@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "277863819591",
+    "project_id": "afk-credits-112d2",
+    "storage_bucket": "afk-credits-112d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277863819591:android:f719ba5d18b23a13a2c462",
+        "android_client_info": {
+          "package_name": "com.example.afkcredits"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277863819591-q6q6faoknpog69f593mgj493s6b9e6ko.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.afkcredits",
+            "certificate_hash": "2fe513c776c71a69a68c487bc5515ee31077d1dc"
+          }
+        },
+        {
+          "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD94N8PVZhYzgMnX5Dn22V4XG_0fXXaPgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

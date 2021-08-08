@@ -1,0 +1,51 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      { 
+        "name": "Mobile Dev",
+        "program": "lib/main_dev.dart",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "debug",
+        "args": [
+          "--flavor", 
+          "dev",
+          "-t",
+          "lib/main_dev.dart",
+        ],
+      },    
+      { 
+        "name": "Mobile Prod",
+        "program": "lib/main_prod.dart",
+        "request": "launch",
+        "type": "dart",
+        "args": [
+          "--flavor", 
+          "prod",
+          "-t",
+          "lib/main_prod.dart",
+        ],
+        "flutterMode": "debug",
+      },    
+      {
+        "name": "Emulator",
+        "request": "launch",
+        "type": "dart",
+        "args": [
+          "--device-id",
+          "emulator-5554",
+          "--flavor",
+          "dev",
+          "-t",
+          "lib/main_dev.dart",
+        ],
+        "flutterMode": "debug",
+      },    
+      {
+        "name": "Run all tests",
+        "request": "launch",
+        "type": "dart",
+        "program": "./test/",
+      }
+    ]
+  }
