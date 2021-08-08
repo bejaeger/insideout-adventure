@@ -18,11 +18,11 @@ class StartUpView extends StatelessWidget {
           children: [
             verticalSpaceMedium,
             ElevatedButton(
-                onPressed: () => model.navigateToSponsorHomeView,
+                onPressed: model.navigateToSponsorHomeView,
                 child: Text("Go to sponsor home")),
             verticalSpaceMedium,
             ElevatedButton(
-                onPressed: () => model.navigateToExplorerHomeView,
+                onPressed: model.navigateToExplorerHomeView,
                 child: Text("Go to explorer home/map")),
           ],
         ),
