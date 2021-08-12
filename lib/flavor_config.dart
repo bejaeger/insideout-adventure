@@ -9,11 +9,11 @@ class FlavorConfigProvider {
   String get appName {
     switch (this.flavor) {
       case Flavor.dev:
-        return "The Good Wallet - Dev";
+        return "The AFK - Dev";
       case Flavor.prod:
-        return "The Good Wallet";
+        return "The AFK";
       default:
-        return "The Good Wallet - Dev";
+        return "The AFK - Dev";
     }
   }
 }
