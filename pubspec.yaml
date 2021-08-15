@@ -38,6 +38,10 @@ dependencies:
   #Google Maps
   google_maps_flutter: ^2.0.6
 
+  #Geolocation 
+  geolocator: ^7.4.0
+  places_service: ^0.1.0
+
   intl: ^0.17.0
 
   # Stacked State Management

@@ -13,4 +13,8 @@ class StartUpViewModel extends BaseModel {
   void navigateToExplorerHomeView() {
     _navigationService.navigateTo(Routes.explorerHomeView);
   }
+
+  void navigateToMapView() {
+    _navigationService.navigateTo(Routes.mapView);
+  }
 }

@@ -16,7 +16,7 @@ import '../ui/views/sponsor_home/sponsor_home_view.dart';
 class Routes {
   static const String sponsorHomeView = '/sponsor-home-view';
   static const String explorerHomeView = '/explorer-home-view';
-  static const String mapView = '/';
+  static const String mapView = '/map-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,

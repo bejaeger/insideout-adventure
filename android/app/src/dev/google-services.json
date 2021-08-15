@@ -7,17 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:277863819591:android:f719ba5d18b23a13a2c462",
+        "mobilesdk_app_id": "1:277863819591:android:32a7705d3e777e68a2c462",
         "android_client_info": {
-          "package_name": "com.example.afkcredits"
+          "package_name": "com.afkcredits.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "277863819591-q6q6faoknpog69f593mgj493s6b9e6ko.apps.googleusercontent.com",
+          "client_id": "277863819591-mj1a94rtrqemr5rmdcr8q965a0948pc7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.afkcredits",
+            "package_name": "com.afkcredits.dev",
+            "certificate_hash": "1296430594c3f9314622082176f929ccacd92ce1"
+          }
+        },
+        {
+          "client_id": "277863819591-nef3u41f1dgbtglesv9bad40pvph116r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.afkcredits.dev",
             "certificate_hash": "2fe513c776c71a69a68c487bc5515ee31077d1dc"
           }
         },
@@ -56,6 +64,14 @@
           "android_info": {
             "package_name": "com.example.afkcredits.dev",
             "certificate_hash": "2fe513c776c71a69a68c487bc5515ee31077d1dc"
+          }
+        },
+        {
+          "client_id": "277863819591-t6anm79r0ie47svndit6mp94nbf2q8l6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.afkcredits.dev",
+            "certificate_hash": "1296430594c3f9314622082176f929ccacd92ce1"
           }
         },
         {
