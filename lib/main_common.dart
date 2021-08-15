@@ -8,10 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'flavor_config.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 const bool USE_EMULATOR = false;
 
