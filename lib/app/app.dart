@@ -1,3 +1,5 @@
+import 'package:afkcredits/services/environment_services.dart';
+import 'package:afkcredits/services/geolocation_service.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
@@ -17,6 +19,8 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: SnackbarService),
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: PlacesService),
+    LazySingleton(classType: GeolocationService),
+    LazySingleton(classType: EnvironmentService),
 
     // Services
   ],

@@ -10,6 +10,7 @@ class MapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MapViewModel>.reactive(
+      onModelReady: (model) => model.initState(),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text('AFK TREASURE HUNTING'),
@@ -17,6 +18,7 @@ class MapView extends StatelessWidget {
         body: Container(
           child: GoogleMap(
             initialCameraPosition: model.position,
+            markers: Set<Marker>.of(model.markers),
           ),
         ),
       ),

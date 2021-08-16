@@ -35,6 +35,7 @@
 afk-credits/android/app/src/dev/google-services.json
 afk-credits/android/app/src/dev/AndroidManifest.xml
 afk-credits/android/app/src/main/AndroidManifest.xml
+.env
 
 # Web related
 lib/generated_plugin_registrant.dart
