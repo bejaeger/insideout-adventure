@@ -32,9 +32,9 @@
 /build/
 
 #Android Services 
-AFK-CREDITS/android/app/src/dev/google-services.json
-AFK-CREDITS/android/app/src/dev/AndroidManifest.xml
-AFK-CREDITS/android/app/src/main/AndroidManifest.xml
+afk-credits/android/app/src/dev/google-services.json
+afk-credits/android/app/src/dev/AndroidManifest.xml
+afk-credits/android/app/src/main/AndroidManifest.xml
 
 # Web related
 lib/generated_plugin_registrant.dart
