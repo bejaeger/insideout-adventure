@@ -1,10 +1,17 @@
+import 'package:afkcredits/apis/firestore_api.dart';
+import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation_service.dart';
+import 'package:afkcredits/services/user_service.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
+import 'package:afkcredits/ui/views/login/create_account_view.dart';
+import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
+import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked_annotations.dart';
+import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 @StackedApp(
@@ -12,6 +19,9 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: SponsorHomeView),
     MaterialRoute(page: ExplorerHomeView),
     MaterialRoute(page: MapView),
+    MaterialRoute(page: LoginView),
+    MaterialRoute(page: CreateAccountView),
+    MaterialRoute(page: StartUpView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -21,6 +31,10 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: PlacesService),
     LazySingleton(classType: GeolocationService),
     LazySingleton(classType: EnvironmentService),
+    LazySingleton(classType: UserService),
+    LazySingleton(classType: FirestoreApi),
+    LazySingleton(classType: FirebaseAuthenticationService),
+    LazySingleton(classType: FlavorConfigProvider),
 
     // Services
   ],
