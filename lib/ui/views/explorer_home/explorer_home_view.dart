@@ -17,7 +17,16 @@ class ExplorerHomeView extends StatelessWidget {
         body: ListView(
           children: [
             verticalSpaceMassive,
-            Text("Map View"),
+            ElevatedButton(
+                // onPressed: model.navigateToExplorerHomeView,
+                onPressed: model.navigateToMapView,
+                //child: Text("Go to explorer home/map")),
+                child: Text("Go to explorer Map  ")),
+            ElevatedButton(
+                // onPressed: model.navigateToExplorerHomeView,
+                onPressed: model.logout,
+                //child: Text("Go to explorer home/map")),
+                child: Text("Logout  ")),
           ],
         ),
       ),

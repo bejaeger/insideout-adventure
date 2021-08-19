@@ -9,11 +9,30 @@ class FlavorConfigProvider {
   String get appName {
     switch (this.flavor) {
       case Flavor.dev:
-        return "The AFK - Dev";
+        return "AFK Credits - Dev";
       case Flavor.prod:
-        return "The AFK";
+        return "AFK Credits";
       default:
-        return "The AFK - Dev";
+        return "AFK Credits - Dev";
+    }
+  }
+
+  String get testUserEmail {
+    return "test@gmail.com";
+  }
+
+  String get testUserPassword {
+    return "m1m1m1";
+  }
+
+  String get testUserId {
+    switch (this.flavor) {
+      case Flavor.dev:
+        return "anLaRoIZCXU0TgZYTmp1AVnRhnD3";
+      case Flavor.prod:
+        return "";
+      default:
+        return "anLaRoIZCXU0TgZYTmp1AVnRhnD3";
     }
   }
 }

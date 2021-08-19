@@ -11,25 +11,36 @@ class StartUpView extends StatelessWidget {
     return ViewModelBuilder<StartUpViewModel>.reactive(
       onModelReady: (model) => model.runStartupLogic(),
       viewModelBuilder: () => StartUpViewModel(),
-      builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: Text("Welcome to AFK Credits"),
-        ),
-        body: ListView(
-          children: [
-            verticalSpaceMedium,
-            ElevatedButton(
-                onPressed: model.navigateToSponsorHomeView,
-                child: Text("Go to sponsor home")),
-            verticalSpaceMedium,
-            ElevatedButton(
-                // onPressed: model.navigateToExplorerHomeView,
-                onPressed: model.navigateToMapView,
-                //child: Text("Go to explorer home/map")),
-                child: Text("Go to explorer Map  ")),
-          ],
-        ),
-      ),
+      builder: (context, model, child) => model.showLoadingScreen()
+          ? Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("AFK Credits", style: textTheme(context).headline2),
+                    verticalSpaceMedium,
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              ),
+            )
+          : Scaffold(
+              body: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Failure to log in",
+                          style: textTheme(context).headline2),
+                      verticalSpaceMedium,
+                      Text(
+                          "Unfortunately, there was an error when logging. Please contact our support"),
+                    ],
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }

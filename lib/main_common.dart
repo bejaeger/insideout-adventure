@@ -27,6 +27,12 @@ void mainCommon(Flavor flavor) async {
     // setupSnackbarUi();
     // Logger.level = Level.verbose;
 
+    // configure services that need settings dependent on flavor
+    final FlavorConfigProvider flavorConfigProvider =
+        locator<FlavorConfigProvider>();
+    flavorConfigProvider.configure(flavor);
+    print("==>> Running with flavor $flavor");
+
     runApp(MyApp());
   } catch (e) {
     print("ERROR: App main function failed with error: ${e.toString()}");
