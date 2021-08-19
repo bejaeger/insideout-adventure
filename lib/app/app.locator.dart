@@ -6,6 +6,7 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'package:geolocator/geolocator.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -29,4 +30,5 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => PlacesService());
   locator.registerLazySingleton(() => GeolocationService());
   locator.registerLazySingleton(() => EnvironmentService());
+  //locator.registerLazySingleton(() => Position());
 }

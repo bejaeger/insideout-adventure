@@ -1,4 +1,4 @@
-package com.example.afkcredits
+package com.afkcredits
 
 import io.flutter.embedding.android.FlutterActivity
 

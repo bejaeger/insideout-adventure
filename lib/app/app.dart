@@ -21,6 +21,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: PlacesService),
     LazySingleton(classType: GeolocationService),
     LazySingleton(classType: EnvironmentService),
+    //LazySingleton(classType: Position),
 
     // Services
   ],
