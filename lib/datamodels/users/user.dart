@@ -23,9 +23,9 @@ class User with _$User {
     required String uid,
     required String fullName,
     required String email,
-    required UserRole role,
     required List<String> sponsorIds,
     required List<String> explorerIds,
+    required UserRole role,
     @Default(false)
         bool newUser,
     @JsonKey(
@@ -45,7 +45,7 @@ User getEmptyUser() {
     uid: "",
     fullName: "",
     email: "",
-    role: UserRole.explorer,
+    role: UserRole.unassigned,
     sponsorIds: [],
     explorerIds: [],
     newUser: false,

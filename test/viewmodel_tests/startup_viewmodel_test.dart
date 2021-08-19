@@ -59,6 +59,17 @@ void main() {
         verify(userService.currentUserNullable);
       });
 
+      test(
+          'When hasLoggedInUser is true but no user account is created yet (third-party login), navigate to selectRoleAfterLoginView',
+          () async {
+        final navigationService = getAndRegisterNavigationService();
+        getAndRegisterUserService(
+            hasLoggedInUser: true, currentUser: null, newUser: true);
+        final model = _getModel();
+        await model.runStartupLogic();
+        verify(navigationService.replaceWith(Routes.selectRoleAfterLoginView));
+      });
+
       test('When currentUser has role sponsor, navigate to sponsorHomeView',
           () async {
         final navigationService = getAndRegisterNavigationService();

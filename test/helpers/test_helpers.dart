@@ -1,6 +1,8 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/datamodels/users/user_statistics.dart';
+import 'package:afkcredits/enums/user_role.dart';
+import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
@@ -13,7 +15,10 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import 'datamodel_helpers.dart';
+import 'mock_firebase_user.dart';
 import 'test_helpers.mocks.dart';
+
+final mockFirebaseUser = MockFirebaseUser();
 
 @GenerateMocks([], customMocks: [
   // our services registered with get_it
@@ -21,21 +26,38 @@ import 'test_helpers.mocks.dart';
   MockSpec<FirestoreApi>(returnNullOnMissingStub: true),
   MockSpec<EnvironmentService>(returnNullOnMissingStub: true),
   MockSpec<PlacesService>(returnNullOnMissingStub: true),
+  MockSpec<FlavorConfigProvider>(returnNullOnMissingStub: true),
 
   // stacked services registered with get_it
   MockSpec<NavigationService>(returnNullOnMissingStub: true),
-  MockSpec<SnackbarService>(returnNullOnMissingStub: true),
+  MockSpec<DialogService>(returnNullOnMissingStub: true),
   MockSpec<FirebaseAuthenticationService>(returnNullOnMissingStub: true),
 ])
 MockUserService getAndRegisterUserService({
   bool hasLoggedInUser = false,
   User? currentUser,
+  bool newUser = false,
 }) {
   _removeRegistrationIfExists<UserService>();
   final service = MockUserService();
   when(service.hasLoggedInUser).thenReturn(hasLoggedInUser);
   when(service.currentUser).thenReturn(currentUser ?? getTestUserExplorer());
-  when(service.currentUserNullable).thenReturn(currentUser);
+  when(service.currentUserNullable)
+      .thenReturn(newUser ? null : getTestUserExplorer());
+  when(service.runLoginLogic(
+          method: anyNamed("method"),
+          email: anyNamed("email"),
+          password: anyNamed("password")))
+      .thenAnswer(
+          (_) async => FirebaseAuthenticationResult(user: mockFirebaseUser));
+  when(service.runCreateAccountLogic(
+          method: anyNamed("method"),
+          role: anyNamed("role"),
+          fullName: anyNamed("fullName"),
+          email: anyNamed("email"),
+          password: anyNamed("password")))
+      .thenAnswer(
+          (_) async => FirebaseAuthenticationResult(user: mockFirebaseUser));
   locator.registerSingleton<UserService>(service);
   return service;
 }
@@ -97,6 +119,20 @@ MockFirestoreApi getAndRegisterFirestoreApi({User? user}) {
   return service;
 }
 
+MockFlavorConfigProvider getAndRegisterFlavorConfigProvider() {
+  _removeRegistrationIfExists<FlavorConfigProvider>();
+  final service = MockFlavorConfigProvider();
+  locator.registerSingleton<FlavorConfigProvider>(service);
+  return service;
+}
+
+MockDialogService getAndRegisterDialogService() {
+  _removeRegistrationIfExists<DialogService>();
+  final service = MockDialogService();
+  locator.registerSingleton<DialogService>(service);
+  return service;
+}
+
 void registerServices() {
   getAndRegisterUserService();
   getAndRegisterEnvironmentService();
@@ -104,6 +140,8 @@ void registerServices() {
   getAndRegisterFirestoreApi();
   getAndRegisterFirebaseAuthenticationService();
   getAndRegisterPlacesService();
+  getAndRegisterFlavorConfigProvider();
+  getAndRegisterDialogService();
 }
 
 void unregisterServices() {
@@ -112,8 +150,9 @@ void unregisterServices() {
   locator.unregister<FirestoreApi>();
   locator.unregister<EnvironmentService>();
   locator.unregister<PlacesService>();
-
+  locator.unregister<FlavorConfigProvider>();
   locator.unregister<FirebaseAuthenticationService>();
+  locator.unregister<DialogService>();
 }
 
 void _removeRegistrationIfExists<T extends Object>() {

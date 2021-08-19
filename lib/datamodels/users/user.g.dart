@@ -11,11 +11,11 @@ _$_User _$_$_UserFromJson(Map<String, dynamic> json) {
     uid: json['uid'] as String,
     fullName: json['fullName'] as String,
     email: json['email'] as String,
-    role: _$enumDecode(_$UserRoleEnumMap, json['role']),
     sponsorIds:
         (json['sponsorIds'] as List<dynamic>).map((e) => e as String).toList(),
     explorerIds:
         (json['explorerIds'] as List<dynamic>).map((e) => e as String).toList(),
+    role: _$enumDecode(_$UserRoleEnumMap, json['role']),
     newUser: json['newUser'] as bool? ?? false,
     fullNameSearch: (json['fullNameSearch'] as List<dynamic>?)
         ?.map((e) => e as String)
@@ -27,9 +27,9 @@ Map<String, dynamic> _$_$_UserToJson(_$_User instance) => <String, dynamic>{
       'uid': instance.uid,
       'fullName': instance.fullName,
       'email': instance.email,
-      'role': _$UserRoleEnumMap[instance.role],
       'sponsorIds': instance.sponsorIds,
       'explorerIds': instance.explorerIds,
+      'role': _$UserRoleEnumMap[instance.role],
       'newUser': instance.newUser,
       'fullNameSearch': User._checkIfKeywordsAreSet(instance.fullNameSearch),
     };
@@ -64,4 +64,5 @@ const _$UserRoleEnumMap = {
   UserRole.sponsor: 'sponsor',
   UserRole.explorer: 'explorer',
   UserRole.admin: 'admin',
+  UserRole.unassigned: 'unassigned',
 };

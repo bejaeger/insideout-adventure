@@ -18,6 +18,12 @@ class SponsorHomeView extends StatelessWidget {
           children: [
             verticalSpaceMassive,
             Text("Sponsor Home View"),
+            verticalSpaceMassive,
+            ElevatedButton(
+                // onPressed: model.navigateToExplorerHomeView,
+                onPressed: model.logout,
+                //child: Text("Go to explorer home/map")),
+                child: Text("Logout  ")),
           ],
         ),
       ),

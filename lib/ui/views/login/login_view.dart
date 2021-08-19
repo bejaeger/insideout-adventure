@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -24,7 +25,8 @@ class LoginView extends StatelessWidget with $LoginView {
         body: AuthenticationLayout(
           busy: model.isBusy,
           onCreateAccountTapped: model.navigateToCreateAccount,
-          onDummyLoginTapped: model.onDummyLoginTapped(),
+          onDummyLoginExplorerTapped: model.onDummyLoginExplorerTapped(),
+          onDummyLoginSponsorTapped: model.onDummyLoginSponsorTapped(),
           onMainButtonTapped: () => model.saveData(AuthenticationMethod.Email),
           validationMessage: model.validationMessage,
           title: 'Welcome to AFK Credits',

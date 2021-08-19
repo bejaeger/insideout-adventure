@@ -3,9 +3,12 @@ import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation_service.dart';
 import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
+import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
+import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
-import 'package:afkcredits/ui/views/login/create_account_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
+import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
@@ -21,7 +24,10 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: MapView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: CreateAccountView),
+    MaterialRoute(page: CreateAccountUserRoleView),
     MaterialRoute(page: StartUpView),
+    MaterialRoute(page: AdminHomeView),
+    MaterialRoute(page: SelectRoleAfterLoginView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

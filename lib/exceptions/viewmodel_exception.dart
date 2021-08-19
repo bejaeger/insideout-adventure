@@ -1,9 +1,9 @@
-class MapViewModelException implements Exception {
+class ViewModelException implements Exception {
   final String message;
   final String? devDetails;
   final String? prettyDetails;
 
-  MapViewModelException({
+  ViewModelException({
     required this.message,
     this.devDetails,
     this.prettyDetails,
@@ -11,6 +11,6 @@ class MapViewModelException implements Exception {
 
   @override
   String toString() {
-    return 'MapViewModelException (in-house exception): $message ${devDetails != null ? '- $devDetails' : ''}';
+    return 'ViewModelException (in-house exception): $message ${devDetails != null ? '- $devDetails' : ''}';
   }
 }

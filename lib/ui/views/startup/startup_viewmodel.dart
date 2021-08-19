@@ -27,24 +27,25 @@ class StartUpViewModel extends BaseModel {
         log.v('We have a user session on disk. Sync the user profile ...');
         await _userService.syncUserAccount();
 
-        final currentUserNullable = _userService.currentUserNullable;
+        if (_userService.currentUserNullable == null) {
+          // This means we used a third party provider and didn't make it until
+          // the role selection. Do it now!
+          log.w(
+              "We found a logged in user but no user document in the database. This happens at the first time when logging in with a third party service and not choosing a row. So this is very rare! Maybe look into it.");
+          await _navigationService.replaceWith(Routes.selectRoleAfterLoginView);
+        } else {
+          final currentUser = _userService.currentUser;
+          log.v('User sync complete. User profile: $currentUser');
 
-        if (currentUserNullable == null) {
-          log.wtf(
-              "We found a logged in user but no user document in the database. This should never happen and is likely due to an inconsistency in the backend!");
-          throw Exception("User signed in but not initialized!");
-        }
-        final currentUser = _userService.currentUser;
-        log.v('User sync complete. User profile: $currentUser');
-
-        if (currentUser.role == UserRole.explorer) {
-          log.v(
-              'We found an explorer account, let\'s navigate to the home screen.');
-          navigateToExplorerHomeView();
-        } else if (currentUser.role == UserRole.sponsor) {
-          log.v('We have a sponsor account. Let\'s the sponsor home screen!');
-          navigateToSponsorHomeView();
-          // navigate to home view
+          if (currentUser.role == UserRole.explorer) {
+            log.v(
+                'We found an explorer account, let\'s navigate to the home screen.');
+            _navigationService.replaceWith(Routes.explorerHomeView);
+          } else if (currentUser.role == UserRole.sponsor) {
+            log.v('We have a sponsor account. Let\'s the sponsor home screen!');
+            _navigationService.replaceWith(Routes.sponsorHomeView);
+            // navigate to home view
+          }
         }
         // TODO:
         // else if (currentUser.role == UserRole.admin) {
@@ -63,17 +64,5 @@ class StartUpViewModel extends BaseModel {
 
   bool showLoadingScreen() {
     return true;
-  }
-
-  void navigateToSponsorHomeView() {
-    _navigationService.replaceWith(Routes.sponsorHomeView);
-  }
-
-  void navigateToExplorerHomeView() {
-    _navigationService.replaceWith(Routes.explorerHomeView);
-  }
-
-  void navigateToMapView() {
-    _navigationService.replaceWith(Routes.mapView);
   }
 }

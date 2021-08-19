@@ -8,12 +8,14 @@ class AuthenticationLayout extends StatelessWidget {
   final String? subtitle;
   final String? mainButtonTitle;
   final Widget? form;
+  final String? googleText;
   final bool showTermsText;
   final void Function()? onMainButtonTapped;
   final void Function()? onCreateAccountTapped;
   final void Function()? onForgotPassword;
   final void Function()? onBackPressed;
-  final void Function()? onDummyLoginTapped;
+  final void Function()? onDummyLoginExplorerTapped;
+  final void Function()? onDummyLoginSponsorTapped;
   final void Function()? onGoogleButtonTapped;
   final void Function()? onAppleButtonTapped;
   final String? validationMessage;
@@ -33,10 +35,12 @@ class AuthenticationLayout extends StatelessWidget {
     this.validationMessage,
     this.showTermsText = false,
     this.busy = false,
-    this.onDummyLoginTapped,
     this.onGoogleButtonTapped,
     this.onAppleButtonTapped,
     this.releaseName,
+    this.onDummyLoginExplorerTapped,
+    this.onDummyLoginSponsorTapped,
+    this.googleText,
   }) : super(key: key);
 
   @override
@@ -60,7 +64,7 @@ class AuthenticationLayout extends StatelessWidget {
               ),
             Text(
               title!,
-              style: textTheme(context).headline2,
+              style: textTheme(context).headline4,
             ),
             verticalSpaceSmall,
             Align(
@@ -120,36 +124,73 @@ class AuthenticationLayout extends StatelessWidget {
                       ),
               ),
             ),
-            if (onDummyLoginTapped != null) verticalSpaceSmall,
-            if (onDummyLoginTapped != null)
-              GestureDetector(
-                onTap: onDummyLoginTapped,
-                child: Container(
-                  width: double.infinity,
-                  height: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: kPrimaryColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: busy
-                      ? CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(Colors.white),
-                        )
-                      : Text(
-                          "SIGN IN AS TEST USER",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14),
+            if (onDummyLoginExplorerTapped != null ||
+                onDummyLoginSponsorTapped != null)
+              verticalSpaceRegular,
+            if (onDummyLoginExplorerTapped != null ||
+                onDummyLoginSponsorTapped != null)
+              Row(
+                children: [
+                  if (onDummyLoginSponsorTapped != null)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: onDummyLoginSponsorTapped,
+                        child: Container(
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: busy
+                              ? CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation(Colors.white),
+                                )
+                              : Text(
+                                  "LOGIN AS TEST SPONSOR",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
                         ),
-                ),
+                      ),
+                    ),
+                  if (onDummyLoginExplorerTapped != null) horizontalSpaceTiny,
+                  if (onDummyLoginExplorerTapped != null)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: onDummyLoginExplorerTapped,
+                        child: Container(
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: busy
+                              ? CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation(Colors.white),
+                                )
+                              : Text(
+                                  "LOGIN AS TEST EXPLORER",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
-            verticalSpaceRegular,
+            verticalSpaceMedium,
             if (onCreateAccountTapped != null)
               GestureDetector(
                 onTap: onCreateAccountTapped,
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Don\'t have an account?'),
@@ -158,6 +199,7 @@ class AuthenticationLayout extends StatelessWidget {
                       'Create an account',
                       style: TextStyle(
                         color: kPrimaryColor,
+                        fontSize: 25,
                       ),
                     )
                   ],
@@ -178,7 +220,7 @@ class AuthenticationLayout extends StatelessWidget {
             if (onGoogleButtonTapped != null)
               SignInButton(
                 Buttons.Google,
-                text: "SIGN IN WITH GOOGLE",
+                text: googleText ?? "SIGN IN WITH GOOGLE",
                 onPressed: onGoogleButtonTapped!,
               ),
             if (onAppleButtonTapped != null)
