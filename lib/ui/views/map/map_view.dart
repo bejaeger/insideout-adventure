@@ -17,8 +17,10 @@ class MapView extends StatelessWidget {
         ),
         body: Container(
           child: GoogleMap(
+            //mapType: MapType.hybrid,
             initialCameraPosition: model.position,
-            markers: Set<Marker>.of(model.markers),
+            markers: model.markersTmp,
+            onMapCreated: model.onMapCreated,
           ),
         ),
       ),
