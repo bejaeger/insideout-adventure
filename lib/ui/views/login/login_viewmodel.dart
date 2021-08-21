@@ -36,11 +36,14 @@ class LoginViewModel extends AuthenticationViewModel {
   }
 
   @override
-  Future<FirebaseAuthenticationResult> runAuthentication(
+  Future<AFKCreditsAuthenticationResult> runAuthentication(
       AuthenticationMethod method,
-      [UserRole? role]) {
-    return _userService.runLoginLogic(
-        method: method, email: emailValue, password: passwordValue, role: role);
+      [UserRole? role]) async {
+    return await _userService.runLoginLogic(
+        method: method,
+        emailOrName: emailOrNameValue,
+        password: passwordValue,
+        role: role);
   }
 
   void navigateToCreateAccount() {

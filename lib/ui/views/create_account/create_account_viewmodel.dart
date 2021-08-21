@@ -18,7 +18,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
   final UserService _userService = locator<UserService>();
 
   @override
-  Future<FirebaseAuthenticationResult> runAuthentication(
+  Future<AFKCreditsAuthenticationResult> runAuthentication(
       AuthenticationMethod method,
       [UserRole? role]) async {
     return await _userService.runCreateAccountLogic(

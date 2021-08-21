@@ -25,7 +25,7 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
       builder: (context, model, child) => Scaffold(
           body: AuthenticationLayout(
         busy: model.isBusy,
-        onMainButtonTapped: () => model.saveData(AuthenticationMethod.Email),
+        onMainButtonTapped: () => model.saveData(AuthenticationMethod.email),
         onBackPressed: model.replaceWithSelectRoleView,
         validationMessage: model.validationMessage,
         title: 'Create $roleString Account',

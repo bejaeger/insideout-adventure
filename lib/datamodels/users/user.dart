@@ -22,7 +22,7 @@ class User with _$User {
   factory User({
     required String uid,
     required String fullName,
-    required String email,
+    String? email,
     required List<String> sponsorIds,
     required List<String> explorerIds,
     required UserRole role,
@@ -32,6 +32,8 @@ class User with _$User {
       toJson: User._checkIfKeywordsAreSet,
     )
         List<String>? fullNameSearch,
+    String? createdByUserWithId,
+    String? password,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

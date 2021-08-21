@@ -9,7 +9,6 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 abstract class AuthenticationViewModel extends FormViewModel {
@@ -26,16 +25,16 @@ abstract class AuthenticationViewModel extends FormViewModel {
     // Run the authentication and set viewmodel to busy
 
     if (role != null && this.role == null) this.role = role;
-    final FirebaseAuthenticationResult result =
+    log.i("Trying to authenticate user with method $method and role $role ");
+    final AFKCreditsAuthenticationResult result =
         await (runBusyFuture(runAuthentication(method, this.role)));
 
     if (!result.hasError) {
       log.i("Authentication successful, now initializing user data");
 
       try {
-        await (runBusyFuture(initializeUser()));
-        // If current user is not yet set we need to create it
-        // We end up here when the user signs up with third-party providers!
+        await (runBusyFuture(initializeUser(
+            uid: result.uid, fromLocalStorage: result.fromLocalStorage)));
       } catch (e) {
         log.e("Failed initializing user with error: ${e.toString()}");
         String publicFacingMessage =
@@ -50,11 +49,12 @@ abstract class AuthenticationViewModel extends FormViewModel {
       }
 
       if (_userService.currentUserNullable == null) {
-        // User logged in but account not created yet -> third party login
+        // User logged in but account not created in database yet -> third party login
         // navigate to selectUserRoleView to select user role
         log.i(
             "User logged in with third-party provider. Navigate to select role view");
         navigationService.replaceWith(Routes.selectRoleAfterLoginView);
+        return;
       } else {
         // User account found in database
         final role = this.role ?? _userService.getUserRole;
@@ -78,16 +78,13 @@ abstract class AuthenticationViewModel extends FormViewModel {
     }
   }
 
-  Future initializeUser() async {
-    return await _userService.syncUserAccount();
-  }
-
-  Future createUserAccount(UserRole role) async {
-    return await _userService.createUserAccountFromFirebaseUser(role: role);
+  Future initializeUser({String? uid, bool fromLocalStorage = false}) async {
+    return await _userService.syncUserAccount(
+        uid: uid, fromLocalStorage: fromLocalStorage);
   }
 
   // needs to be overrriden!
-  Future<FirebaseAuthenticationResult> runAuthentication(
+  Future<AFKCreditsAuthenticationResult> runAuthentication(
       AuthenticationMethod method,
       [UserRole? role]);
 }

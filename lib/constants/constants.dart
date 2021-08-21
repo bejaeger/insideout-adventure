@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 const String kAppName = "AFK Credits";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY';
-
+const kLocalStorageUidKey = "uid";
+const kTestUid = "TestId";
 /////////////////////////////////////////////////
 // Firebase collections and keys
 final CollectionReference usersCollection =

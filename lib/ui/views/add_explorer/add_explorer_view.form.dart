@@ -9,19 +9,19 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-const String EmailOrNameValueKey = 'emailOrName';
+const String NameValueKey = 'name';
 const String PasswordValueKey = 'password';
 
-mixin $LoginView on StatelessWidget {
-  final TextEditingController emailOrNameController = TextEditingController();
+mixin $AddExplorerView on StatelessWidget {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final FocusNode emailOrNameFocusNode = FocusNode();
+  final FocusNode nameFocusNode = FocusNode();
   final FocusNode passwordFocusNode = FocusNode();
 
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
   void listenToFormUpdated(FormViewModel model) {
-    emailOrNameController.addListener(() => _updateFormData(model));
+    nameController.addListener(() => _updateFormData(model));
     passwordController.addListener(() => _updateFormData(model));
   }
 
@@ -29,7 +29,7 @@ mixin $LoginView on StatelessWidget {
   void _updateFormData(FormViewModel model) => model.setData(
         model.formValueMap
           ..addAll({
-            EmailOrNameValueKey: emailOrNameController.text,
+            NameValueKey: nameController.text,
             PasswordValueKey: passwordController.text,
           }),
       );
@@ -38,16 +38,16 @@ mixin $LoginView on StatelessWidget {
   void disposeForm() {
     // The dispose function for a TextEditingController sets all listeners to null
 
-    emailOrNameController.dispose();
+    nameController.dispose();
     passwordController.dispose();
   }
 }
 
 extension ValueProperties on FormViewModel {
-  String? get emailOrNameValue => this.formValueMap[EmailOrNameValueKey];
+  String? get nameValue => this.formValueMap[NameValueKey];
   String? get passwordValue => this.formValueMap[PasswordValueKey];
 
-  bool get hasEmailOrName => this.formValueMap.containsKey(EmailOrNameValueKey);
+  bool get hasName => this.formValueMap.containsKey(NameValueKey);
   bool get hasPassword => this.formValueMap.containsKey(PasswordValueKey);
 }
 

@@ -22,7 +22,7 @@ void main() {
         final userService = getAndRegisterUserService();
         when(userService.getUserRole).thenReturn(UserRole.sponsor);
         final model = _getModel();
-        await model.saveData(AuthenticationMethod.Email);
+        await model.saveData(AuthenticationMethod.email);
         verify(navigationService.replaceWith(Routes.sponsorHomeView));
       });
 
@@ -33,7 +33,7 @@ void main() {
         final userService = getAndRegisterUserService();
         when(userService.getUserRole).thenReturn(UserRole.admin);
         final model = _getModel();
-        await model.saveData(AuthenticationMethod.Email);
+        await model.saveData(AuthenticationMethod.email);
         verify(navigationService.replaceWith(Routes.adminHomeView));
       });
 
@@ -44,7 +44,7 @@ void main() {
         final userService = getAndRegisterUserService();
         when(userService.getUserRole).thenReturn(UserRole.explorer);
         final model = _getModel();
-        await model.saveData(AuthenticationMethod.Email);
+        await model.saveData(AuthenticationMethod.email);
         verify(navigationService.replaceWith(Routes.explorerHomeView));
       });
 

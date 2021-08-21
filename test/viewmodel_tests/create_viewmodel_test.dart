@@ -23,7 +23,7 @@ void main() {
           () async {
         final navigationService = getAndRegisterNavigationService();
         final model = _getModelSponsor();
-        await model.saveData(AuthenticationMethod.Email);
+        await model.saveData(AuthenticationMethod.email);
         verify(navigationService.replaceWith(Routes.sponsorHomeView));
       });
 
@@ -32,7 +32,7 @@ void main() {
           () async {
         final navigationService = getAndRegisterNavigationService();
         final model = _getModelExplorer();
-        await model.saveData(AuthenticationMethod.Email);
+        await model.saveData(AuthenticationMethod.email);
         verify(navigationService.replaceWith(Routes.explorerHomeView));
       });
     });

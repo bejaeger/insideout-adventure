@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -12,6 +13,8 @@ import 'package:stacked_services/stacked_services.dart';
 class BaseModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final UserService _userService = locator<UserService>();
+
+  User get currentUser => _userService.currentUser;
 
   navigateBack() {
     _navigationService.back();

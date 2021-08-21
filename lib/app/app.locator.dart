@@ -6,6 +6,7 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked.dart';
@@ -17,6 +18,7 @@ import '../apis/firestore_api.dart';
 import '../flavor_config.dart';
 import '../services/environment_services.dart';
 import '../services/geolocation_service.dart';
+import '../services/local_storage_service.dart';
 import '../services/user_service.dart';
 
 final locator = StackedLocator.instance;
@@ -38,4 +40,6 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => FirestoreApi());
   locator.registerLazySingleton(() => FirebaseAuthenticationService());
   locator.registerLazySingleton(() => FlavorConfigProvider());
+  locator.registerLazySingleton(() => FlutterSecureStorage());
+  locator.registerLazySingleton(() => LocalStorageService());
 }

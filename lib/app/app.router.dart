@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import '../enums/user_role.dart';
+import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
@@ -32,6 +33,7 @@ class Routes {
   static const String adminHomeView = '/admin-home-view';
   static const String selectRoleAfterLoginView =
       '/select-role-after-login-view';
+  static const String addExplorerView = '/add-explorer-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -42,6 +44,7 @@ class Routes {
     startUpView,
     adminHomeView,
     selectRoleAfterLoginView,
+    addExplorerView,
   };
 }
 
@@ -58,6 +61,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.startUpView, page: StartUpView),
     RouteDef(Routes.adminHomeView, page: AdminHomeView),
     RouteDef(Routes.selectRoleAfterLoginView, page: SelectRoleAfterLoginView),
+    RouteDef(Routes.addExplorerView, page: AddExplorerView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -123,6 +127,15 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    AddExplorerView: (data) {
+      var args = data.getArgs<AddExplorerViewArguments>(
+        orElse: () => AddExplorerViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AddExplorerView(key: args.key),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -141,4 +154,10 @@ class CreateAccountViewArguments {
   final Key? key;
   final UserRole role;
   CreateAccountViewArguments({this.key, required this.role});
+}
+
+/// AddExplorerView arguments holder class
+class AddExplorerViewArguments {
+  final Key? key;
+  AddExplorerViewArguments({this.key});
 }

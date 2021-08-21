@@ -4,10 +4,12 @@ import 'package:afkcredits/datamodels/users/user_statistics.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
+import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:places_service/places_service.dart';
@@ -27,6 +29,8 @@ final mockFirebaseUser = MockFirebaseUser();
   MockSpec<EnvironmentService>(returnNullOnMissingStub: true),
   MockSpec<PlacesService>(returnNullOnMissingStub: true),
   MockSpec<FlavorConfigProvider>(returnNullOnMissingStub: true),
+  MockSpec<LocalStorageService>(returnNullOnMissingStub: true),
+  MockSpec<FlutterSecureStorage>(returnNullOnMissingStub: true),
 
   // stacked services registered with get_it
   MockSpec<NavigationService>(returnNullOnMissingStub: true),
@@ -35,6 +39,7 @@ final mockFirebaseUser = MockFirebaseUser();
 ])
 MockUserService getAndRegisterUserService({
   bool hasLoggedInUser = false,
+  String? localUserId,
   User? currentUser,
   bool newUser = false,
 }) {
@@ -42,22 +47,23 @@ MockUserService getAndRegisterUserService({
   final service = MockUserService();
   when(service.hasLoggedInUser).thenReturn(hasLoggedInUser);
   when(service.currentUser).thenReturn(currentUser ?? getTestUserExplorer());
+  when(service.getLocallyLoggedInUserId()).thenAnswer((_) async => localUserId);
   when(service.currentUserNullable)
       .thenReturn(newUser ? null : getTestUserExplorer());
   when(service.runLoginLogic(
           method: anyNamed("method"),
-          email: anyNamed("email"),
+          emailOrName: anyNamed("emailOrName"),
           password: anyNamed("password")))
-      .thenAnswer(
-          (_) async => FirebaseAuthenticationResult(user: mockFirebaseUser));
+      .thenAnswer((_) async =>
+          AFKCreditsAuthenticationResult.fromLocalStorage(uid: kTestUid));
   when(service.runCreateAccountLogic(
           method: anyNamed("method"),
           role: anyNamed("role"),
           fullName: anyNamed("fullName"),
           email: anyNamed("email"),
           password: anyNamed("password")))
-      .thenAnswer(
-          (_) async => FirebaseAuthenticationResult(user: mockFirebaseUser));
+      .thenAnswer((_) async =>
+          AFKCreditsAuthenticationResult.fromLocalStorage(uid: kTestUid));
   locator.registerSingleton<UserService>(service);
   return service;
 }
@@ -105,6 +111,7 @@ MockFirebaseAuthenticationService getAndRegisterFirebaseAuthenticationService({
   _removeRegistrationIfExists<FirebaseAuthenticationService>();
   final service = MockFirebaseAuthenticationService();
   when(service.authStateChanges).thenAnswer((_) => Stream.value(currentUser));
+  when(service.logout()).thenAnswer((_) async => null);
   locator.registerSingleton<FirebaseAuthenticationService>(service);
   return service;
 }
@@ -133,6 +140,22 @@ MockDialogService getAndRegisterDialogService() {
   return service;
 }
 
+MockLocalStorageService getAndRegisterLocalStorageService() {
+  _removeRegistrationIfExists<LocalStorageService>();
+  final service = MockLocalStorageService();
+  when(service.saveToDisk(key: anyNamed("key"), value: anyNamed("value")))
+      .thenAnswer((_) async => Future.value());
+  locator.registerSingleton<LocalStorageService>(service);
+  return service;
+}
+
+FlutterSecureStorage getAndRegisterFlutterSecureStorage() {
+  _removeRegistrationIfExists<FlutterSecureStorage>();
+  final service = MockFlutterSecureStorage();
+  locator.registerSingleton<FlutterSecureStorage>(service);
+  return service;
+}
+
 void registerServices() {
   getAndRegisterUserService();
   getAndRegisterEnvironmentService();
@@ -142,6 +165,8 @@ void registerServices() {
   getAndRegisterPlacesService();
   getAndRegisterFlavorConfigProvider();
   getAndRegisterDialogService();
+  getAndRegisterLocalStorageService();
+  getAndRegisterFlutterSecureStorage();
 }
 
 void unregisterServices() {
@@ -153,6 +178,8 @@ void unregisterServices() {
   locator.unregister<FlavorConfigProvider>();
   locator.unregister<FirebaseAuthenticationService>();
   locator.unregister<DialogService>();
+  locator.unregister<LocalStorageService>();
+  locator.unregister<FlutterSecureStorage>();
 }
 
 void _removeRegistrationIfExists<T extends Object>() {

@@ -23,16 +23,28 @@ class StartUpViewModel extends BaseModel {
         apiKey: _environmentService.getValue(GoogleMapsEnvKey));
 
     try {
+      final localUserId = await _userService.getLocallyLoggedInUserId();
+      if (localUserId != null) {
+        log.v(
+            'We have a user session on local storage. Sync the user profile ...');
+        await _userService.syncUserAccount(
+            uid: localUserId, fromLocalStorage: true);
+      }
       if (_userService.hasLoggedInUser) {
-        log.v('We have a user session on disk. Sync the user profile ...');
+        log.v(
+            'We have an active user session on firebase. Sync the user profile ...');
         await _userService.syncUserAccount();
+      }
 
+      if (_userService.hasLoggedInUser || localUserId != null) {
         if (_userService.currentUserNullable == null) {
-          // This means we used a third party provider and didn't make it until
+          // This means we used a third party provider when loggin in
+          // the first time but didn't make it until
           // the role selection. Do it now!
           log.w(
               "We found a logged in user but no user document in the database. This happens at the first time when logging in with a third party service and not choosing a row. So this is very rare! Maybe look into it.");
           await _navigationService.replaceWith(Routes.selectRoleAfterLoginView);
+          return;
         } else {
           final currentUser = _userService.currentUser;
           log.v('User sync complete. User profile: $currentUser');

@@ -38,6 +38,13 @@ class FirestoreApi {
     log.v('Stats document added to ${docRef.path}');
   }
 
+  // when explorer is added without authentication so without ID
+  // we need to generate that id and add it to the datamodel.
+  DocumentReference createUserDocument() {
+    final docRef = usersCollection.doc();
+    return docRef;
+  }
+
   ////////////////////////////////////////////////////////
   // Get user if exists
   Future<User?> getUser({required String uid}) async {
@@ -63,6 +70,29 @@ class FirestoreApi {
         message: 'Failed to get user',
         devDetails: '$error',
       );
+    }
+  }
+
+  Future<User?> getUserWithName({required String? name}) async {
+    if (name == null) return null;
+    QuerySnapshot doc =
+        await usersCollection.where("fullName", isEqualTo: name).get();
+    try {
+      if (doc.docs.length > 1) {
+        log.wtf(
+            "This should never happen! There is more than one user with name $name in the database");
+        return null;
+      }
+      if (doc.docs.length == 1) {
+        final id = doc.docs.first.id;
+        log.v("Found user with name $name, returning user object");
+        return User.fromJson(doc.docs.first.data());
+      } else {
+        log.v("No user found with name $name");
+        return null;
+      }
+    } catch (e) {
+      log.e("Error when getting user document: $e");
     }
   }
 

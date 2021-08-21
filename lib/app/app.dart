@@ -2,7 +2,9 @@ import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation_service.dart';
+import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
@@ -12,6 +14,7 @@ import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
@@ -28,6 +31,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: StartUpView),
     MaterialRoute(page: AdminHomeView),
     MaterialRoute(page: SelectRoleAfterLoginView),
+    MaterialRoute(page: AddExplorerView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -41,7 +45,8 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: FlavorConfigProvider),
-
+    LazySingleton(classType: FlutterSecureStorage),
+    LazySingleton(classType: LocalStorageService),
     // Services
   ],
   logger: StackedLogger(),

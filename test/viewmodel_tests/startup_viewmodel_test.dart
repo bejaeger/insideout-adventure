@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -22,7 +23,26 @@ void main() {
       });
 
       test(
-          'When called should check if we have a logged in user on UserService',
+          'When called should check if there is a logged in user in local storage',
+          () async {
+        final userService = getAndRegisterUserService();
+        final model = _getModel();
+        await model.runStartupLogic();
+        verify(userService.getLocallyLoggedInUserId());
+      });
+
+      test(
+          'When called should check if there is a logged in user in local storage and if yes, call syncUserAccount',
+          () async {
+        final userService = getAndRegisterUserService(localUserId: kTestUid);
+        final model = _getModel();
+        await model.runStartupLogic();
+        verify(userService.syncUserAccount(
+            uid: anyNamed("uid"), fromLocalStorage: true));
+      });
+
+      test(
+          'When called should check if we have a logged in firebase user on UserService',
           () async {
         final userService = getAndRegisterUserService();
         final model = _getModel();

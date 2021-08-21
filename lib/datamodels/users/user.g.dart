@@ -10,7 +10,7 @@ _$_User _$_$_UserFromJson(Map<String, dynamic> json) {
   return _$_User(
     uid: json['uid'] as String,
     fullName: json['fullName'] as String,
-    email: json['email'] as String,
+    email: json['email'] as String?,
     sponsorIds:
         (json['sponsorIds'] as List<dynamic>).map((e) => e as String).toList(),
     explorerIds:
@@ -20,6 +20,8 @@ _$_User _$_$_UserFromJson(Map<String, dynamic> json) {
     fullNameSearch: (json['fullNameSearch'] as List<dynamic>?)
         ?.map((e) => e as String)
         .toList(),
+    createdByUserWithId: json['createdByUserWithId'] as String?,
+    password: json['password'] as String?,
   );
 }
 
@@ -32,6 +34,8 @@ Map<String, dynamic> _$_$_UserToJson(_$_User instance) => <String, dynamic>{
       'role': _$UserRoleEnumMap[instance.role],
       'newUser': instance.newUser,
       'fullNameSearch': User._checkIfKeywordsAreSet(instance.fullNameSearch),
+      'createdByUserWithId': instance.createdByUserWithId,
+      'password': instance.password,
     };
 
 K _$enumDecode<K, V>(
