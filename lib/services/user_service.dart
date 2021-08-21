@@ -21,6 +21,8 @@ import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:crypto/crypto.dart';
+import 'dart:convert'; // for the utf8.encode method
 
 class UserService {
   final _firestoreApi = locator<FirestoreApi>();
@@ -122,7 +124,9 @@ class UserService {
       // We just return the id of that user here.
       final user = await _firestoreApi.getUserWithName(name: emailOrName);
       if (user != null) {
-        if (user.password != null && password == user.password) {
+        if (user.password != null &&
+            isMatchingPasswords(hashedPw: user.password, stringPw: password)) {
+          // && password == user.password) {
           log.i("Found AFK user that was created by a sponsor inside the app");
           return AFKCreditsAuthenticationResult.fromLocalStorage(uid: user.uid);
         } else {
@@ -229,10 +233,11 @@ class UserService {
     if (await isUserAlreadyPresent(name: name)) {
       return "User with name $name already present. Please choose a different name.";
     }
+
     final docRef = _firestoreApi.createUserDocument();
     final newExplorer = User(
       fullName: name,
-      password: password,
+      password: hashPassword(password),
       uid: docRef.id,
       role: UserRole.explorer,
       sponsorIds: [currentUser.uid],
@@ -293,6 +298,21 @@ class UserService {
       }
     }
     supportedExplorers.addAll(tmpSupportedExplorers);
+  }
+
+  /////////////////////////////////////////////////
+  /// Some helper functions
+
+  bool isMatchingPasswords(
+      {required String? hashedPw, required String? stringPw}) {
+    if (hashedPw == null || stringPw == null) return false;
+    final hash1 = hashPassword(stringPw);
+    return hash1.compareTo(hashedPw) == 0;
+  }
+
+  String hashPassword(String pw) {
+    final bytes1 = utf8.encode(pw); // data being hashed
+    return sha1.convert(bytes1).toString();
   }
 
   //////////////////////////////////////////////////

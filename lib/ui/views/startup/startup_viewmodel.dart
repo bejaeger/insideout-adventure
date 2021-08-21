@@ -57,14 +57,13 @@ class StartUpViewModel extends BaseModel {
             log.v('We have a sponsor account. Let\'s the sponsor home screen!');
             _navigationService.replaceWith(Routes.sponsorHomeView);
             // navigate to home view
+          } else if (currentUser.role == UserRole.admin) {
+            log.v(
+                'We have an admin account. We will go to the admin home view!');
+            _navigationService.replaceWith(Routes.adminHomeView);
+            // navigate to home view
           }
         }
-        // TODO:
-        // else if (currentUser.role == UserRole.admin) {
-        //   log.v('We have an admin account. We will go to the admin home view!');
-        //   navigateToAdminHomeView();
-        //   // navigate to home view
-        // }
       } else {
         log.v('No user on disk, navigate to the LoginView');
         _navigationService.replaceWith(Routes.loginView);

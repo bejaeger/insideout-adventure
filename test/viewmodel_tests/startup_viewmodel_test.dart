@@ -100,6 +100,16 @@ void main() {
         verify(navigationService.replaceWith(Routes.sponsorHomeView));
       });
 
+      test('When currentUser has role sponsor, navigate to adminHomeView',
+          () async {
+        final navigationService = getAndRegisterNavigationService();
+        getAndRegisterUserService(
+            hasLoggedInUser: true, currentUser: getTestUserAdmin());
+        final model = _getModel();
+        await model.runStartupLogic();
+        verify(navigationService.replaceWith(Routes.adminHomeView));
+      });
+
       test('When currentUser has role explorer, navigate to explorerHomeView',
           () async {
         final navigationService = getAndRegisterNavigationService();
