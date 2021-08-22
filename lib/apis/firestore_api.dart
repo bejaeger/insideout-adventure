@@ -190,6 +190,40 @@ class FirestoreApi {
     });
   }
 
+  /// invitations
+  Stream<List<User>> getExplorersDataStream({required String uid}) {
+    try {
+      final returnStream = usersCollection
+          .where("sponsorIds", arrayContains: uid)
+          .snapshots()
+          .map((event) =>
+              event.docs.map((doc) => User.fromJson(doc.data())).toList());
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when listening to money pools the user is invited to",
+          devDetails: '$e');
+    }
+  }
+
+  //   /// invitations
+  // Stream<List<User>> getExplorersStatsStream({required String uid}) {
+  //   try {
+  //     final returnStream = usersCollection
+  //         .where("sponsorIds", arrayContains: uid)
+  //         .snapshots()
+  //         .map((event) =>
+  //             event.docs.map((doc) => User.fromJson(doc.data())).toList());
+  //     return returnStream;
+  //   } catch (e) {
+  //     throw FirestoreApiException(
+  //         message:
+  //             "Unknown expection when listening to money pools the user is invited to",
+  //         devDetails: '$e');
+  //   }
+  // }
+
   //////////////////////////////////////////////////////
   /// Queries for existing users
 

@@ -1,4 +1,5 @@
 import 'package:afkcredits/datamodels/users/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/user_statistics.dart';
 import 'package:afkcredits/ui/layout_widgets/search_layout.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/user_list_tile.dart';
@@ -20,13 +21,14 @@ class SearchExplorerView extends StatelessWidget {
         query: model.queryUsers,
         focusNode: focusNode,
         isBusy: model.isBusy,
-        searchItemWidget: (dynamic data) {
+        searchItemWidget: (dynamic userInfo) {
           return UserListTile(
-              onTilePressed: (PublicUserInfo userInfo) async {
+              onTilePressed: (
+                  [PublicUserInfo? userInfo, UserStatistics? userStats]) async {
                 focusNode.unfocus();
-                await model.selectUserAndProceed(userInfo);
+                await model.selectUserAndProceed(userInfo!);
               },
-              userInfo: data);
+              userInfo: userInfo);
         },
       ),
     );

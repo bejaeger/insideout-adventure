@@ -121,7 +121,7 @@ MockFirestoreApi getAndRegisterFirestoreApi({User? user}) {
   final service = MockFirestoreApi();
   when(service.getUser(uid: anyNamed("uid")))
       .thenAnswer((realInvocation) async => user);
-  final userStats = getEmptyUserStatistics();
+  final userStats = getEmptyUserStatistics(uid: kTestUid);
   locator.registerSingleton<FirestoreApi>(service);
   return service;
 }

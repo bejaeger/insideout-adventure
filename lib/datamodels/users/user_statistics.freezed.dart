@@ -23,11 +23,13 @@ class _$UserStatisticsTearOff {
   _UserStatistics call(
       {required num afkCredits,
       required num availableSponsoring,
-      required List<ConciseQuestInfo> completedQuests}) {
+      required List<ConciseQuestInfo> completedQuests,
+      required String uid}) {
     return _UserStatistics(
       afkCredits: afkCredits,
       availableSponsoring: availableSponsoring,
       completedQuests: completedQuests,
+      uid: uid,
     );
   }
 
@@ -45,6 +47,7 @@ mixin _$UserStatistics {
   num get availableSponsoring => throw _privateConstructorUsedError;
   List<ConciseQuestInfo> get completedQuests =>
       throw _privateConstructorUsedError;
+  String get uid => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -60,7 +63,8 @@ abstract class $UserStatisticsCopyWith<$Res> {
   $Res call(
       {num afkCredits,
       num availableSponsoring,
-      List<ConciseQuestInfo> completedQuests});
+      List<ConciseQuestInfo> completedQuests,
+      String uid});
 }
 
 /// @nodoc
@@ -77,6 +81,7 @@ class _$UserStatisticsCopyWithImpl<$Res>
     Object? afkCredits = freezed,
     Object? availableSponsoring = freezed,
     Object? completedQuests = freezed,
+    Object? uid = freezed,
   }) {
     return _then(_value.copyWith(
       afkCredits: afkCredits == freezed
@@ -91,6 +96,10 @@ class _$UserStatisticsCopyWithImpl<$Res>
           ? _value.completedQuests
           : completedQuests // ignore: cast_nullable_to_non_nullable
               as List<ConciseQuestInfo>,
+      uid: uid == freezed
+          ? _value.uid
+          : uid // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -105,7 +114,8 @@ abstract class _$UserStatisticsCopyWith<$Res>
   $Res call(
       {num afkCredits,
       num availableSponsoring,
-      List<ConciseQuestInfo> completedQuests});
+      List<ConciseQuestInfo> completedQuests,
+      String uid});
 }
 
 /// @nodoc
@@ -124,6 +134,7 @@ class __$UserStatisticsCopyWithImpl<$Res>
     Object? afkCredits = freezed,
     Object? availableSponsoring = freezed,
     Object? completedQuests = freezed,
+    Object? uid = freezed,
   }) {
     return _then(_UserStatistics(
       afkCredits: afkCredits == freezed
@@ -138,6 +149,10 @@ class __$UserStatisticsCopyWithImpl<$Res>
           ? _value.completedQuests
           : completedQuests // ignore: cast_nullable_to_non_nullable
               as List<ConciseQuestInfo>,
+      uid: uid == freezed
+          ? _value.uid
+          : uid // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -149,7 +164,8 @@ class _$_UserStatistics implements _UserStatistics {
   _$_UserStatistics(
       {required this.afkCredits,
       required this.availableSponsoring,
-      required this.completedQuests});
+      required this.completedQuests,
+      required this.uid});
 
   factory _$_UserStatistics.fromJson(Map<String, dynamic> json) =>
       _$_$_UserStatisticsFromJson(json);
@@ -160,10 +176,12 @@ class _$_UserStatistics implements _UserStatistics {
   final num availableSponsoring;
   @override
   final List<ConciseQuestInfo> completedQuests;
+  @override
+  final String uid;
 
   @override
   String toString() {
-    return 'UserStatistics(afkCredits: $afkCredits, availableSponsoring: $availableSponsoring, completedQuests: $completedQuests)';
+    return 'UserStatistics(afkCredits: $afkCredits, availableSponsoring: $availableSponsoring, completedQuests: $completedQuests, uid: $uid)';
   }
 
   @override
@@ -178,7 +196,9 @@ class _$_UserStatistics implements _UserStatistics {
                     .equals(other.availableSponsoring, availableSponsoring)) &&
             (identical(other.completedQuests, completedQuests) ||
                 const DeepCollectionEquality()
-                    .equals(other.completedQuests, completedQuests)));
+                    .equals(other.completedQuests, completedQuests)) &&
+            (identical(other.uid, uid) ||
+                const DeepCollectionEquality().equals(other.uid, uid)));
   }
 
   @override
@@ -186,7 +206,8 @@ class _$_UserStatistics implements _UserStatistics {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(afkCredits) ^
       const DeepCollectionEquality().hash(availableSponsoring) ^
-      const DeepCollectionEquality().hash(completedQuests);
+      const DeepCollectionEquality().hash(completedQuests) ^
+      const DeepCollectionEquality().hash(uid);
 
   @JsonKey(ignore: true)
   @override
@@ -203,7 +224,8 @@ abstract class _UserStatistics implements UserStatistics {
   factory _UserStatistics(
       {required num afkCredits,
       required num availableSponsoring,
-      required List<ConciseQuestInfo> completedQuests}) = _$_UserStatistics;
+      required List<ConciseQuestInfo> completedQuests,
+      required String uid}) = _$_UserStatistics;
 
   factory _UserStatistics.fromJson(Map<String, dynamic> json) =
       _$_UserStatistics.fromJson;
@@ -215,6 +237,8 @@ abstract class _UserStatistics implements UserStatistics {
   @override
   List<ConciseQuestInfo> get completedQuests =>
       throw _privateConstructorUsedError;
+  @override
+  String get uid => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$UserStatisticsCopyWith<_UserStatistics> get copyWith =>

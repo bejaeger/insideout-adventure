@@ -13,6 +13,7 @@ _$_UserStatistics _$_$_UserStatisticsFromJson(Map<String, dynamic> json) {
     completedQuests: (json['completedQuests'] as List<dynamic>)
         .map((e) => ConciseQuestInfo.fromJson(e as Map<String, dynamic>))
         .toList(),
+    uid: json['uid'] as String,
   );
 }
 
@@ -22,4 +23,5 @@ Map<String, dynamic> _$_$_UserStatisticsToJson(_$_UserStatistics instance) =>
       'availableSponsoring': instance.availableSponsoring,
       'completedQuests':
           instance.completedQuests.map((e) => e.toJson()).toList(),
+      'uid': instance.uid,
     };

@@ -4,6 +4,7 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 // The Basemodel
 // All our ViewModels inherit from this class so
@@ -13,6 +14,7 @@ import 'package:stacked_services/stacked_services.dart';
 class BaseModel extends BaseViewModel {
   final NavigationService navigationService = locator<NavigationService>();
   final UserService userService = locator<UserService>();
+  final SnackbarService snackbarService = locator<SnackbarService>();
 
   User get currentUser => userService.currentUser;
 
@@ -23,5 +25,12 @@ class BaseModel extends BaseViewModel {
   Future logout() async {
     await userService.handleLogoutEvent();
     navigationService.clearStackAndShow(Routes.loginView);
+  }
+
+  void showNotImplementedSnackbar() {
+    snackbarService.showSnackbar(
+        title: "Not yet implemented.",
+        message: "I know... it's sad",
+        duration: Duration(seconds: 2));
   }
 }

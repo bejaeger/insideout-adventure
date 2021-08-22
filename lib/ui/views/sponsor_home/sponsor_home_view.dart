@@ -1,8 +1,8 @@
 import 'dart:math';
-
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/users/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/datamodels/users/user_statistics.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/user_list_tile.dart';
@@ -43,7 +43,9 @@ class SponsorHomeView extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
                 child: ExplorersList(
+                    explorersStats: model.supportedExplorerStats,
                     explorers: model.supportedExplorers,
+                    onExplorerPressed: model.navigateToSingleExplorerView,
                     onAddNewExplorerPressed: model.showAddExplorerBottomSheet),
               ),
             // _sendMoneyButton(context, model),
@@ -64,12 +66,17 @@ class SponsorHomeView extends StatelessWidget {
 
 class ExplorersList extends StatelessWidget {
   final List<User> explorers;
+  final Map<String, UserStatistics>? explorersStats;
+
   final void Function() onAddNewExplorerPressed;
+  final void Function({required String uid})? onExplorerPressed;
 
   const ExplorersList({
     Key? key,
     required this.explorers,
+    this.explorersStats,
     required this.onAddNewExplorerPressed,
+    this.onExplorerPressed,
   }) : super(key: key);
 
   @override
@@ -96,6 +103,16 @@ class ExplorersList extends StatelessWidget {
             children: [
               horizontalSpaceSmall,
               UserListTile(
+                onTilePressed: onExplorerPressed == null
+                    ? null
+                    : (
+                        [PublicUserInfo? userInfo,
+                        UserStatistics? userStats]) async {
+                        onExplorerPressed!(uid: userInfo!.uid);
+                      },
+                userStats: explorersStats == null || explorersStats?.length == 0
+                    ? null
+                    : explorersStats![explorers[index].uid],
                 userInfo: PublicUserInfo(
                   name: explorers[index].fullName,
                   email: explorers[index].email,
