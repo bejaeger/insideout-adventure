@@ -2,14 +2,17 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/users/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/datamodels/users/user_statistics.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
-
+  final firestoreInstance = FirebaseFirestore.instance;
   // Create user documents
 
   Future<void> createUser(
@@ -149,6 +152,32 @@ class FirestoreApi {
     }
   }
 
+  Future addSponsorIdToUser(
+      {required String uid, required String sponsorId}) async {
+    try {
+      firestoreInstance.runTransaction((transaction) async {
+        final doc = await usersCollection.doc(uid).get();
+        User otherUser = User.fromJson(doc.data()!);
+        List<String> newSponsorIds = [];
+        newSponsorIds.addAll(otherUser.explorerIds);
+        if (newSponsorIds.contains(sponsorId)) {
+          log.w(
+              "Sponsor Id already added! Nothing is really brokwn but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a sponsor. Then this issue can't appear");
+          return;
+        }
+        newSponsorIds.add(sponsorId);
+        await usersCollection.doc(uid).set(
+            otherUser.copyWith(sponsorIds: newSponsorIds).toJson(),
+            SetOptions(merge: true));
+      });
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when trying to add sponsor Id to users sponsor Ids",
+          devDetails: '$e');
+    }
+  }
+
   Stream<User> getUserStream({required String uid}) {
     return usersCollection.doc(uid).snapshots().map((event) {
       if (!event.exists || event.data() == null) {
@@ -159,6 +188,25 @@ class FirestoreApi {
       }
       return User.fromJson(event.data()!);
     });
+  }
+
+  //////////////////////////////////////////////////////
+  /// Queries for existing users
+
+  Future<List<PublicUserInfo>> queryExplorers(
+      {required String queryString}) async {
+    QuerySnapshot foundUsers = await usersCollection
+        .where("role", isEqualTo: getStringFromEnum(UserRole.explorer))
+        .where("fullNameSearch", arrayContains: queryString.toLowerCase())
+        .get();
+    final results = foundUsers.docs.map((DocumentSnapshot doc) {
+      return PublicUserInfo(
+          name: doc.get("fullName"),
+          uid: doc.get("uid"),
+          email: doc.get("email"));
+    }).toList();
+    log.v("Queried users and found ${results.length} matches");
+    return results;
   }
 
   /////////////////////////////////////////////////////////

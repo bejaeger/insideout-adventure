@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/users/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
+import 'package:afkcredits/ui/widgets/user_list_tile.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -32,7 +34,7 @@ class SponsorHomeView extends StatelessWidget {
               model.isBusy
                   ? CircularProgressIndicator()
                   : ElevatedButton(
-                      onPressed: model.navigateToAddExplorerView,
+                      onPressed: model.showAddExplorerBottomSheet,
                       child: Text("Support First Explorer -> "),
                       //imagePath: ImagePath.peopleHoldingHands,
                     ),
@@ -42,7 +44,7 @@ class SponsorHomeView extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
                 child: ExplorersList(
                     explorers: model.supportedExplorers,
-                    onAddNewExplorerPressed: model.navigateToAddExplorerView),
+                    onAddNewExplorerPressed: model.showAddExplorerBottomSheet),
               ),
             // _sendMoneyButton(context, model),
             verticalSpaceLarge,
@@ -86,18 +88,20 @@ class ExplorersList extends StatelessWidget {
                   // onPressed: model.navigateToExplorerHomeView,
                   onPressed: onAddNewExplorerPressed,
                   //child: Text("Go to explorer home/map")),
-                  child: Text("Add")),
+                  child: Text("+ Add")),
             ],
           );
         } else {
           return Column(
             children: [
               horizontalSpaceSmall,
-              Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  child: ListTile(title: Text(explorers[index].fullName))),
+              UserListTile(
+                userInfo: PublicUserInfo(
+                  name: explorers[index].fullName,
+                  email: explorers[index].email,
+                  uid: explorers[index].uid,
+                ),
+              ),
             ],
           );
         }

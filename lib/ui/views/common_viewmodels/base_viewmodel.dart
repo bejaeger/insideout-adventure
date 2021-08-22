@@ -11,17 +11,17 @@ import 'package:stacked_services/stacked_services.dart';
 // entire App
 
 class BaseModel extends BaseViewModel {
-  final NavigationService _navigationService = locator<NavigationService>();
-  final UserService _userService = locator<UserService>();
+  final NavigationService navigationService = locator<NavigationService>();
+  final UserService userService = locator<UserService>();
 
-  User get currentUser => _userService.currentUser;
+  User get currentUser => userService.currentUser;
 
-  navigateBack() {
-    _navigationService.back();
+  void navigateBack() {
+    navigationService.back();
   }
 
   Future logout() async {
-    await _userService.handleLogoutEvent();
-    _navigationService.clearStackAndShow(Routes.loginView);
+    await userService.handleLogoutEvent();
+    navigationService.clearStackAndShow(Routes.loginView);
   }
 }

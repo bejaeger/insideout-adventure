@@ -246,11 +246,32 @@ class UserService {
       newUser: true,
     );
     await createUserAccount(user: newExplorer);
-    List<String> newExplorerIds = [];
-    newExplorerIds.addAll(currentUser.explorerIds);
-    newExplorerIds.add(docRef.id);
+    List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
     await updateUserData(
         user: currentUser.copyWith(explorerIds: newExplorerIds));
+  }
+
+  Future addExplorerToSupportedExplorers({required String uid}) async {
+    try {
+      if (currentUser.explorerIds.contains(uid)) {
+        return "Explorer already supported";
+      } else {
+        log.i("Adding explorer with id $uid to list of explorers");
+        List<String> newExplorerIds = addToSupportedExplorersList(uid: uid);
+        // Ideal way would be to add a transaction here!
+        await Future.wait([
+          updateUserData(
+              user: currentUser.copyWith(explorerIds: newExplorerIds)),
+          addSponsorIdToOtherUser(
+              otherUsersId: uid, sponsorId: currentUser.uid),
+        ]);
+        await Future.delayed(Duration(seconds: 3));
+      }
+    } catch (e) {
+      log.e(
+          "Error when trying to add new explorer to list of supported explorers");
+      rethrow;
+    }
   }
 
   // Stream of current user with list with explorer Ids.
@@ -258,10 +279,11 @@ class UserService {
   void addExplorerListener(
       {required Completer<void> completer, void Function()? callback}) async {
     if (_supportedExplorersStreamSubscription == null) {
-      Stream userStream = _firestoreApi.getUserStream(uid: currentUser.uid);
-      _supportedExplorersStreamSubscription = userStream.listen((event) async {
-        await updateSupportedExplorers();
-        _currentUser = event;
+      Stream<User> userStream =
+          _firestoreApi.getUserStream(uid: currentUser.uid);
+      _supportedExplorersStreamSubscription = userStream.listen((user) async {
+        _currentUser = user;
+        await updateSupportedExplorersList(newUser: user);
         if (!completer.isCompleted) {
           completer.complete();
         }
@@ -276,12 +298,12 @@ class UserService {
     }
   }
 
-  Future updateSupportedExplorers() async {
-    List<String>? explorerIds = currentUser.explorerIds;
+  Future updateSupportedExplorersList({required User newUser}) async {
+    List<String>? explorerIds = newUser.explorerIds;
     List<User> tmpSupportedExplorers = [];
     List<String> previousExplorerIds =
         supportedExplorers.map((e) => e.uid).toList();
-    // add supportedExplorers to but only read documents of new supportedExplorers
+    // add supportedExplorers but only read documents of new supportedExplorers
     for (var id in explorerIds) {
       if (!previousExplorerIds.contains(id)) {
         log.i("getting user data with id $id");
@@ -303,6 +325,13 @@ class UserService {
   /////////////////////////////////////////////////
   /// Some helper functions
 
+  List<String> addToSupportedExplorersList({required String uid}) {
+    List<String> newExplorerIds = [];
+    newExplorerIds.addAll(currentUser.explorerIds);
+    newExplorerIds.add(uid);
+    return newExplorerIds;
+  }
+
   bool isMatchingPasswords(
       {required String? hashedPw, required String? stringPw}) {
     if (hashedPw == null || stringPw == null) return false;
@@ -321,6 +350,11 @@ class UserService {
   Future updateUserData({required User user}) async {
     _currentUser = user;
     _firestoreApi.updateUserData(user: user);
+  }
+
+  Future addSponsorIdToOtherUser(
+      {required String otherUsersId, required String sponsorId}) async {
+    _firestoreApi.addSponsorIdToUser(uid: otherUsersId, sponsorId: sponsorId);
   }
 
   Future isUserAlreadyPresent({required name}) async {
