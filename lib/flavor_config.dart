@@ -1,5 +1,7 @@
 import 'package:afkcredits/enums/user_role.dart';
 
+import 'constants/constants.dart';
+
 enum Flavor { unknown, dev, prod }
 
 class FlavorConfigProvider {
@@ -47,6 +49,28 @@ class FlavorConfigProvider {
       } else {
         return "";
       }
+    }
+  }
+
+  String get authority {
+    switch (this.flavor) {
+      case Flavor.dev:
+        return AUTHORITYDEV;
+      case Flavor.prod:
+        return AUTHORITYPROD;
+      default:
+        return AUTHORITYDEV;
+    }
+  }
+
+  String get uripathprepend {
+    switch (this.flavor) {
+      case Flavor.dev:
+        return URIPATHPREPENDDEV;
+      case Flavor.prod:
+        return URIPATHPREPENDPROD;
+      default:
+        return URIPATHPREPENDDEV;
     }
   }
 }

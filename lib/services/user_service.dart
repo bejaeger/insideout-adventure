@@ -37,6 +37,10 @@ class UserService {
   User? _currentUser;
   User? get currentUserNullable => _currentUser;
   User get currentUser => _currentUser!;
+  UserStatistics? _currentUserStats;
+  UserStatistics get currentUserStats => _currentUserStats!;
+  StreamSubscription? _currentUserStreamSubscription;
+  StreamSubscription? _currentUserStatsStreamSubscription;
 
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
 
@@ -48,7 +52,7 @@ class UserService {
   // map of list of money pools with money Pool id as key
   Map<String, User> supportedExplorers = {};
   Map<String, UserStatistics> supportedExplorerStats = {};
-  StreamSubscription? _currentUserStreamSubscription;
+
   StreamSubscription? _explorersDataStreamSubscriptions;
 
   List<User> get supportedExplorersList {
@@ -285,8 +289,24 @@ class UserService {
     }
   }
 
-  // Stream of current user with list with explorer Ids.
-  // Whenevee that updates the stream holding the list of friends will update too.
+  //////////////////////////////////////////////////////////
+  /// Listener setup
+  ///
+  /// The following function adds all necessary listeners
+  ///
+  /// 1. currentUser
+  /// 2. currentUser stats
+  ///
+  /// 3. explorer user data
+  ///    -> handled with a query snapshot to look for all users that
+  ///       have the currentUser's id in the sponsorIds arraay
+  ///
+  /// 4. explorer statistics documents
+  ///   -> handled manually in the listener of 3. by adding and removing
+  ///      listeneres to the summary stats documents whenever the explorer
+  ///      changes
+  ///
+
   void setupUserDataListeners(
       {required Completer<void> completer, void Function()? callback}) async {
     // set up listener for explorer user data
@@ -331,6 +351,19 @@ class UserService {
           _firestoreApi.getUserStream(uid: currentUser.uid);
       _currentUserStreamSubscription = userStream.listen((user) async {
         _currentUser = user;
+        if (callback != null) {
+          callback();
+        }
+      });
+    } else {
+      log.w("Already listening to current User document");
+    }
+
+    if (_currentUserStatsStreamSubscription == null) {
+      Stream<UserStatistics> userStream =
+          _firestoreApi.getUserSummaryStatisticsStream(uid: currentUser.uid);
+      _currentUserStatsStreamSubscription = userStream.listen((stats) async {
+        _currentUserStats = stats;
         if (callback != null) {
           callback();
         }
@@ -383,49 +416,8 @@ class UserService {
     return completer.future;
   }
 
-  StreamSubscription addUserListener({required User user}) {
-    return _firestoreApi.getUserStream(uid: user.uid).listen((event) {
-      user = user;
-    });
-  }
-
-  // Future updateSupportedExplorersList({required User newUser}) async {
-  //   List<String>? explorerIds = newUser.explorerIds;
-  //   List<User> tmpSupportedExplorers = [];
-  //   List<UserStatistics> tmpSupportedExplorersStats = [];
-  //   List<String> previousExplorerIds =
-  //       supportedExplorers.map((e) => e.uid).toList();
-  //   // add supportedExplorers but only read documents of new supportedExplorers
-  //   for (var id in explorerIds) {
-  //     if (!previousExplorerIds.contains(id)) {
-  //       log.i("Found new explorer, fetching user data for user with id $id");
-  //       User? tmpUser = await _firestoreApi.getUser(uid: id);
-  //       UserStatistics? tmpUserStats =
-  //           await _firestoreApi.getUserSummaryStatistics(uid: id);
-  //       if (tmpUser != null) {
-  //         tmpSupportedExplorers.add(tmpUser);
-  //       }
-  //       tmpSupportedExplorersStats.add(tmpUserStats);
-  //     }
-  //   }
-  //   // remove supportedExplorers
-  //   for (var id in previousExplorerIds) {
-  //     if (!explorerIds.contains(id)) {
-  //       removeFromExplorerLists(uid: id);
-  //     }
-  //   }
-  //   addToExplorerLists(
-  //       users: tmpSupportedExplorers, stats: tmpSupportedExplorersStats);
-  // }
-
-  /////////////////////////////////////////////////
-  /// Some helper functions
-
-  // void addToExplorerLists(
-  //     {required List<User> users, required List<UserStatistics> stats}) {
-  //   supportedExplorers.addAll(users);
-  //   supportedExplorersStats.addAll(stats);
-  // }
+  //////////////////////////////////////////
+  /// Some smaller helper functions
 
   void removeFromExplorerLists({required String uid}) {
     supportedExplorers.remove(uid);
@@ -487,10 +479,13 @@ class UserService {
 
     // set current user to null
     _currentUser = null;
+    _currentUserStats = null;
 
     // remove user listeners
     _currentUserStreamSubscription?.cancel();
     _currentUserStreamSubscription = null;
+    _currentUserStatsStreamSubscription?.cancel();
+    _currentUserStatsStreamSubscription = null;
 
     _explorerStatsStreamSubscriptions.forEach((key, value) {
       cancelExplorerStatsListener(uid: key);

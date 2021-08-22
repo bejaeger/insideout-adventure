@@ -19,6 +19,7 @@ import '../flavor_config.dart';
 import '../services/environment_services.dart';
 import '../services/geolocation_service.dart';
 import '../services/local_storage_service.dart';
+import '../services/payments/payment_service.dart';
 import '../services/user_service.dart';
 
 final locator = StackedLocator.instance;
@@ -42,4 +43,5 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => FlavorConfigProvider());
   locator.registerLazySingleton(() => FlutterSecureStorage());
   locator.registerLazySingleton(() => LocalStorageService());
+  locator.registerLazySingleton(() => PaymentService());
 }

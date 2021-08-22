@@ -19,3 +19,14 @@ final CollectionReference questsCollection =
 final appName = 'AFK Credits';
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
+
+////////////////////////////////////////////////////
+/// Cloud functions
+
+// when running on production backend
+const String AUTHORITYDEV = "us-central1-afkcredits.cloudfunctions.net";
+const String URIPATHPREPENDDEV = "";
+
+// when running on production backend
+const String AUTHORITYPROD = "us-central1-afkcredits.cloudfunctions.net";
+const String URIPATHPREPENDPROD = "";

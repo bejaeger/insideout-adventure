@@ -26,7 +26,7 @@ class SingleExplorerView extends StatelessWidget {
                 child: ListView(
                   children: [
                     verticalSpaceMedium,
-                    Text(model.user!.fullName,
+                    Text(model.user.fullName,
                         style: textTheme(context).headline4),
                     verticalSpaceMedium,
                     Row(
@@ -34,7 +34,7 @@ class SingleExplorerView extends StatelessWidget {
                         Expanded(
                             child: StatsCard(
                           height: 80,
-                          statistic: model.stats!.afkCredits,
+                          statistic: model.stats.afkCredits,
                           subtitle: "Earned AFK Credits",
                         )),
                         horizontalSpaceMedium,
@@ -42,7 +42,7 @@ class SingleExplorerView extends StatelessWidget {
                             child: StatsCard(
                           height: 80,
                           subtitle: "Available Sponsoring",
-                          statistic: model.stats!.availableSponsoring,
+                          statistic: model.stats.availableSponsoring,
                         ))
                       ],
                     ),
@@ -53,7 +53,7 @@ class SingleExplorerView extends StatelessWidget {
                     verticalSpaceMedium,
                     ElevatedButton(
                         onPressed: model.showNotImplementedSnackbar,
-                        child: Text("Switch to Explorer View")),
+                        child: Text("Switch to Explorer Version")),
                     verticalSpaceMedium,
                     SectionHeader(title: "Completed Quests"),
                     Text("    ... "),

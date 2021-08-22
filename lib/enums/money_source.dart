@@ -1,0 +1,1 @@
+enum MoneySource { Bank, AFKCredits }

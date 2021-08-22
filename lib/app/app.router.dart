@@ -9,6 +9,8 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../datamodels/users/public_user_info.dart';
+import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
@@ -22,6 +24,7 @@ import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
 import '../ui/views/sponsor_home/sponsor_home_view.dart';
 import '../ui/views/startup/startup_view.dart';
+import '../ui/views/transfer_funds/transfer_funds_view.dart';
 
 class Routes {
   static const String sponsorHomeView = '/sponsor-home-view';
@@ -38,6 +41,7 @@ class Routes {
   static const String addExplorerView = '/add-explorer-view';
   static const String searchExplorerView = '/search-explorer-view';
   static const String singleExplorerView = '/single-explorer-view';
+  static const String transferFundsView = '/transfer-funds-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -51,6 +55,7 @@ class Routes {
     addExplorerView,
     searchExplorerView,
     singleExplorerView,
+    transferFundsView,
   };
 }
 
@@ -70,6 +75,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.addExplorerView, page: AddExplorerView),
     RouteDef(Routes.searchExplorerView, page: SearchExplorerView),
     RouteDef(Routes.singleExplorerView, page: SingleExplorerView),
+    RouteDef(Routes.transferFundsView, page: TransferFundsView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -163,6 +169,18 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    TransferFundsView: (data) {
+      var args = data.getArgs<TransferFundsViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => TransferFundsView(
+          key: args.key,
+          type: args.type,
+          senderInfo: args.senderInfo,
+          recipientInfo: args.recipientInfo,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -200,4 +218,17 @@ class SingleExplorerViewArguments {
   final Key? key;
   final String uid;
   SingleExplorerViewArguments({this.key, required this.uid});
+}
+
+/// TransferFundsView arguments holder class
+class TransferFundsViewArguments {
+  final Key? key;
+  final TransferType type;
+  final PublicUserInfo senderInfo;
+  final PublicUserInfo recipientInfo;
+  TransferFundsViewArguments(
+      {this.key,
+      required this.type,
+      required this.senderInfo,
+      required this.recipientInfo});
 }
