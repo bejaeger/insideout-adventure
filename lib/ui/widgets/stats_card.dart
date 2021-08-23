@@ -1,10 +1,11 @@
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
 class StatsCard extends StatelessWidget {
   final double height;
-  final num statistic;
+  final String statistic;
   final String? title;
   final String? subtitle;
   final String buttonText;
@@ -51,7 +52,7 @@ class StatsCard extends StatelessWidget {
                                 ),
                           ), //verticalSpaceTiny,
                         Text(
-                          statistic.toString(),
+                          statistic,
                           maxLines: 1,
                           style: textTheme(context).headline2!.copyWith(
                                 fontSize: 28,

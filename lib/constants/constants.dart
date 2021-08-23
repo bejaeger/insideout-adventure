@@ -24,7 +24,7 @@ final CollectionReference globalStatsCollection =
 /// Cloud functions
 
 // when running on production backend
-const String AUTHORITYDEV = "us-central1-afkcredits.cloudfunctions.net";
+const String AUTHORITYDEV = "us-central1-afk-credits-112d2.cloudfunctions.net";
 const String URIPATHPREPENDDEV = "";
 
 // when running on production backend

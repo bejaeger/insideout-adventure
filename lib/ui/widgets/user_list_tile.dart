@@ -3,6 +3,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/users/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/user_statistics.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -62,9 +63,11 @@ class UserListTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text("Earned: " + userStats!.afkCredits.toString()),
+                        Text("Earned: " +
+                            userStats!.afkCredits.toString() +
+                            " AFK Credits"),
                         Text("Sponsoring: " +
-                            userStats!.availableSponsoring.toString()),
+                            formatAmount(userStats!.availableSponsoring)),
                       ],
                     )),
         ),

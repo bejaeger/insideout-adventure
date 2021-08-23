@@ -1,9 +1,10 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/services/layout/layout_service.dart';
+import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 // The Basemodel
@@ -15,7 +16,9 @@ class BaseModel extends BaseViewModel {
   final NavigationService navigationService = locator<NavigationService>();
   final UserService userService = locator<UserService>();
   final SnackbarService snackbarService = locator<SnackbarService>();
-
+  final TransfersHistoryService transfersHistoryService =
+      locator<TransfersHistoryService>();
+  final LayoutService layoutService = locator<LayoutService>();
   User get currentUser => userService.currentUser;
 
   void navigateBack() {
@@ -24,6 +27,8 @@ class BaseModel extends BaseViewModel {
 
   Future logout() async {
     await userService.handleLogoutEvent();
+    transfersHistoryService.clearData();
+    layoutService.setShowBottomNavBar(false);
     navigationService.clearStackAndShow(Routes.loginView);
   }
 

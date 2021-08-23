@@ -2,31 +2,34 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/datamodels/users/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/datamodels/users/user_statistics.dart';
-import 'package:afkcredits/services/user_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-class SponsorHomeViewModel extends BaseModel {
-  final UserService _userService = locator<UserService>();
-  List<User> get supportedExplorers => _userService.supportedExplorersList;
-  Map<String, UserStatistics> get supportedExplorerStats =>
-      _userService.supportedExplorerStats;
-
+class SponsorHomeViewModel extends LayoutTemplateViewModel {
   final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-
   final log = getLogger("SponsorHomeViewModel");
+
+  List<User> get supportedExplorers => userService.supportedExplorersList;
+  Map<String, UserStatistics> get supportedExplorerStats =>
+      userService.supportedExplorerStats;
+
   // Listen to streams of latest donations and transactions to be displayed
   // instantly when pulling up bottom sheets
   Future listenToData() async {
     Completer completerOne = Completer<void>();
-    _userService.setupUserDataListeners(
+    Completer completerTwo = Completer<void>();
+    userService.setupUserDataListeners(
         completer: completerOne, callback: () => super.notifyListeners());
+    transfersHistoryService.addTransferDataListener(
+        config: queryConfig,
+        completer: completerTwo,
+        callback: () => super.notifyListeners());
     await runBusyFuture(Future.wait([
       completerOne.future,
+      completerTwo.future,
     ]));
     notifyListeners();
   }
@@ -35,6 +38,7 @@ class SponsorHomeViewModel extends BaseModel {
   // bottom sheets
 
   Future showAddExplorerBottomSheet() async {
+    setShowBottomNavBar(false);
     final result = await _bottomSheetService.showBottomSheet(
       barrierDismissible: true,
       title: 'Create new account or search for existing explorer?',
@@ -42,10 +46,11 @@ class SponsorHomeViewModel extends BaseModel {
       cancelButtonTitle: 'Search',
     );
     if (result?.confirmed == true) {
-      navigationService.navigateTo(Routes.addExplorerView);
-    } else {
-      navigationService.navigateTo(Routes.searchExplorerView);
+      await navigationService.navigateTo(Routes.addExplorerView);
+    } else if (result?.confirmed == false) {
+      await navigationService.navigateTo(Routes.searchExplorerView);
     }
+    setShowBottomNavBar(true);
   }
 
   ///////////////////////////////////////////////////
@@ -53,6 +58,10 @@ class SponsorHomeViewModel extends BaseModel {
 
   void navigateToAddExplorerView() {
     navigationService.navigateTo(Routes.addExplorerView);
+  }
+
+  void navigateToTransferHistoryView() {
+    navigationService.navigateTo(Routes.transfersHistoryView);
   }
 
   void navigateToSingleExplorerView({required String uid}) {

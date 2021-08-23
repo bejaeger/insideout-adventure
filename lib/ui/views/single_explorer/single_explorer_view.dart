@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -26,7 +27,7 @@ class SingleExplorerView extends StatelessWidget {
                 child: ListView(
                   children: [
                     verticalSpaceMedium,
-                    Text(model.user.fullName,
+                    Text(model.explorer.fullName,
                         style: textTheme(context).headline4),
                     verticalSpaceMedium,
                     Row(
@@ -34,7 +35,7 @@ class SingleExplorerView extends StatelessWidget {
                         Expanded(
                             child: StatsCard(
                           height: 80,
-                          statistic: model.stats.afkCredits,
+                          statistic: model.stats.afkCredits.toString(),
                           subtitle: "Earned AFK Credits",
                         )),
                         horizontalSpaceMedium,
@@ -42,14 +43,15 @@ class SingleExplorerView extends StatelessWidget {
                             child: StatsCard(
                           height: 80,
                           subtitle: "Available Sponsoring",
-                          statistic: model.stats.availableSponsoring,
+                          statistic:
+                              formatAmount(model.stats.availableSponsoring),
                         ))
                       ],
                     ),
                     verticalSpaceMedium,
                     ElevatedButton(
                         onPressed: model.navigateToAddFundsView,
-                        child: Text("Add Sponsored Funds")),
+                        child: Text("Sponsor ${model.explorer.fullName}")),
                     verticalSpaceMedium,
                     ElevatedButton(
                         onPressed: model.showNotImplementedSnackbar,

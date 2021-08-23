@@ -33,7 +33,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
         listenToFormUpdated(model);
       },
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(title: Text("Sponsor Explorer")),
+        appBar: AppBar(title: Text("Sponsor ${recipientInfo.name}")),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
           child: ListView(
@@ -52,6 +52,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                     .copyWith(fontSize: 35, color: kBlackHeadlineColor),
                 autofocus: true,
                 decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.attach_money),
                   enabledBorder: UnderlineInputBorder(
                     borderSide:
                         BorderSide(color: kBlackHeadlineColor, width: 0.0),

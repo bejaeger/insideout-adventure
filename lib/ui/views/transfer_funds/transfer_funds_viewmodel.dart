@@ -181,8 +181,8 @@ class TransferFundsViewModel extends FormViewModel {
       final transferDetails = TransferDetails(
         recipientId: recipientInfo.uid,
         recipientName: recipientInfo.name,
-        senderId: senderInfo.uid ?? currentUser.uid,
-        senderName: senderInfo.name ?? currentUser.fullName,
+        senderId: senderInfo.uid,
+        senderName: senderInfo.name,
         sourceType: MoneySource.Bank,
         amount: scaleAmountForStripe(amount!),
         currency: 'cad',

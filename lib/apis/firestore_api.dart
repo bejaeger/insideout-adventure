@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/payments/money_transfer.dart';
+import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/users/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/datamodels/users/user_statistics.dart';
+import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/utils/string_utils.dart';
@@ -207,23 +210,6 @@ class FirestoreApi {
     }
   }
 
-  //   /// invitations
-  // Stream<List<User>> getExplorersStatsStream({required String uid}) {
-  //   try {
-  //     final returnStream = usersCollection
-  //         .where("sponsorIds", arrayContains: uid)
-  //         .snapshots()
-  //         .map((event) =>
-  //             event.docs.map((doc) => User.fromJson(doc.data())).toList());
-  //     return returnStream;
-  //   } catch (e) {
-  //     throw FirestoreApiException(
-  //         message:
-  //             "Unknown expection when listening to money pools the user is invited to",
-  //         devDetails: '$e');
-  //   }
-  // }
-
   //////////////////////////////////////////////////////
   /// Queries for existing users
 
@@ -241,6 +227,38 @@ class FirestoreApi {
     }).toList();
     log.v("Queried users and found ${results.length} matches");
     return results;
+  }
+
+  ///////////////////////////////////////////////////////
+  /// Get Money Transfer Stream
+  Stream<List<MoneyTransfer>> getTransferDataStream(
+      {required MoneyTransferQueryConfig config, required String uid}) {
+    Query query;
+    query = paymentsCollection
+        .where("transferDetails.senderId", isEqualTo: config.senderId!)
+        .orderBy("createdAt", descending: true);
+    if (config.maxNumberReturns != null)
+      query = query.limit(config.maxNumberReturns!);
+
+    log.v("converting snapshot to list of money transfers");
+
+    try {
+      // convert Stream<QuerySnapshot> to Stream<List<MoneyTransfer>>
+      Stream<List<MoneyTransfer>> returnStream = query.snapshots().map(
+            (event) => event.docs.map(
+              (doc) {
+                //log.v("Data to read into MoneyTransfer document ${doc.data()}");
+                return MoneyTransfer.fromJson(doc.data());
+              },
+            ).toList(),
+          );
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message: "Failed to read money transfer documents into dart model",
+          devDetails:
+              "Are you sure your documents in the backend are valid? Are you running with an emulator? Check the logs for concrete data that could not be read into the MoneyTransfer document");
+    }
   }
 
   /////////////////////////////////////////////////////////

@@ -398,7 +398,8 @@ class UserService {
   Future addExplorerStatListener(
       {required String explorerId, void Function()? callback}) async {
     Completer<void> completer = Completer();
-    if (!_explorerStatsStreamSubscriptions.containsKey(explorerId)) {
+    if (!_explorerStatsStreamSubscriptions.containsKey(explorerId) ||
+        _explorerStatsStreamSubscriptions[explorerId] == null) {
       _explorerStatsStreamSubscriptions[explorerId] = _firestoreApi
           .getUserSummaryStatisticsStream(uid: explorerId)
           .listen((stats) {
@@ -411,6 +412,7 @@ class UserService {
         }
       });
     } else {
+      log.w("Stats stream of user with id $explorerId already listened to!");
       completer.complete();
     }
     return completer.future;
@@ -467,7 +469,7 @@ class UserService {
 
   // pause the listener
   void cancelExplorerStatsListener({required String uid}) {
-    log.v("Pause transfer data listener with config: '$uid'");
+    log.v("Cancel transfer data listener with config: '$uid'");
     _explorerStatsStreamSubscriptions[uid]?.cancel();
     _explorerStatsStreamSubscriptions[uid] = null;
   }
@@ -491,6 +493,7 @@ class UserService {
       cancelExplorerStatsListener(uid: key);
     });
     _explorersDataStreamSubscriptions?.cancel();
+    log.wtf("Setting list of explorers stream subscription to null!");
     _explorersDataStreamSubscriptions = null;
 
     supportedExplorers = {};

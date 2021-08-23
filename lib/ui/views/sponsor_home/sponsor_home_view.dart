@@ -1,9 +1,11 @@
 import 'dart:math';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/users/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/datamodels/users/user_statistics.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/user_list_tile.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -18,6 +20,7 @@ class SponsorHomeView extends StatelessWidget {
     return ViewModelBuilder<SponsorHomeViewModel>.reactive(
       viewModelBuilder: () => SponsorHomeViewModel(),
       onModelReady: (model) => model.listenToData(),
+      fireOnModelReadyOnce: true,
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text("Hi Sponsor!"),
@@ -25,11 +28,12 @@ class SponsorHomeView extends StatelessWidget {
         body: ListView(
           physics: ScrollPhysics(),
           children: [
-            verticalSpaceMassive,
+            verticalSpaceMedium,
             SectionHeader(
               title: "Supported Explorers",
             ),
             verticalSpaceSmall,
+            verticalSpaceTiny,
             if (model.supportedExplorers.length == 0)
               model.isBusy
                   ? CircularProgressIndicator()
@@ -48,15 +52,34 @@ class SponsorHomeView extends StatelessWidget {
                     onExplorerPressed: model.navigateToSingleExplorerView,
                     onAddNewExplorerPressed: model.showAddExplorerBottomSheet),
               ),
+            verticalSpaceMedium,
+            if (model.latestTransfers.length > 0)
+              SectionHeader(
+                title: "Recent Payments",
+                onTextButtonTap: model.navigateToTransferHistoryView,
+              ),
+            if (model.latestTransfers.length > 0) verticalSpaceSmall,
+
+            if (model.latestTransfers.length > 0)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: kHorizontalPadding + 5.0),
+                child: LatestTransfersList(
+                  transfers: model.latestTransfers,
+                  onTilePressed: model.showMoneyTransferInfoDialog,
+                ),
+              ),
             // _sendMoneyButton(context, model),
             verticalSpaceLarge,
             Divider(),
-            verticalSpaceMedium,
+            verticalSpaceLarge,
+            verticalSpaceLarge,
             ElevatedButton(
                 // onPressed: model.navigateToExplorerHomeView,
                 onPressed: model.logout,
                 //child: Text("Go to explorer home/map")),
                 child: Text("Logout  ")),
+            verticalSpaceLarge,
           ],
         ),
       ),
@@ -123,6 +146,46 @@ class ExplorersList extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+
+class LatestTransfersList extends StatelessWidget {
+  final List<MoneyTransfer> transfers;
+  final void Function(MoneyTransfer)? onTilePressed;
+  const LatestTransfersList({
+    Key? key,
+    required this.transfers,
+    this.onTilePressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        border: Border.all(color: Colors.grey[400]!),
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: ScrollPhysics(),
+          itemCount: transfers.length > 3 ? 3 : transfers.length,
+          itemBuilder: (context, index) {
+            var data = transfers[index];
+            return TransferListTile(
+              onTap: onTilePressed == null ? null : () => onTilePressed!(data),
+              dense: true,
+              showBottomDivider: index < 2 && transfers.length > 2,
+              showTopDivider: false,
+              transaction: data,
+              amount: data.transferDetails.amount,
+            );
+          },
+        ),
+      ),
     );
   }
 }

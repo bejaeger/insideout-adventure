@@ -17,6 +17,7 @@ import '../ui/views/admin/admin_home_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
+import '../ui/views/layout/layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_view.dart';
@@ -24,6 +25,7 @@ import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
 import '../ui/views/sponsor_home/sponsor_home_view.dart';
 import '../ui/views/startup/startup_view.dart';
+import '../ui/views/transaction_history/transfers_history_view.dart';
 import '../ui/views/transfer_funds/transfer_funds_view.dart';
 
 class Routes {
@@ -34,7 +36,7 @@ class Routes {
   static const String createAccountView = '/create-account-view';
   static const String createAccountUserRoleView =
       '/create-account-user-role-view';
-  static const String startUpView = '/start-up-view';
+  static const String startUpView = '/';
   static const String adminHomeView = '/admin-home-view';
   static const String selectRoleAfterLoginView =
       '/select-role-after-login-view';
@@ -42,6 +44,8 @@ class Routes {
   static const String searchExplorerView = '/search-explorer-view';
   static const String singleExplorerView = '/single-explorer-view';
   static const String transferFundsView = '/transfer-funds-view';
+  static const String transfersHistoryView = '/transfers-history-view';
+  static const String layoutTemplateView = '/layout-template-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -56,6 +60,8 @@ class Routes {
     searchExplorerView,
     singleExplorerView,
     transferFundsView,
+    transfersHistoryView,
+    layoutTemplateView,
   };
 }
 
@@ -76,6 +82,8 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.searchExplorerView, page: SearchExplorerView),
     RouteDef(Routes.singleExplorerView, page: SingleExplorerView),
     RouteDef(Routes.transferFundsView, page: TransferFundsView),
+    RouteDef(Routes.transfersHistoryView, page: TransfersHistoryView),
+    RouteDef(Routes.layoutTemplateView, page: LayoutTemplateView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -181,6 +189,22 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    TransfersHistoryView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const TransfersHistoryView(),
+        settings: data,
+      );
+    },
+    LayoutTemplateView: (data) {
+      var args = data.getArgs<LayoutTemplateViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => LayoutTemplateView(
+          key: args.key,
+          childView: args.childView,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -231,4 +255,11 @@ class TransferFundsViewArguments {
       required this.type,
       required this.senderInfo,
       required this.recipientInfo});
+}
+
+/// LayoutTemplateView arguments holder class
+class LayoutTemplateViewArguments {
+  final Key? key;
+  final Widget childView;
+  LayoutTemplateViewArguments({this.key, required this.childView});
 }

@@ -7,6 +7,7 @@ import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
+import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -16,6 +17,8 @@ abstract class AuthenticationViewModel extends FormViewModel {
   AuthenticationViewModel({this.role});
   final NavigationService navigationService = locator<NavigationService>();
   final UserService _userService = locator<UserService>();
+  final LayoutService _layoutService = locator<LayoutService>();
+
   final log = getLogger("AuthenticationViewModel");
 
   @override
@@ -62,6 +65,7 @@ abstract class AuthenticationViewModel extends FormViewModel {
         log.i("User logged in with role $role");
         // ADD logic to navigate to different views depending on user role!
         // authenticated and initialized -> go to successRoute
+
         if (role == UserRole.explorer) {
           navigationService.replaceWith(Routes.explorerHomeView);
         } else if (role == UserRole.sponsor) {
@@ -69,6 +73,7 @@ abstract class AuthenticationViewModel extends FormViewModel {
         } else if (role == UserRole.admin) {
           navigationService.replaceWith(Routes.adminHomeView);
         }
+        _layoutService.setShowBottomNavBar(true);
       }
     } else {
       log.e(

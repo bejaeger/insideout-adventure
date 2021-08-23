@@ -1,10 +1,11 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/datamodels/users/user_statistics.dart';
-import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
+import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:afkcredits/apis/firestore_api.dart';
@@ -31,9 +32,12 @@ final mockFirebaseUser = MockFirebaseUser();
   MockSpec<FlavorConfigProvider>(returnNullOnMissingStub: true),
   MockSpec<LocalStorageService>(returnNullOnMissingStub: true),
   MockSpec<FlutterSecureStorage>(returnNullOnMissingStub: true),
+  MockSpec<LayoutService>(returnNullOnMissingStub: true),
+  MockSpec<TransfersHistoryService>(returnNullOnMissingStub: true),
 
   // stacked services registered with get_it
   MockSpec<NavigationService>(returnNullOnMissingStub: true),
+  MockSpec<SnackbarService>(returnNullOnMissingStub: true),
   MockSpec<DialogService>(returnNullOnMissingStub: true),
   MockSpec<FirebaseAuthenticationService>(returnNullOnMissingStub: true),
 ])
@@ -156,17 +160,25 @@ FlutterSecureStorage getAndRegisterFlutterSecureStorage() {
   return service;
 }
 
-void registerServices() {
-  getAndRegisterUserService();
-  getAndRegisterEnvironmentService();
-  getAndRegisterNavigationService();
-  getAndRegisterFirestoreApi();
-  getAndRegisterFirebaseAuthenticationService();
-  getAndRegisterPlacesService();
-  getAndRegisterFlavorConfigProvider();
-  getAndRegisterDialogService();
-  getAndRegisterLocalStorageService();
-  getAndRegisterFlutterSecureStorage();
+LayoutService getAndRegisterLayoutService() {
+  _removeRegistrationIfExists<LayoutService>();
+  final service = MockLayoutService();
+  locator.registerSingleton<LayoutService>(service);
+  return service;
+}
+
+SnackbarService getAndRegisterSnackBarService() {
+  _removeRegistrationIfExists<SnackbarService>();
+  final service = MockSnackbarService();
+  locator.registerSingleton<SnackbarService>(service);
+  return service;
+}
+
+TransfersHistoryService getAndRegisterTransfersHistoryService() {
+  _removeRegistrationIfExists<TransfersHistoryService>();
+  final service = MockTransfersHistoryService();
+  locator.registerSingleton<TransfersHistoryService>(service);
+  return service;
 }
 
 void unregisterServices() {
@@ -180,6 +192,25 @@ void unregisterServices() {
   locator.unregister<DialogService>();
   locator.unregister<LocalStorageService>();
   locator.unregister<FlutterSecureStorage>();
+  locator.unregister<LayoutService>();
+  locator.unregister<SnackbarService>();
+  locator.unregister<TransfersHistoryService>();
+}
+
+void registerServices() {
+  getAndRegisterUserService();
+  getAndRegisterEnvironmentService();
+  getAndRegisterNavigationService();
+  getAndRegisterFirestoreApi();
+  getAndRegisterFirebaseAuthenticationService();
+  getAndRegisterPlacesService();
+  getAndRegisterFlavorConfigProvider();
+  getAndRegisterDialogService();
+  getAndRegisterLocalStorageService();
+  getAndRegisterFlutterSecureStorage();
+  getAndRegisterLayoutService();
+  getAndRegisterSnackBarService();
+  getAndRegisterTransfersHistoryService();
 }
 
 void _removeRegistrationIfExists<T extends Object>() {

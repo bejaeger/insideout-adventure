@@ -16,12 +16,11 @@ import 'package:path/path.dart' as p;
 // Or GPay or Apple Pay for the transactions into the system
 
 class PaymentService {
-  final log = getLogger("DummyPaymentService");
+  final log = getLogger("PaymentService");
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
 
   Future processTransfer({required MoneyTransfer moneyTransfer}) async {
-    return;
     try {
       log.i("Calling restful server function bookkeepMoneyTransfer");
 
