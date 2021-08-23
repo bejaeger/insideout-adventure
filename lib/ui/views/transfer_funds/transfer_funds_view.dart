@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/datamodels/users/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_viewmodel.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';

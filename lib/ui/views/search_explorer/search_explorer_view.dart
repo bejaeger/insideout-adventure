@@ -1,5 +1,5 @@
-import 'package:afkcredits/datamodels/users/public_user_info.dart';
-import 'package:afkcredits/datamodels/users/user_statistics.dart';
+import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/ui/layout_widgets/search_layout.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/user_list_tile.dart';

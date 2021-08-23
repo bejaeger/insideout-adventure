@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/datamodels/users/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/datamodels/users/user_statistics.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 

@@ -6,7 +6,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/transfer_details.dart';
-import 'package:afkcredits/datamodels/users/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/money_source.dart';

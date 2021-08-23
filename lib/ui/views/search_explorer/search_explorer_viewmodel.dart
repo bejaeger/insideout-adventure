@@ -1,9 +1,8 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/datamodels/users/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/search_functionality_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class SearchExplorerViewModel extends SearchFunctionalityViewModel {

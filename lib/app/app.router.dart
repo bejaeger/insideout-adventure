@@ -9,7 +9,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import '../datamodels/users/public_user_info.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
@@ -248,8 +247,8 @@ class SingleExplorerViewArguments {
 class TransferFundsViewArguments {
   final Key? key;
   final TransferType type;
-  final PublicUserInfo senderInfo;
-  final PublicUserInfo recipientInfo;
+  final dynamic senderInfo;
+  final dynamic recipientInfo;
   TransferFundsViewArguments(
       {this.key,
       required this.type,

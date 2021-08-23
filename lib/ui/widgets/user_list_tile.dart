@@ -1,8 +1,8 @@
 // User list tile e.g. for search view or friends list view
 
 import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/datamodels/users/public_user_info.dart';
-import 'package:afkcredits/datamodels/users/user_statistics.dart';
+import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:flutter/material.dart';
