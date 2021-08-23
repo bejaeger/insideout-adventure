@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/ui/shared/setup_dialog_ui.dart';
+import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +24,7 @@ void mainCommon(Flavor flavor) async {
     }
 
     setupLocator();
-    // setupDialogUi();
+    setupDialogUi();
     // setupBottomSheetUi();
     // setupSnackbarUi();
     // Logger.level = Level.verbose;
@@ -44,16 +46,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: kAppName,
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-        ),
-        navigatorKey: StackedService.navigatorKey,
-        onGenerateRoute: StackedRouter().onGenerateRoute,
-        home: StartUpView()
-        //builder: (context, child) => child!,
-        );
+      debugShowCheckedModeBanner: false,
+      title: kAppName,
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      navigatorKey: StackedService.navigatorKey,
+      onGenerateRoute: StackedRouter().onGenerateRoute,
+      //home: StartUpView()
+      builder: (context, child) => LayoutTemplateView(childView: child!),
+    );
   }
 }
 

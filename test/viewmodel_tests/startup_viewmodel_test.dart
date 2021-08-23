@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -22,7 +23,26 @@ void main() {
       });
 
       test(
-          'When called should check if we have a logged in user on UserService',
+          'When called should check if there is a logged in user in local storage',
+          () async {
+        final userService = getAndRegisterUserService();
+        final model = _getModel();
+        await model.runStartupLogic();
+        verify(userService.getLocallyLoggedInUserId());
+      });
+
+      test(
+          'When called should check if there is a logged in user in local storage and if yes, call syncUserAccount',
+          () async {
+        final userService = getAndRegisterUserService(localUserId: kTestUid);
+        final model = _getModel();
+        await model.runStartupLogic();
+        verify(userService.syncUserAccount(
+            uid: anyNamed("uid"), fromLocalStorage: true));
+      });
+
+      test(
+          'When called should check if we have a logged in firebase user on UserService',
           () async {
         final userService = getAndRegisterUserService();
         final model = _getModel();
@@ -59,6 +79,17 @@ void main() {
         verify(userService.currentUserNullable);
       });
 
+      test(
+          'When hasLoggedInUser is true but no user account is created yet (third-party login), navigate to selectRoleAfterLoginView',
+          () async {
+        final navigationService = getAndRegisterNavigationService();
+        getAndRegisterUserService(
+            hasLoggedInUser: true, currentUser: null, newUser: true);
+        final model = _getModel();
+        await model.runStartupLogic();
+        verify(navigationService.replaceWith(Routes.selectRoleAfterLoginView));
+      });
+
       test('When currentUser has role sponsor, navigate to sponsorHomeView',
           () async {
         final navigationService = getAndRegisterNavigationService();
@@ -67,6 +98,16 @@ void main() {
         final model = _getModel();
         await model.runStartupLogic();
         verify(navigationService.replaceWith(Routes.sponsorHomeView));
+      });
+
+      test('When currentUser has role sponsor, navigate to adminHomeView',
+          () async {
+        final navigationService = getAndRegisterNavigationService();
+        getAndRegisterUserService(
+            hasLoggedInUser: true, currentUser: getTestUserAdmin());
+        final model = _getModel();
+        await model.runStartupLogic();
+        verify(navigationService.replaceWith(Routes.adminHomeView));
       });
 
       test('When currentUser has role explorer, navigate to explorerHomeView',

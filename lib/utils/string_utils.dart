@@ -29,3 +29,7 @@ String getFirstName(String name) {
   List<String> splitName = name.split(" ");
   return splitName[0];
 }
+
+String getStringFromEnum(dynamic enumItem) {
+  return enumItem.toString().split('.').last;
+}

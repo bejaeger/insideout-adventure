@@ -2,14 +2,20 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/payments/money_transfer.dart';
+import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
+import 'package:afkcredits/datamodels/users/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/datamodels/users/user_statistics.dart';
+import 'package:afkcredits/enums/transfer_type.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
-
+  final firestoreInstance = FirebaseFirestore.instance;
   // Create user documents
 
   Future<void> createUser(
@@ -38,6 +44,13 @@ class FirestoreApi {
     log.v('Stats document added to ${docRef.path}');
   }
 
+  // when explorer is added without authentication so without ID
+  // we need to generate that id and add it to the datamodel.
+  DocumentReference createUserDocument() {
+    final docRef = usersCollection.doc();
+    return docRef;
+  }
+
   ////////////////////////////////////////////////////////
   // Get user if exists
   Future<User?> getUser({required String uid}) async {
@@ -63,6 +76,29 @@ class FirestoreApi {
         message: 'Failed to get user',
         devDetails: '$error',
       );
+    }
+  }
+
+  Future<User?> getUserWithName({required String? name}) async {
+    if (name == null) return null;
+    QuerySnapshot doc =
+        await usersCollection.where("fullName", isEqualTo: name).get();
+    try {
+      if (doc.docs.length > 1) {
+        log.wtf(
+            "This should never happen! There is more than one user with name $name in the database");
+        return null;
+      }
+      if (doc.docs.length == 1) {
+        final id = doc.docs.first.id;
+        log.v("Found user with name $name, returning user object");
+        return User.fromJson(doc.docs.first.data());
+      } else {
+        log.v("No user found with name $name");
+        return null;
+      }
+    } catch (e) {
+      log.e("Error when getting user document: $e");
     }
   }
 
@@ -119,6 +155,32 @@ class FirestoreApi {
     }
   }
 
+  Future addSponsorIdToUser(
+      {required String uid, required String sponsorId}) async {
+    try {
+      firestoreInstance.runTransaction((transaction) async {
+        final doc = await usersCollection.doc(uid).get();
+        User otherUser = User.fromJson(doc.data()!);
+        List<String> newSponsorIds = [];
+        newSponsorIds.addAll(otherUser.explorerIds);
+        if (newSponsorIds.contains(sponsorId)) {
+          log.w(
+              "Sponsor Id already added! Nothing is really brokwn but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a sponsor. Then this issue can't appear");
+          return;
+        }
+        newSponsorIds.add(sponsorId);
+        await usersCollection.doc(uid).set(
+            otherUser.copyWith(sponsorIds: newSponsorIds).toJson(),
+            SetOptions(merge: true));
+      });
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when trying to add sponsor Id to users sponsor Ids",
+          devDetails: '$e');
+    }
+  }
+
   Stream<User> getUserStream({required String uid}) {
     return usersCollection.doc(uid).snapshots().map((event) {
       if (!event.exists || event.data() == null) {
@@ -129,6 +191,74 @@ class FirestoreApi {
       }
       return User.fromJson(event.data()!);
     });
+  }
+
+  /// invitations
+  Stream<List<User>> getExplorersDataStream({required String uid}) {
+    try {
+      final returnStream = usersCollection
+          .where("sponsorIds", arrayContains: uid)
+          .snapshots()
+          .map((event) =>
+              event.docs.map((doc) => User.fromJson(doc.data())).toList());
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when listening to money pools the user is invited to",
+          devDetails: '$e');
+    }
+  }
+
+  //////////////////////////////////////////////////////
+  /// Queries for existing users
+
+  Future<List<PublicUserInfo>> queryExplorers(
+      {required String queryString}) async {
+    QuerySnapshot foundUsers = await usersCollection
+        .where("role", isEqualTo: getStringFromEnum(UserRole.explorer))
+        .where("fullNameSearch", arrayContains: queryString.toLowerCase())
+        .get();
+    final results = foundUsers.docs.map((DocumentSnapshot doc) {
+      return PublicUserInfo(
+          name: doc.get("fullName"),
+          uid: doc.get("uid"),
+          email: doc.get("email"));
+    }).toList();
+    log.v("Queried users and found ${results.length} matches");
+    return results;
+  }
+
+  ///////////////////////////////////////////////////////
+  /// Get Money Transfer Stream
+  Stream<List<MoneyTransfer>> getTransferDataStream(
+      {required MoneyTransferQueryConfig config, required String uid}) {
+    Query query;
+    query = paymentsCollection
+        .where("transferDetails.senderId", isEqualTo: config.senderId!)
+        .orderBy("createdAt", descending: true);
+    if (config.maxNumberReturns != null)
+      query = query.limit(config.maxNumberReturns!);
+
+    log.v("converting snapshot to list of money transfers");
+
+    try {
+      // convert Stream<QuerySnapshot> to Stream<List<MoneyTransfer>>
+      Stream<List<MoneyTransfer>> returnStream = query.snapshots().map(
+            (event) => event.docs.map(
+              (doc) {
+                //log.v("Data to read into MoneyTransfer document ${doc.data()}");
+                return MoneyTransfer.fromJson(doc.data());
+              },
+            ).toList(),
+          );
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message: "Failed to read money transfer documents into dart model",
+          devDetails:
+              "Are you sure your documents in the backend are valid? Are you running with an emulator? Check the logs for concrete data that could not be read into the MoneyTransfer document");
+    }
   }
 
   /////////////////////////////////////////////////////////

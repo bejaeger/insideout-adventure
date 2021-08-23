@@ -22,16 +22,18 @@ class User with _$User {
   factory User({
     required String uid,
     required String fullName,
-    required String email,
-    required UserRole role,
+    String? email,
     required List<String> sponsorIds,
     required List<String> explorerIds,
+    required UserRole role,
     @Default(false)
         bool newUser,
     @JsonKey(
       toJson: User._checkIfKeywordsAreSet,
     )
         List<String>? fullNameSearch,
+    String? createdByUserWithId,
+    String? password,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -45,7 +47,7 @@ User getEmptyUser() {
     uid: "",
     fullName: "",
     email: "",
-    role: UserRole.explorer,
+    role: UserRole.unassigned,
     sponsorIds: [],
     explorerIds: [],
     newUser: false,

@@ -1,3 +1,7 @@
+import 'package:afkcredits/enums/user_role.dart';
+
+import 'constants/constants.dart';
+
 enum Flavor { unknown, dev, prod }
 
 class FlavorConfigProvider {
@@ -17,22 +21,56 @@ class FlavorConfigProvider {
     }
   }
 
-  String get testUserEmail {
-    return "test@gmail.com";
+  String getTestUserEmail(UserRole? role) {
+    if (role == null) return "";
+    if (role == UserRole.explorer) {
+      return "test@gmail.com";
+    }
+    if (role == UserRole.sponsor) {
+      return "test2@gmail.com";
+    } else {
+      return "";
+    }
   }
 
-  String get testUserPassword {
+  String getTestUserPassword() {
     return "m1m1m1";
   }
 
-  String get testUserId {
+  String getTestUserId(UserRole role) {
+    if (this.flavor == Flavor.prod) {
+      return "";
+    } else {
+      if (role == UserRole.explorer) {
+        return "anLaRoIZCXU0TgZYTmp1AVnRhnD3";
+      }
+      if (role == UserRole.sponsor) {
+        return "N3INiSGUOvXsinbbyKZhFvq3AbW2";
+      } else {
+        return "";
+      }
+    }
+  }
+
+  String get authority {
     switch (this.flavor) {
       case Flavor.dev:
-        return "anLaRoIZCXU0TgZYTmp1AVnRhnD3";
+        return AUTHORITYDEV;
       case Flavor.prod:
-        return "";
+        return AUTHORITYPROD;
       default:
-        return "anLaRoIZCXU0TgZYTmp1AVnRhnD3";
+        return AUTHORITYDEV;
+    }
+  }
+
+  String get uripathprepend {
+    switch (this.flavor) {
+      case Flavor.dev:
+        return URIPATHPREPENDDEV;
+      case Flavor.prod:
+        return URIPATHPREPENDPROD;
+      default:
+        return URIPATHPREPENDDEV;
     }
   }
 }

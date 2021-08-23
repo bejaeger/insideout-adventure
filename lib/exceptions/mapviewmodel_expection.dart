@@ -11,6 +11,6 @@ class MapViewModelException implements Exception {
 
   @override
   String toString() {
-    return 'FirestoreApiException (in-house exception): $message ${devDetails != null ? '- $devDetails' : ''}';
+    return 'MapViewModelException (in-house exception): $message ${devDetails != null ? '- $devDetails' : ''}';
   }
 }

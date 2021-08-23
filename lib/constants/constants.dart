@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 const String kAppName = "AFK Credits";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY';
-
+const kLocalStorageUidKey = "uid";
+const kTestUid = "TestId";
 /////////////////////////////////////////////////
 // Firebase collections and keys
 final CollectionReference usersCollection =
@@ -18,3 +19,14 @@ final CollectionReference questsCollection =
 final appName = 'AFK Credits';
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
+
+////////////////////////////////////////////////////
+/// Cloud functions
+
+// when running on production backend
+const String AUTHORITYDEV = "us-central1-afk-credits-112d2.cloudfunctions.net";
+const String URIPATHPREPENDDEV = "";
+
+// when running on production backend
+const String AUTHORITYPROD = "us-central1-afkcredits.cloudfunctions.net";
+const String URIPATHPREPENDPROD = "";

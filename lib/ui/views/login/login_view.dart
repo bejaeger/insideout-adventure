@@ -9,7 +9,7 @@ import './login_viewmodel.dart';
 import 'package:afkcredits/ui/views/login/login_view.form.dart';
 
 @FormView(fields: [
-  FormTextField(name: 'email'),
+  FormTextField(name: 'emailOrName'),
   FormTextField(name: 'password'),
 ])
 class LoginView extends StatelessWidget with $LoginView {
@@ -24,8 +24,10 @@ class LoginView extends StatelessWidget with $LoginView {
         body: AuthenticationLayout(
           busy: model.isBusy,
           onCreateAccountTapped: model.navigateToCreateAccount,
-          onDummyLoginTapped: model.onDummyLoginTapped(),
-          onMainButtonTapped: () => model.saveData(AuthenticationMethod.Email),
+          onDummyLoginExplorerTapped: model.onDummyLoginExplorerTapped(),
+          onDummyLoginSponsorTapped: model.onDummyLoginSponsorTapped(),
+          onMainButtonTapped: () => model
+              .saveData(AuthenticationMethod.EmailOrSponsorCreatedExplorer),
           validationMessage: model.validationMessage,
           title: 'Welcome to AFK Credits',
           subtitle: 'real-world quests, in-game rewards',
@@ -33,8 +35,9 @@ class LoginView extends StatelessWidget with $LoginView {
           form: Column(
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Email'),
-                controller: emailController,
+                decoration:
+                    InputDecoration(labelText: 'Email or explorer name'),
+                controller: emailOrNameController,
               ),
               TextField(
                 decoration: InputDecoration(

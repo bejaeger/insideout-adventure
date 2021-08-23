@@ -2,8 +2,8 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MapViewModel extends BaseViewModel {
   final log = getLogger('MapViewModel');

@@ -23,22 +23,26 @@ class _$UserTearOff {
   _User call(
       {required String uid,
       required String fullName,
-      required String email,
-      required UserRole role,
+      String? email,
       required List<String> sponsorIds,
       required List<String> explorerIds,
+      required UserRole role,
       bool newUser = false,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
-          List<String>? fullNameSearch}) {
+          List<String>? fullNameSearch,
+      String? createdByUserWithId,
+      String? password}) {
     return _User(
       uid: uid,
       fullName: fullName,
       email: email,
-      role: role,
       sponsorIds: sponsorIds,
       explorerIds: explorerIds,
+      role: role,
       newUser: newUser,
       fullNameSearch: fullNameSearch,
+      createdByUserWithId: createdByUserWithId,
+      password: password,
     );
   }
 
@@ -54,13 +58,15 @@ const $User = _$UserTearOff();
 mixin _$User {
   String get uid => throw _privateConstructorUsedError;
   String get fullName => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
-  UserRole get role => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
   List<String> get sponsorIds => throw _privateConstructorUsedError;
   List<String> get explorerIds => throw _privateConstructorUsedError;
+  UserRole get role => throw _privateConstructorUsedError;
   bool get newUser => throw _privateConstructorUsedError;
   @JsonKey(toJson: User._checkIfKeywordsAreSet)
   List<String>? get fullNameSearch => throw _privateConstructorUsedError;
+  String? get createdByUserWithId => throw _privateConstructorUsedError;
+  String? get password => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -74,13 +80,15 @@ abstract class $UserCopyWith<$Res> {
   $Res call(
       {String uid,
       String fullName,
-      String email,
-      UserRole role,
+      String? email,
       List<String> sponsorIds,
       List<String> explorerIds,
+      UserRole role,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
-          List<String>? fullNameSearch});
+          List<String>? fullNameSearch,
+      String? createdByUserWithId,
+      String? password});
 }
 
 /// @nodoc
@@ -96,11 +104,13 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? uid = freezed,
     Object? fullName = freezed,
     Object? email = freezed,
-    Object? role = freezed,
     Object? sponsorIds = freezed,
     Object? explorerIds = freezed,
+    Object? role = freezed,
     Object? newUser = freezed,
     Object? fullNameSearch = freezed,
+    Object? createdByUserWithId = freezed,
+    Object? password = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -114,11 +124,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
       email: email == freezed
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      role: role == freezed
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as UserRole,
+              as String?,
       sponsorIds: sponsorIds == freezed
           ? _value.sponsorIds
           : sponsorIds // ignore: cast_nullable_to_non_nullable
@@ -127,6 +133,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.explorerIds
           : explorerIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      role: role == freezed
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as UserRole,
       newUser: newUser == freezed
           ? _value.newUser
           : newUser // ignore: cast_nullable_to_non_nullable
@@ -135,6 +145,14 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.fullNameSearch
           : fullNameSearch // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      createdByUserWithId: createdByUserWithId == freezed
+          ? _value.createdByUserWithId
+          : createdByUserWithId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      password: password == freezed
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -147,13 +165,15 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   $Res call(
       {String uid,
       String fullName,
-      String email,
-      UserRole role,
+      String? email,
       List<String> sponsorIds,
       List<String> explorerIds,
+      UserRole role,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
-          List<String>? fullNameSearch});
+          List<String>? fullNameSearch,
+      String? createdByUserWithId,
+      String? password});
 }
 
 /// @nodoc
@@ -170,11 +190,13 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? uid = freezed,
     Object? fullName = freezed,
     Object? email = freezed,
-    Object? role = freezed,
     Object? sponsorIds = freezed,
     Object? explorerIds = freezed,
+    Object? role = freezed,
     Object? newUser = freezed,
     Object? fullNameSearch = freezed,
+    Object? createdByUserWithId = freezed,
+    Object? password = freezed,
   }) {
     return _then(_User(
       uid: uid == freezed
@@ -188,11 +210,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
       email: email == freezed
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      role: role == freezed
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as UserRole,
+              as String?,
       sponsorIds: sponsorIds == freezed
           ? _value.sponsorIds
           : sponsorIds // ignore: cast_nullable_to_non_nullable
@@ -201,6 +219,10 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.explorerIds
           : explorerIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      role: role == freezed
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as UserRole,
       newUser: newUser == freezed
           ? _value.newUser
           : newUser // ignore: cast_nullable_to_non_nullable
@@ -209,6 +231,14 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.fullNameSearch
           : fullNameSearch // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      createdByUserWithId: createdByUserWithId == freezed
+          ? _value.createdByUserWithId
+          : createdByUserWithId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      password: password == freezed
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -220,12 +250,14 @@ class _$_User implements _User {
   _$_User(
       {required this.uid,
       required this.fullName,
-      required this.email,
-      required this.role,
+      this.email,
       required this.sponsorIds,
       required this.explorerIds,
+      required this.role,
       this.newUser = false,
-      @JsonKey(toJson: User._checkIfKeywordsAreSet) this.fullNameSearch});
+      @JsonKey(toJson: User._checkIfKeywordsAreSet) this.fullNameSearch,
+      this.createdByUserWithId,
+      this.password});
 
   factory _$_User.fromJson(Map<String, dynamic> json) =>
       _$_$_UserFromJson(json);
@@ -235,23 +267,27 @@ class _$_User implements _User {
   @override
   final String fullName;
   @override
-  final String email;
-  @override
-  final UserRole role;
+  final String? email;
   @override
   final List<String> sponsorIds;
   @override
   final List<String> explorerIds;
+  @override
+  final UserRole role;
   @JsonKey(defaultValue: false)
   @override
   final bool newUser;
   @override
   @JsonKey(toJson: User._checkIfKeywordsAreSet)
   final List<String>? fullNameSearch;
+  @override
+  final String? createdByUserWithId;
+  @override
+  final String? password;
 
   @override
   String toString() {
-    return 'User(uid: $uid, fullName: $fullName, email: $email, role: $role, sponsorIds: $sponsorIds, explorerIds: $explorerIds, newUser: $newUser, fullNameSearch: $fullNameSearch)';
+    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password)';
   }
 
   @override
@@ -265,20 +301,26 @@ class _$_User implements _User {
                     .equals(other.fullName, fullName)) &&
             (identical(other.email, email) ||
                 const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.role, role) ||
-                const DeepCollectionEquality().equals(other.role, role)) &&
             (identical(other.sponsorIds, sponsorIds) ||
                 const DeepCollectionEquality()
                     .equals(other.sponsorIds, sponsorIds)) &&
             (identical(other.explorerIds, explorerIds) ||
                 const DeepCollectionEquality()
                     .equals(other.explorerIds, explorerIds)) &&
+            (identical(other.role, role) ||
+                const DeepCollectionEquality().equals(other.role, role)) &&
             (identical(other.newUser, newUser) ||
                 const DeepCollectionEquality()
                     .equals(other.newUser, newUser)) &&
             (identical(other.fullNameSearch, fullNameSearch) ||
                 const DeepCollectionEquality()
-                    .equals(other.fullNameSearch, fullNameSearch)));
+                    .equals(other.fullNameSearch, fullNameSearch)) &&
+            (identical(other.createdByUserWithId, createdByUserWithId) ||
+                const DeepCollectionEquality()
+                    .equals(other.createdByUserWithId, createdByUserWithId)) &&
+            (identical(other.password, password) ||
+                const DeepCollectionEquality()
+                    .equals(other.password, password)));
   }
 
   @override
@@ -287,11 +329,13 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(uid) ^
       const DeepCollectionEquality().hash(fullName) ^
       const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(role) ^
       const DeepCollectionEquality().hash(sponsorIds) ^
       const DeepCollectionEquality().hash(explorerIds) ^
+      const DeepCollectionEquality().hash(role) ^
       const DeepCollectionEquality().hash(newUser) ^
-      const DeepCollectionEquality().hash(fullNameSearch);
+      const DeepCollectionEquality().hash(fullNameSearch) ^
+      const DeepCollectionEquality().hash(createdByUserWithId) ^
+      const DeepCollectionEquality().hash(password);
 
   @JsonKey(ignore: true)
   @override
@@ -308,13 +352,15 @@ abstract class _User implements User {
   factory _User(
       {required String uid,
       required String fullName,
-      required String email,
-      required UserRole role,
+      String? email,
       required List<String> sponsorIds,
       required List<String> explorerIds,
+      required UserRole role,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
-          List<String>? fullNameSearch}) = _$_User;
+          List<String>? fullNameSearch,
+      String? createdByUserWithId,
+      String? password}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -323,18 +369,22 @@ abstract class _User implements User {
   @override
   String get fullName => throw _privateConstructorUsedError;
   @override
-  String get email => throw _privateConstructorUsedError;
-  @override
-  UserRole get role => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
   @override
   List<String> get sponsorIds => throw _privateConstructorUsedError;
   @override
   List<String> get explorerIds => throw _privateConstructorUsedError;
   @override
+  UserRole get role => throw _privateConstructorUsedError;
+  @override
   bool get newUser => throw _privateConstructorUsedError;
   @override
   @JsonKey(toJson: User._checkIfKeywordsAreSet)
   List<String>? get fullNameSearch => throw _privateConstructorUsedError;
+  @override
+  String? get createdByUserWithId => throw _privateConstructorUsedError;
+  @override
+  String? get password => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$UserCopyWith<_User> get copyWith => throw _privateConstructorUsedError;

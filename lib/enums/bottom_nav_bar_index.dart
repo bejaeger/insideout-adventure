@@ -1,0 +1,1 @@
+enum BottomNavigationBarIndex { home, map }

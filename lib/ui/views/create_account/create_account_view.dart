@@ -1,8 +1,9 @@
 import 'package:afkcredits/enums/authentication_method.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
+import 'package:afkcredits/ui/views/create_account/create_account_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:afkcredits/ui/views/login/create_account_view.form.dart';
-import 'package:afkcredits/ui/views/login/create_account_viewmodel.dart';
+import 'package:afkcredits/ui/views/create_account/create_account_view.form.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
@@ -12,19 +13,22 @@ import 'package:stacked/stacked_annotations.dart';
   FormTextField(name: 'password'),
 ])
 class CreateAccountView extends StatelessWidget with $CreateAccountView {
-  CreateAccountView({Key? key}) : super(key: key);
+  final UserRole role;
+  CreateAccountView({Key? key, required this.role}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String roleString = role == UserRole.sponsor ? "Sponsor" : "Explorer";
     return ViewModelBuilder<CreateAccountViewModel>.reactive(
+      viewModelBuilder: () => CreateAccountViewModel(role: role),
       onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) => Scaffold(
           body: AuthenticationLayout(
         busy: model.isBusy,
-        onMainButtonTapped: () => model.saveData(AuthenticationMethod.Email),
-        onBackPressed: model.replaceWithLoginView,
+        onMainButtonTapped: () => model.saveData(AuthenticationMethod.email),
+        onBackPressed: model.replaceWithSelectRoleView,
         validationMessage: model.validationMessage,
-        title: 'Create Account',
+        title: 'Create $roleString Account',
         subtitle: 'Enter your name, email and password for sign up.',
         mainButtonTitle: 'SIGN UP',
         form: Column(
@@ -46,7 +50,6 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
         ),
         showTermsText: true,
       )),
-      viewModelBuilder: () => CreateAccountViewModel(),
     );
   }
 }

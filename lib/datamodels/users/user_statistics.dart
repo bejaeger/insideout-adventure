@@ -11,6 +11,7 @@ class UserStatistics with _$UserStatistics {
     required num afkCredits,
     required num availableSponsoring,
     required List<ConciseQuestInfo> completedQuests,
+    required String uid,
   }) = _UserStatistics;
 
   factory UserStatistics.fromJson(Map<String, dynamic> json) =>
@@ -20,10 +21,11 @@ class UserStatistics with _$UserStatistics {
 // Unfortunately json serializable only supports literals as default
 // We simply create a top-level function to get an empty a user statistics
 // model that is empty. This is used for creating the initial documents in firestore
-UserStatistics getEmptyUserStatistics() {
+UserStatistics getEmptyUserStatistics({required String uid}) {
   return UserStatistics(
     afkCredits: 0,
     availableSponsoring: 0,
+    uid: uid,
     completedQuests: [],
   );
 }
