@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/datamodels/users/user_statistics.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';

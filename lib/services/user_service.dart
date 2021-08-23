@@ -10,6 +10,7 @@ import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
@@ -121,6 +122,14 @@ class UserService {
     }
   }
 
+//
+  Future<void> createUserFavouritePlaces(
+      {required String userId, required UserFavPlaces favouritePlaces}) async {
+    await _firestoreApi.createUserFavouritePlaces(
+        userId: userId, favouritePlaces: favouritePlaces);
+  }
+
+  //Create a List of My Favourite Places
   Future<String?> getLocallyLoggedInUserId() async {
     final id = await _localStorageService.getFromDisk(key: kLocalStorageUidKey);
     return id;

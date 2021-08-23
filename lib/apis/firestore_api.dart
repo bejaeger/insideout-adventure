@@ -4,10 +4,10 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
+import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/utils/string_utils.dart';
@@ -42,6 +42,22 @@ class FirestoreApi {
     final docRef = getUserSummaryStatisticsDocument(uid: uid);
     await docRef.set(stats.toJson());
     log.v('Stats document added to ${docRef.path}');
+  }
+
+  //Create a List of My Favourite Places
+  Future<void> createUserFavouritePlaces(
+      {required userId, required UserFavPlaces favouritePlaces}) async {
+    try {
+      final _docRef = getUserFavourtePlacesDocument(uid: userId);
+      if (_docRef != null) {
+        await _docRef.set(favouritePlaces.toJson());
+        log.v('Favourite Places document added to ${_docRef.path}');
+      }
+    } catch (e) {
+      throw FirestoreApiException(
+          message: 'Failed To Insert Places',
+          devDetails: 'Failed Caused By $e.');
+    }
   }
 
   // when explorer is added without authentication so without ID
@@ -272,5 +288,12 @@ class FirestoreApi {
         .doc(uid)
         .collection(userStatisticsCollectionKey)
         .doc(userSummaryStatisticsDocumentKey);
+  }
+
+  DocumentReference getUserFavourtePlacesDocument({required String uid}) {
+    return usersCollection
+        .doc(uid)
+        .collection(userFavouritePlacesCollectionKey)
+        .doc();
   }
 }
