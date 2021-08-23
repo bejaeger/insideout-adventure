@@ -1,10 +1,9 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
-import 'package:afkcredits/services/geolocation_service.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
-import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
@@ -58,15 +57,11 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: FlavorConfigProvider),
-<<<<<<< HEAD
-
-=======
-    LazySingleton(classType: FlutterSecureStorage),
-    LazySingleton(classType: LocalStorageService),
-    LazySingleton(classType: PaymentService),
-    LazySingleton(classType: TransfersHistoryService),
     LazySingleton(classType: LayoutService),
->>>>>>> 805d26ec802ef2954c63690f21a66a28d471ea78
+    LazySingleton(classType: LocalStorageService),
+    LazySingleton(classType: FlutterSecureStorage),
+    LazySingleton(classType: TransfersHistoryService),
+
     // Services
   ],
   logger: StackedLogger(),

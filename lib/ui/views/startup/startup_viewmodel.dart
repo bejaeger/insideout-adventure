@@ -3,12 +3,17 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/services/environment_services.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:places_service/places_service.dart';
 
 class StartUpViewModel extends LayoutTemplateViewModel {
   final PlacesService _placesService = locator<PlacesService>();
+  final _geolocationService = locator<GeolocationService>();
   final EnvironmentService _environmentService = locator<EnvironmentService>();
+  Position? position;
 
   final log = getLogger("StartUpViewModel");
 
@@ -17,6 +22,16 @@ class StartUpViewModel extends LayoutTemplateViewModel {
     //final placesKey =  _environment.getValue(key)
     _placesService.initialize(
         apiKey: _environmentService.getValue(GoogleMapsEnvKey));
+
+    position = await _geolocationService.getCurrentLocation();
+
+    try {
+      if (position != null) {
+        _geolocationService.setUserPosition(position: position!);
+      }
+    } catch (e) {
+      log.e("$e");
+    }
 
     try {
       final localUserId = await userService.getLocallyLoggedInUserId();

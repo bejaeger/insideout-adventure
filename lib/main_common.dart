@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui.dart';
 import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
-import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
