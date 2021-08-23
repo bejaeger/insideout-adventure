@@ -11,7 +11,7 @@ class MapViewModel extends BaseViewModel {
   Set<Marker> markersTmp = {};
   var _pos;
 
-  final CameraPosition position = CameraPosition(
+  final CameraPosition initialCameraPosition = CameraPosition(
     target: LatLng(49.246445, -122.994560),
     zoom: 12,
   );
@@ -22,8 +22,8 @@ class MapViewModel extends BaseViewModel {
     //Verify If location is available on device.
     final checkGeolocation = await checkGeolocationAvailable();
     Position _position = Position(
-        latitude: this.position.target.latitude,
-        longitude: this.position.target.longitude,
+        latitude: this.initialCameraPosition.target.latitude,
+        longitude: this.initialCameraPosition.target.longitude,
         accuracy: 0.0,
         timestamp: null,
         speed: 0.0,
@@ -104,7 +104,6 @@ class MapViewModel extends BaseViewModel {
           prettyDetails:
               "An internal error occured on our side, please apologize and try again later.");
     }
-
     setBusy(false);
     notifyListeners();
   }

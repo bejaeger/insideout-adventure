@@ -18,9 +18,13 @@ class MapView extends StatelessWidget {
         body: Container(
           child: GoogleMap(
             //mapType: MapType.hybrid,
-            initialCameraPosition: model.position,
+            initialCameraPosition: model.initialCameraPosition,
             markers: model.markersTmp,
             onMapCreated: model.onMapCreated,
+            //For showing your current location on Map with a blue dot.
+            myLocationEnabled: true,
+            // Button used for bringing the user location to the center of the camera view.
+            myLocationButtonEnabled: false,
           ),
         ),
       ),

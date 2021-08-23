@@ -31,14 +31,10 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: PlacesService),
     LazySingleton(classType: GeolocationService),
     LazySingleton(classType: EnvironmentService),
-<<<<<<< HEAD
-    //LazySingleton(classType: Position),
-=======
     LazySingleton(classType: UserService),
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: FlavorConfigProvider),
->>>>>>> 92643f27b1e321f55f00094da75a8889daf6569f
 
     // Services
   ],
