@@ -8,14 +8,15 @@ part 'active_quest.g.dart';
 
 @freezed
 class ActiveQuest with _$ActiveQuest {
+  @JsonSerializable(explicitToJson: true)
   factory ActiveQuest({
-    required String id,
+    String? id,
     required Quest quest,
-    required List<Marker> markersCollected,
+    required List<bool> markersCollected,
     required QuestStatus status,
     List<String>? uids,
     String? afkCreditsEarned,
-    int? timeElapsed, // in seconds!
+    required int timeElapsed, // in seconds!
     @Default("") dynamic createdAt,
   }) = _ActiveQuest;
 

@@ -34,6 +34,24 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
     notifyListeners();
   }
 
+  Future startQuest() async {
+    try {
+      await questService.startQuest(questId: "Test");
+      snackbarService.showSnackbar(message: "Started quest");
+    } catch (e) {
+      log.e("Could not start quest, error thrown: $e");
+    }
+  }
+
+  Future finishQuest() async {
+    try {
+      await questService.finishQuest();
+      snackbarService.showSnackbar(message: "Finished quest");
+    } catch (e) {
+      log.e("Could not finish quest, error thrown: $e");
+    }
+  }
+
   /////////////////////////////////////////////////
   // bottom sheets
 

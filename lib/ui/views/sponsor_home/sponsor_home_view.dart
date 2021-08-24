@@ -29,6 +29,35 @@ class SponsorHomeView extends StatelessWidget {
           physics: ScrollPhysics(),
           children: [
             verticalSpaceMedium,
+            if (model.hasActiveQuest)
+              Card(
+                elevation: 10.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Quest Active!",
+                        style: textTheme(context).headline6,
+                      ),
+                      Text(model.activeQuest.timeElapsed.toString(),
+                          style: textTheme(context).headline4),
+                      Text("Time elapsed in seconds"),
+                    ],
+                  ),
+                ),
+              ),
+            ElevatedButton(
+              onPressed: model.startQuest,
+              child: Text("Start Quest"),
+              //imagePath: ImagePath.peopleHoldingHands,
+            ),
+            ElevatedButton(
+              onPressed: model.finishQuest,
+              child: Text("Stop Quest"),
+              //imagePath: ImagePath.peopleHoldingHands,
+            ),
+            verticalSpaceMedium,
             SectionHeader(
               title: "Supported Explorers",
             ),

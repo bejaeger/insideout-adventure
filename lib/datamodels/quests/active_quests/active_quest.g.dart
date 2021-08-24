@@ -8,15 +8,15 @@ part of 'active_quest.dart';
 
 _$_ActiveQuest _$_$_ActiveQuestFromJson(Map<String, dynamic> json) {
   return _$_ActiveQuest(
-    id: json['id'] as String,
+    id: json['id'] as String?,
     quest: Quest.fromJson(json['quest'] as Map<String, dynamic>),
     markersCollected: (json['markersCollected'] as List<dynamic>)
-        .map((e) => Marker.fromJson(e as Map<String, dynamic>))
+        .map((e) => e as bool)
         .toList(),
     status: _$enumDecode(_$QuestStatusEnumMap, json['status']),
     uids: (json['uids'] as List<dynamic>?)?.map((e) => e as String).toList(),
     afkCreditsEarned: json['afkCreditsEarned'] as String?,
-    timeElapsed: json['timeElapsed'] as int?,
+    timeElapsed: json['timeElapsed'] as int,
     createdAt: json['createdAt'] ?? '',
   );
 }
@@ -24,7 +24,7 @@ _$_ActiveQuest _$_$_ActiveQuestFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$_$_ActiveQuestToJson(_$_ActiveQuest instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'quest': instance.quest,
+      'quest': instance.quest.toJson(),
       'markersCollected': instance.markersCollected,
       'status': _$QuestStatusEnumMap[instance.status],
       'uids': instance.uids,

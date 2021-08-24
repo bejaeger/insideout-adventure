@@ -262,7 +262,8 @@ class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_Quest implements _Quest {
   _$_Quest(
       {required this.id,

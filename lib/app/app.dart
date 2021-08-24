@@ -5,6 +5,7 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
@@ -61,6 +62,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: LocalStorageService),
     LazySingleton(classType: FlutterSecureStorage),
     LazySingleton(classType: TransfersHistoryService),
+    LazySingleton(classType: QuestService),
 
     // Services
   ],

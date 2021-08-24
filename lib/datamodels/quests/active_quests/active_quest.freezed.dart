@@ -21,13 +21,13 @@ class _$ActiveQuestTearOff {
   const _$ActiveQuestTearOff();
 
   _ActiveQuest call(
-      {required String id,
+      {String? id,
       required Quest quest,
-      required List<Marker> markersCollected,
+      required List<bool> markersCollected,
       required QuestStatus status,
       List<String>? uids,
       String? afkCreditsEarned,
-      int? timeElapsed,
+      required int timeElapsed,
       dynamic createdAt = ""}) {
     return _ActiveQuest(
       id: id,
@@ -51,13 +51,13 @@ const $ActiveQuest = _$ActiveQuestTearOff();
 
 /// @nodoc
 mixin _$ActiveQuest {
-  String get id => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
   Quest get quest => throw _privateConstructorUsedError;
-  List<Marker> get markersCollected => throw _privateConstructorUsedError;
+  List<bool> get markersCollected => throw _privateConstructorUsedError;
   QuestStatus get status => throw _privateConstructorUsedError;
   List<String>? get uids => throw _privateConstructorUsedError;
   String? get afkCreditsEarned => throw _privateConstructorUsedError;
-  int? get timeElapsed => throw _privateConstructorUsedError; // in seconds!
+  int get timeElapsed => throw _privateConstructorUsedError; // in seconds!
   dynamic get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -72,13 +72,13 @@ abstract class $ActiveQuestCopyWith<$Res> {
           ActiveQuest value, $Res Function(ActiveQuest) then) =
       _$ActiveQuestCopyWithImpl<$Res>;
   $Res call(
-      {String id,
+      {String? id,
       Quest quest,
-      List<Marker> markersCollected,
+      List<bool> markersCollected,
       QuestStatus status,
       List<String>? uids,
       String? afkCreditsEarned,
-      int? timeElapsed,
+      int timeElapsed,
       dynamic createdAt});
 
   $QuestCopyWith<$Res> get quest;
@@ -107,7 +107,7 @@ class _$ActiveQuestCopyWithImpl<$Res> implements $ActiveQuestCopyWith<$Res> {
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       quest: quest == freezed
           ? _value.quest
           : quest // ignore: cast_nullable_to_non_nullable
@@ -115,7 +115,7 @@ class _$ActiveQuestCopyWithImpl<$Res> implements $ActiveQuestCopyWith<$Res> {
       markersCollected: markersCollected == freezed
           ? _value.markersCollected
           : markersCollected // ignore: cast_nullable_to_non_nullable
-              as List<Marker>,
+              as List<bool>,
       status: status == freezed
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -131,7 +131,7 @@ class _$ActiveQuestCopyWithImpl<$Res> implements $ActiveQuestCopyWith<$Res> {
       timeElapsed: timeElapsed == freezed
           ? _value.timeElapsed
           : timeElapsed // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       createdAt: createdAt == freezed
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -155,13 +155,13 @@ abstract class _$ActiveQuestCopyWith<$Res>
       __$ActiveQuestCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String id,
+      {String? id,
       Quest quest,
-      List<Marker> markersCollected,
+      List<bool> markersCollected,
       QuestStatus status,
       List<String>? uids,
       String? afkCreditsEarned,
-      int? timeElapsed,
+      int timeElapsed,
       dynamic createdAt});
 
   @override
@@ -193,7 +193,7 @@ class __$ActiveQuestCopyWithImpl<$Res> extends _$ActiveQuestCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       quest: quest == freezed
           ? _value.quest
           : quest // ignore: cast_nullable_to_non_nullable
@@ -201,7 +201,7 @@ class __$ActiveQuestCopyWithImpl<$Res> extends _$ActiveQuestCopyWithImpl<$Res>
       markersCollected: markersCollected == freezed
           ? _value.markersCollected
           : markersCollected // ignore: cast_nullable_to_non_nullable
-              as List<Marker>,
+              as List<bool>,
       status: status == freezed
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -217,7 +217,7 @@ class __$ActiveQuestCopyWithImpl<$Res> extends _$ActiveQuestCopyWithImpl<$Res>
       timeElapsed: timeElapsed == freezed
           ? _value.timeElapsed
           : timeElapsed // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       createdAt: createdAt == freezed
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -227,27 +227,28 @@ class __$ActiveQuestCopyWithImpl<$Res> extends _$ActiveQuestCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_ActiveQuest implements _ActiveQuest {
   _$_ActiveQuest(
-      {required this.id,
+      {this.id,
       required this.quest,
       required this.markersCollected,
       required this.status,
       this.uids,
       this.afkCreditsEarned,
-      this.timeElapsed,
+      required this.timeElapsed,
       this.createdAt = ""});
 
   factory _$_ActiveQuest.fromJson(Map<String, dynamic> json) =>
       _$_$_ActiveQuestFromJson(json);
 
   @override
-  final String id;
+  final String? id;
   @override
   final Quest quest;
   @override
-  final List<Marker> markersCollected;
+  final List<bool> markersCollected;
   @override
   final QuestStatus status;
   @override
@@ -255,7 +256,7 @@ class _$_ActiveQuest implements _ActiveQuest {
   @override
   final String? afkCreditsEarned;
   @override
-  final int? timeElapsed;
+  final int timeElapsed;
   @JsonKey(defaultValue: "")
   @override // in seconds!
   final dynamic createdAt;
@@ -316,24 +317,24 @@ class _$_ActiveQuest implements _ActiveQuest {
 
 abstract class _ActiveQuest implements ActiveQuest {
   factory _ActiveQuest(
-      {required String id,
+      {String? id,
       required Quest quest,
-      required List<Marker> markersCollected,
+      required List<bool> markersCollected,
       required QuestStatus status,
       List<String>? uids,
       String? afkCreditsEarned,
-      int? timeElapsed,
+      required int timeElapsed,
       dynamic createdAt}) = _$_ActiveQuest;
 
   factory _ActiveQuest.fromJson(Map<String, dynamic> json) =
       _$_ActiveQuest.fromJson;
 
   @override
-  String get id => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
   @override
   Quest get quest => throw _privateConstructorUsedError;
   @override
-  List<Marker> get markersCollected => throw _privateConstructorUsedError;
+  List<bool> get markersCollected => throw _privateConstructorUsedError;
   @override
   QuestStatus get status => throw _privateConstructorUsedError;
   @override
@@ -341,7 +342,7 @@ abstract class _ActiveQuest implements ActiveQuest {
   @override
   String? get afkCreditsEarned => throw _privateConstructorUsedError;
   @override
-  int? get timeElapsed => throw _privateConstructorUsedError;
+  int get timeElapsed => throw _privateConstructorUsedError;
   @override // in seconds!
   dynamic get createdAt => throw _privateConstructorUsedError;
   @override

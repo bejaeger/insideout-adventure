@@ -7,6 +7,7 @@ part 'quest.g.dart';
 
 @freezed
 class Quest with _$Quest {
+  @JsonSerializable(explicitToJson: true)
   factory Quest({
     required String id,
     required String name,
