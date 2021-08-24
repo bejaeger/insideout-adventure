@@ -4,10 +4,14 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/active_quest.dart';
+import 'package:afkcredits/datamodels/quests/markers/marker.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/utils/string_utils.dart';
@@ -174,7 +178,7 @@ class FirestoreApi {
         throw FirestoreApiException(
             message: "User statistics document not valid!",
             devDetails:
-                "Something must have failed before when creating user account. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
+                "Something must have failed before when creating user account with id $uid. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
       }
       return UserStatistics.fromJson(event.data()!);
     });
@@ -296,6 +300,49 @@ class FirestoreApi {
           message: "Failed to read money transfer documents into dart model",
           devDetails:
               "Are you sure your documents in the backend are valid? Are you running with an emulator? Check the logs for concrete data that could not be read into the MoneyTransfer document");
+    }
+  }
+
+  ////////////////////////////////////////////////////////
+  /// Everything related to quests
+
+  // Returns dummy data for now!
+  Quest getQuest({required String questId}) {
+    return Quest(
+      id: "QuestDummyId",
+      name: "Grouse Grind",
+      description: "Make it up the hill in less than 1 hour",
+      afkCredits: 100,
+      markers: [
+        Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49, lon: -122),
+        Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.5, lon: -122)
+      ],
+      type: QuestType.Hike,
+      startMarker:
+          Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49, lon: -122),
+      finishMarker:
+          Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.5, lon: -122),
+    );
+  }
+
+  // Returns dummy data for now!
+  Future pushFinishedQuest({required ActiveQuest? quest}) async {
+    if (quest == null) {
+      log.wtf("Quest to push is null! This should not happen");
+      return;
+    }
+    try {
+      final docRef = activeQuestsCollection.doc();
+      ActiveQuest newQuest = quest.copyWith(id: docRef.id);
+      //log.v("Adding the following quest to firestore: ${newQuest.toJson()}");
+      await docRef.set(newQuest.toJson());
+    } catch (e) {
+      log.e(
+          "Something went wrong when pushing a finished quest, this is the error: $e");
+      throw FirestoreApiException(
+          message: "A peculiar error occured",
+          devDetails:
+              "This problem is likely caused by some not well defined datamodels and their json serializability.");
     }
   }
 

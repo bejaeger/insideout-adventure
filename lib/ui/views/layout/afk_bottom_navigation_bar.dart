@@ -21,11 +21,11 @@ class AFKBottomNavigationBar extends StatelessWidget {
               opacity: opacity,
               child: AnimatedContainer(
                 duration: model.showBottomNavBar
-                    ? Duration(milliseconds: 300)
+                    ? Duration(milliseconds: 100)
                     : Duration(milliseconds: 100),
-                curve:
-                    model.showBottomNavBar ? Curves.easeOutBack : Curves.easeIn,
+                curve: model.showBottomNavBar ? Curves.easeIn : Curves.easeIn,
                 //transform: ,
+                // Could also use Visibility widget here to hide navbar
                 height: model.showBottomNavBar ? height : 0,
                 color: Colors.green,
                 child: Row(

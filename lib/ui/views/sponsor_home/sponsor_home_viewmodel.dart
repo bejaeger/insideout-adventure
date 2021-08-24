@@ -34,6 +34,24 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
     notifyListeners();
   }
 
+  Future startQuest() async {
+    try {
+      await questService.startQuest(questId: "Test");
+      snackbarService.showSnackbar(message: "Started quest");
+    } catch (e) {
+      log.e("Could not start quest, error thrown: $e");
+    }
+  }
+
+  Future finishQuest() async {
+    try {
+      await questService.finishQuest();
+      snackbarService.showSnackbar(message: "Finished quest");
+    } catch (e) {
+      log.e("Could not finish quest, error thrown: $e");
+    }
+  }
+
   /////////////////////////////////////////////////
   // bottom sheets
 
@@ -56,16 +74,16 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
   ///////////////////////////////////////////////////
   // navigation
 
-  void navigateToAddExplorerView() {
-    navigationService.navigateTo(Routes.addExplorerView);
-  }
-
-  void navigateToTransferHistoryView() {
-    navigationService.navigateTo(Routes.transfersHistoryView);
+  void navigateToTransferHistoryView() async {
+    setShowBottomNavBar(false);
+    await navigationService.navigateTo(Routes.transfersHistoryView);
+    setShowBottomNavBar(true);
   }
 
   void navigateToSingleExplorerView({required String uid}) {
+    setShowBottomNavBar(false);
     navigationService.navigateTo(Routes.singleExplorerView,
         arguments: SingleExplorerViewArguments(uid: uid));
+    setShowBottomNavBar(true);
   }
 }
