@@ -152,7 +152,7 @@ class FirestoreApi {
         throw FirestoreApiException(
             message: "User statistics document not valid!",
             devDetails:
-                "Something must have failed before when creating user account. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
+                "Something must have failed before when creating user account with id $uid. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
       }
       return UserStatistics.fromJson(event.data()!);
     });

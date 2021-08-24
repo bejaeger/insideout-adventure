@@ -502,7 +502,6 @@ class UserService {
       cancelExplorerStatsListener(uid: key);
     });
     _explorersDataStreamSubscriptions?.cancel();
-    log.wtf("Setting list of explorers stream subscription to null!");
     _explorersDataStreamSubscriptions = null;
 
     supportedExplorers = {};

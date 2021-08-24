@@ -30,7 +30,7 @@ class StartUpViewModel extends LayoutTemplateViewModel {
         _geolocationService.setUserPosition(position: position!);
       }
     } catch (e) {
-      log.e("$e");
+      log.e("Could not set user position due to error: $e");
     }
 
     try {

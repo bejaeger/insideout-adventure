@@ -9,8 +9,8 @@ const kTestUid = "TestId";
 // Firebase collections and keys
 final CollectionReference usersCollection =
     FirebaseFirestore.instance.collection('users');
-final String userStatisticsCollectionKey = "FavouritePlaces";
-final String userFavouritePlacesCollectionKey = "statistics";
+final String userStatisticsCollectionKey = "statistics";
+final String userFavouritePlacesCollectionKey = "FavouritePlaces";
 final String userSummaryStatisticsDocumentKey = "summaryStats";
 final CollectionReference paymentsCollection =
     FirebaseFirestore.instance.collection('transfers');

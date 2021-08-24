@@ -1,4 +1,4 @@
-import 'package:afkcredits/datamodels/quests/concise_quest_info.dart';
+import 'package:afkcredits/datamodels/quests/concise_quest_info/concise_quest_info.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_statistics.freezed.dart';

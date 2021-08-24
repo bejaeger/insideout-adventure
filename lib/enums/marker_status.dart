@@ -1,0 +1,1 @@
+enum MarkerStatus { testing, placed }

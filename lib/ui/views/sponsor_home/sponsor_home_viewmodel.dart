@@ -56,16 +56,16 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
   ///////////////////////////////////////////////////
   // navigation
 
-  void navigateToAddExplorerView() {
-    navigationService.navigateTo(Routes.addExplorerView);
-  }
-
-  void navigateToTransferHistoryView() {
-    navigationService.navigateTo(Routes.transfersHistoryView);
+  void navigateToTransferHistoryView() async {
+    setShowBottomNavBar(false);
+    await navigationService.navigateTo(Routes.transfersHistoryView);
+    setShowBottomNavBar(true);
   }
 
   void navigateToSingleExplorerView({required String uid}) {
+    setShowBottomNavBar(false);
     navigationService.navigateTo(Routes.singleExplorerView,
         arguments: SingleExplorerViewArguments(uid: uid));
+    setShowBottomNavBar(true);
   }
 }
