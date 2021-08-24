@@ -16,6 +16,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
   final firestoreInstance = FirebaseFirestore.instance;
+  //List<UserFavPlaces>? places;
   // Create user documents
 
   Future<void> createUser(
@@ -92,6 +93,27 @@ class FirestoreApi {
         message: 'Failed to get user',
         devDetails: '$error',
       );
+    }
+  }
+
+  Future<List<UserFavPlaces>?>? getUserFavouritePlaces(
+      {required String userId}) async {
+    final userFavouritePlaces = await usersCollection
+        .doc(userId)
+        .collection(userFavouritePlacesCollectionKey)
+        .get();
+
+    if (userFavouritePlaces.docs.isNotEmpty) {
+      try {
+        return userFavouritePlaces.docs
+            .map((docs) => UserFavPlaces.fromJson(docs.data()))
+            .toList();
+      } catch (e) {
+        throw FirestoreApiException(
+            message: 'Failed to get the Places', devDetails: '$e');
+      }
+    } else {
+      return null;
     }
   }
 

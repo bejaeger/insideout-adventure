@@ -57,14 +57,16 @@ class MapViewModel extends BaseViewModel {
   Future<void> createFavouritePlaces() async {
     setBusy(true);
     final getUser = _userService.currentUser;
+    log.v('The Current userId: ${getUser.uid}');
     await _userService.createUserFavouritePlaces(
-        userId: getUser.uid,
-        favouritePlaces: UserFavPlaces(
-            id: getUser.uid,
-            name: "Beautiful park",
-            lat: 41.9294115,
-            lon: 12.5380785,
-            image: ''));
+      userId: getUser.uid,
+      favouritePlaces: UserFavPlaces(
+          id: getUser.uid,
+          name: "Beautiful park",
+          lat: 37.756750,
+          lon: -122.450270,
+          image: ''),
+    );
 
     setBusy(false);
     notifyListeners();
