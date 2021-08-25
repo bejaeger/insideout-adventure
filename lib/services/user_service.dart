@@ -128,6 +128,12 @@ class UserService {
         userId: userId, favouritePlaces: favouritePlaces);
   }
 
+//Get User Favourite Places
+  Future<List<UserFavPlaces>?> getUserFavouritePlaces(
+      {required String userId}) async {
+    return await _firestoreApi.getUserFavouritePlaces(userId: userId);
+  }
+
   Future<String?> getLocallyLoggedInUserId() async {
     final id = await _localStorageService.getFromDisk(key: kLocalStorageUidKey);
     return id;

@@ -6,7 +6,6 @@ import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:places_service/places_service.dart';
 
 class StartUpViewModel extends LayoutTemplateViewModel {

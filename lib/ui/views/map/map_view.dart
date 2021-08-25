@@ -10,7 +10,7 @@ class MapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MapViewModel>.reactive(
-      //onModelReady: (model) => model.getCurrentLocation,
+      // onModelReady: (model) => model.createFavouritePlaces(),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text('AFK TREASURE HUNTING'),

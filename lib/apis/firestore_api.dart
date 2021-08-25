@@ -53,10 +53,11 @@ class FirestoreApi {
   Future<void> createUserFavouritePlaces(
       {required userId, required UserFavPlaces favouritePlaces}) async {
     try {
-      final _docRef = getUserFavourtePlacesDocument(uid: userId);
+      final _docRef = getUserFavouritePlacesDocument(uid: userId);
       if (_docRef != null) {
         await _docRef.set(favouritePlaces.toJson());
-        log.v('Favourite Places document added to ${_docRef.path}');
+        log.v('Favourite Places document added to ${_docRef.path}' + '\n');
+        log.v('Your Document Reference is: ${_docRef.toString()}');
       }
     } catch (e) {
       throw FirestoreApiException(
@@ -100,6 +101,7 @@ class FirestoreApi {
     }
   }
 
+// Get User Favourite Places.
   Future<List<UserFavPlaces>?>? getUserFavouritePlaces(
       {required String userId}) async {
     final userFavouritePlaces = await usersCollection
@@ -359,7 +361,7 @@ class FirestoreApi {
         .doc(userSummaryStatisticsDocumentKey);
   }
 
-  DocumentReference getUserFavourtePlacesDocument({required String uid}) {
+  DocumentReference getUserFavouritePlacesDocument({required String uid}) {
     return usersCollection
         .doc(uid)
         .collection(userFavouritePlacesCollectionKey)
