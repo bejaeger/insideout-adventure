@@ -80,9 +80,9 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
     setShowBottomNavBar(true);
   }
 
-  void navigateToSingleExplorerView({required String uid}) {
+  void navigateToSingleExplorerView({required String uid}) async {
     setShowBottomNavBar(false);
-    navigationService.navigateTo(Routes.singleExplorerView,
+    await navigationService.navigateTo(Routes.singleExplorerView,
         arguments: SingleExplorerViewArguments(uid: uid));
     setShowBottomNavBar(true);
   }

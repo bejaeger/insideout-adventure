@@ -3,13 +3,13 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'active_quest.freezed.dart';
-part 'active_quest.g.dart';
+part 'activated_quest.freezed.dart';
+part 'activated_quest.g.dart';
 
 @freezed
-class ActiveQuest with _$ActiveQuest {
+class ActivatedQuest with _$ActivatedQuest {
   @JsonSerializable(explicitToJson: true)
-  factory ActiveQuest({
+  factory ActivatedQuest({
     String? id,
     required Quest quest,
     required List<bool> markersCollected,
@@ -18,8 +18,8 @@ class ActiveQuest with _$ActiveQuest {
     String? afkCreditsEarned,
     required int timeElapsed, // in seconds!
     @Default("") dynamic createdAt,
-  }) = _ActiveQuest;
+  }) = _ActivatedQuest;
 
-  factory ActiveQuest.fromJson(Map<String, dynamic> json) =>
-      _$ActiveQuestFromJson(json);
+  factory ActivatedQuest.fromJson(Map<String, dynamic> json) =>
+      _$ActivatedQuestFromJson(json);
 }

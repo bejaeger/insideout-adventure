@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/active_quest.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
@@ -28,7 +28,7 @@ class BaseModel extends BaseViewModel {
 
   bool get hasActiveQuest => questService.activeQuest != null;
   // only access this
-  ActiveQuest get activeQuest => questService.activeQuest!;
+  ActivatedQuest get activeQuest => questService.activeQuest!;
 
   StreamSubscription? _activeQuestSubscription;
 

@@ -4,7 +4,7 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/active_quest.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
@@ -328,14 +328,14 @@ class FirestoreApi {
   }
 
   // Returns dummy data for now!
-  Future pushFinishedQuest({required ActiveQuest? quest}) async {
+  Future pushFinishedQuest({required ActivatedQuest? quest}) async {
     if (quest == null) {
       log.wtf("Quest to push is null! This should not happen");
       return;
     }
     try {
       final docRef = activeQuestsCollection.doc();
-      ActiveQuest newQuest = quest.copyWith(id: docRef.id);
+      ActivatedQuest newQuest = quest.copyWith(id: docRef.id);
       //log.v("Adding the following quest to firestore: ${newQuest.toJson()}");
       await docRef.set(newQuest.toJson());
     } catch (e) {

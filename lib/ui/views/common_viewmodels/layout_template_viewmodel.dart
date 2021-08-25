@@ -17,7 +17,7 @@ class LayoutTemplateViewModel extends TransferBaseViewModel {
 
   Future setShowBottomNavBar(bool show) async {
     if (show == true) {
-      await Future.delayed(Duration(milliseconds: 200));
+      await Future.delayed(Duration(milliseconds: 150));
     }
     layoutService.setShowBottomNavBar(show);
   }

@@ -14,7 +14,7 @@ final appName = 'AFK Credits';
 // collection keys
 final String userStatisticsCollectionKey = "statistics";
 final String userFavouritePlacesCollectionKey = "FavouritePlaces";
-final String activeQuestsCollectionKey = "activeQuests";
+final String activatedQuestsCollectionKey = "activatedQuests";
 
 // document keys
 final String userSummaryStatisticsDocumentKey = "summaryStats";
@@ -29,7 +29,7 @@ final CollectionReference questsCollection =
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
 final CollectionReference activeQuestsCollection =
-    FirebaseFirestore.instance.collection(activeQuestsCollectionKey);
+    FirebaseFirestore.instance.collection(activatedQuestsCollectionKey);
 
 ////////////////////////////////////////////////////
 /// Cloud functions

@@ -1,6 +1,6 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/active_quest.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:rxdart/rxdart.dart';
@@ -8,15 +8,15 @@ import 'package:stop_watch_timer/stop_watch_timer.dart'; // Import stop_watch_ti
 import 'package:afkcredits/app/app.logger.dart';
 
 class QuestService {
-  BehaviorSubject<ActiveQuest?> activeQuestSubject =
-      BehaviorSubject<ActiveQuest?>();
-  ActiveQuest? get activeQuest => activeQuestSubject.valueOrNull;
+  BehaviorSubject<ActivatedQuest?> activeQuestSubject =
+      BehaviorSubject<ActivatedQuest?>();
+  ActivatedQuest? get activeQuest => activeQuestSubject.valueOrNull;
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final StopWatchTimer _stopWatchTimer = StopWatchTimer(); // Create instance.
 
   final log = getLogger("QuestService");
 
-  void updateActiveQuest(ActiveQuest quest) {
+  void updateActiveQuest(ActivatedQuest quest) {
     activeQuestSubject.add(quest);
   }
 
@@ -29,7 +29,7 @@ class QuestService {
     Quest quest = await _firestoreApi.getQuest(questId: questId);
 
     // Get active quest
-    ActiveQuest activeQuest = getActiveQuest(quest: quest);
+    ActivatedQuest activeQuest = getActiveQuest(quest: quest);
 
     // Add quest to behavior subject
     updateActiveQuest(activeQuest);
@@ -44,6 +44,9 @@ class QuestService {
 
   Future finishQuest() async {
     // Fetch quest information
+
+    // TODO: change status to finish on quest
+
     if (activeQuest == null) {
       log.e("No active quest present, can't finish anything!");
     } else {
@@ -63,8 +66,8 @@ class QuestService {
     }
   }
 
-  ActiveQuest getActiveQuest({required Quest quest}) {
-    return ActiveQuest(
+  ActivatedQuest getActiveQuest({required Quest quest}) {
+    return ActivatedQuest(
       quest: quest,
       markersCollected: List.filled(quest.markers.length, false),
       status: QuestStatus.active,

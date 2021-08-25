@@ -1,7 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
-part of 'active_quest.dart';
+part of 'activated_quest.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,15 +12,15 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-ActiveQuest _$ActiveQuestFromJson(Map<String, dynamic> json) {
-  return _ActiveQuest.fromJson(json);
+ActivatedQuest _$ActivatedQuestFromJson(Map<String, dynamic> json) {
+  return _ActivatedQuest.fromJson(json);
 }
 
 /// @nodoc
-class _$ActiveQuestTearOff {
-  const _$ActiveQuestTearOff();
+class _$ActivatedQuestTearOff {
+  const _$ActivatedQuestTearOff();
 
-  _ActiveQuest call(
+  _ActivatedQuest call(
       {String? id,
       required Quest quest,
       required List<bool> markersCollected,
@@ -29,7 +29,7 @@ class _$ActiveQuestTearOff {
       String? afkCreditsEarned,
       required int timeElapsed,
       dynamic createdAt = ""}) {
-    return _ActiveQuest(
+    return _ActivatedQuest(
       id: id,
       quest: quest,
       markersCollected: markersCollected,
@@ -41,16 +41,16 @@ class _$ActiveQuestTearOff {
     );
   }
 
-  ActiveQuest fromJson(Map<String, Object> json) {
-    return ActiveQuest.fromJson(json);
+  ActivatedQuest fromJson(Map<String, Object> json) {
+    return ActivatedQuest.fromJson(json);
   }
 }
 
 /// @nodoc
-const $ActiveQuest = _$ActiveQuestTearOff();
+const $ActivatedQuest = _$ActivatedQuestTearOff();
 
 /// @nodoc
-mixin _$ActiveQuest {
+mixin _$ActivatedQuest {
   String? get id => throw _privateConstructorUsedError;
   Quest get quest => throw _privateConstructorUsedError;
   List<bool> get markersCollected => throw _privateConstructorUsedError;
@@ -62,15 +62,15 @@ mixin _$ActiveQuest {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActiveQuestCopyWith<ActiveQuest> get copyWith =>
+  $ActivatedQuestCopyWith<ActivatedQuest> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ActiveQuestCopyWith<$Res> {
-  factory $ActiveQuestCopyWith(
-          ActiveQuest value, $Res Function(ActiveQuest) then) =
-      _$ActiveQuestCopyWithImpl<$Res>;
+abstract class $ActivatedQuestCopyWith<$Res> {
+  factory $ActivatedQuestCopyWith(
+          ActivatedQuest value, $Res Function(ActivatedQuest) then) =
+      _$ActivatedQuestCopyWithImpl<$Res>;
   $Res call(
       {String? id,
       Quest quest,
@@ -85,12 +85,13 @@ abstract class $ActiveQuestCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ActiveQuestCopyWithImpl<$Res> implements $ActiveQuestCopyWith<$Res> {
-  _$ActiveQuestCopyWithImpl(this._value, this._then);
+class _$ActivatedQuestCopyWithImpl<$Res>
+    implements $ActivatedQuestCopyWith<$Res> {
+  _$ActivatedQuestCopyWithImpl(this._value, this._then);
 
-  final ActiveQuest _value;
+  final ActivatedQuest _value;
   // ignore: unused_field
-  final $Res Function(ActiveQuest) _then;
+  final $Res Function(ActivatedQuest) _then;
 
   @override
   $Res call({
@@ -148,11 +149,11 @@ class _$ActiveQuestCopyWithImpl<$Res> implements $ActiveQuestCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$ActiveQuestCopyWith<$Res>
-    implements $ActiveQuestCopyWith<$Res> {
-  factory _$ActiveQuestCopyWith(
-          _ActiveQuest value, $Res Function(_ActiveQuest) then) =
-      __$ActiveQuestCopyWithImpl<$Res>;
+abstract class _$ActivatedQuestCopyWith<$Res>
+    implements $ActivatedQuestCopyWith<$Res> {
+  factory _$ActivatedQuestCopyWith(
+          _ActivatedQuest value, $Res Function(_ActivatedQuest) then) =
+      __$ActivatedQuestCopyWithImpl<$Res>;
   @override
   $Res call(
       {String? id,
@@ -169,14 +170,15 @@ abstract class _$ActiveQuestCopyWith<$Res>
 }
 
 /// @nodoc
-class __$ActiveQuestCopyWithImpl<$Res> extends _$ActiveQuestCopyWithImpl<$Res>
-    implements _$ActiveQuestCopyWith<$Res> {
-  __$ActiveQuestCopyWithImpl(
-      _ActiveQuest _value, $Res Function(_ActiveQuest) _then)
-      : super(_value, (v) => _then(v as _ActiveQuest));
+class __$ActivatedQuestCopyWithImpl<$Res>
+    extends _$ActivatedQuestCopyWithImpl<$Res>
+    implements _$ActivatedQuestCopyWith<$Res> {
+  __$ActivatedQuestCopyWithImpl(
+      _ActivatedQuest _value, $Res Function(_ActivatedQuest) _then)
+      : super(_value, (v) => _then(v as _ActivatedQuest));
 
   @override
-  _ActiveQuest get _value => super._value as _ActiveQuest;
+  _ActivatedQuest get _value => super._value as _ActivatedQuest;
 
   @override
   $Res call({
@@ -189,7 +191,7 @@ class __$ActiveQuestCopyWithImpl<$Res> extends _$ActiveQuestCopyWithImpl<$Res>
     Object? timeElapsed = freezed,
     Object? createdAt = freezed,
   }) {
-    return _then(_ActiveQuest(
+    return _then(_ActivatedQuest(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -229,8 +231,8 @@ class __$ActiveQuestCopyWithImpl<$Res> extends _$ActiveQuestCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_ActiveQuest implements _ActiveQuest {
-  _$_ActiveQuest(
+class _$_ActivatedQuest implements _ActivatedQuest {
+  _$_ActivatedQuest(
       {this.id,
       required this.quest,
       required this.markersCollected,
@@ -240,8 +242,8 @@ class _$_ActiveQuest implements _ActiveQuest {
       required this.timeElapsed,
       this.createdAt = ""});
 
-  factory _$_ActiveQuest.fromJson(Map<String, dynamic> json) =>
-      _$_$_ActiveQuestFromJson(json);
+  factory _$_ActivatedQuest.fromJson(Map<String, dynamic> json) =>
+      _$_$_ActivatedQuestFromJson(json);
 
   @override
   final String? id;
@@ -263,13 +265,13 @@ class _$_ActiveQuest implements _ActiveQuest {
 
   @override
   String toString() {
-    return 'ActiveQuest(id: $id, quest: $quest, markersCollected: $markersCollected, status: $status, uids: $uids, afkCreditsEarned: $afkCreditsEarned, timeElapsed: $timeElapsed, createdAt: $createdAt)';
+    return 'ActivatedQuest(id: $id, quest: $quest, markersCollected: $markersCollected, status: $status, uids: $uids, afkCreditsEarned: $afkCreditsEarned, timeElapsed: $timeElapsed, createdAt: $createdAt)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _ActiveQuest &&
+        (other is _ActivatedQuest &&
             (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.quest, quest) ||
@@ -306,17 +308,17 @@ class _$_ActiveQuest implements _ActiveQuest {
 
   @JsonKey(ignore: true)
   @override
-  _$ActiveQuestCopyWith<_ActiveQuest> get copyWith =>
-      __$ActiveQuestCopyWithImpl<_ActiveQuest>(this, _$identity);
+  _$ActivatedQuestCopyWith<_ActivatedQuest> get copyWith =>
+      __$ActivatedQuestCopyWithImpl<_ActivatedQuest>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_ActiveQuestToJson(this);
+    return _$_$_ActivatedQuestToJson(this);
   }
 }
 
-abstract class _ActiveQuest implements ActiveQuest {
-  factory _ActiveQuest(
+abstract class _ActivatedQuest implements ActivatedQuest {
+  factory _ActivatedQuest(
       {String? id,
       required Quest quest,
       required List<bool> markersCollected,
@@ -324,10 +326,10 @@ abstract class _ActiveQuest implements ActiveQuest {
       List<String>? uids,
       String? afkCreditsEarned,
       required int timeElapsed,
-      dynamic createdAt}) = _$_ActiveQuest;
+      dynamic createdAt}) = _$_ActivatedQuest;
 
-  factory _ActiveQuest.fromJson(Map<String, dynamic> json) =
-      _$_ActiveQuest.fromJson;
+  factory _ActivatedQuest.fromJson(Map<String, dynamic> json) =
+      _$_ActivatedQuest.fromJson;
 
   @override
   String? get id => throw _privateConstructorUsedError;
@@ -347,6 +349,6 @@ abstract class _ActiveQuest implements ActiveQuest {
   dynamic get createdAt => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$ActiveQuestCopyWith<_ActiveQuest> get copyWith =>
+  _$ActivatedQuestCopyWith<_ActivatedQuest> get copyWith =>
       throw _privateConstructorUsedError;
 }

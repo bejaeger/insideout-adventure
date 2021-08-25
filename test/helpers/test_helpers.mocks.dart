@@ -9,7 +9,7 @@ import 'package:afkcredits/apis/firestore_api.dart' as _i16;
 import 'package:afkcredits/datamodels/payments/money_transfer.dart' as _i18;
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart'
     as _i19;
-import 'package:afkcredits/datamodels/quests/active_quests/active_quest.dart'
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
     as _i20;
 import 'package:afkcredits/datamodels/quests/quest.dart' as _i7;
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart'
@@ -163,6 +163,13 @@ class MockUserService extends _i1.Mock implements _i5.UserService {
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
           as _i13.Future<void>);
+  @override
+  _i13.Future<List<_i14.UserFavPlaces>?> getUserFavouritePlaces(
+          {String? userId}) =>
+      (super.noSuchMethod(
+              Invocation.method(#getUserFavouritePlaces, [], {#userId: userId}),
+              returnValue: Future<List<_i14.UserFavPlaces>?>.value())
+          as _i13.Future<List<_i14.UserFavPlaces>?>);
   @override
   _i13.Future<String?> getLocallyLoggedInUserId() =>
       (super.noSuchMethod(Invocation.method(#getLocallyLoggedInUserId, []),
@@ -337,6 +344,12 @@ class MockFirestoreApi extends _i1.Mock implements _i16.FirestoreApi {
       (super.noSuchMethod(Invocation.method(#getUser, [], {#uid: uid}),
           returnValue: Future<_i3.User?>.value()) as _i13.Future<_i3.User?>);
   @override
+  _i13.Future<List<_i14.UserFavPlaces>?>? getUserFavouritePlaces(
+          {String? userId}) =>
+      (super.noSuchMethod(
+              Invocation.method(#getUserFavouritePlaces, [], {#userId: userId}))
+          as _i13.Future<List<_i14.UserFavPlaces>?>?);
+  @override
   _i13.Future<_i3.User?> getUserWithName({String? name}) => (super.noSuchMethod(
       Invocation.method(#getUserWithName, [], {#name: name}),
       returnValue: Future<_i3.User?>.value()) as _i13.Future<_i3.User?>);
@@ -396,7 +409,7 @@ class MockFirestoreApi extends _i1.Mock implements _i16.FirestoreApi {
       (super.noSuchMethod(Invocation.method(#getQuest, [], {#questId: questId}),
           returnValue: _FakeQuest_6()) as _i7.Quest);
   @override
-  _i13.Future<dynamic> pushFinishedQuest({_i20.ActiveQuest? quest}) => (super
+  _i13.Future<dynamic> pushFinishedQuest({_i20.ActivatedQuest? quest}) => (super
       .noSuchMethod(Invocation.method(#pushFinishedQuest, [], {#quest: quest}),
           returnValue: Future<dynamic>.value()) as _i13.Future<dynamic>);
   @override
@@ -411,9 +424,9 @@ class MockFirestoreApi extends _i1.Mock implements _i16.FirestoreApi {
           Invocation.method(#getUserSummaryStatisticsDocument, [], {#uid: uid}),
           returnValue: _FakeDocumentReference_5()) as _i6.DocumentReference);
   @override
-  _i6.DocumentReference getUserFavourtePlacesDocument({String? uid}) =>
+  _i6.DocumentReference getUserFavouritePlacesDocument({String? uid}) =>
       (super.noSuchMethod(
-          Invocation.method(#getUserFavourtePlacesDocument, [], {#uid: uid}),
+          Invocation.method(#getUserFavouritePlacesDocument, [], {#uid: uid}),
           returnValue: _FakeDocumentReference_5()) as _i6.DocumentReference);
   @override
   String toString() => super.toString();
