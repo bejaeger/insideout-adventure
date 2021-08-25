@@ -27,6 +27,7 @@ class MapViewModel extends BaseViewModel {
     await Permission.location.request();
   }
 
+//Add Markers to the Map
   void addMarker(
       {required double lat,
       required double long,
