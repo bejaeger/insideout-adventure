@@ -8,19 +8,13 @@ import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.da
 class LayoutTemplateViewModel extends TransferBaseViewModel {
   final LayoutService layoutService = locator<LayoutService>();
   bool get showBottomNavBar => layoutService.showBottomNavBar;
-  final log = getLogger("LayoutTemplateViewModel");
   void listenToLayoutSettings() {
     layoutService.showBottomNavBarSubject.listen((value) {
       notifyListeners();
     });
   }
 
-  Future setShowBottomNavBar(bool show) async {
-    if (show == true) {
-      await Future.delayed(Duration(milliseconds: 150));
-    }
-    layoutService.setShowBottomNavBar(show);
-  }
+  final log = getLogger("LayoutTemplateViewModel");
 
   void replaceToHomeView() {
     if (currentUser.role == UserRole.explorer) {

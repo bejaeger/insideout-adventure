@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
@@ -11,7 +12,7 @@ import 'package:afkcredits/app/app.logger.dart';
 class SponsorHomeViewModel extends LayoutTemplateViewModel {
   final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   final log = getLogger("SponsorHomeViewModel");
-
+  final DialogService _dialogService = locator<DialogService>();
   List<User> get supportedExplorers => userService.supportedExplorersList;
   Map<String, UserStatistics> get supportedExplorerStats =>
       userService.supportedExplorerStats;
@@ -36,7 +37,8 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
 
   Future startQuest() async {
     try {
-      await questService.startQuest(questId: "Test");
+      final quest = await questService.getQuest(questId: kTestQuestId);
+      await questService.startQuest(quest: quest);
       snackbarService.showSnackbar(message: "Started quest");
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
@@ -45,8 +47,22 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
 
   Future finishQuest() async {
     try {
-      await questService.finishQuest();
-      snackbarService.showSnackbar(message: "Finished quest");
+      final result = await questService.evaluateAndFinishQuest();
+      if (result is String) {
+        final continueQuest = await _dialogService.showConfirmationDialog(
+            title: result.toString(),
+            cancelTitle: "Cancel Quest",
+            confirmationTitle: "Continue");
+        if (continueQuest?.confirmed == true) {
+          await questService.continueIncompleteQuest();
+        } else {
+          await questService.cancelIncompleteQuest();
+          await _dialogService.showDialog(title: "Quest cancelled");
+        }
+      } else {
+        await _dialogService.showDialog(
+            title: "Congratz, you succesfully finished the quest!");
+      }
     } catch (e) {
       log.e("Could not finish quest, error thrown: $e");
     }

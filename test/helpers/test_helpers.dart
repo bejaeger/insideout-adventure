@@ -1,11 +1,15 @@
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:afkcredits/apis/firestore_api.dart';
@@ -14,6 +18,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:places_service/places_service.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -34,6 +39,9 @@ final mockFirebaseUser = MockFirebaseUser();
   MockSpec<FlutterSecureStorage>(returnNullOnMissingStub: true),
   MockSpec<LayoutService>(returnNullOnMissingStub: true),
   MockSpec<TransfersHistoryService>(returnNullOnMissingStub: true),
+  MockSpec<GeolocationService>(returnNullOnMissingStub: true),
+  MockSpec<QuestService>(returnNullOnMissingStub: true),
+  MockSpec<StopWatchService>(returnNullOnMissingStub: true),
 
   // stacked services registered with get_it
   MockSpec<NavigationService>(returnNullOnMissingStub: true),
@@ -123,6 +131,8 @@ MockFirebaseAuthenticationService getAndRegisterFirebaseAuthenticationService({
 MockFirestoreApi getAndRegisterFirestoreApi({User? user}) {
   _removeRegistrationIfExists<FirestoreApi>();
   final service = MockFirestoreApi();
+  when(service.pushFinishedQuest(quest: anyNamed("quest")))
+      .thenAnswer((_) async => null);
   when(service.getUser(uid: anyNamed("uid")))
       .thenAnswer((realInvocation) async => user);
   final userStats = getEmptyUserStatistics(uid: kTestUid);
@@ -181,6 +191,31 @@ TransfersHistoryService getAndRegisterTransfersHistoryService() {
   return service;
 }
 
+QuestService getAndRegisterQuestService() {
+  _removeRegistrationIfExists<QuestService>();
+  final service = MockQuestService();
+  when(service.activatedQuestSubject).thenAnswer(
+      (_) => BehaviorSubject<ActivatedQuest?>.seeded(getTestActivatedQuest()));
+  locator.registerSingleton<QuestService>(service);
+  return service;
+}
+
+GeolocationService getAndRegisterGeolocationService() {
+  _removeRegistrationIfExists<GeolocationService>();
+  final service = MockGeolocationService();
+  when(service.getCurrentLocation()).thenAnswer((_) async => null);
+  locator.registerSingleton<GeolocationService>(service);
+  return service;
+}
+
+StopWatchService getAndRegisterStopWatchService() {
+  _removeRegistrationIfExists<StopWatchService>();
+  final service = MockStopWatchService();
+  when(service.getSecondTime()).thenReturn(100);
+  locator.registerSingleton<StopWatchService>(service);
+  return service;
+}
+
 void unregisterServices() {
   locator.unregister<UserService>();
   locator.unregister<NavigationService>();
@@ -195,6 +230,9 @@ void unregisterServices() {
   locator.unregister<LayoutService>();
   locator.unregister<SnackbarService>();
   locator.unregister<TransfersHistoryService>();
+  locator.unregister<QuestService>();
+  locator.unregister<GeolocationService>();
+  locator.unregister<StopWatchService>();
 }
 
 void registerServices() {
@@ -211,6 +249,9 @@ void registerServices() {
   getAndRegisterLayoutService();
   getAndRegisterSnackBarService();
   getAndRegisterTransfersHistoryService();
+  getAndRegisterQuestService();
+  getAndRegisterGeolocationService();
+  getAndRegisterStopWatchService();
 }
 
 void _removeRegistrationIfExists<T extends Object>() {

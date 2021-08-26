@@ -4,7 +4,6 @@ const String kAppName = "AFK Credits";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY';
 const kLocalStorageUidKey = "uid";
-const kTestUid = "TestId";
 
 final appName = 'AFK Credits';
 
@@ -41,3 +40,8 @@ const String URIPATHPREPENDDEV = "";
 // when running on production backend
 const String AUTHORITYPROD = "us-central1-afkcredits.cloudfunctions.net";
 const String URIPATHPREPENDPROD = "";
+
+/////////////////////////////////////////////////////////
+/// For testing
+const String kTestUid = "TestId";
+const String kTestQuestId = "QuestId";

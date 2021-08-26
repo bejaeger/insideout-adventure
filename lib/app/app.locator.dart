@@ -23,6 +23,7 @@ import '../services/local_storage_service.dart';
 import '../services/payments/payment_service.dart';
 import '../services/payments/transfers_history_service.dart';
 import '../services/quests/quest_service.dart';
+import '../services/quests/stopwatch_service.dart';
 import '../services/user_service.dart';
 
 final locator = StackedLocator.instance;
@@ -50,4 +51,5 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => TransfersHistoryService());
   locator.registerLazySingleton(() => QuestService());
   locator.registerLazySingleton(() => PaymentService());
+  locator.registerLazySingleton(() => StopWatchService());
 }

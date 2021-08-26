@@ -62,5 +62,6 @@ K _$enumDecode<K, V>(
 const _$QuestStatusEnumMap = {
   QuestStatus.active: 'active',
   QuestStatus.cancelled: 'cancelled',
-  QuestStatus.finished: 'finished',
+  QuestStatus.success: 'finished',
+  QuestStatus.incomplete: 'incomplete',
 };

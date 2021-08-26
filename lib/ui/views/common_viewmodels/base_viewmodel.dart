@@ -26,15 +26,15 @@ class BaseModel extends BaseViewModel {
   final LayoutService layoutService = locator<LayoutService>();
   User get currentUser => userService.currentUser;
 
-  bool get hasActiveQuest => questService.activeQuest != null;
+  bool get hasActiveQuest => questService.activatedQuest != null;
   // only access this
-  ActivatedQuest get activeQuest => questService.activeQuest!;
+  ActivatedQuest get activeQuest => questService.activatedQuest!;
 
   StreamSubscription? _activeQuestSubscription;
 
   BaseModel() {
     // listen to changes in wallet
-    _activeQuestSubscription = questService.activeQuestSubject.listen(
+    _activeQuestSubscription = questService.activatedQuestSubject.listen(
       (stats) {
         notifyListeners();
       },
@@ -46,6 +46,13 @@ class BaseModel extends BaseViewModel {
     transfersHistoryService.clearData();
     layoutService.setShowBottomNavBar(false);
     navigationService.clearStackAndShow(Routes.loginView);
+  }
+
+  Future setShowBottomNavBar(bool show) async {
+    if (show == true) {
+      await Future.delayed(Duration(milliseconds: 150));
+    }
+    layoutService.setShowBottomNavBar(show);
   }
 
   ////////////////////////////////////////
