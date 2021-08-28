@@ -45,3 +45,7 @@ const String URIPATHPREPENDPROD = "";
 /// For testing
 const String kTestUid = "TestId";
 const String kTestQuestId = "QuestId";
+
+//////////////////////////////////////////////////////////
+/// Quest related
+const int kMaxQuestTimeInSeconds = 24 * 60 * 60;

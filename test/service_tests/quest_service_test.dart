@@ -54,7 +54,7 @@ void main() {
       test('When not all markers were collected, mark quest as incomplete', () {
         // arrange
         final service = _getService();
-        service.updateActivatedQuest(getTestActivatedButIncompleteQuest());
+        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
         // act
         service.evaluateQuest();
         // assert
@@ -64,7 +64,7 @@ void main() {
       test('When not all markers were collected, mark quest as success', () {
         // arrange
         final service = _getService();
-        service.updateActivatedQuest(getTestActivatedAndCompleteQuest());
+        service.pushActivatedQuest(getTestActivatedAndCompleteQuest());
         // act
         service.evaluateQuest();
         // assert
@@ -101,7 +101,7 @@ void main() {
 
         //act
         final service = _getService();
-        service.updateActivatedQuest(getTestFinishedQuest());
+        service.pushActivatedQuest(getTestFinishedQuest());
         await service.evaluateAndFinishQuest();
 
         //assert
@@ -114,7 +114,7 @@ void main() {
           () async {
         final firestoreApi = getAndRegisterFirestoreApi();
         final service = _getService();
-        service.updateActivatedQuest(getTestFinishedQuest());
+        service.pushActivatedQuest(getTestFinishedQuest());
         await service.evaluateAndFinishQuest();
         verify(firestoreApi.pushFinishedQuest(quest: anyNamed("quest")));
       });
@@ -122,14 +122,14 @@ void main() {
       test('When quest is incomplete return string with warning', () async {
         final service = _getService();
         // this basically mocks out the evaluateQuest function!
-        service.updateActivatedQuest(getTestIncompleteQuest());
+        service.pushActivatedQuest(getTestIncompleteQuest());
         expect(await service.evaluateAndFinishQuest(), WarningQuestNotFinished);
       });
 
       test('After quest is finished activated quest should be null', () async {
         final service = _getService();
         await service.startQuest(quest: getTestQuest());
-        service.updateActivatedQuest(getTestFinishedQuest());
+        service.pushActivatedQuest(getTestFinishedQuest());
         await service.evaluateAndFinishQuest();
         expect(service.activatedQuest, isNull);
       });
@@ -142,7 +142,7 @@ void main() {
         // arrange
         final stopWatchService = getAndRegisterStopWatchService();
         final service = _getService();
-        service.updateActivatedQuest(getTestIncompleteQuest());
+        service.pushActivatedQuest(getTestIncompleteQuest());
 
         // act
         service.continueIncompleteQuest();
@@ -151,6 +151,24 @@ void main() {
         verify(stopWatchService.startTimer());
         verify(stopWatchService.resumeListener());
         expect(service.activatedQuest?.status, QuestStatus.active);
+      });
+    });
+
+    group('trackData -', () {
+      test(
+          'when trackData is called after MaxQuestTime the tracking should stop',
+          () async {
+        // arrange
+        final stopWatchService = getAndRegisterStopWatchService();
+        final firestoreApi = getAndRegisterFirestoreApi();
+        final service = _getService();
+        service.pushActivatedQuest(getTestFinishedQuest());
+        // act
+        await service.trackData(kMaxQuestTimeInSeconds);
+        // assert
+        verify(firestoreApi.pushFinishedQuest(quest: anyNamed("quest")));
+        verify(stopWatchService.resetTimer());
+        verify(stopWatchService.cancelListener());
       });
     });
   });

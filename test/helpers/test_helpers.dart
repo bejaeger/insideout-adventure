@@ -208,7 +208,7 @@ GeolocationService getAndRegisterGeolocationService() {
   return service;
 }
 
-StopWatchService getAndRegisterStopWatchService() {
+MockStopWatchService getAndRegisterStopWatchService() {
   _removeRegistrationIfExists<StopWatchService>();
   final service = MockStopWatchService();
   when(service.getSecondTime()).thenReturn(100);

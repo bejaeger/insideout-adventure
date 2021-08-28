@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/user_list_tile.dart';
@@ -22,39 +23,14 @@ class SponsorHomeView extends StatelessWidget {
       onModelReady: (model) => model.listenToData(),
       fireOnModelReadyOnce: true,
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: Text("Hi Sponsor!"),
-        ),
+        appBar: CustomAppBar(title: "Hi Sponsor!"),
         body: ListView(
           physics: ScrollPhysics(),
           children: [
             verticalSpaceMedium,
-            if (model.hasActiveQuest)
-              Card(
-                elevation: 10.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Quest Active!",
-                        style: textTheme(context).headline6,
-                      ),
-                      Text(model.activeQuest.timeElapsed.toString(),
-                          style: textTheme(context).headline4),
-                      Text("Time elapsed in seconds"),
-                    ],
-                  ),
-                ),
-              ),
             ElevatedButton(
               onPressed: model.startQuest,
               child: Text("Start Quest"),
-              //imagePath: ImagePath.peopleHoldingHands,
-            ),
-            ElevatedButton(
-              onPressed: model.finishQuest,
-              child: Text("Stop Quest"),
               //imagePath: ImagePath.peopleHoldingHands,
             ),
             verticalSpaceMedium,

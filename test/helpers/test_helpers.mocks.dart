@@ -846,16 +846,12 @@ class MockQuestService extends _i1.Mock implements _i31.QuestService {
       (super.noSuchMethod(Invocation.method(#cancelIncompleteQuest, []),
           returnValue: Future<dynamic>.value()) as _i16.Future<dynamic>);
   @override
-  void trackData(int? seconds) =>
-      super.noSuchMethod(Invocation.method(#trackData, [seconds]),
-          returnValueForMissingStub: null);
-  @override
   void evaluateQuest() =>
       super.noSuchMethod(Invocation.method(#evaluateQuest, []),
           returnValueForMissingStub: null);
   @override
-  void updateActivatedQuest(_i12.ActivatedQuest? quest) =>
-      super.noSuchMethod(Invocation.method(#updateActivatedQuest, [quest]),
+  void pushActivatedQuest(_i12.ActivatedQuest? quest) =>
+      super.noSuchMethod(Invocation.method(#pushActivatedQuest, [quest]),
           returnValueForMissingStub: null);
   @override
   void removeActivatedQuest() =>
@@ -869,6 +865,16 @@ class MockQuestService extends _i1.Mock implements _i31.QuestService {
   void updateTime(int? seconds) =>
       super.noSuchMethod(Invocation.method(#updateTime, [seconds]),
           returnValueForMissingStub: null);
+  @override
+  _i12.ActivatedQuest updateTimeOnQuest(
+          _i12.ActivatedQuest? activatedQuest, int? seconds) =>
+      (super.noSuchMethod(
+          Invocation.method(#updateTimeOnQuest, [activatedQuest, seconds]),
+          returnValue: _FakeActivatedQuest_13()) as _i12.ActivatedQuest);
+  @override
+  _i16.Future<dynamic> trackData(int? seconds) =>
+      (super.noSuchMethod(Invocation.method(#trackData, [seconds]),
+          returnValue: Future<dynamic>.value()) as _i16.Future<dynamic>);
   @override
   void disposeActivatedQuest() =>
       super.noSuchMethod(Invocation.method(#disposeActivatedQuest, []),
@@ -903,9 +909,10 @@ class MockStopWatchService extends _i1.Mock implements _i32.StopWatchService {
       (super.noSuchMethod(Invocation.method(#getSecondTime, []), returnValue: 0)
           as int);
   @override
-  void listenToSecondTime({void Function(int)? callback}) => super.noSuchMethod(
-      Invocation.method(#listenToSecondTime, [], {#callback: callback}),
-      returnValueForMissingStub: null);
+  void listenToSecondTime({_i16.Future<dynamic> Function(int)? callback}) =>
+      super.noSuchMethod(
+          Invocation.method(#listenToSecondTime, [], {#callback: callback}),
+          returnValueForMissingStub: null);
   @override
   void cancelListener() =>
       super.noSuchMethod(Invocation.method(#cancelListener, []),

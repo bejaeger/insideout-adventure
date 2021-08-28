@@ -25,7 +25,7 @@ class StopWatchService {
     return _stopWatchTimer.secondTime.value;
   }
 
-  void listenToSecondTime({required void Function(int) callback}) {
+  void listenToSecondTime({required Future Function(int) callback}) {
     if (_streamSubscription == null) {
       _streamSubscription = _stopWatchTimer.secondTime.listen((value) {
         callback(value);

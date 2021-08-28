@@ -35,39 +35,6 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
     notifyListeners();
   }
 
-  Future startQuest() async {
-    try {
-      final quest = await questService.getQuest(questId: kTestQuestId);
-      await questService.startQuest(quest: quest);
-      snackbarService.showSnackbar(message: "Started quest");
-    } catch (e) {
-      log.e("Could not start quest, error thrown: $e");
-    }
-  }
-
-  Future finishQuest() async {
-    try {
-      final result = await questService.evaluateAndFinishQuest();
-      if (result is String) {
-        final continueQuest = await _dialogService.showConfirmationDialog(
-            title: result.toString(),
-            cancelTitle: "Cancel Quest",
-            confirmationTitle: "Continue");
-        if (continueQuest?.confirmed == true) {
-          await questService.continueIncompleteQuest();
-        } else {
-          await questService.cancelIncompleteQuest();
-          await _dialogService.showDialog(title: "Quest cancelled");
-        }
-      } else {
-        await _dialogService.showDialog(
-            title: "Congratz, you succesfully finished the quest!");
-      }
-    } catch (e) {
-      log.e("Could not finish quest, error thrown: $e");
-    }
-  }
-
   /////////////////////////////////////////////////
   // bottom sheets
 

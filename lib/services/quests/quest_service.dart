@@ -1,11 +1,13 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart'; // Import stop_watch_timer
 import 'package:afkcredits/app/app.logger.dart';
@@ -25,7 +27,7 @@ class QuestService {
     ActivatedQuest activatedQuest = getActivatedQuest(quest: quest);
 
     // Add quest to behavior subject
-    updateActivatedQuest(activatedQuest);
+    pushActivatedQuest(activatedQuest);
 
     // Start timer
     _stopWatchService.startTimer();
@@ -44,6 +46,7 @@ class QuestService {
       _stopWatchService.stopTimer();
       _stopWatchService.pauseListener();
       trackData(_stopWatchService.getSecondTime());
+      // updateData();
 
       evaluateQuest();
 
@@ -63,8 +66,7 @@ class QuestService {
     if (activatedQuest != null) {
       _stopWatchService.resumeListener();
       _stopWatchService.startTimer();
-      updateActivatedQuest(
-          activatedQuest!.copyWith(status: QuestStatus.active));
+      pushActivatedQuest(activatedQuest!.copyWith(status: QuestStatus.active));
     } else {
       log.e(
           "Can't continue the quest because there is no quest present. This function should have probably never been called! Please check!");
@@ -72,24 +74,20 @@ class QuestService {
   }
 
   Future cancelIncompleteQuest() async {
-    log.i("Cancelling incomplete quest");
-    await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
-    disposeActivatedQuest();
+    if (activatedQuest != null) {
+      log.i("Cancelling incomplete quest");
+      await _firestoreApi.pushFinishedQuest(
+          quest: activatedQuest!.copyWith(status: QuestStatus.cancelled));
+      disposeActivatedQuest();
+    } else {
+      log.e(
+          "Can't cancel the quest because there is no quest present. This function should have probably never been called! Please check!");
+    }
   }
 
   //////////////////////////////////////////
   //////////////////////////////////////////////////////////
   // Internal & Important functions
-
-  // Callback function called every second in the stop watch listener
-  // used to track quests data!
-  void trackData(int seconds) {
-    if (activatedQuest != null) {
-      // Q: Does this only trigger a rebuild in the sponsor home view?
-      // Or in other places, too? Something to test!
-      updateActivatedQuest(activatedQuest!.copyWith(timeElapsed: seconds));
-    }
-  }
 
   // evaluate the quest
   // Set status of quest according to what is found
@@ -100,22 +98,22 @@ class QuestService {
     bool? allMarkersCollected =
         activatedQuest?.markersCollected.any((element) => element == false);
     if (allMarkersCollected != null && allMarkersCollected == false) {
-      updateActivatedQuest(
-          activatedQuest!.copyWith(status: QuestStatus.success));
+      pushActivatedQuest(activatedQuest!.copyWith(status: QuestStatus.success));
     } else {
-      updateActivatedQuest(
+      pushActivatedQuest(
           activatedQuest!.copyWith(status: QuestStatus.incomplete));
     }
   }
 
   ////////////////////////////////////////////////
   // Helper functions
-  void updateActivatedQuest(ActivatedQuest quest) {
+  void pushActivatedQuest(ActivatedQuest quest) {
     log.v("Add updated quest to stream");
     activatedQuestSubject.add(quest);
   }
 
   void removeActivatedQuest() {
+    log.v("Removing active quest");
     activatedQuestSubject.add(null);
   }
 
@@ -125,7 +123,40 @@ class QuestService {
 
   void updateTime(int seconds) {
     if (activatedQuest != null) {
-      updateActivatedQuest(activatedQuest!.copyWith(timeElapsed: seconds));
+      pushActivatedQuest(activatedQuest!.copyWith(timeElapsed: seconds));
+    }
+  }
+
+  ActivatedQuest updateTimeOnQuest(ActivatedQuest activatedQuest, int seconds) {
+    return activatedQuest.copyWith(timeElapsed: seconds);
+  }
+
+  Future trackData(int seconds) async {
+    ActivatedQuest tmpActivatedQuest = activatedQuest!;
+    //void updateTime(int seconds) {
+    bool push = false;
+    if (seconds % 1 == 0) {
+      push = true;
+      // every five seconds
+      tmpActivatedQuest = updateTimeOnQuest(tmpActivatedQuest, seconds);
+    }
+    if (seconds % 10 == 0) {
+      push = true;
+      // every ten seconds
+      log.v("10 seconds passed!");
+      // tmpActivatedQuest = trackSomeOtherData(tmpActivatedQuest, seconds);
+    }
+    if (seconds >= kMaxQuestTimeInSeconds) {
+      push = false;
+      log.wtf(
+          "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten!");
+      // TODO: Add mechanism for the user to get a Notification about this
+      await cancelIncompleteQuest();
+      return;
+    }
+    //}
+    if (push) {
+      pushActivatedQuest(tmpActivatedQuest);
     }
   }
 
