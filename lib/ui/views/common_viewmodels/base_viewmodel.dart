@@ -31,7 +31,8 @@ class BaseModel extends BaseViewModel {
   bool get hasActiveQuest => questService.activatedQuest != null;
   // only access this
   ActivatedQuest get activeQuest => questService.activatedQuest!;
-
+  int get numMarkersCollected =>
+      activeQuest.markersCollected.where((element) => element == true).length;
   StreamSubscription? _activeQuestSubscription;
 
   BaseModel() {
@@ -44,6 +45,7 @@ class BaseModel extends BaseViewModel {
   }
 
   Future logout() async {
+    // TODO: Check that there is no active quest present!
     await userService.handleLogoutEvent();
     transfersHistoryService.clearData();
     layoutService.setShowBottomNavBar(false);

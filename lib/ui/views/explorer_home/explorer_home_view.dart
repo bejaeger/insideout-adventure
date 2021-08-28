@@ -1,4 +1,5 @@
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -11,8 +12,8 @@ class ExplorerHomeView extends StatelessWidget {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
       viewModelBuilder: () => ExplorerHomeViewModel(),
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: Text("Hi Explorer!"),
+        appBar: CustomAppBar(
+          title: "Hi Explorer!",
         ),
         body: ListView(
           children: [

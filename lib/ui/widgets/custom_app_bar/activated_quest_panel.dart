@@ -55,7 +55,15 @@ class ActivatedQuestPanel extends StatelessWidget {
                                       "Active quest - " +
                                           model.activeQuest.timeElapsed
                                               .toString() +
-                                          " sec elapsed - 3 / 10 markers",
+                                          " sec elapsed - " +
+                                          model.numMarkersCollected
+                                              .toString()
+                                              .toString() +
+                                          " / " +
+                                          model.activeQuest.markersCollected
+                                              .length
+                                              .toString() +
+                                          " markers",
                                       style: textTheme(context)
                                           .bodyText1!
                                           .copyWith(
