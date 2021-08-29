@@ -4,8 +4,10 @@ import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/user_service.dart';
@@ -67,6 +69,8 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: QuestService),
     LazySingleton(classType: PaymentService),
     LazySingleton(classType: StopWatchService),
+    LazySingleton(classType: QRCodeService),
+    LazySingleton(classType: MarkerService),
 
     // Services
   ],

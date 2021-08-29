@@ -20,8 +20,10 @@ import '../services/environment_services.dart';
 import '../services/geolocation/geolocation_service.dart';
 import '../services/layout/layout_service.dart';
 import '../services/local_storage_service.dart';
+import '../services/markers/marker_service.dart';
 import '../services/payments/payment_service.dart';
 import '../services/payments/transfers_history_service.dart';
+import '../services/qrcodes/qrcode_service.dart';
 import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/user_service.dart';
@@ -52,4 +54,6 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => QuestService());
   locator.registerLazySingleton(() => PaymentService());
   locator.registerLazySingleton(() => StopWatchService());
+  locator.registerLazySingleton(() => QRCodeService());
+  locator.registerLazySingleton(() => MarkerService());
 }

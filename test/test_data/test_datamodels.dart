@@ -6,6 +6,9 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
+import 'package:geolocator/geolocator.dart';
+
+import 'test_constants.dart';
 
 User getTestUserSponsor() {
   return User(
@@ -43,6 +46,52 @@ User getTestUserAdmin() {
   );
 }
 
+Position getTestPosition1() {
+  return Position(
+      longitude: 49,
+      latitude: -122,
+      timestamp: DateTime.now(),
+      accuracy: 0.0,
+      altitude: 100,
+      heading: 0.0,
+      speed: 0.0,
+      speedAccuracy: 0.0);
+}
+
+Position getTestPositionAwayFromMarker1() {
+  return Position(
+      longitude: 0,
+      latitude: 0,
+      timestamp: DateTime.now(),
+      accuracy: 0.0,
+      altitude: 100,
+      heading: 0.0,
+      speed: 0.0,
+      speedAccuracy: 0.0);
+}
+
+Marker getTestMarker1() {
+  return Marker(
+      id: kTestMarker1Id, qrCodeId: kTestMarker1QrCodeId, lat: 49, lon: -122);
+}
+
+Marker getTestMarker1NullCoordinates() {
+  return Marker(
+      id: kTestMarker1Id, qrCodeId: kTestMarker1QrCodeId, lat: null, lon: null);
+}
+
+Marker getTestMarker2() {
+  return Marker(id: "Marker2Id", qrCodeId: "QRCode2Id", lat: 49.1, lon: -122);
+}
+
+Marker getTestMarker3() {
+  return Marker(id: "Marker3Id", qrCodeId: "QRCode3Id", lat: 49.2, lon: -122);
+}
+
+Marker getTestMarker4() {
+  return Marker(id: "Marker4Id", qrCodeId: "QRCode4Id", lat: 49.2, lon: -122);
+}
+
 Quest getTestQuest() {
   return Quest(
     id: kTestQuestId,
@@ -50,14 +99,13 @@ Quest getTestQuest() {
     description: "Make it up the hill in less than 1 hour",
     afkCredits: 100,
     markers: [
-      Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49, lon: -122),
-      Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.5, lon: -122)
+      getTestMarker1(),
+      getTestMarker2(),
+      getTestMarker3(),
     ],
     type: QuestType.Hike,
-    startMarker:
-        Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49, lon: -122),
-    finishMarker:
-        Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.5, lon: -122),
+    startMarker: getTestMarker1(),
+    finishMarker: getTestMarker3(),
   );
 }
 
@@ -88,7 +136,7 @@ ActivatedQuest getTestActivatedButIncompleteQuest() {
   );
 }
 
-ActivatedQuest getTestFinishedQuest() {
+ActivatedQuest getTestSuccessQuest() {
   return ActivatedQuest(
     quest: getTestQuest(),
     markersCollected: List.filled(getTestQuest().markers.length, true),

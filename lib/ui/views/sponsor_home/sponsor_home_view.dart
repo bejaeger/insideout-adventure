@@ -28,12 +28,6 @@ class SponsorHomeView extends StatelessWidget {
           physics: ScrollPhysics(),
           children: [
             verticalSpaceMedium,
-            ElevatedButton(
-              onPressed: model.startQuest,
-              child: Text("Start Quest"),
-              //imagePath: ImagePath.peopleHoldingHands,
-            ),
-            verticalSpaceMedium,
             SectionHeader(
               title: "Supported Explorers",
             ),

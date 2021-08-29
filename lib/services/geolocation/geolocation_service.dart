@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -103,5 +104,16 @@ class GeolocationService {
     // continue accessing the position of the device.
 
     return true;
+  }
+
+  Future<bool> isUserCloseby({required double lat, required double lon}) async {
+    Position position = await getCurrentLocation();
+    double distanceInMeters = Geolocator.distanceBetween(
+        position.latitude, position.longitude, lat, lon);
+    if (distanceInMeters > kMaxDistanceFromMarkerInMeter) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

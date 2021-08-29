@@ -12,7 +12,6 @@ import 'package:afkcredits/app/app.logger.dart';
 class SponsorHomeViewModel extends LayoutTemplateViewModel {
   final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   final log = getLogger("SponsorHomeViewModel");
-  final DialogService _dialogService = locator<DialogService>();
   List<User> get supportedExplorers => userService.supportedExplorersList;
   Map<String, UserStatistics> get supportedExplorerStats =>
       userService.supportedExplorerStats;

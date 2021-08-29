@@ -1,11 +1,12 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../helpers/datamodel_helpers.dart';
+import '../test_data/test_datamodels.dart';
 import '../helpers/test_helpers.dart';
 
 QuestService _getService() => QuestService();
@@ -101,7 +102,7 @@ void main() {
 
         //act
         final service = _getService();
-        service.pushActivatedQuest(getTestFinishedQuest());
+        service.pushActivatedQuest(getTestSuccessQuest());
         await service.evaluateAndFinishQuest();
 
         //assert
@@ -114,7 +115,7 @@ void main() {
           () async {
         final firestoreApi = getAndRegisterFirestoreApi();
         final service = _getService();
-        service.pushActivatedQuest(getTestFinishedQuest());
+        service.pushActivatedQuest(getTestSuccessQuest());
         await service.evaluateAndFinishQuest();
         verify(firestoreApi.pushFinishedQuest(quest: anyNamed("quest")));
       });
@@ -129,7 +130,7 @@ void main() {
       test('After quest is finished activated quest should be null', () async {
         final service = _getService();
         await service.startQuest(quest: getTestQuest());
-        service.pushActivatedQuest(getTestFinishedQuest());
+        service.pushActivatedQuest(getTestSuccessQuest());
         await service.evaluateAndFinishQuest();
         expect(service.activatedQuest, isNull);
       });
@@ -162,13 +163,95 @@ void main() {
         final stopWatchService = getAndRegisterStopWatchService();
         final firestoreApi = getAndRegisterFirestoreApi();
         final service = _getService();
-        service.pushActivatedQuest(getTestFinishedQuest());
+        service.pushActivatedQuest(getTestSuccessQuest());
+
         // act
         await service.trackData(kMaxQuestTimeInSeconds);
+
         // assert
         verify(firestoreApi.pushFinishedQuest(quest: anyNamed("quest")));
         verify(stopWatchService.resetTimer());
         verify(stopWatchService.cancelListener());
+      });
+    });
+
+    group('verifyAndUpdateCollectedMarkers -', () {
+      test(
+          'when called, a check needs to be performed whether the user is close to the marker',
+          () async {
+        // arrange
+        final markerService = getAndRegisterMarkerService();
+        when(markerService.isUserCloseby(marker: getTestMarker1()))
+            .thenAnswer((_) async => Future.value(false));
+        final service = _getService();
+        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
+        // act
+        await service.verifyAndUpdateCollectedMarkers(marker: getTestMarker1());
+        // assert
+        verify(markerService.isUserCloseby(marker: getTestMarker1()));
+      });
+
+      test(
+          'when called and marker not in quest, return string with error message',
+          () async {
+        // arrange
+        final service = _getService();
+        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
+        // assert & act
+        expect(
+            await service.verifyAndUpdateCollectedMarkers(
+                marker: getTestMarker4()),
+            isA<String>());
+      });
+
+      // ! This test is currently failing because we still use dummy data here!
+      test(
+          'when called and user is not nearby marker, return string with error message',
+          () async {
+        // arrange
+        final markerService = getAndRegisterMarkerService();
+        when(markerService.isUserCloseby(marker: anyNamed("marker")))
+            .thenAnswer((_) async => false);
+        // act
+        final service = _getService();
+        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
+        // assert
+        expect(
+            await service.verifyAndUpdateCollectedMarkers(
+                marker: getTestMarker1()),
+            isA<String>());
+      });
+    });
+
+    group('isMarkerInQuest -', () {
+      test('Return true if it belongs to the currently active quest', () {
+        // arrange
+        final service = _getService();
+        // act
+        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
+        // assert
+        expect(service.isMarkerInQuest(marker: getTestMarker2()), true);
+      });
+
+      test('Return false when it doesn\'t belong to the currently active quest',
+          () {
+        final service = _getService();
+        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
+        expect(service.isMarkerInQuest(marker: getTestMarker4()), false);
+      });
+    });
+
+    group('updateCollectedMarkers -', () {
+      test(
+          'When the second marker is succesfully scanned it needs to be reflected in the activated quest model',
+          () async {
+        // arrange
+        final service = _getService();
+        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
+        // act
+        service.updateCollectedMarkers(marker: getTestMarker2());
+        // assert
+        expect(service.activatedQuest?.markersCollected[1], true);
       });
     });
   });

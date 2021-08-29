@@ -17,12 +17,46 @@ class ExplorerHomeView extends StatelessWidget {
         ),
         body: ListView(
           children: [
-            verticalSpaceMassive,
+            verticalSpaceMedium,
             ElevatedButton(
                 // onPressed: model.navigateToExplorerHomeView,
                 onPressed: model.navigateToMapView,
                 //child: Text("Go to explorer home/map")),
                 child: Text("Go to explorer Map  ")),
+            verticalSpaceMedium,
+            ElevatedButton(
+              onPressed: model.startQuest,
+              child: Text("Start Quest"),
+              //imagePath: ImagePath.peopleHoldingHands,
+            ),
+            if (model.hasActiveQuest)
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: model.collectMarker1,
+                      child: Text("Dummy Collect Marker 1"),
+                      //imagePath: ImagePath.peopleHoldingHands,
+                    ),
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: model.collectMarker2,
+                      child: Text("Dummy Collect Marker 2"),
+
+                      //imagePath: ImagePath.peopleHoldingHands,
+                    ),
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: model.collectMarker3,
+                      child: Text("Dummy Collect Marker 3"),
+                      //imagePath: ImagePath.peopleHoldingHands,
+                    ),
+                  ),
+                ],
+              ),
+            verticalSpaceMassive,
             ElevatedButton(
                 // onPressed: model.navigateToExplorerHomeView,
                 onPressed: model.logout,

@@ -27,6 +27,8 @@ final CollectionReference questsCollection =
     FirebaseFirestore.instance.collection('quests');
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
+final CollectionReference markersCollection =
+    FirebaseFirestore.instance.collection("markers");
 final CollectionReference activeQuestsCollection =
     FirebaseFirestore.instance.collection(activatedQuestsCollectionKey);
 
@@ -41,11 +43,8 @@ const String URIPATHPREPENDDEV = "";
 const String AUTHORITYPROD = "us-central1-afkcredits.cloudfunctions.net";
 const String URIPATHPREPENDPROD = "";
 
-/////////////////////////////////////////////////////////
-/// For testing
-const String kTestUid = "TestId";
-const String kTestQuestId = "QuestId";
-
 //////////////////////////////////////////////////////////
-/// Quest related
+/// Quest settings!
+
 const int kMaxQuestTimeInSeconds = 24 * 60 * 60;
+const int kMaxDistanceFromMarkerInMeter = 50;

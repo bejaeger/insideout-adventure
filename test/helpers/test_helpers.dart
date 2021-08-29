@@ -7,7 +7,9 @@ import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/user_service.dart';
@@ -15,6 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:places_service/places_service.dart';
@@ -22,7 +25,8 @@ import 'package:rxdart/rxdart.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import 'datamodel_helpers.dart';
+import '../test_data/test_constants.dart';
+import '../test_data/test_datamodels.dart';
 import 'mock_firebase_user.dart';
 import 'test_helpers.mocks.dart';
 
@@ -42,6 +46,8 @@ final mockFirebaseUser = MockFirebaseUser();
   MockSpec<GeolocationService>(returnNullOnMissingStub: true),
   MockSpec<QuestService>(returnNullOnMissingStub: true),
   MockSpec<StopWatchService>(returnNullOnMissingStub: true),
+  MockSpec<MarkerService>(returnNullOnMissingStub: true),
+  MockSpec<QRCodeService>(returnNullOnMissingStub: true),
 
   // stacked services registered with get_it
   MockSpec<NavigationService>(returnNullOnMissingStub: true),
@@ -200,10 +206,13 @@ QuestService getAndRegisterQuestService() {
   return service;
 }
 
-GeolocationService getAndRegisterGeolocationService() {
+GeolocationService getAndRegisterGeolocationService(
+    {Position? position, bool isCloseBy = true}) {
   _removeRegistrationIfExists<GeolocationService>();
   final service = MockGeolocationService();
-  when(service.getCurrentLocation()).thenAnswer((_) async => null);
+  when(service.getCurrentLocation()).thenAnswer((_) async => position);
+  when(service.isUserCloseby(lat: anyNamed("lat"), lon: anyNamed("lon")))
+      .thenAnswer((_) async => isCloseBy);
   locator.registerSingleton<GeolocationService>(service);
   return service;
 }
@@ -213,6 +222,20 @@ MockStopWatchService getAndRegisterStopWatchService() {
   final service = MockStopWatchService();
   when(service.getSecondTime()).thenReturn(100);
   locator.registerSingleton<StopWatchService>(service);
+  return service;
+}
+
+MockMarkerService getAndRegisterMarkerService() {
+  _removeRegistrationIfExists<MarkerService>();
+  final service = MockMarkerService();
+  locator.registerSingleton<MarkerService>(service);
+  return service;
+}
+
+MockQRCodeService getAndRegisterQRCodeService() {
+  _removeRegistrationIfExists<QRCodeService>();
+  final service = MockQRCodeService();
+  locator.registerSingleton<QRCodeService>(service);
   return service;
 }
 
@@ -233,6 +256,8 @@ void unregisterServices() {
   locator.unregister<QuestService>();
   locator.unregister<GeolocationService>();
   locator.unregister<StopWatchService>();
+  locator.unregister<MarkerService>();
+  locator.unregister<QRCodeService>();
 }
 
 void registerServices() {
@@ -252,6 +277,8 @@ void registerServices() {
   getAndRegisterQuestService();
   getAndRegisterGeolocationService();
   getAndRegisterStopWatchService();
+  getAndRegisterMarkerService();
+  getAndRegisterQRCodeService();
 }
 
 void _removeRegistrationIfExists<T extends Object>() {

@@ -29,7 +29,7 @@ class StopWatchService {
     if (_streamSubscription == null) {
       _streamSubscription = _stopWatchTimer.secondTime.listen((value) {
         callback(value);
-        log.v('secondTime $value');
+        // if (value % 10 == 0) log.v('secondTime $value');
       });
     } else {
       log.w("second time already listened to!");

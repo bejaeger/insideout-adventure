@@ -78,12 +78,12 @@ class ActivatedQuestPanel extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SmallButton(
-                                    title: "Cancel Quest",
+                                    title: "Finish Quest",
                                     onPressed: model.finishQuest),
-                                horizontalSpaceMedium,
-                                SmallButton(
-                                    title: "Complete Quest",
-                                    onPressed: model.finishQuest),
+                                // horizontalSpaceMedium,
+                                // SmallButton(
+                                //     title: "Complete Quest",
+                                //     onPressed: model.finishQuest),
                               ],
                             ),
                           ),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/dummy_datamodels.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -310,21 +311,7 @@ class FirestoreApi {
 
   // Returns dummy data for now!
   Quest getQuest({required String questId}) {
-    return Quest(
-      id: "QuestDummyId",
-      name: "Grouse Grind",
-      description: "Make it up the hill in less than 1 hour",
-      afkCredits: 100,
-      markers: [
-        Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49, lon: -122),
-        Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.5, lon: -122)
-      ],
-      type: QuestType.Hike,
-      startMarker:
-          Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49, lon: -122),
-      finishMarker:
-          Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.5, lon: -122),
-    );
+    return getDummyQuest();
   }
 
   // Returns dummy data for now!
@@ -347,6 +334,34 @@ class FirestoreApi {
           devDetails:
               "This problem is likely caused by some not well defined datamodels and their json serializability.");
     }
+  }
+
+  ///////////////////////////////////////////////////
+  /// Functions related to markers
+  Future<Marker?> getMarkerFromQrCodeId({required String qrCodeId}) async {
+    /////////////////////////////////////////////
+    // For now we return dummy data!
+    return Future.value(
+        Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.1, lon: -122));
+
+    //////////////////////////////////////////////
+    // QuerySnapshot snapshot =
+    //     await markersCollection.where(qrCodeId, isEqualTo: qrCodeId).get();
+    // if (snapshot.docs.length > 1) {
+    //   throw FirestoreApiException(
+    //       message:
+    //           "Found more than one marker with id $qrCodeId. This should never happen!",
+    //       devDetails:
+    //           "Maybe this is some inconsistency in the backend during development?");
+    // }
+    // if (snapshot.docs.length == 0) {
+    //   throw FirestoreApiException(
+    //       message: "No marker with id $qrCodeId found. Returning null",
+    //       devDetails:
+    //           "Maybe this is some inconsistency in the backend during development?");
+    // }
+    // final marker = Marker.fromJson(snapshot.docs[0].data());
+    // return marker;
   }
 
   /////////////////////////////////////////////////////////

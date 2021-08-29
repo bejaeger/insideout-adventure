@@ -61,7 +61,7 @@ class BaseModel extends BaseViewModel {
 
   Future startQuest() async {
     try {
-      final quest = await questService.getQuest(questId: kTestQuestId);
+      final quest = await questService.getQuest(questId: "QuestId");
       await questService.startQuest(quest: quest);
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
