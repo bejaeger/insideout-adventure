@@ -6,7 +6,8 @@ import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
-import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
@@ -59,7 +60,8 @@ MockUserService getAndRegisterUserService({
           emailOrName: anyNamed("emailOrName"),
           password: anyNamed("password")))
       .thenAnswer((_) async =>
-          AFKCreditsAuthenticationResult.fromLocalStorage(uid: kTestUid));
+          AFKCreditsAuthenticationResultService.fromLocalStorage(
+              uid: kTestUid));
   when(service.runCreateAccountLogic(
           method: anyNamed("method"),
           role: anyNamed("role"),
@@ -67,7 +69,8 @@ MockUserService getAndRegisterUserService({
           email: anyNamed("email"),
           password: anyNamed("password")))
       .thenAnswer((_) async =>
-          AFKCreditsAuthenticationResult.fromLocalStorage(uid: kTestUid));
+          AFKCreditsAuthenticationResultService.fromLocalStorage(
+              uid: kTestUid));
   locator.registerSingleton<UserService>(service);
   return service;
 }

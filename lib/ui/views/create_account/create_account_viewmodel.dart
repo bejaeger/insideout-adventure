@@ -5,7 +5,8 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/authentication_viewmodel.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.form.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
@@ -18,7 +19,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
   final UserService _userService = locator<UserService>();
 
   @override
-  Future<AFKCreditsAuthenticationResult> runAuthentication(
+  Future<AFKCreditsAuthenticationResultService> runAuthentication(
       AuthenticationMethod method,
       [UserRole? role]) async {
     return await _userService.runCreateAccountLogic(

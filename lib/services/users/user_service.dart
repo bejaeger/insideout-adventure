@@ -21,9 +21,10 @@ import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:crypto/crypto.dart';
-import 'dart:convert'; // for the utf8.encode method
+import 'dart:convert';
+
+import 'afkcredits_authentication_result_service.dart'; // for the utf8.encode method
 
 class UserService {
   final _firestoreApi = locator<FirestoreApi>();
@@ -139,7 +140,7 @@ class UserService {
     return id;
   }
 
-  Future<AFKCreditsAuthenticationResult> runLoginLogic(
+  Future<AFKCreditsAuthenticationResultService> runLoginLogic(
       {required AuthenticationMethod method,
       String? emailOrName,
       String? password,
@@ -157,46 +158,52 @@ class UserService {
             isMatchingPasswords(hashedPw: user.password, stringPw: password)) {
           // && password == user.password) {
           log.i("Found AFK user that was created by a sponsor inside the app");
-          return AFKCreditsAuthenticationResult.fromLocalStorage(uid: user.uid);
+          return AFKCreditsAuthenticationResultService.fromLocalStorage(
+              uid: user.uid);
         } else {
           log.i(
               "Found AFK user that was created by a sponsor inside the app but password is not valid!");
-          return Future.value(AFKCreditsAuthenticationResult.error(
+          return Future.value(AFKCreditsAuthenticationResultService.error(
               errorMessage:
                   "Password for user with name $emailOrName is not correct."));
         }
       } else {
         log.i("Login with e-mail");
-        return AFKCreditsAuthenticationResult.fromFirebaseAuthenticationResult(
-            firebaseAuthenticationResult: await _firebaseAuthenticationService
-                .loginWithEmail(email: emailOrName!, password: password!));
+        return AFKCreditsAuthenticationResultService
+            .fromFirebaseAuthenticationResult(
+                firebaseAuthenticationResult:
+                    await _firebaseAuthenticationService.loginWithEmail(
+                        email: emailOrName!, password: password!));
       }
     } else if (method == AuthenticationMethod.email) {
       log.i("Login with e-mail");
-      return AFKCreditsAuthenticationResult.fromFirebaseAuthenticationResult(
-          firebaseAuthenticationResult: await _firebaseAuthenticationService
-              .loginWithEmail(email: emailOrName!, password: password!));
+      return AFKCreditsAuthenticationResultService
+          .fromFirebaseAuthenticationResult(
+              firebaseAuthenticationResult: await _firebaseAuthenticationService
+                  .loginWithEmail(email: emailOrName!, password: password!));
     } else if (method == AuthenticationMethod.google) {
       log.i("Login with google");
-      return AFKCreditsAuthenticationResult.fromFirebaseAuthenticationResult(
-          firebaseAuthenticationResult:
-              await _firebaseAuthenticationService.signInWithGoogle());
+      return AFKCreditsAuthenticationResultService
+          .fromFirebaseAuthenticationResult(
+              firebaseAuthenticationResult:
+                  await _firebaseAuthenticationService.signInWithGoogle());
     } else if (method == AuthenticationMethod.dummy) {
-      return AFKCreditsAuthenticationResult.fromFirebaseAuthenticationResult(
-          firebaseAuthenticationResult:
-              await _firebaseAuthenticationService.loginWithEmail(
-                  email: _flavorConfigProvider.getTestUserEmail(role),
-                  password: _flavorConfigProvider.getTestUserPassword()));
+      return AFKCreditsAuthenticationResultService
+          .fromFirebaseAuthenticationResult(
+              firebaseAuthenticationResult:
+                  await _firebaseAuthenticationService.loginWithEmail(
+                      email: _flavorConfigProvider.getTestUserEmail(role),
+                      password: _flavorConfigProvider.getTestUserPassword()));
     } else {
       log.e(
           "The authentication method you tried to use is not implemented yet. Use E-mail, Google, or Apple to authenticate");
-      return Future.value(AFKCreditsAuthenticationResult.error(
+      return Future.value(AFKCreditsAuthenticationResultService.error(
           errorMessage:
               "Authentification method you try to use is not available."));
     }
   }
 
-  Future<AFKCreditsAuthenticationResult> runCreateAccountLogic(
+  Future<AFKCreditsAuthenticationResultService> runCreateAccountLogic(
       {required AuthenticationMethod method,
       required UserRole role,
       String? fullName,
@@ -212,11 +219,11 @@ class UserService {
     } else {
       log.e(
           "The authentication method you tried to use is not implemented yet. Use E-mail, Google, Facebook, or Apple to authenticate");
-      return AFKCreditsAuthenticationResult.error(
+      return AFKCreditsAuthenticationResultService.error(
           errorMessage: "Authentication method not valid!");
     }
     if (result.hasError) {
-      return AFKCreditsAuthenticationResult.error(
+      return AFKCreditsAuthenticationResultService.error(
           errorMessage: result.errorMessage);
     } else {
       // create user in data bank
@@ -235,16 +242,16 @@ class UserService {
       } catch (e) {
         log.e("Error: $e");
         if (e is FirestoreApiException) {
-          return AFKCreditsAuthenticationResult.error(
+          return AFKCreditsAuthenticationResultService.error(
               errorMessage: e.prettyDetails ??
                   "Something went wrong when creating a new user in our databank. Please try again later or contact support!");
         } else {
-          return AFKCreditsAuthenticationResult.error(
+          return AFKCreditsAuthenticationResultService.error(
               errorMessage:
                   "Something went wrong when creating a new user in our databank. Please try again later or contact support!");
         }
       }
-      return AFKCreditsAuthenticationResult.authenticatedUser(
+      return AFKCreditsAuthenticationResultService.authenticatedUser(
           firebaseUser: result.user);
     }
   }
@@ -516,7 +523,7 @@ class UserService {
   }
 }
 
-////////////////////////////////////////////////////
+/* ////////////////////////////////////////////////////
 /// AFK Credits authentication result
 /// We need this abstraction because we
 /// can have users not authenticated with
@@ -583,3 +590,4 @@ class AFKCreditsAuthenticationResult {
       (firebaseUser == null && user != null) ||
       (firebaseUser == null && user == null && uid != null);
 }
+ */

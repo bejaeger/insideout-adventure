@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

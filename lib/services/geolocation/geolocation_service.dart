@@ -1,10 +1,15 @@
+import 'package:afkcredits/apis/firestore_api.dart';
+import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GeolocationService {
   final log = getLogger('GeolocationService');
+  final _firestoreApi = locator<FirestoreApi>();
+
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   var _position;
 
@@ -103,5 +108,10 @@ class GeolocationService {
     // continue accessing the position of the device.
 
     return true;
+  }
+
+  //Get User Favourite Places
+  Future<List<Places>?> getPlaces() async {
+    return await _firestoreApi.getPlaces();
   }
 }

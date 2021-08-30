@@ -2,7 +2,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
 

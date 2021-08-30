@@ -7,7 +7,7 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 

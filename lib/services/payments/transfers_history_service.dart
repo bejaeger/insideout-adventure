@@ -5,7 +5,7 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 
 class TransfersHistoryService {
   final log = getLogger("TransfersHistoryService");

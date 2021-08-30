@@ -6,7 +6,7 @@ import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
@@ -15,6 +15,7 @@ import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
+import 'package:afkcredits/ui/views/map/map_screen.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
@@ -45,6 +46,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: TransferFundsView),
     MaterialRoute(page: TransfersHistoryView),
     MaterialRoute(page: LayoutTemplateView),
+    MaterialRoute(page: MapScreen),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -63,6 +65,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: FlutterSecureStorage),
     LazySingleton(classType: TransfersHistoryService),
     LazySingleton(classType: QuestService),
+    // LazySingleton(classType: AFKCreditsAuthenticationResultService),
 
     // Services
   ],

@@ -4,6 +4,7 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
+import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/active_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -113,6 +114,24 @@ class FirestoreApi {
       try {
         return userFavouritePlaces.docs
             .map((docs) => UserFavPlaces.fromJson(docs.data()))
+            .toList();
+      } catch (e) {
+        throw FirestoreApiException(
+            message: 'Failed to get the Places', devDetails: '$e');
+      }
+    } else {
+      return null;
+    }
+  }
+
+// Get Places For the Quest.
+  Future<List<Places>?>? getPlaces() async {
+    final _places = await placesCollection.get();
+
+    if (_places.docs.isNotEmpty) {
+      try {
+        return _places.docs
+            .map((docs) => Places.fromJson(docs.data()))
             .toList();
       } catch (e) {
         throw FirestoreApiException(

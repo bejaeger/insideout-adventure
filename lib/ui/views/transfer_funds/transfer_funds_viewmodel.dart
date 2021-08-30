@@ -16,7 +16,7 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/payments/payment_service.dart';
-import 'package:afkcredits/services/user_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
