@@ -1,70 +1,224 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/active_quest.dart';
+import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/services/markers/marker_service.dart';
+import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart'; // Import stop_watch_timer
 import 'package:afkcredits/app/app.logger.dart';
 
 class QuestService {
-  BehaviorSubject<ActiveQuest?> activeQuestSubject =
-      BehaviorSubject<ActiveQuest?>();
-  ActiveQuest? get activeQuest => activeQuestSubject.valueOrNull;
+  BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
+      BehaviorSubject<ActivatedQuest?>();
+  ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
-  final StopWatchTimer _stopWatchTimer = StopWatchTimer(); // Create instance.
+  final MarkerService _markerService = locator<MarkerService>();
+  final StopWatchService _stopWatchService =
+      locator<StopWatchService>(); // Create instance.
 
   final log = getLogger("QuestService");
 
-  void updateActiveQuest(ActiveQuest quest) {
-    activeQuestSubject.add(quest);
-  }
-
-  void removeActiveQuest() {
-    activeQuestSubject.add(null);
-  }
-
-  Future startQuest({required String questId}) async {
-    // Fetch quest information
-    Quest quest = await _firestoreApi.getQuest(questId: questId);
-
+  Future startQuest({required Quest quest}) async {
     // Get active quest
-    ActiveQuest activeQuest = getActiveQuest(quest: quest);
+    ActivatedQuest activatedQuest = getActivatedQuest(quest: quest);
 
     // Add quest to behavior subject
-    updateActiveQuest(activeQuest);
+    pushActivatedQuest(activatedQuest);
 
     // Start timer
-    _stopWatchTimer.onExecute.add(StopWatchExecute.start);
-    _stopWatchTimer.secondTime.listen((value) {
-      updateTime(value);
-      log.v('secondTime $value');
-    });
+    _stopWatchService.startTimer();
+    _stopWatchService.listenToSecondTime(callback: trackData);
   }
 
-  Future finishQuest() async {
+  // Handle the scenario when a user finishes a hike
+  // First evaluate the activated quest data and return values according to that
+  Future evaluateAndFinishQuest() async {
     // Fetch quest information
-    if (activeQuest == null) {
-      log.e("No active quest present, can't finish anything!");
+    if (activatedQuest == null) {
+      log.e(
+          "No activated quest present, can't finish anything! This function should have probably never been called!");
+      return;
     } else {
-      _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
-      updateTime(_stopWatchTimer.secondTime.value);
-      await _firestoreApi.pushFinishedQuest(quest: activeQuest);
-      _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
-      removeActiveQuest();
+      _stopWatchService.stopTimer();
+      _stopWatchService.pauseListener();
+      trackData(_stopWatchService.getSecondTime());
+      // updateData();
+
+      evaluateQuest();
+
+      if (activatedQuest!.status == QuestStatus.incomplete) {
+        log.w("Quest is incomplete. Show message to user");
+        return WarningQuestNotFinished;
+      } else {
+        log.i("Quest successfully finished, pushing to firebase!");
+        // if we end up here it means the quest has finished succesfully!
+        await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
+        disposeActivatedQuest();
+      }
     }
   }
 
-  ////////////////////////////////////////
-  /// helper functions
-  void updateTime(int value) {
-    if (activeQuest != null) {
-      updateActiveQuest(activeQuest!.copyWith(timeElapsed: value));
+  Future continueIncompleteQuest() async {
+    if (activatedQuest != null) {
+      _stopWatchService.resumeListener();
+      _stopWatchService.startTimer();
+      pushActivatedQuest(activatedQuest!.copyWith(status: QuestStatus.active));
+    } else {
+      log.e(
+          "Can't continue the quest because there is no quest present. This function should have probably never been called! Please check!");
     }
   }
 
-  ActiveQuest getActiveQuest({required Quest quest}) {
-    return ActiveQuest(
+  Future cancelIncompleteQuest() async {
+    if (activatedQuest != null) {
+      log.i("Cancelling incomplete quest");
+      await _firestoreApi.pushFinishedQuest(
+          quest: activatedQuest!.copyWith(status: QuestStatus.cancelled));
+      disposeActivatedQuest();
+    } else {
+      log.e(
+          "Can't cancel the quest because there is no quest present. This function should have probably never been called! Please check!");
+    }
+  }
+
+  //////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+  // Internal & Important functions
+
+  // evaluate the quest
+  // Set status of quest according to what is found
+  // success: user succesfully finished the quest
+  // incomplete: e.g. not all markers were collected
+  void evaluateQuest() {
+    log.i("Evaluating quest");
+    bool? allMarkersCollected =
+        activatedQuest?.markersCollected.any((element) => element == false);
+    if (allMarkersCollected != null && allMarkersCollected == false) {
+      pushActivatedQuest(activatedQuest!.copyWith(status: QuestStatus.success));
+    } else {
+      pushActivatedQuest(
+          activatedQuest!.copyWith(status: QuestStatus.incomplete));
+    }
+  }
+
+  Future trackData(int seconds) async {
+    ActivatedQuest tmpActivatedQuest = activatedQuest!;
+    //void updateTime(int seconds) {
+    bool push = false;
+    if (seconds % 1 == 0) {
+      push = true;
+      // every five seconds
+      tmpActivatedQuest = this.updateTimeOnQuest(tmpActivatedQuest, seconds);
+    }
+    if (seconds % 10 == 0) {
+      push = true;
+      // every ten seconds
+      log.v("quest active since $seconds seconds!");
+      // tmpActivatedQuest = trackSomeOtherData(tmpActivatedQuest, seconds);
+    }
+    if (seconds >= kMaxQuestTimeInSeconds) {
+      push = false;
+      log.wtf(
+          "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten!");
+      // TODO: Add mechanism for the user to get a Notification about this
+      await cancelIncompleteQuest();
+      return;
+    }
+    //}
+    if (push) {
+      pushActivatedQuest(tmpActivatedQuest);
+    }
+  }
+
+  Future verifyAndUpdateCollectedMarkers({required Marker marker}) async {
+    if (!isMarkerInQuest(marker: marker)) {
+      log.e("Marker is not part of current quest!");
+      return Future.value("Marker is not part of the currently active quest!");
+    }
+    final closeby = await _markerService.isUserCloseby(marker: marker);
+    if (!closeby) {
+      log.e("User is not nearby marker!");
+      // ! Still DUMMY VERSION -> Unit test of this function will fail!
+      log.e(
+          "We will still update the collected markers because we are using dummy data at the moment!");
+      //return Future.value("User is not nearby the marker!");
+    }
+    updateCollectedMarkers(marker: marker);
+  }
+
+  void updateCollectedMarkers({required Marker marker}) {
+    if (activatedQuest != null) {
+      final index = activatedQuest!.quest.markers
+          .indexWhere((element) => element == marker);
+      if (index < 0) {
+        log.wtf(
+            "Marker is not available in currently active quest. Before this funciton is called, this should have been already checked, please check your code!");
+        return;
+      }
+      List<bool> markersCollectedNew = activatedQuest!.markersCollected;
+      if (markersCollectedNew[index]) {
+        // TODO: Forward this info also to the user!
+        log.i("Marker already collected");
+        return;
+      }
+      markersCollectedNew[index] = true;
+      log.v("New Marker collected!");
+      pushActivatedQuest(
+          activatedQuest!.copyWith(markersCollected: markersCollectedNew));
+    } else {
+      log.e(
+          "Can't cancel the quest because there is no quest present. This function should have probably never been called! Please check!");
+    }
+  }
+
+  ////////////////////////////////////////////////
+  // Helper functions
+  void pushActivatedQuest(ActivatedQuest quest) {
+    // log.v("Add updated quest to stream");
+    activatedQuestSubject.add(quest);
+  }
+
+  void removeActivatedQuest() {
+    log.v("Removing active quest");
+    activatedQuestSubject.add(null);
+  }
+
+  bool isMarkerInQuest({required Marker marker}) {
+    if (activatedQuest != null) {
+      return activatedQuest!.quest.markers.any((element) => element == marker);
+    } else {
+      log.e(
+          "Can't cancel the quest because there is no quest present. This function should have probably never been called! Please check!");
+      return false;
+    }
+  }
+
+  Future getQuest({required String questId}) async {
+    return await _firestoreApi.getQuest(questId: questId);
+  }
+
+  void updateTime(int seconds) {
+    if (activatedQuest != null) {
+      pushActivatedQuest(activatedQuest!.copyWith(timeElapsed: seconds));
+    }
+  }
+
+  ActivatedQuest updateTimeOnQuest(ActivatedQuest activatedQuest, int seconds) {
+    return activatedQuest.copyWith(timeElapsed: seconds);
+  }
+
+  void disposeActivatedQuest() {
+    _stopWatchService.resetTimer();
+    _stopWatchService.cancelListener();
+    removeActivatedQuest();
+  }
+
+  ActivatedQuest getActivatedQuest({required Quest quest}) {
+    return ActivatedQuest(
       quest: quest,
       markersCollected: List.filled(quest.markers.length, false),
       status: QuestStatus.active,

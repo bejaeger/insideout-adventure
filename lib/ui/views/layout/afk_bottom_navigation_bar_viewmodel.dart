@@ -15,7 +15,8 @@ class AFKBottomNavigationBarViewModel extends LayoutTemplateViewModel {
   }
 
   void onMapPressed() {
-    navigationService.clearStackAndShow(Routes.mapScreen);
+    //navigationService.clearStackAndShow(Routes.mapScreen);
+    navigationService.clearStackAndShow(Routes.mapView);
     _currentIndex = BottomNavigationBarIndex.map;
     notifyListeners();
   }

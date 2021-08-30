@@ -1,3 +1,4 @@
+import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
@@ -15,8 +16,9 @@ class MapViewModel extends BaseViewModel {
   final log = getLogger('MapViewModel');
   final geolocation = locator<GeolocationService>();
   final _userService = locator<UserService>();
+  final _directionsAPI = locator<DirectionsAPI>();
 
-  Set<Marker> markersTmp = {};
+  Set<Marker> _markersTmp = {};
   Position? _pos;
   List<UserFavPlaces>? userFavouritePlaces;
   List<Places>? places;
@@ -24,12 +26,9 @@ class MapViewModel extends BaseViewModel {
   GoogleMapController? _googleMapController;
   Marker? origin;
   Marker? destination;
-  Directions? info;
+  Directions? _directionInfo;
 
-  final CameraPosition initialCameraPosition = CameraPosition(
-    target: LatLng(37.4219983, -122.084),
-    zoom: 8,
-  );
+  //CameraPosition get initialCameraPosition => null;
 
   Future<void> requestPermission() async {
     await Permission.location.request();
@@ -37,6 +36,23 @@ class MapViewModel extends BaseViewModel {
 
   //Get Google Map Controller
   GoogleMapController? get getGoogleMapController => _googleMapController;
+
+  Set<Marker>? get getMarkers => _markersTmp;
+
+  //Get Direction Info
+  Directions? get getDirectionInfo => _directionInfo;
+
+  // ignore: non_constant_identifier_names
+  CameraPosition initialCameraPosition() {
+    final CameraPosition _initialCameraPosition = CameraPosition(
+      //In Future I will change these values to dynamically Change the Initial Camera Position
+      //Based on teh city
+      target: LatLng(37.4219983, -122.084),
+      zoom: 8,
+    );
+
+    return _initialCameraPosition;
+  }
 
 //Add Markers to the Map
   void addMarker(
@@ -46,7 +62,7 @@ class MapViewModel extends BaseViewModel {
       required markerTitle}) {
     setBusy(true);
 
-    markersTmp.add(
+    _markersTmp.add(
       Marker(
           markerId: MarkerId(markerId),
           //position: _pos,
@@ -57,7 +73,7 @@ class MapViewModel extends BaseViewModel {
               : BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueOrange)),
     );
-    _googleMapController!.animateCamera(
+/*     _googleMapController!.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: LatLng(lat, long),
@@ -65,7 +81,19 @@ class MapViewModel extends BaseViewModel {
           tilt: 50.0,
         ),
       ),
-    );
+    ); */
+
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future<Directions?> getDirections({
+    required LatLng origin,
+    required LatLng destination,
+  }) async {
+    setBusy(true);
+    _directionInfo = await _directionsAPI.getDirections(
+        origin: origin, destination: destination);
     setBusy(false);
     notifyListeners();
   }
@@ -106,8 +134,8 @@ class MapViewModel extends BaseViewModel {
           lat: _userFavouritePlaces.lat!,
           long: _userFavouritePlaces.lon!);
     }
-    markersTmp = markersTmp;
-    log.v('These Are the Values in the current Markers $markersTmp');
+    _markersTmp = _markersTmp;
+    log.v('These Are the Values in the current Markers $_markersTmp');
     setBusy(false);
     notifyListeners();
   }
@@ -121,8 +149,8 @@ class MapViewModel extends BaseViewModel {
         addMarker(
             markerId: _p.id, markerTitle: _p.name, lat: _p.lat!, long: _p.lon!);
       }
-      markersTmp = markersTmp;
-      log.v('These Are the Values in the current Markers $markersTmp');
+      _markersTmp = _markersTmp;
+      log.v('These Are the Values in the current Markers $_markersTmp');
       setBusy(false);
       notifyListeners();
     } else {

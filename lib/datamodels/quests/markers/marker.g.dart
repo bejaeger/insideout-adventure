@@ -10,8 +10,8 @@ _$_Marker _$_$_MarkerFromJson(Map<String, dynamic> json) {
   return _$_Marker(
     id: json['id'] as String,
     qrCodeId: json['qrCodeId'] as String,
-    lat: (json['lat'] as num).toDouble(),
-    lon: (json['lon'] as num).toDouble(),
+    lat: (json['lat'] as num?)?.toDouble(),
+    lon: (json['lon'] as num?)?.toDouble(),
     markerStatus:
         _$enumDecodeNullable(_$MarkerStatusEnumMap, json['markerStatus']) ??
             MarkerStatus.testing,

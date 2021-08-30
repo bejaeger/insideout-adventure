@@ -9,8 +9,8 @@ class Marker with _$Marker {
   factory Marker({
     required String id,
     required String qrCodeId,
-    required double lat,
-    required double lon,
+    double? lat,
+    double? lon,
     @Default(MarkerStatus.testing) MarkerStatus markerStatus,
   }) = _Marker;
 

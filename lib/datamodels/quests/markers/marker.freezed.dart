@@ -23,8 +23,8 @@ class _$MarkerTearOff {
   _Marker call(
       {required String id,
       required String qrCodeId,
-      required double lat,
-      required double lon,
+      double? lat,
+      double? lon,
       MarkerStatus markerStatus = MarkerStatus.testing}) {
     return _Marker(
       id: id,
@@ -47,8 +47,8 @@ const $Marker = _$MarkerTearOff();
 mixin _$Marker {
   String get id => throw _privateConstructorUsedError;
   String get qrCodeId => throw _privateConstructorUsedError;
-  double get lat => throw _privateConstructorUsedError;
-  double get lon => throw _privateConstructorUsedError;
+  double? get lat => throw _privateConstructorUsedError;
+  double? get lon => throw _privateConstructorUsedError;
   MarkerStatus get markerStatus => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -63,8 +63,8 @@ abstract class $MarkerCopyWith<$Res> {
   $Res call(
       {String id,
       String qrCodeId,
-      double lat,
-      double lon,
+      double? lat,
+      double? lon,
       MarkerStatus markerStatus});
 }
 
@@ -96,11 +96,11 @@ class _$MarkerCopyWithImpl<$Res> implements $MarkerCopyWith<$Res> {
       lat: lat == freezed
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
       lon: lon == freezed
           ? _value.lon
           : lon // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
       markerStatus: markerStatus == freezed
           ? _value.markerStatus
           : markerStatus // ignore: cast_nullable_to_non_nullable
@@ -117,8 +117,8 @@ abstract class _$MarkerCopyWith<$Res> implements $MarkerCopyWith<$Res> {
   $Res call(
       {String id,
       String qrCodeId,
-      double lat,
-      double lon,
+      double? lat,
+      double? lon,
       MarkerStatus markerStatus});
 }
 
@@ -151,11 +151,11 @@ class __$MarkerCopyWithImpl<$Res> extends _$MarkerCopyWithImpl<$Res>
       lat: lat == freezed
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
       lon: lon == freezed
           ? _value.lon
           : lon // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
       markerStatus: markerStatus == freezed
           ? _value.markerStatus
           : markerStatus // ignore: cast_nullable_to_non_nullable
@@ -170,8 +170,8 @@ class _$_Marker implements _Marker {
   _$_Marker(
       {required this.id,
       required this.qrCodeId,
-      required this.lat,
-      required this.lon,
+      this.lat,
+      this.lon,
       this.markerStatus = MarkerStatus.testing});
 
   factory _$_Marker.fromJson(Map<String, dynamic> json) =>
@@ -182,9 +182,9 @@ class _$_Marker implements _Marker {
   @override
   final String qrCodeId;
   @override
-  final double lat;
+  final double? lat;
   @override
-  final double lon;
+  final double? lon;
   @JsonKey(defaultValue: MarkerStatus.testing)
   @override
   final MarkerStatus markerStatus;
@@ -236,8 +236,8 @@ abstract class _Marker implements Marker {
   factory _Marker(
       {required String id,
       required String qrCodeId,
-      required double lat,
-      required double lon,
+      double? lat,
+      double? lon,
       MarkerStatus markerStatus}) = _$_Marker;
 
   factory _Marker.fromJson(Map<String, dynamic> json) = _$_Marker.fromJson;
@@ -247,9 +247,9 @@ abstract class _Marker implements Marker {
   @override
   String get qrCodeId => throw _privateConstructorUsedError;
   @override
-  double get lat => throw _privateConstructorUsedError;
+  double? get lat => throw _privateConstructorUsedError;
   @override
-  double get lon => throw _privateConstructorUsedError;
+  double? get lon => throw _privateConstructorUsedError;
   @override
   MarkerStatus get markerStatus => throw _privateConstructorUsedError;
   @override

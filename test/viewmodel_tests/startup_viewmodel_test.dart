@@ -4,7 +4,8 @@ import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../helpers/datamodel_helpers.dart';
+import '../test_data/test_constants.dart';
+import '../test_data/test_datamodels.dart';
 import '../helpers/test_helpers.dart';
 
 StartUpViewModel _getModel() => StartUpViewModel();

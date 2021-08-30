@@ -1,11 +1,16 @@
+import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/markers/marker_service.dart';
+import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
@@ -66,6 +71,11 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: TransfersHistoryService),
     LazySingleton(classType: QuestService),
     // LazySingleton(classType: AFKCreditsAuthenticationResultService),
+    LazySingleton(classType: PaymentService),
+    LazySingleton(classType: StopWatchService),
+    LazySingleton(classType: QRCodeService),
+    LazySingleton(classType: MarkerService),
+    LazySingleton(classType: DirectionsAPI),
 
     // Services
   ],

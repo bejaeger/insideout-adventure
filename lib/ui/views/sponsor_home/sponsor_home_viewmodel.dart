@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
@@ -11,7 +12,6 @@ import 'package:afkcredits/app/app.logger.dart';
 class SponsorHomeViewModel extends LayoutTemplateViewModel {
   final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   final log = getLogger("SponsorHomeViewModel");
-
   List<User> get supportedExplorers => userService.supportedExplorersList;
   Map<String, UserStatistics> get supportedExplorerStats =>
       userService.supportedExplorerStats;
@@ -32,24 +32,6 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
       completerTwo.future,
     ]));
     notifyListeners();
-  }
-
-  Future startQuest() async {
-    try {
-      await questService.startQuest(questId: "Test");
-      snackbarService.showSnackbar(message: "Started quest");
-    } catch (e) {
-      log.e("Could not start quest, error thrown: $e");
-    }
-  }
-
-  Future finishQuest() async {
-    try {
-      await questService.finishQuest();
-      snackbarService.showSnackbar(message: "Finished quest");
-    } catch (e) {
-      log.e("Could not finish quest, error thrown: $e");
-    }
   }
 
   /////////////////////////////////////////////////
@@ -80,9 +62,9 @@ class SponsorHomeViewModel extends LayoutTemplateViewModel {
     setShowBottomNavBar(true);
   }
 
-  void navigateToSingleExplorerView({required String uid}) {
+  void navigateToSingleExplorerView({required String uid}) async {
     setShowBottomNavBar(false);
-    navigationService.navigateTo(Routes.singleExplorerView,
+    await navigationService.navigateTo(Routes.singleExplorerView,
         arguments: SingleExplorerViewArguments(uid: uid));
     setShowBottomNavBar(true);
   }

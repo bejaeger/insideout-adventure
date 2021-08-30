@@ -13,15 +13,17 @@ class LayoutTemplateView extends StatelessWidget {
     return ViewModelBuilder<LayoutTemplateViewModel>.reactive(
       viewModelBuilder: () => LayoutTemplateViewModel(),
       onModelReady: (model) => model.listenToLayoutSettings(),
-      builder: (context, model, child) => Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: childView,
-            ),
-            AFKBottomNavigationBar(),
-          ],
+      builder: (context, model, child) => SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                child: SafeArea(child: childView),
+              ),
+              AFKBottomNavigationBar(),
+            ],
+          ),
         ),
       ),
     );

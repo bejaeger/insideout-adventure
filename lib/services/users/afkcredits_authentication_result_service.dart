@@ -18,8 +18,6 @@ class AFKCreditsAuthenticationResultService {
   /// Firebase user
   final firebase.User? firebaseUser;
 
-  final _userService = locator<UserService>();
-
   /// Firebase user
   final String? uid;
 

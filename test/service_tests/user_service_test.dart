@@ -3,7 +3,8 @@ import 'package:afkcredits/services/users/user_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../helpers/datamodel_helpers.dart';
+import '../test_data/test_constants.dart';
+import '../test_data/test_datamodels.dart';
 import '../helpers/test_helpers.dart';
 
 UserService _getService() => UserService();

@@ -4,7 +4,6 @@ const String kAppName = "AFK Credits";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY';
 const kLocalStorageUidKey = "uid";
-const kTestUid = "TestId";
 
 final appName = 'AFK Credits';
 
@@ -14,7 +13,7 @@ final appName = 'AFK Credits';
 // collection keys
 final String userStatisticsCollectionKey = "statistics";
 final String userFavouritePlacesCollectionKey = "FavouritePlaces";
-final String activeQuestsCollectionKey = "activeQuests";
+final String activatedQuestsCollectionKey = "activatedQuests";
 
 // document keys
 final String userSummaryStatisticsDocumentKey = "summaryStats";
@@ -31,8 +30,10 @@ final CollectionReference questsCollection =
     FirebaseFirestore.instance.collection('quests');
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
+final CollectionReference markersCollection =
+    FirebaseFirestore.instance.collection("markers");
 final CollectionReference activeQuestsCollection =
-    FirebaseFirestore.instance.collection(activeQuestsCollectionKey);
+    FirebaseFirestore.instance.collection(activatedQuestsCollectionKey);
 
 ////////////////////////////////////////////////////
 /// Cloud functions
@@ -44,3 +45,9 @@ const String URIPATHPREPENDDEV = "";
 // when running on production backend
 const String AUTHORITYPROD = "us-central1-afkcredits.cloudfunctions.net";
 const String URIPATHPREPENDPROD = "";
+
+//////////////////////////////////////////////////////////
+/// Quest settings!
+
+const int kMaxQuestTimeInSeconds = 24 * 60 * 60;
+const int kMaxDistanceFromMarkerInMeter = 50;

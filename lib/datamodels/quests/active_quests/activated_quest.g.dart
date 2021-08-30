@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'active_quest.dart';
+part of 'activated_quest.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ActiveQuest _$_$_ActiveQuestFromJson(Map<String, dynamic> json) {
-  return _$_ActiveQuest(
+_$_ActivatedQuest _$_$_ActivatedQuestFromJson(Map<String, dynamic> json) {
+  return _$_ActivatedQuest(
     id: json['id'] as String?,
     quest: Quest.fromJson(json['quest'] as Map<String, dynamic>),
     markersCollected: (json['markersCollected'] as List<dynamic>)
@@ -21,7 +21,7 @@ _$_ActiveQuest _$_$_ActiveQuestFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$_$_ActiveQuestToJson(_$_ActiveQuest instance) =>
+Map<String, dynamic> _$_$_ActivatedQuestToJson(_$_ActivatedQuest instance) =>
     <String, dynamic>{
       'id': instance.id,
       'quest': instance.quest.toJson(),
@@ -62,5 +62,6 @@ K _$enumDecode<K, V>(
 const _$QuestStatusEnumMap = {
   QuestStatus.active: 'active',
   QuestStatus.cancelled: 'cancelled',
-  QuestStatus.finished: 'finished',
+  QuestStatus.success: 'success',
+  QuestStatus.incomplete: 'incomplete',
 };

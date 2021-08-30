@@ -1,6 +1,7 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,12 +14,13 @@ class GeolocationService {
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   var _position;
 
-  CameraPosition getInitialCameraPostion() {
-    final CameraPosition initialCameraPosition = CameraPosition(
-      target: LatLng(49.246445, -122.994560),
-      zoom: 17,
+  // ignore: non_constant_identifier_names
+  CameraPosition initialCameraPosition() {
+    final CameraPosition _initialCameraPosition = CameraPosition(
+      target: LatLng(37.4219983, -122.084),
+      zoom: 8,
     );
-    return initialCameraPosition;
+    return _initialCameraPosition;
   }
 
   Future getCurrentLocation() async {
@@ -89,12 +91,6 @@ class GeolocationService {
     if (permission == LocationPermission.denied) {
       permission = await _geolocatorPlatform.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-
         return false;
       }
     }
@@ -104,14 +100,23 @@ class GeolocationService {
       return false;
     }
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-
     return true;
   }
 
   //Get User Favourite Places
   Future<List<Places>?> getPlaces() async {
     return await _firestoreApi.getPlaces();
+  }
+
+  Future<bool> isUserCloseby({required double lat, required double lon}) async {
+    Position position = await getCurrentLocation();
+
+    double distanceInMeters = Geolocator.distanceBetween(
+        position.latitude, position.longitude, lat, lon);
+    if (distanceInMeters > kMaxDistanceFromMarkerInMeter) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

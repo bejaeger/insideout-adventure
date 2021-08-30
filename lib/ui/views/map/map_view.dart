@@ -1,3 +1,4 @@
+import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -11,30 +12,45 @@ class MapView extends StatelessWidget {
     return ViewModelBuilder<MapViewModel>.reactive(
       // onModelReady: (model) => model.createFavouritePlaces(),
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: Text('AFK TREASURE HUNTING'),
+        appBar: CustomAppBar(
+          title: 'AFK TREASURE HUNTING',
         ),
         body: Container(
           child: GoogleMap(
             //mapType: MapType.hybrid,
-            initialCameraPosition: model.initialCameraPosition,
+            initialCameraPosition: model.initialCameraPosition(),
             //Place Markers in the Map
-            markers: model.markersTmp,
+            markers: model.getMarkers!,
             //callback that’s called when the map is ready to us.
             onMapCreated: model.onMapCreated,
             //For showing your current location on Map with a blue dot.
             myLocationEnabled: true,
             // Button used for bringing the user location to the center of the camera view.
-            myLocationButtonEnabled: false,
+            myLocationButtonEnabled: true,
+            polylines: {
+              if (model.getDirectionInfo != null)
+                Polyline(
+                  polylineId: const PolylineId('overview_polyline'),
+                  color: Colors.red,
+                  width: 5,
+                  points: model.getDirectionInfo!.polylinePoints
+                      .map((e) => LatLng(e.latitude, e.longitude))
+                      .toList(),
+                ),
+            },
+
+            //Enable Traffic Mode.
+            //trafficEnabled: true,
           ),
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,
           onPressed: () => model.getGoogleMapController!.animateCamera(
-            model.info != null
-                ? CameraUpdate.newLatLngBounds(model.info!.bounds, 100.0)
-                : CameraUpdate.newCameraPosition(model.initialCameraPosition),
+            model.getDirectionInfo != null
+                ? CameraUpdate.newLatLngBounds(
+                    model.getDirectionInfo!.bounds, 100.0)
+                : CameraUpdate.newCameraPosition(model.initialCameraPosition()),
           ),
           child: const Icon(Icons.center_focus_strong),
         ),
