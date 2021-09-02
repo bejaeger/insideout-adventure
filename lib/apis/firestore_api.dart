@@ -355,11 +355,11 @@ class FirestoreApi {
 
   ///////////////////////////////////////////////////
   /// Functions related to markers
-  Future<Marker?> getMarkerFromQrCodeId({required String qrCodeId}) async {
+  Future<Markers?> getMarkerFromQrCodeId({required String qrCodeId}) async {
     /////////////////////////////////////////////
     // For now we return dummy data!
     return Future.value(
-        Marker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.1, lon: -122));
+        Markers(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.1, lon: -122));
 
     //////////////////////////////////////////////
     // QuerySnapshot snapshot =

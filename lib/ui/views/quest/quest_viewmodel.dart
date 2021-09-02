@@ -1,11 +1,11 @@
 import 'dart:async';
-
 import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/datamodels/places/places.dart';
+import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
@@ -15,12 +15,14 @@ import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stacked/stacked.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class MapViewModel extends BaseViewModel {
-  final log = getLogger('MapViewModel');
+class QuestViewModel extends BaseViewModel {
+
+
+   final log = getLogger('QuestViewModel');
   final geolocation = locator<GeolocationService>();
   final _userService = locator<UserService>();
   final _directionsAPI = locator<DirectionsAPI>();
@@ -145,9 +147,7 @@ class MapViewModel extends BaseViewModel {
       ///Quest. 
       await questService.startQuest(quest: quest);
 
-/*            
-Clock Timer       
- final timerStream = _stopWatchService.stopWatchStream();    
+                  final timerStream = _stopWatchService.stopWatchStream();    
                    // ignore: cancel_subscriptions
                     _timerSubscription = timerStream.listen((int newTime) {             
                      _stopWatchService.setHours(hours:  ((newTime / (60 * 60)) % 60)
@@ -162,7 +162,7 @@ Clock Timer
                     });
                     _stopWatchService.setTimerStreamSubscription(timerSubscription: _timerSubscription!); 
                      setBusy(false); 
-                     notifyListeners();  */
+                     notifyListeners(); 
 
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");

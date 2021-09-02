@@ -7,7 +7,7 @@ class MarkerService {
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final log = getLogger("MarkerService");
 
-  Future<bool> isUserCloseby({required Marker marker}) async {
+  Future<bool> isUserCloseby({required Markers marker}) async {
     if (marker.lat != null && marker.lon != null) {
       return await _geolocationService.isUserCloseby(
           lat: marker.lat!, lon: marker.lon!);

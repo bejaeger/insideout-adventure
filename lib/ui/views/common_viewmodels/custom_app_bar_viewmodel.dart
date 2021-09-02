@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -13,11 +14,13 @@ class CustomAppBarViewModel extends BaseModel {
       if (result is String) {
         final continueQuest = await _dialogService.showConfirmationDialog(
             title: result.toString(),
-            cancelTitle: "Cancel Quest",
-            confirmationTitle: "Continue Quest");
+            cancelTitle: "Cancel",
+            confirmationTitle: "Continue");
         if (continueQuest?.confirmed == true) {
           await questService.continueIncompleteQuest();
         } else {
+          //Set The Running Quest to
+          checkRunningQuest = false;
           await questService.cancelIncompleteQuest();
           await _dialogService.showDialog(title: "Quest cancelled");
         }

@@ -12,74 +12,79 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-Marker _$MarkerFromJson(Map<String, dynamic> json) {
-  return _Marker.fromJson(json);
+Markers _$MarkersFromJson(Map<String, dynamic> json) {
+  return _Markers.fromJson(json);
 }
 
 /// @nodoc
-class _$MarkerTearOff {
-  const _$MarkerTearOff();
+class _$MarkersTearOff {
+  const _$MarkersTearOff();
 
-  _Marker call(
+  _Markers call(
       {required String id,
       required String qrCodeId,
+      String? questId,
       double? lat,
       double? lon,
       MarkerStatus markerStatus = MarkerStatus.testing}) {
-    return _Marker(
+    return _Markers(
       id: id,
       qrCodeId: qrCodeId,
+      questId: questId,
       lat: lat,
       lon: lon,
       markerStatus: markerStatus,
     );
   }
 
-  Marker fromJson(Map<String, Object> json) {
-    return Marker.fromJson(json);
+  Markers fromJson(Map<String, Object> json) {
+    return Markers.fromJson(json);
   }
 }
 
 /// @nodoc
-const $Marker = _$MarkerTearOff();
+const $Markers = _$MarkersTearOff();
 
 /// @nodoc
-mixin _$Marker {
+mixin _$Markers {
   String get id => throw _privateConstructorUsedError;
   String get qrCodeId => throw _privateConstructorUsedError;
+  String? get questId => throw _privateConstructorUsedError;
   double? get lat => throw _privateConstructorUsedError;
   double? get lon => throw _privateConstructorUsedError;
   MarkerStatus get markerStatus => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $MarkerCopyWith<Marker> get copyWith => throw _privateConstructorUsedError;
+  $MarkersCopyWith<Markers> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MarkerCopyWith<$Res> {
-  factory $MarkerCopyWith(Marker value, $Res Function(Marker) then) =
-      _$MarkerCopyWithImpl<$Res>;
+abstract class $MarkersCopyWith<$Res> {
+  factory $MarkersCopyWith(Markers value, $Res Function(Markers) then) =
+      _$MarkersCopyWithImpl<$Res>;
   $Res call(
       {String id,
       String qrCodeId,
+      String? questId,
       double? lat,
       double? lon,
       MarkerStatus markerStatus});
 }
 
 /// @nodoc
-class _$MarkerCopyWithImpl<$Res> implements $MarkerCopyWith<$Res> {
-  _$MarkerCopyWithImpl(this._value, this._then);
+class _$MarkersCopyWithImpl<$Res> implements $MarkersCopyWith<$Res> {
+  _$MarkersCopyWithImpl(this._value, this._then);
 
-  final Marker _value;
+  final Markers _value;
   // ignore: unused_field
-  final $Res Function(Marker) _then;
+  final $Res Function(Markers) _then;
 
   @override
   $Res call({
     Object? id = freezed,
     Object? qrCodeId = freezed,
+    Object? questId = freezed,
     Object? lat = freezed,
     Object? lon = freezed,
     Object? markerStatus = freezed,
@@ -93,6 +98,10 @@ class _$MarkerCopyWithImpl<$Res> implements $MarkerCopyWith<$Res> {
           ? _value.qrCodeId
           : qrCodeId // ignore: cast_nullable_to_non_nullable
               as String,
+      questId: questId == freezed
+          ? _value.questId
+          : questId // ignore: cast_nullable_to_non_nullable
+              as String?,
       lat: lat == freezed
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
@@ -110,36 +119,38 @@ class _$MarkerCopyWithImpl<$Res> implements $MarkerCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$MarkerCopyWith<$Res> implements $MarkerCopyWith<$Res> {
-  factory _$MarkerCopyWith(_Marker value, $Res Function(_Marker) then) =
-      __$MarkerCopyWithImpl<$Res>;
+abstract class _$MarkersCopyWith<$Res> implements $MarkersCopyWith<$Res> {
+  factory _$MarkersCopyWith(_Markers value, $Res Function(_Markers) then) =
+      __$MarkersCopyWithImpl<$Res>;
   @override
   $Res call(
       {String id,
       String qrCodeId,
+      String? questId,
       double? lat,
       double? lon,
       MarkerStatus markerStatus});
 }
 
 /// @nodoc
-class __$MarkerCopyWithImpl<$Res> extends _$MarkerCopyWithImpl<$Res>
-    implements _$MarkerCopyWith<$Res> {
-  __$MarkerCopyWithImpl(_Marker _value, $Res Function(_Marker) _then)
-      : super(_value, (v) => _then(v as _Marker));
+class __$MarkersCopyWithImpl<$Res> extends _$MarkersCopyWithImpl<$Res>
+    implements _$MarkersCopyWith<$Res> {
+  __$MarkersCopyWithImpl(_Markers _value, $Res Function(_Markers) _then)
+      : super(_value, (v) => _then(v as _Markers));
 
   @override
-  _Marker get _value => super._value as _Marker;
+  _Markers get _value => super._value as _Markers;
 
   @override
   $Res call({
     Object? id = freezed,
     Object? qrCodeId = freezed,
+    Object? questId = freezed,
     Object? lat = freezed,
     Object? lon = freezed,
     Object? markerStatus = freezed,
   }) {
-    return _then(_Marker(
+    return _then(_Markers(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -148,6 +159,10 @@ class __$MarkerCopyWithImpl<$Res> extends _$MarkerCopyWithImpl<$Res>
           ? _value.qrCodeId
           : qrCodeId // ignore: cast_nullable_to_non_nullable
               as String,
+      questId: questId == freezed
+          ? _value.questId
+          : questId // ignore: cast_nullable_to_non_nullable
+              as String?,
       lat: lat == freezed
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
@@ -166,21 +181,24 @@ class __$MarkerCopyWithImpl<$Res> extends _$MarkerCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Marker implements _Marker {
-  _$_Marker(
+class _$_Markers implements _Markers {
+  _$_Markers(
       {required this.id,
       required this.qrCodeId,
+      this.questId,
       this.lat,
       this.lon,
       this.markerStatus = MarkerStatus.testing});
 
-  factory _$_Marker.fromJson(Map<String, dynamic> json) =>
-      _$_$_MarkerFromJson(json);
+  factory _$_Markers.fromJson(Map<String, dynamic> json) =>
+      _$_$_MarkersFromJson(json);
 
   @override
   final String id;
   @override
   final String qrCodeId;
+  @override
+  final String? questId;
   @override
   final double? lat;
   @override
@@ -191,18 +209,21 @@ class _$_Marker implements _Marker {
 
   @override
   String toString() {
-    return 'Marker(id: $id, qrCodeId: $qrCodeId, lat: $lat, lon: $lon, markerStatus: $markerStatus)';
+    return 'Markers(id: $id, qrCodeId: $qrCodeId, questId: $questId, lat: $lat, lon: $lon, markerStatus: $markerStatus)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Marker &&
+        (other is _Markers &&
             (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.qrCodeId, qrCodeId) ||
                 const DeepCollectionEquality()
                     .equals(other.qrCodeId, qrCodeId)) &&
+            (identical(other.questId, questId) ||
+                const DeepCollectionEquality()
+                    .equals(other.questId, questId)) &&
             (identical(other.lat, lat) ||
                 const DeepCollectionEquality().equals(other.lat, lat)) &&
             (identical(other.lon, lon) ||
@@ -217,35 +238,39 @@ class _$_Marker implements _Marker {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(qrCodeId) ^
+      const DeepCollectionEquality().hash(questId) ^
       const DeepCollectionEquality().hash(lat) ^
       const DeepCollectionEquality().hash(lon) ^
       const DeepCollectionEquality().hash(markerStatus);
 
   @JsonKey(ignore: true)
   @override
-  _$MarkerCopyWith<_Marker> get copyWith =>
-      __$MarkerCopyWithImpl<_Marker>(this, _$identity);
+  _$MarkersCopyWith<_Markers> get copyWith =>
+      __$MarkersCopyWithImpl<_Markers>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_MarkerToJson(this);
+    return _$_$_MarkersToJson(this);
   }
 }
 
-abstract class _Marker implements Marker {
-  factory _Marker(
+abstract class _Markers implements Markers {
+  factory _Markers(
       {required String id,
       required String qrCodeId,
+      String? questId,
       double? lat,
       double? lon,
-      MarkerStatus markerStatus}) = _$_Marker;
+      MarkerStatus markerStatus}) = _$_Markers;
 
-  factory _Marker.fromJson(Map<String, dynamic> json) = _$_Marker.fromJson;
+  factory _Markers.fromJson(Map<String, dynamic> json) = _$_Markers.fromJson;
 
   @override
   String get id => throw _privateConstructorUsedError;
   @override
   String get qrCodeId => throw _privateConstructorUsedError;
+  @override
+  String? get questId => throw _privateConstructorUsedError;
   @override
   double? get lat => throw _privateConstructorUsedError;
   @override
@@ -254,5 +279,6 @@ abstract class _Marker implements Marker {
   MarkerStatus get markerStatus => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$MarkerCopyWith<_Marker> get copyWith => throw _privateConstructorUsedError;
+  _$MarkersCopyWith<_Markers> get copyWith =>
+      throw _privateConstructorUsedError;
 }

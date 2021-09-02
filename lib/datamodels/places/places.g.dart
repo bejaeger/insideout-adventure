@@ -13,6 +13,7 @@ _$_Places _$_$_PlacesFromJson(Map<String, dynamic> json) {
     lat: (json['lat'] as num?)?.toDouble(),
     lon: (json['lon'] as num?)?.toDouble(),
     image: json['image'] as String?,
+    questId: json['questId'] as String?,
   );
 }
 
@@ -22,4 +23,5 @@ Map<String, dynamic> _$_$_PlacesToJson(_$_Places instance) => <String, dynamic>{
       'lat': instance.lat,
       'lon': instance.lon,
       'image': instance.image,
+      'questId': instance.questId,
     };

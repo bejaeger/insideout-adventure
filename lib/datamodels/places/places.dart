@@ -5,12 +5,12 @@ part 'places.g.dart';
 
 @freezed
 class Places with _$Places {
-  factory Places({
-    required String id,
-    String? name,
-    double? lat,
-    double? lon,
-    String? image,
-  }) = _Places;
+  factory Places(
+      {required String id,
+      String? name,
+      double? lat,
+      double? lon,
+      String? image,
+      String? questId}) = _Places;
   factory Places.fromJson(Map<String, dynamic> json) => _$PlacesFromJson(json);
 }

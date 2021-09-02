@@ -25,13 +25,15 @@ class _$PlacesTearOff {
       String? name,
       double? lat,
       double? lon,
-      String? image}) {
+      String? image,
+      String? questId}) {
     return _Places(
       id: id,
       name: name,
       lat: lat,
       lon: lon,
       image: image,
+      questId: questId,
     );
   }
 
@@ -50,6 +52,7 @@ mixin _$Places {
   double? get lat => throw _privateConstructorUsedError;
   double? get lon => throw _privateConstructorUsedError;
   String? get image => throw _privateConstructorUsedError;
+  String? get questId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -60,7 +63,13 @@ mixin _$Places {
 abstract class $PlacesCopyWith<$Res> {
   factory $PlacesCopyWith(Places value, $Res Function(Places) then) =
       _$PlacesCopyWithImpl<$Res>;
-  $Res call({String id, String? name, double? lat, double? lon, String? image});
+  $Res call(
+      {String id,
+      String? name,
+      double? lat,
+      double? lon,
+      String? image,
+      String? questId});
 }
 
 /// @nodoc
@@ -78,6 +87,7 @@ class _$PlacesCopyWithImpl<$Res> implements $PlacesCopyWith<$Res> {
     Object? lat = freezed,
     Object? lon = freezed,
     Object? image = freezed,
+    Object? questId = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -100,6 +110,10 @@ class _$PlacesCopyWithImpl<$Res> implements $PlacesCopyWith<$Res> {
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as String?,
+      questId: questId == freezed
+          ? _value.questId
+          : questId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -109,7 +123,13 @@ abstract class _$PlacesCopyWith<$Res> implements $PlacesCopyWith<$Res> {
   factory _$PlacesCopyWith(_Places value, $Res Function(_Places) then) =
       __$PlacesCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String? name, double? lat, double? lon, String? image});
+  $Res call(
+      {String id,
+      String? name,
+      double? lat,
+      double? lon,
+      String? image,
+      String? questId});
 }
 
 /// @nodoc
@@ -128,6 +148,7 @@ class __$PlacesCopyWithImpl<$Res> extends _$PlacesCopyWithImpl<$Res>
     Object? lat = freezed,
     Object? lon = freezed,
     Object? image = freezed,
+    Object? questId = freezed,
   }) {
     return _then(_Places(
       id: id == freezed
@@ -150,6 +171,10 @@ class __$PlacesCopyWithImpl<$Res> extends _$PlacesCopyWithImpl<$Res>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as String?,
+      questId: questId == freezed
+          ? _value.questId
+          : questId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -157,7 +182,13 @@ class __$PlacesCopyWithImpl<$Res> extends _$PlacesCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Places implements _Places {
-  _$_Places({required this.id, this.name, this.lat, this.lon, this.image});
+  _$_Places(
+      {required this.id,
+      this.name,
+      this.lat,
+      this.lon,
+      this.image,
+      this.questId});
 
   factory _$_Places.fromJson(Map<String, dynamic> json) =>
       _$_$_PlacesFromJson(json);
@@ -172,10 +203,12 @@ class _$_Places implements _Places {
   final double? lon;
   @override
   final String? image;
+  @override
+  final String? questId;
 
   @override
   String toString() {
-    return 'Places(id: $id, name: $name, lat: $lat, lon: $lon, image: $image)';
+    return 'Places(id: $id, name: $name, lat: $lat, lon: $lon, image: $image, questId: $questId)';
   }
 
   @override
@@ -191,7 +224,9 @@ class _$_Places implements _Places {
             (identical(other.lon, lon) ||
                 const DeepCollectionEquality().equals(other.lon, lon)) &&
             (identical(other.image, image) ||
-                const DeepCollectionEquality().equals(other.image, image)));
+                const DeepCollectionEquality().equals(other.image, image)) &&
+            (identical(other.questId, questId) ||
+                const DeepCollectionEquality().equals(other.questId, questId)));
   }
 
   @override
@@ -201,7 +236,8 @@ class _$_Places implements _Places {
       const DeepCollectionEquality().hash(name) ^
       const DeepCollectionEquality().hash(lat) ^
       const DeepCollectionEquality().hash(lon) ^
-      const DeepCollectionEquality().hash(image);
+      const DeepCollectionEquality().hash(image) ^
+      const DeepCollectionEquality().hash(questId);
 
   @JsonKey(ignore: true)
   @override
@@ -220,7 +256,8 @@ abstract class _Places implements Places {
       String? name,
       double? lat,
       double? lon,
-      String? image}) = _$_Places;
+      String? image,
+      String? questId}) = _$_Places;
 
   factory _Places.fromJson(Map<String, dynamic> json) = _$_Places.fromJson;
 
@@ -234,6 +271,8 @@ abstract class _Places implements Places {
   double? get lon => throw _privateConstructorUsedError;
   @override
   String? get image => throw _privateConstructorUsedError;
+  @override
+  String? get questId => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$PlacesCopyWith<_Places> get copyWith => throw _privateConstructorUsedError;

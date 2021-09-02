@@ -30,7 +30,9 @@ class QuestService {
     pushActivatedQuest(activatedQuest);
 
     // Start timer
+    //Harguilar Commented This Out Timer
     _stopWatchService.startTimer();
+
     _stopWatchService.listenToSecondTime(callback: trackData);
   }
 
@@ -134,7 +136,7 @@ class QuestService {
     }
   }
 
-  Future verifyAndUpdateCollectedMarkers({required Marker marker}) async {
+  Future verifyAndUpdateCollectedMarkers({required Markers marker}) async {
     if (!isMarkerInQuest(marker: marker)) {
       log.e("Marker is not part of current quest!");
       return Future.value("Marker is not part of the currently active quest!");
@@ -150,7 +152,7 @@ class QuestService {
     updateCollectedMarkers(marker: marker);
   }
 
-  void updateCollectedMarkers({required Marker marker}) {
+  void updateCollectedMarkers({required Markers marker}) {
     if (activatedQuest != null) {
       final index = activatedQuest!.quest.markers
           .indexWhere((element) => element == marker);
@@ -187,7 +189,7 @@ class QuestService {
     activatedQuestSubject.add(null);
   }
 
-  bool isMarkerInQuest({required Marker marker}) {
+  bool isMarkerInQuest({required Markers marker}) {
     if (activatedQuest != null) {
       return activatedQuest!.quest.markers.any((element) => element == marker);
     } else {

@@ -70,26 +70,26 @@ Position getTestPositionAwayFromMarker1() {
       speedAccuracy: 0.0);
 }
 
-Marker getTestMarker1() {
-  return Marker(
+Markers getTestMarker1() {
+  return Markers(
       id: kTestMarker1Id, qrCodeId: kTestMarker1QrCodeId, lat: 49, lon: -122);
 }
 
-Marker getTestMarker1NullCoordinates() {
-  return Marker(
+Markers getTestMarker1NullCoordinates() {
+  return Markers(
       id: kTestMarker1Id, qrCodeId: kTestMarker1QrCodeId, lat: null, lon: null);
 }
 
-Marker getTestMarker2() {
-  return Marker(id: "Marker2Id", qrCodeId: "QRCode2Id", lat: 49.1, lon: -122);
+Markers getTestMarker2() {
+  return Markers(id: "Marker2Id", qrCodeId: "QRCode2Id", lat: 49.1, lon: -122);
 }
 
-Marker getTestMarker3() {
-  return Marker(id: "Marker3Id", qrCodeId: "QRCode3Id", lat: 49.2, lon: -122);
+Markers getTestMarker3() {
+  return Markers(id: "Marker3Id", qrCodeId: "QRCode3Id", lat: 49.2, lon: -122);
 }
 
-Marker getTestMarker4() {
-  return Marker(id: "Marker4Id", qrCodeId: "QRCode4Id", lat: 49.2, lon: -122);
+Markers getTestMarker4() {
+  return Markers(id: "Marker4Id", qrCodeId: "QRCode4Id", lat: 49.2, lon: -122);
 }
 
 Quest getTestQuest() {

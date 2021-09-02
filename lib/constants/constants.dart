@@ -51,3 +51,5 @@ const String URIPATHPREPENDPROD = "";
 
 const int kMaxQuestTimeInSeconds = 24 * 60 * 60;
 const int kMaxDistanceFromMarkerInMeter = 50;
+
+bool checkRunningQuest = false;

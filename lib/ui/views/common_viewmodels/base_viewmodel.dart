@@ -8,6 +8,7 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -25,12 +26,40 @@ class BaseModel extends BaseViewModel {
   final TransfersHistoryService transfersHistoryService =
       locator<TransfersHistoryService>();
   final LayoutService layoutService = locator<LayoutService>();
+  final StopWatchService _stopWatchService = locator<StopWatchService>();
+
   User get currentUser => userService.currentUser;
 
   final log = getLogger("BaseModel");
   bool get hasActiveQuest => questService.activatedQuest != null;
   // only access this
   ActivatedQuest get activeQuest => questService.activatedQuest!;
+  String? seconds;
+
+  String get getActiveHours {
+    final hours = _stopWatchService.getHours;
+    notifyListeners();
+    return hours;
+  }
+
+  String get getActiveMinutes {
+    notifyListeners();
+
+    return _stopWatchService.getMinutes;
+  }
+
+  void setSeconds() {
+    setBusy(true);
+    notifyListeners();
+    seconds = _stopWatchService.getSeconds;
+    setBusy(true);
+  }
+
+  String? get getActiveSeconds {
+    setSeconds();
+    return seconds;
+  }
+
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
   StreamSubscription? _activeQuestSubscription;

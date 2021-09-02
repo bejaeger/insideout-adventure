@@ -6,10 +6,11 @@ part of 'marker.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Marker _$_$_MarkerFromJson(Map<String, dynamic> json) {
-  return _$_Marker(
+_$_Markers _$_$_MarkersFromJson(Map<String, dynamic> json) {
+  return _$_Markers(
     id: json['id'] as String,
     qrCodeId: json['qrCodeId'] as String,
+    questId: json['questId'] as String?,
     lat: (json['lat'] as num?)?.toDouble(),
     lon: (json['lon'] as num?)?.toDouble(),
     markerStatus:
@@ -18,9 +19,11 @@ _$_Marker _$_$_MarkerFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$_$_MarkerToJson(_$_Marker instance) => <String, dynamic>{
+Map<String, dynamic> _$_$_MarkersToJson(_$_Markers instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'qrCodeId': instance.qrCodeId,
+      'questId': instance.questId,
       'lat': instance.lat,
       'lon': instance.lon,
       'markerStatus': _$MarkerStatusEnumMap[instance.markerStatus],

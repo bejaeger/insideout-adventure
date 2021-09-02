@@ -12,6 +12,7 @@ class ActivatedQuestPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CustomAppBarViewModel>.reactive(
+      // onModelReady: (model) => model.initiseTimer(),
       viewModelBuilder: () => CustomAppBarViewModel(),
       builder: (context, model, child) => AnimatedContainer(
         height: model.hasActiveQuest ? height + kAppBarExtendedHeight : 0,
@@ -53,12 +54,15 @@ class ActivatedQuestPanel extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                       "Active quest - " +
+/*                                           model.getActiveHours +
+                                          ":" +
+                                          model.getActiveMinutes +
+                                          ":" +
+                                          model.getActiveSeconds! */
                                           model.activeQuest.timeElapsed
                                               .toString() +
                                           " sec elapsed - " +
-                                          model.numMarkersCollected
-                                              .toString()
-                                              .toString() +
+                                          model.numMarkersCollected.toString() +
                                           " / " +
                                           model.activeQuest.markersCollected
                                               .length

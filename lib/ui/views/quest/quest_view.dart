@@ -1,16 +1,15 @@
+import 'package:afkcredits/ui/views/quest/quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
-import 'map_viewmodel.dart';
 
-class MapView extends StatelessWidget {
-  const MapView({Key? key}) : super(key: key);
+class QuestView extends StatelessWidget {
+  const QuestView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MapViewModel>.reactive(
+    return ViewModelBuilder<QuestViewModel>.reactive(
       // onModelReady: (model) => model.createFavouritePlaces(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(
@@ -57,7 +56,7 @@ class MapView extends StatelessWidget {
           child: const Icon(Icons.center_focus_strong),
         ),
       ),
-      viewModelBuilder: () => MapViewModel(),
+      viewModelBuilder: () => QuestViewModel(),
     );
   }
 }
