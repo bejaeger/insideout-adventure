@@ -10,10 +10,10 @@ class QuestView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<QuestViewModel>.reactive(
-      // onModelReady: (model) => model.createFavouritePlaces(),
+      onModelReady: (model) => model.initilizeStartedQuest(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(
-          title: 'AFK TREASURE HUNTING',
+          title: 'Quest Running',
         ),
         body: Container(
           child: GoogleMap(
@@ -44,6 +44,7 @@ class QuestView extends StatelessWidget {
             //trafficEnabled: true,
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,

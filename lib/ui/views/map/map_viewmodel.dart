@@ -3,13 +3,16 @@ import 'dart:async';
 import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/datamodels/places/places.dart';
+import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -28,6 +31,8 @@ class MapViewModel extends BaseViewModel {
   final QuestService questService = locator<QuestService>();
   final DialogService _dialogService = locator<DialogService>();
   final StopWatchService _stopWatchService = locator<StopWatchService>();
+  final  _markersService = locator<MarkerService>();
+  final  _navigationService = locator<NavigationService>();
 
   Set<Marker> _markersTmp = {};
    StreamSubscription<int>? _timerSubscription;
@@ -84,7 +89,7 @@ class MapViewModel extends BaseViewModel {
               : BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueOrange),
           onTap: () {
-                   if (checkRunningQuest ==  false){
+          if (checkRunningQuest ==  false){
             displayQuestBottomSheet(
               places: places,
               );
@@ -139,11 +144,12 @@ class MapViewModel extends BaseViewModel {
     Future startQuest() async {
       setBusy(true); 
     try {
-      final quest = await questService.getQuest(questId: "QuestId");
+      final quest = await questService.getQuest(questId: "QuestDummyId");
       /// Once The user Click on Start a Quest. It tks her/him to new Page 
       ///Differents Markers will Display as Part of the quest as well The App showing the counting of the 
       ///Quest. 
       await questService.startQuest(quest: quest);
+      _navigationService.replaceWith(Routes.questView);
 
 /*            
 Clock Timer       
@@ -168,7 +174,6 @@ Clock Timer
       log.e("Could not start quest, error thrown: $e");
     }
   }
-
   Future getPlaces() async {
     setBusy(true);
     places = await geolocation.getPlaces();
@@ -205,7 +210,37 @@ Clock Timer
     setBusy(false);
     notifyListeners();
   }
-
+  Future<void> createMarkers() async {
+    setBusy(true);
+    await _markersService.createMarkers(markers: 
+    Markers(
+      id: "9hJodek7hlwwUVl0VgzN",
+      qrCodeId: "QRCode2Id",
+      lat: 37.487846,
+      lon: -122.236115,
+      questId: 'QuestId' 
+    )
+    );
+    await _markersService.createMarkers(markers: 
+    Markers(
+          id: "nc9tNP2lSdzbjjC1p574",
+          qrCodeId: "QRCode2Id",
+          lat: 37.75675,
+          lon: -122.45027,
+          questId: 'QuestId01')
+        );
+        await _markersService.createMarkers(markers: 
+    Markers(
+            id: "Marker3Id",
+            qrCodeId: "QRCode3Id",
+            lat: 37.4219983,
+            lon: -122.084,
+            questId: 'QuestId02')
+          );
+ 
+    setBusy(false);
+    notifyListeners();
+  }
   Future displayQuestBottomSheet(
       {required Places places}) async {
       Quest quest = await questService.getQuest(questId: places.questId!);
@@ -216,13 +251,15 @@ Clock Timer
         confirmButtonTitle: "Start Quest",
         cancelButtonTitle: "Close");
             if (sheetResponse!.confirmed == true){
-          //User Will Start a Quest 
-          
+              
+            //Set The Quest that Will Start. 
+            questService.setStartedQuest(startedQuest: quest); 
+
+          //User Will Start a Quest  
           checkRunningQuest = true; 
            startQuest(); 
           }    
   }
-
   @override
   void dispose() {
     _googleMapController!.dispose();

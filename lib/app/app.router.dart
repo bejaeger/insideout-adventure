@@ -22,6 +22,7 @@ import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_screen.dart';
 import '../ui/views/map/map_view.dart';
+import '../ui/views/quest/quest_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
 import '../ui/views/sponsor_home/sponsor_home_view.dart';
@@ -48,6 +49,7 @@ class Routes {
   static const String transfersHistoryView = '/transfers-history-view';
   static const String layoutTemplateView = '/layout-template-view';
   static const String mapScreen = '/map-screen';
+  static const String questView = '/quest-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -65,6 +67,7 @@ class Routes {
     transfersHistoryView,
     layoutTemplateView,
     mapScreen,
+    questView,
   };
 }
 
@@ -88,6 +91,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.transfersHistoryView, page: TransfersHistoryView),
     RouteDef(Routes.layoutTemplateView, page: LayoutTemplateView),
     RouteDef(Routes.mapScreen, page: MapScreen),
+    RouteDef(Routes.questView, page: QuestView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -212,6 +216,12 @@ class StackedRouter extends RouterBase {
     MapScreen: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => MapScreen(),
+        settings: data,
+      );
+    },
+    QuestView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const QuestView(),
         settings: data,
       );
     },

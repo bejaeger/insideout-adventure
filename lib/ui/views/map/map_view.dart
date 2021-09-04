@@ -1,6 +1,5 @@
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'map_viewmodel.dart';
@@ -11,7 +10,7 @@ class MapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MapViewModel>.reactive(
-      // onModelReady: (model) => model.createFavouritePlaces(),
+      //  onModelReady: (model) => model.createMarkers(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(
           title: 'AFK TREASURE HUNTING',
@@ -45,6 +44,7 @@ class MapView extends StatelessWidget {
             //trafficEnabled: true,
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,

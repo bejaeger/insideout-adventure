@@ -22,6 +22,8 @@ class QuestService {
 
   final log = getLogger("QuestService");
 
+  Quest? _startedQuest;
+
   Future startQuest({required Quest quest}) async {
     // Get active quest
     ActivatedQuest activatedQuest = getActivatedQuest(quest: quest);
@@ -35,6 +37,14 @@ class QuestService {
 
     _stopWatchService.listenToSecondTime(callback: trackData);
   }
+
+  //Set Started Quest.
+  void setStartedQuest({required Quest startedQuest}) {
+    _startedQuest = startedQuest;
+  }
+
+  //Get Started Quest
+  Quest get getStartedQuest => _startedQuest!;
 
   // Handle the scenario when a user finishes a hike
   // First evaluate the activated quest data and return values according to that

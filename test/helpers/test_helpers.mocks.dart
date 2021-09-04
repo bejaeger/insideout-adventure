@@ -13,7 +13,7 @@ import 'package:afkcredits/datamodels/places/places.dart' as _i33;
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
     as _i12;
 import 'package:afkcredits/datamodels/quests/markers/marker.dart' as _i13;
-import 'package:afkcredits/datamodels/quests/quest.dart' as _i7;
+import 'package:afkcredits/datamodels/quests/quest.dart' as _i11;
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart'
     as _i19;
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart'
@@ -42,13 +42,13 @@ import 'package:cloud_firestore/cloud_firestore.dart' as _i6;
 import 'package:firebase_auth/firebase_auth.dart' as _i14;
 import 'package:flutter/material.dart' as _i39;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i29;
-import 'package:geolocator/geolocator.dart' as _i10;
-import 'package:google_maps_flutter/google_maps_flutter.dart' as _i11;
+import 'package:geolocator/geolocator.dart' as _i9;
+import 'package:google_maps_flutter/google_maps_flutter.dart' as _i10;
 import 'package:logger/logger.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:places_service/src/models/application_models.dart' as _i8;
+import 'package:places_service/src/models/application_models.dart' as _i7;
 import 'package:places_service/src/places_service.dart' as _i26;
-import 'package:rxdart/rxdart.dart' as _i9;
+import 'package:rxdart/rxdart.dart' as _i8;
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart' as _i15;
 import 'package:stacked_services/stacked_services.dart' as _i38;
 
@@ -75,21 +75,21 @@ class _FakeFirebaseFirestore_4 extends _i1.Fake
 class _FakeDocumentReference_5 extends _i1.Fake
     implements _i6.DocumentReference {}
 
-class _FakeQuest_6 extends _i1.Fake implements _i7.Quest {}
-
-class _FakeCollectionReference_7 extends _i1.Fake
+class _FakeCollectionReference_6 extends _i1.Fake
     implements _i6.CollectionReference {}
 
-class _FakePlacesLocation_8 extends _i1.Fake implements _i8.PlacesLocation {}
+class _FakePlacesLocation_7 extends _i1.Fake implements _i7.PlacesLocation {}
 
-class _FakePlacesDetails_9 extends _i1.Fake implements _i8.PlacesDetails {}
+class _FakePlacesDetails_8 extends _i1.Fake implements _i7.PlacesDetails {}
 
-class _FakeBehaviorSubject_10<T> extends _i1.Fake
-    implements _i9.BehaviorSubject<T> {}
+class _FakeBehaviorSubject_9<T> extends _i1.Fake
+    implements _i8.BehaviorSubject<T> {}
 
-class _FakePosition_11 extends _i1.Fake implements _i10.Position {}
+class _FakePosition_10 extends _i1.Fake implements _i9.Position {}
 
-class _FakeCameraPosition_12 extends _i1.Fake implements _i11.CameraPosition {}
+class _FakeCameraPosition_11 extends _i1.Fake implements _i10.CameraPosition {}
+
+class _FakeQuest_12 extends _i1.Fake implements _i11.Quest {}
 
 class _FakeActivatedQuest_13 extends _i1.Fake implements _i12.ActivatedQuest {}
 
@@ -425,9 +425,9 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
               returnValue: Stream<List<_i23.MoneyTransfer>>.empty())
           as _i18.Stream<List<_i23.MoneyTransfer>>);
   @override
-  _i7.Quest getQuest({String? questId}) =>
-      (super.noSuchMethod(Invocation.method(#getQuest, [], {#questId: questId}),
-          returnValue: _FakeQuest_6()) as _i7.Quest);
+  _i11.Quest? getQuest({String? questId}) =>
+      (super.noSuchMethod(Invocation.method(#getQuest, [], {#questId: questId}))
+          as _i11.Quest?);
   @override
   _i18.Future<dynamic> pushFinishedQuest({_i12.ActivatedQuest? quest}) => (super
       .noSuchMethod(Invocation.method(#pushFinishedQuest, [], {#quest: quest}),
@@ -442,7 +442,7 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
   _i6.CollectionReference getUserStatisticsCollection({String? uid}) =>
       (super.noSuchMethod(
               Invocation.method(#getUserStatisticsCollection, [], {#uid: uid}),
-              returnValue: _FakeCollectionReference_7())
+              returnValue: _FakeCollectionReference_6())
           as _i6.CollectionReference);
   @override
   _i6.DocumentReference getUserSummaryStatisticsDocument({String? uid}) =>
@@ -484,26 +484,26 @@ class MockEnvironmentService extends _i1.Mock
 /// See the documentation for Mockito's code generation for more information.
 class MockPlacesService extends _i1.Mock implements _i26.PlacesService {
   @override
-  _i8.PlacesLocation get currentPosition =>
+  _i7.PlacesLocation get currentPosition =>
       (super.noSuchMethod(Invocation.getter(#currentPosition),
-          returnValue: _FakePlacesLocation_8()) as _i8.PlacesLocation);
+          returnValue: _FakePlacesLocation_7()) as _i7.PlacesLocation);
   @override
   void initialize({String? apiKey}) =>
       super.noSuchMethod(Invocation.method(#initialize, [], {#apiKey: apiKey}),
           returnValueForMissingStub: null);
   @override
-  _i18.Future<List<_i8.PlacesAutoCompleteResult>> getAutoComplete(
+  _i18.Future<List<_i7.PlacesAutoCompleteResult>> getAutoComplete(
           String? input) =>
       (super.noSuchMethod(Invocation.method(#getAutoComplete, [input]),
-              returnValue: Future<List<_i8.PlacesAutoCompleteResult>>.value(
-                  <_i8.PlacesAutoCompleteResult>[]))
-          as _i18.Future<List<_i8.PlacesAutoCompleteResult>>);
+              returnValue: Future<List<_i7.PlacesAutoCompleteResult>>.value(
+                  <_i7.PlacesAutoCompleteResult>[]))
+          as _i18.Future<List<_i7.PlacesAutoCompleteResult>>);
   @override
-  _i18.Future<_i8.PlacesDetails> getPlaceDetails(String? placeId) =>
+  _i18.Future<_i7.PlacesDetails> getPlaceDetails(String? placeId) =>
       (super.noSuchMethod(Invocation.method(#getPlaceDetails, [placeId]),
               returnValue:
-                  Future<_i8.PlacesDetails>.value(_FakePlacesDetails_9()))
-          as _i18.Future<_i8.PlacesDetails>);
+                  Future<_i7.PlacesDetails>.value(_FakePlacesDetails_8()))
+          as _i18.Future<_i7.PlacesDetails>);
   @override
   _i18.Future<dynamic> getPlacesAtCurrentLocation() =>
       (super.noSuchMethod(Invocation.method(#getPlacesAtCurrentLocation, []),
@@ -694,13 +694,13 @@ class MockFlutterSecureStorage extends _i1.Mock
 /// See the documentation for Mockito's code generation for more information.
 class MockLayoutService extends _i1.Mock implements _i30.LayoutService {
   @override
-  _i9.BehaviorSubject<bool> get showBottomNavBarSubject =>
+  _i8.BehaviorSubject<bool> get showBottomNavBarSubject =>
       (super.noSuchMethod(Invocation.getter(#showBottomNavBarSubject),
-              returnValue: _FakeBehaviorSubject_10<bool>())
-          as _i9.BehaviorSubject<bool>);
+              returnValue: _FakeBehaviorSubject_9<bool>())
+          as _i8.BehaviorSubject<bool>);
   @override
   set showBottomNavBarSubject(
-          _i9.BehaviorSubject<bool>? _showBottomNavBarSubject) =>
+          _i8.BehaviorSubject<bool>? _showBottomNavBarSubject) =>
       super.noSuchMethod(
           Invocation.setter(#showBottomNavBarSubject, _showBottomNavBarSubject),
           returnValueForMissingStub: null);
@@ -796,19 +796,19 @@ class MockGeolocationService extends _i1.Mock
       (super.noSuchMethod(Invocation.getter(#log), returnValue: _FakeLogger_0())
           as _i2.Logger);
   @override
-  _i10.Position get getUserPosition =>
+  _i9.Position get getUserPosition =>
       (super.noSuchMethod(Invocation.getter(#getUserPosition),
-          returnValue: _FakePosition_11()) as _i10.Position);
+          returnValue: _FakePosition_10()) as _i9.Position);
   @override
-  _i11.CameraPosition initialCameraPosition() =>
+  _i10.CameraPosition initialCameraPosition() =>
       (super.noSuchMethod(Invocation.method(#initialCameraPosition, []),
-          returnValue: _FakeCameraPosition_12()) as _i11.CameraPosition);
+          returnValue: _FakeCameraPosition_11()) as _i10.CameraPosition);
   @override
   _i18.Future<dynamic> getCurrentLocation() =>
       (super.noSuchMethod(Invocation.method(#getCurrentLocation, []),
           returnValue: Future<dynamic>.value()) as _i18.Future<dynamic>);
   @override
-  _i18.Future<dynamic> setUserPosition({_i10.Position? position}) =>
+  _i18.Future<dynamic> setUserPosition({_i9.Position? position}) =>
       (super.noSuchMethod(
           Invocation.method(#setUserPosition, [], {#position: position}),
           returnValue: Future<dynamic>.value()) as _i18.Future<dynamic>);
@@ -839,13 +839,13 @@ class MockGeolocationService extends _i1.Mock
 /// See the documentation for Mockito's code generation for more information.
 class MockQuestService extends _i1.Mock implements _i34.QuestService {
   @override
-  _i9.BehaviorSubject<_i12.ActivatedQuest?> get activatedQuestSubject =>
+  _i8.BehaviorSubject<_i12.ActivatedQuest?> get activatedQuestSubject =>
       (super.noSuchMethod(Invocation.getter(#activatedQuestSubject),
-              returnValue: _FakeBehaviorSubject_10<_i12.ActivatedQuest?>())
-          as _i9.BehaviorSubject<_i12.ActivatedQuest?>);
+              returnValue: _FakeBehaviorSubject_9<_i12.ActivatedQuest?>())
+          as _i8.BehaviorSubject<_i12.ActivatedQuest?>);
   @override
   set activatedQuestSubject(
-          _i9.BehaviorSubject<_i12.ActivatedQuest?>? _activatedQuestSubject) =>
+          _i8.BehaviorSubject<_i12.ActivatedQuest?>? _activatedQuestSubject) =>
       super.noSuchMethod(
           Invocation.setter(#activatedQuestSubject, _activatedQuestSubject),
           returnValueForMissingStub: null);
@@ -854,9 +854,17 @@ class MockQuestService extends _i1.Mock implements _i34.QuestService {
       (super.noSuchMethod(Invocation.getter(#log), returnValue: _FakeLogger_0())
           as _i2.Logger);
   @override
-  _i18.Future<dynamic> startQuest({_i7.Quest? quest}) =>
+  _i11.Quest get getStartedQuest =>
+      (super.noSuchMethod(Invocation.getter(#getStartedQuest),
+          returnValue: _FakeQuest_12()) as _i11.Quest);
+  @override
+  _i18.Future<dynamic> startQuest({_i11.Quest? quest}) =>
       (super.noSuchMethod(Invocation.method(#startQuest, [], {#quest: quest}),
           returnValue: Future<dynamic>.value()) as _i18.Future<dynamic>);
+  @override
+  void setStartedQuest({_i11.Quest? startedQuest}) => super.noSuchMethod(
+      Invocation.method(#setStartedQuest, [], {#startedQuest: startedQuest}),
+      returnValueForMissingStub: null);
   @override
   _i18.Future<dynamic> evaluateAndFinishQuest() =>
       (super.noSuchMethod(Invocation.method(#evaluateAndFinishQuest, []),
@@ -919,7 +927,7 @@ class MockQuestService extends _i1.Mock implements _i34.QuestService {
       super.noSuchMethod(Invocation.method(#disposeActivatedQuest, []),
           returnValueForMissingStub: null);
   @override
-  _i12.ActivatedQuest getActivatedQuest({_i7.Quest? quest}) => (super
+  _i12.ActivatedQuest getActivatedQuest({_i11.Quest? quest}) => (super
       .noSuchMethod(Invocation.method(#getActivatedQuest, [], {#quest: quest}),
           returnValue: _FakeActivatedQuest_13()) as _i12.ActivatedQuest);
   @override

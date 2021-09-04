@@ -66,6 +66,22 @@ class FirestoreApi {
     }
   }
 
+  //Create a List of My Favourite Places
+  Future<void> createMarkers({required Markers markers}) async {
+    try {
+      final _docRef = getMarkersDocs(markerId: markers.id);
+      if (_docRef != null) {
+        await _docRef.set(markers.toJson());
+        log.v('Favourite Places document added to ${_docRef.path}' + '\n');
+        log.v('Your Document Reference is: ${_docRef.toString()}');
+      }
+    } catch (e) {
+      throw FirestoreApiException(
+          message: 'Failed To Insert Places',
+          devDetails: 'Failed Caused By $e.');
+    }
+  }
+
   // when explorer is added without authentication so without ID
   // we need to generate that id and add it to the datamodel.
   DocumentReference createUserDocument() {
@@ -327,7 +343,7 @@ class FirestoreApi {
   /// Everything related to quests
 
   // Returns dummy data for now!
-  Quest getQuest({required String questId}) {
+  Quest? getQuest({required String questId}) {
     return getDummyQuest();
   }
 
@@ -399,5 +415,9 @@ class FirestoreApi {
         .doc(uid)
         .collection(userFavouritePlacesCollectionKey)
         .doc();
+  }
+
+  DocumentReference getMarkersDocs({required String markerId}) {
+    return markersCollection.doc(markerId);
   }
 }
