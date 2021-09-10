@@ -44,6 +44,7 @@ class QuestView extends StatelessWidget {
             //trafficEnabled: true,
           ),
         ),
+        //Place the Floating Action to the Left of the View
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
@@ -54,7 +55,7 @@ class QuestView extends StatelessWidget {
                     model.getDirectionInfo!.bounds, 100.0)
                 : CameraUpdate.newCameraPosition(model.initialCameraPosition()),
           ),
-          child: const Icon(Icons.center_focus_strong),
+          child: const Icon(Icons.qr_code),
         ),
       ),
       viewModelBuilder: () => QuestViewModel(),

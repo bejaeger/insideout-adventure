@@ -14,8 +14,6 @@ import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/services/quests/stopwatch_service.dart';
-import 'package:afkcredits/services/users/user_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -25,20 +23,21 @@ import 'package:stacked_services/stacked_services.dart';
 class MapViewModel extends BaseViewModel {
   final log = getLogger('MapViewModel');
   final geolocation = locator<GeolocationService>();
-  final _userService = locator<UserService>();
-  final _directionsAPI = locator<DirectionsAPI>();
+  //final _userService = locator<UserService>();
+  //final _directionsAPI = locator<DirectionsAPI>();
   final _bottomSheetService = locator<BottomSheetService>();
   final QuestService questService = locator<QuestService>();
   final DialogService _dialogService = locator<DialogService>();
-  final StopWatchService _stopWatchService = locator<StopWatchService>();
-  final  _markersService = locator<MarkerService>();
-  final  _navigationService = locator<NavigationService>();
+  //final StopWatchService _stopWatchService = locator<StopWatchService>();
+  final _markersService = locator<MarkerService>();
+  final _navigationService = locator<NavigationService>();
 
   Set<Marker> _markersTmp = {};
-   StreamSubscription<int>? _timerSubscription;
+  //StreamSubscription<int>? _timerSubscription;
   Position? _pos;
   List<UserFavPlaces>? userFavouritePlaces;
   List<Places>? places;
+  List<Markers>? markers;
 
   GoogleMapController? _googleMapController;
   Marker? origin;
@@ -67,68 +66,44 @@ class MapViewModel extends BaseViewModel {
       target: LatLng(37.4219983, -122.084),
       zoom: 8,
     );
-
     return _initialCameraPosition;
   }
 
 //Add Markers to the Map
-  void addMarker(
-      {
-      required Places places
-      }) {
+  void addMarker({required Markers markers}) {
     setBusy(true);
 
     _markersTmp.add(
       Marker(
-          markerId: MarkerId(places.id),
-          //position: _pos,
-          position: LatLng(places.lat!, places.lon!),
-          infoWindow: InfoWindow(title: places.name!, snippet: 'Vancouver'),
-          icon: (places.id == 'currpos')
+          markerId: MarkerId(markers.id),
+          position: LatLng(markers.lat!, markers.lon!),
+          infoWindow: InfoWindow(snippet: 'Vancouver'),
+          icon: (markers.id == 'Marker3Id')
               ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)
               : BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueOrange),
           onTap: () {
-          if (checkRunningQuest ==  false){
-            displayQuestBottomSheet(
-              places: places,
+            if (checkRunningQuest == false) {
+              displayQuestBottomSheet(
+                markers: markers,
               );
-                }
-                else {
-                  _dialogService.showDialog(
-                  title: "'You Currently Have a Running Quest !!!"); 
-                }               
+            } else {
+              _dialogService.showDialog(
+                  title: "'You Currently Have a Running Quest !!!");
+            }
           }),
     );
     setBusy(false);
     notifyListeners();
   }
-  Future<Directions?> getDirections({
-    required LatLng origin,
-    required LatLng destination,
-  }) async {
-    setBusy(true);
-    _directionInfo = await _directionsAPI.getDirections(
-        origin: origin, destination: destination);
-    setBusy(false);
-    notifyListeners();
-  }
+
   Future<void> onMapCreated(GoogleMapController controller) async {
     setBusy(true);
     try {
       _googleMapController = controller;
       _pos = geolocation.getUserPosition;
       //This is the Initial Marker In the Map.
-      addMarker(
-        places: Places(
-          id: 'currpos', 
-          lat: _pos!.latitude, 
-          lon: _pos!.longitude, 
-          name: 'Bernaby', 
-          image: '',
-          questId: 'questId02'
-        ) 
-      );
+      getQuestMarkers();
     } catch (error) {
       throw MapViewModelException(
           message: 'An error occured in the defining ',
@@ -136,18 +111,19 @@ class MapViewModel extends BaseViewModel {
           prettyDetails:
               "An internal error occured on our side, please apologize and try again later.");
     }
-    getPlaces();
+
     setBusy(false);
     notifyListeners();
   }
 
-    Future startQuest() async {
-      setBusy(true); 
+  Future startQuest() async {
+    setBusy(true);
     try {
       final quest = await questService.getQuest(questId: "QuestDummyId");
-      /// Once The user Click on Start a Quest. It tks her/him to new Page 
-      ///Differents Markers will Display as Part of the quest as well The App showing the counting of the 
-      ///Quest. 
+
+      /// Once The user Click on Start a Quest. It tks her/him to new Page
+      ///Differents Markers will Display as Part of the quest as well The App showing the counting of the
+      ///Quest.
       await questService.startQuest(quest: quest);
       _navigationService.replaceWith(Routes.questView);
 
@@ -174,92 +150,74 @@ Clock Timer
       log.e("Could not start quest, error thrown: $e");
     }
   }
-  Future getPlaces() async {
-    setBusy(true);
-    places = await geolocation.getPlaces();
 
-    if (places!.isNotEmpty) {
-      for (Places _p in places!) {
-        addMarker(
-           places: _p);
+  void getQuestMarkers() {
+    setBusy(true);
+    markers = _markersService.getSetMarkers;
+
+    if (markers!.isNotEmpty) {
+      for (Markers _m in markers!) {
+        addMarker(markers: _m);
       }
       _markersTmp = _markersTmp;
       log.v('These Are the Values in the current Markers $_markersTmp');
       setBusy(false);
       notifyListeners();
     } else {
-      log.i('Places is Empty');
+      log.i('Markers are Empty');
     }
   }
 
-  Future<void> createFavouritePlaces() async {
-    setBusy(true);
-    final getUser = _userService.currentUser;
-    log.v('The Current userId: ${getUser.uid}');
-    await _userService.createUserFavouritePlaces(
-      userId: getUser.uid,
-      favouritePlaces: UserFavPlaces(
-          id: getUser.uid,
-          name: "Beautiful park",
-          lat: 37.756750,
-          lon: -122.450270,
-          image: '', 
-
-          ),
-    );
-    setBusy(false);
-    notifyListeners();
-  }
   Future<void> createMarkers() async {
     setBusy(true);
-    await _markersService.createMarkers(markers: 
-    Markers(
-      id: "9hJodek7hlwwUVl0VgzN",
-      qrCodeId: "QRCode2Id",
-      lat: 37.487846,
-      lon: -122.236115,
-      questId: 'QuestId' 
-    )
-    );
-    await _markersService.createMarkers(markers: 
-    Markers(
-          id: "nc9tNP2lSdzbjjC1p574",
-          qrCodeId: "QRCode2Id",
-          lat: 37.75675,
-          lon: -122.45027,
-          questId: 'QuestId01')
-        );
-        await _markersService.createMarkers(markers: 
-    Markers(
+    await _markersService.createMarkers(
+        markers: Markers(
+            id: "9hJodek7hlwwUVl0VgzN",
+            qrCodeId: "QRCode2Id",
+            lat: 37.487846,
+            lon: -122.236115,
+            questId: 'QuestId'));
+    await _markersService.createMarkers(
+        markers: Markers(
+            id: "nc9tNP2lSdzbjjC1p574",
+            qrCodeId: "QRCode2Id",
+            lat: 37.75675,
+            lon: -122.45027,
+            questId: 'QuestId01'));
+    await _markersService.createMarkers(
+        markers: Markers(
             id: "Marker3Id",
             qrCodeId: "QRCode3Id",
             lat: 37.4219983,
             lon: -122.084,
-            questId: 'QuestId02')
-          );
- 
+            questId: 'QuestId02'));
+
     setBusy(false);
     notifyListeners();
   }
-  Future displayQuestBottomSheet(
-      {required Places places}) async {
-      Quest quest = await questService.getQuest(questId: places.questId!);
 
-    SheetResponse? sheetResponse = await _bottomSheetService.showBottomSheet(
-       title: 'Am Displaying The quest Description: '  + quest.description
-       // description: "OR add new payment method +",
-        confirmButtonTitle: "Start Quest",
-        cancelButtonTitle: "Close");
-            if (sheetResponse!.confirmed == true){
-              
-            //Set The Quest that Will Start. 
-            questService.setStartedQuest(startedQuest: quest); 
+  Future displayQuestBottomSheet({required Markers markers}) async {
+    Quest quest = await questService.getQuest(questId: markers.questId!);
 
-          //User Will Start a Quest  
-          checkRunningQuest = true; 
-           startQuest(); 
-          }    
+    if (quest != null) {
+      SheetResponse? sheetResponse = await _bottomSheetService.showBottomSheet(
+          title: ' Name: ' + quest.name,
+          description: 'Description: ' + quest.description,
+          // description: "OR add new payment method +",
+          confirmButtonTitle: "Start Quest",
+          cancelButtonTitle: "Close");
+      if (sheetResponse!.confirmed == true) {
+        //Set The Quest that Will Start.
+        questService.setStartedQuest(startedQuest: quest);
+        //User Will Start a Quest
+        checkRunningQuest = true;
+        startQuest();
+      }
+    } else {
+      log.w('You Providing an Empty Quest');
+    }
   }
+
   @override
   void dispose() {
     _googleMapController!.dispose();

@@ -22,6 +22,7 @@ import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_screen.dart';
 import '../ui/views/map/map_view.dart';
+import '../ui/views/qrcode/qrcode_view_mobile.dart';
 import '../ui/views/quest/quest_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
@@ -50,6 +51,7 @@ class Routes {
   static const String layoutTemplateView = '/layout-template-view';
   static const String mapScreen = '/map-screen';
   static const String questView = '/quest-view';
+  static const String qRCodeViewMobile = '/q-rcode-view-mobile';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -68,6 +70,7 @@ class Routes {
     layoutTemplateView,
     mapScreen,
     questView,
+    qRCodeViewMobile,
   };
 }
 
@@ -92,6 +95,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.layoutTemplateView, page: LayoutTemplateView),
     RouteDef(Routes.mapScreen, page: MapScreen),
     RouteDef(Routes.questView, page: QuestView),
+    RouteDef(Routes.qRCodeViewMobile, page: QRCodeViewMobile),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -225,6 +229,18 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    QRCodeViewMobile: (data) {
+      var args = data.getArgs<QRCodeViewMobileArguments>(
+        orElse: () => QRCodeViewMobileArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => QRCodeViewMobile(
+          key: args.key,
+          initialIndex: args.initialIndex,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -282,4 +298,11 @@ class LayoutTemplateViewArguments {
   final Key? key;
   final Widget childView;
   LayoutTemplateViewArguments({this.key, required this.childView});
+}
+
+/// QRCodeViewMobile arguments holder class
+class QRCodeViewMobileArguments {
+  final Key? key;
+  final int initialIndex;
+  QRCodeViewMobileArguments({this.key, this.initialIndex = 0});
 }

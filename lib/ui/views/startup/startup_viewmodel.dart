@@ -4,6 +4,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:places_service/places_service.dart';
@@ -12,6 +13,8 @@ class StartUpViewModel extends LayoutTemplateViewModel {
   final PlacesService _placesService = locator<PlacesService>();
   final _geolocationService = locator<GeolocationService>();
   final EnvironmentService _environmentService = locator<EnvironmentService>();
+  final _markersService = locator<MarkerService>();
+
   Position? position;
 
   final log = getLogger("StartUpViewModel");
@@ -22,11 +25,22 @@ class StartUpViewModel extends LayoutTemplateViewModel {
     _placesService.initialize(
         apiKey: _environmentService.getValue(GoogleMapsEnvKey));
 
+    //Get Current User Location
     position = await _geolocationService.getCurrentLocation();
+    //Get Guest Markers
+    final _markers = await _markersService.getQuestMarkers();
 
     try {
       if (position != null) {
         _geolocationService.setUserPosition(position: position!);
+      }
+    } catch (e) {
+      log.e("Could not set user position due to error: $e");
+    }
+
+    try {
+      if (_markers != null) {
+        _markersService.setQuestMarkers(markers: _markers);
       }
     } catch (e) {
       log.e("Could not set user position due to error: $e");

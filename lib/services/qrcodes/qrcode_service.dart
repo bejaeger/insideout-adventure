@@ -26,7 +26,7 @@ class QRCodeService {
       // exact geolocation at the time when the qr code is generated!
       // So we should not encode that in the qr code itself but
       // add the info later on!
-      final newMarker = marker.copyWith(lat: null, lon: null);
+      final newMarker = marker.copyWith(lat: marker.lat, lon: marker.lon);
       return json.encode(newMarker.toJson()).toString();
     } catch (e) {
       throw QRCodeServiceException(

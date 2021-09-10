@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/datamodels/places/places.dart';
@@ -10,6 +11,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,6 +25,8 @@ class QuestViewModel extends BaseViewModel {
   //final _bottomSheetService = locator<BottomSheetService>();
   final QuestService questService = locator<QuestService>();
   final DialogService _dialogService = locator<DialogService>();
+  final _navService = locator<NavigationService>();
+  final _qrcodeService = locator<QRCodeService>();
   Quest? _startedQuest;
 
   Set<Marker>? _markersTmp = {};
@@ -55,7 +59,7 @@ class QuestViewModel extends BaseViewModel {
       //Based on teh city
       target: LatLng(
           _startedQuest!.startMarker.lat!, _startedQuest!.startMarker.lon!),
-      zoom: 8,
+      zoom: 10,
     );
 
     return _initialCameraPosition;
@@ -71,15 +75,30 @@ class QuestViewModel extends BaseViewModel {
           position: LatLng(markers.lat!, markers.lon!),
           infoWindow:
               InfoWindow(title: _startedQuest!.name, snippet: 'Vancouver'),
-          icon: (_startedQuest!.startMarker.id == markers!.id)
+          icon: (_startedQuest!.startMarker.id == markers.id)
               ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)
               : BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueOrange),
           onTap: () {
             if (checkRunningQuest == false) {
             } else {
+              ///Remove Marker Should be present.
+              ///Once the user click on the marker that marker should go out of the Map
+              questService.verifyAndUpdateCollectedMarkers(marker: markers);
+
               _dialogService.showDialog(
-                  title: "'You Currently Have a Running Quest !!!");
+                  title: "'You Currently Have a Running Quest !!!",
+                  description:
+                      "QRCODE DESCRIPTION: " + markers.qrCodeId.toString());
+
+              //Convert QRCODE String To Markers
+              _qrcodeService.convertQrCodeStringToMarker(
+                  qrCodeString: markers.qrCodeId);
+
+              //Convert Markers Into QRCODE
+              _qrcodeService.convertMarkerToQrCodeString(marker: markers);
+
+              _navService.navigateTo(Routes.qRCodeViewMobile);
             }
           }),
     );
@@ -117,7 +136,8 @@ class QuestViewModel extends BaseViewModel {
     try {
       _googleMapController = controller;
       //Add Starter Marker
-      addMarker(markers: _startedQuest!.startMarker);
+      getQuestMarkers();
+      //addMarker(markers: _startedQuest!.startMarker);
     } catch (error) {
       throw MapViewModelException(
           message: 'An error occured in the defining ',
@@ -125,12 +145,12 @@ class QuestViewModel extends BaseViewModel {
           prettyDetails:
               "An internal error occured on our side, please apologize and try again later.");
     }
-    getPlaces();
+    //getPlaces();
     setBusy(false);
     notifyListeners();
   }
 
-  Future getPlaces() async {
+  Future getQuestMarkers() async {
     setBusy(true);
     //places = await geolocation.getPlaces();
 

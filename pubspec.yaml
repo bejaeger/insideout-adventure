@@ -46,7 +46,8 @@ dependencies:
   permission_handler: ^8.1.4+2
 
   intl: ^0.17.0
-
+  qr_flutter: ^4.0.0
+  qr_code_scanner: ^0.4.0
   # Stacked State Management
   stacked: ^2.2.3
   stacked_services: ^0.8.3

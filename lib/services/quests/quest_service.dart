@@ -210,7 +210,7 @@ class QuestService {
   }
 
   Future getQuest({required String questId}) async {
-    return await _firestoreApi.getQuest(questId: questId);
+    return _firestoreApi.getQuest(questId: questId);
   }
 
   void updateTime(int seconds) {

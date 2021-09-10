@@ -157,6 +157,24 @@ class FirestoreApi {
     }
   }
 
+// Get Markers For the Quest.
+  Future<List<Markers>?>? getMarkers() async {
+    final _markers = await markersCollection.get();
+
+    if (_markers.docs.isNotEmpty) {
+      try {
+        return _markers.docs
+            .map((docs) => Markers.fromJson(docs.data()))
+            .toList();
+      } catch (e) {
+        throw FirestoreApiException(
+            message: 'Failed to get the Places', devDetails: '$e');
+      }
+    } else {
+      return null;
+    }
+  }
+
   Future<User?> getUserWithName({required String? name}) async {
     if (name == null) return null;
     QuerySnapshot doc =
