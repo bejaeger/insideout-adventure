@@ -21,7 +21,7 @@ class CustomAppBarViewModel extends BaseModel {
         if (continueQuest?.confirmed == true) {
           await questService.continueIncompleteQuest();
         } else {
-          //Set The Running Quest to
+          //Running Quest Been Cancelled.
           checkRunningQuest = false;
           await questService.cancelIncompleteQuest();
           await _dialogService.showDialog(title: "Quest cancelled");

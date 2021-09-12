@@ -88,6 +88,7 @@ class MapViewModel extends BaseViewModel {
                 markers: markers,
               );
             } else {
+              // final activeQuestLenght= questService.activatedQuest!.length;
               _dialogService.showDialog(
                   title: "'You Currently Have a Running Quest !!!");
             }

@@ -6,6 +6,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/datamodels/places/places.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
@@ -25,13 +26,16 @@ class QuestViewModel extends BaseViewModel {
   //final _bottomSheetService = locator<BottomSheetService>();
   final QuestService questService = locator<QuestService>();
   final DialogService _dialogService = locator<DialogService>();
-  final _navService = locator<NavigationService>();
+  final _navigationService = locator<NavigationService>();
   final _qrcodeService = locator<QRCodeService>();
   Quest? _startedQuest;
+  List<Markers>? setOfCollectedMarkers = [];
+  int idx = 0;
 
   Set<Marker>? _markersTmp = {};
   List<UserFavPlaces>? userFavouritePlaces;
   List<Places>? places;
+  bool foundMarker = false;
 
   GoogleMapController? _googleMapController;
   Marker? origin;
@@ -47,6 +51,8 @@ class QuestViewModel extends BaseViewModel {
   //Get Google Map Controller
   GoogleMapController? get getGoogleMapController => _googleMapController;
 
+  ActivatedQuest get activeQuest => questService.activatedQuest!;
+
   Set<Marker>? get getMarkers => _markersTmp;
 
   //Get Direction Info
@@ -59,10 +65,36 @@ class QuestViewModel extends BaseViewModel {
       //Based on teh city
       target: LatLng(
           _startedQuest!.startMarker.lat!, _startedQuest!.startMarker.lon!),
-      zoom: 10,
+      zoom: 9,
     );
 
     return _initialCameraPosition;
+  }
+
+  Future finishQuest() async {
+    try {
+      final result = await questService.evaluateAndFinishQuest();
+      if (result is String) {
+        final continueQuest = await _dialogService.showConfirmationDialog(
+            title: result.toString(),
+            cancelTitle: "Cancel",
+            confirmationTitle: "Continue");
+        if (continueQuest?.confirmed == true) {
+          await questService.continueIncompleteQuest();
+        } else {
+          //Running Quest Been Cancelled.
+          checkRunningQuest = false;
+          await questService.cancelIncompleteQuest();
+          await _dialogService.showDialog(title: "Quest cancelled");
+          _navigationService.replaceWith(Routes.mapView);
+        }
+      } else {
+        await _dialogService.showDialog(
+            title: "Congratz, you succesfully finished the quest!");
+      }
+    } catch (e) {
+      log.e("Could not finish quest, error thrown: $e");
+    }
   }
 
 //Add Markers to the Map
@@ -71,7 +103,6 @@ class QuestViewModel extends BaseViewModel {
     _markersTmp!.add(
       Marker(
           markerId: MarkerId(markers!.id),
-          //position: _pos,
           position: LatLng(markers.lat!, markers.lon!),
           infoWindow:
               InfoWindow(title: _startedQuest!.name, snippet: 'Vancouver'),
@@ -80,25 +111,61 @@ class QuestViewModel extends BaseViewModel {
               : BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueOrange),
           onTap: () {
-            if (checkRunningQuest == false) {
-            } else {
+            if (checkRunningQuest == true) {
               ///Remove Marker Should be present.
-              ///Once the user click on the marker that marker should go out of the Map
-              questService.verifyAndUpdateCollectedMarkers(marker: markers);
+              ///Once the user click on the marker that marker should go out of the Map as collected one.
 
-              _dialogService.showDialog(
+              //Keep Track of already Collected Markers.
+              if (setOfCollectedMarkers!.length > 0) {
+                for (int idx = 0; idx < setOfCollectedMarkers!.length; idx++) {
+                  if (setOfCollectedMarkers![idx].qrCodeId ==
+                      markers.qrCodeId) {
+                    _dialogService.showDialog(
+                        description:
+                            'qrcode already used ${setOfCollectedMarkers![idx].qrCodeId}! Try another one');
+                    foundMarker = true;
+                    //reset the Index
+                    idx = 0;
+                    break;
+                  }
+                }
+                if (foundMarker == false) {
+                  setOfCollectedMarkers!.add(markers);
+                  //update the Collected Markers.
+                  questService.verifyAndUpdateCollectedMarkers(marker: markers);
+                } else {
+                  //put Back Found Marker to False;
+                  foundMarker = false;
+                }
+              } else {
+                //add markers to tco
+                setOfCollectedMarkers!.add(markers);
+                //update the Collected Markers.
+                questService.verifyAndUpdateCollectedMarkers(marker: markers);
+
+                //Convert QRCODE String To Markers
+                _qrcodeService.convertQrCodeStringToMarker(
+                    qrCodeString: markers.qrCodeId);
+
+                //Convert Markers Into QRCODE
+                _qrcodeService.convertMarkerToQrCodeString(marker: markers);
+              }
+
+/*               _dialogService.showDialog(
                   title: "'You Currently Have a Running Quest !!!",
                   description:
-                      "QRCODE DESCRIPTION: " + markers.qrCodeId.toString());
+                      "QRCODE DESCRIPTION: " + markers.qrCodeId.toString()); */
 
-              //Convert QRCODE String To Markers
-              _qrcodeService.convertQrCodeStringToMarker(
-                  qrCodeString: markers.qrCodeId);
+              if (setOfCollectedMarkers!.length ==
+                  activeQuest.markersCollected.length) {
+                finishQuest();
+              }
 
-              //Convert Markers Into QRCODE
-              _qrcodeService.convertMarkerToQrCodeString(marker: markers);
-
-              _navService.navigateTo(Routes.qRCodeViewMobile);
+              // _navService.navigateTo(Routes.qRCodeViewMobile);
+            } else {
+              _dialogService.showDialog(
+                  title: "Quest Not Running",
+                  description: "Verify Your Quest Because is not running");
             }
           }),
     );
