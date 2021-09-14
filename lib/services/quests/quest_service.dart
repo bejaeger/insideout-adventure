@@ -3,11 +3,13 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/completed_quest/completed_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -72,6 +74,29 @@ class QuestService {
         disposeActivatedQuest();
       }
     }
+  }
+
+  /// Store all The Information
+  Future finishQuest(
+      {Quest? finishedQuest,
+      required int? numMarkersCollected,
+      required String? userId,
+      required String? timeElapse}) async {
+    //Stop the clock
+    _stopWatchService.stopTimer();
+    _stopWatchService.pauseListener();
+    trackData(_stopWatchService.getSecondTime());
+
+    log.i("Quest successfully finished, pushing to firebase!");
+    // if we end up here it means the quest has finished succesfully!
+    await _firestoreApi.createUserCompletedQuest(
+        userId: userId,
+        completedQuest: CompletedQuest(
+            questId: finishedQuest!.id,
+            numberMarkersCollected: numMarkersCollected,
+            status: QuestStatus.success,
+            afkCreditsEarned: finishedQuest.afkCredits,
+            timeElapsed: timeElapse));
   }
 
   Future continueIncompleteQuest() async {

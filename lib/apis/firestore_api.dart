@@ -6,6 +6,7 @@ import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/completed_quest/completed_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
@@ -56,6 +57,23 @@ class FirestoreApi {
       final _docRef = getUserFavouritePlacesDocument(uid: userId);
       if (_docRef != null) {
         await _docRef.set(favouritePlaces.toJson());
+        log.v('Favourite Places document added to ${_docRef.path}' + '\n');
+        log.v('Your Document Reference is: ${_docRef.toString()}');
+      }
+    } catch (e) {
+      throw FirestoreApiException(
+          message: 'Failed To Insert Places',
+          devDetails: 'Failed Caused By $e.');
+    }
+  }
+
+  //Create a List of Completed Quest By Users.
+  Future<void> createUserCompletedQuest(
+      {required userId, required CompletedQuest? completedQuest}) async {
+    try {
+      final _docRef = getUserStatisticsCollection(uid: userId);
+      if (_docRef != null) {
+        await _docRef.set(completedQuest!.toJson());
         log.v('Favourite Places document added to ${_docRef.path}' + '\n');
         log.v('Your Document Reference is: ${_docRef.toString()}');
       }
@@ -417,8 +435,11 @@ class FirestoreApi {
 
   /////////////////////////////////////////////////////////
   // Collection's getter
-  CollectionReference getUserStatisticsCollection({required String uid}) {
-    return usersCollection.doc(uid).collection(userStatisticsCollectionKey);
+  DocumentReference getUserStatisticsCollection({required String uid}) {
+    return usersCollection
+        .doc(uid)
+        .collection(userStatisticsCollectionKey)
+        .doc();
   }
 
   DocumentReference getUserSummaryStatisticsDocument({required String uid}) {

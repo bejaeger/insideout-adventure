@@ -14,6 +14,8 @@ import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
@@ -28,6 +30,8 @@ class QuestViewModel extends BaseViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final _navigationService = locator<NavigationService>();
   final _qrcodeService = locator<QRCodeService>();
+  final _stopWatchService = locator<StopWatchService>();
+  final _userService = locator<UserService>();
   Quest? _startedQuest;
   List<Markers>? setOfCollectedMarkers = [];
   int idx = 0;
@@ -35,7 +39,6 @@ class QuestViewModel extends BaseViewModel {
   Set<Marker>? _markersTmp = {};
   List<UserFavPlaces>? userFavouritePlaces;
   List<Places>? places;
-  bool foundMarker = false;
 
   GoogleMapController? _googleMapController;
   Marker? origin;
@@ -69,6 +72,33 @@ class QuestViewModel extends BaseViewModel {
     );
 
     return _initialCameraPosition;
+  }
+
+  Future finishCompletedQuest({required int numMarkersCollected}) async {
+    //Stop The Timer;
+    _stopWatchService.stopTimer();
+
+    //Running Quest Been Finshed.
+    checkRunningQuest = false;
+    //final result = await questService.finishQuest();
+
+    await _dialogService.showDialog(
+        title: "Congratz, you succesfully finished the quest!",
+        buttonTitle: 'Ok');
+
+    //checkRunningQuest = false;
+    //await questService.cancelIncompleteQuest();
+    //await _dialogService.showDialog(title: "Quest cancelled");
+    //Add all the information of the Quest in the Firebase.
+    await questService.finishQuest(
+        finishedQuest: _startedQuest,
+        userId: _userService.currentUser.uid,
+        numMarkersCollected: numMarkersCollected,
+        timeElapse: activeQuest.timeElapsed.toString());
+    _navigationService.replaceWith(Routes.mapView);
+
+    //await _dialogService.showDialog(title: "Quest cancelled");
+    //_navigationService.replaceWith(Routes.mapView);
   }
 
   Future finishQuest() async {
@@ -151,14 +181,14 @@ class QuestViewModel extends BaseViewModel {
                 _qrcodeService.convertMarkerToQrCodeString(marker: markers);
               }
 
-/*               _dialogService.showDialog(
-                  title: "'You Currently Have a Running Quest !!!",
-                  description:
-                      "QRCODE DESCRIPTION: " + markers.qrCodeId.toString()); */
-
               if (setOfCollectedMarkers!.length ==
                   activeQuest.markersCollected.length) {
-                finishQuest();
+                final _markersCollected = setOfCollectedMarkers!.length;
+                print(
+                    'This is The Number of Markers Collected: ${_markersCollected.toString()}');
+
+                finishCompletedQuest(numMarkersCollected: _markersCollected);
+                //finishQuest();
               }
 
               // _navService.navigateTo(Routes.qRCodeViewMobile);
