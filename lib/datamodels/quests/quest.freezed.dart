@@ -25,9 +25,9 @@ class _$QuestTearOff {
       required String name,
       required String description,
       required QuestType type,
-      required Markers startMarker,
-      required Markers finishMarker,
-      required List<Markers> markers,
+      required AFKMarker startMarker,
+      required AFKMarker finishMarker,
+      required List<AFKMarker> markers,
       required num afkCredits,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess}) {
@@ -59,9 +59,9 @@ mixin _$Quest {
   String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   QuestType get type => throw _privateConstructorUsedError;
-  Markers get startMarker => throw _privateConstructorUsedError;
-  Markers get finishMarker => throw _privateConstructorUsedError;
-  List<Markers> get markers => throw _privateConstructorUsedError;
+  AFKMarker get startMarker => throw _privateConstructorUsedError;
+  AFKMarker get finishMarker => throw _privateConstructorUsedError;
+  List<AFKMarker> get markers => throw _privateConstructorUsedError;
   num get afkCredits => throw _privateConstructorUsedError;
   List<num>? get afkCreditsPerMarker => throw _privateConstructorUsedError;
   num? get bonusAfkCreditsOnSuccess => throw _privateConstructorUsedError;
@@ -80,15 +80,15 @@ abstract class $QuestCopyWith<$Res> {
       String name,
       String description,
       QuestType type,
-      Markers startMarker,
-      Markers finishMarker,
-      List<Markers> markers,
+      AFKMarker startMarker,
+      AFKMarker finishMarker,
+      List<AFKMarker> markers,
       num afkCredits,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess});
 
-  $MarkersCopyWith<$Res> get startMarker;
-  $MarkersCopyWith<$Res> get finishMarker;
+  $AFKMarkerCopyWith<$Res> get startMarker;
+  $AFKMarkerCopyWith<$Res> get finishMarker;
 }
 
 /// @nodoc
@@ -132,15 +132,15 @@ class _$QuestCopyWithImpl<$Res> implements $QuestCopyWith<$Res> {
       startMarker: startMarker == freezed
           ? _value.startMarker
           : startMarker // ignore: cast_nullable_to_non_nullable
-              as Markers,
+              as AFKMarker,
       finishMarker: finishMarker == freezed
           ? _value.finishMarker
           : finishMarker // ignore: cast_nullable_to_non_nullable
-              as Markers,
+              as AFKMarker,
       markers: markers == freezed
           ? _value.markers
           : markers // ignore: cast_nullable_to_non_nullable
-              as List<Markers>,
+              as List<AFKMarker>,
       afkCredits: afkCredits == freezed
           ? _value.afkCredits
           : afkCredits // ignore: cast_nullable_to_non_nullable
@@ -157,15 +157,15 @@ class _$QuestCopyWithImpl<$Res> implements $QuestCopyWith<$Res> {
   }
 
   @override
-  $MarkersCopyWith<$Res> get startMarker {
-    return $MarkersCopyWith<$Res>(_value.startMarker, (value) {
+  $AFKMarkerCopyWith<$Res> get startMarker {
+    return $AFKMarkerCopyWith<$Res>(_value.startMarker, (value) {
       return _then(_value.copyWith(startMarker: value));
     });
   }
 
   @override
-  $MarkersCopyWith<$Res> get finishMarker {
-    return $MarkersCopyWith<$Res>(_value.finishMarker, (value) {
+  $AFKMarkerCopyWith<$Res> get finishMarker {
+    return $AFKMarkerCopyWith<$Res>(_value.finishMarker, (value) {
       return _then(_value.copyWith(finishMarker: value));
     });
   }
@@ -181,17 +181,17 @@ abstract class _$QuestCopyWith<$Res> implements $QuestCopyWith<$Res> {
       String name,
       String description,
       QuestType type,
-      Markers startMarker,
-      Markers finishMarker,
-      List<Markers> markers,
+      AFKMarker startMarker,
+      AFKMarker finishMarker,
+      List<AFKMarker> markers,
       num afkCredits,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess});
 
   @override
-  $MarkersCopyWith<$Res> get startMarker;
+  $AFKMarkerCopyWith<$Res> get startMarker;
   @override
-  $MarkersCopyWith<$Res> get finishMarker;
+  $AFKMarkerCopyWith<$Res> get finishMarker;
 }
 
 /// @nodoc
@@ -236,15 +236,15 @@ class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
       startMarker: startMarker == freezed
           ? _value.startMarker
           : startMarker // ignore: cast_nullable_to_non_nullable
-              as Markers,
+              as AFKMarker,
       finishMarker: finishMarker == freezed
           ? _value.finishMarker
           : finishMarker // ignore: cast_nullable_to_non_nullable
-              as Markers,
+              as AFKMarker,
       markers: markers == freezed
           ? _value.markers
           : markers // ignore: cast_nullable_to_non_nullable
-              as List<Markers>,
+              as List<AFKMarker>,
       afkCredits: afkCredits == freezed
           ? _value.afkCredits
           : afkCredits // ignore: cast_nullable_to_non_nullable
@@ -289,11 +289,11 @@ class _$_Quest implements _Quest {
   @override
   final QuestType type;
   @override
-  final Markers startMarker;
+  final AFKMarker startMarker;
   @override
-  final Markers finishMarker;
+  final AFKMarker finishMarker;
   @override
-  final List<Markers> markers;
+  final List<AFKMarker> markers;
   @override
   final num afkCredits;
   @override
@@ -371,9 +371,9 @@ abstract class _Quest implements Quest {
       required String name,
       required String description,
       required QuestType type,
-      required Markers startMarker,
-      required Markers finishMarker,
-      required List<Markers> markers,
+      required AFKMarker startMarker,
+      required AFKMarker finishMarker,
+      required List<AFKMarker> markers,
       required num afkCredits,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess}) = _$_Quest;
@@ -389,11 +389,11 @@ abstract class _Quest implements Quest {
   @override
   QuestType get type => throw _privateConstructorUsedError;
   @override
-  Markers get startMarker => throw _privateConstructorUsedError;
+  AFKMarker get startMarker => throw _privateConstructorUsedError;
   @override
-  Markers get finishMarker => throw _privateConstructorUsedError;
+  AFKMarker get finishMarker => throw _privateConstructorUsedError;
   @override
-  List<Markers> get markers => throw _privateConstructorUsedError;
+  List<AFKMarker> get markers => throw _privateConstructorUsedError;
   @override
   num get afkCredits => throw _privateConstructorUsedError;
   @override

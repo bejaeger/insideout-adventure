@@ -12,11 +12,12 @@ _$_Quest _$_$_QuestFromJson(Map<String, dynamic> json) {
     name: json['name'] as String,
     description: json['description'] as String,
     type: _$enumDecode(_$QuestTypeEnumMap, json['type']),
-    startMarker: Markers.fromJson(json['startMarker'] as Map<String, dynamic>),
+    startMarker:
+        AFKMarker.fromJson(json['startMarker'] as Map<String, dynamic>),
     finishMarker:
-        Markers.fromJson(json['finishMarker'] as Map<String, dynamic>),
+        AFKMarker.fromJson(json['finishMarker'] as Map<String, dynamic>),
     markers: (json['markers'] as List<dynamic>)
-        .map((e) => Markers.fromJson(e as Map<String, dynamic>))
+        .map((e) => AFKMarker.fromJson(e as Map<String, dynamic>))
         .toList(),
     afkCredits: json['afkCredits'] as num,
     afkCreditsPerMarker: (json['afkCreditsPerMarker'] as List<dynamic>?)

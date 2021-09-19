@@ -8,10 +8,10 @@ import 'package:afkcredits/exceptions/qrcode_service_exception.dart';
 class QRCodeService {
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
 
-  Markers convertQrCodeStringToMarker({required String qrCodeString}) {
+  AFKMarker convertQrCodeStringToMarker({required String qrCodeString}) {
     try {
       final json = jsonDecode(qrCodeString);
-      return Markers.fromJson(json);
+      return AFKMarker.fromJson(json);
     } catch (e) {
       throw QRCodeServiceException(
           message: "Qr Code is not valid",
@@ -20,7 +20,7 @@ class QRCodeService {
     }
   }
 
-  String convertMarkerToQrCodeString({required Markers marker}) {
+  String convertMarkerToQrCodeString({required AFKMarker marker}) {
     try {
       // need to remove lat and lon info cause we don't know the
       // exact geolocation at the time when the qr code is generated!
@@ -37,7 +37,7 @@ class QRCodeService {
   }
 
   Future getMarkerFromQrCodeString({required String qrCodeString}) async {
-    Markers marker = convertQrCodeStringToMarker(qrCodeString: qrCodeString);
+    AFKMarker marker = convertQrCodeStringToMarker(qrCodeString: qrCodeString);
     return await _firestoreApi.getMarkerFromQrCodeId(qrCodeId: marker.qrCodeId);
   }
 }

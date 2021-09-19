@@ -6,8 +6,8 @@ part of 'marker.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Markers _$_$_MarkersFromJson(Map<String, dynamic> json) {
-  return _$_Markers(
+_$_AFKMarker _$_$_AFKMarkerFromJson(Map<String, dynamic> json) {
+  return _$_AFKMarker(
     id: json['id'] as String,
     qrCodeId: json['qrCodeId'] as String,
     questId: json['questId'] as String?,
@@ -19,7 +19,7 @@ _$_Markers _$_$_MarkersFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$_$_MarkersToJson(_$_Markers instance) =>
+Map<String, dynamic> _$_$_AFKMarkerToJson(_$_AFKMarker instance) =>
     <String, dynamic>{
       'id': instance.id,
       'qrCodeId': instance.qrCodeId,

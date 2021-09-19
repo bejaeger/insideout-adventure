@@ -37,7 +37,7 @@ class MapViewModel extends BaseViewModel {
   Position? _pos;
   List<UserFavPlaces>? userFavouritePlaces;
   List<Places>? places;
-  List<Markers>? markers;
+  List<AFKMarker>? markers;
 
   GoogleMapController? _googleMapController;
   Marker? origin;
@@ -70,7 +70,7 @@ class MapViewModel extends BaseViewModel {
   }
 
 //Add Markers to the Map
-  void addMarker({required Markers markers}) {
+  void addMarker({required AFKMarker markers}) {
     setBusy(true);
 
     _markersTmp.add(
@@ -145,7 +145,8 @@ Clock Timer
                     });
                     _stopWatchService.setTimerStreamSubscription(timerSubscription: _timerSubscription!); 
                      setBusy(false); 
-                     notifyListeners();  */
+                     notifyListeners(); 
+                      */
 
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
@@ -157,7 +158,7 @@ Clock Timer
     markers = _markersService.getSetMarkers;
 
     if (markers!.isNotEmpty) {
-      for (Markers _m in markers!) {
+      for (AFKMarker _m in markers!) {
         addMarker(markers: _m);
       }
       _markersTmp = _markersTmp;
@@ -172,21 +173,21 @@ Clock Timer
   Future<void> createMarkers() async {
     setBusy(true);
     await _markersService.createMarkers(
-        markers: Markers(
+        markers: AFKMarker(
             id: "9hJodek7hlwwUVl0VgzN",
             qrCodeId: "QRCode2Id",
             lat: 37.487846,
             lon: -122.236115,
             questId: 'QuestId'));
     await _markersService.createMarkers(
-        markers: Markers(
+        markers: AFKMarker(
             id: "nc9tNP2lSdzbjjC1p574",
             qrCodeId: "QRCode2Id",
             lat: 37.75675,
             lon: -122.45027,
             questId: 'QuestId01'));
     await _markersService.createMarkers(
-        markers: Markers(
+        markers: AFKMarker(
             id: "Marker3Id",
             qrCodeId: "QRCode3Id",
             lat: 37.4219983,
@@ -197,7 +198,7 @@ Clock Timer
     notifyListeners();
   }
 
-  Future displayQuestBottomSheet({required Markers markers}) async {
+  Future displayQuestBottomSheet({required AFKMarker markers}) async {
     Quest quest = await questService.getQuest(questId: markers.questId!);
 
     if (quest != null) {

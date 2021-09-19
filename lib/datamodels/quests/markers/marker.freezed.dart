@@ -12,22 +12,22 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-Markers _$MarkersFromJson(Map<String, dynamic> json) {
-  return _Markers.fromJson(json);
+AFKMarker _$AFKMarkerFromJson(Map<String, dynamic> json) {
+  return _AFKMarker.fromJson(json);
 }
 
 /// @nodoc
-class _$MarkersTearOff {
-  const _$MarkersTearOff();
+class _$AFKMarkerTearOff {
+  const _$AFKMarkerTearOff();
 
-  _Markers call(
+  _AFKMarker call(
       {required String id,
       required String qrCodeId,
       String? questId,
       double? lat,
       double? lon,
       MarkerStatus markerStatus = MarkerStatus.testing}) {
-    return _Markers(
+    return _AFKMarker(
       id: id,
       qrCodeId: qrCodeId,
       questId: questId,
@@ -37,16 +37,16 @@ class _$MarkersTearOff {
     );
   }
 
-  Markers fromJson(Map<String, Object> json) {
-    return Markers.fromJson(json);
+  AFKMarker fromJson(Map<String, Object> json) {
+    return AFKMarker.fromJson(json);
   }
 }
 
 /// @nodoc
-const $Markers = _$MarkersTearOff();
+const $AFKMarker = _$AFKMarkerTearOff();
 
 /// @nodoc
-mixin _$Markers {
+mixin _$AFKMarker {
   String get id => throw _privateConstructorUsedError;
   String get qrCodeId => throw _privateConstructorUsedError;
   String? get questId => throw _privateConstructorUsedError;
@@ -56,13 +56,14 @@ mixin _$Markers {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $MarkersCopyWith<Markers> get copyWith => throw _privateConstructorUsedError;
+  $AFKMarkerCopyWith<AFKMarker> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MarkersCopyWith<$Res> {
-  factory $MarkersCopyWith(Markers value, $Res Function(Markers) then) =
-      _$MarkersCopyWithImpl<$Res>;
+abstract class $AFKMarkerCopyWith<$Res> {
+  factory $AFKMarkerCopyWith(AFKMarker value, $Res Function(AFKMarker) then) =
+      _$AFKMarkerCopyWithImpl<$Res>;
   $Res call(
       {String id,
       String qrCodeId,
@@ -73,12 +74,12 @@ abstract class $MarkersCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$MarkersCopyWithImpl<$Res> implements $MarkersCopyWith<$Res> {
-  _$MarkersCopyWithImpl(this._value, this._then);
+class _$AFKMarkerCopyWithImpl<$Res> implements $AFKMarkerCopyWith<$Res> {
+  _$AFKMarkerCopyWithImpl(this._value, this._then);
 
-  final Markers _value;
+  final AFKMarker _value;
   // ignore: unused_field
-  final $Res Function(Markers) _then;
+  final $Res Function(AFKMarker) _then;
 
   @override
   $Res call({
@@ -119,9 +120,10 @@ class _$MarkersCopyWithImpl<$Res> implements $MarkersCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$MarkersCopyWith<$Res> implements $MarkersCopyWith<$Res> {
-  factory _$MarkersCopyWith(_Markers value, $Res Function(_Markers) then) =
-      __$MarkersCopyWithImpl<$Res>;
+abstract class _$AFKMarkerCopyWith<$Res> implements $AFKMarkerCopyWith<$Res> {
+  factory _$AFKMarkerCopyWith(
+          _AFKMarker value, $Res Function(_AFKMarker) then) =
+      __$AFKMarkerCopyWithImpl<$Res>;
   @override
   $Res call(
       {String id,
@@ -133,13 +135,13 @@ abstract class _$MarkersCopyWith<$Res> implements $MarkersCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$MarkersCopyWithImpl<$Res> extends _$MarkersCopyWithImpl<$Res>
-    implements _$MarkersCopyWith<$Res> {
-  __$MarkersCopyWithImpl(_Markers _value, $Res Function(_Markers) _then)
-      : super(_value, (v) => _then(v as _Markers));
+class __$AFKMarkerCopyWithImpl<$Res> extends _$AFKMarkerCopyWithImpl<$Res>
+    implements _$AFKMarkerCopyWith<$Res> {
+  __$AFKMarkerCopyWithImpl(_AFKMarker _value, $Res Function(_AFKMarker) _then)
+      : super(_value, (v) => _then(v as _AFKMarker));
 
   @override
-  _Markers get _value => super._value as _Markers;
+  _AFKMarker get _value => super._value as _AFKMarker;
 
   @override
   $Res call({
@@ -150,7 +152,7 @@ class __$MarkersCopyWithImpl<$Res> extends _$MarkersCopyWithImpl<$Res>
     Object? lon = freezed,
     Object? markerStatus = freezed,
   }) {
-    return _then(_Markers(
+    return _then(_AFKMarker(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -181,8 +183,8 @@ class __$MarkersCopyWithImpl<$Res> extends _$MarkersCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Markers implements _Markers {
-  _$_Markers(
+class _$_AFKMarker implements _AFKMarker {
+  _$_AFKMarker(
       {required this.id,
       required this.qrCodeId,
       this.questId,
@@ -190,8 +192,8 @@ class _$_Markers implements _Markers {
       this.lon,
       this.markerStatus = MarkerStatus.testing});
 
-  factory _$_Markers.fromJson(Map<String, dynamic> json) =>
-      _$_$_MarkersFromJson(json);
+  factory _$_AFKMarker.fromJson(Map<String, dynamic> json) =>
+      _$_$_AFKMarkerFromJson(json);
 
   @override
   final String id;
@@ -209,13 +211,13 @@ class _$_Markers implements _Markers {
 
   @override
   String toString() {
-    return 'Markers(id: $id, qrCodeId: $qrCodeId, questId: $questId, lat: $lat, lon: $lon, markerStatus: $markerStatus)';
+    return 'AFKMarker(id: $id, qrCodeId: $qrCodeId, questId: $questId, lat: $lat, lon: $lon, markerStatus: $markerStatus)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Markers &&
+        (other is _AFKMarker &&
             (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.qrCodeId, qrCodeId) ||
@@ -245,25 +247,26 @@ class _$_Markers implements _Markers {
 
   @JsonKey(ignore: true)
   @override
-  _$MarkersCopyWith<_Markers> get copyWith =>
-      __$MarkersCopyWithImpl<_Markers>(this, _$identity);
+  _$AFKMarkerCopyWith<_AFKMarker> get copyWith =>
+      __$AFKMarkerCopyWithImpl<_AFKMarker>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_MarkersToJson(this);
+    return _$_$_AFKMarkerToJson(this);
   }
 }
 
-abstract class _Markers implements Markers {
-  factory _Markers(
+abstract class _AFKMarker implements AFKMarker {
+  factory _AFKMarker(
       {required String id,
       required String qrCodeId,
       String? questId,
       double? lat,
       double? lon,
-      MarkerStatus markerStatus}) = _$_Markers;
+      MarkerStatus markerStatus}) = _$_AFKMarker;
 
-  factory _Markers.fromJson(Map<String, dynamic> json) = _$_Markers.fromJson;
+  factory _AFKMarker.fromJson(Map<String, dynamic> json) =
+      _$_AFKMarker.fromJson;
 
   @override
   String get id => throw _privateConstructorUsedError;
@@ -279,6 +282,6 @@ abstract class _Markers implements Markers {
   MarkerStatus get markerStatus => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$MarkersCopyWith<_Markers> get copyWith =>
+  _$AFKMarkerCopyWith<_AFKMarker> get copyWith =>
       throw _privateConstructorUsedError;
 }

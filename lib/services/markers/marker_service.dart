@@ -8,9 +8,9 @@ class MarkerService {
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final log = getLogger("MarkerService");
   final _firestoreApi = locator<FirestoreApi>();
-  List<Markers>? _markersLists;
+  List<AFKMarker>? _markersLists;
 
-  Future<bool> isUserCloseby({required Markers marker}) async {
+  Future<bool> isUserCloseby({required AFKMarker marker}) async {
     if (marker.lat != null && marker.lon != null) {
       return await _geolocationService.isUserCloseby(
           lat: marker.lat!, lon: marker.lon!);
@@ -20,20 +20,20 @@ class MarkerService {
     }
   }
 
-  Future<void> createMarkers({required Markers markers}) async {
+  Future<void> createMarkers({required AFKMarker markers}) async {
     await _firestoreApi.createMarkers(markers: markers);
   }
 
   //Get User Favourite Places
-  Future<List<Markers>?> getQuestMarkers() async {
+  Future<List<AFKMarker>?> getQuestMarkers() async {
     return await _firestoreApi.getMarkers();
   }
 
-  Future<void> setQuestMarkers({required List<Markers> markers}) async {
+  Future<void> setQuestMarkers({required List<AFKMarker> markers}) async {
     _markersLists = markers;
   }
 
-  List<Markers> get getSetMarkers => _markersLists!;
+  List<AFKMarker> get getSetMarkers => _markersLists!;
 
   //Markers get getMarkers => getDummyMarker1
   // TODO

@@ -20,8 +20,8 @@ Quest getDummyQuest() {
   );
 }
 
-Markers getDummyMarker1() {
-  return Markers(
+AFKMarker getDummyMarker1() {
+  return AFKMarker(
       id: "9hJodek7hlwwUVl0VgzN",
       qrCodeId: "QRCode01Id",
       lat: 37.487846,
@@ -29,8 +29,8 @@ Markers getDummyMarker1() {
       questId: 'QuestId');
 }
 
-Markers getDummyMarker2() {
-  return Markers(
+AFKMarker getDummyMarker2() {
+  return AFKMarker(
       id: "nc9tNP2lSdzbjjC1p574",
       qrCodeId: "QRCode02Id",
       lat: 37.75675,
@@ -38,8 +38,8 @@ Markers getDummyMarker2() {
       questId: 'QuestId01');
 }
 
-Markers getDummyMarker3() {
-  return Markers(
+AFKMarker getDummyMarker3() {
+  return AFKMarker(
       id: "Marker3Id",
       qrCodeId: "QRCode03Id",
       lat: 37.4219983,
@@ -47,8 +47,8 @@ Markers getDummyMarker3() {
       questId: 'QuestId02');
 }
 
-Markers getDummyMarker4() {
-  return Markers(
+AFKMarker getDummyMarker4() {
+  return AFKMarker(
       id: "Marker4Id",
       qrCodeId: "QRCode04Id",
       lat: 37.4636,

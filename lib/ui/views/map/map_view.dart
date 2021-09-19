@@ -19,12 +19,18 @@ class MapView extends StatelessWidget {
           child: GoogleMap(
             //mapType: MapType.hybrid,
             initialCameraPosition: model.initialCameraPosition(),
+
             //Place Markers in the Map
             markers: model.getMarkers!,
+
             //callback that’s called when the map is ready to us.
             onMapCreated: model.onMapCreated,
+
             //For showing your current location on Map with a blue dot.
             myLocationEnabled: true,
+            //Remove the Zoom in and out button
+            zoomControlsEnabled: false,
+
             // Button used for bringing the user location to the center of the camera view.
             myLocationButtonEnabled: true,
 
@@ -39,6 +45,7 @@ class MapView extends StatelessWidget {
                       .toList(),
                 ),
             },
+
             //onTap: model.handleTap(),
             //Enable Traffic Mode.
             //trafficEnabled: true,

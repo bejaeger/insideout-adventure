@@ -85,7 +85,7 @@ class FirestoreApi {
   }
 
   //Create a List of My Favourite Places
-  Future<void> createMarkers({required Markers markers}) async {
+  Future<void> createMarkers({required AFKMarker markers}) async {
     try {
       final _docRef = getMarkersDocs(markerId: markers.id);
       if (_docRef != null) {
@@ -176,13 +176,13 @@ class FirestoreApi {
   }
 
 // Get Markers For the Quest.
-  Future<List<Markers>?>? getMarkers() async {
+  Future<List<AFKMarker>?>? getMarkers() async {
     final _markers = await markersCollection.get();
 
     if (_markers.docs.isNotEmpty) {
       try {
         return _markers.docs
-            .map((docs) => Markers.fromJson(docs.data()))
+            .map((docs) => AFKMarker.fromJson(docs.data()))
             .toList();
       } catch (e) {
         throw FirestoreApiException(
@@ -407,11 +407,11 @@ class FirestoreApi {
 
   ///////////////////////////////////////////////////
   /// Functions related to markers
-  Future<Markers?> getMarkerFromQrCodeId({required String qrCodeId}) async {
+  Future<AFKMarker?> getMarkerFromQrCodeId({required String qrCodeId}) async {
     /////////////////////////////////////////////
     // For now we return dummy data!
     return Future.value(
-        Markers(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.1, lon: -122));
+        AFKMarker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.1, lon: -122));
 
     //////////////////////////////////////////////
     // QuerySnapshot snapshot =

@@ -29,6 +29,9 @@ class QuestView extends StatelessWidget {
             // Button used for bringing the user location to the center of the camera view.
             myLocationButtonEnabled: true,
 
+            //Remove the Zoom in and out button
+            zoomControlsEnabled: false,
+
             polylines: {
               if (model.getDirectionInfo != null)
                 Polyline(

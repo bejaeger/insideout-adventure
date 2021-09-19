@@ -89,7 +89,7 @@ class _FakeQuest_10 extends _i1.Fake implements _i10.Quest {}
 
 class _FakeActivatedQuest_11 extends _i1.Fake implements _i11.ActivatedQuest {}
 
-class _FakeMarkers_12 extends _i1.Fake implements _i12.Markers {}
+class _FakeAFKMarker_12 extends _i1.Fake implements _i12.AFKMarker {}
 
 class _FakeFirebaseAuth_13 extends _i1.Fake implements _i13.FirebaseAuth {}
 
@@ -353,7 +353,7 @@ class MockFirestoreApi extends _i1.Mock implements _i20.FirestoreApi {
               returnValueForMissingStub: Future<void>.value())
           as _i17.Future<void>);
   @override
-  _i17.Future<void> createMarkers({_i12.Markers? markers}) =>
+  _i17.Future<void> createMarkers({_i12.AFKMarker? markers}) =>
       (super.noSuchMethod(
               Invocation.method(#createMarkers, [], {#markers: markers}),
               returnValue: Future<void>.value(),
@@ -437,11 +437,11 @@ class MockFirestoreApi extends _i1.Mock implements _i20.FirestoreApi {
       .noSuchMethod(Invocation.method(#pushFinishedQuest, [], {#quest: quest}),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
-  _i17.Future<_i12.Markers?> getMarkerFromQrCodeId({String? qrCodeId}) =>
+  _i17.Future<_i12.AFKMarker?> getMarkerFromQrCodeId({String? qrCodeId}) =>
       (super.noSuchMethod(
           Invocation.method(#getMarkerFromQrCodeId, [], {#qrCodeId: qrCodeId}),
           returnValue:
-              Future<_i12.Markers?>.value()) as _i17.Future<_i12.Markers?>);
+              Future<_i12.AFKMarker?>.value()) as _i17.Future<_i12.AFKMarker?>);
   @override
   _i5.DocumentReference getUserStatisticsCollection({String? uid}) =>
       (super.noSuchMethod(
@@ -861,12 +861,14 @@ class MockQuestService extends _i1.Mock implements _i34.QuestService {
   _i17.Future<dynamic> finishQuest(
           {_i10.Quest? finishedQuest,
           int? numMarkersCollected,
-          String? userId}) =>
+          String? userId,
+          String? timeElapse}) =>
       (super.noSuchMethod(
           Invocation.method(#finishQuest, [], {
             #finishedQuest: finishedQuest,
             #numMarkersCollected: numMarkersCollected,
-            #userId: userId
+            #userId: userId,
+            #timeElapse: timeElapse
           }),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
@@ -887,13 +889,13 @@ class MockQuestService extends _i1.Mock implements _i34.QuestService {
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
   _i17.Future<dynamic> verifyAndUpdateCollectedMarkers(
-          {_i12.Markers? marker}) =>
+          {_i12.AFKMarker? marker}) =>
       (super.noSuchMethod(
           Invocation.method(
               #verifyAndUpdateCollectedMarkers, [], {#marker: marker}),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
-  void updateCollectedMarkers({_i12.Markers? marker}) => super.noSuchMethod(
+  void updateCollectedMarkers({_i12.AFKMarker? marker}) => super.noSuchMethod(
       Invocation.method(#updateCollectedMarkers, [], {#marker: marker}),
       returnValueForMissingStub: null);
   @override
@@ -905,7 +907,7 @@ class MockQuestService extends _i1.Mock implements _i34.QuestService {
       super.noSuchMethod(Invocation.method(#removeActivatedQuest, []),
           returnValueForMissingStub: null);
   @override
-  bool isMarkerInQuest({_i12.Markers? marker}) => (super.noSuchMethod(
+  bool isMarkerInQuest({_i12.AFKMarker? marker}) => (super.noSuchMethod(
       Invocation.method(#isMarkerInQuest, [], {#marker: marker}),
       returnValue: false) as bool);
   @override
@@ -1023,27 +1025,27 @@ class MockStopWatchService extends _i1.Mock implements _i35.StopWatchService {
 /// See the documentation for Mockito's code generation for more information.
 class MockMarkerService extends _i1.Mock implements _i36.MarkerService {
   @override
-  List<_i12.Markers> get getSetMarkers =>
+  List<_i12.AFKMarker> get getSetMarkers =>
       (super.noSuchMethod(Invocation.getter(#getSetMarkers),
-          returnValue: <_i12.Markers>[]) as List<_i12.Markers>);
+          returnValue: <_i12.AFKMarker>[]) as List<_i12.AFKMarker>);
   @override
-  _i17.Future<bool> isUserCloseby({_i12.Markers? marker}) => (super
+  _i17.Future<bool> isUserCloseby({_i12.AFKMarker? marker}) => (super
       .noSuchMethod(Invocation.method(#isUserCloseby, [], {#marker: marker}),
           returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
   @override
-  _i17.Future<void> createMarkers({_i12.Markers? markers}) =>
+  _i17.Future<void> createMarkers({_i12.AFKMarker? markers}) =>
       (super.noSuchMethod(
               Invocation.method(#createMarkers, [], {#markers: markers}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
           as _i17.Future<void>);
   @override
-  _i17.Future<List<_i12.Markers>?> getQuestMarkers() =>
+  _i17.Future<List<_i12.AFKMarker>?> getQuestMarkers() =>
       (super.noSuchMethod(Invocation.method(#getQuestMarkers, []),
-              returnValue: Future<List<_i12.Markers>?>.value())
-          as _i17.Future<List<_i12.Markers>?>);
+              returnValue: Future<List<_i12.AFKMarker>?>.value())
+          as _i17.Future<List<_i12.AFKMarker>?>);
   @override
-  _i17.Future<void> setQuestMarkers({List<_i12.Markers>? markers}) =>
+  _i17.Future<void> setQuestMarkers({List<_i12.AFKMarker>? markers}) =>
       (super.noSuchMethod(
               Invocation.method(#setQuestMarkers, [], {#markers: markers}),
               returnValue: Future<void>.value(),
@@ -1058,13 +1060,13 @@ class MockMarkerService extends _i1.Mock implements _i36.MarkerService {
 /// See the documentation for Mockito's code generation for more information.
 class MockQRCodeService extends _i1.Mock implements _i37.QRCodeService {
   @override
-  _i12.Markers convertQrCodeStringToMarker({String? qrCodeString}) =>
+  _i12.AFKMarker convertQrCodeStringToMarker({String? qrCodeString}) =>
       (super.noSuchMethod(
           Invocation.method(
               #convertQrCodeStringToMarker, [], {#qrCodeString: qrCodeString}),
-          returnValue: _FakeMarkers_12()) as _i12.Markers);
+          returnValue: _FakeAFKMarker_12()) as _i12.AFKMarker);
   @override
-  String convertMarkerToQrCodeString({_i12.Markers? marker}) =>
+  String convertMarkerToQrCodeString({_i12.AFKMarker? marker}) =>
       (super.noSuchMethod(
           Invocation.method(
               #convertMarkerToQrCodeString, [], {#marker: marker}),

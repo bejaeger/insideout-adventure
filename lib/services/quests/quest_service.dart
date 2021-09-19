@@ -143,35 +143,37 @@ class QuestService {
   }
 
   Future trackData(int seconds) async {
-    ActivatedQuest tmpActivatedQuest = activatedQuest!;
-    //void updateTime(int seconds) {
-    bool push = false;
-    if (seconds % 1 == 0) {
-      push = true;
-      // every five seconds
-      tmpActivatedQuest = this.updateTimeOnQuest(tmpActivatedQuest, seconds);
-    }
-    if (seconds % 10 == 0) {
-      push = true;
-      // every ten seconds
-      log.v("quest active since $seconds seconds!");
-      // tmpActivatedQuest = trackSomeOtherData(tmpActivatedQuest, seconds);
-    }
-    if (seconds >= kMaxQuestTimeInSeconds) {
-      push = false;
-      log.wtf(
-          "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten!");
-      // TODO: Add mechanism for the user to get a Notification about this
-      await cancelIncompleteQuest();
-      return;
-    }
-    //}
-    if (push) {
-      pushActivatedQuest(tmpActivatedQuest);
+    if (activatedQuest != null) {
+      ActivatedQuest tmpActivatedQuest = activatedQuest!;
+      //void updateTime(int seconds) {
+      bool push = false;
+      if (seconds % 1 == 0) {
+        push = true;
+        // every five seconds
+        tmpActivatedQuest = this.updateTimeOnQuest(tmpActivatedQuest, seconds);
+      }
+      if (seconds % 10 == 0) {
+        push = true;
+        // every ten seconds
+        log.v("quest active since $seconds seconds!");
+        // tmpActivatedQuest = trackSomeOtherData(tmpActivatedQuest, seconds);
+      }
+      if (seconds >= kMaxQuestTimeInSeconds) {
+        push = false;
+        log.wtf(
+            "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten!");
+        // TODO: Add mechanism for the user to get a Notification about this
+        await cancelIncompleteQuest();
+        return;
+      }
+      //}
+      if (push) {
+        pushActivatedQuest(tmpActivatedQuest);
+      }
     }
   }
 
-  Future verifyAndUpdateCollectedMarkers({required Markers marker}) async {
+  Future verifyAndUpdateCollectedMarkers({required AFKMarker marker}) async {
     if (!isMarkerInQuest(marker: marker)) {
       log.e("Marker is not part of current quest!");
       return Future.value("Marker is not part of the currently active quest!");
@@ -187,7 +189,7 @@ class QuestService {
     updateCollectedMarkers(marker: marker);
   }
 
-  void updateCollectedMarkers({required Markers marker}) {
+  void updateCollectedMarkers({required AFKMarker marker}) {
     if (activatedQuest != null) {
       final index = activatedQuest!.quest.markers
           .indexWhere((element) => element == marker);
@@ -224,7 +226,7 @@ class QuestService {
     activatedQuestSubject.add(null);
   }
 
-  bool isMarkerInQuest({required Markers marker}) {
+  bool isMarkerInQuest({required AFKMarker marker}) {
     if (activatedQuest != null) {
       return activatedQuest!.quest.markers.any((element) => element == marker);
     } else {

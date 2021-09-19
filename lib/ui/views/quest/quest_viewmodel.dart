@@ -33,7 +33,7 @@ class QuestViewModel extends BaseViewModel {
   final _stopWatchService = locator<StopWatchService>();
   final _userService = locator<UserService>();
   Quest? _startedQuest;
-  List<Markers>? setOfCollectedMarkers = [];
+  List<AFKMarker>? setOfCollectedMarkers = [];
   int idx = 0;
 
   Set<Marker>? _markersTmp = {};
@@ -45,6 +45,8 @@ class QuestViewModel extends BaseViewModel {
   Marker? destination;
   Directions? _directionInfo;
 
+  ActivatedQuest? _activeQuest;
+
   //CameraPosition get initialCameraPosition => null;
 
   Future<void> requestPermission() async {
@@ -54,7 +56,14 @@ class QuestViewModel extends BaseViewModel {
   //Get Google Map Controller
   GoogleMapController? get getGoogleMapController => _googleMapController;
 
-  ActivatedQuest get activeQuest => questService.activatedQuest!;
+  activeQuest() {
+    _activeQuest = questService.activatedQuest!;
+    if (_activeQuest != null) {
+      return _activeQuest!;
+    } else {
+      return null;
+    }
+  }
 
   Set<Marker>? get getMarkers => _markersTmp;
 
@@ -74,7 +83,9 @@ class QuestViewModel extends BaseViewModel {
     return _initialCameraPosition;
   }
 
-  Future finishCompletedQuest({required int numMarkersCollected}) async {
+  Future _finishCompletedQuest({required int numMarkersCollected}) async {
+    //final result = await questService.evaluateAndFinishQuest();
+
     //Stop The Timer;
     _stopWatchService.stopTimer();
 
@@ -86,49 +97,21 @@ class QuestViewModel extends BaseViewModel {
         title: "Congratz, you succesfully finished the quest!",
         buttonTitle: 'Ok');
 
-    //checkRunningQuest = false;
-    //await questService.cancelIncompleteQuest();
-    //await _dialogService.showDialog(title: "Quest cancelled");
+    questService.disposeActivatedQuest();
     //Add all the information of the Quest in the Firebase.
     await questService.finishQuest(
         finishedQuest: _startedQuest,
         userId: _userService.currentUser.uid,
         numMarkersCollected: numMarkersCollected,
-        timeElapse: activeQuest.timeElapsed.toString());
+        timeElapse: _activeQuest!.timeElapsed.toString());
     _navigationService.replaceWith(Routes.mapView);
 
     //await _dialogService.showDialog(title: "Quest cancelled");
     //_navigationService.replaceWith(Routes.mapView);
   }
 
-  Future finishQuest() async {
-    try {
-      final result = await questService.evaluateAndFinishQuest();
-      if (result is String) {
-        final continueQuest = await _dialogService.showConfirmationDialog(
-            title: result.toString(),
-            cancelTitle: "Cancel",
-            confirmationTitle: "Continue");
-        if (continueQuest?.confirmed == true) {
-          await questService.continueIncompleteQuest();
-        } else {
-          //Running Quest Been Cancelled.
-          checkRunningQuest = false;
-          await questService.cancelIncompleteQuest();
-          await _dialogService.showDialog(title: "Quest cancelled");
-          _navigationService.replaceWith(Routes.mapView);
-        }
-      } else {
-        await _dialogService.showDialog(
-            title: "Congratz, you succesfully finished the quest!");
-      }
-    } catch (e) {
-      log.e("Could not finish quest, error thrown: $e");
-    }
-  }
-
 //Add Markers to the Map
-  void addMarker({Markers? markers}) {
+  void addMarker({AFKMarker? markers}) {
     setBusy(true);
     _markersTmp!.add(
       Marker(
@@ -136,15 +119,11 @@ class QuestViewModel extends BaseViewModel {
           position: LatLng(markers.lat!, markers.lon!),
           infoWindow:
               InfoWindow(title: _startedQuest!.name, snippet: 'Vancouver'),
-          icon: (_startedQuest!.startMarker.id == markers.id)
-              ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)
-              : BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueOrange),
+          // icon: (_startedQuest!.startMarker.id == markers.id)
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
           onTap: () {
             if (checkRunningQuest == true) {
-              ///Remove Marker Should be present.
-              ///Once the user click on the marker that marker should go out of the Map as collected one.
-
               //Keep Track of already Collected Markers.
               if (setOfCollectedMarkers!.length > 0) {
                 for (int idx = 0; idx < setOfCollectedMarkers!.length; idx++) {
@@ -170,6 +149,7 @@ class QuestViewModel extends BaseViewModel {
               } else {
                 //add markers to tco
                 setOfCollectedMarkers!.add(markers);
+
                 //update the Collected Markers.
                 questService.verifyAndUpdateCollectedMarkers(marker: markers);
 
@@ -182,12 +162,12 @@ class QuestViewModel extends BaseViewModel {
               }
 
               if (setOfCollectedMarkers!.length ==
-                  activeQuest.markersCollected.length) {
+                  _activeQuest!.markersCollected.length) {
                 final _markersCollected = setOfCollectedMarkers!.length;
                 print(
                     'This is The Number of Markers Collected: ${_markersCollected.toString()}');
 
-                finishCompletedQuest(numMarkersCollected: _markersCollected);
+                _finishCompletedQuest(numMarkersCollected: _markersCollected);
                 //finishQuest();
               }
 
@@ -216,6 +196,7 @@ class QuestViewModel extends BaseViewModel {
   }
 
   void initilizeStartedQuest() {
+    activeQuest();
     _startedQuest = questService.getStartedQuest;
 
     log.i('You Have Started This Quest $_startedQuest');
@@ -251,7 +232,7 @@ class QuestViewModel extends BaseViewModel {
     setBusy(true);
     //places = await geolocation.getPlaces();
 
-    for (Markers _m in _startedQuest!.markers) {
+    for (AFKMarker _m in _startedQuest!.markers) {
       addMarker(markers: _m);
     }
     _markersTmp = _markersTmp;

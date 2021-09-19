@@ -5,16 +5,16 @@ part 'marker.freezed.dart';
 part 'marker.g.dart';
 
 @freezed
-class Markers with _$Markers {
-  factory Markers({
+class AFKMarker with _$AFKMarker {
+  factory AFKMarker({
     required String id,
     required String qrCodeId,
     String? questId,
     double? lat,
     double? lon,
     @Default(MarkerStatus.testing) MarkerStatus markerStatus,
-  }) = _Markers;
+  }) = _AFKMarker;
 
-  factory Markers.fromJson(Map<String, dynamic> json) =>
-      _$MarkersFromJson(json);
+  factory AFKMarker.fromJson(Map<String, dynamic> json) =>
+      _$AFKMarkerFromJson(json);
 }
