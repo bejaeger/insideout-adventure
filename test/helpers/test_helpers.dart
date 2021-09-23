@@ -1,4 +1,5 @@
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/dummy_datamodels.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
@@ -12,6 +13,7 @@ import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:afkcredits/apis/firestore_api.dart';
@@ -72,7 +74,8 @@ MockUserService getAndRegisterUserService({
           emailOrName: anyNamed("emailOrName"),
           password: anyNamed("password")))
       .thenAnswer((_) async =>
-          AFKCreditsAuthenticationResult.fromLocalStorage(uid: kTestUid));
+          AFKCreditsAuthenticationResultService.fromLocalStorage(
+              uid: kTestUid));
 
   when(service.runCreateAccountLogic(
           method: anyNamed("method"),
@@ -81,7 +84,8 @@ MockUserService getAndRegisterUserService({
           email: anyNamed("email"),
           password: anyNamed("password")))
       .thenAnswer((_) async =>
-          AFKCreditsAuthenticationResult.fromLocalStorage(uid: kTestUid));
+          AFKCreditsAuthenticationResultService.fromLocalStorage(
+              uid: kTestUid));
   locator.registerSingleton<UserService>(service);
   return service;
 }
@@ -228,6 +232,7 @@ MockStopWatchService getAndRegisterStopWatchService() {
 MockMarkerService getAndRegisterMarkerService() {
   _removeRegistrationIfExists<MarkerService>();
   final service = MockMarkerService();
+  when(service.getQuestMarkers()).thenAnswer((_) async => [getDummyMarker1()]);
   locator.registerSingleton<MarkerService>(service);
   return service;
 }

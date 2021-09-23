@@ -27,7 +27,7 @@ void main() {
         expect(
             service.convertQrCodeStringToMarker(
                 qrCodeString: kTestMarker1QrCodeString),
-            getTestMarker1NullCoordinates());
+            getTestMarker1());
       });
     });
 

@@ -72,12 +72,10 @@ Position getTestPositionAwayFromMarker1() {
 
 AFKMarker getTestMarker1() {
   return AFKMarker(
-      id: kTestMarker1Id, qrCodeId: kTestMarker1QrCodeId, lat: 49, lon: -122);
-}
-
-AFKMarker getTestMarker1NullCoordinates() {
-  return AFKMarker(
-      id: kTestMarker1Id, qrCodeId: kTestMarker1QrCodeId, lat: null, lon: null);
+      id: kTestMarker1Id,
+      qrCodeId: kTestMarker1QrCodeId,
+      lat: kTestMarker1Lat,
+      lon: kTestMarker1Lon);
 }
 
 AFKMarker getTestMarker2() {
