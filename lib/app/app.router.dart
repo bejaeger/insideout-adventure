@@ -22,6 +22,7 @@ import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_screen.dart';
 import '../ui/views/map/map_view.dart';
+import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_mobile.dart';
 import '../ui/views/quest/quest_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
@@ -52,6 +53,7 @@ class Routes {
   static const String mapScreen = '/map-screen';
   static const String questView = '/quest-view';
   static const String qRCodeViewMobile = '/q-rcode-view-mobile';
+  static const String qRCodeView = '/q-rcode-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -71,6 +73,7 @@ class Routes {
     mapScreen,
     questView,
     qRCodeViewMobile,
+    qRCodeView,
   };
 }
 
@@ -96,6 +99,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.mapScreen, page: MapScreen),
     RouteDef(Routes.questView, page: QuestView),
     RouteDef(Routes.qRCodeViewMobile, page: QRCodeViewMobile),
+    RouteDef(Routes.qRCodeView, page: QRCodeView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -238,6 +242,12 @@ class StackedRouter extends RouterBase {
           key: args.key,
           initialIndex: args.initialIndex,
         ),
+        settings: data,
+      );
+    },
+    QRCodeView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => QRCodeView(),
         settings: data,
       );
     },

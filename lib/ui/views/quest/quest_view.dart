@@ -26,6 +26,7 @@ class QuestView extends StatelessWidget {
             onMapCreated: model.onMapCreated,
             //For showing your current location on Map with a blue dot.
             myLocationEnabled: true,
+
             // Button used for bringing the user location to the center of the camera view.
             myLocationButtonEnabled: true,
 

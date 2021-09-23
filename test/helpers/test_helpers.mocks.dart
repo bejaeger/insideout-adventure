@@ -1131,6 +1131,10 @@ class MockMarkerService extends _i1.Mock implements _i38.MarkerService {
 /// See the documentation for Mockito's code generation for more information.
 class MockQRCodeService extends _i1.Mock implements _i39.QRCodeService {
   @override
+  _i2.Logger get log =>
+      (super.noSuchMethod(Invocation.getter(#log), returnValue: _FakeLogger_0())
+          as _i2.Logger);
+  @override
   _i14.AFKMarker getMarkerFromQrCodeString({String? qrCodeString}) =>
       (super.noSuchMethod(
           Invocation.method(
