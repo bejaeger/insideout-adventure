@@ -14,6 +14,16 @@ class QRCodeViewModel extends BaseModel {
   final SnackbarService? _snackbarService = locator<SnackbarService>();
   final NavigationService? _navigationService = locator<NavigationService>();
 
+  String getUserInfo() {
+    return _qrCodeService!.getEncodedUserInfo(currentUser);
+  }
+
+/*   
+Future navigateToSearchViewMobile() async {
+    await _navigationService!.replaceWith(Routes.searchView);
+  }
+*/
+
   Future analyzeScanResult({required Barcode result}) async {
     if (isBusy) {
       return null;
@@ -24,7 +34,7 @@ class QRCodeViewModel extends BaseModel {
         "Scanned code with result '${result.code}' and format '${result.format}");
     PublicUserInfo? userInfo;
     try {
-      //userInfo = _qrCodeService!.analyzeScanResult(result);
+      userInfo = _qrCodeService!.analyzeScanResult(result);
     } catch (e) {
       if (e is QRCodeServiceException) {
         log.e("Error when reading QR Code: $e");
@@ -41,5 +51,6 @@ class QRCodeViewModel extends BaseModel {
     log.i(
         "Successfully read user information from QR Code, navigate to send money view");
     setBusy(false);
+    notifyListeners();
   }
 }

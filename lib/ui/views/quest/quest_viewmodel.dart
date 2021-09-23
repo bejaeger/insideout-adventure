@@ -5,11 +5,9 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
-import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
@@ -25,7 +23,6 @@ class QuestViewModel extends BaseViewModel {
   final log = getLogger('QuestViewModel');
   final geolocation = locator<GeolocationService>();
   final _directionsAPI = locator<DirectionsAPI>();
-  //final _bottomSheetService = locator<BottomSheetService>();
   final QuestService questService = locator<QuestService>();
   final DialogService _dialogService = locator<DialogService>();
   final _navigationService = locator<NavigationService>();
@@ -34,20 +31,15 @@ class QuestViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   Quest? _startedQuest;
   List<AFKMarker>? setOfCollectedMarkers = [];
+  BitmapDescriptor? sourceIcon;
+  bool _checkMarkerColor = false;
   int idx = 0;
-
   Set<Marker>? _markersTmp = {};
-  List<UserFavPlaces>? userFavouritePlaces;
-  List<Places>? places;
-
   GoogleMapController? _googleMapController;
   Marker? origin;
   Marker? destination;
   Directions? _directionInfo;
-
   ActivatedQuest? _activeQuest;
-
-  //CameraPosition get initialCameraPosition => null;
 
   Future<void> requestPermission() async {
     await Permission.location.request();
@@ -104,10 +96,30 @@ class QuestViewModel extends BaseViewModel {
         userId: _userService.currentUser.uid,
         numMarkersCollected: numMarkersCollected,
         timeElapse: _activeQuest!.timeElapsed.toString());
-    _navigationService.replaceWith(Routes.mapView);
 
-    //await _dialogService.showDialog(title: "Quest cancelled");
-    //_navigationService.replaceWith(Routes.mapView);
+    _navigationService.replaceWith(Routes.mapView);
+  }
+
+  BitmapDescriptor defineMarkersColour({required bool checkOnTapMarker}) {
+    if (checkOnTapMarker == false) {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+    } else {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+    }
+  }
+
+  void addCollectedMarkers({AFKMarker? markers}) {
+    setBusy(true);
+    // For Future please make sure we you search for markers with the same Id remove the one you found and add new ones.
+    _markersTmp!.add(
+      Marker(
+        markerId: MarkerId(markers!.id),
+        position: LatLng(markers.lat!, markers.lon!),
+        icon: defineMarkersColour(checkOnTapMarker: true),
+      ),
+    );
+    setBusy(false);
+    notifyListeners();
   }
 
 //Add Markers to the Map
@@ -120,9 +132,10 @@ class QuestViewModel extends BaseViewModel {
           infoWindow:
               InfoWindow(title: _startedQuest!.name, snippet: 'Vancouver'),
           // icon: (_startedQuest!.startMarker.id == markers.id)
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+          icon: defineMarkersColour(checkOnTapMarker: _checkMarkerColor),
           onTap: () {
+            _checkMarkerColor = true;
+
             if (checkRunningQuest == true) {
               //Keep Track of already Collected Markers.
               if (setOfCollectedMarkers!.length > 0) {
@@ -140,6 +153,10 @@ class QuestViewModel extends BaseViewModel {
                 }
                 if (foundMarker == false) {
                   setOfCollectedMarkers!.add(markers);
+                  //Add Markers to Collected Ones
+
+                  addCollectedMarkers(markers: markers);
+
                   //update the Collected Markers.
                   questService.verifyAndUpdateCollectedMarkers(marker: markers);
                 } else {
@@ -149,6 +166,8 @@ class QuestViewModel extends BaseViewModel {
               } else {
                 //add markers to tco
                 setOfCollectedMarkers!.add(markers);
+                //Add Markers to Collected Ones
+                addCollectedMarkers(markers: markers);
 
                 //update the Collected Markers.
                 questService.verifyAndUpdateCollectedMarkers(marker: markers);
@@ -168,6 +187,7 @@ class QuestViewModel extends BaseViewModel {
                     'This is The Number of Markers Collected: ${_markersCollected.toString()}');
 
                 _finishCompletedQuest(numMarkersCollected: _markersCollected);
+
                 //finishQuest();
               }
 
@@ -179,7 +199,6 @@ class QuestViewModel extends BaseViewModel {
             }
           }),
     );
-
     setBusy(false);
     notifyListeners();
   }
@@ -196,6 +215,8 @@ class QuestViewModel extends BaseViewModel {
   }
 
   void initilizeStartedQuest() {
+    sourceIcon =
+        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
     activeQuest();
     _startedQuest = questService.getStartedQuest;
 
@@ -230,8 +251,6 @@ class QuestViewModel extends BaseViewModel {
 
   Future getQuestMarkers() async {
     setBusy(true);
-    //places = await geolocation.getPlaces();
-
     for (AFKMarker _m in _startedQuest!.markers) {
       addMarker(markers: _m);
     }

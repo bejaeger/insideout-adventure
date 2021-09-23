@@ -55,12 +55,22 @@ class MapView extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,
-          onPressed: () => model.getGoogleMapController!.animateCamera(
+          onPressed: () {
+            model.getGoogleMapController!.animateCamera(
+                model.getDirectionInfo != null
+                    ? CameraUpdate.newLatLngBounds(
+                        model.getDirectionInfo!.bounds, 100.0)
+                    : CameraUpdate.newCameraPosition(
+                        model.initialCameraPosition()));
+
+            model.navigateToQrcode();
+          },
+          /* => model.getGoogleMapController!.animateCamera(
             model.getDirectionInfo != null
                 ? CameraUpdate.newLatLngBounds(
                     model.getDirectionInfo!.bounds, 100.0)
                 : CameraUpdate.newCameraPosition(model.initialCameraPosition()),
-          ),
+          ), */
           child: const Icon(Icons.center_focus_strong),
         ),
       ),

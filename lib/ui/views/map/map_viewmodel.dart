@@ -117,6 +117,10 @@ class MapViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void navigateToQrcode() {
+    _navigationService.navigateTo(Routes.qRCodeView);
+  }
+
   Future startQuest() async {
     setBusy(true);
     try {
