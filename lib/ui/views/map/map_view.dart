@@ -17,6 +17,7 @@ class MapView extends StatelessWidget {
         ),
         body: Container(
           child: GoogleMap(
+            onTap: (_) => model.notifyListeners(),
             //mapType: MapType.hybrid,
             initialCameraPosition: model.initialCameraPosition(),
 
@@ -55,15 +56,14 @@ class MapView extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,
-          onPressed: () {
+          onPressed: () async {
             model.getGoogleMapController!.animateCamera(
                 model.getDirectionInfo != null
                     ? CameraUpdate.newLatLngBounds(
                         model.getDirectionInfo!.bounds, 100.0)
                     : CameraUpdate.newCameraPosition(
                         model.initialCameraPosition()));
-
-            model.navigateToQrcode();
+            await model.scanQrCodeWithActiveQuest();
           },
           /* => model.getGoogleMapController!.animateCamera(
             model.getDirectionInfo != null

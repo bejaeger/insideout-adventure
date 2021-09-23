@@ -22,8 +22,8 @@ import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_screen.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
-import 'package:afkcredits/ui/views/qrcode/qrcode_view_mobile.dart';
 import 'package:afkcredits/ui/views/quest/quest_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
@@ -56,8 +56,8 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: LayoutTemplateView),
     MaterialRoute(page: MapScreen),
     MaterialRoute(page: QuestView),
-    MaterialRoute(page: QRCodeViewMobile),
     MaterialRoute(page: QRCodeView),
+    MaterialRoute(page: QRCodeViewExample),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

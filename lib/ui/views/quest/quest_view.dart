@@ -44,6 +44,7 @@ class QuestView extends StatelessWidget {
                       .toList(),
                 ),
             },
+
             //onTap: model.handleTap(),
             //Enable Traffic Mode.
             //trafficEnabled: true,
@@ -54,12 +55,15 @@ class QuestView extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,
-          onPressed: () => model.getGoogleMapController!.animateCamera(
-            model.getDirectionInfo != null
-                ? CameraUpdate.newLatLngBounds(
-                    model.getDirectionInfo!.bounds, 100.0)
-                : CameraUpdate.newCameraPosition(model.initialCameraPosition()),
-          ),
+          onPressed: () async {
+            model.getGoogleMapController!.animateCamera(
+                model.getDirectionInfo != null
+                    ? CameraUpdate.newLatLngBounds(
+                        model.getDirectionInfo!.bounds, 100.0)
+                    : CameraUpdate.newCameraPosition(
+                        model.initialCameraPosition()));
+            await model.scanQrCodeWithActiveQuest();
+          },
           child: const Icon(Icons.qr_code),
         ),
       ),

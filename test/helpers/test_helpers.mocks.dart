@@ -947,11 +947,14 @@ class MockQuestService extends _i1.Mock implements _i36.QuestService {
       Invocation.method(#updateCollectedMarkers, [], {#marker: marker}),
       returnValueForMissingStub: null);
   @override
-  _i19.Future<_i12.QuestQRCodeScanResult> handleQrCodeScan(
-          {String? qrCodeString}) =>
+  bool isMarkerCollected({_i14.AFKMarker? marker}) => (super.noSuchMethod(
+      Invocation.method(#isMarkerCollected, [], {#marker: marker}),
+      returnValue: false) as bool);
+  @override
+  _i19.Future<_i12.QuestQRCodeScanResult> handleQrCodeScanEvent(
+          {_i14.AFKMarker? marker}) =>
       (super.noSuchMethod(
-              Invocation.method(
-                  #handleQrCodeScan, [], {#qrCodeString: qrCodeString}),
+              Invocation.method(#handleQrCodeScanEvent, [], {#marker: marker}),
               returnValue: Future<_i12.QuestQRCodeScanResult>.value(
                   _FakeQuestQRCodeScanResult_12()))
           as _i19.Future<_i12.QuestQRCodeScanResult>);

@@ -16,8 +16,8 @@ class CustomAppBarViewModel extends BaseModel {
       if (result is String) {
         final continueQuest = await _dialogService.showConfirmationDialog(
             title: result.toString(),
-            cancelTitle: "Cancel",
-            confirmationTitle: "Continue");
+            cancelTitle: "Cancel Quest",
+            confirmationTitle: "Continue Quest");
         if (continueQuest?.confirmed == true) {
           await questService.continueIncompleteQuest();
         } else {

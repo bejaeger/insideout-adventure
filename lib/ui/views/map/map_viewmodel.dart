@@ -13,14 +13,17 @@ import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
+import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
+import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class MapViewModel extends BaseViewModel {
+class MapViewModel extends BaseModel {
   final log = getLogger('MapViewModel');
   final geolocation = locator<GeolocationService>();
   //final _userService = locator<UserService>();
@@ -31,7 +34,7 @@ class MapViewModel extends BaseViewModel {
   //final StopWatchService _stopWatchService = locator<StopWatchService>();
   final _markersService = locator<MarkerService>();
   final _navigationService = locator<NavigationService>();
-
+  final _qrCodeService = locator<QRCodeService>();
   Set<Marker> _markersTmp = {};
   //StreamSubscription<int>? _timerSubscription;
   Position? _pos;
@@ -70,32 +73,71 @@ class MapViewModel extends BaseViewModel {
   }
 
 //Add Markers to the Map
-  void addMarker({required AFKMarker markers}) {
+  void addMarker({required AFKMarker afkmarker}) {
     setBusy(true);
 
     _markersTmp.add(
       Marker(
-          markerId: MarkerId(markers.id),
-          position: LatLng(markers.lat!, markers.lon!),
+          markerId: MarkerId(afkmarker.id),
+          position: LatLng(afkmarker.lat!, afkmarker.lon!),
           infoWindow: InfoWindow(snippet: 'Vancouver'),
-          icon: (markers.id == 'Marker3Id')
-              ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)
-              : BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueOrange),
-          onTap: () {
-            if (checkRunningQuest == false) {
-              displayQuestBottomSheet(
-                markers: markers,
-              );
-            } else {
-              // final activeQuestLenght= questService.activatedQuest!.length;
-              _dialogService.showDialog(
-                  title: "'You Currently Have a Running Quest !!!");
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+          onTap: () async {
+            bool adminMode = false;
+            if (userIsAdmin) {
+              adminMode = await showAdminDialogAndGetResponse();
+              if (adminMode) {
+                String qrCodeString =
+                    _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
+                navigationService.navigateTo(Routes.qRCodeView,
+                    arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
+              }
+            }
+            if (!userIsAdmin || adminMode == false) {
+              if (hasActiveQuest == false) {
+                displayQuestBottomSheet(
+                  markers: afkmarker,
+                );
+              } else {
+                // final activeQuestLenght= questService.activatedQuest!.length;
+                _dialogService.showDialog(
+                    title: "'You Currently Have a Running Quest !!!");
+              }
             }
           }),
     );
     setBusy(false);
     notifyListeners();
+  }
+
+  Future scanQrCodeWithActiveQuest() async {
+    QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
+    handleQrCodeScanEvent(result);
+  }
+
+  void handleQrCodeScanEvent(QuestQRCodeScanResult result) {
+    if (result.isEmpty) {
+      return;
+    }
+    if (result.hasError) {
+      log.e("Error occured: ${result.errorMessage}");
+    } else {
+      if (result.marker != null) {
+        log.i("Scanned marker belongs to currently active quest");
+        snackbarService.showSnackbar(
+            title: "Collected Marker!",
+            message: "Successfully collected marker",
+            duration: Duration(seconds: 2));
+      }
+      if (result.quests != null) {
+        log.i("Found quests associated to the scanned start marker.");
+        snackbarService.showSnackbar(
+            title: "Start quest?",
+            message: "Not yet fully implemented!",
+            duration: Duration(seconds: 2));
+      }
+    }
   }
 
   Future<void> onMapCreated(GoogleMapController controller) async {
@@ -115,10 +157,6 @@ class MapViewModel extends BaseViewModel {
 
     setBusy(false);
     notifyListeners();
-  }
-
-  void navigateToQrcode() {
-    _navigationService.navigateTo(Routes.qRCodeView);
   }
 
   Future startQuest() async {
@@ -163,7 +201,7 @@ Clock Timer
 
     if (markers!.isNotEmpty) {
       for (AFKMarker _m in markers!) {
-        addMarker(markers: _m);
+        addMarker(afkmarker: _m);
       }
       _markersTmp = _markersTmp;
       log.v('These Are the Values in the current Markers $_markersTmp');
@@ -175,6 +213,7 @@ Clock Timer
   }
 
   Future<void> createMarkers() async {
+    // TODO: Get this from firestore api and set up proper dummy data in dummy_datamodels.dart
     setBusy(true);
     await _markersService.createMarkers(
         markers: AFKMarker(

@@ -182,9 +182,7 @@ class QuestService {
       log.e("Marker is not part of current quest!");
       return Future.value("Marker is not part of the currently active quest!");
     }
-    log.wtf("Before");
     final bool closeby = await _markerService.isUserCloseby(marker: marker);
-    log.wtf("After error");
     if (!closeby) {
       log.e("User is not nearby marker!");
       // ! Still DUMMY VERSION -> Unit test of this function will fail!
@@ -220,11 +218,18 @@ class QuestService {
     }
   }
 
-  Future<QuestQRCodeScanResult> handleQrCodeScan(
-      {required String qrCodeString}) async {
-    AFKMarker marker =
-        _qrCodeService.getMarkerFromQrCodeString(qrCodeString: qrCodeString);
+  bool isMarkerCollected({required AFKMarker marker}) {
+    if (activatedQuest != null) {
+      final index = activatedQuest!.quest.markers
+          .indexWhere((element) => element == marker);
+      return activatedQuest!.markersCollected[index];
+    } else {
+      return false;
+    }
+  }
 
+  Future<QuestQRCodeScanResult> handleQrCodeScanEvent(
+      {required AFKMarker marker}) async {
     if (!hasActiveQuest) {
       List<Quest> quests = await _firestoreApi.getQuestsWithStartMarkerId(
           startMarkerId: marker.id);

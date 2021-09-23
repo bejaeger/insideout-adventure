@@ -9,6 +9,8 @@ import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
+import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -26,12 +28,12 @@ class QuestViewModel extends BaseModel {
   final _navigationService = locator<NavigationService>();
   final _stopWatchService = locator<StopWatchService>();
   final _userService = locator<UserService>();
+  final _qrCodeService = locator<QRCodeService>();
   Quest? _startedQuest;
-  List<AFKMarker>? setOfCollectedMarkers = [];
+  List<AFKMarker> setOfCollectedMarkers = [];
   BitmapDescriptor? sourceIcon;
-  bool _checkMarkerColor = false;
   int idx = 0;
-  Set<Marker>? _markersTmp = {};
+  Set<Marker> _markersTmp = {};
   GoogleMapController? _googleMapController;
   Marker? origin;
   Marker? destination;
@@ -76,118 +78,142 @@ class QuestViewModel extends BaseModel {
         title: "Congratz, you succesfully finished the quest!",
         buttonTitle: 'Ok');
 
-    questService.disposeActivatedQuest();
     //Add all the information of the Quest in the Firebase.
     await questService.finishQuest(
         finishedQuest: _startedQuest,
         userId: _userService.currentUser.uid,
         numMarkersCollected: numMarkersCollected,
         timeElapse: activeQuest.timeElapsed.toString());
-
+    questService.disposeActivatedQuest();
     _navigationService.replaceWith(Routes.mapView);
   }
 
-  BitmapDescriptor defineMarkersColour({required bool checkOnTapMarker}) {
-    if (checkOnTapMarker == false) {
+  BitmapDescriptor defineMarkersColour({required AFKMarker afkmarker}) {
+    final index =
+        activeQuest.quest.markers.indexWhere((element) => element == afkmarker);
+    if (!activeQuest.markersCollected[index]) {
       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
     } else {
       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
     }
   }
 
-  void addCollectedMarkers({AFKMarker? markers}) {
-    setBusy(true);
-    // For Future please make sure we you search for markers with the same Id remove the one you found and add new ones.
-    _markersTmp!.add(
-      Marker(
-        markerId: MarkerId(markers!.id),
-        position: LatLng(markers.lat!, markers.lon!),
-        icon: defineMarkersColour(checkOnTapMarker: true),
-      ),
-    );
-    setBusy(false);
+  void updateMapMarkers({required AFKMarker afkmarker}) {
+    _markersTmp = _markersTmp
+        .map((item) => item.markerId == MarkerId(afkmarker.id)
+            ? item.copyWith(
+                iconParam: defineMarkersColour(afkmarker: afkmarker))
+            : item)
+        .toSet();
     notifyListeners();
   }
 
-//Add Markers to the Map
-  void addMarker({AFKMarker? markers}) {
-    setBusy(true);
-    _markersTmp!.add(
+  // Add Markers to the Map
+  void addMarker({required AFKMarker afkmarker}) {
+    _markersTmp.add(
       Marker(
-          markerId: MarkerId(markers!.id),
-          position: LatLng(markers.lat!, markers.lon!),
+          markerId: MarkerId(afkmarker.id),
+          position: LatLng(afkmarker.lat!, afkmarker.lon!),
           infoWindow:
               InfoWindow(title: _startedQuest!.name, snippet: 'Vancouver'),
           // icon: (_startedQuest!.startMarker.id == markers.id)
-          icon: defineMarkersColour(checkOnTapMarker: _checkMarkerColor),
-          onTap: () {
-            _checkMarkerColor = true;
-
-            if (checkRunningQuest == true) {
-              //Keep Track of already Collected Markers.
-              if (setOfCollectedMarkers!.length > 0) {
-                for (int idx = 0; idx < setOfCollectedMarkers!.length; idx++) {
-                  if (setOfCollectedMarkers![idx].qrCodeId ==
-                      markers.qrCodeId) {
-                    _dialogService.showDialog(
-                        description:
-                            'qrcode already used ${setOfCollectedMarkers![idx].qrCodeId}! Try another one');
-                    foundMarker = true;
-                    //reset the Index
-                    idx = 0;
-                    break;
-                  }
-                }
-                if (foundMarker == false) {
-                  setOfCollectedMarkers!.add(markers);
-                  //Add Markers to Collected Ones
-
-                  addCollectedMarkers(markers: markers);
-
-                  //update the Collected Markers.
-                  questService.verifyAndUpdateCollectedMarkers(marker: markers);
-                } else {
-                  //put Back Found Marker to False;
-                  foundMarker = false;
-                }
-              } else {
-                //add markers to tco
-                setOfCollectedMarkers!.add(markers);
-                //Add Markers to Collected Ones
-                addCollectedMarkers(markers: markers);
-
-                //update the Collected Markers.
-                questService.verifyAndUpdateCollectedMarkers(marker: markers);
-
-                //Convert QRCODE String To Markers
-                // _qrcodeService.convertQrCodeStringToMarker(
-                //     qrCodeString: markers.qrCodeId);
-
-                //Convert Markers Into QRCODE
-                //_qrcodeService.convertMarkerToQrCodeString(marker: markers);
+          icon: defineMarkersColour(afkmarker: afkmarker),
+          onTap: () async {
+            bool adminMode = false;
+            if (userIsAdmin) {
+              adminMode = await showAdminDialogAndGetResponse();
+              if (adminMode) {
+                String qrCodeString =
+                    _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
+                navigationService.navigateTo(Routes.qRCodeView,
+                    arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
               }
-
-              if (setOfCollectedMarkers!.length ==
-                  activeQuest.markersCollected.length) {
-                final _markersCollected = setOfCollectedMarkers!.length;
-                print(
-                    'This is The Number of Markers Collected: ${_markersCollected.toString()}');
-
-                _finishCompletedQuest(numMarkersCollected: _markersCollected);
-
-                //finishQuest();
-              }
-
-              // _navService.navigateTo(Routes.qRCodeViewMobile);
-            } else {
-              _dialogService.showDialog(
-                  title: "Quest Not Running",
-                  description: "Verify Your Quest Because is not running");
+            }
+            if (!userIsAdmin || adminMode == false) {
+              await handleCollectMarkerEvent(afkmarker: afkmarker);
             }
           }),
     );
-    setBusy(false);
-    notifyListeners();
+  }
+
+  Future handleCollectMarkerEvent({required AFKMarker afkmarker}) async {
+    if (hasActiveQuest == true) {
+      bool isCollected = isMarkerAlreadyCollected(afkmarker: afkmarker);
+      if (isCollected == false) {
+        setOfCollectedMarkers.add(afkmarker);
+        //Add Markers to Collected Ones
+
+        //update the Collected Markers.
+        await questService.verifyAndUpdateCollectedMarkers(marker: afkmarker);
+        updateMapMarkers(afkmarker: afkmarker);
+      }
+      checkIfQuestFinishedAndFinishQuest();
+
+      // _navService.navigateTo(Routes.qRCodeViewMobile);
+    } else {
+      _dialogService.showDialog(
+          title: "Quest Not Running",
+          description: "Verify Your Quest Because is not running");
+    }
+  }
+
+  Future scanQrCodeWithActiveQuest() async {
+    QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
+    await handleQrCodeScanEvent(result);
+  }
+
+  Future handleQrCodeScanEvent(QuestQRCodeScanResult result) async {
+    if (result.isEmpty) {
+      return;
+    }
+    if (result.hasError) {
+      log.e("Error occured: ${result.errorMessage}");
+      snackbarService.showSnackbar(
+          title: "Failed to collect marker!",
+          message: result.errorMessage!,
+          duration: Duration(seconds: 2));
+    } else {
+      if (result.marker != null) {
+        log.i("Scanned marker belongs to currently active quest");
+        await handleCollectMarkerEvent(afkmarker: result.marker!);
+        snackbarService.showSnackbar(
+            title: "Collected Marker!",
+            message: "Successfully collected marker",
+            duration: Duration(seconds: 2));
+      }
+      // if (result.quests != null) {
+      //   log.i("Found quests associated to the scanned start marker.");
+      //   snackbarService.showSnackbar(
+      //       title: "Start quest?",
+      //       message: "Not yet fully implemented!",
+      //       duration: Duration(seconds: 2));
+      // }
+    }
+  }
+
+  bool isMarkerAlreadyCollected({required AFKMarker afkmarker}) {
+    bool isCollected = false;
+    for (int idx = 0; idx < setOfCollectedMarkers.length; idx++) {
+      if (setOfCollectedMarkers[idx].qrCodeId == afkmarker.qrCodeId) {
+        _dialogService.showDialog(
+            description:
+                'qrcode already used ${setOfCollectedMarkers[idx].qrCodeId}! Try another one');
+        isCollected = true;
+        break;
+      }
+    }
+    return isCollected;
+  }
+
+  void checkIfQuestFinishedAndFinishQuest() {
+    if (setOfCollectedMarkers.length == activeQuest.markersCollected.length) {
+      final _markersCollected = setOfCollectedMarkers.length;
+      print(
+          'This is The Number of Markers Collected: ${_markersCollected.toString()}');
+      _finishCompletedQuest(numMarkersCollected: _markersCollected);
+
+      //finishQuest();
+    }
   }
 
   Future<Directions?> getDirections({
@@ -238,7 +264,7 @@ class QuestViewModel extends BaseModel {
   Future getQuestMarkers() async {
     setBusy(true);
     for (AFKMarker _m in _startedQuest!.markers) {
-      addMarker(markers: _m);
+      addMarker(afkmarker: _m);
     }
     _markersTmp = _markersTmp;
     log.v('These Are the Values in the current Markers $_markersTmp');

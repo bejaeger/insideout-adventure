@@ -1,19 +1,59 @@
-import 'dart:developer';
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:afkcredits/ui/shared/colors/color_settings.dart';
+import 'package:afkcredits/ui/views/qrcode/qrcode_viewmodel.dart';
+import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-class QRCodeView extends StatefulWidget {
+import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:stacked/stacked.dart';
+
+class QRCodeView extends StatelessWidget {
+  final String? qrCodeString;
+  const QRCodeView({Key? key, this.qrCodeString}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => _QRCodeViewState();
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<QRCodeViewModel>.reactive(
+        viewModelBuilder: () => QRCodeViewModel(),
+        builder: (context, model, child) => qrCodeString == null
+            ? ScanQRCode(
+                analyzeScanResult: model.analyzeScanResult,
+                onBackPressed: model.popQrCodeView,
+              )
+            : ShowQRCode(
+                qrCodeString: qrCodeString!,
+                onBackPressed: model.navigateBack,
+              )
+        // MyQRCode(userInfo: model.getUserInfo()),
+        );
+  }
 }
 
-class _QRCodeViewState extends State<QRCodeView> {
-  Barcode? result;
+class ScanQRCode extends StatefulWidget {
+  final Future Function({required Barcode result}) analyzeScanResult;
+  final void Function() onBackPressed;
+
+  const ScanQRCode(
+      {Key? key, required this.analyzeScanResult, required this.onBackPressed})
+      : super(key: key);
+
+  @override
+  _ScanQRCodeState createState() => _ScanQRCodeState();
+}
+
+class _ScanQRCodeState extends State<ScanQRCode> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  bool isFlashOn = false;
+
+  void toggleFlash() async {
+    await controller?.toggleFlash();
+    isFlashOn = !isFlashOn;
+    setState(() {});
+  }
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -21,119 +61,86 @@ class _QRCodeViewState extends State<QRCodeView> {
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller!.pauseCamera();
+      controller?.pauseCamera();
     }
-    controller!.resumeCamera();
+    controller?.resumeCamera();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
+    return SafeArea(
+      child: Column(
+        children: [
           Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  else
-                    Text('Scan a code'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
-                              },
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
-                                } else {
-                                  return Text('loading');
-                                }
-                              },
-                            )),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: Text('pause', style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: Text('resume', style: TextStyle(fontSize: 20)),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
+            child: Container(
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(10.0),
+              // ),
+              //clipBehavior: Clip.hardEdge,
+              //height: screenHeightPercentage(context, percentage: 0.7),
+              width: screenWidth(context),
+              child: _buildQrView(context, widget.onBackPressed),
+              // SizedBox.expand(
+              //     child: Image.asset(ImageIconPaths.qrcodeScanning)),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
+  Widget _buildQrView(BuildContext context, void Function() onBackPressed) {
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
-    return QRView(
-      key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
-      overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
-      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: QRView(
+            key: qrKey,
+            onQRViewCreated: _onQRViewCreated,
+            overlay: QrScannerOverlayShape(
+                borderColor: ColorSettings.primaryColor,
+                borderRadius: 10,
+                borderLength: 30,
+                borderWidth: 10,
+                cutOutSize: 250),
+          ),
+        ),
+        Align(
+          alignment: Alignment(0.0, 0.7),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text("Scan an AFK Credits QR Code",
+                style: textTheme(context)
+                    .headline6!
+                    .copyWith(color: Colors.white)),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: IconButton(
+              icon: isFlashOn
+                  ? Icon(Icons.flash_on, size: 24, color: Colors.white)
+                  : Icon(Icons.flash_off, size: 24, color: Colors.white),
+              onPressed: toggleFlash,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, size: 24, color: Colors.white),
+              onPressed: onBackPressed,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -141,25 +148,57 @@ class _QRCodeViewState extends State<QRCodeView> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
+    controller.scannedDataStream.listen((scanData) async {
+      // analyzes scanned result and navigates to new
+      // screen if qr code scan was successfull
+      await widget.analyzeScanResult(result: scanData);
     });
-  }
-
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('no Permission')),
-      );
-    }
   }
 
   @override
   void dispose() {
     controller?.dispose();
     super.dispose();
+  }
+}
+
+class ShowQRCode extends StatelessWidget {
+  final String qrCodeString;
+  final void Function() onBackPressed;
+  const ShowQRCode(
+      {Key? key, required this.qrCodeString, required this.onBackPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: IconButton(
+            icon: Icon(Icons.arrow_back, size: 24, color: Colors.black),
+            onPressed: onBackPressed,
+          ),
+        ),
+        verticalSpaceLarge,
+        Align(
+          child: Container(
+              width: screenWidth(context, percentage: 0.7),
+              height: 100.0,
+              child: Text(qrCodeString)),
+        ),
+        verticalSpaceMedium,
+        Center(
+          child: Container(
+            height: 250,
+            width: 250,
+            child: QrImage(
+              data: qrCodeString,
+            ),
+          ),
+        ),
+        verticalSpaceMedium,
+      ],
+    );
   }
 }

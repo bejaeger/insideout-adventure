@@ -23,6 +23,12 @@ class QuestQRCodeScanResult {
       : marker = null,
         quests = null;
 
+  QuestQRCodeScanResult.empty()
+      : marker = null,
+        errorMessage = null,
+        quests = null;
+
   /// Returns true if the response has an error associated with it
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
+  bool get isEmpty => errorMessage == null && marker == null && quests == null;
 }

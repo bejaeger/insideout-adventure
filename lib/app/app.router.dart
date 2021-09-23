@@ -23,7 +23,7 @@ import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_screen.dart';
 import '../ui/views/map/map_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
-import '../ui/views/qrcode/qrcode_view_mobile.dart';
+import '../ui/views/qrcode/qrcode_view_example.dart';
 import '../ui/views/quest/quest_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
@@ -52,8 +52,8 @@ class Routes {
   static const String layoutTemplateView = '/layout-template-view';
   static const String mapScreen = '/map-screen';
   static const String questView = '/quest-view';
-  static const String qRCodeViewMobile = '/q-rcode-view-mobile';
   static const String qRCodeView = '/q-rcode-view';
+  static const String qRCodeViewExample = '/q-rcode-view-example';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -72,8 +72,8 @@ class Routes {
     layoutTemplateView,
     mapScreen,
     questView,
-    qRCodeViewMobile,
     qRCodeView,
+    qRCodeViewExample,
   };
 }
 
@@ -98,8 +98,8 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.layoutTemplateView, page: LayoutTemplateView),
     RouteDef(Routes.mapScreen, page: MapScreen),
     RouteDef(Routes.questView, page: QuestView),
-    RouteDef(Routes.qRCodeViewMobile, page: QRCodeViewMobile),
     RouteDef(Routes.qRCodeView, page: QRCodeView),
+    RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -233,21 +233,21 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    QRCodeViewMobile: (data) {
-      var args = data.getArgs<QRCodeViewMobileArguments>(
-        orElse: () => QRCodeViewMobileArguments(),
+    QRCodeView: (data) {
+      var args = data.getArgs<QRCodeViewArguments>(
+        orElse: () => QRCodeViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => QRCodeViewMobile(
+        builder: (context) => QRCodeView(
           key: args.key,
-          initialIndex: args.initialIndex,
+          qrCodeString: args.qrCodeString,
         ),
         settings: data,
       );
     },
-    QRCodeView: (data) {
+    QRCodeViewExample: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => QRCodeView(),
+        builder: (context) => QRCodeViewExample(),
         settings: data,
       );
     },
@@ -310,9 +310,9 @@ class LayoutTemplateViewArguments {
   LayoutTemplateViewArguments({this.key, required this.childView});
 }
 
-/// QRCodeViewMobile arguments holder class
-class QRCodeViewMobileArguments {
+/// QRCodeView arguments holder class
+class QRCodeViewArguments {
   final Key? key;
-  final int initialIndex;
-  QRCodeViewMobileArguments({this.key, this.initialIndex = 0});
+  final String? qrCodeString;
+  QRCodeViewArguments({this.key, this.qrCodeString});
 }

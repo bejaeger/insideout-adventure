@@ -256,7 +256,7 @@ void main() {
     //--------------------------------------------
     // Marker scanning
 
-    group('handleQrCodeScan -', () {
+    group('handleQrCodeScanEvent -', () {
       test(
           'If no quest is present, download quest associated to that marker and prompt user with start quest dialog',
           () async {
@@ -267,7 +267,7 @@ void main() {
             .thenAnswer((_) async => [getTestQuest()]);
         // act
         final service = _getService();
-        service.handleQrCodeScan(qrCodeString: kTestMarker1QrCodeString);
+        service.handleQrCodeScanEvent(marker: getTestMarker1());
         // assert
         verify(firestoreApi.getQuestsWithStartMarkerId(
             startMarkerId: kTestMarker1Id));
@@ -281,7 +281,7 @@ void main() {
         // act
         final service = _getService();
         await service.startQuest(quest: getTestQuest());
-        service.handleQrCodeScan(qrCodeString: kTestMarker1QrCodeString);
+        service.handleQrCodeScanEvent(marker: getTestMarker1());
         // assert
         verify(markerService.isUserCloseby(marker: getTestMarker1()));
       });
@@ -289,12 +289,10 @@ void main() {
       test(
           'If a quest is active and the scanned marker is the first marker in activatedQuest marker should be collected',
           () async {
-        // arrange
-        getAndRegisterQRCodeService(marker: getTestMarker1());
         // act
         final service = _getService();
         await service.startQuest(quest: getTestQuest());
-        await service.handleQrCodeScan(qrCodeString: kTestMarker1QrCodeString);
+        await service.handleQrCodeScanEvent(marker: getTestMarker1());
         // assert
         expect(service.activatedQuest!.markersCollected[0], true);
         expect(service.activatedQuest!.markersCollected[1], false);
@@ -304,12 +302,10 @@ void main() {
       test(
           'If a quest is active and the scanned marker is the second marker in activatedQuest marker should be collected',
           () async {
-        // arrange
-        getAndRegisterQRCodeService(marker: getTestMarker2());
         // act
         final service = _getService();
         await service.startQuest(quest: getTestQuest());
-        await service.handleQrCodeScan(qrCodeString: kTestMarker2QrCodeString);
+        await service.handleQrCodeScanEvent(marker: getTestMarker2());
         // assert
         expect(service.activatedQuest!.markersCollected[0], false);
         expect(service.activatedQuest!.markersCollected[1], true);
@@ -319,13 +315,11 @@ void main() {
       test(
           'If a quest is active and the scanned marker is not in activatedQuest, return error',
           () async {
-        // arrange
-        getAndRegisterQRCodeService(marker: getTestMarkerFarAway());
         // act
         final service = _getService();
         await service.startQuest(quest: getTestQuest());
-        QuestQRCodeScanResult result = await service.handleQrCodeScan(
-            qrCodeString: kTestMarkerFarAwayQrCodeString);
+        QuestQRCodeScanResult result =
+            await service.handleQrCodeScanEvent(marker: getTestMarkerFarAway());
         // assert
         expect(result.errorMessage, WarningScannedMarkerNotInQuest);
       });
