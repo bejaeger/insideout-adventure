@@ -16,7 +16,7 @@ void main() {
     group('convertMarkerToQrCodeString -', () {
       test('Marker represented as a string encoded in the qr code', () async {
         final service = _getService();
-        expect(service.convertMarkerToQrCodeString(marker: getTestMarker1()),
+        expect(service.getQrCodeStringFromMarker(marker: getTestMarker1()),
             kTestMarker1QrCodeString);
       });
     });
@@ -25,26 +25,9 @@ void main() {
       test('Return marker object from qrcode string', () {
         final service = _getService();
         expect(
-            service.convertQrCodeStringToMarker(
+            service.getMarkerFromQrCodeString(
                 qrCodeString: kTestMarker1QrCodeString),
             getTestMarker1());
-      });
-    });
-
-    group('getMarkerFromQrCodeString -', () {
-      test('Return marker with actual coordinates looked up at in our database',
-          () async {
-        // arrange
-        final firestoreApi = getAndRegisterFirestoreApi();
-        when(firestoreApi.getMarkerFromQrCodeId(qrCodeId: anyNamed("qrCodeId")))
-            .thenAnswer((_) async => getTestMarker1());
-        // act
-        final service = _getService();
-        await service.getMarkerFromQrCodeString(
-            qrCodeString: kTestMarker1QrCodeString);
-        // assert
-        verify(
-            firestoreApi.getMarkerFromQrCodeId(qrCodeId: kTestMarker1QrCodeId));
       });
     });
   });

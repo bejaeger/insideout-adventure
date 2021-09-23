@@ -154,11 +154,11 @@ class QuestViewModel extends BaseViewModel {
                 questService.verifyAndUpdateCollectedMarkers(marker: markers);
 
                 //Convert QRCODE String To Markers
-                _qrcodeService.convertQrCodeStringToMarker(
-                    qrCodeString: markers.qrCodeId);
+                // _qrcodeService.convertQrCodeStringToMarker(
+                //     qrCodeString: markers.qrCodeId);
 
                 //Convert Markers Into QRCODE
-                _qrcodeService.convertMarkerToQrCodeString(marker: markers);
+                //_qrcodeService.convertMarkerToQrCodeString(marker: markers);
               }
 
               if (setOfCollectedMarkers!.length ==

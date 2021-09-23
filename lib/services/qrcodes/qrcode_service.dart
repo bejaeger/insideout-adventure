@@ -8,7 +8,7 @@ import 'package:afkcredits/exceptions/qrcode_service_exception.dart';
 class QRCodeService {
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
 
-  AFKMarker convertQrCodeStringToMarker({required String qrCodeString}) {
+  AFKMarker getMarkerFromQrCodeString({required String qrCodeString}) {
     try {
       final json = jsonDecode(qrCodeString);
       return AFKMarker.fromJson(json);
@@ -20,7 +20,7 @@ class QRCodeService {
     }
   }
 
-  String convertMarkerToQrCodeString({required AFKMarker marker}) {
+  String getQrCodeStringFromMarker({required AFKMarker marker}) {
     try {
       // need to remove lat and lon info cause we don't know the
       // exact geolocation at the time when the qr code is generated!
@@ -34,10 +34,5 @@ class QRCodeService {
           devDetails:
               "Could not create string from  Marker datamodel. Error thrown: $e");
     }
-  }
-
-  Future getMarkerFromQrCodeString({required String qrCodeString}) async {
-    AFKMarker marker = convertQrCodeStringToMarker(qrCodeString: qrCodeString);
-    return await _firestoreApi.getMarkerFromQrCodeId(qrCodeId: marker.qrCodeId);
   }
 }

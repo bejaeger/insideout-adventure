@@ -80,7 +80,10 @@ AFKMarker getTestMarker1() {
 
 AFKMarker getTestMarker2() {
   return AFKMarker(
-      id: "Marker2Id", qrCodeId: "QRCode2Id", lat: 49.1, lon: -122);
+      id: kTestMarker2Id,
+      qrCodeId: kTestMarker2QrCodeId,
+      lat: kTestMarker2Lat,
+      lon: kTestMarker2Lon);
 }
 
 AFKMarker getTestMarker3() {
@@ -91,6 +94,10 @@ AFKMarker getTestMarker3() {
 AFKMarker getTestMarker4() {
   return AFKMarker(
       id: "Marker4Id", qrCodeId: "QRCode4Id", lat: 49.2, lon: -122);
+}
+
+AFKMarker getTestMarkerFarAway() {
+  return AFKMarker(id: "FarAwayId", qrCodeId: "FarAwayId", lat: 99, lon: 99);
 }
 
 Quest getTestQuest() {

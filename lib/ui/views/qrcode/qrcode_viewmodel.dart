@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/exceptions/qrcode_service_exception.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
@@ -22,9 +23,11 @@ class QRCodeViewModel extends BaseModel {
     var deadTime = Duration(seconds: 3);
     log.i(
         "Scanned code with result '${result.code}' and format '${result.format}");
-    PublicUserInfo? userInfo;
+    AFKMarker? marker;
     try {
-      //userInfo = _qrCodeService!.analyzeScanResult(result);
+      // marker =
+      //     await questService.getMarkerFromQrCodeId(qrCodeId: result.code);
+      //marker = _qrCodeService.getMarkerFromQrCodeString(result.code);
     } catch (e) {
       if (e is QRCodeServiceException) {
         log.e("Error when reading QR Code: $e");

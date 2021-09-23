@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:afkcredits/ui/shared/colors/color_settings.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/layouts/tabbar_layout.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -19,30 +18,10 @@ class QRCodeViewMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<QRCodeViewModel>.reactive(
       viewModelBuilder: () => QRCodeViewModel(),
-      builder: (context, model, child) => TabBarLayout(
-          initialIndex: initialIndex,
-          title: "QR Code",
-          titleTrailingWidget: IconButton(
-              icon: Icon(Icons.search_rounded),
-              onPressed: () {
-                //Still Action To be Performed
-              }),
-          tabs: [
-            SizedBox(
-              width: screenWidth(context) * 0.4,
-              child: Tab(text: "Scan"),
-            ),
-            SizedBox(
-              width: screenWidth(context) * 0.4,
-              child: Tab(text: "Get paid"),
-            ),
-          ],
-          views: [
-            ScanQRCode(
-              analyzeScanResult: model.analyzeScanResult,
-            ),
-            // MyQRCode(userInfo: model.getUserInfo()),
-          ]),
+      builder: (context, model, child) => ScanQRCode(
+        analyzeScanResult: model.analyzeScanResult,
+      ),
+      // MyQRCode(userInfo: model.getUserInfo()),
     );
   }
 }
@@ -209,7 +188,7 @@ class MyQRCode extends StatelessWidget {
             height: 250,
             width: 250,
             child: Text(
-              "Have your friend scan this QR code to transfer money to you",
+              "Scan the qr code",
             ),
           ),
         ),

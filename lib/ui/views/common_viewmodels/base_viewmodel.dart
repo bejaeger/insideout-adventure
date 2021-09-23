@@ -31,7 +31,7 @@ class BaseModel extends BaseViewModel {
   User get currentUser => userService.currentUser;
 
   final log = getLogger("BaseModel");
-  bool get hasActiveQuest => questService.activatedQuest != null;
+  bool get hasActiveQuest => questService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => questService.activatedQuest!;
   String? seconds;

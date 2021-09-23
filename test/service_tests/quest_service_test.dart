@@ -1,11 +1,14 @@
+import 'dart:math';
+
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
-import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import '../test_data/test_constants.dart';
 import '../test_data/test_datamodels.dart';
 import '../helpers/test_helpers.dart';
 
@@ -181,11 +184,9 @@ void main() {
           () async {
         // arrange
         final markerService = getAndRegisterMarkerService();
-        when(markerService.isUserCloseby(marker: getTestMarker1()))
-            .thenAnswer((_) async => Future.value(false));
+        // act
         final service = _getService();
         service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
-        // act
         await service.verifyAndUpdateCollectedMarkers(marker: getTestMarker1());
         // assert
         verify(markerService.isUserCloseby(marker: getTestMarker1()));
@@ -209,9 +210,6 @@ void main() {
           'when called and user is not nearby marker, return string with error message',
           () async {
         // arrange
-        final markerService = getAndRegisterMarkerService();
-        when(markerService.isUserCloseby(marker: anyNamed("marker")))
-            .thenAnswer((_) async => false);
         // act
         final service = _getService();
         service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
@@ -252,6 +250,100 @@ void main() {
         service.updateCollectedMarkers(marker: getTestMarker2());
         // assert
         expect(service.activatedQuest?.markersCollected[1], true);
+      });
+    });
+
+    //--------------------------------------------
+    // Marker scanning
+
+    group('handleQrCodeScan -', () {
+      test(
+          'If no quest is present, download quest associated to that marker and prompt user with start quest dialog',
+          () async {
+        // arrange
+        final firestoreApi = getAndRegisterFirestoreApi();
+        when(firestoreApi.getQuestsWithStartMarkerId(
+                startMarkerId: kTestMarker1Id))
+            .thenAnswer((_) async => [getTestQuest()]);
+        // act
+        final service = _getService();
+        service.handleQrCodeScan(qrCodeString: kTestMarker1QrCodeString);
+        // assert
+        verify(firestoreApi.getQuestsWithStartMarkerId(
+            startMarkerId: kTestMarker1Id));
+      });
+
+      test(
+          'If a quest is active and the scanned marker is present in activatedQuest, should call isUserCloseBy',
+          () async {
+        // arrange
+        final markerService = getAndRegisterMarkerService();
+        // act
+        final service = _getService();
+        await service.startQuest(quest: getTestQuest());
+        service.handleQrCodeScan(qrCodeString: kTestMarker1QrCodeString);
+        // assert
+        verify(markerService.isUserCloseby(marker: getTestMarker1()));
+      });
+
+      test(
+          'If a quest is active and the scanned marker is the first marker in activatedQuest marker should be collected',
+          () async {
+        // arrange
+        getAndRegisterQRCodeService(marker: getTestMarker1());
+        // act
+        final service = _getService();
+        await service.startQuest(quest: getTestQuest());
+        await service.handleQrCodeScan(qrCodeString: kTestMarker1QrCodeString);
+        // assert
+        expect(service.activatedQuest!.markersCollected[0], true);
+        expect(service.activatedQuest!.markersCollected[1], false);
+        expect(service.activatedQuest!.markersCollected[2], false);
+      });
+
+      test(
+          'If a quest is active and the scanned marker is the second marker in activatedQuest marker should be collected',
+          () async {
+        // arrange
+        getAndRegisterQRCodeService(marker: getTestMarker2());
+        // act
+        final service = _getService();
+        await service.startQuest(quest: getTestQuest());
+        await service.handleQrCodeScan(qrCodeString: kTestMarker2QrCodeString);
+        // assert
+        expect(service.activatedQuest!.markersCollected[0], false);
+        expect(service.activatedQuest!.markersCollected[1], true);
+        expect(service.activatedQuest!.markersCollected[2], false);
+      });
+
+      test(
+          'If a quest is active and the scanned marker is not in activatedQuest, return error',
+          () async {
+        // arrange
+        getAndRegisterQRCodeService(marker: getTestMarkerFarAway());
+        // act
+        final service = _getService();
+        await service.startQuest(quest: getTestQuest());
+        QuestQRCodeScanResult result = await service.handleQrCodeScan(
+            qrCodeString: kTestMarkerFarAwayQrCodeString);
+        // assert
+        expect(result.errorMessage, WarningScannedMarkerNotInQuest);
+      });
+    });
+
+    group('getMarkerFromQrCodeString -', () {
+      test('Return marker with actual coordinates looked up at in our database',
+          () async {
+        // arrange
+        final firestoreApi = getAndRegisterFirestoreApi();
+        // act
+        final service = _getService();
+        await service.getMarkerFromQrCodeId(qrCodeId: kTestMarker1QrCodeId);
+        // assert
+        verify(
+          await firestoreApi.getMarkerFromQrCodeId(
+              qrCodeId: kTestMarker1QrCodeId),
+        );
       });
     });
   });

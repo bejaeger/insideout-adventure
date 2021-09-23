@@ -8,6 +8,8 @@ import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
+import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
+import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rxdart/rxdart.dart';
@@ -16,6 +18,7 @@ import 'package:afkcredits/app/app.logger.dart';
 class QuestService {
   BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
       BehaviorSubject<ActivatedQuest?>();
+  final QRCodeService _qrCodeService = locator<QRCodeService>();
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final MarkerService _markerService = locator<MarkerService>();
@@ -25,6 +28,7 @@ class QuestService {
   final log = getLogger("QuestService");
 
   Quest? _startedQuest;
+  bool get hasActiveQuest => activatedQuest != null;
 
   Future startQuest({required Quest quest}) async {
     // Get active quest
@@ -178,7 +182,9 @@ class QuestService {
       log.e("Marker is not part of current quest!");
       return Future.value("Marker is not part of the currently active quest!");
     }
-    final closeby = await _markerService.isUserCloseby(marker: marker);
+    log.wtf("Before");
+    final bool closeby = await _markerService.isUserCloseby(marker: marker);
+    log.wtf("After error");
     if (!closeby) {
       log.e("User is not nearby marker!");
       // ! Still DUMMY VERSION -> Unit test of this function will fail!
@@ -212,6 +218,40 @@ class QuestService {
       log.e(
           "Can't cancel the quest because there is no quest present. This function should have probably never been called! Please check!");
     }
+  }
+
+  Future<QuestQRCodeScanResult> handleQrCodeScan(
+      {required String qrCodeString}) async {
+    AFKMarker marker =
+        _qrCodeService.getMarkerFromQrCodeString(qrCodeString: qrCodeString);
+
+    if (!hasActiveQuest) {
+      List<Quest> quests = await _firestoreApi.getQuestsWithStartMarkerId(
+          startMarkerId: marker.id);
+      return QuestQRCodeScanResult.quests(quests: quests);
+    } else {
+      // Active quest present, so we need to validate the marker and collect it
+      // 1. compare marker.markerId with marker ids inside activatedQuest
+      if (isMarkerInQuest(marker: marker)) {
+        log.i(
+            "Marker in quest, checking geolocation and updating active quest");
+        AFKMarker fullMarker = activatedQuest!.quest.markers
+            .firstWhere((element) => element.id == marker.id);
+        // TODO: If user not closeby throw special error!
+        await verifyAndUpdateCollectedMarkers(marker: marker);
+        // return marker that was succesfully scanned
+        return QuestQRCodeScanResult.marker(marker: fullMarker);
+      } else {
+        log.w("Scanned marker does not belong to currently active quest");
+        return QuestQRCodeScanResult.error(
+            errorMessage: WarningScannedMarkerNotInQuest);
+      }
+    }
+  }
+
+  Future<AFKMarker?> getMarkerFromQrCodeId({required String qrCodeId}) async {
+    // TODO: Check wether marker is in active quest or whether it needs to be downloaded!
+    return await _firestoreApi.getMarkerFromQrCodeId(qrCodeId: qrCodeId);
   }
 
   ////////////////////////////////////////////////

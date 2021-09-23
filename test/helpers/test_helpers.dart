@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_datamodels.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/flavor_config.dart';
@@ -145,6 +146,8 @@ MockFirestoreApi getAndRegisterFirestoreApi({User? user}) {
       .thenAnswer((_) async => null);
   when(service.getUser(uid: anyNamed("uid")))
       .thenAnswer((realInvocation) async => user);
+  when(service.getMarkerFromQrCodeId(qrCodeId: anyNamed("qrCodeId")))
+      .thenAnswer((_) async => getTestMarker1());
   final userStats = getEmptyUserStatistics(uid: kTestUid);
   locator.registerSingleton<FirestoreApi>(service);
   return service;
@@ -229,17 +232,22 @@ MockStopWatchService getAndRegisterStopWatchService() {
   return service;
 }
 
-MockMarkerService getAndRegisterMarkerService() {
+MockMarkerService getAndRegisterMarkerService({bool isUserCloseby = false}) {
   _removeRegistrationIfExists<MarkerService>();
   final service = MockMarkerService();
   when(service.getQuestMarkers()).thenAnswer((_) async => [getDummyMarker1()]);
+  when(service.isUserCloseby(marker: anyNamed("marker")))
+      .thenAnswer((_) async => isUserCloseby);
   locator.registerSingleton<MarkerService>(service);
   return service;
 }
 
-MockQRCodeService getAndRegisterQRCodeService() {
+MockQRCodeService getAndRegisterQRCodeService({AFKMarker? marker}) {
   _removeRegistrationIfExists<QRCodeService>();
   final service = MockQRCodeService();
+  when(service.getMarkerFromQrCodeString(
+          qrCodeString: anyNamed("qrCodeString")))
+      .thenReturn(marker ?? getTestMarker1());
   locator.registerSingleton<QRCodeService>(service);
   return service;
 }

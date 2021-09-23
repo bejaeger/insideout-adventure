@@ -433,6 +433,24 @@ class FirestoreApi {
     // return marker;
   }
 
+  Future<List<Quest>> getQuestsWithStartMarkerId(
+      {required String? startMarkerId}) async {
+    return [getDummyQuest()];
+    // QuerySnapshot snapshot = await questsCollection
+    //     .where(startMarkerId, isEqualTo: startMarkerId)
+    //     .get();
+    // try {
+    //   List<Quest> quests =
+    //       snapshot.docs.map((e) => Quest.fromJson(e.data())).toList();
+    //   return quests;
+    // } catch (e) {
+    //   throw FirestoreApiException(
+    //     message: 'Failed to get quests with startMarkerId $startMarkerId',
+    //     devDetails: 'Error thrown: $e',
+    //   );
+    // }
+  }
+
   /////////////////////////////////////////////////////////
   // Collection's getter
   DocumentReference getUserStatisticsCollection({required String uid}) {
