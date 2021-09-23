@@ -142,9 +142,7 @@ class QuestViewModel extends BaseModel {
       if (isCollected == false) {
         setOfCollectedMarkers.add(afkmarker);
         //Add Markers to Collected Ones
-
-        //update the Collected Markers.
-        await questService.verifyAndUpdateCollectedMarkers(marker: afkmarker);
+        //update colors of markers
         updateMapMarkers(afkmarker: afkmarker);
       }
       checkIfQuestFinishedAndFinishQuest();

@@ -228,6 +228,7 @@ class QuestService {
     }
   }
 
+  // Called in qrcode_viewmodel
   Future<QuestQRCodeScanResult> handleQrCodeScanEvent(
       {required AFKMarker marker}) async {
     if (!hasActiveQuest) {
