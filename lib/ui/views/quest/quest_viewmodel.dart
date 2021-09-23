@@ -5,28 +5,25 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class QuestViewModel extends BaseViewModel {
+class QuestViewModel extends BaseModel {
   final log = getLogger('QuestViewModel');
   final geolocation = locator<GeolocationService>();
   final _directionsAPI = locator<DirectionsAPI>();
   final QuestService questService = locator<QuestService>();
   final DialogService _dialogService = locator<DialogService>();
   final _navigationService = locator<NavigationService>();
-  final _qrcodeService = locator<QRCodeService>();
   final _stopWatchService = locator<StopWatchService>();
   final _userService = locator<UserService>();
   Quest? _startedQuest;
@@ -39,7 +36,6 @@ class QuestViewModel extends BaseViewModel {
   Marker? origin;
   Marker? destination;
   Directions? _directionInfo;
-  ActivatedQuest? _activeQuest;
 
   Future<void> requestPermission() async {
     await Permission.location.request();
@@ -47,15 +43,6 @@ class QuestViewModel extends BaseViewModel {
 
   //Get Google Map Controller
   GoogleMapController? get getGoogleMapController => _googleMapController;
-
-  activeQuest() {
-    _activeQuest = questService.activatedQuest!;
-    if (_activeQuest != null) {
-      return _activeQuest!;
-    } else {
-      return null;
-    }
-  }
 
   Set<Marker>? get getMarkers => _markersTmp;
 
@@ -95,7 +82,7 @@ class QuestViewModel extends BaseViewModel {
         finishedQuest: _startedQuest,
         userId: _userService.currentUser.uid,
         numMarkersCollected: numMarkersCollected,
-        timeElapse: _activeQuest!.timeElapsed.toString());
+        timeElapse: activeQuest.timeElapsed.toString());
 
     _navigationService.replaceWith(Routes.mapView);
   }
@@ -181,7 +168,7 @@ class QuestViewModel extends BaseViewModel {
               }
 
               if (setOfCollectedMarkers!.length ==
-                  _activeQuest!.markersCollected.length) {
+                  activeQuest.markersCollected.length) {
                 final _markersCollected = setOfCollectedMarkers!.length;
                 print(
                     'This is The Number of Markers Collected: ${_markersCollected.toString()}');
@@ -217,7 +204,6 @@ class QuestViewModel extends BaseViewModel {
   void initilizeStartedQuest() {
     sourceIcon =
         BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
-    activeQuest();
     _startedQuest = questService.getStartedQuest;
 
     log.i('You Have Started This Quest $_startedQuest');
