@@ -232,7 +232,7 @@ MockStopWatchService getAndRegisterStopWatchService() {
   return service;
 }
 
-MockMarkerService getAndRegisterMarkerService({bool isUserCloseby = false}) {
+MockMarkerService getAndRegisterMarkerService({bool isUserCloseby = true}) {
   _removeRegistrationIfExists<MarkerService>();
   final service = MockMarkerService();
   when(service.getQuestMarkers()).thenAnswer((_) async => [getDummyMarker1()]);

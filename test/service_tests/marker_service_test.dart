@@ -19,6 +19,8 @@ void main() {
         //arrange
         final locationService =
             getAndRegisterGeolocationService(isCloseBy: true);
+        final flavorConfigProvider = getAndRegisterFlavorConfigProvider();
+        when(flavorConfigProvider.enableGPSVerification).thenReturn(true);
         final service = _getService();
         //acts
         await service.isUserCloseby(marker: getTestMarker1());

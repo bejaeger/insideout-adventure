@@ -5,6 +5,11 @@ import 'constants/constants.dart';
 enum Flavor { unknown, dev, prod }
 
 class FlavorConfigProvider {
+  // TODO: Add this to a specific flavor!
+  // We should add a "test" flavor!
+  bool allowDummyMarkerCollection = true;
+  bool enableGPSVerification = false;
+
   Flavor flavor = Flavor.unknown;
   void configure(Flavor flavorIn) {
     flavor = flavorIn;

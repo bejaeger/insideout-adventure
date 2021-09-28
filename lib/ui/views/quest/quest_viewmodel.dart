@@ -30,7 +30,6 @@ class QuestViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _qrCodeService = locator<QRCodeService>();
   Quest? _startedQuest;
-  List<AFKMarker> setOfCollectedMarkers = [];
   BitmapDescriptor? sourceIcon;
   int idx = 0;
   Set<Marker> _markersTmp = {};
@@ -130,7 +129,9 @@ class QuestViewModel extends BaseModel {
               }
             }
             if (!userIsAdmin || adminMode == false) {
-              await handleCollectMarkerEvent(afkmarker: afkmarker);
+              QuestQRCodeScanResult scanResult =
+                  await questService.handleQrCodeScanEvent(marker: afkmarker);
+              await handleQrCodeScanEvent(scanResult);
             }
           }),
     );
@@ -138,16 +139,8 @@ class QuestViewModel extends BaseModel {
 
   Future handleCollectMarkerEvent({required AFKMarker afkmarker}) async {
     if (hasActiveQuest == true) {
-      bool isCollected = isMarkerAlreadyCollected(afkmarker: afkmarker);
-      if (isCollected == false) {
-        setOfCollectedMarkers.add(afkmarker);
-        //Add Markers to Collected Ones
-        //update colors of markers
-        updateMapMarkers(afkmarker: afkmarker);
-      }
+      updateMapMarkers(afkmarker: afkmarker);
       checkIfQuestFinishedAndFinishQuest();
-
-      // _navService.navigateTo(Routes.qRCodeViewMobile);
     } else {
       _dialogService.showDialog(
           title: "Quest Not Running",
@@ -172,7 +165,7 @@ class QuestViewModel extends BaseModel {
           duration: Duration(seconds: 2));
     } else {
       if (result.marker != null) {
-        log.i("Scanned marker belongs to currently active quest");
+        log.i("Scanned marker sucessfully collected!");
         await handleCollectMarkerEvent(afkmarker: result.marker!);
         snackbarService.showSnackbar(
             title: "Collected Marker!",
@@ -189,23 +182,11 @@ class QuestViewModel extends BaseModel {
     }
   }
 
-  bool isMarkerAlreadyCollected({required AFKMarker afkmarker}) {
-    bool isCollected = false;
-    for (int idx = 0; idx < setOfCollectedMarkers.length; idx++) {
-      if (setOfCollectedMarkers[idx].qrCodeId == afkmarker.qrCodeId) {
-        _dialogService.showDialog(
-            description:
-                'qrcode already used ${setOfCollectedMarkers[idx].qrCodeId}! Try another one');
-        isCollected = true;
-        break;
-      }
-    }
-    return isCollected;
-  }
-
+  // TODO: Move to quest service!
   void checkIfQuestFinishedAndFinishQuest() {
-    if (setOfCollectedMarkers.length == activeQuest.markersCollected.length) {
-      final _markersCollected = setOfCollectedMarkers.length;
+    if (activeQuest.quest.markers.length ==
+        activeQuest.markersCollected.length) {
+      final _markersCollected = activeQuest.markersCollected.length;
       print(
           'This is The Number of Markers Collected: ${_markersCollected.toString()}');
       _finishCompletedQuest(numMarkersCollected: _markersCollected);

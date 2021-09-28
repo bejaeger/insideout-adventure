@@ -7,6 +7,7 @@ import 'package:afkcredits/datamodels/quests/completed_quest/completed_quest.dar
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -177,22 +178,6 @@ class QuestService {
     }
   }
 
-  Future verifyAndUpdateCollectedMarkers({required AFKMarker marker}) async {
-    if (!isMarkerInQuest(marker: marker)) {
-      log.e("Marker is not part of current quest!");
-      return Future.value("Marker is not part of the currently active quest!");
-    }
-    final bool closeby = await _markerService.isUserCloseby(marker: marker);
-    if (!closeby) {
-      log.e("User is not nearby marker!");
-      // ! Still DUMMY VERSION -> Unit test of this function will fail!
-      log.e(
-          "We will still update the collected markers because we are using dummy data at the moment!");
-      //return Future.value("User is not nearby the marker!");
-    }
-    updateCollectedMarkers(marker: marker);
-  }
-
   void updateCollectedMarkers({required AFKMarker marker}) {
     if (activatedQuest != null) {
       final index = activatedQuest!.quest.markers
@@ -204,8 +189,8 @@ class QuestService {
       }
       List<bool> markersCollectedNew = activatedQuest!.markersCollected;
       if (markersCollectedNew[index]) {
-        // TODO: Forward this info also to the user!
-        log.i("Marker already collected");
+        log.wtf(
+            "Marker already collected. Before this function is called, this should have been already checked, please check your code!");
         return;
       }
       markersCollectedNew[index] = true;
@@ -214,7 +199,7 @@ class QuestService {
           activatedQuest!.copyWith(markersCollected: markersCollectedNew));
     } else {
       log.e(
-          "Can't cancel the quest because there is no quest present. This function should have probably never been called! Please check!");
+          "Can't update the collected markers because there is no quest present. This function should have probably never been called! Please check!");
     }
   }
 
@@ -236,22 +221,44 @@ class QuestService {
           startMarkerId: marker.id);
       return QuestQRCodeScanResult.quests(quests: quests);
     } else {
-      // Active quest present, so we need to validate the marker and collect it
-      // 1. compare marker.markerId with marker ids inside activatedQuest
-      if (isMarkerInQuest(marker: marker)) {
-        log.i(
-            "Marker in quest, checking geolocation and updating active quest");
-        AFKMarker fullMarker = activatedQuest!.quest.markers
-            .firstWhere((element) => element.id == marker.id);
-        // TODO: If user not closeby throw special error!
-        await verifyAndUpdateCollectedMarkers(marker: marker);
-        // return marker that was succesfully scanned
-        return QuestQRCodeScanResult.marker(marker: fullMarker);
-      } else {
+      // Checks to perform:
+      // 1. isMarkerInQuest
+      // 2. isUserCloseby?
+      // 3. isMarkerAlreadyCollected?
+
+      // 1.
+      if (!isMarkerInQuest(marker: marker)) {
         log.w("Scanned marker does not belong to currently active quest");
         return QuestQRCodeScanResult.error(
             errorMessage: WarningScannedMarkerNotInQuest);
       }
+
+      // Marker is in quest so let's get full marker with lat and long by reading from already downloaded
+      // active quest
+      AFKMarker fullMarker = activatedQuest!.quest.markers
+          .firstWhere((element) => element.id == marker.id);
+
+      // 2.
+      final bool closeby =
+          await _markerService.isUserCloseby(marker: fullMarker);
+      if (!closeby) {
+        log.w("User is not nearby marker!");
+        return QuestQRCodeScanResult.error(
+            errorMessage: WarningNotNearbyMarker);
+      }
+
+      // 3.
+      if (isMarkerCollected(marker: fullMarker)) {
+        log.w("Scanned marker has been collected already");
+        return QuestQRCodeScanResult.error(
+            errorMessage: WarningScannedMarkerAlreadyCollected);
+      }
+
+      log.i(
+          "Marker verified! Continue with updated collected markers in activated quesst");
+      updateCollectedMarkers(marker: fullMarker);
+      // return marker that was succesfully scanned
+      return QuestQRCodeScanResult.marker(marker: fullMarker);
     }
   }
 
@@ -274,7 +281,8 @@ class QuestService {
 
   bool isMarkerInQuest({required AFKMarker marker}) {
     if (activatedQuest != null) {
-      return activatedQuest!.quest.markers.any((element) => element == marker);
+      return activatedQuest!.quest.markers
+          .any((element) => element.id == marker.id);
     } else {
       log.e(
           "Can't cancel the quest because there is no quest present. This function should have probably never been called! Please check!");

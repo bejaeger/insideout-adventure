@@ -550,6 +550,24 @@ class MockPlacesService extends _i1.Mock implements _i28.PlacesService {
 class MockFlavorConfigProvider extends _i1.Mock
     implements _i29.FlavorConfigProvider {
   @override
+  bool get allowDummyMarkerCollection =>
+      (super.noSuchMethod(Invocation.getter(#allowDummyMarkerCollection),
+          returnValue: false) as bool);
+  @override
+  set allowDummyMarkerCollection(bool? _allowDummyMarkerCollection) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #allowDummyMarkerCollection, _allowDummyMarkerCollection),
+          returnValueForMissingStub: null);
+  @override
+  bool get enableGPSVerification =>
+      (super.noSuchMethod(Invocation.getter(#enableGPSVerification),
+          returnValue: false) as bool);
+  @override
+  set enableGPSVerification(bool? _enableGPSVerification) => super.noSuchMethod(
+      Invocation.setter(#enableGPSVerification, _enableGPSVerification),
+      returnValueForMissingStub: null);
+  @override
   _i29.Flavor get flavor => (super.noSuchMethod(Invocation.getter(#flavor),
       returnValue: _i29.Flavor.unknown) as _i29.Flavor);
   @override
@@ -934,13 +952,6 @@ class MockQuestService extends _i1.Mock implements _i36.QuestService {
   @override
   _i19.Future<dynamic> trackData(int? seconds) =>
       (super.noSuchMethod(Invocation.method(#trackData, [seconds]),
-          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
-  @override
-  _i19.Future<dynamic> verifyAndUpdateCollectedMarkers(
-          {_i14.AFKMarker? marker}) =>
-      (super.noSuchMethod(
-          Invocation.method(
-              #verifyAndUpdateCollectedMarkers, [], {#marker: marker}),
           returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   void updateCollectedMarkers({_i14.AFKMarker? marker}) => super.noSuchMethod(

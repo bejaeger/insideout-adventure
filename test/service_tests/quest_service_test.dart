@@ -178,49 +178,6 @@ void main() {
       });
     });
 
-    group('verifyAndUpdateCollectedMarkers -', () {
-      test(
-          'when called, a check needs to be performed whether the user is close to the marker',
-          () async {
-        // arrange
-        final markerService = getAndRegisterMarkerService();
-        // act
-        final service = _getService();
-        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
-        await service.verifyAndUpdateCollectedMarkers(marker: getTestMarker1());
-        // assert
-        verify(markerService.isUserCloseby(marker: getTestMarker1()));
-      });
-
-      test(
-          'when called and marker not in quest, return string with error message',
-          () async {
-        // arrange
-        final service = _getService();
-        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
-        // assert & act
-        expect(
-            await service.verifyAndUpdateCollectedMarkers(
-                marker: getTestMarker4()),
-            isA<String>());
-      });
-
-      // ! This test is currently failing because we still use dummy data here!
-      test(
-          'when called and user is not nearby marker, return string with error message',
-          () async {
-        // arrange
-        // act
-        final service = _getService();
-        service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
-        // assert
-        expect(
-            await service.verifyAndUpdateCollectedMarkers(
-                marker: getTestMarker1()),
-            isA<String>());
-      });
-    });
-
     group('isMarkerInQuest -', () {
       test('Return true if it belongs to the currently active quest', () {
         // arrange
@@ -313,7 +270,7 @@ void main() {
       });
 
       test(
-          'If a quest is active and the scanned marker is not in activatedQuest, return error',
+          'If a quest is active and the scanned marker is not in activatedQuest, return appropriate error',
           () async {
         // act
         final service = _getService();
@@ -322,6 +279,33 @@ void main() {
             await service.handleQrCodeScanEvent(marker: getTestMarkerFarAway());
         // assert
         expect(result.errorMessage, WarningScannedMarkerNotInQuest);
+      });
+
+      test(
+          'If a quest is active and the user is not closeby, return appropriate error',
+          () async {
+        // arrange
+        getAndRegisterMarkerService(isUserCloseby: false);
+        // act
+        final service = _getService();
+        await service.startQuest(quest: getTestQuest());
+        QuestQRCodeScanResult result =
+            await service.handleQrCodeScanEvent(marker: getTestMarker1());
+        // assert
+        expect(result.errorMessage, WarningNotNearbyMarker);
+      });
+
+      test(
+          'If a quest is active and the marker is not collected, return appropriate error',
+          () async {
+        // act
+        final service = _getService();
+        await service.startQuest(quest: getTestQuest());
+        service.updateCollectedMarkers(marker: getTestMarker1());
+        QuestQRCodeScanResult result =
+            await service.handleQrCodeScanEvent(marker: getTestMarker1());
+        // assert
+        expect(result.errorMessage, WarningScannedMarkerAlreadyCollected);
       });
     });
 

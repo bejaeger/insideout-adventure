@@ -18,18 +18,15 @@ class ExplorerHomeViewModel extends BaseModel {
   //////////////////////////////
   /// Dummy functions
 
-  Future collectMarker1() async {
-    await questService.verifyAndUpdateCollectedMarkers(
-        marker: getDummyMarker1());
+  void collectMarker1() {
+    questService.updateCollectedMarkers(marker: getDummyMarker1());
   }
 
-  Future collectMarker2() async {
-    await questService.verifyAndUpdateCollectedMarkers(
-        marker: getDummyMarker2());
+  void collectMarker2() {
+    questService.updateCollectedMarkers(marker: getDummyMarker2());
   }
 
-  Future collectMarker3() async {
-    await questService.verifyAndUpdateCollectedMarkers(
-        marker: getDummyMarker3());
+  void collectMarker3() {
+    questService.updateCollectedMarkers(marker: getDummyMarker3());
   }
 }
