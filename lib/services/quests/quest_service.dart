@@ -30,6 +30,7 @@ class QuestService {
 
   Quest? _startedQuest;
   bool get hasActiveQuest => activatedQuest != null;
+  // num get numberCollectedMarkers =>
 
   Future startQuest({required Quest quest}) async {
     // Get active quest
@@ -52,6 +53,12 @@ class QuestService {
 
   //Get Started Quest
   Quest get getStartedQuest => _startedQuest!;
+  int get getNumberMarkersCollected => activatedQuest!.markersCollected
+      .where((element) => element == true)
+      .toList()
+      .length;
+  bool get isAllMarkersCollected =>
+      activatedQuest!.quest.markers.length == getNumberMarkersCollected;
 
   // Handle the scenario when a user finishes a hike
   // First evaluate the activated quest data and return values according to that

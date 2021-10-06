@@ -184,13 +184,11 @@ class QuestViewModel extends BaseModel {
 
   // TODO: Move to quest service!
   void checkIfQuestFinishedAndFinishQuest() {
-    if (activeQuest.quest.markers.length ==
-        activeQuest.markersCollected.length) {
-      final _markersCollected = activeQuest.markersCollected.length;
+    if (questService.isAllMarkersCollected) {
+      final _markersCollected = questService.getNumberMarkersCollected;
       print(
           'This is The Number of Markers Collected: ${_markersCollected.toString()}');
       _finishCompletedQuest(numMarkersCollected: _markersCollected);
-
       //finishQuest();
     }
   }
