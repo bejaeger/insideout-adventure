@@ -4,6 +4,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
@@ -32,6 +33,7 @@ class BaseModel extends BaseViewModel {
   final StopWatchService _stopWatchService = locator<StopWatchService>();
 
   User get currentUser => userService.currentUser;
+  UserStatistics get currentUserStats => userService.currentUserStats;
   bool get userIsAdmin => currentUser.role == UserRole.admin;
 
   final log = getLogger("BaseModel");

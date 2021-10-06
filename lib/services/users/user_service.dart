@@ -329,6 +329,32 @@ class UserService {
 
   void setupUserDataListeners(
       {required Completer<void> completer, void Function()? callback}) async {
+    if (_currentUserStreamSubscription == null) {
+      Stream<User> userStream =
+          _firestoreApi.getUserStream(uid: currentUser.uid);
+      _currentUserStreamSubscription = userStream.listen((user) async {
+        _currentUser = user;
+        if (callback != null) {
+          callback();
+        }
+      });
+    } else {
+      log.w("Already listening to current User document");
+    }
+
+    if (_currentUserStatsStreamSubscription == null) {
+      Stream<UserStatistics> userStream =
+          _firestoreApi.getUserSummaryStatisticsStream(uid: currentUser.uid);
+      _currentUserStatsStreamSubscription = userStream.listen((stats) async {
+        _currentUserStats = stats;
+        if (callback != null) {
+          callback();
+        }
+      });
+    } else {
+      log.w("Already listening to current User document");
+    }
+
     // set up listener for explorer user data
     if (_explorersDataStreamSubscriptions == null) {
       _explorersDataStreamSubscriptions = _firestoreApi
@@ -364,32 +390,6 @@ class UserService {
     } else {
       log.w("Already listening to list of explorers");
       completer.complete();
-    }
-
-    if (_currentUserStreamSubscription == null) {
-      Stream<User> userStream =
-          _firestoreApi.getUserStream(uid: currentUser.uid);
-      _currentUserStreamSubscription = userStream.listen((user) async {
-        _currentUser = user;
-        if (callback != null) {
-          callback();
-        }
-      });
-    } else {
-      log.w("Already listening to current User document");
-    }
-
-    if (_currentUserStatsStreamSubscription == null) {
-      Stream<UserStatistics> userStream =
-          _firestoreApi.getUserSummaryStatisticsStream(uid: currentUser.uid);
-      _currentUserStatsStreamSubscription = userStream.listen((stats) async {
-        _currentUserStats = stats;
-        if (callback != null) {
-          callback();
-        }
-      });
-    } else {
-      log.w("Already listening to current User document");
     }
   }
 
