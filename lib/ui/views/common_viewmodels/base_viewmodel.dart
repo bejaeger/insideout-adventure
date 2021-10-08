@@ -102,15 +102,17 @@ class BaseModel extends BaseViewModel {
     }
   }
 
-  /////////////////////////////////////////////
-  // QRCode scanning features
+  ////////////////////////////////////////
+  // Navigation and dialogs
+  void navigateBack() {
+    navigationService.back();
+  }
 
-  // TODO: Add this in dedicated common viewmodel!
-
-  Future<QuestQRCodeScanResult> navigateToQrcodeViewAndReturnResult() async {
-    QuestQRCodeScanResult result =
-        await navigationService.navigateTo(Routes.qRCodeView);
-    return result;
+  void showNotImplementedSnackbar() {
+    snackbarService.showSnackbar(
+        title: "Not yet implemented.",
+        message: "I know... it's sad",
+        duration: Duration(seconds: 2));
   }
 
   Future<bool> showAdminDialogAndGetResponse() async {
@@ -127,19 +129,6 @@ class BaseModel extends BaseViewModel {
       adminMode = false;
     }
     return adminMode;
-  }
-
-  ////////////////////////////////////////
-  // Navigation and dialogs
-  void navigateBack() {
-    navigationService.back();
-  }
-
-  void showNotImplementedSnackbar() {
-    snackbarService.showSnackbar(
-        title: "Not yet implemented.",
-        message: "I know... it's sad",
-        duration: Duration(seconds: 2));
   }
 
   //////////////////////////////////////////

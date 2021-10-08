@@ -14,12 +14,12 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class QuestViewModel extends BaseModel {
+class ActiveQuestViewModel extends QuestViewModel {
   final log = getLogger('QuestViewModel');
   final geolocation = locator<GeolocationService>();
   final _directionsAPI = locator<DirectionsAPI>();
@@ -78,12 +78,7 @@ class QuestViewModel extends BaseModel {
         buttonTitle: 'Ok');
 
     //Add all the information of the Quest in the Firebase.
-    await questService.finishQuest(
-        finishedQuest: _startedQuest,
-        userId: _userService.currentUser.uid,
-        numMarkersCollected: numMarkersCollected,
-        timeElapse: activeQuest.timeElapsed.toString());
-    questService.disposeActivatedQuest();
+    await questService.evaluateAndFinishQuest();
     _navigationService.replaceWith(Routes.mapView);
   }
 
@@ -153,6 +148,7 @@ class QuestViewModel extends BaseModel {
     await handleQrCodeScanEvent(result);
   }
 
+  @override
   Future handleQrCodeScanEvent(QuestQRCodeScanResult result) async {
     if (result.isEmpty) {
       return;

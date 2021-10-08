@@ -13,11 +13,6 @@ class QRCodeViewModel extends BaseModel {
   final QRCodeService _qrCodeService = locator<QRCodeService>();
   final SnackbarService? _snackbarService = locator<SnackbarService>();
 
-/*   
-Future navigateToSearchViewMobile() async {
-    await _navigationService!.replaceWith(Routes.searchView);
-  }
-*/
   void popQrCodeView() {
     navigationService.back(result: QuestQRCodeScanResult.empty());
   }
@@ -33,11 +28,9 @@ Future navigateToSearchViewMobile() async {
     try {
       AFKMarker marker =
           _qrCodeService.getMarkerFromQrCodeString(qrCodeString: result.code);
-      QuestQRCodeScanResult scanResult =
-          await questService.handleQrCodeScanEvent(marker: marker);
       log.i(
           "Successfully read marker information from QR Code, navigate back with scanResult");
-      navigationService.back(result: scanResult);
+      navigationService.back(result: marker);
     } catch (e) {
       if (e is QRCodeServiceException) {
         log.e("Error when reading QR Code: $e");

@@ -57,6 +57,7 @@ class QuestService {
       .where((element) => element == true)
       .toList()
       .length;
+  // TODO: unit test this?
   bool get isAllMarkersCollected =>
       activatedQuest!.quest.markers.length == getNumberMarkersCollected;
 

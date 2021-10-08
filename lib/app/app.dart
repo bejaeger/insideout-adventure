@@ -24,7 +24,7 @@ import 'package:afkcredits/ui/views/map/map_screen.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
-import 'package:afkcredits/ui/views/quest/quest_view.dart';
+import 'package:afkcredits/ui/views/quest/active_quest_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
@@ -55,7 +55,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: TransfersHistoryView),
     MaterialRoute(page: LayoutTemplateView),
     MaterialRoute(page: MapScreen),
-    MaterialRoute(page: QuestView),
+    MaterialRoute(page: ActiveQuestView),
     MaterialRoute(page: QRCodeView),
     MaterialRoute(page: QRCodeViewExample),
   ],

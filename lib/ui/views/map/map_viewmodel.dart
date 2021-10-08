@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -16,14 +15,13 @@ import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stacked/stacked.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class MapViewModel extends BaseModel {
+class MapViewModel extends QuestViewModel {
   final log = getLogger('MapViewModel');
   final geolocation = locator<GeolocationService>();
   //final _userService = locator<UserService>();
@@ -111,11 +109,7 @@ class MapViewModel extends BaseModel {
     notifyListeners();
   }
 
-  Future scanQrCodeWithActiveQuest() async {
-    QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
-    handleQrCodeScanEvent(result);
-  }
-
+  @override
   void handleQrCodeScanEvent(QuestQRCodeScanResult result) {
     if (result.isEmpty) {
       return;
@@ -168,7 +162,7 @@ class MapViewModel extends BaseModel {
       ///Differents Markers will Display as Part of the quest as well The App showing the counting of the
       ///Quest.
       await questService.startQuest(quest: quest);
-      _navigationService.replaceWith(Routes.questView);
+      _navigationService.replaceWith(Routes.activeQuestView);
 
 /*            
 Clock Timer       

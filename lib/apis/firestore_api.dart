@@ -390,7 +390,7 @@ class FirestoreApi {
       return;
     }
     try {
-      final docRef = activeQuestsCollection.doc();
+      final docRef = activatedQuestsCollection.doc();
       ActivatedQuest newQuest = quest.copyWith(
           id: docRef.id, createdAt: FieldValue.serverTimestamp());
       //log.v("Adding the following quest to firestore: ${newQuest.toJson()}");

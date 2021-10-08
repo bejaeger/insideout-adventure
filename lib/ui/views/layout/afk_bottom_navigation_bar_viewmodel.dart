@@ -21,7 +21,7 @@ class AFKBottomNavigationBarViewModel extends LayoutTemplateViewModel {
       navigationService.clearStackAndShow(Routes.mapView);
       _currentIndex = BottomNavigationBarIndex.map;
     } else {
-      navigationService.clearStackAndShow(Routes.questView);
+      navigationService.clearStackAndShow(Routes.activeQuestView);
       _currentIndex = BottomNavigationBarIndex.map;
     }
 
