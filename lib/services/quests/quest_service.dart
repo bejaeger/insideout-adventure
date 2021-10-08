@@ -89,29 +89,6 @@ class QuestService {
     }
   }
 
-  /// Store all The Information
-  Future finishQuest(
-      {Quest? finishedQuest,
-      required int? numMarkersCollected,
-      required String? userId,
-      required String? timeElapse}) async {
-    //Stop the clock
-    _stopWatchService.stopTimer();
-    _stopWatchService.pauseListener();
-    trackData(_stopWatchService.getSecondTime());
-
-    log.i("Quest successfully finished, pushing to firebase!");
-    // if we end up here it means the quest has finished succesfully!
-    await _firestoreApi.createUserCompletedQuest(
-        userId: userId,
-        completedQuest: CompletedQuest(
-            questId: finishedQuest!.id,
-            numberMarkersCollected: numMarkersCollected,
-            status: QuestStatus.success,
-            afkCreditsEarned: finishedQuest.afkCredits,
-            timeElapsed: timeElapse));
-  }
-
   Future continueIncompleteQuest() async {
     if (activatedQuest != null) {
       _stopWatchService.resumeListener();

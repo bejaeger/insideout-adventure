@@ -932,20 +932,6 @@ class MockQuestService extends _i1.Mock implements _i36.QuestService {
       (super.noSuchMethod(Invocation.method(#evaluateAndFinishQuest, []),
           returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i19.Future<dynamic> finishQuest(
-          {_i11.Quest? finishedQuest,
-          int? numMarkersCollected,
-          String? userId,
-          String? timeElapse}) =>
-      (super.noSuchMethod(
-          Invocation.method(#finishQuest, [], {
-            #finishedQuest: finishedQuest,
-            #numMarkersCollected: numMarkersCollected,
-            #userId: userId,
-            #timeElapse: timeElapse
-          }),
-          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
-  @override
   _i19.Future<dynamic> continueIncompleteQuest() =>
       (super.noSuchMethod(Invocation.method(#continueIncompleteQuest, []),
           returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
