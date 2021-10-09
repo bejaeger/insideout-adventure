@@ -357,36 +357,37 @@ class UserService {
 
     // set up listener for explorer user data
     if (_explorersDataStreamSubscriptions == null) {
-      _explorersDataStreamSubscriptions = _firestoreApi
-          .getExplorersDataStream(uid: currentUser.uid)
-          .listen((users) async {
-        // remove explorers if not present anymore
-        List<String> newUids = users.map((e) => e.uid).toList();
-        List<String> currentUids =
-            supportedExplorersList.map((e) => e.uid).toList();
-        currentUids.forEach((element) {
-          if (!newUids.contains(element)) {
-            removeFromExplorerLists(uid: element);
+      _explorersDataStreamSubscriptions =
+          _firestoreApi.getExplorersDataStream(uid: currentUser.uid).listen(
+        (users) async {
+          // remove explorers if not present anymore
+          List<String> newUids = users.map((e) => e.uid).toList();
+          List<String> currentUids =
+              supportedExplorersList.map((e) => e.uid).toList();
+          currentUids.forEach((element) {
+            if (!newUids.contains(element)) {
+              removeFromExplorerLists(uid: element);
+            }
+          });
+          // update existing explorers
+          users.forEach((user) {
+            supportedExplorers[user.uid] = user;
+          });
+
+          await addExplorerStatsListeners(
+              explorerIds: newUids, callback: callback);
+
+          if (!completer.isCompleted) {
+            completer.complete();
           }
-        });
-        // update existing explorers
-        users.forEach((user) {
-          supportedExplorers[user.uid] = user;
-        });
-
-        await addExplorerStatsListeners(
-            explorerIds: newUids, callback: callback);
-
-        if (!completer.isCompleted) {
-          completer.complete();
-        }
-        if (callback != null) {
-          callback();
-        }
-        log.v("Listened to ${supportedExplorers.length} supportedExplorers");
-        log.v(
-            "Listened to ${supportedExplorerStats.length} supportedExplorerStats");
-      });
+          if (callback != null) {
+            callback();
+          }
+          log.v("Listened to ${supportedExplorers.length} supportedExplorers");
+          log.v(
+              "Listened to ${supportedExplorerStats.length} supportedExplorerStats");
+        },
+      );
     } else {
       log.w("Already listening to list of explorers");
       completer.complete();

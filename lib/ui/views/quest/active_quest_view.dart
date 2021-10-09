@@ -17,37 +17,45 @@ class ActiveQuestView extends StatelessWidget {
           title: 'Quest Running',
         ),
         body: Container(
-          child: GoogleMap(
-            //mapType: MapType.hybrid,
-            initialCameraPosition: model.initialCameraPosition(),
-            //Place Markers in the Map
-            markers: model.getMarkers!,
-            //callback that’s called when the map is ready to us.
-            onMapCreated: model.onMapCreated,
-            //For showing your current location on Map with a blue dot.
-            myLocationEnabled: true,
+          child: Stack(
+            children: [
+              GoogleMap(
+                //mapType: MapType.hybrid,
+                initialCameraPosition: model.initialCameraPosition(),
+                //Place Markers in the Map
+                markers: model.getMarkers!,
+                //callback that’s called when the map is ready to us.
+                onMapCreated: model.onMapCreated,
+                //For showing your current location on Map with a blue dot.
+                myLocationEnabled: true,
 
-            // Button used for bringing the user location to the center of the camera view.
-            myLocationButtonEnabled: true,
+                // Button used for bringing the user location to the center of the camera view.
+                myLocationButtonEnabled: true,
 
-            //Remove the Zoom in and out button
-            zoomControlsEnabled: false,
+                //Remove the Zoom in and out button
+                zoomControlsEnabled: false,
 
-            polylines: {
-              if (model.getDirectionInfo != null)
-                Polyline(
-                  polylineId: const PolylineId('overview_polyline'),
-                  color: Colors.red,
-                  width: 5,
-                  points: model.getDirectionInfo!.polylinePoints
-                      .map((e) => LatLng(e.latitude, e.longitude))
-                      .toList(),
-                ),
-            },
+                polylines: {
+                  if (model.getDirectionInfo != null)
+                    Polyline(
+                      polylineId: const PolylineId('overview_polyline'),
+                      color: Colors.red,
+                      width: 5,
+                      points: model.getDirectionInfo!.polylinePoints
+                          .map((e) => LatLng(e.latitude, e.longitude))
+                          .toList(),
+                    ),
+                },
 
-            //onTap: model.handleTap(),
-            //Enable Traffic Mode.
-            //trafficEnabled: true,
+                //onTap: model.handleTap(),
+                //Enable Traffic Mode.
+                //trafficEnabled: true,
+              ),
+              if (model.isBusy)
+                Align(
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator()),
+            ],
           ),
         ),
         //Place the Floating Action to the Left of the View

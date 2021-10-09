@@ -8,6 +8,7 @@ import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -18,9 +19,10 @@ import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:afkcredits/app/app.logger.dart';
 
 class ActiveQuestViewModel extends QuestViewModel {
-  final log = getLogger('QuestViewModel');
+  final log = getLogger('ActiveQuestViewModel');
   final geolocation = locator<GeolocationService>();
   final _directionsAPI = locator<DirectionsAPI>();
   final QuestService questService = locator<QuestService>();
@@ -29,6 +31,7 @@ class ActiveQuestViewModel extends QuestViewModel {
   final _stopWatchService = locator<StopWatchService>();
   final _userService = locator<UserService>();
   final _qrCodeService = locator<QRCodeService>();
+
   Quest? _startedQuest;
   BitmapDescriptor? sourceIcon;
   int idx = 0;
@@ -73,13 +76,43 @@ class ActiveQuestViewModel extends QuestViewModel {
     checkRunningQuest = false;
     //final result = await questService.finishQuest();
 
-    await _dialogService.showDialog(
-        title: "Congratz, you succesfully finished the quest!",
-        buttonTitle: 'Ok');
-
-    //Add all the information of the Quest in the Firebase.
-    await questService.evaluateAndFinishQuest();
-    _navigationService.replaceWith(Routes.mapView);
+    try {
+      //Add all the information of the Quest in the Firebase.
+      dynamic result;
+      try {
+        setBusy(true);
+        result = await questService.evaluateAndFinishQuest();
+        setBusy(false);
+      } catch (e) {
+        setBusy(false);
+        if (e is QuestServiceException) {
+          await _dialogService.showDialog(
+              title: e.prettyDetails, buttonTitle: 'Ok');
+          _navigationService.replaceWith(Routes.mapView);
+          return;
+        } else {
+          log.e("Unknown error occured from evaluateAndFinishQuest");
+          rethrow;
+        }
+      }
+      if (result is String) {
+        log.wtf(
+            "An error occured when trying to finish the quest. The following warning was thrown: $result");
+      } else {
+        await _dialogService.showDialog(
+            title: "Congratz, you succesfully finished the quest!",
+            buttonTitle: 'Ok');
+        _navigationService.replaceWith(Routes.mapView);
+      }
+    } catch (e) {
+      setBusy(false);
+      await _dialogService.showDialog(
+          title: "An internal error occured on our side. Sorry!",
+          buttonTitle: 'Ok');
+      log.wtf(
+          "An error occured when trying to finish the quest. This should never happen!");
+      _navigationService.replaceWith(Routes.mapView);
+    }
   }
 
   BitmapDescriptor defineMarkersColour({required AFKMarker afkmarker}) {
@@ -182,8 +215,8 @@ class ActiveQuestViewModel extends QuestViewModel {
   void checkIfQuestFinishedAndFinishQuest() {
     if (questService.isAllMarkersCollected) {
       final _markersCollected = questService.getNumberMarkersCollected;
-      print(
-          'This is The Number of Markers Collected: ${_markersCollected.toString()}');
+      log.i(
+          "This is The Number of Markers Collected: ${_markersCollected.toString()}");
       _finishCompletedQuest(numMarkersCollected: _markersCollected);
       //finishQuest();
     }

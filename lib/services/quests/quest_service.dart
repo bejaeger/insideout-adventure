@@ -1,30 +1,40 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/quests/completed_quest/completed_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/exceptions/firestore_api_exception.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:path/path.dart' as p;
+import 'package:http/http.dart' as http;
 
 class QuestService {
   BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
       BehaviorSubject<ActivatedQuest?>();
+  final FlavorConfigProvider _flavorConfigProvider =
+      locator<FlavorConfigProvider>();
   final QRCodeService _qrCodeService = locator<QRCodeService>();
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final MarkerService _markerService = locator<MarkerService>();
   final StopWatchService _stopWatchService =
       locator<StopWatchService>(); // Create instance.
+  // map of list of money pools with money Pool id as key
+  List<ActivatedQuest> activatedQuests = [];
+  StreamSubscription? _pastQuestsStreamSubscription;
 
   final log = getLogger("QuestService");
 
@@ -32,9 +42,10 @@ class QuestService {
   bool get hasActiveQuest => activatedQuest != null;
   // num get numberCollectedMarkers =>
 
-  Future startQuest({required Quest quest}) async {
+  Future startQuest({required Quest quest, required List<String> uids}) async {
     // Get active quest
-    ActivatedQuest activatedQuest = getActivatedQuest(quest: quest);
+    ActivatedQuest activatedQuest =
+        _getActivatedQuest(quest: quest, uids: uids);
 
     // Add quest to behavior subject
     pushActivatedQuest(activatedQuest);
@@ -75,14 +86,25 @@ class QuestService {
       trackData(_stopWatchService.getSecondTime());
       // updateData();
 
-      evaluateQuest();
+      evaluateQuestAndSetStatus();
 
       if (activatedQuest!.status == QuestStatus.incomplete) {
         log.w("Quest is incomplete. Show message to user");
         return WarningQuestNotFinished;
       } else {
         log.i("Quest successfully finished, pushing to firebase!");
+        //try {
         // if we end up here it means the quest has finished succesfully!
+        try {
+          await _bookkeepFinishedQuest(quest: activatedQuest!);
+        } catch (e) {
+          await _firestoreApi.pushFinishedQuest(
+              quest: activatedQuest!
+                  .copyWith(status: QuestStatus.internalFailure));
+          disposeActivatedQuest();
+          log.wtf(e);
+          rethrow;
+        }
         await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
         disposeActivatedQuest();
       }
@@ -120,15 +142,21 @@ class QuestService {
   // Set status of quest according to what is found
   // success: user succesfully finished the quest
   // incomplete: e.g. not all markers were collected
-  void evaluateQuest() {
+  // also set earned credits
+  void evaluateQuestAndSetStatus() {
     log.i("Evaluating quest");
     bool? allMarkersCollected =
         activatedQuest?.markersCollected.any((element) => element == false);
     if (allMarkersCollected != null && allMarkersCollected == false) {
-      pushActivatedQuest(activatedQuest!.copyWith(status: QuestStatus.success));
+      pushActivatedQuest(activatedQuest!.copyWith(
+          status: QuestStatus.success,
+          afkCreditsEarned: activatedQuest!.quest.afkCredits));
     } else {
       pushActivatedQuest(
-          activatedQuest!.copyWith(status: QuestStatus.incomplete));
+        activatedQuest!.copyWith(
+          status: QuestStatus.incomplete,
+        ),
+      );
     }
   }
 
@@ -252,6 +280,82 @@ class QuestService {
     return await _firestoreApi.getMarkerFromQrCodeId(qrCodeId: qrCodeId);
   }
 
+  ///////////////////////////////////////////
+  /// Calling backend function to bookkeep credits
+  Future _bookkeepFinishedQuest({required ActivatedQuest quest}) async {
+    try {
+      log.i("Calling restful server function bookkeepFinishedQuest");
+      Uri url = Uri.https(
+          _flavorConfigProvider.authority,
+          p.join(_flavorConfigProvider.uripathprepend,
+              "transfers-api/bookkeepfinishedquest"));
+      http.Response? response = await http.post(url,
+          body: json.encode(quest.toJson()),
+          headers: {"Accept": "application/json"});
+      log.i("posted http request");
+      dynamic result = json.decode(response.body);
+      log.i("decoded json response");
+      // return result;
+      if (result["error"] == null) {
+        log.i("Quest successfully bookkept!");
+      } else {
+        log.e(
+            "Error when trying to bookeep finished quest: ${result['error']['message']}");
+        throw QuestServiceException(
+            message:
+                "An error occured in the cloud function 'bookkeepFinishedQuest'",
+            devDetails:
+                "Error message from cloud function: ${result["error"]["message"]}",
+            prettyDetails: "${result["error"]["message"]}");
+      }
+    } catch (e) {
+      if (e is QuestServiceException) rethrow;
+      log.e("Couldn't process finishedquest: ${e.toString()}");
+      throw QuestServiceException(
+          message:
+              "Something failed when calling the https function bookkeepFinishedQuest",
+          devDetails:
+              "This should not happen and is due to an error on the Firestore side or the datamodels that were being pushed!",
+          prettyDetails:
+              "An internal error occured on our side, please apologize and try again later.");
+    }
+  }
+
+  ////////////////////////////////////////////
+  /// History of quests
+
+  // adds listener to money pools the user is contributing to
+  // allows to wait for the first emission of the stream via the completer
+  Future<void>? setupPastQuestsListener(
+      {required Completer<void> completer,
+      required String uid,
+      void Function()? callback}) async {
+    if (_pastQuestsStreamSubscription == null) {
+      bool listenedOnce = false;
+      _pastQuestsStreamSubscription =
+          _firestoreApi.getPastQuestsStream(uid: uid).listen((snapshot) {
+        listenedOnce = true;
+        activatedQuests = snapshot;
+        if (!completer.isCompleted) {
+          completer.complete();
+        }
+        if (callback != null) {
+          callback();
+        }
+        log.v("Listened to ${activatedQuests.length} quests");
+      });
+      if (!listenedOnce) {
+        if (!completer.isCompleted) {
+          completer.complete();
+        }
+      }
+      return completer.future;
+    } else {
+      log.w("Already listening to list of quests, not adding another listener");
+      completer.complete();
+    }
+  }
+
   ////////////////////////////////////////////////
   // Helper functions
   void pushActivatedQuest(ActivatedQuest quest) {
@@ -295,12 +399,20 @@ class QuestService {
     removeActivatedQuest();
   }
 
-  ActivatedQuest getActivatedQuest({required Quest quest}) {
+  ActivatedQuest _getActivatedQuest(
+      {required Quest quest, required List<String> uids}) {
     return ActivatedQuest(
       quest: quest,
       markersCollected: List.filled(quest.markers.length, false),
       status: QuestStatus.active,
       timeElapsed: 0,
+      uids: uids,
     );
+  }
+
+  void clearData() {
+    activatedQuests = [];
+    _pastQuestsStreamSubscription?.cancel();
+    _pastQuestsStreamSubscription = null;
   }
 }

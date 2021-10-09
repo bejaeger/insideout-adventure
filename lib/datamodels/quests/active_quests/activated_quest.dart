@@ -14,7 +14,7 @@ class ActivatedQuest with _$ActivatedQuest {
     required List<bool> markersCollected,
     required QuestStatus status,
     List<String>? uids,
-    String? afkCreditsEarned,
+    num? afkCreditsEarned,
     required int timeElapsed, // in seconds!
     @Default("") dynamic createdAt,
   }) = _ActivatedQuest;

@@ -29,6 +29,7 @@ class _$QuestTearOff {
       required AFKMarker finishMarker,
       required List<AFKMarker> markers,
       required num afkCredits,
+      String? networkImagePath,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess}) {
     return _Quest(
@@ -40,6 +41,7 @@ class _$QuestTearOff {
       finishMarker: finishMarker,
       markers: markers,
       afkCredits: afkCredits,
+      networkImagePath: networkImagePath,
       afkCreditsPerMarker: afkCreditsPerMarker,
       bonusAfkCreditsOnSuccess: bonusAfkCreditsOnSuccess,
     );
@@ -63,6 +65,7 @@ mixin _$Quest {
   AFKMarker get finishMarker => throw _privateConstructorUsedError;
   List<AFKMarker> get markers => throw _privateConstructorUsedError;
   num get afkCredits => throw _privateConstructorUsedError;
+  String? get networkImagePath => throw _privateConstructorUsedError;
   List<num>? get afkCreditsPerMarker => throw _privateConstructorUsedError;
   num? get bonusAfkCreditsOnSuccess => throw _privateConstructorUsedError;
 
@@ -84,6 +87,7 @@ abstract class $QuestCopyWith<$Res> {
       AFKMarker finishMarker,
       List<AFKMarker> markers,
       num afkCredits,
+      String? networkImagePath,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess});
 
@@ -109,6 +113,7 @@ class _$QuestCopyWithImpl<$Res> implements $QuestCopyWith<$Res> {
     Object? finishMarker = freezed,
     Object? markers = freezed,
     Object? afkCredits = freezed,
+    Object? networkImagePath = freezed,
     Object? afkCreditsPerMarker = freezed,
     Object? bonusAfkCreditsOnSuccess = freezed,
   }) {
@@ -145,6 +150,10 @@ class _$QuestCopyWithImpl<$Res> implements $QuestCopyWith<$Res> {
           ? _value.afkCredits
           : afkCredits // ignore: cast_nullable_to_non_nullable
               as num,
+      networkImagePath: networkImagePath == freezed
+          ? _value.networkImagePath
+          : networkImagePath // ignore: cast_nullable_to_non_nullable
+              as String?,
       afkCreditsPerMarker: afkCreditsPerMarker == freezed
           ? _value.afkCreditsPerMarker
           : afkCreditsPerMarker // ignore: cast_nullable_to_non_nullable
@@ -185,6 +194,7 @@ abstract class _$QuestCopyWith<$Res> implements $QuestCopyWith<$Res> {
       AFKMarker finishMarker,
       List<AFKMarker> markers,
       num afkCredits,
+      String? networkImagePath,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess});
 
@@ -213,6 +223,7 @@ class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
     Object? finishMarker = freezed,
     Object? markers = freezed,
     Object? afkCredits = freezed,
+    Object? networkImagePath = freezed,
     Object? afkCreditsPerMarker = freezed,
     Object? bonusAfkCreditsOnSuccess = freezed,
   }) {
@@ -249,6 +260,10 @@ class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
           ? _value.afkCredits
           : afkCredits // ignore: cast_nullable_to_non_nullable
               as num,
+      networkImagePath: networkImagePath == freezed
+          ? _value.networkImagePath
+          : networkImagePath // ignore: cast_nullable_to_non_nullable
+              as String?,
       afkCreditsPerMarker: afkCreditsPerMarker == freezed
           ? _value.afkCreditsPerMarker
           : afkCreditsPerMarker // ignore: cast_nullable_to_non_nullable
@@ -274,6 +289,7 @@ class _$_Quest implements _Quest {
       required this.finishMarker,
       required this.markers,
       required this.afkCredits,
+      this.networkImagePath,
       this.afkCreditsPerMarker,
       this.bonusAfkCreditsOnSuccess});
 
@@ -297,13 +313,15 @@ class _$_Quest implements _Quest {
   @override
   final num afkCredits;
   @override
+  final String? networkImagePath;
+  @override
   final List<num>? afkCreditsPerMarker;
   @override
   final num? bonusAfkCreditsOnSuccess;
 
   @override
   String toString() {
-    return 'Quest(id: $id, name: $name, description: $description, type: $type, startMarker: $startMarker, finishMarker: $finishMarker, markers: $markers, afkCredits: $afkCredits, afkCreditsPerMarker: $afkCreditsPerMarker, bonusAfkCreditsOnSuccess: $bonusAfkCreditsOnSuccess)';
+    return 'Quest(id: $id, name: $name, description: $description, type: $type, startMarker: $startMarker, finishMarker: $finishMarker, markers: $markers, afkCredits: $afkCredits, networkImagePath: $networkImagePath, afkCreditsPerMarker: $afkCreditsPerMarker, bonusAfkCreditsOnSuccess: $bonusAfkCreditsOnSuccess)';
   }
 
   @override
@@ -331,6 +349,9 @@ class _$_Quest implements _Quest {
             (identical(other.afkCredits, afkCredits) ||
                 const DeepCollectionEquality()
                     .equals(other.afkCredits, afkCredits)) &&
+            (identical(other.networkImagePath, networkImagePath) ||
+                const DeepCollectionEquality()
+                    .equals(other.networkImagePath, networkImagePath)) &&
             (identical(other.afkCreditsPerMarker, afkCreditsPerMarker) ||
                 const DeepCollectionEquality()
                     .equals(other.afkCreditsPerMarker, afkCreditsPerMarker)) &&
@@ -351,6 +372,7 @@ class _$_Quest implements _Quest {
       const DeepCollectionEquality().hash(finishMarker) ^
       const DeepCollectionEquality().hash(markers) ^
       const DeepCollectionEquality().hash(afkCredits) ^
+      const DeepCollectionEquality().hash(networkImagePath) ^
       const DeepCollectionEquality().hash(afkCreditsPerMarker) ^
       const DeepCollectionEquality().hash(bonusAfkCreditsOnSuccess);
 
@@ -375,6 +397,7 @@ abstract class _Quest implements Quest {
       required AFKMarker finishMarker,
       required List<AFKMarker> markers,
       required num afkCredits,
+      String? networkImagePath,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess}) = _$_Quest;
 
@@ -396,6 +419,8 @@ abstract class _Quest implements Quest {
   List<AFKMarker> get markers => throw _privateConstructorUsedError;
   @override
   num get afkCredits => throw _privateConstructorUsedError;
+  @override
+  String? get networkImagePath => throw _privateConstructorUsedError;
   @override
   List<num>? get afkCreditsPerMarker => throw _privateConstructorUsedError;
   @override

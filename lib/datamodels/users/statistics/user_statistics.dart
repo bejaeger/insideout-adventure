@@ -11,7 +11,8 @@ class UserStatistics with _$UserStatistics {
     required num afkCredits,
     required num availableSponsoring,
     required num lifetimeEarnings,
-    required List<ConciseQuestInfo> completedQuests,
+    required num numberQuestsCompleted,
+    required List<ConciseFinishedQuestInfo> completedQuests,
     required String uid,
   }) = _UserStatistics;
 
@@ -26,6 +27,7 @@ UserStatistics getEmptyUserStatistics({required String uid}) {
   return UserStatistics(
     afkCredits: 0,
     availableSponsoring: 0,
+    numberQuestsCompleted: 0,
     lifetimeEarnings: 0,
     uid: uid,
     completedQuests: [],

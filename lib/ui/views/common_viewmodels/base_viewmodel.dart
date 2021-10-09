@@ -80,6 +80,7 @@ class BaseModel extends BaseViewModel {
 
   Future logout() async {
     // TODO: Check that there is no active quest present!
+    questService.clearData();
     await userService.handleLogoutEvent();
     transfersHistoryService.clearData();
     layoutService.setShowBottomNavBar(false);
@@ -96,7 +97,7 @@ class BaseModel extends BaseViewModel {
   Future startQuest() async {
     try {
       final quest = await questService.getQuest(questId: "QuestId");
-      await questService.startQuest(quest: quest);
+      await questService.startQuest(quest: quest, uids: [currentUser.uid]);
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
     }

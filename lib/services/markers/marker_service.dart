@@ -24,7 +24,6 @@ class MarkerService {
         return false;
       }
     } else {
-      // ! Still DUMMY VERSION -> Unit test of this function will fail!
       log.e(
           "We will pretend that the user is nearby the marker in any case (without checking actual GPS) because we run in test mode at the moment!");
       return true;

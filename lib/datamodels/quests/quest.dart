@@ -17,6 +17,7 @@ class Quest with _$Quest {
     required AFKMarker finishMarker,
     required List<AFKMarker> markers,
     required num afkCredits,
+    String? networkImagePath,
     List<num>? afkCreditsPerMarker,
     num? bonusAfkCreditsOnSuccess,
   }) = _Quest;

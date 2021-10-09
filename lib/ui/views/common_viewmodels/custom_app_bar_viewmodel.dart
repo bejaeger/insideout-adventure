@@ -32,7 +32,7 @@ class CustomAppBarViewModel extends BaseModel {
             title: "Congratz, you succesfully finished the quest!");
       }
     } catch (e) {
-      log.e("Could not finish quest, error thrown: $e");
+      log.wtf("Could not finish quest, error thrown: $e");
     }
   }
 }

@@ -161,7 +161,7 @@ class MapViewModel extends QuestViewModel {
       /// Once The user Click on Start a Quest. It tks her/him to new Page
       ///Differents Markers will Display as Part of the quest as well The App showing the counting of the
       ///Quest.
-      await questService.startQuest(quest: quest);
+      await questService.startQuest(quest: quest, uids: [currentUser.uid]);
       _navigationService.replaceWith(Routes.activeQuestView);
 
 /*            
