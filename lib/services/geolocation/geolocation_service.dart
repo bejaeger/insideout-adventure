@@ -26,7 +26,7 @@ class GeolocationService {
   Future getCurrentLocation() async {
     //Verify If location is available on device.
     final checkGeolocation = await checkGeolocationAvailable();
-    Position _position = Position(
+    /*   Position _position = Position(
         latitude: 49.246445,
         longitude: -122.994560,
         accuracy: 0.0,
@@ -34,15 +34,20 @@ class GeolocationService {
         speed: 0.0,
         heading: 0.0,
         speedAccuracy: 0.0,
-        altitude: 0.0);
+        altitude: 0.0); */
 
-    if (checkGeolocation) {
+    if (checkGeolocation == true) {
       try {
         _position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best);
+        log.i('Harguilar Current Position $_position');
         if (_position != null) {
-          //final lastPosition = await Geolocator.getLastKnownPosition();
-          //return lastPosition;
+          final lastPosition = await Geolocator.getLastKnownPosition();
+          log.i('This is Harguilar Last Location $lastPosition');
+          return lastPosition;
+          //return _position;
+        } else {
+          _position = Geolocator.getCurrentPosition();
           return _position;
         }
       } catch (error) {
@@ -53,7 +58,7 @@ class GeolocationService {
             prettyDetails:
                 "An internal error occured on our side, please apologize and try again later.");
       }
-      return _position;
+      // return _position;
     }
   }
 

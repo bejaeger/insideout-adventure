@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'flavor_config.dart';
+import 'ui/shared/setup_bottom_sheet_ui.dart';
 
 const bool USE_EMULATOR = false;
 
@@ -23,6 +24,7 @@ void mainCommon(Flavor flavor) async {
 
     setupLocator();
     setupDialogUi();
+    setupBottomSheetUi();
     // setupBottomSheetUi();
     // setupSnackbarUi();
     // Logger.level = Level.verbose;

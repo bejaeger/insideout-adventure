@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:afkcredits/ui/shared/colors/color_settings.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_viewmodel.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
-
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stacked/stacked.dart';

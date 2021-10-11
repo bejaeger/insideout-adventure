@@ -1,15 +1,12 @@
 import 'dart:async';
-
-import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
-import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
+import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -19,15 +16,14 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stacked/stacked.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class MapViewModel extends BaseModel {
   final log = getLogger('MapViewModel');
-  final geolocation = locator<GeolocationService>();
-  //final _userService = locator<UserService>();
-  //final _directionsAPI = locator<DirectionsAPI>();
+  final _geolocationService = locator<GeolocationService>();
+
+  //Quest? userQuest;
   final _bottomSheetService = locator<BottomSheetService>();
   final QuestService questService = locator<QuestService>();
   final DialogService _dialogService = locator<DialogService>();
@@ -36,18 +32,15 @@ class MapViewModel extends BaseModel {
   final _navigationService = locator<NavigationService>();
   final _qrCodeService = locator<QRCodeService>();
   Set<Marker> _markersTmp = {};
-  //StreamSubscription<int>? _timerSubscription;
-  Position? _pos;
-  List<UserFavPlaces>? userFavouritePlaces;
-  List<Places>? places;
+  //List<Places>? places;
   List<AFKMarker>? markers;
+  var _userPostion;
+  //bool _tappedMarkers = false;
 
   GoogleMapController? _googleMapController;
   Marker? origin;
   Marker? destination;
   Directions? _directionInfo;
-
-  //CameraPosition get initialCameraPosition => null;
 
   Future<void> requestPermission() async {
     await Permission.location.request();
@@ -61,21 +54,18 @@ class MapViewModel extends BaseModel {
   //Get Direction Info
   Directions? get getDirectionInfo => _directionInfo;
 
-  // ignore: non_constant_identifier_names
   CameraPosition initialCameraPosition() {
+    log.i('Your Position Inside  initialCameraPosition is $_userPostion');
+
     final CameraPosition _initialCameraPosition = CameraPosition(
-      //In Future I will change these values to dynamically Change the Initial Camera Position
-      //Based on teh city
-      target: LatLng(37.4219983, -122.084),
-      zoom: 8,
-    );
+        target: LatLng(_userPostion.latitude, _userPostion.longitude), zoom: 8);
     return _initialCameraPosition;
   }
 
+  // bool get tappedMarkers => _tappedMarkers;
 //Add Markers to the Map
   void addMarker({required AFKMarker afkmarker}) {
     setBusy(true);
-
     _markersTmp.add(
       Marker(
           markerId: MarkerId(afkmarker.id),
@@ -84,7 +74,18 @@ class MapViewModel extends BaseModel {
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
           onTap: () async {
+            Quest _quest = await questService.getQuest(questId: afkmarker.id);
+
+            // userQuest = _quest;
+            //log.i('This is a User Quest $userQuest');
             bool adminMode = false;
+            //Set The Quest that Will Start.
+            if (_quest != null) {
+              questService.setStartedQuest(startedQuest: _quest);
+            }
+
+            // _tappedMarkers = true;
+            //  notifyListeners();
             if (userIsAdmin) {
               adminMode = await showAdminDialogAndGetResponse();
               if (adminMode) {
@@ -96,11 +97,10 @@ class MapViewModel extends BaseModel {
             }
             if (!userIsAdmin || adminMode == false) {
               if (hasActiveQuest == false) {
-                displayQuestBottomSheet(
+                await displayQuestBottomSheet(
                   markers: afkmarker,
                 );
               } else {
-                // final activeQuestLenght= questService.activatedQuest!.length;
                 _dialogService.showDialog(
                     title: "'You Currently Have a Running Quest !!!");
               }
@@ -140,12 +140,24 @@ class MapViewModel extends BaseModel {
     }
   }
 
-  Future<void> onMapCreated(GoogleMapController controller) async {
+  setCurrentUserPosition() {
     setBusy(true);
     try {
-      _googleMapController = controller;
-      _pos = geolocation.getUserPosition;
-      //This is the Initial Marker In the Map.
+      if (_geolocationService.getUserPosition != null) {
+        _userPostion = _geolocationService.getUserPosition;
+        log.i('Your Position Values is $_userPostion');
+      } else {
+        log.wtf('Your Position Values is Null Look at it: $_userPostion');
+      }
+    } catch (e) {}
+    setBusy(false);
+    notifyListeners();
+  }
+
+  void onMapCreated(GoogleMapController controller) {
+    setBusy(true);
+    _googleMapController = controller;
+    try {
       getQuestMarkers();
     } catch (error) {
       throw MapViewModelException(
@@ -154,7 +166,6 @@ class MapViewModel extends BaseModel {
           prettyDetails:
               "An internal error occured on our side, please apologize and try again later.");
     }
-
     setBusy(false);
     notifyListeners();
   }
@@ -163,12 +174,56 @@ class MapViewModel extends BaseModel {
     setBusy(true);
     try {
       final quest = await questService.getQuest(questId: "QuestDummyId");
-
-      /// Once The user Click on Start a Quest. It tks her/him to new Page
-      ///Differents Markers will Display as Part of the quest as well The App showing the counting of the
-      ///Quest.
       await questService.startQuest(quest: quest);
-      _navigationService.replaceWith(Routes.questView);
+      await _navigationService.replaceWith(Routes.questView);
+    } catch (e) {
+      log.e("Could not start quest, error thrown: $e");
+    }
+  }
+
+  void getQuestMarkers() {
+    setBusy(true);
+    markers = _markersService.getSetMarkers;
+    if (markers!.isNotEmpty) {
+      for (AFKMarker _m in markers!) {
+        addMarker(afkmarker: _m);
+      }
+      _markersTmp = _markersTmp;
+    } else {
+      log.i('Markers are Empty');
+    }
+    setBusy(false);
+    notifyListeners();
+  }
+
+  Future displayQuestBottomSheet({required AFKMarker markers}) async {
+    Quest quest = await questService.getQuest(questId: markers.questId!);
+    if (quest != null) {
+      SheetResponse? sheetResponse = await _bottomSheetService.showCustomSheet(
+          variant: BottomSheetType.questInformation,
+          title: ' Name: ' + quest.name,
+          description: 'Description: ' + quest.description,
+          mainButtonTitle: "Start Quest",
+          secondaryButtonTitle: "Close");
+
+      if (sheetResponse!.confirmed == true) {
+        //Set The Quest that Will Start.
+        questService.setStartedQuest(startedQuest: quest);
+        //User Will Start a Quest
+        checkRunningQuest = true;
+        await startQuest();
+      }
+    } else {
+      log.w('You Providing an Empty Quest');
+    }
+  }
+
+  @override
+  void dispose() {
+    _googleMapController!.dispose();
+    super.dispose();
+  }
+}
 
 /*            
 Clock Timer       
@@ -189,83 +244,3 @@ Clock Timer
                      setBusy(false); 
                      notifyListeners(); 
                       */
-
-    } catch (e) {
-      log.e("Could not start quest, error thrown: $e");
-    }
-  }
-
-  void getQuestMarkers() {
-    setBusy(true);
-    markers = _markersService.getSetMarkers;
-
-    if (markers!.isNotEmpty) {
-      for (AFKMarker _m in markers!) {
-        addMarker(afkmarker: _m);
-      }
-      _markersTmp = _markersTmp;
-      log.v('These Are the Values in the current Markers $_markersTmp');
-      setBusy(false);
-      notifyListeners();
-    } else {
-      log.i('Markers are Empty');
-    }
-  }
-
-  Future<void> createMarkers() async {
-    // TODO: Get this from firestore api and set up proper dummy data in dummy_datamodels.dart
-    setBusy(true);
-    await _markersService.createMarkers(
-        markers: AFKMarker(
-            id: "9hJodek7hlwwUVl0VgzN",
-            qrCodeId: "QRCode2Id",
-            lat: 37.487846,
-            lon: -122.236115,
-            questId: 'QuestId'));
-    await _markersService.createMarkers(
-        markers: AFKMarker(
-            id: "nc9tNP2lSdzbjjC1p574",
-            qrCodeId: "QRCode2Id",
-            lat: 37.75675,
-            lon: -122.45027,
-            questId: 'QuestId01'));
-    await _markersService.createMarkers(
-        markers: AFKMarker(
-            id: "Marker3Id",
-            qrCodeId: "QRCode3Id",
-            lat: 37.4219983,
-            lon: -122.084,
-            questId: 'QuestId02'));
-
-    setBusy(false);
-    notifyListeners();
-  }
-
-  Future displayQuestBottomSheet({required AFKMarker markers}) async {
-    Quest quest = await questService.getQuest(questId: markers.questId!);
-
-    if (quest != null) {
-      SheetResponse? sheetResponse = await _bottomSheetService.showBottomSheet(
-          title: ' Name: ' + quest.name,
-          description: 'Description: ' + quest.description,
-          // description: "OR add new payment method +",
-          confirmButtonTitle: "Start Quest",
-          cancelButtonTitle: "Close");
-      if (sheetResponse!.confirmed == true) {
-        //Set The Quest that Will Start.
-        questService.setStartedQuest(startedQuest: quest);
-        //User Will Start a Quest
-        checkRunningQuest = true;
-        startQuest();
-      }
-    } else {
-      log.w('You Providing an Empty Quest');
-    }
-  }
-
-  @override
-  void dispose() {
-    _googleMapController!.dispose();
-    super.dispose();
-  }
-}

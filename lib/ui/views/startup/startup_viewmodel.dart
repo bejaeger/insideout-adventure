@@ -27,6 +27,7 @@ class StartUpViewModel extends LayoutTemplateViewModel {
 
     //Get Current User Location
     position = await _geolocationService.getCurrentLocation();
+    log.i('This is your current Position StartupViewModel $position');
     //Get Guest Markers
     final _markers = await _markersService.getQuestMarkers();
 

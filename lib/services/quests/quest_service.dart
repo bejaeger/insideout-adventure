@@ -47,11 +47,15 @@ class QuestService {
 
   //Set Started Quest.
   void setStartedQuest({required Quest startedQuest}) {
-    _startedQuest = startedQuest;
+    if (startedQuest != null) {
+      _startedQuest = startedQuest;
+    } else {
+      log.wtf('I do not access Null Values in $startedQuest');
+    }
   }
 
   //Get Started Quest
-  Quest get getStartedQuest => _startedQuest!;
+  Quest? get getStartedQuest => _startedQuest!;
 
   // Handle the scenario when a user finishes a hike
   // First evaluate the activated quest data and return values according to that

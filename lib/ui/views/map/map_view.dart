@@ -11,6 +11,7 @@ class MapView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MapViewModel>.reactive(
       //  onModelReady: (model) => model.createMarkers(),
+      onModelReady: (model) => model.setCurrentUserPosition(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(
           title: 'AFK TREASURE HUNTING',
@@ -23,9 +24,14 @@ class MapView extends StatelessWidget {
 
             //Place Markers in the Map
             markers: model.getMarkers!,
+            // onCameraMove: ,
 
-            //callback that’s called when the map is ready to us.
+            //callback that’s called when the map is ready to use.
             onMapCreated: model.onMapCreated,
+
+            //enable zoom gestures
+            zoomGesturesEnabled: true,
+            //minMaxZoomPreference: MinMaxZoomPreference(13,17)
 
             //For showing your current location on Map with a blue dot.
             myLocationEnabled: true,
@@ -65,12 +71,6 @@ class MapView extends StatelessWidget {
                         model.initialCameraPosition()));
             await model.scanQrCodeWithActiveQuest();
           },
-          /* => model.getGoogleMapController!.animateCamera(
-            model.getDirectionInfo != null
-                ? CameraUpdate.newLatLngBounds(
-                    model.getDirectionInfo!.bounds, 100.0)
-                : CameraUpdate.newCameraPosition(model.initialCameraPosition()),
-          ), */
           child: const Icon(Icons.center_focus_strong),
         ),
       ),

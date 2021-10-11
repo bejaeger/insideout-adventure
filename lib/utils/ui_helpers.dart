@@ -24,6 +24,9 @@ Widget spacedDivider = Column(
 double screenHeightPercentage(BuildContext context, {double percentage = 1}) =>
     screenHeight(context) * percentage;
 
+double screenWidthPercentage(BuildContext context, {double percentage = 1}) =>
+    screenWidth(context) * percentage;
+
 Color getBkgColor(context) => Theme.of(context).backgroundColor;
 
 Widget verticalSpace(double height) => SizedBox(height: height);
