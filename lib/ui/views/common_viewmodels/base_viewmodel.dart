@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
@@ -31,6 +32,7 @@ class BaseModel extends BaseViewModel {
   final StopWatchService _stopWatchService = locator<StopWatchService>();
 
   User get currentUser => userService.currentUser;
+  UserStatistics get currentUserStats => userService.currentUserStats;
   bool get userIsAdmin => currentUser.role == UserRole.admin;
 
   final log = getLogger("BaseModel");
@@ -77,6 +79,7 @@ class BaseModel extends BaseViewModel {
 
   Future logout() async {
     // TODO: Check that there is no active quest present!
+    questService.clearData();
     await userService.handleLogoutEvent();
     transfersHistoryService.clearData();
     layoutService.setShowBottomNavBar(false);
@@ -93,21 +96,23 @@ class BaseModel extends BaseViewModel {
   Future startQuest() async {
     try {
       final quest = await questService.getQuest(questId: "QuestId");
-      await questService.startQuest(quest: quest);
+      await questService.startQuest(quest: quest, uids: [currentUser.uid]);
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
     }
   }
 
-  /////////////////////////////////////////////
-  // QRCode scanning features
+  ////////////////////////////////////////
+  // Navigation and dialogs
+  void navigateBack() {
+    navigationService.back();
+  }
 
-  // TODO: Add this in dedicated common viewmodel!
-
-  Future<QuestQRCodeScanResult> navigateToQrcodeViewAndReturnResult() async {
-    QuestQRCodeScanResult result =
-        await navigationService.navigateTo(Routes.qRCodeView);
-    return result;
+  void showNotImplementedSnackbar() {
+    snackbarService.showSnackbar(
+        title: "Not yet implemented.",
+        message: "I know... it's sad",
+        duration: Duration(seconds: 2));
   }
 
   Future<bool> showAdminDialogAndGetResponse() async {
@@ -124,19 +129,6 @@ class BaseModel extends BaseViewModel {
       adminMode = false;
     }
     return adminMode;
-  }
-
-  ////////////////////////////////////////
-  // Navigation and dialogs
-  void navigateBack() {
-    navigationService.back();
-  }
-
-  void showNotImplementedSnackbar() {
-    snackbarService.showSnackbar(
-        title: "Not yet implemented.",
-        message: "I know... it's sad",
-        duration: Duration(seconds: 2));
   }
 
   //////////////////////////////////////////

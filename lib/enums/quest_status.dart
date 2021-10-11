@@ -1,4 +1,4 @@
-enum QuestStatus { active, cancelled, success, incomplete } 
+enum QuestStatus { active, cancelled, success, incomplete, internalFailure } 
 
 // active: user actively doing the quest
 // cancelled: user did not finish the quest but cancelled it

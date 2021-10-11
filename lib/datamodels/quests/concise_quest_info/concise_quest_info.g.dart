@@ -6,8 +6,9 @@ part of 'concise_quest_info.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ConciseQuestInfo _$_$_ConciseQuestInfoFromJson(Map<String, dynamic> json) {
-  return _$_ConciseQuestInfo(
+_$_ConciseFinishedQuestInfo _$_$_ConciseFinishedQuestInfoFromJson(
+    Map<String, dynamic> json) {
+  return _$_ConciseFinishedQuestInfo(
     name: json['name'] as String,
     type: _$enumDecode(_$QuestTypeEnumMap, json['type']),
     afkCredits: json['afkCredits'] as num,
@@ -15,8 +16,8 @@ _$_ConciseQuestInfo _$_$_ConciseQuestInfoFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$_$_ConciseQuestInfoToJson(
-        _$_ConciseQuestInfo instance) =>
+Map<String, dynamic> _$_$_ConciseFinishedQuestInfoToJson(
+        _$_ConciseFinishedQuestInfo instance) =>
     <String, dynamic>{
       'name': instance.name,
       'type': _$QuestTypeEnumMap[instance.type],

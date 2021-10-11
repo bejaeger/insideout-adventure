@@ -26,7 +26,7 @@ class _$ActivatedQuestTearOff {
       required List<bool> markersCollected,
       required QuestStatus status,
       List<String>? uids,
-      String? afkCreditsEarned,
+      num? afkCreditsEarned,
       required int timeElapsed,
       dynamic createdAt = ""}) {
     return _ActivatedQuest(
@@ -56,7 +56,7 @@ mixin _$ActivatedQuest {
   List<bool> get markersCollected => throw _privateConstructorUsedError;
   QuestStatus get status => throw _privateConstructorUsedError;
   List<String>? get uids => throw _privateConstructorUsedError;
-  String? get afkCreditsEarned => throw _privateConstructorUsedError;
+  num? get afkCreditsEarned => throw _privateConstructorUsedError;
   int get timeElapsed => throw _privateConstructorUsedError; // in seconds!
   dynamic get createdAt => throw _privateConstructorUsedError;
 
@@ -77,7 +77,7 @@ abstract class $ActivatedQuestCopyWith<$Res> {
       List<bool> markersCollected,
       QuestStatus status,
       List<String>? uids,
-      String? afkCreditsEarned,
+      num? afkCreditsEarned,
       int timeElapsed,
       dynamic createdAt});
 
@@ -128,7 +128,7 @@ class _$ActivatedQuestCopyWithImpl<$Res>
       afkCreditsEarned: afkCreditsEarned == freezed
           ? _value.afkCreditsEarned
           : afkCreditsEarned // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as num?,
       timeElapsed: timeElapsed == freezed
           ? _value.timeElapsed
           : timeElapsed // ignore: cast_nullable_to_non_nullable
@@ -161,7 +161,7 @@ abstract class _$ActivatedQuestCopyWith<$Res>
       List<bool> markersCollected,
       QuestStatus status,
       List<String>? uids,
-      String? afkCreditsEarned,
+      num? afkCreditsEarned,
       int timeElapsed,
       dynamic createdAt});
 
@@ -215,7 +215,7 @@ class __$ActivatedQuestCopyWithImpl<$Res>
       afkCreditsEarned: afkCreditsEarned == freezed
           ? _value.afkCreditsEarned
           : afkCreditsEarned // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as num?,
       timeElapsed: timeElapsed == freezed
           ? _value.timeElapsed
           : timeElapsed // ignore: cast_nullable_to_non_nullable
@@ -256,7 +256,7 @@ class _$_ActivatedQuest implements _ActivatedQuest {
   @override
   final List<String>? uids;
   @override
-  final String? afkCreditsEarned;
+  final num? afkCreditsEarned;
   @override
   final int timeElapsed;
   @JsonKey(defaultValue: "")
@@ -324,7 +324,7 @@ abstract class _ActivatedQuest implements ActivatedQuest {
       required List<bool> markersCollected,
       required QuestStatus status,
       List<String>? uids,
-      String? afkCreditsEarned,
+      num? afkCreditsEarned,
       required int timeElapsed,
       dynamic createdAt}) = _$_ActivatedQuest;
 
@@ -342,7 +342,7 @@ abstract class _ActivatedQuest implements ActivatedQuest {
   @override
   List<String>? get uids => throw _privateConstructorUsedError;
   @override
-  String? get afkCreditsEarned => throw _privateConstructorUsedError;
+  num? get afkCreditsEarned => throw _privateConstructorUsedError;
   @override
   int get timeElapsed => throw _privateConstructorUsedError;
   @override // in seconds!

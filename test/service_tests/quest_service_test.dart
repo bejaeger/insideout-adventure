@@ -32,7 +32,7 @@ void main() {
       test('When quest is started we start the timer', () async {
         final stopWatch = getAndRegisterStopWatchService();
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         verify(stopWatch.startTimer());
       });
 
@@ -40,7 +40,7 @@ void main() {
           () async {
         final stopWatch = getAndRegisterStopWatchService();
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         verify(stopWatch.listenToSecondTime(callback: service.trackData));
       });
 
@@ -48,7 +48,7 @@ void main() {
           'When quest is started we should have an activated quest corresponding to the quest that was started',
           () async {
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         expect(service.activatedQuest, getTestActivatedQuest());
       });
     });
@@ -60,7 +60,7 @@ void main() {
         final service = _getService();
         service.pushActivatedQuest(getTestActivatedButIncompleteQuest());
         // act
-        service.evaluateQuest();
+        service.evaluateQuestAndSetStatus();
         // assert
         expect(service.activatedQuest?.status, QuestStatus.incomplete);
       });
@@ -70,7 +70,7 @@ void main() {
         final service = _getService();
         service.pushActivatedQuest(getTestActivatedAndCompleteQuest());
         // act
-        service.evaluateQuest();
+        service.evaluateQuestAndSetStatus();
         // assert
         expect(service.activatedQuest?.status, QuestStatus.success);
       });
@@ -88,7 +88,7 @@ void main() {
 
         //act
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         await service.evaluateAndFinishQuest();
 
         //assert
@@ -132,7 +132,7 @@ void main() {
 
       test('After quest is finished activated quest should be null', () async {
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         service.pushActivatedQuest(getTestSuccessQuest());
         await service.evaluateAndFinishQuest();
         expect(service.activatedQuest, isNull);
@@ -237,7 +237,7 @@ void main() {
         final markerService = getAndRegisterMarkerService();
         // act
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         service.handleQrCodeScanEvent(marker: getTestMarker1());
         // assert
         verify(markerService.isUserCloseby(marker: getTestMarker1()));
@@ -248,7 +248,7 @@ void main() {
           () async {
         // act
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         await service.handleQrCodeScanEvent(marker: getTestMarker1());
         // assert
         expect(service.activatedQuest!.markersCollected[0], true);
@@ -261,7 +261,7 @@ void main() {
           () async {
         // act
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         await service.handleQrCodeScanEvent(marker: getTestMarker2());
         // assert
         expect(service.activatedQuest!.markersCollected[0], false);
@@ -274,7 +274,7 @@ void main() {
           () async {
         // act
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         QuestQRCodeScanResult result =
             await service.handleQrCodeScanEvent(marker: getTestMarkerFarAway());
         // assert
@@ -288,7 +288,7 @@ void main() {
         getAndRegisterMarkerService(isUserCloseby: false);
         // act
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         QuestQRCodeScanResult result =
             await service.handleQrCodeScanEvent(marker: getTestMarker1());
         // assert
@@ -300,7 +300,7 @@ void main() {
           () async {
         // act
         final service = _getService();
-        await service.startQuest(quest: getTestQuest());
+        await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         service.updateCollectedMarkers(marker: getTestMarker1());
         QuestQRCodeScanResult result =
             await service.handleQrCodeScanEvent(marker: getTestMarker1());

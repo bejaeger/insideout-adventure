@@ -1,11 +1,11 @@
 
-import {Request, Response} from "express";
-import {Post} from "firebase-backend";
-import {AFKCreditsBookkeeper} from "../../system/afkCreditsBookkeeper";
-import {getPayload} from "../../system/helperFunctions";
-import {StatusCodes} from "http-status-codes";
-import {ResponseHandler} from "../../system/responseHandler";
-import {FirestoreManager} from "../../system/firestoreManager";
+import { Request, Response } from "express";
+import { Post } from "firebase-backend";
+import { AFKCreditsBookkeeper } from "../../system/afkCreditsBookkeeper";
+import { getPayload } from "../../system/helperFunctions";
+import { StatusCodes } from "http-status-codes";
+import { ResponseHandler } from "../../system/responseHandler";
+import { FirestoreManager } from "../../system/firestoreManager";
 
 const admin = require("firebase-admin");
 const db = admin.firestore();
@@ -36,7 +36,7 @@ export default new Post((request: Request, response: Response) => {
       data["transferId"] = docRef.id;
 
       // prepare return Data
-      const returnData: any = {transferId: docRef.id};
+      const returnData: any = { transferId: docRef.id };
 
       // /////////////////////////////////////////////////////////////
       // Sponsoring payment
@@ -59,11 +59,17 @@ export default new Post((request: Request, response: Response) => {
 
 
       response.status(StatusCodes.OK).send(
-          ResponseHandler.returnData(returnData)
+        ResponseHandler.returnData(returnData)
       );
     } catch (error) {
-      log(error);
-      response.status(StatusCodes.INTERNAL_SERVER_ERROR).send(ResponseHandler.returnError(error.message));
+      if (typeof error === "string") {
+        // We've narrowed 'e' down to the type 'string'.
+        console.log(error);
+      }
+      if (error instanceof Error) {
+        log(error.message);
+        response.status(StatusCodes.INTERNAL_SERVER_ERROR).send(ResponseHandler.returnError(error.message));
+      }
     }
   });
 }

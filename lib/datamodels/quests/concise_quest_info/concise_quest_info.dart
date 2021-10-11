@@ -5,15 +5,15 @@ part 'concise_quest_info.freezed.dart';
 part 'concise_quest_info.g.dart';
 
 @freezed
-class ConciseQuestInfo with _$ConciseQuestInfo {
+class ConciseFinishedQuestInfo with _$ConciseFinishedQuestInfo {
   @JsonSerializable(explicitToJson: true)
-  factory ConciseQuestInfo({
+  factory ConciseFinishedQuestInfo({
     required String name,
     required QuestType type,
     required num afkCredits,
     required num afkCreditsEarned,
-  }) = _ConciseQuestInfo;
+  }) = _ConciseFinishedQuestInfo;
 
-  factory ConciseQuestInfo.fromJson(Map<String, dynamic> json) =>
-      _$ConciseQuestInfoFromJson(json);
+  factory ConciseFinishedQuestInfo.fromJson(Map<String, dynamic> json) =>
+      _$ConciseFinishedQuestInfoFromJson(json);
 }

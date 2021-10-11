@@ -6,17 +6,18 @@ import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/quests/completed_quest/completed_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
@@ -57,23 +58,6 @@ class FirestoreApi {
       final _docRef = getUserFavouritePlacesDocument(uid: userId);
       if (_docRef != null) {
         await _docRef.set(favouritePlaces.toJson());
-        log.v('Favourite Places document added to ${_docRef.path}' + '\n');
-        log.v('Your Document Reference is: ${_docRef.toString()}');
-      }
-    } catch (e) {
-      throw FirestoreApiException(
-          message: 'Failed To Insert Places',
-          devDetails: 'Failed Caused By $e.');
-    }
-  }
-
-  //Create a List of Completed Quest By Users.
-  Future<void> createUserCompletedQuest(
-      {required userId, required CompletedQuest? completedQuest}) async {
-    try {
-      final _docRef = getUserStatisticsCollection(uid: userId);
-      if (_docRef != null) {
-        await _docRef.set(completedQuest!.toJson());
         log.v('Favourite Places document added to ${_docRef.path}' + '\n');
         log.v('Your Document Reference is: ${_docRef.toString()}');
       }
@@ -390,7 +374,7 @@ class FirestoreApi {
       return;
     }
     try {
-      final docRef = activeQuestsCollection.doc();
+      final docRef = activatedQuestsCollection.doc();
       ActivatedQuest newQuest = quest.copyWith(
           id: docRef.id, createdAt: FieldValue.serverTimestamp());
       //log.v("Adding the following quest to firestore: ${newQuest.toJson()}");
@@ -449,6 +433,29 @@ class FirestoreApi {
     //     devDetails: 'Error thrown: $e',
     //   );
     // }
+  }
+
+  ////////////////////////////////////////////////////////
+  // Quest collection
+  ///  money pools the user is contributing to
+  Stream<List<ActivatedQuest>> getPastQuestsStream({required String uid}) {
+    try {
+      final returnStream = activatedQuestsCollection
+          .where("uids", arrayContains: uid)
+          .orderBy("createdAt", descending: true)
+          .where("status",
+              isEqualTo: describeEnum(QuestStatus.success.toString()))
+          .snapshots()
+          .map((event) => event.docs
+              .map((doc) => ActivatedQuest.fromJson(doc.data()))
+              .toList());
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when listening to past quests the user has successfully done",
+          devDetails: '$e');
+    }
   }
 
   /////////////////////////////////////////////////////////

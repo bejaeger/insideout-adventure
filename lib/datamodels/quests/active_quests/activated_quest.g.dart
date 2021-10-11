@@ -15,7 +15,7 @@ _$_ActivatedQuest _$_$_ActivatedQuestFromJson(Map<String, dynamic> json) {
         .toList(),
     status: _$enumDecode(_$QuestStatusEnumMap, json['status']),
     uids: (json['uids'] as List<dynamic>?)?.map((e) => e as String).toList(),
-    afkCreditsEarned: json['afkCreditsEarned'] as String?,
+    afkCreditsEarned: json['afkCreditsEarned'] as num?,
     timeElapsed: json['timeElapsed'] as int,
     createdAt: json['createdAt'] ?? '',
   );
@@ -64,4 +64,5 @@ const _$QuestStatusEnumMap = {
   QuestStatus.cancelled: 'cancelled',
   QuestStatus.success: 'success',
   QuestStatus.incomplete: 'incomplete',
+  QuestStatus.internalFailure: 'internalFailure',
 };

@@ -8,9 +8,21 @@ export class ResponseHandler {
       data: null,
       error: {
         message: errorMessage,
+        errorObject: null,
       },
     };
   }
+
+    // Return objects
+    static returnErrorObject(errorMessage: string, errorObject: any) {
+      return {
+        data: null,
+        error: {
+          message: errorMessage,
+          errorObject: errorObject,
+        },
+      };
+    }
 
   static returnData(data: any) {
     return {

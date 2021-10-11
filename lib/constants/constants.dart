@@ -32,7 +32,7 @@ final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
 final CollectionReference markersCollection =
     FirebaseFirestore.instance.collection("markers");
-final CollectionReference activeQuestsCollection =
+final CollectionReference activatedQuestsCollection =
     FirebaseFirestore.instance.collection(activatedQuestsCollectionKey);
 
 ////////////////////////////////////////////////////

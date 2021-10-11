@@ -329,43 +329,6 @@ class UserService {
 
   void setupUserDataListeners(
       {required Completer<void> completer, void Function()? callback}) async {
-    // set up listener for explorer user data
-    if (_explorersDataStreamSubscriptions == null) {
-      _explorersDataStreamSubscriptions = _firestoreApi
-          .getExplorersDataStream(uid: currentUser.uid)
-          .listen((users) async {
-        // remove explorers if not present anymore
-        List<String> newUids = users.map((e) => e.uid).toList();
-        List<String> currentUids =
-            supportedExplorersList.map((e) => e.uid).toList();
-        currentUids.forEach((element) {
-          if (!newUids.contains(element)) {
-            removeFromExplorerLists(uid: element);
-          }
-        });
-        // update existing explorers
-        users.forEach((user) {
-          supportedExplorers[user.uid] = user;
-        });
-
-        await addExplorerStatsListeners(
-            explorerIds: newUids, callback: callback);
-
-        if (!completer.isCompleted) {
-          completer.complete();
-        }
-        if (callback != null) {
-          callback();
-        }
-        log.v("Listened to ${supportedExplorers.length} supportedExplorers");
-        log.v(
-            "Listened to ${supportedExplorerStats.length} supportedExplorerStats");
-      });
-    } else {
-      log.w("Already listening to list of explorers");
-      completer.complete();
-    }
-
     if (_currentUserStreamSubscription == null) {
       Stream<User> userStream =
           _firestoreApi.getUserStream(uid: currentUser.uid);
@@ -390,6 +353,44 @@ class UserService {
       });
     } else {
       log.w("Already listening to current User document");
+    }
+
+    // set up listener for explorer user data
+    if (_explorersDataStreamSubscriptions == null) {
+      _explorersDataStreamSubscriptions =
+          _firestoreApi.getExplorersDataStream(uid: currentUser.uid).listen(
+        (users) async {
+          // remove explorers if not present anymore
+          List<String> newUids = users.map((e) => e.uid).toList();
+          List<String> currentUids =
+              supportedExplorersList.map((e) => e.uid).toList();
+          currentUids.forEach((element) {
+            if (!newUids.contains(element)) {
+              removeFromExplorerLists(uid: element);
+            }
+          });
+          // update existing explorers
+          users.forEach((user) {
+            supportedExplorers[user.uid] = user;
+          });
+
+          await addExplorerStatsListeners(
+              explorerIds: newUids, callback: callback);
+
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
+          if (callback != null) {
+            callback();
+          }
+          log.v("Listened to ${supportedExplorers.length} supportedExplorers");
+          log.v(
+              "Listened to ${supportedExplorerStats.length} supportedExplorerStats");
+        },
+      );
+    } else {
+      log.w("Already listening to list of explorers");
+      completer.complete();
     }
   }
 

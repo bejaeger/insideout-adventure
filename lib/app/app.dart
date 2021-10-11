@@ -20,11 +20,10 @@ import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
-import 'package:afkcredits/ui/views/map/bottomsheet/raise_quest_bottom_sheet_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
-import 'package:afkcredits/ui/views/quest/quest_view.dart';
+import 'package:afkcredits/ui/views/quest/active_quest_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
@@ -54,8 +53,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: TransferFundsView),
     MaterialRoute(page: TransfersHistoryView),
     MaterialRoute(page: LayoutTemplateView),
-    MaterialRoute(page: RaiseQuestBottomSheetView),
-    MaterialRoute(page: QuestView),
+    MaterialRoute(page: ActiveQuestView),
     MaterialRoute(page: QRCodeView),
     MaterialRoute(page: QRCodeViewExample),
   ],

@@ -1,32 +1,27 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/datamodels/dummy_datamodels.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:stacked_services/stacked_services.dart';
+import 'dart:async';
 
 class ExplorerHomeViewModel extends BaseModel {
-  final NavigationService _navigationService = locator<NavigationService>();
+  List<ActivatedQuest> get activatedQuests => questService.activatedQuests;
 
-///////////////////////////////////////////
-// Navigations
+  Future listenToData() async {
+    setBusy(true);
+    Completer completer = Completer<void>();
+    Completer completerTwo = Completer<void>();
+    userService.setupUserDataListeners(
+        completer: completer, callback: () => notifyListeners());
+    questService.setupPastQuestsListener(
+        completer: completerTwo,
+        uid: currentUser.uid,
+        callback: () => notifyListeners());
+    await Future.wait([
+      completer.future,
+      completerTwo.future,
+    ]);
 
-  void navigateToMapView() {
-    //_navigationService.navigateTo(Routes.mapScreen);
-    _navigationService.navigateTo(Routes.mapView);
-  }
-
-  //////////////////////////////
-  /// Dummy functions
-
-  void collectMarker1() {
-    questService.updateCollectedMarkers(marker: getDummyMarker1());
-  }
-
-  void collectMarker2() {
-    questService.updateCollectedMarkers(marker: getDummyMarker2());
-  }
-
-  void collectMarker3() {
-    questService.updateCollectedMarkers(marker: getDummyMarker3());
+    setBusy(false);
   }
 }

@@ -23,11 +23,15 @@ class _$UserStatisticsTearOff {
   _UserStatistics call(
       {required num afkCredits,
       required num availableSponsoring,
-      required List<ConciseQuestInfo> completedQuests,
+      required num lifetimeEarnings,
+      required num numberQuestsCompleted,
+      required List<ConciseFinishedQuestInfo> completedQuests,
       required String uid}) {
     return _UserStatistics(
       afkCredits: afkCredits,
       availableSponsoring: availableSponsoring,
+      lifetimeEarnings: lifetimeEarnings,
+      numberQuestsCompleted: numberQuestsCompleted,
       completedQuests: completedQuests,
       uid: uid,
     );
@@ -45,7 +49,9 @@ const $UserStatistics = _$UserStatisticsTearOff();
 mixin _$UserStatistics {
   num get afkCredits => throw _privateConstructorUsedError;
   num get availableSponsoring => throw _privateConstructorUsedError;
-  List<ConciseQuestInfo> get completedQuests =>
+  num get lifetimeEarnings => throw _privateConstructorUsedError;
+  num get numberQuestsCompleted => throw _privateConstructorUsedError;
+  List<ConciseFinishedQuestInfo> get completedQuests =>
       throw _privateConstructorUsedError;
   String get uid => throw _privateConstructorUsedError;
 
@@ -63,7 +69,9 @@ abstract class $UserStatisticsCopyWith<$Res> {
   $Res call(
       {num afkCredits,
       num availableSponsoring,
-      List<ConciseQuestInfo> completedQuests,
+      num lifetimeEarnings,
+      num numberQuestsCompleted,
+      List<ConciseFinishedQuestInfo> completedQuests,
       String uid});
 }
 
@@ -80,6 +88,8 @@ class _$UserStatisticsCopyWithImpl<$Res>
   $Res call({
     Object? afkCredits = freezed,
     Object? availableSponsoring = freezed,
+    Object? lifetimeEarnings = freezed,
+    Object? numberQuestsCompleted = freezed,
     Object? completedQuests = freezed,
     Object? uid = freezed,
   }) {
@@ -92,10 +102,18 @@ class _$UserStatisticsCopyWithImpl<$Res>
           ? _value.availableSponsoring
           : availableSponsoring // ignore: cast_nullable_to_non_nullable
               as num,
+      lifetimeEarnings: lifetimeEarnings == freezed
+          ? _value.lifetimeEarnings
+          : lifetimeEarnings // ignore: cast_nullable_to_non_nullable
+              as num,
+      numberQuestsCompleted: numberQuestsCompleted == freezed
+          ? _value.numberQuestsCompleted
+          : numberQuestsCompleted // ignore: cast_nullable_to_non_nullable
+              as num,
       completedQuests: completedQuests == freezed
           ? _value.completedQuests
           : completedQuests // ignore: cast_nullable_to_non_nullable
-              as List<ConciseQuestInfo>,
+              as List<ConciseFinishedQuestInfo>,
       uid: uid == freezed
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
@@ -114,7 +132,9 @@ abstract class _$UserStatisticsCopyWith<$Res>
   $Res call(
       {num afkCredits,
       num availableSponsoring,
-      List<ConciseQuestInfo> completedQuests,
+      num lifetimeEarnings,
+      num numberQuestsCompleted,
+      List<ConciseFinishedQuestInfo> completedQuests,
       String uid});
 }
 
@@ -133,6 +153,8 @@ class __$UserStatisticsCopyWithImpl<$Res>
   $Res call({
     Object? afkCredits = freezed,
     Object? availableSponsoring = freezed,
+    Object? lifetimeEarnings = freezed,
+    Object? numberQuestsCompleted = freezed,
     Object? completedQuests = freezed,
     Object? uid = freezed,
   }) {
@@ -145,10 +167,18 @@ class __$UserStatisticsCopyWithImpl<$Res>
           ? _value.availableSponsoring
           : availableSponsoring // ignore: cast_nullable_to_non_nullable
               as num,
+      lifetimeEarnings: lifetimeEarnings == freezed
+          ? _value.lifetimeEarnings
+          : lifetimeEarnings // ignore: cast_nullable_to_non_nullable
+              as num,
+      numberQuestsCompleted: numberQuestsCompleted == freezed
+          ? _value.numberQuestsCompleted
+          : numberQuestsCompleted // ignore: cast_nullable_to_non_nullable
+              as num,
       completedQuests: completedQuests == freezed
           ? _value.completedQuests
           : completedQuests // ignore: cast_nullable_to_non_nullable
-              as List<ConciseQuestInfo>,
+              as List<ConciseFinishedQuestInfo>,
       uid: uid == freezed
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
@@ -164,6 +194,8 @@ class _$_UserStatistics implements _UserStatistics {
   _$_UserStatistics(
       {required this.afkCredits,
       required this.availableSponsoring,
+      required this.lifetimeEarnings,
+      required this.numberQuestsCompleted,
       required this.completedQuests,
       required this.uid});
 
@@ -175,13 +207,17 @@ class _$_UserStatistics implements _UserStatistics {
   @override
   final num availableSponsoring;
   @override
-  final List<ConciseQuestInfo> completedQuests;
+  final num lifetimeEarnings;
+  @override
+  final num numberQuestsCompleted;
+  @override
+  final List<ConciseFinishedQuestInfo> completedQuests;
   @override
   final String uid;
 
   @override
   String toString() {
-    return 'UserStatistics(afkCredits: $afkCredits, availableSponsoring: $availableSponsoring, completedQuests: $completedQuests, uid: $uid)';
+    return 'UserStatistics(afkCredits: $afkCredits, availableSponsoring: $availableSponsoring, lifetimeEarnings: $lifetimeEarnings, numberQuestsCompleted: $numberQuestsCompleted, completedQuests: $completedQuests, uid: $uid)';
   }
 
   @override
@@ -194,6 +230,12 @@ class _$_UserStatistics implements _UserStatistics {
             (identical(other.availableSponsoring, availableSponsoring) ||
                 const DeepCollectionEquality()
                     .equals(other.availableSponsoring, availableSponsoring)) &&
+            (identical(other.lifetimeEarnings, lifetimeEarnings) ||
+                const DeepCollectionEquality()
+                    .equals(other.lifetimeEarnings, lifetimeEarnings)) &&
+            (identical(other.numberQuestsCompleted, numberQuestsCompleted) ||
+                const DeepCollectionEquality().equals(
+                    other.numberQuestsCompleted, numberQuestsCompleted)) &&
             (identical(other.completedQuests, completedQuests) ||
                 const DeepCollectionEquality()
                     .equals(other.completedQuests, completedQuests)) &&
@@ -206,6 +248,8 @@ class _$_UserStatistics implements _UserStatistics {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(afkCredits) ^
       const DeepCollectionEquality().hash(availableSponsoring) ^
+      const DeepCollectionEquality().hash(lifetimeEarnings) ^
+      const DeepCollectionEquality().hash(numberQuestsCompleted) ^
       const DeepCollectionEquality().hash(completedQuests) ^
       const DeepCollectionEquality().hash(uid);
 
@@ -224,7 +268,9 @@ abstract class _UserStatistics implements UserStatistics {
   factory _UserStatistics(
       {required num afkCredits,
       required num availableSponsoring,
-      required List<ConciseQuestInfo> completedQuests,
+      required num lifetimeEarnings,
+      required num numberQuestsCompleted,
+      required List<ConciseFinishedQuestInfo> completedQuests,
       required String uid}) = _$_UserStatistics;
 
   factory _UserStatistics.fromJson(Map<String, dynamic> json) =
@@ -235,7 +281,11 @@ abstract class _UserStatistics implements UserStatistics {
   @override
   num get availableSponsoring => throw _privateConstructorUsedError;
   @override
-  List<ConciseQuestInfo> get completedQuests =>
+  num get lifetimeEarnings => throw _privateConstructorUsedError;
+  @override
+  num get numberQuestsCompleted => throw _privateConstructorUsedError;
+  @override
+  List<ConciseFinishedQuestInfo> get completedQuests =>
       throw _privateConstructorUsedError;
   @override
   String get uid => throw _privateConstructorUsedError;

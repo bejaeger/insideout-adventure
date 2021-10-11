@@ -8,7 +8,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/transfer_type.dart';
@@ -21,11 +20,10 @@ import '../ui/views/explorer_home/explorer_home_view.dart';
 import '../ui/views/layout/layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
-import '../ui/views/map/bottomsheet/raise_quest_bottom_sheet_view.dart';
 import '../ui/views/map/map_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
-import '../ui/views/quest/quest_view.dart';
+import '../ui/views/quest/active_quest_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
 import '../ui/views/sponsor_home/sponsor_home_view.dart';
@@ -51,9 +49,7 @@ class Routes {
   static const String transferFundsView = '/transfer-funds-view';
   static const String transfersHistoryView = '/transfers-history-view';
   static const String layoutTemplateView = '/layout-template-view';
-  static const String raiseQuestBottomSheetView =
-      '/raise-quest-bottom-sheet-view';
-  static const String questView = '/quest-view';
+  static const String activeQuestView = '/active-quest-view';
   static const String qRCodeView = '/q-rcode-view';
   static const String qRCodeViewExample = '/q-rcode-view-example';
   static const all = <String>{
@@ -72,8 +68,7 @@ class Routes {
     transferFundsView,
     transfersHistoryView,
     layoutTemplateView,
-    raiseQuestBottomSheetView,
-    questView,
+    activeQuestView,
     qRCodeView,
     qRCodeViewExample,
   };
@@ -98,8 +93,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.transferFundsView, page: TransferFundsView),
     RouteDef(Routes.transfersHistoryView, page: TransfersHistoryView),
     RouteDef(Routes.layoutTemplateView, page: LayoutTemplateView),
-    RouteDef(Routes.raiseQuestBottomSheetView, page: RaiseQuestBottomSheetView),
-    RouteDef(Routes.questView, page: QuestView),
+    RouteDef(Routes.activeQuestView, page: ActiveQuestView),
     RouteDef(Routes.qRCodeView, page: QRCodeView),
     RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
   ];
@@ -223,22 +217,9 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    RaiseQuestBottomSheetView: (data) {
-      var args = data.getArgs<RaiseQuestBottomSheetViewArguments>(
-        orElse: () => RaiseQuestBottomSheetViewArguments(),
-      );
+    ActiveQuestView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => RaiseQuestBottomSheetView(
-          key: args.key,
-          request: args.request,
-          completer: args.completer,
-        ),
-        settings: data,
-      );
-    },
-    QuestView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const QuestView(),
+        builder: (context) => const ActiveQuestView(),
         settings: data,
       );
     },
@@ -317,14 +298,6 @@ class LayoutTemplateViewArguments {
   final Key? key;
   final Widget childView;
   LayoutTemplateViewArguments({this.key, required this.childView});
-}
-
-/// RaiseQuestBottomSheetView arguments holder class
-class RaiseQuestBottomSheetViewArguments {
-  final Key? key;
-  final SheetRequest<dynamic>? request;
-  final dynamic Function(SheetResponse<dynamic>)? completer;
-  RaiseQuestBottomSheetViewArguments({this.key, this.request, this.completer});
 }
 
 /// QRCodeView arguments holder class
