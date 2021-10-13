@@ -9,7 +9,6 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
-import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -31,6 +30,7 @@ class BaseModel extends BaseViewModel {
       locator<TransfersHistoryService>();
   final LayoutService layoutService = locator<LayoutService>();
   final StopWatchService _stopWatchService = locator<StopWatchService>();
+  StreamSubscription<int>? _timerSubscription;
 
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
@@ -41,28 +41,30 @@ class BaseModel extends BaseViewModel {
   // only access this
   ActivatedQuest get activeQuest => questService.activatedQuest!;
   String? seconds;
+  String? hours;
+  String? minutes;
 
-  String get getActiveHours {
-    final hours = _stopWatchService.getHours;
+  String get getActiveHours => hours!;
+  String get getActiveMinutes => minutes!;
+  String? get getActiveSeconds => seconds!;
+
+  StreamSubscription<int>? get timeSubscription => _timerSubscription;
+
+  void setTimer() {
+    //Clock Timer
+    final timerStream = _stopWatchService.stopWatchStream();
+
+    _timerSubscription = timerStream.listen((int time) {
+      hours = ((time / (60 * 60)) % 60).floor().toString().padLeft(2, '0');
+
+      minutes = ((time / 60) % 60).floor().toString().padLeft(2, '0');
+
+      seconds = (time % 60).floor().toString().padLeft(2, '0');
+    });
+    _stopWatchService.setTimerStreamSubscription(
+        timerSubscription: _timerSubscription!);
+    setBusy(false);
     notifyListeners();
-    return hours;
-  }
-
-  String get getActiveMinutes {
-    notifyListeners();
-    return _stopWatchService.getMinutes;
-  }
-
-  void setSeconds() {
-    setBusy(true);
-    notifyListeners();
-    seconds = _stopWatchService.getSeconds;
-    setBusy(true);
-  }
-
-  String? get getActiveSeconds {
-    setSeconds();
-    return seconds;
   }
 
   int get numMarkersCollected =>
@@ -140,6 +142,7 @@ class BaseModel extends BaseViewModel {
   @override
   void dispose() {
     _activeQuestSubscription?.cancel();
+    _timerSubscription!.cancel();
     super.dispose();
   }
 }

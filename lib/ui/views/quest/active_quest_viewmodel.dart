@@ -14,7 +14,6 @@ import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
-import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';

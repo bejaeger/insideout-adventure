@@ -178,7 +178,6 @@ class QuestService {
         push = false;
         log.wtf(
             "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten!");
-        // TODO: Add mechanism for the user to get a Notification about this
         await cancelIncompleteQuest();
         return;
       }

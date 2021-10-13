@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -14,9 +13,9 @@ import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class MapViewModel extends QuestViewModel {
@@ -27,25 +26,23 @@ class MapViewModel extends QuestViewModel {
   final _bottomSheetService = locator<BottomSheetService>();
   final QuestService questService = locator<QuestService>();
   final DialogService _dialogService = locator<DialogService>();
-  //final StopWatchService _stopWatchService = locator<StopWatchService>();
   final _markersService = locator<MarkerService>();
   final _navigationService = locator<NavigationService>();
   final _qrCodeService = locator<QRCodeService>();
+  final _stopWatchService = locator<StopWatchService>();
+
   Set<Marker> _markersTmp = {};
   //List<Places>? places;
   List<AFKMarker>? markers;
   List<Quest> get nearbyQuests => questService.nearbyQuests;
   var _userPostion;
-  //bool _tappedMarkers = false;
+  bool _tappedMarkers = false;
 
   GoogleMapController? _googleMapController;
+
   Marker? origin;
   Marker? destination;
   Directions? _directionInfo;
-
-  Future<void> requestPermission() async {
-    await Permission.location.request();
-  }
 
   //Get Google Map Controller
   GoogleMapController? get getGoogleMapController => _googleMapController;
@@ -56,8 +53,6 @@ class MapViewModel extends QuestViewModel {
   Directions? get getDirectionInfo => _directionInfo;
 
   CameraPosition initialCameraPosition() {
-    log.i('Your Position Inside  initialCameraPosition is $_userPostion');
-
     final CameraPosition _initialCameraPosition = CameraPosition(
         target: LatLng(_userPostion.latitude, _userPostion.longitude),
         zoom: 11);
@@ -79,7 +74,8 @@ class MapViewModel extends QuestViewModel {
             // ? quest already preloaded
             // Quest _quest = await questService.getQuest(questId: afkmarker.id);
 
-            // userQuest = _quest;
+            _tappedMarkers = true;
+
             //log.i('This is a User Quest $userQuest');
             bool adminMode = false;
 
@@ -205,23 +201,3 @@ class MapViewModel extends QuestViewModel {
     super.dispose();
   }
 }
-
-/*            
-Clock Timer       
- final timerStream = _stopWatchService.stopWatchStream();    
-                   // ignore: cancel_subscriptions
-                    _timerSubscription = timerStream.listen((int newTime) {             
-                     _stopWatchService.setHours(hours:  ((newTime / (60 * 60)) % 60)
-                            .floor()
-                            .toString()
-                            .padLeft(2, '0')); 
-                       _stopWatchService.setMinutes(minutes:((newTime / 60) % 60)
-                            .floor()
-                            .toString()
-                            .padLeft(2, '0') );
-                            _stopWatchService.setSeconds(seconds:(newTime % 60).floor().toString().padLeft(2, '0'));             
-                    });
-                    _stopWatchService.setTimerStreamSubscription(timerSubscription: _timerSubscription!); 
-                     setBusy(false); 
-                     notifyListeners(); 
-                      */

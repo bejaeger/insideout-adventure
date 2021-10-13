@@ -66,7 +66,7 @@ class StopWatchService {
   String get getMinutes => _minutesStr;
   String get getSeconds => _secondsStr;
 
-  void setHours({required String hours}) {
+/*   void setHours({required String hours}) {
     _hoursStr = hours;
     print('Harguilar Number of Hours: $_hoursStr');
   }
@@ -79,7 +79,7 @@ class StopWatchService {
   void setSeconds({required String seconds}) {
     _secondsStr = seconds;
     print('Harguilar Number of Seconds: $_secondsStr');
-  }
+  } */
 
   Stream<int> stopWatchStream() {
     StreamController<int>? streamController;
