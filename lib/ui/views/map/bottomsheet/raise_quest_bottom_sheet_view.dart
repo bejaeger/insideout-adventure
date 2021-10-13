@@ -45,7 +45,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                 zoomControlsEnabled: false,
               ),
             ),
-            SizedBox(height: 10),
+            //SizedBox(height: 10),
             Text(
               request!.title.toString(),
               style: TextStyle(

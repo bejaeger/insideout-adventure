@@ -5,7 +5,6 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GeolocationService {
   final log = getLogger('GeolocationService');
@@ -14,32 +13,15 @@ class GeolocationService {
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   var _position;
 
-  // ignore: non_constant_identifier_names
-  CameraPosition initialCameraPosition() {
-    final CameraPosition _initialCameraPosition = CameraPosition(
-      target: LatLng(37.4219983, -122.084),
-      zoom: 8,
-    );
-    return _initialCameraPosition;
-  }
-
   Future getCurrentLocation() async {
     //Verify If location is available on device.
     final checkGeolocation = await checkGeolocationAvailable();
-    /*   Position _position = Position(
-        latitude: 49.246445,
-        longitude: -122.994560,
-        accuracy: 0.0,
-        timestamp: null,
-        speed: 0.0,
-        heading: 0.0,
-        speedAccuracy: 0.0,
-        altitude: 0.0); */
 
     if (checkGeolocation == true) {
       try {
         _position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best);
+
         log.i('Harguilar Current Position $_position');
         if (_position != null) {
           final lastPosition = await Geolocator.getLastKnownPosition();

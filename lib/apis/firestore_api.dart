@@ -170,7 +170,7 @@ class FirestoreApi {
             .toList();
       } catch (e) {
         throw FirestoreApiException(
-            message: 'Failed to get the Places', devDetails: '$e');
+            message: 'Failed to get the Markers', devDetails: '$e');
       }
     } else {
       return null;
