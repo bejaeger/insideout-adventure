@@ -84,7 +84,8 @@ class ActivatedQuestPanel extends StatelessWidget {
                               children: [
                                 SmallButton(
                                     title: "Finish Quest",
-                                    onPressed: model.finishQuest),
+                                    onPressed: () async =>
+                                        await model.finishQuest()),
                                 // horizontalSpaceMedium,
                                 // SmallButton(
                                 //     title: "Complete Quest",

@@ -159,7 +159,7 @@ class FirestoreApi {
     }
   }
 
-// Get Markers For the Quest.
+  // Get Markers For the Quest.
   Future<List<AFKMarker>?>? getMarkers() async {
     final _markers = await markersCollection.get();
 

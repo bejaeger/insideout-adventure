@@ -24,8 +24,10 @@ AFKMarker getDummyMarker1() {
   return AFKMarker(
       id: "9hJodek7hlwwUVl0VgzN",
       qrCodeId: "QRCode01Id",
-      lat: 37.487846,
-      lon: -122.236115,
+      lat: 49.26738998905981,
+      lon: -122.99023572987633,
+      // lat: 37.487846,
+      // lon: -122.236115,
       questId: 'QuestId');
 }
 
@@ -33,8 +35,10 @@ AFKMarker getDummyMarker2() {
   return AFKMarker(
       id: "nc9tNP2lSdzbjjC1p574",
       qrCodeId: "QRCode02Id",
-      lat: 37.75675,
-      lon: -122.45027,
+      lat: 49.36738998905981,
+      lon: -122.99023572987633,
+      // lat: 37.75675,
+      // lon: -122.45027,
       questId: 'QuestId01');
 }
 
@@ -42,8 +46,10 @@ AFKMarker getDummyMarker3() {
   return AFKMarker(
       id: "Marker3Id",
       qrCodeId: "QRCode03Id",
-      lat: 37.4219983,
-      lon: -122.084,
+      lat: 49.36738998905981,
+      lon: -122.89023572987633,
+      // lat: 37.4219983,
+      // lon: -122.084,
       questId: 'QuestId02');
 }
 
@@ -51,7 +57,9 @@ AFKMarker getDummyMarker4() {
   return AFKMarker(
       id: "Marker4Id",
       qrCodeId: "QRCode04Id",
-      lat: 37.4636,
-      lon: -122.4286,
+      lat: 49.36738998905981,
+      lon: -122.95023572987633,
+      // lat: 37.4636,
+      // lon: -122.4286,
       questId: 'QuestId04');
 }
