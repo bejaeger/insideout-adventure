@@ -9,7 +9,6 @@ class AFKMarker with _$AFKMarker {
   factory AFKMarker({
     required String id,
     required String qrCodeId,
-    String? questId,
     double? lat,
     double? lon,
     @Default(MarkerStatus.testing) MarkerStatus markerStatus,

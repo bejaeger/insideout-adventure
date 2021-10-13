@@ -23,14 +23,12 @@ class _$AFKMarkerTearOff {
   _AFKMarker call(
       {required String id,
       required String qrCodeId,
-      String? questId,
       double? lat,
       double? lon,
       MarkerStatus markerStatus = MarkerStatus.testing}) {
     return _AFKMarker(
       id: id,
       qrCodeId: qrCodeId,
-      questId: questId,
       lat: lat,
       lon: lon,
       markerStatus: markerStatus,
@@ -49,7 +47,6 @@ const $AFKMarker = _$AFKMarkerTearOff();
 mixin _$AFKMarker {
   String get id => throw _privateConstructorUsedError;
   String get qrCodeId => throw _privateConstructorUsedError;
-  String? get questId => throw _privateConstructorUsedError;
   double? get lat => throw _privateConstructorUsedError;
   double? get lon => throw _privateConstructorUsedError;
   MarkerStatus get markerStatus => throw _privateConstructorUsedError;
@@ -67,7 +64,6 @@ abstract class $AFKMarkerCopyWith<$Res> {
   $Res call(
       {String id,
       String qrCodeId,
-      String? questId,
       double? lat,
       double? lon,
       MarkerStatus markerStatus});
@@ -85,7 +81,6 @@ class _$AFKMarkerCopyWithImpl<$Res> implements $AFKMarkerCopyWith<$Res> {
   $Res call({
     Object? id = freezed,
     Object? qrCodeId = freezed,
-    Object? questId = freezed,
     Object? lat = freezed,
     Object? lon = freezed,
     Object? markerStatus = freezed,
@@ -99,10 +94,6 @@ class _$AFKMarkerCopyWithImpl<$Res> implements $AFKMarkerCopyWith<$Res> {
           ? _value.qrCodeId
           : qrCodeId // ignore: cast_nullable_to_non_nullable
               as String,
-      questId: questId == freezed
-          ? _value.questId
-          : questId // ignore: cast_nullable_to_non_nullable
-              as String?,
       lat: lat == freezed
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
@@ -128,7 +119,6 @@ abstract class _$AFKMarkerCopyWith<$Res> implements $AFKMarkerCopyWith<$Res> {
   $Res call(
       {String id,
       String qrCodeId,
-      String? questId,
       double? lat,
       double? lon,
       MarkerStatus markerStatus});
@@ -147,7 +137,6 @@ class __$AFKMarkerCopyWithImpl<$Res> extends _$AFKMarkerCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? qrCodeId = freezed,
-    Object? questId = freezed,
     Object? lat = freezed,
     Object? lon = freezed,
     Object? markerStatus = freezed,
@@ -161,10 +150,6 @@ class __$AFKMarkerCopyWithImpl<$Res> extends _$AFKMarkerCopyWithImpl<$Res>
           ? _value.qrCodeId
           : qrCodeId // ignore: cast_nullable_to_non_nullable
               as String,
-      questId: questId == freezed
-          ? _value.questId
-          : questId // ignore: cast_nullable_to_non_nullable
-              as String?,
       lat: lat == freezed
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
@@ -187,7 +172,6 @@ class _$_AFKMarker implements _AFKMarker {
   _$_AFKMarker(
       {required this.id,
       required this.qrCodeId,
-      this.questId,
       this.lat,
       this.lon,
       this.markerStatus = MarkerStatus.testing});
@@ -200,8 +184,6 @@ class _$_AFKMarker implements _AFKMarker {
   @override
   final String qrCodeId;
   @override
-  final String? questId;
-  @override
   final double? lat;
   @override
   final double? lon;
@@ -211,7 +193,7 @@ class _$_AFKMarker implements _AFKMarker {
 
   @override
   String toString() {
-    return 'AFKMarker(id: $id, qrCodeId: $qrCodeId, questId: $questId, lat: $lat, lon: $lon, markerStatus: $markerStatus)';
+    return 'AFKMarker(id: $id, qrCodeId: $qrCodeId, lat: $lat, lon: $lon, markerStatus: $markerStatus)';
   }
 
   @override
@@ -223,9 +205,6 @@ class _$_AFKMarker implements _AFKMarker {
             (identical(other.qrCodeId, qrCodeId) ||
                 const DeepCollectionEquality()
                     .equals(other.qrCodeId, qrCodeId)) &&
-            (identical(other.questId, questId) ||
-                const DeepCollectionEquality()
-                    .equals(other.questId, questId)) &&
             (identical(other.lat, lat) ||
                 const DeepCollectionEquality().equals(other.lat, lat)) &&
             (identical(other.lon, lon) ||
@@ -240,7 +219,6 @@ class _$_AFKMarker implements _AFKMarker {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(qrCodeId) ^
-      const DeepCollectionEquality().hash(questId) ^
       const DeepCollectionEquality().hash(lat) ^
       const DeepCollectionEquality().hash(lon) ^
       const DeepCollectionEquality().hash(markerStatus);
@@ -260,7 +238,6 @@ abstract class _AFKMarker implements AFKMarker {
   factory _AFKMarker(
       {required String id,
       required String qrCodeId,
-      String? questId,
       double? lat,
       double? lon,
       MarkerStatus markerStatus}) = _$_AFKMarker;
@@ -272,8 +249,6 @@ abstract class _AFKMarker implements AFKMarker {
   String get id => throw _privateConstructorUsedError;
   @override
   String get qrCodeId => throw _privateConstructorUsedError;
-  @override
-  String? get questId => throw _privateConstructorUsedError;
   @override
   double? get lat => throw _privateConstructorUsedError;
   @override

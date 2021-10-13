@@ -24,7 +24,6 @@ class CustomAppBarViewModel extends BaseModel {
           //Running Quest Been Cancelled.
           checkRunningQuest = false;
           await questService.cancelIncompleteQuest();
-          await _dialogService.showDialog(title: "Quest cancelled");
           _navigationService.replaceWith(Routes.mapView);
           log.i("replaced view with mapView");
         }

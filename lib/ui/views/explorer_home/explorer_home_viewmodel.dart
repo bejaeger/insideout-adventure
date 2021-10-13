@@ -5,7 +5,8 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'dart:async';
 
 class ExplorerHomeViewModel extends BaseModel {
-  List<ActivatedQuest> get activatedQuests => questService.activatedQuests;
+  List<ActivatedQuest> get activatedQuestsHistory =>
+      questService.activatedQuestsHistory;
 
   Future listenToData() async {
     setBusy(true);
@@ -21,7 +22,6 @@ class ExplorerHomeViewModel extends BaseModel {
       completer.future,
       completerTwo.future,
     ]);
-
     setBusy(false);
   }
 }

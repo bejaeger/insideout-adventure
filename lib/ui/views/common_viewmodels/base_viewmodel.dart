@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -93,10 +94,13 @@ class BaseModel extends BaseViewModel {
     layoutService.setShowBottomNavBar(show);
   }
 
-  Future startQuest() async {
+  Future startQuest({required Quest quest}) async {
     try {
-      final quest = await questService.getQuest(questId: "QuestId");
+      /// Once The user Click on Start a Quest. It tks her/him to new Page
+      /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
+      /// Quest.
       await questService.startQuest(quest: quest, uids: [currentUser.uid]);
+      navigationService.replaceWith(Routes.activeQuestView);
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
     }

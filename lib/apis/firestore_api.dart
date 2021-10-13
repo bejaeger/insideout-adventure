@@ -364,7 +364,12 @@ class FirestoreApi {
 
   // Returns dummy data for now!
   Quest? getQuest({required String questId}) {
-    return getDummyQuest();
+    return getDummyQuest1();
+  }
+
+  // Returns dummy data for now!
+  List<Quest> getNearbyQuests() {
+    return [getDummyQuest1(), getDummyQuest2()];
   }
 
   // Returns dummy data for now!
@@ -419,7 +424,7 @@ class FirestoreApi {
 
   Future<List<Quest>> getQuestsWithStartMarkerId(
       {required String? startMarkerId}) async {
-    return [getDummyQuest()];
+    return [getDummyQuest1()];
     // QuerySnapshot snapshot = await questsCollection
     //     .where(startMarkerId, isEqualTo: startMarkerId)
     //     .get();

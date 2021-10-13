@@ -9,6 +9,8 @@ class AdminHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AdminHomeViewModel>.reactive(
+      onModelReady: (model) => model.listenToData(),
+      fireOnModelReadyOnce: true,
       viewModelBuilder: () => AdminHomeViewModel(),
       builder: (context, model, child) => Scaffold(
           appBar: AppBar(title: Text("Admin Home View")),

@@ -39,10 +39,10 @@ class ExplorerHomeView extends StatelessWidget {
                       title: "Recently Completed Quests",
                     ),
                     verticalSpaceSmall,
-                    model.activatedQuests.length == 0
+                    model.activatedQuestsHistory.length == 0
                         ? Text("Complete your first quest first ->")
                         : QuestsGrid(
-                            activatedQuests: model.activatedQuests,
+                            activatedQuests: model.activatedQuestsHistory,
                             onPressed: () => null,
                           ),
                     verticalSpaceLarge,

@@ -10,7 +10,6 @@ _$_AFKMarker _$_$_AFKMarkerFromJson(Map<String, dynamic> json) {
   return _$_AFKMarker(
     id: json['id'] as String,
     qrCodeId: json['qrCodeId'] as String,
-    questId: json['questId'] as String?,
     lat: (json['lat'] as num?)?.toDouble(),
     lon: (json['lon'] as num?)?.toDouble(),
     markerStatus:
@@ -23,7 +22,6 @@ Map<String, dynamic> _$_$_AFKMarkerToJson(_$_AFKMarker instance) =>
     <String, dynamic>{
       'id': instance.id,
       'qrCodeId': instance.qrCodeId,
-      'questId': instance.questId,
       'lat': instance.lat,
       'lon': instance.lon,
       'markerStatus': _$MarkerStatusEnumMap[instance.markerStatus],
