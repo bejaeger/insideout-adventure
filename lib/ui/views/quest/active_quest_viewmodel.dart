@@ -28,10 +28,10 @@ class ActiveQuestViewModel extends QuestViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final _navigationService = locator<NavigationService>();
   final _stopWatchService = locator<StopWatchService>();
-  final _userService = locator<UserService>();
   final _qrCodeService = locator<QRCodeService>();
 
-  Quest? _startedQuest;
+  Quest get startedQuest => questService.getStartedQuest;
+
   BitmapDescriptor? sourceIcon;
   int idx = 0;
   Set<Marker> _markersTmp = {};
@@ -57,8 +57,8 @@ class ActiveQuestViewModel extends QuestViewModel {
     final CameraPosition _initialCameraPosition = CameraPosition(
       //In Future I will change these values to dynamically Change the Initial Camera Position
       //Based on teh city
-      target: LatLng(
-          _startedQuest!.startMarker.lat!, _startedQuest!.startMarker.lon!),
+      target:
+          LatLng(startedQuest.startMarker.lat!, startedQuest.startMarker.lon!),
       zoom: 9,
     );
 
@@ -141,7 +141,7 @@ class ActiveQuestViewModel extends QuestViewModel {
           markerId: MarkerId(afkmarker.id),
           position: LatLng(afkmarker.lat!, afkmarker.lon!),
           infoWindow:
-              InfoWindow(title: _startedQuest!.name, snippet: 'Vancouver'),
+              InfoWindow(title: startedQuest.name, snippet: 'Vancouver'),
           // icon: (_startedQuest!.startMarker.id == markers.id)
           icon: defineMarkersColour(afkmarker: afkmarker),
           onTap: () async {
@@ -232,20 +232,18 @@ class ActiveQuestViewModel extends QuestViewModel {
     notifyListeners();
   }
 
-  void initilizeStartedQuest() {
+  void initializeStartedQuest() {
     sourceIcon =
         BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
-    _startedQuest = questService.getStartedQuest;
-
-    log.i('You Have Started This Quest $_startedQuest');
-    getDirections(
-        origin: LatLng(
-            _startedQuest!.startMarker.lat!, _startedQuest!.startMarker.lon!),
-        destination: LatLng(_startedQuest!.finishMarker.lat!,
-            _startedQuest!.finishMarker.lon!));
+    log.i('You Have Started This Quest $startedQuest');
+    // TODO: What is this getDirections about?
+    // Throws an error in direction.dart datamodel
+    // getDirections(
+    //     origin: LatLng(
+    //         _startedQuest!.startMarker.lat!, _startedQuest!.startMarker.lon!),
+    //     destination: LatLng(_startedQuest!.finishMarker.lat!,
+    //         _startedQuest!.finishMarker.lon!));
   }
-
-  Quest get getStartedQuest => _startedQuest!;
 
   Future<void> onMapCreated(GoogleMapController controller) async {
     setBusy(true);
@@ -268,7 +266,7 @@ class ActiveQuestViewModel extends QuestViewModel {
 
   Future getQuestMarkers() async {
     setBusy(true);
-    for (AFKMarker _m in _startedQuest!.markers) {
+    for (AFKMarker _m in startedQuest.markers) {
       addMarker(afkmarker: _m);
     }
     _markersTmp = _markersTmp;

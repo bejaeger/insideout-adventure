@@ -170,12 +170,10 @@ class MapViewModel extends QuestViewModel {
     setBusy(true);
     try {
       final quest = await questService.getQuest(questId: "QuestDummyId");
-      await questService.startQuest(quest: quest, uids: []);
-      await _navigationService.replaceWith(Routes.activeQuestView);
 
       /// Once The user Click on Start a Quest. It tks her/him to new Page
-      ///Differents Markers will Display as Part of the quest as well The App showing the counting of the
-      ///Quest.
+      // /Differents Markers will Display as Part of the quest as well The App showing the counting of the
+      /// Quest.
       await questService.startQuest(quest: quest, uids: [currentUser.uid]);
       _navigationService.replaceWith(Routes.activeQuestView);
     } catch (e) {

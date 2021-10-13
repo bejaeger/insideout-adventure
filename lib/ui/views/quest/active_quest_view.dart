@@ -10,7 +10,7 @@ class ActiveQuestView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActiveQuestViewModel>.reactive(
-      onModelReady: (model) => model.initilizeStartedQuest(),
+      //onModelReady: (model) => model.initializeStartedQuest(),
       disposeViewModel: false,
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(

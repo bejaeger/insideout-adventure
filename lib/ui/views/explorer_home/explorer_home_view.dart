@@ -21,7 +21,7 @@ class ExplorerHomeView extends StatelessWidget {
       fireOnModelReadyOnce: true,
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(
-          title: "Hi Explorer!",
+          title: "Hi Explorer ${model.currentUser.fullName}!",
         ),
         body: model.isBusy
             ? CircularProgressIndicator()
