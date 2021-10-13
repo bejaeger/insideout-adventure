@@ -34,6 +34,7 @@ class MapViewModel extends QuestViewModel {
   Set<Marker> _markersTmp = {};
   //List<Places>? places;
   List<AFKMarker>? markers;
+  List<Quest> get nearbyQuests => questService.nearbyQuests;
   var _userPostion;
   //bool _tappedMarkers = false;
 
@@ -58,31 +59,29 @@ class MapViewModel extends QuestViewModel {
     log.i('Your Position Inside  initialCameraPosition is $_userPostion');
 
     final CameraPosition _initialCameraPosition = CameraPosition(
-        target: LatLng(_userPostion.latitude, _userPostion.longitude), zoom: 8);
+        target: LatLng(_userPostion.latitude, _userPostion.longitude),
+        zoom: 11);
     return _initialCameraPosition;
   }
 
   // bool get tappedMarkers => _tappedMarkers;
 //Add Markers to the Map
-  void addMarker({required AFKMarker afkmarker}) {
-    setBusy(true);
+  void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
     _markersTmp.add(
       Marker(
-          markerId: MarkerId(afkmarker.id),
+          markerId: MarkerId(afkmarker
+              .id), // google maps marker id of start marker will be our quest id
           position: LatLng(afkmarker.lat!, afkmarker.lon!),
-          infoWindow: InfoWindow(snippet: 'Vancouver'),
+          infoWindow: InfoWindow(snippet: quest.name),
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
           onTap: () async {
-            Quest _quest = await questService.getQuest(questId: afkmarker.id);
+            // ? quest already preloaded
+            // Quest _quest = await questService.getQuest(questId: afkmarker.id);
 
             // userQuest = _quest;
             //log.i('This is a User Quest $userQuest');
             bool adminMode = false;
-            //Set The Quest that Will Start.
-            if (_quest != null) {
-              questService.setStartedQuest(startedQuest: _quest);
-            }
 
             // _tappedMarkers = true;
             //  notifyListeners();
@@ -98,17 +97,16 @@ class MapViewModel extends QuestViewModel {
             if (!userIsAdmin || adminMode == false) {
               if (hasActiveQuest == false) {
                 await displayQuestBottomSheet(
-                  markers: afkmarker,
+                  quest: quest,
+                  startMarker: afkmarker,
                 );
               } else {
                 _dialogService.showDialog(
-                    title: "'You Currently Have a Running Quest !!!");
+                    title: "You Currently Have a Running Quest !!!");
               }
             }
           }),
     );
-    setBusy(false);
-    notifyListeners();
   }
 
   @override
@@ -154,7 +152,7 @@ class MapViewModel extends QuestViewModel {
     setBusy(true);
     _googleMapController = controller;
     try {
-      getQuestMarkers();
+      loadQuests();
     } catch (error) {
       throw MapViewModelException(
           message: 'An error occured in the defining ',
@@ -166,55 +164,38 @@ class MapViewModel extends QuestViewModel {
     notifyListeners();
   }
 
-  Future startQuest() async {
+  void loadQuests() async {
     setBusy(true);
-    try {
-      final quest = await questService.getQuest(questId: "QuestDummyId");
-
-      /// Once The user Click on Start a Quest. It tks her/him to new Page
-      // /Differents Markers will Display as Part of the quest as well The App showing the counting of the
-      /// Quest.
-      await questService.startQuest(quest: quest, uids: [currentUser.uid]);
-      _navigationService.replaceWith(Routes.activeQuestView);
-    } catch (e) {
-      log.e("Could not start quest, error thrown: $e");
-    }
+    await questService.loadNearbyQuests();
+    extractStartMarkersAndAddToMap();
+    setBusy(false);
   }
 
-  void getQuestMarkers() {
-    setBusy(true);
-    markers = _markersService.getSetMarkers;
-    if (markers!.isNotEmpty) {
-      for (AFKMarker _m in markers!) {
-        addMarker(afkmarker: _m);
+  void extractStartMarkersAndAddToMap() {
+    if (nearbyQuests.isNotEmpty) {
+      for (Quest _q in nearbyQuests) {
+        AFKMarker _m = _q.startMarker;
+        addMarkerToMap(quest: _q, afkmarker: _m);
       }
       _markersTmp = _markersTmp;
     } else {
       log.i('Markers are Empty');
     }
-    setBusy(false);
-    notifyListeners();
   }
 
-  Future displayQuestBottomSheet({required AFKMarker markers}) async {
-    Quest quest = await questService.getQuest(questId: markers.questId!);
-    if (quest != null) {
-      SheetResponse? sheetResponse = await _bottomSheetService.showCustomSheet(
-          variant: BottomSheetType.questInformation,
-          title: ' Name: ' + quest.name,
-          description: 'Description: ' + quest.description,
-          mainButtonTitle: "Start Quest",
-          secondaryButtonTitle: "Close");
-
-      if (sheetResponse!.confirmed == true) {
-        //Set The Quest that Will Start.
-        questService.setStartedQuest(startedQuest: quest);
-        //User Will Start a Quest
-        checkRunningQuest = true;
-        await startQuest();
-      }
-    } else {
-      log.w('You Providing an Empty Quest');
+  Future displayQuestBottomSheet(
+      {required Quest quest, required AFKMarker startMarker}) async {
+    SheetResponse? sheetResponse = await _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.questInformation,
+        title: ' Name: ' + quest.name,
+        description: 'Description: ' + quest.description,
+        mainButtonTitle: "Start Quest",
+        secondaryButtonTitle: "Close",
+        data: quest);
+    if (sheetResponse?.confirmed == true) {
+      //User Will Start a Quest
+      checkRunningQuest = true;
+      await startQuest(quest: quest);
     }
   }
 

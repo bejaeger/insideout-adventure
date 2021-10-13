@@ -6,10 +6,10 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RaiseQuestBottomSheetViewModel extends BaseModel {
+  final Quest quest;
+  RaiseQuestBottomSheetViewModel({required this.quest});
+
   final log = getLogger("RaiseQuestBottomSheetViewModel");
-  //final NavigationService? _navigationService = locator<NavigationService>();
-  BitmapDescriptor? sourceIcon;
-  Quest? _startedQuest;
 
   Set<Marker> _markersTmp = {};
   GoogleMapController? _googleMapController;
@@ -25,45 +25,19 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     final CameraPosition _initialCameraPosition = CameraPosition(
       //In Future I will change these values to dynamically Change the Initial Camera Position
       //Based on teh city
-      target: LatLng(
-          _startedQuest!.startMarker.lat!, _startedQuest!.startMarker.lon!),
+      target: LatLng(quest.startMarker.lat!, quest.startMarker.lon!),
       zoom: 9,
     );
 
     return _initialCameraPosition;
   }
 
-  void initilizeStartedQuest() {
-    sourceIcon =
-        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
-    if (questService.getStartedQuest! != null) {
-      _startedQuest = questService.getStartedQuest!;
-    }
-  }
-
   void getQuestMarkers() {
     setBusy(true);
-    if (_startedQuest != null) {
-      for (AFKMarker _m in _startedQuest!.markers) {
-        addMarker(afkmarker: _m);
-      }
-      _markersTmp = _markersTmp;
-    } else {
-      log.i('This started Quest Value is Null $_startedQuest!');
+    for (AFKMarker _m in quest.markers) {
+      addMarker(afkmarker: _m);
     }
-
     setBusy(false);
-    notifyListeners();
-  }
-
-  BitmapDescriptor defineMarkersColour({required AFKMarker afkmarker}) {
-    final index =
-        activeQuest.quest.markers.indexWhere((element) => element == afkmarker);
-    if (!activeQuest.markersCollected[index]) {
-      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
-    } else {
-      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-    }
   }
 
   void onMapCreated(GoogleMapController controller) {
@@ -81,7 +55,6 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
               "An internal error occured on our side, please apologize and try again later.");
     }
     setBusy(false);
-    notifyListeners();
   }
 
   void addMarker({required AFKMarker afkmarker}) {
@@ -90,10 +63,19 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
         Marker(
           markerId: MarkerId(afkmarker.id),
           position: LatLng(afkmarker.lat!, afkmarker.lon!),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
         ),
       );
     } catch (e) {
       log.i("markers added {$e}");
+    }
+  }
+
+  String checkSponsoringSentence() {
+    if (quest.afkCredits < currentUserStats.availableSponsoring) {
+      return "You can earn ${quest.afkCredits} credits by completing this quest!";
+    } else {
+      return "You don't have enough AFK Credits funds to earn ${quest.afkCredits} credits. Ask a sponsor to support you :)";
     }
   }
 

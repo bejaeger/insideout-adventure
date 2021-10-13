@@ -26,19 +26,23 @@ class QuestService {
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
   final QRCodeService _qrCodeService = locator<QRCodeService>();
-  ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final MarkerService _markerService = locator<MarkerService>();
   final StopWatchService _stopWatchService =
       locator<StopWatchService>(); // Create instance.
   // map of list of money pools with money Pool id as key
-  List<ActivatedQuest> activatedQuests = [];
+  List<ActivatedQuest> activatedQuestsHistory = [];
   StreamSubscription? _pastQuestsStreamSubscription;
-
+  List<Quest> nearbyQuests = [];
   final log = getLogger("QuestService");
 
-  Quest? _startedQuest;
   bool get hasActiveQuest => activatedQuest != null;
+  ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
+  Quest? _startedQuest;
+  Quest? get getStartedQuest => _startedQuest;
+  void setStartedQuest(Quest? quest) {
+    _startedQuest = quest;
+  }
   // num get numberCollectedMarkers =>
 
   Future startQuest({required Quest quest, required List<String> uids}) async {
@@ -48,6 +52,8 @@ class QuestService {
 
     // Add quest to behavior subject
     pushActivatedQuest(activatedQuest);
+    // ! this here is important !
+    setStartedQuest(quest);
 
     // Start timer
     //Harguilar Commented This Out Timer
@@ -56,17 +62,6 @@ class QuestService {
     _stopWatchService.listenToSecondTime(callback: trackData);
   }
 
-  //Set Started Quest.
-  void setStartedQuest({required Quest startedQuest}) {
-    if (startedQuest != null) {
-      _startedQuest = startedQuest;
-    } else {
-      log.wtf('I do not access Null Values in $startedQuest');
-    }
-  }
-
-  //Get Started Quest
-  Quest get getStartedQuest => _startedQuest!;
   int get getNumberMarkersCollected => activatedQuest!.markersCollected
       .where((element) => element == true)
       .toList()
@@ -338,14 +333,14 @@ class QuestService {
       _pastQuestsStreamSubscription =
           _firestoreApi.getPastQuestsStream(uid: uid).listen((snapshot) {
         listenedOnce = true;
-        activatedQuests = snapshot;
+        activatedQuestsHistory = snapshot;
         if (!completer.isCompleted) {
           completer.complete();
         }
         if (callback != null) {
           callback();
         }
-        log.v("Listened to ${activatedQuests.length} quests");
+        log.v("Listened to ${activatedQuestsHistory.length} quests");
       });
       if (!listenedOnce) {
         if (!completer.isCompleted) {
@@ -386,6 +381,11 @@ class QuestService {
     return _firestoreApi.getQuest(questId: questId);
   }
 
+  Future loadNearbyQuests() async {
+    // TODO: In the future retrieve only nearby quests
+    nearbyQuests = _firestoreApi.getNearbyQuests();
+  }
+
   void updateTime(int seconds) {
     if (activatedQuest != null) {
       pushActivatedQuest(activatedQuest!.copyWith(timeElapsed: seconds));
@@ -414,7 +414,7 @@ class QuestService {
   }
 
   void clearData() {
-    activatedQuests = [];
+    activatedQuestsHistory = [];
     _pastQuestsStreamSubscription?.cancel();
     _pastQuestsStreamSubscription = null;
   }

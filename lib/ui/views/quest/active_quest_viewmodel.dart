@@ -30,7 +30,7 @@ class ActiveQuestViewModel extends QuestViewModel {
   final _stopWatchService = locator<StopWatchService>();
   final _qrCodeService = locator<QRCodeService>();
 
-  Quest get startedQuest => questService.getStartedQuest;
+  Quest get startedQuest => questService.getStartedQuest!;
 
   BitmapDescriptor? sourceIcon;
   int idx = 0;
@@ -59,7 +59,7 @@ class ActiveQuestViewModel extends QuestViewModel {
       //Based on teh city
       target:
           LatLng(startedQuest.startMarker.lat!, startedQuest.startMarker.lon!),
-      zoom: 9,
+      zoom: 12,
     );
 
     return _initialCameraPosition;
@@ -140,8 +140,7 @@ class ActiveQuestViewModel extends QuestViewModel {
       Marker(
           markerId: MarkerId(afkmarker.id),
           position: LatLng(afkmarker.lat!, afkmarker.lon!),
-          infoWindow:
-              InfoWindow(title: startedQuest.name, snippet: 'Vancouver'),
+          infoWindow: InfoWindow(title: afkmarker.id),
           // icon: (_startedQuest!.startMarker.id == markers.id)
           icon: defineMarkersColour(afkmarker: afkmarker),
           onTap: () async {
@@ -240,9 +239,9 @@ class ActiveQuestViewModel extends QuestViewModel {
     // Throws an error in direction.dart datamodel
     // getDirections(
     //     origin: LatLng(
-    //         _startedQuest!.startMarker.lat!, _startedQuest!.startMarker.lon!),
-    //     destination: LatLng(_startedQuest!.finishMarker.lat!,
-    //         _startedQuest!.finishMarker.lon!));
+    //         startedQuest.startMarker.lat!, startedQuest.startMarker.lon!),
+    //     destination: LatLng(
+    //         startedQuest.finishMarker.lat!, startedQuest.finishMarker.lon!));
   }
 
   Future<void> onMapCreated(GoogleMapController controller) async {
