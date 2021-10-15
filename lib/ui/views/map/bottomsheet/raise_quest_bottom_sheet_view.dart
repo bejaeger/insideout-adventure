@@ -6,20 +6,20 @@ import 'package:stacked_services/stacked_services.dart';
 import 'raise_quest_bottom_sheet_viewmodel.dart';
 
 class RaiseQuestBottomSheetView extends StatelessWidget {
-  final SheetRequest? request;
-  final Function(SheetResponse)? completer;
+  final SheetRequest request;
+  final Function(SheetResponse) completer;
 
   const RaiseQuestBottomSheetView({
     Key? key,
-    this.request,
-    this.completer,
+    required this.request,
+    required this.completer,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<RaiseQuestBottomSheetViewModel>.reactive(
       viewModelBuilder: () =>
-          RaiseQuestBottomSheetViewModel(quest: request!.data),
+          RaiseQuestBottomSheetViewModel(quest: request.data),
       builder: (context, model, child) => Container(
         color: Colors.grey[100],
         child: Padding(
@@ -60,7 +60,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                request!.title.toString(),
+                request.title.toString(),
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                request!.description.toString(),
+                request.description.toString(),
                 style: TextStyle(
                     fontSize: 20,
                     //fontWeight: FontWeight.bold,
@@ -79,10 +79,9 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   MaterialButton(
-                    onPressed: () =>
-                        completer!(SheetResponse(confirmed: false)),
+                    onPressed: () => completer(SheetResponse(confirmed: false)),
                     child: Text(
-                      request!.secondaryButtonTitle.toString(),
+                      request.secondaryButtonTitle.toString(),
                       style: TextStyle(
                           fontSize: 20,
                           //fontWeight: FontWeight.bold,
@@ -90,9 +89,9 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                     ),
                   ),
                   MaterialButton(
-                    onPressed: () => completer!(SheetResponse(confirmed: true)),
+                    onPressed: () => completer(SheetResponse(confirmed: true)),
                     child: Text(
-                      request!.mainButtonTitle.toString(),
+                      request.mainButtonTitle.toString(),
                       style: TextStyle(
                           fontSize: 20,
                           //fontWeight: FontWeight.bold,
@@ -101,7 +100,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                   )
                 ],
               ),
-              //Text(model.checkSponsoringSentence()),
+              Text(model.checkSponsoringSentence()),
             ],
           ),
         ),

@@ -21,17 +21,21 @@ class _$UserStatisticsTearOff {
   const _$UserStatisticsTearOff();
 
   _UserStatistics call(
-      {required num afkCredits,
+      {required num afkCreditsBalance,
+      required num afkCreditsSpent,
       required num availableSponsoring,
       required num lifetimeEarnings,
-      required num numberQuestsCompleted,
+      required int numberQuestsCompleted,
+      required int numberGiftCardsPurchased,
       required List<ConciseFinishedQuestInfo> completedQuests,
       required String uid}) {
     return _UserStatistics(
-      afkCredits: afkCredits,
+      afkCreditsBalance: afkCreditsBalance,
+      afkCreditsSpent: afkCreditsSpent,
       availableSponsoring: availableSponsoring,
       lifetimeEarnings: lifetimeEarnings,
       numberQuestsCompleted: numberQuestsCompleted,
+      numberGiftCardsPurchased: numberGiftCardsPurchased,
       completedQuests: completedQuests,
       uid: uid,
     );
@@ -47,10 +51,12 @@ const $UserStatistics = _$UserStatisticsTearOff();
 
 /// @nodoc
 mixin _$UserStatistics {
-  num get afkCredits => throw _privateConstructorUsedError;
+  num get afkCreditsBalance => throw _privateConstructorUsedError;
+  num get afkCreditsSpent => throw _privateConstructorUsedError;
   num get availableSponsoring => throw _privateConstructorUsedError;
   num get lifetimeEarnings => throw _privateConstructorUsedError;
-  num get numberQuestsCompleted => throw _privateConstructorUsedError;
+  int get numberQuestsCompleted => throw _privateConstructorUsedError;
+  int get numberGiftCardsPurchased => throw _privateConstructorUsedError;
   List<ConciseFinishedQuestInfo> get completedQuests =>
       throw _privateConstructorUsedError;
   String get uid => throw _privateConstructorUsedError;
@@ -67,10 +73,12 @@ abstract class $UserStatisticsCopyWith<$Res> {
           UserStatistics value, $Res Function(UserStatistics) then) =
       _$UserStatisticsCopyWithImpl<$Res>;
   $Res call(
-      {num afkCredits,
+      {num afkCreditsBalance,
+      num afkCreditsSpent,
       num availableSponsoring,
       num lifetimeEarnings,
-      num numberQuestsCompleted,
+      int numberQuestsCompleted,
+      int numberGiftCardsPurchased,
       List<ConciseFinishedQuestInfo> completedQuests,
       String uid});
 }
@@ -86,17 +94,23 @@ class _$UserStatisticsCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? afkCredits = freezed,
+    Object? afkCreditsBalance = freezed,
+    Object? afkCreditsSpent = freezed,
     Object? availableSponsoring = freezed,
     Object? lifetimeEarnings = freezed,
     Object? numberQuestsCompleted = freezed,
+    Object? numberGiftCardsPurchased = freezed,
     Object? completedQuests = freezed,
     Object? uid = freezed,
   }) {
     return _then(_value.copyWith(
-      afkCredits: afkCredits == freezed
-          ? _value.afkCredits
-          : afkCredits // ignore: cast_nullable_to_non_nullable
+      afkCreditsBalance: afkCreditsBalance == freezed
+          ? _value.afkCreditsBalance
+          : afkCreditsBalance // ignore: cast_nullable_to_non_nullable
+              as num,
+      afkCreditsSpent: afkCreditsSpent == freezed
+          ? _value.afkCreditsSpent
+          : afkCreditsSpent // ignore: cast_nullable_to_non_nullable
               as num,
       availableSponsoring: availableSponsoring == freezed
           ? _value.availableSponsoring
@@ -109,7 +123,11 @@ class _$UserStatisticsCopyWithImpl<$Res>
       numberQuestsCompleted: numberQuestsCompleted == freezed
           ? _value.numberQuestsCompleted
           : numberQuestsCompleted // ignore: cast_nullable_to_non_nullable
-              as num,
+              as int,
+      numberGiftCardsPurchased: numberGiftCardsPurchased == freezed
+          ? _value.numberGiftCardsPurchased
+          : numberGiftCardsPurchased // ignore: cast_nullable_to_non_nullable
+              as int,
       completedQuests: completedQuests == freezed
           ? _value.completedQuests
           : completedQuests // ignore: cast_nullable_to_non_nullable
@@ -130,10 +148,12 @@ abstract class _$UserStatisticsCopyWith<$Res>
       __$UserStatisticsCopyWithImpl<$Res>;
   @override
   $Res call(
-      {num afkCredits,
+      {num afkCreditsBalance,
+      num afkCreditsSpent,
       num availableSponsoring,
       num lifetimeEarnings,
-      num numberQuestsCompleted,
+      int numberQuestsCompleted,
+      int numberGiftCardsPurchased,
       List<ConciseFinishedQuestInfo> completedQuests,
       String uid});
 }
@@ -151,17 +171,23 @@ class __$UserStatisticsCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? afkCredits = freezed,
+    Object? afkCreditsBalance = freezed,
+    Object? afkCreditsSpent = freezed,
     Object? availableSponsoring = freezed,
     Object? lifetimeEarnings = freezed,
     Object? numberQuestsCompleted = freezed,
+    Object? numberGiftCardsPurchased = freezed,
     Object? completedQuests = freezed,
     Object? uid = freezed,
   }) {
     return _then(_UserStatistics(
-      afkCredits: afkCredits == freezed
-          ? _value.afkCredits
-          : afkCredits // ignore: cast_nullable_to_non_nullable
+      afkCreditsBalance: afkCreditsBalance == freezed
+          ? _value.afkCreditsBalance
+          : afkCreditsBalance // ignore: cast_nullable_to_non_nullable
+              as num,
+      afkCreditsSpent: afkCreditsSpent == freezed
+          ? _value.afkCreditsSpent
+          : afkCreditsSpent // ignore: cast_nullable_to_non_nullable
               as num,
       availableSponsoring: availableSponsoring == freezed
           ? _value.availableSponsoring
@@ -174,7 +200,11 @@ class __$UserStatisticsCopyWithImpl<$Res>
       numberQuestsCompleted: numberQuestsCompleted == freezed
           ? _value.numberQuestsCompleted
           : numberQuestsCompleted // ignore: cast_nullable_to_non_nullable
-              as num,
+              as int,
+      numberGiftCardsPurchased: numberGiftCardsPurchased == freezed
+          ? _value.numberGiftCardsPurchased
+          : numberGiftCardsPurchased // ignore: cast_nullable_to_non_nullable
+              as int,
       completedQuests: completedQuests == freezed
           ? _value.completedQuests
           : completedQuests // ignore: cast_nullable_to_non_nullable
@@ -192,10 +222,12 @@ class __$UserStatisticsCopyWithImpl<$Res>
 @JsonSerializable(explicitToJson: true)
 class _$_UserStatistics implements _UserStatistics {
   _$_UserStatistics(
-      {required this.afkCredits,
+      {required this.afkCreditsBalance,
+      required this.afkCreditsSpent,
       required this.availableSponsoring,
       required this.lifetimeEarnings,
       required this.numberQuestsCompleted,
+      required this.numberGiftCardsPurchased,
       required this.completedQuests,
       required this.uid});
 
@@ -203,13 +235,17 @@ class _$_UserStatistics implements _UserStatistics {
       _$_$_UserStatisticsFromJson(json);
 
   @override
-  final num afkCredits;
+  final num afkCreditsBalance;
+  @override
+  final num afkCreditsSpent;
   @override
   final num availableSponsoring;
   @override
   final num lifetimeEarnings;
   @override
-  final num numberQuestsCompleted;
+  final int numberQuestsCompleted;
+  @override
+  final int numberGiftCardsPurchased;
   @override
   final List<ConciseFinishedQuestInfo> completedQuests;
   @override
@@ -217,16 +253,19 @@ class _$_UserStatistics implements _UserStatistics {
 
   @override
   String toString() {
-    return 'UserStatistics(afkCredits: $afkCredits, availableSponsoring: $availableSponsoring, lifetimeEarnings: $lifetimeEarnings, numberQuestsCompleted: $numberQuestsCompleted, completedQuests: $completedQuests, uid: $uid)';
+    return 'UserStatistics(afkCreditsBalance: $afkCreditsBalance, afkCreditsSpent: $afkCreditsSpent, availableSponsoring: $availableSponsoring, lifetimeEarnings: $lifetimeEarnings, numberQuestsCompleted: $numberQuestsCompleted, numberGiftCardsPurchased: $numberGiftCardsPurchased, completedQuests: $completedQuests, uid: $uid)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _UserStatistics &&
-            (identical(other.afkCredits, afkCredits) ||
+            (identical(other.afkCreditsBalance, afkCreditsBalance) ||
                 const DeepCollectionEquality()
-                    .equals(other.afkCredits, afkCredits)) &&
+                    .equals(other.afkCreditsBalance, afkCreditsBalance)) &&
+            (identical(other.afkCreditsSpent, afkCreditsSpent) ||
+                const DeepCollectionEquality()
+                    .equals(other.afkCreditsSpent, afkCreditsSpent)) &&
             (identical(other.availableSponsoring, availableSponsoring) ||
                 const DeepCollectionEquality()
                     .equals(other.availableSponsoring, availableSponsoring)) &&
@@ -236,6 +275,11 @@ class _$_UserStatistics implements _UserStatistics {
             (identical(other.numberQuestsCompleted, numberQuestsCompleted) ||
                 const DeepCollectionEquality().equals(
                     other.numberQuestsCompleted, numberQuestsCompleted)) &&
+            (identical(
+                    other.numberGiftCardsPurchased, numberGiftCardsPurchased) ||
+                const DeepCollectionEquality().equals(
+                    other.numberGiftCardsPurchased,
+                    numberGiftCardsPurchased)) &&
             (identical(other.completedQuests, completedQuests) ||
                 const DeepCollectionEquality()
                     .equals(other.completedQuests, completedQuests)) &&
@@ -246,10 +290,12 @@ class _$_UserStatistics implements _UserStatistics {
   @override
   int get hashCode =>
       runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(afkCredits) ^
+      const DeepCollectionEquality().hash(afkCreditsBalance) ^
+      const DeepCollectionEquality().hash(afkCreditsSpent) ^
       const DeepCollectionEquality().hash(availableSponsoring) ^
       const DeepCollectionEquality().hash(lifetimeEarnings) ^
       const DeepCollectionEquality().hash(numberQuestsCompleted) ^
+      const DeepCollectionEquality().hash(numberGiftCardsPurchased) ^
       const DeepCollectionEquality().hash(completedQuests) ^
       const DeepCollectionEquality().hash(uid);
 
@@ -266,10 +312,12 @@ class _$_UserStatistics implements _UserStatistics {
 
 abstract class _UserStatistics implements UserStatistics {
   factory _UserStatistics(
-      {required num afkCredits,
+      {required num afkCreditsBalance,
+      required num afkCreditsSpent,
       required num availableSponsoring,
       required num lifetimeEarnings,
-      required num numberQuestsCompleted,
+      required int numberQuestsCompleted,
+      required int numberGiftCardsPurchased,
       required List<ConciseFinishedQuestInfo> completedQuests,
       required String uid}) = _$_UserStatistics;
 
@@ -277,13 +325,17 @@ abstract class _UserStatistics implements UserStatistics {
       _$_UserStatistics.fromJson;
 
   @override
-  num get afkCredits => throw _privateConstructorUsedError;
+  num get afkCreditsBalance => throw _privateConstructorUsedError;
+  @override
+  num get afkCreditsSpent => throw _privateConstructorUsedError;
   @override
   num get availableSponsoring => throw _privateConstructorUsedError;
   @override
   num get lifetimeEarnings => throw _privateConstructorUsedError;
   @override
-  num get numberQuestsCompleted => throw _privateConstructorUsedError;
+  int get numberQuestsCompleted => throw _privateConstructorUsedError;
+  @override
+  int get numberGiftCardsPurchased => throw _privateConstructorUsedError;
   @override
   List<ConciseFinishedQuestInfo> get completedQuests =>
       throw _privateConstructorUsedError;

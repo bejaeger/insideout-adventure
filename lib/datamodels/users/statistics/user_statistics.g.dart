@@ -8,10 +8,12 @@ part of 'user_statistics.dart';
 
 _$_UserStatistics _$_$_UserStatisticsFromJson(Map<String, dynamic> json) {
   return _$_UserStatistics(
-    afkCredits: json['afkCredits'] as num,
+    afkCreditsBalance: json['afkCreditsBalance'] as num,
+    afkCreditsSpent: json['afkCreditsSpent'] as num,
     availableSponsoring: json['availableSponsoring'] as num,
     lifetimeEarnings: json['lifetimeEarnings'] as num,
-    numberQuestsCompleted: json['numberQuestsCompleted'] as num,
+    numberQuestsCompleted: json['numberQuestsCompleted'] as int,
+    numberGiftCardsPurchased: json['numberGiftCardsPurchased'] as int,
     completedQuests: (json['completedQuests'] as List<dynamic>)
         .map(
             (e) => ConciseFinishedQuestInfo.fromJson(e as Map<String, dynamic>))
@@ -22,10 +24,12 @@ _$_UserStatistics _$_$_UserStatisticsFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$_$_UserStatisticsToJson(_$_UserStatistics instance) =>
     <String, dynamic>{
-      'afkCredits': instance.afkCredits,
+      'afkCreditsBalance': instance.afkCreditsBalance,
+      'afkCreditsSpent': instance.afkCreditsSpent,
       'availableSponsoring': instance.availableSponsoring,
       'lifetimeEarnings': instance.lifetimeEarnings,
       'numberQuestsCompleted': instance.numberQuestsCompleted,
+      'numberGiftCardsPurchased': instance.numberGiftCardsPurchased,
       'completedQuests':
           instance.completedQuests.map((e) => e.toJson()).toList(),
       'uid': instance.uid,
