@@ -90,11 +90,11 @@ class GeolocationService {
     return true;
   }
 
-  //Get User Favourite Places
+/*   //Get User Favourite Places
   Future<List<Places>?> getPlaces() async {
     return await _firestoreApi.getPlaces();
   }
-
+ */
   Future<bool> isUserCloseby({required double lat, required double lon}) async {
     Position position = await getCurrentLocation();
 

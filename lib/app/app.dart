@@ -3,6 +3,7 @@ import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/giftcard/giftcard_services.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -17,6 +18,7 @@ import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
+import 'package:afkcredits/ui/views/giftcards/giftcard_view.dart';
 import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
@@ -56,6 +58,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: ActiveQuestView),
     MaterialRoute(page: QRCodeView),
     MaterialRoute(page: QRCodeViewExample),
+    MaterialRoute(page: GiftCardView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -80,6 +83,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: QRCodeService),
     LazySingleton(classType: MarkerService),
     LazySingleton(classType: DirectionsAPI),
+    LazySingleton(classType: GiftCardService),
 
     // Services
   ],

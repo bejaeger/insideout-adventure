@@ -22,8 +22,8 @@ final String userSummaryStatisticsDocumentKey = "summaryStats";
 final CollectionReference usersCollection =
     FirebaseFirestore.instance.collection('users');
 // collection references
-final CollectionReference placesCollection =
-    FirebaseFirestore.instance.collection('places');
+final CollectionReference giftCardsCollection =
+    FirebaseFirestore.instance.collection('giftCardCategories');
 final CollectionReference paymentsCollection =
     FirebaseFirestore.instance.collection('transfers');
 final CollectionReference questsCollection =

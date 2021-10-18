@@ -31,47 +31,74 @@ class AFKBottomNavigationBar extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Stack(
-                      children: [
-                        Container(
-                          height: height,
-                          width: screenWidth(context, percentage: 0.5),
-                          color: model.isOnHome
-                              ? Colors.white.withOpacity(0.2)
-                              : Colors.white.withOpacity(0),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          width: screenWidth(context, percentage: 0.5),
-                          child: IconButton(
-                            onPressed: model.onHomePressed,
-                            icon: Icon(Icons.home,
-                                size: kBottomNavigationBarIconSize,
-                                color: kBottomNavigationBarIconColor),
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: height,
+                            width: screenWidth(context, percentage: 0.5),
+                            color: model.isOnHome
+                                ? Colors.white.withOpacity(0.2)
+                                : Colors.white.withOpacity(0),
                           ),
-                        ),
-                      ],
+                          Container(
+                            alignment: Alignment.center,
+                            width: screenWidth(context, percentage: 0.5),
+                            child: IconButton(
+                              onPressed: model.onHomePressed,
+                              icon: Icon(Icons.home,
+                                  size: kBottomNavigationBarIconSize,
+                                  color: kBottomNavigationBarIconColor),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Stack(
-                      children: [
-                        Container(
-                          height: height,
-                          width: screenWidth(context, percentage: 0.5),
-                          color: model.isOnMap
-                              ? Colors.white.withOpacity(0.2)
-                              : Colors.white.withOpacity(0),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          width: screenWidth(context, percentage: 0.5),
-                          child: IconButton(
-                            onPressed: model.onMapPressed,
-                            icon: Icon(Icons.explore,
-                                size: kBottomNavigationBarIconSize,
-                                color: kBottomNavigationBarIconColor),
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: height,
+                            width: screenWidth(context, percentage: 0.5),
+                            color: model.isOnMap
+                                ? Colors.white.withOpacity(0.2)
+                                : Colors.white.withOpacity(0),
                           ),
-                        ),
-                      ],
+                          Container(
+                            alignment: Alignment.center,
+                            width: screenWidth(context, percentage: 0.5),
+                            child: IconButton(
+                              onPressed: model.onMapPressed,
+                              icon: Icon(Icons.explore,
+                                  size: kBottomNavigationBarIconSize,
+                                  color: kBottomNavigationBarIconColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: height,
+                            width: screenWidth(context, percentage: 0.5),
+                            color: model.isOnGift
+                                ? Colors.white.withOpacity(0.2)
+                                : Colors.white.withOpacity(0),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            width: screenWidth(context, percentage: 0.5),
+                            child: IconButton(
+                              onPressed: model.onGiftPressed,
+                              icon: Icon(Icons.card_giftcard,
+                                  size: kBottomNavigationBarIconSize,
+                                  color: kBottomNavigationBarIconColor),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

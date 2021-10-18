@@ -17,6 +17,7 @@ import '../ui/views/admin/admin_home_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
+import '../ui/views/giftcards/giftcard_view.dart';
 import '../ui/views/layout/layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
@@ -52,6 +53,7 @@ class Routes {
   static const String activeQuestView = '/active-quest-view';
   static const String qRCodeView = '/q-rcode-view';
   static const String qRCodeViewExample = '/q-rcode-view-example';
+  static const String giftCardView = '/gift-card-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -71,6 +73,7 @@ class Routes {
     activeQuestView,
     qRCodeView,
     qRCodeViewExample,
+    giftCardView,
   };
 }
 
@@ -96,6 +99,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.activeQuestView, page: ActiveQuestView),
     RouteDef(Routes.qRCodeView, page: QRCodeView),
     RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
+    RouteDef(Routes.giftCardView, page: GiftCardView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -238,6 +242,12 @@ class StackedRouter extends RouterBase {
     QRCodeViewExample: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => QRCodeViewExample(),
+        settings: data,
+      );
+    },
+    GiftCardView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const GiftCardView(),
         settings: data,
       );
     },
