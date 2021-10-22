@@ -35,7 +35,7 @@ class SingleExplorerView extends StatelessWidget {
                         Expanded(
                             child: StatsCard(
                           height: 80,
-                          statistic: model.stats.afkCredits.toString(),
+                          statistic: model.stats.afkCreditsBalance.toString(),
                           subtitle: "Earned AFK Credits",
                         )),
                         horizontalSpaceMedium,

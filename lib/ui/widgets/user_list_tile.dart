@@ -64,7 +64,7 @@ class UserListTile extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text("Earned: " +
-                            userStats!.afkCredits.toString() +
+                            userStats!.afkCreditsBalance.toString() +
                             " AFK Credits"),
                         Text("Sponsoring: " +
                             formatAmount(userStats!.availableSponsoring)),

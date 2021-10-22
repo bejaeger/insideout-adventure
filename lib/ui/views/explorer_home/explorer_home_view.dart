@@ -89,7 +89,7 @@ class ExplorerCreditStats extends StatelessWidget {
             Flexible(
               child: Column(
                 children: [
-                  Text(userStats.afkCredits.toString(),
+                  Text(userStats.afkCreditsBalance.toString(),
                       style: textTheme(context).headline4),
                   Icon(Icons.lock_open),
                   Text(
