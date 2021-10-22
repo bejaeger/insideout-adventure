@@ -13,17 +13,19 @@ class AdminHomeView extends StatelessWidget {
       fireOnModelReadyOnce: true,
       viewModelBuilder: () => AdminHomeViewModel(),
       builder: (context, model, child) => Scaffold(
-          appBar: AppBar(title: Text("Admin Home View")),
-          body: ListView(
-            children: [
-              verticalSpaceMedium,
-              ElevatedButton(
-                  // onPressed: model.navigateToExplorerHomeView,
-                  onPressed: model.logout,
-                  //child: Text("Go to explorer home/map")),
-                  child: Text("Logout  ")),
-            ],
-          )),
+        appBar: AppBar(title: Text("Admin Home View")),
+        body: ListView(
+          children: [
+            verticalSpaceMedium,
+            ElevatedButton(
+              // onPressed: model.navigateToExplorerHomeView,
+              onPressed: model.logout,
+              //child: Text("Go to explorer home/map")),
+              child: Text("Logout  "),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

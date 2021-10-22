@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_datamodels.dart';
+import 'package:afkcredits/datamodels/giftcards/giftcards.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
-import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -141,7 +141,7 @@ class FirestoreApi {
     }
   }
 
-// Get Places For the Quest.
+/* // Get Places For the Quest.
   Future<List<Places>?>? getPlaces() async {
     final _places = await placesCollection.get();
 
@@ -157,7 +157,7 @@ class FirestoreApi {
     } else {
       return null;
     }
-  }
+  } */
 
   // Get Markers For the Quest.
   Future<List<AFKMarker>?>? getMarkers() async {
@@ -488,5 +488,22 @@ class FirestoreApi {
 
   DocumentReference getMarkersDocs({required String markerId}) {
     return markersCollection.doc(markerId);
+  }
+
+  Future<List<Giftcards?>?> getGiftCards() async {
+    try {
+      final giftCards = await giftCardsCollection.get();
+      if (giftCards.docs.isNotEmpty) {
+        log.v('This is our List of Gift Cards: $giftCards in our Database');
+        return giftCards.docs
+            .map((docs) => Giftcards.fromJson(docs.data()))
+            .toList();
+      } else {
+        log.wtf('You are Providing me Empty Document $giftCards');
+      }
+    } catch (e) {
+      throw FirestoreApiException(
+          message: "Error Was Thrown", devDetails: "$e");
+    }
   }
 }
