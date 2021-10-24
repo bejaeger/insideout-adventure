@@ -6,7 +6,7 @@ import 'package:afkcredits/datamodels/giftcards/giftcards.dart';
 class GiftCardService {
   final _firestoreApi = locator<FirestoreApi>();
   final logger = getLogger('GiftCardService');
-  Future<List<Giftcards?>?> getGiftCards() async {
-    return await _firestoreApi.getGiftCards();
+  Future<List<Giftcards?>?> getGiftCards({String? name}) async {
+    return await _firestoreApi.getGiftCards(name: name);
   }
 }

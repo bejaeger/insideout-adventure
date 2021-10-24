@@ -492,10 +492,10 @@ class FirestoreApi {
     return markersCollection.doc(markerId);
   }
 
-  Future<List<Giftcards?>?> getGiftCards() async {
+  Future<List<Giftcards?>?> getGiftCards({String? name}) async {
     try {
       final giftCards =
-          await giftCardsCollection.where("name", isEqualTo: "Steam").get();
+          await giftCardsCollection.where("name", isEqualTo: name!).get();
       if (giftCards.docs.isNotEmpty) {
         log.v('This is our List of Gift Cards: $giftCards in our Database');
         return giftCards.docs
