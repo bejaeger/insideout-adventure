@@ -12,9 +12,11 @@ import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/enums/gift_card_category.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
+import 'package:afkcredits/services/giftcard/giftcard_services.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -492,18 +494,21 @@ class FirestoreApi {
 
   Future<List<Giftcards?>?> getGiftCards() async {
     try {
-      final giftCards = await giftCardsCollection.get();
+      final giftCards =
+          await giftCardsCollection.where("name", isEqualTo: "Steam").get();
       if (giftCards.docs.isNotEmpty) {
         log.v('This is our List of Gift Cards: $giftCards in our Database');
         return giftCards.docs
             .map((docs) => Giftcards.fromJson(docs.data()))
             .toList();
       } else {
-        log.wtf('You are Providing me Empty Document $giftCards');
+        log.wtf('You are Providing me Empty Document $giftCards' +
+            GiftCardCategory.Steam.toString());
       }
     } catch (e) {
       throw FirestoreApiException(
-          message: "Error Was Thrown", devDetails: "$e");
+          message: "Error Was Thrown",
+          devDetails: "$e" + GiftCardCategory.Steam.toString());
     }
   }
 }

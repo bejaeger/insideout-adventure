@@ -24,12 +24,14 @@ class _$GiftcardsTearOff {
       {String? categoryId,
       double? amount,
       String? imageUrl,
-      String? categoryName}) {
+      String? categoryName,
+      String? name}) {
     return _Giftcards(
       categoryId: categoryId,
       amount: amount,
       imageUrl: imageUrl,
       categoryName: categoryName,
+      name: name,
     );
   }
 
@@ -47,6 +49,7 @@ mixin _$Giftcards {
   double? get amount => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
   String? get categoryName => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -62,7 +65,8 @@ abstract class $GiftcardsCopyWith<$Res> {
       {String? categoryId,
       double? amount,
       String? imageUrl,
-      String? categoryName});
+      String? categoryName,
+      String? name});
 }
 
 /// @nodoc
@@ -79,6 +83,7 @@ class _$GiftcardsCopyWithImpl<$Res> implements $GiftcardsCopyWith<$Res> {
     Object? amount = freezed,
     Object? imageUrl = freezed,
     Object? categoryName = freezed,
+    Object? name = freezed,
   }) {
     return _then(_value.copyWith(
       categoryId: categoryId == freezed
@@ -97,6 +102,10 @@ class _$GiftcardsCopyWithImpl<$Res> implements $GiftcardsCopyWith<$Res> {
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
               as String?,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -111,7 +120,8 @@ abstract class _$GiftcardsCopyWith<$Res> implements $GiftcardsCopyWith<$Res> {
       {String? categoryId,
       double? amount,
       String? imageUrl,
-      String? categoryName});
+      String? categoryName,
+      String? name});
 }
 
 /// @nodoc
@@ -129,6 +139,7 @@ class __$GiftcardsCopyWithImpl<$Res> extends _$GiftcardsCopyWithImpl<$Res>
     Object? amount = freezed,
     Object? imageUrl = freezed,
     Object? categoryName = freezed,
+    Object? name = freezed,
   }) {
     return _then(_Giftcards(
       categoryId: categoryId == freezed
@@ -147,6 +158,10 @@ class __$GiftcardsCopyWithImpl<$Res> extends _$GiftcardsCopyWithImpl<$Res>
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
               as String?,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -155,7 +170,11 @@ class __$GiftcardsCopyWithImpl<$Res> extends _$GiftcardsCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Giftcards implements _Giftcards {
   _$_Giftcards(
-      {this.categoryId, this.amount, this.imageUrl, this.categoryName});
+      {this.categoryId,
+      this.amount,
+      this.imageUrl,
+      this.categoryName,
+      this.name});
 
   factory _$_Giftcards.fromJson(Map<String, dynamic> json) =>
       _$_$_GiftcardsFromJson(json);
@@ -168,10 +187,12 @@ class _$_Giftcards implements _Giftcards {
   final String? imageUrl;
   @override
   final String? categoryName;
+  @override
+  final String? name;
 
   @override
   String toString() {
-    return 'Giftcards(categoryId: $categoryId, amount: $amount, imageUrl: $imageUrl, categoryName: $categoryName)';
+    return 'Giftcards(categoryId: $categoryId, amount: $amount, imageUrl: $imageUrl, categoryName: $categoryName, name: $name)';
   }
 
   @override
@@ -188,7 +209,9 @@ class _$_Giftcards implements _Giftcards {
                     .equals(other.imageUrl, imageUrl)) &&
             (identical(other.categoryName, categoryName) ||
                 const DeepCollectionEquality()
-                    .equals(other.categoryName, categoryName)));
+                    .equals(other.categoryName, categoryName)) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)));
   }
 
   @override
@@ -197,7 +220,8 @@ class _$_Giftcards implements _Giftcards {
       const DeepCollectionEquality().hash(categoryId) ^
       const DeepCollectionEquality().hash(amount) ^
       const DeepCollectionEquality().hash(imageUrl) ^
-      const DeepCollectionEquality().hash(categoryName);
+      const DeepCollectionEquality().hash(categoryName) ^
+      const DeepCollectionEquality().hash(name);
 
   @JsonKey(ignore: true)
   @override
@@ -215,7 +239,8 @@ abstract class _Giftcards implements Giftcards {
       {String? categoryId,
       double? amount,
       String? imageUrl,
-      String? categoryName}) = _$_Giftcards;
+      String? categoryName,
+      String? name}) = _$_Giftcards;
 
   factory _Giftcards.fromJson(Map<String, dynamic> json) =
       _$_Giftcards.fromJson;
@@ -228,6 +253,8 @@ abstract class _Giftcards implements Giftcards {
   String? get imageUrl => throw _privateConstructorUsedError;
   @override
   String? get categoryName => throw _privateConstructorUsedError;
+  @override
+  String? get name => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$GiftcardsCopyWith<_Giftcards> get copyWith =>
