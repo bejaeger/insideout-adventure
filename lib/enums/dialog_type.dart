@@ -1,2 +1,2 @@
 /// The type of dialog to show
-enum DialogType { Stats, MoneyTransfer, Onboarding }
+enum DialogType { Stats, MoneyTransfer, Onboarding, purchaseGiftCards }

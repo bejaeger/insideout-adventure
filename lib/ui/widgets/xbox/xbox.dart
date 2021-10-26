@@ -24,40 +24,48 @@ Widget xboxWidget(
                   scrollDirection: Axis.horizontal,
                   itemCount: model.getGiftCard!.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: Image.network(
-                              model.getGiftCard![index]!.imageUrl!,
-                              fit: BoxFit.fill,
+                    return GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              flex: 4,
+                              child: Image.network(
+                                model.getGiftCard![index]!.imageUrl!,
+                                fit: BoxFit.fill,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text(formatAmount(
-                                        model.getGiftCard![index]!.amount)
-                                    .toString()),
-                                horizontalSpaceSmall,
-                                Text(
-                                    model.getGiftCard![index]!.name.toString()),
-                                horizontalSpaceSmall,
-                                Text(formatAmount(
-                                        model.getGiftCard![index]!.amount)
-                                    .toString()),
-                              ],
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text(formatAmount(
+                                          model.getGiftCard![index]!.amount)
+                                      .toString()),
+                                  horizontalSpaceSmall,
+                                  Text(model.getGiftCard![index]!.name
+                                      .toString()),
+                                  horizontalSpaceSmall,
+                                  Text(formatAmount(
+                                          model.getGiftCard![index]!.amount)
+                                      .toString()),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      onTap: () {
+                        model.setGiftCards(
+                            giftcards: model.getGiftCard![index]!);
+                        model.displayDialogService();
+                        print(model.getGiftCard![index]!);
+                      },
                     );
                   },
                 ),

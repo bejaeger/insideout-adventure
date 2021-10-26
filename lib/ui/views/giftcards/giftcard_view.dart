@@ -24,6 +24,11 @@ class GiftCardView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 verticalSpaceMedium,
+                Text(
+                  'Time to Spend \n Your Hard-earned Credit.',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                verticalSpaceMedium,
                 steamWidget(context),
                 verticalSpaceMedium,
                 psWidget(context),

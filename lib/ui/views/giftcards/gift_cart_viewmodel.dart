@@ -4,7 +4,7 @@ import 'package:afkcredits/datamodels/giftcards/giftcards.dart';
 import 'package:afkcredits/services/giftcard/giftcard_services.dart';
 import 'package:stacked/stacked.dart';
 
-class GiftCardViewModel extends BaseViewModel {
+abstract class GiftCardViewModel extends BaseViewModel {
   final _giftCardServices = locator<GiftCardService>();
   List<Giftcards?>? _giftcards;
   final _logger = getLogger('GiftCardViewModel');
