@@ -9,6 +9,9 @@ class SteamViewModel extends GiftCardViewModel {
   final _giftCardServices = locator<GiftCardService>();
   final _dialogService = locator<DialogService>();
 
+  //final _logger = getLogger('SteamViewModel');
+  final _snackBarService = locator<SnackbarService>();
+
   List<Giftcards?>? _giftcards;
 
   List<Giftcards?>? get getGiftCard => _giftcards!;
@@ -31,7 +34,16 @@ class SteamViewModel extends GiftCardViewModel {
         mainButtonTitle: 'Purchase',
         secondaryButtonTitle: 'Cancel');
     if (dialogResponse?.confirmed == true) {
+      showNotImplementedSnackbar();
       //Validate If the User Has enough Credit to Purchase Gift Cards.
+
     }
+  }
+
+  void showNotImplementedSnackbar() {
+    _snackBarService.showSnackbar(
+        title: "Not yet implemented.",
+        message: "I know... it's sad",
+        duration: Duration(seconds: 2));
   }
 }
