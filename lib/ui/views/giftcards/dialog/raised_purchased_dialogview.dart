@@ -17,8 +17,8 @@ class RaisedPurchasedDialogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<RaisedPurchasedDialogViewModel>.reactive(
-      builder: (context, model, child) => Scaffold(
-        body: Card(
+      builder: (context, model, child) => Dialog(
+        child: Card(
           elevation: 5,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -34,16 +34,19 @@ class RaisedPurchasedDialogView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(formatAmount(model.getGiftCards.amount!).toString()),
+                  Text(formatAmount(model.getGiftCards.amount!)),
                   horizontalSpaceSmall,
                   Text(
-                    model.getGiftCards.name.toString(),
+                    model.getGiftCards.categoryName.toString(),
                   ),
                   horizontalSpaceSmall,
-                  Text(formatAmount(model.getGiftCards.amount).toString()),
+                  Text(formatAmount(model.getGiftCards.amount)),
                 ],
               ),
               horizontalSpaceSmall,
+              Text("Price in AFK Credits: To Be Added"),
+              Text("Available Credits: " +
+                  model.currentUserStats.afkCreditsBalance.toString()),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

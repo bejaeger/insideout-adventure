@@ -1,6 +1,7 @@
 import 'package:afkcredits/ui/widgets/steam/steamviewmodel.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -14,7 +15,7 @@ Widget steamWidget(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                model.getGiftCard![0]!.categoryName!.toString(),
+                describeEnum(model.getGiftCard![0]!.categoryName!.toString()),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -48,7 +49,9 @@ Widget steamWidget(BuildContext context) {
                                       .toString()),
                                   horizontalSpaceSmall,
                                   Text(
-                                    model.getGiftCard![index]!.name.toString(),
+                                    describeEnum(model
+                                        .getGiftCard![index]!.categoryName
+                                        .toString()),
                                   ),
                                   horizontalSpaceSmall,
                                   Text(formatAmount(

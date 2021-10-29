@@ -1,7 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
-part of 'giftcards.dart';
+part of 'gift_card_category.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,70 +12,68 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-Giftcards _$GiftcardsFromJson(Map<String, dynamic> json) {
-  return _Giftcards.fromJson(json);
+GiftCardCategory _$GiftCardCategoryFromJson(Map<String, dynamic> json) {
+  return _GiftCardCategory.fromJson(json);
 }
 
 /// @nodoc
-class _$GiftcardsTearOff {
-  const _$GiftcardsTearOff();
+class _$GiftCardCategoryTearOff {
+  const _$GiftCardCategoryTearOff();
 
-  _Giftcards call(
+  _GiftCardCategory call(
       {String? categoryId,
       double? amount,
       String? imageUrl,
-      String? categoryName,
-      String? name}) {
-    return _Giftcards(
+      GiftCardType? categoryName}) {
+    return _GiftCardCategory(
       categoryId: categoryId,
       amount: amount,
       imageUrl: imageUrl,
       categoryName: categoryName,
-      name: name,
     );
   }
 
-  Giftcards fromJson(Map<String, Object> json) {
-    return Giftcards.fromJson(json);
+  GiftCardCategory fromJson(Map<String, Object> json) {
+    return GiftCardCategory.fromJson(json);
   }
 }
 
 /// @nodoc
-const $Giftcards = _$GiftcardsTearOff();
+const $GiftCardCategory = _$GiftCardCategoryTearOff();
 
 /// @nodoc
-mixin _$Giftcards {
+mixin _$GiftCardCategory {
   String? get categoryId => throw _privateConstructorUsedError;
   double? get amount => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
-  String? get categoryName => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
+  GiftCardType? get categoryName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $GiftcardsCopyWith<Giftcards> get copyWith =>
+  $GiftCardCategoryCopyWith<GiftCardCategory> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $GiftcardsCopyWith<$Res> {
-  factory $GiftcardsCopyWith(Giftcards value, $Res Function(Giftcards) then) =
-      _$GiftcardsCopyWithImpl<$Res>;
+abstract class $GiftCardCategoryCopyWith<$Res> {
+  factory $GiftCardCategoryCopyWith(
+          GiftCardCategory value, $Res Function(GiftCardCategory) then) =
+      _$GiftCardCategoryCopyWithImpl<$Res>;
   $Res call(
       {String? categoryId,
       double? amount,
       String? imageUrl,
-      String? categoryName,
-      String? name});
+      GiftCardType? categoryName});
 }
 
 /// @nodoc
-class _$GiftcardsCopyWithImpl<$Res> implements $GiftcardsCopyWith<$Res> {
-  _$GiftcardsCopyWithImpl(this._value, this._then);
+class _$GiftCardCategoryCopyWithImpl<$Res>
+    implements $GiftCardCategoryCopyWith<$Res> {
+  _$GiftCardCategoryCopyWithImpl(this._value, this._then);
 
-  final Giftcards _value;
+  final GiftCardCategory _value;
   // ignore: unused_field
-  final $Res Function(Giftcards) _then;
+  final $Res Function(GiftCardCategory) _then;
 
   @override
   $Res call({
@@ -83,7 +81,6 @@ class _$GiftcardsCopyWithImpl<$Res> implements $GiftcardsCopyWith<$Res> {
     Object? amount = freezed,
     Object? imageUrl = freezed,
     Object? categoryName = freezed,
-    Object? name = freezed,
   }) {
     return _then(_value.copyWith(
       categoryId: categoryId == freezed
@@ -101,37 +98,35 @@ class _$GiftcardsCopyWithImpl<$Res> implements $GiftcardsCopyWith<$Res> {
       categoryName: categoryName == freezed
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as GiftCardType?,
     ));
   }
 }
 
 /// @nodoc
-abstract class _$GiftcardsCopyWith<$Res> implements $GiftcardsCopyWith<$Res> {
-  factory _$GiftcardsCopyWith(
-          _Giftcards value, $Res Function(_Giftcards) then) =
-      __$GiftcardsCopyWithImpl<$Res>;
+abstract class _$GiftCardCategoryCopyWith<$Res>
+    implements $GiftCardCategoryCopyWith<$Res> {
+  factory _$GiftCardCategoryCopyWith(
+          _GiftCardCategory value, $Res Function(_GiftCardCategory) then) =
+      __$GiftCardCategoryCopyWithImpl<$Res>;
   @override
   $Res call(
       {String? categoryId,
       double? amount,
       String? imageUrl,
-      String? categoryName,
-      String? name});
+      GiftCardType? categoryName});
 }
 
 /// @nodoc
-class __$GiftcardsCopyWithImpl<$Res> extends _$GiftcardsCopyWithImpl<$Res>
-    implements _$GiftcardsCopyWith<$Res> {
-  __$GiftcardsCopyWithImpl(_Giftcards _value, $Res Function(_Giftcards) _then)
-      : super(_value, (v) => _then(v as _Giftcards));
+class __$GiftCardCategoryCopyWithImpl<$Res>
+    extends _$GiftCardCategoryCopyWithImpl<$Res>
+    implements _$GiftCardCategoryCopyWith<$Res> {
+  __$GiftCardCategoryCopyWithImpl(
+      _GiftCardCategory _value, $Res Function(_GiftCardCategory) _then)
+      : super(_value, (v) => _then(v as _GiftCardCategory));
 
   @override
-  _Giftcards get _value => super._value as _Giftcards;
+  _GiftCardCategory get _value => super._value as _GiftCardCategory;
 
   @override
   $Res call({
@@ -139,9 +134,8 @@ class __$GiftcardsCopyWithImpl<$Res> extends _$GiftcardsCopyWithImpl<$Res>
     Object? amount = freezed,
     Object? imageUrl = freezed,
     Object? categoryName = freezed,
-    Object? name = freezed,
   }) {
-    return _then(_Giftcards(
+    return _then(_GiftCardCategory(
       categoryId: categoryId == freezed
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
@@ -157,27 +151,19 @@ class __$GiftcardsCopyWithImpl<$Res> extends _$GiftcardsCopyWithImpl<$Res>
       categoryName: categoryName == freezed
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as GiftCardType?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_Giftcards implements _Giftcards {
-  _$_Giftcards(
-      {this.categoryId,
-      this.amount,
-      this.imageUrl,
-      this.categoryName,
-      this.name});
+class _$_GiftCardCategory implements _GiftCardCategory {
+  _$_GiftCardCategory(
+      {this.categoryId, this.amount, this.imageUrl, this.categoryName});
 
-  factory _$_Giftcards.fromJson(Map<String, dynamic> json) =>
-      _$_$_GiftcardsFromJson(json);
+  factory _$_GiftCardCategory.fromJson(Map<String, dynamic> json) =>
+      _$_$_GiftCardCategoryFromJson(json);
 
   @override
   final String? categoryId;
@@ -186,19 +172,17 @@ class _$_Giftcards implements _Giftcards {
   @override
   final String? imageUrl;
   @override
-  final String? categoryName;
-  @override
-  final String? name;
+  final GiftCardType? categoryName;
 
   @override
   String toString() {
-    return 'Giftcards(categoryId: $categoryId, amount: $amount, imageUrl: $imageUrl, categoryName: $categoryName, name: $name)';
+    return 'GiftCardCategory(categoryId: $categoryId, amount: $amount, imageUrl: $imageUrl, categoryName: $categoryName)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Giftcards &&
+        (other is _GiftCardCategory &&
             (identical(other.categoryId, categoryId) ||
                 const DeepCollectionEquality()
                     .equals(other.categoryId, categoryId)) &&
@@ -209,9 +193,7 @@ class _$_Giftcards implements _Giftcards {
                     .equals(other.imageUrl, imageUrl)) &&
             (identical(other.categoryName, categoryName) ||
                 const DeepCollectionEquality()
-                    .equals(other.categoryName, categoryName)) &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)));
+                    .equals(other.categoryName, categoryName)));
   }
 
   @override
@@ -220,30 +202,28 @@ class _$_Giftcards implements _Giftcards {
       const DeepCollectionEquality().hash(categoryId) ^
       const DeepCollectionEquality().hash(amount) ^
       const DeepCollectionEquality().hash(imageUrl) ^
-      const DeepCollectionEquality().hash(categoryName) ^
-      const DeepCollectionEquality().hash(name);
+      const DeepCollectionEquality().hash(categoryName);
 
   @JsonKey(ignore: true)
   @override
-  _$GiftcardsCopyWith<_Giftcards> get copyWith =>
-      __$GiftcardsCopyWithImpl<_Giftcards>(this, _$identity);
+  _$GiftCardCategoryCopyWith<_GiftCardCategory> get copyWith =>
+      __$GiftCardCategoryCopyWithImpl<_GiftCardCategory>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_GiftcardsToJson(this);
+    return _$_$_GiftCardCategoryToJson(this);
   }
 }
 
-abstract class _Giftcards implements Giftcards {
-  factory _Giftcards(
+abstract class _GiftCardCategory implements GiftCardCategory {
+  factory _GiftCardCategory(
       {String? categoryId,
       double? amount,
       String? imageUrl,
-      String? categoryName,
-      String? name}) = _$_Giftcards;
+      GiftCardType? categoryName}) = _$_GiftCardCategory;
 
-  factory _Giftcards.fromJson(Map<String, dynamic> json) =
-      _$_Giftcards.fromJson;
+  factory _GiftCardCategory.fromJson(Map<String, dynamic> json) =
+      _$_GiftCardCategory.fromJson;
 
   @override
   String? get categoryId => throw _privateConstructorUsedError;
@@ -252,11 +232,9 @@ abstract class _Giftcards implements Giftcards {
   @override
   String? get imageUrl => throw _privateConstructorUsedError;
   @override
-  String? get categoryName => throw _privateConstructorUsedError;
-  @override
-  String? get name => throw _privateConstructorUsedError;
+  GiftCardType? get categoryName => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$GiftcardsCopyWith<_Giftcards> get copyWith =>
+  _$GiftCardCategoryCopyWith<_GiftCardCategory> get copyWith =>
       throw _privateConstructorUsedError;
 }

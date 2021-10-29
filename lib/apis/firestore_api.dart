@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_datamodels.dart';
-import 'package:afkcredits/datamodels/giftcards/giftcards.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_category.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -12,7 +12,7 @@ import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/gift_card_category.dart';
+import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
@@ -492,23 +492,23 @@ class FirestoreApi {
     return markersCollection.doc(markerId);
   }
 
-  Future<List<Giftcards?>?> getGiftCards({String? name}) async {
+  Future<List<GiftCardCategory?>?> getGiftCards({String? name}) async {
     try {
       final giftCards =
           await giftCardsCollection.where("name", isEqualTo: name!).get();
       if (giftCards.docs.isNotEmpty) {
         log.v('This is our List of Gift Cards: $giftCards in our Database');
         return giftCards.docs
-            .map((docs) => Giftcards.fromJson(docs.data()))
+            .map((docs) => GiftCardCategory.fromJson(docs.data()))
             .toList();
       } else {
         log.wtf('You are Providing me Empty Document $giftCards' +
-            GiftCardCategory.Steam.toString());
+            GiftCardType.Steam.toString());
       }
     } catch (e) {
       throw FirestoreApiException(
           message: "Error Was Thrown",
-          devDetails: "$e" + GiftCardCategory.Steam.toString());
+          devDetails: "$e" + GiftCardType.Steam.toString());
     }
   }
 }

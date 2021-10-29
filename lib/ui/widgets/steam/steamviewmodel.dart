@@ -1,5 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/datamodels/giftcards/giftcards.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_category.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/services/giftcard/giftcard_services.dart';
 import 'package:afkcredits/ui/views/giftcards/gift_card_viewmodel.dart';
@@ -12,8 +12,8 @@ class SteamViewModel extends GiftCardViewModel {
   //final _logger = getLogger('SteamViewModel');
   final _snackBarService = locator<SnackbarService>();
 
-  List<Giftcards?>? _giftcards;
-  List<Giftcards?>? get getGiftCard => _giftcards!;
+  List<GiftCardCategory?>? _giftcards;
+  List<GiftCardCategory?>? get getGiftCard => _giftcards!;
 
   @override
   Future<void>? loadGiftCards({String? name}) async {
@@ -22,7 +22,7 @@ class SteamViewModel extends GiftCardViewModel {
     setBusy(false);
   }
 
-  void setGiftCards({Giftcards? giftcards}) {
+  void setGiftCards({GiftCardCategory? giftcards}) {
     _giftCardServices.setGiftCard(purchaseGiftCard: giftcards);
   }
 
