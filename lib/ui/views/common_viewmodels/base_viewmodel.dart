@@ -142,7 +142,7 @@ class BaseModel extends BaseViewModel {
   @override
   void dispose() {
     _activeQuestSubscription?.cancel();
-    _timerSubscription!.cancel();
+    _timerSubscription?.cancel();
     super.dispose();
   }
 }

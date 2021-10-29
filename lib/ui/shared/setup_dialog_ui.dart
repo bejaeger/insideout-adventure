@@ -9,7 +9,7 @@ void setupDialogUi() {
   final builders = {
     DialogType.MoneyTransfer: (context, sheetRequest, completer) =>
         MoneyTransferDialogView(request: sheetRequest, completer: completer),
-    DialogType.purchaseGiftCards: (context, sheetRequest, completer) =>
+    DialogType.PurchaseGiftCards: (context, sheetRequest, completer) =>
         RaisedPurchasedDialogView(request: sheetRequest, completer: completer),
     // DialogType.Onboarding: (context, sheetRequest, completer) =>
     //     OnboardingDialogView(request: sheetRequest, completer: completer),

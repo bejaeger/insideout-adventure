@@ -18,7 +18,7 @@ import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
-import 'package:afkcredits/ui/views/giftcards/giftcard_view.dart';
+import 'package:afkcredits/ui/views/giftcards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';

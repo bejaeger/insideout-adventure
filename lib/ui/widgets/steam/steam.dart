@@ -7,8 +7,9 @@ import 'package:stacked/stacked.dart';
 Widget steamWidget(BuildContext context) {
   return ViewModelBuilder<SteamViewModel>.reactive(
     viewModelBuilder: () => SteamViewModel(),
-    onModelReady: (model) => model.initilized(name: 'Steam'),
-    builder: (context, model, child) => model.getGiftCard!.isNotEmpty
+    onModelReady: (model) => model.loadGiftCards(name: 'Steam'),
+    builder: (context, model, child) => (!model.isBusy &&
+            model.getGiftCard!.isNotEmpty)
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -76,9 +77,7 @@ Widget steamWidget(BuildContext context) {
           )
         : Container(
             child: Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.green,
-              ),
+              child: CircularProgressIndicator(),
             ),
           ),
   );

@@ -6,16 +6,16 @@ import 'package:stacked/stacked.dart';
 
 abstract class GiftCardViewModel extends BaseViewModel {
   final _giftCardServices = locator<GiftCardService>();
-  List<Giftcards?>? _giftcards;
+  // List<Giftcards?>? _giftcards;
   final _logger = getLogger('GiftCardViewModel');
 
-  List<Giftcards?>? get getGiftCard => _giftcards!;
+  // List<Giftcards?>? get getGiftCard => _giftcards!;
 
-  Future<void>? initilized() async {
+  Future<void>? loadGiftCards() async {
     setBusy(true);
     // _giftcards = await _giftCardServices.getGiftCards();
-    _giftcards = await _giftCardServices.getGiftCards();
-    _logger.i('This is the Value of GiftCards Within ViewModel $_giftcards');
+    // _giftcards = await _giftCardServices.getGiftCards();
+    // _logger.i('This is the Value of GiftCards Within ViewModel $_giftcards');
     setBusy(false);
     notifyListeners();
   }

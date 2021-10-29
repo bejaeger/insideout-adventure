@@ -17,7 +17,6 @@ class AFKBottomNavigationBarViewModel extends LayoutTemplateViewModel {
   }
 
   void onGiftPressed() {
-    clearStackAndNavigateToHomeView();
     navigationService.clearStackAndShow(Routes.giftCardView);
     _currentIndex = BottomNavigationBarIndex.giftcard;
     notifyListeners();
@@ -32,7 +31,6 @@ class AFKBottomNavigationBarViewModel extends LayoutTemplateViewModel {
       navigationService.clearStackAndShow(Routes.activeQuestView);
       _currentIndex = BottomNavigationBarIndex.map;
     }
-
     notifyListeners();
   }
 }
