@@ -12,6 +12,7 @@ _$_Giftcards _$_$_GiftcardsFromJson(Map<String, dynamic> json) {
     amount: (json['amount'] as num?)?.toDouble(),
     imageUrl: json['imageUrl'] as String?,
     categoryName: json['categoryName'] as String?,
+    name: json['name'] as String?,
   );
 }
 
@@ -21,4 +22,5 @@ Map<String, dynamic> _$_$_GiftcardsToJson(_$_Giftcards instance) =>
       'amount': instance.amount,
       'imageUrl': instance.imageUrl,
       'categoryName': instance.categoryName,
+      'name': instance.name,
     };

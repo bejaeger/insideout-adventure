@@ -15,7 +15,6 @@ class LayoutTemplateViewModel extends TransferBaseViewModel {
   }
 
   final log = getLogger("LayoutTemplateViewModel");
-
   void replaceToHomeView() {
     if (currentUser.role == UserRole.explorer) {
       log.v(
@@ -33,7 +32,6 @@ class LayoutTemplateViewModel extends TransferBaseViewModel {
       log.v('We have an admin account. We will go to the admin home view!');
       navigationService.replaceWith(Routes.adminHomeView);
       setShowBottomNavBar(true);
-
       // navigate to home view
     }
   }

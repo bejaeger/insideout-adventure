@@ -1,84 +1,44 @@
-import 'package:afkcredits/enums/gift_card_category.dart';
+import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/ps/ps.dart';
+import 'package:afkcredits/ui/widgets/steam/steam.dart';
+import 'package:afkcredits/ui/widgets/xbox/xbox.dart';
+import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
-import 'gift_cart_viewmodel.dart';
 
 class GiftCardView extends StatelessWidget {
   const GiftCardView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<GiftCardViewModel>.reactive(
-      onModelReady: (model) => model.initilized(),
-      builder: (context, model, child) => model.getGiftCard != null
-          ? Scaffold(
-              body: SingleChildScrollView(
-                child: ListView.builder(
-                    itemCount: model.getGiftCard!.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          if (GiftCardCategory.playstation ==
-                              model.getGiftCard![index]!.categoryName)
-                            Expanded(
-                              child: ListView(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                children: <Widget>[
-                                  Text(
-                                      model.getGiftCard![index]!.categoryName!),
-                                  Image.network(
-                                      model.getGiftCard![index]!.imageUrl!),
-                                  Text(model.getGiftCard![index]!.amount
-                                      .toString())
-                                ],
-                              ),
-                            ),
-                          if (GiftCardCategory.xbox ==
-                              model.getGiftCard![index]!.categoryName)
-                            Expanded(
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                children: <Widget>[
-                                  Text(
-                                      model.getGiftCard![index]!.categoryName!),
-                                  Image.network(
-                                      model.getGiftCard![index]!.imageUrl!),
-                                  Text(model.getGiftCard![index]!.amount
-                                      .toString())
-                                ],
-                              ),
-                            ),
-                          if (GiftCardCategory.steam ==
-                              model.getGiftCard![index]!.categoryName)
-                            Expanded(
-                              child: ListView(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                children: <Widget>[
-                                  Text(
-                                      model.getGiftCard![index]!.categoryName!),
-                                  Image.network(
-                                      model.getGiftCard![index]!.imageUrl!),
-                                  Text(model.getGiftCard![index]!.amount
-                                      .toString())
-                                ],
-                              ),
-                            ),
-                        ],
-                      );
-                    }),
-              ),
-            )
-          : Container(
-              child: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.green,
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: 'Gift Card List',
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20.0, bottom: 90.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                verticalSpaceMedium,
+                Text(
+                  'Time to Spend \n Your Hard-earned Credit.',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),
-              ),
+                verticalSpaceMedium,
+                steamWidget(context),
+                verticalSpaceMedium,
+                psWidget(context),
+                verticalSpaceMedium,
+                xboxWidget(context),
+              ],
             ),
-      viewModelBuilder: () => GiftCardViewModel(),
+          ),
+        ),
+      ),
     );
   }
 }

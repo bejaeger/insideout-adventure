@@ -9,6 +9,7 @@ class Giftcards with _$Giftcards {
     double? amount,
     String? imageUrl,
     String? categoryName,
+    String? name,
   }) = _Giftcards;
 
   factory Giftcards.fromJson(Map<String, dynamic> json) =>
