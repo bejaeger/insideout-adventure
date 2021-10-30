@@ -48,24 +48,25 @@ class BaseModel extends BaseViewModel {
   String get getActiveMinutes => minutes!;
   String? get getActiveSeconds => seconds!;
 
+  String get getHourMinuteSecondsTime =>
+      _stopWatchService.secondsToHourMinuteSecondTime(activeQuest.timeElapsed);
+
   StreamSubscription<int>? get timeSubscription => _timerSubscription;
 
-  void setTimer() {
-    //Clock Timer
-    final timerStream = _stopWatchService.stopWatchStream();
+  // void setTimer() {
+  //   //Clock Timer
+  //   final timerStream = _stopWatchService.stopWatchStream();
 
-    _timerSubscription = timerStream.listen((int time) {
-      hours = ((time / (60 * 60)) % 60).floor().toString().padLeft(2, '0');
-
-      minutes = ((time / 60) % 60).floor().toString().padLeft(2, '0');
-
-      seconds = (time % 60).floor().toString().padLeft(2, '0');
-    });
-    _stopWatchService.setTimerStreamSubscription(
-        timerSubscription: _timerSubscription!);
-    setBusy(false);
-    notifyListeners();
-  }
+  //   _timerSubscription = timerStream.listen((int time) {
+  //     hours = ((time / (60 * 60)) % 60).floor().toString().padLeft(2, '0');
+  //     minutes = ((time / 60) % 60).floor().toString().padLeft(2, '0');
+  //     seconds = (time % 60).floor().toString().padLeft(2, '0');
+  //   });
+  //   _stopWatchService.setTimerStreamSubscription(
+  //       timerSubscription: _timerSubscription!);
+  //   setBusy(false);
+  //   notifyListeners();
+  // }
 
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;

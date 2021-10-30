@@ -70,7 +70,7 @@ export class AFKCreditsBookkeeper {
     // a separate function here
     transaction.update(docRefRecipient, {
       availableSponsoring: decrement, // deccrement available sponsoring of explorer
-      afkCredits: increment, // increment afk credits balance
+      afkCreditsBalance: increment, // increment afk credits balance
       lifetimeEarnings: increment, // increment lifetime earnings
       numberQuestsCompleted: incrementNumberQuests,  // increment number of quests completed
     });

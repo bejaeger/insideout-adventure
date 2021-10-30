@@ -5,7 +5,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 abstract class QuestViewModel extends BaseModel {
   Future scanQrCodeWithActiveQuest() async {
     QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
-    handleQrCodeScanEvent(result);
+    await handleQrCodeScanEvent(result);
   }
 
   Future<QuestQRCodeScanResult> navigateToQrcodeViewAndReturnResult() async {
@@ -16,5 +16,5 @@ abstract class QuestViewModel extends BaseModel {
   }
 
   // needs to be overrriden!
-  void handleQrCodeScanEvent(QuestQRCodeScanResult result);
+  Future handleQrCodeScanEvent(QuestQRCodeScanResult result);
 }

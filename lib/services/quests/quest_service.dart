@@ -36,6 +36,8 @@ class QuestService {
   List<Quest> nearbyQuests = [];
   final log = getLogger("QuestService");
 
+  ActivatedQuest? previouslyFinishedQuest;
+
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
   Quest? _startedQuest;
@@ -104,6 +106,8 @@ class QuestService {
           rethrow;
         }
         await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
+        // keep copy of finished quest to show in success dialog view
+        previouslyFinishedQuest = activatedQuest;
         disposeActivatedQuest();
       }
     }
@@ -223,7 +227,11 @@ class QuestService {
     }
   }
 
-  // Called in qrcode_viewmodel
+  // Function that interprets QR Code scanning event
+  // If no quest is active, a check is performed whether the marker is a start marker.
+  // If a quest is active, the marker is validated .
+  // In each case, an appropriate QuestQRCodeScanResult is returned.
+  // This result is interpreted in the viewmodels
   Future<QuestQRCodeScanResult> handleQrCodeScanEvent(
       {required AFKMarker marker}) async {
     if (!hasActiveQuest) {

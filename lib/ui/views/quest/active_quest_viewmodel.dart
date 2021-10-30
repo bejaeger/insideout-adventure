@@ -97,8 +97,23 @@ class ActiveQuestViewModel extends QuestViewModel {
         log.wtf(
             "An error occured when trying to finish the quest. The following warning was thrown: $result");
       } else {
+        if (questService.previouslyFinishedQuest == null) {
+          log.wtf(
+              "Quest was successfully finished but previouslyFinishedQuest was not set! This should never happen and is due to an internal error in quest service..");
+          throw Exception(
+              "Internal Error: For developers, please set the variable 'previouslyFinishedQuest' in the quest service.");
+        }
+        // Quest succesfully finished!
         await _dialogService.showDialog(
             title: "Congratz, you succesfully finished the quest!",
+            description: "Earned credits: " +
+                questService.previouslyFinishedQuest!.quest.afkCredits
+                    .toString() +
+                ", time elapsed: " +
+                _stopWatchService.secondsToHourMinuteSecondTime(
+                    questService.previouslyFinishedQuest!.timeElapsed) +
+                "; New balance: " +
+                currentUserStats.afkCreditsBalance.toString(),
             buttonTitle: 'Ok');
         _navigationService.replaceWith(Routes.mapView);
       }
@@ -108,7 +123,7 @@ class ActiveQuestViewModel extends QuestViewModel {
           title: "An internal error occured on our side. Sorry!",
           buttonTitle: 'Ok');
       log.wtf(
-          "An error occured when trying to finish the quest. This should never happen!");
+          "An error occured when trying to finish the quest. This should never happen! Error: $e");
       _navigationService.replaceWith(Routes.mapView);
     }
   }
@@ -171,11 +186,6 @@ class ActiveQuestViewModel extends QuestViewModel {
           title: "Quest Not Running",
           description: "Verify Your Quest Because is not running");
     }
-  }
-
-  Future scanQrCodeWithActiveQuest() async {
-    QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
-    await handleQrCodeScanEvent(result);
   }
 
   @override

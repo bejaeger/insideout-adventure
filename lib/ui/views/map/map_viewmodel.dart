@@ -106,9 +106,9 @@ class MapViewModel extends QuestViewModel {
   }
 
   @override
-  void handleQrCodeScanEvent(QuestQRCodeScanResult result) {
+  Future handleQrCodeScanEvent(QuestQRCodeScanResult result) async {
     if (result.isEmpty) {
-      return;
+      return Future.value();
     }
     if (result.hasError) {
       log.e("Error occured: ${result.errorMessage}");
@@ -120,12 +120,18 @@ class MapViewModel extends QuestViewModel {
             message: "Successfully collected marker",
             duration: Duration(seconds: 2));
       }
-      if (result.quests != null) {
+      if (result.quests != null && result.quests!.length > 0) {
+        // TODO: Handle case where more than one quest is returned here!
+        // For now, just start first quest!
         log.i("Found quests associated to the scanned start marker.");
-        snackbarService.showSnackbar(
-            title: "Start quest?",
-            message: "Not yet fully implemented!",
-            duration: Duration(seconds: 2));
+        await displayQuestBottomSheet(
+          quest: result.quests![0],
+          startMarker: result.quests![0].startMarker,
+        );
+      } else {
+        await dialogService.showDialog(
+            title:
+                "The scanned Marker is not a start of a quest. Please go to the starting point");
       }
     }
   }
