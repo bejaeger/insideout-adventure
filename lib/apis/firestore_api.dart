@@ -16,7 +16,7 @@ import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
-import 'package:afkcredits/services/giftcard/giftcard_services.dart';
+import 'package:afkcredits/services/giftcard/gift_card_services.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -492,10 +492,12 @@ class FirestoreApi {
     return markersCollection.doc(markerId);
   }
 
-  Future<List<GiftCardCategory?>?> getGiftCards({String? name}) async {
+  Future<List<GiftCardCategory>> getGiftCardsForCategory(
+      {required String categoryName}) async {
     try {
-      final giftCards =
-          await giftCardsCollection.where("name", isEqualTo: name!).get();
+      final giftCards = await giftCardsCollection
+          .where("name", isEqualTo: categoryName)
+          .get();
       if (giftCards.docs.isNotEmpty) {
         log.v('This is our List of Gift Cards: $giftCards in our Database');
         return giftCards.docs
@@ -504,6 +506,31 @@ class FirestoreApi {
       } else {
         log.wtf('You are Providing me Empty Document $giftCards' +
             GiftCardType.Steam.toString());
+        throw FirestoreApiException(
+            message: "Data could not be found",
+            devDetails: "gift card document is empty");
+      }
+    } catch (e) {
+      throw FirestoreApiException(
+          message: "Error Was Thrown",
+          devDetails: "$e" + GiftCardType.Steam.toString());
+    }
+  }
+
+  Future<List<GiftCardCategory>> getAllGiftCards() async {
+    try {
+      final giftCards = await giftCardsCollection.get();
+      if (giftCards.docs.isNotEmpty) {
+        log.v('This is our List of Gift Cards: $giftCards in our Database');
+        return giftCards.docs
+            .map((docs) => GiftCardCategory.fromJson(docs.data()))
+            .toList();
+      } else {
+        log.wtf('You are Providing me Empty Document $giftCards' +
+            GiftCardType.Steam.toString());
+        throw FirestoreApiException(
+            message: "Data could not be found",
+            devDetails: "gift card document is empty");
       }
     } catch (e) {
       throw FirestoreApiException(

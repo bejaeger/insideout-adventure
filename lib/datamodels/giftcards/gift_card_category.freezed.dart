@@ -21,10 +21,10 @@ class _$GiftCardCategoryTearOff {
   const _$GiftCardCategoryTearOff();
 
   _GiftCardCategory call(
-      {String? categoryId,
-      double? amount,
+      {required String categoryId,
+      required double amount,
       String? imageUrl,
-      GiftCardType? categoryName}) {
+      required GiftCardType categoryName}) {
     return _GiftCardCategory(
       categoryId: categoryId,
       amount: amount,
@@ -43,10 +43,10 @@ const $GiftCardCategory = _$GiftCardCategoryTearOff();
 
 /// @nodoc
 mixin _$GiftCardCategory {
-  String? get categoryId => throw _privateConstructorUsedError;
-  double? get amount => throw _privateConstructorUsedError;
+  String get categoryId => throw _privateConstructorUsedError;
+  double get amount => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
-  GiftCardType? get categoryName => throw _privateConstructorUsedError;
+  GiftCardType get categoryName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -60,10 +60,10 @@ abstract class $GiftCardCategoryCopyWith<$Res> {
           GiftCardCategory value, $Res Function(GiftCardCategory) then) =
       _$GiftCardCategoryCopyWithImpl<$Res>;
   $Res call(
-      {String? categoryId,
-      double? amount,
+      {String categoryId,
+      double amount,
       String? imageUrl,
-      GiftCardType? categoryName});
+      GiftCardType categoryName});
 }
 
 /// @nodoc
@@ -86,11 +86,11 @@ class _$GiftCardCategoryCopyWithImpl<$Res>
       categoryId: categoryId == freezed
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       amount: amount == freezed
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as double,
       imageUrl: imageUrl == freezed
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
@@ -98,7 +98,7 @@ class _$GiftCardCategoryCopyWithImpl<$Res>
       categoryName: categoryName == freezed
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
-              as GiftCardType?,
+              as GiftCardType,
     ));
   }
 }
@@ -111,10 +111,10 @@ abstract class _$GiftCardCategoryCopyWith<$Res>
       __$GiftCardCategoryCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? categoryId,
-      double? amount,
+      {String categoryId,
+      double amount,
       String? imageUrl,
-      GiftCardType? categoryName});
+      GiftCardType categoryName});
 }
 
 /// @nodoc
@@ -139,11 +139,11 @@ class __$GiftCardCategoryCopyWithImpl<$Res>
       categoryId: categoryId == freezed
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       amount: amount == freezed
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as double,
       imageUrl: imageUrl == freezed
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
@@ -151,7 +151,7 @@ class __$GiftCardCategoryCopyWithImpl<$Res>
       categoryName: categoryName == freezed
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
-              as GiftCardType?,
+              as GiftCardType,
     ));
   }
 }
@@ -160,19 +160,22 @@ class __$GiftCardCategoryCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_GiftCardCategory implements _GiftCardCategory {
   _$_GiftCardCategory(
-      {this.categoryId, this.amount, this.imageUrl, this.categoryName});
+      {required this.categoryId,
+      required this.amount,
+      this.imageUrl,
+      required this.categoryName});
 
   factory _$_GiftCardCategory.fromJson(Map<String, dynamic> json) =>
       _$_$_GiftCardCategoryFromJson(json);
 
   @override
-  final String? categoryId;
+  final String categoryId;
   @override
-  final double? amount;
+  final double amount;
   @override
   final String? imageUrl;
   @override
-  final GiftCardType? categoryName;
+  final GiftCardType categoryName;
 
   @override
   String toString() {
@@ -217,22 +220,22 @@ class _$_GiftCardCategory implements _GiftCardCategory {
 
 abstract class _GiftCardCategory implements GiftCardCategory {
   factory _GiftCardCategory(
-      {String? categoryId,
-      double? amount,
+      {required String categoryId,
+      required double amount,
       String? imageUrl,
-      GiftCardType? categoryName}) = _$_GiftCardCategory;
+      required GiftCardType categoryName}) = _$_GiftCardCategory;
 
   factory _GiftCardCategory.fromJson(Map<String, dynamic> json) =
       _$_GiftCardCategory.fromJson;
 
   @override
-  String? get categoryId => throw _privateConstructorUsedError;
+  String get categoryId => throw _privateConstructorUsedError;
   @override
-  double? get amount => throw _privateConstructorUsedError;
+  double get amount => throw _privateConstructorUsedError;
   @override
   String? get imageUrl => throw _privateConstructorUsedError;
   @override
-  GiftCardType? get categoryName => throw _privateConstructorUsedError;
+  GiftCardType get categoryName => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$GiftCardCategoryCopyWith<_GiftCardCategory> get copyWith =>

@@ -8,11 +8,10 @@ part of 'gift_card_category.dart';
 
 _$_GiftCardCategory _$_$_GiftCardCategoryFromJson(Map<String, dynamic> json) {
   return _$_GiftCardCategory(
-    categoryId: json['categoryId'] as String?,
-    amount: (json['amount'] as num?)?.toDouble(),
+    categoryId: json['categoryId'] as String,
+    amount: (json['amount'] as num).toDouble(),
     imageUrl: json['imageUrl'] as String?,
-    categoryName:
-        _$enumDecodeNullable(_$GiftCardTypeEnumMap, json['categoryName']),
+    categoryName: _$enumDecode(_$GiftCardTypeEnumMap, json['categoryName']),
   );
 }
 
@@ -49,17 +48,6 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$GiftCardTypeEnumMap = {

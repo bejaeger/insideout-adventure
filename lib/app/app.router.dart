@@ -17,7 +17,7 @@ import '../ui/views/admin/admin_home_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
-import '../ui/views/giftcards/gift_card_view.dart';
+import '../ui/views/gift_cards/gift_card_view.dart';
 import '../ui/views/layout/layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';

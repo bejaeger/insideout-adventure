@@ -6,10 +6,10 @@ part 'gift_card_category.g.dart';
 @freezed
 class GiftCardCategory with _$GiftCardCategory {
   factory GiftCardCategory({
-    String? categoryId,
-    double? amount,
+    required String categoryId,
+    required double amount,
     String? imageUrl,
-    GiftCardType? categoryName,
+    required GiftCardType categoryName,
   }) = _GiftCardCategory;
 
   factory GiftCardCategory.fromJson(Map<String, dynamic> json) =>

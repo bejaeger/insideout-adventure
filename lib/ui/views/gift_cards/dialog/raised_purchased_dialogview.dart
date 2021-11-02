@@ -27,20 +27,21 @@ class RaisedPurchasedDialogView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Image.network(
-                model.getGiftCards.imageUrl!,
-                fit: BoxFit.fill,
-              ),
+              if (request.data.imageUrl != null)
+                Image.network(
+                  request.data.imageUrl!,
+                  fit: BoxFit.fill,
+                ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(formatAmount(model.getGiftCards.amount!)),
+                  Text(formatAmount(request.data.amount)),
                   horizontalSpaceSmall,
                   Text(
-                    model.getGiftCards.categoryName.toString(),
+                    request.data.categoryName.toString(),
                   ),
                   horizontalSpaceSmall,
-                  Text(formatAmount(model.getGiftCards.amount)),
+                  Text(formatAmount(request.data.amount)),
                 ],
               ),
               horizontalSpaceSmall,
