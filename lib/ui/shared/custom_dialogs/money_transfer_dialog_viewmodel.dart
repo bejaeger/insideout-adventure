@@ -43,7 +43,7 @@ class MoneyTransferDialogViewModel extends BaseModel {
     if (status == TransferDialogStatus.error) {
       title = "Transfer Failed";
       description =
-          "An internal error occured on our side. Please apologize and try again later";
+          "Sorry, an internal error occured on our side. Please try again later";
       mainButtonTitle = "Got it";
     } else if (status == TransferDialogStatus.success) {
       if (type == TransferType.Sponsor2Explorer) {
@@ -51,6 +51,9 @@ class MoneyTransferDialogViewModel extends BaseModel {
         mainButtonTitle = "Go Back";
       } else if (type == TransferType.Explorer2AFK) {
         title = "Transfer Successful!";
+        mainButtonTitle = "Go Back";
+      } else if (type == TransferType.GiftCardPurchase) {
+        title = "Succesfully Purchased Gift Card!";
         mainButtonTitle = "Go Back";
       } else {
         title = "Success!!";

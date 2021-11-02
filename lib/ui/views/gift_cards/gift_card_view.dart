@@ -43,8 +43,8 @@ class GiftCardView extends StatelessWidget {
                                 children: [
                                   GiftCardsSection(
                                       giftCards: e,
-                                      onGiftCardTap:
-                                          model.displayGiftCardDialog),
+                                      onGiftCardTap: model
+                                          .displayGiftCardDialogAndProcessPurchase),
                                   verticalSpaceMedium,
                                 ],
                               ),

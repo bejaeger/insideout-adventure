@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/constants/afk_credit_and_currency_system.dart';
 import 'package:afkcredits/utils/other_helpers.dart';
 import 'package:intl/intl.dart';
 
@@ -43,4 +44,10 @@ bool isNonZeroDecimalCurrency() {
     log.e("Potentially an invalid locale was parsed to isNonDecimalCurrency()");
     rethrow;
   }
+}
+
+////////////////////////////////////
+// credit and currency conversion (maybe put this in a sevice?)
+int centsToAfkCredits(num cents) {
+  return (cents * kCentsToAfkCreditsConversionFactor).round();
 }

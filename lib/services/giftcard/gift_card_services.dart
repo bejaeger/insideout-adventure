@@ -1,7 +1,8 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/datamodels/giftcards/gift_card_category.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:flutter/foundation.dart';
 
 class GiftCardService {

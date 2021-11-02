@@ -1,4 +1,4 @@
-import 'package:afkcredits/datamodels/giftcards/gift_card_category.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/foundation.dart';

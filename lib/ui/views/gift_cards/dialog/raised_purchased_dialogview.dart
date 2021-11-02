@@ -45,7 +45,8 @@ class RaisedPurchasedDialogView extends StatelessWidget {
                 ],
               ),
               horizontalSpaceSmall,
-              Text("Price in AFK Credits: To Be Added"),
+              Text("Price in AFK Credits: " +
+                  centsToAfkCredits(request.data.amount).toString()),
               Text("Available Credits: " +
                   model.currentUserStats.afkCreditsBalance.toString()),
               Row(
