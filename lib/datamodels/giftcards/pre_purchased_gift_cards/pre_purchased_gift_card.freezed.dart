@@ -21,10 +21,13 @@ class _$PrePurchasedGiftCardTearOff {
   const _$PrePurchasedGiftCardTearOff();
 
   _PrePurchasedGiftCard call(
-      {required String code, required String categoryId}) {
+      {required String code,
+      required String categoryId,
+      required double amount}) {
     return _PrePurchasedGiftCard(
       code: code,
       categoryId: categoryId,
+      amount: amount,
     );
   }
 
@@ -40,6 +43,7 @@ const $PrePurchasedGiftCard = _$PrePurchasedGiftCardTearOff();
 mixin _$PrePurchasedGiftCard {
   String get code => throw _privateConstructorUsedError;
   String get categoryId => throw _privateConstructorUsedError;
+  double get amount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -52,7 +56,7 @@ abstract class $PrePurchasedGiftCardCopyWith<$Res> {
   factory $PrePurchasedGiftCardCopyWith(PrePurchasedGiftCard value,
           $Res Function(PrePurchasedGiftCard) then) =
       _$PrePurchasedGiftCardCopyWithImpl<$Res>;
-  $Res call({String code, String categoryId});
+  $Res call({String code, String categoryId, double amount});
 }
 
 /// @nodoc
@@ -68,6 +72,7 @@ class _$PrePurchasedGiftCardCopyWithImpl<$Res>
   $Res call({
     Object? code = freezed,
     Object? categoryId = freezed,
+    Object? amount = freezed,
   }) {
     return _then(_value.copyWith(
       code: code == freezed
@@ -78,6 +83,10 @@ class _$PrePurchasedGiftCardCopyWithImpl<$Res>
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
               as String,
+      amount: amount == freezed
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -89,7 +98,7 @@ abstract class _$PrePurchasedGiftCardCopyWith<$Res>
           $Res Function(_PrePurchasedGiftCard) then) =
       __$PrePurchasedGiftCardCopyWithImpl<$Res>;
   @override
-  $Res call({String code, String categoryId});
+  $Res call({String code, String categoryId, double amount});
 }
 
 /// @nodoc
@@ -107,6 +116,7 @@ class __$PrePurchasedGiftCardCopyWithImpl<$Res>
   $Res call({
     Object? code = freezed,
     Object? categoryId = freezed,
+    Object? amount = freezed,
   }) {
     return _then(_PrePurchasedGiftCard(
       code: code == freezed
@@ -117,6 +127,10 @@ class __$PrePurchasedGiftCardCopyWithImpl<$Res>
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
               as String,
+      amount: amount == freezed
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -124,7 +138,8 @@ class __$PrePurchasedGiftCardCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_PrePurchasedGiftCard implements _PrePurchasedGiftCard {
-  _$_PrePurchasedGiftCard({required this.code, required this.categoryId});
+  _$_PrePurchasedGiftCard(
+      {required this.code, required this.categoryId, required this.amount});
 
   factory _$_PrePurchasedGiftCard.fromJson(Map<String, dynamic> json) =>
       _$_$_PrePurchasedGiftCardFromJson(json);
@@ -133,10 +148,12 @@ class _$_PrePurchasedGiftCard implements _PrePurchasedGiftCard {
   final String code;
   @override
   final String categoryId;
+  @override
+  final double amount;
 
   @override
   String toString() {
-    return 'PrePurchasedGiftCard(code: $code, categoryId: $categoryId)';
+    return 'PrePurchasedGiftCard(code: $code, categoryId: $categoryId, amount: $amount)';
   }
 
   @override
@@ -147,14 +164,17 @@ class _$_PrePurchasedGiftCard implements _PrePurchasedGiftCard {
                 const DeepCollectionEquality().equals(other.code, code)) &&
             (identical(other.categoryId, categoryId) ||
                 const DeepCollectionEquality()
-                    .equals(other.categoryId, categoryId)));
+                    .equals(other.categoryId, categoryId)) &&
+            (identical(other.amount, amount) ||
+                const DeepCollectionEquality().equals(other.amount, amount)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(code) ^
-      const DeepCollectionEquality().hash(categoryId);
+      const DeepCollectionEquality().hash(categoryId) ^
+      const DeepCollectionEquality().hash(amount);
 
   @JsonKey(ignore: true)
   @override
@@ -171,7 +191,8 @@ class _$_PrePurchasedGiftCard implements _PrePurchasedGiftCard {
 abstract class _PrePurchasedGiftCard implements PrePurchasedGiftCard {
   factory _PrePurchasedGiftCard(
       {required String code,
-      required String categoryId}) = _$_PrePurchasedGiftCard;
+      required String categoryId,
+      required double amount}) = _$_PrePurchasedGiftCard;
 
   factory _PrePurchasedGiftCard.fromJson(Map<String, dynamic> json) =
       _$_PrePurchasedGiftCard.fromJson;
@@ -180,6 +201,8 @@ abstract class _PrePurchasedGiftCard implements PrePurchasedGiftCard {
   String get code => throw _privateConstructorUsedError;
   @override
   String get categoryId => throw _privateConstructorUsedError;
+  @override
+  double get amount => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$PrePurchasedGiftCardCopyWith<_PrePurchasedGiftCard> get copyWith =>

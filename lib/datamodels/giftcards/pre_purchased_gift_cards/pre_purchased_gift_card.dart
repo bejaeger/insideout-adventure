@@ -8,6 +8,7 @@ class PrePurchasedGiftCard with _$PrePurchasedGiftCard {
   factory PrePurchasedGiftCard({
     required String code,
     required String categoryId,
+    required double amount,
   }) = _PrePurchasedGiftCard;
 
   factory PrePurchasedGiftCard.fromJson(Map<String, dynamic> json) =>

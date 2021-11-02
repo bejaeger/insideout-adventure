@@ -88,9 +88,10 @@ export class FakeDataPopulator {
   private async generateUserStatistics(userId: string, zero = false) {
     // log(`generateUserStatistics userId:${userId}`);
     const stats = {
-      "afkCredits": zero ? 0 : faker.datatype.number(100000),
+      "afkCreditsBalance": zero ? 0 : faker.datatype.number(100000),
+      "afkCreditsSpent": zero ? 0 : faker.datatype.number(100000),
       "availableSponsoring": zero ? 0 : faker.datatype.number(100000),
-      "completedQuests": zero ? 0 : faker.datatype.number(10),
+      "numberQuestsCompleted": zero ? 0 : faker.datatype.number(10),
     };
     await this.dbManager.createUserStatistics(userId, stats);
   }

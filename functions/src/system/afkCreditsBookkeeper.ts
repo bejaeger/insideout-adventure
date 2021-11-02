@@ -16,6 +16,9 @@ export class AFKCreditsBookkeeper {
   db: firestore.Firestore;
   dbManager: FirestoreManager;
 
+  kDollarToAfkCreditsConversionFactor: number = 10;
+  kCentsToAfkCreditsConversionFactor: number = this.kDollarToAfkCreditsConversionFactor * 0.01;
+
   constructor(
     db: firestore.Firestore,
   ) {
@@ -78,6 +81,47 @@ export class AFKCreditsBookkeeper {
 
 
 
+  // update Statistics when a quest has been finished by user with uid uid
+  async updateStatsOnGiftCardPurchase(transaction: any, uid: string, amount: number) {
+    log("Entering updateStatsOnGiftCardPurchase()");
+
+    // fetch documents
+    const userDocRef = this.dbManager.getUserSummaryStatisticsDocument(uid);
+    const userDoc = await transaction.get(userDocRef);
+    // validate documents
+    if (!userDoc.exists) {
+      throw Error('Summary statistics document or global stats document does not exist');
+    }
+    const userStats = userDoc.data();
+
+    const afkCreditsToDeduct = this.kCentsToAfkCreditsConversionFactor*amount;
+
+    // ! This check is crucual!
+    if (userStats != null) {
+      log('Fetched user statistics document');
+      // Validate request (validate whether current amount of GW is enough)
+      if (!this.hasEnoughAFKCredits(userStats["afkCreditsBalance"], afkCreditsToDeduct)) {
+        throw Error(`Current AFK Credits balance is not enough to buy gift card.`);
+      }
+    } else {
+      throw Error("No data in summary statistics document!");
+    }
+
+    // Check whether gift card is already available or needs to be provided manually!
+
+    const increment = admin.firestore.FieldValue.increment(afkCreditsToDeduct);
+    const incrementNumberGiftCards = admin.firestore.FieldValue.increment(1);
+    const decrement = admin.firestore.FieldValue.increment(-afkCreditsToDeduct);
+    const docRefRecipient = this.dbManager.getUserSummaryStatisticsDocument(uid);
+    transaction.update(docRefRecipient, {
+      afkCreditsBalance: decrement, // increment afk credits balance
+      afkCreditsSpent: increment, // increment lifetime earnings
+      numberGiftCardsPurchased: incrementNumberGiftCards,  // increment number of quests completed
+    });
+
+
+  }
+
   ///////////////////////////////////////////////////////////////
   // Helper and validating functions
 
@@ -86,4 +130,10 @@ export class AFKCreditsBookkeeper {
     log(`currentBalance: ${currentBalance}`);
     return Math.abs(amountToDeduct) <= currentBalance;
   }
+
+  private hasEnoughAFKCredits(currentCreditBalance: number, amountToDeduct: number) {
+    log(`amountToDeduct: ${amountToDeduct}`);
+    log(`current AFK Credits Balance: ${currentCreditBalance}`);
+    return Math.abs(amountToDeduct) <= currentCreditBalance;
+  }  
 }

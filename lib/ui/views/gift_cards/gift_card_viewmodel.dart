@@ -130,7 +130,7 @@ class GiftCardViewModel extends BaseModel {
   bool hasEnoughBalance(double amount) {
     log.v(
         "Comparing balance of gift card: ${centsToAfkCredits(amount)} and available credits ${currentUserStats.afkCreditsBalance}");
-    return centsToAfkCredits(amount) < currentUserStats.afkCreditsBalance;
+    return centsToAfkCredits(amount) <= currentUserStats.afkCreditsBalance;
   }
 
   Future loadGiftCards({required String name}) async {

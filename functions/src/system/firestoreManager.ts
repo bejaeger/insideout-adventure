@@ -1,7 +1,7 @@
 import {firestore} from "firebase-admin";
 
 // enable short hand for console.log()
-// function log(message: string) { console.log(`FirestoreCollectionHandler | ${message}`); }
+function log(message: string) { console.log(`FirestoreCollectionHandler | ${message}`); }
 
 /**
  * A class that helps with getting firestore collections
@@ -21,6 +21,21 @@ export class FirestoreManager {
 
     createMoneyTransferDocument() {
       return this.db.collection("transfers").doc();
+    }
+
+    createGiftCardPurchaseDocument(uid: string) {
+      return this.db.collection("users").doc(uid).collection("giftcards").doc();
+    }
+
+    async getPrePurchasedGiftCard(categoryId: string) {
+      const snapshot = await this.db.collection("prePurchasedGiftCards").where("categoryId", "==", categoryId).get();
+      if (snapshot.empty) {
+        log(`No pre-purchased gift card available for category with id ${categoryId}.`);
+        return null;
+      } else {
+        log(`Pre-purchased gift card found!`);
+        return snapshot.docs[0];
+      }
     }
 
     // ///////////////////////////////////////////////////////////
