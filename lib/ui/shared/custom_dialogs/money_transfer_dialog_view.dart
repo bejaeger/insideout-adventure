@@ -50,82 +50,81 @@ class _BasicDialogContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      AnimatedOpacity(
-        duration: Duration(milliseconds: 500),
-        opacity: model.isBusy ? 0.0 : 1.0,
-        child: model.isBusy
-            ? Container()
-            : Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.topCenter,
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: screenWidth(context, percentage: 0.04),
-                    ),
-                    padding: const EdgeInsets.only(
-                      top: 32,
-                      left: 16,
-                      right: 16,
-                      bottom: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+      if (!model.isBusy) ...[
+        AnimatedOpacity(
+          duration: Duration(milliseconds: 500),
+          opacity: model.isBusy ? 0.0 : 1.0,
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.topCenter,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: screenWidth(context, percentage: 0.04),
+                ),
+                padding: const EdgeInsets.only(
+                  top: 32,
+                  left: 16,
+                  right: 16,
+                  bottom: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    verticalSpaceSmall,
+                    Text(model.title ?? '',
+                        textAlign: TextAlign.center,
+                        style: textTheme(context).headline6),
+                    verticalSpaceSmall,
+                    Text(model.description ?? '', textAlign: TextAlign.center),
+                    verticalSpaceMedium,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        verticalSpaceSmall,
-                        Text(model.title ?? '',
-                            textAlign: TextAlign.center,
-                            style: textTheme(context).headline6),
-                        verticalSpaceSmall,
-                        Text(model.description ?? '',
-                            textAlign: TextAlign.center),
-                        verticalSpaceMedium,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            if (model.secondaryButtonTitle != null)
-                              TextButton(
-                                onPressed: () =>
-                                    completer(DialogResponse(confirmed: false)),
-                                child: Text(
-                                  model.secondaryButtonTitle!,
-                                ),
-                              ),
-                            TextButton(
-                              onPressed: () =>
-                                  completer(DialogResponse(confirmed: true)),
-                              child: Text(
-                                model.mainButtonTitle ?? '',
-                                style: textTheme(context).bodyText2!.copyWith(
-                                    color: _getStatusColor(model.status),
-                                    fontWeight: FontWeight.w600),
-                              ),
+                        if (model.secondaryButtonTitle != null)
+                          TextButton(
+                            onPressed: () =>
+                                completer(DialogResponse(confirmed: false)),
+                            child: Text(
+                              model.secondaryButtonTitle!,
                             ),
-                          ],
+                          ),
+                        TextButton(
+                          onPressed: () =>
+                              completer(DialogResponse(confirmed: true)),
+                          child: Text(
+                            model.mainButtonTitle ?? '',
+                            style: textTheme(context).bodyText2!.copyWith(
+                                color: _getStatusColor(model.status),
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  Positioned(
-                    top: -28,
-                    child: CircleAvatar(
-                      minRadius: 16,
-                      maxRadius: 28,
-                      backgroundColor: _getStatusColor(model.status),
-                      child: Icon(
-                        _getStatusIcon(model.status),
-                        size: 28,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-      ),
+              Positioned(
+                top: -28,
+                child: CircleAvatar(
+                  minRadius: 16,
+                  maxRadius: 28,
+                  backgroundColor: _getStatusColor(model.status),
+                  child: Icon(
+                    _getStatusIcon(model.status),
+                    size: 28,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
       if (model.isBusy)
         Center(
           child: Container(

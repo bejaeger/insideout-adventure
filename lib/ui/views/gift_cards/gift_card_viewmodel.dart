@@ -180,6 +180,7 @@ class GiftCardViewModel extends BaseModel {
 
   List<List<GiftCardCategory>> getListOfGiftCardsToDisplay() {
     List<List<GiftCardCategory>> returnList = [];
+
     getUniqueCategoryNames().forEach((categoryName) {
       if (!returnList.any((listOfGiftCards) => listOfGiftCards.any((giftCard) =>
           describeEnum(giftCard.categoryName).toString() == categoryName))) {
