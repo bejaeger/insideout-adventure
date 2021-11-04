@@ -3,6 +3,7 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_datamodels.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -16,7 +17,7 @@ import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
-import 'package:afkcredits/services/giftcard/gift_card_services.dart';
+import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -444,7 +445,6 @@ class FirestoreApi {
 
   ////////////////////////////////////////////////////////
   // Quest collection
-  ///  money pools the user is contributing to
   Stream<List<ActivatedQuest>> getPastQuestsStream({required String uid}) {
     try {
       final returnStream = activatedQuestsCollection
@@ -465,32 +465,9 @@ class FirestoreApi {
     }
   }
 
-  /////////////////////////////////////////////////////////
-  // Collection's getter
-  DocumentReference getUserStatisticsCollection({required String uid}) {
-    return usersCollection
-        .doc(uid)
-        .collection(userStatisticsCollectionKey)
-        .doc();
-  }
-
-  DocumentReference getUserSummaryStatisticsDocument({required String uid}) {
-    return usersCollection
-        .doc(uid)
-        .collection(userStatisticsCollectionKey)
-        .doc(userSummaryStatisticsDocumentKey);
-  }
-
-  DocumentReference getUserFavouritePlacesDocument({required String uid}) {
-    return usersCollection
-        .doc(uid)
-        .collection(userFavouritePlacesCollectionKey)
-        .doc();
-  }
-
-  DocumentReference getMarkersDocs({required String markerId}) {
-    return markersCollection.doc(markerId);
-  }
+  ////////////////////////////////////////////////////////
+  // Gift Cards functions
+  //
 
   Future<List<GiftCardCategory>> getGiftCardsForCategory(
       {required String categoryName}) async {
@@ -538,4 +515,56 @@ class FirestoreApi {
           devDetails: "$e" + GiftCardType.Steam.toString());
     }
   }
+
+  Stream<List<GiftCardPurchase>> getPurchasedGiftCardsStream(
+      {required String uid}) {
+    try {
+      final returnStream = getUserGiftCardsCollection(uid: uid)
+          .orderBy("createdAt", descending: true)
+          .snapshots()
+          .map((event) => event.docs
+              .map((doc) => GiftCardPurchase.fromJson(doc.data()))
+              .toList());
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message: "Unknown expection when listening to purchased gift cards",
+          devDetails: '$e');
+    }
+  }
+
+  Future updateGiftCardPurchase(
+      {required GiftCardPurchase giftCardPurchase, required String uid}) async {
+    getUserGiftCardsCollection(uid: uid)
+        .doc(giftCardPurchase.transferId)
+        .update(giftCardPurchase.toJson());
+  }
+}
+
+/////////////////////////////////////////////////////////
+// Collection's getter
+DocumentReference getUserStatisticsCollection({required String uid}) {
+  return usersCollection.doc(uid).collection(userStatisticsCollectionKey).doc();
+}
+
+DocumentReference getUserSummaryStatisticsDocument({required String uid}) {
+  return usersCollection
+      .doc(uid)
+      .collection(userStatisticsCollectionKey)
+      .doc(userSummaryStatisticsDocumentKey);
+}
+
+DocumentReference getUserFavouritePlacesDocument({required String uid}) {
+  return usersCollection
+      .doc(uid)
+      .collection(userFavouritePlacesCollectionKey)
+      .doc();
+}
+
+DocumentReference getMarkersDocs({required String markerId}) {
+  return markersCollection.doc(markerId);
+}
+
+CollectionReference getUserGiftCardsCollection({required String uid}) {
+  return usersCollection.doc(uid).collection(purchasedGiftCardsCollectionKey);
 }

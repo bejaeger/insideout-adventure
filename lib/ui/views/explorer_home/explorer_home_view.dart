@@ -35,8 +35,16 @@ class ExplorerHomeView extends StatelessWidget {
                       userStats: model.currentUserStats,
                     ),
                     verticalSpaceLarge,
+                    ElevatedButton(
+                      // onPressed: model.navigateToExplorerHomeView,
+                      onPressed: model.navigateToGiftCardsView,
+                      //child: Text("Go to explorer home/map")),
+                      child: Text("Your Gift Cards  "),
+                    ),
+                    verticalSpaceMedium,
                     SectionHeader(
-                      title: "Recently Completed Quests",
+                      horizontalPadding: 0,
+                      title: "Your Achievements",
                     ),
                     verticalSpaceSmall,
                     model.activatedQuestsHistory.length == 0
@@ -148,6 +156,7 @@ class QuestsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      scrollDirection: Axis.horizontal,
       physics: ScrollPhysics(),
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

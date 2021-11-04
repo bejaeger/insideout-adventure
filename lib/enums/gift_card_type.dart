@@ -1,1 +1,1 @@
-enum GiftCardType { Playstation, Xbox, Steam }
+enum GiftCardType { Playstation, Xbox, Steam, Nintendo }

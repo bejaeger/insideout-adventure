@@ -54,4 +54,5 @@ const _$GiftCardTypeEnumMap = {
   GiftCardType.Playstation: 'Playstation',
   GiftCardType.Xbox: 'Xbox',
   GiftCardType.Steam: 'Steam',
+  GiftCardType.Nintendo: 'Nintendo',
 };

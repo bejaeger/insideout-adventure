@@ -20,7 +20,7 @@ import '../apis/firestore_api.dart';
 import '../flavor_config.dart';
 import '../services/environment_services.dart';
 import '../services/geolocation/geolocation_service.dart';
-import '../services/giftcard/gift_card_services.dart';
+import '../services/giftcard/gift_card_service.dart';
 import '../services/layout/layout_service.dart';
 import '../services/local_storage_service.dart';
 import '../services/markers/marker_service.dart';

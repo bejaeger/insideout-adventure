@@ -11,7 +11,7 @@ import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
-import 'package:afkcredits/services/giftcard/gift_card_services.dart';
+import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
