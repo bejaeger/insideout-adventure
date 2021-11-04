@@ -7,6 +7,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/user_role.dart';
+import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
@@ -30,6 +31,8 @@ class BaseModel extends BaseViewModel {
       locator<TransfersHistoryService>();
   final LayoutService layoutService = locator<LayoutService>();
   final StopWatchService _stopWatchService = locator<StopWatchService>();
+  final GiftCardService _giftCardService = locator<GiftCardService>();
+
   StreamSubscription<int>? _timerSubscription;
 
   User get currentUser => userService.currentUser;
@@ -84,6 +87,7 @@ class BaseModel extends BaseViewModel {
   Future logout() async {
     // TODO: Check that there is no active quest present!
     questService.clearData();
+    _giftCardService.clearData();
     await userService.handleLogoutEvent();
     transfersHistoryService.clearData();
     layoutService.setShowBottomNavBar(false);

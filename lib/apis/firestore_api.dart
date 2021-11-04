@@ -520,7 +520,7 @@ class FirestoreApi {
       {required String uid}) {
     try {
       final returnStream = getUserGiftCardsCollection(uid: uid)
-          .orderBy("createdAt", descending: true)
+          .orderBy("purchasedAt", descending: true)
           .snapshots()
           .map((event) => event.docs
               .map((doc) => GiftCardPurchase.fromJson(doc.data()))

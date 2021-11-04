@@ -199,9 +199,10 @@ class __$GiftCardPurchaseCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_GiftCardPurchase implements _GiftCardPurchase {
-  _$_GiftCardPurchase(
+  const _$_GiftCardPurchase(
       {required this.giftCardCategory,
       required this.uid,
       this.code,
@@ -276,7 +277,7 @@ class _$_GiftCardPurchase implements _GiftCardPurchase {
 }
 
 abstract class _GiftCardPurchase implements GiftCardPurchase {
-  factory _GiftCardPurchase(
+  const factory _GiftCardPurchase(
       {required GiftCardCategory giftCardCategory,
       required String uid,
       String? code,

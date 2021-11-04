@@ -3,6 +3,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
+import 'package:afkcredits/ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'dart:async';
 
@@ -30,7 +31,9 @@ class ExplorerHomeViewModel extends BaseModel {
     setBusy(false);
   }
 
-  void navigateToGiftCardsView() {
-    navigationService.navigateTo(Routes.purchasedGiftCardsView);
+  Future navigateToGiftCardsView() async {
+    setShowBottomNavBar(false);
+    await navigationService.navigateTo(Routes.purchasedGiftCardsView);
+    setShowBottomNavBar(true);
   }
 }

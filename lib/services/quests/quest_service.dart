@@ -421,6 +421,7 @@ class QuestService {
   }
 
   void clearData() {
+    log.i("Clear quest history");
     activatedQuestsHistory = [];
     _pastQuestsStreamSubscription?.cancel();
     _pastQuestsStreamSubscription = null;

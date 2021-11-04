@@ -27,4 +27,10 @@ class PurchasedGiftCardsViewModel extends BaseModel {
     _giftCardService.switchRedeemStatus(
         giftCardPurchase: giftCardPurchase, uid: currentUser.uid);
   }
+
+  @override
+  void dispose() {
+    _giftCardService.cancelPurchasedGiftCardSubscription();
+    super.dispose();
+  }
 }

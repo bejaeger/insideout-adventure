@@ -23,7 +23,7 @@ _$_GiftCardPurchase _$_$_GiftCardPurchaseFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$_$_GiftCardPurchaseToJson(
         _$_GiftCardPurchase instance) =>
     <String, dynamic>{
-      'giftCardCategory': instance.giftCardCategory,
+      'giftCardCategory': instance.giftCardCategory.toJson(),
       'uid': instance.uid,
       'code': instance.code,
       'purchasedAt': instance.purchasedAt,

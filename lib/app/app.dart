@@ -24,6 +24,7 @@ import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
+import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
 import 'package:afkcredits/ui/views/quest/active_quest_view.dart';
@@ -86,6 +87,8 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: MarkerService),
     LazySingleton(classType: DirectionsAPI),
     LazySingleton(classType: GiftCardService),
+
+    LazySingleton(classType: PurchasedGiftCardsViewModel),
 
     // Services
   ],

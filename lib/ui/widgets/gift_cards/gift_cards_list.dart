@@ -54,7 +54,7 @@ class GiftCardsList extends StatelessWidget {
                         horizontalSpaceSmall,
                         Text(centsToAfkCredits(giftCardList[index].amount)
                                 .toString() +
-                            " AFK Credits"),
+                            " AFKC"),
                       ],
                     ),
                   ),

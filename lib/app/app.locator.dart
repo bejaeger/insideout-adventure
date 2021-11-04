@@ -30,6 +30,7 @@ import '../services/qrcodes/qrcode_service.dart';
 import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/users/user_service.dart';
+import '../ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 
 final locator = StackedLocator.instance;
 
@@ -61,4 +62,5 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => MarkerService());
   locator.registerLazySingleton(() => DirectionsAPI());
   locator.registerLazySingleton(() => GiftCardService());
+  locator.registerLazySingleton(() => PurchasedGiftCardsViewModel());
 }

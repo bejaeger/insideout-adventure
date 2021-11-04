@@ -80,7 +80,7 @@ class GiftCardService {
         if (callback != null) {
           callback();
         }
-        log.v("Listened to ${purchasedGiftCards.length} quests");
+        log.v("Listened to ${purchasedGiftCards.length} gift cards");
       });
       if (!listenedOnce) {
         if (!completer.isCompleted) {
@@ -117,11 +117,24 @@ class GiftCardService {
         giftCardPurchase.status == PurchasedGiftCardStatus.redeemed
             ? PurchasedGiftCardStatus.available
             : PurchasedGiftCardStatus.redeemed;
+    log.i("Switching status of gift card to $newStatus");
     GiftCardPurchase newGiftCardPurchase = purchasedGiftCards
         .where((element) => element.transferId == giftCardPurchase.transferId)
         .first
         .copyWith(status: newStatus);
     _firestoreApi.updateGiftCardPurchase(
         giftCardPurchase: newGiftCardPurchase, uid: uid);
+  }
+
+  void clearData() {
+    log.i("Clear purchased gift cards");
+    purchasedGiftCards = [];
+    _purchasedGiftCardsStreamSubscription?.cancel();
+    _purchasedGiftCardsStreamSubscription = null;
+  }
+
+  void cancelPurchasedGiftCardSubscription() {
+    _purchasedGiftCardsStreamSubscription?.cancel();
+    _purchasedGiftCardsStreamSubscription = null;
   }
 }

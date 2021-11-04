@@ -59,7 +59,7 @@ class ActiveQuestView extends StatelessWidget {
           ),
         ),
         //Place the Floating Action to the Left of the View
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,

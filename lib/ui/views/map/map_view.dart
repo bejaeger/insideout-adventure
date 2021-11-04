@@ -58,7 +58,7 @@ class MapView extends StatelessWidget {
             //trafficEnabled: true,
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,

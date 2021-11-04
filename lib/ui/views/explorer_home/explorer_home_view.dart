@@ -36,10 +36,11 @@ class ExplorerHomeView extends StatelessWidget {
                     ),
                     verticalSpaceLarge,
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(elevation: 5),
                       // onPressed: model.navigateToExplorerHomeView,
                       onPressed: model.navigateToGiftCardsView,
                       //child: Text("Go to explorer home/map")),
-                      child: Text("Your Gift Cards  "),
+                      child: Text("See Your Gift Cards -> "),
                     ),
                     verticalSpaceMedium,
                     SectionHeader(
@@ -155,24 +156,27 @@ class QuestsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      scrollDirection: Axis.horizontal,
-      physics: ScrollPhysics(),
-      shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 1,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        crossAxisCount: 2,
+    return SizedBox(
+      height: 200,
+      child: GridView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          childAspectRatio: 1,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 1,
+        ),
+        itemCount: activatedQuests.length,
+        itemBuilder: (context, index) {
+          final ActivatedQuest data = activatedQuests[index];
+          return FinishedQuestCard(
+            quest: data,
+            onTap: () => null,
+          );
+        },
       ),
-      itemCount: activatedQuests.length,
-      itemBuilder: (context, index) {
-        final ActivatedQuest data = activatedQuests[index];
-        return FinishedQuestCard(
-          quest: data,
-          onTap: () => null,
-        );
-      },
     );
   }
 }
@@ -192,7 +196,7 @@ class FinishedQuestCard extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: SizedBox(
           //width: screenWidthPercentage(context, percentage: 0.8),
-          height: 150,
+          height: 200,
           child: Stack(
             fit: StackFit.expand,
             children: [

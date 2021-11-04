@@ -7,7 +7,8 @@ part 'gift_card_purchase.g.dart';
 
 @freezed
 class GiftCardPurchase with _$GiftCardPurchase {
-  factory GiftCardPurchase({
+  @JsonSerializable(explicitToJson: true)
+  const factory GiftCardPurchase({
     required GiftCardCategory giftCardCategory,
     required String uid,
     String? code,
