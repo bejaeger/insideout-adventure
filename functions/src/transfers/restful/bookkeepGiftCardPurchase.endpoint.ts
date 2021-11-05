@@ -38,7 +38,7 @@ export default new Post((request: Request, response: Response) => {
             data["transferId"] = docRef.id;
 
             // prepare return Data
-            let returnData: any = { transferId: docRef.id, needToProvideGiftCard: false };
+            let returnData: any = GiftCardManager.getDefaultReturnObject(docRef.id, false);
 
             const amount = giftCardCategory["amount"];
             const categoryId = giftCardCategory["categoryId"];

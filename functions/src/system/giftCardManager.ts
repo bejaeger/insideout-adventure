@@ -39,4 +39,8 @@ export class GiftCardManager {
     
   }
 
+  static getDefaultReturnObject(transferId: string, needToProvideGiftCard: boolean) {
+    return { transferId: transferId, needToProvideGiftCard: needToProvideGiftCard };
+  }
+
 }

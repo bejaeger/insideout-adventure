@@ -13,16 +13,16 @@ export class ResponseHandler {
     };
   }
 
-    // Return objects
-    static returnErrorObject(errorMessage: string, errorObject: any) {
-      return {
-        data: null,
-        error: {
-          message: errorMessage,
-          errorObject: errorObject,
-        },
-      };
-    }
+  // Return objects
+  static returnErrorObject(errorMessage: string, errorObject: any) {
+    return {
+      data: null,
+      error: {
+        message: errorMessage,
+        errorObject: errorObject,
+      },
+    };
+  }
 
   static returnData(data: any) {
     return {

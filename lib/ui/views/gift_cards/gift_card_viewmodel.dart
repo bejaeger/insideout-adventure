@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_purchase_success_result/gift_card_purchase_success_result.dart';
 import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/money_transfer_dialog_status.dart';
@@ -12,7 +14,6 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
-import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:flutter/foundation.dart';
@@ -21,17 +22,16 @@ import 'package:stacked_services/stacked_services.dart';
 class GiftCardViewModel extends BaseModel {
   final SnackbarService? _snackbarService = locator<SnackbarService>();
 
-  final _giftCardServices = locator<GiftCardService>();
+  final _giftCardService = locator<GiftCardService>();
   final _dialogService = locator<DialogService>();
-  final _paymentService = locator<PaymentService>();
   final BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
 
   List<GiftCardCategory> getGiftCardCategories({required String categoryName}) {
-    return _giftCardServices.getGiftCards(categoryName: categoryName);
+    return _giftCardService.getGiftCards(categoryName: categoryName);
   }
 
   Map<String, List<GiftCardCategory>> get getAllGiftCardCategories =>
-      _giftCardServices.giftCardCategories;
+      _giftCardService.giftCardCategories;
 
   final log = getLogger('GiftCardViewModel');
 
@@ -81,6 +81,16 @@ class GiftCardViewModel extends BaseModel {
         dynamic dialogResult = await _showMoneyTransferDialog(
             moneyTransferCompleter: purchaseCompleter,
             type: TransferType.GiftCardPurchase);
+
+        if (dialogResult?.confirmed == true &&
+            (await purchaseCompleter.future != TransferDialogStatus.error ||
+                await purchaseCompleter.future !=
+                    TransferDialogStatus.warning)) {
+          log.i("Navigating to purchased gift card view");
+          setShowBottomNavBar(false);
+          await navigationService.navigateTo(Routes.purchasedGiftCardsView);
+          setShowBottomNavBar(true);
+        }
       }
     }
   }
@@ -91,11 +101,15 @@ class GiftCardViewModel extends BaseModel {
     try {
       final giftCardPurchase =
           GiftCardPurchase(giftCardCategory: giftCard, uid: currentUser.uid);
-      await _paymentService.purchaseGiftCard(
-          giftCardPurchase: giftCardPurchase);
-      log.i("GiftCard purchase: $giftCardPurchase");
+      GiftCardPurchaseSuccessResult result = await _giftCardService
+          .purchaseGiftCard(giftCardPurchase: giftCardPurchase);
+      log.i("GiftCard purchased: $giftCardPurchase");
       // the completion event will be listened to in the pop-up dialog
-      purchaseCompleter.complete(TransferDialogStatus.success);
+      if (result.needToProvideGiftCard == true) {
+        purchaseCompleter.complete(TransferDialogStatus.giftCardPending);
+      } else {
+        purchaseCompleter.complete(TransferDialogStatus.success);
+      }
     } catch (e) {
       log.e("Error when processing gift card purchase, error thrown $e");
       if (e is MoneyTransferException) {
@@ -136,14 +150,14 @@ class GiftCardViewModel extends BaseModel {
   Future loadGiftCards({required String name}) async {
     setBusy(true);
     log.i("Loading gift cards");
-    await _giftCardServices.fetchGiftCards(categoryName: name);
+    await _giftCardService.fetchGiftCards(categoryName: name);
     setBusy(false);
   }
 
   Future loadAllGiftCards() async {
     setBusy(true);
     log.i("Loading gift cards");
-    await _giftCardServices.fetchAllGiftCards();
+    await _giftCardService.fetchAllGiftCards();
     setBusy(false);
   }
 

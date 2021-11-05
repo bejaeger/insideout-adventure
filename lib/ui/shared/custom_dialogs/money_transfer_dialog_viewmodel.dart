@@ -54,12 +54,20 @@ class MoneyTransferDialogViewModel extends BaseModel {
         mainButtonTitle = "Go Back";
       } else if (type == TransferType.GiftCardPurchase) {
         title = "Succesfully Purchased Gift Card!";
-        mainButtonTitle = "Go Back";
+        mainButtonTitle = "See Gift Cards";
+        secondaryButtonTitle = "Go Back";
       } else {
         title = "Success!!";
         description = "You are the best!";
         mainButtonTitle = "Go Back";
       }
+    } else if (status == TransferDialogStatus.giftCardPending) {
+      log.i(
+          "The order was succesfull but there was no pre-purchased gift card available!");
+      title = "You order was successful!";
+      description = "Your gift card code will be available soon!";
+      mainButtonTitle = "See Gift Cards";
+      secondaryButtonTitle = "Go Back";
     } else {
       title = "Warning";
       description =

@@ -11,7 +11,6 @@ _$_PrePurchasedGiftCard _$_$_PrePurchasedGiftCardFromJson(
   return _$_PrePurchasedGiftCard(
     code: json['code'] as String,
     categoryId: json['categoryId'] as String,
-    amount: (json['amount'] as num).toDouble(),
   );
 }
 
@@ -20,5 +19,4 @@ Map<String, dynamic> _$_$_PrePurchasedGiftCardToJson(
     <String, dynamic>{
       'code': instance.code,
       'categoryId': instance.categoryId,
-      'amount': instance.amount,
     };

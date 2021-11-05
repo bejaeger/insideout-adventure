@@ -1,15 +1,23 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_purchase_success_result/gift_card_purchase_success_result.dart';
 import 'package:afkcredits/enums/purchased_gift_card_status.dart';
+import 'package:afkcredits/exceptions/firestore_api_exception.dart';
+import 'package:afkcredits/flavor_config.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
 
 class GiftCardService {
   final _firestoreApi = locator<FirestoreApi>();
+  final FlavorConfigProvider _flavorConfigProvider =
+      locator<FlavorConfigProvider>();
   final log = getLogger('GiftCardService');
   Map<String, List<GiftCardCategory>> giftCardCategories = {};
 
@@ -125,6 +133,53 @@ class GiftCardService {
     _firestoreApi.updateGiftCardPurchase(
         giftCardPurchase: newGiftCardPurchase, uid: uid);
   }
+
+  ///////////////////////////////////////////////
+  /// Call Cloud Function
+  Future purchaseGiftCard({required GiftCardPurchase giftCardPurchase}) async {
+    try {
+      log.i("Calling restful server function bookkeepGiftCardPurchase");
+
+      Uri url = Uri.https(
+          _flavorConfigProvider.authority,
+          p.join(_flavorConfigProvider.uripathprepend,
+              "transfers-api/bookkeepgiftcardpurchase"));
+      http.Response? response = await http.post(url,
+          body: json.encode(giftCardPurchase.toJson()),
+          headers: {"Accept": "application/json"});
+      log.i("posted http request");
+      dynamic result = json.decode(response.body);
+      log.i("decoded json response");
+
+      if (result["error"] == null) {
+        log.i(
+            "Added the following gift card purchase document to ${result["data"]["transferId"]}: ${giftCardPurchase.toJson()}");
+        return GiftCardPurchaseSuccessResult.fromJson(result["data"]);
+      } else {
+        log.e(
+            "Error when creating money transfer: ${result["error"]["message"]}");
+        throw FirestoreApiException(
+            message:
+                "An error occured in the cloud function 'bookkeepGiftCardPurchase'",
+            devDetails:
+                "Error message from cloud function: ${result["error"]["message"]}",
+            prettyDetails:
+                "An internal error occured on our side, please apologize and try again later.");
+      }
+    } catch (e) {
+      log.e("Couldn't process transfer: ${e.toString()}");
+      throw FirestoreApiException(
+          message:
+              "Something failed when calling the https function bookkeepGiftCardPurchase",
+          devDetails:
+              "This should not happen and is due to an error on the Firestore side or the datamodels that were being pushed!",
+          prettyDetails:
+              "An internal error occured on our side, please apologize and try again later.");
+    }
+  }
+
+  ////////////////////////////////////////////////////////////
+  // Clean-up
 
   void clearData() {
     log.i("Clear purchased gift cards");

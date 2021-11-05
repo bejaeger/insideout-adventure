@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/enums/purchased_gift_card_status.dart';
@@ -90,12 +91,19 @@ class GiftCardPurchasePreview extends StatelessWidget {
         ? "Your order will arrive soon."
         : giftCard.code!;
     bool isSelected = giftCard.status == PurchasedGiftCardStatus.redeemed;
+    String titleSuffix = giftCard.status == PurchasedGiftCardStatus.available
+        ? ", Redeem Now"
+        : "";
     return ListTile(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
         side: BorderSide(
             width: 1.0,
-            color: isSelected ? Colors.grey[400]! : Colors.grey[800]!),
+            color: giftCard.status == PurchasedGiftCardStatus.available
+                ? kPrimaryColor
+                : isSelected
+                    ? Colors.grey[400]!
+                    : Colors.grey[800]!),
       ),
       leading: giftCard.giftCardCategory.imageUrl != null
           ? Opacity(
@@ -110,8 +118,9 @@ class GiftCardPurchasePreview extends StatelessWidget {
                   .toString()),
             ),
       isThreeLine: true,
-      title:
-          Text(describeEnum(giftCard.giftCardCategory.categoryName).toString()),
+      title: Text(
+          describeEnum(giftCard.giftCardCategory.categoryName).toString() +
+              titleSuffix),
       subtitle: Text(
         "Amount: " +
             formatAmount(giftCard.giftCardCategory.amount) +
@@ -121,6 +130,7 @@ class GiftCardPurchasePreview extends StatelessWidget {
       ),
       enabled: giftCard.status != PurchasedGiftCardStatus.redeemed,
       trailing: ToggleButtons(
+        borderRadius: BorderRadius.circular(16.0),
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),

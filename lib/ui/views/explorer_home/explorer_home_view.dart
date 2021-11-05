@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -85,7 +86,9 @@ class ExplorerCreditStats extends StatelessWidget {
             Flexible(
               child: Column(
                 children: [
-                  Text(userStats.availableSponsoring.toString(),
+                  Text(
+                      centsToAfkCredits(userStats.availableSponsoring)
+                          .toString(),
                       style: textTheme(context).headline4),
                   Icon(Icons.lock),
                   Text(
