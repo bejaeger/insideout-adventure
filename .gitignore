@@ -34,9 +34,9 @@
 pubspec.lock
 
 #Android Services 
-afk-credits/android/app/src/dev/google-services.json
-afk-credits/android/app/src/dev/AndroidManifest.xml
-afk-credits/android/app/src/main/AndroidManifest.xml
+android/app/src/dev/google-services.json
+android/app/src/dev/AndroidManifest.xml
+android/app/src/main/AndroidManifest.xml
 android/app/src/dev/google-services.json
 android/app/src/dev/AndroidManifest.xml
 android/app/src/main/AndroidManifest.xml
