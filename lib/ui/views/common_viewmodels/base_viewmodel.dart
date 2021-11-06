@@ -33,8 +33,6 @@ class BaseModel extends BaseViewModel {
   final StopWatchService _stopWatchService = locator<StopWatchService>();
   final GiftCardService _giftCardService = locator<GiftCardService>();
 
-  StreamSubscription<int>? _timerSubscription;
-
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get userIsAdmin => currentUser.role == UserRole.admin;
@@ -53,8 +51,6 @@ class BaseModel extends BaseViewModel {
 
   String get getHourMinuteSecondsTime =>
       _stopWatchService.secondsToHourMinuteSecondTime(activeQuest.timeElapsed);
-
-  StreamSubscription<int>? get timeSubscription => _timerSubscription;
 
   // void setTimer() {
   //   //Clock Timer
@@ -106,8 +102,15 @@ class BaseModel extends BaseViewModel {
       /// Once The user Click on Start a Quest. It tks her/him to new Page
       /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
       /// Quest.
-      await questService.startQuest(quest: quest, uids: [currentUser.uid]);
-      navigationService.replaceWith(Routes.activeQuestView);
+      final isQuestStarted =
+          await questService.startQuest(quest: quest, uids: [currentUser.uid]);
+      if (isQuestStarted is String) {
+        await dialogService.showDialog(
+            title: "Sorry could not start the quest",
+            description: isQuestStarted);
+      } else {
+        navigationService.replaceWith(Routes.activeQuestView);
+      }
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
     }
@@ -142,12 +145,21 @@ class BaseModel extends BaseViewModel {
     return adminMode;
   }
 
+  void clearStackAndNavigateToHomeView() {
+    if (currentUser.role == UserRole.sponsor) {
+      navigationService.clearStackAndShow(Routes.sponsorHomeView);
+    } else if (currentUser.role == UserRole.explorer) {
+      navigationService.clearStackAndShow(Routes.explorerHomeView);
+    } else if (currentUser.role == UserRole.admin) {
+      navigationService.clearStackAndShow(Routes.adminHomeView);
+    }
+  }
+
   //////////////////////////////////////////
   /// Clean-up
   @override
   void dispose() {
     _activeQuestSubscription?.cancel();
-    _timerSubscription?.cancel();
     super.dispose();
   }
 }

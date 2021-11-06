@@ -26,7 +26,7 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
       //In Future I will change these values to dynamically Change the Initial Camera Position
       //Based on teh city
       target: LatLng(quest.startMarker.lat!, quest.startMarker.lon!),
-      zoom: 9,
+      zoom: 14,
     );
 
     return _initialCameraPosition;

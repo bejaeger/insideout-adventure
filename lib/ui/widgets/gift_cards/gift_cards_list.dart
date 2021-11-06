@@ -29,36 +29,39 @@ class GiftCardsList extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (giftCardList[index].imageUrl != null)
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if (giftCardList[index].imageUrl != null)
+                      Expanded(
+                        flex: 4,
+                        child: Image.network(
+                          giftCardList[index].imageUrl!,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                     Expanded(
-                      flex: 4,
-                      child: Image.network(
-                        giftCardList[index].imageUrl!,
-                        fit: BoxFit.fill,
+                      child: Row(
+                        children: [
+                          Text(formatAmount(giftCardList[index].amount)
+                              .toString()),
+                          horizontalSpaceSmall,
+                          Text(
+                            describeEnum(
+                                giftCardList[index].categoryName.toString()),
+                          ),
+                          horizontalSpaceSmall,
+                          Text(centsToAfkCredits(giftCardList[index].amount)
+                                  .toString() +
+                              " AFKC"),
+                        ],
                       ),
                     ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Text(formatAmount(giftCardList[index].amount)
-                            .toString()),
-                        horizontalSpaceSmall,
-                        Text(
-                          describeEnum(
-                              giftCardList[index].categoryName.toString()),
-                        ),
-                        horizontalSpaceSmall,
-                        Text(centsToAfkCredits(giftCardList[index].amount)
-                                .toString() +
-                            " AFKC"),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             onTap: () {

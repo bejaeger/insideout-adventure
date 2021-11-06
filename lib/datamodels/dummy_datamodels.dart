@@ -27,7 +27,7 @@ Quest getDummyQuest2() {
     id: "QuestId02",
     name: "Angola Adventure",
     description: "Explore the coast of Angola",
-    afkCredits: 100,
+    afkCredits: 900,
     markers: [
       getDummyMarker5(),
       getDummyMarker6(),
@@ -38,6 +38,63 @@ Quest getDummyQuest2() {
     type: QuestType.Hike,
     startMarker: getDummyMarker5(),
     finishMarker: getDummyMarker9(),
+  );
+}
+
+// Angola quest
+Quest getDummyQuest3() {
+  return Quest(
+    id: "QuestId03",
+    name: "Fun at Brentwood",
+    description:
+        "Whether it's long street or high street...you'll have the time of your life",
+    afkCredits: 200,
+    markers: [
+      woodwayMarker1(),
+      woodwayMarker2(),
+      woodwayMarker3(),
+      woodwayMarker4(),
+      woodwayMarker5(),
+      woodwayMarker6(),
+    ],
+    type: QuestType.Hike,
+    startMarker: woodwayMarker1(),
+    finishMarker: woodwayMarker6(),
+  );
+}
+
+// Angola quest
+Quest getDummyQuest4() {
+  return Quest(
+    id: "QuestId04",
+    name: "Woodway Adventures",
+    description: "Find the most precious hidden codes at Woodway",
+    afkCredits: 50,
+    markers: [
+      intimateWoodwayMarker1(),
+      intimateWoodwayMarker2(),
+      intimateWoodwayMarker3(),
+      intimateWoodwayMarker4(),
+    ],
+    type: QuestType.Hike,
+    startMarker: intimateWoodwayMarker1(),
+    finishMarker: intimateWoodwayMarker4(),
+  );
+}
+
+// Angola quest
+Quest getDummyQuest5() {
+  return Quest(
+    id: "My Room",
+    name: "Party at Mine!",
+    description: "Come and test it",
+    afkCredits: 50,
+    markers: [
+      myRoomMarker(),
+    ],
+    type: QuestType.Hike,
+    startMarker: myRoomMarker(),
+    finishMarker: myRoomMarker(),
   );
 }
 
@@ -124,4 +181,103 @@ AFKMarker getDummyMarker9() {
     lat: -8.823430807206417,
     lon: 13.239321606477823,
   );
+}
+
+////////////////////////////////////
+/// Markers near woodway
+AFKMarker woodwayMarker1() {
+  return AFKMarker(
+    id: "woodway1",
+    qrCodeId: "woodway1",
+    lat: 49.267442,
+    lon: -122.990101,
+  );
+}
+
+AFKMarker woodwayMarker2() {
+  return AFKMarker(
+    id: "woodway2",
+    qrCodeId: "woodway2",
+    lat: 49.267395,
+    lon: -122.992182,
+  );
+}
+
+AFKMarker woodwayMarker3() {
+  return AFKMarker(
+    id: "woodway3",
+    qrCodeId: "woodway3",
+    lat: 49.268429,
+    lon: -122.997176,
+  );
+}
+
+AFKMarker woodwayMarker4() {
+  return AFKMarker(
+    id: "woodway4",
+    qrCodeId: "woodway4",
+    lat: 49.268316,
+    lon: -122.992263,
+  );
+}
+
+AFKMarker woodwayMarker5() {
+  return AFKMarker(
+    id: "woodway5",
+    qrCodeId: "woodway5",
+    lat: 49.268033,
+    lon: -123.003743,
+  );
+}
+
+AFKMarker woodwayMarker6() {
+  return AFKMarker(
+    id: "woodway6",
+    qrCodeId: "woodway6",
+    lat: 49.266695,
+    lon: -123.006713,
+  );
+}
+
+AFKMarker intimateWoodwayMarker1() {
+  return AFKMarker(
+    id: "intimateWoodwayMarker1",
+    qrCodeId: "intimateWoodwayMarker1",
+    lat: 49.266586,
+    lon: -122.990129,
+  );
+}
+
+AFKMarker intimateWoodwayMarker2() {
+  return AFKMarker(
+    id: "intimateWoodwayMarker2",
+    qrCodeId: "intimateWoodwayMarker2",
+    lat: 49.266508,
+    lon: -122.988709,
+  );
+}
+
+AFKMarker intimateWoodwayMarker3() {
+  return AFKMarker(
+    id: "intimateWoodwayMarker3",
+    qrCodeId: "intimateWoodwayMarker3",
+    lat: 49.267229,
+    lon: -122.989160,
+  );
+}
+
+AFKMarker intimateWoodwayMarker4() {
+  return AFKMarker(
+      id: "intimateWoodwayMarker4",
+      qrCodeId: "intimateWoodwayMarker4",
+      lat: 49.267480,
+      lon: -122.990532);
+}
+
+AFKMarker myRoomMarker() {
+  return AFKMarker(
+      id: "myRoomMarker",
+      qrCodeId: "myRoomMarker",
+      lat: 49.267489,
+      lon: -122.990541);
 }

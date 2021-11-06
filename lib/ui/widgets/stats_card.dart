@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class StatsCard extends StatelessWidget {
   final double height;
   final String statistic;
+  final String? statisticCredits;
   final String? title;
   final String? subtitle;
   final String buttonText;
@@ -20,7 +21,8 @@ class StatsCard extends StatelessWidget {
       this.subtitle,
       this.onButtonPressed,
       this.buttonText = "Donate",
-      this.onCardPressed})
+      this.onCardPressed,
+      this.statisticCredits})
       : super(key: key);
 
   @override
@@ -51,13 +53,42 @@ class StatsCard extends StatelessWidget {
                                   fontSize: 18,
                                 ),
                           ), //verticalSpaceTiny,
-                        Text(
-                          statistic,
-                          maxLines: 1,
-                          style: textTheme(context).headline2!.copyWith(
-                                fontSize: 28,
+                        statisticCredits != null
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    statistic,
+                                    maxLines: 1,
+                                    style:
+                                        textTheme(context).headline2!.copyWith(
+                                              fontSize: 28,
+                                            ),
+                                  ),
+                                  Text(
+                                    " -> ",
+                                    style:
+                                        textTheme(context).headline2!.copyWith(
+                                              fontSize: 28,
+                                            ),
+                                  ),
+                                  Text(
+                                    statisticCredits! + " AFKC",
+                                    maxLines: 1,
+                                    style:
+                                        textTheme(context).headline2!.copyWith(
+                                              fontSize: 28,
+                                            ),
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                statistic,
+                                maxLines: 1,
+                                style: textTheme(context).headline2!.copyWith(
+                                      fontSize: 28,
+                                    ),
                               ),
-                        ),
                         if (subtitle != null)
                           Text(
                             subtitle!,

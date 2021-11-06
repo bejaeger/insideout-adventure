@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
+import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -84,31 +85,18 @@ class ExplorerCreditStats extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
-              child: Column(
-                children: [
-                  Text(
-                      centsToAfkCredits(userStats.availableSponsoring)
-                          .toString(),
-                      style: textTheme(context).headline4),
-                  Icon(Icons.lock),
-                  Text(
-                    kCreditsToEarnDescription,
-                  ),
-                ],
-              ),
+              child: StatsCard(
+                  height: 80,
+                  statistic:
+                      formatAfkCreditsFromCents(userStats.availableSponsoring),
+                  subtitle: kCreditsToEarnDescription),
             ),
-            Spacer(),
             Flexible(
-              child: Column(
-                children: [
-                  Text(userStats.afkCreditsBalance.toString(),
-                      style: textTheme(context).headline4),
-                  Icon(Icons.lock_open),
-                  Text(
-                    kCurrentAFKCreditsDescription,
-                  ),
-                ],
-              ),
+              child: StatsCard(
+                  height: 80,
+                  statistic:
+                      formatAfkCreditsFromCents(userStats.afkCreditsBalance),
+                  subtitle: kCurrentAFKCreditsDescription),
             ),
           ],
         ),
@@ -117,29 +105,17 @@ class ExplorerCreditStats extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
-              child: Column(
-                children: [
-                  Text(userStats.lifetimeEarnings.toString(),
-                      style: textTheme(context).headline4),
-                  Icon(Icons.lock_open),
-                  Text(
-                    kLifetimeEarningsDescription,
-                  ),
-                ],
-              ),
+              child: StatsCard(
+                  height: 80,
+                  statistic:
+                      formatAfkCreditsFromCents(userStats.lifetimeEarnings),
+                  subtitle: kLifetimeEarningsDescription),
             ),
-            Spacer(),
             Flexible(
-              child: Column(
-                children: [
-                  Text(userStats.numberQuestsCompleted.toString(),
-                      style: textTheme(context).headline4),
-                  Icon(Icons.map),
-                  Text(
-                    kNumberCompletedQuestsDescription,
-                  ),
-                ],
-              ),
+              child: StatsCard(
+                  height: 80,
+                  statistic: userStats.numberQuestsCompleted.toString(),
+                  subtitle: kNumberCompletedQuestsDescription),
             ),
           ],
         ),

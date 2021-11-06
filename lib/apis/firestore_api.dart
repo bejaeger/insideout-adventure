@@ -17,7 +17,6 @@ import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
-import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -372,7 +371,17 @@ class FirestoreApi {
 
   // Returns dummy data for now!
   List<Quest> getNearbyQuests() {
-    return [getDummyQuest1(), getDummyQuest2()];
+    return [
+      getDummyQuest1(),
+      getDummyQuest3(),
+      getDummyQuest4(),
+      getDummyQuest2(),
+      getDummyQuest5(),
+      // getDummyQuest1(),
+      // getDummyQuest2(),
+      // getDummyQuest1(),
+      // getDummyQuest2()
+    ];
   }
 
   // Returns dummy data for now!

@@ -27,7 +27,7 @@ class AFKBottomNavigationBar extends StatelessWidget {
                 //transform: ,
                 // Could also use Visibility widget here to hide navbar
                 height: model.showBottomNavBar ? height : 0,
-                color: Colors.green,
+                color: kPrimaryColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

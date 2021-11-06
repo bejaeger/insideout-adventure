@@ -148,7 +148,7 @@ class _BasicDialogContent extends StatelessWidget {
           return kPrimaryColor;
       }
     } else {
-      return Colors.green;
+      return kPrimaryColor;
     }
   }
 

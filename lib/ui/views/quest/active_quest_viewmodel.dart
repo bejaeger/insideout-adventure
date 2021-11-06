@@ -58,7 +58,7 @@ class ActiveQuestViewModel extends QuestViewModel {
       //Based on teh city
       target:
           LatLng(startedQuest.startMarker.lat!, startedQuest.startMarker.lon!),
-      zoom: 12,
+      zoom: 15,
     );
 
     return _initialCameraPosition;
@@ -104,6 +104,7 @@ class ActiveQuestViewModel extends QuestViewModel {
               "Internal Error: For developers, please set the variable 'previouslyFinishedQuest' in the quest service.");
         }
         // Quest succesfully finished!
+
         await _dialogService.showDialog(
             title: "Congratz, you succesfully finished the quest!",
             description: "Earned credits: " +
@@ -195,10 +196,10 @@ class ActiveQuestViewModel extends QuestViewModel {
     }
     if (result.hasError) {
       log.e("Error occured: ${result.errorMessage}");
-      snackbarService.showSnackbar(
-          title: "Failed to collect marker!",
-          message: result.errorMessage!,
-          duration: Duration(seconds: 2));
+      dialogService.showDialog(
+        title: "Failed to collect marker!",
+        description: result.errorMessage!,
+      );
     } else {
       if (result.marker != null) {
         log.i("Scanned marker sucessfully collected!");

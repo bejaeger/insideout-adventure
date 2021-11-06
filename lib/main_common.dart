@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui.dart';
 import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
@@ -49,7 +50,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: kAppName,
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        elevatedButtonTheme:
+            ElevatedButtonThemeData(style: getRaisedButtonStyle()),
+        primaryColor: kPrimaryColor,
+        primaryIconTheme: IconThemeData(color: Colors.white),
+        primaryTextTheme: TextTheme(
+          headline6: TextStyle(
+              // color of app bar title
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              height: 1.3),
+        ),
       ),
       navigatorKey: StackedService.navigatorKey,
       onGenerateRoute: StackedRouter().onGenerateRoute,
@@ -69,4 +81,17 @@ Future _connectToFirebaseEmulator() async {
   );
 
   await FirebaseAuth.instance.useEmulator('http://$localHostString:9099');
+}
+
+ButtonStyle getRaisedButtonStyle() {
+  return ElevatedButton.styleFrom(
+    onPrimary: Colors.white,
+    // primary: darkTurquoise,
+    primary: kPrimaryColor,
+    minimumSize: Size(88, 45),
+    padding: EdgeInsets.symmetric(horizontal: 16),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(16.0)),
+    ),
+  );
 }

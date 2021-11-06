@@ -31,6 +31,16 @@ class MapViewModel extends QuestViewModel {
   final _qrCodeService = locator<QRCodeService>();
   final _stopWatchService = locator<StopWatchService>();
 
+  int currentIndex = 0;
+  void toggleIndex() {
+    if (currentIndex == 0) {
+      currentIndex = 1;
+    } else {
+      currentIndex = 0;
+    }
+    notifyListeners();
+  }
+
   Set<Marker> _markersTmp = {};
   //List<Places>? places;
   List<AFKMarker>? markers;
@@ -52,10 +62,15 @@ class MapViewModel extends QuestViewModel {
   //Get Direction Info
   Directions? get getDirectionInfo => _directionInfo;
 
+  Future initialize() async {
+    setCurrentUserPosition();
+    loadQuests();
+  }
+
   CameraPosition initialCameraPosition() {
     final CameraPosition _initialCameraPosition = CameraPosition(
         target: LatLng(_userPostion.latitude, _userPostion.longitude),
-        zoom: 11);
+        zoom: 12);
     return _initialCameraPosition;
   }
 
@@ -105,6 +120,18 @@ class MapViewModel extends QuestViewModel {
     );
   }
 
+  Future onQuestInListTapped(Quest quest) async {
+    log.i("Quest list item tapped!!!");
+    if (hasActiveQuest == false) {
+      await displayQuestBottomSheet(
+        quest: quest,
+      );
+    } else {
+      _dialogService.showDialog(
+          title: "You Currently Have a Running Quest !!!");
+    }
+  }
+
   @override
   Future handleQrCodeScanEvent(QuestQRCodeScanResult result) async {
     if (result.isEmpty) {
@@ -151,19 +178,18 @@ class MapViewModel extends QuestViewModel {
   }
 
   void onMapCreated(GoogleMapController controller) {
-    setBusy(true);
+    // setBusy(true);
     _googleMapController = controller;
-    try {
-      loadQuests();
-    } catch (error) {
-      throw MapViewModelException(
-          message: 'An error occured in the defining ',
-          devDetails: "Error message from Map View Model $error ",
-          prettyDetails:
-              "An internal error occured on our side, please apologize and try again later.");
-    }
-    setBusy(false);
-    notifyListeners();
+    // try {
+    //   loadQuests();
+    // } catch (error) {
+    //   throw MapViewModelException(
+    //       message: 'An error occured in the defining ',
+    //       devDetails: "Error message from Map View Model $error ",
+    //       prettyDetails:
+    //           "An internal error occured on our side, please apologize and try again later.");
+    // }
+    // setBusy(false);
   }
 
   void loadQuests() async {
@@ -186,7 +212,7 @@ class MapViewModel extends QuestViewModel {
   }
 
   Future displayQuestBottomSheet(
-      {required Quest quest, required AFKMarker startMarker}) async {
+      {required Quest quest, AFKMarker? startMarker}) async {
     SheetResponse? sheetResponse = await _bottomSheetService.showCustomSheet(
         variant: BottomSheetType.questInformation,
         title: ' Name: ' + quest.name,

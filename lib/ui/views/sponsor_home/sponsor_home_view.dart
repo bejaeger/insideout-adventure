@@ -29,7 +29,7 @@ class SponsorHomeView extends StatelessWidget {
           children: [
             verticalSpaceMedium,
             SectionHeader(
-              title: "Supported Explorers",
+              title: "Sponsored Explorers",
             ),
             verticalSpaceSmall,
             verticalSpaceTiny,
@@ -117,7 +117,7 @@ class ExplorersList extends StatelessWidget {
                   // onPressed: model.navigateToExplorerHomeView,
                   onPressed: onAddNewExplorerPressed,
                   //child: Text("Go to explorer home/map")),
-                  child: Text("+ Add")),
+                  child: Text("Sponsor Another Explorer ->")),
             ],
           );
         } else {

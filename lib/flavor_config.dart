@@ -8,7 +8,7 @@ class FlavorConfigProvider {
   // TODO: Add this to a specific flavor!
   // We should add a "test" flavor!
   bool allowDummyMarkerCollection = true;
-  bool enableGPSVerification = false;
+  bool enableGPSVerification = true;
 
   Flavor flavor = Flavor.unknown;
   void configure(Flavor flavorIn) {

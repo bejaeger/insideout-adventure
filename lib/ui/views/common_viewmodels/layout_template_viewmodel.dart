@@ -35,14 +35,4 @@ class LayoutTemplateViewModel extends TransferBaseViewModel {
       // navigate to home view
     }
   }
-
-  void clearStackAndNavigateToHomeView() {
-    if (currentUser.role == UserRole.sponsor) {
-      navigationService.clearStackAndShow(Routes.sponsorHomeView);
-    } else if (currentUser.role == UserRole.explorer) {
-      navigationService.clearStackAndShow(Routes.explorerHomeView);
-    } else if (currentUser.role == UserRole.admin) {
-      navigationService.clearStackAndShow(Routes.adminHomeView);
-    }
-  }
 }

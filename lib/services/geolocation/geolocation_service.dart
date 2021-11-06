@@ -40,6 +40,7 @@ class GeolocationService {
             prettyDetails:
                 "An internal error occured on our side, please apologize and try again later.");
       }
+
       // return _position;
     }
   }

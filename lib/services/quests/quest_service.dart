@@ -49,11 +49,20 @@ class QuestService {
 
   Future startQuest({required Quest quest, required List<String> uids}) async {
     // Get active quest
-    ActivatedQuest activatedQuest =
+    ActivatedQuest tmpActivatedQuest =
         _getActivatedQuest(quest: quest, uids: uids);
 
+    // Location check
+    AFKMarker fullMarker = tmpActivatedQuest.quest.markers
+        .firstWhere((element) => element.id == quest.startMarker.id);
+    final bool closeby = await _markerService.isUserCloseby(marker: fullMarker);
+    if (!closeby) {
+      log.w("You are not nearby the marker, cannot start quest!");
+      return "You are not nearby the marker.";
+    }
+
     // Add quest to behavior subject
-    pushActivatedQuest(activatedQuest);
+    pushActivatedQuest(tmpActivatedQuest);
     // ! this here is important !
     setStartedQuest(quest);
 
@@ -62,6 +71,7 @@ class QuestService {
     _stopWatchService.startTimer();
 
     _stopWatchService.listenToSecondTime(callback: trackData);
+    return true;
   }
 
   int get getNumberMarkersCollected => activatedQuest!.markersCollected
@@ -233,7 +243,8 @@ class QuestService {
   // In each case, an appropriate QuestQRCodeScanResult is returned.
   // This result is interpreted in the viewmodels
   Future<QuestQRCodeScanResult> handleQrCodeScanEvent(
-      {required AFKMarker marker}) async {
+      {AFKMarker? marker}) async {
+    if (marker == null) return QuestQRCodeScanResult.empty();
     if (!hasActiveQuest) {
       List<Quest> quests = await _firestoreApi.getQuestsWithStartMarkerId(
           startMarkerId: marker.id);
@@ -391,6 +402,7 @@ class QuestService {
   Future loadNearbyQuests() async {
     // TODO: In the future retrieve only nearby quests
     nearbyQuests = _firestoreApi.getNearbyQuests();
+    log.i("Found ${nearbyQuests.length} nearby quests.");
   }
 
   void updateTime(int seconds) {

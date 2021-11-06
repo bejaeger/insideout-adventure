@@ -14,7 +14,7 @@ class QRCodeViewModel extends BaseModel {
   final SnackbarService? _snackbarService = locator<SnackbarService>();
 
   void popQrCodeView() {
-    navigationService.back(result: QuestQRCodeScanResult.empty());
+    navigationService.back(result: null);
   }
 
   Future analyzeScanResult({required Barcode result}) async {

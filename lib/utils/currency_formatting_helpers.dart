@@ -51,3 +51,7 @@ bool isNonZeroDecimalCurrency() {
 int centsToAfkCredits(num cents) {
   return (cents * kCentsToAfkCreditsConversionFactor).round();
 }
+
+String formatAfkCreditsFromCents(num cents) {
+  return ((cents * kCentsToAfkCreditsConversionFactor).round()).toString();
+}
