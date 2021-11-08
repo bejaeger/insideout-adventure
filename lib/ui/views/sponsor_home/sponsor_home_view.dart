@@ -112,7 +112,7 @@ class ExplorersList extends StatelessWidget {
         if (index == min(explorers.length, 9)) {
           return Column(
             children: [
-              horizontalSpaceSmall,
+              horizontalSpaceMedium,
               ElevatedButton(
                   // onPressed: model.navigateToExplorerHomeView,
                   onPressed: onAddNewExplorerPressed,
@@ -132,9 +132,9 @@ class ExplorersList extends StatelessWidget {
                         UserStatistics? userStats]) async {
                         onExplorerPressed!(uid: userInfo!.uid);
                       },
-                userStats: explorersStats == null || explorersStats?.length == 0
-                    ? null
-                    : explorersStats![explorers[index].uid],
+                // userStats: explorersStats == null || explorersStats?.length == 0
+                //     ? null
+                //     : explorersStats![explorers[index].uid],
                 userInfo: PublicUserInfo(
                   name: explorers[index].fullName,
                   email: explorers[index].email,

@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 /// Returns values from the environment read from the .env file
 class EnvironmentService {
@@ -9,7 +10,8 @@ class EnvironmentService {
   Future initialise() async {
     log.i('Load environment');
 
-    await load(fileName: ".env");
+    await load(fileName: kIsWeb ? "dotenv" : ".env");
+
     log.v('Environement loaded');
   }
 

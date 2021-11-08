@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "afk-credits-112d2"
-  }
+    "default": "afk-credits-112d2",
+    "staging": "afk-credits-prod"
+  },
+  "targets": {}
 }

@@ -92,7 +92,8 @@ class StatsCard extends StatelessWidget {
                         if (subtitle != null)
                           Text(
                             subtitle!,
-                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
                             style: textTheme(context).bodyText2!.copyWith(
                                   fontSize: 13,
                                 ),

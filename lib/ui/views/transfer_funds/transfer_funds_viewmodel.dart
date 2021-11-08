@@ -132,7 +132,7 @@ class TransferFundsViewModel extends FormViewModel {
         // -----------------------------------------------------
         // Handle user input after success or error of transfer!
         // Navigation depends on user input and transfer type;
-        if (dialogResult!.confirmed) {
+        if (dialogResult?.confirmed == true) {
           if (type == TransferType.Sponsor2Explorer) {
             // navigate back to money pool
             navigateBack();

@@ -164,7 +164,6 @@ class FirestoreApi {
   // Get Markers For the Quest.
   Future<List<AFKMarker>?>? getMarkers() async {
     final _markers = await markersCollection.get();
-
     if (_markers.docs.isNotEmpty) {
       try {
         return _markers.docs
@@ -371,17 +370,7 @@ class FirestoreApi {
 
   // Returns dummy data for now!
   List<Quest> getNearbyQuests() {
-    return [
-      getDummyQuest1(),
-      getDummyQuest3(),
-      getDummyQuest4(),
-      getDummyQuest2(),
-      getDummyQuest5(),
-      // getDummyQuest1(),
-      // getDummyQuest2(),
-      // getDummyQuest1(),
-      // getDummyQuest2()
-    ];
+    return getDummyQuests();
   }
 
   // Returns dummy data for now!
@@ -436,7 +425,9 @@ class FirestoreApi {
 
   Future<List<Quest>> getQuestsWithStartMarkerId(
       {required String? startMarkerId}) async {
-    return [getDummyQuest1()];
+    return getNearbyQuests()
+        .where((element) => element.startMarker.id == startMarkerId)
+        .toList();
     // QuerySnapshot snapshot = await questsCollection
     //     .where(startMarkerId, isEqualTo: startMarkerId)
     //     .get();

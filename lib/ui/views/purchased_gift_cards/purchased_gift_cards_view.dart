@@ -122,7 +122,7 @@ class GiftCardPurchasePreview extends StatelessWidget {
           describeEnum(giftCard.giftCardCategory.categoryName).toString() +
               titleSuffix),
       subtitle: Text(
-        "Amount: " +
+        "" +
             formatAmount(giftCard.giftCardCategory.amount) +
             "; Code: " +
             giftCardCodeText,
@@ -135,9 +135,9 @@ class GiftCardPurchasePreview extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(giftCard.status == PurchasedGiftCardStatus.available
-                ? "redeemed"
+                ? "used"
                 : giftCard.status == PurchasedGiftCardStatus.redeemed
-                    ? "redeemed"
+                    ? "used"
                     : "pending"),
           )
         ],

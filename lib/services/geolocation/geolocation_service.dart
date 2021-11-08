@@ -3,15 +3,18 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/places/places.dart';
+import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:location/location.dart' as loc;
 
 class GeolocationService {
   final log = getLogger('GeolocationService');
   final _firestoreApi = locator<FirestoreApi>();
 
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
-  var _position;
+  dynamic _position;
 
   Future getCurrentLocation() async {
     //Verify If location is available on device.
@@ -19,8 +22,13 @@ class GeolocationService {
 
     if (checkGeolocation == true) {
       try {
-        _position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.best);
+        if (!kIsWeb) {
+          _position = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.best);
+        } else {
+          final loc.Location location = new loc.Location();
+          _position = await location.getLocation();
+        }
 
         log.i('Harguilar Current Position $_position');
         if (_position != null) {
@@ -33,19 +41,25 @@ class GeolocationService {
           return _position;
         }
       } catch (error) {
-        throw MapViewModelException(
-            message:
-                'An error occured in the defining your position $_position',
-            devDetails: "Error message from Map View Model $error ",
+        log.e("Error when reading geolocation.");
+        throw GeolocationServiceException(
+            message: 'An error occured trying to get your current geolocation',
+            devDetails: "Error message from geolocation service: $error",
             prettyDetails:
-                "An internal error occured on our side, please apologize and try again later.");
+                "Geolocation could not be found. Please make sure your have location activated on your phone.");
       }
-
       // return _position;
+    } else {
+      log.e("Location service seems to be turned off on the phone");
+      throw GeolocationServiceException(
+          message: 'An error occured trying to get your current geolocation',
+          devDetails: "Location service seems to be turned off on the phone.",
+          prettyDetails:
+              "Geolocation could not be found. Please make sure you have location activated on your phone.");
     }
   }
 
-  Future setUserPosition({required Position position}) async {
+  Future setUserPosition({required dynamic position}) async {
     if (position != null) {
       _position = position;
       log.i('This is my current Posstion $position');
@@ -54,7 +68,7 @@ class GeolocationService {
     }
   }
 
-  Position get getUserPosition => _position;
+  Position? get getUserPosition => _position;
 
   Future<bool> checkGeolocationAvailable() async {
     bool isGeolocationAvailable = await Geolocator.isLocationServiceEnabled();
@@ -97,14 +111,17 @@ class GeolocationService {
   }
  */
   Future<bool> isUserCloseby({required double lat, required double lon}) async {
-    Position position = await getCurrentLocation();
+    final position = await getCurrentLocation();
 
-    double distanceInMeters = Geolocator.distanceBetween(
-        position.latitude, position.longitude, lat, lon);
-    if (distanceInMeters > kMaxDistanceFromMarkerInMeter) {
-      return false;
-    } else {
-      return true;
+    if (position != null) {
+      double distanceInMeters = Geolocator.distanceBetween(
+          position.latitude, position.longitude, lat, lon);
+      if (distanceInMeters > kMaxDistanceFromMarkerInMeter) {
+        return false;
+      } else {
+        return true;
+      }
     }
+    return false;
   }
 }

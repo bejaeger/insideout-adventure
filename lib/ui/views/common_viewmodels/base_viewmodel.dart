@@ -155,6 +155,13 @@ class BaseModel extends BaseViewModel {
     }
   }
 
+  Future showGenericInternalErrorDialog() async {
+    return await dialogService.showDialog(
+        title: "Sorry",
+        description:
+            "An internal error occured on our side. Sorry, please try again later.");
+  }
+
   //////////////////////////////////////////
   /// Clean-up
   @override

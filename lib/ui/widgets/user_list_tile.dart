@@ -29,47 +29,50 @@ class UserListTile extends StatelessWidget {
       onTap: onTilePressed != null
           ? () async => await onTilePressed!(userInfo, userStats)
           : null,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: Center(
-          child: ListTile(
-              leading: CircleAvatar(
-                radius: 20,
-                backgroundColor: kPrimaryColor,
-                child: Text(getInitialsFromName(userInfo.name),
-                    style: TextStyle(color: Colors.white, fontSize: 14)),
-              ),
-              title: Text(
-                userInfo.name,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black,
+      child: Container(
+        height: 80,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Center(
+            child: ListTile(
+                leading: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: kPrimaryColor,
+                  child: Text(getInitialsFromName(userInfo.name),
+                      style: TextStyle(color: Colors.white, fontSize: 14)),
                 ),
-              ),
-              subtitle: userInfo.email != null && userInfo.email != ""
-                  ? Text(
-                      userInfo.email!.toLowerCase(),
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.grey,
-                      ),
-                    )
-                  : null,
-              trailing: userStats == null
-                  ? null
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Earned: " +
-                            userStats!.afkCreditsBalance.toString() +
-                            " AFK Credits"),
-                        Text("Sponsoring: " +
-                            formatAmount(userStats!.availableSponsoring)),
-                      ],
-                    )),
+                title: Text(
+                  userInfo.name,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
+                  ),
+                ),
+                subtitle: userInfo.email != null && userInfo.email != ""
+                    ? Text(
+                        userInfo.email!.toLowerCase(),
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.grey,
+                        ),
+                      )
+                    : null,
+                trailing: userStats == null
+                    ? null
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Earned: " +
+                              userStats!.afkCreditsBalance.toString() +
+                              " AFK Credits"),
+                          Text("Sponsoring: " +
+                              formatAmount(userStats!.availableSponsoring)),
+                        ],
+                      )),
+          ),
         ),
       ),
     );

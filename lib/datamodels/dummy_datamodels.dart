@@ -2,10 +2,20 @@ import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 
+List<Quest> getDummyQuests() {
+  return [
+    getDummyQuest1(),
+    getDummyQuest3(),
+    getDummyQuest4(),
+    getDummyQuest2(),
+    getDummyQuest5(),
+  ];
+}
+
 // burnaby quest
 Quest getDummyQuest1() {
   return Quest(
-    id: "QuestId02",
+    id: "QuestId01",
     name: "Grouse Grind",
     description: "Make it up the hill in less than 1 hour",
     afkCredits: 100,
@@ -88,7 +98,7 @@ Quest getDummyQuest5() {
     id: "My Room",
     name: "Party at Mine!",
     description: "Come and test it",
-    afkCredits: 50,
+    afkCredits: 100,
     markers: [
       myRoomMarker(),
     ],

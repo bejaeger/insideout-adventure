@@ -56,6 +56,7 @@ class LoginView extends StatelessWidget with $LoginView {
               // with custom text
             ],
           ),
+          releaseName: model.getReleaseName,
           onForgotPassword: () {},
           onGoogleButtonTapped: () =>
               model.saveData(AuthenticationMethod.google),

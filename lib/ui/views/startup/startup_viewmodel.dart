@@ -15,7 +15,7 @@ class StartUpViewModel extends LayoutTemplateViewModel {
   final EnvironmentService _environmentService = locator<EnvironmentService>();
   final _markersService = locator<MarkerService>();
 
-  Position? position;
+  dynamic position;
 
   final log = getLogger("StartUpViewModel");
 
@@ -25,27 +25,7 @@ class StartUpViewModel extends LayoutTemplateViewModel {
     _placesService.initialize(
         apiKey: _environmentService.getValue(GoogleMapsEnvKey));
 
-    //Get Current User Location
-    position = await _geolocationService.getCurrentLocation();
-    log.i('This is your current Position StartupViewModel $position');
-    //Get Guest Markers
-    final _markers = await _markersService.getQuestMarkers();
-
-    try {
-      if (position != null) {
-        _geolocationService.setUserPosition(position: position!);
-      }
-    } catch (e) {
-      log.e("Could not set user position due to error: $e");
-    }
-
-    try {
-      if (_markers != null) {
-        _markersService.setQuestMarkers(markers: _markers);
-      }
-    } catch (e) {
-      log.e("Could not set user position due to error: $e");
-    }
+    // TODO: Check for network connection!
 
     try {
       final localUserId = await userService.getLocallyLoggedInUserId();
@@ -81,6 +61,7 @@ class StartUpViewModel extends LayoutTemplateViewModel {
       }
     } catch (e) {
       log.e("$e");
+      navigationService.replaceWith(Routes.loginView);
     }
   }
 

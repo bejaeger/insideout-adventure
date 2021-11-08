@@ -34,13 +34,10 @@
 pubspec.lock
 
 #Android Services 
-android/app/src/dev/google-services.json
-android/app/src/dev/AndroidManifest.xml
-android/app/src/main/AndroidManifest.xml
-android/app/src/dev/google-services.json
-android/app/src/dev/AndroidManifest.xml
-android/app/src/main/AndroidManifest.xml
+android/app/src/*/google-services.json
+android/app/src/*/AndroidManifest.xml
 .env
+dotenv
 
 # Web related
 lib/generated_plugin_registrant.dart
@@ -55,3 +52,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase settings
+.firebase/
+.vscode/settings.json
+.firebaserc
+
+# ios build
+ios/build/

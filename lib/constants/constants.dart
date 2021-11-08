@@ -44,7 +44,9 @@ const String AUTHORITYDEV = "us-central1-afk-credits-112d2.cloudfunctions.net";
 const String URIPATHPREPENDDEV = "";
 
 // when running on production backend
-const String AUTHORITYPROD = "us-central1-afkcredits.cloudfunctions.net";
+// TODO: This is still the dev environment cloud functions!
+const String AUTHORITYPROD = "us-central1-afk-credits-prod.cloudfunctions.net";
+// "us-central1-afkcredits.cloudfunctions.net";
 const String URIPATHPREPENDPROD = "";
 
 //////////////////////////////////////////////////////////

@@ -20,7 +20,7 @@ class FlavorConfigProvider {
       case Flavor.dev:
         return "AFK Credits - Dev";
       case Flavor.prod:
-        return "AFK Credits";
+        return "AFK Credits - Proto v1";
       default:
         return "AFK Credits - Dev";
     }

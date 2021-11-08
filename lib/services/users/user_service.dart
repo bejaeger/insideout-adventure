@@ -23,7 +23,7 @@ import 'package:afkcredits/utils/string_utils.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'afkcredits_authentication_result_service.dart'; // for the utf8.encode method
 
 class UserService {
@@ -497,9 +497,10 @@ class UserService {
 
   // clear all data when user logs out!
   Future handleLogoutEvent() async {
-    // remove uid from local storage
-    await _localStorageService.deleteFromDisk(key: kLocalStorageUidKey);
-
+    if (!kIsWeb) {
+      // remove uid from local storage
+      await _localStorageService.deleteFromDisk(key: kLocalStorageUidKey);
+    }
     // set current user to null
     _currentUser = null;
     _currentUserStats = null;

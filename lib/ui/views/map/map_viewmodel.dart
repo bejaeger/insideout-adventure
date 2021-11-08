@@ -7,6 +7,7 @@ import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/datamodels/quests/markers/marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
+import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -45,7 +46,6 @@ class MapViewModel extends QuestViewModel {
   //List<Places>? places;
   List<AFKMarker>? markers;
   List<Quest> get nearbyQuests => questService.nearbyQuests;
-  var _userPostion;
   bool _tappedMarkers = false;
 
   GoogleMapController? _googleMapController;
@@ -63,15 +63,37 @@ class MapViewModel extends QuestViewModel {
   Directions? get getDirectionInfo => _directionInfo;
 
   Future initialize() async {
-    setCurrentUserPosition();
-    loadQuests();
+    log.i("Initializing map view");
+    setBusy(true);
+    try {
+      if (_geolocationService.getUserPosition == null) {
+        await _geolocationService.getCurrentLocation();
+      } else {
+        _geolocationService.getCurrentLocation();
+      }
+      setBusy(false);
+      loadQuests();
+      notifyListeners();
+    } catch (e) {
+      if (e is GeolocationServiceException) {
+        await dialogService.showDialog(
+            title: "Sorry", description: e.prettyDetails);
+      } else {
+        await showGenericInternalErrorDialog();
+      }
+    }
   }
 
-  CameraPosition initialCameraPosition() {
-    final CameraPosition _initialCameraPosition = CameraPosition(
-        target: LatLng(_userPostion.latitude, _userPostion.longitude),
-        zoom: 12);
-    return _initialCameraPosition;
+  CameraPosition? initialCameraPosition() {
+    if (_geolocationService.getUserPosition != null) {
+      final CameraPosition _initialCameraPosition = CameraPosition(
+          target: LatLng(_geolocationService.getUserPosition!.latitude,
+              _geolocationService.getUserPosition!.longitude),
+          zoom: 13);
+      return _initialCameraPosition;
+    } else {
+      return null;
+    }
   }
 
   // bool get tappedMarkers => _tappedMarkers;
@@ -163,20 +185,6 @@ class MapViewModel extends QuestViewModel {
     }
   }
 
-  setCurrentUserPosition() {
-    setBusy(true);
-    try {
-      if (_geolocationService.getUserPosition != null) {
-        _userPostion = _geolocationService.getUserPosition;
-        log.i('Your Position Values is $_userPostion');
-      } else {
-        log.wtf('Your Position Values is Null Look at it: $_userPostion');
-      }
-    } catch (e) {}
-    setBusy(false);
-    notifyListeners();
-  }
-
   void onMapCreated(GoogleMapController controller) {
     // setBusy(true);
     _googleMapController = controller;
@@ -193,10 +201,9 @@ class MapViewModel extends QuestViewModel {
   }
 
   void loadQuests() async {
-    setBusy(true);
     await questService.loadNearbyQuests();
     extractStartMarkersAndAddToMap();
-    setBusy(false);
+    notifyListeners();
   }
 
   void extractStartMarkersAndAddToMap() {

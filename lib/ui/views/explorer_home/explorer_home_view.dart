@@ -95,7 +95,7 @@ class ExplorerCreditStats extends StatelessWidget {
               child: StatsCard(
                   height: 80,
                   statistic:
-                      formatAfkCreditsFromCents(userStats.afkCreditsBalance),
+                      userStats.afkCreditsBalance.toString(),
                   subtitle: kCurrentAFKCreditsDescription),
             ),
           ],
@@ -108,7 +108,7 @@ class ExplorerCreditStats extends StatelessWidget {
               child: StatsCard(
                   height: 80,
                   statistic:
-                      formatAfkCreditsFromCents(userStats.lifetimeEarnings),
+                    userStats.lifetimeEarnings.toString(),
                   subtitle: kLifetimeEarningsDescription),
             ),
             Flexible(

@@ -19,6 +19,9 @@ class LoginViewModel extends AuthenticationViewModel {
       locator<FlavorConfigProvider>();
   final log = getLogger("LoginViewModel");
   final UserService _userService = locator<UserService>();
+  final FlavorConfigProvider flavorConfigProvider =
+      locator<FlavorConfigProvider>();
+  String get getReleaseName => flavorConfigProvider.appName;
 
   dynamic onDummyLoginExplorerTapped() {
     if (_flavorConfigProvider.flavor == Flavor.dev) {

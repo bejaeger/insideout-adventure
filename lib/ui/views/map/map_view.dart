@@ -46,15 +46,17 @@ class MapView extends StatelessWidget {
             ),
             verticalSpaceSmall,
             MyFloatingActionButton(
-                onPressed: () async {
-                  model.getGoogleMapController!.animateCamera(
-                      model.getDirectionInfo != null
-                          ? CameraUpdate.newLatLngBounds(
-                              model.getDirectionInfo!.bounds, 100.0)
-                          : CameraUpdate.newCameraPosition(
-                              model.initialCameraPosition()));
-                  await model.scanQrCodeWithActiveQuest();
-                },
+                onPressed: model.initialCameraPosition() == null
+                    ? () async => null
+                    : () async {
+                        model.getGoogleMapController!.animateCamera(
+                            model.getDirectionInfo != null
+                                ? CameraUpdate.newLatLngBounds(
+                                    model.getDirectionInfo!.bounds, 100.0)
+                                : CameraUpdate.newCameraPosition(
+                                    model.initialCameraPosition()!));
+                        await model.scanQrCodeWithActiveQuest();
+                      },
                 icon: const Icon(Icons.qr_code_scanner_rounded,
                     size: 30, color: Colors.white)),
           ],
@@ -75,46 +77,52 @@ class GoogleMapsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: GoogleMap(
-        onTap: (_) => model.notifyListeners(),
-        //mapType: MapType.hybrid,
-        initialCameraPosition: model.initialCameraPosition(),
+      child: model.isBusy
+          ? Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : GoogleMap(
+              onTap: (_) => model.notifyListeners(),
+              //mapType: MapType.hybrid,
+              initialCameraPosition: model.initialCameraPosition(),
 
-        //Place Markers in the Map
-        markers: model.getMarkers!,
-        // onCameraMove: ,
+              //Place Markers in the Map
+              markers: model.getMarkers!,
+              // onCameraMove: ,
 
-        //callback that’s called when the map is ready to use.
-        onMapCreated: model.onMapCreated,
+              //callback that’s called when the map is ready to use.
+              onMapCreated: model.onMapCreated,
 
-        //enable zoom gestures
-        zoomGesturesEnabled: true,
-        //minMaxZoomPreference: MinMaxZoomPreference(13,17)
+              //enable zoom gestures
+              zoomGesturesEnabled: true,
+              //minMaxZoomPreference: MinMaxZoomPreference(13,17)
 
-        //For showing your current location on Map with a blue dot.
-        myLocationEnabled: true,
-        //Remove the Zoom in and out button
-        zoomControlsEnabled: false,
+              //For showing your current location on Map with a blue dot.
+              myLocationEnabled: true,
+              //Remove the Zoom in and out button
+              zoomControlsEnabled: false,
 
-        // Button used for bringing the user location to the center of the camera view.
-        myLocationButtonEnabled: true,
+              // Button used for bringing the user location to the center of the camera view.
+              myLocationButtonEnabled: true,
 
-        polylines: {
-          if (model.getDirectionInfo != null)
-            Polyline(
-              polylineId: const PolylineId('overview_polyline'),
-              color: Colors.red,
-              width: 5,
-              points: model.getDirectionInfo!.polylinePoints
-                  .map((e) => LatLng(e.latitude, e.longitude))
-                  .toList(),
+              polylines: {
+                if (model.getDirectionInfo != null)
+                  Polyline(
+                    polylineId: const PolylineId('overview_polyline'),
+                    color: Colors.red,
+                    width: 5,
+                    points: model.getDirectionInfo!.polylinePoints
+                        .map((e) => LatLng(e.latitude, e.longitude))
+                        .toList(),
+                  ),
+              },
+
+              //onTap: model.handleTap(),
+              //Enable Traffic Mode.
+              //trafficEnabled: true,
             ),
-        },
-
-        //onTap: model.handleTap(),
-        //Enable Traffic Mode.
-        //trafficEnabled: true,
-      ),
     );
   }
 }
@@ -173,7 +181,7 @@ class QuestListScreen extends StatelessWidget {
     List<QuestCard> questCards = [];
     quests.forEach((quest) {
       QuestCard questCard = QuestCard(
-          height: 120,
+          height: 140,
           quest: quest,
           subtitle: quest.description,
           onCardPressed: () async => await onCardTapped(quest));
@@ -222,7 +230,7 @@ class QuestCard extends StatelessWidget {
                     Text(subtitle!,
                         style: textTheme(context)
                             .bodyText2!
-                            .copyWith(fontSize: 20)),
+                            .copyWith(fontSize: 18)),
                   Text("Credits to earns: " + quest.afkCredits.toString()),
                   Text("Type: " + describeEnum(quest.type).toString()),
                   if (sponsoringSentence != null) Text(sponsoringSentence!),
