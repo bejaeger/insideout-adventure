@@ -66,6 +66,10 @@ export default new Post((request: Request, response: Response) => {
                     }
                     t.set(docRef, data);
                 });
+                response.status(StatusCodes.OK).send(
+                    ResponseHandler.returnData(returnData)
+                );
+
             }
             catch (e) {
                 log(`Error: Could not purchase gift card because of error: ${e}`);
@@ -73,9 +77,6 @@ export default new Post((request: Request, response: Response) => {
                     ResponseHandler.returnError(`Gift card could not be purchased, error: ${e}`));
             }
 
-            response.status(StatusCodes.OK).send(
-                ResponseHandler.returnData(returnData)
-            );
         } catch (error) {
             if (typeof error === "string") {
                 // We've narrowed 'e' down to the type 'string'.

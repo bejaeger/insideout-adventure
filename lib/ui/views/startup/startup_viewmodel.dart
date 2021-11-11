@@ -60,7 +60,8 @@ class StartUpViewModel extends LayoutTemplateViewModel {
         navigationService.replaceWith(Routes.loginView);
       }
     } catch (e) {
-      log.e("$e");
+      log.e(
+          "Error, possibly no network connection could not be found? Error message: $e");
       navigationService.replaceWith(Routes.loginView);
     }
   }

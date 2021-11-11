@@ -14,6 +14,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@notionhq/client": "^0.4.6",
     "faker": "^5.5.3",
     "firebase-admin": "^9.8.0",
     "firebase-backend": "^0.2.2",
