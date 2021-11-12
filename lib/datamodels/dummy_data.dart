@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 List<Quest> getDummyQuests() {
   return [
     getDummyQuest1(),
-    getDummyQuest3(),
+    // getDummyQuest3(),
     getDummyQuest4(),
     getDummyQuest2(),
     getDummyQuest5(),

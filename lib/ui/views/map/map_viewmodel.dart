@@ -9,17 +9,15 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class MapViewModel extends QuestViewModel {
   final log = getLogger('MapViewModel');
@@ -47,7 +45,6 @@ class MapViewModel extends QuestViewModel {
   //List<Places>? places;
   List<AFKMarker>? markers;
   List<Quest> get nearbyQuests => questService.nearbyQuests;
-  bool _tappedMarkers = false;
 
   GoogleMapController? _googleMapController;
 
@@ -72,19 +69,36 @@ class MapViewModel extends QuestViewModel {
       } else {
         _geolocationService.getAndSetCurrentLocation();
       }
-      setBusy(false);
-      loadQuests();
-      notifyListeners();
     } catch (e) {
       if (e is GeolocationServiceException) {
+        // if (kIsWeb) {
+        //   await dialogService.showDialog(
+        //       title: "Sorry", description: "Map not supported on PWA version");
+        // } else {
         if (_flavorConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
+        } else {
+          if (!shownDummyModeDialog) {
+            await dialogService.showDialog(
+                title: "Dummy mode active",
+                description:
+                    "GPS connection not available, you can still try out the quests by tapping on the markers");
+            shownDummyModeDialog = true;
+          }
         }
+        // }
       } else {
         await showGenericInternalErrorDialog();
       }
     }
+    try {
+      loadQuests();
+    } catch (e) {
+      log.wtf("Error when loading quest, this should never happen. Error: $e");
+      await showGenericInternalErrorDialog();
+    }
+    setBusy(false);
   }
 
   CameraPosition? initialCameraPosition() {
@@ -97,12 +111,11 @@ class MapViewModel extends QuestViewModel {
     } else {
       return CameraPosition(
         target: getDummyCoordinates(),
+        zoom: 14,
       );
     }
   }
 
-  // bool get tappedMarkers => _tappedMarkers;
-//Add Markers to the Map
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
     _markersTmp.add(
       Marker(
@@ -115,8 +128,6 @@ class MapViewModel extends QuestViewModel {
           onTap: () async {
             // ? quest already preloaded
             // Quest _quest = await questService.getQuest(questId: afkmarker.id);
-
-            _tappedMarkers = true;
 
             //log.i('This is a User Quest $userQuest');
             bool adminMode = false;

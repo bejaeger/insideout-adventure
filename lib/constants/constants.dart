@@ -57,3 +57,4 @@ const int kMaxQuestTimeInSeconds = 24 * 60 * 60;
 const int kMaxDistanceFromMarkerInMeter = 50;
 
 bool foundMarker = false;
+bool shownDummyModeDialog = false;

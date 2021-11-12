@@ -14,7 +14,6 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 class ActiveQuestViewModel extends QuestViewModel {
   final log = getLogger('ActiveQuestViewModel');
