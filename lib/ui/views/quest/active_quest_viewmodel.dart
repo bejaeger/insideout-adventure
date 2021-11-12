@@ -3,18 +3,14 @@ import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
-import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -25,9 +21,6 @@ class ActiveQuestViewModel extends QuestViewModel {
   final geolocation = locator<GeolocationService>();
   final _directionsAPI = locator<DirectionsAPI>();
   final QuestService questService = locator<QuestService>();
-  final DialogService _dialogService = locator<DialogService>();
-  final _navigationService = locator<NavigationService>();
-  final _stopWatchService = locator<StopWatchService>();
   final _qrCodeService = locator<QRCodeService>();
 
   Quest get startedQuest => questService.getStartedQuest!;
@@ -63,69 +56,6 @@ class ActiveQuestViewModel extends QuestViewModel {
     );
 
     return _initialCameraPosition;
-  }
-
-// ! IMPORTANT TODO
-// MAKE THISS AND THE FINISH Quest function in custom_app_bar_viewmodel the same!!!!!!!
-
-  Future _finishCompletedQuest({required int numMarkersCollected}) async {
-    try {
-      //Add all the information of the Quest in the Firebase.
-      dynamic result;
-      try {
-        setBusy(true);
-        result = await questService.evaluateAndFinishQuest();
-        setBusy(false);
-      } catch (e) {
-        setBusy(false);
-        if (e is QuestServiceException) {
-          await _dialogService.showDialog(
-              title: e.prettyDetails, buttonTitle: 'Ok');
-          _navigationService.replaceWith(Routes.mapView);
-          return;
-        } else if (e is CloudFunctionApiException) {
-          await _dialogService.showDialog(
-              title: e.prettyDetails, buttonTitle: 'Ok');
-          return;
-        } else {
-          log.e("Unknown error occured from evaluateAndFinishQuest");
-          rethrow;
-        }
-      }
-      if (result is String) {
-        log.wtf(
-            "An error occured when trying to finish the quest. The following warning was thrown: $result");
-      } else {
-        if (questService.previouslyFinishedQuest == null) {
-          log.wtf(
-              "Quest was successfully finished but previouslyFinishedQuest was not set! This should never happen and is due to an internal error in quest service..");
-          throw Exception(
-              "Internal Error: For developers, please set the variable 'previouslyFinishedQuest' in the quest service.");
-        }
-        // Quest succesfully finished!
-
-        await _dialogService.showDialog(
-            title: "Congratz, you succesfully finished the quest!",
-            description: "Earned credits: " +
-                questService.previouslyFinishedQuest!.quest.afkCredits
-                    .toString() +
-                ", time elapsed: " +
-                _stopWatchService.secondsToHourMinuteSecondTime(
-                    questService.previouslyFinishedQuest!.timeElapsed) +
-                "; New balance: " +
-                currentUserStats.afkCreditsBalance.toString(),
-            buttonTitle: 'Ok');
-        _navigationService.replaceWith(Routes.mapView);
-      }
-    } catch (e) {
-      setBusy(false);
-      await _dialogService.showDialog(
-          title: "An internal error occured on our side. Sorry!",
-          buttonTitle: 'Ok');
-      log.wtf(
-          "An error occured when trying to finish the quest. This should never happen! Error: $e");
-      _navigationService.replaceWith(Routes.mapView);
-    }
   }
 
   BitmapDescriptor defineMarkersColour({required AFKMarker afkmarker}) {
@@ -182,7 +112,7 @@ class ActiveQuestViewModel extends QuestViewModel {
       updateMapMarkers(afkmarker: afkmarker);
       checkIfQuestFinishedAndFinishQuest();
     } else {
-      _dialogService.showDialog(
+      dialogService.showDialog(
           title: "Quest Not Running",
           description: "Verify Your Quest Because is not running");
     }
@@ -224,7 +154,7 @@ class ActiveQuestViewModel extends QuestViewModel {
       final _markersCollected = questService.getNumberMarkersCollected;
       log.i(
           "This is The Number of Markers Collected: ${_markersCollected.toString()}");
-      _finishCompletedQuest(numMarkersCollected: _markersCollected);
+      finishCompletedQuest();
       //finishQuest();
     }
   }

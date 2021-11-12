@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/custom_app_bar_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/activated_quest_panel_viewmodel.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -11,9 +11,9 @@ class ActivatedQuestPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<CustomAppBarViewModel>.reactive(
+    return ViewModelBuilder<ActivatedQuestPanelViewModel>.reactive(
       //onModelReady: (model) => model.setTimer(),
-      viewModelBuilder: () => CustomAppBarViewModel(),
+      viewModelBuilder: () => ActivatedQuestPanelViewModel(),
       builder: (context, model, child) => AnimatedContainer(
         height: model.hasActiveQuest ? height + kAppBarExtendedHeight : 0,
         decoration: BoxDecoration(
@@ -78,10 +78,15 @@ class ActivatedQuestPanel extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SmallButton(
-                                    title: "Finish Quest",
-                                    onPressed: () async =>
-                                        await model.finishQuest()),
+                                model.isBusy
+                                    ? CircularProgressIndicator(
+                                        color: Colors.white)
+                                    : SmallButton(
+                                        title: "Finish Quest",
+                                        onPressed: model.isBusy
+                                            ? () => null
+                                            : () async => await model
+                                                .finishCompletedQuest()),
                                 // horizontalSpaceMedium,
                                 // SmallButton(
                                 //     title: "Complete Quest",
