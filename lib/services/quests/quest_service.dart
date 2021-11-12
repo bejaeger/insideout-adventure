@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/quests/markers/marker.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -108,12 +110,17 @@ class QuestService {
         try {
           await _bookkeepFinishedQuest(quest: activatedQuest!);
         } catch (e) {
-          await _firestoreApi.pushFinishedQuest(
-              quest: activatedQuest!
-                  .copyWith(status: QuestStatus.internalFailure));
-          disposeActivatedQuest();
-          log.wtf(e);
-          rethrow;
+          if (e is CloudFunctionApiException) {
+            continueIncompleteQuest();
+            rethrow;
+          } else {
+            await _firestoreApi.pushFinishedQuest(
+                quest: activatedQuest!
+                    .copyWith(status: QuestStatus.internalFailure));
+            disposeActivatedQuest();
+            log.wtf(e);
+            rethrow;
+          }
         }
         await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
         // keep copy of finished quest to show in success dialog view
@@ -300,6 +307,11 @@ class QuestService {
   /// Calling backend function to bookkeep credits
   Future _bookkeepFinishedQuest({required ActivatedQuest quest}) async {
     try {
+      // TODO
+      // Add check for network connection.
+      // And return proper error message if no data connection available
+      // And also keep quest status!
+
       log.i("Calling restful server function bookkeepFinishedQuest");
       Uri url = Uri.https(
           _flavorConfigProvider.authority,
@@ -325,15 +337,23 @@ class QuestService {
             prettyDetails: "${result["error"]["message"]}");
       }
     } catch (e) {
-      if (e is QuestServiceException) rethrow;
       log.e("Couldn't process finishedquest: ${e.toString()}");
-      throw QuestServiceException(
-          message:
-              "Something failed when calling the https function bookkeepFinishedQuest",
-          devDetails:
-              "This should not happen and is due to an error on the Firestore side or the datamodels that were being pushed!",
-          prettyDetails:
-              "An internal error occured on our side, please apologize and try again later.");
+      if (e is QuestServiceException) rethrow;
+      if (e is SocketException) {
+        throw CloudFunctionApiException(
+            message: "No network available",
+            devDetails:
+                "It seems like the call to the cloud function was not possible due to connection issues. Prompt a message to the user so that he tries again later.",
+            prettyDetails: "No network connection, please try again later.");
+      } else {
+        throw QuestServiceException(
+            message:
+                "Something failed when calling the https function bookkeepFinishedQuest",
+            devDetails:
+                "This should not happen and is due to an error on the Firestore side or the datamodels that were being pushed!",
+            prettyDetails:
+                "An internal error occured on our side, sorry! Please try again later.");
+      }
     }
   }
 

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/datamodels/quests/markers/marker.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/exceptions/qrcode_service_exception.dart';
 
 class QRCodeService {

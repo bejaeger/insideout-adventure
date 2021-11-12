@@ -4,11 +4,13 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
-import 'package:afkcredits/datamodels/quests/markers/marker.dart';
+import 'package:afkcredits/datamodels/dummy_data.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
+import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
@@ -27,10 +29,9 @@ class MapViewModel extends QuestViewModel {
   final _bottomSheetService = locator<BottomSheetService>();
   final QuestService questService = locator<QuestService>();
   final DialogService _dialogService = locator<DialogService>();
-  final _markersService = locator<MarkerService>();
-  final _navigationService = locator<NavigationService>();
   final _qrCodeService = locator<QRCodeService>();
-  final _stopWatchService = locator<StopWatchService>();
+  final FlavorConfigProvider _flavorConfigProvider =
+      locator<FlavorConfigProvider>();
 
   int currentIndex = 0;
   void toggleIndex() {
@@ -67,17 +68,19 @@ class MapViewModel extends QuestViewModel {
     setBusy(true);
     try {
       if (_geolocationService.getUserPosition == null) {
-        await _geolocationService.getCurrentLocation();
+        await _geolocationService.getAndSetCurrentLocation();
       } else {
-        _geolocationService.getCurrentLocation();
+        _geolocationService.getAndSetCurrentLocation();
       }
       setBusy(false);
       loadQuests();
       notifyListeners();
     } catch (e) {
       if (e is GeolocationServiceException) {
-        await dialogService.showDialog(
-            title: "Sorry", description: e.prettyDetails);
+        if (_flavorConfigProvider.enableGPSVerification) {
+          await dialogService.showDialog(
+              title: "Sorry", description: e.prettyDetails);
+        }
       } else {
         await showGenericInternalErrorDialog();
       }
@@ -92,7 +95,9 @@ class MapViewModel extends QuestViewModel {
           zoom: 13);
       return _initialCameraPosition;
     } else {
-      return null;
+      return CameraPosition(
+        target: getDummyCoordinates(),
+      );
     }
   }
 

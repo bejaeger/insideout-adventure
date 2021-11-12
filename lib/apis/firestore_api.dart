@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/dummy_datamodels.dart';
+import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/quests/markers/marker.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';

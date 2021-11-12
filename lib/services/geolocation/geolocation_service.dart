@@ -16,7 +16,9 @@ class GeolocationService {
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   dynamic _position;
 
-  Future getCurrentLocation() async {
+  Position? get getUserPosition => _position;
+
+  Future getAndSetCurrentLocation() async {
     //Verify If location is available on device.
     final checkGeolocation = await checkGeolocationAvailable();
 
@@ -68,8 +70,6 @@ class GeolocationService {
     }
   }
 
-  Position? get getUserPosition => _position;
-
   Future<bool> checkGeolocationAvailable() async {
     bool isGeolocationAvailable = await Geolocator.isLocationServiceEnabled();
     return isGeolocationAvailable;
@@ -111,7 +111,7 @@ class GeolocationService {
   }
  */
   Future<bool> isUserCloseby({required double lat, required double lon}) async {
-    final position = await getCurrentLocation();
+    final position = await getAndSetCurrentLocation();
 
     if (position != null) {
       double distanceInMeters = Geolocator.distanceBetween(

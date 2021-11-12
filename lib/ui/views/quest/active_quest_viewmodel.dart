@@ -5,8 +5,9 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/directions/directions.dart';
-import 'package:afkcredits/datamodels/quests/markers/marker.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
@@ -64,6 +65,9 @@ class ActiveQuestViewModel extends QuestViewModel {
     return _initialCameraPosition;
   }
 
+// ! IMPORTANT TODO
+// MAKE THISS AND THE FINISH Quest function in custom_app_bar_viewmodel the same!!!!!!!
+
   Future _finishCompletedQuest({required int numMarkersCollected}) async {
     //final result = await questService.evaluateAndFinishQuest();
 
@@ -87,6 +91,10 @@ class ActiveQuestViewModel extends QuestViewModel {
           await _dialogService.showDialog(
               title: e.prettyDetails, buttonTitle: 'Ok');
           _navigationService.replaceWith(Routes.mapView);
+          return;
+        } else if (e is CloudFunctionApiException) {
+          await _dialogService.showDialog(
+              title: e.prettyDetails, buttonTitle: 'Ok');
           return;
         } else {
           log.e("Unknown error occured from evaluateAndFinishQuest");

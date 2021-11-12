@@ -1,4 +1,4 @@
-import 'package:afkcredits/datamodels/quests/markers/marker.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

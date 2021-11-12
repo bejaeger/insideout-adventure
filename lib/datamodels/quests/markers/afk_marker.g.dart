@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'marker.dart';
+part of 'afk_marker.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

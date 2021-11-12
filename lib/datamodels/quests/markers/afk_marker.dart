@@ -1,8 +1,8 @@
 import 'package:afkcredits/enums/marker_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'marker.freezed.dart';
-part 'marker.g.dart';
+part 'afk_marker.freezed.dart';
+part 'afk_marker.g.dart';
 
 @freezed
 class AFKMarker with _$AFKMarker {

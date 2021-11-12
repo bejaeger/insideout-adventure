@@ -1,6 +1,8 @@
-import 'package:afkcredits/datamodels/quests/markers/marker.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<Quest> getDummyQuests() {
   return [
@@ -290,4 +292,8 @@ AFKMarker myRoomMarker() {
       qrCodeId: "myRoomMarker",
       lat: 49.267489,
       lon: -122.990541);
+}
+
+getDummyCoordinates() {
+  return LatLng(49.267489, -122.990541);
 }
