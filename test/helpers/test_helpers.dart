@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/dummy_datamodels.dart';
+import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/quests/markers/marker.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/flavor_config.dart';
@@ -217,7 +217,7 @@ GeolocationService getAndRegisterGeolocationService(
     {Position? position, bool isCloseBy = true}) {
   _removeRegistrationIfExists<GeolocationService>();
   final service = MockGeolocationService();
-  when(service.getCurrentLocation()).thenAnswer((_) async => position);
+  when(service.getAndSetCurrentLocation()).thenAnswer((_) async => position);
   when(service.isUserCloseby(lat: anyNamed("lat"), lon: anyNamed("lon")))
       .thenAnswer((_) async => isCloseBy);
   locator.registerSingleton<GeolocationService>(service);

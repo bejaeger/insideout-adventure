@@ -69,15 +69,6 @@ class ActiveQuestViewModel extends QuestViewModel {
 // MAKE THISS AND THE FINISH Quest function in custom_app_bar_viewmodel the same!!!!!!!
 
   Future _finishCompletedQuest({required int numMarkersCollected}) async {
-    //final result = await questService.evaluateAndFinishQuest();
-
-    //Stop The Timer;
-    _stopWatchService.stopTimer();
-
-    //Running Quest Been Finshed.
-    checkRunningQuest = false;
-    //final result = await questService.finishQuest();
-
     try {
       //Add all the information of the Quest in the Firebase.
       dynamic result;

@@ -233,8 +233,6 @@ class MapViewModel extends QuestViewModel {
         secondaryButtonTitle: "Close",
         data: quest);
     if (sheetResponse?.confirmed == true) {
-      //User Will Start a Quest
-      checkRunningQuest = true;
       await startQuest(quest: quest);
     }
   }
