@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class NoNetworkConnection extends StatelessWidget {
+class NoNetworkConnectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(

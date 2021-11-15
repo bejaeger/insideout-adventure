@@ -15,7 +15,7 @@ class GiftCardView extends StatelessWidget {
     return ViewModelBuilder<GiftCardViewModel>.reactive(
       viewModelBuilder: () => GiftCardViewModel(),
       onModelReady: (model) => model.loadAllGiftCards(),
-      builder: (context, model, child) => VerifyNetworkConnection(
+      builder: (context, model, child) => VerifyNetworkConnectionView(
         child: Scaffold(
           appBar: CustomAppBar(
             title: 'Gift Card Shop',

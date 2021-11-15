@@ -3,7 +3,7 @@ import 'package:afkcredits/ui/views/no_network_connection/no_network_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class VerifyNetworkConnection extends StatelessWidget {
+class VerifyNetworkConnectionView extends StatelessWidget {
   final Widget child;
   VerifyNetworkConnection({
     required this.child,
@@ -17,6 +17,6 @@ class VerifyNetworkConnection extends StatelessWidget {
       return child;
     }
     // return Opacity(opacity: 0.1,child: child,);  }
-    return NoNetworkConnection();
+    return NoNetworkConnectionView();
   }
 }
