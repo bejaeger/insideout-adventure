@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
