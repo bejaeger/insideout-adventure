@@ -1,8 +1,8 @@
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/gift_cards/components/gift_cards_section.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/verify_network_connection/verify_network_connection.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/verifyNetworkConnection/verify_network_connection.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -15,7 +15,7 @@ class GiftCardView extends StatelessWidget {
     return ViewModelBuilder<GiftCardViewModel>.reactive(
       viewModelBuilder: () => GiftCardViewModel(),
       onModelReady: (model) => model.loadAllGiftCards(),
-      builder: (context, model, child) => VerifyNetworkConnectionView(
+      builder: (context, model, child) => VerifyNetworkConnection(
         child: Scaffold(
           appBar: CustomAppBar(
             title: 'Gift Card Shop',

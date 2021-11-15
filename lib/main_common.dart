@@ -15,7 +15,6 @@ import 'package:stacked_services/stacked_services.dart';
 import 'enums/connectivity_type.dart';
 import 'flavor_config.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
-import 'ui/widgets/verifyNetworkConnection/verify_network_connection.dart';
 
 const bool USE_EMULATOR = false;
 

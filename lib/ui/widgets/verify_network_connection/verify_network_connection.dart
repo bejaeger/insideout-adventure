@@ -1,9 +1,9 @@
 import 'package:afkcredits/enums/connectivity_type.dart';
-import 'package:afkcredits/ui/views/no_network_connection/no_network_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../views/network_connection/no_network_connection_view.dart';
 
-class VerifyNetworkConnectionView extends StatelessWidget {
+class VerifyNetworkConnection extends StatelessWidget {
   final Widget child;
   VerifyNetworkConnection({
     required this.child,
