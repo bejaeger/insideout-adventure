@@ -6,6 +6,7 @@ import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
+import 'package:afkcredits/ui/widgets/verify_network_connection/verify_network_connection.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -21,52 +22,54 @@ class ExplorerHomeView extends StatelessWidget {
       viewModelBuilder: () => ExplorerHomeViewModel(),
       onModelReady: (model) => model.listenToData(),
       fireOnModelReadyOnce: true,
-      builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(
-          title: "Hi Explorer ${model.currentUser.fullName}!",
-        ),
-        body: model.isBusy
-            ? CircularProgressIndicator()
-            : Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                child: ListView(
-                  children: [
-                    verticalSpaceLarge,
-                    ExplorerCreditStats(
-                      userStats: model.currentUserStats,
-                    ),
-                    verticalSpaceLarge,
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(elevation: 5),
-                      // onPressed: model.navigateToExplorerHomeView,
-                      onPressed: model.navigateToGiftCardsView,
-                      //child: Text("Go to explorer home/map")),
-                      child: Text("See Your Gift Cards -> "),
-                    ),
-                    verticalSpaceMedium,
-                    SectionHeader(
-                      horizontalPadding: 0,
-                      title: "Your Achievements",
-                    ),
-                    verticalSpaceSmall,
-                    model.activatedQuestsHistory.length == 0
-                        ? Text("Complete your first quest first ->")
-                        : QuestsGrid(
-                            activatedQuests: model.activatedQuestsHistory,
-                            onPressed: () => null,
-                          ),
-                    verticalSpaceLarge,
-                    ElevatedButton(
-                      // onPressed: model.navigateToExplorerHomeView,
-                      onPressed: model.logout,
-                      //child: Text("Go to explorer home/map")),
-                      child: Text("Logout  "),
-                    ),
-                    verticalSpaceLarge,
-                  ],
+      builder: (context, model, child) => VerifyNetworkConnection(
+        child: Scaffold(
+          appBar: CustomAppBar(
+            title: "Hi Explorer ${model.currentUser.fullName}!",
+          ),
+          body: model.isBusy
+              ? CircularProgressIndicator()
+              : Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: ListView(
+                    children: [
+                      verticalSpaceLarge,
+                      ExplorerCreditStats(
+                        userStats: model.currentUserStats,
+                      ),
+                      verticalSpaceLarge,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 5),
+                        // onPressed: model.navigateToExplorerHomeView,
+                        onPressed: model.navigateToGiftCardsView,
+                        //child: Text("Go to explorer home/map")),
+                        child: Text("See Your Gift Cards -> "),
+                      ),
+                      verticalSpaceMedium,
+                      SectionHeader(
+                        horizontalPadding: 0,
+                        title: "Your Achievements",
+                      ),
+                      verticalSpaceSmall,
+                      model.activatedQuestsHistory.length == 0
+                          ? Text("Complete your first quest first ->")
+                          : QuestsGrid(
+                              activatedQuests: model.activatedQuestsHistory,
+                              onPressed: () => null,
+                            ),
+                      verticalSpaceLarge,
+                      ElevatedButton(
+                        // onPressed: model.navigateToExplorerHomeView,
+                        onPressed: model.logout,
+                        //child: Text("Go to explorer home/map")),
+                        child: Text("Logout  "),
+                      ),
+                      verticalSpaceLarge,
+                    ],
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -94,8 +97,7 @@ class ExplorerCreditStats extends StatelessWidget {
             Flexible(
               child: StatsCard(
                   height: 80,
-                  statistic:
-                      userStats.afkCreditsBalance.toString(),
+                  statistic: userStats.afkCreditsBalance.toString(),
                   subtitle: kCurrentAFKCreditsDescription),
             ),
           ],
@@ -107,8 +109,7 @@ class ExplorerCreditStats extends StatelessWidget {
             Flexible(
               child: StatsCard(
                   height: 80,
-                  statistic:
-                    userStats.lifetimeEarnings.toString(),
+                  statistic: userStats.lifetimeEarnings.toString(),
                   subtitle: kLifetimeEarningsDescription),
             ),
             Flexible(
