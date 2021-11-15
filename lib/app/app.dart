@@ -1,6 +1,7 @@
 import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
@@ -66,6 +67,7 @@ import 'package:stacked_services/stacked_services.dart';
   dependencies: [
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: DialogService),
+    LazySingleton(classType: ConnectivityService),
     LazySingleton(classType: SnackbarService),
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: PlacesService),

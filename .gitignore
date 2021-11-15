@@ -37,7 +37,7 @@ pubspec.lock
 android/app/src/*/google-services.json
 android/app/src/*/AndroidManifest.xml
 .env
-dotenv
+
 
 # Web related
 lib/generated_plugin_registrant.dart

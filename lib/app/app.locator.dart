@@ -18,6 +18,7 @@ import 'package:stacked_services/stacked_services.dart';
 import '../apis/direction_api.dart';
 import '../apis/firestore_api.dart';
 import '../flavor_config.dart';
+import '../services/connectivity/connectivity_service.dart';
 import '../services/environment_services.dart';
 import '../services/geolocation/geolocation_service.dart';
 import '../services/giftcard/gift_card_service.dart';
@@ -42,6 +43,7 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
 // Register dependencies
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DialogService());
+  locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => PlacesService());
