@@ -153,7 +153,7 @@ class ActiveQuestViewModel extends QuestViewModel {
       final _markersCollected = questService.getNumberMarkersCollected;
       log.i(
           "This is The Number of Markers Collected: ${_markersCollected.toString()}");
-      finishCompletedQuest();
+      checkQuestAndFinishWhenCompleted();
       //finishQuest();
     }
   }

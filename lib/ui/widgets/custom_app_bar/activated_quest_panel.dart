@@ -86,7 +86,7 @@ class ActivatedQuestPanel extends StatelessWidget {
                                         onPressed: model.isBusy
                                             ? () => null
                                             : () async => await model
-                                                .finishCompletedQuest()),
+                                                .checkQuestAndFinishWhenCompleted()),
                                 // horizontalSpaceMedium,
                                 // SmallButton(
                                 //     title: "Complete Quest",

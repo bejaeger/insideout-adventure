@@ -7,6 +7,8 @@ import { StatusCodes } from "http-status-codes";
 import { ResponseHandler } from "../../system/responseHandler";
 import { FirestoreManager } from "../../system/firestoreManager";
 import { GiftCardManager } from "../../system/giftCardManager";
+import { EmailService } from "../../system/emailService";
+import { NotionApi } from "../../system/notionApi";
 
 const admin = require("firebase-admin");
 const db = admin.firestore();
@@ -29,6 +31,8 @@ export default new Post((request: Request, response: Response) => {
             const bookkeeper = new AFKCreditsBookkeeper(db);
             const dbHandler = new FirestoreManager(db);
             const giftCardManager = new GiftCardManager(db);
+            const emailService = new EmailService();
+            const notionApi = new NotionApi();
 
             const giftCardCategory = data["giftCardCategory"];
             const uid = data["uid"];
@@ -42,6 +46,7 @@ export default new Post((request: Request, response: Response) => {
 
             const amount = giftCardCategory["amount"];
             const categoryId = giftCardCategory["categoryId"];
+
 
             try {
                 await db.runTransaction(async (t: any) => {
@@ -61,11 +66,39 @@ export default new Post((request: Request, response: Response) => {
                         returnData["needToProvideGiftCard"] = true;
                         data["status"] = "pending";
 
-                        // TODO: Trigger E-Mail Alert and add interface
-                        // To provide gift card to user!!
                     }
                     t.set(docRef, data);
                 });
+
+                try {
+                    // Send email
+                    emailService.notifyAFKCreditsTeamAfterGiftCardPurchase(
+                        data["status"],
+                        uid,
+                        categoryId,
+                        data["transferId"],
+                        data["code"]
+                    );
+
+                    // add gift card purchase to notion
+                    notionApi.bookkeepGiftCardPurchase(
+                        data["status"],
+                        uid,
+                        categoryId,
+                        giftCardCategory["categoryName"],
+                        amount,
+                        data["transferId"],
+                    );
+                } catch (e) {
+                    log("Error when sending email alert or using notion Api!")
+                    if (typeof e === "string") {
+                        log(e);
+                    }
+                    if (e instanceof Error) {
+                        log(e.message);
+                    }
+                }
+
                 response.status(StatusCodes.OK).send(
                     ResponseHandler.returnData(returnData)
                 );

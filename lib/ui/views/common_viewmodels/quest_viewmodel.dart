@@ -7,7 +7,7 @@ import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
 abstract class QuestViewModel extends BaseModel {
-    final _stopWatchService = locator<StopWatchService>();
+  final _stopWatchService = locator<StopWatchService>();
 
   Future scanQrCodeWithActiveQuest() async {
     QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
@@ -24,13 +24,13 @@ abstract class QuestViewModel extends BaseModel {
   // needs to be overrriden!
   Future handleQrCodeScanEvent(QuestQRCodeScanResult result);
 
-  Future finishCompletedQuest() async {
+  Future checkQuestAndFinishWhenCompleted() async {
     try {
       dynamic result;
       try {
         setBusy(true);
         result = await questService.evaluateAndFinishQuest();
-        setBusy(false);        
+        setBusy(false);
       } catch (e) {
         setBusy(false);
         if (e is QuestServiceException) {
@@ -54,6 +54,7 @@ abstract class QuestViewModel extends BaseModel {
             title: result.toString(),
             cancelTitle: "Cancel Quest",
             confirmationTitle: "Continue Quest");
+
         if (continueQuest?.confirmed == true) {
           await questService.continueIncompleteQuest();
         } else {
@@ -93,6 +94,4 @@ abstract class QuestViewModel extends BaseModel {
       navigationService.replaceWith(Routes.mapView);
     }
   }
-
-
 }
