@@ -83,6 +83,20 @@ export class NotionApi {
                                    email:  "bjager@sfu.ca",
                                 }
                             },
+                            {
+                                type: "person",
+                                id: "bf4cbda5-7996-4e65-8933-70a03a827154",
+                                person: {
+                                   email:  "pmayerho@sfu.ca",
+                                }
+                            },
+                            {
+                                type: "person",
+                                id: "c429f9c4-a831-41fb-91da-8c813a19aa88",
+                                person: {
+                                   email:  "karam.elabd@gmail.com",
+                                }
+                            },                            
                         ],
                     },              
                 },
