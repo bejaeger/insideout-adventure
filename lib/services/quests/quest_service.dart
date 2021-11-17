@@ -144,9 +144,14 @@ class QuestService {
   Future cancelIncompleteQuest() async {
     if (activatedQuest != null) {
       log.i("Cancelling incomplete quest");
-      await _firestoreApi.pushFinishedQuest(
+      // don't await for this call otherwise we will wait forever
+      // in case of no data connection. Since we are just cancelling
+      // a quest it's not crucial info for the app to immediately react to it.
+      // So we can just take the easy route here and don't await the push call.
+      _firestoreApi.pushFinishedQuest(
           quest: activatedQuest!.copyWith(status: QuestStatus.cancelled));
       disposeActivatedQuest();
+      log.i("Cancelled incomplete ques");
     } else {
       log.e(
           "Can't cancel the quest because there is no quest present. This function should have probably never been called! Please check!");
