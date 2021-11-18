@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
+import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
@@ -11,25 +10,22 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
-import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
+
 import 'package:afkcredits/services/markers/marker_service.dart';
-import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:path/path.dart' as p;
-import 'package:http/http.dart' as http;
 
 class QuestService {
   BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
       BehaviorSubject<ActivatedQuest?>();
+  final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
-  final QRCodeService _qrCodeService = locator<QRCodeService>();
-  final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final MarkerService _markerService = locator<MarkerService>();
+  final CloudFunctionsApi _cloudFunctionsApi = locator<CloudFunctionsApi>();
   final StopWatchService _stopWatchService =
       locator<StopWatchService>(); // Create instance.
   // map of list of money pools with money Pool id as key
@@ -108,9 +104,10 @@ class QuestService {
         //try {
         // if we end up here it means the quest has finished succesfully!
         try {
-          await _bookkeepFinishedQuest(quest: activatedQuest!);
+          await _cloudFunctionsApi.bookkeepFinishedQuest(
+              quest: activatedQuest!);
         } catch (e) {
-          if (e is CloudFunctionApiException) {
+          if (e is CloudFunctionsApiException) {
             continueIncompleteQuest();
             rethrow;
           } else {
@@ -122,6 +119,7 @@ class QuestService {
             rethrow;
           }
         }
+        // At this point the quest has successfully finished!
         await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
         // keep copy of finished quest to show in success dialog view
         previouslyFinishedQuest = activatedQuest;
@@ -258,8 +256,9 @@ class QuestService {
       {AFKMarker? marker}) async {
     if (marker == null) return QuestQRCodeScanResult.empty();
     if (!hasActiveQuest) {
-      List<Quest> quests = await _firestoreApi.getQuestsWithStartMarkerId(
-          startMarkerId: marker.id);
+      // get Quests with start marker id
+      List<Quest> quests =
+          await _getQuestsWithStartMarkerId(markerId: marker.id);
       return QuestQRCodeScanResult.quests(quests: quests);
     } else {
       // Checks to perform:
@@ -308,60 +307,6 @@ class QuestService {
     return await _firestoreApi.getMarkerFromQrCodeId(qrCodeId: qrCodeId);
   }
 
-  ///////////////////////////////////////////
-  /// Calling backend function to bookkeep credits
-  Future _bookkeepFinishedQuest({required ActivatedQuest quest}) async {
-    try {
-      // TODO
-      // Add check for network connection.
-      // And return proper error message if no data connection available
-      // And also keep quest status!
-
-      log.i("Calling restful server function bookkeepFinishedQuest");
-      Uri url = Uri.https(
-          _flavorConfigProvider.authority,
-          p.join(_flavorConfigProvider.uripathprepend,
-              "transfers-api/bookkeepfinishedquest"));
-      http.Response? response = await http.post(url,
-          body: json.encode(quest.toJson()),
-          headers: {"Accept": "application/json"});
-      log.i("posted http request");
-      dynamic result = json.decode(response.body);
-      log.i("decoded json response");
-      // return result;
-      if (result["error"] == null) {
-        log.i("Quest successfully bookkept!");
-      } else {
-        log.e(
-            "Error when trying to bookeep finished quest: ${result['error']['message']}");
-        throw QuestServiceException(
-            message:
-                "An error occured in the cloud function 'bookkeepFinishedQuest'",
-            devDetails:
-                "Error message from cloud function: ${result["error"]["message"]}",
-            prettyDetails: "${result["error"]["message"]}");
-      }
-    } catch (e) {
-      log.e("Couldn't process finishedquest: ${e.toString()}");
-      if (e is QuestServiceException) rethrow;
-      if (e is SocketException) {
-        throw CloudFunctionApiException(
-            message: "No network available",
-            devDetails:
-                "It seems like the call to the cloud function was not possible due to connection issues. Prompt a message to the user so that he tries again later.",
-            prettyDetails: "No network connection, please try again later.");
-      } else {
-        throw QuestServiceException(
-            message:
-                "Something failed when calling the https function bookkeepFinishedQuest",
-            devDetails:
-                "This should not happen and is due to an error on the Firestore side or the datamodels that were being pushed!",
-            prettyDetails:
-                "An internal error occured on our side, sorry! Please try again later.");
-      }
-    }
-  }
-
   ////////////////////////////////////////////
   /// History of quests
 
@@ -397,6 +342,13 @@ class QuestService {
     }
   }
 
+  Future loadNearbyQuests() async {
+    // TODO: In the future retrieve only nearby quests
+    nearbyQuests = await _firestoreApi.getNearbyQuests(
+        pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests);
+    log.i("Found ${nearbyQuests.length} nearby quests.");
+  }
+
   ////////////////////////////////////////////////
   // Helper functions
   void pushActivatedQuest(ActivatedQuest quest) {
@@ -424,10 +376,19 @@ class QuestService {
     return _firestoreApi.getQuest(questId: questId);
   }
 
-  Future loadNearbyQuests() async {
-    // TODO: In the future retrieve only nearby quests
-    nearbyQuests = _firestoreApi.getNearbyQuests();
-    log.i("Found ${nearbyQuests.length} nearby quests.");
+  Future<List<Quest>> _getQuestsWithStartMarkerId(
+      {required String markerId}) async {
+    // get Quests with start marker id
+    late List<Quest> quests;
+    if (nearbyQuests.length == 0) {
+      quests = await _firestoreApi.downloadQuestsWithStartMarkerId(
+          startMarkerId: markerId);
+    } else {
+      quests = nearbyQuests
+          .where((element) => element.startMarker.id == markerId)
+          .toList();
+    }
+    return quests;
   }
 
   void updateTime(int seconds) {

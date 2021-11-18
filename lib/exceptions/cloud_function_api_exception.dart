@@ -1,9 +1,9 @@
-class CloudFunctionApiException implements Exception {
+class CloudFunctionsApiException implements Exception {
   final String message;
   final String? devDetails;
   final String? prettyDetails;
 
-  CloudFunctionApiException({
+  CloudFunctionsApiException({
     required this.message,
     this.devDetails,
     this.prettyDetails,

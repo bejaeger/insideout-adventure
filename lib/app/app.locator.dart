@@ -15,6 +15,7 @@ import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+import '../apis/cloud_functions_api.dart';
 import '../apis/direction_api.dart';
 import '../apis/firestore_api.dart';
 import '../flavor_config.dart';
@@ -51,6 +52,7 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => EnvironmentService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => FirestoreApi());
+  locator.registerLazySingleton(() => CloudFunctionsApi());
   locator.registerLazySingleton(() => FirebaseAuthenticationService());
   locator.registerLazySingleton(() => FlavorConfigProvider());
   locator.registerLazySingleton(() => LayoutService());

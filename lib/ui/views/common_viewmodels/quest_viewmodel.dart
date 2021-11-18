@@ -38,7 +38,7 @@ abstract class QuestViewModel extends BaseModel {
               title: e.prettyDetails, buttonTitle: 'Ok');
           navigationService.replaceWith(Routes.mapView);
           return;
-        } else if (e is CloudFunctionApiException) {
+        } else if (e is CloudFunctionsApiException) {
           await dialogService.showDialog(
               title: e.prettyDetails, buttonTitle: 'Ok');
           return;

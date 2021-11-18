@@ -123,6 +123,7 @@ ActivatedQuest getTestActivatedQuest() {
     markersCollected: List.filled(getTestQuest().markers.length, false),
     status: QuestStatus.active,
     timeElapsed: 0,
+    uids: [kTestUid],
   );
 }
 

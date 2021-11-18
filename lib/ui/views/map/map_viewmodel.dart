@@ -17,7 +17,6 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class MapViewModel extends QuestViewModel {
   final log = getLogger('MapViewModel');

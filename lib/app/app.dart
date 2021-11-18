@@ -1,3 +1,4 @@
+import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/flavor_config.dart';
@@ -75,6 +76,8 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: EnvironmentService),
     LazySingleton(classType: UserService),
     LazySingleton(classType: FirestoreApi),
+    LazySingleton(classType: CloudFunctionsApi),
+
     LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: FlavorConfigProvider),
     LazySingleton(classType: LayoutService),

@@ -1,3 +1,4 @@
+import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -38,6 +39,7 @@ final mockFirebaseUser = MockFirebaseUser();
   // our services registered with get_it
   MockSpec<UserService>(returnNullOnMissingStub: true),
   MockSpec<FirestoreApi>(returnNullOnMissingStub: true),
+  MockSpec<CloudFunctionsApi>(returnNullOnMissingStub: true),
   MockSpec<EnvironmentService>(returnNullOnMissingStub: true),
   MockSpec<PlacesService>(returnNullOnMissingStub: true),
   MockSpec<FlavorConfigProvider>(returnNullOnMissingStub: true),
@@ -148,8 +150,20 @@ MockFirestoreApi getAndRegisterFirestoreApi({User? user}) {
       .thenAnswer((realInvocation) async => user);
   when(service.getMarkerFromQrCodeId(qrCodeId: anyNamed("qrCodeId")))
       .thenAnswer((_) async => getTestMarker1());
+  when(service.downloadQuestsWithStartMarkerId(
+          startMarkerId: anyNamed("startMarkerId")))
+      .thenAnswer((_) async => [getDummyQuest1()]);
   final userStats = getEmptyUserStatistics(uid: kTestUid);
   locator.registerSingleton<FirestoreApi>(service);
+  return service;
+}
+
+MockCloudFunctionsApi getAndRegisterCloudFunctionsApi() {
+  _removeRegistrationIfExists<CloudFunctionsApi>();
+  final service = MockCloudFunctionsApi();
+  when(service.bookkeepFinishedQuest(quest: anyNamed("quest")))
+      .thenAnswer((_) async => Future.value());
+  locator.registerSingleton<CloudFunctionsApi>(service);
   return service;
 }
 
@@ -256,6 +270,7 @@ void unregisterServices() {
   locator.unregister<UserService>();
   locator.unregister<NavigationService>();
   locator.unregister<FirestoreApi>();
+  locator.unregister<CloudFunctionsApi>();
   locator.unregister<EnvironmentService>();
   locator.unregister<PlacesService>();
   locator.unregister<FlavorConfigProvider>();
@@ -278,6 +293,7 @@ void registerServices() {
   getAndRegisterEnvironmentService();
   getAndRegisterNavigationService();
   getAndRegisterFirestoreApi();
+  getAndRegisterCloudFunctionsApi();
   getAndRegisterFirebaseAuthenticationService();
   getAndRegisterPlacesService();
   getAndRegisterFlavorConfigProvider();

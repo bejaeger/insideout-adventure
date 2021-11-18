@@ -15,7 +15,7 @@ const double kTestMarker2Lat = 49.1;
 const double kTestMarker2Lon = -122.0;
 
 const String kTestMarker1QrCodeString =
-    "{\"id\":\"$kTestMarker1Id\",\"qrCodeId\":\"$kTestMarker1QrCodeId\",\"questId\":null,\"lat\":$kTestMarker1Lat,\"lon\":$kTestMarker1Lon,\"markerStatus\":\"testing\"}";
+    "{\"id\":\"$kTestMarker1Id\",\"qrCodeId\":\"$kTestMarker1QrCodeId\",\"lat\":$kTestMarker1Lat,\"lon\":$kTestMarker1Lon,\"markerStatus\":\"testing\"}";
 const String kTestMarker2QrCodeString =
     "{\"id\":\"$kTestMarker2Id\",\"qrCodeId\":\"$kTestMarker2QrCodeId\",\"questId\":null,\"lat\":$kTestMarker2Lat,\"lon\":$kTestMarker2Lon,\"markerStatus\":\"testing\"}";
 

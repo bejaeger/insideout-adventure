@@ -365,12 +365,58 @@ class FirestoreApi {
 
   // Returns dummy data for now!
   Quest? getQuest({required String questId}) {
+    log.i("Get dummy quest");
     return getDummyQuest1();
   }
 
   // Returns dummy data for now!
-  List<Quest> getNearbyQuests() {
-    return getDummyQuests();
+  Future<List<Quest>> getNearbyQuests({bool? pushDummyQuests}) async {
+    if (pushDummyQuests != null && pushDummyQuests) {
+      //TODO push quests
+      late List<Quest> questsOnFirestore;
+      try {
+        final questsOnFirestore = await _downloadNearbyQuests();
+      } catch (e) {
+        log.w(
+            "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
+        questsOnFirestore = [];
+      }
+      final quests = getDummyQuests();
+      quests.forEach((el1) {
+        if (!questsOnFirestore.any((el2) => el2.id == el1.id)) {
+          // dummy quest not yet on firestore
+          // adding it
+          _uploadQuest(quest: el1);
+        }
+      });
+      return quests;
+    } else {
+      return await _downloadNearbyQuests();
+    }
+  }
+
+  Future _uploadQuest({required Quest quest}) async {
+    log.i("Upload quest with id ${quest.id} to firestore");
+    questsCollection.add(quest.toJson());
+  }
+
+  Future<List<Quest>> _downloadNearbyQuests() async {
+    try {
+      final quests = await questsCollection.get();
+      if (quests.docs.isNotEmpty) {
+        log.v('Found list of quests in database');
+        return quests.docs.map((docs) => Quest.fromJson(docs.data())).toList();
+      } else {
+        log.wtf('You are providing an Empty document for quests');
+        throw FirestoreApiException(
+            message: "Quest data could not be found",
+            devDetails: "Quest document is empty");
+      }
+    } catch (e) {
+      if (e is FirestoreApiException) rethrow;
+      throw FirestoreApiException(
+          message: "Error Was Thrown when loading quests", devDetails: "$e");
+    }
   }
 
   // Returns dummy data for now!
@@ -423,24 +469,25 @@ class FirestoreApi {
     // return marker;
   }
 
-  Future<List<Quest>> getQuestsWithStartMarkerId(
+  Future<List<Quest>> downloadQuestsWithStartMarkerId(
       {required String? startMarkerId}) async {
-    return getNearbyQuests()
-        .where((element) => element.startMarker.id == startMarkerId)
-        .toList();
-    // QuerySnapshot snapshot = await questsCollection
-    //     .where(startMarkerId, isEqualTo: startMarkerId)
-    //     .get();
-    // try {
-    //   List<Quest> quests =
-    //       snapshot.docs.map((e) => Quest.fromJson(e.data())).toList();
-    //   return quests;
-    // } catch (e) {
-    //   throw FirestoreApiException(
-    //     message: 'Failed to get quests with startMarkerId $startMarkerId',
-    //     devDetails: 'Error thrown: $e',
-    //   );
-    // }
+    // List<Quest> quests = await getNearbyQuests();
+    // return quests
+    //     .where((element) => element.startMarker.id == startMarkerId)
+    //     .toList();
+    QuerySnapshot snapshot = await questsCollection
+        .where(startMarkerId, isEqualTo: startMarkerId)
+        .get();
+    try {
+      List<Quest> quests =
+          snapshot.docs.map((e) => Quest.fromJson(e.data())).toList();
+      return quests;
+    } catch (e) {
+      throw FirestoreApiException(
+        message: 'Failed to get quests with startMarkerId $startMarkerId',
+        devDetails: 'Error thrown: $e',
+      );
+    }
   }
 
   ////////////////////////////////////////////////////////
