@@ -35,7 +35,6 @@ pubspec.lock
 
 #Android Services 
 android/app/src/*/google-services.json
-android/app/src/*/AndroidManifest.xml
 .env
 dotenv
 
