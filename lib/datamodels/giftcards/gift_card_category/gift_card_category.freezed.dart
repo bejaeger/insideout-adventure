@@ -1,5 +1,6 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'gift_card_category.dart';
 
@@ -166,7 +167,7 @@ class _$_GiftCardCategory implements _GiftCardCategory {
       required this.categoryName});
 
   factory _$_GiftCardCategory.fromJson(Map<String, dynamic> json) =>
-      _$_$_GiftCardCategoryFromJson(json);
+      _$$_GiftCardCategoryFromJson(json);
 
   @override
   final String categoryId;
@@ -214,7 +215,7 @@ class _$_GiftCardCategory implements _GiftCardCategory {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_GiftCardCategoryToJson(this);
+    return _$$_GiftCardCategoryToJson(this);
   }
 }
 
