@@ -46,7 +46,7 @@ class LoginViewModel extends AuthenticationViewModel {
     return await _userService.runLoginLogic(
         method: method,
         emailOrName: emailOrNameValue,
-        password: passwordValue,
+        stringPw: passwordValue,
         role: role);
   }
 

@@ -1,6 +1,7 @@
 /////////////////////////////////////////////////////////
 /// For testing
 const String kTestUid = "TestId";
+const String kTestExplorerUid = "TestExplorerId";
 const String kTestQuestId = "QuestId";
 const String kTestQrCodeId = "QrCodeId";
 

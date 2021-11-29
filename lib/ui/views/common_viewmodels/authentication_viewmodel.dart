@@ -57,7 +57,7 @@ abstract class AuthenticationViewModel extends FormViewModel {
         // navigate to selectUserRoleView to select user role
         log.i(
             "User logged in with third-party provider. Navigate to select role view");
-        navigationService.replaceWith(Routes.selectRoleAfterLoginView);
+        navigationService.replaceWith(Routes.selectRoleAfterLoginView, arguments: SelectRoleAfterLoginViewArguments(authMethod: method));
         return;
       } else {
         // User account found in database

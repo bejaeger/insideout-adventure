@@ -26,6 +26,7 @@ class BaseModel extends BaseViewModel {
   final SnackbarService snackbarService = locator<SnackbarService>();
   final QuestService questService = locator<QuestService>();
   final DialogService dialogService = locator<DialogService>();
+  final BottomSheetService bottomSheetService = locator<BottomSheetService>();
   final TransfersHistoryService transfersHistoryService =
       locator<TransfersHistoryService>();
   final LayoutService layoutService = locator<LayoutService>();
@@ -36,7 +37,7 @@ class BaseModel extends BaseViewModel {
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get userIsAdmin => currentUser.role == UserRole.admin;
 
-  final log = getLogger("BaseModel");
+  final baseModelLog = getLogger("BaseModel");
   bool get hasActiveQuest => questService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => questService.activatedQuest!;
@@ -79,13 +80,18 @@ class BaseModel extends BaseViewModel {
     );
   }
 
-  Future logout() async {
-    // TODO: Check that there is no active quest present!
+  Future clearServiceData({bool logOutFromFirebase = true}) async {
     questService.clearData();
     _giftCardService.clearData();
-    await userService.handleLogoutEvent();
+    await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
     layoutService.setShowBottomNavBar(false);
+
+  }
+
+  Future logout() async {
+    // TODO: Check that there is no active quest present!
+    clearServiceData();
     navigationService.clearStackAndShow(Routes.loginView);
   }
 
@@ -111,7 +117,7 @@ class BaseModel extends BaseViewModel {
         navigationService.replaceWith(Routes.activeQuestView);
       }
     } catch (e) {
-      log.e("Could not start quest, error thrown: $e");
+      baseModelLog.e("Could not start quest, error thrown: $e");
     }
   }
 

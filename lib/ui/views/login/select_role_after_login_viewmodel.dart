@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
@@ -10,8 +11,9 @@ class SelectRoleAfterLoginViewModel extends LayoutTemplateViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final UserService _userService = locator<UserService>();
   final log = getLogger("SelectRoleAfterLoginViewModel");
+  final AuthenticationMethod authMethod;
 
-  SelectRoleAfterLoginViewModel();
+  SelectRoleAfterLoginViewModel({required this.authMethod});
 
   void navigateToLoginView() {
     _navigationService.replaceWith(Routes.loginView);
@@ -21,7 +23,7 @@ class SelectRoleAfterLoginViewModel extends LayoutTemplateViewModel {
     try {
       setBusy(true);
       await _userService.createUserAccountFromFirebaseUser(
-          role: UserRole.sponsor);
+          role: UserRole.sponsor, authMethod: authMethod);
       await _userService.syncUserAccount();
       replaceToHomeView();
       setBusy(false);
@@ -35,7 +37,7 @@ class SelectRoleAfterLoginViewModel extends LayoutTemplateViewModel {
     try {
       setBusy(true);
       await _userService.createUserAccountFromFirebaseUser(
-          role: UserRole.explorer);
+          role: UserRole.explorer, authMethod: authMethod);
       await _userService.syncUserAccount();
       replaceToHomeView();
       setBusy(false);

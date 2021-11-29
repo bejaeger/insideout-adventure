@@ -31,6 +31,7 @@ import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
 import 'package:afkcredits/ui/views/quest/active_quest_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
+import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
@@ -64,6 +65,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: QRCodeViewExample),
     MaterialRoute(page: GiftCardView),
     MaterialRoute(page: PurchasedGiftCardsView),
+    MaterialRoute(page: SetPinView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

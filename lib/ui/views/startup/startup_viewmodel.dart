@@ -2,6 +2,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -46,9 +47,10 @@ class StartUpViewModel extends LayoutTemplateViewModel {
           // This means we used a third party provider when loggin in
           // the first time but didn't make it until
           // the role selection. Do it now!
-          log.w(
+          // TODO: Revisit this! Not clear if that is a case that will ever occur!
+          log.wtf(
               "We found a logged in user but no user document in the database. This happens at the first time when logging in with a third party service and not choosing a role. So it is very rare and might also be due to some inconsistency in the backend during development! Maybe look into it but you might not need to worry about it.");
-          await navigationService.replaceWith(Routes.selectRoleAfterLoginView);
+          await navigationService.replaceWith(Routes.selectRoleAfterLoginView, arguments: SelectRoleAfterLoginViewArguments(authMethod: AuthenticationMethod.google));
           return;
         } else {
           final currentUser = userService.currentUser;

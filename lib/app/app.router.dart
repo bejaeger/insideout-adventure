@@ -8,8 +8,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
 import '../datamodels/users/public_info/public_user_info.dart';
+import '../enums/authentication_method.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
@@ -27,6 +29,7 @@ import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
 import '../ui/views/quest/active_quest_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
+import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
 import '../ui/views/sponsor_home/sponsor_home_view.dart';
 import '../ui/views/startup/startup_view.dart';
@@ -56,6 +59,7 @@ class Routes {
   static const String qRCodeViewExample = '/q-rcode-view-example';
   static const String giftCardView = '/gift-card-view';
   static const String purchasedGiftCardsView = '/purchased-gift-cards-view';
+  static const String setPinView = '/set-pin-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -77,6 +81,7 @@ class Routes {
     qRCodeViewExample,
     giftCardView,
     purchasedGiftCardsView,
+    setPinView,
   };
 }
 
@@ -104,6 +109,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
     RouteDef(Routes.giftCardView, page: GiftCardView),
     RouteDef(Routes.purchasedGiftCardsView, page: PurchasedGiftCardsView),
+    RouteDef(Routes.setPinView, page: SetPinView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -164,8 +170,12 @@ class StackedRouter extends RouterBase {
       );
     },
     SelectRoleAfterLoginView: (data) {
+      var args = data.getArgs<SelectRoleAfterLoginViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const SelectRoleAfterLoginView(),
+        builder: (context) => SelectRoleAfterLoginView(
+          key: args.key,
+          authMethod: args.authMethod,
+        ),
         settings: data,
       );
     },
@@ -261,6 +271,15 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    SetPinView: (data) {
+      var args = data.getArgs<SetPinViewArguments>(
+        orElse: () => SetPinViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SetPinView(key: args.key),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -279,6 +298,13 @@ class CreateAccountViewArguments {
   final Key? key;
   final UserRole role;
   CreateAccountViewArguments({this.key, required this.role});
+}
+
+/// SelectRoleAfterLoginView arguments holder class
+class SelectRoleAfterLoginViewArguments {
+  final Key? key;
+  final AuthenticationMethod authMethod;
+  SelectRoleAfterLoginViewArguments({this.key, required this.authMethod});
 }
 
 /// AddExplorerView arguments holder class
@@ -325,4 +351,10 @@ class QRCodeViewArguments {
   final Key? key;
   final String? qrCodeString;
   QRCodeViewArguments({this.key, this.qrCodeString});
+}
+
+/// SetPinView arguments holder class
+class SetPinViewArguments {
+  final Key? key;
+  SetPinViewArguments({this.key});
 }

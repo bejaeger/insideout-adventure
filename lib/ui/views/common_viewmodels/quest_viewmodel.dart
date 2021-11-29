@@ -5,10 +5,12 @@ import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/app/app.logger.dart';
 
 abstract class QuestViewModel extends BaseModel {
   final _stopWatchService = locator<StopWatchService>();
 
+final log = getLogger("QuestViewModel");
   Future scanQrCodeWithActiveQuest() async {
     QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
     await handleQrCodeScanEvent(result);
