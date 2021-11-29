@@ -25,7 +25,7 @@ class ExplorerHomeView extends StatelessWidget {
       builder: (context, model, child) => VerifyNetworkConnection(
         child: Scaffold(
           appBar: CustomAppBar(
-            title: "Hi Explorer ${model.currentUser.fullName}!",
+            title: "Hi Explorer ${model.name}!",
           ),
           body: model.isBusy
               ? CircularProgressIndicator()
@@ -64,6 +64,14 @@ class ExplorerHomeView extends StatelessWidget {
                         onPressed: model.logout,
                         //child: Text("Go to explorer home/map")),
                         child: Text("Logout  "),
+                      ),
+          verticalSpaceMedium,
+                      if (model.currentUser.createdByUserWithId != null)
+                                            ElevatedButton(
+                        // onPressed: model.navigateToExplorerHomeView,
+                        onPressed: model.handleSwitchToSponsorEvent,
+                        //child: Text("Go to explorer home/map")),
+                        child: Text("Switch To Sponsor  "),
                       ),
                       verticalSpaceLarge,
                     ],

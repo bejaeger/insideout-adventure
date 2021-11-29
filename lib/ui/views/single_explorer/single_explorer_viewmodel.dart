@@ -4,13 +4,19 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 
-class SingleExplorerViewModel extends BaseModel {
-  User get explorer => userService.supportedExplorers[uid]!;
-  UserStatistics get stats => userService.supportedExplorerStats[uid]!;
-  final String uid;
+class SingleExplorerViewModel extends SwitchAccountsViewModel {
 
-  SingleExplorerViewModel({required this.uid});
+  final String explorerUid;
+  SingleExplorerViewModel({required this.explorerUid}) : super(explorerUid: explorerUid);
+
+  User get explorer => userService.supportedExplorers[explorerUid]!;
+  UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
+
+  final log = getLogger("SingleExplorerViewModel");
+
 
   Future navigateToAddFundsView() async {
     layoutService.setShowBottomNavBar(false);
@@ -25,6 +31,7 @@ class SingleExplorerViewModel extends BaseModel {
     layoutService.setShowBottomNavBar(true);
     notifyListeners();
   }
+
 
   Future refresh() async {
     notifyListeners();
