@@ -6,18 +6,16 @@ part of 'places.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Places _$_$_PlacesFromJson(Map<String, dynamic> json) {
-  return _$_Places(
-    id: json['id'] as String,
-    name: json['name'] as String?,
-    lat: (json['lat'] as num?)?.toDouble(),
-    lon: (json['lon'] as num?)?.toDouble(),
-    image: json['image'] as String?,
-    questId: json['questId'] as String?,
-  );
-}
+_$_Places _$$_PlacesFromJson(Map<String, dynamic> json) => _$_Places(
+      id: json['id'] as String,
+      name: json['name'] as String?,
+      lat: (json['lat'] as num?)?.toDouble(),
+      lon: (json['lon'] as num?)?.toDouble(),
+      image: json['image'] as String?,
+      questId: json['questId'] as String?,
+    );
 
-Map<String, dynamic> _$_$_PlacesToJson(_$_Places instance) => <String, dynamic>{
+Map<String, dynamic> _$$_PlacesToJson(_$_Places instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'lat': instance.lat,

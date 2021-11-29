@@ -1,5 +1,6 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'user_fav_places.dart';
 
@@ -168,7 +169,7 @@ class _$_UserFavPlaces implements _UserFavPlaces {
       {required this.id, this.name, this.lat, this.lon, this.image});
 
   factory _$_UserFavPlaces.fromJson(Map<String, dynamic> json) =>
-      _$_$_UserFavPlacesFromJson(json);
+      _$$_UserFavPlacesFromJson(json);
 
   @override
   final String id;
@@ -218,7 +219,7 @@ class _$_UserFavPlaces implements _UserFavPlaces {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_UserFavPlacesToJson(this);
+    return _$$_UserFavPlacesToJson(this);
   }
 }
 
