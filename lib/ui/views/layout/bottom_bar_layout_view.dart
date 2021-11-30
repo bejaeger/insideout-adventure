@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/enums/user_role.dart';
+import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
@@ -94,6 +95,7 @@ class _BottomBarLayoutTemplateViewState
   List<Widget> _buildScreens({required UserRole userRole}) {
     return [
       if (userRole == UserRole.sponsor) SponsorHomeView(),
+      if (userRole == UserRole.admin) AdminHomeView(),
       if (userRole == UserRole.explorer) ExplorerHomeView(),
       MapView(),
       if (userRole == UserRole.explorer) GiftCardView(),
