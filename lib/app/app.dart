@@ -17,6 +17,7 @@ import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
+import 'package:afkcredits/ui/views/admin/markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
@@ -64,6 +65,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: QRCodeViewExample),
     MaterialRoute(page: GiftCardView),
     MaterialRoute(page: PurchasedGiftCardsView),
+    MaterialRoute(page: AddMarkersView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

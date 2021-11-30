@@ -1,5 +1,4 @@
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
 
@@ -9,6 +8,8 @@ class AFKBottomNavigationBarViewModel extends LayoutTemplateViewModel {
   bool get isOnHome => _currentIndex == BottomNavigationBarIndex.home;
   bool get isOnMap => _currentIndex == BottomNavigationBarIndex.map;
   bool get isOnGift => _currentIndex == BottomNavigationBarIndex.giftcard;
+  bool get isOnAddMarkers =>
+      _currentIndex == BottomNavigationBarIndex.addmarkers;
 
   void onHomePressed() {
     clearStackAndNavigateToHomeView();
@@ -19,6 +20,12 @@ class AFKBottomNavigationBarViewModel extends LayoutTemplateViewModel {
   void onGiftPressed() {
     navigationService.clearStackAndShow(Routes.giftCardView);
     _currentIndex = BottomNavigationBarIndex.giftcard;
+    notifyListeners();
+  }
+
+  void onMarkersPressed() {
+    navigationService.clearStackAndShow(Routes.addMarkersView);
+    _currentIndex = BottomNavigationBarIndex.addmarkers;
     notifyListeners();
   }
 

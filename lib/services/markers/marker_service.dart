@@ -30,8 +30,8 @@ class MarkerService {
     }
   }
 
-  Future<void> createMarkers({required AFKMarker markers}) async {
-    await _firestoreApi.createMarkers(markers: markers);
+  Future<void> addMarkers({required AFKMarker markers}) async {
+    await _firestoreApi.addMarkers(markers: markers);
   }
 
   //Get User Favourite Places

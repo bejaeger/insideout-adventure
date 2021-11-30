@@ -46,19 +46,20 @@ class MapView extends StatelessWidget {
             ),
             verticalSpaceSmall,
             MyFloatingActionButton(
-                onPressed: model.initialCameraPosition() == null
-                    ? () async => null
-                    : () async {
-                        model.getGoogleMapController!.animateCamera(
-                            model.getDirectionInfo != null
-                                ? CameraUpdate.newLatLngBounds(
-                                    model.getDirectionInfo!.bounds, 100.0)
-                                : CameraUpdate.newCameraPosition(
-                                    model.initialCameraPosition()!));
-                        await model.scanQrCodeWithActiveQuest();
-                      },
-                icon: const Icon(Icons.qr_code_scanner_rounded,
-                    size: 30, color: Colors.white)),
+              onPressed: model.initialCameraPosition() == null
+                  ? () async => null
+                  : () async {
+                      model.getGoogleMapController!.animateCamera(
+                          model.getDirectionInfo != null
+                              ? CameraUpdate.newLatLngBounds(
+                                  model.getDirectionInfo!.bounds, 100.0)
+                              : CameraUpdate.newCameraPosition(
+                                  model.initialCameraPosition()!));
+                      await model.scanQrCodeWithActiveQuest();
+                    },
+              icon: const Icon(Icons.qr_code_scanner_rounded,
+                  size: 30, color: Colors.white),
+            ),
           ],
         ),
       ),
@@ -229,9 +230,10 @@ class QuestCard extends StatelessWidget {
               children: [
                 Text(quest.name, style: textTheme(context).headline4),
                 if (subtitle != null)
-                  Text(subtitle!,
-                      style:
-                          textTheme(context).bodyText2!.copyWith(fontSize: 18)),
+                  Text(
+                    subtitle!,
+                    style: textTheme(context).bodyText2!.copyWith(fontSize: 18),
+                  ),
                 Text("Credits to earns: " + quest.afkCredits.toString()),
                 Text("Type: " + describeEnum(quest.type).toString()),
                 if (sponsoringSentence != null) Text(sponsoringSentence!),

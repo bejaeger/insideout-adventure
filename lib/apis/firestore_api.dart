@@ -71,7 +71,7 @@ class FirestoreApi {
   }
 
   //Create a List of My Favourite Places
-  Future<void> createMarkers({required AFKMarker markers}) async {
+  Future<void> addMarkers({required AFKMarker markers}) async {
     try {
       final _docRef = getMarkersDocs(markerId: markers.id);
       if (_docRef != null) {

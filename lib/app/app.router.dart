@@ -6,6 +6,7 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -15,6 +16,7 @@ import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
+import '../ui/views/admin/markers/add_markers_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
@@ -57,6 +59,7 @@ class Routes {
   static const String qRCodeViewExample = '/q-rcode-view-example';
   static const String giftCardView = '/gift-card-view';
   static const String purchasedGiftCardsView = '/purchased-gift-cards-view';
+  static const String addMarkersView = '/add-markers-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -78,6 +81,7 @@ class Routes {
     qRCodeViewExample,
     giftCardView,
     purchasedGiftCardsView,
+    addMarkersView,
   };
 }
 
@@ -105,6 +109,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
     RouteDef(Routes.giftCardView, page: GiftCardView),
     RouteDef(Routes.purchasedGiftCardsView, page: PurchasedGiftCardsView),
+    RouteDef(Routes.addMarkersView, page: AddMarkersView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -259,6 +264,12 @@ class StackedRouter extends RouterBase {
     PurchasedGiftCardsView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const PurchasedGiftCardsView(),
+        settings: data,
+      );
+    },
+    AddMarkersView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AddMarkersView(),
         settings: data,
       );
     },
