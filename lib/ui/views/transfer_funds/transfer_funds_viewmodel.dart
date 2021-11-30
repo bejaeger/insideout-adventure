@@ -12,6 +12,7 @@ import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/money_source.dart';
 import 'package:afkcredits/enums/money_transfer_dialog_status.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
@@ -283,11 +284,11 @@ class TransferFundsViewModel extends FormViewModel {
   // Navigations
   //
   void clearTillFirstAndShowExplorerHomeScreen() {
-    _navigationService.clearTillFirstAndShow(Routes.explorerHomeView);
+      _navigationService.clearTillFirstAndShow(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.explorer));
   }
 
   void clearTillFirstAndShowSponsorHomeScreen() {
-    _navigationService.clearTillFirstAndShow(Routes.sponsorHomeView);
+      _navigationService.clearTillFirstAndShow(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.sponsor));
   }
 
   ////////////////////////////////////////////////////////////////

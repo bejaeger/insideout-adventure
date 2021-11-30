@@ -3,7 +3,10 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
 
-class AFKBottomNavigationBarViewModel extends LayoutTemplateViewModel {
+/////////////////////////////////
+/// ! DEPRECATED!!!!!
+
+class AFKBottomNavigationBarViewModel extends CustomBottomBarLayoutTemplateViewModel {
   BottomNavigationBarIndex _currentIndex = BottomNavigationBarIndex.home;
 
   bool get isOnHome => _currentIndex == BottomNavigationBarIndex.home;

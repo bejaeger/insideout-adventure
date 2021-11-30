@@ -13,66 +13,68 @@ class ActiveQuestView extends StatelessWidget {
     return ViewModelBuilder<ActiveQuestViewModel>.reactive(
       //onModelReady: (model) => model.initializeStartedQuest(),
       disposeViewModel: false,
-      builder: (context, model, child) => Scaffold(
-          appBar: CustomAppBar(
-            title: 'Quest Running',
-          ),
-          body: Container(
-            child: Stack(
-              children: [
-                GoogleMap(
-                  //mapType: MapType.hybrid,
-                  initialCameraPosition: model.initialCameraPosition(),
-                  //Place Markers in the Map
-                  markers: model.getMarkers!,
-                  //callback that’s called when the map is ready to us.
-                  onMapCreated: model.onMapCreated,
-                  //For showing your current location on Map with a blue dot.
-                  myLocationEnabled: true,
-
-                  // Button used for bringing the user location to the center of the camera view.
-                  myLocationButtonEnabled: true,
-
-                  //Remove the Zoom in and out button
-                  zoomControlsEnabled: false,
-
-                  polylines: {
-                    if (model.getDirectionInfo != null)
-                      Polyline(
-                        polylineId: const PolylineId('overview_polyline'),
-                        color: Colors.red,
-                        width: 5,
-                        points: model.getDirectionInfo!.polylinePoints
-                            .map((e) => LatLng(e.latitude, e.longitude))
-                            .toList(),
-                      ),
-                  },
-
-                  //onTap: model.handleTap(),
-                  //Enable Traffic Mode.
-                  //trafficEnabled: true,
-                ),
-                if (model.isBusy)
-                  Align(
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator()),
-              ],
+      builder: (context, model, child) => SafeArea(
+        child: Scaffold(
+            appBar: CustomAppBar(
+              title: 'Quest Running',
             ),
-          ),
-          //Place the Floating Action to the Left of the View
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButton: MyFloatingActionButton(
-              onPressed: () async {
-                model.getGoogleMapController!.animateCamera(
-                    model.getDirectionInfo != null
-                        ? CameraUpdate.newLatLngBounds(
-                            model.getDirectionInfo!.bounds, 100.0)
-                        : CameraUpdate.newCameraPosition(
-                            model.initialCameraPosition()));
-                await model.scanQrCodeWithActiveQuest();
-              },
-              icon: const Icon(Icons.qr_code_scanner_rounded,
-                  size: 30, color: Colors.white))),
+            body: Container(
+              child: Stack(
+                children: [
+                  GoogleMap(
+                    //mapType: MapType.hybrid,
+                    initialCameraPosition: model.initialCameraPosition(),
+                    //Place Markers in the Map
+                    markers: model.getMarkers!,
+                    //callback that’s called when the map is ready to us.
+                    onMapCreated: model.onMapCreated,
+                    //For showing your current location on Map with a blue dot.
+                    myLocationEnabled: true,
+      
+                    // Button used for bringing the user location to the center of the camera view.
+                    myLocationButtonEnabled: true,
+      
+                    //Remove the Zoom in and out button
+                    zoomControlsEnabled: false,
+      
+                    polylines: {
+                      if (model.getDirectionInfo != null)
+                        Polyline(
+                          polylineId: const PolylineId('overview_polyline'),
+                          color: Colors.red,
+                          width: 5,
+                          points: model.getDirectionInfo!.polylinePoints
+                              .map((e) => LatLng(e.latitude, e.longitude))
+                              .toList(),
+                        ),
+                    },
+      
+                    //onTap: model.handleTap(),
+                    //Enable Traffic Mode.
+                    //trafficEnabled: true,
+                  ),
+                  if (model.isBusy)
+                    Align(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator()),
+                ],
+              ),
+            ),
+            //Place the Floating Action to the Left of the View
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            floatingActionButton: MyFloatingActionButton(
+                onPressed: () async {
+                  model.getGoogleMapController!.animateCamera(
+                      model.getDirectionInfo != null
+                          ? CameraUpdate.newLatLngBounds(
+                              model.getDirectionInfo!.bounds, 100.0)
+                          : CameraUpdate.newCameraPosition(
+                              model.initialCameraPosition()));
+                  await model.scanQrCodeWithActiveQuest();
+                },
+                icon: const Icon(Icons.qr_code_scanner_rounded,
+                    size: 30, color: Colors.white))),
+      ),
       viewModelBuilder: () => ActiveQuestViewModel(),
     );
   }

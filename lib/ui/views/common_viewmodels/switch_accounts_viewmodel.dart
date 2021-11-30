@@ -2,6 +2,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -75,7 +76,8 @@ abstract class SwitchAccountsViewModel extends BaseModel {
       return;
     }
     // navigate to screen
-    await navigationService.replaceWith(Routes.explorerHomeView);
+    await clearStackAndNavigateToHomeView();
+
     setBusy(false);
   }
 
@@ -93,14 +95,15 @@ abstract class SwitchAccountsViewModel extends BaseModel {
     } else {
       if (userService.sponsorReference!.withPasscode) {
         // user has to type passcode to switch
-        layoutService.setShowBottomNavBar(false);
+        //layoutService.setShowBottomNavBar(false);
         final pinResult = await navigationService.navigateTo(Routes.setPinView);
         if (pinResult == null) {
           return;
         } else {
-          // Check if pin is correct
+          // Check if pin is correct          
           final valid =
               await userService.validateSponsorPin(pin: pinResult.pin);
+          setBusy(true);
           if (valid != null && valid == true) {
             await switchToSponsorAccount(
                 sponsorReference: userService.sponsorReference!);
@@ -109,6 +112,7 @@ abstract class SwitchAccountsViewModel extends BaseModel {
                 title: "Pin not correct",
                 description: "You entered a wrong passcode.");
           }
+          setBusy(false);
         }
       } else {
         // no passcode provided.
@@ -121,7 +125,7 @@ abstract class SwitchAccountsViewModel extends BaseModel {
               sponsorReference: userService.sponsorReference!);
         }
       }
-      layoutService.setShowBottomNavBar(true);
+      //layoutService.setShowBottomNavBar(true);
     }
   }
 
@@ -130,6 +134,7 @@ abstract class SwitchAccountsViewModel extends BaseModel {
     setBusy(true);
     // Clear all service data but keep logged in with firebase!
     log.i("Clearing all explorer data");
+    //await Future.delayed(Duration(seconds: 5));
     await clearServiceData(logOutFromFirebase: false);
     try {
       log.i("Syncing sponsor account");
@@ -144,7 +149,7 @@ abstract class SwitchAccountsViewModel extends BaseModel {
       return;
     }
     // navigate to screen
-    await navigationService.replaceWith(Routes.sponsorHomeView);
+    await clearStackAndNavigateToHomeView();
     setBusy(false);
   }
 }

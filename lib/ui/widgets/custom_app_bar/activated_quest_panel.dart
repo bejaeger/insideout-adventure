@@ -15,7 +15,7 @@ class ActivatedQuestPanel extends StatelessWidget {
       //onModelReady: (model) => model.setTimer(),
       viewModelBuilder: () => ActivatedQuestPanelViewModel(),
       builder: (context, model, child) => AnimatedContainer(
-        height: model.hasActiveQuest ? height + kAppBarExtendedHeight : 0,
+        height: model.hasActiveQuest ? height + kActiveQuestPanelHeight : 0,
         decoration: BoxDecoration(
           color: kColorActivatedQuest,
           boxShadow: [

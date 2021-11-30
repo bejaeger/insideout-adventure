@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -98,7 +99,7 @@ void main() {
             hasLoggedInUser: true, currentUser: getTestUserSponsor());
         final model = _getModel();
         await model.runStartupLogic();
-        verify(navigationService.replaceWith(Routes.sponsorHomeView));
+        verify(navigationService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.sponsor)));
       });
 
       test('When currentUser has role sponsor, navigate to adminHomeView',
@@ -119,7 +120,7 @@ void main() {
         final model = _getModel();
         await model.runStartupLogic();
 
-        verify(navigationService.replaceWith(Routes.explorerHomeView));
+        verify(await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.explorer)));
       });
 
       // Next things to add!

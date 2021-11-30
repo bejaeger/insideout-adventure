@@ -6,11 +6,10 @@ import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 import 'package:places_service/places_service.dart';
 
-class StartUpViewModel extends LayoutTemplateViewModel {
+class StartUpViewModel extends TransferBaseViewModel {
   final PlacesService _placesService = locator<PlacesService>();
   final _geolocationService = locator<GeolocationService>();
   final EnvironmentService _environmentService = locator<EnvironmentService>();
@@ -55,7 +54,7 @@ class StartUpViewModel extends LayoutTemplateViewModel {
         } else {
           final currentUser = userService.currentUser;
           log.v('User sync complete. User profile: $currentUser');
-          replaceToHomeView();
+          replaceWithHomeView();
         }
       } else {
         log.v('No user on disk, navigate to the LoginView');

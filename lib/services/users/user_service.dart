@@ -72,11 +72,12 @@ class UserService {
 
   Future<void> syncUserAccount(
       {String? uid, bool fromLocalStorage = false}) async {
+
+
     final actualUid =
         uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
 
     log.v('Sync user $actualUid');
-
     final userAccount = await _firestoreApi.getUser(uid: actualUid);
 
     if (userAccount != null) {

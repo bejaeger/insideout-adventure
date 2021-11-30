@@ -19,7 +19,7 @@ class SingleExplorerViewModel extends SwitchAccountsViewModel {
 
 
   Future navigateToAddFundsView() async {
-    layoutService.setShowBottomNavBar(false);
+    //layoutService.setShowBottomNavBar(false);
     await navigationService.navigateTo(Routes.transferFundsView,
         arguments: TransferFundsViewArguments(
             type: TransferType.Sponsor2Explorer,
@@ -28,7 +28,7 @@ class SingleExplorerViewModel extends SwitchAccountsViewModel {
             recipientInfo:
                 PublicUserInfo(name: explorer.fullName, uid: explorer.uid)));
     await Future.delayed(Duration(milliseconds: 300));
-    layoutService.setShowBottomNavBar(true);
+    //layoutService.setShowBottomNavBar(true);
     notifyListeners();
   }
 

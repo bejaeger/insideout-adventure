@@ -29,7 +29,7 @@ void main() {
         verify(
             service.createUserAccountFromFirebaseUser(role: UserRole.sponsor));
         verify(service.syncUserAccount());
-        verify(navService.replaceWith(Routes.sponsorHomeView));
+        verify(navService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.sponsor)));
       });
     });
 
@@ -48,7 +48,7 @@ void main() {
         verify(
             service.createUserAccountFromFirebaseUser(role: UserRole.explorer));
         verify(service.syncUserAccount());
-        verify(navService.replaceWith(Routes.explorerHomeView));
+        verify(await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.explorer)));
       });
     });
   });

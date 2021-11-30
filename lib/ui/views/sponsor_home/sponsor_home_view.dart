@@ -23,7 +23,7 @@ class SponsorHomeView extends StatelessWidget {
       onModelReady: (model) => model.listenToData(),
       fireOnModelReadyOnce: true,
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(title: "Hi Sponsor!"),
+        appBar: CustomAppBar(title: "Hi Sponsor"),
         body: ListView(
           physics: ScrollPhysics(),
           children: [

@@ -21,7 +21,8 @@ import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
-import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
+import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
+import 'package:afkcredits/ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
@@ -59,13 +60,14 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: SingleExplorerView),
     MaterialRoute(page: TransferFundsView),
     MaterialRoute(page: TransfersHistoryView),
-    MaterialRoute(page: LayoutTemplateView),
+    MaterialRoute(page: CustomBottomBarLayoutTemplateView),
     MaterialRoute(page: ActiveQuestView),
     MaterialRoute(page: QRCodeView),
     MaterialRoute(page: QRCodeViewExample),
     MaterialRoute(page: GiftCardView),
     MaterialRoute(page: PurchasedGiftCardsView),
     MaterialRoute(page: SetPinView),
+    MaterialRoute(page: BottomBarLayoutTemplateView),    
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

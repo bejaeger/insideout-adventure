@@ -24,7 +24,7 @@ void main() {
         final navigationService = getAndRegisterNavigationService();
         final model = _getModelSponsor();
         await model.saveData(AuthenticationMethod.email);
-        verify(navigationService.replaceWith(Routes.sponsorHomeView));
+        verify(navigationService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.sponsor)));
       });
 
       test(
@@ -33,7 +33,7 @@ void main() {
         final navigationService = getAndRegisterNavigationService();
         final model = _getModelExplorer();
         await model.saveData(AuthenticationMethod.email);
-        verify(navigationService.replaceWith(Routes.explorerHomeView));
+verify(navigationService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.explorer)));        
       });
     });
   });
