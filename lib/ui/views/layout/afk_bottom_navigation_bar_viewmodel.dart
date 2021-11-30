@@ -31,7 +31,8 @@ class AFKBottomNavigationBarViewModel extends CustomBottomBarLayoutTemplateViewM
       navigationService.clearStackAndShow(Routes.mapView);
       _currentIndex = BottomNavigationBarIndex.map;
     } else {
-      navigationService.clearStackAndShow(Routes.activeQuestView);
+      // this is not functional, would need to add activeQuestView here most likely
+      navigationService.clearStackAndShow(Routes.mapView);
       _currentIndex = BottomNavigationBarIndex.map;
     }
     notifyListeners();

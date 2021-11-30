@@ -28,7 +28,6 @@ import '../ui/views/map/map_view.dart';
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
-import '../ui/views/quest/active_quest_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
@@ -56,7 +55,6 @@ class Routes {
   static const String transfersHistoryView = '/transfers-history-view';
   static const String customBottomBarLayoutTemplateView =
       '/custom-bottom-bar-layout-template-view';
-  static const String activeQuestView = '/active-quest-view';
   static const String qRCodeView = '/q-rcode-view';
   static const String qRCodeViewExample = '/q-rcode-view-example';
   static const String giftCardView = '/gift-card-view';
@@ -80,7 +78,6 @@ class Routes {
     transferFundsView,
     transfersHistoryView,
     customBottomBarLayoutTemplateView,
-    activeQuestView,
     qRCodeView,
     qRCodeViewExample,
     giftCardView,
@@ -110,7 +107,6 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.transfersHistoryView, page: TransfersHistoryView),
     RouteDef(Routes.customBottomBarLayoutTemplateView,
         page: CustomBottomBarLayoutTemplateView),
-    RouteDef(Routes.activeQuestView, page: ActiveQuestView),
     RouteDef(Routes.qRCodeView, page: QRCodeView),
     RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
     RouteDef(Routes.giftCardView, page: GiftCardView),
@@ -241,12 +237,6 @@ class StackedRouter extends RouterBase {
           key: args.key,
           childView: args.childView,
         ),
-        settings: data,
-      );
-    },
-    ActiveQuestView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const ActiveQuestView(),
         settings: data,
       );
     },

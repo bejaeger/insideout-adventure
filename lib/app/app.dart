@@ -61,7 +61,6 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: TransferFundsView),
     MaterialRoute(page: TransfersHistoryView),
     MaterialRoute(page: CustomBottomBarLayoutTemplateView),
-    MaterialRoute(page: ActiveQuestView),
     MaterialRoute(page: QRCodeView),
     MaterialRoute(page: QRCodeViewExample),
     MaterialRoute(page: GiftCardView),

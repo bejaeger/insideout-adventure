@@ -115,9 +115,6 @@ class BaseModel extends BaseViewModel {
         await dialogService.showDialog(
             title: "Sorry could not start the quest",
             description: isQuestStarted);
-      } else {
-        // replaceWithMainView(index: BottomNavigationBarIndex.map);
-        // navigationService.replaceWith(Routes.activeQuestView);
       }
     } catch (e) {
       baseModelLog.e("Could not start quest, error thrown: $e");
