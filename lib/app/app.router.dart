@@ -12,6 +12,8 @@ import 'package:stacked/stacked_annotations.dart';
 
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/authentication_method.dart';
+import '../enums/quest_category.dart';
+import '../enums/quest_view_index.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
@@ -289,6 +291,8 @@ class StackedRouter extends RouterBase {
           initialBottomNavBarIndex: args.initialBottomNavBarIndex,
           initialTabBarIndex: args.initialTabBarIndex,
           showDialog: args.showDialog,
+          questViewIndex: args.questViewIndex,
+          questCategory: args.questCategory,
         ),
         settings: data,
       );
@@ -380,10 +384,14 @@ class BottomBarLayoutTemplateViewArguments {
   final int? initialBottomNavBarIndex;
   final int? initialTabBarIndex;
   final bool showDialog;
+  final QuestViewIndex questViewIndex;
+  final QuestCategory? questCategory;
   BottomBarLayoutTemplateViewArguments(
       {this.key,
       required this.userRole,
       this.initialBottomNavBarIndex,
       this.initialTabBarIndex = 0,
-      this.showDialog = false});
+      this.showDialog = false,
+      this.questViewIndex = QuestViewIndex.questlist,
+      this.questCategory});
 }

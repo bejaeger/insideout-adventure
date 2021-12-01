@@ -1,4 +1,4 @@
-import 'package:afkcredits/ui/views/quest/active_quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_quest/active_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:flutter/material.dart';

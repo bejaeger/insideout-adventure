@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/ui/views/quest/active_quest_view.dart';
+import 'package:afkcredits/ui/views/active_quest/active_quest_view.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -23,9 +23,16 @@ class MapView extends StatelessWidget {
       model.hasActiveQuest ? 
         ActiveQuestView() : 
       Scaffold(
-        appBar: CustomAppBar(
-          title: 'AFK TREASURE HUNTS',
-        ),
+              appBar: AppBar(
+                title: Text("Map Games"),
+                leading: IconButton(
+                  onPressed: model.navigateBack,
+                  icon: Icon(Icons.arrow_back),
+                ),
+              ),
+        // appBar: CustomAppBar(
+        //   title: 'AFK TREASURE HUNTS',
+        // ),
         body: 
         IndexedStack(index: model.currentIndex, children: [
           GoogleMapsScreen(model: model),

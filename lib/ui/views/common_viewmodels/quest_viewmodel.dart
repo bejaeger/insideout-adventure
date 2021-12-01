@@ -39,7 +39,7 @@ final log = getLogger("QuestViewModel");
         if (e is QuestServiceException) {
           await dialogService.showDialog(
               title: e.prettyDetails, buttonTitle: 'Ok');
-          replaceWithMainView(index: BottomNavigationBarIndex.map);
+          replaceWithMainView(index: BottomNavBarIndex.map);
           return;
         } else if (e is CloudFunctionsApiException) {
           await dialogService.showDialog(
@@ -62,7 +62,7 @@ final log = getLogger("QuestViewModel");
           await questService.continueIncompleteQuest();
         } else {
           await questService.cancelIncompleteQuest();
-          replaceWithMainView(index: BottomNavigationBarIndex.map);
+          replaceWithMainView(index: BottomNavBarIndex.map);
           log.i("replaced view with mapView");
         }
       } else {
@@ -85,7 +85,7 @@ final log = getLogger("QuestViewModel");
                 "; New balance: " +
                 currentUserStats.afkCreditsBalance.toString(),
             buttonTitle: 'Ok');
-        replaceWithMainView(index: BottomNavigationBarIndex.map);
+        replaceWithMainView(index: BottomNavBarIndex.map);
       }
     } catch (e) {
       setBusy(false);
@@ -94,7 +94,7 @@ final log = getLogger("QuestViewModel");
           buttonTitle: 'Ok');
       log.wtf(
           "An error occured when trying to finish the quest. This should never happen! Error: $e");
-      replaceWithMainView(index: BottomNavigationBarIndex.map);
+      replaceWithMainView(index: BottomNavBarIndex.map);
     }
   }
 }

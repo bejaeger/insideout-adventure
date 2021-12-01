@@ -1,10 +1,14 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/enums/quest_category.dart';
+import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/quests/quest_list_view.dart';
+import 'package:afkcredits/ui/views/single_quest/single_quest_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -14,13 +18,17 @@ class BottomBarLayoutTemplateView extends StatefulWidget {
   final int? initialTabBarIndex;
   final bool showDialog;
   final UserRole userRole;
+  final QuestViewIndex questViewIndex;
+  final QuestCategory? questCategory;
 
   const BottomBarLayoutTemplateView({
     Key? key,
     required this.userRole,
     this.initialBottomNavBarIndex,
     this.initialTabBarIndex = 0,
-    this.showDialog = false,
+    this.showDialog = false, 
+    this.questViewIndex = QuestViewIndex.questlist,
+    this.questCategory
   }) : super(key: key);
 
   @override
@@ -97,7 +105,15 @@ class _BottomBarLayoutTemplateViewState
       if (userRole == UserRole.sponsor) SponsorHomeView(),
       if (userRole == UserRole.admin) AdminHomeView(),
       if (userRole == UserRole.explorer) ExplorerHomeView(),
+
+      if (widget.questViewIndex == QuestViewIndex.questlist)
+      QuestListView(),
+      if (widget.questViewIndex == QuestViewIndex.singlequest)
+      SingleQuestView(questCategory: widget.questCategory),
+      if (widget.questViewIndex == QuestViewIndex.map)
       MapView(),
+
+
       if (userRole == UserRole.explorer) GiftCardView(),
       //MoneyPoolsView(),
     ];

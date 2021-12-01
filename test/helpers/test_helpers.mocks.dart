@@ -3,7 +3,7 @@
 // Do not manually edit this file.
 
 import 'dart:async' as _i17;
-import 'dart:ui' as _i44;
+import 'dart:ui' as _i43;
 
 import 'package:afkcredits/apis/cloud_functions_api.dart' as _i27;
 import 'package:afkcredits/apis/firestore_api.dart' as _i20;
@@ -51,7 +51,6 @@ import 'package:cloud_firestore/cloud_firestore.dart' as _i6;
 import 'package:firebase_auth/firebase_auth.dart' as _i12;
 import 'package:flutter/material.dart' as _i42;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i32;
-import 'package:get/get.dart' as _i43;
 import 'package:logger/logger.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:places_service/src/models/application_models.dart' as _i7;
@@ -1367,10 +1366,10 @@ class MockNavigationService extends _i1.Mock implements _i41.NavigationService {
           bool? popGesture,
           int? id,
           _i42.Curve? curve,
-          _i43.Bindings? binding,
+          _i41.Bindings? binding,
           bool? fullscreenDialog = false,
           bool? preventDuplicates = true,
-          _i43.Transition? transitionClass}) =>
+          _i41.Transition? transitionClass}) =>
       (super.noSuchMethod(Invocation.method(#navigateWithTransition, [
         page
       ], {
@@ -1393,10 +1392,10 @@ class MockNavigationService extends _i1.Mock implements _i41.NavigationService {
           bool? popGesture,
           int? id,
           _i42.Curve? curve,
-          _i43.Bindings? binding,
+          _i41.Bindings? binding,
           bool? fullscreenDialog = false,
           bool? preventDuplicates = true,
-          _i43.Transition? transitionClass}) =>
+          _i41.Transition? transitionClass}) =>
       (super.noSuchMethod(Invocation.method(#replaceWithTransition, [
         page
       ], {
@@ -1443,12 +1442,12 @@ class MockNavigationService extends _i1.Mock implements _i41.NavigationService {
           int? id,
           bool? opaque,
           _i42.Curve? curve,
-          _i43.Bindings? binding,
+          _i41.Bindings? binding,
           Duration? duration,
           bool? fullscreenDialog = false,
           bool? popGesture,
           bool? preventDuplicates = true,
-          _i43.Transition? transition}) =>
+          _i41.Transition? transition}) =>
       (super.noSuchMethod(Invocation.method(#navigateToView, [
         view
       ], {
@@ -1622,9 +1621,9 @@ class MockDialogService extends _i1.Mock implements _i41.DialogService {
           {String? title,
           String? description,
           String? cancelTitle,
-          _i44.Color? cancelTitleColor,
+          _i43.Color? cancelTitleColor,
           String? buttonTitle = r'Ok',
-          _i44.Color? buttonTitleColor,
+          _i43.Color? buttonTitleColor,
           bool? barrierDismissible = false,
           _i41.DialogPlatform? dialogPlatform}) =>
       (super.noSuchMethod(
@@ -1654,7 +1653,7 @@ class MockDialogService extends _i1.Mock implements _i41.DialogService {
           bool? showIconInAdditionalButton = false,
           String? additionalButtonTitle,
           bool? takesInput = false,
-          _i44.Color? barrierColor = const _i44.Color(2315255808),
+          _i43.Color? barrierColor = const _i43.Color(2315255808),
           bool? barrierDismissible = false,
           String? barrierLabel = r'',
           dynamic customData,
@@ -1758,7 +1757,7 @@ class MockBottomSheetService extends _i1.Mock
           bool? showIconInAdditionalButton = false,
           String? additionalButtonTitle,
           bool? takesInput = false,
-          _i44.Color? barrierColor = const _i44.Color(2315255808),
+          _i43.Color? barrierColor = const _i43.Color(2315255808),
           bool? barrierDismissible = true,
           bool? isScrollControlled = false,
           String? barrierLabel = r'',

@@ -30,7 +30,6 @@ import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_vi
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
-import 'package:afkcredits/ui/views/quest/active_quest_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';

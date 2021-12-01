@@ -161,14 +161,14 @@ class BaseModel extends BaseViewModel {
         arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
-    Future replaceWithMainView({required BottomNavigationBarIndex index}) async {
+    Future replaceWithMainView({required BottomNavBarIndex index}) async {
     await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
         arguments: BottomBarLayoutTemplateViewArguments(
             userRole: currentUser.role,
             initialBottomNavBarIndex: index.index));
   }
 
-    Future clearStackAndNavigateToMainView({required BottomNavigationBarIndex index}) async {
+    Future clearStackAndNavigateToMainView({required BottomNavBarIndex index}) async {
     await navigationService.clearStackAndShow(
         Routes.bottomBarLayoutTemplateView,
         arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role, initialBottomNavBarIndex: index.index));
