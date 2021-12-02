@@ -34,68 +34,82 @@ class ActivatedQuestPanel extends StatelessWidget {
         //clipBehavior: Clip.none,
         width: screenWidth(context),
         child: !model.hasActiveQuest
-            ? Container(height: 0, width: 0)
+            ? SizedBox(height: 0, width: 0)
             : Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: height),
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                horizontalSpaceMedium,
-                                Icon(Icons.explore, color: Colors.grey[50]),
-                                Expanded(
-                                  child: Text(
-                                      "Active quest - " +
-                                          model.getHourMinuteSecondsTime +
-                                          /*        " " +
-                                          model.activeQuest.timeElapsed
-                                              .toString() f+ */
-                                          " elapsed - " +
-                                          model.numMarkersCollected.toString() +
-                                          " / " +
-                                          model.activeQuest.markersCollected
-                                              .length
-                                              .toString() +
-                                          " markers",
-                                      style: textTheme(context)
-                                          .bodyText1!
-                                          .copyWith(
-                                              color: Colors.grey[50],
-                                              fontSize: 16)),
+                    child: Stack(
+                      children: [
+                        Column(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: model.navigateToRelevantActiveQuestView,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    horizontalSpaceMedium,
+                                    Icon(Icons.explore, color: Colors.grey[50]),
+                                    Expanded(
+                                      child: Text(
+                                          "Active quest - " +
+                                              model.getHourMinuteSecondsTime +
+                                              /*        " " +
+                                              model.activeQuest.timeElapsed
+                                                  .toString() f+ */
+                                              " elapsed - " +
+                                              model.numMarkersCollected
+                                                  .toString() +
+                                              " / " +
+                                              model.activeQuest.markersCollected
+                                                  .length
+                                                  .toString() +
+                                              " markers",
+                                          style: textTheme(context)
+                                              .bodyText1!
+                                              .copyWith(
+                                                  color: Colors.grey[50],
+                                                  fontSize: 16)),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    model.isBusy
+                                        ? CircularProgressIndicator(
+                                            color: Colors.white)
+                                        : SmallButton(
+                                            title: "Finish Quest",
+                                            onPressed: model.isBusy
+                                                ? () => null
+                                                : () async => await model
+                                                    .checkQuestAndFinishWhenCompleted()),
+                                    // horizontalSpaceMedium,
+                                    // SmallButton(
+                                    //     title: "Complete Quest",
+                                    //     onPressed: model.finishQuest),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                model.isBusy
-                                    ? CircularProgressIndicator(
-                                        color: Colors.white)
-                                    : SmallButton(
-                                        title: "Finish Quest",
-                                        onPressed: model.isBusy
-                                            ? () => null
-                                            : () async => await model
-                                                .checkQuestAndFinishWhenCompleted()),
-                                // horizontalSpaceMedium,
-                                // SmallButton(
-                                //     title: "Complete Quest",
-                                //     onPressed: model.finishQuest),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

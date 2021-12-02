@@ -1,1 +1,0 @@
-enum QuestCategory {minigame, map, hunt}

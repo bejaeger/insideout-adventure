@@ -1,1 +1,1 @@
-enum QuestType { Hike, Hunt, Search }
+enum QuestType { Hike, Hunt, Search, Minigame }

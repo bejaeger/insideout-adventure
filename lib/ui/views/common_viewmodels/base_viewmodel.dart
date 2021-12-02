@@ -153,27 +153,29 @@ class BaseModel extends BaseViewModel {
   Future clearStackAndNavigateToHomeView() async {
     await navigationService.clearStackAndShow(
         Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+        arguments:
+            BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
   Future replaceWithHomeView() async {
     await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+        arguments:
+            BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
-    Future replaceWithMainView({required BottomNavBarIndex index}) async {
+  Future replaceWithMainView({required BottomNavBarIndex index}) async {
     await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
         arguments: BottomBarLayoutTemplateViewArguments(
-            userRole: currentUser.role,
-            initialBottomNavBarIndex: index.index));
+            userRole: currentUser.role, initialBottomNavBarIndex: index));
   }
 
-    Future clearStackAndNavigateToMainView({required BottomNavBarIndex index}) async {
+  Future clearStackAndNavigateToMainView(
+      {required BottomNavBarIndex index}) async {
     await navigationService.clearStackAndShow(
         Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role, initialBottomNavBarIndex: index.index));
+        arguments: BottomBarLayoutTemplateViewArguments(
+            userRole: currentUser.role, initialBottomNavBarIndex: index));
   }
-
 
   Future showGenericInternalErrorDialog() async {
     return await dialogService.showDialog(

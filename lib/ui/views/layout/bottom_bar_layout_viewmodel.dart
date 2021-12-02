@@ -7,4 +7,5 @@ class BottomBarLayoutTemplateViewModel extends BaseModel {
 
   final log = getLogger("LayoutTemplateViewModel");
 
+
 }

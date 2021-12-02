@@ -17,6 +17,7 @@ class ActiveQuestView extends StatelessWidget {
         child: Scaffold(
             appBar: CustomAppBar(
               title: 'Quest Running',
+              onBackButton: () => model.navigateBack(),
             ),
             body: Container(
               child: Stack(

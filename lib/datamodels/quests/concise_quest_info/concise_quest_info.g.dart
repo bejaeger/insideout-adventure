@@ -28,4 +28,5 @@ const _$QuestTypeEnumMap = {
   QuestType.Hike: 'Hike',
   QuestType.Hunt: 'Hunt',
   QuestType.Search: 'Search',
+  QuestType.Minigame: 'Minigame',
 };

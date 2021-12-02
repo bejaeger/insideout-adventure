@@ -12,7 +12,8 @@ import 'package:stacked/stacked_annotations.dart';
 
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/authentication_method.dart';
-import '../enums/quest_category.dart';
+import '../enums/bottom_nav_bar_index.dart';
+import '../enums/quest_type.dart';
 import '../enums/quest_view_index.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
@@ -289,10 +290,9 @@ class StackedRouter extends RouterBase {
           key: args.key,
           userRole: args.userRole,
           initialBottomNavBarIndex: args.initialBottomNavBarIndex,
-          initialTabBarIndex: args.initialTabBarIndex,
           showDialog: args.showDialog,
           questViewIndex: args.questViewIndex,
-          questCategory: args.questCategory,
+          questType: args.questType,
         ),
         settings: data,
       );
@@ -381,17 +381,15 @@ class SetPinViewArguments {
 class BottomBarLayoutTemplateViewArguments {
   final Key? key;
   final UserRole userRole;
-  final int? initialBottomNavBarIndex;
-  final int? initialTabBarIndex;
+  final BottomNavBarIndex? initialBottomNavBarIndex;
   final bool showDialog;
-  final QuestViewIndex questViewIndex;
-  final QuestCategory? questCategory;
+  final QuestViewType questViewIndex;
+  final QuestType? questType;
   BottomBarLayoutTemplateViewArguments(
       {this.key,
       required this.userRole,
       this.initialBottomNavBarIndex,
-      this.initialTabBarIndex = 0,
       this.showDialog = false,
-      this.questViewIndex = QuestViewIndex.questlist,
-      this.questCategory});
+      this.questViewIndex = QuestViewType.questlist,
+      this.questType});
 }

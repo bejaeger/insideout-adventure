@@ -249,7 +249,7 @@ class MapViewModel extends QuestViewModel {
 
   @override
   void dispose() {
-    _googleMapController!.dispose();
+    _googleMapController?.dispose();
     super.dispose();
   }
 }
