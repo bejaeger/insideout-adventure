@@ -6,11 +6,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<Quest> getDummyQuests() {
   return [
-    getDummyQuest1(),
-    // getDummyQuest3(),
-    getDummyQuest4(),
-    getDummyQuest2(),
-    getDummyQuest5(),
+    getDummyVibrationSearchQuest(),
+    streeth11th2ndVibration(),
+    // getDummyQuest1(),
+    // // getDummyQuest3(),
+    // getDummyQuest4(),
+    // getDummyQuest2(),
+    // getDummyQuest5(),
   ];
 }
 
@@ -31,6 +33,36 @@ Quest getDummyQuest1() {
     startMarker: getDummyMarker1(),
     finishMarker: getDummyMarker2(),
   );
+}
+
+// burnaby quest
+Quest getDummyVibrationSearchQuest() {
+  return Quest(
+    id: "VibrationSearch",
+    name: "Woodway Vibrations",
+    description: "Listen to the vibrations",
+    afkCredits: 10,
+    markers: [
+      woodwayInFrontMarker(),
+      myRoomParkSiteMarker(),
+    ],
+    type: QuestType.VibrationSearch,
+    startMarker: woodwayInFrontMarker(),
+    finishMarker: myRoomParkSiteMarker(),
+  );
+}
+
+// burnaby quest
+Quest streeth11th2ndVibration() {
+  return Quest(
+      id: "VibrationSearch at 11th and 2nd",
+      name: "Vibrations will guide you the way!",
+      description: "Listen to the vibrations",
+      afkCredits: 10,
+      markers: [street11th2nd(), street11th2ndEnd()],
+      type: QuestType.VibrationSearch,
+      startMarker: street11th2nd(),
+      finishMarker: street11th2ndEnd());
 }
 
 // Angola quest
@@ -290,8 +322,40 @@ AFKMarker myRoomMarker() {
   return AFKMarker(
       id: "myRoomMarker",
       qrCodeId: "myRoomMarker",
-      lat: 49.267489,
-      lon: -122.990541);
+      lat: 49.267408282,
+      lon: -122.9905778);
+}
+
+AFKMarker woodwayInFrontMarker() {
+  return AFKMarker(
+      id: "woodwayInFrontMarker",
+      qrCodeId: "woodwayInFrontMarker",
+      lat: 49.2673185626,
+      lon: -122.9901804);
+}
+
+AFKMarker myRoomParkSiteMarker() {
+  return AFKMarker(
+      id: "myRoomParkSiteMarker",
+      qrCodeId: "myRoomParkSiteMarker",
+      lat: 49.268019072977,
+      lon: -122.9908816464);
+}
+
+AFKMarker street11th2nd() {
+  return AFKMarker(
+      id: "11th2nd",
+      qrCodeId: "11th2nd",
+      lat: 49.22308671447031,
+      lon: -122.92246584976317);
+}
+
+AFKMarker street11th2ndEnd() {
+  return AFKMarker(
+      id: "street11th2ndEnd",
+      qrCodeId: "street11th2ndEnd",
+      lat: 49.22388203172556,
+      lon: -122.92212046634603);
 }
 
 getDummyCoordinates() {

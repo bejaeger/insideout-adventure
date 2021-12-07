@@ -19,10 +19,9 @@ class MapView extends StatelessWidget {
     return ViewModelBuilder<MapViewModel>.reactive(
       //  onModelReady: (model) => model.createMarkers(),
       onModelReady: (model) => model.initialize(),
-      builder: (context, model, child) => 
-      model.hasActiveQuest ? 
-        ActiveQuestView() : 
-      Scaffold(
+      builder: (context, model, child) => model.hasActiveQuest
+          ? ActiveQuestView()
+          : Scaffold(
               appBar: AppBar(
                 title: Text("Map Games"),
                 leading: IconButton(
@@ -30,51 +29,51 @@ class MapView extends StatelessWidget {
                   icon: Icon(Icons.arrow_back),
                 ),
               ),
-        // appBar: CustomAppBar(
-        //   title: 'AFK TREASURE HUNTS',
-        // ),
-        body: 
-        IndexedStack(index: model.currentIndex, children: [
-          GoogleMapsScreen(model: model),
-          QuestListScreen(
-            quests: model.nearbyQuests,
-            isBusy: model.isBusy,
-            onCardTapped: model.onQuestInListTapped,
-            switchToMap: model.toggleIndex,
-          ),
-        ]),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            MyFloatingActionButton(
-              onPressed: model.toggleIndex,
-              icon: Icon(
-                  model.currentIndex == 0
-                      ? Icons.list_rounded
-                      : Icons.map_rounded,
-                  size: 30,
-                  color: Colors.white),
+              // appBar: CustomAppBar(
+              //   title: 'AFK TREASURE HUNTS',
+              // ),
+              body: IndexedStack(index: model.currentIndex, children: [
+                GoogleMapsScreen(model: model),
+                QuestListScreen(
+                  quests: model.nearbyQuests,
+                  isBusy: model.isBusy,
+                  onCardTapped: model.onQuestInListTapped,
+                  switchToMap: model.toggleIndex,
+                ),
+              ]),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endFloat,
+              floatingActionButton: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  MyFloatingActionButton(
+                    onPressed: model.toggleIndex,
+                    icon: Icon(
+                        model.currentIndex == 0
+                            ? Icons.list_rounded
+                            : Icons.map_rounded,
+                        size: 30,
+                        color: Colors.white),
+                  ),
+                  verticalSpaceSmall,
+                  MyFloatingActionButton(
+                      onPressed: model.initialCameraPosition() == null
+                          ? () async => null
+                          : () async {
+                              model.getGoogleMapController!.animateCamera(
+                                  model.getDirectionInfo != null
+                                      ? CameraUpdate.newLatLngBounds(
+                                          model.getDirectionInfo!.bounds, 100.0)
+                                      : CameraUpdate.newCameraPosition(
+                                          model.initialCameraPosition()));
+                              await model.scanQrCodeWithActiveQuest();
+                            },
+                      icon: const Icon(Icons.qr_code_scanner_rounded,
+                          size: 30, color: Colors.white)),
+                  verticalSpaceSmall,
+                ],
+              ),
             ),
-            verticalSpaceSmall,
-            MyFloatingActionButton(
-                onPressed: model.initialCameraPosition() == null
-                    ? () async => null
-                    : () async {
-                        model.getGoogleMapController!.animateCamera(
-                            model.getDirectionInfo != null
-                                ? CameraUpdate.newLatLngBounds(
-                                    model.getDirectionInfo!.bounds, 100.0)
-                                : CameraUpdate.newCameraPosition(
-                                    model.initialCameraPosition()!));
-                        await model.scanQrCodeWithActiveQuest();
-                      },
-                icon: const Icon(Icons.qr_code_scanner_rounded,
-                    size: 30, color: Colors.white)),
-            verticalSpaceSmall,
-          ],
-        ),
-      ),
       viewModelBuilder: () => MapViewModel(),
     );
   }

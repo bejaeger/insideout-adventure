@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -13,12 +12,10 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ActiveQuestViewModel extends QuestViewModel {
   final log = getLogger('ActiveQuestViewModel');
   final geolocation = locator<GeolocationService>();
-  final _directionsAPI = locator<DirectionsAPI>();
   final QuestService questService = locator<QuestService>();
   final _qrCodeService = locator<QRCodeService>();
 
@@ -30,18 +27,14 @@ class ActiveQuestViewModel extends QuestViewModel {
   GoogleMapController? _googleMapController;
   Marker? origin;
   Marker? destination;
-  Directions? _directionInfo;
-
-  Future<void> requestPermission() async {
-    await Permission.location.request();
-  }
 
   //Get Google Map Controller
   GoogleMapController? get getGoogleMapController => _googleMapController;
 
   Set<Marker>? get getMarkers => _markersTmp;
 
-  //Get Direction Info
+  // ? This seems deprecated ???
+  Directions? _directionInfo;
   Directions? get getDirectionInfo => _directionInfo;
 
   // ignore: non_constant_identifier_names
@@ -156,30 +149,6 @@ class ActiveQuestViewModel extends QuestViewModel {
       checkQuestAndFinishWhenCompleted();
       //finishQuest();
     }
-  }
-
-  Future<Directions?> getDirections({
-    required LatLng origin,
-    required LatLng destination,
-  }) async {
-    setBusy(true);
-    _directionInfo = await _directionsAPI.getDirections(
-        origin: origin, destination: destination);
-    setBusy(false);
-    notifyListeners();
-  }
-
-  void initializeStartedQuest() {
-    sourceIcon =
-        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
-    log.i('You Have Started This Quest $startedQuest');
-    // TODO: What is this getDirections about?
-    // Throws an error in direction.dart datamodel
-    // getDirections(
-    //     origin: LatLng(
-    //         startedQuest.startMarker.lat!, startedQuest.startMarker.lon!),
-    //     destination: LatLng(
-    //         startedQuest.finishMarker.lat!, startedQuest.finishMarker.lon!));
   }
 
   Future<void> onMapCreated(GoogleMapController controller) async {

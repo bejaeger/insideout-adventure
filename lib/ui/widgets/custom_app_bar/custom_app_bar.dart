@@ -12,7 +12,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final void Function()? onBackButton;
   CustomAppBar(
-      {Key? key, this.height = kAppBarExtendedHeight, required this.title, this.onBackButton})
+      {Key? key,
+      this.height = kAppBarExtendedHeight,
+      required this.title,
+      this.onBackButton})
       : super(key: key);
 
   double get getHeight => height;
@@ -52,15 +55,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               height: height,
               width: screenWidth(context),
             ),
-            if (onBackButton != null)
-            Container(
-              height: height,
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                onPressed: model.navigateBack,
-                icon: Icon(Icons.arrow_back, color: Colors.white),
+            if (onBackButton != null && !model.hasActiveQuest)
+              Container(
+                height: height,
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: model.navigateBack,
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                ),
               ),
-            ),
           ],
         ),
       ),

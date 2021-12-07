@@ -5,10 +5,10 @@ import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 
 class ActivatedQuestPanelViewModel extends QuestViewModel {
   final log = getLogger("CustomAppBarViewModel");
+
   @override
   Future handleQrCodeScanEvent(QuestQRCodeScanResult result) {
     // TODO: implement handleQrCodeScanEvent
@@ -22,11 +22,12 @@ class ActivatedQuestPanelViewModel extends QuestViewModel {
 
   void navigateToRelevantActiveQuestView() {
     log.i("Navigating to view with currently active quest");
-    final questViewIndex = activeQuest.quest.type == QuestType.Minigame
-        ? QuestViewType.singlequest
-        : QuestViewType.map;
-    
-    
+    final questViewIndex =
+        activeQuest.quest.type == QuestType.DistanceEstimate ||
+                activeQuest.quest.type == QuestType.VibrationSearch
+            ? QuestViewType.singlequest
+            : QuestViewType.map;
+
     navigationService.navigateTo(
       Routes.bottomBarLayoutTemplateView,
       arguments: BottomBarLayoutTemplateViewArguments(
@@ -37,5 +38,4 @@ class ActivatedQuestPanelViewModel extends QuestViewModel {
       ),
     );
   }
-
 }

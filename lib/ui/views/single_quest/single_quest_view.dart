@@ -9,8 +9,7 @@ import 'package:stacked/stacked.dart';
 
 class SingleQuestView extends StatelessWidget {
   final QuestType? questType;
-  const SingleQuestView({Key? key, required this.questType})
-      : super(key: key);
+  const SingleQuestView({Key? key, required this.questType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,42 +21,98 @@ class SingleQuestView extends StatelessWidget {
                   "ERROR! This should never happen. You navigated to a single quest view without providing a quest category. Hopefully you are not a user of the app but a developer. Otherwise please help us and let the developers know immediately"),
             )
           : model.hasActiveQuest
-              ? ActiveMiniGameView()
+              ? ActiveMiniGameView(questType: questType!)
               : Scaffold(
                   appBar: CustomAppBar(
                     title: describeEnum(questType.toString().toUpperCase()),
                     onBackButton: model.navigateBack,
                   ),
-                  body: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 200,
-                            height: 200,
-                            color: Colors.cyan,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("Estimate 500 Meters",
-                                    style: textTheme(context)
-                                        .headline5!
-                                        .copyWith(color: Colors.grey[200])),
-                                ElevatedButton(
-                                    onPressed: model.startMinigameQuest,
-                                    child: Text("Start quest")),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              width: 200, height: 200, color: Colors.purple),
-                        ],
-                      ),
-                    ],
-                  ),
+                  body: questType == QuestType.DistanceEstimate
+                      ? DistanceEstimateCard(
+                          onPressed: () => model.startMinigameQuest(questType!))
+                      : questType == QuestType.VibrationSearch
+                          ? VibrationSearchCard(
+                              onPressed: () =>
+                                  model.startMinigameQuest(questType!))
+                          : null,
                 ),
+    );
+  }
+}
+
+class DistanceEstimateCard extends StatelessWidget {
+  final void Function() onPressed;
+  const DistanceEstimateCard({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 200,
+              height: 200,
+              color: Colors.cyan,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text("Estimate 500 Meters",
+                      style: textTheme(context)
+                          .headline5!
+                          .copyWith(color: Colors.grey[200])),
+                  ElevatedButton(
+                      onPressed: onPressed, child: Text("Start quest")),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class VibrationSearchCard extends StatelessWidget {
+  final void Function() onPressed;
+
+  const VibrationSearchCard({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 180,
+              height: 180,
+              color: Colors.cyan,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text("Listen to the vibrations!",
+                      style: textTheme(context)
+                          .headline5!
+                          .copyWith(color: Colors.grey[200])),
+                  ElevatedButton(
+                      onPressed: onPressed, child: Text("Start quest")),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

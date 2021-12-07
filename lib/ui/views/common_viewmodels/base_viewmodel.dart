@@ -1,18 +1,24 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
+import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -42,6 +48,7 @@ class BaseModel extends BaseViewModel {
   bool get hasActiveQuest => questService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => questService.activatedQuest!;
+  ActivatedQuest? get activeQuestNullable => questService.activatedQuest;
   String? seconds;
   String? hours;
   String? minutes;
@@ -52,6 +59,8 @@ class BaseModel extends BaseViewModel {
 
   String get getHourMinuteSecondsTime =>
       _stopWatchService.secondsToHourMinuteSecondTime(activeQuest.timeElapsed);
+
+  bool? canVibrate;
 
   // void setTimer() {
   //   //Clock Timer
@@ -70,16 +79,6 @@ class BaseModel extends BaseViewModel {
 
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
-  StreamSubscription? _activeQuestSubscription;
-
-  BaseModel() {
-    // listen to changes in wallet
-    _activeQuestSubscription = questService.activatedQuestSubject.listen(
-      (stats) {
-        notifyListeners();
-      },
-    );
-  }
 
   Future clearServiceData({bool logOutFromFirebase = true}) async {
     questService.clearData();
@@ -102,9 +101,13 @@ class BaseModel extends BaseViewModel {
     //layoutService.setShowBottomNavBar(show);
   }
 
-  Future startQuest({required Quest quest}) async {
+  Future startQuest({required Quest quest, bool startFromMap = false}) async {
     try {
-      /// Once The user Click on Start a Quest. It tks her/him to new Page
+      if (quest.type == QuestType.VibrationSearch && startFromMap) {
+        await navigateToVibrationSearchView();
+      }
+
+      /// Once The user Click on Start a Quest. It is her/him to new Page
       /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
       /// Quest.
       final isQuestStarted =
@@ -177,6 +180,16 @@ class BaseModel extends BaseViewModel {
             userRole: currentUser.role, initialBottomNavBarIndex: index));
   }
 
+  Future navigateToVibrationSearchView() async {
+    await navigationService.navigateTo(Routes.bottomBarLayoutTemplateView,
+        arguments: BottomBarLayoutTemplateViewArguments(
+          userRole: currentUser.role,
+          initialBottomNavBarIndex: BottomNavBarIndex.map,
+          questViewIndex: QuestViewType.singlequest,
+          questType: QuestType.VibrationSearch,
+        ));
+  }
+
   Future showGenericInternalErrorDialog() async {
     return await dialogService.showDialog(
         title: "Sorry",
@@ -188,7 +201,6 @@ class BaseModel extends BaseViewModel {
   /// Clean-up
   @override
   void dispose() {
-    _activeQuestSubscription?.cancel();
     super.dispose();
   }
 }

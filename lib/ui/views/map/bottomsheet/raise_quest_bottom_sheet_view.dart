@@ -1,4 +1,7 @@
+import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -39,26 +42,28 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                 ),
               ),
               verticalSpaceTiny,
-              Expanded(
-                flex: 5,
-                child: GoogleMap(
-                  //mapType: MapType.hybrid,
-                  initialCameraPosition: model.initialCameraPosition(),
-                  //Place Markers in the Map
-                  markers: model.getMarkers!,
-                  //callback that’s called when the map is ready to us.
-                  onMapCreated: model.onMapCreated,
-                  //For showing your current location on Map with a blue dot.
-                  myLocationEnabled: false,
+              if (model.quest.type != QuestType.VibrationSearch &&
+                  model.quest.type != QuestType.Search)
+                Expanded(
+                  flex: 5,
+                  child: GoogleMap(
+                    //mapType: MapType.hybrid,
+                    initialCameraPosition: model.initialCameraPosition(),
+                    //Place Markers in the Map
+                    markers: model.getMarkers!,
+                    //callback that’s called when the map is ready to us.
+                    onMapCreated: model.onMapCreated,
+                    //For showing your current location on Map with a blue dot.
+                    myLocationEnabled: false,
 
-                  // Button used for bringing the user location to the center of the camera view.
-                  myLocationButtonEnabled: true,
+                    // Button used for bringing the user location to the center of the camera view.
+                    myLocationButtonEnabled: true,
 
-                  //Remove the Zoom in and out button
-                  zoomControlsEnabled: false,
+                    //Remove the Zoom in and out button
+                    zoomControlsEnabled: false,
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
+              verticalSpaceSmall,
               Text(
                 request.title.toString(),
                 style: TextStyle(
@@ -66,7 +71,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               ),
-              SizedBox(height: 10),
+              verticalSpaceSmall,
               Text(
                 request.description.toString(),
                 style: TextStyle(
@@ -75,32 +80,71 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                     color: Colors.black),
                 // textAlign: TextAlign.left,
               ),
+              verticalSpaceSmall,
+              Text(
+                "Category: " + describeEnum(model.quest.type).toString(),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: kPrimaryColor),
+                // textAlign: TextAlign.left,
+              ),
+              verticalSpaceSmall,
+              Text(
+                "AFK Credits: " + model.quest.afkCredits.toString(),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: kPrimaryColor),
+                // textAlign: TextAlign.left,
+              ),
+              verticalSpaceSmall,
+              if (model.checkSponsoringSentence() != null)
+                Text(
+                  model.checkSponsoringSentence()!,
+                  style: TextStyle(color: Colors.red),
+                  // textAlign: TextAlign.left,
+                ),
+              verticalSpaceSmall,
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  MaterialButton(
+                  ElevatedButton(
                     onPressed: () => completer(SheetResponse(confirmed: false)),
                     child: Text(
                       request.secondaryButtonTitle.toString(),
                       style: TextStyle(
                           fontSize: 20,
                           //fontWeight: FontWeight.bold,
-                          color: Colors.black),
+                          color: kWhiteTextColor),
                     ),
                   ),
-                  MaterialButton(
-                    onPressed: () => completer(SheetResponse(confirmed: true)),
+
+                  // MaterialButton(
+                  //   onPressed: () => completer(SheetResponse(confirmed: false)),
+                  //   child: Text(
+                  //     request.secondaryButtonTitle.toString(),
+                  //     style: TextStyle(
+                  //         fontSize: 20,
+                  //         //fontWeight: FontWeight.bold,
+                  //         color: Colors.black),
+                  //   ),
+                  // ),
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: model.hasEnoughSponsoring()
+                        ? () => completer(SheetResponse(confirmed: true))
+                        : null,
                     child: Text(
                       request.mainButtonTitle.toString(),
                       style: TextStyle(
                           fontSize: 20,
                           //fontWeight: FontWeight.bold,
-                          color: Colors.black),
+                          color: kWhiteTextColor),
                     ),
-                  )
+                  ),
                 ],
               ),
-              Text(model.checkSponsoringSentence()),
             ],
           ),
         ),

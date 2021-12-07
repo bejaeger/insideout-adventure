@@ -7,6 +7,7 @@ import 'package:stacked/stacked.dart';
 
 class ActivatedQuestPanel extends StatelessWidget {
   final double height;
+
   const ActivatedQuestPanel({Key? key, required this.height}) : super(key: key);
 
   @override
@@ -63,25 +64,9 @@ class ActivatedQuestPanel extends StatelessWidget {
                                     horizontalSpaceMedium,
                                     Icon(Icons.explore, color: Colors.grey[50]),
                                     Expanded(
-                                      child: Text(
-                                          "Active quest - " +
-                                              model.getHourMinuteSecondsTime +
-                                              /*        " " +
-                                              model.activeQuest.timeElapsed
-                                                  .toString() f+ */
-                                              " elapsed - " +
-                                              model.numMarkersCollected
-                                                  .toString() +
-                                              " / " +
-                                              model.activeQuest.markersCollected
-                                                  .length
-                                                  .toString() +
-                                              " markers",
-                                          style: textTheme(context)
-                                              .bodyText1!
-                                              .copyWith(
-                                                  color: Colors.grey[50],
-                                                  fontSize: 16)),
+                                      child: ActiveQuestInfoTex(
+                                          text:
+                                              model.lastActivatedQuestInfoText),
                                     ),
                                   ],
                                 ),
@@ -116,6 +101,22 @@ class ActivatedQuestPanel extends StatelessWidget {
               ),
       ),
     );
+  }
+}
+
+class ActiveQuestInfoTex extends StatelessWidget {
+  final String text;
+  const ActiveQuestInfoTex({
+    required this.text,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text,
+        style: textTheme(context)
+            .bodyText1!
+            .copyWith(color: Colors.grey[50], fontSize: 16));
   }
 }
 

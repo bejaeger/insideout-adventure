@@ -1,4 +1,4 @@
-import 'package:afkcredits/ui/views/active_quest/active_quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +10,13 @@ class ActiveQuestView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ActiveQuestViewModel>.reactive(
-      //onModelReady: (model) => model.initializeStartedQuest(),
+    return ViewModelBuilder<MapViewModel>.reactive(
+      viewModelBuilder: () => MapViewModel(),
       disposeViewModel: false,
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
             appBar: CustomAppBar(
-              title: 'Quest Running',
+              title: 'Active Quest',
               onBackButton: () => model.navigateBack(),
             ),
             body: Container(
@@ -31,13 +31,13 @@ class ActiveQuestView extends StatelessWidget {
                     onMapCreated: model.onMapCreated,
                     //For showing your current location on Map with a blue dot.
                     myLocationEnabled: true,
-      
+
                     // Button used for bringing the user location to the center of the camera view.
                     myLocationButtonEnabled: true,
-      
+
                     //Remove the Zoom in and out button
                     zoomControlsEnabled: false,
-      
+
                     polylines: {
                       if (model.getDirectionInfo != null)
                         Polyline(
@@ -49,7 +49,7 @@ class ActiveQuestView extends StatelessWidget {
                               .toList(),
                         ),
                     },
-      
+
                     //onTap: model.handleTap(),
                     //Enable Traffic Mode.
                     //trafficEnabled: true,
@@ -76,7 +76,6 @@ class ActiveQuestView extends StatelessWidget {
                 icon: const Icon(Icons.qr_code_scanner_rounded,
                     size: 30, color: Colors.white))),
       ),
-      viewModelBuilder: () => ActiveQuestViewModel(),
     );
   }
 }

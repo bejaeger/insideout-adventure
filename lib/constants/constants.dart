@@ -59,3 +59,8 @@ const int kMaxDistanceFromMarkerInMeter = 50;
 
 bool foundMarker = false;
 bool shownDummyModeDialog = false;
+
+// for VibrationSearch
+const double kMinDistanceFromLastCheckInMeters = 10;
+const int kDeadTimeAfterVibrationInSeconds = 5;
+const double kMinDistanceToCatchTrophyInMeters = 20;

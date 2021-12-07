@@ -9,8 +9,10 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -26,6 +28,7 @@ class QuestService {
       locator<FlavorConfigProvider>();
   final MarkerService _markerService = locator<MarkerService>();
   final CloudFunctionsApi _cloudFunctionsApi = locator<CloudFunctionsApi>();
+  final GeolocationService _geolocationService = locator<GeolocationService>();
   final StopWatchService _stopWatchService =
       locator<StopWatchService>(); // Create instance.
   // map of list of money pools with money Pool id as key
@@ -35,6 +38,9 @@ class QuestService {
   final log = getLogger("QuestService");
 
   ActivatedQuest? previouslyFinishedQuest;
+
+  // dead time after update
+  bool isDeadTime = false;
 
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
@@ -68,7 +74,11 @@ class QuestService {
     //Harguilar Commented This Out Timer
     _stopWatchService.startTimer();
 
-    _stopWatchService.listenToSecondTime(callback: trackData);
+    if (quest.type == QuestType.VibrationSearch) {
+      _stopWatchService.listenToSecondTime(callback: trackDataVibrationSearch);
+    } else {
+      _stopWatchService.listenToSecondTime(callback: trackData);
+    }
     return true;
   }
 
@@ -82,7 +92,8 @@ class QuestService {
 
   // Handle the scenario when a user finishes a hike
   // First evaluate the activated quest data and return values according to that
-  Future evaluateAndFinishQuest() async {
+  Future evaluateAndFinishQuest({bool force = false}) async {
+    log.i("Evaluating quest and finishing it if finished");
     // Fetch quest information
     if (activatedQuest == null) {
       log.e(
@@ -94,13 +105,16 @@ class QuestService {
       trackData(_stopWatchService.getSecondTime());
       // updateData();
 
+      // TODO: Add evaluation (how many afk credits were earned) for all quest types
       evaluateQuestAndSetStatus();
 
-      if (activatedQuest!.status == QuestStatus.incomplete) {
+      if (activatedQuest!.status == QuestStatus.incomplete && !force) {
         log.w("Quest is incomplete. Show message to user");
         return WarningQuestNotFinished;
-      } else {
-        log.i("Quest successfully finished, pushing to firebase!");
+      }
+      if (activatedQuest!.status == QuestStatus.success || force) {
+        log.i(
+            "Quest successfully finished (or forcing to finish), pushing to firebase!");
         //try {
         // if we end up here it means the quest has finished succesfully!
         try {
@@ -129,6 +143,8 @@ class QuestService {
   }
 
   Future continueIncompleteQuest() async {
+    // TODO: recover quest! of all types!
+
     if (activatedQuest != null) {
       _stopWatchService.resumeListener();
       _stopWatchService.startTimer();
@@ -167,19 +183,42 @@ class QuestService {
   // also set earned credits
   void evaluateQuestAndSetStatus() {
     log.i("Evaluating quest");
-    bool? allMarkersCollected =
+    bool? markerMissing =
         activatedQuest?.markersCollected.any((element) => element == false);
-    if (allMarkersCollected != null && allMarkersCollected == false) {
-      pushActivatedQuest(activatedQuest!.copyWith(
-          status: QuestStatus.success,
-          afkCreditsEarned: activatedQuest!.quest.afkCredits));
+    bool allMarkersCollected = markerMissing == null ? false : !markerMissing;
+    if (activatedQuest?.quest.type == QuestType.VibrationSearch) {
+      if (activatedQuest?.status == QuestStatus.success) {
+        pushActivatedQuest(activatedQuest!.copyWith(
+            status: QuestStatus.success,
+            afkCreditsEarned: activatedQuest!.quest.afkCredits));
+      } else {
+        pushActivatedQuest(
+          activatedQuest!.copyWith(
+            status: QuestStatus.incomplete,
+          ),
+        );
+      }
     } else {
-      pushActivatedQuest(
-        activatedQuest!.copyWith(
-          status: QuestStatus.incomplete,
-        ),
-      );
+      if (allMarkersCollected == true) {
+        log.i("All markers were collected, quest finished successfully!");
+        pushActivatedQuest(activatedQuest!.copyWith(
+            status: QuestStatus.success,
+            afkCreditsEarned: activatedQuest!.quest.afkCredits));
+      } else {
+        log.w("Quest found to be incomplete!");
+        log.w(
+            "Info: allMarkersCollected = $allMarkersCollected, markersCollected: ${activatedQuest?.markersCollected}");
+        pushActivatedQuest(
+          activatedQuest!.copyWith(
+            status: QuestStatus.incomplete,
+          ),
+        );
+      }
     }
+  }
+
+  void setActiveQuestStatus(QuestStatus status) {
+    pushActivatedQuest(activatedQuest!.copyWith(status: QuestStatus.success));
   }
 
   Future trackData(int seconds) async {
@@ -208,6 +247,92 @@ class QuestService {
       //}
       if (push) {
         pushActivatedQuest(tmpActivatedQuest);
+      }
+    }
+  }
+
+  Future trackDataVibrationSearch(int seconds) async {
+    if (activatedQuest != null) {
+      ActivatedQuest tmpActivatedQuest = activatedQuest!;
+      //void updateTime(int seconds) {
+
+      // set initial data!
+      if (seconds == 1) {
+        final position = await _geolocationService.getAndSetCurrentLocation();
+        tmpActivatedQuest = updateLatLonOnQuest(
+            activatedQuest: tmpActivatedQuest,
+            newLat: position.latitude,
+            newLon: position.latitude);
+        final newDistanceInMeters = _geolocationService.distanceBetween(
+          lat1: position.latitude,
+          lon1: position.longitude,
+          lat2: tmpActivatedQuest.quest.finishMarker.lat,
+          lon2: tmpActivatedQuest.quest.finishMarker.lon,
+        );
+        tmpActivatedQuest = updateDistanceOnQuest(
+            activatedQuest: tmpActivatedQuest,
+            newDistance: newDistanceInMeters,
+            newLat: position.latitude,
+            newLon: position.longitude);
+        log.i(
+            "Setting initial data for Vibration Search Quest $newDistanceInMeters meters");
+        pushActivatedQuest(tmpActivatedQuest);
+      }
+      if (isDeadTime) {
+        log.i("Skipping distance to goal check because dead time is on");
+        return;
+      }
+      bool push = false;
+      if (seconds % 3 == 0) {
+        final position = await _geolocationService.getAndSetCurrentLocation();
+        // check how far user went when last check happened!
+        final distanceFromLastCheck = _geolocationService.distanceBetween(
+          lat1: tmpActivatedQuest.lastCheckLat,
+          lon1: tmpActivatedQuest.lastCheckLon,
+          lat2: position.latitude,
+          lon2: position.longitude,
+        );
+
+        if (distanceFromLastCheck > kMinDistanceFromLastCheckInMeters) {
+          push = true;
+          // check distance to goal!
+          final newDistanceInMeters = _geolocationService.distanceBetween(
+            lat1: position.latitude,
+            lon1: position.longitude,
+            lat2: tmpActivatedQuest.quest.finishMarker.lat,
+            lon2: tmpActivatedQuest.quest.finishMarker.lon,
+          );
+          tmpActivatedQuest = updateDistanceOnQuest(
+              activatedQuest: tmpActivatedQuest,
+              newDistance: newDistanceInMeters,
+              newLat: position.latitude,
+              newLon: position.longitude);
+          log.i("Updating distance to goal to $newDistanceInMeters meters");
+        } else {
+          log.i(
+              "Not checking distance to goal, distance form last check: $distanceFromLastCheck");
+        }
+      }
+      if (seconds % 10 == 0) {
+        // push = true;
+        // every ten seconds
+        log.v("quest active since $seconds seconds!");
+        // tmpActivatedQuest = trackSomeOtherData(tmpActivatedQuest, seconds);
+      }
+      if (seconds >= kMaxQuestTimeInSeconds) {
+        push = false;
+        log.wtf(
+            "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten!");
+        await cancelIncompleteQuest();
+        return;
+      }
+      //}
+      if (push) {
+        pushActivatedQuest(tmpActivatedQuest);
+        isDeadTime = true;
+        await Future.delayed(
+            Duration(seconds: kDeadTimeAfterVibrationInSeconds));
+        isDeadTime = false;
       }
     }
   }
@@ -399,6 +524,25 @@ class QuestService {
 
   ActivatedQuest updateTimeOnQuest(ActivatedQuest activatedQuest, int seconds) {
     return activatedQuest.copyWith(timeElapsed: seconds);
+  }
+
+  ActivatedQuest updateDistanceOnQuest(
+      {required ActivatedQuest activatedQuest,
+      required double newDistance,
+      required double newLat,
+      required double newLon}) {
+    return activatedQuest.copyWith(
+        currentDistanceInMeters: newDistance,
+        lastDistanceInMeters: activatedQuest.currentDistanceInMeters,
+        lastCheckLat: newLat,
+        lastCheckLon: newLon);
+  }
+
+  ActivatedQuest updateLatLonOnQuest(
+      {required ActivatedQuest activatedQuest,
+      required double newLat,
+      required double newLon}) {
+    return activatedQuest.copyWith(lastCheckLat: newLat, lastCheckLon: newLon);
   }
 
   void disposeActivatedQuest() {

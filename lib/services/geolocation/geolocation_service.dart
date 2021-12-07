@@ -32,10 +32,10 @@ class GeolocationService {
           _position = await location.getLocation();
         }
 
-        log.i('Harguilar Current Position $_position');
+        // log.v('Harguilar Current Position $_position');
         if (_position != null) {
           final lastPosition = await Geolocator.getLastKnownPosition();
-          log.i('This is Harguilar Last Location $lastPosition');
+          // log.v('This is Harguilar Last Location $lastPosition');
           return lastPosition;
           //return _position;
         } else {
@@ -123,5 +123,34 @@ class GeolocationService {
       }
     }
     return false;
+  }
+
+  Future<double> distanceBetweenUserAndCoordinates(
+      {required double? lat, required double? lon}) async {
+    if (lat == null || lon == null) {
+      log.e("input latitude or longitude is null, cannot derive distance!");
+      return -1;
+    }
+    final position = await getAndSetCurrentLocation();
+    if (position != null) {
+      double distanceInMeters = Geolocator.distanceBetween(
+          position.latitude, position.longitude, lat, lon);
+      return distanceInMeters;
+    }
+    return -1;
+  }
+
+  double distanceBetween(
+      {required double? lat1,
+      required double? lon1,
+      required double? lat2,
+      required double? lon2}) {
+    if (lat1 == null || lon1 == null || lat2 == null || lon2 == null) {
+      log.e("input latitude or longitude is null, cannot derive distance!");
+      return -1;
+    }
+    double distanceInMeters =
+        Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
+    return distanceInMeters;
   }
 }

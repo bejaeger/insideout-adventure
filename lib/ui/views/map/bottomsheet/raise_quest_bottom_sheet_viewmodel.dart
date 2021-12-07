@@ -71,17 +71,21 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     }
   }
 
-  String checkSponsoringSentence() {
-    if (quest.afkCredits < currentUserStats.availableSponsoring) {
-      return "You can earn ${quest.afkCredits} credits by completing this quest!";
+  String? checkSponsoringSentence() {
+    if (hasEnoughSponsoring()) {
+      return null;
     } else {
       return "You don't have enough AFK Credits funds to earn ${quest.afkCredits} credits. Ask a sponsor to support you :)";
     }
   }
 
+  bool hasEnoughSponsoring() {
+    return quest.afkCredits <= currentUserStats.availableSponsoring;
+  }
+
   @override
   void dispose() {
-    _googleMapController!.dispose();
+    _googleMapController?.dispose();
     super.dispose();
   }
 }

@@ -375,7 +375,7 @@ class FirestoreApi {
       //TODO push quests
       late List<Quest> questsOnFirestore;
       try {
-        final questsOnFirestore = await _downloadNearbyQuests();
+        questsOnFirestore = await _downloadNearbyQuests();
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");

@@ -3,6 +3,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -19,6 +20,7 @@ User getTestUserSponsor() {
     sponsorIds: [],
     explorerIds: [],
     newUser: false,
+    authMethod: AuthenticationMethod.email
   );
 }
 
@@ -31,6 +33,8 @@ User getTestUserExplorer() {
     sponsorIds: [],
     explorerIds: [],
     newUser: false,
+        authMethod: AuthenticationMethod.email
+
   );
 }
 
@@ -43,6 +47,8 @@ User getTestUserAdmin() {
     sponsorIds: [],
     explorerIds: [],
     newUser: false,
+        authMethod: AuthenticationMethod.email
+
   );
 }
 

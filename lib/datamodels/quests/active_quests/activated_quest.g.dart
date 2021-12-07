@@ -18,6 +18,11 @@ _$_ActivatedQuest _$$_ActivatedQuestFromJson(Map<String, dynamic> json) =>
       afkCreditsEarned: json['afkCreditsEarned'] as num?,
       timeElapsed: json['timeElapsed'] as int,
       createdAt: json['createdAt'] ?? '',
+      lastCheckLat: (json['lastCheckLat'] as num?)?.toDouble(),
+      lastCheckLon: (json['lastCheckLon'] as num?)?.toDouble(),
+      currentDistanceInMeters:
+          (json['currentDistanceInMeters'] as num?)?.toDouble(),
+      lastDistanceInMeters: (json['lastDistanceInMeters'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$_ActivatedQuestToJson(_$_ActivatedQuest instance) =>
@@ -30,6 +35,10 @@ Map<String, dynamic> _$$_ActivatedQuestToJson(_$_ActivatedQuest instance) =>
       'afkCreditsEarned': instance.afkCreditsEarned,
       'timeElapsed': instance.timeElapsed,
       'createdAt': instance.createdAt,
+      'lastCheckLat': instance.lastCheckLat,
+      'lastCheckLon': instance.lastCheckLon,
+      'currentDistanceInMeters': instance.currentDistanceInMeters,
+      'lastDistanceInMeters': instance.lastDistanceInMeters,
     };
 
 const _$QuestStatusEnumMap = {
