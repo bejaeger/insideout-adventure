@@ -50,7 +50,7 @@ class UserService {
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
 
   UserRole get getUserRole => currentUser.role;
-
+  bool get userIsAdmin => currentUser.role == UserRole.admin;
   bool get hasRole => currentUserNullable == null ? false : true;
 
   // store list of supportedExplorers
@@ -72,8 +72,6 @@ class UserService {
 
   Future<void> syncUserAccount(
       {String? uid, bool fromLocalStorage = false}) async {
-
-
     final actualUid =
         uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
 
@@ -487,7 +485,7 @@ class UserService {
 
   Future saveSponsorReference(
       {required String uid,
-      required AuthenticationMethod authMethod,
+      AuthenticationMethod? authMethod,
       String? pin}) async {
     if (pin != null) {
       await _localStorageService.saveToDisk(

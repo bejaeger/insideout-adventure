@@ -119,7 +119,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/
-
+    - assets/icons/afk_credits.PNG
   # To add assets to your application, add an assets section, like this:
   #assets:
     - .env

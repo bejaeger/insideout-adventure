@@ -43,7 +43,8 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
               ),
               verticalSpaceTiny,
               if (model.quest.type != QuestType.VibrationSearch &&
-                  model.quest.type != QuestType.Search)
+                  model.quest.type != QuestType.Search &&
+                  model.quest.startMarker != null)
                 Expanded(
                   flex: 5,
                   child: GoogleMap(
@@ -132,7 +133,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                   // ),
                   Spacer(),
                   ElevatedButton(
-                    onPressed: model.hasEnoughSponsoring()
+                    onPressed: model.hasEnoughSponsoring(quest: model.quest)
                         ? () => completer(SheetResponse(confirmed: true))
                         : null,
                     child: Text(

@@ -66,13 +66,18 @@ export class AFKCreditsBookkeeper {
 
     const increment = admin.firestore.FieldValue.increment(afkCreditsEarned);
     const incrementNumberQuests = admin.firestore.FieldValue.increment(1);
-    const decrement = admin.firestore.FieldValue.increment(-afkCreditsEarned);
+
+    // ! This here is very important and needs to be done more properly!
+    // ! This is our business model / the conversion between dollar and credits
+    // ! availableSponsoring is given in CENTS!
+    const decrementSponsoring = admin.firestore.FieldValue.increment(-afkCreditsEarned * 10);
+
     const docRefRecipient = this.dbManager.getUserSummaryStatisticsDocument(uid);
 
     // There will probably be more things to update so that's why we keep it in
     // a separate function here
     transaction.update(docRefRecipient, {
-      availableSponsoring: decrement, // deccrement available sponsoring of explorer
+      availableSponsoring: decrementSponsoring, // decrement available sponsoring of explorer
       afkCreditsBalance: increment, // increment afk credits balance
       lifetimeEarnings: increment, // increment lifetime earnings
       numberQuestsCompleted: incrementNumberQuests,  // increment number of quests completed
@@ -94,7 +99,7 @@ export class AFKCreditsBookkeeper {
     }
     const userStats = userDoc.data();
 
-    const afkCreditsToDeduct = this.kCentsToAfkCreditsConversionFactor*amount;
+    const afkCreditsToDeduct = this.kCentsToAfkCreditsConversionFactor * amount;
 
     // ! This check is crucual!
     if (userStats != null) {
@@ -135,5 +140,5 @@ export class AFKCreditsBookkeeper {
     log(`amountToDeduct: ${amountToDeduct}`);
     log(`current AFK Credits Balance: ${currentCreditBalance}`);
     return Math.abs(amountToDeduct) <= currentCreditBalance;
-  }  
+  }
 }

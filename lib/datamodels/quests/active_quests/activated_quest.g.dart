@@ -47,4 +47,5 @@ const _$QuestStatusEnumMap = {
   QuestStatus.success: 'success',
   QuestStatus.incomplete: 'incomplete',
   QuestStatus.internalFailure: 'internalFailure',
+  QuestStatus.failed: 'failed',
 };

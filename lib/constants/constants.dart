@@ -60,7 +60,21 @@ const int kMaxDistanceFromMarkerInMeter = 50;
 bool foundMarker = false;
 bool shownDummyModeDialog = false;
 
+////////////////////////////////////
 // for VibrationSearch
-const double kMinDistanceFromLastCheckInMeters = 10;
+const int kMinDistanceFromLastCheckInMeters = 10;
 const int kDeadTimeAfterVibrationInSeconds = 5;
 const double kMinDistanceToCatchTrophyInMeters = 20;
+
+const double kMinRequiredAccuracyVibrationSearch = 20;
+
+//////////////////////////////////
+// for distance estimate
+const int kNumberTriesToRevealDistance = 3;
+// tolerance
+const double kMaxDeviationOfGoalInPercent = 0.2;
+const double kMinRequiredAccuracyDistanceEstimate = 30;
+
+////////////////////////////
+///Other
+const double kThresholdGPSAccuracyToShowInfo = 50;

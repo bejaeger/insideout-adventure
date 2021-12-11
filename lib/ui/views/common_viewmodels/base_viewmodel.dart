@@ -1,24 +1,18 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_type.dart';
-import 'package:afkcredits/enums/quest_view_index.dart';
-import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
-import 'package:afkcredits/exceptions/quest_service_exception.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -39,10 +33,11 @@ class BaseModel extends BaseViewModel {
   final LayoutService layoutService = locator<LayoutService>();
   final StopWatchService _stopWatchService = locator<StopWatchService>();
   final GiftCardService _giftCardService = locator<GiftCardService>();
+  final GeolocationService _geolocationService = locator<GeolocationService>();
 
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
-  bool get userIsAdmin => currentUser.role == UserRole.admin;
+  bool get userIsAdmin => userService.userIsAdmin;
 
   final baseModelLog = getLogger("BaseModel");
   bool get hasActiveQuest => questService.hasActiveQuest;
@@ -85,6 +80,7 @@ class BaseModel extends BaseViewModel {
     _giftCardService.clearData();
     await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
+    _geolocationService.clearData();
     //layoutService.setShowBottomNavBar(false);
   }
 
@@ -101,27 +97,42 @@ class BaseModel extends BaseViewModel {
     //layoutService.setShowBottomNavBar(show);
   }
 
-  Future startQuest({required Quest quest, bool startFromMap = false}) async {
+  Future startQuestMain(
+      {required Quest quest,
+      Future Function(int)? periodicFuncFromViewModel}) async {
     try {
-      if (quest.type == QuestType.VibrationSearch && startFromMap) {
-        await navigateToVibrationSearchView();
-      }
+      // if (quest.type == QuestType.VibrationSearch && startFromMap) {
+      //   await navigateToVibrationSearchView();
+      // }
 
       /// Once The user Click on Start a Quest. It is her/him to new Page
       /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
       /// Quest.
-      final isQuestStarted =
-          await questService.startQuest(quest: quest, uids: [currentUser.uid]);
+      final isQuestStarted = await questService.startQuest(
+          quest: quest,
+          uids: [currentUser.uid],
+          periodicFuncFromViewModel: periodicFuncFromViewModel);
 
       // this will also change the MapViewModel to show the ActiveQuestView
       if (isQuestStarted is String) {
         await dialogService.showDialog(
             title: "Sorry could not start the quest",
             description: isQuestStarted);
+        return false;
       }
     } catch (e) {
       baseModelLog.e("Could not start quest, error thrown: $e");
+      rethrow;
     }
+  }
+
+  bool hasEnoughSponsoring({required Quest? quest}) {
+    if (quest == null) {
+      baseModelLog.e(
+          "Attempted to check whether sponsoring is enough for quest that is null!");
+      return false;
+    }
+    return quest.afkCredits <= currentUserStats.availableSponsoring;
   }
 
   ////////////////////////////////////////
@@ -178,16 +189,6 @@ class BaseModel extends BaseViewModel {
         Routes.bottomBarLayoutTemplateView,
         arguments: BottomBarLayoutTemplateViewArguments(
             userRole: currentUser.role, initialBottomNavBarIndex: index));
-  }
-
-  Future navigateToVibrationSearchView() async {
-    await navigationService.navigateTo(Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(
-          userRole: currentUser.role,
-          initialBottomNavBarIndex: BottomNavBarIndex.map,
-          questViewIndex: QuestViewType.singlequest,
-          questType: QuestType.VibrationSearch,
-        ));
   }
 
   Future showGenericInternalErrorDialog() async {

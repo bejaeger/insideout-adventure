@@ -7,7 +7,6 @@ import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
@@ -25,9 +24,7 @@ class MapViewModel extends QuestViewModel {
   final _geolocationService = locator<GeolocationService>();
 
   //Quest? userQuest;
-  final _bottomSheetService = locator<BottomSheetService>();
   final QuestService questService = locator<QuestService>();
-  final DialogService _dialogService = locator<DialogService>();
   final _qrCodeService = locator<QRCodeService>();
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
@@ -45,7 +42,6 @@ class MapViewModel extends QuestViewModel {
   Set<Marker> _markersTmp = {};
   //List<Places>? places;
   List<AFKMarker>? markers;
-  List<Quest> get nearbyQuests => questService.nearbyQuests;
 
   GoogleMapController? _googleMapController;
 
@@ -95,7 +91,9 @@ class MapViewModel extends QuestViewModel {
       }
     }
     try {
-      loadQuests();
+      await loadQuests();
+      extractStartMarkersAndAddToMap();
+      notifyListeners();
     } catch (e) {
       log.wtf("Error when loading quest, this should never happen. Error: $e");
       await showGenericInternalErrorDialog();
@@ -109,7 +107,7 @@ class MapViewModel extends QuestViewModel {
         final CameraPosition _initialCameraPosition = CameraPosition(
             target: LatLng(_geolocationService.getUserPosition!.latitude,
                 _geolocationService.getUserPosition!.longitude),
-            zoom: 13);
+            zoom: 14);
         return _initialCameraPosition;
       } else {
         return CameraPosition(
@@ -118,14 +116,24 @@ class MapViewModel extends QuestViewModel {
         );
       }
     } else {
-      final CameraPosition _initialCameraPosition = CameraPosition(
-        //In Future I will change these values to dynamically Change the Initial Camera Position
-        //Based on teh city
-        target: LatLng(activeQuest.quest.startMarker.lat!,
-            activeQuest.quest.startMarker.lon!),
-        zoom: 15,
-      );
-      return _initialCameraPosition;
+      // HAS ACTIVE QUEST
+      if (activeQuest.quest.startMarker != null) {
+        final CameraPosition _initialCameraPosition = CameraPosition(
+          //In Future I will change these values to dynamically Change the Initial Camera Position
+          //Based on teh city
+          target: LatLng(activeQuest.quest.startMarker!.lat!,
+              activeQuest.quest.startMarker!.lon!),
+          zoom: 15,
+        );
+        return _initialCameraPosition;
+      } else {
+        // return current user position
+        final CameraPosition _initialCameraPosition = CameraPosition(
+            target: LatLng(_geolocationService.getUserPosition!.latitude,
+                _geolocationService.getUserPosition!.longitude),
+            zoom: 13);
+        return _initialCameraPosition;
+      }
     }
   }
 
@@ -167,18 +175,6 @@ class MapViewModel extends QuestViewModel {
     );
   }
 
-  Future onQuestInListTapped(Quest quest) async {
-    log.i("Quest list item tapped!!!");
-    if (hasActiveQuest == false) {
-      await displayQuestBottomSheet(
-        quest: quest,
-      );
-    } else {
-      _dialogService.showDialog(
-          title: "You Currently Have a Running Quest !!!");
-    }
-  }
-
   @override
   Future handleQrCodeScanEvent(QuestQRCodeScanResult result) async {
     if (result.isEmpty) {
@@ -192,6 +188,12 @@ class MapViewModel extends QuestViewModel {
         description: result.errorMessage!,
       );
     } else {
+      if (!hasActiveQuest && result.quests == null) {
+        await dialogService.showDialog(
+            title:
+                "The scanned marker is not a start of a quest. Please go to the starting point");
+      }
+
       if (result.marker != null) {
         if (hasActiveQuest) {
           log.i("Scanned marker sucessfully collected!");
@@ -199,23 +201,18 @@ class MapViewModel extends QuestViewModel {
           await dialogService.showDialog(
               title: "Successfully collected marker!",
               description: getActiveQuestProgressDescription());
-        } else {
-          await dialogService.showDialog(
-              title:
-                  "The scanned marker is not a start of a quest. Please go to the starting point");
         }
-      } else if (result.quests != null && result.quests!.length > 0) {
+      }
+      if (result.quests != null && result.quests!.length > 0) {
         // TODO: Handle case where more than one quest is returned here!
         // For now, just start first quest!
-        log.i("Found quests associated to the scanned start marker.");
-        await displayQuestBottomSheet(
-          quest: result.quests![0],
-          startMarker: result.quests![0].startMarker,
-        );
-      } else {
-        await dialogService.showDialog(
-            title:
-                "The scanned Marker is not a start of a quest. Please go to the starting point");
+        if (!hasActiveQuest) {
+          log.i("Found quests associated to the scanned start marker.");
+          await displayQuestBottomSheet(
+            quest: result.quests![0],
+            startMarker: result.quests![0].startMarker,
+          );
+        }
       }
     }
   }
@@ -310,36 +307,18 @@ class MapViewModel extends QuestViewModel {
     notifyListeners();
   }
 
-  void loadQuests() async {
-    await questService.loadNearbyQuests();
-    extractStartMarkersAndAddToMap();
-    notifyListeners();
-  }
-
   void extractStartMarkersAndAddToMap() {
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
         log.v("Add start marker of quest with name ${_q.name} to map");
-        AFKMarker _m = _q.startMarker;
-        addMarkerToMap(quest: _q, afkmarker: _m);
+        if (_q.startMarker != null) {
+          AFKMarker _m = _q.startMarker!;
+          addMarkerToMap(quest: _q, afkmarker: _m);
+        }
       }
       _markersTmp = _markersTmp;
     } else {
       log.i('Markers are Empty');
-    }
-  }
-
-  Future displayQuestBottomSheet(
-      {required Quest quest, AFKMarker? startMarker}) async {
-    SheetResponse? sheetResponse = await _bottomSheetService.showCustomSheet(
-        variant: BottomSheetType.questInformation,
-        title: 'Name: ' + quest.name,
-        description: 'Description: ' + quest.description,
-        mainButtonTitle: "Start Quest",
-        secondaryButtonTitle: "Close",
-        data: quest);
-    if (sheetResponse?.confirmed == true) {
-      await startQuest(quest: quest, startFromMap: true);
     }
   }
 

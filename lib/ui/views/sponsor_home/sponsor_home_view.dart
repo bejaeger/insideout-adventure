@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
@@ -35,7 +36,7 @@ class SponsorHomeView extends StatelessWidget {
             verticalSpaceTiny,
             if (model.supportedExplorers.length == 0)
               model.isBusy
-                  ? CircularProgressIndicator()
+                  ? AFKProgressIndicator()
                   : ElevatedButton(
                       onPressed: model.showAddExplorerBottomSheet,
                       child: Text("Support First Explorer -> "),

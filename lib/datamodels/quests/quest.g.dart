@@ -11,10 +11,12 @@ _$_Quest _$$_QuestFromJson(Map<String, dynamic> json) => _$_Quest(
       name: json['name'] as String,
       description: json['description'] as String,
       type: $enumDecode(_$QuestTypeEnumMap, json['type']),
-      startMarker:
-          AFKMarker.fromJson(json['startMarker'] as Map<String, dynamic>),
-      finishMarker:
-          AFKMarker.fromJson(json['finishMarker'] as Map<String, dynamic>),
+      startMarker: json['startMarker'] == null
+          ? null
+          : AFKMarker.fromJson(json['startMarker'] as Map<String, dynamic>),
+      finishMarker: json['finishMarker'] == null
+          ? null
+          : AFKMarker.fromJson(json['finishMarker'] as Map<String, dynamic>),
       markers: (json['markers'] as List<dynamic>)
           .map((e) => AFKMarker.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -24,6 +26,8 @@ _$_Quest _$$_QuestFromJson(Map<String, dynamic> json) => _$_Quest(
           ?.map((e) => e as num)
           .toList(),
       bonusAfkCreditsOnSuccess: json['bonusAfkCreditsOnSuccess'] as num?,
+      distanceToTravelInMeter:
+          (json['distanceToTravelInMeter'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$_QuestToJson(_$_Quest instance) => <String, dynamic>{
@@ -31,13 +35,14 @@ Map<String, dynamic> _$$_QuestToJson(_$_Quest instance) => <String, dynamic>{
       'name': instance.name,
       'description': instance.description,
       'type': _$QuestTypeEnumMap[instance.type],
-      'startMarker': instance.startMarker.toJson(),
-      'finishMarker': instance.finishMarker.toJson(),
+      'startMarker': instance.startMarker?.toJson(),
+      'finishMarker': instance.finishMarker?.toJson(),
       'markers': instance.markers.map((e) => e.toJson()).toList(),
       'afkCredits': instance.afkCredits,
       'networkImagePath': instance.networkImagePath,
       'afkCreditsPerMarker': instance.afkCreditsPerMarker,
       'bonusAfkCreditsOnSuccess': instance.bonusAfkCreditsOnSuccess,
+      'distanceToTravelInMeter': instance.distanceToTravelInMeter,
     };
 
 const _$QuestTypeEnumMap = {

@@ -6,10 +6,12 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
+import '../datamodels/quests/quest.dart';
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/authentication_method.dart';
 import '../enums/bottom_nav_bar_index.dart';
@@ -292,6 +294,7 @@ class StackedRouter extends RouterBase {
           initialBottomNavBarIndex: args.initialBottomNavBarIndex,
           showDialog: args.showDialog,
           questViewIndex: args.questViewIndex,
+          quest: args.quest,
           questType: args.questType,
         ),
         settings: data,
@@ -384,6 +387,7 @@ class BottomBarLayoutTemplateViewArguments {
   final BottomNavBarIndex? initialBottomNavBarIndex;
   final bool showDialog;
   final QuestViewType questViewIndex;
+  final Quest? quest;
   final QuestType? questType;
   BottomBarLayoutTemplateViewArguments(
       {this.key,
@@ -391,5 +395,6 @@ class BottomBarLayoutTemplateViewArguments {
       this.initialBottomNavBarIndex,
       this.showDialog = false,
       this.questViewIndex = QuestViewType.questlist,
+      this.quest,
       this.questType});
 }

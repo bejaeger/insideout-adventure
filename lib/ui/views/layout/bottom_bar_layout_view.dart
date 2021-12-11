@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
@@ -10,7 +11,7 @@ import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
-import 'package:afkcredits/ui/views/single_quest/single_quest_view.dart';
+import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -21,6 +22,7 @@ class BottomBarLayoutTemplateView extends StatefulWidget {
   final bool showDialog;
   final UserRole userRole;
   final QuestViewType questViewIndex;
+  final Quest? quest;
   final QuestType? questType;
 
   const BottomBarLayoutTemplateView(
@@ -29,6 +31,7 @@ class BottomBarLayoutTemplateView extends StatefulWidget {
       this.initialBottomNavBarIndex,
       this.showDialog = false,
       this.questViewIndex = QuestViewType.questlist,
+      this.quest,
       this.questType})
       : super(key: key);
 
@@ -121,9 +124,13 @@ class _BottomBarLayoutTemplateViewState
       if (userRole == UserRole.admin) AdminHomeView(),
       if (userRole == UserRole.explorer) ExplorerHomeView(),
 
-      if (widget.questViewIndex == QuestViewType.questlist) QuestsOverviewView(),
+      if (widget.questViewIndex == QuestViewType.questlist)
+        QuestsOverviewView(),
       if (widget.questViewIndex == QuestViewType.singlequest)
-        SingleQuestView(questType: widget.questType),
+        SingleQuestTypeView(
+          quest: widget.quest,
+          questType: widget.questType,
+        ),
       if (widget.questViewIndex == QuestViewType.map) MapView(),
 
       if (userRole == UserRole.explorer) GiftCardView(),

@@ -7,12 +7,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 List<Quest> getDummyQuests() {
   return [
     getDummyVibrationSearchQuest(),
+    getDummyVibrationSearchQuest2(),
     streeth11th2ndVibration(),
-    // getDummyQuest1(),
-    // // getDummyQuest3(),
-    // getDummyQuest4(),
-    // getDummyQuest2(),
-    // getDummyQuest5(),
+    getDistanceEstimate200(),
+    getDistanceEstimate500(),
+    getDistanceEstimate1000(),
+    getDistanceEstimate2000(),
+    getDummyQuest1(),
+    getDummyQuest3(),
+    getDummyQuest4(),
+    getDummyQuest2(),
+    getDummyQuest5(),
   ];
 }
 
@@ -35,12 +40,64 @@ Quest getDummyQuest1() {
   );
 }
 
+// Distance Estimate
+Quest getDistanceEstimate200() {
+  return Quest(
+    id: "Distance Estimate 200",
+    name: "Distance Estimate 200m",
+    description: "Estimate 200m",
+    afkCredits: 20,
+    markers: [],
+    type: QuestType.DistanceEstimate,
+    distanceToTravelInMeter: 200,
+  );
+}
+
+// Distance Estimate
+Quest getDistanceEstimate500() {
+  return Quest(
+    id: "Distance Estimate 500",
+    name: "Distance Estimate 500m",
+    description: "Estimate 500m",
+    afkCredits: 20,
+    markers: [],
+    type: QuestType.DistanceEstimate,
+    distanceToTravelInMeter: 500,
+  );
+}
+
+// Distance Estimate
+Quest getDistanceEstimate1000() {
+  return Quest(
+    id: "Distance Estimate 1km",
+    name: "Distance Estimate 1km",
+    description: "Estimate 1km",
+    afkCredits: 20,
+    markers: [],
+    type: QuestType.DistanceEstimate,
+    distanceToTravelInMeter: 1000,
+  );
+}
+
+// Distance Estimate
+Quest getDistanceEstimate2000() {
+  return Quest(
+    id: "Distance Estimate 2km",
+    name: "Distance Estimate 2km",
+    description: "Estimate 2km",
+    afkCredits: 999999999,
+    markers: [],
+    type: QuestType.DistanceEstimate,
+    distanceToTravelInMeter: 2000,
+  );
+}
+
 // burnaby quest
 Quest getDummyVibrationSearchQuest() {
   return Quest(
     id: "VibrationSearch",
     name: "Woodway Vibrations",
-    description: "Listen to the vibrations",
+    description: "Find the AFK Credits",
     afkCredits: 10,
     markers: [
       woodwayInFrontMarker(),
@@ -53,11 +110,28 @@ Quest getDummyVibrationSearchQuest() {
 }
 
 // burnaby quest
+Quest getDummyVibrationSearchQuest2() {
+  return Quest(
+    id: "VibrationSearch 2",
+    name: "Woodway Vibrations Nr. 2",
+    description: "Find the AFK Credits",
+    afkCredits: 10,
+    markers: [
+      intimateWoodwayMarker7(),
+      intimateWoodwayMarker3(),
+    ],
+    type: QuestType.VibrationSearch,
+    startMarker: intimateWoodwayMarker7(),
+    finishMarker: intimateWoodwayMarker3(),
+  );
+}
+
+// burnaby quest
 Quest streeth11th2ndVibration() {
   return Quest(
       id: "VibrationSearch at 11th and 2nd",
       name: "Vibrations will guide you the way!",
-      description: "Listen to the vibrations",
+      description: "Find the AFK Credits",
       afkCredits: 10,
       markers: [street11th2nd(), street11th2ndEnd()],
       type: QuestType.VibrationSearch,
@@ -280,6 +354,15 @@ AFKMarker woodwayMarker6() {
     qrCodeId: "woodway6",
     lat: 49.266695,
     lon: -123.006713,
+  );
+}
+
+AFKMarker intimateWoodwayMarker7() {
+  return AFKMarker(
+    id: "intimateWoodwayMarker7",
+    qrCodeId: "intimateWoodwayMarker7",
+    lat: 49.26703644791169,
+    lon: -122.99101625330354,
   );
 }
 

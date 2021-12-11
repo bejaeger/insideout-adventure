@@ -1,10 +1,10 @@
+import 'dart:async';
+
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/places/places.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:location/location.dart' as loc;
@@ -12,36 +12,64 @@ import 'package:location/location.dart' as loc;
 class GeolocationService {
   final log = getLogger('GeolocationService');
   final _firestoreApi = locator<FirestoreApi>();
+  StreamSubscription? _currentPositionStreamSubscription;
 
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   dynamic _position;
 
   Position? get getUserPosition => _position;
+  double? currentGPSAccuracy;
+  String? gpsAccuracyInfo;
 
-  Future getAndSetCurrentLocation() async {
+  void listenToPosition(
+      {int distanceFilter = kMinDistanceFromLastCheckInMeters}) {
+    if (_currentPositionStreamSubscription == null) {
+      // TODO: Provide proper error message to user in case of
+      // denied permission, no access to gps, ...
+      _currentPositionStreamSubscription = Geolocator.getPositionStream(
+              desiredAccuracy: LocationAccuracy.best,
+              distanceFilter: distanceFilter)
+          .listen((position) {
+        log.v("New position event fired, accuracy: ${position.accuracy}");
+        _position = position;
+      });
+    }
+  }
+
+  Future<dynamic> getAndSetCurrentLocation() async {
     //Verify If location is available on device.
     final checkGeolocation = await checkGeolocationAvailable();
 
     if (checkGeolocation == true) {
       try {
-        if (!kIsWeb) {
-          _position = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.best);
+        // if (!kIsWeb) {
+        final geolocatorPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best,
+        );
+        currentGPSAccuracy = geolocatorPosition.accuracy;
+        if (currentGPSAccuracy != null &&
+            currentGPSAccuracy! > kThresholdGPSAccuracyToShowInfo) {
+          gpsAccuracyInfo = "Low GPS Accuracy";
         } else {
-          final loc.Location location = new loc.Location();
-          _position = await location.getLocation();
+          gpsAccuracyInfo = null;
         }
+        _position = geolocatorPosition;
+        return geolocatorPosition;
+        // } else {
+        // final loc.Location location = new loc.Location();
+        // _position = await location.getLocation();
+        // }
+        // if (_position != null) {
+        //   log.v("Getting last known position instead");
+        //   final lastPosition = await Geolocator.getLastKnownPosition();
+        //   return lastPosition;
+        //   //return _position;
+        // } else {
+        //   _position = Geolocator.getCurrentPosition(
+        //       desiredAccuracy: LocationAccuracy.best);
+        //   return _position;
+        // }
 
-        // log.v('Harguilar Current Position $_position');
-        if (_position != null) {
-          final lastPosition = await Geolocator.getLastKnownPosition();
-          // log.v('This is Harguilar Last Location $lastPosition');
-          return lastPosition;
-          //return _position;
-        } else {
-          _position = Geolocator.getCurrentPosition();
-          return _position;
-        }
       } catch (error) {
         log.e("Error when reading geolocation.");
         throw GeolocationServiceException(
@@ -75,6 +103,8 @@ class GeolocationService {
     return isGeolocationAvailable;
   }
 
+  // @ https://pub.dev/packages/geolocator
+  // The geolocator will automatically try to request permissions when you try to acquire a location through the getCurrentPosition or getPositionStream methods.
   Future<bool> handlePermission() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -152,5 +182,16 @@ class GeolocationService {
     double distanceInMeters =
         Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
     return distanceInMeters;
+  }
+
+  void cancelPositionListener() {
+    _currentPositionStreamSubscription?.cancel();
+    _currentPositionStreamSubscription = null;
+  }
+
+  void clearData() {
+    _position = null;
+    currentGPSAccuracy = null;
+    cancelPositionListener();
   }
 }

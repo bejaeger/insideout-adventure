@@ -13,13 +13,14 @@ class Quest with _$Quest {
     required String name,
     required String description,
     required QuestType type,
-    required AFKMarker startMarker,
-    required AFKMarker finishMarker,
+    AFKMarker? startMarker,
+    AFKMarker? finishMarker,
     required List<AFKMarker> markers,
     required num afkCredits,
     String? networkImagePath,
     List<num>? afkCreditsPerMarker,
     num? bonusAfkCreditsOnSuccess,
+    double? distanceToTravelInMeter, // for distance estimate
   }) = _Quest;
 
   factory Quest.fromJson(Map<String, dynamic> json) => _$QuestFromJson(json);

@@ -42,59 +42,68 @@ class ActivatedQuestPanel extends StatelessWidget {
                 children: [
                   SizedBox(height: height),
                   Expanded(
-                    child: Stack(
-                      children: [
-                        Column(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: model.navigateToRelevantActiveQuestView,
-                              ),
+                    child: GestureDetector(
+                      onTap: model.navigateToRelevantActiveQuestView,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      horizontalSpaceMedium,
+                                      Icon(Icons.explore,
+                                          color: Colors.grey[50]),
+                                      horizontalSpaceTiny,
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            ActiveQuestInfoTex(
+                                                text: model
+                                                    .lastActivatedQuestInfoText),
+                                            if (model.gpsAccuracyInfo != null)
+                                              Text(model.gpsAccuracyInfo!,
+                                                  style: TextStyle(
+                                                      color: kWhiteTextColor))
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      model.isBusy
+                                          ? CircularProgressIndicator(
+                                              color: Colors.white)
+                                          : SmallButton(
+                                              title: "Finish Quest",
+                                              onPressed: model.isBusy
+                                                  ? () => null
+                                                  : () async => await model
+                                                      .checkQuestAndFinishWhenCompleted()),
+                                      // horizontalSpaceMedium,
+                                      // SmallButton(
+                                      //     title: "Complete Quest",
+                                      //     onPressed: model.finishQuest),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    horizontalSpaceMedium,
-                                    Icon(Icons.explore, color: Colors.grey[50]),
-                                    Expanded(
-                                      child: ActiveQuestInfoTex(
-                                          text:
-                                              model.lastActivatedQuestInfoText),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    model.isBusy
-                                        ? CircularProgressIndicator(
-                                            color: Colors.white)
-                                        : SmallButton(
-                                            title: "Finish Quest",
-                                            onPressed: model.isBusy
-                                                ? () => null
-                                                : () async => await model
-                                                    .checkQuestAndFinishWhenCompleted()),
-                                    // horizontalSpaceMedium,
-                                    // SmallButton(
-                                    //     title: "Complete Quest",
-                                    //     onPressed: model.finishQuest),
-                                  ],
-                                ),
-                              ),
-                            ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -142,7 +151,7 @@ class SmallButton extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(12.0)),
             color: kColorActivatedQuest.withOpacity(0.5),
           ),
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(15.0),
           child: Text(title,
               style: TextStyle(color: Colors.grey[50], fontSize: 16))),
     );

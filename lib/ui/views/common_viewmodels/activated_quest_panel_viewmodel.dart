@@ -33,7 +33,7 @@ class ActivatedQuestPanelViewModel extends QuestViewModel {
       arguments: BottomBarLayoutTemplateViewArguments(
         userRole: currentUser.role,
         questViewIndex: questViewIndex,
-        initialBottomNavBarIndex: BottomNavBarIndex.map,
+        initialBottomNavBarIndex: BottomNavBarIndex.quest,
         questType: activeQuest.quest.type,
       ),
     );

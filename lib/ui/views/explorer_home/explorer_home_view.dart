@@ -3,6 +3,7 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
@@ -28,7 +29,7 @@ class ExplorerHomeView extends StatelessWidget {
             title: "Hi Explorer ${model.name}!",
           ),
           body: model.isBusy
-              ? CircularProgressIndicator()
+              ? AFKProgressIndicator()
               : Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: kHorizontalPadding),
@@ -65,14 +66,14 @@ class ExplorerHomeView extends StatelessWidget {
                         //child: Text("Go to explorer home/map")),
                         child: Text("Logout  "),
                       ),
-          verticalSpaceMedium,
+                      verticalSpaceMedium,
                       if (model.currentUser.createdByUserWithId != null)
-                                            ElevatedButton(
-                        // onPressed: model.navigateToExplorerHomeView,
-                        onPressed: model.handleSwitchToSponsorEvent,
-                        //child: Text("Go to explorer home/map")),
-                        child: Text("Switch To Sponsor  "),
-                      ),
+                        ElevatedButton(
+                          // onPressed: model.navigateToExplorerHomeView,
+                          onPressed: model.handleSwitchToSponsorEvent,
+                          //child: Text("Go to explorer home/map")),
+                          child: Text("Switch To Sponsor  "),
+                        ),
                       verticalSpaceLarge,
                     ],
                   ),
@@ -99,6 +100,7 @@ class ExplorerCreditStats extends StatelessWidget {
               child: StatsCard(
                   height: 80,
                   statistic:
+                      // availableSponsoring IN CENTS!!!!!!
                       formatAfkCreditsFromCents(userStats.availableSponsoring),
                   subtitle: kCreditsToEarnDescription),
             ),

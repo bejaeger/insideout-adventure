@@ -9,7 +9,7 @@ class FlavorConfigProvider {
   // We should add a "test" flavor!
 
   bool allowDummyMarkerCollection = true;
-  bool enableGPSVerification = false;
+  bool enableGPSVerification = true;
 
   // if true the dummy quests configued in dummy_data.dart
   // are going to be pushed to firestore and are also the ones
@@ -30,7 +30,7 @@ class FlavorConfigProvider {
       case Flavor.dev:
         return "AFK Credits - Dev";
       case Flavor.prod:
-        return "AFK Credits - Proto v1";
+        return "AFK Credits - Proto v2";
       default:
         return "AFK Credits - Dev";
     }

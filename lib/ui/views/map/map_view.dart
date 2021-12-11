@@ -1,15 +1,16 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/ui/views/active_quest/active_quest_view.dart';
-import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/views/active_quest_map/active_quest_view.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
+import 'package:afkcredits/ui/widgets/quest_info_card.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
-import 'map_viewmodel.dart';
+import '../common_viewmodels/map_viewmodel.dart';
 
 class MapView extends StatelessWidget {
   const MapView({Key? key}) : super(key: key);
@@ -18,9 +19,14 @@ class MapView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MapViewModel>.reactive(
       //  onModelReady: (model) => model.createMarkers(),
-      onModelReady: (model) => model.initialize(),
+      onModelReady: (model) {
+        //SchedulerBinding.instance?.addPostFrameCallback((timeStamp) async {
+        model.initialize();
+        //});
+        return;
+      },
       builder: (context, model, child) => model.hasActiveQuest
-          ? ActiveQuestView()
+          ? ActiveQuestMapView()
           : Scaffold(
               appBar: AppBar(
                 title: Text("Map Games"),
@@ -46,16 +52,16 @@ class MapView extends StatelessWidget {
               floatingActionButton: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  MyFloatingActionButton(
-                    onPressed: model.toggleIndex,
-                    icon: Icon(
-                        model.currentIndex == 0
-                            ? Icons.list_rounded
-                            : Icons.map_rounded,
-                        size: 30,
-                        color: Colors.white),
-                  ),
-                  verticalSpaceSmall,
+                  // MyFloatingActionButton(
+                  //   onPressed: model.toggleIndex,
+                  //   icon: Icon(
+                  //       model.currentIndex == 0
+                  //           ? Icons.list_rounded
+                  //           : Icons.map_rounded,
+                  //       size: 30,
+                  //       color: Colors.white),
+                  // ),
+                  // verticalSpaceSmall,
                   MyFloatingActionButton(
                       onPressed: model.initialCameraPosition() == null
                           ? () async => null
@@ -66,7 +72,7 @@ class MapView extends StatelessWidget {
                                           model.getDirectionInfo!.bounds, 100.0)
                                       : CameraUpdate.newCameraPosition(
                                           model.initialCameraPosition()));
-                              await model.scanQrCodeWithActiveQuest();
+                              await model.scanQrCode();
                             },
                       icon: const Icon(Icons.qr_code_scanner_rounded,
                           size: 30, color: Colors.white)),
@@ -126,7 +132,7 @@ class GoogleMapsScreen extends StatelessWidget {
                     color: Colors.red,
                     width: 5,
                     points: model.getDirectionInfo!.polylinePoints
-                        .map((e) => LatLng(e.latitude, e.longitude))
+                        .quest((e) => LatLng(e.latitude, e.longitude))
                         .toList(),
                   ),
               },
@@ -189,10 +195,10 @@ class QuestListScreen extends StatelessWidget {
         : CircularProgressIndicator();
   }
 
-  List<QuestCard> getListOfQuestCards(List<Quest> quests) {
-    List<QuestCard> questCards = [];
+  List<QuestInfoCard> getListOfQuestCards(List<Quest> quests) {
+    List<QuestInfoCard> questCards = [];
     quests.forEach((quest) {
-      QuestCard questCard = QuestCard(
+      QuestInfoCard questCard = QuestInfoCard(
           height: 140,
           quest: quest,
           subtitle: quest.description,
@@ -200,56 +206,5 @@ class QuestListScreen extends StatelessWidget {
       questCards.add(questCard);
     });
     return questCards;
-  }
-}
-
-class QuestCard extends StatelessWidget {
-  final double height;
-  final Quest quest;
-  final String? sponsoringSentence;
-  final String? subtitle;
-
-  final void Function() onCardPressed;
-  const QuestCard(
-      {Key? key,
-      required this.height,
-      required this.quest,
-      this.subtitle,
-      required this.onCardPressed,
-      this.sponsoringSentence})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onCardPressed,
-      child: Card(
-        margin: const EdgeInsets.symmetric(
-            vertical: 10.0, horizontal: kHorizontalPadding),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25.0),
-        ),
-        elevation: 4,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-              height: height,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(quest.name, style: textTheme(context).headline4),
-                  if (subtitle != null)
-                    Text(subtitle!,
-                        style: textTheme(context)
-                            .bodyText2!
-                            .copyWith(fontSize: 18)),
-                  Text("Credits to earns: " + quest.afkCredits.toString()),
-                  Text("Type: " + describeEnum(quest.type).toString()),
-                  if (sponsoringSentence != null) Text(sponsoringSentence!),
-                ],
-              )),
-        ),
-      ),
-    );
   }
 }

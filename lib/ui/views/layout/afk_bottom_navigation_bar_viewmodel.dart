@@ -6,11 +6,12 @@ import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.
 /////////////////////////////////
 /// ! DEPRECATED!!!!!
 
-class AFKBottomNavigationBarViewModel extends CustomBottomBarLayoutTemplateViewModel {
+class AFKBottomNavigationBarViewModel
+    extends CustomBottomBarLayoutTemplateViewModel {
   BottomNavBarIndex _currentIndex = BottomNavBarIndex.home;
 
   bool get isOnHome => _currentIndex == BottomNavBarIndex.home;
-  bool get isOnMap => _currentIndex == BottomNavBarIndex.map;
+  bool get isOnMap => _currentIndex == BottomNavBarIndex.quest;
   bool get isOnGift => _currentIndex == BottomNavBarIndex.giftcard;
 
   void onHomePressed() {
@@ -29,11 +30,11 @@ class AFKBottomNavigationBarViewModel extends CustomBottomBarLayoutTemplateViewM
     //navigationService.clearStackAndShow(Routes.mapScreen);
     if (questService.hasActiveQuest == false) {
       navigationService.clearStackAndShow(Routes.mapView);
-      _currentIndex = BottomNavBarIndex.map;
+      _currentIndex = BottomNavBarIndex.quest;
     } else {
       // this is not functional, would need to add activeQuestView here most likely
       navigationService.clearStackAndShow(Routes.mapView);
-      _currentIndex = BottomNavBarIndex.map;
+      _currentIndex = BottomNavBarIndex.quest;
     }
     notifyListeners();
   }
