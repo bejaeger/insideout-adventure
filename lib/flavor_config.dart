@@ -37,12 +37,23 @@ class FlavorConfigProvider {
   }
 
   String getTestUserEmail(UserRole? role) {
-    if (role == null) return "";
+    /* if (role == null) return "";
     if (role == UserRole.explorer) {
       return "test@gmail.com";
     }
     if (role == UserRole.sponsor) {
       return "test2@gmail.com";
+    } else {
+      return "";
+    } */
+
+    if (role == UserRole.explorer) {
+      return "test@gmail.com";
+    } else 
+    if (role == UserRole.sponsor) {
+      return "test2@gmail.com";
+    } else if (role == UserRole.admin) {
+      return "admin@gmail.com";
     } else {
       return "";
     }
@@ -53,7 +64,7 @@ class FlavorConfigProvider {
   }
 
   String getTestUserId(UserRole role) {
-    if (this.flavor == Flavor.prod) {
+    /* if (this.flavor == Flavor.prod) {
       return "";
     } else {
       if (role == UserRole.explorer) {
@@ -61,6 +72,19 @@ class FlavorConfigProvider {
       }
       if (role == UserRole.sponsor) {
         return "N3INiSGUOvXsinbbyKZhFvq3AbW2";
+      } else {
+        return "";
+      }
+    } */
+    if (this.flavor == Flavor.prod) {
+      return "";
+    } else {
+      if (role == UserRole.explorer) {
+        return "anLaRoIZCXU0TgZYTmp1AVnRhnD3";
+      } else if (role == UserRole.sponsor) {
+        return "N3INiSGUOvXsinbbyKZhFvq3AbW2";
+      } else if (role == UserRole.admin) {
+        return "jnLaRoIYCXU0CgZYFmp1AVnHGBD4";
       } else {
         return "";
       }

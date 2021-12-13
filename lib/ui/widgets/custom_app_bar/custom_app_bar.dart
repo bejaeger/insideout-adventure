@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final String title;
-  CustomAppBar({Key? key, this.height = 80, required this.title})
+  CustomAppBar({Key? key, this.height = kAppBarExtendedHeight, required this.title})
       : super(key: key);
 
   double get getHeight => height;

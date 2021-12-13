@@ -5,7 +5,8 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui.dart';
-import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
+import 'package:afkcredits/ui/views/layout/custom_bottom_bar_layout_template_view.dart';
+import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -54,27 +55,40 @@ class MyApp extends StatelessWidget {
           ConnectivityService().connectionStatusController.stream,
       initialData: ConnectivityType.Offline,
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: kAppName,
-        theme: ThemeData(
-          elevatedButtonTheme:
-              ElevatedButtonThemeData(style: getRaisedButtonStyle()),
-          primaryColor: kPrimaryColor,
-          primaryIconTheme: IconThemeData(color: Colors.white),
-          primaryTextTheme: TextTheme(
-            headline6: TextStyle(
-                // color of app bar title
-                fontSize: 22,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-                height: 1.3),
-          ),
-        ),
-        navigatorKey: StackedService.navigatorKey,
-        onGenerateRoute: StackedRouter().onGenerateRoute,
-        //home: StartUpView()
-        builder: (context, child) => LayoutTemplateView(childView: child!),
+          debugShowCheckedModeBanner: false,
+          title: kAppName,
+          theme: ThemeData(
+            elevatedButtonTheme:
+                ElevatedButtonThemeData(style: getRaisedButtonStyle()),
+            primaryColor: kPrimaryColor,
+            appBarTheme: AppBarTheme(
+              
+              shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        bottom: Radius.circular(16),
       ),
+    ),
+                color: kPrimaryColor, elevation: 5, toolbarHeight: 80, centerTitle: true),
+            primaryIconTheme: IconThemeData(color: Colors.white),
+            primaryTextTheme: TextTheme(
+              headline6: TextStyle(
+                  // color of app bar title
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  height: 1.3),
+            ),
+          ),
+          navigatorKey: StackedService.navigatorKey,
+          onGenerateRoute: StackedRouter().onGenerateRoute,
+
+          ///////////////////////////
+          /// Use the following with the AFK Custom bottom nav bar
+          // builder: (context, child) => LayoutTemplateView(childView: child!),
+
+          /////////////////////////////
+          /// Use this when persistent nav bar is used
+          home: StartUpView()),
     );
   }
 }

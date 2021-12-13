@@ -75,6 +75,8 @@ class FirestoreApi {
     try {
       final _docRef = getMarkersDocs(markerId: markers.id);
       if (_docRef != null) {
+        log.i("Document Reference: " + _docRef.toString());
+        log.i("Marker ID: " + markers.id);
         await _docRef.set(markers.toJson());
         log.v('Favourite Places document added to ${_docRef.path}' + '\n');
         log.v('Your Document Reference is: ${_docRef.toString()}');

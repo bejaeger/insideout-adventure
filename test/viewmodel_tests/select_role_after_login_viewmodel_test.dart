@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,7 +8,8 @@ import 'package:mockito/mockito.dart';
 import '../test_data/test_datamodels.dart';
 import '../helpers/test_helpers.dart';
 
-SelectRoleAfterLoginViewModel _getModel() => SelectRoleAfterLoginViewModel();
+SelectRoleAfterLoginViewModel _getModel() =>
+    SelectRoleAfterLoginViewModel(authMethod: AuthenticationMethod.dummy);
 
 void main() {
   group('SelectRoleAfterLoginViewmodelTest -', () {
@@ -29,7 +31,9 @@ void main() {
         verify(
             service.createUserAccountFromFirebaseUser(role: UserRole.sponsor));
         verify(service.syncUserAccount());
-        verify(navService.replaceWith(Routes.sponsorHomeView));
+        verify(navService.replaceWith(Routes.bottomBarLayoutTemplateView,
+            arguments: BottomBarLayoutTemplateViewArguments(
+                userRole: UserRole.sponsor)));
       });
     });
 
@@ -48,7 +52,9 @@ void main() {
         verify(
             service.createUserAccountFromFirebaseUser(role: UserRole.explorer));
         verify(service.syncUserAccount());
-        verify(navService.replaceWith(Routes.explorerHomeView));
+        verify(await navService.replaceWith(Routes.bottomBarLayoutTemplateView,
+            arguments: BottomBarLayoutTemplateViewArguments(
+                userRole: UserRole.explorer)));
       });
     });
   });

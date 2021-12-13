@@ -16,6 +16,8 @@ class AuthenticationLayout extends StatelessWidget {
   final void Function()? onBackPressed;
   final void Function()? onDummyLoginExplorerTapped;
   final void Function()? onDummyLoginSponsorTapped;
+  final void Function()? onDummyLoginAdminTapped;
+
   final void Function()? onGoogleButtonTapped;
   final void Function()? onAppleButtonTapped;
   final String? validationMessage;
@@ -38,6 +40,7 @@ class AuthenticationLayout extends StatelessWidget {
     this.onGoogleButtonTapped,
     this.onAppleButtonTapped,
     this.releaseName,
+    this.onDummyLoginAdminTapped,
     this.onDummyLoginExplorerTapped,
     this.onDummyLoginSponsorTapped,
     this.googleText,
@@ -184,6 +187,37 @@ class AuthenticationLayout extends StatelessWidget {
                         ),
                       ),
                     ),
+                ],
+              ),
+            if (onDummyLoginAdminTapped != null) verticalSpaceMedium,
+            if (onDummyLoginAdminTapped != null)
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: onDummyLoginAdminTapped,
+                      child: Container(
+                        height: 40,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: busy
+                            ? CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.white),
+                              )
+                            : Text(
+                                "LOGIN AS TEST ADMIN",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),
+                              ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             verticalSpaceMedium,

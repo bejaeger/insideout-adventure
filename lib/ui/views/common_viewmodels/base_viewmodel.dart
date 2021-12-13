@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
@@ -26,6 +27,7 @@ class BaseModel extends BaseViewModel {
   final SnackbarService snackbarService = locator<SnackbarService>();
   final QuestService questService = locator<QuestService>();
   final DialogService dialogService = locator<DialogService>();
+  final BottomSheetService bottomSheetService = locator<BottomSheetService>();
   final TransfersHistoryService transfersHistoryService =
       locator<TransfersHistoryService>();
   final LayoutService layoutService = locator<LayoutService>();
@@ -36,7 +38,7 @@ class BaseModel extends BaseViewModel {
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get userIsAdmin => currentUser.role == UserRole.admin;
 
-  final log = getLogger("BaseModel");
+  final baseModelLog = getLogger("BaseModel");
   bool get hasActiveQuest => questService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => questService.activatedQuest!;
@@ -79,13 +81,17 @@ class BaseModel extends BaseViewModel {
     );
   }
 
-  Future logout() async {
-    // TODO: Check that there is no active quest present!
+  Future clearServiceData({bool logOutFromFirebase = true}) async {
     questService.clearData();
     _giftCardService.clearData();
-    await userService.handleLogoutEvent();
+    await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
-    layoutService.setShowBottomNavBar(false);
+    //layoutService.setShowBottomNavBar(false);
+  }
+
+  Future logout() async {
+    // TODO: Check that there is no active quest present!
+    clearServiceData();
     navigationService.clearStackAndShow(Routes.loginView);
   }
 
@@ -93,7 +99,7 @@ class BaseModel extends BaseViewModel {
     if (show == true) {
       await Future.delayed(Duration(milliseconds: 150));
     }
-    layoutService.setShowBottomNavBar(show);
+    //layoutService.setShowBottomNavBar(show);
   }
 
   Future startQuest({required Quest quest}) async {
@@ -103,15 +109,15 @@ class BaseModel extends BaseViewModel {
       /// Quest.
       final isQuestStarted =
           await questService.startQuest(quest: quest, uids: [currentUser.uid]);
+
+      // this will also change the MapViewModel to show the ActiveQuestView
       if (isQuestStarted is String) {
         await dialogService.showDialog(
             title: "Sorry could not start the quest",
             description: isQuestStarted);
-      } else {
-        navigationService.replaceWith(Routes.activeQuestView);
       }
     } catch (e) {
-      log.e("Could not start quest, error thrown: $e");
+      baseModelLog.e("Could not start quest, error thrown: $e");
     }
   }
 
@@ -144,15 +150,30 @@ class BaseModel extends BaseViewModel {
     return adminMode;
   }
 
-  void clearStackAndNavigateToHomeView() {
-    if (currentUser.role == UserRole.sponsor) {
-      navigationService.clearStackAndShow(Routes.sponsorHomeView);
-    } else if (currentUser.role == UserRole.explorer) {
-      navigationService.clearStackAndShow(Routes.explorerHomeView);
-    } else if (currentUser.role == UserRole.admin) {
-      navigationService.clearStackAndShow(Routes.adminHomeView);
-    }
+  Future clearStackAndNavigateToHomeView() async {
+    await navigationService.clearStackAndShow(
+        Routes.bottomBarLayoutTemplateView,
+        arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
+
+  Future replaceWithHomeView() async {
+    await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+        arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+  }
+
+    Future replaceWithMainView({required BottomNavigationBarIndex index}) async {
+    await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+        arguments: BottomBarLayoutTemplateViewArguments(
+            userRole: currentUser.role,
+            initialBottomNavBarIndex: index.index));
+  }
+
+    Future clearStackAndNavigateToMainView({required BottomNavigationBarIndex index}) async {
+    await navigationService.clearStackAndShow(
+        Routes.bottomBarLayoutTemplateView,
+        arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role, initialBottomNavBarIndex: index.index));
+  }
+
 
   Future showGenericInternalErrorDialog() async {
     return await dialogService.showDialog(

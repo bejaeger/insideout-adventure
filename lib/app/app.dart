@@ -17,12 +17,13 @@ import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
-import 'package:afkcredits/ui/views/admin/markers/add_markers_view.dart';
+import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
-import 'package:afkcredits/ui/views/layout/layout_template_view.dart';
+import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
+import 'package:afkcredits/ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
@@ -30,8 +31,8 @@ import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_vi
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
-import 'package:afkcredits/ui/views/quest/active_quest_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
+import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
@@ -59,13 +60,14 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: SingleExplorerView),
     MaterialRoute(page: TransferFundsView),
     MaterialRoute(page: TransfersHistoryView),
-    MaterialRoute(page: LayoutTemplateView),
-    MaterialRoute(page: ActiveQuestView),
+    MaterialRoute(page: CustomBottomBarLayoutTemplateView),
     MaterialRoute(page: QRCodeView),
     MaterialRoute(page: QRCodeViewExample),
     MaterialRoute(page: GiftCardView),
     MaterialRoute(page: PurchasedGiftCardsView),
     MaterialRoute(page: AddMarkersView),
+    MaterialRoute(page: SetPinView),
+    MaterialRoute(page: BottomBarLayoutTemplateView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

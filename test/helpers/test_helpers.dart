@@ -8,6 +8,7 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -52,11 +53,14 @@ final mockFirebaseUser = MockFirebaseUser();
   MockSpec<StopWatchService>(returnNullOnMissingStub: true),
   MockSpec<MarkerService>(returnNullOnMissingStub: true),
   MockSpec<QRCodeService>(returnNullOnMissingStub: true),
+  MockSpec<GiftCardService>(returnNullOnMissingStub: true),
 
   // stacked services registered with get_it
   MockSpec<NavigationService>(returnNullOnMissingStub: true),
   MockSpec<SnackbarService>(returnNullOnMissingStub: true),
   MockSpec<DialogService>(returnNullOnMissingStub: true),
+  MockSpec<BottomSheetService>(returnNullOnMissingStub: true),
+
   MockSpec<FirebaseAuthenticationService>(returnNullOnMissingStub: true),
 ])
 MockUserService getAndRegisterUserService({
@@ -75,7 +79,7 @@ MockUserService getAndRegisterUserService({
   when(service.runLoginLogic(
           method: anyNamed("method"),
           emailOrName: anyNamed("emailOrName"),
-          password: anyNamed("password")))
+          stringPw: anyNamed("password")))
       .thenAnswer((_) async =>
           AFKCreditsAuthenticationResultService.fromLocalStorage(
               uid: kTestUid));
@@ -181,6 +185,20 @@ MockDialogService getAndRegisterDialogService() {
   return service;
 }
 
+MockBottomSheetService getAndRegisterBottomSheetService(
+    {bool confirmed = false}) {
+  _removeRegistrationIfExists<BottomSheetService>();
+  final service = MockBottomSheetService();
+  when(service.showBottomSheet(
+          title: anyNamed("title"),
+          confirmButtonTitle: anyNamed("confirmButtonTitle"),
+          cancelButtonTitle: anyNamed("cancelButtonTitle")))
+      .thenAnswer(
+          (_) async => await Future.value(SheetResponse(confirmed: confirmed)));
+  locator.registerSingleton<BottomSheetService>(service);
+  return service;
+}
+
 MockLocalStorageService getAndRegisterLocalStorageService() {
   _removeRegistrationIfExists<LocalStorageService>();
   final service = MockLocalStorageService();
@@ -266,6 +284,13 @@ MockQRCodeService getAndRegisterQRCodeService({AFKMarker? marker}) {
   return service;
 }
 
+MockGiftCardService getAndRegisterGiftCardService() {
+  _removeRegistrationIfExists<GiftCardService>();
+  final service = MockGiftCardService();
+  locator.registerSingleton<GiftCardService>(service);
+  return service;
+}
+
 void unregisterServices() {
   locator.unregister<UserService>();
   locator.unregister<NavigationService>();
@@ -276,6 +301,7 @@ void unregisterServices() {
   locator.unregister<FlavorConfigProvider>();
   locator.unregister<FirebaseAuthenticationService>();
   locator.unregister<DialogService>();
+  locator.unregister<BottomSheetService>();
   locator.unregister<LocalStorageService>();
   locator.unregister<FlutterSecureStorage>();
   locator.unregister<LayoutService>();
@@ -286,6 +312,7 @@ void unregisterServices() {
   locator.unregister<StopWatchService>();
   locator.unregister<MarkerService>();
   locator.unregister<QRCodeService>();
+  locator.unregister<GiftCardService>();
 }
 
 void registerServices() {
@@ -298,6 +325,7 @@ void registerServices() {
   getAndRegisterPlacesService();
   getAndRegisterFlavorConfigProvider();
   getAndRegisterDialogService();
+  getAndRegisterBottomSheetService();
   getAndRegisterLocalStorageService();
   getAndRegisterFlutterSecureStorage();
   getAndRegisterLayoutService();
@@ -308,6 +336,7 @@ void registerServices() {
   getAndRegisterStopWatchService();
   getAndRegisterMarkerService();
   getAndRegisterQRCodeService();
+  getAndRegisterGiftCardService();
 }
 
 void _removeRegistrationIfExists<T extends Object>() {

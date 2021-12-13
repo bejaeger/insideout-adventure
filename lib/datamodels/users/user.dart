@@ -1,3 +1,4 @@
+import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:afkcredits/exceptions/datamodel_exception.dart';
@@ -26,6 +27,7 @@ class User with _$User {
     required List<String> sponsorIds,
     required List<String> explorerIds,
     required UserRole role,
+    required AuthenticationMethod authMethod,
     @Default(false)
         bool newUser,
     @JsonKey(
@@ -48,6 +50,7 @@ User getEmptyUser() {
     fullName: "",
     email: "",
     role: UserRole.unassigned,
+    authMethod: AuthenticationMethod.dummy,
     sponsorIds: [],
     explorerIds: [],
     newUser: false,

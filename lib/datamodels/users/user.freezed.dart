@@ -28,6 +28,7 @@ class _$UserTearOff {
       required List<String> sponsorIds,
       required List<String> explorerIds,
       required UserRole role,
+      required AuthenticationMethod authMethod,
       bool newUser = false,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
@@ -40,6 +41,7 @@ class _$UserTearOff {
       sponsorIds: sponsorIds,
       explorerIds: explorerIds,
       role: role,
+      authMethod: authMethod,
       newUser: newUser,
       fullNameSearch: fullNameSearch,
       createdByUserWithId: createdByUserWithId,
@@ -63,6 +65,7 @@ mixin _$User {
   List<String> get sponsorIds => throw _privateConstructorUsedError;
   List<String> get explorerIds => throw _privateConstructorUsedError;
   UserRole get role => throw _privateConstructorUsedError;
+  AuthenticationMethod get authMethod => throw _privateConstructorUsedError;
   bool get newUser => throw _privateConstructorUsedError;
   @JsonKey(toJson: User._checkIfKeywordsAreSet)
   List<String>? get fullNameSearch => throw _privateConstructorUsedError;
@@ -85,6 +88,7 @@ abstract class $UserCopyWith<$Res> {
       List<String> sponsorIds,
       List<String> explorerIds,
       UserRole role,
+      AuthenticationMethod authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
@@ -108,6 +112,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? sponsorIds = freezed,
     Object? explorerIds = freezed,
     Object? role = freezed,
+    Object? authMethod = freezed,
     Object? newUser = freezed,
     Object? fullNameSearch = freezed,
     Object? createdByUserWithId = freezed,
@@ -138,6 +143,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as UserRole,
+      authMethod: authMethod == freezed
+          ? _value.authMethod
+          : authMethod // ignore: cast_nullable_to_non_nullable
+              as AuthenticationMethod,
       newUser: newUser == freezed
           ? _value.newUser
           : newUser // ignore: cast_nullable_to_non_nullable
@@ -170,6 +179,7 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       List<String> sponsorIds,
       List<String> explorerIds,
       UserRole role,
+      AuthenticationMethod authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
@@ -194,6 +204,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? sponsorIds = freezed,
     Object? explorerIds = freezed,
     Object? role = freezed,
+    Object? authMethod = freezed,
     Object? newUser = freezed,
     Object? fullNameSearch = freezed,
     Object? createdByUserWithId = freezed,
@@ -224,6 +235,10 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as UserRole,
+      authMethod: authMethod == freezed
+          ? _value.authMethod
+          : authMethod // ignore: cast_nullable_to_non_nullable
+              as AuthenticationMethod,
       newUser: newUser == freezed
           ? _value.newUser
           : newUser // ignore: cast_nullable_to_non_nullable
@@ -255,6 +270,7 @@ class _$_User implements _User {
       required this.sponsorIds,
       required this.explorerIds,
       required this.role,
+      required this.authMethod,
       this.newUser = false,
       @JsonKey(toJson: User._checkIfKeywordsAreSet) this.fullNameSearch,
       this.createdByUserWithId,
@@ -274,6 +290,8 @@ class _$_User implements _User {
   final List<String> explorerIds;
   @override
   final UserRole role;
+  @override
+  final AuthenticationMethod authMethod;
   @JsonKey(defaultValue: false)
   @override
   final bool newUser;
@@ -287,7 +305,7 @@ class _$_User implements _User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password)';
+    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password)';
   }
 
   @override
@@ -309,6 +327,9 @@ class _$_User implements _User {
                     .equals(other.explorerIds, explorerIds)) &&
             (identical(other.role, role) ||
                 const DeepCollectionEquality().equals(other.role, role)) &&
+            (identical(other.authMethod, authMethod) ||
+                const DeepCollectionEquality()
+                    .equals(other.authMethod, authMethod)) &&
             (identical(other.newUser, newUser) ||
                 const DeepCollectionEquality()
                     .equals(other.newUser, newUser)) &&
@@ -332,6 +353,7 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(sponsorIds) ^
       const DeepCollectionEquality().hash(explorerIds) ^
       const DeepCollectionEquality().hash(role) ^
+      const DeepCollectionEquality().hash(authMethod) ^
       const DeepCollectionEquality().hash(newUser) ^
       const DeepCollectionEquality().hash(fullNameSearch) ^
       const DeepCollectionEquality().hash(createdByUserWithId) ^
@@ -356,6 +378,7 @@ abstract class _User implements User {
       required List<String> sponsorIds,
       required List<String> explorerIds,
       required UserRole role,
+      required AuthenticationMethod authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
@@ -376,6 +399,8 @@ abstract class _User implements User {
   List<String> get explorerIds => throw _privateConstructorUsedError;
   @override
   UserRole get role => throw _privateConstructorUsedError;
+  @override
+  AuthenticationMethod get authMethod => throw _privateConstructorUsedError;
   @override
   bool get newUser => throw _privateConstructorUsedError;
   @override

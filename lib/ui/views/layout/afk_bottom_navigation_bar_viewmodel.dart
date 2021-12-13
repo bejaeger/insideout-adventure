@@ -2,7 +2,10 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
 
-class AFKBottomNavigationBarViewModel extends LayoutTemplateViewModel {
+/////////////////////////////////
+/// ! DEPRECATED!!!!!
+
+class AFKBottomNavigationBarViewModel extends CustomBottomBarLayoutTemplateViewModel {
   BottomNavigationBarIndex _currentIndex = BottomNavigationBarIndex.home;
 
   bool get isOnHome => _currentIndex == BottomNavigationBarIndex.home;
@@ -35,7 +38,8 @@ class AFKBottomNavigationBarViewModel extends LayoutTemplateViewModel {
       navigationService.clearStackAndShow(Routes.mapView);
       _currentIndex = BottomNavigationBarIndex.map;
     } else {
-      navigationService.clearStackAndShow(Routes.activeQuestView);
+      // this is not functional, would need to add activeQuestView here most likely
+      navigationService.clearStackAndShow(Routes.mapView);
       _currentIndex = BottomNavigationBarIndex.map;
     }
     notifyListeners();

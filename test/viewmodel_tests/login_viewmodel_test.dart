@@ -23,7 +23,8 @@ void main() {
         when(userService.getUserRole).thenReturn(UserRole.sponsor);
         final model = _getModel();
         await model.saveData(AuthenticationMethod.email);
-        verify(navigationService.replaceWith(Routes.sponsorHomeView));
+                verify(navigationService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.sponsor)));
+
       });
 
       test(
@@ -45,7 +46,7 @@ void main() {
         when(userService.getUserRole).thenReturn(UserRole.explorer);
         final model = _getModel();
         await model.saveData(AuthenticationMethod.email);
-        verify(navigationService.replaceWith(Routes.explorerHomeView));
+        verify(await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.explorer)));
       });
 
       test(

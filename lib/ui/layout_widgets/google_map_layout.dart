@@ -15,6 +15,7 @@ class GoogleMapLayout extends StatelessWidget {
   final void Function()? onForgotPassword;
   final void Function()? onBackPressed;
   final void Function()? onDummyLoginExplorerTapped;
+  final void Function()? onDummyLoginAdminTapped;
   final void Function()? onDummyLoginSponsorTapped;
   final void Function()? onGoogleButtonTapped;
   final void Function()? onAppleButtonTapped;
@@ -39,6 +40,7 @@ class GoogleMapLayout extends StatelessWidget {
     this.onAppleButtonTapped,
     this.releaseName,
     this.onDummyLoginExplorerTapped,
+    this.onDummyLoginAdminTapped,
     this.onDummyLoginSponsorTapped,
     this.googleText,
   }) : super(key: key);
@@ -171,6 +173,32 @@ class GoogleMapLayout extends StatelessWidget {
                       ),
                     ),
                 ],
+              ),
+            if (onDummyLoginAdminTapped != null) verticalSpaceRegular,
+            if (onDummyLoginAdminTapped != null)
+              Expanded(
+                child: GestureDetector(
+                  onTap: onDummyLoginAdminTapped,
+                  child: Container(
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: busy
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                          )
+                        : Text(
+                            "LOGIN AS TEST ADMIN",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14),
+                          ),
+                  ),
+                ),
               ),
             verticalSpaceMedium,
             if (onCreateAccountTapped != null)

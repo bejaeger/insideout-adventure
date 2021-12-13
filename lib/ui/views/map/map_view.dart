@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/ui/views/quest/active_quest_view.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -18,51 +19,54 @@ class MapView extends StatelessWidget {
     return ViewModelBuilder<MapViewModel>.reactive(
       //  onModelReady: (model) => model.createMarkers(),
       onModelReady: (model) => model.initialize(),
-      builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(
-          title: 'AFK TREASURE HUNTS',
-        ),
-        body: IndexedStack(index: model.currentIndex, children: [
-          GoogleMapsScreen(model: model),
-          QuestListScreen(
-            quests: model.nearbyQuests,
-            isBusy: model.isBusy,
-            onCardTapped: model.onQuestInListTapped,
-            switchToMap: model.toggleIndex,
-          ),
-        ]),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            MyFloatingActionButton(
-              onPressed: model.toggleIndex,
-              icon: Icon(
-                  model.currentIndex == 0
-                      ? Icons.list_rounded
-                      : Icons.map_rounded,
-                  size: 30,
-                  color: Colors.white),
+      builder: (context, model, child) => model.hasActiveQuest
+          ? ActiveQuestView()
+          : Scaffold(
+              appBar: CustomAppBar(
+                title: 'AFK TREASURE HUNTS',
+              ),
+              body: IndexedStack(index: model.currentIndex, children: [
+                GoogleMapsScreen(model: model),
+                QuestListScreen(
+                  quests: model.nearbyQuests,
+                  isBusy: model.isBusy,
+                  onCardTapped: model.onQuestInListTapped,
+                  switchToMap: model.toggleIndex,
+                ),
+              ]),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endFloat,
+              floatingActionButton: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  MyFloatingActionButton(
+                    onPressed: model.toggleIndex,
+                    icon: Icon(
+                        model.currentIndex == 0
+                            ? Icons.list_rounded
+                            : Icons.map_rounded,
+                        size: 30,
+                        color: Colors.white),
+                  ),
+                  verticalSpaceSmall,
+                  MyFloatingActionButton(
+                      onPressed: model.initialCameraPosition() == null
+                          ? () async => null
+                          : () async {
+                              model.getGoogleMapController!.animateCamera(
+                                  model.getDirectionInfo != null
+                                      ? CameraUpdate.newLatLngBounds(
+                                          model.getDirectionInfo!.bounds, 100.0)
+                                      : CameraUpdate.newCameraPosition(
+                                          model.initialCameraPosition()!));
+                              await model.scanQrCodeWithActiveQuest();
+                            },
+                      icon: const Icon(Icons.qr_code_scanner_rounded,
+                          size: 30, color: Colors.white)),
+                  verticalSpaceSmall,
+                ],
+              ),
             ),
-            verticalSpaceSmall,
-            MyFloatingActionButton(
-              onPressed: model.initialCameraPosition() == null
-                  ? () async => null
-                  : () async {
-                      model.getGoogleMapController!.animateCamera(
-                          model.getDirectionInfo != null
-                              ? CameraUpdate.newLatLngBounds(
-                                  model.getDirectionInfo!.bounds, 100.0)
-                              : CameraUpdate.newCameraPosition(
-                                  model.initialCameraPosition()!));
-                      await model.scanQrCodeWithActiveQuest();
-                    },
-              icon: const Icon(Icons.qr_code_scanner_rounded,
-                  size: 30, color: Colors.white),
-            ),
-          ],
-        ),
-      ),
       viewModelBuilder: () => MapViewModel(),
     );
   }
@@ -147,36 +151,34 @@ class QuestListScreen extends StatelessWidget {
     return isBusy == false
         ? Container(
             child: ListView(
-              //itemExtent: 120,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: kHorizontalPadding),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'List of Quests',
+            //itemExtent: 120,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: kHorizontalPadding),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'List of Quests',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
+                    TextButton(
+                      onPressed: switchToMap,
+                      child: Text(
+                        'Back to Map',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 20.0, color: kDarkTurquoise),
                       ),
-                      TextButton(
-                        onPressed: switchToMap,
-                        child: Text(
-                          'Back to Map',
-                          textAlign: TextAlign.center,
-                          style:
-                              TextStyle(fontSize: 20.0, color: kDarkTurquoise),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                ...getListOfQuestCards(quests)
-              ],
-            ),
-          )
+              ),
+              ...getListOfQuestCards(quests)
+            ],
+          ))
         : CircularProgressIndicator();
   }
 
@@ -224,22 +226,21 @@ class QuestCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            height: height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(quest.name, style: textTheme(context).headline4),
-                if (subtitle != null)
-                  Text(
-                    subtitle!,
-                    style: textTheme(context).bodyText2!.copyWith(fontSize: 18),
-                  ),
-                Text("Credits to earns: " + quest.afkCredits.toString()),
-                Text("Type: " + describeEnum(quest.type).toString()),
-                if (sponsoringSentence != null) Text(sponsoringSentence!),
-              ],
-            ),
-          ),
+              height: height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(quest.name, style: textTheme(context).headline4),
+                  if (subtitle != null)
+                    Text(subtitle!,
+                        style: textTheme(context)
+                            .bodyText2!
+                            .copyWith(fontSize: 18)),
+                  Text("Credits to earns: " + quest.afkCredits.toString()),
+                  Text("Type: " + describeEnum(quest.type).toString()),
+                  if (sponsoringSentence != null) Text(sponsoringSentence!),
+                ],
+              )),
         ),
       ),
     );

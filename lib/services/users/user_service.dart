@@ -11,6 +11,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
+import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
@@ -44,6 +45,8 @@ class UserService {
   StreamSubscription? _currentUserStreamSubscription;
   StreamSubscription? _currentUserStatsStreamSubscription;
 
+  SponsorReference? sponsorReference;
+
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
 
   UserRole get getUserRole => currentUser.role;
@@ -69,11 +72,12 @@ class UserService {
 
   Future<void> syncUserAccount(
       {String? uid, bool fromLocalStorage = false}) async {
+
+
     final actualUid =
         uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
 
     log.v('Sync user $actualUid');
-
     final userAccount = await _firestoreApi.getUser(uid: actualUid);
 
     if (userAccount != null) {
@@ -84,14 +88,18 @@ class UserService {
         await _localStorageService.saveToDisk(
             key: kLocalStorageUidKey, value: userAccount.uid);
       }
+    } else {
+      log.e("User account with id $actualUid does not exist! Can't sync user");
     }
   }
 
   Future<User> createUserAccountFromFirebaseUser(
-      {required UserRole role}) async {
+      {required UserRole role,
+      required AuthenticationMethod authMethod}) async {
     final user = _firebaseAuthenticationService.firebaseAuth.currentUser!;
     return await createUserAccount(
         user: User(
+      authMethod: authMethod,
       uid: user.uid,
       role: role,
       fullName: user.displayName ?? "",
@@ -143,9 +151,11 @@ class UserService {
   Future<AFKCreditsAuthenticationResultService> runLoginLogic(
       {required AuthenticationMethod method,
       String? emailOrName,
-      String? password,
+      String? stringPw,
+      String? hashedPw,
       UserRole? role}) async {
     if (method == AuthenticationMethod.EmailOrSponsorCreatedExplorer) {
+      log.i("Login with email or sponsor created explorer");
       // check whether account exists with emailOrName as name.
       // In that case we are dealing with an explorer account
       // created by a sponsor in the app. This account does
@@ -153,34 +163,60 @@ class UserService {
       // sponsor account with the createdByUserWithId field.
       // We just return the id of that user here.
       final user = await _firestoreApi.getUserWithName(name: emailOrName);
-      if (user != null) {
-        if (user.password != null &&
-            isMatchingPasswords(hashedPw: user.password, stringPw: password)) {
-          // && password == user.password) {
-          log.i("Found AFK user that was created by a sponsor inside the app");
-          return AFKCreditsAuthenticationResultService.fromLocalStorage(
-              uid: user.uid);
-        } else {
-          log.i(
-              "Found AFK user that was created by a sponsor inside the app but password is not valid!");
-          return Future.value(AFKCreditsAuthenticationResultService.error(
-              errorMessage:
-                  "Password for user with name $emailOrName is not correct."));
-        }
+      if (user == null) {
+        // if no user is present it's probably the first time someone is logging in.
+        // login with standard email flow
+        log.i("User is null, running standard email login logic");
+        return await runLoginLogic(
+            method: AuthenticationMethod.email,
+            emailOrName: emailOrName,
+            stringPw: stringPw,
+            role: role);
       } else {
-        log.i("Login with e-mail");
-        return AFKCreditsAuthenticationResultService
-            .fromFirebaseAuthenticationResult(
-                firebaseAuthenticationResult:
-                    await _firebaseAuthenticationService.loginWithEmail(
-                        email: emailOrName!, password: password!));
+        if (user.createdByUserWithId == null) {
+          // if user is not created by another user we talk about an explorer with an own account
+          // authenticate him with email
+          log.i(
+              "User is NOT created by sponsor, running standard email login logic");
+          return await runLoginLogic(
+              method: AuthenticationMethod.email,
+              emailOrName: user.email,
+              stringPw: stringPw,
+              role: role);
+        } else {
+          // user is created by sponsor
+          if (user.password == null) {
+            // something really bad happened
+            log.wtf(
+                "Should never end up here: This is because no password of explorer was found.");
+            return Future.value(AFKCreditsAuthenticationResultService.error(
+                errorMessage:
+                    "No permissions to login to user with name or email '$emailOrName'."));
+          }
+          if (isMatchingPasswords(
+              hashedPw1: user.password,
+              stringPw2: stringPw,
+              hashedPw2: hashedPw)) {
+            // && password == user.password) {
+            log.i(
+                "Found AFK user that was created by a sponsor inside the app");
+            return AFKCreditsAuthenticationResultService.fromLocalStorage(
+                uid: user.uid);
+          } else {
+            log.i(
+                "Found AFK user that was created by a sponsor inside the app but password is not valid!");
+            return Future.value(AFKCreditsAuthenticationResultService.error(
+                errorMessage:
+                    "Password for user with name $emailOrName is not correct."));
+          }
+        }
       }
     } else if (method == AuthenticationMethod.email) {
       log.i("Login with e-mail");
       return AFKCreditsAuthenticationResultService
           .fromFirebaseAuthenticationResult(
               firebaseAuthenticationResult: await _firebaseAuthenticationService
-                  .loginWithEmail(email: emailOrName!, password: password!));
+                  .loginWithEmail(email: emailOrName!, password: stringPw!));
     } else if (method == AuthenticationMethod.google) {
       log.i("Login with google");
       return AFKCreditsAuthenticationResultService
@@ -231,6 +267,7 @@ class UserService {
         final user = result.user!;
         await createUserAccount(
             user: User(
+          authMethod: method,
           uid: user.uid,
           role: role,
           fullName: fullName ?? (user.displayName ?? ""),
@@ -265,13 +302,16 @@ class UserService {
   }
 
   Future createExplorerAccount(
-      {required String name, required String password}) async {
+      {required String name,
+      required String password,
+      required AuthenticationMethod authMethod}) async {
     if (await isUserAlreadyPresent(name: name)) {
       return "User with name $name already present. Please choose a different name.";
     }
 
     final docRef = _firestoreApi.createUserDocument();
     final newExplorer = User(
+      authMethod: authMethod,
       fullName: name,
       password: hashPassword(password),
       uid: docRef.id,
@@ -439,6 +479,29 @@ class UserService {
     return completer.future;
   }
 
+  Future validateSponsorPin({required String pin}) async {
+    final hashedPin =
+        await _localStorageService.getFromDisk(key: kLocalStorageSponsorPinKey);
+    return isMatchingPasswords(hashedPw1: hashedPin, stringPw2: pin);
+  }
+
+  Future saveSponsorReference(
+      {required String uid,
+      required AuthenticationMethod authMethod,
+      String? pin}) async {
+    if (pin != null) {
+      await _localStorageService.saveToDisk(
+          key: kLocalStorageSponsorPinKey, value: hashPassword(pin));
+    }
+    sponsorReference = SponsorReference(
+        uid: uid, authMethod: authMethod, withPasscode: pin != null);
+  }
+
+  Future clearSponsorReference() async {
+    await _localStorageService.deleteFromDisk(key: kLocalStorageSponsorPinKey);
+    sponsorReference = null;
+  }
+
   //////////////////////////////////////////
   /// Some smaller helper functions
 
@@ -456,10 +519,12 @@ class UserService {
   }
 
   bool isMatchingPasswords(
-      {required String? hashedPw, required String? stringPw}) {
-    if (hashedPw == null || stringPw == null) return false;
-    final hash1 = hashPassword(stringPw);
-    return hash1.compareTo(hashedPw) == 0;
+      {required String? hashedPw1, String? stringPw2, String? hashedPw2}) {
+    if (hashedPw1 == null || (stringPw2 == null && hashedPw2 == null)) {
+      return false;
+    }
+    final hash = hashedPw2 ?? hashPassword(stringPw2!);
+    return hash.compareTo(hashedPw1) == 0;
   }
 
   String hashPassword(String pw) {
@@ -496,7 +561,7 @@ class UserService {
   }
 
   // clear all data when user logs out!
-  Future handleLogoutEvent() async {
+  Future handleLogoutEvent({bool logOutFromFirebase = true}) async {
     if (!kIsWeb) {
       // remove uid from local storage
       await _localStorageService.deleteFromDisk(key: kLocalStorageUidKey);
@@ -521,75 +586,8 @@ class UserService {
     supportedExplorerStats = {};
 
     // actually log out from firebase
-    await _firebaseAuthenticationService.logout();
+    if (logOutFromFirebase) {
+      await _firebaseAuthenticationService.logout();
+    }
   }
 }
-
-/* ////////////////////////////////////////////////////
-/// AFK Credits authentication result
-/// We need this abstraction because we
-/// can have users not authenticated with
-/// firebase authentication (explorer accounts
-/// added from sponsors)
-class AFKCreditsAuthenticationResult {
-  /// AFK Credits user
-  final User? user;
-
-  /// Firebase user
-  final firebase.User? firebaseUser;
-
-  /// Firebase user
-  final String? uid;
-
-  final bool fromLocalStorage;
-
-  /// Firebase user
-  final FirebaseAuthenticationResult? firebaseAuthenticationResult;
-
-  /// Contains the error message for the request
-  final String? errorMessage;
-
-  AFKCreditsAuthenticationResult.authenticatedUser({this.firebaseUser})
-      : errorMessage = null,
-        user = null,
-        fromLocalStorage = false,
-        uid = firebaseUser?.uid,
-        firebaseAuthenticationResult = null;
-
-  AFKCreditsAuthenticationResult.fromFirebaseAuthenticationResult(
-      {this.firebaseAuthenticationResult})
-      : errorMessage = firebaseAuthenticationResult?.errorMessage,
-        firebaseUser = firebaseAuthenticationResult?.user,
-        uid = firebaseAuthenticationResult?.user?.uid,
-        fromLocalStorage = false,
-        user = null;
-
-  AFKCreditsAuthenticationResult.explorerCreatedFromSponsor({this.user})
-      : errorMessage = null,
-        firebaseUser = null,
-        uid = user?.uid,
-        fromLocalStorage = false,
-        firebaseAuthenticationResult = null;
-
-  AFKCreditsAuthenticationResult.fromLocalStorage({this.uid})
-      : errorMessage = null,
-        firebaseUser = null,
-        user = null,
-        fromLocalStorage = true,
-        firebaseAuthenticationResult = null;
-
-  AFKCreditsAuthenticationResult.error({this.errorMessage})
-      : user = null,
-        firebaseUser = null,
-        uid = null,
-        fromLocalStorage = false,
-        firebaseAuthenticationResult = null;
-
-  /// Returns true if the response has an error associated with it
-  bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
-
-  bool get isExplorerCreatedFromSponsor =>
-      (firebaseUser == null && user != null) ||
-      (firebaseUser == null && user == null && uid != null);
-}
- */

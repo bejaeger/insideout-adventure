@@ -15,7 +15,9 @@ class QRCodeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<QRCodeViewModel>.reactive(
         viewModelBuilder: () => QRCodeViewModel(),
-        builder: (context, model, child) => qrCodeString == null
+        builder: (context, model, child) => 
+        Scaffold(
+        body: qrCodeString == null
             ? ScanQRCode(
                 analyzeScanResult: model.analyzeScanResult,
                 onBackPressed: model.popQrCodeView,
@@ -23,7 +25,7 @@ class QRCodeView extends StatelessWidget {
             : ShowQRCode(
                 qrCodeString: qrCodeString!,
                 onBackPressed: model.navigateBack,
-              )
+              )),
         // MyQRCode(userInfo: model.getUserInfo()),
         );
   }

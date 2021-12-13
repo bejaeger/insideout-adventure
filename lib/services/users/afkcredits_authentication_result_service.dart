@@ -1,6 +1,4 @@
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/services/users/user_service.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 

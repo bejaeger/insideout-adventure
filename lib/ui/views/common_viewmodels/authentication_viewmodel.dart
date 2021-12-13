@@ -7,7 +7,6 @@ import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
-import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:stacked/stacked.dart';
@@ -18,7 +17,6 @@ abstract class AuthenticationViewModel extends FormViewModel {
   AuthenticationViewModel({this.role});
   final NavigationService navigationService = locator<NavigationService>();
   final UserService _userService = locator<UserService>();
-  final LayoutService _layoutService = locator<LayoutService>();
 
   final log = getLogger("AuthenticationViewModel");
 
@@ -37,8 +35,10 @@ abstract class AuthenticationViewModel extends FormViewModel {
       log.i("Authentication successful, now initializing user data");
 
       try {
-        await (runBusyFuture(initializeUser(
-            uid: result.uid, fromLocalStorage: result.fromLocalStorage)));
+        await (runBusyFuture(
+          initializeUser(
+              uid: result.uid, fromLocalStorage: result.fromLocalStorage),
+        ));
       } catch (e) {
         log.e("Failed initializing user with error: ${e.toString()}");
         String publicFacingMessage =
@@ -57,7 +57,8 @@ abstract class AuthenticationViewModel extends FormViewModel {
         // navigate to selectUserRoleView to select user role
         log.i(
             "User logged in with third-party provider. Navigate to select role view");
-        navigationService.replaceWith(Routes.selectRoleAfterLoginView);
+        navigationService.replaceWith(Routes.selectRoleAfterLoginView,
+            arguments: SelectRoleAfterLoginViewArguments(authMethod: method));
         return;
       } else {
         // User account found in database
@@ -67,14 +68,17 @@ abstract class AuthenticationViewModel extends FormViewModel {
         // ADD logic to navigate to different views depending on user role!
         // authenticated and initialized -> go to successRoute
 
-        if (role == UserRole.explorer) {
-          navigationService.replaceWith(Routes.explorerHomeView);
-        } else if (role == UserRole.sponsor) {
-          navigationService.replaceWith(Routes.sponsorHomeView);
-        } else if (role == UserRole.admin) {
-          navigationService.replaceWith(Routes.adminHomeView);
-        }
-        _layoutService.setShowBottomNavBar(true);
+        navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+            arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
+        // if (role == UserRole.explorer) {
+        //   navigationService.replaceWith(Routes.explorerHomeView);
+        // } else if (role == UserRole.sponsor) {
+        //   navigationService.replaceWith(Routes.sponsorHomeView);
+        // } else if (role == UserRole.admin) {
+        //   navigationService.replaceWith(Routes.adminHomeView);
+        // }
+
+        //_layoutService.setShowBottomNavBar(true);
       }
     } else {
       log.e(

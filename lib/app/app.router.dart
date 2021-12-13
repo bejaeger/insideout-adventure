@@ -12,24 +12,26 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
 import '../datamodels/users/public_info/public_user_info.dart';
+import '../enums/authentication_method.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
-import '../ui/views/admin/markers/add_markers_view.dart';
+import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
 import '../ui/views/gift_cards/gift_card_view.dart';
-import '../ui/views/layout/layout_template_view.dart';
+import '../ui/views/layout/bottom_bar_layout_view.dart';
+import '../ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_view.dart';
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
-import '../ui/views/quest/active_quest_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
+import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
 import '../ui/views/sponsor_home/sponsor_home_view.dart';
 import '../ui/views/startup/startup_view.dart';
@@ -53,13 +55,16 @@ class Routes {
   static const String singleExplorerView = '/single-explorer-view';
   static const String transferFundsView = '/transfer-funds-view';
   static const String transfersHistoryView = '/transfers-history-view';
-  static const String layoutTemplateView = '/layout-template-view';
-  static const String activeQuestView = '/active-quest-view';
+  static const String customBottomBarLayoutTemplateView =
+      '/custom-bottom-bar-layout-template-view';
   static const String qRCodeView = '/q-rcode-view';
   static const String qRCodeViewExample = '/q-rcode-view-example';
   static const String giftCardView = '/gift-card-view';
   static const String purchasedGiftCardsView = '/purchased-gift-cards-view';
   static const String addMarkersView = '/add-markers-view';
+  static const String setPinView = '/set-pin-view';
+  static const String bottomBarLayoutTemplateView =
+      '/bottom-bar-layout-template-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -75,13 +80,14 @@ class Routes {
     singleExplorerView,
     transferFundsView,
     transfersHistoryView,
-    layoutTemplateView,
-    activeQuestView,
+    customBottomBarLayoutTemplateView,
     qRCodeView,
     qRCodeViewExample,
     giftCardView,
     purchasedGiftCardsView,
     addMarkersView,
+    setPinView,
+    bottomBarLayoutTemplateView,
   };
 }
 
@@ -103,13 +109,16 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.singleExplorerView, page: SingleExplorerView),
     RouteDef(Routes.transferFundsView, page: TransferFundsView),
     RouteDef(Routes.transfersHistoryView, page: TransfersHistoryView),
-    RouteDef(Routes.layoutTemplateView, page: LayoutTemplateView),
-    RouteDef(Routes.activeQuestView, page: ActiveQuestView),
+    RouteDef(Routes.customBottomBarLayoutTemplateView,
+        page: CustomBottomBarLayoutTemplateView),
     RouteDef(Routes.qRCodeView, page: QRCodeView),
     RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
     RouteDef(Routes.giftCardView, page: GiftCardView),
     RouteDef(Routes.purchasedGiftCardsView, page: PurchasedGiftCardsView),
     RouteDef(Routes.addMarkersView, page: AddMarkersView),
+    RouteDef(Routes.setPinView, page: SetPinView),
+    RouteDef(Routes.bottomBarLayoutTemplateView,
+        page: BottomBarLayoutTemplateView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -170,8 +179,12 @@ class StackedRouter extends RouterBase {
       );
     },
     SelectRoleAfterLoginView: (data) {
+      var args = data.getArgs<SelectRoleAfterLoginViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const SelectRoleAfterLoginView(),
+        builder: (context) => SelectRoleAfterLoginView(
+          key: args.key,
+          authMethod: args.authMethod,
+        ),
         settings: data,
       );
     },
@@ -221,19 +234,14 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    LayoutTemplateView: (data) {
-      var args = data.getArgs<LayoutTemplateViewArguments>(nullOk: false);
+    CustomBottomBarLayoutTemplateView: (data) {
+      var args = data.getArgs<CustomBottomBarLayoutTemplateViewArguments>(
+          nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => LayoutTemplateView(
+        builder: (context) => CustomBottomBarLayoutTemplateView(
           key: args.key,
           childView: args.childView,
         ),
-        settings: data,
-      );
-    },
-    ActiveQuestView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const ActiveQuestView(),
         settings: data,
       );
     },
@@ -273,6 +281,29 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    SetPinView: (data) {
+      var args = data.getArgs<SetPinViewArguments>(
+        orElse: () => SetPinViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SetPinView(key: args.key),
+        settings: data,
+      );
+    },
+    BottomBarLayoutTemplateView: (data) {
+      var args =
+          data.getArgs<BottomBarLayoutTemplateViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => BottomBarLayoutTemplateView(
+          key: args.key,
+          userRole: args.userRole,
+          initialBottomNavBarIndex: args.initialBottomNavBarIndex,
+          initialTabBarIndex: args.initialTabBarIndex,
+          showDialog: args.showDialog,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -291,6 +322,13 @@ class CreateAccountViewArguments {
   final Key? key;
   final UserRole role;
   CreateAccountViewArguments({this.key, required this.role});
+}
+
+/// SelectRoleAfterLoginView arguments holder class
+class SelectRoleAfterLoginViewArguments {
+  final Key? key;
+  final AuthenticationMethod authMethod;
+  SelectRoleAfterLoginViewArguments({this.key, required this.authMethod});
 }
 
 /// AddExplorerView arguments holder class
@@ -325,11 +363,12 @@ class TransferFundsViewArguments {
       required this.recipientInfo});
 }
 
-/// LayoutTemplateView arguments holder class
-class LayoutTemplateViewArguments {
+/// CustomBottomBarLayoutTemplateView arguments holder class
+class CustomBottomBarLayoutTemplateViewArguments {
   final Key? key;
   final Widget childView;
-  LayoutTemplateViewArguments({this.key, required this.childView});
+  CustomBottomBarLayoutTemplateViewArguments(
+      {this.key, required this.childView});
 }
 
 /// QRCodeView arguments holder class
@@ -337,4 +376,25 @@ class QRCodeViewArguments {
   final Key? key;
   final String? qrCodeString;
   QRCodeViewArguments({this.key, this.qrCodeString});
+}
+
+/// SetPinView arguments holder class
+class SetPinViewArguments {
+  final Key? key;
+  SetPinViewArguments({this.key});
+}
+
+/// BottomBarLayoutTemplateView arguments holder class
+class BottomBarLayoutTemplateViewArguments {
+  final Key? key;
+  final UserRole userRole;
+  final int? initialBottomNavBarIndex;
+  final int? initialTabBarIndex;
+  final bool showDialog;
+  BottomBarLayoutTemplateViewArguments(
+      {this.key,
+      required this.userRole,
+      this.initialBottomNavBarIndex,
+      this.initialTabBarIndex = 0,
+      this.showDialog = false});
 }

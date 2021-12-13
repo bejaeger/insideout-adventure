@@ -1,14 +1,17 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/app/app.logger.dart';
 
 abstract class QuestViewModel extends BaseModel {
   final _stopWatchService = locator<StopWatchService>();
 
+final log = getLogger("QuestViewModel");
   Future scanQrCodeWithActiveQuest() async {
     QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
     await handleQrCodeScanEvent(result);
@@ -36,7 +39,7 @@ abstract class QuestViewModel extends BaseModel {
         if (e is QuestServiceException) {
           await dialogService.showDialog(
               title: e.prettyDetails, buttonTitle: 'Ok');
-          navigationService.replaceWith(Routes.mapView);
+          replaceWithMainView(index: BottomNavigationBarIndex.map);
           return;
         } else if (e is CloudFunctionsApiException) {
           await dialogService.showDialog(
@@ -59,7 +62,7 @@ abstract class QuestViewModel extends BaseModel {
           await questService.continueIncompleteQuest();
         } else {
           await questService.cancelIncompleteQuest();
-          navigationService.replaceWith(Routes.mapView);
+          replaceWithMainView(index: BottomNavigationBarIndex.map);
           log.i("replaced view with mapView");
         }
       } else {
@@ -82,7 +85,7 @@ abstract class QuestViewModel extends BaseModel {
                 "; New balance: " +
                 currentUserStats.afkCreditsBalance.toString(),
             buttonTitle: 'Ok');
-        navigationService.replaceWith(Routes.mapView);
+        replaceWithMainView(index: BottomNavigationBarIndex.map);
       }
     } catch (e) {
       setBusy(false);
@@ -91,7 +94,7 @@ abstract class QuestViewModel extends BaseModel {
           buttonTitle: 'Ok');
       log.wtf(
           "An error occured when trying to finish the quest. This should never happen! Error: $e");
-      navigationService.replaceWith(Routes.mapView);
+      replaceWithMainView(index: BottomNavigationBarIndex.map);
     }
   }
 }
