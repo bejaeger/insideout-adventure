@@ -25,8 +25,8 @@ class SelectRoleAfterLoginView extends StatelessWidget {
             role: UserRole.explorer),
         onSponsorPressed:
             model.createSponsorAccountAndNavigateToHome(role: UserRole.sponsor),
-        onAdminPressed: model.createSponsorAccountAndNavigateToHome(
-            role: UserRole.adminMaster),
+        /*    onAdminPressed: model.createSponsorAccountAndNavigateToHome(
+            role: UserRole.adminMaster), */
         isBusy: model.isBusy,
       ),
     );

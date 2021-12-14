@@ -11,7 +11,7 @@ import 'package:afkcredits/app/app.logger.dart';
 abstract class QuestViewModel extends BaseModel {
   final _stopWatchService = locator<StopWatchService>();
 
-final log = getLogger("QuestViewModel");
+  final log = getLogger("QuestViewModel");
   Future scanQrCodeWithActiveQuest() async {
     QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
     await handleQrCodeScanEvent(result);
@@ -26,6 +26,18 @@ final log = getLogger("QuestViewModel");
 
   // needs to be overrriden!
   Future handleQrCodeScanEvent(QuestQRCodeScanResult result);
+
+  int get getCurrentIndex => _currentIndex;
+
+  int _currentIndex = 0;
+  void toggleIndex() {
+    if (_currentIndex == 0) {
+      _currentIndex = 1;
+    } else {
+      _currentIndex = 0;
+    }
+    notifyListeners();
+  }
 
   Future checkQuestAndFinishWhenCompleted() async {
     try {

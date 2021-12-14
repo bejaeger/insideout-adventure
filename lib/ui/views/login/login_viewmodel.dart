@@ -33,6 +33,7 @@ class LoginViewModel extends AuthenticationViewModel {
       return () => saveData(AuthenticationMethod.dummy, UserRole.sponsor);
     } else if (_flavorConfigProvider.flavor == Flavor.dev &&
         userRole == UserRole.adminMaster) {
+      //This code needs to be moved accordingly, based on the discussion Ben and I will have.
       return () => createAdminUser(
           userAdmin: UserAdmin(
               id: _flavorConfigProvider.getTestUserId(UserRole.adminMaster),
@@ -65,23 +66,27 @@ class LoginViewModel extends AuthenticationViewModel {
       required String password}) async {
     final result = await _userService.runLoginLogic(
         method: method, emailOrName: email, stringPw: password, role: role);
-    if (!result.hasError) {
+/*     if (!result.hasError) {
       navigateToAdminHomeView();
-    }
+    } */
     return result;
   }
+  //This code needs to be moved accordingly, based on the discussion Ben and I will have.
 
   Future createAdminUser({required UserAdmin userAdmin}) async {
     await _userService.createUserAdminAccount(userAdmin: userAdmin);
-    navigateToAdminHomeView();
+    navigateToAdminHomeView(role: userAdmin.role!);
   }
 
   void navigateToCreateAccount() {
     navigationService.replaceWith(Routes.createAccountUserRoleView);
   }
+  //This code needs to be moved accordingly, based on the discussion Ben and I will have.
 
-  void navigateToAdminHomeView() {
-    navigationService.replaceWith(Routes.homeView);
+  void navigateToAdminHomeView({required UserRole role}) {
+    //navigationService.replaceWith(Routes.homeView);
+    navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+        arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
   }
 
   bool isPwShown = false;

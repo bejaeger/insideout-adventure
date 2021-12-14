@@ -94,7 +94,26 @@ class _BottomBarLayoutTemplateViewState
   }
 
   List<Widget> _buildScreens({required UserRole userRole}) {
-    return [
+    switch (userRole) {
+      case UserRole.sponsor:
+        return [
+          SponsorHomeView(),
+          GiftCardView(),
+        ];
+      case UserRole.explorer:
+        return [
+          ExplorerHomeView(),
+          MapView(),
+          GiftCardView(),
+        ];
+      default:
+        return [
+          HomeView(),
+          AddMarkersView(),
+        ];
+    }
+
+/*     return [
       if (userRole == UserRole.sponsor) SponsorHomeView(),
       //if (userRole == UserRole.admin) AdminHomeView(),
       if (userRole == UserRole.adminMaster) HomeView(), //AddMarkersView(),
@@ -103,10 +122,84 @@ class _BottomBarLayoutTemplateViewState
       if (userRole == UserRole.explorer) GiftCardView(),
       if (userRole == UserRole.adminMaster) AddMarkersView(),
       //MoneyPoolsView(),
-    ];
+    ]; */
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems({required UserRole userRole}) {
+    switch (userRole) {
+      case UserRole.sponsor:
+        return [
+          PersistentBottomNavBarItem(
+            icon: Icon(Icons.home),
+            inactiveIcon: Icon(Icons.home_outlined),
+            //title: ("Home"),
+            iconSize: kBottomNavigationBarIconSize,
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+          PersistentBottomNavBarItem(
+            iconSize: kBottomNavigationBarIconSize,
+            icon: Icon(Icons.card_giftcard),
+            inactiveIcon: Icon(Icons.shop_outlined),
+
+            //title: ("Profile"),
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+        ];
+      case UserRole.explorer:
+        return [
+          PersistentBottomNavBarItem(
+            icon: Icon(Icons.home),
+            inactiveIcon: Icon(Icons.home_outlined),
+            //title: ("Home"),
+            iconSize: kBottomNavigationBarIconSize,
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+          PersistentBottomNavBarItem(
+            icon: Icon(
+              Icons.explore,
+            ),
+            inactiveIcon: Icon(Icons.explore_outlined),
+            iconSize: kBottomNavigationBarIconSize,
+            //title: ("Projects"),
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+          PersistentBottomNavBarItem(
+            iconSize: kBottomNavigationBarIconSize,
+            icon: Icon(Icons.shop),
+            inactiveIcon: Icon(Icons.shop_outlined),
+
+            //title: ("Profile"),
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+        ];
+      default:
+        return [
+          PersistentBottomNavBarItem(
+            icon: Icon(Icons.home),
+            inactiveIcon: Icon(Icons.home_outlined),
+
+            //title: ("Home"),
+            iconSize: kBottomNavigationBarIconSize,
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+          PersistentBottomNavBarItem(
+            icon: Icon(Icons.mark_email_read_outlined),
+            inactiveIcon: Icon(Icons.mark_chat_read),
+
+            //title: ("Home"),
+            iconSize: kBottomNavigationBarIconSize,
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+        ];
+    }
+/* 
     return [
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home),
@@ -147,6 +240,6 @@ class _BottomBarLayoutTemplateViewState
           activeColorPrimary: Colors.white,
           inactiveColorPrimary: Colors.white70,
         ),
-    ];
+    ]; */
   }
 }

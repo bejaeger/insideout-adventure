@@ -14,7 +14,7 @@ class CreateAccountUserRoleView extends StatelessWidget {
         onBackPressed: model.navigateToLoginView,
         onExplorerPressed: model.navigateToExplorerCreateAccount,
         onSponsorPressed: model.navigateToSponsorCreateAccount,
-        onAdminPressed: model.navigateToAdminCreateAccount,
+        //onAdminPressed: model.navigateToAdminCreateAccount,
       ),
     );
   }

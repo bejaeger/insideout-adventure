@@ -4,22 +4,18 @@ import 'package:flutter/material.dart';
 class SelectUserRoleLayout extends StatelessWidget {
   final void Function() onBackPressed;
   final void Function() onExplorerPressed;
-  final void Function() onAdminPressed;
   final void Function() onSponsorPressed;
   final String? explorerButtonTitle;
   final String? sponsorButtonTitle;
-  final String? adminButtonTitle;
   final bool isBusy;
 
   const SelectUserRoleLayout(
       {Key? key,
       required this.onBackPressed,
-      required this.onAdminPressed,
       required this.onExplorerPressed,
       required this.onSponsorPressed,
       this.explorerButtonTitle = "CREATE EXPLORER ACCOUNT",
       this.sponsorButtonTitle = "CREATE SPONSOR ACCOUNT",
-      this.adminButtonTitle = "CREATE SPONSOR ACCOUNT",
       this.isBusy = false})
       : super(key: key);
 
