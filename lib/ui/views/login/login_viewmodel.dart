@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/flavor_config.dart';
@@ -23,7 +24,7 @@ class LoginViewModel extends AuthenticationViewModel {
       locator<FlavorConfigProvider>();
   String get getReleaseName => flavorConfigProvider.appName;
 
-  dynamic userLoginTapped({required UserRole userRole}) async {
+  dynamic userLoginTapped({required UserRole userRole}) {
     if (_flavorConfigProvider.flavor == Flavor.dev &&
         userRole == UserRole.explorer) {
       return () => saveData(AuthenticationMethod.dummy, UserRole.explorer);
@@ -31,43 +32,19 @@ class LoginViewModel extends AuthenticationViewModel {
         userRole == UserRole.sponsor) {
       return () => saveData(AuthenticationMethod.dummy, UserRole.sponsor);
     } else if (_flavorConfigProvider.flavor == Flavor.dev &&
-        userRole == UserRole.admin) {
-      return () => runAdminAuthentication(
-          role: UserRole.admin,
-          email: 'admin@gmailcom',
-          password: 'password',
-          method: AuthenticationMethod.dummy);
-      // return () => saveData(AuthenticationMethod.dummy, UserRole.admin);
+        userRole == UserRole.adminMaster) {
+      return () => createAdminUser(
+          userAdmin: UserAdmin(
+              id: _flavorConfigProvider.getTestUserId(UserRole.adminMaster),
+              role: UserRole.adminMaster,
+              email:
+                  _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster),
+              password: _userService
+                  .hashPassword(_flavorConfigProvider.getTestUserPassword())));
     } else {
       return null;
     }
   }
-
-/*   
-
-dynamic onDummyLoginAdminTapped() {
-    if (_flavorConfigProvider.flavor == Flavor.dev) {
-      //return () => saveData(AuthenticationMethod.dummy, UserRole.admin);
-    } else {
-      return null;
-    }
-  }
-
-dynamic onDummyLoginExplorerTapped() {
-    if (_flavorConfigProvider.flavor == Flavor.dev) {
-      //return () => saveData(AuthenticationMethod.dummy, UserRole.explorer);
-    } else {
-      return null;
-    }
-  }
-
-  dynamic onDummyLoginSponsorTapped() {
-    if (_flavorConfigProvider.flavor == Flavor.dev) {
-      return () => saveData(AuthenticationMethod.dummy, UserRole.sponsor);
-    } else {
-      return null;
-    }
-  } */
 
   @override
   Future<AFKCreditsAuthenticationResultService> runAuthentication(
@@ -81,17 +58,30 @@ dynamic onDummyLoginExplorerTapped() {
         role: role);
   }
 
-  Future<AFKCreditsAuthenticationResultService> runAdminAuthentication(
+  Future<AFKCreditsAuthenticationResultService?> runAdminAuthentication(
       {required AuthenticationMethod method,
       required UserRole? role,
       required String email,
       required String password}) async {
-    return await _userService.runLoginLogic(
+    final result = await _userService.runLoginLogic(
         method: method, emailOrName: email, stringPw: password, role: role);
+    if (!result.hasError) {
+      navigateToAdminHomeView();
+    }
+    return result;
+  }
+
+  Future createAdminUser({required UserAdmin userAdmin}) async {
+    await _userService.createUserAdminAccount(userAdmin: userAdmin);
+    navigateToAdminHomeView();
   }
 
   void navigateToCreateAccount() {
     navigationService.replaceWith(Routes.createAccountUserRoleView);
+  }
+
+  void navigateToAdminHomeView() {
+    navigationService.replaceWith(Routes.homeView);
   }
 
   bool isPwShown = false;

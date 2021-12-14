@@ -25,7 +25,9 @@ class AddExplorerViewModel extends FormViewModel {
     final result = isValidInput(name: nameValue, password: passwordValue!);
     if (result == true) {
       final result = await runBusyFuture(_userService.createExplorerAccount(
-          name: nameValue!, password: passwordValue!, authMethod: AuthenticationMethod.EmailOrSponsorCreatedExplorer));
+          name: nameValue!,
+          password: passwordValue!,
+          authMethod: AuthenticationMethod.EmailOrSponsorCreatedExplorer));
       if (result is String) {
         await _dialogService.showDialog(
             title: "Could not create user", description: result);

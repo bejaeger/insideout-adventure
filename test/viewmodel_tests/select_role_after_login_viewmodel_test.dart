@@ -27,7 +27,8 @@ void main() {
             .thenAnswer((_) async => getTestUserSponsor());
         when(service.syncUserAccount()).thenAnswer((_) async => null);
         final model = _getModel();
-        await model.createSponsorAccountAndNavigateToSponsorHome();
+        await model.createUserAccountAndSyncData(
+            authMethod: AuthenticationMethod.dummy, role: UserRole.sponsor);
         verify(
             service.createUserAccountFromFirebaseUser(role: UserRole.sponsor));
         verify(service.syncUserAccount());
@@ -48,7 +49,8 @@ void main() {
             .thenAnswer((_) async => getTestUserExplorer());
         when(service.syncUserAccount()).thenAnswer((_) async => null);
         final model = _getModel();
-        await model.createExploreAccountAndNavigateToExplorerHome();
+        await model.createUserAccountAndSyncData(
+            authMethod: AuthenticationMethod.dummy, role: UserRole.explorer);
         verify(
             service.createUserAccountFromFirebaseUser(role: UserRole.explorer));
         verify(service.syncUserAccount());

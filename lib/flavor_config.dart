@@ -49,10 +49,9 @@ class FlavorConfigProvider {
 
     if (role == UserRole.explorer) {
       return "test@gmail.com";
-    } else 
-    if (role == UserRole.sponsor) {
+    } else if (role == UserRole.sponsor) {
       return "test2@gmail.com";
-    } else if (role == UserRole.admin) {
+    } else if (role == UserRole.adminMaster) {
       return "admin@gmail.com";
     } else {
       return "";
@@ -83,8 +82,8 @@ class FlavorConfigProvider {
         return "anLaRoIZCXU0TgZYTmp1AVnRhnD3";
       } else if (role == UserRole.sponsor) {
         return "N3INiSGUOvXsinbbyKZhFvq3AbW2";
-      } else if (role == UserRole.admin) {
-        return "jnLaRoIYCXU0CgZYFmp1AVnHGBD4";
+      } else if (role == UserRole.adminMaster) {
+        return "jnLaRoIYCXU0CgZYFmp1AVmFGBD6";
       } else {
         return "";
       }

@@ -1,1 +1,1 @@
-enum UserRole { sponsor, explorer, admin, unassigned }
+enum UserRole { sponsor, explorer, admin, unassigned, adminMaster }

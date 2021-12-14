@@ -1,4 +1,5 @@
 import 'package:afkcredits/enums/authentication_method.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/select_user_role_layout.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +21,12 @@ class SelectRoleAfterLoginView extends StatelessWidget {
           SelectRoleAfterLoginViewModel(authMethod: authMethod),
       builder: (context, model, child) => SelectUserRoleLayout(
         onBackPressed: model.navigateToLoginView,
-        onExplorerPressed: model.createExploreAccountAndNavigateToExplorerHome,
-        onSponsorPressed: model.createSponsorAccountAndNavigateToSponsorHome,
-        onAdminPressed: model.createAdminAccountAndNavigateToExplorerHome,
+        onExplorerPressed: model.createSponsorAccountAndNavigateToHome(
+            role: UserRole.explorer),
+        onSponsorPressed:
+            model.createSponsorAccountAndNavigateToHome(role: UserRole.sponsor),
+        onAdminPressed: model.createSponsorAccountAndNavigateToHome(
+            role: UserRole.adminMaster),
         isBusy: model.isBusy,
       ),
     );

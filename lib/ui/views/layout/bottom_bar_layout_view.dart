@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
+import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
@@ -93,14 +93,15 @@ class _BottomBarLayoutTemplateViewState
     );
   }
 
-  //Harguilar Added
   List<Widget> _buildScreens({required UserRole userRole}) {
     return [
       if (userRole == UserRole.sponsor) SponsorHomeView(),
-      if (userRole == UserRole.admin) AdminHomeView(),
+      //if (userRole == UserRole.admin) AdminHomeView(),
+      if (userRole == UserRole.adminMaster) HomeView(), //AddMarkersView(),
       if (userRole == UserRole.explorer) ExplorerHomeView(),
-      MapView(), AddMarkersView(),
+      MapView(),
       if (userRole == UserRole.explorer) GiftCardView(),
+      if (userRole == UserRole.adminMaster) AddMarkersView(),
       //MoneyPoolsView(),
     ];
   }
@@ -126,21 +127,20 @@ class _BottomBarLayoutTemplateViewState
         activeColorPrimary: Colors.white,
         inactiveColorPrimary: Colors.white70,
       ),
-      //Harguilar Addded
-      PersistentBottomNavBarItem(
-        icon: Icon(
-          Icons.mark_as_unread_outlined,
-        ),
-        inactiveIcon: Icon(Icons.mark_as_unread_outlined),
-        iconSize: kBottomNavigationBarIconSize,
-        //title: ("Projects"),
-        activeColorPrimary: Colors.white,
-        inactiveColorPrimary: Colors.white70,
-      ),
       if (userRole == UserRole.explorer)
         PersistentBottomNavBarItem(
           iconSize: kBottomNavigationBarIconSize,
           icon: Icon(Icons.shop),
+          inactiveIcon: Icon(Icons.shop_outlined),
+
+          //title: ("Profile"),
+          activeColorPrimary: Colors.white,
+          inactiveColorPrimary: Colors.white70,
+        ),
+      if (userRole == UserRole.adminMaster)
+        PersistentBottomNavBarItem(
+          iconSize: kBottomNavigationBarIconSize,
+          icon: Icon(Icons.mark_as_unread),
           inactiveIcon: Icon(Icons.shop_outlined),
 
           //title: ("Profile"),

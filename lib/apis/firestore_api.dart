@@ -9,6 +9,7 @@ import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart'
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -32,6 +33,20 @@ class FirestoreApi {
     try {
       await createUserInfo(user: user);
       await createUserStatistics(uid: user.uid, stats: stats);
+    } catch (error) {
+      throw FirestoreApiException(
+        message: 'Failed to create new user',
+        devDetails: '$error',
+      );
+    }
+  }
+
+  Future createUserAdmin({required UserAdmin userAdmin}) async {
+    try {
+      final userAdminDocument = usersCollection.doc(userAdmin.id);
+      await userAdminDocument.set(userAdmin.toJson());
+      log.v('User document added to ${userAdminDocument.path}');
+      //return result;
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to create new user',

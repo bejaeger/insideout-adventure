@@ -65,14 +65,14 @@ class ExplorerHomeView extends StatelessWidget {
                         //child: Text("Go to explorer home/map")),
                         child: Text("Logout  "),
                       ),
-          verticalSpaceMedium,
+                      verticalSpaceMedium,
                       if (model.currentUser.createdByUserWithId != null)
-                                            ElevatedButton(
-                        // onPressed: model.navigateToExplorerHomeView,
-                        onPressed: model.handleSwitchToSponsorEvent,
-                        //child: Text("Go to explorer home/map")),
-                        child: Text("Switch To Sponsor  "),
-                      ),
+                        ElevatedButton(
+                          // onPressed: model.navigateToExplorerHomeView,
+                          onPressed: model.handleSwitchToSponsorEvent,
+                          //child: Text("Go to explorer home/map")),
+                          child: Text("Switch To Sponsor  "),
+                        ),
                       verticalSpaceLarge,
                     ],
                   ),
@@ -236,25 +236,26 @@ class FinishedQuestCard extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                    height: 35,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      color: kPrimaryColor.withOpacity(0.8),
+                  height: 35,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: kPrimaryColor.withOpacity(0.8),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        horizontalSpaceSmall,
+                        Text("Earned Credits: ",
+                            style: textTheme(context).bodyText1),
+                        Text(quest.afkCreditsEarned.toString(),
+                            style: textTheme(context).bodyText1),
+                        horizontalSpaceSmall,
+                      ],
                     ),
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          horizontalSpaceSmall,
-                          Text("Earned Credits: ",
-                              style: textTheme(context).bodyText1),
-                          Text(quest.afkCreditsEarned.toString(),
-                              style: textTheme(context).bodyText1),
-                          horizontalSpaceSmall,
-                        ],
-                      ),
-                    )),
+                  ),
+                ),
               ),
             ],
           ),

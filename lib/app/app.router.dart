@@ -17,7 +17,8 @@ import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
-import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
+import '../ui/views/admin/admin_user/home/home_view.dart';
+import '../ui/views/admin/admin_user/markers/add_markers_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
@@ -47,6 +48,7 @@ class Routes {
   static const String createAccountUserRoleView =
       '/create-account-user-role-view';
   static const String startUpView = '/';
+  static const String homeView = '/home-view';
   static const String adminHomeView = '/admin-home-view';
   static const String selectRoleAfterLoginView =
       '/select-role-after-login-view';
@@ -73,6 +75,7 @@ class Routes {
     createAccountView,
     createAccountUserRoleView,
     startUpView,
+    homeView,
     adminHomeView,
     selectRoleAfterLoginView,
     addExplorerView,
@@ -102,6 +105,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.createAccountView, page: CreateAccountView),
     RouteDef(Routes.createAccountUserRoleView, page: CreateAccountUserRoleView),
     RouteDef(Routes.startUpView, page: StartUpView),
+    RouteDef(Routes.homeView, page: HomeView),
     RouteDef(Routes.adminHomeView, page: AdminHomeView),
     RouteDef(Routes.selectRoleAfterLoginView, page: SelectRoleAfterLoginView),
     RouteDef(Routes.addExplorerView, page: AddExplorerView),
@@ -169,6 +173,12 @@ class StackedRouter extends RouterBase {
     StartUpView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const StartUpView(),
+        settings: data,
+      );
+    },
+    HomeView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const HomeView(),
         settings: data,
       );
     },

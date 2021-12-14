@@ -1,3 +1,3 @@
-import 'package:stacked/stacked.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
-class HomeViewModel extends BaseViewModel {}
+class HomeViewModel extends BaseModel {}

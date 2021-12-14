@@ -53,21 +53,6 @@ class BaseModel extends BaseViewModel {
   String get getHourMinuteSecondsTime =>
       _stopWatchService.secondsToHourMinuteSecondTime(activeQuest.timeElapsed);
 
-  // void setTimer() {
-  //   //Clock Timer
-  //   final timerStream = _stopWatchService.stopWatchStream();
-
-  //   _timerSubscription = timerStream.listen((int time) {
-  //     hours = ((time / (60 * 60)) % 60).floor().toString().padLeft(2, '0');
-  //     minutes = ((time / 60) % 60).floor().toString().padLeft(2, '0');
-  //     seconds = (time % 60).floor().toString().padLeft(2, '0');
-  //   });
-  //   _stopWatchService.setTimerStreamSubscription(
-  //       timerSubscription: _timerSubscription!);
-  //   setBusy(false);
-  //   notifyListeners();
-  // }
-
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
   StreamSubscription? _activeQuestSubscription;
@@ -153,27 +138,29 @@ class BaseModel extends BaseViewModel {
   Future clearStackAndNavigateToHomeView() async {
     await navigationService.clearStackAndShow(
         Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+        arguments:
+            BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
   Future replaceWithHomeView() async {
     await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+        arguments:
+            BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
-    Future replaceWithMainView({required BottomNavigationBarIndex index}) async {
+  Future replaceWithMainView({required BottomNavigationBarIndex index}) async {
     await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
         arguments: BottomBarLayoutTemplateViewArguments(
-            userRole: currentUser.role,
-            initialBottomNavBarIndex: index.index));
+            userRole: currentUser.role, initialBottomNavBarIndex: index.index));
   }
 
-    Future clearStackAndNavigateToMainView({required BottomNavigationBarIndex index}) async {
+  Future clearStackAndNavigateToMainView(
+      {required BottomNavigationBarIndex index}) async {
     await navigationService.clearStackAndShow(
         Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(userRole: currentUser.role, initialBottomNavBarIndex: index.index));
+        arguments: BottomBarLayoutTemplateViewArguments(
+            userRole: currentUser.role, initialBottomNavBarIndex: index.index));
   }
-
 
   Future showGenericInternalErrorDialog() async {
     return await dialogService.showDialog(

@@ -10,6 +10,7 @@ import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -72,8 +73,6 @@ class UserService {
 
   Future<void> syncUserAccount(
       {String? uid, bool fromLocalStorage = false}) async {
-
-
     final actualUid =
         uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
 
@@ -120,6 +119,22 @@ class UserService {
       UserStatistics stats = getEmptyUserStatistics(uid: newUser.uid);
       await _firestoreApi.createUser(user: newUser, stats: stats);
       return newUser;
+    } catch (e) {
+      log.e("Error in createUser(): ${e.toString()}");
+      throw UserServiceException(
+        message: "Creating user data failed with message",
+        devDetails: e.toString(),
+        prettyDetails:
+            "User data could not be created in our databank. Please try again later or contact support with error messaage: ${e.toString()}",
+      );
+    }
+  }
+
+  Future createUserAdminAccount({required UserAdmin userAdmin}) async {
+    // create a new user profile on firestore
+    try {
+      log.v("Creating user Admin account");
+      await _firestoreApi.createUserAdmin(userAdmin: userAdmin);
     } catch (e) {
       log.e("Error in createUser(): ${e.toString()}");
       throw UserServiceException(
@@ -316,6 +331,28 @@ class UserService {
       password: hashPassword(password),
       uid: docRef.id,
       role: UserRole.explorer,
+      sponsorIds: [currentUser.uid],
+      createdByUserWithId: currentUser.uid,
+      explorerIds: [],
+      newUser: true,
+    );
+    await createUserAccount(user: newExplorer);
+    List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
+    await updateUserData(
+        user: currentUser.copyWith(explorerIds: newExplorerIds));
+  }
+
+  Future createAdminAccount(
+      {required String name,
+      required String password,
+      required AuthenticationMethod authMethod}) async {
+    final docRef = _firestoreApi.createUserDocument();
+    final newExplorer = User(
+      authMethod: authMethod,
+      fullName: name,
+      password: hashPassword(password),
+      uid: docRef.id,
+      role: UserRole.admin,
       sponsorIds: [currentUser.uid],
       createdByUserWithId: currentUser.uid,
       explorerIds: [],
