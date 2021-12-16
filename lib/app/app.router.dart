@@ -6,7 +6,6 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -19,6 +18,10 @@ import '../enums/quest_type.dart';
 import '../enums/quest_view_index.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
+import '../ui/views/active_map_quest/active_map_quest_view.dart';
+import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
+import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
+import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
@@ -67,6 +70,12 @@ class Routes {
   static const String setPinView = '/set-pin-view';
   static const String bottomBarLayoutTemplateView =
       '/bottom-bar-layout-template-view';
+  static const String activeQrCodeSearchView = '/active-qr-code-search-view';
+  static const String activeDistanceEstimateQuestView =
+      '/active-distance-estimate-quest-view';
+  static const String activeTreasureLocationSearchQuestView =
+      '/active-treasure-location-search-quest-view';
+  static const String activeMapQuestView = '/active-map-quest-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -89,6 +98,10 @@ class Routes {
     purchasedGiftCardsView,
     setPinView,
     bottomBarLayoutTemplateView,
+    activeQrCodeSearchView,
+    activeDistanceEstimateQuestView,
+    activeTreasureLocationSearchQuestView,
+    activeMapQuestView,
   };
 }
 
@@ -119,6 +132,12 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.setPinView, page: SetPinView),
     RouteDef(Routes.bottomBarLayoutTemplateView,
         page: BottomBarLayoutTemplateView),
+    RouteDef(Routes.activeQrCodeSearchView, page: ActiveQrCodeSearchView),
+    RouteDef(Routes.activeDistanceEstimateQuestView,
+        page: ActiveDistanceEstimateQuestView),
+    RouteDef(Routes.activeTreasureLocationSearchQuestView,
+        page: ActiveTreasureLocationSearchQuestView),
+    RouteDef(Routes.activeMapQuestView, page: ActiveMapQuestView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -300,6 +319,49 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    ActiveQrCodeSearchView: (data) {
+      var args = data.getArgs<ActiveQrCodeSearchViewArguments>(
+        orElse: () => ActiveQrCodeSearchViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ActiveQrCodeSearchView(
+          key: args.key,
+          quest: args.quest,
+        ),
+        settings: data,
+      );
+    },
+    ActiveDistanceEstimateQuestView: (data) {
+      var args =
+          data.getArgs<ActiveDistanceEstimateQuestViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ActiveDistanceEstimateQuestView(
+          key: args.key,
+          quest: args.quest,
+        ),
+        settings: data,
+      );
+    },
+    ActiveTreasureLocationSearchQuestView: (data) {
+      var args = data.getArgs<ActiveTreasureLocationSearchQuestViewArguments>(
+          nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ActiveTreasureLocationSearchQuestView(
+          key: args.key,
+          onPressed: args.onPressed,
+          lastDistance: args.lastDistance,
+          currentDistance: args.currentDistance,
+          quest: args.quest,
+        ),
+        settings: data,
+      );
+    },
+    ActiveMapQuestView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const ActiveMapQuestView(),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -397,4 +459,33 @@ class BottomBarLayoutTemplateViewArguments {
       this.questViewIndex = QuestViewType.questlist,
       this.quest,
       this.questType});
+}
+
+/// ActiveQrCodeSearchView arguments holder class
+class ActiveQrCodeSearchViewArguments {
+  final Key? key;
+  final Quest? quest;
+  ActiveQrCodeSearchViewArguments({this.key, this.quest});
+}
+
+/// ActiveDistanceEstimateQuestView arguments holder class
+class ActiveDistanceEstimateQuestViewArguments {
+  final Key? key;
+  final Quest? quest;
+  ActiveDistanceEstimateQuestViewArguments({this.key, required this.quest});
+}
+
+/// ActiveTreasureLocationSearchQuestView arguments holder class
+class ActiveTreasureLocationSearchQuestViewArguments {
+  final Key? key;
+  final void Function() onPressed;
+  final double? lastDistance;
+  final double? currentDistance;
+  final Quest? quest;
+  ActiveTreasureLocationSearchQuestViewArguments(
+      {this.key,
+      required this.onPressed,
+      this.lastDistance,
+      this.currentDistance,
+      required this.quest});
 }

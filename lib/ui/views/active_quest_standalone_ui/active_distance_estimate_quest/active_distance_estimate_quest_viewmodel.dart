@@ -52,7 +52,9 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
     numberTries = numberTries + 1;
     final distanceTravelledTest = await _geolocationService
         .distanceBetweenUserAndCoordinates(lat: startingLat, lon: startingLon);
-    if (!(await checkAccuracy(position: _geolocationService.getUserPosition))) {
+    if (!(await checkAccuracy(
+        position: _geolocationService.getUserPosition,
+        minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
       return;
     }
     distanceTravelled = distanceTravelledTest;
@@ -174,13 +176,15 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
 
       log.i("Starting distance estimate quest with name ${quest.name}");
       final position = await _geolocationService.getAndSetCurrentLocation();
-      if (!(await checkAccuracy(position: position))) {
+      if (!(await checkAccuracy(
+          position: position,
+          minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
         return;
       }
       log.i(
           "Starting quest by setting initial position to lat = $startingLat, lon = $startingLon");
-      startingLat = position?.latitude;
-      startingLon = position?.longitude;
+      startingLat = position.latitude;
+      startingLon = position.longitude;
       setBusy(true);
       await startQuestMain(quest: quest);
       // snackbarService.showSnackbar(
@@ -191,21 +195,6 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
       notifyListeners();
     } else {
       log.i("Not starting quest, quest is probably already running");
-    }
-  }
-
-  Future checkAccuracy({required Position? position}) async {
-    if (position == null) {
-      return false;
-    }
-    if (position.accuracy > kMinRequiredAccuracyDistanceEstimate) {
-      await dialogService.showDialog(
-          title: "GPS Accuracy Too Low",
-          description:
-              "Please walk or wait for a few seconds and try again :)");
-      return false;
-    } else {
-      return true;
     }
   }
 
@@ -223,7 +212,7 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
   }
 
   @override
-  Future handleQrCodeScanEvent(QuestQRCodeScanResult result) {
+  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) {
     // TODO: implement handleQrCodeScanEvent
     throw UnimplementedError();
   }

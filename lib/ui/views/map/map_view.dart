@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/ui/views/active_quest_map/active_quest_view.dart';
+import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_view.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -26,7 +26,7 @@ class MapView extends StatelessWidget {
         return;
       },
       builder: (context, model, child) => model.hasActiveQuest
-          ? ActiveQuestMapView()
+          ? ActiveMapQuestView()
           : Scaffold(
               appBar: AppBar(
                 title: Text("Map Games"),
@@ -67,11 +67,8 @@ class MapView extends StatelessWidget {
                           ? () async => null
                           : () async {
                               model.getGoogleMapController!.animateCamera(
-                                  model.getDirectionInfo != null
-                                      ? CameraUpdate.newLatLngBounds(
-                                          model.getDirectionInfo!.bounds, 100.0)
-                                      : CameraUpdate.newCameraPosition(
-                                          model.initialCameraPosition()));
+                                  CameraUpdate.newCameraPosition(
+                                      model.initialCameraPosition()));
                               await model.scanQrCode();
                             },
                       icon: const Icon(Icons.qr_code_scanner_rounded,
@@ -107,7 +104,7 @@ class GoogleMapsScreen extends StatelessWidget {
               initialCameraPosition: model.initialCameraPosition(),
 
               //Place Markers in the Map
-              markers: model.getMarkers!,
+              markers: model.markersOnMap,
               // onCameraMove: ,
 
               //callback that’s called when the map is ready to use.
@@ -124,18 +121,6 @@ class GoogleMapsScreen extends StatelessWidget {
 
               // Button used for bringing the user location to the center of the camera view.
               myLocationButtonEnabled: true,
-
-              polylines: {
-                if (model.getDirectionInfo != null)
-                  Polyline(
-                    polylineId: const PolylineId('overview_polyline'),
-                    color: Colors.red,
-                    width: 5,
-                    points: model.getDirectionInfo!.polylinePoints
-                        .quest((e) => LatLng(e.latitude, e.longitude))
-                        .toList(),
-                  ),
-              },
 
               //onTap: model.handleTap(),
               //Enable Traffic Mode.

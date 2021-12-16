@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
@@ -9,8 +10,16 @@ import 'package:afkcredits/app/app.logger.dart';
 class ActivatedQuestPanelViewModel extends QuestViewModel {
   final log = getLogger("CustomAppBarViewModel");
 
+  bool expanded = false;
+
+  void toggleExpanded() {
+    log.v("Toggle expanded");
+    expanded = !expanded;
+    notifyListeners();
+  }
+
   @override
-  Future handleQrCodeScanEvent(QuestQRCodeScanResult result) {
+  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) {
     // TODO: implement handleQrCodeScanEvent
     throw UnimplementedError();
   }
@@ -23,10 +32,10 @@ class ActivatedQuestPanelViewModel extends QuestViewModel {
   void navigateToRelevantActiveQuestView() {
     log.i("Navigating to view with currently active quest");
     final questViewIndex =
-        activeQuest.quest.type == QuestType.DistanceEstimate ||
-                activeQuest.quest.type == QuestType.VibrationSearch
-            ? QuestViewType.singlequest
-            : QuestViewType.map;
+        questService.getQuestUIStyle(quest: activeQuest.quest) ==
+                QuestUIStyle.map
+            ? QuestViewType.map
+            : QuestViewType.singlequest;
 
     navigationService.navigateTo(
       Routes.bottomBarLayoutTemplateView,

@@ -10,7 +10,7 @@ class ActiveQuestStandaloneUIViewModel extends QuestViewModel {
   }
 
   @override
-  Future handleQrCodeScanEvent(QuestQRCodeScanResult result) {
+  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) {
     // TODO: implement handleQrCodeScanEvent
     throw UnimplementedError();
   }

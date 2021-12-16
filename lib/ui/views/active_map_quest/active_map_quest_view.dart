@@ -1,4 +1,4 @@
-import 'package:afkcredits/ui/views/common_viewmodels/map_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 
-class ActiveQuestMapView extends StatelessWidget {
-  const ActiveQuestMapView({Key? key}) : super(key: key);
+class ActiveMapQuestView extends StatelessWidget {
+  const ActiveMapQuestView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MapViewModel>.reactive(
-      viewModelBuilder: () => MapViewModel(),
+    return ViewModelBuilder<ActiveMapQuestViewModel>.reactive(
+      viewModelBuilder: () => ActiveMapQuestViewModel(),
       disposeViewModel: false,
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
@@ -27,7 +27,7 @@ class ActiveQuestMapView extends StatelessWidget {
                   //mapType: MapType.hybrid,
                   initialCameraPosition: model.initialCameraPosition(),
                   //Place Markers in the Map
-                  markers: model.getMarkers!,
+                  markers: model.markersOnMap,
                   //callback that’s called when the map is ready to us.
                   onMapCreated: model.onMapCreated,
                   //For showing your current location on Map with a blue dot.
@@ -38,18 +38,6 @@ class ActiveQuestMapView extends StatelessWidget {
 
                   //Remove the Zoom in and out button
                   zoomControlsEnabled: false,
-
-                  polylines: {
-                    if (model.getDirectionInfo != null)
-                      Polyline(
-                        polylineId: const PolylineId('overview_polyline'),
-                        color: Colors.red,
-                        width: 5,
-                        points: model.getDirectionInfo!.polylinePoints
-                            .map((e) => LatLng(e.latitude, e.longitude))
-                            .toList(),
-                      ),
-                  },
 
                   //onTap: model.handleTap(),
                   //Enable Traffic Mode.
@@ -70,11 +58,8 @@ class ActiveQuestMapView extends StatelessWidget {
               MyFloatingActionButton(
                 onPressed: () async {
                   model.getGoogleMapController!.animateCamera(
-                      model.getDirectionInfo != null
-                          ? CameraUpdate.newLatLngBounds(
-                              model.getDirectionInfo!.bounds, 100.0)
-                          : CameraUpdate.newCameraPosition(
-                              model.initialCameraPosition()));
+                      CameraUpdate.newCameraPosition(
+                          model.initialCameraPosition()));
                   await model.scanQrCode();
                 },
                 icon: const Icon(Icons.qr_code_scanner_rounded,

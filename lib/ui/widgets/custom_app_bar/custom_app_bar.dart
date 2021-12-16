@@ -26,10 +26,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       viewModelBuilder: () => ActivatedQuestPanelViewModel(),
       builder: (context, model, child) => PreferredSize(
         preferredSize:
-            Size(screenWidth(context), height + kActiveQuestPanelHeight),
+            Size(screenWidth(context), height + kActiveQuestPanelMaxHeight),
         child: Stack(
           children: <Widget>[
-            ActivatedQuestPanel(height: height),
+            ActivatedQuestPanel(heightAppBar: height),
             Container(
               alignment: Alignment.center,
               //clipBehavior: Clip.none,
@@ -71,5 +71,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(height + kAppBarExtendedHeight);
+  Size get preferredSize =>
+      Size.fromHeight(height + kActiveQuestPanelMaxHeight);
 }

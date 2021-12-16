@@ -77,7 +77,10 @@ class _BasicDialogContent extends StatelessWidget {
                         style: textTheme(context)
                             .headline5!
                             .copyWith(color: kPrimaryColor)),
-                    Text("You found the Trophy",
+                    Text(
+                        "You earned " +
+                            request.data.quest.afkCredits.toString() +
+                            " AFK Credits",
                         style: textTheme(context)
                             .headline6!
                             .copyWith(color: kPrimaryColor)),
@@ -98,25 +101,25 @@ class _BasicDialogContent extends StatelessWidget {
                               ),
                             ),
                     ),
-                    if (request.data?.quest?.afkCredits != null)
-                      AnimatedSwitcher(
-                        duration: Duration(seconds: 2),
-                        child: model.status == CreditsCollectionStatus.toCollect
-                            ? Text(
-                                "It's worth " +
-                                    request.data.quest.afkCredits.toString() +
-                                    " Credits!",
-                                style: textTheme(context)
-                                    .headline6!
-                                    .copyWith(color: kPrimaryColor))
-                            : Text(
-                                "Successfully collected " +
-                                    request.data.quest.afkCredits.toString() +
-                                    " credits",
-                                style: textTheme(context)
-                                    .headline6!
-                                    .copyWith(color: kPrimaryColor)),
-                      ),
+                    // if (request.data?.quest?.afkCredits != null)
+                    //   AnimatedSwitcher(
+                    //     duration: Duration(seconds: 2),
+                    //     child: model.status == CreditsCollectionStatus.toCollect
+                    //         ? Text(
+                    //             "It's worth " +
+                    //                 request.data.quest.afkCredits.toString() +
+                    //                 " Credits!",
+                    //             style: textTheme(context)
+                    //                 .headline6!
+                    //                 .copyWith(color: kPrimaryColor))
+                    //         : Text(
+                    //             "Successfully collected " +
+                    //                 request.data.quest.afkCredits.toString() +
+                    //                 " credits",
+                    //             style: textTheme(context)
+                    //                 .headline6!
+                    //                 .copyWith(color: kPrimaryColor)),
+                    //   ),
                     verticalSpaceMedium,
                     model.status == CreditsCollectionStatus.toCollect
                         ? ElevatedButton(

@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
@@ -18,6 +20,7 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 abstract class QuestViewModel extends BaseModel {
@@ -28,7 +31,7 @@ abstract class QuestViewModel extends BaseModel {
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
 
   final StopWatchService _stopWatchService = locator<StopWatchService>();
-  final QRCodeService _qrCodeService = locator<QRCodeService>();
+  final QRCodeService qrCodeService = locator<QRCodeService>();
   List<Quest> get nearbyQuests => questService.nearbyQuests;
 
   QuestViewModel() {
@@ -102,13 +105,16 @@ abstract class QuestViewModel extends BaseModel {
 
   Future navigateToActiveQuestUI({required Quest quest}) async {
     log.i("Navigating to view with currently active quest");
-    final questViewIndex = quest.type == QuestType.DistanceEstimate ||
-            quest.type == QuestType.VibrationSearch
-        ? QuestViewType.singlequest
-        : QuestViewType.map;
-    // ALTERNATIVELY could set flag in quest_service so we don't
-    // have to pass around the quest through all the views!!!
-    // Would probably be cleaner!!
+    final questViewIndex =
+        questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
+            ? QuestViewType.map
+            : QuestViewType.singlequest;
+
+    // if (quest.type == QuestType.DistanceEstimate) {
+    //   navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
+    //       arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
+    // } else {
+    // Use the following to keep bottom nav bar!
     await navigationService.navigateTo(
       Routes.bottomBarLayoutTemplateView,
       arguments: BottomBarLayoutTemplateViewArguments(
@@ -118,11 +124,25 @@ abstract class QuestViewModel extends BaseModel {
         quest: quest,
       ),
     );
+    // }
   }
 
   Future scanQrCode() async {
+    // navigate to qr code view, validate results in quest service, and continue
     QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
-    await handleQrCodeScanEvent(result);
+    if (result.isEmpty) {
+      log.wtf("The object QuestQRCodeScanResult is empty!");
+      return;
+    }
+    if (result.hasError) {
+      log.e("Error occured: ${result.errorMessage}");
+      dialogService.showDialog(
+        title: "Failed to collect marker!",
+        description: result.errorMessage!,
+      );
+      return;
+    }
+    await handleValidQrCodeScanEvent(result);
   }
 
   Future<QuestQRCodeScanResult> navigateToQrcodeViewAndReturnResult() async {
@@ -131,7 +151,7 @@ abstract class QuestViewModel extends BaseModel {
       final adminMode = await showAdminDialogAndGetResponse();
       if (adminMode) {
         String qrCodeString =
-            _qrCodeService.getQrCodeStringFromMarker(marker: marker);
+            qrCodeService.getQrCodeStringFromMarker(marker: marker);
         await navigationService.navigateTo(Routes.qRCodeView,
             arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
         return QuestQRCodeScanResult.empty();
@@ -145,7 +165,7 @@ abstract class QuestViewModel extends BaseModel {
   String getActiveQuestProgressDescription() {
     if (activeQuest.quest.type == QuestType.Hike ||
         activeQuest.quest.type == QuestType.Hunt ||
-        activeQuest.quest.type == QuestType.Search) {
+        activeQuest.quest.type == QuestType.QRCodeSearch) {
       final returnString = "Collected " +
           numMarkersCollected.toString() +
           " of " +
@@ -173,7 +193,7 @@ abstract class QuestViewModel extends BaseModel {
     }
     if (activeQuest.quest.type == QuestType.Hike ||
         activeQuest.quest.type == QuestType.Hunt ||
-        activeQuest.quest.type == QuestType.Search) {
+        activeQuest.quest.type == QuestType.QRCodeSearch) {
       lastActivatedQuestInfoText = "Active quest - " +
           getHourMinuteSecondsTime +
           /*        " " +
@@ -186,7 +206,8 @@ abstract class QuestViewModel extends BaseModel {
           " markers";
     } else if (activeQuest.quest.type == QuestType.DistanceEstimate) {
       lastActivatedQuestInfoText = "Estimating Distance";
-    } else if (activeQuest.quest.type == QuestType.VibrationSearch) {
+    } else if (activeQuest.quest.type == QuestType.TreasureLocationSearch ||
+        activeQuest.quest.type == QuestType.TreasureLocationSearchAutomatic) {
       log.wtf(
           "Should never be called, this is handled in ActiveVibrationSearchQuestViewModel.");
     } else {
@@ -205,6 +226,7 @@ abstract class QuestViewModel extends BaseModel {
         // Needed for vibration search
         questService.setUIDeadTime(true);
         result = await questService.evaluateAndFinishQuest(force: force);
+        setBusy(false);
         // Needed for vibration search
       } catch (e) {
         if (e is QuestServiceException) {
@@ -262,8 +284,13 @@ abstract class QuestViewModel extends BaseModel {
         }
         // Quest succesfully finished!
 
+        await dialogService.showCustomDialog(
+          variant: DialogType.CollectCredits,
+          data: questService.previouslyFinishedQuest!,
+        );
+
         await dialogService.showDialog(
-            title: "Congratz, you succesfully finished the quest!",
+            title: "CONGRATULATIONS!",
             description: "Earned credits: " +
                 questService.previouslyFinishedQuest!.quest.afkCredits
                     .toString() +
@@ -293,36 +320,50 @@ abstract class QuestViewModel extends BaseModel {
   ////////////////////////////
   // needs to be overrriden!
   // Future handleQrCodeScanEvent(QuestQRCodeScanResult result);
-  Future handleQrCodeScanEvent(QuestQRCodeScanResult result) async {
-    if (result.isEmpty) {
-      log.wtf("The object QuestQRCodeScanResult is empty!");
-      return Future.value();
+  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) async {
+    if (!hasActiveQuest &&
+        (result.quests == null ||
+            (result.quests != null && result.quests!.length == 0))) {
+      await dialogService.showDialog(
+          title:
+              "The scanned marker is not a start of a quest. Please go to the starting point");
     }
-    if (result.hasError) {
-      log.e("Error occured: ${result.errorMessage}");
-      dialogService.showDialog(
-        title: "Failed to collect marker!",
-        description: result.errorMessage!,
-      );
-    } else {
-      if (!hasActiveQuest &&
-          (result.quests == null ||
-              (result.quests != null && result.quests!.length == 0))) {
+    if (result.quests != null && result.quests!.length > 0) {
+      // TODO: Handle case where more than one quest is returned here!
+      // For now, just start first quest!
+      if (!hasActiveQuest) {
+        log.i("Found quests associated to the scanned start marker.");
+        await displayQuestBottomSheet(
+          quest: result.quests![0],
+          startMarker: result.quests![0].startMarker,
+        );
+      }
+    }
+  }
+
+  // Helper functions
+  Future checkAccuracy(
+      {required Position? position,
+      bool showDialog = true,
+      double? minAccuracy}) async {
+    if (position == null) {
+      return false;
+    }
+    if (userIsAdmin) {
+      _geolocationService.setGPSAccuracyInfo(
+          "GPS accuracy: ${position.accuracy.toStringAsFixed(0)} m");
+    }
+    if (position.accuracy > (minAccuracy ?? kMinLocationAccuracy)) {
+      _geolocationService.setGPSAccuracyInfo("Low GPS Accuracy");
+      if (showDialog) {
         await dialogService.showDialog(
-            title:
-                "The scanned marker is not a start of a quest. Please go to the starting point");
+            title: "GPS Accuracy Too Low",
+            description:
+                "Please walk or wait for a few seconds and try again :)");
       }
-      if (result.quests != null && result.quests!.length > 0) {
-        // TODO: Handle case where more than one quest is returned here!
-        // For now, just start first quest!
-        if (!hasActiveQuest) {
-          log.i("Found quests associated to the scanned start marker.");
-          await displayQuestBottomSheet(
-            quest: result.quests![0],
-            startMarker: result.quests![0].startMarker,
-          );
-        }
-      }
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -333,7 +374,7 @@ abstract class QuestViewModel extends BaseModel {
   /// Clean-up
   ///
   void cancelQuestListener() {
-    log.i("Cancelling subscription to vibration search quest");
+    log.i("Cancelling subscription to quest");
     _activeQuestSubscription?.cancel();
     _activeQuestSubscription = null;
   }

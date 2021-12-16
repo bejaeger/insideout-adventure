@@ -15,20 +15,20 @@ class GeolocationService {
   StreamSubscription? _currentPositionStreamSubscription;
 
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
-  dynamic _position;
 
+  Position? _position;
   Position? get getUserPosition => _position;
   double? currentGPSAccuracy;
   String? gpsAccuracyInfo;
 
   void listenToPosition(
-      {int distanceFilter = kMinDistanceFromLastCheckInMeters}) {
+      {double distanceFilter = kMinDistanceFromLastCheckInMeters}) {
     if (_currentPositionStreamSubscription == null) {
       // TODO: Provide proper error message to user in case of
       // denied permission, no access to gps, ...
       _currentPositionStreamSubscription = Geolocator.getPositionStream(
               desiredAccuracy: LocationAccuracy.best,
-              distanceFilter: distanceFilter)
+              distanceFilter: distanceFilter.round())
           .listen((position) {
         log.v("New position event fired, accuracy: ${position.accuracy}");
         _position = position;
@@ -36,7 +36,11 @@ class GeolocationService {
     }
   }
 
-  Future<dynamic> getAndSetCurrentLocation() async {
+  setGPSAccuracyInfo(String? info) {
+    gpsAccuracyInfo = info;
+  }
+
+  Future<Position> getAndSetCurrentLocation() async {
     //Verify If location is available on device.
     final checkGeolocation = await checkGeolocationAvailable();
 
@@ -49,9 +53,10 @@ class GeolocationService {
         currentGPSAccuracy = geolocatorPosition.accuracy;
         if (currentGPSAccuracy != null &&
             currentGPSAccuracy! > kThresholdGPSAccuracyToShowInfo) {
-          gpsAccuracyInfo = "Low GPS Accuracy";
+          setGPSAccuracyInfo(
+              "Low GPS Accuracy (${currentGPSAccuracy?.toStringAsFixed(0)} m)");
         } else {
-          gpsAccuracyInfo = null;
+          setGPSAccuracyInfo(null);
         }
         _position = geolocatorPosition;
         return geolocatorPosition;

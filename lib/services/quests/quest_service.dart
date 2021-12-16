@@ -90,14 +90,15 @@ class QuestService {
     //Harguilar Commented This Out Timer
     _stopWatchService.startTimer();
 
-    if (quest.type == QuestType.VibrationSearch) {
+    if (quest.type == QuestType.TreasureLocationSearch ||
+        quest.type == QuestType.TreasureLocationSearchAutomatic) {
       if (periodicFuncFromViewModel != null) {
         _stopWatchService.listenToSecondTime(
             callback: periodicFuncFromViewModel);
       }
     } else if (quest.type == QuestType.DistanceEstimate) {
       _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
-    } else {
+    } else if (quest.type == QuestType.Hike) {
       _stopWatchService.listenToSecondTime(callback: trackData);
     }
     return true;
@@ -210,10 +211,10 @@ class QuestService {
   // also set earned credits
   void evaluateQuestAndSetStatus() {
     log.i("Evaluating quest");
-    bool? markerMissing =
-        activatedQuest?.markersCollected.any((element) => element == false);
-    bool allMarkersCollected = markerMissing == null ? false : !markerMissing;
-    if (activatedQuest?.quest.type == QuestType.VibrationSearch ||
+
+    if (activatedQuest?.quest.type == QuestType.TreasureLocationSearch ||
+        activatedQuest?.quest.type ==
+            QuestType.TreasureLocationSearchAutomatic ||
         activatedQuest?.quest.type == QuestType.DistanceEstimate) {
       if (activatedQuest?.status == QuestStatus.success) {
         pushActivatedQuest(activatedQuest!.copyWith(
@@ -230,6 +231,10 @@ class QuestService {
       // } else if (activatedQuest?.quest.type == QuestType.DistanceEstimate) {
 
     } else {
+      bool? markerMissing =
+          activatedQuest?.markersCollected.any((element) => element == false);
+      bool allMarkersCollected = markerMissing == null ? false : !markerMissing;
+
       if (allMarkersCollected == true) {
         log.i("All markers were collected, quest finished successfully!");
         pushActivatedQuest(activatedQuest!.copyWith(
@@ -503,7 +508,7 @@ class QuestService {
       }
 
       log.i(
-          "Marker verified! Continue with updated collected markers in activated quesst");
+          "Marker verified! Continue with updated collected markers in activated quest");
       updateCollectedMarkers(marker: fullMarker);
       // return marker that was succesfully scanned
       return QuestQRCodeScanResult.marker(marker: fullMarker);
@@ -597,8 +602,10 @@ class QuestService {
       return QuestUIStyle.map;
     }
     final type = usedQuest.type;
-    if (type == QuestType.VibrationSearch ||
-        type == QuestType.DistanceEstimate) {
+    if (type == QuestType.TreasureLocationSearch ||
+        type == QuestType.TreasureLocationSearchAutomatic ||
+        type == QuestType.DistanceEstimate ||
+        type == QuestType.QRCodeSearch) {
       return QuestUIStyle.standalone;
     } else {
       return QuestUIStyle.map;

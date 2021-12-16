@@ -14,14 +14,14 @@ class FlavorConfigProvider {
   // if true the dummy quests configued in dummy_data.dart
   // are going to be pushed to firestore and are also the ones
   // used for running the app
-  bool pushAndUseDummyQuests = false;
+  bool pushAndUseDummyQuests = true;
 
   Flavor flavor = Flavor.unknown;
   void configure(Flavor flavorIn) {
     flavor = flavorIn;
     if (flavor == Flavor.prod) {
       // in production we never want to use dummy quests
-      this.pushAndUseDummyQuests = false;
+      this.pushAndUseDummyQuests = true;
     }
   }
 

@@ -62,11 +62,14 @@ bool shownDummyModeDialog = false;
 
 ////////////////////////////////////
 // for VibrationSearch
-const int kMinDistanceFromLastCheckInMeters = 10;
-const int kDeadTimeAfterVibrationInSeconds = 5;
-const double kMinDistanceToCatchTrophyInMeters = 20;
 
-const double kMinRequiredAccuracyVibrationSearch = 20;
+// will be scaled down once closer to the treasure!
+const double kMinDistanceFromLastCheckInMeters = 30;
+
+const double kMinDistanceToCatchTrophyInMeters = 50;
+const double kMinRequiredAccuracyVibrationSearch = 50;
+// for vibration search automatic
+const int kDeadTimeAfterVibrationInSeconds = 5;
 
 //////////////////////////////////
 // for distance estimate
@@ -76,5 +79,6 @@ const double kMaxDeviationOfGoalInPercent = 0.2;
 const double kMinRequiredAccuracyDistanceEstimate = 30;
 
 ////////////////////////////
-///Other
+/// General
 const double kThresholdGPSAccuracyToShowInfo = 50;
+const double kMinLocationAccuracy = 100;

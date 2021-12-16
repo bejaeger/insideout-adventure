@@ -53,7 +53,7 @@ class _BasicDialogContent extends StatelessWidget {
       //if (!model.isBusy)
 
       AnimatedOpacity(
-        duration: Duration(milliseconds: 800),
+        duration: Duration(milliseconds: 100),
         opacity: model.isBusy ? 0.0 : 1.0,
         child: Stack(
           clipBehavior: Clip.none,
@@ -136,7 +136,7 @@ class _BasicDialogContent extends StatelessWidget {
         child: Align(
           alignment: Alignment.center,
           child: AnimatedOpacity(
-            duration: Duration(milliseconds: 100),
+            duration: Duration(milliseconds: 50),
             opacity: model.isBusy ? 1.0 : 0.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

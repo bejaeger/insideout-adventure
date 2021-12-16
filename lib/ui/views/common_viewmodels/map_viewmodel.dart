@@ -3,23 +3,20 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stacked_services/stacked_services.dart';
 
-class MapViewModel extends QuestViewModel {
+class MapViewModel extends MapBaseViewModel {
   final log = getLogger('MapViewModel');
   final _geolocationService = locator<GeolocationService>();
 
@@ -38,24 +35,6 @@ class MapViewModel extends QuestViewModel {
     }
     notifyListeners();
   }
-
-  Set<Marker> _markersTmp = {};
-  //List<Places>? places;
-  List<AFKMarker>? markers;
-
-  GoogleMapController? _googleMapController;
-
-  Marker? origin;
-  Marker? destination;
-  Directions? _directionInfo;
-
-  //Get Google Map Controller
-  GoogleMapController? get getGoogleMapController => _googleMapController;
-
-  Set<Marker>? get getMarkers => _markersTmp;
-
-  //Get Direction Info
-  Directions? get getDirectionInfo => _directionInfo;
 
   Future initialize() async {
     if (hasActiveQuest) return;
@@ -101,6 +80,7 @@ class MapViewModel extends QuestViewModel {
     setBusy(false);
   }
 
+  @override
   CameraPosition initialCameraPosition() {
     if (!hasActiveQuest) {
       if (_geolocationService.getUserPosition != null) {
@@ -137,8 +117,9 @@ class MapViewModel extends QuestViewModel {
     }
   }
 
+  @override
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
-    _markersTmp.add(
+    markersOnMap.add(
       Marker(
           markerId: MarkerId(afkmarker
               .id), // google maps marker id of start marker will be our quest id
@@ -168,7 +149,7 @@ class MapViewModel extends QuestViewModel {
                 log.i("Quest active, handling qrCodeScanEvent");
                 QuestQRCodeScanResult scanResult =
                     await questService.handleQrCodeScanEvent(marker: afkmarker);
-                await handleQrCodeScanEvent(scanResult);
+                await handleValidQrCodeScanEvent(scanResult);
               }
             }
           }),
@@ -176,7 +157,7 @@ class MapViewModel extends QuestViewModel {
   }
 
   @override
-  Future handleQrCodeScanEvent(QuestQRCodeScanResult result) async {
+  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) async {
     if (result.isEmpty) {
       log.wtf("The object QuestQRCodeScanResult is empty!");
       return Future.value();
@@ -194,6 +175,7 @@ class MapViewModel extends QuestViewModel {
                 "The scanned marker is not a start of a quest. Please go to the starting point");
       }
 
+      // TODO: Check this because this should probably never happen
       if (result.marker != null) {
         if (hasActiveQuest) {
           log.i("Scanned marker sucessfully collected!");
@@ -203,6 +185,7 @@ class MapViewModel extends QuestViewModel {
               description: getActiveQuestProgressDescription());
         }
       }
+
       if (result.quests != null && result.quests!.length > 0) {
         // TODO: Handle case where more than one quest is returned here!
         // For now, just start first quest!
@@ -228,8 +211,9 @@ class MapViewModel extends QuestViewModel {
     }
   }
 
+  @override
   void updateMapMarkers({required AFKMarker afkmarker}) {
-    _markersTmp = _markersTmp
+    markersOnMap = markersOnMap
         .map((item) => item.markerId == MarkerId(afkmarker.id)
             ? item.copyWith(
                 iconParam:
@@ -239,6 +223,7 @@ class MapViewModel extends QuestViewModel {
     notifyListeners();
   }
 
+  @override
   BitmapDescriptor defineMarkersColour(
       {required AFKMarker afkmarker, required Quest? quest}) {
     if (hasActiveQuest) {
@@ -253,9 +238,14 @@ class MapViewModel extends QuestViewModel {
       if (quest?.type == QuestType.Hike) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueOrange);
-      } else if (quest?.type == QuestType.VibrationSearch) {
+      } else if (quest?.type == QuestType.TreasureLocationSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueViolet);
+      } else if (quest?.type == QuestType.TreasureLocationSearchAutomatic) {
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
+      } else if (quest?.type == QuestType.QRCodeSearch) {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueYellow);
       } else {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueYellow);
@@ -274,37 +264,15 @@ class MapViewModel extends QuestViewModel {
     }
   }
 
-  void onMapCreated(GoogleMapController controller) {
-    if (hasActiveQuest) {
-      setBusy(true);
-      try {
-        _googleMapController = controller;
-        //Add Starter Marker
-        getQuestMarkers();
-      } catch (error) {
-        throw MapViewModelException(
-            message: 'An error occured when creating the map',
-            devDetails: "Error message from Map View Model $error ",
-            prettyDetails:
-                "An internal error occured on our side, sorry, please try again later.");
-      }
-      setBusy(false);
-      notifyListeners();
-    } else {
-      _googleMapController = controller;
-    }
-  }
-
-  Future getQuestMarkers() async {
+  @override
+  void loadQuestMarkers() {
     log.i("Getting quest markers");
     setBusy(true);
     for (AFKMarker _m in activeQuest.quest.markers) {
       addMarkerToMap(quest: activeQuest.quest, afkmarker: _m);
     }
-    _markersTmp = _markersTmp;
-    log.v('These Are the values of the current Markers $_markersTmp');
+    log.v('These Are the values of the current Markers $markersOnMap');
     setBusy(false);
-    notifyListeners();
   }
 
   void extractStartMarkersAndAddToMap() {
@@ -316,15 +284,8 @@ class MapViewModel extends QuestViewModel {
           addMarkerToMap(quest: _q, afkmarker: _m);
         }
       }
-      _markersTmp = _markersTmp;
     } else {
       log.i('Markers are Empty');
     }
-  }
-
-  @override
-  void dispose() {
-    _googleMapController?.dispose();
-    super.dispose();
   }
 }

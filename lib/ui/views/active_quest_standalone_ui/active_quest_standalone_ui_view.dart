@@ -1,8 +1,9 @@
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_quest_standalone_ui_viewmodel.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_vibration_search_quest/active_vibration_search_quest_view.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,10 @@ class ActiveQuestStandaloneUIView extends StatelessWidget {
               ? ActiveDistanceEstimateQuestView(
                   quest: quest,
                 )
-              : currentQuest.type == QuestType.VibrationSearch
-                  ? ActiveVibrationSearchQuestView(
+              : currentQuest.type == QuestType.TreasureLocationSearch ||
+                      currentQuest.type ==
+                          QuestType.TreasureLocationSearchAutomatic
+                  ? ActiveTreasureLocationSearchQuestView(
                       quest: quest,
                       onPressed: () => null,
                       lastDistance:
@@ -33,8 +36,10 @@ class ActiveQuestStandaloneUIView extends StatelessWidget {
                           model.activeQuestNullable?.currentDistanceInMeters)
                   : currentQuest.type == QuestType.Hike
                       ? MapView()
-                      : Text(
-                          "ERROR! Active quest view requested with unknown type. This should be reported to a developer. Thank you!");
+                      : currentQuest.type == QuestType.QRCodeSearch
+                          ? ActiveQrCodeSearchView(quest: quest)
+                          : Text(
+                              "ERROR! Active quest view requested with unknown type. This should be reported to a developer. Thank you!");
         });
   }
 }

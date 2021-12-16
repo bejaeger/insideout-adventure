@@ -42,8 +42,10 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                 ),
               ),
               verticalSpaceTiny,
-              if (model.quest.type != QuestType.VibrationSearch &&
-                  model.quest.type != QuestType.Search &&
+              if (model.quest.type != QuestType.TreasureLocationSearch &&
+                  model.quest.type !=
+                      QuestType.TreasureLocationSearchAutomatic &&
+                  model.quest.type != QuestType.QRCodeSearch &&
                   model.quest.startMarker != null)
                 Expanded(
                   flex: 5,

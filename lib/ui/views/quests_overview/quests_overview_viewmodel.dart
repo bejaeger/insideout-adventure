@@ -34,6 +34,7 @@ class QuestsOverviewViewModel extends QuestViewModel {
   }
 
   void navigateToQuestsOfSpecificTypeView(QuestType type) {
+    // Use the below to have the nav bottom bar visible!
     navigationService.navigateTo(
       Routes.bottomBarLayoutTemplateView,
       arguments: BottomBarLayoutTemplateViewArguments(

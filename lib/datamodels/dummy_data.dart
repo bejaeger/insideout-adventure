@@ -7,8 +7,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 List<Quest> getDummyQuests() {
   return [
     getDummyVibrationSearchQuest(),
-    getDummyVibrationSearchQuest2(),
+    //getDummyVibrationSearchQuest2(),
+    getDummyQuestQrCodeSearch(),
+    getDummyQuestQrCodeSearchStarenweg(),
     streeth11th2ndVibration(),
+    getDummyVibrationSearchQuest3(),
+    //getDummyVibrationSearchQuest4(),
     getDistanceEstimate200(),
     getDistanceEstimate500(),
     getDistanceEstimate1000(),
@@ -103,7 +107,7 @@ Quest getDummyVibrationSearchQuest() {
       woodwayInFrontMarker(),
       myRoomParkSiteMarker(),
     ],
-    type: QuestType.VibrationSearch,
+    type: QuestType.TreasureLocationSearch,
     startMarker: woodwayInFrontMarker(),
     finishMarker: myRoomParkSiteMarker(),
   );
@@ -120,9 +124,41 @@ Quest getDummyVibrationSearchQuest2() {
       intimateWoodwayMarker7(),
       intimateWoodwayMarker3(),
     ],
-    type: QuestType.VibrationSearch,
+    type: QuestType.TreasureLocationSearchAutomatic,
     startMarker: intimateWoodwayMarker7(),
     finishMarker: intimateWoodwayMarker3(),
+  );
+}
+
+Quest getDummyVibrationSearchQuest3() {
+  return Quest(
+    id: "VibrationSearch 3",
+    name: "Low On Foods",
+    description: "Find the AFK Credits",
+    afkCredits: 10,
+    markers: [
+      start2(),
+      buyLowOnFoods(),
+    ],
+    type: QuestType.TreasureLocationSearch,
+    startMarker: start2(),
+    finishMarker: buyLowOnFoods(),
+  );
+}
+
+Quest getDummyVibrationSearchQuest4() {
+  return Quest(
+    id: "VibrationSearch 4",
+    name: "Brentwood Vibrations",
+    description: "Find the AFK Credits",
+    afkCredits: 10,
+    markers: [
+      start1(),
+      brentwood(),
+    ],
+    type: QuestType.TreasureLocationSearchAutomatic,
+    startMarker: start1(),
+    finishMarker: brentwood(),
   );
 }
 
@@ -134,7 +170,7 @@ Quest streeth11th2ndVibration() {
       description: "Find the AFK Credits",
       afkCredits: 10,
       markers: [street11th2nd(), street11th2ndEnd()],
-      type: QuestType.VibrationSearch,
+      type: QuestType.TreasureLocationSearch,
       startMarker: street11th2nd(),
       finishMarker: street11th2ndEnd());
 }
@@ -197,6 +233,41 @@ Quest getDummyQuest4() {
     type: QuestType.Hike,
     startMarker: intimateWoodwayMarker1(),
     finishMarker: intimateWoodwayMarker4(),
+  );
+}
+
+Quest getDummyQuestQrCodeSearch() {
+  return Quest(
+    id: "QuestIdQrCodeSearch",
+    name: "Search For Codes at Woodway",
+    description: "Find hidden codes at Woodway place",
+    afkCredits: 50,
+    markers: [
+      intimateWoodwayMarker2(),
+      intimateWoodwayMarker3(),
+      intimateWoodwayMarker4(),
+    ],
+    type: QuestType.QRCodeSearch,
+    startMarker: intimateWoodwayMarker2(),
+    finishMarker: intimateWoodwayMarker4(),
+  );
+}
+
+Quest getDummyQuestQrCodeSearchStarenweg() {
+  return Quest(
+    id: "Starenweg Hunt",
+    name: "Finde Versteckte Codes im Starenweg!",
+    description: "Finde alle codes im Hause Jägers!",
+    afkCredits: 50,
+    markers: [
+      starenweg1(),
+      starenweg2(),
+      starenweg3(),
+    ],
+    // TODO: QRCodeHuntIndoor
+    type: QuestType.QRCodeSearch,
+    startMarker: starenweg1(),
+    finishMarker: starenweg3(),
   );
 }
 
@@ -443,4 +514,63 @@ AFKMarker street11th2ndEnd() {
 
 getDummyCoordinates() {
   return LatLng(49.267489, -122.990541);
+}
+
+AFKMarker buyLowOnFoods() {
+  return AFKMarker(
+      id: "lowonfoods",
+      qrCodeId: "lowonfoods",
+      lat: 49.26627169696727,
+      lon: -122.97854513122365);
+}
+
+AFKMarker brentwood() {
+  return AFKMarker(
+      id: "brentwood",
+      qrCodeId: "brentwood",
+      lat: 49.26658976477327,
+      lon: -123.00164076016931);
+}
+
+AFKMarker start1() {
+  return AFKMarker(
+      id: "start1",
+      qrCodeId: "start1",
+      lat: 49.266942346812016,
+      lon: -122.99230178996156);
+}
+
+AFKMarker start2() {
+  return AFKMarker(
+      id: "start2",
+      qrCodeId: "start2",
+      lat: 49.26707714193788,
+      lon: -122.99019351948672);
+}
+
+AFKMarker starenweg1() {
+  return AFKMarker(
+      id: "starenweg1",
+      qrCodeId: "starenweg1",
+      lat: 48.06831568327273,
+      lon: 7.904692787613575,
+      nextLocationHint: "In der Garage");
+}
+
+AFKMarker starenweg2() {
+  return AFKMarker(
+      id: "starenweg2",
+      qrCodeId: "starenweg2",
+      lat: 48.068320041351725,
+      lon: 7.904803866026531,
+      nextLocationHint: "In Opa's Arbeitszimmer.");
+}
+
+AFKMarker starenweg3() {
+  return AFKMarker(
+    id: "starenweg3",
+    qrCodeId: "starenweg3",
+    lat: 48.06831568327273,
+    lon: 7.904792787613575,
+  );
 }

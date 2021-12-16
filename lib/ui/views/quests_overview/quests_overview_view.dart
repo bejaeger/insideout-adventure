@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -22,7 +23,7 @@ class QuestsOverviewView extends StatelessWidget {
           title: "Quests Overview",
         ),
         body: model.isBusy
-            ? CircularProgressIndicator()
+            ? AFKProgressIndicator()
             : ListView(
                 children: [
                   verticalSpaceMedium,
@@ -80,7 +81,7 @@ class QuestsOverviewView extends StatelessWidget {
   }
 
   Color getColorOfType(QuestType type) {
-    if (type == QuestType.VibrationSearch)
+    if (type == QuestType.TreasureLocationSearch)
       return Colors.orange;
     else if (type == QuestType.Hike) {
       return Colors.red;
