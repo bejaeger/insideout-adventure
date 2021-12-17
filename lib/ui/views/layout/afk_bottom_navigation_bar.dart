@@ -100,6 +100,29 @@ class AFKBottomNavigationBar extends StatelessWidget {
                         ],
                       ),
                     ),
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: height,
+                            width: screenWidth(context, percentage: 0.5),
+                            color: model.isOnAddMarkers
+                                ? Colors.white.withOpacity(0.2)
+                                : Colors.white.withOpacity(0),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            width: screenWidth(context, percentage: 0.5),
+                            child: IconButton(
+                              onPressed: model.onMarkersPressed,
+                              icon: Icon(Icons.mark_email_read_sharp,
+                                  size: kBottomNavigationBarIconSize,
+                                  color: kBottomNavigationBarIconColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -19,6 +19,35 @@ class SelectRoleAfterLoginViewModel extends TransferBaseViewModel {
     _navigationService.replaceWith(Routes.loginView);
   }
 
+  dynamic createSponsorAccountAndNavigateToHome({required UserRole role}) {
+    //setBusy(true);
+    try {
+      if (role == UserRole.sponsor) {
+        return () =>
+            createUserAccountAndSyncData(authMethod: authMethod, role: role);
+      } else if (role == UserRole.explorer) {
+        return () =>
+            createUserAccountAndSyncData(authMethod: authMethod, role: role);
+      } else {
+        return () =>
+            createUserAccountAndSyncData(authMethod: authMethod, role: role);
+      }
+    } catch (e) {
+      // TODO: Proper error message to user
+      log.e("Could not create user account, error: $e");
+    }
+    //setBusy(false);
+  }
+
+  Future createUserAccountAndSyncData(
+      {required UserRole role,
+      required AuthenticationMethod authMethod}) async {
+    await _userService.createUserAccountFromFirebaseUser(
+        role: role, authMethod: authMethod);
+    await _userService.syncUserAccount();
+    replaceWithHomeView();
+  }
+/*
   Future createSponsorAccountAndNavigateToSponsorHome() async {
     try {
       setBusy(true);
@@ -46,4 +75,19 @@ class SelectRoleAfterLoginViewModel extends TransferBaseViewModel {
       log.e("Could not create user account, error: $e");
     }
   }
+
+  Future createAdminAccountAndNavigateToExplorerHome() async {
+    try {
+      setBusy(true);
+      await _userService.createUserAccountFromFirebaseUser(
+          role: UserRole.admin, authMethod: authMethod);
+      await _userService.syncUserAccount();
+      replaceWithHomeView();
+      setBusy(false);
+    } catch (e) {
+      // TODO: Proper error message to user
+      log.e("Could not create user account, error: $e");
+    }
+  }
+  */
 }

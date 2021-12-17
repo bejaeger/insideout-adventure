@@ -49,7 +49,9 @@ class StartUpViewModel extends TransferBaseViewModel {
           // TODO: Revisit this! Not clear if that is a case that will ever occur!
           log.wtf(
               "We found a logged in user but no user document in the database. This happens at the first time when logging in with a third party service and not choosing a role. So it is very rare and might also be due to some inconsistency in the backend during development! Maybe look into it but you might not need to worry about it.");
-          await navigationService.replaceWith(Routes.selectRoleAfterLoginView, arguments: SelectRoleAfterLoginViewArguments(authMethod: AuthenticationMethod.google));
+          await navigationService.replaceWith(Routes.selectRoleAfterLoginView,
+              arguments: SelectRoleAfterLoginViewArguments(
+                  authMethod: AuthenticationMethod.google));
           return;
         } else {
           final currentUser = userService.currentUser;

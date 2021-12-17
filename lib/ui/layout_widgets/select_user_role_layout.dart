@@ -45,6 +45,11 @@ class SelectUserRoleLayout extends StatelessWidget {
               "Are You An Explorer?",
               style: textTheme(context).headline6,
             ),
+            verticalSpaceLarge,
+            Text(
+              "Are You An Admin?",
+              style: textTheme(context).headline6,
+            ),
             verticalSpaceSmall,
             ElevatedButton(
                 onPressed: onExplorerPressed,

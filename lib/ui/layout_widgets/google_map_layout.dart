@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 
-class AuthenticationLayout extends StatelessWidget {
-  final String? title;
-  final String? subtitle;
+class GoogleMapLayout extends StatelessWidget {
+  final bool? googleMapLayout;
+  final bool? zoomControlsEnabled;
   final String? mainButtonTitle;
-  final Widget? form;
+  final Widget? map;
   final String? googleText;
   final bool showTermsText;
   final void Function()? onMainButtonTapped;
@@ -15,21 +15,20 @@ class AuthenticationLayout extends StatelessWidget {
   final void Function()? onForgotPassword;
   final void Function()? onBackPressed;
   final void Function()? onDummyLoginExplorerTapped;
-  final void Function()? onDummyLoginSponsorTapped;
   final void Function()? onDummyLoginAdminTapped;
-
+  final void Function()? onDummyLoginSponsorTapped;
   final void Function()? onGoogleButtonTapped;
   final void Function()? onAppleButtonTapped;
   final String? validationMessage;
   final String? releaseName;
   final bool busy;
 
-  const AuthenticationLayout({
+  const GoogleMapLayout({
     Key? key,
-    this.title,
-    this.subtitle,
+    this.googleMapLayout,
+    this.zoomControlsEnabled,
     this.mainButtonTitle,
-    this.form,
+    this.map,
     this.onMainButtonTapped,
     this.onCreateAccountTapped,
     this.onForgotPassword,
@@ -40,8 +39,8 @@ class AuthenticationLayout extends StatelessWidget {
     this.onGoogleButtonTapped,
     this.onAppleButtonTapped,
     this.releaseName,
-    this.onDummyLoginAdminTapped,
     this.onDummyLoginExplorerTapped,
+    this.onDummyLoginAdminTapped,
     this.onDummyLoginSponsorTapped,
     this.googleText,
   }) : super(key: key);
@@ -65,22 +64,8 @@ class AuthenticationLayout extends StatelessWidget {
                 ),
                 onPressed: onBackPressed,
               ),
-            Text(
-              title!,
-              style: textTheme(context).headline4,
-            ),
-            verticalSpaceSmall,
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                width: screenWidth(context, percentage: 0.7),
-                child: Text(
-                  subtitle!,
-                ),
-              ),
-            ),
             verticalSpaceRegular,
-            form!,
+            map!,
             verticalSpaceRegular,
             if (onForgotPassword != null)
               Align(
@@ -189,36 +174,31 @@ class AuthenticationLayout extends StatelessWidget {
                     ),
                 ],
               ),
-            if (onDummyLoginAdminTapped != null) verticalSpaceMedium,
+            if (onDummyLoginAdminTapped != null) verticalSpaceRegular,
             if (onDummyLoginAdminTapped != null)
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: onDummyLoginAdminTapped,
-                      child: Container(
-                        height: 40,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: busy
-                            ? CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation(Colors.white),
-                              )
-                            : Text(
-                                "LOGIN AS TEST ADMIN",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14),
-                              ),
-                      ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: onDummyLoginAdminTapped,
+                  child: Container(
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      borderRadius: BorderRadius.circular(8),
                     ),
+                    child: busy
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                          )
+                        : Text(
+                            "LOGIN AS TEST ADMIN",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14),
+                          ),
                   ),
-                ],
+                ),
               ),
             verticalSpaceMedium,
             if (onCreateAccountTapped != null)

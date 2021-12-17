@@ -17,6 +17,11 @@ class SelectUserRoleViewModel extends BaseModel {
         arguments: CreateAccountViewArguments(role: UserRole.sponsor));
   }
 
+  void navigateToAdminCreateAccount() {
+    _navigationService.replaceWith(Routes.createAccountView,
+        arguments: CreateAccountViewArguments(role: UserRole.admin));
+  }
+
   void navigateToLoginView() {
     _navigationService.replaceWith(Routes.loginView);
   }

@@ -120,7 +120,7 @@ abstract class QuestViewModel extends BaseModel {
       arguments: BottomBarLayoutTemplateViewArguments(
         userRole: currentUser.role,
         questViewIndex: questViewIndex,
-        initialBottomNavBarIndex: BottomNavBarIndex.quest,
+        initialBottomNavBarIndex: BottomNavBarIndex.map,
         quest: quest,
       ),
     );
@@ -233,7 +233,7 @@ abstract class QuestViewModel extends BaseModel {
           baseModelLog.e(e);
           await dialogService.showDialog(
               title: e.prettyDetails, buttonTitle: 'Ok');
-          replaceWithMainView(index: BottomNavBarIndex.quest);
+          replaceWithMainView(index: BottomNavBarIndex.map);
           questService.setUIDeadTime(false);
         } else if (e is CloudFunctionsApiException) {
           baseModelLog.e(e);
@@ -269,7 +269,7 @@ abstract class QuestViewModel extends BaseModel {
         if (continueQuest?.confirmed == false || force) {
           questService.cancelIncompleteQuest();
           resetQuest();
-          replaceWithMainView(index: BottomNavBarIndex.quest);
+          replaceWithMainView(index: BottomNavBarIndex.map);
           baseModelLog.i("replaced view with mapView");
         }
         questService.setUIDeadTime(false);
@@ -300,7 +300,7 @@ abstract class QuestViewModel extends BaseModel {
                 "; New balance: " +
                 currentUserStats.afkCreditsBalance.toString(),
             buttonTitle: 'Ok');
-        replaceWithMainView(index: BottomNavBarIndex.quest);
+        replaceWithMainView(index: BottomNavBarIndex.map);
         questService.setUIDeadTime(false);
         setBusy(false);
         return true;
@@ -313,7 +313,7 @@ abstract class QuestViewModel extends BaseModel {
           buttonTitle: 'Ok');
       baseModelLog.wtf(
           "An error occured when trying to finish the quest. This should never happen! Error: $e");
-      replaceWithMainView(index: BottomNavBarIndex.quest);
+      replaceWithMainView(index: BottomNavBarIndex.map);
     }
   }
 

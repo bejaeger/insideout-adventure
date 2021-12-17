@@ -1,5 +1,4 @@
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.dart';
 
@@ -11,8 +10,9 @@ class AFKBottomNavigationBarViewModel
   BottomNavBarIndex _currentIndex = BottomNavBarIndex.home;
 
   bool get isOnHome => _currentIndex == BottomNavBarIndex.home;
-  bool get isOnMap => _currentIndex == BottomNavBarIndex.quest;
+  bool get isOnMap => _currentIndex == BottomNavBarIndex.map;
   bool get isOnGift => _currentIndex == BottomNavBarIndex.giftcard;
+  bool get isOnAddMarkers => _currentIndex == BottomNavBarIndex.addmarkers;
 
   void onHomePressed() {
     clearStackAndNavigateToHomeView();
@@ -26,15 +26,21 @@ class AFKBottomNavigationBarViewModel
     notifyListeners();
   }
 
+  void onMarkersPressed() {
+    navigationService.clearStackAndShow(Routes.addMarkersView);
+    _currentIndex = BottomNavBarIndex.addmarkers;
+    notifyListeners();
+  }
+
   void onMapPressed() {
     //navigationService.clearStackAndShow(Routes.mapScreen);
     if (questService.hasActiveQuest == false) {
       navigationService.clearStackAndShow(Routes.mapView);
-      _currentIndex = BottomNavBarIndex.quest;
+      _currentIndex = BottomNavBarIndex.map;
     } else {
       // this is not functional, would need to add activeQuestView here most likely
       navigationService.clearStackAndShow(Routes.mapView);
-      _currentIndex = BottomNavBarIndex.quest;
+      _currentIndex = BottomNavBarIndex.map;
     }
     notifyListeners();
   }

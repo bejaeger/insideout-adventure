@@ -79,7 +79,12 @@ export class FakeDataPopulator {
       } else if (index == 1) {
         docId = await this.dbManager.createUserDocument(user, Constants.TEST_EXPLORER_ID);
         zero = true;
-      } else docId = await this.dbManager.createUserDocument(user);
+      } else if (index == 2){
+        docId = await this.dbManager.createUserDocument(user, Constants.TEST_ADMIN_ID);
+        zero = true;        
+
+      } 
+      else docId = await this.dbManager.createUserDocument(user);
       await this.generateUserStatistics(docId, zero);
       await this.dbManager.addUid(docId);
     }

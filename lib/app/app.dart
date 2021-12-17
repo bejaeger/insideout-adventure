@@ -24,6 +24,8 @@ import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_l
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
+import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
+import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
@@ -59,6 +61,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: CreateAccountView),
     MaterialRoute(page: CreateAccountUserRoleView),
     MaterialRoute(page: StartUpView, initial: true),
+    MaterialRoute(page: HomeView),
     MaterialRoute(page: AdminHomeView),
     MaterialRoute(page: SelectRoleAfterLoginView),
     MaterialRoute(page: AddExplorerView),
@@ -71,6 +74,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: QRCodeViewExample),
     MaterialRoute(page: GiftCardView),
     MaterialRoute(page: PurchasedGiftCardsView),
+    MaterialRoute(page: AddMarkersView),
     MaterialRoute(page: SetPinView),
     MaterialRoute(page: BottomBarLayoutTemplateView),
     MaterialRoute(page: ActiveQrCodeSearchView),

@@ -6,6 +6,7 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -24,6 +25,8 @@ import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcod
 import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
+import '../ui/views/admin/admin_user/home/home_view.dart';
+import '../ui/views/admin/admin_user/markers/add_markers_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
@@ -53,6 +56,7 @@ class Routes {
   static const String createAccountUserRoleView =
       '/create-account-user-role-view';
   static const String startUpView = '/';
+  static const String homeView = '/home-view';
   static const String adminHomeView = '/admin-home-view';
   static const String selectRoleAfterLoginView =
       '/select-role-after-login-view';
@@ -67,6 +71,7 @@ class Routes {
   static const String qRCodeViewExample = '/q-rcode-view-example';
   static const String giftCardView = '/gift-card-view';
   static const String purchasedGiftCardsView = '/purchased-gift-cards-view';
+  static const String addMarkersView = '/add-markers-view';
   static const String setPinView = '/set-pin-view';
   static const String bottomBarLayoutTemplateView =
       '/bottom-bar-layout-template-view';
@@ -84,6 +89,7 @@ class Routes {
     createAccountView,
     createAccountUserRoleView,
     startUpView,
+    homeView,
     adminHomeView,
     selectRoleAfterLoginView,
     addExplorerView,
@@ -96,6 +102,7 @@ class Routes {
     qRCodeViewExample,
     giftCardView,
     purchasedGiftCardsView,
+    addMarkersView,
     setPinView,
     bottomBarLayoutTemplateView,
     activeQrCodeSearchView,
@@ -116,6 +123,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.createAccountView, page: CreateAccountView),
     RouteDef(Routes.createAccountUserRoleView, page: CreateAccountUserRoleView),
     RouteDef(Routes.startUpView, page: StartUpView),
+    RouteDef(Routes.homeView, page: HomeView),
     RouteDef(Routes.adminHomeView, page: AdminHomeView),
     RouteDef(Routes.selectRoleAfterLoginView, page: SelectRoleAfterLoginView),
     RouteDef(Routes.addExplorerView, page: AddExplorerView),
@@ -129,6 +137,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
     RouteDef(Routes.giftCardView, page: GiftCardView),
     RouteDef(Routes.purchasedGiftCardsView, page: PurchasedGiftCardsView),
+    RouteDef(Routes.addMarkersView, page: AddMarkersView),
     RouteDef(Routes.setPinView, page: SetPinView),
     RouteDef(Routes.bottomBarLayoutTemplateView,
         page: BottomBarLayoutTemplateView),
@@ -188,6 +197,12 @@ class StackedRouter extends RouterBase {
     StartUpView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const StartUpView(),
+        settings: data,
+      );
+    },
+    HomeView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const HomeView(),
         settings: data,
       );
     },
@@ -291,6 +306,12 @@ class StackedRouter extends RouterBase {
     PurchasedGiftCardsView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const PurchasedGiftCardsView(),
+        settings: data,
+      );
+    },
+    AddMarkersView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AddMarkersView(),
         settings: data,
       );
     },
