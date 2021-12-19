@@ -4,6 +4,7 @@ const String kAppName = "AFK Credits";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY';
 const kLocalStorageUidKey = "uid";
+const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
 
 final appName = 'AFK Credits';

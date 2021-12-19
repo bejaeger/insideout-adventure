@@ -258,7 +258,7 @@ class QuestService {
     if (!hasActiveQuest) {
       // get Quests with start marker id
       List<Quest> quests =
-          await _getQuestsWithStartMarkerId(markerId: marker.id);
+          await getQuestsWithStartMarkerId(markerId: marker.id);
       return QuestQRCodeScanResult.quests(quests: quests);
     } else {
       // Checks to perform:
@@ -376,7 +376,12 @@ class QuestService {
     return _firestoreApi.getQuest(questId: questId);
   }
 
-  Future<List<Quest>> _getQuestsWithStartMarkerId(
+  // Changed the Scope of the Method. from _pvt to public
+  Future<List<Quest>> downloadNearbyQuests() async {
+    return await _firestoreApi.downloadNearbyQuests();
+  }
+
+  Future<List<Quest>> getQuestsWithStartMarkerId(
       {required String markerId}) async {
     // get Quests with start marker id
     late List<Quest> quests;

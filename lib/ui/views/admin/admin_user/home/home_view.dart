@@ -11,10 +11,10 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
-      onModelReady: (model) => model.nearbyQuests,
+      onModelReady: (model) => model.setQuestList(),
       fireOnModelReadyOnce: true,
       viewModelBuilder: () => HomeViewModel(),
-      builder: (context, model, child) => model.nearbyQuests.isEmpty
+      builder: (context, model, child) => model.getListOfQuest == null
           ? Center(
               child: Container(
                 child: CircularProgressIndicator(
@@ -33,7 +33,7 @@ class HomeView extends StatelessWidget {
                       Expanded(
                         flex: 3,
                         child: ListView.builder(
-                          itemCount: model.nearbyQuests.length,
+                          itemCount: model.getListOfQuest!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               margin: const EdgeInsets.symmetric(
@@ -51,7 +51,7 @@ class HomeView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                        model.nearbyQuests[index].name
+                                        model.getListOfQuest![index].name
                                             .toString(),
                                         style: textTheme(context).headline4),
                                     // if (model.nearbyQuests[index]. != null)

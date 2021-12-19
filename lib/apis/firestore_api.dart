@@ -41,12 +41,14 @@ class FirestoreApi {
     }
   }
 
-  Future createUserAdmin({required UserAdmin userAdmin}) async {
+//For Admin Starts Here
+  Future<void> createUserAdmin({required UserAdmin userAdmin}) async {
     try {
+      log.i("User:$userAdmin");
       final userAdminDocument = usersCollection.doc(userAdmin.id);
       await userAdminDocument.set(userAdmin.toJson());
       log.v('User document added to ${userAdminDocument.path}');
-      //return result;
+      //print(result);
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to create new user',
@@ -54,6 +56,7 @@ class FirestoreApi {
       );
     }
   }
+  //Ends Here
 
   Future<void> createUserInfo({required User user}) async {
     final userDocument = usersCollection.doc(user.uid);
@@ -135,6 +138,23 @@ class FirestoreApi {
         message: 'Failed to get user',
         devDetails: '$error',
       );
+    }
+  }
+
+  ////////////////////////////////////////////////////////
+  // This is the User who will managed The App Code for the BackOffice
+  Future<UserAdmin?> getUserAdmin({required String uid}) async {
+    log.i('userId: $uid');
+    if (uid.isNotEmpty) {
+      final userDoc = await usersCollection.doc(uid).get();
+      if (!userDoc.exists) {
+        log.v("User $uid does not exist in our DB ");
+        return null;
+      }
+      final userData = userDoc.data();
+      return UserAdmin.fromJson(userData!);
+    } else {
+      throw FirestoreApiException(message: 'You have passed an empty Id');
     }
   }
 
@@ -392,7 +412,7 @@ class FirestoreApi {
       //TODO push quests
       late List<Quest> questsOnFirestore;
       try {
-        final questsOnFirestore = await _downloadNearbyQuests();
+        final questsOnFirestore = await downloadNearbyQuests();
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
@@ -408,7 +428,7 @@ class FirestoreApi {
       });
       return quests;
     } else {
-      return await _downloadNearbyQuests();
+      return await downloadNearbyQuests();
     }
   }
 
@@ -417,7 +437,8 @@ class FirestoreApi {
     questsCollection.add(quest.toJson());
   }
 
-  Future<List<Quest>> _downloadNearbyQuests() async {
+  // Changed the Scope of the Method. from _pvt to public
+  Future<List<Quest>> downloadNearbyQuests() async {
     try {
       final quests = await questsCollection.get();
       if (quests.docs.isNotEmpty) {

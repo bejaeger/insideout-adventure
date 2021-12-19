@@ -29,8 +29,7 @@ class LoginView extends StatelessWidget with $LoginView {
               model.userLoginTapped(userRole: UserRole.explorer),
           onDummyLoginSponsorTapped:
               model.userLoginTapped(userRole: UserRole.sponsor),
-          onDummyLoginAdminTapped:
-              model.userLoginTapped(userRole: UserRole.adminMaster),
+          onDummyLoginAdminTapped: model.saveAdminData,
           onMainButtonTapped: () => model
               .saveData(AuthenticationMethod.EmailOrSponsorCreatedExplorer),
           validationMessage: model.validationMessage,
@@ -46,15 +45,16 @@ class LoginView extends StatelessWidget with $LoginView {
               ),
               TextField(
                 decoration: InputDecoration(
-                    labelText: 'Password',
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        model.setIsPwShown(!model.isPwShown);
-                      },
-                      icon: (model.isPwShown)
-                          ? Icon(Icons.visibility, color: kPrimaryColor)
-                          : Icon(Icons.visibility_off, color: kPrimaryColor),
-                    )),
+                  labelText: 'Password',
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      model.setIsPwShown(!model.isPwShown);
+                    },
+                    icon: (model.isPwShown)
+                        ? Icon(Icons.visibility, color: kPrimaryColor)
+                        : Icon(Icons.visibility_off, color: kPrimaryColor),
+                  ),
+                ),
                 obscureText: (model.isPwShown) ? false : true,
                 controller: passwordController,
               ),
