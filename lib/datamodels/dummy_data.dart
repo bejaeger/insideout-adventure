@@ -11,7 +11,7 @@ List<Quest> getDummyQuests() {
     getDummyQuestQrCodeSearch(),
     getDummyQuestQrCodeSearchStarenweg(),
     streeth11th2ndVibration(),
-    getDummyVibrationSearchQuest3(),
+    getDummyVibrationSearchQuestFreiburg(),
     //getDummyVibrationSearchQuest4(),
     getDistanceEstimate200(),
     getDistanceEstimate500(),
@@ -130,19 +130,19 @@ Quest getDummyVibrationSearchQuest2() {
   );
 }
 
-Quest getDummyVibrationSearchQuest3() {
+Quest getDummyVibrationSearchQuestFreiburg() {
   return Quest(
-    id: "VibrationSearch 3",
-    name: "Low On Foods",
+    id: "FreiburgLocationSearch",
+    name: "Freiburg Location Search",
     description: "Find the AFK Credits",
     afkCredits: 10,
     markers: [
-      start2(),
-      buyLowOnFoods(),
+      freiburg1(),
+      freiburg2(),
     ],
     type: QuestType.TreasureLocationSearch,
-    startMarker: start2(),
-    finishMarker: buyLowOnFoods(),
+    startMarker: freiburg1(),
+    finishMarker: freiburg2(),
   );
 }
 
@@ -573,4 +573,22 @@ AFKMarker starenweg3() {
     lat: 48.06831568327273,
     lon: 7.904792787613575,
   );
+}
+
+AFKMarker freiburg1() {
+  return AFKMarker(
+    id: "freiburg1",
+    qrCodeId: "freiburg1",
+    lat: 48.01397259778941,
+    lon: 7.854593947833285,
+  );
+}
+
+AFKMarker freiburg2() {
+  return AFKMarker(
+    id: "freiburg2",
+    qrCodeId: "freiburg2",
+    lat: 48.01694856856642,
+    lon: 7.858700560921927
+  ); 
 }

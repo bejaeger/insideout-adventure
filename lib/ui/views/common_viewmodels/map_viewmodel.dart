@@ -26,16 +26,6 @@ class MapViewModel extends MapBaseViewModel {
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
 
-  int currentIndex = 0;
-  void toggleIndex() {
-    if (currentIndex == 0) {
-      currentIndex = 1;
-    } else {
-      currentIndex = 0;
-    }
-    notifyListeners();
-  }
-
   Future initialize() async {
     if (hasActiveQuest) return;
     log.i("Initializing map view");

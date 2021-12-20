@@ -55,7 +55,7 @@ class ActiveMapQuestView extends StatelessWidget {
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              MyFloatingActionButton(
+              AFKFloatingActionButton(
                 onPressed: () async {
                   model.getGoogleMapController!.animateCamera(
                       CameraUpdate.newCameraPosition(

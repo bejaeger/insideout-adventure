@@ -120,7 +120,7 @@ abstract class QuestViewModel extends BaseModel {
       arguments: BottomBarLayoutTemplateViewArguments(
         userRole: currentUser.role,
         questViewIndex: questViewIndex,
-        initialBottomNavBarIndex: BottomNavBarIndex.map,
+        initialBottomNavBarIndex: BottomNavBarIndex.quest,
         quest: quest,
       ),
     );
@@ -233,7 +233,7 @@ abstract class QuestViewModel extends BaseModel {
           baseModelLog.e(e);
           await dialogService.showDialog(
               title: e.prettyDetails, buttonTitle: 'Ok');
-          replaceWithMainView(index: BottomNavBarIndex.map);
+          replaceWithMainView(index: BottomNavBarIndex.quest);
           questService.setUIDeadTime(false);
         } else if (e is CloudFunctionsApiException) {
           baseModelLog.e(e);
@@ -269,7 +269,7 @@ abstract class QuestViewModel extends BaseModel {
         if (continueQuest?.confirmed == false || force) {
           questService.cancelIncompleteQuest();
           resetQuest();
-          replaceWithMainView(index: BottomNavBarIndex.map);
+          replaceWithMainView(index: BottomNavBarIndex.quest);
           baseModelLog.i("replaced view with mapView");
         }
         questService.setUIDeadTime(false);
@@ -288,19 +288,18 @@ abstract class QuestViewModel extends BaseModel {
           variant: DialogType.CollectCredits,
           data: questService.previouslyFinishedQuest!,
         );
-
-        await dialogService.showDialog(
-            title: "CONGRATULATIONS!",
-            description: "Earned credits: " +
-                questService.previouslyFinishedQuest!.quest.afkCredits
-                    .toString() +
-                ", time elapsed: " +
-                _stopWatchService.secondsToHourMinuteSecondTime(
-                    questService.previouslyFinishedQuest!.timeElapsed) +
-                "; New balance: " +
-                currentUserStats.afkCreditsBalance.toString(),
-            buttonTitle: 'Ok');
-        replaceWithMainView(index: BottomNavBarIndex.map);
+        // await dialogService.showDialog(
+        //     title: "CONGRATULATIONS!",
+        //     description: "Earned credits: " +
+        //         questService.previouslyFinishedQuest!.quest.afkCredits
+        //             .toString() +
+        //         ", time elapsed: " +
+        //         _stopWatchService.secondsToHourMinuteSecondTime(
+        //             questService.previouslyFinishedQuest!.timeElapsed) +
+        //         "; New balance: " +
+        //         currentUserStats.afkCreditsBalance.toString(),
+        //     buttonTitle: 'Ok');
+        replaceWithMainView(index: BottomNavBarIndex.quest);
         questService.setUIDeadTime(false);
         setBusy(false);
         return true;
@@ -313,7 +312,7 @@ abstract class QuestViewModel extends BaseModel {
           buttonTitle: 'Ok');
       baseModelLog.wtf(
           "An error occured when trying to finish the quest. This should never happen! Error: $e");
-      replaceWithMainView(index: BottomNavBarIndex.map);
+      replaceWithMainView(index: BottomNavBarIndex.quest);
     }
   }
 
@@ -341,6 +340,7 @@ abstract class QuestViewModel extends BaseModel {
     }
   }
 
+  // -----------------------------------------
   // Helper functions
   Future checkAccuracy(
       {required Position? position,
@@ -367,6 +367,16 @@ abstract class QuestViewModel extends BaseModel {
     }
   }
 
+  int currentIndex = 0;
+  void toggleIndex() {
+    if (currentIndex == 0) {
+      currentIndex = 1;
+    } else {
+      currentIndex = 0;
+    }
+    notifyListeners();
+  }
+
   // Can be overridden!
   void resetQuest() {}
 
@@ -382,6 +392,7 @@ abstract class QuestViewModel extends BaseModel {
   @override
   void dispose() {
     _activeQuestSubscription?.cancel();
+    resetQuest();
     super.dispose();
   }
 }

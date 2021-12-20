@@ -73,7 +73,7 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
 
   Future maybeStartQuest({required Quest? quest}) async {
     if (quest != null) {
-      resetPreviousQuest();
+      resetQuest();
       log.i("Starting vibration search quest with name ${quest.name}");
       if (quest.type == QuestType.TreasureLocationSearchAutomatic) {
         listenToActiveQuest();
@@ -157,7 +157,8 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
     }
   }
 
-  void resetPreviousQuest() {
+  @override
+  void resetQuest() {
     cancelQuestListener();
     markersOnMap = {};
     checkpoints = [];
@@ -235,10 +236,10 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
 
       log.i("Updating distance to goal to $newDistanceInMeters meters");
 
-      if (tmpActivatedQuest.quest.type ==
-          QuestType.TreasureLocationSearchAutomatic) {
-        questService.pushActivatedQuest(tmpActivatedQuest);
-      }
+      // if (tmpActivatedQuest.quest.type ==
+      //     QuestType.TreasureLocationSearchAutomatic) {
+      questService.pushActivatedQuest(tmpActivatedQuest);
+      // }
 
       return true;
     } else {

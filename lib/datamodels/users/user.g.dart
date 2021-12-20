@@ -46,6 +46,7 @@ const _$UserRoleEnumMap = {
   UserRole.explorer: 'explorer',
   UserRole.admin: 'admin',
   UserRole.unassigned: 'unassigned',
+  UserRole.adminMaster: 'adminMaster',
 };
 
 const _$AuthenticationMethodEnumMap = {

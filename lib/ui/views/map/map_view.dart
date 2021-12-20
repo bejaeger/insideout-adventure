@@ -2,12 +2,12 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_view.dart';
+import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import '../common_viewmodels/map_viewmodel.dart';
@@ -49,32 +49,13 @@ class MapView extends StatelessWidget {
               ]),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.endFloat,
-              floatingActionButton: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // MyFloatingActionButton(
-                  //   onPressed: model.toggleIndex,
-                  //   icon: Icon(
-                  //       model.currentIndex == 0
-                  //           ? Icons.list_rounded
-                  //           : Icons.map_rounded,
-                  //       size: 30,
-                  //       color: Colors.white),
-                  // ),
-                  // verticalSpaceSmall,
-                  MyFloatingActionButton(
-                      onPressed: model.initialCameraPosition() == null
-                          ? () async => null
-                          : () async {
-                              model.getGoogleMapController!.animateCamera(
-                                  CameraUpdate.newCameraPosition(
-                                      model.initialCameraPosition()));
-                              await model.scanQrCode();
-                            },
-                      icon: const Icon(Icons.qr_code_scanner_rounded,
-                          size: 30, color: Colors.white)),
-                  verticalSpaceSmall,
-                ],
+              floatingActionButton: AFKFloatingActionButtons(
+                // title1: "SCAN",
+                onPressed1: model.scanQrCode,
+                iconData1: Icons.qr_code_scanner_rounded,
+                title2: "LIST",
+                onPressed2: model.navigateBack,
+                iconData2: Icons.list_rounded,
               ),
             ),
       viewModelBuilder: () => MapViewModel(),

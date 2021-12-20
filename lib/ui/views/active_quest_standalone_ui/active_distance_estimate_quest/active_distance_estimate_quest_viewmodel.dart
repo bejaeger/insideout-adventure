@@ -115,8 +115,8 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
     // artificial delay to make it exciting for user!
     await Future.delayed(Duration(seconds: 2));
 
-    if (distanceTravelled > (distanceToTravel - kMaxDeviationOfGoalInMeters) &&
-        distanceTravelled < (distanceToTravel + kMaxDeviationOfGoalInMeters)) {
+    if (distanceTravelled > (distanceToTravel - 201) &&
+        distanceTravelled < (distanceToTravel + 201)) {
       // additional delay!
       await Future.delayed(Duration(seconds: 1));
       log.i("SUCCESS! Successfully estimated $distanceToTravel");

@@ -10,11 +10,13 @@ import 'package:stacked/stacked.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final String title;
+  final bool drawer;
   final void Function()? onBackButton;
   CustomAppBar(
       {Key? key,
       this.height = kAppBarExtendedHeight,
       required this.title,
+      this.drawer = false,
       this.onBackButton})
       : super(key: key);
 
@@ -34,10 +36,28 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               alignment: Alignment.center,
               //clipBehavior: Clip.none,
               // Background
-              child: Text(title,
-                  style: textTheme(context)
-                      .headline5!
-                      .copyWith(color: Colors.grey[50])),
+              child: Stack(children: [
+                if (drawer)
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                          onTap: () => Scaffold.of(context).openEndDrawer(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: kHorizontalPadding),
+                            child: Icon(Icons.menu,
+                                color: kWhiteTextColor, size: 35),
+                          ))),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    title,
+                    style: textTheme(context)
+                        .headline5!
+                        .copyWith(color: Colors.grey[50]),
+                  ),
+                ),
+              ]),
               decoration: BoxDecoration(
                 color: kPrimaryColor,
                 boxShadow: [

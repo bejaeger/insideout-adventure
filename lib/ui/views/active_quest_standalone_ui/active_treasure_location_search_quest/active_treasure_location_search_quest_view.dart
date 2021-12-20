@@ -24,7 +24,7 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
     required this.quest,
   }) : super(key: key);
 
-  static const bool withMaps = false;
+  static const bool withMaps = true;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
                                           colors: [
-                                            Colors.white.withOpacity(0.0),
+                                            Colors.white.withOpacity(0.4),
                                             Colors.white,
                                           ]),
                                       borderRadius: BorderRadius.circular(16.0),
@@ -129,6 +129,7 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                     child: ListView(
                                       children: [
                                         verticalSpaceSmall,
+                                        if (!model.hasActiveQuest)
                                         Column(
                                           children: [
                                             ElevatedButton(
@@ -226,10 +227,12 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                                   textTheme(context).headline2),
                                         if (lastDistance != null)
                                           Text("Last Distance",
+                                          textAlign: TextAlign.center,
                                               style: TextStyle(fontSize: 18)),
                                         if (lastDistance != null)
                                           Text(
                                               "${lastDistance?.toStringAsFixed(1)} m",
+                                              textAlign: TextAlign.center,
                                               style: TextStyle(fontSize: 18)),
                                         if (model.hasActiveQuest)
                                           Padding(

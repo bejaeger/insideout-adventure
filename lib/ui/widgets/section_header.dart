@@ -22,7 +22,7 @@ class SectionHeader extends StatelessWidget {
       this.onTextButtonTap,
       this.textButtonText = "SEE ALL",
       this.trailingIcon,
-      this.titleSize = 20,
+      this.titleSize = 24,
       this.horizontalPadding})
       : super(key: key);
 

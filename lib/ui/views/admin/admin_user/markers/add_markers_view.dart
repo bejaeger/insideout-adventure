@@ -129,7 +129,7 @@ class _AddMarkersViewState extends State<AddMarkersView> {
                   Positioned(
                     bottom: 70,
                     right: 4,
-                    child: MyFloatingActionButton(
+                    child: AFKFloatingActionButton(
                       onPressed: model.initialCameraPosition() == null
                           ? () async => null
                           : () async {

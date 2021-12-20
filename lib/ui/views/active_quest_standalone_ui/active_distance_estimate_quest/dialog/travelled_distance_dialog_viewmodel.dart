@@ -38,19 +38,24 @@ class TravelledDistanceDialogViewModel extends BaseModel {
       [double? distanceInMeter]) {
     String addString = "";
     if (distanceInMeter != null) {
-      addString = "You walked " + getDistance(distanceInMeter) + " Meters. ";
+      addString = "You walked " +
+          getDistance(distanceInMeter) +
+          " of " +
+          getDistanceToTravel() +
+          " Meters. ";
     }
     if (status == DistanceCheckStatus.almost) {
       title = "You are almost there!";
-      description = addString + "Try again in the next try";
+      description = addString; // + "Try again in the next try";
       mainButtonTitle = "Got it";
     } else if (status == DistanceCheckStatus.toofar) {
       title = "Wooww!";
-      description = addString + "You went slightly too far, try again!";
+      description = addString; //  + "You went slightly too far, try again!";
       mainButtonTitle = "Got it";
     } else if (status == DistanceCheckStatus.notenough) {
       title = "Not there yet!";
-      description = addString + "You still have some way to go, try again!";
+      description =
+          addString; //  + "You still have some way to go, try again!";
       mainButtonTitle = "Got it";
     } else if (status == DistanceCheckStatus.success) {
       title = "CONGRATULATIONS!!!";
@@ -74,5 +79,9 @@ class TravelledDistanceDialogViewModel extends BaseModel {
 
   String getDistance(double distanceInMeter) {
     return distanceInMeter.toStringAsFixed(0);
+  }
+
+  String getDistanceToTravel() {
+    return activeQuest.quest.distanceToTravelInMeter!.toStringAsFixed(0);
   }
 }

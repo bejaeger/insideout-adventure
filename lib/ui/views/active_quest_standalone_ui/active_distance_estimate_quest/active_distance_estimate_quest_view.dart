@@ -36,9 +36,7 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                 onBackButton: model.navigateBack,
               ),
               body: model.isBusy
-                  ? Align(
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator())
+                  ? AFKProgressIndicator()
                   : Align(
                       alignment: Alignment.center,
                       child: Padding(

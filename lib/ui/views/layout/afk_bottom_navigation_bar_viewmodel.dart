@@ -10,7 +10,7 @@ class AFKBottomNavigationBarViewModel
   BottomNavBarIndex _currentIndex = BottomNavBarIndex.home;
 
   bool get isOnHome => _currentIndex == BottomNavBarIndex.home;
-  bool get isOnMap => _currentIndex == BottomNavBarIndex.map;
+  bool get isOnMap => _currentIndex == BottomNavBarIndex.quest;
   bool get isOnGift => _currentIndex == BottomNavBarIndex.giftcard;
   bool get isOnAddMarkers => _currentIndex == BottomNavBarIndex.addmarkers;
 
@@ -36,11 +36,11 @@ class AFKBottomNavigationBarViewModel
     //navigationService.clearStackAndShow(Routes.mapScreen);
     if (questService.hasActiveQuest == false) {
       navigationService.clearStackAndShow(Routes.mapView);
-      _currentIndex = BottomNavBarIndex.map;
+      _currentIndex = BottomNavBarIndex.quest;
     } else {
       // this is not functional, would need to add activeQuestView here most likely
       navigationService.clearStackAndShow(Routes.mapView);
-      _currentIndex = BottomNavBarIndex.map;
+      _currentIndex = BottomNavBarIndex.quest;
     }
     notifyListeners();
   }

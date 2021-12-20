@@ -94,7 +94,6 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: UserService),
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: CloudFunctionsApi),
-
     LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: FlavorConfigProvider),
     LazySingleton(classType: LayoutService),

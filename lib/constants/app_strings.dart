@@ -3,7 +3,7 @@ const String kUserRoleSelectionDialogTitle =
 const String kUserRoleSelectionDialogButtonTitle = "Explorer";
 const String kUserRoleSelectionDialogCancelTitle = "Sponsor";
 
-const String kCreditsToEarnDescription = "Sponsored Credits To Earn";
-const String kCurrentAFKCreditsDescription = "Current balance";
+const String kCreditsToEarnDescription = "TO EARN";
+const String kCurrentAFKCreditsDescription = "EARNED";
 const String kLifetimeEarningsDescription = "Lifetime earnings";
 const String kNumberCompletedQuestsDescription = "Completed quests";

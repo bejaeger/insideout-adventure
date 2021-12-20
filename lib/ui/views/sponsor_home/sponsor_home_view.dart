@@ -39,7 +39,7 @@ class SponsorHomeView extends StatelessWidget {
                   ? AFKProgressIndicator()
                   : ElevatedButton(
                       onPressed: model.showAddExplorerBottomSheet,
-                      child: Text("Support First Explorer -> "),
+                      child: Text("Add Explorer"),
                       //imagePath: ImagePath.peopleHoldingHands,
                     ),
             if (model.supportedExplorers.length > 0)

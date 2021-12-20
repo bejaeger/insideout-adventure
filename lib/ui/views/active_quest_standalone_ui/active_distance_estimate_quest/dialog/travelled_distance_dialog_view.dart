@@ -74,11 +74,26 @@ class _BasicDialogContent extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   verticalSpaceSmall,
-                  Text(model.title ?? '',
-                      textAlign: TextAlign.center,
-                      style: textTheme(context).headline6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(model.title ?? '',
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            style: textTheme(context).headline4),
+                      ),
+                    ],
+                  ),
                   verticalSpaceSmall,
-                  Text(model.description ?? '', textAlign: TextAlign.center),
+                  Text(
+                    model.description ?? '',
+                    textAlign: TextAlign.center,
+                    style: textTheme(context).headline6!.copyWith(
+                        // color: _getStatusColor(model.status),
+                        color: kGreyTextColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800),
+                  ),
                   verticalSpaceMedium,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -96,9 +111,9 @@ class _BasicDialogContent extends StatelessWidget {
                             completer(DialogResponse(confirmed: true)),
                         child: Text(
                           model.mainButtonTitle ?? '',
-                          style: textTheme(context).bodyText2!.copyWith(
+                          style: textTheme(context).headline6!.copyWith(
                               color: _getStatusColor(model.status),
-                              fontSize: 18,
+                              fontSize: 24,
                               fontWeight: FontWeight.w800),
                         ),
                       ),
@@ -110,12 +125,12 @@ class _BasicDialogContent extends StatelessWidget {
             Positioned(
               top: -28,
               child: CircleAvatar(
-                minRadius: 16,
-                maxRadius: 28,
+                minRadius: 20,
+                maxRadius: 32,
                 backgroundColor: _getStatusColor(model.status),
                 child: Icon(
                   _getStatusIcon(model.status),
-                  size: 28,
+                  size: 32,
                   color: Colors.white,
                 ),
               ),

@@ -13,6 +13,10 @@ import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -81,12 +85,28 @@ class BaseModel extends BaseViewModel {
     await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
     _geolocationService.clearData();
-    //layoutService.setShowBottomNavBar(false);
+  }
+
+  void unregisterViewModels() {
+    // unregister all singleton viewmodels when logging out
+    if (locator.isRegistered<ActiveTreasureLocationSearchQuestViewModel>()) {
+      locator.unregister<ActiveTreasureLocationSearchQuestViewModel>();
+    }
+    if (locator.isRegistered<ActiveDistanceEstimateQuestViewModel>()) {
+      locator.unregister<ActiveDistanceEstimateQuestViewModel>();
+    }
+    if (locator.isRegistered<ActiveQrCodeSearchViewModel>()) {
+      locator.unregister<ActiveQrCodeSearchViewModel>();
+    }
+    if (locator.isRegistered<PurchasedGiftCardsViewModel>()) {
+      locator.unregister<PurchasedGiftCardsViewModel>();
+    }
   }
 
   Future logout() async {
     // TODO: Check that there is no active quest present!
     clearServiceData();
+    unregisterViewModels();
     navigationService.clearStackAndShow(Routes.loginView);
   }
 

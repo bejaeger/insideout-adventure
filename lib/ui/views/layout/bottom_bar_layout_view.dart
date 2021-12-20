@@ -5,6 +5,7 @@ import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
+import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
@@ -69,6 +70,7 @@ class _BottomBarLayoutTemplateViewState
           child: PersistentTabView(
             context,
             controller: _controller,
+
             screens: _buildScreens(userRole: widget.userRole),
             items: _navBarsItems(userRole: widget.userRole),
             confineInSafeArea: true,
@@ -108,7 +110,7 @@ class _BottomBarLayoutTemplateViewState
               // Screen transition animation on change of selected tab.
               animateTabTransition: true,
               curve: Curves.ease,
-              duration: Duration(milliseconds: 300),
+              duration: Duration(milliseconds: 400),
             ),
             navBarHeight: kBottomNavigationBarHeightCustom,
             navBarStyle: NavBarStyle
@@ -124,17 +126,39 @@ class _BottomBarLayoutTemplateViewState
       case UserRole.sponsor:
         return [
           SponsorHomeView(),
-          GiftCardView(),
+          if (widget.questViewIndex == QuestViewType.questlist)
+            QuestsOverviewView(),
+          if (widget.questViewIndex == QuestViewType.singlequest)
+            SingleQuestTypeView(
+              quest: widget.quest,
+              questType: widget.questType,
+            ),
+          if (widget.questViewIndex == QuestViewType.map) MapView(),
         ];
       case UserRole.explorer:
         return [
           ExplorerHomeView(),
-          MapView(),
+          if (widget.questViewIndex == QuestViewType.questlist)
+            QuestsOverviewView(),
+          if (widget.questViewIndex == QuestViewType.singlequest)
+            SingleQuestTypeView(
+              quest: widget.quest,
+              questType: widget.questType,
+            ),
+          if (widget.questViewIndex == QuestViewType.map) MapView(),
           GiftCardView(),
         ];
       default:
         return [
-          HomeView(),
+          AdminHomeView(),
+          if (widget.questViewIndex == QuestViewType.questlist)
+            QuestsOverviewView(),
+          if (widget.questViewIndex == QuestViewType.singlequest)
+            SingleQuestTypeView(
+              quest: widget.quest,
+              questType: widget.questType,
+            ),
+          if (widget.questViewIndex == QuestViewType.map) MapView(),
           AddMarkersView(),
         ];
     }
@@ -145,14 +169,6 @@ class _BottomBarLayoutTemplateViewState
       if (userRole == UserRole.adminMaster) HomeView(), //AddMarkersView(),
       if (userRole == UserRole.explorer) ExplorerHomeView(),
 
-      if (widget.questViewIndex == QuestViewType.questlist)
-        QuestsOverviewView(),
-      if (widget.questViewIndex == QuestViewType.singlequest)
-        SingleQuestTypeView(
-          quest: widget.quest,
-          questType: widget.questType,
-        ),
-      if (widget.questViewIndex == QuestViewType.map) MapView(),
 
       if (userRole == UserRole.explorer) GiftCardView(),
       if (userRole == UserRole.adminMaster) AddMarkersView(),
@@ -220,6 +236,16 @@ class _BottomBarLayoutTemplateViewState
 
             //title: ("Home"),
             iconSize: kBottomNavigationBarIconSize,
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+          PersistentBottomNavBarItem(
+            icon: Icon(
+              Icons.explore,
+            ),
+            inactiveIcon: Icon(Icons.explore_outlined),
+            iconSize: kBottomNavigationBarIconSize,
+            //title: ("Projects"),
             activeColorPrimary: Colors.white,
             inactiveColorPrimary: Colors.white70,
           ),
