@@ -73,28 +73,33 @@ class _BasicDialogContent extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  verticalSpaceSmall,
+                  verticalSpaceMedium,
+                  if (model.collectedCredits) verticalSpaceMedium,
                   Row(
                     children: [
                       Expanded(
-                        child: Text(model.title ?? '',
+                        child: Text(
+                            !model.collectedCredits
+                                ? (model.title ?? '')
+                                : "Collected Credits",
                             maxLines: 1,
                             textAlign: TextAlign.center,
-                            style: textTheme(context).headline4),
+                            style: textTheme(context).headline6!.copyWith(
+                                fontWeight: FontWeight.w800, fontSize: 28)),
                       ),
                     ],
                   ),
-                  verticalSpaceSmall,
-                  Text(
-                    model.description ?? '',
-                    textAlign: TextAlign.center,
-                    style: textTheme(context).headline6!.copyWith(
-                        // color: _getStatusColor(model.status),
-                        color: kGreyTextColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800),
-                  ),
-                  verticalSpaceMedium,
+                  if (!model.collectedCredits) verticalSpaceMedium,
+                  if (!model.collectedCredits)
+                    Text(
+                      model.description ?? '',
+                      textAlign: TextAlign.center,
+                      style: textTheme(context).headline4!.copyWith(
+                          // color: _getStatusColor(model.status),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  verticalSpaceLarge,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -106,20 +111,34 @@ class _BasicDialogContent extends StatelessWidget {
                             model.secondaryButtonTitle!,
                           ),
                         ),
-                      ElevatedButton(
-                        onPressed: () =>
-                            completer(DialogResponse(confirmed: true)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            model.mainButtonTitle ?? '',
-                            style: textTheme(context).headline6!.copyWith(
-                                color: kWhiteTextColor,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w800),
-                          ),
-                        ),
-                      ),
+                      model.collectedCredits == false
+                          ? ElevatedButton(
+                              onPressed: model.getCredits,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  model.mainButtonTitle ?? '',
+                                  style: textTheme(context).headline6!.copyWith(
+                                      color: kWhiteTextColor,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            )
+                          : ElevatedButton(
+                              onPressed: () =>
+                                  completer(DialogResponse(confirmed: true)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Go Back",
+                                  style: textTheme(context).headline6!.copyWith(
+                                      color: kWhiteTextColor,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            ),
                     ],
                   ),
                 ],
@@ -162,7 +181,10 @@ class _BasicDialogContent extends StatelessWidget {
               children: [
                 CircularProgressIndicator(color: kPrimaryColor),
                 verticalSpaceSmall,
-                Text("Checking distance...",
+                Text(
+                    model.status == DistanceCheckStatus.success
+                        ? "Getting credits..."
+                        : "Checking distance...",
                     style: textTheme(context).headline6),
               ],
             ),

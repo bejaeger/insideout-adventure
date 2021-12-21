@@ -28,13 +28,13 @@ class AFKFloatingActionButtons extends StatelessWidget {
           AFKFloatingActionButton(
             title: title2,
             onPressed: onPressed2!,
-            icon: Icon(iconData2!, size: 32, color: Colors.white),
+            icon: Icon(iconData2!, size: 34, color: Colors.white),
           ),
         if (onPressed2 != null) verticalSpaceSmall,
         AFKFloatingActionButton(
             title: title1,
             onPressed: onPressed1,
-            icon: Icon(iconData1, size: 32, color: Colors.white)),
+            icon: Icon(iconData1, size: 34, color: Colors.white)),
         verticalSpaceSmall,
       ],
     );

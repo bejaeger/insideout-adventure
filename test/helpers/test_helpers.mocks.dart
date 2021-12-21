@@ -1141,6 +1141,22 @@ class MockQuestService extends _i1.Mock implements _i38.QuestService {
           }),
           returnValue: Future<dynamic>.value()) as _i18.Future<dynamic>);
   @override
+  _i18.Future<dynamic> handleSuccessfullyFinishedQuest() => (super.noSuchMethod(
+      Invocation.method(#handleSuccessfullyFinishedQuest, []),
+      returnValue: Future<dynamic>.value()) as _i18.Future<dynamic>);
+  @override
+  _i18.Future<dynamic> evaluateFinishedQuest() =>
+      (super.noSuchMethod(Invocation.method(#evaluateFinishedQuest, []),
+          returnValue: Future<dynamic>.value()) as _i18.Future<dynamic>);
+  @override
+  _i18.Future<dynamic> collectCredits() =>
+      (super.noSuchMethod(Invocation.method(#collectCredits, []),
+          returnValue: Future<dynamic>.value()) as _i18.Future<dynamic>);
+  @override
+  _i18.Future<dynamic> uploadAndCleanUpFinishedQuest() =>
+      (super.noSuchMethod(Invocation.method(#uploadAndCleanUpFinishedQuest, []),
+          returnValue: Future<dynamic>.value()) as _i18.Future<dynamic>);
+  @override
   _i18.Future<dynamic> evaluateAndFinishQuest({bool? force = false}) =>
       (super.noSuchMethod(
           Invocation.method(#evaluateAndFinishQuest, [], {#force: force}),

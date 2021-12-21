@@ -6,6 +6,9 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
@@ -47,6 +50,8 @@ class BaseModel extends BaseViewModel {
   bool get hasActiveQuest => questService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => questService.activatedQuest!;
+  ActivatedQuest get previouslyFinishedQuest =>
+      questService.previouslyFinishedQuest!;
   ActivatedQuest? get activeQuestNullable => questService.activatedQuest;
   String? seconds;
   String? hours;
@@ -218,6 +223,40 @@ class BaseModel extends BaseViewModel {
         title: "Sorry",
         description:
             "An internal error occured on our side. Sorry, please try again later.");
+  }
+
+  Future handleSuccessfullyFinishedQuest() async {
+    if (activeQuestNullable?.status == QuestStatus.success) {
+      baseModelLog.i("Found that quest was successfully finished!");
+
+      try {
+        await questService.handleSuccessfullyFinishedQuest();
+        return true;
+      } catch (e) {
+        if (e is QuestServiceException) {
+          baseModelLog.e(e);
+          await dialogService.showDialog(
+              title: e.prettyDetails, buttonTitle: 'Ok');
+          replaceWithMainView(index: BottomNavBarIndex.quest);
+          questService.setUIDeadTime(false);
+        } else if (e is CloudFunctionsApiException) {
+          baseModelLog.e(e);
+          await dialogService.showDialog(
+              title: e.prettyDetails, buttonTitle: 'Ok');
+          questService.setUIDeadTime(false);
+        } else {
+          baseModelLog.e("Unknown error occured from evaluateAndFinishQuest");
+          questService.setUIDeadTime(false);
+          setBusy(false);
+          rethrow;
+        }
+        setBusy(false);
+        return false;
+      }
+    } else {
+      baseModelLog.w(
+          "Active quest either null or not successfull. Either way, this function should not have been called!");
+    }
   }
 
   //////////////////////////////////////////

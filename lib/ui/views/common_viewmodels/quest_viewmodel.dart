@@ -322,6 +322,7 @@ abstract class QuestViewModel extends BaseModel {
         setBusy(false);
         return false;
       }
+      // In case the quest is not finished yet!
       if (result is String) {
         DialogResponse<dynamic>? continueQuest;
         if (!force) {

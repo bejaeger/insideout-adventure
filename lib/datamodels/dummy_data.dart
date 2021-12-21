@@ -8,7 +8,7 @@ List<Quest> getDummyQuests() {
   return [
     getDummyVibrationSearchQuest(),
     //getDummyVibrationSearchQuest2(),
-    getDummyQuestQrCodeSearch(),
+    // getDummyQuestQrCodeSearch(),
     getDummyQuestQrCodeSearchStarenweg(),
     streeth11th2ndVibration(),
     getDummyVibrationSearchQuestFreiburg(),
@@ -257,7 +257,7 @@ Quest getDummyQuestQrCodeSearchStarenweg() {
   return Quest(
     id: "Starenweg Hunt",
     name: "Finde Versteckte Codes im Starenweg!",
-    description: "Finde alle codes im Hause Jägers!",
+    description: "Finde alle Codes im Hause Jägers!",
     afkCredits: 50,
     markers: [
       starenweg1(),

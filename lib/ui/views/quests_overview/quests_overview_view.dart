@@ -64,15 +64,14 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
                 child: _tabbar),
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: AFKFloatingActionButtons(
-          // title1: "SCAN",
-          onPressed1: model.scanQrCode,
-          iconData1: Icons.qr_code_scanner_rounded,
-          // title2: "LIST",
-          // onPressed2: model.navigateBack,
-          // iconData2: Icons.list_rounded,
-        ),
+        // floatingActionButton: AFKFloatingActionButtons(
+        //   // title1: "SCAN",
+        //   onPressed1: model.scanQrCode,
+        //   iconData1: Icons.qr_code_scanner_rounded,
+        //   // title2: "LIST",
+        //   // onPressed2: model.navigateBack,
+        //   // iconData2: Icons.list_rounded,
+        // ),
         body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           controller: _tabController,

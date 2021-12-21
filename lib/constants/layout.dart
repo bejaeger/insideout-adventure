@@ -6,4 +6,4 @@ const double kActiveQuestPanelMaxHeight = 200;
 
 const double kActiveQuestMinSize = 60;
 
-const double kBottomNavigationBarHeightCustom = 65;
+const double kBottomNavigationBarHeightCustom = 60;

@@ -14,6 +14,7 @@ import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
+import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -73,7 +74,6 @@ class _BottomBarLayoutTemplateViewState
             screens: _buildScreens(userRole: widget.userRole),
             items: _navBarsItems(userRole: widget.userRole),
             confineInSafeArea: true,
-
             handleAndroidBackButtonPress: true, // Default is true.
             resizeToAvoidBottomInset:
                 true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
@@ -112,7 +112,16 @@ class _BottomBarLayoutTemplateViewState
               duration: Duration(milliseconds: 400),
             ),
             navBarHeight: kBottomNavigationBarHeightCustom,
-            padding: const NavBarPadding.only(top: 5.0),
+            padding: const NavBarPadding.only(top: 4.0), //, bottom: 4),
+            floatingActionButton: AFKFloatingActionButtons(
+              // title1: "SCAN",
+              onPressed1: model.scanQrCode,
+              iconData1: Icons.qr_code_scanner_rounded,
+              // title2: "LIST",
+              // onPressed2: model.navigateBack,
+              // iconData2: Icons.list_rounded,
+            ),
+
             navBarStyle: NavBarStyle
                 .style16, // Choose the nav bar style with this property.
           ),
@@ -236,11 +245,11 @@ class _BottomBarLayoutTemplateViewState
           AFKNavBarItem(
             icon: Icon(Icons.explore, color: kPrimaryColor),
             inactiveIcon:
-                Icon(Icons.explore, color: kPrimaryColor.withOpacity(0.5)),
+                Icon(Icons.explore, color: kPrimaryColor.withOpacity(0.7)),
             //inactiveColorPrimary: Colors.grey[200],
             activeColorPrimary: Colors.grey[100],
             activeColorSecondary: Colors.white,
-            iconSize: 50,
+            iconSize: 40,
             title: "Quests",
           ),
           AFKNavBarItem(
@@ -286,7 +295,7 @@ class _BottomBarLayoutTemplateViewState
       inactiveIcon: inactiveIcon,
       title: title,
       textStyle:
-          textTheme(context).headline6!.copyWith(height: 0.1, fontSize: 16),
+          textTheme(context).headline6!.copyWith(height: 0.1, fontSize: 15),
       iconSize: iconSize ?? kBottomNavigationBarIconSize,
       activeColorPrimary: activeColorPrimary ?? Colors.white,
       activeColorSecondary: activeColorSecondary ?? Colors.white,

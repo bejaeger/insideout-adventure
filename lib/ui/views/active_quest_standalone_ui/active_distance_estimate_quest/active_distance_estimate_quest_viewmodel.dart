@@ -35,6 +35,7 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
   double? get currentAccuracy => _geolocationService.currentGPSAccuracy;
 
   bool startedQuest = false;
+  bool questSuccessfullyFinished = false;
 
   // User ACTION!
   Future revealDistance() async {
@@ -81,21 +82,16 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
       distanceCheckCompleter.complete(DistanceCheckStatus.internalFailure);
     }
 
-    dynamic dialogResult = await _showDistanceCheckDialog(
+    final result = await _showDistanceCheckDialog(
         completer: distanceCheckCompleter,
         distanceTravelled: distanceTravelled);
 
-    // -----------------------------------------------------
-    // Handle what was evaluated before.
-    // This could actually be handled within evaluateDistanceTravelled!
-    if (activeQuest.status == QuestStatus.success) {
-      log.i("Found that quest was successfully finished!");
-      final result = await checkQuestAndFinishWhenCompleted(showDialog: false);
-      if (result == false) {
-        // give number of try back again!
-        numberTries = numberTries - 1;
-      }
+    if (result?.confirmed == true) {
+      // this means everything went fine!
+      // Show statistics display
+      questSuccessfullyFinished = true;
     }
+
     if (activeQuestNullable?.status == QuestStatus.failed) {
       if (isSuperUser) {
         log.i("You are in admin mode and have infinite tries!");
@@ -109,6 +105,8 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
     notifyListeners();
   }
 
+  // evaluates the distance and and completes the completer for the
+  // dialog to update
   Future _evaluateDistanceTravelled(
       {required double distanceTravelled,
       required Completer<DistanceCheckStatus> completer}) async {
@@ -152,7 +150,8 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
         "distanceCheckStatus": DistanceCheckStatusModel(
           futureStatus: completer.future,
           distanceInMeter: distanceTravelled,
-        )
+        ),
+        "quest": activeQuest,
       },
     );
     return dialogResult;
@@ -208,6 +207,7 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
     distanceTravelled = 0;
     numberTries = 0;
     startedQuest = false;
+    questSuccessfullyFinished = false;
   }
 
   @override

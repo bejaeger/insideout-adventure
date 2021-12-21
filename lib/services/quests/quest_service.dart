@@ -99,9 +99,11 @@ class QuestService {
         _stopWatchService.listenToSecondTime(
             callback: periodicFuncFromViewModel);
       }
-    } else if (quest.type == QuestType.DistanceEstimate) {
-      _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
-    } else if (quest.type == QuestType.Hike) {
+    }
+    //  else if (quest.type == QuestType.DistanceEstimate) {
+    //   _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
+    // }
+    else if (quest.type == QuestType.Hike) {
       _stopWatchService.listenToSecondTime(callback: trackData);
     }
     return true;
@@ -114,6 +116,65 @@ class QuestService {
   // TODO: unit test this?
   bool get isAllMarkersCollected =>
       activatedQuest!.quest.markers.length == getNumberMarkersCollected;
+
+  Future handleSuccessfullyFinishedQuest() async {
+    // 1. Get credits collected, time elapsed and other potential data at the end of the quest
+    // 2. bookkeep credits
+    // 3. clean-up old quest
+
+    // ------------------
+    // 1.
+    // TODO
+    evaluateFinishedQuest();
+
+    // ----------------
+    // 2.
+    await collectCredits();
+
+    // ---------------
+    // 3.
+    await uploadAndCleanUpFinishedQuest();
+  }
+
+  Future evaluateFinishedQuest() async {
+    pushActivatedQuest(activatedQuest!.copyWith(
+        status: QuestStatus.success,
+        afkCreditsEarned: activatedQuest!.quest.afkCredits));
+  }
+
+  Future collectCredits() async {
+    if (activatedQuest == null) {
+      log.wtf("no active quest to collect credits from");
+      return;
+    }
+    try {
+      await _cloudFunctionsApi.bookkeepFinishedQuest(quest: activatedQuest!);
+    } catch (e) {
+      if (e is CloudFunctionsApiException) {
+        if (activatedQuest!.status != QuestStatus.success) {
+          continueIncompleteQuest();
+        }
+        rethrow;
+      } else {
+        await _firestoreApi.pushFinishedQuest(
+            quest:
+                activatedQuest!.copyWith(status: QuestStatus.internalFailure));
+        disposeActivatedQuest();
+        log.wtf(e);
+        rethrow;
+      }
+    }
+  }
+
+  Future uploadAndCleanUpFinishedQuest() async {
+    // At this point the quest has successfully finished!
+    await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
+    // keep copy of finished quest to show in success dialog view
+    previouslyFinishedQuest = activatedQuest;
+    disposeActivatedQuest();
+    setUIDeadTime(false);
+    setTrackingDeadTime(false);
+  }
 
   // Handle the scenario when a user finishes a hike
   // First evaluate the activated quest data and return values according to that
@@ -144,29 +205,9 @@ class QuestService {
             "Quest successfully finished (or forcing to finish), pushing to firebase!");
         //try {
         // if we end up here it means the quest has finished succesfully!
-        try {
-          await _cloudFunctionsApi.bookkeepFinishedQuest(
-              quest: activatedQuest!);
-        } catch (e) {
-          if (e is CloudFunctionsApiException) {
-            if (activatedQuest!.status != QuestStatus.success) {
-              continueIncompleteQuest();
-            }
-            rethrow;
-          } else {
-            await _firestoreApi.pushFinishedQuest(
-                quest: activatedQuest!
-                    .copyWith(status: QuestStatus.internalFailure));
-            disposeActivatedQuest();
-            log.wtf(e);
-            rethrow;
-          }
-        }
+        await collectCredits();
         // At this point the quest has successfully finished!
-        await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
-        // keep copy of finished quest to show in success dialog view
-        previouslyFinishedQuest = activatedQuest;
-        disposeActivatedQuest();
+        await uploadAndCleanUpFinishedQuest();
       }
     }
   }

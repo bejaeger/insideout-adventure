@@ -12,8 +12,8 @@ class AFKFloatingActionButton extends StatelessWidget {
       {Key? key,
       required this.icon,
       required this.onPressed,
-      this.height = 70,
-      this.width = 70,
+      this.height = 75,
+      this.width = 75,
       this.title})
       : super(key: key);
 
@@ -34,7 +34,8 @@ class AFKFloatingActionButton extends StatelessWidget {
         // ],
       ),
       child: FloatingActionButton(
-          elevation: 5,
+          splashColor: kDarkTurquoise,
+          elevation: 8,
           heroTag: null,
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,

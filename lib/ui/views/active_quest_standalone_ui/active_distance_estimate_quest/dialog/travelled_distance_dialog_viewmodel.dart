@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/helpers/distance_check_status_model.dart';
+import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
@@ -8,7 +9,7 @@ class TravelledDistanceDialogViewModel extends BaseModel {
 
   DistanceCheckStatusModel? distanceCheckStatus;
   DistanceCheckStatus? status;
-
+  bool collectedCredits = false;
   String? title;
   String? description;
   String? mainButtonTitle;
@@ -58,9 +59,11 @@ class TravelledDistanceDialogViewModel extends BaseModel {
           addString; //  + "You still have some way to go, try again!";
       mainButtonTitle = "Got it";
     } else if (status == DistanceCheckStatus.success) {
-      title = "CONGRATULATIONS";
-      description =
-          addString + "This means you successfully estimated the distance!";
+      title = "SUCCESS";
+      description = addString +
+          "You earned " +
+          request.data["quest"].quest.afkCredits.toStringAsFixed(0) +
+          " AFK Credits!";
       mainButtonTitle = "Get Credits!";
     } else if (status == DistanceCheckStatus.failed) {
       log.i(
@@ -83,5 +86,17 @@ class TravelledDistanceDialogViewModel extends BaseModel {
 
   String getDistanceToTravel() {
     return activeQuest.quest.distanceToTravelInMeter!.toStringAsFixed(0);
+  }
+
+  Future getCredits() async {
+    setBusy(true);
+    final result = await handleSuccessfullyFinishedQuest();
+    if (result == true) {
+      log.i("Credits succesfully collected");
+      collectedCredits = true;
+    } else {
+      replaceWithMainView(index: BottomNavBarIndex.quest);
+    }
+    setBusy(false);
   }
 }
