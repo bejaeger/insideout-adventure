@@ -20,6 +20,7 @@ class Quest with _$Quest {
     String? networkImagePath,
     List<num>? afkCreditsPerMarker,
     num? bonusAfkCreditsOnSuccess,
+    double? distanceFromUser,
     double? distanceToTravelInMeter, // for distance estimate
   }) = _Quest;
 

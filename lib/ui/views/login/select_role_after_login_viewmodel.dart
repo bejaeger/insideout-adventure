@@ -19,19 +19,12 @@ class SelectRoleAfterLoginViewModel extends TransferBaseViewModel {
     _navigationService.replaceWith(Routes.loginView);
   }
 
-  dynamic createSponsorAccountAndNavigateToHome({required UserRole role}) {
-    //setBusy(true);
+  void createAccountAndNavigateToHome({required UserRole role}) async {
     try {
-      if (role == UserRole.sponsor) {
-        return () =>
-            createUserAccountAndSyncData(authMethod: authMethod, role: role);
-      } else if (role == UserRole.explorer) {
-        return () =>
-            createUserAccountAndSyncData(authMethod: authMethod, role: role);
-      } else {
-        return () =>
-            createUserAccountAndSyncData(authMethod: authMethod, role: role);
-      }
+      await _userService.createUserAccountFromFirebaseUser(
+          role: role, authMethod: authMethod);
+      await _userService.syncUserAccount();
+      replaceWithHomeView();
     } catch (e) {
       // TODO: Proper error message to user
       log.e("Could not create user account, error: $e");
@@ -39,14 +32,6 @@ class SelectRoleAfterLoginViewModel extends TransferBaseViewModel {
     //setBusy(false);
   }
 
-  Future createUserAccountAndSyncData(
-      {required UserRole role,
-      required AuthenticationMethod authMethod}) async {
-    await _userService.createUserAccountFromFirebaseUser(
-        role: role, authMethod: authMethod);
-    await _userService.syncUserAccount();
-    replaceWithHomeView();
-  }
 /*
   Future createSponsorAccountAndNavigateToSponsorHome() async {
     try {

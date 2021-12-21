@@ -6,7 +6,6 @@ import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
-import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
@@ -148,6 +147,19 @@ class _BottomBarLayoutTemplateViewState
           if (widget.questViewIndex == QuestViewType.map) MapView(),
           GiftCardView(),
         ];
+      case UserRole.superUser:
+        return [
+          ExplorerHomeView(),
+          if (widget.questViewIndex == QuestViewType.questlist)
+            QuestsOverviewView(),
+          if (widget.questViewIndex == QuestViewType.singlequest)
+            SingleQuestTypeView(
+              quest: widget.quest,
+              questType: widget.questType,
+            ),
+          if (widget.questViewIndex == QuestViewType.map) MapView(),
+          GiftCardView(),
+        ];
       default:
         return [
           AdminHomeView(),
@@ -183,7 +195,7 @@ class _BottomBarLayoutTemplateViewState
           PersistentBottomNavBarItem(
             icon: Icon(Icons.home),
             inactiveIcon: Icon(Icons.home_outlined),
-            //title: ("Home"),
+            title: ("Home"),
             iconSize: kBottomNavigationBarIconSize,
             activeColorPrimary: Colors.white,
             inactiveColorPrimary: Colors.white70,
@@ -192,8 +204,7 @@ class _BottomBarLayoutTemplateViewState
             iconSize: kBottomNavigationBarIconSize,
             icon: Icon(Icons.card_giftcard),
             inactiveIcon: Icon(Icons.shop_outlined),
-
-            //title: ("Profile"),
+            title: ("Rewards"),
             activeColorPrimary: Colors.white,
             inactiveColorPrimary: Colors.white70,
           ),
@@ -203,7 +214,7 @@ class _BottomBarLayoutTemplateViewState
           PersistentBottomNavBarItem(
             icon: Icon(Icons.home),
             inactiveIcon: Icon(Icons.home_outlined),
-            //title: ("Home"),
+            title: ("Home"),
             iconSize: kBottomNavigationBarIconSize,
             activeColorPrimary: Colors.white,
             inactiveColorPrimary: Colors.white70,
@@ -214,7 +225,7 @@ class _BottomBarLayoutTemplateViewState
             ),
             inactiveIcon: Icon(Icons.explore_outlined),
             iconSize: kBottomNavigationBarIconSize,
-            //title: ("Projects"),
+            title: ("Quests"),
             activeColorPrimary: Colors.white,
             inactiveColorPrimary: Colors.white70,
           ),
@@ -222,8 +233,36 @@ class _BottomBarLayoutTemplateViewState
             iconSize: kBottomNavigationBarIconSize,
             icon: Icon(Icons.shop),
             inactiveIcon: Icon(Icons.shop_outlined),
-
-            //title: ("Profile"),
+            title: ("Rewards"),
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+        ];
+      case UserRole.superUser:
+        return [
+          PersistentBottomNavBarItem(
+            icon: Icon(Icons.home),
+            inactiveIcon: Icon(Icons.home_outlined),
+            title: ("Home"),
+            iconSize: kBottomNavigationBarIconSize,
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+          PersistentBottomNavBarItem(
+            icon: Icon(
+              Icons.explore,
+            ),
+            inactiveIcon: Icon(Icons.explore_outlined),
+            iconSize: kBottomNavigationBarIconSize,
+            title: ("Quests"),
+            activeColorPrimary: Colors.white,
+            inactiveColorPrimary: Colors.white70,
+          ),
+          PersistentBottomNavBarItem(
+            iconSize: kBottomNavigationBarIconSize,
+            icon: Icon(Icons.shop),
+            inactiveIcon: Icon(Icons.shop_outlined),
+            title: ("Rewards"),
             activeColorPrimary: Colors.white,
             inactiveColorPrimary: Colors.white70,
           ),
@@ -233,8 +272,7 @@ class _BottomBarLayoutTemplateViewState
           PersistentBottomNavBarItem(
             icon: Icon(Icons.home),
             inactiveIcon: Icon(Icons.home_outlined),
-
-            //title: ("Home"),
+            title: "Home",
             iconSize: kBottomNavigationBarIconSize,
             activeColorPrimary: Colors.white,
             inactiveColorPrimary: Colors.white70,
@@ -245,15 +283,14 @@ class _BottomBarLayoutTemplateViewState
             ),
             inactiveIcon: Icon(Icons.explore_outlined),
             iconSize: kBottomNavigationBarIconSize,
-            //title: ("Projects"),
+            title: ("Quests"),
             activeColorPrimary: Colors.white,
             inactiveColorPrimary: Colors.white70,
           ),
           PersistentBottomNavBarItem(
             icon: Icon(Icons.mark_email_read_outlined),
             inactiveIcon: Icon(Icons.mark_chat_read),
-
-            //title: ("Home"),
+            title: ("Home"),
             iconSize: kBottomNavigationBarIconSize,
             activeColorPrimary: Colors.white,
             inactiveColorPrimary: Colors.white70,

@@ -73,7 +73,7 @@ class _BasicDialogContent extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     verticalSpaceSmall,
-                    Text("CONGRATULATIONS!",
+                    Text("CONGRATULATIONS",
                         style: textTheme(context)
                             .headline5!
                             .copyWith(color: kPrimaryColor)),

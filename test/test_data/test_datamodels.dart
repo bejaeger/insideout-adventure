@@ -13,43 +13,38 @@ import 'test_constants.dart';
 
 User getTestUserSponsor() {
   return User(
-    uid: "testId",
-    fullName: "testName",
-    email: "test@email.com",
-    role: UserRole.sponsor,
-    sponsorIds: [],
-    explorerIds: [],
-    newUser: false,
-    authMethod: AuthenticationMethod.email
-  );
+      uid: "testId",
+      fullName: "testName",
+      email: "test@email.com",
+      role: UserRole.sponsor,
+      sponsorIds: [],
+      explorerIds: [],
+      newUser: false,
+      authMethod: AuthenticationMethod.email);
 }
 
 User getTestUserExplorer() {
   return User(
-    uid: "testId",
-    fullName: "testName",
-    email: "test@email.com",
-    role: UserRole.explorer,
-    sponsorIds: [],
-    explorerIds: [],
-    newUser: false,
-        authMethod: AuthenticationMethod.email
-
-  );
+      uid: "testId",
+      fullName: "testName",
+      email: "test@email.com",
+      role: UserRole.explorer,
+      sponsorIds: [],
+      explorerIds: [],
+      newUser: false,
+      authMethod: AuthenticationMethod.email);
 }
 
 User getTestUserAdmin() {
   return User(
-    uid: "testId",
-    fullName: "testName",
-    email: "test@email.com",
-    role: UserRole.admin,
-    sponsorIds: [],
-    explorerIds: [],
-    newUser: false,
-        authMethod: AuthenticationMethod.email
-
-  );
+      uid: "testId",
+      fullName: "testName",
+      email: "test@email.com",
+      role: UserRole.admin,
+      sponsorIds: [],
+      explorerIds: [],
+      newUser: false,
+      authMethod: AuthenticationMethod.email);
 }
 
 Position getTestPosition1() {

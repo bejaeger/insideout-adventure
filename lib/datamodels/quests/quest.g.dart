@@ -26,6 +26,7 @@ _$_Quest _$$_QuestFromJson(Map<String, dynamic> json) => _$_Quest(
           ?.map((e) => e as num)
           .toList(),
       bonusAfkCreditsOnSuccess: json['bonusAfkCreditsOnSuccess'] as num?,
+      distanceFromUser: (json['distanceFromUser'] as num?)?.toDouble(),
       distanceToTravelInMeter:
           (json['distanceToTravelInMeter'] as num?)?.toDouble(),
     );
@@ -42,6 +43,7 @@ Map<String, dynamic> _$$_QuestToJson(_$_Quest instance) => <String, dynamic>{
       'networkImagePath': instance.networkImagePath,
       'afkCreditsPerMarker': instance.afkCreditsPerMarker,
       'bonusAfkCreditsOnSuccess': instance.bonusAfkCreditsOnSuccess,
+      'distanceFromUser': instance.distanceFromUser,
       'distanceToTravelInMeter': instance.distanceToTravelInMeter,
     };
 

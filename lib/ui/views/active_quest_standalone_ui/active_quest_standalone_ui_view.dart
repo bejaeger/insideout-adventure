@@ -22,22 +22,18 @@ class ActiveQuestStandaloneUIView extends StatelessWidget {
           final currentQuest = quest ?? model.activeQuest.quest;
           return currentQuest.type == QuestType.DistanceEstimate
               ? ActiveDistanceEstimateQuestView(
-                  quest: quest,
+                  quest: currentQuest,
                 )
               : currentQuest.type == QuestType.TreasureLocationSearch ||
                       currentQuest.type ==
                           QuestType.TreasureLocationSearchAutomatic
                   ? ActiveTreasureLocationSearchQuestView(
-                      quest: quest,
-                      onPressed: () => null,
-                      lastDistance:
-                          model.activeQuestNullable?.lastDistanceInMeters,
-                      currentDistance:
-                          model.activeQuestNullable?.currentDistanceInMeters)
+                      quest: currentQuest,
+                    )
                   : currentQuest.type == QuestType.Hike
                       ? MapView()
                       : currentQuest.type == QuestType.QRCodeSearch
-                          ? ActiveQrCodeSearchView(quest: quest)
+                          ? ActiveQrCodeSearchView(quest: currentQuest)
                           : Text(
                               "ERROR! Active quest view requested with unknown type. This should be reported to a developer. Thank you!");
         });

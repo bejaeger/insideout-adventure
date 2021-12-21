@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class ActiveDistanceEstimateQuestView extends StatelessWidget {
-  final Quest? quest;
+  final Quest quest;
 
   const ActiveDistanceEstimateQuestView({
     Key? key,
@@ -172,25 +172,25 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                                 ),
                                 verticalSpaceMedium,
 
-                                if (model.userIsAdmin &&
+                                if (model.isSuperUser &&
                                     model.currentSpeed != null)
                                   Text("Current Speed",
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
                                       style: textTheme(context).headline6),
-                                if (model.userIsAdmin &&
+                                if (model.isSuperUser &&
                                     model.currentSpeed != null)
                                   Text(
                                       model.currentSpeed!.toStringAsFixed(1) +
                                           "m",
                                       style: textTheme(context).headline4),
-                                if (model.userIsAdmin &&
+                                if (model.isSuperUser &&
                                     model.currentAccuracy != null)
                                   Text("Current Accuracy",
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
                                       style: textTheme(context).headline6),
-                                if (model.userIsAdmin &&
+                                if (model.isSuperUser &&
                                     model.currentAccuracy != null)
                                   Text(
                                       model.currentAccuracy!

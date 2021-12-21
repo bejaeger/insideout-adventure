@@ -33,6 +33,7 @@ class _$QuestTearOff {
       String? networkImagePath,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess,
+      double? distanceFromUser,
       double? distanceToTravelInMeter}) {
     return _Quest(
       id: id,
@@ -46,6 +47,7 @@ class _$QuestTearOff {
       networkImagePath: networkImagePath,
       afkCreditsPerMarker: afkCreditsPerMarker,
       bonusAfkCreditsOnSuccess: bonusAfkCreditsOnSuccess,
+      distanceFromUser: distanceFromUser,
       distanceToTravelInMeter: distanceToTravelInMeter,
     );
   }
@@ -71,6 +73,7 @@ mixin _$Quest {
   String? get networkImagePath => throw _privateConstructorUsedError;
   List<num>? get afkCreditsPerMarker => throw _privateConstructorUsedError;
   num? get bonusAfkCreditsOnSuccess => throw _privateConstructorUsedError;
+  double? get distanceFromUser => throw _privateConstructorUsedError;
   double? get distanceToTravelInMeter => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -94,6 +97,7 @@ abstract class $QuestCopyWith<$Res> {
       String? networkImagePath,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess,
+      double? distanceFromUser,
       double? distanceToTravelInMeter});
 
   $AFKMarkerCopyWith<$Res>? get startMarker;
@@ -121,6 +125,7 @@ class _$QuestCopyWithImpl<$Res> implements $QuestCopyWith<$Res> {
     Object? networkImagePath = freezed,
     Object? afkCreditsPerMarker = freezed,
     Object? bonusAfkCreditsOnSuccess = freezed,
+    Object? distanceFromUser = freezed,
     Object? distanceToTravelInMeter = freezed,
   }) {
     return _then(_value.copyWith(
@@ -168,6 +173,10 @@ class _$QuestCopyWithImpl<$Res> implements $QuestCopyWith<$Res> {
           ? _value.bonusAfkCreditsOnSuccess
           : bonusAfkCreditsOnSuccess // ignore: cast_nullable_to_non_nullable
               as num?,
+      distanceFromUser: distanceFromUser == freezed
+          ? _value.distanceFromUser
+          : distanceFromUser // ignore: cast_nullable_to_non_nullable
+              as double?,
       distanceToTravelInMeter: distanceToTravelInMeter == freezed
           ? _value.distanceToTravelInMeter
           : distanceToTravelInMeter // ignore: cast_nullable_to_non_nullable
@@ -215,6 +224,7 @@ abstract class _$QuestCopyWith<$Res> implements $QuestCopyWith<$Res> {
       String? networkImagePath,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess,
+      double? distanceFromUser,
       double? distanceToTravelInMeter});
 
   @override
@@ -245,6 +255,7 @@ class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
     Object? networkImagePath = freezed,
     Object? afkCreditsPerMarker = freezed,
     Object? bonusAfkCreditsOnSuccess = freezed,
+    Object? distanceFromUser = freezed,
     Object? distanceToTravelInMeter = freezed,
   }) {
     return _then(_Quest(
@@ -292,6 +303,10 @@ class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
           ? _value.bonusAfkCreditsOnSuccess
           : bonusAfkCreditsOnSuccess // ignore: cast_nullable_to_non_nullable
               as num?,
+      distanceFromUser: distanceFromUser == freezed
+          ? _value.distanceFromUser
+          : distanceFromUser // ignore: cast_nullable_to_non_nullable
+              as double?,
       distanceToTravelInMeter: distanceToTravelInMeter == freezed
           ? _value.distanceToTravelInMeter
           : distanceToTravelInMeter // ignore: cast_nullable_to_non_nullable
@@ -316,6 +331,7 @@ class _$_Quest implements _Quest {
       this.networkImagePath,
       this.afkCreditsPerMarker,
       this.bonusAfkCreditsOnSuccess,
+      this.distanceFromUser,
       this.distanceToTravelInMeter});
 
   factory _$_Quest.fromJson(Map<String, dynamic> json) =>
@@ -344,11 +360,13 @@ class _$_Quest implements _Quest {
   @override
   final num? bonusAfkCreditsOnSuccess;
   @override
+  final double? distanceFromUser;
+  @override
   final double? distanceToTravelInMeter;
 
   @override
   String toString() {
-    return 'Quest(id: $id, name: $name, description: $description, type: $type, startMarker: $startMarker, finishMarker: $finishMarker, markers: $markers, afkCredits: $afkCredits, networkImagePath: $networkImagePath, afkCreditsPerMarker: $afkCreditsPerMarker, bonusAfkCreditsOnSuccess: $bonusAfkCreditsOnSuccess, distanceToTravelInMeter: $distanceToTravelInMeter)';
+    return 'Quest(id: $id, name: $name, description: $description, type: $type, startMarker: $startMarker, finishMarker: $finishMarker, markers: $markers, afkCredits: $afkCredits, networkImagePath: $networkImagePath, afkCreditsPerMarker: $afkCreditsPerMarker, bonusAfkCreditsOnSuccess: $bonusAfkCreditsOnSuccess, distanceFromUser: $distanceFromUser, distanceToTravelInMeter: $distanceToTravelInMeter)';
   }
 
   @override
@@ -387,6 +405,9 @@ class _$_Quest implements _Quest {
                 const DeepCollectionEquality().equals(
                     other.bonusAfkCreditsOnSuccess,
                     bonusAfkCreditsOnSuccess)) &&
+            (identical(other.distanceFromUser, distanceFromUser) ||
+                const DeepCollectionEquality()
+                    .equals(other.distanceFromUser, distanceFromUser)) &&
             (identical(
                     other.distanceToTravelInMeter, distanceToTravelInMeter) ||
                 const DeepCollectionEquality().equals(
@@ -407,6 +428,7 @@ class _$_Quest implements _Quest {
       const DeepCollectionEquality().hash(networkImagePath) ^
       const DeepCollectionEquality().hash(afkCreditsPerMarker) ^
       const DeepCollectionEquality().hash(bonusAfkCreditsOnSuccess) ^
+      const DeepCollectionEquality().hash(distanceFromUser) ^
       const DeepCollectionEquality().hash(distanceToTravelInMeter);
 
   @JsonKey(ignore: true)
@@ -433,6 +455,7 @@ abstract class _Quest implements Quest {
       String? networkImagePath,
       List<num>? afkCreditsPerMarker,
       num? bonusAfkCreditsOnSuccess,
+      double? distanceFromUser,
       double? distanceToTravelInMeter}) = _$_Quest;
 
   factory _Quest.fromJson(Map<String, dynamic> json) = _$_Quest.fromJson;
@@ -459,6 +482,8 @@ abstract class _Quest implements Quest {
   List<num>? get afkCreditsPerMarker => throw _privateConstructorUsedError;
   @override
   num? get bonusAfkCreditsOnSuccess => throw _privateConstructorUsedError;
+  @override
+  double? get distanceFromUser => throw _privateConstructorUsedError;
   @override
   double? get distanceToTravelInMeter => throw _privateConstructorUsedError;
   @override

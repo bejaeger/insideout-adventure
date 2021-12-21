@@ -25,9 +25,11 @@ class MapViewModel extends MapBaseViewModel {
   final _qrCodeService = locator<QRCodeService>();
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
+  bool initialized = false;
 
   Future initialize() async {
     if (hasActiveQuest) return;
+    initialized = false;
     log.i("Initializing map view");
     setBusy(true);
     try {
@@ -60,7 +62,7 @@ class MapViewModel extends MapBaseViewModel {
       }
     }
     try {
-      await loadQuests();
+      // await loadQuests();
       extractStartMarkersAndAddToMap();
       notifyListeners();
     } catch (e) {
@@ -120,7 +122,7 @@ class MapViewModel extends MapBaseViewModel {
             // event triggered when user taps marker
 
             bool adminMode = false;
-            if (userIsAdmin) {
+            if (isSuperUser) {
               adminMode = await showAdminDialogAndGetResponse();
               if (adminMode) {
                 String qrCodeString =
@@ -129,7 +131,7 @@ class MapViewModel extends MapBaseViewModel {
                     arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
               }
             }
-            if (!userIsAdmin || adminMode == false) {
+            if (!isSuperUser || adminMode == false) {
               if (hasActiveQuest == false) {
                 await displayQuestBottomSheet(
                   quest: quest,

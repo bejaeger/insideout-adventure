@@ -23,7 +23,7 @@ class _$AFKMarkerTearOff {
 
   _AFKMarker call(
       {required String id,
-      required String qrCodeId,
+      String? qrCodeId,
       String? nextLocationSolution,
       String? nextLocationHint,
       String? nextLocationPictureHint,
@@ -53,7 +53,7 @@ const $AFKMarker = _$AFKMarkerTearOff();
 /// @nodoc
 mixin _$AFKMarker {
   String get id => throw _privateConstructorUsedError;
-  String get qrCodeId => throw _privateConstructorUsedError;
+  String? get qrCodeId => throw _privateConstructorUsedError;
   String? get nextLocationSolution => throw _privateConstructorUsedError;
   String? get nextLocationHint => throw _privateConstructorUsedError;
   String? get nextLocationPictureHint => throw _privateConstructorUsedError;
@@ -73,7 +73,7 @@ abstract class $AFKMarkerCopyWith<$Res> {
       _$AFKMarkerCopyWithImpl<$Res>;
   $Res call(
       {String id,
-      String qrCodeId,
+      String? qrCodeId,
       String? nextLocationSolution,
       String? nextLocationHint,
       String? nextLocationPictureHint,
@@ -109,7 +109,7 @@ class _$AFKMarkerCopyWithImpl<$Res> implements $AFKMarkerCopyWith<$Res> {
       qrCodeId: qrCodeId == freezed
           ? _value.qrCodeId
           : qrCodeId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       nextLocationSolution: nextLocationSolution == freezed
           ? _value.nextLocationSolution
           : nextLocationSolution // ignore: cast_nullable_to_non_nullable
@@ -146,7 +146,7 @@ abstract class _$AFKMarkerCopyWith<$Res> implements $AFKMarkerCopyWith<$Res> {
   @override
   $Res call(
       {String id,
-      String qrCodeId,
+      String? qrCodeId,
       String? nextLocationSolution,
       String? nextLocationHint,
       String? nextLocationPictureHint,
@@ -183,7 +183,7 @@ class __$AFKMarkerCopyWithImpl<$Res> extends _$AFKMarkerCopyWithImpl<$Res>
       qrCodeId: qrCodeId == freezed
           ? _value.qrCodeId
           : qrCodeId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       nextLocationSolution: nextLocationSolution == freezed
           ? _value.nextLocationSolution
           : nextLocationSolution // ignore: cast_nullable_to_non_nullable
@@ -217,7 +217,7 @@ class __$AFKMarkerCopyWithImpl<$Res> extends _$AFKMarkerCopyWithImpl<$Res>
 class _$_AFKMarker implements _AFKMarker {
   _$_AFKMarker(
       {required this.id,
-      required this.qrCodeId,
+      this.qrCodeId,
       this.nextLocationSolution,
       this.nextLocationHint,
       this.nextLocationPictureHint,
@@ -231,7 +231,7 @@ class _$_AFKMarker implements _AFKMarker {
   @override
   final String id;
   @override
-  final String qrCodeId;
+  final String? qrCodeId;
   @override
   final String? nextLocationSolution;
   @override
@@ -305,7 +305,7 @@ class _$_AFKMarker implements _AFKMarker {
 abstract class _AFKMarker implements AFKMarker {
   factory _AFKMarker(
       {required String id,
-      required String qrCodeId,
+      String? qrCodeId,
       String? nextLocationSolution,
       String? nextLocationHint,
       String? nextLocationPictureHint,
@@ -319,7 +319,7 @@ abstract class _AFKMarker implements AFKMarker {
   @override
   String get id => throw _privateConstructorUsedError;
   @override
-  String get qrCodeId => throw _privateConstructorUsedError;
+  String? get qrCodeId => throw _privateConstructorUsedError;
   @override
   String? get nextLocationSolution => throw _privateConstructorUsedError;
   @override

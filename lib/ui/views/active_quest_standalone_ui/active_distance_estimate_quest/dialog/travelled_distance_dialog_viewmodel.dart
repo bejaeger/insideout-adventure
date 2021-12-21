@@ -58,14 +58,14 @@ class TravelledDistanceDialogViewModel extends BaseModel {
           addString; //  + "You still have some way to go, try again!";
       mainButtonTitle = "Got it";
     } else if (status == DistanceCheckStatus.success) {
-      title = "CONGRATULATIONS!!!";
+      title = "CONGRATULATIONS";
       description =
           addString + "This means you successfully estimated the distance!";
       mainButtonTitle = "Get Credits!";
     } else if (status == DistanceCheckStatus.failed) {
       log.i(
           "The order was succesfull but there was no pre-purchased gift card available!");
-      title = "You did not succeed";
+      title = "Unsuccesful";
       description =
           addString + "Unfortunately, you didn't succeed this time, try again!";
       mainButtonTitle = "Got it";

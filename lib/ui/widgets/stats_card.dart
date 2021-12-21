@@ -12,6 +12,7 @@ class StatsCard extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final String buttonText;
+  final double? iconHeight;
   final void Function()? onButtonPressed;
   final void Function()? onCardPressed;
 
@@ -25,6 +26,7 @@ class StatsCard extends StatelessWidget {
       this.buttonText = "Donate",
       this.onCardPressed,
       this.statisticCredits,
+      this.iconHeight,
       this.statsType = StatsType.unlockedCredits})
       : super(key: key);
 
@@ -52,6 +54,7 @@ class StatsCard extends StatelessWidget {
           child: Column(
             children: [
               AFKCreditsIcon(
+                  height: iconHeight,
                   locked:
                       statsType == StatsType.unlockedCredits ? false : true),
               Expanded(
@@ -62,41 +65,30 @@ class StatsCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         if (title != null)
-                          Text(
-                            title!,
-                            style: textTheme(context).headline4!.copyWith(
-                                fontSize: 18,
-                                color: kDarkTurquoise,
-                                fontWeight: FontWeight.w600),
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              title!,
+                              style: textTheme(context).headline4!.copyWith(
+                                  fontSize: 18,
+                                  color: kDarkTurquoise,
+                                  fontWeight: FontWeight.w600),
+                            ),
                           ), //verticalSpaceTiny,
                         statisticCredits != null
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    statistic,
-                                    maxLines: 1,
-                                    style:
-                                        textTheme(context).headline2!.copyWith(
-                                              fontSize: 28,
-                                            ),
-                                  ),
-                                  Text(
-                                    " -> ",
-                                    style:
-                                        textTheme(context).headline2!.copyWith(
-                                              fontSize: 28,
-                                            ),
-                                  ),
-                                  Text(
-                                    statisticCredits! + " AFKC",
-                                    maxLines: 1,
-                                    style:
-                                        textTheme(context).headline2!.copyWith(
-                                              fontSize: 28,
-                                            ),
-                                  ),
-                                ],
+                            ? FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  statistic +
+                                      " = " +
+                                      statisticCredits! +
+                                      " AFKC",
+                                  maxLines: 1,
+                                  style: textTheme(context).headline2!.copyWith(
+                                        fontSize: 20,
+                                        color: kDarkTurquoise,
+                                      ),
+                                ),
                               )
                             : Text(
                                 statistic,
@@ -146,15 +138,17 @@ class StatsCard extends StatelessWidget {
 
 class AFKCreditsIcon extends StatelessWidget {
   final bool locked;
+  final double? height;
   const AFKCreditsIcon({
     Key? key,
     this.locked = false,
+    this.height,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 70,
+        height: height ?? 70,
         child: AspectRatio(
           aspectRatio: 1,
           child: Stack(
@@ -162,7 +156,8 @@ class AFKCreditsIcon extends StatelessWidget {
             children: [
               Align(
                   alignment: Alignment.center,
-                  child: Image.asset(kAFKCreditsLogoPath, height: 60)),
+                  child: Image.asset(kAFKCreditsLogoPath,
+                      height: (height ?? 70) - 10.0)),
               if (locked)
                 Align(
                   alignment: locked ? Alignment.center : Alignment.bottomRight,

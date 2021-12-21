@@ -265,7 +265,7 @@ Quest getDummyQuestQrCodeSearchStarenweg() {
       starenweg3(),
     ],
     // TODO: QRCodeHuntIndoor
-    type: QuestType.QRCodeSearch,
+    type: QuestType.QRCodeHuntIndoor,
     startMarker: starenweg1(),
     finishMarker: starenweg3(),
   );
@@ -586,9 +586,8 @@ AFKMarker freiburg1() {
 
 AFKMarker freiburg2() {
   return AFKMarker(
-    id: "freiburg2",
-    qrCodeId: "freiburg2",
-    lat: 48.01694856856642,
-    lon: 7.858700560921927
-  ); 
+      id: "freiburg2",
+      qrCodeId: "freiburg2",
+      lat: 48.01694856856642,
+      lon: 7.858700560921927);
 }

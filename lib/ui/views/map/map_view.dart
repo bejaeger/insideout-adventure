@@ -1,66 +1,44 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_view.dart';
-import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
-import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import '../common_viewmodels/map_viewmodel.dart';
 
-class MapView extends StatelessWidget {
+class MapView extends StatefulWidget {
   const MapView({Key? key}) : super(key: key);
 
   @override
+  State<MapView> createState() => _MapViewState();
+}
+
+class _MapViewState extends State<MapView> with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MapViewModel>.reactive(
-      //  onModelReady: (model) => model.createMarkers(),
-      onModelReady: (model) {
-        //SchedulerBinding.instance?.addPostFrameCallback((timeStamp) async {
-        model.initialize();
-        //});
-        return;
-      },
-      builder: (context, model, child) => model.hasActiveQuest
-          ? ActiveMapQuestView()
-          : Scaffold(
-              appBar: AppBar(
-                title: Text("Map Games"),
-                leading: IconButton(
-                  onPressed: model.navigateBack,
-                  icon: Icon(Icons.arrow_back),
-                ),
-              ),
-              // appBar: CustomAppBar(
-              //   title: 'AFK TREASURE HUNTS',
-              // ),
-              body: IndexedStack(index: model.currentIndex, children: [
-                GoogleMapsScreen(model: model),
-                QuestListScreen(
-                  quests: model.nearbyQuests,
-                  isBusy: model.isBusy,
-                  onCardTapped: model.onQuestInListTapped,
-                  switchToMap: model.toggleIndex,
-                ),
-              ]),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.endFloat,
-              floatingActionButton: AFKFloatingActionButtons(
-                // title1: "SCAN",
-                onPressed1: model.scanQrCode,
-                iconData1: Icons.qr_code_scanner_rounded,
-                title2: "LIST",
-                onPressed2: model.navigateBack,
-                iconData2: Icons.list_rounded,
-              ),
-            ),
-      viewModelBuilder: () => MapViewModel(),
-    );
+        //  onModelReady: (model) => model.createMarkers(),
+        //disposeViewModel: false,
+        fireOnModelReadyOnce: true,
+        onModelReady: (model) {
+          model.initialize();
+          return;
+        },
+        viewModelBuilder: () => MapViewModel(),
+        builder: (context, model, child) {
+          return GoogleMapsScreen(model: model);
+        }
+        // model.hasActiveQuest
+        //     ? ActiveMapQuestView()
+        //     : GoogleMapsScreen(model: model),
+
+        );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class GoogleMapsScreen extends StatelessWidget {
@@ -72,41 +50,33 @@ class GoogleMapsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: model.isBusy
-          ? Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            )
-          : GoogleMap(
-              onTap: (_) => model.notifyListeners(),
-              //mapType: MapType.hybrid,
-              initialCameraPosition: model.initialCameraPosition(),
+    return GoogleMap(
+      onTap: (_) => model.notifyListeners(),
+      //mapType: MapType.hybrid,
+      initialCameraPosition: model.initialCameraPosition(),
 
-              //Place Markers in the Map
-              markers: model.markersOnMap,
-              // onCameraMove: ,
+      //Place Markers in the Map
+      markers: model.markersOnMap,
+      // onCameraMove: ,
 
-              //callback that’s called when the map is ready to use.
-              onMapCreated: model.onMapCreated,
+      //callback that’s called when the map is ready to use.
+      onMapCreated: model.onMapCreated,
 
-              //enable zoom gestures
-              zoomGesturesEnabled: true,
-              //minMaxZoomPreference: MinMaxZoomPreference(13,17)
+      //enable zoom gestures
+      zoomGesturesEnabled: true,
+      //minMaxZoomPreference: MinMaxZoomPreference(13,17)
 
-              //For showing your current location on Map with a blue dot.
-              myLocationEnabled: true,
-              //Remove the Zoom in and out button
-              zoomControlsEnabled: false,
+      //For showing your current location on Map with a blue dot.
+      myLocationEnabled: true,
+      //Remove the Zoom in and out button
+      zoomControlsEnabled: false,
 
-              // Button used for bringing the user location to the center of the camera view.
-              myLocationButtonEnabled: true,
+      // Button used for bringing the user location to the center of the camera view.
+      myLocationButtonEnabled: true,
 
-              //onTap: model.handleTap(),
-              //Enable Traffic Mode.
-              //trafficEnabled: true,
-            ),
+      //onTap: model.handleTap(),
+      //Enable Traffic Mode.
+      //trafficEnabled: true,
     );
   }
 }

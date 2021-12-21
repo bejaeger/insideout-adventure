@@ -51,6 +51,9 @@ class QuestService {
   void setStartedQuest(Quest? quest) {
     _startedQuest = quest;
   }
+
+  bool sortedNearbyQuests = false;
+  List<QuestType> allQuestTypes = [];
   // num get numberCollectedMarkers =>
 
   Future startQuest(
@@ -471,7 +474,7 @@ class QuestService {
     if (!hasActiveQuest) {
       // get Quests with start marker id
       List<Quest> quests =
-          await _getQuestsWithStartMarkerId(markerId: marker.id);
+          await getQuestsWithStartMarkerId(markerId: marker.id);
       return QuestQRCodeScanResult.quests(quests: quests);
     } else {
       // Checks to perform:
@@ -589,6 +592,18 @@ class QuestService {
     return returnQuests;
   }
 
+  void extractAllQuestTypes() {
+    if (nearbyQuests.isNotEmpty) {
+      for (Quest _q in nearbyQuests) {
+        if (!allQuestTypes.any((element) => element == _q.type)) {
+          allQuestTypes.add(_q.type);
+        }
+      }
+    } else {
+      log.w('No nearby quests found');
+    }
+  }
+
   // Useful for UI, check if active quest screen is standalone ui or map view!
   QuestUIStyle getQuestUIStyle({Quest? quest}) {
     Quest? usedQuest;
@@ -605,11 +620,41 @@ class QuestService {
     if (type == QuestType.TreasureLocationSearch ||
         type == QuestType.TreasureLocationSearchAutomatic ||
         type == QuestType.DistanceEstimate ||
-        type == QuestType.QRCodeSearch) {
+        type == QuestType.QRCodeSearch ||
+        type == QuestType.QRCodeSearchIndoor ||
+        type == QuestType.QRCodeHuntIndoor) {
       return QuestUIStyle.standalone;
     } else {
       return QuestUIStyle.map;
     }
+  }
+
+  Future sortNearbyQuests() async {
+    if (nearbyQuests.isNotEmpty) {
+      log.i("Check distances for current quest list");
+
+      // need to use normal for loop to await results
+      for (var i = 0; i < nearbyQuests.length; i++) {
+        if (nearbyQuests[i].startMarker != null) {
+          double distance =
+              await _geolocationService.distanceBetweenUserAndCoordinates(
+                  lat: nearbyQuests[i].startMarker!.lat,
+                  lon: nearbyQuests[i].startMarker!.lon);
+          nearbyQuests[i] =
+              nearbyQuests[i].copyWith(distanceFromUser: distance);
+        } else {
+          nearbyQuests[i] = nearbyQuests[i]
+              .copyWith(distanceFromUser: kUnrealisticallyHighDistance);
+          sortedNearbyQuests = true;
+        }
+      }
+      nearbyQuests
+          .sort((a, b) => a.distanceFromUser!.compareTo(b.distanceFromUser!));
+    } else {
+      log.w(
+          "Curent quests empty, or distance check not required. Can't check distances");
+    }
+    log.i("Notify listeners");
   }
 
   ////////////////////////////////////////////////
@@ -639,7 +684,12 @@ class QuestService {
     return _firestoreApi.getQuest(questId: questId);
   }
 
-  Future<List<Quest>> _getQuestsWithStartMarkerId(
+  // Changed the Scope of the Method. from _pvt to public
+  Future<List<Quest>> downloadNearbyQuests() async {
+    return await _firestoreApi.downloadNearbyQuests();
+  }
+
+  Future<List<Quest>> getQuestsWithStartMarkerId(
       {required String markerId}) async {
     // get Quests with start marker id
     late List<Quest> quests;

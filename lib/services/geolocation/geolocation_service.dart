@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
@@ -8,6 +9,7 @@ import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:location/location.dart' as loc;
+import 'package:afkcredits/app/app.logger.dart';
 
 class GeolocationService {
   final log = getLogger('GeolocationService');
@@ -47,19 +49,35 @@ class GeolocationService {
     if (checkGeolocation == true) {
       try {
         // if (!kIsWeb) {
-        final geolocatorPosition = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best,
-        );
-        currentGPSAccuracy = geolocatorPosition.accuracy;
-        if (currentGPSAccuracy != null &&
-            currentGPSAccuracy! > kThresholdGPSAccuracyToShowInfo) {
-          setGPSAccuracyInfo(
-              "Low GPS Accuracy (${currentGPSAccuracy?.toStringAsFixed(0)} m)");
-        } else {
-          setGPSAccuracyInfo(null);
+        Duration? difference;
+        if (getUserPosition != null) {
+          difference = getUserPosition?.timestamp?.difference(DateTime.now());
         }
-        _position = geolocatorPosition;
-        return geolocatorPosition;
+
+        // cooldown time of 5 seconds for distance check.
+        if ((difference != null && difference.inSeconds.abs() > 5) ||
+            getUserPosition == null) {
+          log.v("Retrieving new location");
+          final geolocatorPosition = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+          );
+
+          currentGPSAccuracy = geolocatorPosition.accuracy;
+          if (currentGPSAccuracy != null &&
+              currentGPSAccuracy! > kThresholdGPSAccuracyToShowInfo) {
+            setGPSAccuracyInfo(
+                "Low GPS Accuracy (${currentGPSAccuracy?.toStringAsFixed(0)} m)");
+          } else {
+            setGPSAccuracyInfo(null);
+          }
+          _position = geolocatorPosition;
+          return geolocatorPosition;
+        } else {
+          // return previous location
+          log.v("Returning previously fetched location");
+          return _position!;
+        }
+
         // } else {
         // final loc.Location location = new loc.Location();
         // _position = await location.getLocation();
@@ -76,7 +94,7 @@ class GeolocationService {
         // }
 
       } catch (error) {
-        log.e("Error when reading geolocation.");
+        log.e("Error when reading geolocation. Error thrown: $error");
         throw GeolocationServiceException(
             message: 'An error occured trying to get your current geolocation',
             devDetails: "Error message from geolocation service: $error",
@@ -167,12 +185,9 @@ class GeolocationService {
       return -1;
     }
     final position = await getAndSetCurrentLocation();
-    if (position != null) {
-      double distanceInMeters = Geolocator.distanceBetween(
-          position.latitude, position.longitude, lat, lon);
-      return distanceInMeters;
-    }
-    return -1;
+    double distanceInMeters = Geolocator.distanceBetween(
+        position.latitude, position.longitude, lat, lon);
+    return distanceInMeters;
   }
 
   double distanceBetween(

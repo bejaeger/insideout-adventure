@@ -32,33 +32,46 @@ class SingleExplorerView extends StatelessWidget {
                           Text(model.explorer.fullName,
                               style: textTheme(context).headline4),
                           verticalSpaceMedium,
-                          Column(
+                          Row(
                             children: [
-                              StatsCard(
-                                height: 80,
-                                statistic:
-                                    model.stats.lifetimeEarnings.toString(),
-                                subtitle: "Earned AFK Credits",
+                              Expanded(
+                                child: StatsCard(
+                                  iconHeight: 60,
+                                  statistic:
+                                      model.stats.lifetimeEarnings.toString(),
+                                  title: "Earned AFK Credits",
+                                ),
                               ),
-                              StatsCard(
-                                height: 80,
-                                subtitle: "Spent AFK Credits",
-                                statistic:
-                                    model.stats.afkCreditsSpent.toString(),
+                              Expanded(
+                                child: StatsCard(
+                                  iconHeight: 60,
+                                  title: "Spent AFK Credits",
+                                  statistic:
+                                      model.stats.afkCreditsSpent.toString(),
+                                ),
                               ),
-                              StatsCard(
-                                height: 80,
-                                subtitle: "Available Sponsoring",
-                                statistic: formatAmount(
-                                    model.stats.availableSponsoring),
-                                statisticCredits: formatAfkCreditsFromCents(
-                                    model.stats.availableSponsoring),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: StatsCard(
+                                  iconHeight: 60,
+                                  title: "Available Sponsoring",
+                                  statistic: formatAmount(
+                                      model.stats.availableSponsoring),
+                                  statisticCredits: formatAfkCreditsFromCents(
+                                      model.stats.availableSponsoring),
+                                ),
                               ),
-                              StatsCard(
-                                height: 80,
-                                subtitle: "Gift Cards Purchased",
-                                statistic: model.stats.numberGiftCardsPurchased
-                                    .toString(),
+                              Expanded(
+                                child: StatsCard(
+                                  iconHeight: 60,
+                                  title: "Gift Cards Purchased",
+                                  statistic: model
+                                      .stats.numberGiftCardsPurchased
+                                      .toString(),
+                                ),
                               ),
                             ],
                           ),
@@ -68,10 +81,10 @@ class SingleExplorerView extends StatelessWidget {
                               child:
                                   Text("Sponsor ${model.explorer.fullName}")),
                           verticalSpaceMedium,
-                          if (model.explorer.createdByUserWithId != null) 
-                          ElevatedButton(
-                              onPressed: model.handleSwitchToExplorerEvent,
-                              child: Text("Switch to Explorer Version")),
+                          if (model.explorer.createdByUserWithId != null)
+                            ElevatedButton(
+                                onPressed: model.handleSwitchToExplorerEvent,
+                                child: Text("Switch to Explorer Version")),
                           verticalSpaceMedium,
                           SectionHeader(title: "Completed Quests"),
                           Text("    ... "),

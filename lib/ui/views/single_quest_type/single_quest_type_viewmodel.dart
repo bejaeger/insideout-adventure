@@ -13,35 +13,13 @@ class SingleQuestViewModel extends QuestViewModel {
 
   final QuestType? questType;
   List<Quest> currentQuests = [];
-  List<double?> distancesFromQuests = [];
 
   SingleQuestViewModel({this.questType}) {
     if (questType != null) {
       currentQuests = getQuestsOfType(type: questType!);
-      currentQuests.forEach((element) => distancesFromQuests.add(null));
+      currentQuests
+          .forEach((element) => distancesFromQuests.add(double.infinity));
     }
-  }
-
-  Future getDistancesToStartOfQuests() async {
-    if (currentQuests.isNotEmpty) {
-      log.i("Check distances for current quest list");
-
-      // need to use normal for loop to await results
-      for (var i = 0; i < currentQuests.length; i++) {
-        if (currentQuests[i].startMarker != null) {
-          double distance =
-              await _geolocationService.distanceBetweenUserAndCoordinates(
-                  lat: currentQuests[i].startMarker!.lat,
-                  lon: currentQuests[i].startMarker!.lon);
-          distancesFromQuests[i] = distance;
-        }
-      }
-    } else {
-      log.w(
-          "Curent quests empty, or distance check not required. Can't check distances");
-    }
-    log.i("Notify listeners");
-    notifyListeners();
   }
 
   @override

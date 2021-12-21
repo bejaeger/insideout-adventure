@@ -41,7 +41,7 @@ class BaseModel extends BaseViewModel {
 
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
-  bool get userIsAdmin => userService.userIsAdmin;
+  bool get isSuperUser => userService.isSuperUser;
 
   final baseModelLog = getLogger("BaseModel");
   bool get hasActiveQuest => questService.hasActiveQuest;
@@ -89,18 +89,20 @@ class BaseModel extends BaseViewModel {
 
   void unregisterViewModels() {
     // unregister all singleton viewmodels when logging out
-    if (locator.isRegistered<ActiveTreasureLocationSearchQuestViewModel>()) {
-      locator.unregister<ActiveTreasureLocationSearchQuestViewModel>();
-    }
-    if (locator.isRegistered<ActiveDistanceEstimateQuestViewModel>()) {
-      locator.unregister<ActiveDistanceEstimateQuestViewModel>();
-    }
-    if (locator.isRegistered<ActiveQrCodeSearchViewModel>()) {
-      locator.unregister<ActiveQrCodeSearchViewModel>();
-    }
-    if (locator.isRegistered<PurchasedGiftCardsViewModel>()) {
-      locator.unregister<PurchasedGiftCardsViewModel>();
-    }
+    // TODO: remove data from viewmodels on loggin!
+
+    // if (locator.isRegistered<ActiveTreasureLocationSearchQuestViewModel>()) {
+    //   locator.unregister<ActiveTreasureLocationSearchQuestViewModel>();
+    // }
+    // if (locator.isRegistered<ActiveDistanceEstimateQuestViewModel>()) {
+    //   locator.unregister<ActiveDistanceEstimateQuestViewModel>();
+    // }
+    // if (locator.isRegistered<ActiveQrCodeSearchViewModel>()) {
+    //   locator.unregister<ActiveQrCodeSearchViewModel>();
+    // }
+    // if (locator.isRegistered<PurchasedGiftCardsViewModel>()) {
+    //   locator.unregister<PurchasedGiftCardsViewModel>();
+    // }
   }
 
   Future logout() async {

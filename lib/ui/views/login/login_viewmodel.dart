@@ -12,10 +12,15 @@ import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/authentication_viewmodel.dart';
 // import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:afkcredits/ui/views/login/login_view.form.dart';
+import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class LoginViewModel extends AuthenticationViewModel {
   //    kIsWeb ? Routes.walletView : Routes.layoutTemplateViewMobile);
+  final FirebaseAuthenticationService? _firebaseAuthenticationService =
+      locator<FirebaseAuthenticationService>();
   bool checkUserRole = true;
+  final _navigationService = locator<NavigationService>();
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
   final log = getLogger("LoginViewModel");
@@ -25,27 +30,22 @@ class LoginViewModel extends AuthenticationViewModel {
   String get getReleaseName => flavorConfigProvider.appName;
 
   dynamic userLoginTapped({required UserRole userRole}) {
-    if (_flavorConfigProvider.flavor == Flavor.dev &&
-        userRole == UserRole.explorer) {
-      return () => saveData(AuthenticationMethod.dummy, UserRole.explorer);
-    } else if (_flavorConfigProvider.flavor == Flavor.dev &&
-        userRole == UserRole.sponsor) {
-      return () => saveData(AuthenticationMethod.dummy, UserRole.sponsor);
-    } else if (_flavorConfigProvider.flavor == Flavor.dev &&
-        userRole == UserRole.adminMaster) {
-      //This code needs to be moved accordingly, based on the discussion Ben and I will have.
-      return () => createAdminUser(
-          userAdmin: UserAdmin(
-              id: _flavorConfigProvider.getTestUserId(UserRole.adminMaster),
-              role: UserRole.adminMaster,
-              email:
-                  _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster),
-              password: _userService
-                  .hashPassword(_flavorConfigProvider.getTestUserPassword())));
-    } else {
-      return null;
+    if (_flavorConfigProvider.flavor == Flavor.dev) {
+      return () => saveData(AuthenticationMethod.dummy, userRole);
     }
   }
+
+/*   @override
+  Future<FirebaseAuthenticationResult> runAdminAuthResult() =>
+      _userService.createUserAdminAccount(
+        userAdmin: UserAdmin(
+            id: _flavorConfigProvider.getTestUserId(UserRole.adminMaster),
+            role: UserRole.adminMaster,
+            email: _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster),
+            password: _userService
+                .hashPassword(_flavorConfigProvider.getTestUserPassword())),
+        method: AuthenticationMethod.dummy,
+      ); */
 
   @override
   Future<AFKCreditsAuthenticationResultService> runAuthentication(
@@ -59,34 +59,8 @@ class LoginViewModel extends AuthenticationViewModel {
         role: role);
   }
 
-  Future<AFKCreditsAuthenticationResultService?> runAdminAuthentication(
-      {required AuthenticationMethod method,
-      required UserRole? role,
-      required String email,
-      required String password}) async {
-    final result = await _userService.runLoginLogic(
-        method: method, emailOrName: email, stringPw: password, role: role);
-/*     if (!result.hasError) {
-      navigateToAdminHomeView();
-    } */
-    return result;
-  }
-  //This code needs to be moved accordingly, based on the discussion Ben and I will have.
-
-  Future createAdminUser({required UserAdmin userAdmin}) async {
-    await _userService.createUserAdminAccount(userAdmin: userAdmin);
-    navigateToAdminHomeView(role: userAdmin.role!);
-  }
-
   void navigateToCreateAccount() {
-    navigationService.replaceWith(Routes.createAccountUserRoleView);
-  }
-  //This code needs to be moved accordingly, based on the discussion Ben and I will have.
-
-  void navigateToAdminHomeView({required UserRole role}) {
-    //navigationService.replaceWith(Routes.homeView);
-    navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
+    _navigationService.replaceWith(Routes.createAccountUserRoleView);
   }
 
   bool isPwShown = false;
@@ -94,4 +68,13 @@ class LoginViewModel extends AuthenticationViewModel {
     isPwShown = show;
     notifyListeners();
   }
+
+  @override
+  Future<FirebaseAuthenticationResult> runAdminAuthResult() =>
+      _firebaseAuthenticationService!.createAccountWithEmail(
+        email:
+            _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster).trim(),
+        password: _userService
+            .hashPassword(_flavorConfigProvider.getTestUserPassword()),
+      );
 }

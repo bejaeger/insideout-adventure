@@ -1,7 +1,5 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +9,6 @@ class QuestInfoCard extends StatelessWidget {
   final Quest quest;
   final String? sponsoringSentence;
   final String? subtitle;
-  final double? userDistanceInMeter;
   final void Function() onCardPressed;
 
   const QuestInfoCard(
@@ -20,8 +17,7 @@ class QuestInfoCard extends StatelessWidget {
       required this.quest,
       this.subtitle,
       required this.onCardPressed,
-      this.sponsoringSentence,
-      this.userDistanceInMeter})
+      this.sponsoringSentence})
       : super(key: key);
 
   @override
@@ -51,12 +47,13 @@ class QuestInfoCard extends StatelessWidget {
                   Text("Credits to earns: " + quest.afkCredits.toString()),
                   Text("Type: " + describeEnum(quest.type).toString()),
                   AnimatedOpacity(
-                    opacity: userDistanceInMeter == null ? 0 : 1,
+                    opacity: quest.distanceFromUser == null ? 0 : 1,
                     duration: Duration(milliseconds: 500),
-                    child: Text(userDistanceInMeter == null
+                    child: Text(quest.distanceFromUser == null
                         ? "Distance: Unkown"
                         : "Distance: " +
-                            (0.001 * userDistanceInMeter!).toStringAsFixed(1) +
+                            (0.001 * quest.distanceFromUser!)
+                                .toStringAsFixed(1) +
                             " km"),
                   ),
                   // if (quest.type == QuestType.VibrationSearch)

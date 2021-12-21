@@ -54,7 +54,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     title,
                     style: textTheme(context)
                         .headline5!
-                        .copyWith(color: Colors.grey[50]),
+                        .copyWith(color: kWhiteTextColor),
                   ),
                 ),
               ]),
@@ -69,8 +69,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(12.0),
-                    bottomRight: Radius.circular(12.0)),
+                    bottomLeft: Radius.circular(16.0),
+                    bottomRight: Radius.circular(16.0)),
               ),
               height: height,
               width: screenWidth(context),

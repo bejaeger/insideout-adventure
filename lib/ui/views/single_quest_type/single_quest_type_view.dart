@@ -19,7 +19,6 @@ class SingleQuestTypeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SingleQuestViewModel>.reactive(
       viewModelBuilder: () => SingleQuestViewModel(questType: questType),
-      onModelReady: (model) => model.getDistancesToStartOfQuests(),
       builder: (context, model, child) => (quest == null && questType == null)
           ? Container(
               child: Text(
@@ -48,8 +47,6 @@ class SingleQuestTypeView extends StatelessWidget {
                                       height: 140,
                                       quest: quest,
                                       subtitle: quest.description,
-                                      userDistanceInMeter:
-                                          model.distancesFromQuests[index],
                                       onCardPressed: () async => await model
                                           .onQuestInListTapped(quest)));
                             })

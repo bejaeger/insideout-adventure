@@ -340,9 +340,7 @@ class StackedRouter extends RouterBase {
       );
     },
     ActiveQrCodeSearchView: (data) {
-      var args = data.getArgs<ActiveQrCodeSearchViewArguments>(
-        orElse: () => ActiveQrCodeSearchViewArguments(),
-      );
+      var args = data.getArgs<ActiveQrCodeSearchViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => ActiveQrCodeSearchView(
           key: args.key,
@@ -368,17 +366,18 @@ class StackedRouter extends RouterBase {
       return MaterialPageRoute<dynamic>(
         builder: (context) => ActiveTreasureLocationSearchQuestView(
           key: args.key,
-          onPressed: args.onPressed,
-          lastDistance: args.lastDistance,
-          currentDistance: args.currentDistance,
           quest: args.quest,
         ),
         settings: data,
       );
     },
     ActiveMapQuestView: (data) {
+      var args = data.getArgs<ActiveMapQuestViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const ActiveMapQuestView(),
+        builder: (context) => ActiveMapQuestView(
+          key: args.key,
+          quest: args.quest,
+        ),
         settings: data,
       );
     },
@@ -484,28 +483,28 @@ class BottomBarLayoutTemplateViewArguments {
 /// ActiveQrCodeSearchView arguments holder class
 class ActiveQrCodeSearchViewArguments {
   final Key? key;
-  final Quest? quest;
-  ActiveQrCodeSearchViewArguments({this.key, this.quest});
+  final Quest quest;
+  ActiveQrCodeSearchViewArguments({this.key, required this.quest});
 }
 
 /// ActiveDistanceEstimateQuestView arguments holder class
 class ActiveDistanceEstimateQuestViewArguments {
   final Key? key;
-  final Quest? quest;
+  final Quest quest;
   ActiveDistanceEstimateQuestViewArguments({this.key, required this.quest});
 }
 
 /// ActiveTreasureLocationSearchQuestView arguments holder class
 class ActiveTreasureLocationSearchQuestViewArguments {
   final Key? key;
-  final void Function() onPressed;
-  final double? lastDistance;
-  final double? currentDistance;
-  final Quest? quest;
+  final Quest quest;
   ActiveTreasureLocationSearchQuestViewArguments(
-      {this.key,
-      required this.onPressed,
-      this.lastDistance,
-      this.currentDistance,
-      required this.quest});
+      {this.key, required this.quest});
+}
+
+/// ActiveMapQuestView arguments holder class
+class ActiveMapQuestViewArguments {
+  final Key? key;
+  final Quest quest;
+  ActiveMapQuestViewArguments({this.key, required this.quest});
 }

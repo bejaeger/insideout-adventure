@@ -13,11 +13,12 @@ import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
+import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
+import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:geolocator/geolocator.dart';
@@ -29,10 +30,11 @@ abstract class QuestViewModel extends BaseModel {
   String lastActivatedQuestInfoText = "Active Quest";
   final GeolocationService _geolocationService = locator<GeolocationService>();
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
-
-  final StopWatchService _stopWatchService = locator<StopWatchService>();
+  final FlavorConfigProvider _flavorConfigProvider =
+      locator<FlavorConfigProvider>();
   final QRCodeService qrCodeService = locator<QRCodeService>();
   List<Quest> get nearbyQuests => questService.nearbyQuests;
+  List<double> distancesFromQuests = [];
 
   QuestViewModel() {
     // listen to changes in wallet
@@ -60,13 +62,64 @@ abstract class QuestViewModel extends BaseModel {
     );
   }
 
-  Future loadQuests() async {
-    await questService.loadNearbyQuests();
-  }
-
   List<Quest> getQuestsOfType({required QuestType type}) {
     return questService.extractQuestsOfType(
         quests: nearbyQuests, questType: type);
+  }
+
+  Future getLocation() async {
+    try {
+      if (_geolocationService.getUserPosition == null) {
+        await _geolocationService.getAndSetCurrentLocation();
+      } else {
+        _geolocationService.getAndSetCurrentLocation();
+      }
+    } catch (e) {
+      if (e is GeolocationServiceException) {
+        // if (kIsWeb) {
+        //   await dialogService.showDialog(
+        //       title: "Sorry", description: "Map not supported on PWA version");
+        // } else {
+        if (_flavorConfigProvider.enableGPSVerification) {
+          await dialogService.showDialog(
+              title: "Sorry", description: e.prettyDetails);
+        } else {
+          if (!shownDummyModeDialog) {
+            await dialogService.showDialog(
+                title: "Dummy mode active",
+                description:
+                    "GPS connection not available, you can still try out the quests by tapping on the markers");
+            shownDummyModeDialog = true;
+          }
+        }
+        // }
+      } else {
+        await showGenericInternalErrorDialog();
+      }
+    }
+  }
+
+  Future getDistancesToStartOfQuests() async {
+    if (nearbyQuests.isNotEmpty) {
+      log.i("Check distances for current quest list");
+
+      // need to use normal for loop to await results
+      for (var i = 0; i < nearbyQuests.length; i++) {
+        if (nearbyQuests[i].startMarker != null) {
+          double distance =
+              await _geolocationService.distanceBetweenUserAndCoordinates(
+                  lat: nearbyQuests[i].startMarker!.lat,
+                  lon: nearbyQuests[i].startMarker!.lon);
+          nearbyQuests[i] =
+              nearbyQuests[i].copyWith(distanceFromUser: distance);
+        }
+      }
+    } else {
+      log.w(
+          "Curent quests empty, or distance check not required. Can't check distances");
+    }
+    log.i("Notify listeners");
+    notifyListeners();
   }
 
   Future onQuestInListTapped(Quest quest) async {
@@ -92,38 +145,58 @@ abstract class QuestViewModel extends BaseModel {
         description: 'Description: ' + quest.description,
         mainButtonTitle: quest.type == QuestType.DistanceEstimate
             ? "Go to Quest"
-            : "Start Quest",
+            : "Go to Quest",
         secondaryButtonTitle: "Close",
         data: quest);
     if (sheetResponse?.confirmed == true) {
       log.i("Looking at details of quest OR starting quest immediately");
       questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
-          ? await startQuestMain(quest: quest)
+          ? await navigateToActiveQuestUI(quest: quest)
           : await navigateToActiveQuestUI(quest: quest);
     }
   }
 
   Future navigateToActiveQuestUI({required Quest quest}) async {
     log.i("Navigating to view with currently active quest");
-    final questViewIndex =
-        questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
-            ? QuestViewType.map
-            : QuestViewType.singlequest;
 
-    // if (quest.type == QuestType.DistanceEstimate) {
-    //   navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
-    //       arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
-    // } else {
-    // Use the following to keep bottom nav bar!
-    await navigationService.navigateTo(
-      Routes.bottomBarLayoutTemplateView,
-      arguments: BottomBarLayoutTemplateViewArguments(
-        userRole: currentUser.role,
-        questViewIndex: questViewIndex,
-        initialBottomNavBarIndex: BottomNavBarIndex.quest,
-        quest: quest,
-      ),
-    );
+    if (quest.type == QuestType.TreasureLocationSearch) {
+      navigationService.navigateTo(Routes.activeTreasureLocationSearchQuestView,
+          arguments:
+              ActiveTreasureLocationSearchQuestViewArguments(quest: quest));
+    } else if (quest.type == QuestType.DistanceEstimate) {
+      navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
+          arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
+    } else if (quest.type == QuestType.QRCodeSearch ||
+        quest.type == QuestType.QRCodeSearchIndoor ||
+        quest.type == QuestType.QRCodeHuntIndoor) {
+      navigationService.navigateTo(Routes.activeQrCodeSearchView,
+          arguments: ActiveQrCodeSearchViewArguments(quest: quest));
+    } else if (quest.type == QuestType.Hike || quest.type == QuestType.Hunt) {
+      navigationService.navigateTo(Routes.activeMapQuestView,
+          arguments: ActiveMapQuestViewArguments(quest: quest));
+    }
+    // } else if (quest.type == QuestType.Hike) {
+    //   navigationService.navigateTo(Routes.activeDistanceEstimateQuestView);
+    // }
+
+    // final questViewIndex =
+    //     questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
+    //         ? QuestViewType.map
+    //         : QuestViewType.singlequest;
+    // // if (quest.type == QuestType.DistanceEstimate) {
+    // //   navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
+    // //       arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
+    // // } else {
+    // // Use the following to keep bottom nav bar!
+    // await navigationService.navigateTo(
+    //   Routes.bottomBarLayoutTemplateView,
+    //   arguments: BottomBarLayoutTemplateViewArguments(
+    //     userRole: currentUser.role,
+    //     questViewIndex: questViewIndex,
+    //     initialBottomNavBarIndex: BottomNavBarIndex.quest,
+    //     quest: quest,
+    //   ),
+    // );
     // }
   }
 
@@ -147,7 +220,7 @@ abstract class QuestViewModel extends BaseModel {
 
   Future<QuestQRCodeScanResult> navigateToQrcodeViewAndReturnResult() async {
     final marker = await navigationService.navigateTo(Routes.qRCodeView);
-    if (userIsAdmin && marker != null) {
+    if (isSuperUser && marker != null) {
       final adminMode = await showAdminDialogAndGetResponse();
       if (adminMode) {
         String qrCodeString =
@@ -340,6 +413,13 @@ abstract class QuestViewModel extends BaseModel {
     }
   }
 
+  void displayMarker(AFKMarker marker) {
+    String qrCodeString =
+        qrCodeService.getQrCodeStringFromMarker(marker: marker);
+    navigationService.navigateTo(Routes.qRCodeView,
+        arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
+  }
+
   // -----------------------------------------
   // Helper functions
   Future checkAccuracy(
@@ -349,7 +429,7 @@ abstract class QuestViewModel extends BaseModel {
     if (position == null) {
       return false;
     }
-    if (userIsAdmin) {
+    if (isSuperUser) {
       _geolocationService.setGPSAccuracyInfo(
           "GPS accuracy: ${position.accuracy.toStringAsFixed(0)} m");
     }

@@ -7,30 +7,24 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
 class QuestsOverviewViewModel extends QuestViewModel {
-  List<QuestType> questTypes = [];
+  List<QuestType> get questTypes => questService.allQuestTypes;
 
-  Future initialize() async {
+  Future initialize({bool? force}) async {
     setBusy(true);
     try {
-      await loadQuests();
-      extractQuestTypes();
+      if (questService.sortedNearbyQuests == false || force == true) {
+        await Future.wait([
+          getLocation(),
+          questService.loadNearbyQuests(),
+        ]);
+        await questService.sortNearbyQuests();
+        questService.extractAllQuestTypes();
+      }
     } catch (e) {
       log.wtf("Error when loading quest, this should never happen. Error: $e");
       await showGenericInternalErrorDialog();
     }
     setBusy(false);
-  }
-
-  void extractQuestTypes() {
-    if (nearbyQuests.isNotEmpty) {
-      for (Quest _q in nearbyQuests) {
-        if (!questTypes.any((element) => element == _q.type)) {
-          questTypes.add(_q.type);
-        }
-      }
-    } else {
-      log.w('No nearby quests found');
-    }
   }
 
   void navigateToQuestsOfSpecificTypeView(QuestType type) {

@@ -17,12 +17,10 @@ class ActiveQrCodeSearchViewModel extends MapBaseViewModel {
   bool? closeby;
   final log = getLogger("ActiveQrCodeSearchViewModel");
 
-  void initialize({required Quest? quest}) async {
+  void initialize({required Quest quest}) async {
     runBusyFuture(_geolocationService.getAndSetCurrentLocation());
-    if (quest != null) {
-      closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
-      notifyListeners();
-    }
+    closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
+    notifyListeners();
   }
 
   Future maybeStartQuest({required Quest? quest}) async {
@@ -37,9 +35,9 @@ class ActiveQrCodeSearchViewModel extends MapBaseViewModel {
       }
       final result = await startQuestMain(quest: quest);
       setBusy(false);
-      if (result is bool && result == false) {
-        navigateBack();
-      } else {}
+      // if (result is bool && result == false) {
+      //   navigateBack();
+      // } else {}
     } else {
       log.w("Not starting quest, quest is probably already running");
     }
@@ -57,13 +55,10 @@ class ActiveQrCodeSearchViewModel extends MapBaseViewModel {
           icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
           onTap: () async {
             bool adminMode = false;
-            if (userIsAdmin) {
+            if (isSuperUser) {
               adminMode = await showAdminDialogAndGetResponse();
               if (adminMode) {
-                String qrCodeString =
-                    qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
-                navigationService.navigateTo(Routes.qRCodeView,
-                    arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
+                displayMarker(afkmarker);
               }
             }
           }),
@@ -80,7 +75,7 @@ class ActiveQrCodeSearchViewModel extends MapBaseViewModel {
   @override
   void loadQuestMarkers() {
     // for testing purposes, display location of qr code markers
-    if (userIsAdmin) {
+    if (isSuperUser) {
       for (AFKMarker _m in activeQuest.quest.markers) {
         addMarkerToMap(quest: activeQuest.quest, afkmarker: _m);
       }

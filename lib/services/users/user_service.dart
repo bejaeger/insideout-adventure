@@ -39,6 +39,7 @@ class UserService {
   final log = getLogger('UserService');
 
   User? _currentUser;
+  UserAdmin? _currentUserAdmin;
   User? get currentUserNullable => _currentUser;
   User get currentUser => _currentUser!;
   UserStatistics? _currentUserStats;
@@ -46,12 +47,14 @@ class UserService {
   StreamSubscription? _currentUserStreamSubscription;
   StreamSubscription? _currentUserStatsStreamSubscription;
 
+  UserAdmin? get getCurrentUserAdmin => _currentUserAdmin!;
+
   SponsorReference? sponsorReference;
 
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
 
   UserRole get getUserRole => currentUser.role;
-  bool get userIsAdmin => currentUser.role == UserRole.admin;
+  bool get isSuperUser => currentUser.role == UserRole.superUser;
   bool get hasRole => currentUserNullable == null ? false : true;
 
   // store list of supportedExplorers
@@ -72,25 +75,87 @@ class UserService {
   Map<String, StreamSubscription?> _explorerStatsStreamSubscriptions = {};
 
   Future<void> syncUserAccount(
-      {String? uid, bool fromLocalStorage = false}) async {
+      {String? uid, bool fromLocalStorage = false, UserRole? role}) async {
+    var userAccount;
     final actualUid =
         uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
 
     log.v('Sync user $actualUid');
-    final userAccount = await _firestoreApi.getUser(uid: actualUid);
+    // if (role == UserRole.adminMaster) {
+    //   userAccount = await _firestoreApi.getUserAdmin(uid: actualUid);
+    // } else {
+    userAccount = await _firestoreApi.getUser(uid: actualUid);
+    // }
 
     if (userAccount != null) {
       log.v('User account exists. Save as _currentUser');
+      // if (UserRole.adminMaster == role) {
+      //   _currentUserAdmin = userAccount;
+      // } else {
       _currentUser = userAccount;
+      // }
       if (fromLocalStorage) {
         log.v("Save current user id to disk");
         await _localStorageService.saveToDisk(
             key: kLocalStorageUidKey, value: userAccount.uid);
+        await _localStorageService.saveRoleToDisk(
+            key: kLocalStorageRoleKey, value: role);
       }
     } else {
       log.e("User account with id $actualUid does not exist! Can't sync user");
     }
   }
+
+  //Sync User BackOffice office code Starts
+
+/*   Future<void> syncUserAdminAccount(
+      {String? uid, bool fromLocalStorage = false}) async {
+    final actualUid =
+        uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
+
+    log.v('Sync user $actualUid');
+    final adminUserAccount = await _firestoreApi.getUserAdmin(uid: actualUid);
+
+    if (adminUserAccount != null) {
+      log.v('User account exists. Save as _currentUser');
+      _currentUserAdmin = adminUserAccount;
+      if (fromLocalStorage) {
+        log.v("Save current user id to disk");
+        await _localStorageService.saveToDisk(
+            key: kLocalStorageUidKey, value: _currentUserAdmin!.id);
+      }
+    } else {
+      log.e("User account with id $actualUid does not exist! Can't sync user");
+    }
+  } */
+
+  Future<void> syncOrCreateUserAdminAccount(
+      {required UserAdmin userAdmin,
+      required AuthenticationMethod method,
+      bool fromLocalStorate = false}) async {
+    // create a new user profile on firestore
+    log.i("user created by Harguilar: $userAdmin");
+    await syncUserAccount(
+        fromLocalStorage: fromLocalStorate, role: userAdmin.role);
+    try {
+      if (_currentUserAdmin == null) {
+        await _firestoreApi.createUserAdmin(userAdmin: userAdmin);
+        _currentUserAdmin = userAdmin;
+        log.v('User Information Has Been Saved $_currentUserAdmin');
+      }
+      //return await _firestoreApi.createUserAdmin(userAdmin: userAdmin);
+    } catch (e) {
+      log.e("Error in createUser(): ${e.toString()}");
+      throw UserServiceException(
+        message: "Creating user data failed with message",
+        devDetails: e.toString(),
+        prettyDetails:
+            "User data could not be created in our databank. Please try again later or contact support with error messaage: ${e.toString()}",
+      );
+    }
+  }
+
+//BackOffice Ends Here.
 
   Future<User> createUserAccountFromFirebaseUser(
       {required UserRole role,
@@ -130,22 +195,6 @@ class UserService {
     }
   }
 
-  Future createUserAdminAccount({required UserAdmin userAdmin}) async {
-    // create a new user profile on firestore
-    try {
-      log.v("Creating user Admin account");
-      await _firestoreApi.createUserAdmin(userAdmin: userAdmin);
-    } catch (e) {
-      log.e("Error in createUser(): ${e.toString()}");
-      throw UserServiceException(
-        message: "Creating user data failed with message",
-        devDetails: e.toString(),
-        prettyDetails:
-            "User data could not be created in our databank. Please try again later or contact support with error messaage: ${e.toString()}",
-      );
-    }
-  }
-
   Future<void> createUserFavouritePlaces(
       {required String userId, required UserFavPlaces favouritePlaces}) async {
     await _firestoreApi.createUserFavouritePlaces(
@@ -160,6 +209,12 @@ class UserService {
 
   Future<String?> getLocallyLoggedInUserId() async {
     final id = await _localStorageService.getFromDisk(key: kLocalStorageUidKey);
+    return id;
+  }
+
+  Future<UserRole?> getLocallyLoggedUserRole() async {
+    final id =
+        await _localStorageService.getFromDisk(key: kLocalStorageRoleKey);
     return id;
   }
 
@@ -331,28 +386,6 @@ class UserService {
       password: hashPassword(password),
       uid: docRef.id,
       role: UserRole.explorer,
-      sponsorIds: [currentUser.uid],
-      createdByUserWithId: currentUser.uid,
-      explorerIds: [],
-      newUser: true,
-    );
-    await createUserAccount(user: newExplorer);
-    List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
-    await updateUserData(
-        user: currentUser.copyWith(explorerIds: newExplorerIds));
-  }
-
-  Future createAdminAccount(
-      {required String name,
-      required String password,
-      required AuthenticationMethod authMethod}) async {
-    final docRef = _firestoreApi.createUserDocument();
-    final newExplorer = User(
-      authMethod: authMethod,
-      fullName: name,
-      password: hashPassword(password),
-      uid: docRef.id,
-      role: UserRole.admin,
       sponsorIds: [currentUser.uid],
       createdByUserWithId: currentUser.uid,
       explorerIds: [],

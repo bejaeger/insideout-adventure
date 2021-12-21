@@ -54,7 +54,8 @@ dependencies:
   # Stacked State Management
   stacked: ^2.2.3
   stacked_services: ^0.8.3
-  stacked_firebase_auth: ^0.2.10+2
+  #stacked_firebase_auth: ^0.2.10+2
+  stacked_firebase_auth: ^0.2.4
   flutter_signin_button: ^2.0.0
 
   flutter_polyline_points: ^1.0.0

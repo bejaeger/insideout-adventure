@@ -8,7 +8,7 @@ part 'afk_marker.g.dart';
 class AFKMarker with _$AFKMarker {
   factory AFKMarker({
     required String id,
-    required String qrCodeId,
+    String? qrCodeId,
     String? nextLocationSolution,
     String? nextLocationHint,
     String? nextLocationPictureHint,

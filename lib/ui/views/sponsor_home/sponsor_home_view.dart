@@ -37,10 +37,13 @@ class SponsorHomeView extends StatelessWidget {
             if (model.supportedExplorers.length == 0)
               model.isBusy
                   ? AFKProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: model.showAddExplorerBottomSheet,
-                      child: Text("Add Explorer"),
-                      //imagePath: ImagePath.peopleHoldingHands,
+                  : Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: ElevatedButton(
+                        onPressed: model.showAddExplorerBottomSheet,
+                        child: Text("Add Explorer"),
+                        //imagePath: ImagePath.peopleHoldingHands,
+                      ),
                     ),
             if (model.supportedExplorers.length > 0)
               Container(
@@ -118,7 +121,7 @@ class ExplorersList extends StatelessWidget {
                   // onPressed: model.navigateToExplorerHomeView,
                   onPressed: onAddNewExplorerPressed,
                   //child: Text("Go to explorer home/map")),
-                  child: Text("Sponsor Another Explorer ->")),
+                  child: Text("Add Explorer")),
             ],
           );
         } else {

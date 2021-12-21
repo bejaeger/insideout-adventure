@@ -4,6 +4,7 @@ const String kAppName = "AFK Credits";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY';
 const kLocalStorageUidKey = "uid";
+const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
 
 final appName = 'AFK Credits';
@@ -82,3 +83,4 @@ const double kMinRequiredAccuracyDistanceEstimate = 30;
 /// General
 const double kThresholdGPSAccuracyToShowInfo = 50;
 const double kMinLocationAccuracy = 100;
+const double kUnrealisticallyHighDistance = 100000000;

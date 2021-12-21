@@ -106,15 +106,18 @@ class _BasicDialogContent extends StatelessWidget {
                             model.secondaryButtonTitle!,
                           ),
                         ),
-                      TextButton(
+                      ElevatedButton(
                         onPressed: () =>
                             completer(DialogResponse(confirmed: true)),
-                        child: Text(
-                          model.mainButtonTitle ?? '',
-                          style: textTheme(context).headline6!.copyWith(
-                              color: _getStatusColor(model.status),
-                              fontSize: 24,
-                              fontWeight: FontWeight.w800),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            model.mainButtonTitle ?? '',
+                            style: textTheme(context).headline6!.copyWith(
+                                color: kWhiteTextColor,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w800),
+                          ),
                         ),
                       ),
                     ],

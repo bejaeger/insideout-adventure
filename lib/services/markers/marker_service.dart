@@ -21,7 +21,7 @@ class MarkerService {
       return false;
     }
     if (_flavorConfigProvider.enableGPSVerification &&
-        !_userService.userIsAdmin) {
+        !_userService.isSuperUser) {
       if (marker.lat != null && marker.lon != null) {
         return await _geolocationService.isUserCloseby(
             lat: marker.lat!, lon: marker.lon!);

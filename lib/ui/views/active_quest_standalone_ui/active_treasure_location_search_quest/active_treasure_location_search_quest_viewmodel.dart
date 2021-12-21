@@ -37,12 +37,10 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
 
   bool? closeby;
 
-  void initialize({required Quest? quest}) async {
+  void initialize({required Quest quest}) async {
     runBusyFuture(_geolocationService.getAndSetCurrentLocation());
-    if (quest != null) {
-      closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
-      notifyListeners();
-    }
+    closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
+    notifyListeners();
   }
 
   // AUTOMATIC TRACKING
@@ -129,6 +127,9 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
         setTrackingDeadTime(true);
         vibrateRightDirection();
         log.i("SUCCESFFULLY FOUND trophy");
+
+        // Make checkout procedure same for all quest types!
+        // Function in quest_viewmodel!
         await dialogService.showCustomDialog(
           variant: DialogType.CollectCredits,
           data: activeQuest,

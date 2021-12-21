@@ -8,7 +8,7 @@ part of 'afk_marker.dart';
 
 _$_AFKMarker _$$_AFKMarkerFromJson(Map<String, dynamic> json) => _$_AFKMarker(
       id: json['id'] as String,
-      qrCodeId: json['qrCodeId'] as String,
+      qrCodeId: json['qrCodeId'] as String?,
       nextLocationSolution: json['nextLocationSolution'] as String?,
       nextLocationHint: json['nextLocationHint'] as String?,
       nextLocationPictureHint: json['nextLocationPictureHint'] as String?,

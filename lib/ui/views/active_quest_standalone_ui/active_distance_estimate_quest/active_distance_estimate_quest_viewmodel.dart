@@ -38,7 +38,7 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
 
   // User ACTION!
   Future revealDistance() async {
-    if (numberOfAvailableTries == 1 && !userIsAdmin) {
+    if (numberOfAvailableTries == 1 && !isSuperUser) {
       final result = await dialogService.showDialog(
           title: "Sure?",
           description:
@@ -62,7 +62,7 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
 
     ////////////////////////////////////////////////////
     /// Temporary testing purposes
-    if (userIsAdmin) {
+    if (isSuperUser) {
       _currentSpeed = _geolocationService.getUserPosition?.speed;
     }
 
@@ -97,7 +97,7 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
       }
     }
     if (activeQuestNullable?.status == QuestStatus.failed) {
-      if (userIsAdmin) {
+      if (isSuperUser) {
         log.i("You are in admin mode and have infinite tries!");
       } else {
         log.i("Found that quest failed! cancelling incomplete quest");
@@ -117,6 +117,10 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
 
     if (distanceTravelled > (distanceToTravel - 201) &&
         distanceTravelled < (distanceToTravel + 201)) {
+      // if (distanceTravelled >
+      //         (distanceToTravel - kMinDistanceToCatchTrophyInMeters) &&
+      //     distanceTravelled <
+      //         (distanceToTravel + kMinDistanceToCatchTrophyInMeters)) {
       // additional delay!
       await Future.delayed(Duration(seconds: 1));
       log.i("SUCCESS! Successfully estimated $distanceToTravel");
@@ -154,14 +158,9 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
     return dialogResult;
   }
 
-  void initialize({required Quest? quest}) {
+  void initialize({required Quest quest}) {
     resetPreviousQuest();
-    if (quest != null) {
-      distanceToTravel = quest.distanceToTravelInMeter!;
-    } else {
-      log.e("Quest is null! Cannot start anything!");
-      // await showGenericInternalErrorDialog();
-    }
+    distanceToTravel = quest.distanceToTravelInMeter!;
   }
 
   // 1. Start quest

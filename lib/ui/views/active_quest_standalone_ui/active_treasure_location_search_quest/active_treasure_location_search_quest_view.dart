@@ -12,15 +12,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
-  final void Function() onPressed;
-  final double? lastDistance;
-  final double? currentDistance;
-  final Quest? quest;
+  final Quest quest;
   const ActiveTreasureLocationSearchQuestView({
     Key? key,
-    required this.onPressed,
-    this.lastDistance,
-    this.currentDistance,
     required this.quest,
   }) : super(key: key);
 
@@ -34,16 +28,17 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
           locator<ActiveTreasureLocationSearchQuestViewModel>(),
       disposeViewModel: false,
       onModelReady: (model) => model.initialize(quest: quest),
-      builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(
-          title: "Search for the Trohpy!",
-          onBackButton: model.navigateBack,
-        ),
-        body: model.isBusy
-            ? AFKProgressIndicator()
-            : Align(
-                alignment: Alignment.center,
-                child: model.activeQuestNullable?.status == QuestStatus.success
+      builder: (context, model, child) => SafeArea(
+        child: Scaffold(
+          appBar: CustomAppBar(
+            title: "Search for the Trohpy!",
+            onBackButton: model.navigateBack,
+          ),
+          body: Align(
+            alignment: Alignment.center,
+            child: model.isBusy
+                ? AFKProgressIndicator()
+                : model.activeQuestNullable?.status == QuestStatus.success
                     ? Text(
                         "Successfully finished quest! Finish above when you have data",
                         style: textTheme(context)
@@ -55,24 +50,29 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                         child: Stack(
                           children: [
                             withMaps
-                                ? GoogleMap(
-                                    //mapType: MapType.hybrid,
-                                    initialCameraPosition:
-                                        model.initialCameraPosition(),
-                                    //Place Markers in the Map
-                                    markers: model.markersOnMap,
-                                    //callback that’s called when the map is ready to us.
-                                    onMapCreated: model.onMapCreated,
-                                    //For showing your current location on Map with a blue dot.
-                                    myLocationEnabled: true,
-                                    // Button used for bringing the user location to the center of the camera view.
-                                    myLocationButtonEnabled: false,
-                                    //Remove the Zoom in and out button
-                                    zoomControlsEnabled: false,
+                                ? Container(
+                                    height:
+                                        screenHeight(context, percentage: 0.6) -
+                                            kAppBarExtendedHeight,
+                                    child: GoogleMap(
+                                      //mapType: MapType.hybrid,
+                                      initialCameraPosition:
+                                          model.initialCameraPosition(),
+                                      //Place Markers in the Map
+                                      markers: model.markersOnMap,
+                                      //callback that’s called when the map is ready to us.
+                                      onMapCreated: model.onMapCreated,
+                                      //For showing your current location on Map with a blue dot.
+                                      myLocationEnabled: true,
+                                      // Button used for bringing the user location to the center of the camera view.
+                                      myLocationButtonEnabled: false,
+                                      //Remove the Zoom in and out button
+                                      zoomControlsEnabled: false,
 
-                                    //onTap: model.handleTap(),
-                                    //Enable Traffic Mode.
-                                    //trafficEnabled: true,
+                                      //onTap: model.handleTap(),
+                                      //Enable Traffic Mode.
+                                      //trafficEnabled: true,
+                                    ),
                                   )
                                 : Container(
                                     alignment: Alignment.topCenter,
@@ -112,14 +112,19 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Colors.white.withOpacity(0.4),
-                                            Colors.white,
-                                          ]),
-                                      borderRadius: BorderRadius.circular(16.0),
+                                      // gradient: LinearGradient(
+                                      //     begin: Alignment.topCenter,
+                                      //     end: Alignment.bottomCenter,
+                                      //     colors: [
+                                      //       kNiceBeige,
+                                      //       kNiceBeige,
+                                      //       // Colors.white.withOpacity(0.4),
+                                      //       // Colors.white,
+                                      //     ]),
+                                      color: Colors.grey[50],
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(16.0),
+                                          topLeft: Radius.circular(16.0)),
                                       //color: Colors.white.withOpacity(0.5),
                                     ),
                                     width: screenWidth(context),
@@ -130,20 +135,22 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                       children: [
                                         verticalSpaceSmall,
                                         if (!model.hasActiveQuest)
-                                        Column(
-                                          children: [
-                                            ElevatedButton(
-                                              onPressed: model.showInstructions,
-                                              child: Text(
-                                                "Instructions",
-                                                style: textTheme(context)
-                                                    .headline6!
-                                                    .copyWith(
-                                                        color: kWhiteTextColor),
+                                          Column(
+                                            children: [
+                                              ElevatedButton(
+                                                onPressed:
+                                                    model.showInstructions,
+                                                child: Text(
+                                                  "Instructions",
+                                                  style: textTheme(context)
+                                                      .headline6!
+                                                      .copyWith(
+                                                          color:
+                                                              kWhiteTextColor),
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
+                                            ],
+                                          ),
                                         if (!model.hasActiveQuest)
                                           verticalSpaceSmall,
                                         !model.hasActiveQuest
@@ -214,24 +221,32 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                                     "Cannot start the quest. Please go to the start to the quest"),
                                               ),
                                         verticalSpaceMedium,
-                                        if (currentDistance != null)
+                                        if (model.activeQuestNullable
+                                                ?.currentDistanceInMeters !=
+                                            null)
                                           Text("Current Distance",
                                               textAlign: TextAlign.center,
                                               style:
                                                   textTheme(context).headline6),
-                                        if (currentDistance != null)
+                                        if (model.activeQuestNullable
+                                                ?.currentDistanceInMeters !=
+                                            null)
                                           Text(
-                                              "${currentDistance?.toStringAsFixed(1)} m",
+                                              "${model.activeQuestNullable?.currentDistanceInMeters?.toStringAsFixed(1)} m",
                                               textAlign: TextAlign.center,
                                               style:
                                                   textTheme(context).headline2),
-                                        if (lastDistance != null)
+                                        if (model.activeQuestNullable
+                                                ?.lastDistanceInMeters !=
+                                            null)
                                           Text("Last Distance",
-                                          textAlign: TextAlign.center,
+                                              textAlign: TextAlign.center,
                                               style: TextStyle(fontSize: 18)),
-                                        if (lastDistance != null)
+                                        if (model.activeQuestNullable
+                                                ?.lastDistanceInMeters !=
+                                            null)
                                           Text(
-                                              "${lastDistance?.toStringAsFixed(1)} m",
+                                              "${model.activeQuestNullable?.lastDistanceInMeters?.toStringAsFixed(1)} m",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(fontSize: 18)),
                                         if (model.hasActiveQuest)
@@ -256,7 +271,8 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                           ],
                         ),
                       ),
-              ),
+          ),
+        ),
       ),
     );
   }
