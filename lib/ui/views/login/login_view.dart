@@ -29,7 +29,13 @@ class LoginView extends StatelessWidget with $LoginView {
               model.userLoginTapped(userRole: UserRole.explorer),
           onDummyLoginSponsorTapped:
               model.userLoginTapped(userRole: UserRole.sponsor),
-          onDummyLoginAdminTapped: model.saveAdminData,
+          onDummyLoginAdminTapped:
+              model.userLoginTapped(userRole: UserRole.admin),
+          onDummyLoginSuperUserTapped:
+              model.userLoginTapped(userRole: UserRole.superUser),
+          onDummyLoginAdminMasterTapped:
+              model.userLoginTapped(userRole: UserRole.adminMaster),
+          //model.saveAdminData,
           onMainButtonTapped: () => model
               .saveData(AuthenticationMethod.EmailOrSponsorCreatedExplorer),
           validationMessage: model.validationMessage,

@@ -1,1 +1,1 @@
-enum BottomNavigationBarIndex { home, map, giftcard, addmarkers }
+enum BottomNavBarIndex { home, quest, giftcard, addmarkers }

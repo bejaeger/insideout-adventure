@@ -32,6 +32,9 @@ import '../services/qrcodes/qrcode_service.dart';
 import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/users/user_service.dart';
+import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_viewmodel.dart';
+import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
+import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 
 final locator = StackedLocator.instance;
@@ -67,4 +70,8 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => DirectionsAPI());
   locator.registerLazySingleton(() => GiftCardService());
   locator.registerLazySingleton(() => PurchasedGiftCardsViewModel());
+  locator.registerLazySingleton(
+      () => ActiveTreasureLocationSearchQuestViewModel());
+  locator.registerLazySingleton(() => ActiveDistanceEstimateQuestViewModel());
+  locator.registerLazySingleton(() => ActiveQrCodeSearchViewModel());
 }

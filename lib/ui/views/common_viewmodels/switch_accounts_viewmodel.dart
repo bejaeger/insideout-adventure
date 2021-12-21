@@ -2,7 +2,6 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -100,7 +99,7 @@ abstract class SwitchAccountsViewModel extends BaseModel {
         if (pinResult == null) {
           return;
         } else {
-          // Check if pin is correct          
+          // Check if pin is correct
           final valid =
               await userService.validateSponsorPin(pin: pinResult.pin);
           setBusy(true);

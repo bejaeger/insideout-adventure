@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
@@ -35,11 +36,14 @@ class SponsorHomeView extends StatelessWidget {
             verticalSpaceTiny,
             if (model.supportedExplorers.length == 0)
               model.isBusy
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: model.showAddExplorerBottomSheet,
-                      child: Text("Support First Explorer -> "),
-                      //imagePath: ImagePath.peopleHoldingHands,
+                  ? AFKProgressIndicator()
+                  : Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: ElevatedButton(
+                        onPressed: model.showAddExplorerBottomSheet,
+                        child: Text("Add Explorer"),
+                        //imagePath: ImagePath.peopleHoldingHands,
+                      ),
                     ),
             if (model.supportedExplorers.length > 0)
               Container(
@@ -117,7 +121,7 @@ class ExplorersList extends StatelessWidget {
                   // onPressed: model.navigateToExplorerHomeView,
                   onPressed: onAddNewExplorerPressed,
                   //child: Text("Go to explorer home/map")),
-                  child: Text("Sponsor Another Explorer ->")),
+                  child: Text("Add Explorer")),
             ],
           );
         } else {

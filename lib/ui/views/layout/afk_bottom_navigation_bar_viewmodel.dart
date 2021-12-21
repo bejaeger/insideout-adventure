@@ -5,30 +5,30 @@ import 'package:afkcredits/ui/views/common_viewmodels/layout_template_viewmodel.
 /////////////////////////////////
 /// ! DEPRECATED!!!!!
 
-class AFKBottomNavigationBarViewModel extends CustomBottomBarLayoutTemplateViewModel {
-  BottomNavigationBarIndex _currentIndex = BottomNavigationBarIndex.home;
+class AFKBottomNavigationBarViewModel
+    extends CustomBottomBarLayoutTemplateViewModel {
+  BottomNavBarIndex _currentIndex = BottomNavBarIndex.home;
 
-  bool get isOnHome => _currentIndex == BottomNavigationBarIndex.home;
-  bool get isOnMap => _currentIndex == BottomNavigationBarIndex.map;
-  bool get isOnGift => _currentIndex == BottomNavigationBarIndex.giftcard;
-  bool get isOnAddMarkers =>
-      _currentIndex == BottomNavigationBarIndex.addmarkers;
+  bool get isOnHome => _currentIndex == BottomNavBarIndex.home;
+  bool get isOnMap => _currentIndex == BottomNavBarIndex.quest;
+  bool get isOnGift => _currentIndex == BottomNavBarIndex.giftcard;
+  bool get isOnAddMarkers => _currentIndex == BottomNavBarIndex.addmarkers;
 
   void onHomePressed() {
     clearStackAndNavigateToHomeView();
-    _currentIndex = BottomNavigationBarIndex.home;
+    _currentIndex = BottomNavBarIndex.home;
     notifyListeners();
   }
 
   void onGiftPressed() {
     navigationService.clearStackAndShow(Routes.giftCardView);
-    _currentIndex = BottomNavigationBarIndex.giftcard;
+    _currentIndex = BottomNavBarIndex.giftcard;
     notifyListeners();
   }
 
   void onMarkersPressed() {
     navigationService.clearStackAndShow(Routes.addMarkersView);
-    _currentIndex = BottomNavigationBarIndex.addmarkers;
+    _currentIndex = BottomNavBarIndex.addmarkers;
     notifyListeners();
   }
 
@@ -36,11 +36,11 @@ class AFKBottomNavigationBarViewModel extends CustomBottomBarLayoutTemplateViewM
     //navigationService.clearStackAndShow(Routes.mapScreen);
     if (questService.hasActiveQuest == false) {
       navigationService.clearStackAndShow(Routes.mapView);
-      _currentIndex = BottomNavigationBarIndex.map;
+      _currentIndex = BottomNavBarIndex.quest;
     } else {
       // this is not functional, would need to add activeQuestView here most likely
       navigationService.clearStackAndShow(Routes.mapView);
-      _currentIndex = BottomNavigationBarIndex.map;
+      _currentIndex = BottomNavBarIndex.quest;
     }
     notifyListeners();
   }

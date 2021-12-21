@@ -6,6 +6,10 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.form.dart';
 
+// !Todo
+// Might wanna switch to this package!
+// https://pub.dev/packages/pin_code_fields
+
 @FormView(fields: [
   FormTextField(name: 'number1'),
   FormTextField(name: 'number2'),
@@ -83,7 +87,7 @@ class SetPinView extends StatelessWidget with $SetPinView {
 
   Widget buildTextField(int i, BuildContext context, dynamic model,
       [bool autofocus = false]) {
-    final String lastDigit = getControllers()[i].text;    
+    final String lastDigit = getControllers()[i].text;
 
     return Container(
       width: 50,

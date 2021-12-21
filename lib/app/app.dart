@@ -15,6 +15,13 @@ import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_view.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
@@ -70,6 +77,10 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: AddMarkersView),
     MaterialRoute(page: SetPinView),
     MaterialRoute(page: BottomBarLayoutTemplateView),
+    MaterialRoute(page: ActiveQrCodeSearchView),
+    MaterialRoute(page: ActiveDistanceEstimateQuestView),
+    MaterialRoute(page: ActiveTreasureLocationSearchQuestView),
+    MaterialRoute(page: ActiveMapQuestView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -83,7 +94,6 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: UserService),
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: CloudFunctionsApi),
-
     LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: FlavorConfigProvider),
     LazySingleton(classType: LayoutService),
@@ -100,6 +110,9 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: GiftCardService),
 
     LazySingleton(classType: PurchasedGiftCardsViewModel),
+    LazySingleton(classType: ActiveTreasureLocationSearchQuestViewModel),
+    LazySingleton(classType: ActiveDistanceEstimateQuestViewModel),
+    LazySingleton(classType: ActiveQrCodeSearchViewModel),
 
     // Services
   ],

@@ -52,10 +52,11 @@ const $UserStatistics = _$UserStatisticsTearOff();
 
 /// @nodoc
 mixin _$UserStatistics {
-  num get afkCreditsBalance => throw _privateConstructorUsedError;
-  num get afkCreditsSpent => throw _privateConstructorUsedError;
-  num get availableSponsoring => throw _privateConstructorUsedError;
-  num get lifetimeEarnings => throw _privateConstructorUsedError;
+  num get afkCreditsBalance => throw _privateConstructorUsedError; // in credits
+  num get afkCreditsSpent => throw _privateConstructorUsedError; // in credits
+  num get availableSponsoring =>
+      throw _privateConstructorUsedError; // in cents!
+  num get lifetimeEarnings => throw _privateConstructorUsedError; // in credits
   int get numberQuestsCompleted => throw _privateConstructorUsedError;
   int get numberGiftCardsPurchased => throw _privateConstructorUsedError;
   List<ConciseFinishedQuestInfo> get completedQuests =>
@@ -237,13 +238,13 @@ class _$_UserStatistics implements _UserStatistics {
 
   @override
   final num afkCreditsBalance;
-  @override
+  @override // in credits
   final num afkCreditsSpent;
-  @override
+  @override // in credits
   final num availableSponsoring;
-  @override
+  @override // in cents!
   final num lifetimeEarnings;
-  @override
+  @override // in credits
   final int numberQuestsCompleted;
   @override
   final int numberGiftCardsPurchased;
@@ -327,13 +328,13 @@ abstract class _UserStatistics implements UserStatistics {
 
   @override
   num get afkCreditsBalance => throw _privateConstructorUsedError;
-  @override
+  @override // in credits
   num get afkCreditsSpent => throw _privateConstructorUsedError;
-  @override
+  @override // in credits
   num get availableSponsoring => throw _privateConstructorUsedError;
-  @override
+  @override // in cents!
   num get lifetimeEarnings => throw _privateConstructorUsedError;
-  @override
+  @override // in credits
   int get numberQuestsCompleted => throw _privateConstructorUsedError;
   @override
   int get numberGiftCardsPurchased => throw _privateConstructorUsedError;

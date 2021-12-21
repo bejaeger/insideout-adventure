@@ -19,4 +19,8 @@ const Color kNiceBlue = Color(0xFF3E7FC5);
 
 const Color kBottomNavigationBarIconColor = Colors.white;
 
+const Color kWhiteTextColor = Color(0xFFF5F5F5);
+
 const Color kColorActivatedQuest = Colors.red;
+
+const Color kShadowColor = Colors.black26;

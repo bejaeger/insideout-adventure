@@ -28,7 +28,7 @@ class _$UserTearOff {
       required List<String> sponsorIds,
       required List<String> explorerIds,
       required UserRole role,
-      required AuthenticationMethod authMethod,
+      AuthenticationMethod? authMethod,
       bool newUser = false,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
@@ -65,7 +65,7 @@ mixin _$User {
   List<String> get sponsorIds => throw _privateConstructorUsedError;
   List<String> get explorerIds => throw _privateConstructorUsedError;
   UserRole get role => throw _privateConstructorUsedError;
-  AuthenticationMethod get authMethod => throw _privateConstructorUsedError;
+  AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
   bool get newUser => throw _privateConstructorUsedError;
   @JsonKey(toJson: User._checkIfKeywordsAreSet)
   List<String>? get fullNameSearch => throw _privateConstructorUsedError;
@@ -88,7 +88,7 @@ abstract class $UserCopyWith<$Res> {
       List<String> sponsorIds,
       List<String> explorerIds,
       UserRole role,
-      AuthenticationMethod authMethod,
+      AuthenticationMethod? authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
@@ -146,7 +146,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
       authMethod: authMethod == freezed
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
-              as AuthenticationMethod,
+              as AuthenticationMethod?,
       newUser: newUser == freezed
           ? _value.newUser
           : newUser // ignore: cast_nullable_to_non_nullable
@@ -179,7 +179,7 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       List<String> sponsorIds,
       List<String> explorerIds,
       UserRole role,
-      AuthenticationMethod authMethod,
+      AuthenticationMethod? authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
@@ -238,7 +238,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
       authMethod: authMethod == freezed
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
-              as AuthenticationMethod,
+              as AuthenticationMethod?,
       newUser: newUser == freezed
           ? _value.newUser
           : newUser // ignore: cast_nullable_to_non_nullable
@@ -270,7 +270,7 @@ class _$_User implements _User {
       required this.sponsorIds,
       required this.explorerIds,
       required this.role,
-      required this.authMethod,
+      this.authMethod,
       this.newUser = false,
       @JsonKey(toJson: User._checkIfKeywordsAreSet) this.fullNameSearch,
       this.createdByUserWithId,
@@ -291,7 +291,7 @@ class _$_User implements _User {
   @override
   final UserRole role;
   @override
-  final AuthenticationMethod authMethod;
+  final AuthenticationMethod? authMethod;
   @JsonKey(defaultValue: false)
   @override
   final bool newUser;
@@ -378,7 +378,7 @@ abstract class _User implements User {
       required List<String> sponsorIds,
       required List<String> explorerIds,
       required UserRole role,
-      required AuthenticationMethod authMethod,
+      AuthenticationMethod? authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
@@ -400,7 +400,7 @@ abstract class _User implements User {
   @override
   UserRole get role => throw _privateConstructorUsedError;
   @override
-  AuthenticationMethod get authMethod => throw _privateConstructorUsedError;
+  AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
   @override
   bool get newUser => throw _privateConstructorUsedError;
   @override

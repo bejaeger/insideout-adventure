@@ -1,0 +1,1 @@
+enum CreditsCollectionStatus { toCollect, collected }

@@ -9,8 +9,8 @@ part of 'sponsor_reference.dart';
 _$_SponsorReference _$$_SponsorReferenceFromJson(Map<String, dynamic> json) =>
     _$_SponsorReference(
       uid: json['uid'] as String,
-      authMethod:
-          $enumDecode(_$AuthenticationMethodEnumMap, json['authMethod']),
+      authMethod: $enumDecodeNullable(
+          _$AuthenticationMethodEnumMap, json['authMethod']),
       withPasscode: json['withPasscode'] as bool,
     );
 

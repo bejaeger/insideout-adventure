@@ -27,7 +27,7 @@ class User with _$User {
     required List<String> sponsorIds,
     required List<String> explorerIds,
     required UserRole role,
-    required AuthenticationMethod authMethod,
+    AuthenticationMethod? authMethod,
     @Default(false)
         bool newUser,
     @JsonKey(

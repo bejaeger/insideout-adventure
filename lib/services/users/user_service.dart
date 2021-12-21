@@ -54,7 +54,7 @@ class UserService {
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
 
   UserRole get getUserRole => currentUser.role;
-
+  bool get isSuperUser => currentUser.role == UserRole.superUser;
   bool get hasRole => currentUserNullable == null ? false : true;
 
   // store list of supportedExplorers
@@ -81,24 +81,23 @@ class UserService {
         uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
 
     log.v('Sync user $actualUid');
-    if (role == UserRole.adminMaster) {
-      userAccount = await _firestoreApi.getUserAdmin(uid: actualUid);
-    } else {
-      userAccount = await _firestoreApi.getUser(uid: actualUid);
-    }
+    // if (role == UserRole.adminMaster) {
+    //   userAccount = await _firestoreApi.getUserAdmin(uid: actualUid);
+    // } else {
+    userAccount = await _firestoreApi.getUser(uid: actualUid);
+    // }
 
     if (userAccount != null) {
       log.v('User account exists. Save as _currentUser');
-      if (UserRole.adminMaster == role) {
-        _currentUserAdmin = userAccount;
-      } else {
-        _currentUser = userAccount;
-      }
+      // if (UserRole.adminMaster == role) {
+      //   _currentUserAdmin = userAccount;
+      // } else {
+      _currentUser = userAccount;
+      // }
       if (fromLocalStorage) {
         log.v("Save current user id to disk");
         await _localStorageService.saveToDisk(
             key: kLocalStorageUidKey, value: userAccount.uid);
-
         await _localStorageService.saveRoleToDisk(
             key: kLocalStorageRoleKey, value: role);
       }
@@ -398,28 +397,6 @@ class UserService {
         user: currentUser.copyWith(explorerIds: newExplorerIds));
   }
 
-  Future createAdminAccount(
-      {required String name,
-      required String password,
-      required AuthenticationMethod authMethod}) async {
-    final docRef = _firestoreApi.createUserDocument();
-    final newExplorer = User(
-      authMethod: authMethod,
-      fullName: name,
-      password: hashPassword(password),
-      uid: docRef.id,
-      role: UserRole.admin,
-      sponsorIds: [currentUser.uid],
-      createdByUserWithId: currentUser.uid,
-      explorerIds: [],
-      newUser: true,
-    );
-    await createUserAccount(user: newExplorer);
-    List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
-    await updateUserData(
-        user: currentUser.copyWith(explorerIds: newExplorerIds));
-  }
-
   Future addExplorerToSupportedExplorers({required String uid}) async {
     try {
       if (currentUser.explorerIds.contains(uid)) {
@@ -580,7 +557,7 @@ class UserService {
 
   Future saveSponsorReference(
       {required String uid,
-      required AuthenticationMethod authMethod,
+      AuthenticationMethod? authMethod,
       String? pin}) async {
     if (pin != null) {
       await _localStorageService.saveToDisk(

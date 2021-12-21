@@ -9,7 +9,7 @@ import '../test_data/test_datamodels.dart';
 import '../helpers/test_helpers.dart';
 
 SelectRoleAfterLoginViewModel _getModel() =>
-    SelectRoleAfterLoginViewModel(authMethod: AuthenticationMethod.dummy);
+    SelectRoleAfterLoginViewModel(authMethod: AuthenticationMethod.email);
 
 void main() {
   group('SelectRoleAfterLoginViewmodelTest -', () {
@@ -23,14 +23,15 @@ void main() {
         final service =
             getAndRegisterUserService(currentUser: getTestUserSponsor());
         final navService = getAndRegisterNavigationService();
-        when(service.createUserAccountFromFirebaseUser(role: UserRole.sponsor))
+        when(service.createUserAccountFromFirebaseUser(
+                role: UserRole.sponsor, authMethod: AuthenticationMethod.email))
             .thenAnswer((_) async => getTestUserSponsor());
         when(service.syncUserAccount()).thenAnswer((_) async => null);
         final model = _getModel();
         await model.createUserAccountAndSyncData(
             authMethod: AuthenticationMethod.dummy, role: UserRole.sponsor);
-        verify(
-            service.createUserAccountFromFirebaseUser(role: UserRole.sponsor));
+        verify(service.createUserAccountFromFirebaseUser(
+            role: UserRole.sponsor, authMethod: AuthenticationMethod.email));
         verify(service.syncUserAccount());
         verify(navService.replaceWith(Routes.bottomBarLayoutTemplateView,
             arguments: BottomBarLayoutTemplateViewArguments(
@@ -45,14 +46,16 @@ void main() {
         final service =
             getAndRegisterUserService(currentUser: getTestUserExplorer());
         final navService = getAndRegisterNavigationService();
-        when(service.createUserAccountFromFirebaseUser(role: UserRole.explorer))
+        when(service.createUserAccountFromFirebaseUser(
+                role: UserRole.explorer,
+                authMethod: AuthenticationMethod.email))
             .thenAnswer((_) async => getTestUserExplorer());
         when(service.syncUserAccount()).thenAnswer((_) async => null);
         final model = _getModel();
         await model.createUserAccountAndSyncData(
             authMethod: AuthenticationMethod.dummy, role: UserRole.explorer);
-        verify(
-            service.createUserAccountFromFirebaseUser(role: UserRole.explorer));
+        verify(service.createUserAccountFromFirebaseUser(
+            role: UserRole.explorer, authMethod: AuthenticationMethod.email));
         verify(service.syncUserAccount());
         verify(await navService.replaceWith(Routes.bottomBarLayoutTemplateView,
             arguments: BottomBarLayoutTemplateViewArguments(

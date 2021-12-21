@@ -60,3 +60,27 @@ const int kMaxDistanceFromMarkerInMeter = 50;
 
 bool foundMarker = false;
 bool shownDummyModeDialog = false;
+
+////////////////////////////////////
+// for VibrationSearch
+
+// will be scaled down once closer to the treasure!
+const double kMinDistanceFromLastCheckInMeters = 30;
+
+const double kMinDistanceToCatchTrophyInMeters = 50;
+const double kMinRequiredAccuracyVibrationSearch = 50;
+// for vibration search automatic
+const int kDeadTimeAfterVibrationInSeconds = 5;
+
+//////////////////////////////////
+// for distance estimate
+const int kNumberTriesToRevealDistance = 3;
+// tolerance
+const double kMaxDeviationOfGoalInPercent = 0.2;
+const double kMinRequiredAccuracyDistanceEstimate = 30;
+
+////////////////////////////
+/// General
+const double kThresholdGPSAccuracyToShowInfo = 50;
+const double kMinLocationAccuracy = 100;
+const double kUnrealisticallyHighDistance = 100000000;

@@ -9,8 +9,11 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -26,6 +29,7 @@ class QuestService {
       locator<FlavorConfigProvider>();
   final MarkerService _markerService = locator<MarkerService>();
   final CloudFunctionsApi _cloudFunctionsApi = locator<CloudFunctionsApi>();
+  final GeolocationService _geolocationService = locator<GeolocationService>();
   final StopWatchService _stopWatchService =
       locator<StopWatchService>(); // Create instance.
   // map of list of money pools with money Pool id as key
@@ -36,6 +40,10 @@ class QuestService {
 
   ActivatedQuest? previouslyFinishedQuest;
 
+  // dead time after update
+  bool isTrackingDeadTime = false;
+  bool isUIDeadTime = false;
+
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
   Quest? _startedQuest;
@@ -43,20 +51,37 @@ class QuestService {
   void setStartedQuest(Quest? quest) {
     _startedQuest = quest;
   }
+
+  bool sortedNearbyQuests = false;
+  List<QuestType> allQuestTypes = [];
   // num get numberCollectedMarkers =>
 
-  Future startQuest({required Quest quest, required List<String> uids}) async {
+  Future startQuest(
+      {required Quest quest,
+      required List<String> uids,
+      Future Function(int)? periodicFuncFromViewModel}) async {
     // Get active quest
     ActivatedQuest tmpActivatedQuest =
         _getActivatedQuest(quest: quest, uids: uids);
 
     // Location check
-    AFKMarker fullMarker = tmpActivatedQuest.quest.markers
-        .firstWhere((element) => element.id == quest.startMarker.id);
-    final bool closeby = await _markerService.isUserCloseby(marker: fullMarker);
-    if (!closeby) {
-      log.w("You are not nearby the marker, cannot start quest!");
-      return "You are not nearby the marker.";
+    if (quest.type != QuestType.DistanceEstimate) {
+      try {
+        AFKMarker fullMarker = tmpActivatedQuest.quest.markers
+            .firstWhere((element) => element.id == quest.startMarker?.id);
+        final bool closeby =
+            await _markerService.isUserCloseby(marker: fullMarker);
+        if (!closeby) {
+          log.w("You are not nearby the marker, cannot start quest!");
+          return "You are not nearby the marker.";
+        }
+      } catch (e) {
+        log.e("Error thrown when searching for start marker: $e");
+        if (e is StateError) {
+          log.e(
+              "The quest that is to be started does not have a start marker!");
+        }
+      }
     }
 
     // Add quest to behavior subject
@@ -68,7 +93,17 @@ class QuestService {
     //Harguilar Commented This Out Timer
     _stopWatchService.startTimer();
 
-    _stopWatchService.listenToSecondTime(callback: trackData);
+    if (quest.type == QuestType.TreasureLocationSearch ||
+        quest.type == QuestType.TreasureLocationSearchAutomatic) {
+      if (periodicFuncFromViewModel != null) {
+        _stopWatchService.listenToSecondTime(
+            callback: periodicFuncFromViewModel);
+      }
+    } else if (quest.type == QuestType.DistanceEstimate) {
+      _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
+    } else if (quest.type == QuestType.Hike) {
+      _stopWatchService.listenToSecondTime(callback: trackData);
+    }
     return true;
   }
 
@@ -82,7 +117,8 @@ class QuestService {
 
   // Handle the scenario when a user finishes a hike
   // First evaluate the activated quest data and return values according to that
-  Future evaluateAndFinishQuest() async {
+  Future evaluateAndFinishQuest({bool force = false}) async {
+    log.i("Evaluating quest and finishing it if finished");
     // Fetch quest information
     if (activatedQuest == null) {
       log.e(
@@ -91,16 +127,21 @@ class QuestService {
     } else {
       _stopWatchService.stopTimer();
       _stopWatchService.pauseListener();
-      trackData(_stopWatchService.getSecondTime());
+
+      trackData(_stopWatchService.getSecondTime(), forceNoPush: true);
       // updateData();
+
+      // TODO: Add evaluation (how many afk credits were earned) for all quest types
 
       evaluateQuestAndSetStatus();
 
-      if (activatedQuest!.status == QuestStatus.incomplete) {
+      if (activatedQuest!.status == QuestStatus.incomplete && !force) {
         log.w("Quest is incomplete. Show message to user");
         return WarningQuestNotFinished;
-      } else {
-        log.i("Quest successfully finished, pushing to firebase!");
+      }
+      if (activatedQuest!.status == QuestStatus.success || force) {
+        log.i(
+            "Quest successfully finished (or forcing to finish), pushing to firebase!");
         //try {
         // if we end up here it means the quest has finished succesfully!
         try {
@@ -108,7 +149,9 @@ class QuestService {
               quest: activatedQuest!);
         } catch (e) {
           if (e is CloudFunctionsApiException) {
-            continueIncompleteQuest();
+            if (activatedQuest!.status != QuestStatus.success) {
+              continueIncompleteQuest();
+            }
             rethrow;
           } else {
             await _firestoreApi.pushFinishedQuest(
@@ -129,6 +172,8 @@ class QuestService {
   }
 
   Future continueIncompleteQuest() async {
+    // TODO: recover quest! of all types!
+
     if (activatedQuest != null) {
       _stopWatchService.resumeListener();
       _stopWatchService.startTimer();
@@ -148,6 +193,8 @@ class QuestService {
       // So we can just take the easy route here and don't await the push call.
       _firestoreApi.pushFinishedQuest(
           quest: activatedQuest!.copyWith(status: QuestStatus.cancelled));
+      pushActivatedQuest(
+          activatedQuest!.copyWith(status: QuestStatus.cancelled));
       disposeActivatedQuest();
       log.i("Cancelled incomplete ques");
     } else {
@@ -167,22 +214,53 @@ class QuestService {
   // also set earned credits
   void evaluateQuestAndSetStatus() {
     log.i("Evaluating quest");
-    bool? allMarkersCollected =
-        activatedQuest?.markersCollected.any((element) => element == false);
-    if (allMarkersCollected != null && allMarkersCollected == false) {
-      pushActivatedQuest(activatedQuest!.copyWith(
-          status: QuestStatus.success,
-          afkCreditsEarned: activatedQuest!.quest.afkCredits));
+
+    if (activatedQuest?.quest.type == QuestType.TreasureLocationSearch ||
+        activatedQuest?.quest.type ==
+            QuestType.TreasureLocationSearchAutomatic ||
+        activatedQuest?.quest.type == QuestType.DistanceEstimate) {
+      if (activatedQuest?.status == QuestStatus.success) {
+        pushActivatedQuest(activatedQuest!.copyWith(
+            status: QuestStatus.success,
+            afkCreditsEarned: activatedQuest!.quest.afkCredits));
+      } else {
+        pushActivatedQuest(
+          activatedQuest!.copyWith(
+            status: QuestStatus.incomplete,
+          ),
+        );
+      }
+
+      // } else if (activatedQuest?.quest.type == QuestType.DistanceEstimate) {
+
     } else {
-      pushActivatedQuest(
-        activatedQuest!.copyWith(
-          status: QuestStatus.incomplete,
-        ),
-      );
+      bool? markerMissing =
+          activatedQuest?.markersCollected.any((element) => element == false);
+      bool allMarkersCollected = markerMissing == null ? false : !markerMissing;
+
+      if (allMarkersCollected == true) {
+        log.i("All markers were collected, quest finished successfully!");
+        pushActivatedQuest(activatedQuest!.copyWith(
+            status: QuestStatus.success,
+            afkCreditsEarned: activatedQuest!.quest.afkCredits));
+      } else {
+        log.w("Quest found to be incomplete!");
+        log.w(
+            "Info: allMarkersCollected = $allMarkersCollected, markersCollected: ${activatedQuest?.markersCollected}");
+        pushActivatedQuest(
+          activatedQuest!.copyWith(
+            status: QuestStatus.incomplete,
+          ),
+        );
+      }
     }
   }
 
-  Future trackData(int seconds) async {
+  void setAndPushActiveQuestStatus(QuestStatus status) {
+    pushActivatedQuest(activatedQuest!.copyWith(status: status));
+  }
+
+  Future trackData(int seconds, {bool forceNoPush = false}) async {
     if (activatedQuest != null) {
       ActivatedQuest tmpActivatedQuest = activatedQuest!;
       //void updateTime(int seconds) {
@@ -206,10 +284,144 @@ class QuestService {
         return;
       }
       //}
-      if (push) {
+      if (push && !forceNoPush) {
         pushActivatedQuest(tmpActivatedQuest);
       }
     }
+  }
+
+  Future trackDataVibrationSearch(int seconds) async {
+    if (activatedQuest != null) {
+      ActivatedQuest tmpActivatedQuest = activatedQuest!;
+      //void updateTime(int seconds) {
+
+      // set initial data!
+      if (seconds == 1) {
+        final position = await _geolocationService.getAndSetCurrentLocation();
+        tmpActivatedQuest = updateLatLonOnQuest(
+            activatedQuest: tmpActivatedQuest,
+            newLat: position.latitude,
+            newLon: position.latitude);
+        final newDistanceInMeters = _geolocationService.distanceBetween(
+          lat1: position.latitude,
+          lon1: position.longitude,
+          lat2: tmpActivatedQuest.quest.finishMarker?.lat,
+          lon2: tmpActivatedQuest.quest.finishMarker?.lon,
+        );
+        tmpActivatedQuest = updateDistanceOnQuest(
+            activatedQuest: tmpActivatedQuest,
+            newDistance: newDistanceInMeters,
+            newLat: position.latitude,
+            newLon: position.longitude);
+        log.i(
+            "Setting initial data for Vibration Search Quest $newDistanceInMeters meters");
+        pushActivatedQuest(tmpActivatedQuest);
+      }
+      bool push = false;
+      if (seconds % 3 == 0) {
+        if (isTrackingDeadTime) {
+          log.v("Skipping distance to goal check because dead time is on");
+          return;
+        }
+        final position = await _geolocationService.getAndSetCurrentLocation();
+        if (position.accuracy > kMinRequiredAccuracyVibrationSearch) {
+          log.v(
+              "Accuracy is ${position.accuracy} and not enough to take next point!");
+          return;
+        } else {
+          push = true;
+        }
+
+        // check how far user went when last check happened!
+        final distanceFromLastCheck = _geolocationService.distanceBetween(
+          lat1: tmpActivatedQuest.lastCheckLat,
+          lon1: tmpActivatedQuest.lastCheckLon,
+          lat2: position.latitude,
+          lon2: position.longitude,
+        );
+
+        if (distanceFromLastCheck > kMinDistanceFromLastCheckInMeters) {
+          // if (distanceFromLastCheck > 0) {
+          push = true;
+          // check distance to goal!
+          final newDistanceInMeters = _geolocationService.distanceBetween(
+            lat1: position.latitude,
+            lon1: position.longitude,
+            lat2: tmpActivatedQuest.quest.finishMarker?.lat,
+            lon2: tmpActivatedQuest.quest.finishMarker?.lon,
+          );
+          tmpActivatedQuest = updateDistanceOnQuest(
+              activatedQuest: tmpActivatedQuest,
+              newDistance: newDistanceInMeters,
+              newLat: position.latitude,
+              newLon: position.longitude);
+          log.i("Updating distance to goal to $newDistanceInMeters meters");
+          tmpActivatedQuest =
+              this.updateTimeOnQuest(tmpActivatedQuest, seconds);
+        } else {
+          log.v(
+              "Not checking distance to goal, distance from last check: $distanceFromLastCheck");
+        }
+      }
+      if (seconds % 10 == 0) {
+        // push = true;
+        // every ten seconds
+        log.v("quest active since $seconds seconds!");
+        // tmpActivatedQuest = trackSomeOtherData(tmpActivatedQuest, seconds);
+      }
+      if (seconds >= kMaxQuestTimeInSeconds) {
+        push = false;
+        log.wtf(
+            "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten!");
+        await cancelIncompleteQuest();
+        return;
+      }
+      //}
+      if (push) {
+        pushActivatedQuest(tmpActivatedQuest);
+        setTrackingDeadTime(true);
+        await Future.delayed(
+            Duration(seconds: kDeadTimeAfterVibrationInSeconds));
+        if (tmpActivatedQuest.status != QuestStatus.success)
+          setTrackingDeadTime(false);
+      }
+    }
+  }
+
+  Future trackDataDistanceEstimate(int seconds,
+      {bool forceNoPush = false}) async {
+    if (activatedQuest != null) {
+      ActivatedQuest tmpActivatedQuest = activatedQuest!;
+      //void updateTime(int seconds) {
+      bool push = false;
+      if (seconds % 10 == 0) {
+        // check location every once in a while to
+        // make user aware of current accuracy?
+        push = true;
+        await _geolocationService.getAndSetCurrentLocation();
+      }
+      if (seconds >= kMaxQuestTimeInSeconds) {
+        push = false;
+        log.wtf(
+            "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten!");
+        await cancelIncompleteQuest();
+        return;
+      }
+      //}
+      if (push && !forceNoPush) {
+        pushActivatedQuest(tmpActivatedQuest);
+      }
+    }
+  }
+
+  void setTrackingDeadTime(bool deadTime) {
+    log.v("Setting quest data tracking dead time to $deadTime");
+    isTrackingDeadTime = deadTime;
+  }
+
+  void setUIDeadTime(bool deadTime) {
+    log.v("Setting quest data UI update dead time to $deadTime");
+    isUIDeadTime = deadTime;
   }
 
   void updateCollectedMarkers({required AFKMarker marker}) {
@@ -253,8 +465,12 @@ class QuestService {
   // In each case, an appropriate QuestQRCodeScanResult is returned.
   // This result is interpreted in the viewmodels
   Future<QuestQRCodeScanResult> handleQrCodeScanEvent(
-      {AFKMarker? marker}) async {
+      {AFKMarker? marker, bool returnMarker = false}) async {
     if (marker == null) return QuestQRCodeScanResult.empty();
+    if (returnMarker) {
+      return QuestQRCodeScanResult.marker(marker: marker);
+    }
+
     if (!hasActiveQuest) {
       // get Quests with start marker id
       List<Quest> quests =
@@ -295,7 +511,7 @@ class QuestService {
       }
 
       log.i(
-          "Marker verified! Continue with updated collected markers in activated quesst");
+          "Marker verified! Continue with updated collected markers in activated quest");
       updateCollectedMarkers(marker: fullMarker);
       // return marker that was succesfully scanned
       return QuestQRCodeScanResult.marker(marker: fullMarker);
@@ -342,17 +558,109 @@ class QuestService {
     }
   }
 
-  Future loadNearbyQuests() async {
-    // TODO: In the future retrieve only nearby quests
-    nearbyQuests = await _firestoreApi.getNearbyQuests(
-        pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests);
-    log.i("Found ${nearbyQuests.length} nearby quests.");
+  Future loadNearbyQuests({bool force = false}) async {
+    if (nearbyQuests.isEmpty || force) {
+      // TODO: In the future retrieve only nearby quests
+      nearbyQuests = await _firestoreApi.getNearbyQuests(
+          pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests);
+      log.i("Found ${nearbyQuests.length} nearby quests.");
+    } else {
+      log.i("Quests already loaded.");
+    }
+  }
+
+  Future getQuestsOfType({required QuestType questType}) async {
+    if (nearbyQuests.isEmpty) {
+      // Not very efficient to load all quests and then extract only the ones of a specific type!
+      await loadNearbyQuests();
+    }
+    return extractQuestsOfType(quests: nearbyQuests, questType: questType);
+  }
+
+  List<Quest> extractQuestsOfType(
+      {required List<Quest> quests, required QuestType questType}) {
+    List<Quest> returnQuests = [];
+    if (quests.isNotEmpty) {
+      for (Quest _q in quests) {
+        if (_q.type == questType) {
+          returnQuests.add(_q);
+        }
+      }
+    } else {
+      log.w('No nearby quests found');
+    }
+    return returnQuests;
+  }
+
+  void extractAllQuestTypes() {
+    if (nearbyQuests.isNotEmpty) {
+      for (Quest _q in nearbyQuests) {
+        if (!allQuestTypes.any((element) => element == _q.type)) {
+          allQuestTypes.add(_q.type);
+        }
+      }
+    } else {
+      log.w('No nearby quests found');
+    }
+  }
+
+  // Useful for UI, check if active quest screen is standalone ui or map view!
+  QuestUIStyle getQuestUIStyle({Quest? quest}) {
+    Quest? usedQuest;
+    if (quest != null) {
+      usedQuest = quest;
+    } else if (activatedQuest != null) {
+      usedQuest = activatedQuest!.quest;
+    } else {
+      log.e(
+          "No quest given as input and no quest active! Returning default = QuestUIStyle.map");
+      return QuestUIStyle.map;
+    }
+    final type = usedQuest.type;
+    if (type == QuestType.TreasureLocationSearch ||
+        type == QuestType.TreasureLocationSearchAutomatic ||
+        type == QuestType.DistanceEstimate ||
+        type == QuestType.QRCodeSearch ||
+        type == QuestType.QRCodeSearchIndoor ||
+        type == QuestType.QRCodeHuntIndoor) {
+      return QuestUIStyle.standalone;
+    } else {
+      return QuestUIStyle.map;
+    }
+  }
+
+  Future sortNearbyQuests() async {
+    if (nearbyQuests.isNotEmpty) {
+      log.i("Check distances for current quest list");
+
+      // need to use normal for loop to await results
+      for (var i = 0; i < nearbyQuests.length; i++) {
+        if (nearbyQuests[i].startMarker != null) {
+          double distance =
+              await _geolocationService.distanceBetweenUserAndCoordinates(
+                  lat: nearbyQuests[i].startMarker!.lat,
+                  lon: nearbyQuests[i].startMarker!.lon);
+          nearbyQuests[i] =
+              nearbyQuests[i].copyWith(distanceFromUser: distance);
+        } else {
+          nearbyQuests[i] = nearbyQuests[i]
+              .copyWith(distanceFromUser: kUnrealisticallyHighDistance);
+          sortedNearbyQuests = true;
+        }
+      }
+      nearbyQuests
+          .sort((a, b) => a.distanceFromUser!.compareTo(b.distanceFromUser!));
+    } else {
+      log.w(
+          "Curent quests empty, or distance check not required. Can't check distances");
+    }
+    log.i("Notify listeners");
   }
 
   ////////////////////////////////////////////////
   // Helper functions
   void pushActivatedQuest(ActivatedQuest quest) {
-    // log.v("Add updated quest to stream");
+    log.v("Add updated quest to stream so that UI can react!");
     activatedQuestSubject.add(quest);
   }
 
@@ -390,7 +698,7 @@ class QuestService {
           startMarkerId: markerId);
     } else {
       quests = nearbyQuests
-          .where((element) => element.startMarker.id == markerId)
+          .where((element) => element.startMarker?.id == markerId)
           .toList();
     }
     return quests;
@@ -404,6 +712,25 @@ class QuestService {
 
   ActivatedQuest updateTimeOnQuest(ActivatedQuest activatedQuest, int seconds) {
     return activatedQuest.copyWith(timeElapsed: seconds);
+  }
+
+  ActivatedQuest updateDistanceOnQuest(
+      {required ActivatedQuest activatedQuest,
+      required double newDistance,
+      required double newLat,
+      required double newLon}) {
+    return activatedQuest.copyWith(
+        currentDistanceInMeters: newDistance,
+        lastDistanceInMeters: activatedQuest.currentDistanceInMeters,
+        lastCheckLat: newLat,
+        lastCheckLon: newLon);
+  }
+
+  ActivatedQuest updateLatLonOnQuest(
+      {required ActivatedQuest activatedQuest,
+      required double newLat,
+      required double newLon}) {
+    return activatedQuest.copyWith(lastCheckLat: newLat, lastCheckLon: newLon);
   }
 
   void disposeActivatedQuest() {
