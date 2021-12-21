@@ -14,6 +14,7 @@ import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
+import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:stacked/stacked.dart';
@@ -69,7 +70,6 @@ class _BottomBarLayoutTemplateViewState
           child: PersistentTabView(
             context,
             controller: _controller,
-
             screens: _buildScreens(userRole: widget.userRole),
             items: _navBarsItems(userRole: widget.userRole),
             confineInSafeArea: true,
@@ -84,12 +84,12 @@ class _BottomBarLayoutTemplateViewState
             decoration: NavBarDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: kGreyTextColor,
-                  blurRadius: 12.0, // soften the shadow
-                  spreadRadius: 3, //extend the shadow
+                  color: kShadowColor,
+                  blurRadius: 5.0, // soften the shadow
+                  spreadRadius: 1, //extend the shadow
                   offset: Offset(
-                    0, // Move to right 10  horizontally
-                    15.0, // Move to bottom 10 Vertically
+                    1, // Move to right 10  horizontally
+                    2, // Move to bottom 10 Vertically
                   ),
                 )
               ],
@@ -112,8 +112,9 @@ class _BottomBarLayoutTemplateViewState
               duration: Duration(milliseconds: 400),
             ),
             navBarHeight: kBottomNavigationBarHeightCustom,
+            padding: const NavBarPadding.only(top: 5.0),
             navBarStyle: NavBarStyle
-                .style8, // Choose the nav bar style with this property.
+                .style16, // Choose the nav bar style with this property.
           ),
         ),
       ),
@@ -192,152 +193,104 @@ class _BottomBarLayoutTemplateViewState
     switch (userRole) {
       case UserRole.sponsor:
         return [
-          PersistentBottomNavBarItem(
+          AFKNavBarItem(
             icon: Icon(Icons.home),
             inactiveIcon: Icon(Icons.home_outlined),
-            title: ("Home"),
-            iconSize: kBottomNavigationBarIconSize,
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
+            title: "Home",
           ),
-          PersistentBottomNavBarItem(
-            iconSize: kBottomNavigationBarIconSize,
+          AFKNavBarItem(
             icon: Icon(Icons.card_giftcard),
             inactiveIcon: Icon(Icons.shop_outlined),
-            title: ("Rewards"),
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
+            title: "Rewards",
           ),
         ];
       case UserRole.explorer:
         return [
-          PersistentBottomNavBarItem(
-            icon: Icon(Icons.home),
+          AFKNavBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Icon(Icons.home),
+            ),
             inactiveIcon: Icon(Icons.home_outlined),
-            title: ("Home"),
-            iconSize: kBottomNavigationBarIconSize,
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
+            title: "Home",
           ),
-          PersistentBottomNavBarItem(
+          AFKNavBarItem(
             icon: Icon(
               Icons.explore,
             ),
             inactiveIcon: Icon(Icons.explore_outlined),
-            iconSize: kBottomNavigationBarIconSize,
-            title: ("Quests"),
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
+            title: "Quests",
           ),
-          PersistentBottomNavBarItem(
-            iconSize: kBottomNavigationBarIconSize,
+          AFKNavBarItem(
             icon: Icon(Icons.shop),
             inactiveIcon: Icon(Icons.shop_outlined),
-            title: ("Rewards"),
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
+            title: "Rewards",
           ),
         ];
       case UserRole.superUser:
         return [
-          PersistentBottomNavBarItem(
-            icon: Icon(Icons.home),
-            inactiveIcon: Icon(Icons.home_outlined),
-            title: ("Home"),
-            iconSize: kBottomNavigationBarIconSize,
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
+          AFKNavBarItem(
+              icon: Icon(Icons.home),
+              inactiveIcon: Icon(Icons.home_outlined),
+              title: "Home"),
+          AFKNavBarItem(
+            icon: Icon(Icons.explore, color: kPrimaryColor),
+            inactiveIcon:
+                Icon(Icons.explore, color: kPrimaryColor.withOpacity(0.5)),
+            //inactiveColorPrimary: Colors.grey[200],
+            activeColorPrimary: Colors.grey[100],
+            activeColorSecondary: Colors.white,
+            iconSize: 50,
+            title: "Quests",
           ),
-          PersistentBottomNavBarItem(
-            icon: Icon(
-              Icons.explore,
-            ),
-            inactiveIcon: Icon(Icons.explore_outlined),
-            iconSize: kBottomNavigationBarIconSize,
-            title: ("Quests"),
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
-          ),
-          PersistentBottomNavBarItem(
-            iconSize: kBottomNavigationBarIconSize,
+          AFKNavBarItem(
+            //iconSize: kBottomNavigationBarIconSize,
             icon: Icon(Icons.shop),
             inactiveIcon: Icon(Icons.shop_outlined),
-            title: ("Rewards"),
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
+            title: "Rewards",
           ),
         ];
       default:
         return [
-          PersistentBottomNavBarItem(
+          AFKNavBarItem(
             icon: Icon(Icons.home),
             inactiveIcon: Icon(Icons.home_outlined),
             title: "Home",
-            iconSize: kBottomNavigationBarIconSize,
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
           ),
-          PersistentBottomNavBarItem(
+          AFKNavBarItem(
             icon: Icon(
               Icons.explore,
             ),
             inactiveIcon: Icon(Icons.explore_outlined),
-            iconSize: kBottomNavigationBarIconSize,
             title: ("Quests"),
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
           ),
-          PersistentBottomNavBarItem(
+          AFKNavBarItem(
             icon: Icon(Icons.mark_email_read_outlined),
             inactiveIcon: Icon(Icons.mark_chat_read),
             title: ("Home"),
-            iconSize: kBottomNavigationBarIconSize,
-            activeColorPrimary: Colors.white,
-            inactiveColorPrimary: Colors.white70,
           ),
         ];
     }
-/* 
-    return [
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
-        inactiveIcon: Icon(Icons.home_outlined),
+  }
 
-        //title: ("Home"),
-        iconSize: kBottomNavigationBarIconSize,
-        activeColorPrimary: Colors.white,
-        inactiveColorPrimary: Colors.white70,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(
-          Icons.explore,
-        ),
-        inactiveIcon: Icon(Icons.explore_outlined),
-        iconSize: kBottomNavigationBarIconSize,
-        //title: ("Projects"),
-        activeColorPrimary: Colors.white,
-        inactiveColorPrimary: Colors.white70,
-      ),
-      if (userRole == UserRole.explorer)
-        PersistentBottomNavBarItem(
-          iconSize: kBottomNavigationBarIconSize,
-          icon: Icon(Icons.shop),
-          inactiveIcon: Icon(Icons.shop_outlined),
-
-          //title: ("Profile"),
-          activeColorPrimary: Colors.white,
-          inactiveColorPrimary: Colors.white70,
-        ),
-      if (userRole == UserRole.adminMaster)
-        PersistentBottomNavBarItem(
-          iconSize: kBottomNavigationBarIconSize,
-          icon: Icon(Icons.mark_as_unread),
-          inactiveIcon: Icon(Icons.shop_outlined),
-
-          //title: ("Profile"),
-          activeColorPrimary: Colors.white,
-          inactiveColorPrimary: Colors.white70,
-        ),
-    ]; */
+  PersistentBottomNavBarItem AFKNavBarItem(
+      {required Widget icon,
+      required Widget inactiveIcon,
+      required String title,
+      double? iconSize,
+      Color? activeColorPrimary,
+      Color? activeColorSecondary,
+      Color? inactiveColorPrimary}) {
+    return PersistentBottomNavBarItem(
+      icon: icon,
+      inactiveIcon: inactiveIcon,
+      title: title,
+      textStyle:
+          textTheme(context).headline6!.copyWith(height: 0.1, fontSize: 16),
+      iconSize: iconSize ?? kBottomNavigationBarIconSize,
+      activeColorPrimary: activeColorPrimary ?? Colors.white,
+      activeColorSecondary: activeColorSecondary ?? Colors.white,
+      inactiveColorPrimary: inactiveColorPrimary ?? Colors.white70,
+    );
   }
 }

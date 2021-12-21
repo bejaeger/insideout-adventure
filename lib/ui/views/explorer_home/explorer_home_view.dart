@@ -76,43 +76,49 @@ class ExplorerHomeView extends StatelessWidget {
                         ],
                       ),
                       verticalSpaceMedium,
-
-                      // ExplorerCreditStats(
-                      //   userStats: model.currentUserStats,
-                      // ),
                       Row(
                         children: [
                           Expanded(
                             child: NavButtonWidget(
-                              padding: 0,
-                              title: 'QUESTS',
+                              title: 'ASK FOR SPONSORING',
                               icon: const Icon(
-                                Icons.explore,
-                                color: kDarkTurquoise,
-                                size: 70,
-                              ),
-                              onTap: model.navigateToQuests,
-                            ),
-                          ),
-                        ],
-                      ),
-                      verticalSpaceMedium,
-                      Row(
-                        children: [
-                          Expanded(
-                            child: NavButtonWidget(
-                              padding: 0,
-                              title: 'ACHIEVEMENTS',
-                              icon: const Icon(
-                                Icons.badge_rounded,
+                                Icons.arrow_downward_rounded,
                                 color: kDarkTurquoise,
                                 size: 70,
                               ),
                               onTap: model.showNotImplementedSnackbar,
                             ),
                           ),
+                          Expanded(
+                            child: NavButtonWidget(
+                              title: 'GIFT CARDS',
+                              icon: const Icon(
+                                Icons.card_giftcard_outlined,
+                                color: kDarkTurquoise,
+                                size: 70,
+                              ),
+                              onTap: model.navigateToGiftCardsView,
+                            ),
+                          ),
                         ],
                       ),
+                      // Row(
+                      //   children: [
+                      //     Expanded(
+                      //       child: NavButtonWidget(
+                      //         padding: 0,
+                      //         title: 'ACHIEVEMENTS',
+                      //         icon: const Icon(
+                      //           Icons.badge_rounded,
+                      //           color: kDarkTurquoise,
+                      //           size: 70,
+                      //         ),
+                      //         onTap: model.showNotImplementedSnackbar,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      verticalSpaceLarge,
                       // verticalSpaceMedium,
                       // SectionHeader(
                       //   horizontalPadding: 0,

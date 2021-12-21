@@ -141,7 +141,7 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
                     FittedBox(
                       fit: BoxFit.contain,
                       child: Text(
-                        "CATEGORIES",
+                        "CATEGORY",
                         //  maxLines: 1,
                       ),
                     ),

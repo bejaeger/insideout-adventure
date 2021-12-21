@@ -53,45 +53,45 @@ class DrawerWidgetView extends StatelessWidget {
                         )),
                   ],
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: NavButtonWidget(
-                        title: 'REWARDS',
-                        icon: const Icon(
-                          Icons.card_giftcard_outlined,
-                          color: kDarkTurquoise,
-                          size: 70,
-                        ),
-                        onTap: model.navigateToGiftCardsView,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                        child: NavButtonWidget(
-                      title: 'ASK FOR FUNDS',
-                      icon: const Icon(
-                        Icons.arrow_downward_rounded,
-                        color: kDarkTurquoise,
-                        size: 70,
-                      ),
-                      onTap: model.showNotImplementedSnackbar,
-                    )),
-                    // Expanded(
-                    //     child: NavButtonWidget(
-                    //   title: 'ACHIEVEMENTS',
-                    //   icon: const Icon(
-                    //     Icons.badge_rounded,
-                    //     color: kDarkTurquoise,
-                    //     size: 70,
-                    //   ),
-                    //   onTap: model.showNotImplementedSnackbar,
-                    // )),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: NavButtonWidget(
+                //         title: 'REWARDS',
+                //         icon: const Icon(
+                //           Icons.card_giftcard_outlined,
+                //           color: kDarkTurquoise,
+                //           size: 70,
+                //         ),
+                //         onTap: model.navigateToGiftCardsView,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //         child: NavButtonWidget(
+                //       title: 'ASK FOR FUNDS',
+                //       icon: const Icon(
+                //         Icons.arrow_downward_rounded,
+                //         color: kDarkTurquoise,
+                //         size: 70,
+                //       ),
+                //       onTap: model.showNotImplementedSnackbar,
+                //     ),),
+                // Expanded(
+                //     child: NavButtonWidget(
+                //   title: 'ACHIEVEMENTS',
+                //   icon: const Icon(
+                //     Icons.badge_rounded,
+                //     color: kDarkTurquoise,
+                //     size: 70,
+                //   ),
+                //   onTap: model.showNotImplementedSnackbar,
+                // )),
+                //  ],
+                //),
                 verticalSpaceMedium,
                 Padding(
                   padding: const EdgeInsets.symmetric(

@@ -73,4 +73,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
         description:
             "This is the amount you successfully earned already! You can spend credits on gift cards!");
   }
+
+  Future navigateToGiftCardsView() async {
+    await navigationService.navigateTo(Routes.purchasedGiftCardsView);
+  }
 }
