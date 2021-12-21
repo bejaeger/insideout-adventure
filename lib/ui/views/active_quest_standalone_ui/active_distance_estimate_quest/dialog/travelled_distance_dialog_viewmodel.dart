@@ -1,15 +1,13 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/helpers/distance_check_status_model.dart';
-import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/quest_status_dialog_viewmodel.dart';
 
-class TravelledDistanceDialogViewModel extends BaseModel {
+class TravelledDistanceDialogViewModel extends QuestCommonDialogViewModel {
   final log = getLogger("TravelledDistanceDialogViewModel");
 
   DistanceCheckStatusModel? distanceCheckStatus;
   DistanceCheckStatus? status;
-  bool collectedCredits = false;
   String? title;
   String? description;
   String? mainButtonTitle;
@@ -86,17 +84,5 @@ class TravelledDistanceDialogViewModel extends BaseModel {
 
   String getDistanceToTravel() {
     return activeQuest.quest.distanceToTravelInMeter!.toStringAsFixed(0);
-  }
-
-  Future getCredits() async {
-    setBusy(true);
-    final result = await handleSuccessfullyFinishedQuest();
-    if (result == true) {
-      log.i("Credits succesfully collected");
-      collectedCredits = true;
-    } else {
-      replaceWithMainView(index: BottomNavBarIndex.quest);
-    }
-    setBusy(false);
   }
 }

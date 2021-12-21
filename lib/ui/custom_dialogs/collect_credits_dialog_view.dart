@@ -1,7 +1,6 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/ui/custom_dialogs/collect_credits_dialog_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -23,7 +22,7 @@ class CollectCreditsDialogView extends StatelessWidget {
         viewModelBuilder: () => CollectCreditsDialogViewModel(),
         builder: (context, model, child) => Dialog(
               elevation: 0,
-              backgroundColor: Colors.transparent,
+              backgroundColor: Colors.white,
               child: _BasicDialogContent(
                 request: request,
                 completer: completer,
@@ -49,10 +48,10 @@ class _BasicDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      if (!model.isBusy) ...[
+    return Stack(
+      children: [
         AnimatedOpacity(
-          duration: Duration(milliseconds: 1500),
+          duration: Duration(milliseconds: 500),
           opacity: model.isBusy ? 0.0 : 1.0,
           child: Stack(
             clipBehavior: Clip.none,
@@ -73,7 +72,7 @@ class _BasicDialogContent extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     verticalSpaceSmall,
-                    Text("CONGRATULATIONS",
+                    Text("SUCCESSS",
                         style: textTheme(context)
                             .headline5!
                             .copyWith(color: kPrimaryColor)),
@@ -87,7 +86,7 @@ class _BasicDialogContent extends StatelessWidget {
                     verticalSpaceSmall,
                     AnimatedSwitcher(
                       duration: Duration(seconds: 2),
-                      child: model.status == CreditsCollectionStatus.toCollect
+                      child: !model.collectedCredits
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Image.asset(kAFKCreditsLogoPath),
@@ -121,9 +120,9 @@ class _BasicDialogContent extends StatelessWidget {
                     //                 .copyWith(color: kPrimaryColor)),
                     //   ),
                     verticalSpaceMedium,
-                    model.status == CreditsCollectionStatus.toCollect
+                    !model.collectedCredits
                         ? ElevatedButton(
-                            onPressed: model.collectCredits,
+                            onPressed: model.getCredits,
                             child: Text("Collect Your Credits",
                                 style: textTheme(context)
                                     .headline6!
@@ -166,7 +165,26 @@ class _BasicDialogContent extends StatelessWidget {
             ],
           ),
         ),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.center,
+            child: AnimatedOpacity(
+              duration: Duration(milliseconds: 50),
+              opacity: model.isBusy ? 1.0 : 0.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: kPrimaryColor),
+                  verticalSpaceMedium,
+                  Text("Getting credits...",
+                      style: textTheme(context).headline6),
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
-    ]);
+    );
   }
 }

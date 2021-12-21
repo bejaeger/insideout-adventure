@@ -31,6 +31,7 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
   bool skipUpdatingQuestStatus = false;
   bool isCheckingDistance = false;
   final MarkerService _markerService = locator<MarkerService>();
+  bool questSuccessfullyFinished = false;
 
   List<TreasureSearchLocation> checkpoints = [];
   final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
@@ -38,6 +39,7 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
   bool? closeby;
 
   void initialize({required Quest quest}) async {
+    resetPreviousQuest();
     runBusyFuture(_geolocationService.getAndSetCurrentLocation());
     closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
     notifyListeners();
@@ -114,11 +116,10 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
         activeQuest.currentDistanceInMeters == null) {
       lastActivatedQuestInfoText = "Start Walking and search for the Trophy!";
     } else {
-      if (activeQuest.currentDistanceInMeters! <
-          kMinDistanceToCatchTrophyInMeters) {
-        // DUMMY
-        // if (activeQuest.currentDistanceInMeters! < 9999) {
-
+      // if (activeQuest.currentDistanceInMeters! <
+      //     kMinDistanceToCatchTrophyInMeters) {
+      // DUMMY
+      if (activeQuest.currentDistanceInMeters! < 9999) {
         // This should collect the NEXT marker!!
         // Show loading screen, show that the quest is gonna be pushed!
         // ! (What if there is no data connection? Sill need to be able to push the data later on!)
@@ -130,20 +131,17 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
 
         // Make checkout procedure same for all quest types!
         // Function in quest_viewmodel!
-        await dialogService.showCustomDialog(
+        final result = await dialogService.showCustomDialog(
           variant: DialogType.CollectCredits,
           data: activeQuest,
         );
-        // await dialogService.showDialog(
-        //     title: "SUCCESS!", description: "You found the trophy!");
-        setBusy(true);
-        setTrackingDeadTime(false);
-        final result = await checkQuestAndFinishWhenCompleted();
-        // clean -up!
-        if (result != false) {
-          cancelQuestListener();
+        if (result?.confirmed == true) {
+          // this means everything went fine!
+          // Show statistics display
+          questSuccessfullyFinished = true;
         }
-        setBusy(false);
+        cancelQuestListener();
+        notifyListeners();
         return;
       }
       if (activeQuest.lastDistanceInMeters! >
@@ -159,11 +157,13 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
   }
 
   @override
-  void resetQuest() {
+  void resetPreviousQuest() {
     cancelQuestListener();
     markersOnMap = {};
     checkpoints = [];
     directionStatus = "Start Walking";
+    questSuccessfullyFinished = false;
+    setTrackingDeadTime(false);
   }
 
   Future setInitialDistance() async {
@@ -219,9 +219,10 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
     }
 
     final bool allow = isDistanceCheckAllowed(newPosition: position);
-    if (allow) {
-      // DUMMY
-      // if (distanceFromLastCheck > 0) {
+    // DUMMY
+    if (true) {
+      // if (allow) {
+
       setSkipUpdatingQuestStatus(false);
 
       // check distance to goal!

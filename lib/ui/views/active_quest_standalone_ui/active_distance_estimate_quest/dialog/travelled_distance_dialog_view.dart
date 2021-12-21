@@ -180,7 +180,7 @@ class _BasicDialogContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircularProgressIndicator(color: kPrimaryColor),
-                verticalSpaceSmall,
+                verticalSpaceMedium,
                 Text(
                     model.status == DistanceCheckStatus.success
                         ? "Getting credits..."
