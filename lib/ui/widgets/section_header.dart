@@ -15,6 +15,7 @@ class SectionHeader extends StatelessWidget {
   final Widget? trailingIcon;
   final double titleSize;
   final double? horizontalPadding;
+  final double? verticalPadding;
 
   const SectionHeader(
       {Key? key,
@@ -23,14 +24,16 @@ class SectionHeader extends StatelessWidget {
       this.textButtonText = "SEE ALL",
       this.trailingIcon,
       this.titleSize = 24,
-      this.horizontalPadding})
+      this.horizontalPadding,
+      this.verticalPadding})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: horizontalPadding ?? kHorizontalPadding),
+          horizontal: horizontalPadding ?? kHorizontalPadding,
+          vertical: verticalPadding ?? kVerticalPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

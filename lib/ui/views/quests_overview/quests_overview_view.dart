@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
-import 'package:afkcredits/ui/views/quests_overview/nearby_quests_list.dart/nearby_quests_list.dart';
+import 'package:afkcredits/ui/views/quests_overview/quest_lists.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_categories_list.dart/quest_categories_list.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
@@ -29,7 +29,7 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
       onModelReady: (model) {
         model.initialize();
         _tabController = TabController(
-          length: 3,
+          length: 2,
           vsync: this,
         );
       },
@@ -76,14 +76,12 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
           physics: NeverScrollableScrollPhysics(),
           controller: _tabController,
           children: [
-            model.isBusy
-                ? AFKProgressIndicator()
-                : NearbyQuestsList(model: model),
+            model.isBusy ? AFKProgressIndicator() : QuestLists(model: model),
             // Icon(Icons.apps),
             model.isBusy ? AFKProgressIndicator() : MapView(),
-            model.isBusy
-                ? AFKProgressIndicator()
-                : QuestsCategoryList(model: model),
+            // model.isBusy
+            //     ? AFKProgressIndicator()
+            //     : QuestsCategoryList(model: model),
           ],
         ),
       ),
@@ -108,9 +106,9 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.near_me, size: 30),
+                    Icon(Icons.list_rounded, size: 30),
                     Text(
-                      "NEARBY",
+                      "List",
                     ),
                   ],
                 ),
@@ -124,29 +122,29 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
                   children: [
                     Icon(Icons.map_rounded, size: 30),
                     Text(
-                      "MAPS",
+                      "Map",
                     ),
                   ],
                 ),
               ),
             ),
-            Tab(
-              child: Align(
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.category_rounded, size: 30),
-                    FittedBox(
-                      fit: BoxFit.contain,
-                      child: Text(
-                        "CATEGORY",
-                        //  maxLines: 1,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
+            // Tab(
+            //   child: Align(
+            //     alignment: Alignment.center,
+            //     child: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         Icon(Icons.category_rounded, size: 30),
+            //         FittedBox(
+            //           fit: BoxFit.contain,
+            //           child: Text(
+            //             "CATEGORY",
+            //             //  maxLines: 1,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // )
           ]);
 }

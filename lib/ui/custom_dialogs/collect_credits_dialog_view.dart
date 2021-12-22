@@ -21,7 +21,10 @@ class CollectCreditsDialogView extends StatelessWidget {
     return ViewModelBuilder<CollectCreditsDialogViewModel>.reactive(
         viewModelBuilder: () => CollectCreditsDialogViewModel(),
         builder: (context, model, child) => Dialog(
-              elevation: 0,
+              elevation: 5,
+              //insetPadding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0)),
               backgroundColor: Colors.white,
               child: _BasicDialogContent(
                 request: request,
@@ -53,77 +56,62 @@ class _BasicDialogContent extends StatelessWidget {
         AnimatedOpacity(
           duration: Duration(milliseconds: 500),
           opacity: model.isBusy ? 0.0 : 1.0,
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.topCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 padding: const EdgeInsets.only(
                   top: 32,
                   left: 16,
                   right: 16,
-                  bottom: 12,
+                  bottom: 32,
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                ),
+                alignment: Alignment.center,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     verticalSpaceSmall,
-                    Text("SUCCESSS",
-                        style: textTheme(context)
-                            .headline5!
-                            .copyWith(color: kPrimaryColor)),
+                    Text(model.collectedCredits ? "SUCCESS!" : "You are dope!",
+                        style: textTheme(context).headline6!.copyWith(
+                            color: kPrimaryColor,
+                            fontSize: 32,
+                            fontWeight: FontWeight.w800)),
+                    verticalSpaceSmall,
                     Text(
-                        "You earned " +
-                            request.data.quest.afkCredits.toString() +
-                            " AFK Credits",
+                        model.collectedCredits
+                            ? "You collected " +
+                                request.data.quest.afkCredits.toString() +
+                                " AFK Credits"
+                            : "You earned " +
+                                request.data.quest.afkCredits.toString() +
+                                " AFK Credits",
                         style: textTheme(context)
-                            .headline6!
-                            .copyWith(color: kPrimaryColor)),
+                            .headline4!
+                            .copyWith(color: kPrimaryColor, fontSize: 18)),
                     verticalSpaceSmall,
                     AnimatedSwitcher(
-                      duration: Duration(seconds: 2),
+                      duration: Duration(milliseconds: 1),
                       child: !model.collectedCredits
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: Image.asset(kAFKCreditsLogoPath),
+                              child: Image.asset(kAFKCreditsLogoPath,
+                                  width: screenWidth(context, percentage: 0.4)),
                             )
                           : FittedBox(
                               fit: BoxFit.fill,
                               child: Icon(
                                 Icons.check,
-                                size: 10000,
+                                size: 200,
                                 color: kPrimaryColor,
                               ),
                             ),
                     ),
-                    // if (request.data?.quest?.afkCredits != null)
-                    //   AnimatedSwitcher(
-                    //     duration: Duration(seconds: 2),
-                    //     child: model.status == CreditsCollectionStatus.toCollect
-                    //         ? Text(
-                    //             "It's worth " +
-                    //                 request.data.quest.afkCredits.toString() +
-                    //                 " Credits!",
-                    //             style: textTheme(context)
-                    //                 .headline6!
-                    //                 .copyWith(color: kPrimaryColor))
-                    //         : Text(
-                    //             "Successfully collected " +
-                    //                 request.data.quest.afkCredits.toString() +
-                    //                 " credits",
-                    //             style: textTheme(context)
-                    //                 .headline6!
-                    //                 .copyWith(color: kPrimaryColor)),
-                    //   ),
                     verticalSpaceMedium,
                     !model.collectedCredits
                         ? ElevatedButton(
                             onPressed: model.getCredits,
-                            child: Text("Collect Your Credits",
+                            child: Text("Collect Credits",
                                 style: textTheme(context)
                                     .headline6!
                                     .copyWith(color: kWhiteTextColor)))
@@ -143,25 +131,6 @@ class _BasicDialogContent extends StatelessWidget {
                   ],
                 ),
               ),
-              // AnimatedOpacity(
-              //   duration: Duration(milliseconds: 500),
-              //   opacity: model.status == CreditsCollectionStatus.toCollect
-              //       ? 0.0
-              //       : 1.0,
-              //   child: Positioned(
-              //     top: -28,
-              //     child: CircleAvatar(
-              //       minRadius: 16,
-              //       maxRadius: 28,
-              //       backgroundColor: kPrimaryColor,
-              //       child: Icon(
-              //         Icons.check,
-              //         size: 28,
-              //         color: Colors.white,
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),

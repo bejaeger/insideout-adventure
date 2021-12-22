@@ -23,6 +23,8 @@ class TravelledDistanceDialogView extends StatelessWidget {
         onModelReady: (model) => model.waitForProcess(request: request),
         builder: (context, model, child) => Dialog(
               elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0)),
               backgroundColor: Colors.white,
               child: _BasicDialogContent(
                 request: request,
@@ -113,7 +115,11 @@ class _BasicDialogContent extends StatelessWidget {
                         ),
                       model.collectedCredits == false
                           ? ElevatedButton(
-                              onPressed: model.getCredits,
+                              onPressed:
+                                  model.status == DistanceCheckStatus.success
+                                      ? model.getCredits
+                                      : () => completer(
+                                          DialogResponse(confirmed: false)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(

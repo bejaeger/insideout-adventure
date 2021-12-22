@@ -77,7 +77,7 @@ const int kDeadTimeAfterVibrationInSeconds = 5;
 const int kNumberTriesToRevealDistance = 3;
 // tolerance
 const double kMaxDeviationOfGoalInPercent = 0.2;
-const double kMinRequiredAccuracyDistanceEstimate = 30;
+const double kMinRequiredAccuracyDistanceEstimate = 50;
 
 ////////////////////////////
 /// General

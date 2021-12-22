@@ -19,22 +19,12 @@ class _MapViewState extends State<MapView> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MapViewModel>.reactive(
-        //  onModelReady: (model) => model.createMarkers(),
         //disposeViewModel: false,
-        fireOnModelReadyOnce: true,
-        onModelReady: (model) {
-          model.initialize();
-          return;
-        },
+        onModelReady: (model) => model.initialize(),
         viewModelBuilder: () => MapViewModel(),
         builder: (context, model, child) {
           return GoogleMapsScreen(model: model);
-        }
-        // model.hasActiveQuest
-        //     ? ActiveMapQuestView()
-        //     : GoogleMapsScreen(model: model),
-
-        );
+        });
   }
 
   @override

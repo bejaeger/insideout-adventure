@@ -1,4 +1,5 @@
 const double kHorizontalPadding = 20.0;
+const double kVerticalPadding = 10.0;
 const double kBottomNavigationBarIconSize = 35;
 
 const double kAppBarExtendedHeight = 80;

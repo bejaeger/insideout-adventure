@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/helpers/distance_check_status_model.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
@@ -10,10 +11,10 @@ import 'package:afkcredits/enums/distance_check_status.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
+class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   // Instead of these functions here I should have override functions
   // That all work in QuestViewModel!
 
@@ -50,15 +51,18 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
         return;
       }
     }
-    numberTries = numberTries + 1;
+    setBusy(true);
     final distanceTravelledTest = await _geolocationService
         .distanceBetweenUserAndCoordinates(lat: startingLat, lon: startingLon);
     if (!(await checkAccuracy(
         position: _geolocationService.getUserPosition,
         minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
+      setBusy(false);
       return;
     }
+    numberTries = numberTries + 1;
     distanceTravelled = distanceTravelledTest;
+    setBusy(false);
     // distanceTravelled = 1;
 
     ////////////////////////////////////////////////////
@@ -113,6 +117,7 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
     // artificial delay to make it exciting for user!
     await Future.delayed(Duration(seconds: 2));
 
+    // DUMMY
     if (distanceTravelled > (distanceToTravel - 201) &&
         distanceTravelled < (distanceToTravel + 201)) {
       // if (distanceTravelled >
@@ -203,16 +208,34 @@ class ActiveDistanceEstimateQuestViewModel extends QuestViewModel {
             "Start the quest and then walk ${distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance of tries!");
   }
 
+  @override
   void resetPreviousQuest() {
     distanceTravelled = 0;
     numberTries = 0;
     startedQuest = false;
-    questSuccessfullyFinished = false;
+    super.resetPreviousQuest();
   }
 
   @override
   Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) {
     // TODO: implement handleQrCodeScanEvent
+    throw UnimplementedError();
+  }
+
+  @override
+  void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
+    // TODO: implement addMarkerToMap
+  }
+
+  @override
+  void loadQuestMarkers() {
+    // TODO: implement loadQuestMarkers
+  }
+
+  @override
+  BitmapDescriptor defineMarkersColour(
+      {required AFKMarker afkmarker, required Quest? quest}) {
+    // TODO: implement defineMarkersColour
     throw UnimplementedError();
   }
 }

@@ -61,9 +61,11 @@ class ActiveMapQuestView extends StatelessWidget {
                     child: Container(
                       height: screenHeight(context, percentage: 0.4),
                       child: QuestInfoCard(
-                          quest: quest,
-                          onCardPressed: () => null,
-                          height: screenHeight(context, percentage: 0.4)),
+                        quest: quest,
+                        onCardPressed: () => null,
+                        height: screenHeight(context, percentage: 0.1),
+                        width: screenWidth(context, percentage: 0.7),
+                      ),
                     ),
                   ),
                   if (model.isBusy)

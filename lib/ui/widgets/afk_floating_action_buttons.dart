@@ -9,6 +9,7 @@ class AFKFloatingActionButtons extends StatelessWidget {
   final void Function()? onPressed2;
   final IconData? iconData2;
   final String? title2;
+  final double yOffset;
   const AFKFloatingActionButtons({
     Key? key,
     required this.onPressed1,
@@ -17,6 +18,7 @@ class AFKFloatingActionButtons extends StatelessWidget {
     this.iconData2,
     this.title1,
     this.title2,
+    this.yOffset = 10,
   }) : super(key: key);
 
   @override
@@ -35,7 +37,7 @@ class AFKFloatingActionButtons extends StatelessWidget {
             title: title1,
             onPressed: onPressed1,
             icon: Icon(iconData1, size: 34, color: Colors.white)),
-        verticalSpaceSmall,
+        SizedBox(height: yOffset),
       ],
     );
   }

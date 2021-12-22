@@ -19,6 +19,7 @@ import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
+import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:geolocator/geolocator.dart';
@@ -29,6 +30,7 @@ abstract class QuestViewModel extends BaseModel {
   StreamSubscription? _activeQuestSubscription;
   String lastActivatedQuestInfoText = "Active Quest";
   final GeolocationService _geolocationService = locator<GeolocationService>();
+  final StopWatchService _stopWatchService = locator<StopWatchService>();
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
@@ -38,15 +40,9 @@ abstract class QuestViewModel extends BaseModel {
 
   QuestViewModel() {
     // listen to changes in wallet
+    log.i("Setting up active quest listener");
     _activeQuestSubscription = questService.activatedQuestSubject.listen(
       (activatedQuest) {
-        // if (stats?.status == QuestStatus.active ||
-        //     stats?.status == QuestStatus.incomplete) {
-        //   // TODO: make this more general! UI response to quest actions!
-        //   // TODO: Could be a function to be overridden by specific ACTIVE quest viewmodels
-        //   // similar to 'trackData' or 'trackDataVibrationSearch' in quest_service
-        //   getActivatedQuestInfoText();
-        // }
         if (activeQuestNullable?.quest.type == QuestType.Hike) {
           lastActivatedQuestInfoText = getActiveQuestProgressDescription();
         }
@@ -141,8 +137,8 @@ abstract class QuestViewModel extends BaseModel {
       {required Quest quest, AFKMarker? startMarker}) async {
     SheetResponse? sheetResponse = await bottomSheetService.showCustomSheet(
         variant: BottomSheetType.questInformation,
-        title: 'Name: ' + quest.name,
-        description: 'Description: ' + quest.description,
+        title: quest.name,
+        description: quest.description,
         mainButtonTitle: quest.type == QuestType.DistanceEstimate
             ? "Go to Quest"
             : "Go to Quest",
@@ -437,6 +433,7 @@ abstract class QuestViewModel extends BaseModel {
     if (position.accuracy > (minAccuracy ?? kMinLocationAccuracy)) {
       _geolocationService.setGPSAccuracyInfo("Low GPS Accuracy");
       if (showDialog) {
+        log.e("Accuracy low: ${position.accuracy}");
         await dialogService.showDialog(
             title: "GPS Accuracy Too Low",
             description:
@@ -447,6 +444,13 @@ abstract class QuestViewModel extends BaseModel {
       return true;
     }
   }
+
+  // String? updateTimeElapsedString() {
+  //   if (hasActiveQuest) {
+  //     timeElapsed =  _stopWatchService
+  //         .secondsToHourMinuteSecondTime(activeQuest.timeElapsed);
+  //   }
+  // }
 
   int currentIndex = 0;
   void toggleIndex() {

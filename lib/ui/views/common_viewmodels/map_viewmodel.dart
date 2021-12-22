@@ -13,10 +13,11 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:stacked/src/state_management/reactive_service_mixin.dart';
 
-class MapViewModel extends MapBaseViewModel {
+class MapViewModel extends ActiveQuestBaseViewModel {
   final log = getLogger('MapViewModel');
   final _geolocationService = locator<GeolocationService>();
 

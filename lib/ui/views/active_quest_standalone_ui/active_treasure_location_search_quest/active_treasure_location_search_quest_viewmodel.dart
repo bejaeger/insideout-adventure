@@ -13,15 +13,17 @@ import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:stacked/src/state_management/reactive_service_mixin.dart';
 
 // Singleton ViewModel!
 
-class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
+class ActiveTreasureLocationSearchQuestViewModel
+    extends ActiveQuestBaseViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
 
   double? get currentGPSAccuracy => _geolocationService.currentGPSAccuracy;
@@ -31,7 +33,6 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
   bool skipUpdatingQuestStatus = false;
   bool isCheckingDistance = false;
   final MarkerService _markerService = locator<MarkerService>();
-  bool questSuccessfullyFinished = false;
 
   List<TreasureSearchLocation> checkpoints = [];
   final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
@@ -122,26 +123,7 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
       if (activeQuest.currentDistanceInMeters! < 9999) {
         // This should collect the NEXT marker!!
         // Show loading screen, show that the quest is gonna be pushed!
-        // ! (What if there is no data connection? Sill need to be able to push the data later on!)
-
-        questService.setAndPushActiveQuestStatus(QuestStatus.success);
-        setTrackingDeadTime(true);
-        vibrateRightDirection();
-        log.i("SUCCESFFULLY FOUND trophy");
-
-        // Make checkout procedure same for all quest types!
-        // Function in quest_viewmodel!
-        final result = await dialogService.showCustomDialog(
-          variant: DialogType.CollectCredits,
-          data: activeQuest,
-        );
-        if (result?.confirmed == true) {
-          // this means everything went fine!
-          // Show statistics display
-          questSuccessfullyFinished = true;
-        }
-        cancelQuestListener();
-        notifyListeners();
+        await showSuccessDialog();
         return;
       }
       if (activeQuest.lastDistanceInMeters! >
@@ -273,7 +255,7 @@ class ActiveTreasureLocationSearchQuestViewModel extends MapBaseViewModel {
     }
   }
 
-  addNewCheckpoint({required Position newPosition}) {
+  void addNewCheckpoint({required Position newPosition}) {
     double newDistance = getNewDistanceToGoal(newPosition: newPosition);
     double distanceToPreviousCheckpoint =
         getDistanceToPreviousCheckpoint(newPosition: newPosition);

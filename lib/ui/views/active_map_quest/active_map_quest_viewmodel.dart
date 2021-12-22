@@ -1,6 +1,7 @@
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_viewmodel.dart';
+import 'package:stacked/src/state_management/reactive_service_mixin.dart';
 
 class ActiveMapQuestViewModel extends MapViewModel {
   void addMarkers({required Quest quest}) {

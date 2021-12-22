@@ -6,12 +6,16 @@ class NavButtonWidget extends StatelessWidget {
   final Icon icon;
   final double padding;
   final void Function() onTap;
+  final Color? color;
+  final Color? titleColor;
   const NavButtonWidget(
       {Key? key,
       required this.title,
       required this.icon,
       required this.onTap,
-      this.padding = 20.0})
+      this.padding = 20.0,
+      this.color,
+      this.titleColor})
       : super(key: key);
 
   @override
@@ -31,7 +35,7 @@ class NavButtonWidget extends StatelessWidget {
                   offset: Offset(3, 3),
                 )
               ],
-              color: Colors.grey[200],
+              color: color ?? Colors.grey[200],
               borderRadius: BorderRadius.circular(16.0)),
           child: Column(
             children: [
@@ -52,9 +56,9 @@ class NavButtonWidget extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
-                          color: kDarkTurquoise,
+                          color: titleColor ?? kDarkTurquoise,
                           fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,

@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/stats_type.dart';
+import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class StatsCard extends StatelessWidget {
   final String? subtitle;
   final String buttonText;
   final double? iconHeight;
+  final Widget? icon;
   final void Function()? onButtonPressed;
   final void Function()? onCardPressed;
 
@@ -27,7 +29,8 @@ class StatsCard extends StatelessWidget {
       this.onCardPressed,
       this.statisticCredits,
       this.iconHeight,
-      this.statsType = StatsType.unlockedCredits})
+      this.statsType = StatsType.unlockedCredits,
+      this.icon})
       : super(key: key);
 
   @override
@@ -53,10 +56,12 @@ class StatsCard extends StatelessWidget {
           ),
           child: Column(
             children: [
-              AFKCreditsIcon(
-                  height: iconHeight,
-                  locked:
-                      statsType == StatsType.unlockedCredits ? false : true),
+              icon ??
+                  AFKCreditsIcon(
+                      height: iconHeight,
+                      locked: statsType == StatsType.unlockedCredits
+                          ? false
+                          : true),
               Expanded(
                 child: Stack(
                   fit: StackFit.expand,
@@ -78,16 +83,33 @@ class StatsCard extends StatelessWidget {
                         statisticCredits != null
                             ? FittedBox(
                                 fit: BoxFit.contain,
-                                child: Text(
-                                  statistic +
-                                      " = " +
-                                      statisticCredits! +
-                                      " AFKC",
-                                  maxLines: 1,
-                                  style: textTheme(context).headline2!.copyWith(
-                                        fontSize: 20,
-                                        color: kDarkTurquoise,
-                                      ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      statistic,
+                                      maxLines: 1,
+                                      style: textTheme(context)
+                                          .headline2!
+                                          .copyWith(
+                                            fontSize: 20,
+                                            color: kDarkTurquoise,
+                                          ),
+                                    ),
+                                    Text(
+                                      " = ",
+                                      style: textTheme(context)
+                                          .headline2!
+                                          .copyWith(
+                                            fontSize: 20,
+                                            color: kDarkTurquoise,
+                                          ),
+                                    ),
+                                    CreditsAmount(
+                                        height: 15,
+                                        amount: 0,
+                                        amountString: statisticCredits!)
+                                  ],
                                 ),
                               )
                             : Text(

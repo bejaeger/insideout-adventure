@@ -48,7 +48,7 @@ class ExplorerHomeView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Flexible(
-                            flex: 5,
+                            flex: 10,
                             child: StatsCard(
                                 onCardPressed:
                                     model.showToEarnExplanationDialog,
@@ -62,7 +62,7 @@ class ExplorerHomeView extends StatelessWidget {
                           ),
                           Spacer(),
                           Flexible(
-                            flex: 5,
+                            flex: 10,
                             child: StatsCard(
                                 onCardPressed:
                                     model.showEarnedExplanationDialog,
@@ -75,26 +75,32 @@ class ExplorerHomeView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      verticalSpaceMedium,
                       Row(
                         children: [
-                          Expanded(
+                          Flexible(
+                            flex: 10,
                             child: NavButtonWidget(
-                              title: 'ASK FOR SPONSORING',
-                              icon: const Icon(
+                              color: Colors.blue,
+                              title: 'ASK FOR CREDITS',
+                              titleColor: kWhiteTextColor,
+                              icon: Icon(
                                 Icons.arrow_downward_rounded,
-                                color: kDarkTurquoise,
+                                color: kGreyTextColor.withOpacity(0.9),
                                 size: 70,
                               ),
                               onTap: model.showNotImplementedSnackbar,
                             ),
                           ),
-                          Expanded(
+                          Spacer(),
+                          Flexible(
+                            flex: 10,
                             child: NavButtonWidget(
+                              color: Colors.green,
                               title: 'GIFT CARDS',
-                              icon: const Icon(
+                              titleColor: kWhiteTextColor,
+                              icon: Icon(
                                 Icons.card_giftcard_outlined,
-                                color: kDarkTurquoise,
+                                color: kGreyTextColor.withOpacity(0.9),
                                 size: 70,
                               ),
                               onTap: model.navigateToGiftCardsView,
@@ -118,7 +124,7 @@ class ExplorerHomeView extends StatelessWidget {
                       //     ),
                       //   ],
                       // ),
-                      verticalSpaceLarge,
+
                       // verticalSpaceMedium,
                       // SectionHeader(
                       //   horizontalPadding: 0,
@@ -132,6 +138,8 @@ class ExplorerHomeView extends StatelessWidget {
                       //         onPressed: () => null,
                       //       ),
                       // verticalSpaceLarge,
+                      SectionHeader(title: "Achievements"),
+                      verticalSpaceLarge,
                     ],
                   ),
                 ),

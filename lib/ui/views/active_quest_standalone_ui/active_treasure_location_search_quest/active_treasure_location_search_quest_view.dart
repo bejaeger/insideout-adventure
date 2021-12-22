@@ -6,6 +6,9 @@ import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/empty_note.dart';
+import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
+import 'package:afkcredits/ui/widgets/not_enough_sponsoring_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -91,40 +94,26 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                     ],
                                   )),
                         // Container(color: Colors.cyan),
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Text("Goal: Find the Trophy!",
-                                  style: textTheme(context)
-                                      .headline6!
-                                      .copyWith(color: kPrimaryColor)),
-                            ),
-                          ),
-                        ),
+                        // Align(
+                        //   alignment: Alignment.topCenter,
+                        //   child: Container(
+                        //     decoration: BoxDecoration(
+                        //       color: Colors.white.withOpacity(0.8),
+                        //     ),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(20.0),
+                        //       child: Text("Goal: Find the Trophy!",
+                        //           style: textTheme(context)
+                        //               .headline6!
+                        //               .copyWith(color: kPrimaryColor)),
+                        //     ),
+                        //   ),
+                        // ),
                         model.questSuccessfullyFinished
-                            ? Column(
-                                children: [
-                                  verticalSpaceMassive,
-                                  Text(
-                                      "You are the best, you finished the quest",
-                                      textAlign: TextAlign.center,
-                                      style: textTheme(context).headline2),
-                                  verticalSpaceMedium,
-                                  ElevatedButton(
-                                      onPressed: () =>
-                                          model.replaceWithMainView(
-                                              index: BottomNavBarIndex.quest),
-                                      child: Text("More Quests",
-                                          style: textTheme(context)
-                                              .headline6!
-                                              .copyWith(
-                                                  color: kWhiteTextColor))),
-                                ],
+                            ? EmptyNote(
+                                onMoreButtonPressed: () =>
+                                    model.replaceWithMainView(
+                                        index: BottomNavBarIndex.quest),
                               )
                             : Align(
                                 alignment: Alignment.bottomCenter,
@@ -233,15 +222,12 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                                     //  "Your start position has been tagged"),
                                                   ],
                                                 ),
-                                          (model.closeby != null &&
-                                                  model.closeby == true)
-                                              ? SizedBox(height: 0, width: 0)
-                                              : SizedBox(
-                                                  width: screenWidth(context,
-                                                      percentage: 0.6),
-                                                  child: Text(
-                                                      "Cannot start the quest. Please go to the start to the quest"),
-                                                ),
+                                          if (model.closeby != null &&
+                                              model.closeby == true)
+                                            NotCloseToQuestNote(),
+                                          if (!model.hasEnoughSponsoring(
+                                              quest: quest))
+                                            NotEnoughSponsoringNote(),
                                           verticalSpaceMedium,
                                           if (model.activeQuestNullable
                                                   ?.currentDistanceInMeters !=

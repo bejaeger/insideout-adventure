@@ -1,5 +1,7 @@
+import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
@@ -25,7 +27,7 @@ class SingleExplorerView extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
                 child: model.isBusy
-                    ? CircularProgressIndicator()
+                    ? AFKProgressIndicator()
                     : ListView(
                         children: [
                           verticalSpaceMedium,
@@ -56,6 +58,8 @@ class SingleExplorerView extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: StatsCard(
+                                  icon: Icon(Icons.money_rounded,
+                                      size: 50, color: kPrimaryColor),
                                   iconHeight: 60,
                                   title: "Available Sponsoring",
                                   statistic: formatAmount(
@@ -66,6 +70,8 @@ class SingleExplorerView extends StatelessWidget {
                               ),
                               Expanded(
                                 child: StatsCard(
+                                  icon: Icon(Icons.card_giftcard,
+                                      size: 50, color: kPrimaryColor),
                                   iconHeight: 60,
                                   title: "Gift Cards Purchased",
                                   statistic: model
@@ -78,16 +84,17 @@ class SingleExplorerView extends StatelessWidget {
                           verticalSpaceMedium,
                           ElevatedButton(
                               onPressed: model.navigateToAddFundsView,
-                              child:
-                                  Text("Sponsor ${model.explorer.fullName}")),
+                              child: Text(
+                                  "Add Funds to ${model.explorer.fullName}'s Account")),
                           verticalSpaceMedium,
                           if (model.explorer.createdByUserWithId != null)
                             ElevatedButton(
                                 onPressed: model.handleSwitchToExplorerEvent,
-                                child: Text("Switch to Explorer Version")),
+                                child: Text("Switch to Children Area")),
                           verticalSpaceMedium,
-                          SectionHeader(title: "Completed Quests"),
-                          Text("    ... "),
+                          SectionHeader(
+                              title: "Completed Quests", horizontalPadding: 0),
+                          // Text("    ... "),
                         ],
                       )),
           )),

@@ -2,14 +2,18 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
+import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:stacked/stacked.dart';
 
-class ActiveQrCodeSearchViewModel extends MapBaseViewModel {
+class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
   final MarkerService _markerService = locator<MarkerService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
 
@@ -18,23 +22,36 @@ class ActiveQrCodeSearchViewModel extends MapBaseViewModel {
   final log = getLogger("ActiveQrCodeSearchViewModel");
 
   void initialize({required Quest quest}) async {
+    resetPreviousQuest();
     runBusyFuture(_geolocationService.getAndSetCurrentLocation());
     closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
     notifyListeners();
   }
 
   Future maybeStartQuest({required Quest? quest}) async {
-    if (quest != null) {
+    if (!hasEnoughSponsoring(quest: quest)) {
+      return null;
+    }
+    if (quest != null && !hasActiveQuest) {
       resetPreviousQuest();
-      log.i("Starting Qr code search quest with name ${quest.name}");
-      setBusy(true);
+      log.i("Maybe starting Qr code search quest with name ${quest.name}");
+      //setBusy(true);
       final position = await _geolocationService.getAndSetCurrentLocation();
-      if (!(await checkAccuracy(position: position))) {
-        setBusy(false);
-        return false;
+
+      if (quest.type != QuestType.QRCodeSearchIndoor &&
+          quest.type != QuestType.QRCodeHuntIndoor) {
+        if (!(await checkAccuracy(position: position))) {
+          setBusy(true);
+          await Future.delayed(Duration(seconds: 1));
+          setBusy(false);
+          return false;
+        }
       }
       final result = await startQuestMain(quest: quest);
-      setBusy(false);
+      await Future.delayed(Duration(seconds: 1));
+      showStartSwipe = false;
+      notifyListeners();
+      //setBusy(false);
       // if (result is bool && result == false) {
       //   navigateBack();
       // } else {}
@@ -91,6 +108,7 @@ class ActiveQrCodeSearchViewModel extends MapBaseViewModel {
   Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) async {
     if (!hasActiveQuest) {
       log.wtf("No quest running");
+      dialogService.showDialog(title: "Please start the quest first");
       return;
     }
     if (result.marker != null) {
@@ -103,7 +121,9 @@ class ActiveQrCodeSearchViewModel extends MapBaseViewModel {
         foundObjects.add(result.marker!);
 
         if (questService.isAllMarkersCollected) {
-          checkQuestAndFinishWhenCompleted();
+          await showSuccessDialog();
+          return;
+          // checkQuestAndFinishWhenCompleted();
         } else {
           await dialogService.showDialog(
               title: "Successfully collected marker!",
@@ -119,8 +139,11 @@ class ActiveQrCodeSearchViewModel extends MapBaseViewModel {
   }
 
   // -------------------------------------
+  @override
   void resetPreviousQuest() {
     markersOnMap = {};
     foundObjects = [];
+    showStartSwipe = true;
+    super.resetPreviousQuest();
   }
 }

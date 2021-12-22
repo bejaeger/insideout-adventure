@@ -20,8 +20,13 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:stacked/stacked.dart';
 
-class QuestService {
+class QuestService with ReactiveServiceMixin {
+  QuestService() {
+    listenToReactiveValues([_timeElapsed]);
+  }
+
   BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
       BehaviorSubject<ActivatedQuest?>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
@@ -92,6 +97,11 @@ class QuestService {
     // Start timer
     //Harguilar Commented This Out Timer
     _stopWatchService.startTimer();
+
+    if (quest.type == QuestType.QRCodeHuntIndoor ||
+        quest.type == QuestType.QRCodeSearch) {
+      _stopWatchService.listenToSecondTime(callback: trackTime);
+    }
 
     if (quest.type == QuestType.TreasureLocationSearch ||
         quest.type == QuestType.TreasureLocationSearchAutomatic) {
@@ -299,6 +309,15 @@ class QuestService {
 
   void setAndPushActiveQuestStatus(QuestStatus status) {
     pushActivatedQuest(activatedQuest!.copyWith(status: status));
+  }
+
+  Future trackTime(int seconds) async {
+    if (activatedQuest != null) {
+      ActivatedQuest tmpActivatedQuest = activatedQuest!;
+      if (seconds % 1 == 0) {
+        updateTimeElapsed(seconds);
+      }
+    }
   }
 
   Future trackData(int seconds, {bool forceNoPush = false}) async {
@@ -745,6 +764,24 @@ class QuestService {
     return quests;
   }
 
+  ReactiveValue<int> _timeElapsed = ReactiveValue<int>(0);
+  int get timeElapsed => _timeElapsed.value;
+  void updateTimeElapsed(int seconds) {
+    _timeElapsed.value = seconds;
+  }
+
+  String getMinutesElapsedString() {
+    return _stopWatchService.secondsToMinuteSecondTime(timeElapsed);
+  }
+
+  String getHoursElapsedString() {
+    return _stopWatchService.secondsToHourMinuteSecondTime(timeElapsed);
+  }
+
+  void resetTimeElapsed() {
+    _timeElapsed.value = 0;
+  }
+
   void updateTime(int seconds) {
     if (activatedQuest != null) {
       pushActivatedQuest(activatedQuest!.copyWith(timeElapsed: seconds));
@@ -777,6 +814,7 @@ class QuestService {
   void disposeActivatedQuest() {
     _stopWatchService.resetTimer();
     _stopWatchService.cancelListener();
+    resetTimeElapsed();
     removeActivatedQuest();
   }
 

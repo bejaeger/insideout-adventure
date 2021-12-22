@@ -50,11 +50,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ))),
                 Align(
                   alignment: Alignment.center,
-                  child: Text(
-                    title,
-                    style: textTheme(context)
-                        .headline5!
-                        .copyWith(color: kWhiteTextColor),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child: FittedBox(
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: textTheme(context)
+                            .headline5!
+                            .copyWith(color: kWhiteTextColor),
+                      ),
+                    ),
                   ),
                 ),
               ]),
@@ -84,6 +91,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   icon: Icon(Icons.arrow_back, color: Colors.white),
                 ),
               ),
+            if (model.isSuperUser)
+              Container(
+                  height: height,
+                  alignment: Alignment.topRight,
+                  child: Text("Super User",
+                      style: TextStyle(color: Colors.white))),
           ],
         ),
       ),

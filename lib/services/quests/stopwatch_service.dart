@@ -138,7 +138,19 @@ class StopWatchService {
         m.toString().length < 2 ? "0" + m.toString() : m.toString();
     String secondsLeft =
         s.toString().length < 2 ? "0" + s.toString() : s.toString();
-    String result = "$hourLeft:$minuteLeft:$secondsLeft";
+    String result =
+        "$hourLeft" + "h" + " $minuteLeft" + "m" + " $secondsLeft" + "s";
     return result;
+  }
+
+  // Helper functions
+  String secondsToMinuteSecondTime(int? value) {
+    final result = secondsToHourMinuteSecondTime(value);
+    final substring = result.substring(4);
+    if (substring[0] == "0") {
+      return substring.substring(1);
+    } else {
+      return substring;
+    }
   }
 }

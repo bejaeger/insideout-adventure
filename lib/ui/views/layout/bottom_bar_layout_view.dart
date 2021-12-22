@@ -109,21 +109,23 @@ class _BottomBarLayoutTemplateViewState
               // Screen transition animation on change of selected tab.
               animateTabTransition: true,
               curve: Curves.ease,
-              duration: Duration(milliseconds: 400),
+              duration: Duration(milliseconds: 200),
             ),
             navBarHeight: kBottomNavigationBarHeightCustom,
-            padding: const NavBarPadding.only(top: 4.0), //, bottom: 4),
-            floatingActionButton: AFKFloatingActionButtons(
-              // title1: "SCAN",
-              onPressed1: model.scanQrCode,
-              iconData1: Icons.qr_code_scanner_rounded,
-              // title2: "LIST",
-              // onPressed2: model.navigateBack,
-              // iconData2: Icons.list_rounded,
-            ),
+            padding: const NavBarPadding.only(top: 4.0, bottom: 4),
+            floatingActionButton: model.currentUser.role != UserRole.sponsor
+                ? AFKFloatingActionButtons(
+                    // title1: "SCAN",
+                    onPressed1: model.scanQrCode,
+                    iconData1: Icons.qr_code_scanner_rounded,
+                    // title2: "LIST",
+                    // onPressed2: model.navigateBack,
+                    // iconData2: Icons.list_rounded,
+                  )
+                : null,
 
             navBarStyle: NavBarStyle
-                .style16, // Choose the nav bar style with this property.
+                .simple, // Choose the nav bar style with this property.
           ),
         ),
       ),
@@ -208,9 +210,9 @@ class _BottomBarLayoutTemplateViewState
             title: "Home",
           ),
           AFKNavBarItem(
-            icon: Icon(Icons.card_giftcard),
-            inactiveIcon: Icon(Icons.shop_outlined),
-            title: "Rewards",
+            icon: Icon(Icons.explore),
+            inactiveIcon: Icon(Icons.explore_outlined),
+            title: "Quests",
           ),
         ];
       case UserRole.explorer:
@@ -239,17 +241,18 @@ class _BottomBarLayoutTemplateViewState
       case UserRole.superUser:
         return [
           AFKNavBarItem(
-              icon: Icon(Icons.home),
-              inactiveIcon: Icon(Icons.home_outlined),
-              title: "Home"),
+            icon: Icon(Icons.home),
+            inactiveIcon: Icon(Icons.home_outlined),
+            title: "Home",
+          ),
           AFKNavBarItem(
-            icon: Icon(Icons.explore, color: kPrimaryColor),
-            inactiveIcon:
-                Icon(Icons.explore, color: kPrimaryColor.withOpacity(0.7)),
+            icon: Icon(Icons.explore), //, color: kPrimaryColor),
+            inactiveIcon: Icon(Icons
+                .explore_outlined), //, color: kPrimaryColor.withOpacity(0.7)),
             //inactiveColorPrimary: Colors.grey[200],
-            activeColorPrimary: Colors.grey[100],
-            activeColorSecondary: Colors.white,
-            iconSize: 40,
+            // activeColorPrimary: Colors.grey[100],
+            // activeColorSecondary: Colors.white,
+            // iconSize: 40,
             title: "Quests",
           ),
           AFKNavBarItem(
@@ -294,8 +297,9 @@ class _BottomBarLayoutTemplateViewState
       icon: icon,
       inactiveIcon: inactiveIcon,
       title: title,
-      textStyle:
-          textTheme(context).headline6!.copyWith(height: 0.1, fontSize: 15),
+      // textStyle:
+      //     textTheme(context).headline6!.copyWith(height: 0.1, fontSize: 15),
+      textStyle: textTheme(context).headline6!.copyWith(fontSize: 15),
       iconSize: iconSize ?? kBottomNavigationBarIconSize,
       activeColorPrimary: activeColorPrimary ?? Colors.white,
       activeColorSecondary: activeColorSecondary ?? Colors.white,

@@ -9,6 +9,7 @@ List<Quest> getDummyQuests() {
     getDummyVibrationSearchQuest(),
     //getDummyVibrationSearchQuest2(),
     // getDummyQuestQrCodeSearch(),
+    getDummyQuestQrCodeHuntStarenweg(),
     getDummyQuestQrCodeSearchStarenweg(),
     streeth11th2ndVibration(),
     getDummyVibrationSearchQuestFreiburg(),
@@ -253,10 +254,10 @@ Quest getDummyQuestQrCodeSearch() {
   );
 }
 
-Quest getDummyQuestQrCodeSearchStarenweg() {
+Quest getDummyQuestQrCodeHuntStarenweg() {
   return Quest(
     id: "Starenweg Hunt",
-    name: "Finde Versteckte Codes im Starenweg!",
+    name: "Versteckter Schatz bei Jägers!",
     description: "Finde alle Codes im Hause Jägers!",
     afkCredits: 50,
     markers: [
@@ -266,6 +267,24 @@ Quest getDummyQuestQrCodeSearchStarenweg() {
     ],
     // TODO: QRCodeHuntIndoor
     type: QuestType.QRCodeHuntIndoor,
+    startMarker: starenweg1(),
+    finishMarker: starenweg3(),
+  );
+}
+
+Quest getDummyQuestQrCodeSearchStarenweg() {
+  return Quest(
+    id: "Starenweg Hunt",
+    name: "Versteckte Schätze im Starenweg!",
+    description: "Finde alle Codes im Starenweg!",
+    afkCredits: 50,
+    markers: [
+      starenweg1(),
+      starenweg2(),
+      starenweg3(),
+    ],
+    // TODO: QRCodeHuntIndoor
+    type: QuestType.QRCodeSearch,
     startMarker: starenweg1(),
     finishMarker: starenweg3(),
   );

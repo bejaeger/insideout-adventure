@@ -1,3 +1,4 @@
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -48,4 +49,55 @@ String formatDate(DateTime timestamp) {
 
 String formatDateDetails(DateTime timestamp) {
   return DateFormat.yMd().add_jm().format(timestamp);
+}
+
+IconData getIconForCategory(QuestType category) {
+  switch (category) {
+    case QuestType.DistanceEstimate:
+      return Icons.arrow_right_alt;
+    case QuestType.TreasureLocationSearch:
+      return Icons.location_on;
+    case QuestType.QRCodeSearchIndoor:
+      return Icons.search_rounded;
+    case QuestType.QRCodeHuntIndoor:
+      return Icons.pets;
+    case QuestType.Hike:
+      return Icons.nature_people;
+    default:
+      return Icons.explore;
+  }
+}
+
+String getStringForCategory(QuestType? category) {
+  if (category == null) return "";
+  switch (category) {
+    case QuestType.DistanceEstimate:
+      return "Estimating Distance";
+    case QuestType.TreasureLocationSearch:
+      return "Treasure Search";
+    case QuestType.QRCodeSearchIndoor:
+      return "QR Code Search";
+    case QuestType.QRCodeHuntIndoor:
+      return "Indoor QR Code Hunt";
+    case QuestType.Hike:
+      return "Hike";
+    case QuestType.QRCodeSearch:
+      return "QR Code Search";
+    default:
+      return "Default Quest";
+  }
+}
+
+Color getColorOfType(QuestType type) {
+  if (type == QuestType.TreasureLocationSearch)
+    return Colors.orange;
+  else if (type == QuestType.Hike) {
+    return Colors.red;
+  } else if (type == QuestType.DistanceEstimate) {
+    return Colors.blue;
+  } else if (type == QuestType.QRCodeSearch) {
+    return Colors.green;
+  } else {
+    return Colors.cyan;
+  }
 }

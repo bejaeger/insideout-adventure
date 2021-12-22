@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_quest_standalone_ui_view.dart';
@@ -28,7 +29,7 @@ class SingleQuestTypeView extends StatelessWidget {
               ? ActiveQuestStandaloneUIView(quest: quest)
               : Scaffold(
                   appBar: CustomAppBar(
-                    title: describeEnum(questType.toString().toUpperCase()),
+                    title: getStringForCategory(questType),
                     onBackButton: model.navigateBack,
                   ),
                   body:
@@ -44,7 +45,9 @@ class SingleQuestTypeView extends StatelessWidget {
                               return MapEntry(
                                   index,
                                   QuestInfoCard(
-                                      height: 140,
+                                      height: 200,
+                                      marginRight: kHorizontalPadding,
+                                      marginTop: 20,
                                       quest: quest,
                                       subtitle: quest.description,
                                       onCardPressed: () async => await model

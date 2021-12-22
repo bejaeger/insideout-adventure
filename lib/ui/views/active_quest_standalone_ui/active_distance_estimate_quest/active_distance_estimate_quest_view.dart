@@ -36,7 +36,7 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                 title: "Estimating Distance",
                 onBackButton: model.navigateBack,
               ),
-              body: model.isBusy
+              body: model.isBusy && !model.hasActiveQuest
                   ? AFKProgressIndicator()
                   : Align(
                       alignment: Alignment.center,
@@ -143,14 +143,21 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                                                           ElevatedButton(
                                                             onPressed: model
                                                                 .revealDistance,
-                                                            child: Text(
-                                                                "Check Distance",
-                                                                style: textTheme(
-                                                                        context)
-                                                                    .headline6!
-                                                                    .copyWith(
-                                                                        color:
-                                                                            kWhiteTextColor)),
+                                                            child: (model
+                                                                        .isBusy &&
+                                                                    model
+                                                                        .hasActiveQuest)
+                                                                ? AFKProgressIndicator(
+                                                                    color:
+                                                                        kWhiteTextColor)
+                                                                : Text(
+                                                                    "Update Location",
+                                                                    style: textTheme(
+                                                                            context)
+                                                                        .headline6!
+                                                                        .copyWith(
+                                                                            color:
+                                                                                kWhiteTextColor)),
                                                           ),
                                                           // Text(
                                                           //  "Your start position has been tagged"),
