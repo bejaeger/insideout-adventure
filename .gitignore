@@ -94,3 +94,5 @@ ios/build/
 
 ios/Runner/Info.plist
 ios/Runner/AppDelegate.swift
+ios/Runner/GoogleService-Info.plist
+ios/Runner/GoogleService-Info.plist
