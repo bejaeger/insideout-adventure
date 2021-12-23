@@ -5,6 +5,10 @@ class SelectUserRoleLayout extends StatelessWidget {
   final void Function() onBackPressed;
   final void Function() onExplorerPressed;
   final void Function() onSponsorPressed;
+  final void Function()? onSuperUserPressed;
+  final void Function()? onAdminMasterPressed;
+  final void Function()? onAdminPressed;
+
   final String? explorerButtonTitle;
   final String? sponsorButtonTitle;
   final bool isBusy;
@@ -16,7 +20,10 @@ class SelectUserRoleLayout extends StatelessWidget {
       required this.onSponsorPressed,
       this.explorerButtonTitle = "CREATE EXPLORER ACCOUNT",
       this.sponsorButtonTitle = "CREATE SPONSOR ACCOUNT",
-      this.isBusy = false})
+      this.isBusy = false,
+      this.onSuperUserPressed,
+      this.onAdminMasterPressed,
+      this.onAdminPressed})
       : super(key: key);
 
   @override
@@ -45,11 +52,11 @@ class SelectUserRoleLayout extends StatelessWidget {
               "Are You An Explorer?",
               style: textTheme(context).headline6,
             ),
-            verticalSpaceLarge,
-            Text(
-              "Are You An Admin?",
-              style: textTheme(context).headline6,
-            ),
+            // verticalSpaceLarge,
+            // Text(
+            //   "Are You An Admin?",
+            //   style: textTheme(context).headline6,
+            // ),
             verticalSpaceSmall,
             ElevatedButton(
                 onPressed: onExplorerPressed,
@@ -64,6 +71,44 @@ class SelectUserRoleLayout extends StatelessWidget {
                 onPressed: onSponsorPressed,
                 child: Text("Create Sponsor Account")),
             verticalSpaceLarge,
+            // -------------------------------------
+            // For Development ONLY!
+            if (onSuperUserPressed != null && onAdminMasterPressed != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("For Development"),
+                  Text("------------------------------>>"),
+                  verticalSpaceSmall,
+                  Text(
+                    "Are You A Super User?",
+                    style: textTheme(context).headline6,
+                  ),
+                  verticalSpaceSmall,
+                  ElevatedButton(
+                      onPressed: onSuperUserPressed,
+                      child: Text("Create A Super User Account")),
+                  verticalSpaceSmall,
+                  Text(
+                    "Are You A Admin?",
+                    style: textTheme(context).headline6,
+                  ),
+                  verticalSpaceSmall,
+                  ElevatedButton(
+                      onPressed: onAdminPressed,
+                      child: Text("Create An Admin Account")),
+                  verticalSpaceSmall,
+                  Text(
+                    "Are You A Master Admin?",
+                    style: textTheme(context).headline6,
+                  ),
+                  verticalSpaceSmall,
+                  ElevatedButton(
+                      onPressed: onAdminMasterPressed,
+                      child: Text("Create A Master Admin Account")),
+                  verticalSpaceSmall,
+                ],
+              ),
             if (isBusy) CircularProgressIndicator(),
           ],
         ),

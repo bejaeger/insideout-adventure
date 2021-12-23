@@ -8,10 +8,10 @@ part 'user_statistics.g.dart';
 class UserStatistics with _$UserStatistics {
   @JsonSerializable(explicitToJson: true)
   factory UserStatistics({
-    required num afkCreditsBalance,
-    required num afkCreditsSpent,
-    required num availableSponsoring,
-    required num lifetimeEarnings,
+    required num afkCreditsBalance, // in credits
+    required num afkCreditsSpent, // in credits
+    required num availableSponsoring, // in cents!
+    required num lifetimeEarnings, // in credits
     required int numberQuestsCompleted,
     required int numberGiftCardsPurchased,
     required List<ConciseFinishedQuestInfo> completedQuests,

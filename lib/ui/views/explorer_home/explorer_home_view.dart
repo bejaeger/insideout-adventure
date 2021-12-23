@@ -2,8 +2,12 @@ import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
+import 'package:afkcredits/enums/stats_type.dart';
+import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/nav_button_widget.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/ui/widgets/verify_network_connection/verify_network_connection.dart';
@@ -26,53 +30,115 @@ class ExplorerHomeView extends StatelessWidget {
         child: Scaffold(
           appBar: CustomAppBar(
             title: "Hi Explorer ${model.name}!",
+            drawer: true,
+          ),
+          endDrawer: SizedBox(
+            width: screenWidth(context, percentage: 0.8),
+            child: const DrawerWidgetView(),
           ),
           body: model.isBusy
-              ? CircularProgressIndicator()
+              ? AFKProgressIndicator()
               : Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: kHorizontalPadding),
                   child: ListView(
                     children: [
-                      verticalSpaceLarge,
-                      ExplorerCreditStats(
-                        userStats: model.currentUserStats,
-                      ),
-                      verticalSpaceLarge,
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 5),
-                        // onPressed: model.navigateToExplorerHomeView,
-                        onPressed: model.navigateToGiftCardsView,
-                        //child: Text("Go to explorer home/map")),
-                        child: Text("See Your Gift Cards -> "),
-                      ),
                       verticalSpaceMedium,
-                      SectionHeader(
-                        horizontalPadding: 0,
-                        title: "Your Achievements",
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            flex: 10,
+                            child: StatsCard(
+                                onCardPressed:
+                                    model.showToEarnExplanationDialog,
+                                statsType: StatsType.lockedCredits,
+                                height: 150,
+                                statistic:
+                                    // availableSponsoring IN CENTS!!!!!!
+                                    formatAfkCreditsFromCents(model
+                                        .currentUserStats.availableSponsoring),
+                                title: kCreditsToEarnDescription),
+                          ),
+                          Spacer(),
+                          Flexible(
+                            flex: 10,
+                            child: StatsCard(
+                                onCardPressed:
+                                    model.showEarnedExplanationDialog,
+                                statsType: StatsType.unlockedCredits,
+                                height: 150,
+                                statistic: model
+                                    .currentUserStats.afkCreditsBalance
+                                    .toString(),
+                                title: kCurrentAFKCreditsDescription),
+                          ),
+                        ],
                       ),
-                      verticalSpaceSmall,
-                      model.activatedQuestsHistory.length == 0
-                          ? Text("Complete your first quest first ->")
-                          : QuestsGrid(
-                              activatedQuests: model.activatedQuestsHistory,
-                              onPressed: () => null,
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 10,
+                            child: NavButtonWidget(
+                              color: Colors.blue,
+                              title: 'ASK FOR CREDITS',
+                              titleColor: kWhiteTextColor,
+                              icon: Icon(
+                                Icons.arrow_downward_rounded,
+                                color: kGreyTextColor.withOpacity(0.9),
+                                size: 70,
+                              ),
+                              onTap: model.showNotImplementedSnackbar,
                             ),
-                      verticalSpaceLarge,
-                      ElevatedButton(
-                        // onPressed: model.navigateToExplorerHomeView,
-                        onPressed: model.logout,
-                        //child: Text("Go to explorer home/map")),
-                        child: Text("Logout  "),
+                          ),
+                          Spacer(),
+                          Flexible(
+                            flex: 10,
+                            child: NavButtonWidget(
+                              color: Colors.green,
+                              title: 'GIFT CARDS',
+                              titleColor: kWhiteTextColor,
+                              icon: Icon(
+                                Icons.card_giftcard_outlined,
+                                color: kGreyTextColor.withOpacity(0.9),
+                                size: 70,
+                              ),
+                              onTap: model.navigateToGiftCardsView,
+                            ),
+                          ),
+                        ],
                       ),
-                      verticalSpaceMedium,
-                      if (model.currentUser.createdByUserWithId != null)
-                        ElevatedButton(
-                          // onPressed: model.navigateToExplorerHomeView,
-                          onPressed: model.handleSwitchToSponsorEvent,
-                          //child: Text("Go to explorer home/map")),
-                          child: Text("Switch To Sponsor  "),
-                        ),
+                      // Row(
+                      //   children: [
+                      //     Expanded(
+                      //       child: NavButtonWidget(
+                      //         padding: 0,
+                      //         title: 'ACHIEVEMENTS',
+                      //         icon: const Icon(
+                      //           Icons.badge_rounded,
+                      //           color: kDarkTurquoise,
+                      //           size: 70,
+                      //         ),
+                      //         onTap: model.showNotImplementedSnackbar,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+
+                      // verticalSpaceMedium,
+                      // SectionHeader(
+                      //   horizontalPadding: 0,
+                      //   title: "Achievements",
+                      // ),
+                      // verticalSpaceSmall,
+                      // model.activatedQuestsHistory.length == 0
+                      //     ? Container(height: 0)
+                      //     : QuestsGrid(
+                      //         activatedQuests: model.activatedQuestsHistory,
+                      //         onPressed: () => null,
+                      //       ),
+                      // verticalSpaceLarge,
+                      SectionHeader(title: "Achievements"),
                       verticalSpaceLarge,
                     ],
                   ),
@@ -96,38 +162,44 @@ class ExplorerCreditStats extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
+              flex: 5,
               child: StatsCard(
-                  height: 80,
+                  statsType: StatsType.lockedCredits,
+                  height: 150,
                   statistic:
+                      // availableSponsoring IN CENTS!!!!!!
                       formatAfkCreditsFromCents(userStats.availableSponsoring),
-                  subtitle: kCreditsToEarnDescription),
+                  title: kCreditsToEarnDescription),
             ),
+            Spacer(),
             Flexible(
+              flex: 5,
               child: StatsCard(
-                  height: 80,
+                  statsType: StatsType.unlockedCredits,
+                  height: 150,
                   statistic: userStats.afkCreditsBalance.toString(),
-                  subtitle: kCurrentAFKCreditsDescription),
+                  title: kCurrentAFKCreditsDescription),
             ),
           ],
         ),
         verticalSpaceMedium,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flexible(
-              child: StatsCard(
-                  height: 80,
-                  statistic: userStats.lifetimeEarnings.toString(),
-                  subtitle: kLifetimeEarningsDescription),
-            ),
-            Flexible(
-              child: StatsCard(
-                  height: 80,
-                  statistic: userStats.numberQuestsCompleted.toString(),
-                  subtitle: kNumberCompletedQuestsDescription),
-            ),
-          ],
-        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     Flexible(
+        //       child: StatsCard(
+        //           height: 80,
+        //           statistic: userStats.lifetimeEarnings.toString(),
+        //           subtitle: kLifetimeEarningsDescription),
+        //     ),
+        //     Flexible(
+        //       child: StatsCard(
+        //           height: 80,
+        //           statistic: userStats.numberQuestsCompleted.toString(),
+        //           subtitle: kNumberCompletedQuestsDescription),
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }

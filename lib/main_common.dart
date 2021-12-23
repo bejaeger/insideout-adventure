@@ -5,7 +5,6 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui.dart';
-import 'package:afkcredits/ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,13 +61,15 @@ class MyApp extends StatelessWidget {
                 ElevatedButtonThemeData(style: getRaisedButtonStyle()),
             primaryColor: kPrimaryColor,
             appBarTheme: AppBarTheme(
-              
-              shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        bottom: Radius.circular(16),
-      ),
-    ),
-                color: kPrimaryColor, elevation: 5, toolbarHeight: 80, centerTitle: true),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(16),
+                  ),
+                ),
+                color: kPrimaryColor,
+                elevation: 5,
+                toolbarHeight: 80,
+                centerTitle: true),
             primaryIconTheme: IconThemeData(color: Colors.white),
             primaryTextTheme: TextTheme(
               headline6: TextStyle(

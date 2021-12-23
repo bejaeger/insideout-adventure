@@ -23,7 +23,7 @@ class _$SponsorReferenceTearOff {
 
   _SponsorReference call(
       {required String uid,
-      required AuthenticationMethod authMethod,
+      AuthenticationMethod? authMethod,
       required bool withPasscode}) {
     return _SponsorReference(
       uid: uid,
@@ -43,7 +43,7 @@ const $SponsorReference = _$SponsorReferenceTearOff();
 /// @nodoc
 mixin _$SponsorReference {
   String get uid => throw _privateConstructorUsedError;
-  AuthenticationMethod get authMethod => throw _privateConstructorUsedError;
+  AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
   bool get withPasscode => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -57,7 +57,7 @@ abstract class $SponsorReferenceCopyWith<$Res> {
   factory $SponsorReferenceCopyWith(
           SponsorReference value, $Res Function(SponsorReference) then) =
       _$SponsorReferenceCopyWithImpl<$Res>;
-  $Res call({String uid, AuthenticationMethod authMethod, bool withPasscode});
+  $Res call({String uid, AuthenticationMethod? authMethod, bool withPasscode});
 }
 
 /// @nodoc
@@ -83,7 +83,7 @@ class _$SponsorReferenceCopyWithImpl<$Res>
       authMethod: authMethod == freezed
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
-              as AuthenticationMethod,
+              as AuthenticationMethod?,
       withPasscode: withPasscode == freezed
           ? _value.withPasscode
           : withPasscode // ignore: cast_nullable_to_non_nullable
@@ -99,7 +99,7 @@ abstract class _$SponsorReferenceCopyWith<$Res>
           _SponsorReference value, $Res Function(_SponsorReference) then) =
       __$SponsorReferenceCopyWithImpl<$Res>;
   @override
-  $Res call({String uid, AuthenticationMethod authMethod, bool withPasscode});
+  $Res call({String uid, AuthenticationMethod? authMethod, bool withPasscode});
 }
 
 /// @nodoc
@@ -127,7 +127,7 @@ class __$SponsorReferenceCopyWithImpl<$Res>
       authMethod: authMethod == freezed
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
-              as AuthenticationMethod,
+              as AuthenticationMethod?,
       withPasscode: withPasscode == freezed
           ? _value.withPasscode
           : withPasscode // ignore: cast_nullable_to_non_nullable
@@ -140,9 +140,7 @@ class __$SponsorReferenceCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_SponsorReference implements _SponsorReference {
   _$_SponsorReference(
-      {required this.uid,
-      required this.authMethod,
-      required this.withPasscode});
+      {required this.uid, this.authMethod, required this.withPasscode});
 
   factory _$_SponsorReference.fromJson(Map<String, dynamic> json) =>
       _$$_SponsorReferenceFromJson(json);
@@ -150,7 +148,7 @@ class _$_SponsorReference implements _SponsorReference {
   @override
   final String uid;
   @override
-  final AuthenticationMethod authMethod;
+  final AuthenticationMethod? authMethod;
   @override
   final bool withPasscode;
 
@@ -194,7 +192,7 @@ class _$_SponsorReference implements _SponsorReference {
 abstract class _SponsorReference implements SponsorReference {
   factory _SponsorReference(
       {required String uid,
-      required AuthenticationMethod authMethod,
+      AuthenticationMethod? authMethod,
       required bool withPasscode}) = _$_SponsorReference;
 
   factory _SponsorReference.fromJson(Map<String, dynamic> json) =
@@ -203,7 +201,7 @@ abstract class _SponsorReference implements SponsorReference {
   @override
   String get uid => throw _privateConstructorUsedError;
   @override
-  AuthenticationMethod get authMethod => throw _privateConstructorUsedError;
+  AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
   @override
   bool get withPasscode => throw _privateConstructorUsedError;
   @override

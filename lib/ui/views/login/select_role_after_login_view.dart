@@ -21,12 +21,16 @@ class SelectRoleAfterLoginView extends StatelessWidget {
           SelectRoleAfterLoginViewModel(authMethod: authMethod),
       builder: (context, model, child) => SelectUserRoleLayout(
         onBackPressed: model.navigateToLoginView,
-        onExplorerPressed: model.createSponsorAccountAndNavigateToHome(
-            role: UserRole.explorer),
-        onSponsorPressed:
-            model.createSponsorAccountAndNavigateToHome(role: UserRole.sponsor),
-        /*    onAdminPressed: model.createSponsorAccountAndNavigateToHome(
-            role: UserRole.adminMaster), */
+        onExplorerPressed: () =>
+            model.createAccountAndNavigateToHome(role: UserRole.explorer),
+        onSponsorPressed: () =>
+            model.createAccountAndNavigateToHome(role: UserRole.sponsor),
+        onSuperUserPressed: () =>
+            model.createAccountAndNavigateToHome(role: UserRole.superUser),
+        onAdminMasterPressed: () =>
+            model.createAccountAndNavigateToHome(role: UserRole.adminMaster),
+        onAdminPressed: () =>
+            model.createAccountAndNavigateToHome(role: UserRole.admin),
         isBusy: model.isBusy,
       ),
     );

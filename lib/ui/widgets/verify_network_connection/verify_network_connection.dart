@@ -2,6 +2,7 @@ import 'package:afkcredits/enums/connectivity_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../views/network_connection/no_network_connection_view.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class VerifyNetworkConnection extends StatelessWidget {
   final Widget child;
@@ -12,6 +13,9 @@ class VerifyNetworkConnection extends StatelessWidget {
   Widget build(BuildContext context) {
     var connectionStatus = Provider.of<ConnectivityType>(context);
 
+    if (kIsWeb) {
+      return child;
+    }
     if (connectionStatus == ConnectivityType.WiFi ||
         connectionStatus == ConnectivityType.Cellular) {
       return child;

@@ -17,6 +17,8 @@ class AuthenticationLayout extends StatelessWidget {
   final void Function()? onDummyLoginExplorerTapped;
   final void Function()? onDummyLoginSponsorTapped;
   final void Function()? onDummyLoginAdminTapped;
+  final void Function()? onDummyLoginSuperUserTapped;
+  final void Function()? onDummyLoginAdminMasterTapped;
 
   final void Function()? onGoogleButtonTapped;
   final void Function()? onAppleButtonTapped;
@@ -44,6 +46,8 @@ class AuthenticationLayout extends StatelessWidget {
     this.onDummyLoginExplorerTapped,
     this.onDummyLoginSponsorTapped,
     this.googleText,
+    this.onDummyLoginSuperUserTapped,
+    this.onDummyLoginAdminMasterTapped,
   }) : super(key: key);
 
   @override
@@ -189,13 +193,75 @@ class AuthenticationLayout extends StatelessWidget {
                     ),
                 ],
               ),
-            if (onDummyLoginAdminTapped != null) verticalSpaceMedium,
-            if (onDummyLoginAdminTapped != null)
+            if (onDummyLoginAdminTapped != null ||
+                onDummyLoginSuperUserTapped != null)
+              verticalSpaceSmall,
+            if (onDummyLoginAdminTapped != null ||
+                onDummyLoginSuperUserTapped != null)
+              Row(
+                children: [
+                  if (onDummyLoginAdminTapped != null)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: onDummyLoginAdminTapped,
+                        child: Container(
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: busy
+                              ? CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation(Colors.white),
+                                )
+                              : Text(
+                                  "LOGIN AS ADMIN",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                        ),
+                      ),
+                    ),
+                  if (onDummyLoginSuperUserTapped != null) horizontalSpaceTiny,
+                  if (onDummyLoginSuperUserTapped != null)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: onDummyLoginSuperUserTapped,
+                        child: Container(
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: busy
+                              ? CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation(Colors.white),
+                                )
+                              : Text(
+                                  "LOGIN AS SUPER USER",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            if (onDummyLoginAdminMasterTapped != null) verticalSpaceSmall,
+            if (onDummyLoginAdminMasterTapped != null)
               Row(
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: onDummyLoginAdminTapped,
+                      onTap: onDummyLoginAdminMasterTapped,
                       child: Container(
                         height: 40,
                         alignment: Alignment.center,
@@ -209,7 +275,7 @@ class AuthenticationLayout extends StatelessWidget {
                                     AlwaysStoppedAnimation(Colors.white),
                               )
                             : Text(
-                                "LOGIN AS TEST ADMIN",
+                                "LOGIN AS MASTER ADMIN",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

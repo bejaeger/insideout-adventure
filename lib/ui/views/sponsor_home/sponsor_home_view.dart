@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
@@ -24,62 +25,65 @@ class SponsorHomeView extends StatelessWidget {
       fireOnModelReadyOnce: true,
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: "Hi Sponsor"),
-        body: ListView(
-          physics: ScrollPhysics(),
-          children: [
-            verticalSpaceMedium,
-            SectionHeader(
-              title: "Sponsored Explorers",
-            ),
-            verticalSpaceSmall,
-            verticalSpaceTiny,
-            if (model.supportedExplorers.length == 0)
-              model.isBusy
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: model.showAddExplorerBottomSheet,
-                      child: Text("Support First Explorer -> "),
-                      //imagePath: ImagePath.peopleHoldingHands,
-                    ),
-            if (model.supportedExplorers.length > 0)
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                child: ExplorersList(
-                    explorersStats: model.supportedExplorerStats,
-                    explorers: model.supportedExplorers,
-                    onExplorerPressed: model.navigateToSingleExplorerView,
-                    onAddNewExplorerPressed: model.showAddExplorerBottomSheet),
-              ),
-            verticalSpaceMedium,
-            if (model.latestTransfers.length > 0)
+        body: RefreshIndicator(
+          onRefresh: () => model.listenToData(),
+          child: ListView(
+            physics: ScrollPhysics(),
+            children: [
+              verticalSpaceMedium,
               SectionHeader(
-                title: "Recent Payments",
-                onTextButtonTap: model.navigateToTransferHistoryView,
+                title: "Sponsored Explorers",
               ),
-            if (model.latestTransfers.length > 0) verticalSpaceSmall,
-
-            if (model.latestTransfers.length > 0)
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: kHorizontalPadding + 5.0),
-                child: LatestTransfersList(
-                  transfers: model.latestTransfers,
-                  onTilePressed: model.showMoneyTransferInfoDialog,
+              if (model.supportedExplorers.length == 0)
+                model.isBusy
+                    ? AFKProgressIndicator()
+                    : Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ElevatedButton(
+                          onPressed: model.showAddExplorerBottomSheet,
+                          child: Text("Add Explorer"),
+                          //imagePath: ImagePath.peopleHoldingHands,
+                        ),
+                      ),
+              if (model.supportedExplorers.length > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: ExplorersList(
+                      explorersStats: model.supportedExplorerStats,
+                      explorers: model.supportedExplorers,
+                      onExplorerPressed: model.navigateToSingleExplorerView,
+                      onAddNewExplorerPressed:
+                          model.showAddExplorerBottomSheet),
                 ),
-              ),
-            // _sendMoneyButton(context, model),
-            verticalSpaceLarge,
-            Divider(),
-            verticalSpaceLarge,
-            verticalSpaceLarge,
-            ElevatedButton(
-                // onPressed: model.navigateToExplorerHomeView,
-                onPressed: model.logout,
-                //child: Text("Go to explorer home/map")),
-                child: Text("Logout  ")),
-            verticalSpaceLarge,
-          ],
+              verticalSpaceMedium,
+              if (model.latestTransfers.length > 0)
+                SectionHeader(
+                  title: "Recent Payments",
+                  onTextButtonTap: model.navigateToTransferHistoryView,
+                ),
+              if (model.latestTransfers.length > 0)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding + 5.0),
+                  child: LatestTransfersList(
+                    transfers: model.latestTransfers,
+                    onTilePressed: model.showMoneyTransferInfoDialog,
+                  ),
+                ),
+              // _sendMoneyButton(context, model),
+              verticalSpaceLarge,
+              Divider(),
+              verticalSpaceLarge,
+              verticalSpaceLarge,
+              ElevatedButton(
+                  // onPressed: model.navigateToExplorerHomeView,
+                  onPressed: model.logout,
+                  //child: Text("Go to explorer home/map")),
+                  child: Text("Logout  ")),
+              verticalSpaceLarge,
+            ],
+          ),
         ),
       ),
     );
@@ -117,7 +121,7 @@ class ExplorersList extends StatelessWidget {
                   // onPressed: model.navigateToExplorerHomeView,
                   onPressed: onAddNewExplorerPressed,
                   //child: Text("Go to explorer home/map")),
-                  child: Text("Sponsor Another Explorer ->")),
+                  child: Text("Add Explorer")),
             ],
           );
         } else {

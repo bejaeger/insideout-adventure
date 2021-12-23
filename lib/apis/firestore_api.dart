@@ -76,11 +76,9 @@ class FirestoreApi {
       {required userId, required UserFavPlaces favouritePlaces}) async {
     try {
       final _docRef = getUserFavouritePlacesDocument(uid: userId);
-      if (_docRef != null) {
-        await _docRef.set(favouritePlaces.toJson());
-        log.v('Favourite Places document added to ${_docRef.path}' + '\n');
-        log.v('Your Document Reference is: ${_docRef.toString()}');
-      }
+      await _docRef.set(favouritePlaces.toJson());
+      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
+      log.v('Your Document Reference is: ${_docRef.toString()}');
     } catch (e) {
       throw FirestoreApiException(
           message: 'Failed To Insert Places',
@@ -92,13 +90,11 @@ class FirestoreApi {
   Future<void> addMarkers({required AFKMarker markers}) async {
     try {
       final _docRef = getMarkersDocs(markerId: markers.id);
-      if (_docRef != null) {
-        log.i("Document Reference: " + _docRef.toString());
-        log.i("Marker ID: " + markers.id);
-        await _docRef.set(markers.toJson());
-        log.v('Favourite Places document added to ${_docRef.path}' + '\n');
-        log.v('Your Document Reference is: ${_docRef.toString()}');
-      }
+      log.i("Document Reference: " + _docRef.toString());
+      log.i("Marker ID: " + markers.id);
+      await _docRef.set(markers.toJson());
+      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
+      log.v('Your Document Reference is: ${_docRef.toString()}');
     } catch (e) {
       throw FirestoreApiException(
           message: 'Failed To Insert Places',
@@ -226,7 +222,6 @@ class FirestoreApi {
         return null;
       }
       if (doc.docs.length == 1) {
-        final id = doc.docs.first.id;
         log.v("Found user with name $name, returning user object");
         return User.fromJson(doc.docs.first.data());
       } else {
@@ -412,7 +407,7 @@ class FirestoreApi {
       //TODO push quests
       late List<Quest> questsOnFirestore;
       try {
-        final questsOnFirestore = await downloadNearbyQuests();
+        questsOnFirestore = await downloadNearbyQuests();
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
@@ -451,6 +446,7 @@ class FirestoreApi {
             devDetails: "Quest document is empty");
       }
     } catch (e) {
+      log.e("$e");
       if (e is FirestoreApiException) rethrow;
       throw FirestoreApiException(
           message: "Error Was Thrown when loading quests", devDetails: "$e");

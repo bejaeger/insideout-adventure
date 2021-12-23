@@ -10,7 +10,14 @@ import 'package:stacked/stacked.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final String title;
-  CustomAppBar({Key? key, this.height = kAppBarExtendedHeight, required this.title})
+  final bool drawer;
+  final void Function()? onBackButton;
+  CustomAppBar(
+      {Key? key,
+      this.height = kAppBarExtendedHeight,
+      required this.title,
+      this.drawer = false,
+      this.onBackButton})
       : super(key: key);
 
   double get getHeight => height;
@@ -21,18 +28,43 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       viewModelBuilder: () => ActivatedQuestPanelViewModel(),
       builder: (context, model, child) => PreferredSize(
         preferredSize:
-            Size(screenWidth(context), height + kAppBarExtendedHeight),
+            Size(screenWidth(context), height + kActiveQuestPanelMaxHeight),
         child: Stack(
           children: <Widget>[
-            ActivatedQuestPanel(height: height),
+            ActivatedQuestPanel(heightAppBar: height),
             Container(
               alignment: Alignment.center,
               //clipBehavior: Clip.none,
               // Background
-              child: Text(title,
-                  style: textTheme(context)
-                      .headline5!
-                      .copyWith(color: Colors.grey[50])),
+              child: Stack(children: [
+                if (drawer)
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                          onTap: () => Scaffold.of(context).openEndDrawer(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: kHorizontalPadding),
+                            child: Icon(Icons.menu,
+                                color: kWhiteTextColor, size: 35),
+                          ))),
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child: FittedBox(
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: textTheme(context)
+                            .headline5!
+                            .copyWith(color: kWhiteTextColor),
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
               decoration: BoxDecoration(
                 color: kPrimaryColor,
                 boxShadow: [
@@ -44,12 +76,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(12.0),
-                    bottomRight: Radius.circular(12.0)),
+                    bottomLeft: Radius.circular(16.0),
+                    bottomRight: Radius.circular(16.0)),
               ),
               height: height,
               width: screenWidth(context),
             ),
+            if (onBackButton != null && !model.hasActiveQuest)
+              Container(
+                height: height,
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: model.navigateBack,
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                ),
+              ),
+            if (model.isSuperUser)
+              Container(
+                  height: height,
+                  alignment: Alignment.topRight,
+                  child: Text("Super User",
+                      style: TextStyle(color: Colors.white))),
           ],
         ),
       ),
@@ -57,5 +104,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(height + kAppBarExtendedHeight);
+  Size get preferredSize =>
+      Size.fromHeight(height + kActiveQuestPanelMaxHeight);
 }

@@ -25,7 +25,7 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     final CameraPosition _initialCameraPosition = CameraPosition(
       //In Future I will change these values to dynamically Change the Initial Camera Position
       //Based on teh city
-      target: LatLng(quest.startMarker.lat!, quest.startMarker.lon!),
+      target: LatLng(quest.startMarker!.lat!, quest.startMarker!.lon!),
       zoom: 14,
     );
 
@@ -71,9 +71,9 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     }
   }
 
-  String checkSponsoringSentence() {
-    if (quest.afkCredits < currentUserStats.availableSponsoring) {
-      return "You can earn ${quest.afkCredits} credits by completing this quest!";
+  String? checkSponsoringSentence() {
+    if (hasEnoughSponsoring(quest: quest)) {
+      return null;
     } else {
       return "You don't have enough AFK Credits funds to earn ${quest.afkCredits} credits. Ask a sponsor to support you :)";
     }
@@ -81,7 +81,7 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
 
   @override
   void dispose() {
-    _googleMapController!.dispose();
+    _googleMapController?.dispose();
     super.dispose();
   }
 }

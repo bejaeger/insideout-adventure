@@ -10,10 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
+import '../datamodels/quests/quest.dart';
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/authentication_method.dart';
+import '../enums/bottom_nav_bar_index.dart';
+import '../enums/quest_type.dart';
+import '../enums/quest_view_index.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
+import '../ui/views/active_map_quest/active_map_quest_view.dart';
+import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
+import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
+import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
 import '../ui/views/admin/admin_user/home/home_view.dart';
@@ -66,6 +74,12 @@ class Routes {
   static const String setPinView = '/set-pin-view';
   static const String bottomBarLayoutTemplateView =
       '/bottom-bar-layout-template-view';
+  static const String activeQrCodeSearchView = '/active-qr-code-search-view';
+  static const String activeDistanceEstimateQuestView =
+      '/active-distance-estimate-quest-view';
+  static const String activeTreasureLocationSearchQuestView =
+      '/active-treasure-location-search-quest-view';
+  static const String activeMapQuestView = '/active-map-quest-view';
   static const all = <String>{
     sponsorHomeView,
     explorerHomeView,
@@ -90,6 +104,10 @@ class Routes {
     addMarkersView,
     setPinView,
     bottomBarLayoutTemplateView,
+    activeQrCodeSearchView,
+    activeDistanceEstimateQuestView,
+    activeTreasureLocationSearchQuestView,
+    activeMapQuestView,
   };
 }
 
@@ -122,6 +140,12 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.setPinView, page: SetPinView),
     RouteDef(Routes.bottomBarLayoutTemplateView,
         page: BottomBarLayoutTemplateView),
+    RouteDef(Routes.activeQrCodeSearchView, page: ActiveQrCodeSearchView),
+    RouteDef(Routes.activeDistanceEstimateQuestView,
+        page: ActiveDistanceEstimateQuestView),
+    RouteDef(Routes.activeTreasureLocationSearchQuestView,
+        page: ActiveTreasureLocationSearchQuestView),
+    RouteDef(Routes.activeMapQuestView, page: ActiveMapQuestView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -307,8 +331,52 @@ class StackedRouter extends RouterBase {
           key: args.key,
           userRole: args.userRole,
           initialBottomNavBarIndex: args.initialBottomNavBarIndex,
-          initialTabBarIndex: args.initialTabBarIndex,
           showDialog: args.showDialog,
+          questViewIndex: args.questViewIndex,
+          quest: args.quest,
+          questType: args.questType,
+        ),
+        settings: data,
+      );
+    },
+    ActiveQrCodeSearchView: (data) {
+      var args = data.getArgs<ActiveQrCodeSearchViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ActiveQrCodeSearchView(
+          key: args.key,
+          quest: args.quest,
+        ),
+        settings: data,
+      );
+    },
+    ActiveDistanceEstimateQuestView: (data) {
+      var args =
+          data.getArgs<ActiveDistanceEstimateQuestViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ActiveDistanceEstimateQuestView(
+          key: args.key,
+          quest: args.quest,
+        ),
+        settings: data,
+      );
+    },
+    ActiveTreasureLocationSearchQuestView: (data) {
+      var args = data.getArgs<ActiveTreasureLocationSearchQuestViewArguments>(
+          nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ActiveTreasureLocationSearchQuestView(
+          key: args.key,
+          quest: args.quest,
+        ),
+        settings: data,
+      );
+    },
+    ActiveMapQuestView: (data) {
+      var args = data.getArgs<ActiveMapQuestViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ActiveMapQuestView(
+          key: args.key,
+          quest: args.quest,
         ),
         settings: data,
       );
@@ -397,13 +465,46 @@ class SetPinViewArguments {
 class BottomBarLayoutTemplateViewArguments {
   final Key? key;
   final UserRole userRole;
-  final int? initialBottomNavBarIndex;
-  final int? initialTabBarIndex;
+  final BottomNavBarIndex? initialBottomNavBarIndex;
   final bool showDialog;
+  final QuestViewType questViewIndex;
+  final Quest? quest;
+  final QuestType? questType;
   BottomBarLayoutTemplateViewArguments(
       {this.key,
       required this.userRole,
       this.initialBottomNavBarIndex,
-      this.initialTabBarIndex = 0,
-      this.showDialog = false});
+      this.showDialog = false,
+      this.questViewIndex = QuestViewType.questlist,
+      this.quest,
+      this.questType});
+}
+
+/// ActiveQrCodeSearchView arguments holder class
+class ActiveQrCodeSearchViewArguments {
+  final Key? key;
+  final Quest quest;
+  ActiveQrCodeSearchViewArguments({this.key, required this.quest});
+}
+
+/// ActiveDistanceEstimateQuestView arguments holder class
+class ActiveDistanceEstimateQuestViewArguments {
+  final Key? key;
+  final Quest quest;
+  ActiveDistanceEstimateQuestViewArguments({this.key, required this.quest});
+}
+
+/// ActiveTreasureLocationSearchQuestView arguments holder class
+class ActiveTreasureLocationSearchQuestViewArguments {
+  final Key? key;
+  final Quest quest;
+  ActiveTreasureLocationSearchQuestViewArguments(
+      {this.key, required this.quest});
+}
+
+/// ActiveMapQuestView arguments holder class
+class ActiveMapQuestViewArguments {
+  final Key? key;
+  final Quest quest;
+  ActiveMapQuestViewArguments({this.key, required this.quest});
 }

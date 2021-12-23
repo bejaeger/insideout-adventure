@@ -6,8 +6,20 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<Quest> getDummyQuests() {
   return [
+    getDummyVibrationSearchQuest(),
+    //getDummyVibrationSearchQuest2(),
+    // getDummyQuestQrCodeSearch(),
+    getDummyQuestQrCodeHuntStarenweg(),
+    getDummyQuestQrCodeSearchStarenweg(),
+    streeth11th2ndVibration(),
+    getDummyVibrationSearchQuestFreiburg(),
+    //getDummyVibrationSearchQuest4(),
+    getDistanceEstimate200(),
+    getDistanceEstimate500(),
+    getDistanceEstimate1000(),
+    getDistanceEstimate2000(),
     getDummyQuest1(),
-    // getDummyQuest3(),
+    getDummyQuest3(),
     getDummyQuest4(),
     getDummyQuest2(),
     getDummyQuest5(),
@@ -31,6 +43,137 @@ Quest getDummyQuest1() {
     startMarker: getDummyMarker1(),
     finishMarker: getDummyMarker2(),
   );
+}
+
+// Distance Estimate
+Quest getDistanceEstimate200() {
+  return Quest(
+    id: "Distance Estimate 200",
+    name: "Distance Estimate 200m",
+    description: "Estimate 200m",
+    afkCredits: 20,
+    markers: [],
+    type: QuestType.DistanceEstimate,
+    distanceToTravelInMeter: 200,
+  );
+}
+
+// Distance Estimate
+Quest getDistanceEstimate500() {
+  return Quest(
+    id: "Distance Estimate 500",
+    name: "Distance Estimate 500m",
+    description: "Estimate 500m",
+    afkCredits: 20,
+    markers: [],
+    type: QuestType.DistanceEstimate,
+    distanceToTravelInMeter: 500,
+  );
+}
+
+// Distance Estimate
+Quest getDistanceEstimate1000() {
+  return Quest(
+    id: "Distance Estimate 1km",
+    name: "Distance Estimate 1km",
+    description: "Estimate 1km",
+    afkCredits: 20,
+    markers: [],
+    type: QuestType.DistanceEstimate,
+    distanceToTravelInMeter: 1000,
+  );
+}
+
+// Distance Estimate
+Quest getDistanceEstimate2000() {
+  return Quest(
+    id: "Distance Estimate 2km",
+    name: "Distance Estimate 2km",
+    description: "Estimate 2km",
+    afkCredits: 999999999,
+    markers: [],
+    type: QuestType.DistanceEstimate,
+    distanceToTravelInMeter: 2000,
+  );
+}
+
+// burnaby quest
+Quest getDummyVibrationSearchQuest() {
+  return Quest(
+    id: "VibrationSearch",
+    name: "Woodway Vibrations",
+    description: "Find the AFK Credits",
+    afkCredits: 10,
+    markers: [
+      woodwayInFrontMarker(),
+      myRoomParkSiteMarker(),
+    ],
+    type: QuestType.TreasureLocationSearch,
+    startMarker: woodwayInFrontMarker(),
+    finishMarker: myRoomParkSiteMarker(),
+  );
+}
+
+// burnaby quest
+Quest getDummyVibrationSearchQuest2() {
+  return Quest(
+    id: "VibrationSearch 2",
+    name: "Woodway Vibrations Nr. 2",
+    description: "Find the AFK Credits",
+    afkCredits: 10,
+    markers: [
+      intimateWoodwayMarker7(),
+      intimateWoodwayMarker3(),
+    ],
+    type: QuestType.TreasureLocationSearchAutomatic,
+    startMarker: intimateWoodwayMarker7(),
+    finishMarker: intimateWoodwayMarker3(),
+  );
+}
+
+Quest getDummyVibrationSearchQuestFreiburg() {
+  return Quest(
+    id: "FreiburgLocationSearch",
+    name: "Freiburg Location Search",
+    description: "Find the AFK Credits",
+    afkCredits: 10,
+    markers: [
+      freiburg1(),
+      freiburg2(),
+    ],
+    type: QuestType.TreasureLocationSearch,
+    startMarker: freiburg1(),
+    finishMarker: freiburg2(),
+  );
+}
+
+Quest getDummyVibrationSearchQuest4() {
+  return Quest(
+    id: "VibrationSearch 4",
+    name: "Brentwood Vibrations",
+    description: "Find the AFK Credits",
+    afkCredits: 10,
+    markers: [
+      start1(),
+      brentwood(),
+    ],
+    type: QuestType.TreasureLocationSearchAutomatic,
+    startMarker: start1(),
+    finishMarker: brentwood(),
+  );
+}
+
+// burnaby quest
+Quest streeth11th2ndVibration() {
+  return Quest(
+      id: "VibrationSearch at 11th and 2nd",
+      name: "Vibrations will guide you the way!",
+      description: "Find the AFK Credits",
+      afkCredits: 10,
+      markers: [street11th2nd(), street11th2ndEnd()],
+      type: QuestType.TreasureLocationSearch,
+      startMarker: street11th2nd(),
+      finishMarker: street11th2ndEnd());
 }
 
 // Angola quest
@@ -91,6 +234,59 @@ Quest getDummyQuest4() {
     type: QuestType.Hike,
     startMarker: intimateWoodwayMarker1(),
     finishMarker: intimateWoodwayMarker4(),
+  );
+}
+
+Quest getDummyQuestQrCodeSearch() {
+  return Quest(
+    id: "QuestIdQrCodeSearch",
+    name: "Search For Codes at Woodway",
+    description: "Find hidden codes at Woodway place",
+    afkCredits: 50,
+    markers: [
+      intimateWoodwayMarker2(),
+      intimateWoodwayMarker3(),
+      intimateWoodwayMarker4(),
+    ],
+    type: QuestType.QRCodeSearch,
+    startMarker: intimateWoodwayMarker2(),
+    finishMarker: intimateWoodwayMarker4(),
+  );
+}
+
+Quest getDummyQuestQrCodeHuntStarenweg() {
+  return Quest(
+    id: "Starenweg Hunt",
+    name: "Versteckter Schatz bei Jägers!",
+    description: "Finde alle Codes im Hause Jägers!",
+    afkCredits: 50,
+    markers: [
+      starenweg1(),
+      starenweg2(),
+      starenweg3(),
+    ],
+    // TODO: QRCodeHuntIndoor
+    type: QuestType.QRCodeHuntIndoor,
+    startMarker: starenweg1(),
+    finishMarker: starenweg3(),
+  );
+}
+
+Quest getDummyQuestQrCodeSearchStarenweg() {
+  return Quest(
+    id: "Starenweg Hunt",
+    name: "Versteckte Schätze im Starenweg!",
+    description: "Finde alle Codes im Starenweg!",
+    afkCredits: 50,
+    markers: [
+      starenweg1(),
+      starenweg2(),
+      starenweg3(),
+    ],
+    // TODO: QRCodeHuntIndoor
+    type: QuestType.QRCodeSearch,
+    startMarker: starenweg1(),
+    finishMarker: starenweg3(),
   );
 }
 
@@ -251,6 +447,15 @@ AFKMarker woodwayMarker6() {
   );
 }
 
+AFKMarker intimateWoodwayMarker7() {
+  return AFKMarker(
+    id: "intimateWoodwayMarker7",
+    qrCodeId: "intimateWoodwayMarker7",
+    lat: 49.26703644791169,
+    lon: -122.99101625330354,
+  );
+}
+
 AFKMarker intimateWoodwayMarker1() {
   return AFKMarker(
     id: "intimateWoodwayMarker1",
@@ -290,10 +495,118 @@ AFKMarker myRoomMarker() {
   return AFKMarker(
       id: "myRoomMarker",
       qrCodeId: "myRoomMarker",
-      lat: 49.267489,
-      lon: -122.990541);
+      lat: 49.267408282,
+      lon: -122.9905778);
+}
+
+AFKMarker woodwayInFrontMarker() {
+  return AFKMarker(
+      id: "woodwayInFrontMarker",
+      qrCodeId: "woodwayInFrontMarker",
+      lat: 49.2673185626,
+      lon: -122.9901804);
+}
+
+AFKMarker myRoomParkSiteMarker() {
+  return AFKMarker(
+      id: "myRoomParkSiteMarker",
+      qrCodeId: "myRoomParkSiteMarker",
+      lat: 49.268019072977,
+      lon: -122.9908816464);
+}
+
+AFKMarker street11th2nd() {
+  return AFKMarker(
+      id: "11th2nd",
+      qrCodeId: "11th2nd",
+      lat: 49.22308671447031,
+      lon: -122.92246584976317);
+}
+
+AFKMarker street11th2ndEnd() {
+  return AFKMarker(
+      id: "street11th2ndEnd",
+      qrCodeId: "street11th2ndEnd",
+      lat: 49.22388203172556,
+      lon: -122.92212046634603);
 }
 
 getDummyCoordinates() {
   return LatLng(49.267489, -122.990541);
+}
+
+AFKMarker buyLowOnFoods() {
+  return AFKMarker(
+      id: "lowonfoods",
+      qrCodeId: "lowonfoods",
+      lat: 49.26627169696727,
+      lon: -122.97854513122365);
+}
+
+AFKMarker brentwood() {
+  return AFKMarker(
+      id: "brentwood",
+      qrCodeId: "brentwood",
+      lat: 49.26658976477327,
+      lon: -123.00164076016931);
+}
+
+AFKMarker start1() {
+  return AFKMarker(
+      id: "start1",
+      qrCodeId: "start1",
+      lat: 49.266942346812016,
+      lon: -122.99230178996156);
+}
+
+AFKMarker start2() {
+  return AFKMarker(
+      id: "start2",
+      qrCodeId: "start2",
+      lat: 49.26707714193788,
+      lon: -122.99019351948672);
+}
+
+AFKMarker starenweg1() {
+  return AFKMarker(
+      id: "starenweg1",
+      qrCodeId: "starenweg1",
+      lat: 48.06831568327273,
+      lon: 7.904692787613575,
+      nextLocationHint: "In der Garage");
+}
+
+AFKMarker starenweg2() {
+  return AFKMarker(
+      id: "starenweg2",
+      qrCodeId: "starenweg2",
+      lat: 48.068320041351725,
+      lon: 7.904803866026531,
+      nextLocationHint: "In Opa's Arbeitszimmer.");
+}
+
+AFKMarker starenweg3() {
+  return AFKMarker(
+    id: "starenweg3",
+    qrCodeId: "starenweg3",
+    lat: 48.06831568327273,
+    lon: 7.904792787613575,
+  );
+}
+
+AFKMarker freiburg1() {
+  return AFKMarker(
+    id: "freiburg1",
+    qrCodeId: "freiburg1",
+    lat: 48.01397259778941,
+    lon: 7.854593947833285,
+  );
+}
+
+AFKMarker freiburg2() {
+  return AFKMarker(
+      id: "freiburg2",
+      qrCodeId: "freiburg2",
+      lat: 48.01694856856642,
+      lon: 7.858700560921927);
 }

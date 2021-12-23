@@ -1,5 +1,7 @@
+import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
@@ -25,56 +27,74 @@ class SingleExplorerView extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
                 child: model.isBusy
-                    ? CircularProgressIndicator()
+                    ? AFKProgressIndicator()
                     : ListView(
                         children: [
                           verticalSpaceMedium,
                           Text(model.explorer.fullName,
                               style: textTheme(context).headline4),
                           verticalSpaceMedium,
-                          Column(
+                          Row(
                             children: [
-                              StatsCard(
-                                height: 80,
-                                statistic:
-                                    model.stats.lifetimeEarnings.toString(),
-                                subtitle: "Earned AFK Credits",
+                              Expanded(
+                                child: StatsCard(
+                                  iconHeight: 60,
+                                  statistic:
+                                      model.stats.lifetimeEarnings.toString(),
+                                  title: "Earned AFK Credits",
+                                ),
                               ),
-                              StatsCard(
-                                height: 80,
-                                subtitle: "Spent AFK Credits",
-                                statistic:
-                                    model.stats.afkCreditsSpent.toString(),
+                              Expanded(
+                                child: StatsCard(
+                                  iconHeight: 60,
+                                  title: "Spent AFK Credits",
+                                  statistic:
+                                      model.stats.afkCreditsSpent.toString(),
+                                ),
                               ),
-                              StatsCard(
-                                height: 80,
-                                subtitle: "Available Sponsoring",
-                                statistic: formatAmount(
-                                    model.stats.availableSponsoring),
-                                statisticCredits: formatAfkCreditsFromCents(
-                                    model.stats.availableSponsoring),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: StatsCard(
+                                  icon: Icon(Icons.money_rounded,
+                                      size: 50, color: kPrimaryColor),
+                                  iconHeight: 60,
+                                  title: "Available Sponsoring",
+                                  statistic: formatAmount(
+                                      model.stats.availableSponsoring),
+                                  statisticCredits: formatAfkCreditsFromCents(
+                                      model.stats.availableSponsoring),
+                                ),
                               ),
-                              StatsCard(
-                                height: 80,
-                                subtitle: "Gift Cards Purchased",
-                                statistic: model.stats.numberGiftCardsPurchased
-                                    .toString(),
+                              Expanded(
+                                child: StatsCard(
+                                  icon: Icon(Icons.card_giftcard,
+                                      size: 50, color: kPrimaryColor),
+                                  iconHeight: 60,
+                                  title: "Gift Cards Purchased",
+                                  statistic: model
+                                      .stats.numberGiftCardsPurchased
+                                      .toString(),
+                                ),
                               ),
                             ],
                           ),
                           verticalSpaceMedium,
                           ElevatedButton(
                               onPressed: model.navigateToAddFundsView,
-                              child:
-                                  Text("Sponsor ${model.explorer.fullName}")),
+                              child: Text(
+                                  "Add Funds to ${model.explorer.fullName}'s Account")),
                           verticalSpaceMedium,
-                          if (model.explorer.createdByUserWithId != null) 
-                          ElevatedButton(
-                              onPressed: model.handleSwitchToExplorerEvent,
-                              child: Text("Switch to Explorer Version")),
+                          if (model.explorer.createdByUserWithId != null)
+                            ElevatedButton(
+                                onPressed: model.handleSwitchToExplorerEvent,
+                                child: Text("Switch to Children Area")),
                           verticalSpaceMedium,
-                          SectionHeader(title: "Completed Quests"),
-                          Text("    ... "),
+                          SectionHeader(
+                              title: "Completed Quests", horizontalPadding: 0),
+                          // Text("    ... "),
                         ],
                       )),
           )),

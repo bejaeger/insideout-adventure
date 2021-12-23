@@ -4,6 +4,8 @@ import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/enums/purchased_gift_card_status.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/foundation.dart';
@@ -19,19 +21,23 @@ class PurchasedGiftCardsView extends StatelessWidget {
       onModelReady: (model) => model.listenToData(),
       disposeViewModel: false,
       viewModelBuilder: () => locator<PurchasedGiftCardsViewModel>(),
-      builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: Text("Your Gift Cards"),
+      builder: (context, model, child) => SafeArea(
+        child: Scaffold(
+          appBar: CustomAppBar(
+            title: "Your Gift Cards",
+            onBackButton: model.navigateBack,
+          ),
+          body: model.isBusy
+              ? CircularProgressIndicator()
+              : Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: PurchasedGiftCardsList(
+                    onBuyGiftCardPressed: model.navigateToGiftCardsView,
+                    giftCards: model.purchasedGiftCards,
+                    onRedeemedPressed: model.onRedeemedPressed,
+                  )),
         ),
-        body: model.isBusy
-            ? CircularProgressIndicator()
-            : Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                child: PurchasedGiftCardsList(
-                  giftCards: model.purchasedGiftCards,
-                  onRedeemedPressed: model.onRedeemedPressed,
-                )),
       ),
     );
   }
@@ -40,10 +46,12 @@ class PurchasedGiftCardsView extends StatelessWidget {
 class PurchasedGiftCardsList extends StatelessWidget {
   final List<GiftCardPurchase> giftCards;
   final void Function(GiftCardPurchase) onRedeemedPressed;
+  final void Function() onBuyGiftCardPressed;
   PurchasedGiftCardsList({
     Key? key,
     required this.giftCards,
     required this.onRedeemedPressed,
+    required this.onBuyGiftCardPressed,
   }) : super(key: key);
 
   @override
@@ -53,7 +61,10 @@ class PurchasedGiftCardsList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               verticalSpaceMediumLarge,
-              Text("You have to earn your first gift card ;)"),
+              EmptyNote(
+                  title: "You don't have any gift cards yet.",
+                  buttonTitle: "Buy Gift Card",
+                  onMoreButtonPressed: onBuyGiftCardPressed),
             ],
           )
         : ListView.builder(

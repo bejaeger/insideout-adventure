@@ -4,9 +4,11 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 
 class MarkerService {
   final GeolocationService _geolocationService = locator<GeolocationService>();
+  final UserService _userService = locator<UserService>();
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
 
@@ -14,8 +16,12 @@ class MarkerService {
   final _firestoreApi = locator<FirestoreApi>();
   List<AFKMarker>? _markersLists;
 
-  Future<bool> isUserCloseby({required AFKMarker marker}) async {
-    if (_flavorConfigProvider.enableGPSVerification) {
+  Future<bool> isUserCloseby({required AFKMarker? marker}) async {
+    if (marker == null) {
+      return false;
+    }
+    if (_flavorConfigProvider.enableGPSVerification &&
+        !_userService.isSuperUser) {
       if (marker.lat != null && marker.lon != null) {
         return await _geolocationService.isUserCloseby(
             lat: marker.lat!, lon: marker.lon!);
@@ -25,7 +31,7 @@ class MarkerService {
       }
     } else {
       log.e(
-          "We will pretend that the user is nearby the marker in any case (without checking actual GPS) because we run in test mode at the moment!");
+          "We will pretend that the user is nearby the marker (without checking actual GPS) because we run in test mode at the moment!");
       return true;
     }
   }

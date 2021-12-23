@@ -29,12 +29,8 @@ class LoginViewModel extends AuthenticationViewModel {
   String get getReleaseName => flavorConfigProvider.appName;
 
   dynamic userLoginTapped({required UserRole userRole}) {
-    if (_flavorConfigProvider.flavor == Flavor.dev &&
-        userRole == UserRole.explorer) {
-      return () => saveData(AuthenticationMethod.dummy, UserRole.explorer);
-    } else if (_flavorConfigProvider.flavor == Flavor.dev &&
-        userRole == UserRole.sponsor) {
-      return () => saveData(AuthenticationMethod.dummy, UserRole.sponsor);
+    if (_flavorConfigProvider.flavor == Flavor.dev) {
+      return () => saveData(AuthenticationMethod.dummy, userRole);
     }
   }
 
@@ -60,16 +56,6 @@ class LoginViewModel extends AuthenticationViewModel {
         emailOrName: emailOrNameValue,
         stringPw: passwordValue,
         role: role);
-  }
-
-  Future<AFKCreditsAuthenticationResultService?> runAdminAuthentication(
-      {required AuthenticationMethod method,
-      required UserRole? role,
-      required String email,
-      required String password}) async {
-    final result = await _userService.runLoginLogic(
-        method: method, emailOrName: email, stringPw: password, role: role);
-    return result;
   }
 
   void navigateToCreateAccount() {

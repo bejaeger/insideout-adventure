@@ -8,7 +8,10 @@ part of 'afk_marker.dart';
 
 _$_AFKMarker _$$_AFKMarkerFromJson(Map<String, dynamic> json) => _$_AFKMarker(
       id: json['id'] as String,
-      qrCodeId: json['qrCodeId'] as String,
+      qrCodeId: json['qrCodeId'] as String?,
+      nextLocationSolution: json['nextLocationSolution'] as String?,
+      nextLocationHint: json['nextLocationHint'] as String?,
+      nextLocationPictureHint: json['nextLocationPictureHint'] as String?,
       lat: (json['lat'] as num?)?.toDouble(),
       lon: (json['lon'] as num?)?.toDouble(),
       markerStatus:
@@ -20,6 +23,9 @@ Map<String, dynamic> _$$_AFKMarkerToJson(_$_AFKMarker instance) =>
     <String, dynamic>{
       'id': instance.id,
       'qrCodeId': instance.qrCodeId,
+      'nextLocationSolution': instance.nextLocationSolution,
+      'nextLocationHint': instance.nextLocationHint,
+      'nextLocationPictureHint': instance.nextLocationPictureHint,
       'lat': instance.lat,
       'lon': instance.lon,
       'markerStatus': _$MarkerStatusEnumMap[instance.markerStatus],

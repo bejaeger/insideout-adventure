@@ -29,7 +29,11 @@ class _$ActivatedQuestTearOff {
       List<String>? uids,
       num? afkCreditsEarned,
       required int timeElapsed,
-      dynamic createdAt = ""}) {
+      dynamic createdAt = "",
+      double? lastCheckLat,
+      double? lastCheckLon,
+      double? currentDistanceInMeters,
+      double? lastDistanceInMeters}) {
     return _ActivatedQuest(
       id: id,
       quest: quest,
@@ -39,6 +43,10 @@ class _$ActivatedQuestTearOff {
       afkCreditsEarned: afkCreditsEarned,
       timeElapsed: timeElapsed,
       createdAt: createdAt,
+      lastCheckLat: lastCheckLat,
+      lastCheckLon: lastCheckLon,
+      currentDistanceInMeters: currentDistanceInMeters,
+      lastDistanceInMeters: lastDistanceInMeters,
     );
   }
 
@@ -60,6 +68,13 @@ mixin _$ActivatedQuest {
   num? get afkCreditsEarned => throw _privateConstructorUsedError;
   int get timeElapsed => throw _privateConstructorUsedError; // in seconds!
   dynamic get createdAt => throw _privateConstructorUsedError;
+  double? get lastCheckLat =>
+      throw _privateConstructorUsedError; // For VibrationSearch quest
+  double? get lastCheckLon =>
+      throw _privateConstructorUsedError; // For VibrationSearch quest
+  double? get currentDistanceInMeters =>
+      throw _privateConstructorUsedError; // For VibrationSearch quest
+  double? get lastDistanceInMeters => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -80,7 +95,11 @@ abstract class $ActivatedQuestCopyWith<$Res> {
       List<String>? uids,
       num? afkCreditsEarned,
       int timeElapsed,
-      dynamic createdAt});
+      dynamic createdAt,
+      double? lastCheckLat,
+      double? lastCheckLon,
+      double? currentDistanceInMeters,
+      double? lastDistanceInMeters});
 
   $QuestCopyWith<$Res> get quest;
 }
@@ -104,6 +123,10 @@ class _$ActivatedQuestCopyWithImpl<$Res>
     Object? afkCreditsEarned = freezed,
     Object? timeElapsed = freezed,
     Object? createdAt = freezed,
+    Object? lastCheckLat = freezed,
+    Object? lastCheckLon = freezed,
+    Object? currentDistanceInMeters = freezed,
+    Object? lastDistanceInMeters = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -138,6 +161,22 @@ class _$ActivatedQuestCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      lastCheckLat: lastCheckLat == freezed
+          ? _value.lastCheckLat
+          : lastCheckLat // ignore: cast_nullable_to_non_nullable
+              as double?,
+      lastCheckLon: lastCheckLon == freezed
+          ? _value.lastCheckLon
+          : lastCheckLon // ignore: cast_nullable_to_non_nullable
+              as double?,
+      currentDistanceInMeters: currentDistanceInMeters == freezed
+          ? _value.currentDistanceInMeters
+          : currentDistanceInMeters // ignore: cast_nullable_to_non_nullable
+              as double?,
+      lastDistanceInMeters: lastDistanceInMeters == freezed
+          ? _value.lastDistanceInMeters
+          : lastDistanceInMeters // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 
@@ -164,7 +203,11 @@ abstract class _$ActivatedQuestCopyWith<$Res>
       List<String>? uids,
       num? afkCreditsEarned,
       int timeElapsed,
-      dynamic createdAt});
+      dynamic createdAt,
+      double? lastCheckLat,
+      double? lastCheckLon,
+      double? currentDistanceInMeters,
+      double? lastDistanceInMeters});
 
   @override
   $QuestCopyWith<$Res> get quest;
@@ -191,6 +234,10 @@ class __$ActivatedQuestCopyWithImpl<$Res>
     Object? afkCreditsEarned = freezed,
     Object? timeElapsed = freezed,
     Object? createdAt = freezed,
+    Object? lastCheckLat = freezed,
+    Object? lastCheckLon = freezed,
+    Object? currentDistanceInMeters = freezed,
+    Object? lastDistanceInMeters = freezed,
   }) {
     return _then(_ActivatedQuest(
       id: id == freezed
@@ -225,6 +272,22 @@ class __$ActivatedQuestCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      lastCheckLat: lastCheckLat == freezed
+          ? _value.lastCheckLat
+          : lastCheckLat // ignore: cast_nullable_to_non_nullable
+              as double?,
+      lastCheckLon: lastCheckLon == freezed
+          ? _value.lastCheckLon
+          : lastCheckLon // ignore: cast_nullable_to_non_nullable
+              as double?,
+      currentDistanceInMeters: currentDistanceInMeters == freezed
+          ? _value.currentDistanceInMeters
+          : currentDistanceInMeters // ignore: cast_nullable_to_non_nullable
+              as double?,
+      lastDistanceInMeters: lastDistanceInMeters == freezed
+          ? _value.lastDistanceInMeters
+          : lastDistanceInMeters // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -241,7 +304,11 @@ class _$_ActivatedQuest implements _ActivatedQuest {
       this.uids,
       this.afkCreditsEarned,
       required this.timeElapsed,
-      this.createdAt = ""});
+      this.createdAt = "",
+      this.lastCheckLat,
+      this.lastCheckLon,
+      this.currentDistanceInMeters,
+      this.lastDistanceInMeters});
 
   factory _$_ActivatedQuest.fromJson(Map<String, dynamic> json) =>
       _$$_ActivatedQuestFromJson(json);
@@ -263,10 +330,18 @@ class _$_ActivatedQuest implements _ActivatedQuest {
   @JsonKey(defaultValue: "")
   @override // in seconds!
   final dynamic createdAt;
+  @override
+  final double? lastCheckLat;
+  @override // For VibrationSearch quest
+  final double? lastCheckLon;
+  @override // For VibrationSearch quest
+  final double? currentDistanceInMeters;
+  @override // For VibrationSearch quest
+  final double? lastDistanceInMeters;
 
   @override
   String toString() {
-    return 'ActivatedQuest(id: $id, quest: $quest, markersCollected: $markersCollected, status: $status, uids: $uids, afkCreditsEarned: $afkCreditsEarned, timeElapsed: $timeElapsed, createdAt: $createdAt)';
+    return 'ActivatedQuest(id: $id, quest: $quest, markersCollected: $markersCollected, status: $status, uids: $uids, afkCreditsEarned: $afkCreditsEarned, timeElapsed: $timeElapsed, createdAt: $createdAt, lastCheckLat: $lastCheckLat, lastCheckLon: $lastCheckLon, currentDistanceInMeters: $currentDistanceInMeters, lastDistanceInMeters: $lastDistanceInMeters)';
   }
 
   @override
@@ -292,7 +367,20 @@ class _$_ActivatedQuest implements _ActivatedQuest {
                     .equals(other.timeElapsed, timeElapsed)) &&
             (identical(other.createdAt, createdAt) ||
                 const DeepCollectionEquality()
-                    .equals(other.createdAt, createdAt)));
+                    .equals(other.createdAt, createdAt)) &&
+            (identical(other.lastCheckLat, lastCheckLat) ||
+                const DeepCollectionEquality()
+                    .equals(other.lastCheckLat, lastCheckLat)) &&
+            (identical(other.lastCheckLon, lastCheckLon) ||
+                const DeepCollectionEquality()
+                    .equals(other.lastCheckLon, lastCheckLon)) &&
+            (identical(
+                    other.currentDistanceInMeters, currentDistanceInMeters) ||
+                const DeepCollectionEquality().equals(
+                    other.currentDistanceInMeters, currentDistanceInMeters)) &&
+            (identical(other.lastDistanceInMeters, lastDistanceInMeters) ||
+                const DeepCollectionEquality()
+                    .equals(other.lastDistanceInMeters, lastDistanceInMeters)));
   }
 
   @override
@@ -305,7 +393,11 @@ class _$_ActivatedQuest implements _ActivatedQuest {
       const DeepCollectionEquality().hash(uids) ^
       const DeepCollectionEquality().hash(afkCreditsEarned) ^
       const DeepCollectionEquality().hash(timeElapsed) ^
-      const DeepCollectionEquality().hash(createdAt);
+      const DeepCollectionEquality().hash(createdAt) ^
+      const DeepCollectionEquality().hash(lastCheckLat) ^
+      const DeepCollectionEquality().hash(lastCheckLon) ^
+      const DeepCollectionEquality().hash(currentDistanceInMeters) ^
+      const DeepCollectionEquality().hash(lastDistanceInMeters);
 
   @JsonKey(ignore: true)
   @override
@@ -327,7 +419,11 @@ abstract class _ActivatedQuest implements ActivatedQuest {
       List<String>? uids,
       num? afkCreditsEarned,
       required int timeElapsed,
-      dynamic createdAt}) = _$_ActivatedQuest;
+      dynamic createdAt,
+      double? lastCheckLat,
+      double? lastCheckLon,
+      double? currentDistanceInMeters,
+      double? lastDistanceInMeters}) = _$_ActivatedQuest;
 
   factory _ActivatedQuest.fromJson(Map<String, dynamic> json) =
       _$_ActivatedQuest.fromJson;
@@ -348,6 +444,14 @@ abstract class _ActivatedQuest implements ActivatedQuest {
   int get timeElapsed => throw _privateConstructorUsedError;
   @override // in seconds!
   dynamic get createdAt => throw _privateConstructorUsedError;
+  @override
+  double? get lastCheckLat => throw _privateConstructorUsedError;
+  @override // For VibrationSearch quest
+  double? get lastCheckLon => throw _privateConstructorUsedError;
+  @override // For VibrationSearch quest
+  double? get currentDistanceInMeters => throw _privateConstructorUsedError;
+  @override // For VibrationSearch quest
+  double? get lastDistanceInMeters => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$ActivatedQuestCopyWith<_ActivatedQuest> get copyWith =>

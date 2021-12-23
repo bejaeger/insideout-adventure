@@ -284,11 +284,15 @@ class TransferFundsViewModel extends FormViewModel {
   // Navigations
   //
   void clearTillFirstAndShowExplorerHomeScreen() {
-      _navigationService.clearTillFirstAndShow(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.explorer));
+    _navigationService.clearTillFirstAndShow(Routes.bottomBarLayoutTemplateView,
+        arguments:
+            BottomBarLayoutTemplateViewArguments(userRole: UserRole.explorer));
   }
 
   void clearTillFirstAndShowSponsorHomeScreen() {
-      _navigationService.clearTillFirstAndShow(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.sponsor));
+    _navigationService.clearTillFirstAndShow(Routes.bottomBarLayoutTemplateView,
+        arguments:
+            BottomBarLayoutTemplateViewArguments(userRole: UserRole.sponsor));
   }
 
   ////////////////////////////////////////////////////////////////
