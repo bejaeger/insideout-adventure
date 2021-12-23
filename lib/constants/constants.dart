@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 const String kAppName = "AFK Credits";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY';
+const GoogleMapsEnvKeyIOS = 'GOOGLE_MAPS_API_KEY_IOS';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
