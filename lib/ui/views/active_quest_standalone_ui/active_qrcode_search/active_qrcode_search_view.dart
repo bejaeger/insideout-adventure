@@ -3,7 +3,6 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
@@ -71,27 +70,29 @@ class ActiveQrCodeSearchView extends StatelessWidget {
                                     outerColor: kPrimaryColor,
 
                                     //text: "Start",
-                                    child: model.hasEnoughSponsoring(
-                                            quest: quest)
-                                        ? Shimmer.fromColors(
-                                            baseColor: kGreyTextColor,
-                                            highlightColor: Colors.white,
-                                            period: const Duration(
-                                                milliseconds: 1000),
-                                            child: Text("Slide to start",
+                                    child:
+                                        model.hasEnoughSponsoring(quest: quest)
+                                            ? Shimmer.fromColors(
+                                                baseColor: kGreyTextColor,
+                                                highlightColor: Colors.white,
+                                                period: const Duration(
+                                                    milliseconds: 1000),
+                                                child: Text("Slide to start",
+                                                    style: textTheme(context)
+                                                        .headline6!
+                                                        .copyWith(
+                                                            fontSize: 22,
+                                                            color:
+                                                                kWhiteTextColor)),
+                                              )
+                                            : Text(
+                                                "Cannot start",
                                                 style: textTheme(context)
                                                     .headline6!
                                                     .copyWith(
                                                         fontSize: 22,
-                                                        color:
-                                                            kWhiteTextColor)),
-                                          )
-                                        : Text("Cannot start",
-                                            style: textTheme(context)
-                                                .headline6!
-                                                .copyWith(
-                                                    fontSize: 22,
-                                                    color: kWhiteTextColor)),
+                                                        color: kWhiteTextColor),
+                                              ),
                                     height: 50,
                                     elevation: 10,
                                     sliderRotate: false,

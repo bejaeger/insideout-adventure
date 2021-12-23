@@ -106,7 +106,10 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.list_rounded, size: 30),
+                    Expanded(
+                      flex: 1,
+                      child: Icon(Icons.list_rounded, size: 30),
+                    ),
                     Text(
                       "List",
                     ),
@@ -121,8 +124,11 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.map_rounded, size: 30),
-                    Text(
-                      "Map",
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        "Map",
+                      ),
                     ),
                   ],
                 ),

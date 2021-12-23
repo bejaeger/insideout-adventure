@@ -26,124 +26,120 @@ class ExplorerHomeView extends StatelessWidget {
       viewModelBuilder: () => ExplorerHomeViewModel(),
       onModelReady: (model) => model.listenToData(),
       fireOnModelReadyOnce: true,
-      builder: (context, model, child) => VerifyNetworkConnection(
-        child: Scaffold(
-          appBar: CustomAppBar(
-            title: "Hi Explorer ${model.name}!",
-            drawer: true,
-          ),
-          endDrawer: SizedBox(
-            width: screenWidth(context, percentage: 0.8),
-            child: const DrawerWidgetView(),
-          ),
-          body: model.isBusy
-              ? AFKProgressIndicator()
-              : Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding),
-                  child: ListView(
-                    children: [
-                      verticalSpaceMedium,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            flex: 10,
-                            child: StatsCard(
-                                onCardPressed:
-                                    model.showToEarnExplanationDialog,
-                                statsType: StatsType.lockedCredits,
-                                height: 150,
-                                statistic:
-                                    // availableSponsoring IN CENTS!!!!!!
-                                    formatAfkCreditsFromCents(model
-                                        .currentUserStats.availableSponsoring),
-                                title: kCreditsToEarnDescription),
-                          ),
-                          Spacer(),
-                          Flexible(
-                            flex: 10,
-                            child: StatsCard(
-                                onCardPressed:
-                                    model.showEarnedExplanationDialog,
-                                statsType: StatsType.unlockedCredits,
-                                height: 150,
-                                statistic: model
-                                    .currentUserStats.afkCreditsBalance
-                                    .toString(),
-                                title: kCurrentAFKCreditsDescription),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Flexible(
-                            flex: 10,
-                            child: NavButtonWidget(
-                              color: Colors.blue,
-                              title: 'ASK FOR CREDITS',
-                              titleColor: kWhiteTextColor,
-                              icon: Icon(
-                                Icons.arrow_downward_rounded,
-                                color: kGreyTextColor.withOpacity(0.9),
-                                size: 70,
-                              ),
-                              onTap: model.showNotImplementedSnackbar,
-                            ),
-                          ),
-                          Spacer(),
-                          Flexible(
-                            flex: 10,
-                            child: NavButtonWidget(
-                              color: Colors.green,
-                              title: 'GIFT CARDS',
-                              titleColor: kWhiteTextColor,
-                              icon: Icon(
-                                Icons.card_giftcard_outlined,
-                                color: kGreyTextColor.withOpacity(0.9),
-                                size: 70,
-                              ),
-                              onTap: model.navigateToGiftCardsView,
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Row(
-                      //   children: [
-                      //     Expanded(
-                      //       child: NavButtonWidget(
-                      //         padding: 0,
-                      //         title: 'ACHIEVEMENTS',
-                      //         icon: const Icon(
-                      //           Icons.badge_rounded,
-                      //           color: kDarkTurquoise,
-                      //           size: 70,
-                      //         ),
-                      //         onTap: model.showNotImplementedSnackbar,
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-
-                      // verticalSpaceMedium,
-                      // SectionHeader(
-                      //   horizontalPadding: 0,
-                      //   title: "Achievements",
-                      // ),
-                      // verticalSpaceSmall,
-                      // model.activatedQuestsHistory.length == 0
-                      //     ? Container(height: 0)
-                      //     : QuestsGrid(
-                      //         activatedQuests: model.activatedQuestsHistory,
-                      //         onPressed: () => null,
-                      //       ),
-                      // verticalSpaceLarge,
-                      SectionHeader(title: "Achievements"),
-                      verticalSpaceLarge,
-                    ],
-                  ),
-                ),
+      builder: (context, model, child) => Scaffold(
+        appBar: CustomAppBar(
+          title: "Hi Explorer ${model.name}!",
+          drawer: true,
         ),
+        endDrawer: SizedBox(
+          width: screenWidth(context, percentage: 0.8),
+          child: const DrawerWidgetView(),
+        ),
+        body: model.isBusy
+            ? AFKProgressIndicator()
+            : Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+                child: ListView(
+                  children: [
+                    verticalSpaceMedium,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          flex: 10,
+                          child: StatsCard(
+                              onCardPressed: model.showToEarnExplanationDialog,
+                              statsType: StatsType.lockedCredits,
+                              height: 150,
+                              statistic:
+                                  // availableSponsoring IN CENTS!!!!!!
+                                  formatAfkCreditsFromCents(model
+                                      .currentUserStats.availableSponsoring),
+                              title: kCreditsToEarnDescription),
+                        ),
+                        Spacer(),
+                        Flexible(
+                          flex: 10,
+                          child: StatsCard(
+                              onCardPressed: model.showEarnedExplanationDialog,
+                              statsType: StatsType.unlockedCredits,
+                              height: 150,
+                              statistic: model
+                                  .currentUserStats.afkCreditsBalance
+                                  .toString(),
+                              title: kCurrentAFKCreditsDescription),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 10,
+                          child: NavButtonWidget(
+                            color: Colors.blue,
+                            title: 'ASK FOR CREDITS',
+                            titleColor: kWhiteTextColor,
+                            icon: Icon(
+                              Icons.arrow_downward_rounded,
+                              color: kGreyTextColor.withOpacity(0.9),
+                              size: 70,
+                            ),
+                            onTap: model.showNotImplementedSnackbar,
+                          ),
+                        ),
+                        Spacer(),
+                        Flexible(
+                          flex: 10,
+                          child: NavButtonWidget(
+                            color: Colors.green,
+                            title: 'GIFT CARDS',
+                            titleColor: kWhiteTextColor,
+                            icon: Icon(
+                              Icons.card_giftcard_outlined,
+                              color: kGreyTextColor.withOpacity(0.9),
+                              size: 70,
+                            ),
+                            onTap: model.navigateToGiftCardsView,
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: NavButtonWidget(
+                    //         padding: 0,
+                    //         title: 'ACHIEVEMENTS',
+                    //         icon: const Icon(
+                    //           Icons.badge_rounded,
+                    //           color: kDarkTurquoise,
+                    //           size: 70,
+                    //         ),
+                    //         onTap: model.showNotImplementedSnackbar,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+
+                    // verticalSpaceMedium,
+                    // SectionHeader(
+                    //   horizontalPadding: 0,
+                    //   title: "Achievements",
+                    // ),
+                    // verticalSpaceSmall,
+                    // model.activatedQuestsHistory.length == 0
+                    //     ? Container(height: 0)
+                    //     : QuestsGrid(
+                    //         activatedQuests: model.activatedQuestsHistory,
+                    //         onPressed: () => null,
+                    //       ),
+                    // verticalSpaceLarge,
+                    SectionHeader(title: "Achievements"),
+                    verticalSpaceLarge,
+                  ],
+                ),
+              ),
       ),
     );
   }
