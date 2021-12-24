@@ -18,6 +18,8 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
 
   List<AFKMarker> foundObjects = [];
+  int indexHint = 0;
+  bool possibleToGetNextHint = false;
   bool? closeby;
   final log = getLogger("ActiveQrCodeSearchViewModel");
 
@@ -41,22 +43,54 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
       if (quest.type != QuestType.QRCodeSearchIndoor &&
           quest.type != QuestType.QRCodeHuntIndoor) {
         if (!(await checkAccuracy(position: position))) {
-          setBusy(true);
-          await Future.delayed(Duration(seconds: 1));
-          setBusy(false);
+          resetSlider();
           return false;
         }
       }
       final result = await startQuestMain(quest: quest);
-      await Future.delayed(Duration(seconds: 1));
-      showStartSwipe = false;
-      notifyListeners();
+      if (result is bool && result == true) {
+        // adding start marker as it contains the first hint and
+        // is only used to bring the user to the screen with the active quest UI
+        foundObjects.add(quest.markers[0]);
+        // this might be redundant. Could also use 'handleQrCodeScanEvent' in questService
+        // which performs geolocation verification!
+        questService.updateCollectedMarkers(marker: quest.markers[0]);
+
+        await Future.delayed(Duration(seconds: 1));
+        showStartSwipe = false;
+        notifyListeners();
+      } else {
+        log.wtf("Not starting quest, due to an unknown reason");
+      }
+      resetSlider();
+
       //setBusy(false);
       // if (result is bool && result == false) {
       //   navigateBack();
       // } else {}
     } else {
       log.w("Not starting quest, quest is probably already running");
+    }
+  }
+
+  // Retrieve current hint which is attached to the previously collected marker.
+  // This means it is simply the last object of foundObjects!
+  String getCurrentHint() {
+    if (!hasActiveQuest) {
+      return "Start the quest above to see the first hint";
+    } else {
+      //    return foundObjects[indexHint].nextLocationHint!;
+      return foundObjects.last.nextLocationHint ??
+          "No hint for this round, sorry! You are on your own...";
+    }
+  }
+
+  // Retrieve current hint which is attached to the previously collected marker.
+  // This means it is simply the last object of foundObjects!
+  void getNextHint() {
+    if (foundObjects.length >= indexHint + 1) {
+      indexHint = indexHint + 1;
+      notifyListeners();
     }
   }
 
@@ -105,7 +139,12 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
   }
 
   @override
-  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) async {
+  bool isQuestCompleted() {
+    return questService.isAllMarkersCollected;
+  }
+
+  @override
+  Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
     if (!hasActiveQuest) {
       log.wtf("No quest running");
       dialogService.showDialog(title: "Please start the quest first");
@@ -118,9 +157,11 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
         addMarkerToMap(quest: activeQuest.quest, afkmarker: result.marker!);
 
         // this might be redundant as this is also taken care of in quest service
+        // maybe we should remove the version in the service though!
         foundObjects.add(result.marker!);
 
-        if (questService.isAllMarkersCollected) {
+        final bool completed = isQuestCompleted();
+        if (completed) {
           await showSuccessDialog();
           return;
           // checkQuestAndFinishWhenCompleted();
@@ -128,11 +169,12 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
           await dialogService.showDialog(
               title: "Successfully collected marker!",
               description: getActiveQuestProgressDescription());
-          if (result.marker!.nextLocationHint != null)
-            await dialogService.showDialog(
-                title: "Next hint",
-                description: result.marker!.nextLocationHint!);
+          // if (result.marker!.nextLocationHint != null)
+          //   await dialogService.showDialog(
+          //       title: "Next hint",
+          //       description: result.marker!.nextLocationHint!);
         }
+        // possibleToGetNextHint = true;
         notifyListeners();
       }
     }
@@ -145,5 +187,11 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
     foundObjects = [];
     showStartSwipe = true;
     super.resetPreviousQuest();
+  }
+
+  void resetSlider() async {
+    setBusy(true);
+    await Future.delayed(Duration(milliseconds: 50));
+    setBusy(false);
   }
 }

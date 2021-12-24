@@ -198,7 +198,6 @@ class QuestService with ReactiveServiceMixin {
     } else {
       _stopWatchService.stopTimer();
       _stopWatchService.pauseListener();
-
       trackData(_stopWatchService.getSecondTime(), forceNoPush: true);
       // updateData();
 
@@ -219,6 +218,13 @@ class QuestService with ReactiveServiceMixin {
         // At this point the quest has successfully finished!
         await uploadAndCleanUpFinishedQuest();
       }
+    }
+  }
+
+  dynamic checkQuestStatus() {
+    if (activatedQuest!.status == QuestStatus.incomplete) {
+      log.w("Quest is incomplete. Show message to user");
+      return WarningQuestNotFinished;
     }
   }
 
@@ -265,6 +271,13 @@ class QuestService with ReactiveServiceMixin {
   // also set earned credits
   void evaluateQuestAndSetStatus() {
     log.i("Evaluating quest");
+
+    if (activatedQuest?.status == QuestStatus.success) {
+      // model evaluated already in viewmodel. Just add credits
+      pushActivatedQuest(activatedQuest!
+          .copyWith(afkCreditsEarned: activatedQuest!.quest.afkCredits));
+      return;
+    }
 
     if (activatedQuest?.quest.type == QuestType.TreasureLocationSearch ||
         activatedQuest?.quest.type ==
@@ -488,9 +501,11 @@ class QuestService with ReactiveServiceMixin {
     if (activatedQuest != null) {
       final index = activatedQuest!.quest.markers
           .indexWhere((element) => element == marker);
+
+      // some error catching
       if (index < 0) {
         log.wtf(
-            "Marker is not available in currently active quest. Before this funciton is called, this should have been already checked, please check your code!");
+            "Marker is not available in currently active quest. Before this function is called, this should have been already checked, please check your code!");
         return;
       }
       List<bool> markersCollectedNew = activatedQuest!.markersCollected;
@@ -499,6 +514,8 @@ class QuestService with ReactiveServiceMixin {
             "Marker already collected. Before this function is called, this should have been already checked, please check your code!");
         return;
       }
+
+      // actually updating the marker list storing the info whether a marker is found or not
       markersCollectedNew[index] = true;
       log.v("New Marker collected!");
       pushActivatedQuest(
@@ -524,18 +541,15 @@ class QuestService with ReactiveServiceMixin {
   // If a quest is active, the marker is validated .
   // In each case, an appropriate QuestQRCodeScanResult is returned.
   // This result is interpreted in the viewmodels
-  Future<QuestQRCodeScanResult> handleQrCodeScanEvent(
-      {AFKMarker? marker, bool returnMarker = false}) async {
-    if (marker == null) return QuestQRCodeScanResult.empty();
-    if (returnMarker) {
-      return QuestQRCodeScanResult.marker(marker: marker);
-    }
+  Future<MarkerAnalysisResult> analyzeMarker(
+      {AFKMarker? marker, bool locationVerification = true}) async {
+    if (marker == null) return MarkerAnalysisResult.empty();
 
     if (!hasActiveQuest) {
       // get Quests with start marker id
       List<Quest> quests =
           await getQuestsWithStartMarkerId(markerId: marker.id);
-      return QuestQRCodeScanResult.quests(quests: quests);
+      return MarkerAnalysisResult.quests(quests: quests);
     } else {
       // Checks to perform:
       // 1. isMarkerInQuest
@@ -545,7 +559,7 @@ class QuestService with ReactiveServiceMixin {
       // 1.
       if (!isMarkerInQuest(marker: marker)) {
         log.w("Scanned marker does not belong to currently active quest");
-        return QuestQRCodeScanResult.error(
+        return MarkerAnalysisResult.error(
             errorMessage: WarningScannedMarkerNotInQuest);
       }
 
@@ -555,18 +569,19 @@ class QuestService with ReactiveServiceMixin {
           .firstWhere((element) => element.id == marker.id);
 
       // 2.
-      final bool closeby =
-          await _markerService.isUserCloseby(marker: fullMarker);
-      if (!closeby) {
-        log.w("User is not nearby marker!");
-        return QuestQRCodeScanResult.error(
-            errorMessage: WarningNotNearbyMarker);
+      if (locationVerification) {
+        final bool closeby =
+            await _markerService.isUserCloseby(marker: fullMarker);
+        if (!closeby) {
+          log.w("User is not nearby marker!");
+          return MarkerAnalysisResult.error(
+              errorMessage: WarningNotNearbyMarker);
+        }
       }
-
       // 3.
       if (isMarkerCollected(marker: fullMarker)) {
         log.w("Scanned marker has been collected already");
-        return QuestQRCodeScanResult.error(
+        return MarkerAnalysisResult.error(
             errorMessage: WarningScannedMarkerAlreadyCollected);
       }
 
@@ -574,7 +589,7 @@ class QuestService with ReactiveServiceMixin {
           "Marker verified! Continue with updated collected markers in activated quest");
       updateCollectedMarkers(marker: fullMarker);
       // return marker that was succesfully scanned
-      return QuestQRCodeScanResult.marker(marker: fullMarker);
+      return MarkerAnalysisResult.marker(marker: fullMarker);
     }
   }
 

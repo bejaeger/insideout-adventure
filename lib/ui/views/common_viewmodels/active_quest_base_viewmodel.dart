@@ -21,6 +21,7 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
 
   // Functions to override!
   void loadQuestMarkers();
+  bool isQuestCompleted();
   void updateMapMarkers({required AFKMarker afkmarker}) {}
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker});
   BitmapDescriptor defineMarkersColour(

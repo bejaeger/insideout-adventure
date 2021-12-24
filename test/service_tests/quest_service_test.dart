@@ -224,7 +224,7 @@ void main() {
             .thenAnswer((_) async => [getTestQuest()]);
         // act
         final service = _getService();
-        service.handleQrCodeScanEvent(marker: getTestMarker1());
+        service.analyzeMarker(marker: getTestMarker1());
         // assert
         verify(firestoreApi.downloadQuestsWithStartMarkerId(
             startMarkerId: kTestMarker1Id));
@@ -238,7 +238,7 @@ void main() {
         // act
         final service = _getService();
         await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
-        service.handleQrCodeScanEvent(marker: getTestMarker1());
+        service.analyzeMarker(marker: getTestMarker1());
         // assert
         verify(markerService.isUserCloseby(marker: getTestMarker1()));
       });
@@ -249,7 +249,7 @@ void main() {
         // act
         final service = _getService();
         await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
-        await service.handleQrCodeScanEvent(marker: getTestMarker1());
+        await service.analyzeMarker(marker: getTestMarker1());
         // assert
         expect(service.activatedQuest!.markersCollected[0], true);
         expect(service.activatedQuest!.markersCollected[1], false);
@@ -262,7 +262,7 @@ void main() {
         // act
         final service = _getService();
         await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
-        await service.handleQrCodeScanEvent(marker: getTestMarker2());
+        await service.analyzeMarker(marker: getTestMarker2());
         // assert
         expect(service.activatedQuest!.markersCollected[0], false);
         expect(service.activatedQuest!.markersCollected[1], true);
@@ -275,8 +275,8 @@ void main() {
         // act
         final service = _getService();
         await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
-        QuestQRCodeScanResult result =
-            await service.handleQrCodeScanEvent(marker: getTestMarkerFarAway());
+        MarkerAnalysisResult result =
+            await service.analyzeMarker(marker: getTestMarkerFarAway());
         // assert
         expect(result.errorMessage, WarningScannedMarkerNotInQuest);
       });
@@ -305,8 +305,8 @@ void main() {
         final service = _getService();
         await service.startQuest(quest: getTestQuest(), uids: [kTestUid]);
         service.updateCollectedMarkers(marker: getTestMarker1());
-        QuestQRCodeScanResult result =
-            await service.handleQrCodeScanEvent(marker: getTestMarker1());
+        MarkerAnalysisResult result =
+            await service.analyzeMarker(marker: getTestMarker1());
         // assert
         expect(result.errorMessage, WarningScannedMarkerAlreadyCollected);
       });

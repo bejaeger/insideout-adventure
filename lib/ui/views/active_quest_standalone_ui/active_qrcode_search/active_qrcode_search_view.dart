@@ -96,10 +96,8 @@ class ActiveQrCodeSearchView extends StatelessWidget {
                                     elevation: 10,
                                     sliderRotate: false,
                                     //key: _key,
-                                    // onSubmit: () =>
-                                    //     model.maybeStartQuest(quest: quest),
-                                    onSubmit: null,
-
+                                    onSubmit: () =>
+                                        model.maybeStartQuest(quest: quest),
                                     borderRadius: 50,
                                     // animationDuration: Duration(seconds: 1),
                                   ),
@@ -130,11 +128,11 @@ class ActiveQrCodeSearchView extends StatelessWidget {
                                               textAlign: TextAlign.center),
                                           Text(
                                               model.hasActiveQuest
-                                                  ? model.foundObjects.length
+                                                  ? (model.foundObjects.length - 1)
                                                           .toString() +
                                                       " / " +
-                                                      model.activeQuest.quest
-                                                          .markers.length
+                                                      (model.activeQuest.quest
+                                                          .markers.length - 1)
                                                           .toString()
                                                   : "0 / " +
                                                       quest.markers.length
@@ -151,12 +149,37 @@ class ActiveQrCodeSearchView extends StatelessWidget {
                                   child: NextHintDisplay(
                                       model: model, quest: quest)),
                               // SizedBox(height: 5),
+                                          if (model.isSuperUser)
+           Container(
+             height: 100,
+             child: Column(
+                children: [
+                  Text("Scrollable list of Markers"),
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [                        
+                        ...quest.markers
+                            .map(
+                              (e) => TextButton(
+                                onPressed: () => model.displayMarker(e),
+                                child: Text(e.id),
+                              ),
+                            )
+                            .toList(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+           ),
+
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Text("Find & Scan Codes",
                                       style: textTheme(context).headline6),
-                                  Icon(Icons.arrow_forward, size: 50),
+                                  Icon(Icons.arrow_forward, size: 40),
                                   SizedBox(width: 100),
                                 ],
                               ),
@@ -171,7 +194,7 @@ class ActiveQrCodeSearchView extends StatelessWidget {
 }
 
 class NextHintDisplay extends StatelessWidget {
-  final dynamic model;
+  final ActiveQrCodeSearchViewModel model;
   final Quest quest;
   const NextHintDisplay({Key? key, required this.model, required this.quest})
       : super(key: key);
@@ -188,12 +211,42 @@ class NextHintDisplay extends StatelessWidget {
                 ])
           : null,
       margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-      child: !model.isSuperUser || quest.type == QuestType.QRCodeSearch
-          ? Column(
+      child:
+           Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (quest.type != QuestType.QRCodeSearch)
-                  SectionHeader(title: "Next Hint"),
+                  Container(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Next Hint",
+                                style: textTheme(context)
+                                    .headline4!
+                                    .copyWith(fontSize: 24)),
+                            Text("Where is the next code?",
+                                textAlign: TextAlign.left,
+                                style: textTheme(context)
+                                    .headline4!
+                                    .copyWith(fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                if (quest.type == QuestType.QRCodeHuntIndoor)
+                  Expanded(
+                      child: DisplayHint(
+                    hintString: model.getCurrentHint(),
+                    // possibleToGetNextHint: model.possibleToGetNextHint,
+                    // onNextHintPressed: model.getNextHint
+                  )),
                 if (quest.type == QuestType.QRCodeSearch)
                   Expanded(
                     child: Container(
@@ -266,26 +319,86 @@ class NextHintDisplay extends StatelessWidget {
                     ),
                   ),
               ],
-            )
-          : Column(
-              children: [
-                verticalSpaceLarge,
-                SectionHeader(title: "Markers"),
-                ListView(
-                  shrinkWrap: true,
-                  children: [
-                    ...quest.markers
-                        .map(
-                          (e) => TextButton(
-                            onPressed: () => model.displayMarker(e),
-                            child: Text(e.id),
-                          ),
-                        )
-                        .toList(),
-                  ],
-                ),
-              ],
             ),
+    );
+  }
+}
+
+class DisplayHint extends StatefulWidget {
+  final String hintString;
+  // final bool possibleToGetNextHint;
+  // final void Function() onNextHintPressed;
+  const DisplayHint({
+    Key? key,
+    required this.hintString,
+    // required this.possibleToGetNextHint,
+    // required this.onNextHintPressed
+  }) : super(key: key);
+
+  @override
+  State<DisplayHint> createState() => _DisplayHintState();
+}
+
+class _DisplayHintState extends State<DisplayHint>
+    with TickerProviderStateMixin {
+  late final AnimationController _controller;
+  // ..repeat(reverse: true);
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    );
+    // _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // if (!widget.possibleToGetNextHint)
+          Expanded(
+            child: RotationTransition(
+              turns: _animation,
+              child: Align(
+                child: Text(widget.hintString,
+                    //overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style:
+                        textTheme(context).headline6!.copyWith(fontSize: 30)),
+              ),
+            ),
+          ),
+          verticalSpaceMedium,
+          // ElevatedButton(
+          //     onPressed: () async {
+          //       widget.onNextHintPressed();
+          //       _controller.forward();
+          //       await Future.delayed(Duration(seconds: 2));
+          //       _controller.reset();
+          //     },
+          //     child: Text("Get Hint",
+          //         style: textTheme(context)
+          //             .headline6!
+          //             .copyWith(color: kWhiteTextColor))),
+        ],
+      ),
     );
   }
 }

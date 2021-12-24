@@ -203,8 +203,8 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                               : Column(
                                                   children: [
                                                     ElevatedButton(
-                                                        onPressed: model
-                                                            .checkNewDistance,
+                                                        onPressed:
+                                                            model.checkDistance,
                                                         child: !model
                                                                 .isCheckingDistance
                                                             ? Text(

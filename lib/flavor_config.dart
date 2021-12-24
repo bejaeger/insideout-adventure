@@ -16,13 +16,12 @@ class FlavorConfigProvider {
   // used for running the app
   bool pushAndUseDummyQuests = true;
 
+  // dummy checks for quest completion for testing purposes
+  bool dummyQuestCompletionVerification = true;
+
   Flavor flavor = Flavor.unknown;
   void configure(Flavor flavorIn) {
     flavor = flavorIn;
-    if (flavor == Flavor.prod) {
-      // in production we never want to use dummy quests
-      this.pushAndUseDummyQuests = true;
-    }
   }
 
   String get appName {

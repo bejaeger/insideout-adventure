@@ -8,7 +8,7 @@ class HomeViewModel extends QuestViewModel {
   List<Quest>? _getListOfQUest;
   final _questService = locator<QuestService>();
   @override
-  Future handleQrCodeScanEvent(QuestQRCodeScanResult result) {
+  Future handleQrCodeScanEvent(MarkerAnalysisResult result) {
     // TODO: implement handleQrCodeScanEvent
     throw UnimplementedError();
   }

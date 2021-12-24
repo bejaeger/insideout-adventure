@@ -20,6 +20,9 @@ _$_Quest _$$_QuestFromJson(Map<String, dynamic> json) => _$_Quest(
       markers: (json['markers'] as List<dynamic>)
           .map((e) => AFKMarker.fromJson(e as Map<String, dynamic>))
           .toList(),
+      markerNotes: (json['markerNotes'] as List<dynamic>?)
+          ?.map((e) => MarkerNote.fromJson(e as Map<String, dynamic>))
+          .toList(),
       afkCredits: json['afkCredits'] as num,
       networkImagePath: json['networkImagePath'] as String?,
       afkCreditsPerMarker: (json['afkCreditsPerMarker'] as List<dynamic>?)
@@ -39,6 +42,7 @@ Map<String, dynamic> _$$_QuestToJson(_$_Quest instance) => <String, dynamic>{
       'startMarker': instance.startMarker?.toJson(),
       'finishMarker': instance.finishMarker?.toJson(),
       'markers': instance.markers.map((e) => e.toJson()).toList(),
+      'markerNotes': instance.markerNotes?.map((e) => e.toJson()).toList(),
       'afkCredits': instance.afkCredits,
       'networkImagePath': instance.networkImagePath,
       'afkCreditsPerMarker': instance.afkCreditsPerMarker,

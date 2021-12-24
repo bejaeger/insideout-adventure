@@ -109,21 +109,32 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
     notifyListeners();
   }
 
+  @override
+  isQuestCompleted(
+      {double distanceTravelled = 0, double distanceToTravel = 99999}) {
+    if (flavorConfigProvider.dummyQuestCompletionVerification) {
+      return (distanceTravelled > (distanceToTravel - 201) &&
+          distanceTravelled < (distanceToTravel + 201));
+    } else {
+      return (distanceTravelled >
+              (distanceToTravel - kMinDistanceToCatchTrophyInMeters) &&
+          distanceTravelled <
+              (distanceToTravel + kMinDistanceToCatchTrophyInMeters));
+    }
+  }
+
   // evaluates the distance and and completes the completer for the
   // dialog to update
   Future _evaluateDistanceTravelled(
       {required double distanceTravelled,
       required Completer<DistanceCheckStatus> completer}) async {
     // artificial delay to make it exciting for user!
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
 
-    // DUMMY
-    if (distanceTravelled > (distanceToTravel - 201) &&
-        distanceTravelled < (distanceToTravel + 201)) {
-      // if (distanceTravelled >
-      //         (distanceToTravel - kMinDistanceToCatchTrophyInMeters) &&
-      //     distanceTravelled <
-      //         (distanceToTravel + kMinDistanceToCatchTrophyInMeters)) {
+    final completed = isQuestCompleted(
+        distanceToTravel: distanceToTravel,
+        distanceTravelled: distanceTravelled);
+    if (completed) {
       // additional delay!
       await Future.delayed(Duration(seconds: 1));
       log.i("SUCCESS! Successfully estimated $distanceToTravel");
@@ -217,7 +228,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   }
 
   @override
-  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) {
+  Future handleMarkerAnalysisResult(MarkerAnalysisResult result) {
     // TODO: implement handleQrCodeScanEvent
     throw UnimplementedError();
   }

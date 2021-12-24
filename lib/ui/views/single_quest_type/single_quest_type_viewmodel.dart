@@ -23,7 +23,7 @@ class SingleQuestViewModel extends QuestViewModel {
   }
 
   @override
-  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) {
+  Future handleMarkerAnalysisResult(MarkerAnalysisResult result) {
     // TODO: implement handleQrCodeScanEvent
     throw UnimplementedError();
   }

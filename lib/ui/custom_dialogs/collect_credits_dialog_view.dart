@@ -36,7 +36,7 @@ class CollectCreditsDialogView extends StatelessWidget {
 }
 
 class _BasicDialogContent extends StatelessWidget {
-  final dynamic model;
+  final CollectCreditsDialogViewModel model;
   final DialogRequest request;
   final Function(DialogResponse dialogResponse) completer;
 

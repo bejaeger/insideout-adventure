@@ -93,7 +93,7 @@ class ActivatedQuestPanel extends StatelessWidget {
                                             onPressed: model.isBusy
                                                 ? () => null
                                                 : () async => await model
-                                                    .checkQuestAndFinishWhenCompleted()),
+                                                    .cancelOrFinishQuest()),
                                       ],
                                     ),
                             ],
