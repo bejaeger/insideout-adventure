@@ -69,6 +69,7 @@ dotenv
 **/ios/Runner/GeneratedPluginRegistrant.*
 **/ios/Runner/GoogleService-Info.plist
 **/ios/Runner/GoogleService-Info.plist
+**/ios/Runner/GoogleService-Info-2.plist
 
 # Web related
 lib/generated_plugin_registrant.dart
@@ -91,8 +92,8 @@ app.*.map.json
 
 # ios build
 ios/build/
-
 ios/Runner/Info.plist
 ios/Runner/AppDelegate.swift
 ios/Runner/GoogleService-Info.plist
 ios/Runner/GoogleService-Info.plist
+ios/Runner/GoogleService-Info-2.plist
