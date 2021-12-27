@@ -15,7 +15,10 @@ class CachedNetworkImageWrapper extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: imageUrl,
       placeholder: (BuildContext context, String url) =>
-          loader ?? CircularProgressIndicator(),
+          loader ??
+          Center(
+            child: CircularProgressIndicator(),
+          ),
       errorWidget: (BuildContext context, String url, dynamic error) =>
           errorWidget ?? Image.asset('assets/icons/sem-internet.jpg'),
       fit: BoxFit.fill,

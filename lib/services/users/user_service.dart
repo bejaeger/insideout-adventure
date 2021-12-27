@@ -106,29 +106,6 @@ class UserService {
     }
   }
 
-  //Sync User BackOffice office code Starts
-
-/*   Future<void> syncUserAdminAccount(
-      {String? uid, bool fromLocalStorage = false}) async {
-    final actualUid =
-        uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
-
-    log.v('Sync user $actualUid');
-    final adminUserAccount = await _firestoreApi.getUserAdmin(uid: actualUid);
-
-    if (adminUserAccount != null) {
-      log.v('User account exists. Save as _currentUser');
-      _currentUserAdmin = adminUserAccount;
-      if (fromLocalStorage) {
-        log.v("Save current user id to disk");
-        await _localStorageService.saveToDisk(
-            key: kLocalStorageUidKey, value: _currentUserAdmin!.id);
-      }
-    } else {
-      log.e("User account with id $actualUid does not exist! Can't sync user");
-    }
-  } */
-
   Future<void> syncOrCreateUserAdminAccount(
       {required UserAdmin userAdmin,
       required AuthenticationMethod method,

@@ -14,9 +14,9 @@ import 'package:places_service/places_service.dart';
 
 class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
   final PlacesService _placesService = locator<PlacesService>();
-  final _geolocationService = locator<GeolocationService>();
+  //final _geolocationService = locator<GeolocationService>();
   final EnvironmentService _environmentService = locator<EnvironmentService>();
-  final _markersService = locator<MarkerService>();
+  //final _markersService = locator<MarkerService>();
 
   dynamic position;
 

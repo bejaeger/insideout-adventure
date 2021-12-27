@@ -11,10 +11,11 @@ class CreateAccountUserRoleView extends StatelessWidget {
     return ViewModelBuilder<SelectUserRoleViewModel>.reactive(
       viewModelBuilder: () => SelectUserRoleViewModel(),
       builder: (context, model, child) => SelectUserRoleLayout(
+        //In Future I only see one Navigation Function with different Roles Parameters. Same UserTapToLogin
         onBackPressed: model.navigateToLoginView,
         onExplorerPressed: model.navigateToExplorerCreateAccount,
         onSponsorPressed: model.navigateToSponsorCreateAccount,
-        //onAdminPressed: model.navigateToAdminCreateAccount,
+        onAdminMasterPressed: model.navigateToAdminCreateAccount,
       ),
     );
   }

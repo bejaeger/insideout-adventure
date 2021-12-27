@@ -12,4 +12,23 @@ mixin NavigationMixin {
       arguments: BottomBarLayoutTemplateViewArguments(userRole: role),
     );
   }
+
+  void navToExplorerCreateAccount({required UserRole role}) {
+    _navigationService.replaceWith(Routes.createAccountView,
+        arguments: CreateAccountViewArguments(role: role));
+  }
+
+  void navToSponsorCreateAccount({required UserRole role}) {
+    _navigationService.replaceWith(Routes.createAccountView,
+        arguments: CreateAccountViewArguments(role: role));
+  }
+
+  void navToAdminCreateAccount({required UserRole role}) {
+    _navigationService.replaceWith(Routes.createAccountView,
+        arguments: CreateAccountViewArguments(role: role));
+  }
+
+  void navToLoginView() {
+    _navigationService.replaceWith(Routes.loginView);
+  }
 }

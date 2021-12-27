@@ -11,6 +11,7 @@ class SelectUserRoleLayout extends StatelessWidget {
 
   final String? explorerButtonTitle;
   final String? sponsorButtonTitle;
+  final String? adminMasterButtonTitle;
   final bool isBusy;
 
   const SelectUserRoleLayout(
@@ -20,9 +21,10 @@ class SelectUserRoleLayout extends StatelessWidget {
       required this.onSponsorPressed,
       this.explorerButtonTitle = "CREATE EXPLORER ACCOUNT",
       this.sponsorButtonTitle = "CREATE SPONSOR ACCOUNT",
+      this.adminMasterButtonTitle = "CREATE ADMIN MASTER ACCOUNT",
       this.isBusy = false,
       this.onSuperUserPressed,
-      this.onAdminMasterPressed,
+      required this.onAdminMasterPressed,
       this.onAdminPressed})
       : super(key: key);
 
@@ -52,24 +54,34 @@ class SelectUserRoleLayout extends StatelessWidget {
               "Are You An Explorer?",
               style: textTheme(context).headline6,
             ),
-            // verticalSpaceLarge,
-            // Text(
-            //   "Are You An Admin?",
-            //   style: textTheme(context).headline6,
-            // ),
+
             verticalSpaceSmall,
             ElevatedButton(
-                onPressed: onExplorerPressed,
-                child: Text("Create Explorer Account")),
+              onPressed: onExplorerPressed,
+              child: Text("Create Explorer Account"),
+            ),
             verticalSpaceLarge,
             Text(
               "Are You A Sponsor?",
               style: textTheme(context).headline6,
             ),
+
             verticalSpaceSmall,
             ElevatedButton(
-                onPressed: onSponsorPressed,
-                child: Text("Create Sponsor Account")),
+              onPressed: onSponsorPressed,
+              child: Text("Create Sponsor Account"),
+            ),
+            verticalSpaceLarge,
+            Text(
+              "Are You An Admin Master ?",
+              style: textTheme(context).headline6,
+            ),
+            verticalSpaceSmall,
+            ElevatedButton(
+              onPressed: onAdminMasterPressed,
+              child: Text("Create Admin Master Account"),
+            ),
+
             verticalSpaceLarge,
             // -------------------------------------
             // For Development ONLY!
