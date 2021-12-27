@@ -16,49 +16,47 @@ class GiftCardView extends StatelessWidget {
     return ViewModelBuilder<GiftCardViewModel>.reactive(
       viewModelBuilder: () => GiftCardViewModel(),
       onModelReady: (model) => model.loadAllGiftCards(),
-      builder: (context, model, child) => VerifyNetworkConnection(
-        child: Scaffold(
-          appBar: CustomAppBar(
-            title: 'Gift Card Shop',
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-            child: ListView(
-              children: [
-                (!model.isBusy)
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          verticalSpaceMedium,
-                          Center(
-                            child: Text(
-                              'Time to Spend \n Your Hard-earned Credit.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 20.0, fontWeight: FontWeight.bold),
-                            ),
+      builder: (context, model, child) => Scaffold(
+        appBar: CustomAppBar(
+          title: 'Gift Card Shop',
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+          child: ListView(
+            children: [
+              (!model.isBusy)
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        verticalSpaceMedium,
+                        Center(
+                          child: Text(
+                            'Time to Spend \n Your Hard-earned Credit.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
-                          verticalSpaceMedium,
-                          ...model
-                              .getListOfGiftCardsToDisplay()
-                              .map(
-                                (e) => Column(
-                                  children: [
-                                    GiftCardsSection(
-                                        giftCards: e,
-                                        onGiftCardTap: model
-                                            .displayGiftCardDialogAndProcessPurchase),
-                                    verticalSpaceMedium,
-                                  ],
-                                ),
-                              )
-                              .toList(),
-                          verticalSpaceLarge,
-                        ],
-                      )
-                    : AFKProgressIndicator()
-              ],
-            ),
+                        ),
+                        verticalSpaceMedium,
+                        ...model
+                            .getListOfGiftCardsToDisplay()
+                            .map(
+                              (e) => Column(
+                                children: [
+                                  GiftCardsSection(
+                                      giftCards: e,
+                                      onGiftCardTap: model
+                                          .displayGiftCardDialogAndProcessPurchase),
+                                  verticalSpaceMedium,
+                                ],
+                              ),
+                            )
+                            .toList(),
+                        verticalSpaceLarge,
+                      ],
+                    )
+                  : AFKProgressIndicator()
+            ],
           ),
         ),
       ),

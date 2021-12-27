@@ -10,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:location/location.dart' as loc;
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class GeolocationService {
   final log = getLogger('GeolocationService');
@@ -142,6 +143,7 @@ class GeolocationService {
 
       return false;
     }
+    var request = await Permission.locationAlways.request();
 
     permission = await _geolocatorPlatform.checkPermission();
     if (permission == LocationPermission.denied) {

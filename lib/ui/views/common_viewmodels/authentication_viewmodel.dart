@@ -32,17 +32,17 @@ abstract class AuthenticationViewModel extends FormViewModel
     if (role != null && this.role == null) this.role = role;
     log.i("Trying to authenticate user with method $method and role $role ");
     final AFKCreditsAuthenticationResultService result = await (runBusyFuture(
-      runAuthentication(method, this.role),
-    ));
+        runAuthentication(method, this.role),
+        throwException: true));
 
     if (!result.hasError) {
       log.i("Authentication successful, now initializing user data");
 
       try {
         await (runBusyFuture(
-          initializeUser(
-              uid: result.uid, fromLocalStorage: result.fromLocalStorage),
-        ));
+            initializeUser(
+                uid: result.uid, fromLocalStorage: result.fromLocalStorage),
+            throwException: true));
       } catch (e) {
         log.e("Failed initializing user with error: ${e.toString()}");
         String publicFacingMessage =

@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -24,8 +25,12 @@ class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
   Future<void> runStartupLogic() async {
     await _environmentService.initialise();
     //final placesKey =  _environment.getValue(key)
-    _placesService.initialize(
-        apiKey: _environmentService.getValue(GoogleMapsEnvKey));
+    if (Platform.isIOS) {
+      _placesService.initialize(
+          apiKey: _environmentService.getValue(GoogleMapsEnvKeyIOS));
+    } else if (Platform.isAndroid)
+      _placesService.initialize(
+          apiKey: _environmentService.getValue(GoogleMapsEnvKey));
 
     // TODO: Check for network connection!
 

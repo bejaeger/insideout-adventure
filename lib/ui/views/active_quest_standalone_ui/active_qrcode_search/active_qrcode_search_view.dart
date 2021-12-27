@@ -3,7 +3,6 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
@@ -32,6 +31,7 @@ class ActiveQrCodeSearchView extends StatelessWidget {
         disposeViewModel: false,
         onModelReady: (model) => model.initialize(quest: quest),
         builder: (context, model, child) {
+<<<<<<< HEAD
           return WillPopScope(
             onWillPop: () async {
               return false;
@@ -92,7 +92,116 @@ class ActiveQrCodeSearchView extends StatelessWidget {
                                             Text("Time"),
                                             Text(model.timeElapsed.toString(),
                                                 maxLines: 1,
+||||||| 7316f2e
+          return SafeArea(
+            child: Scaffold(
+              appBar: CustomAppBar(
+                title: "Search for the Hidden Codes!",
+                onBackButton: model.navigateBack,
+              ),
+              floatingActionButton: AFKFloatingActionButtons(
+                // title1: "SCAN",
+                // onPressed2: model.hasActiveQuest
+                //     ? null
+                //     : () => model.maybeStartQuest(quest: quest),
+                // title2: "START",
+                //iconData2: Icons.star,
+                onPressed1: model.scanQrCode,
+                iconData1: Icons.qr_code_scanner_rounded,
+                yOffset: 0,
+                // title2: "LIST",
+                // onPressed2: model.navigateBack,
+                // iconData2: Icons.list_rounded,
+              ),
+              body: model.isBusy
+                  ? AFKProgressIndicator()
+                  : model.questSuccessfullyFinished
+                      ? EmptyNote(
+                          onMoreButtonPressed: () => model.replaceWithMainView(
+                              index: BottomNavBarIndex.quest),
+                        )
+                      : Align(
+                          alignment: Alignment.center,
+                          child: Column(
+                            children: [
+                              verticalSpaceMedium,
+                              if (model.showStartSwipe)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: kHorizontalPadding),
+                                  child: SlideAction(
+                                    outerColor: kPrimaryColor,
+
+                                    //text: "Start",
+                                    child: model.hasEnoughSponsoring(
+                                            quest: quest)
+                                        ? Shimmer.fromColors(
+                                            baseColor: kGreyTextColor,
+                                            highlightColor: Colors.white,
+                                            period: const Duration(
+                                                milliseconds: 1000),
+                                            child: Text("Slide to start",
+=======
+          return SafeArea(
+            child: Scaffold(
+              appBar: CustomAppBar(
+                title: "Search for the Hidden Codes!",
+                onBackButton: model.navigateBack,
+              ),
+              floatingActionButton: AFKFloatingActionButtons(
+                // title1: "SCAN",
+                // onPressed2: model.hasActiveQuest
+                //     ? null
+                //     : () => model.maybeStartQuest(quest: quest),
+                // title2: "START",
+                //iconData2: Icons.star,
+                onPressed1: model.scanQrCode,
+                iconData1: Icons.qr_code_scanner_rounded,
+                yOffset: 0,
+                // title2: "LIST",
+                // onPressed2: model.navigateBack,
+                // iconData2: Icons.list_rounded,
+              ),
+              body: model.isBusy
+                  ? AFKProgressIndicator()
+                  : model.questSuccessfullyFinished
+                      ? EmptyNote(
+                          onMoreButtonPressed: () => model.replaceWithMainView(
+                              index: BottomNavBarIndex.quest),
+                        )
+                      : Align(
+                          alignment: Alignment.center,
+                          child: Column(
+                            children: [
+                              verticalSpaceMedium,
+                              if (model.showStartSwipe)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: kHorizontalPadding),
+                                  child: SlideAction(
+                                    outerColor: kPrimaryColor,
+
+                                    //text: "Start",
+                                    child:
+                                        model.hasEnoughSponsoring(quest: quest)
+                                            ? Shimmer.fromColors(
+                                                baseColor: kGreyTextColor,
+                                                highlightColor: Colors.white,
+                                                period: const Duration(
+                                                    milliseconds: 1000),
+                                                child: Text("Slide to start",
+                                                    style: textTheme(context)
+                                                        .headline6!
+                                                        .copyWith(
+                                                            fontSize: 22,
+                                                            color:
+                                                                kWhiteTextColor)),
+                                              )
+                                            : Text(
+                                                "Cannot start",
+>>>>>>> 72b1049f1e803e363795c773301ac2518b545f4e
                                                 style: textTheme(context)
+<<<<<<< HEAD
                                                     .headline4),
                                           ],
                                         ),
@@ -125,6 +234,46 @@ class ActiveQrCodeSearchView extends StatelessWidget {
                                         ),
                                       ],
                                     ),
+||||||| 7316f2e
+                                                    .headline6!
+                                                    .copyWith(
+                                                        fontSize: 22,
+                                                        color:
+                                                            kWhiteTextColor)),
+                                          )
+                                        : Text("Cannot start",
+                                            style: textTheme(context)
+                                                .headline6!
+                                                .copyWith(
+                                                    fontSize: 22,
+                                                    color: kWhiteTextColor)),
+                                    height: 50,
+                                    elevation: 10,
+                                    sliderRotate: false,
+                                    //key: _key,
+                                    // onSubmit: () =>
+                                    //     model.maybeStartQuest(quest: quest),
+                                    onSubmit: null,
+
+                                    borderRadius: 50,
+                                    // animationDuration: Duration(seconds: 1),
+=======
+                                                    .headline6!
+                                                    .copyWith(
+                                                        fontSize: 22,
+                                                        color: kWhiteTextColor),
+                                              ),
+                                    height: 50,
+                                    elevation: 10,
+                                    sliderRotate: false,
+                                    //key: _key,
+                                    // onSubmit: () =>
+                                    //     model.maybeStartQuest(quest: quest),
+                                    onSubmit: null,
+
+                                    borderRadius: 50,
+                                    // animationDuration: Duration(seconds: 1),
+>>>>>>> 72b1049f1e803e363795c773301ac2518b545f4e
                                   ),
                                 Expanded(
                                     child: NextHintDisplay(

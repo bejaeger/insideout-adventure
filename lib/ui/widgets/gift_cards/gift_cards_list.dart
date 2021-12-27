@@ -1,4 +1,5 @@
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
+import 'package:afkcredits/ui/widgets/cach_network_image/cached_network_image_wrapper.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/foundation.dart';
@@ -38,9 +39,8 @@ class GiftCardsList extends StatelessWidget {
                     if (giftCardList[index].imageUrl != null)
                       Expanded(
                         flex: 4,
-                        child: Image.network(
-                          giftCardList[index].imageUrl!,
-                          fit: BoxFit.fill,
+                        child: CachedNetworkImageWrapper(
+                          imageUrl: giftCardList[index].imageUrl!,
                         ),
                       ),
                     Expanded(
