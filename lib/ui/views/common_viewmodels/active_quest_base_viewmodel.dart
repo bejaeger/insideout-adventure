@@ -21,6 +21,7 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
 
   // Functions to override!
   void loadQuestMarkers();
+  bool isQuestCompleted();
   void updateMapMarkers({required AFKMarker afkmarker}) {}
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker});
   BitmapDescriptor defineMarkersColour(
@@ -105,6 +106,13 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
     }
   }
 
+  Future showCollectedMarkerDialog() async {
+    await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
+    // await dialogService.showDialog(
+    //     title: "Successfully collected marker!",
+    //     description: getActiveQuestProgressDescription());
+  }
+
   @override
   void dispose() {
     _googleMapController?.dispose();
@@ -120,5 +128,6 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
 
   void resetPreviousQuest() {
     questSuccessfullyFinished = false;
+    showStartSwipe = true;
   }
 }

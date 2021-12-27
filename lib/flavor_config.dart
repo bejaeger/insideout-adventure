@@ -8,21 +8,20 @@ class FlavorConfigProvider {
   // TODO: Add this to a specific flavor!
   // We should add a "test" flavor!
 
-  bool allowDummyMarkerCollection = true;
+  bool allowDummyMarkerCollection = false;
   bool enableGPSVerification = true;
 
   // if true the dummy quests configued in dummy_data.dart
   // are going to be pushed to firestore and are also the ones
   // used for running the app
-  bool pushAndUseDummyQuests = true;
+  bool pushAndUseDummyQuests = false;
+
+  // dummy checks for quest completion for testing purposes
+  bool dummyQuestCompletionVerification = false;
 
   Flavor flavor = Flavor.unknown;
   void configure(Flavor flavorIn) {
     flavor = flavorIn;
-    if (flavor == Flavor.prod) {
-      // in production we never want to use dummy quests
-      this.pushAndUseDummyQuests = true;
-    }
   }
 
   String get appName {

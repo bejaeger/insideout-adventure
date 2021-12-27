@@ -10,4 +10,18 @@ class ActiveMapQuestViewModel extends MapViewModel {
     }
     notifyListeners();
   }
+
+  Future maybeStartQuest({required Quest? quest}) async {
+    if (quest != null && !hasActiveQuest) {
+      final result = await startQuestMain(quest: quest);
+      if (result is bool && result == true) {
+        await Future.delayed(Duration(seconds: 1));
+        showStartSwipe = false;
+        notifyListeners();
+      } else {
+        log.wtf("Not starting quest, due to an unknown reason");
+      }
+      resetSlider();
+    }
+  }
 }

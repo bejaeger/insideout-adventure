@@ -43,6 +43,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     resetPreviousQuest();
     runBusyFuture(_geolocationService.getAndSetCurrentLocation());
     closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
+    loadQuestMarkers(quest: quest);
     notifyListeners();
   }
 
@@ -57,7 +58,7 @@ class ActiveTreasureLocationSearchQuestViewModel
           if (activatedQuest?.status == QuestStatus.active ||
               activatedQuest?.status == QuestStatus.incomplete) {
             if (!skipUpdatingQuestStatus) {
-              checkQuestStatusAndRebuildUI();
+              completeDistanceCheckAndUpdateQuestStatus();
               skipUpdatingQuestStatus = false;
             }
           }
@@ -82,6 +83,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
       final position = await _geolocationService.getAndSetCurrentLocation();
       if (!(await checkAccuracy(position: position))) {
+        resetSlider();
         return false;
       }
 
@@ -97,37 +99,57 @@ class ActiveTreasureLocationSearchQuestViewModel
       }
       if (result is bool && result == false) {
         navigateBack();
-      } else {
-        await setInitialDistance();
-        addMarkerToMap(
-            quest: quest,
-            afkmarker: AFKMarker(
-                id: "checkpoint " + checkpoints.length.toString(),
-                qrCodeId: "checkpoint " + checkpoints.length.toString(),
-                lat: checkpoints.last.currentLat,
-                lon: checkpoints.last.currentLon));
+        return;
       }
+      await setInitialDistance();
+      addMarkerToMap(
+          quest: quest,
+          afkmarker: AFKMarker(
+              id: "checkpoint " + checkpoints.length.toString(),
+              qrCodeId: "checkpoint " + checkpoints.length.toString(),
+              lat: checkpoints.last.currentLat,
+              lon: checkpoints.last.currentLon));
+
+      await Future.delayed(Duration(seconds: 1));
+      showStartSwipe = false;
+      notifyListeners();
     } else {
       log.i("Not starting quest, quest is probably already running");
     }
   }
 
-  Future checkQuestStatusAndRebuildUI() async {
+  @override
+  bool isQuestCompleted() {
+    if (!hasActiveQuest) {
+      log.wtf(
+          "No quest is active! This function should have never been called!");
+      return false;
+    } else {
+      // option to add dummy checks for testing purposes
+      if (flavorConfigProvider.dummyQuestCompletionVerification) {
+        return activeQuest.currentDistanceInMeters! < 9999;
+      } else {
+        // this is the true check configured in constants.dart
+        return activeQuest.currentDistanceInMeters! <
+            kMinDistanceToCatchTrophyInMeters;
+      }
+    }
+  }
+
+  Future completeDistanceCheckAndUpdateQuestStatus() async {
     if (activeQuest.lastDistanceInMeters == null ||
         activeQuest.currentDistanceInMeters == null) {
       lastActivatedQuestInfoText = "Start Walking and search for the Trophy!";
     } else {
-      // if (activeQuest.currentDistanceInMeters! <
-      //     kMinDistanceToCatchTrophyInMeters) {
-      // DUMMY
-      if (activeQuest.currentDistanceInMeters! < 9999) {
-        // This should collect the NEXT marker!!
-        // Show loading screen, show that the quest is gonna be pushed!
+      final completed = isQuestCompleted();
+      if (completed) {
+        // quest succesfully completed
         await showSuccessDialog();
         return;
       }
-      if (activeQuest.lastDistanceInMeters! >
-          activeQuest.currentDistanceInMeters!) {
+      // update UI on quest update
+      if (checkpoints.elementAt(checkpoints.length - 2).distanceToGoal >
+          checkpoints.last.distanceToGoal) {
         await vibrateRightDirection();
         directionStatus = "Getting closer!";
       } else {
@@ -146,6 +168,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     directionStatus = "Start Walking";
     questSuccessfullyFinished = false;
     setTrackingDeadTime(false);
+    super.resetPreviousQuest();
   }
 
   Future setInitialDistance() async {
@@ -202,9 +225,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
     final bool allow = isDistanceCheckAllowed(newPosition: position);
     // DUMMY
-    if (true) {
-      // if (allow) {
-
+    if (allow || flavorConfigProvider.dummyQuestCompletionVerification) {
       setSkipUpdatingQuestStatus(false);
 
       // check distance to goal!
@@ -216,14 +237,10 @@ class ActiveTreasureLocationSearchQuestViewModel
           newDistance: newDistanceInMeters,
           newLat: position.latitude,
           newLon: position.longitude);
-      addNewCheckpoint(newPosition: position);
+      addCheckpoint(newPosition: position);
 
       log.i("Updating distance to goal to $newDistanceInMeters meters");
-
-      // if (tmpActivatedQuest.quest.type ==
-      //     QuestType.TreasureLocationSearchAutomatic) {
       questService.pushActivatedQuest(tmpActivatedQuest);
-      // }
 
       return true;
     } else {
@@ -232,7 +249,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     }
   }
 
-  Future checkNewDistance() async {
+  Future checkDistance() async {
     final results = await Future.wait([
       checkNewLocation(),
       artificialDelay(),
@@ -241,7 +258,7 @@ class ActiveTreasureLocationSearchQuestViewModel
       // show string on UI, else update distances
       directionStatus = results[0];
       notifyListeners();
-    } else {
+    } else if (results[0] is bool && results[0] == true) {
       if (results[0] is bool && results[0] == true) {
         addMarkerToMap(
             quest: activeQuest.quest,
@@ -250,12 +267,15 @@ class ActiveTreasureLocationSearchQuestViewModel
                 qrCodeId: "checkpoint " + checkpoints.length.toString(),
                 lat: checkpoints.last.currentLat,
                 lon: checkpoints.last.currentLon));
-        checkQuestStatusAndRebuildUI();
+        completeDistanceCheckAndUpdateQuestStatus();
       }
+    } else {
+      log.wtf(
+          "Checking new location returned 'false' or something unknwon! Check code!");
     }
   }
 
-  void addNewCheckpoint({required Position newPosition}) {
+  void addCheckpoint({required Position newPosition}) {
     double newDistance = getNewDistanceToGoal(newPosition: newPosition);
     double distanceToPreviousCheckpoint =
         getDistanceToPreviousCheckpoint(newPosition: newPosition);
@@ -304,7 +324,7 @@ class ActiveTreasureLocationSearchQuestViewModel
   }
 
   // check whether distance can be checked based on accuracy,
-  // distance to goal, and quest configuration
+  // distance to last check, and quest configuration
   bool isDistanceCheckAllowed({required Position newPosition}) {
     if (questService.activatedQuest == null) {
       log.wtf("no quest active at the moment");
@@ -454,7 +474,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   ///////////////////////////////////////////////////
   @override
-  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) {
+  Future handleMarkerAnalysisResult(MarkerAnalysisResult result) {
     // TODO: implement handleQrCodeScanEvent
     throw UnimplementedError();
   }
@@ -474,7 +494,7 @@ class ActiveTreasureLocationSearchQuestViewModel
   Future artificialDelay() async {
     setIsCheckingDistance(true);
     notifyListeners();
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 500));
     setIsCheckingDistance(false);
     notifyListeners();
   }
@@ -485,11 +505,15 @@ class ActiveTreasureLocationSearchQuestViewModel
   // Map functionality
 
   @override
-  void loadQuestMarkers() {
-    log.i("Getting quest markers");
-    addMarkerToMap(
-        quest: activeQuest.quest, afkmarker: activeQuest.quest.startMarker);
-    log.v('These Are the values of the current Markers $markersOnMap');
+  void loadQuestMarkers({Quest? quest}) {
+    log.i("Loading quest markers");
+    if (quest != null) {
+      addMarkerToMap(quest: quest, afkmarker: quest.startMarker);
+    } else {
+      addMarkerToMap(
+          quest: activeQuest.quest, afkmarker: activeQuest.quest.startMarker);
+      log.v('These Are the values of the current Markers $markersOnMap');
+    }
     notifyListeners();
   }
 

@@ -18,8 +18,13 @@ class EmptyNote extends StatelessWidget {
     return Column(
       children: [
         verticalSpaceMassive,
-        Text(title ?? "You are the best, you finished the quest",
-            textAlign: TextAlign.center, style: textTheme(context).headline3),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+              title ?? "You are the best, you successfully finished the quest",
+              textAlign: TextAlign.center,
+              style: textTheme(context).headline3),
+        ),
         verticalSpaceMedium,
         ElevatedButton(
             onPressed: onMoreButtonPressed,

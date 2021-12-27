@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
@@ -32,7 +33,7 @@ abstract class QuestViewModel extends BaseModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final StopWatchService _stopWatchService = locator<StopWatchService>();
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
-  final FlavorConfigProvider _flavorConfigProvider =
+  final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
   final QRCodeService qrCodeService = locator<QRCodeService>();
   List<Quest> get nearbyQuests => questService.nearbyQuests;
@@ -76,7 +77,7 @@ abstract class QuestViewModel extends BaseModel {
         //   await dialogService.showDialog(
         //       title: "Sorry", description: "Map not supported on PWA version");
         // } else {
-        if (_flavorConfigProvider.enableGPSVerification) {
+        if (flavorConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
         } else {
@@ -198,7 +199,7 @@ abstract class QuestViewModel extends BaseModel {
 
   Future scanQrCode() async {
     // navigate to qr code view, validate results in quest service, and continue
-    QuestQRCodeScanResult result = await navigateToQrcodeViewAndReturnResult();
+    MarkerAnalysisResult result = await navigateToQrcodeViewAndReturnResult();
     if (result.isEmpty) {
       log.wtf("The object QuestQRCodeScanResult is empty!");
       return;
@@ -211,10 +212,10 @@ abstract class QuestViewModel extends BaseModel {
       );
       return;
     }
-    await handleValidQrCodeScanEvent(result);
+    await handleMarkerAnalysisResult(result);
   }
 
-  Future<QuestQRCodeScanResult> navigateToQrcodeViewAndReturnResult() async {
+  Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
     final marker = await navigationService.navigateTo(Routes.qRCodeView);
     if (isSuperUser && marker != null) {
       final adminMode = await showAdminDialogAndGetResponse();
@@ -223,11 +224,11 @@ abstract class QuestViewModel extends BaseModel {
             qrCodeService.getQrCodeStringFromMarker(marker: marker);
         await navigationService.navigateTo(Routes.qRCodeView,
             arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-        return QuestQRCodeScanResult.empty();
+        return MarkerAnalysisResult.empty();
       }
     }
-    QuestQRCodeScanResult scanResult =
-        await questService.handleQrCodeScanEvent(marker: marker);
+    MarkerAnalysisResult scanResult =
+        await questService.analyzeMarker(marker: marker);
     return scanResult;
   }
 
@@ -285,111 +286,60 @@ abstract class QuestViewModel extends BaseModel {
     notifyListeners();
   }
 
-  Future checkQuestAndFinishWhenCompleted(
+  // function called to cancel quest OR when quest is finished
+  // but markers weren't collected yet.
+  Future cancelOrFinishQuest(
       {bool force = false, bool showDialog = true}) async {
-    try {
-      dynamic result;
-      try {
-        setBusy(true);
-
-        // Needed for vibration search
-        questService.setUIDeadTime(true);
-        result = await questService.evaluateAndFinishQuest(force: force);
-        setBusy(false);
-        // Needed for vibration search
-      } catch (e) {
-        if (e is QuestServiceException) {
-          baseModelLog.e(e);
-          await dialogService.showDialog(
-              title: e.prettyDetails, buttonTitle: 'Ok');
-          replaceWithMainView(index: BottomNavBarIndex.quest);
-          questService.setUIDeadTime(false);
-        } else if (e is CloudFunctionsApiException) {
-          baseModelLog.e(e);
-          await dialogService.showDialog(
-              title: e.prettyDetails, buttonTitle: 'Ok');
-          questService.setUIDeadTime(false);
-        } else {
-          baseModelLog.e("Unknown error occured from evaluateAndFinishQuest");
-          questService.setUIDeadTime(false);
-          setBusy(false);
-          rethrow;
-        }
-        setBusy(false);
-        return false;
-      }
-      // In case the quest is not finished yet!
-      if (result is String) {
-        DialogResponse<dynamic>? continueQuest;
-        if (!force) {
-          baseModelLog.w(
-              "A warning or error occured when trying to finish the quest. The following warning was thrown: $result");
-          continueQuest = await dialogService.showConfirmationDialog(
-              title: result.toString(),
-              cancelTitle: "Cancel Quest",
-              confirmationTitle: "Continue Quest");
-        } else {
-          baseModelLog.w("You are forcing to end the quest");
-        }
-
-        if (continueQuest?.confirmed == true) {
-          await questService.continueIncompleteQuest();
-          questService.setUIDeadTime(false);
-        }
-        if (continueQuest?.confirmed == false || force) {
-          questService.cancelIncompleteQuest();
-          resetQuest();
-          replaceWithMainView(index: BottomNavBarIndex.quest);
-          baseModelLog.i("replaced view with mapView");
-        }
-        questService.setUIDeadTime(false);
+    if (activeQuest.status != QuestStatus.success) {
+      DialogResponse<dynamic>? continueQuest;
+      if (!force) {
+        baseModelLog.w("Quest is incomplete, show dialog");
+        continueQuest = await dialogService.showConfirmationDialog(
+            title: WarningQuestNotFinished,
+            cancelTitle: "Cancel Quest",
+            confirmationTitle: "Continue Quest");
       } else {
-        if (questService.previouslyFinishedQuest == null) {
-          baseModelLog.wtf(
-              "Quest was successfully finished but previouslyFinishedQuest was not set! This should never happen and is due to an internal error in quest service..");
-          questService.setUIDeadTime(false);
-          setBusy(false);
-          throw Exception(
-              "Internal Error: For developers, please set the variable 'previouslyFinishedQuest' in the quest service.");
-        }
-        // Quest succesfully finished!
+        baseModelLog.w("You are forcing to end the quest");
+      }
 
-        await dialogService.showCustomDialog(
-          variant: DialogType.CollectCredits,
-          data: questService.previouslyFinishedQuest!,
-        );
-        // await dialogService.showDialog(
-        //     title: "CONGRATULATIONS!",
-        //     description: "Earned credits: " +
-        //         questService.previouslyFinishedQuest!.quest.afkCredits
-        //             .toString() +
-        //         ", time elapsed: " +
-        //         _stopWatchService.secondsToHourMinuteSecondTime(
-        //             questService.previouslyFinishedQuest!.timeElapsed) +
-        //         "; New balance: " +
-        //         currentUserStats.afkCreditsBalance.toString(),
-        //     buttonTitle: 'Ok');
+      if (continueQuest?.confirmed == true) {
+        await questService.continueIncompleteQuest();
+        questService.setUIDeadTime(false);
+      }
+      if (continueQuest?.confirmed == false || force) {
+        questService.cancelIncompleteQuest();
+        resetQuest();
         replaceWithMainView(index: BottomNavBarIndex.quest);
+        baseModelLog.i("replaced view with mapView");
+      }
+      questService.setUIDeadTime(false);
+    } else {
+      if (questService.previouslyFinishedQuest == null) {
+        baseModelLog.wtf(
+            "Quest was successfully finished but previouslyFinishedQuest was not set! This should never happen and is due to an internal error in quest service..");
         questService.setUIDeadTime(false);
         setBusy(false);
-        return true;
+        throw Exception(
+            "Internal Error: For developers, please set the variable 'previouslyFinishedQuest' in the quest service.");
       }
-      setBusy(false);
-    } catch (e) {
-      setBusy(false);
-      await dialogService.showDialog(
-          title: "An internal error occured on our side. Sorry!",
-          buttonTitle: 'Ok');
-      baseModelLog.wtf(
-          "An error occured when trying to finish the quest. This should never happen! Error: $e");
+      // Quest succesfully finished!
+      await dialogService.showCustomDialog(
+        variant: DialogType.CollectCredits,
+        data: questService.previouslyFinishedQuest!,
+      );
       replaceWithMainView(index: BottomNavBarIndex.quest);
+      questService.setUIDeadTime(false);
+      setBusy(false);
+      return true;
     }
+    setBusy(false);
   }
 
   ////////////////////////////
   // needs to be overrriden!
   // Future handleQrCodeScanEvent(QuestQRCodeScanResult result);
-  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) async {
+  Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
+    log.i("Handling marker analysis result");
     if (!hasActiveQuest &&
         (result.quests == null ||
             (result.quests != null && result.quests!.length == 0))) {
@@ -460,6 +410,12 @@ abstract class QuestViewModel extends BaseModel {
       currentIndex = 0;
     }
     notifyListeners();
+  }
+
+  void resetSlider() async {
+    setBusy(true);
+    await Future.delayed(Duration(milliseconds: 50));
+    setBusy(false);
   }
 
   // Can be overridden!

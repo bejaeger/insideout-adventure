@@ -3,7 +3,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 
 /// Possible result when qr code is scanned
 
-class QuestQRCodeScanResult {
+class MarkerAnalysisResult {
   /// AFK Credits user
   final AFKMarker? marker;
   final List<Quest>? quests;
@@ -11,19 +11,19 @@ class QuestQRCodeScanResult {
   /// Contains the error message for the request
   final String? errorMessage;
 
-  QuestQRCodeScanResult.quests({this.quests})
+  MarkerAnalysisResult.quests({this.quests})
       : errorMessage = null,
         marker = null;
 
-  QuestQRCodeScanResult.marker({this.marker})
+  MarkerAnalysisResult.marker({this.marker})
       : errorMessage = null,
         quests = null;
 
-  QuestQRCodeScanResult.error({this.errorMessage})
+  MarkerAnalysisResult.error({this.errorMessage})
       : marker = null,
         quests = null;
 
-  QuestQRCodeScanResult.empty()
+  MarkerAnalysisResult.empty()
       : marker = null,
         errorMessage = null,
         quests = null;

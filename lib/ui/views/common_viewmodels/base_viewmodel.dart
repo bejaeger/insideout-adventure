@@ -147,6 +147,7 @@ class BaseModel extends BaseViewModel {
             description: isQuestStarted);
         return false;
       }
+      return true;
     } catch (e) {
       baseModelLog.e("Could not start quest, error thrown: $e");
       rethrow;

@@ -6,4 +6,5 @@ enum DialogType {
   PurchaseGiftCards,
   CollectCredits,
   CheckTravelledDistance,
+  CollectedMarker,
 }

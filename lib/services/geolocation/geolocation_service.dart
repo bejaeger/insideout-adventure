@@ -46,7 +46,6 @@ class GeolocationService {
   Future<Position> getAndSetCurrentLocation() async {
     //Verify If location is available on device.
     final checkGeolocation = await checkGeolocationAvailable();
-
     if (checkGeolocation == true) {
       try {
         // if (!kIsWeb) {
@@ -58,10 +57,12 @@ class GeolocationService {
         // cooldown time of 5 seconds for distance check.
         if ((difference != null && difference.inSeconds.abs() > 5) ||
             getUserPosition == null) {
-          log.v("Retrieving new location");
+          // log.wtf("---------------------------------");
+          // log.i(DateTime.now().toString());
           final geolocatorPosition = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best,
           );
+          // log.i(DateTime.now().toString());
 
           currentGPSAccuracy = geolocatorPosition.accuracy;
           if (currentGPSAccuracy != null &&

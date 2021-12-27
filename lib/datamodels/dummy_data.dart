@@ -7,9 +7,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 List<Quest> getDummyQuests() {
   return [
     getDummyVibrationSearchQuest(),
+
+    heidachTrohpy(),
+    commercialTrophy(),
     //getDummyVibrationSearchQuest2(),
     // getDummyQuestQrCodeSearch(),
-    getDummyQuestQrCodeHuntStarenweg(),
+    getDummyVibrationSearchQuestHeuweiler(),
+    getQrCodeHuntJaeger(),
+    getDummyQuestQrCodeHuntBelek(),
     getDummyQuestQrCodeSearchStarenweg(),
     streeth11th2ndVibration(),
     getDummyVibrationSearchQuestFreiburg(),
@@ -20,9 +25,10 @@ List<Quest> getDummyQuests() {
     getDistanceEstimate2000(),
     getDummyQuest1(),
     getDummyQuest3(),
-    getDummyQuest4(),
-    getDummyQuest2(),
+    // getDummyQuest4(),
+    // getDummyQuest2(),
     getDummyQuest5(),
+    getDummyQuest6(),
   ];
 }
 
@@ -167,13 +173,27 @@ Quest getDummyVibrationSearchQuest4() {
 Quest streeth11th2ndVibration() {
   return Quest(
       id: "VibrationSearch at 11th and 2nd",
-      name: "Vibrations will guide you the way!",
+      name: "10th Street Fun!",
       description: "Find the AFK Credits",
       afkCredits: 10,
       markers: [street11th2nd(), street11th2ndEnd()],
       type: QuestType.TreasureLocationSearch,
       startMarker: street11th2nd(),
       finishMarker: street11th2ndEnd());
+}
+
+// burnaby quest
+Quest heidachTrohpy() {
+  return Quest(
+      id: "heidach trophy",
+      name: "Finde den Schatz im Heidach",
+      description:
+          "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
+      afkCredits: 30,
+      markers: [heidach1(), heidach2()],
+      type: QuestType.TreasureLocationSearch,
+      startMarker: heidach1(),
+      finishMarker: heidach2());
 }
 
 // Angola quest
@@ -254,7 +274,7 @@ Quest getDummyQuestQrCodeSearch() {
   );
 }
 
-Quest getDummyQuestQrCodeHuntStarenweg() {
+Quest getQrCodeHuntJaeger() {
   return Quest(
     id: "Starenweg Hunt",
     name: "Versteckter Schatz bei Jägers!",
@@ -264,11 +284,34 @@ Quest getDummyQuestQrCodeHuntStarenweg() {
       starenweg1(),
       starenweg2(),
       starenweg3(),
+      starenweg4(),
+      starenweg5(),
+      starenweg6(),
     ],
     // TODO: QRCodeHuntIndoor
     type: QuestType.QRCodeHuntIndoor,
     startMarker: starenweg1(),
-    finishMarker: starenweg3(),
+    finishMarker: starenweg6(),
+  );
+}
+
+Quest getDummyQuestQrCodeHuntBelek() {
+  return Quest(
+    id: "Belek Hunt",
+    name: "Versteckter Schatz bei Belek!",
+    description: "Finde alle Codes im Hause Beleks!",
+    afkCredits: 50,
+    markers: [
+      belek1(),
+      belek2(),
+      belek3(),
+      belek4(),
+      belek5(),
+    ],
+    // TODO: QRCodeHuntIndoor
+    type: QuestType.QRCodeHuntIndoor,
+    startMarker: belek1(),
+    finishMarker: belek2(),
   );
 }
 
@@ -303,6 +346,22 @@ Quest getDummyQuest5() {
     type: QuestType.Hike,
     startMarker: myRoomMarker(),
     finishMarker: myRoomMarker(),
+  );
+}
+
+Quest getDummyQuest6() {
+  return Quest(
+    id: "Starenweg Hike",
+    name: "Starenweg Hike!",
+    description: "",
+    afkCredits: 1,
+    markers: [
+      starenweg4(),
+      starenweg3(),
+    ],
+    type: QuestType.Hike,
+    startMarker: starenweg4(),
+    finishMarker: starenweg3(),
   );
 }
 
@@ -573,7 +632,7 @@ AFKMarker starenweg1() {
       qrCodeId: "starenweg1",
       lat: 48.06831568327273,
       lon: 7.904692787613575,
-      nextLocationHint: "In der Garage");
+      nextLocationHint: "Der erste Code ist unter dir!");
 }
 
 AFKMarker starenweg2() {
@@ -582,17 +641,54 @@ AFKMarker starenweg2() {
       qrCodeId: "starenweg2",
       lat: 48.068320041351725,
       lon: 7.904803866026531,
-      nextLocationHint: "In Opa's Arbeitszimmer.");
+      nextLocationHint: "Suche in Opa's Arbeitszimmer.");
 }
 
 AFKMarker starenweg3() {
   return AFKMarker(
-    id: "starenweg3",
-    qrCodeId: "starenweg3",
-    lat: 48.06831568327273,
-    lon: 7.904792787613575,
-  );
+      id: "starenweg3",
+      qrCodeId: "starenweg3",
+      lat: 48.06831568327273,
+      lon: 7.904792787613575,
+      nextLocationHint: "Unter einem Bett");
 }
+
+AFKMarker starenweg4() {
+  return AFKMarker(
+      id: "starenweg4",
+      qrCodeId: "starenweg4",
+      lat: 48.06831568327273,
+      lon: 7.904892787613575,
+      nextLocationHint: "In einem Küchenschrank");
+}
+
+AFKMarker starenweg5() {
+  return AFKMarker(
+      id: "starenweg5",
+      qrCodeId: "starenweg5",
+      lat: 48.06831568327273,
+      lon: 7.904892787613575,
+      nextLocationHint: "In einer der Schubladen im Flur im 1. Stock");
+}
+
+AFKMarker starenweg6() {
+  return AFKMarker(
+      id: "starenweg6",
+      qrCodeId: "starenweg6",
+      lat: 48.06831568327273,
+      lon: 7.904892787613575,
+      nextLocationHint: "");
+}
+
+// AFKMarker starenweg6() {
+//   return AFKMarker(
+//     id: "starenweg6",
+//     qrCodeId: "starenweg6",
+//     lat: 48.06831568327273,
+//     lon: 7.904892787613575,
+//     nextLocationHint: "In einer Schublade im ersten OG");
+
+// }
 
 AFKMarker freiburg1() {
   return AFKMarker(
@@ -609,4 +705,132 @@ AFKMarker freiburg2() {
       qrCodeId: "freiburg2",
       lat: 48.01694856856642,
       lon: 7.858700560921927);
+}
+
+AFKMarker belek1() {
+  return AFKMarker(
+      id: "belek1",
+      qrCodeId: "belek1",
+      lat: 48.04959523177769,
+      lon: 7.901375792193425,
+      nextLocationHint: "Der erste Marker ist unter dir mein Kleiner ;)");
+}
+
+AFKMarker belek2() {
+  return AFKMarker(
+      id: "belek2",
+      qrCodeId: "belek2",
+      lat: 48.04959523177769,
+      lon: 7.901375792193425,
+      nextLocationHint: "Schau mal in den Kühlschrank!");
+}
+
+AFKMarker belek3() {
+  return AFKMarker(
+      id: "belek3",
+      qrCodeId: "belek3",
+      lat: 48.04959523177769,
+      lon: 7.901375792193425,
+      nextLocationHint: "Bring mir ein Bier und ich sage dir den nächsten Tip");
+}
+
+AFKMarker belek4() {
+  return AFKMarker(
+      id: "belek4",
+      qrCodeId: "belek4",
+      lat: 48.04959523177769,
+      lon: 7.901375792193425,
+      nextLocationHint: "Unter einem Möbelstück!");
+}
+
+AFKMarker belek5() {
+  return AFKMarker(
+      id: "belek5",
+      qrCodeId: "belek5",
+      lat: 48.04959523177769,
+      lon: 7.901375792193425,
+      nextLocationHint: "Im Kleiderschrank!!");
+}
+
+AFKMarker belekLocSearch1() {
+  return AFKMarker(
+      id: "belekLocSearch1",
+      qrCodeId: "belekLocSearch1",
+      lat: 48.050260829411386,
+      lon: 7.9010928692091635,
+      nextLocationHint: "");
+}
+
+AFKMarker belekLocSearch() {
+  return AFKMarker(
+      id: "belekLocSearch",
+      qrCodeId: "belekLocSearch",
+      lat: 48.05194200805362,
+      lon: 7.90323708024672,
+      nextLocationHint: "");
+}
+
+// burnaby quest
+Quest getDummyVibrationSearchQuestHeuweiler() {
+  return Quest(
+      id: "VibrationSearch",
+      name: "Heuweiler Trophy Search!",
+      description: "Find the Trophy Hidden in Heuweiler Best Town!",
+      afkCredits: 30,
+      markers: [
+        belekLocSearch1(),
+        belekLocSearch(),
+      ],
+      type: QuestType.TreasureLocationSearch,
+      startMarker: belekLocSearch1(),
+      finishMarker: belekLocSearch());
+}
+
+AFKMarker heidach1() {
+  return AFKMarker(
+      id: "heidach1",
+      qrCodeId: "heidach1",
+      lat: 48.06808982011085,
+      lon: 7.905153161233762,
+      nextLocationHint: "");
+}
+
+AFKMarker heidach2() {
+  return AFKMarker(
+      id: "heidach2",
+      qrCodeId: "heidach2",
+      lat: 48.06701330843975,
+      lon: 7.903736956224777,
+      nextLocationHint: "");
+}
+
+Quest commercialTrophy() {
+  return Quest(
+      id: "commercial trophy",
+      name: "Find the biggest secret of commercial drive!",
+      description:
+          "Learn how to enjoy life by finding the treasure at commercial drive",
+      afkCredits: 30,
+      markers: [commercial1(), commercial2()],
+      type: QuestType.TreasureLocationSearch,
+      startMarker: commercial1(),
+      finishMarker: commercial2());
+}
+
+AFKMarker commercial1() {
+  return AFKMarker(
+      id: "commercial1",
+      qrCodeId: "commercial1",
+      lat: 49.273658969631974,
+      lon: -123.0705730554199,
+      nextLocationHint: "");
+}
+
+AFKMarker commercial2() {
+  return AFKMarker(
+      id: "commercial2",
+      qrCodeId: "commercial2",
+      lat: 49.27631049183584,
+      lon: -123.06956197567348,
+      nextLocationHint: "");
 }

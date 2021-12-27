@@ -24,7 +24,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
   //Quest? userQuest;
   final QuestService questService = locator<QuestService>();
   final _qrCodeService = locator<QRCodeService>();
-  final FlavorConfigProvider _flavorConfigProvider =
+  final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
   bool initialized = false;
 
@@ -45,7 +45,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         //   await dialogService.showDialog(
         //       title: "Sorry", description: "Map not supported on PWA version");
         // } else {
-        if (_flavorConfigProvider.enableGPSVerification) {
+        if (flavorConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
         } else {
@@ -139,10 +139,11 @@ class MapViewModel extends ActiveQuestBaseViewModel {
                   startMarker: afkmarker,
                 );
               } else {
+                // what happens when the user collects a marker
                 log.i("Quest active, handling qrCodeScanEvent");
-                QuestQRCodeScanResult scanResult =
-                    await questService.handleQrCodeScanEvent(marker: afkmarker);
-                await handleValidQrCodeScanEvent(scanResult);
+                MarkerAnalysisResult markerResult =
+                    await questService.analyzeMarker(marker: afkmarker);
+                await handleMarkerAnalysisResult(markerResult);
               }
             }
           }),
@@ -150,7 +151,8 @@ class MapViewModel extends ActiveQuestBaseViewModel {
   }
 
   @override
-  Future handleValidQrCodeScanEvent(QuestQRCodeScanResult result) async {
+  Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
+    log.i("Handling marker analysis result");
     if (result.isEmpty) {
       log.wtf("The object QuestQRCodeScanResult is empty!");
       return Future.value();
@@ -172,10 +174,8 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       if (result.marker != null) {
         if (hasActiveQuest) {
           log.i("Scanned marker sucessfully collected!");
-          await handleCollectMarkerEvent(afkmarker: result.marker!);
-          await dialogService.showDialog(
-              title: "Successfully collected marker!",
-              description: getActiveQuestProgressDescription());
+          await showCollectedMarkerDialog();
+          await handleCollectedMarkerEvent(afkmarker: result.marker!);
         }
       }
 
@@ -193,10 +193,17 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-  Future handleCollectMarkerEvent({required AFKMarker afkmarker}) async {
+  Future handleCollectedMarkerEvent({required AFKMarker afkmarker}) async {
     if (hasActiveQuest == true) {
       updateMapMarkers(afkmarker: afkmarker);
-      checkIfQuestFinishedAndFinishQuest();
+
+      // Move this to isQuestCompleted function and remove stuff from service!
+      if (isQuestCompleted()) {
+        //checkQuestAndFinishWhenCompleted();
+        // quest succesfully completed
+        await showSuccessDialog();
+        return;
+      }
     } else {
       dialogService.showDialog(
           title: "Quest Not Running",
@@ -246,17 +253,6 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-  // TODO: Move to quest service!
-  void checkIfQuestFinishedAndFinishQuest() {
-    if (questService.isAllMarkersCollected) {
-      final _markersCollected = questService.getNumberMarkersCollected;
-      log.i(
-          "This is The Number of Markers Collected: ${_markersCollected.toString()}");
-      checkQuestAndFinishWhenCompleted();
-      //finishQuest();
-    }
-  }
-
   @override
   void loadQuestMarkers() {
     log.i("Getting quest markers");
@@ -280,5 +276,10 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     } else {
       log.i('Markers are Empty');
     }
+  }
+
+  @override
+  bool isQuestCompleted() {
+    return questService.isAllMarkersCollected;
   }
 }
