@@ -187,19 +187,20 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
         replaceWithMainView(index: BottomNavBarIndex.quest);
         return;
       }
-
+      setBusy(true);
       log.i("Starting distance estimate quest with name ${quest.name}");
       final position = await _geolocationService.getAndSetCurrentLocation();
       if (!(await checkAccuracy(
           position: position,
           minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
+        setBusy(false);
         return;
       }
       log.i(
           "Starting quest by setting initial position to lat = $startingLat, lon = $startingLon");
       startingLat = position.latitude;
       startingLon = position.longitude;
-      setBusy(true);
+
       await startQuestMain(quest: quest);
       // snackbarService.showSnackbar(
       //     message: "Tagged position, you can start to walk now :)");

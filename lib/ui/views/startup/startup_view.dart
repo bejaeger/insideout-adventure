@@ -1,4 +1,7 @@
+import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
+import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -17,9 +20,16 @@ class StartUpView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("AFK Credits", style: textTheme(context).headline2),
+                    AFKCreditsIcon(height: 170),
+                    verticalSpaceSmall,
+                    Text("AFK Credits",
+                        style: textTheme(context)
+                            .headline6!
+                            .copyWith(fontSize: 36, color: kPrimaryColor)),
                     verticalSpaceMedium,
-                    CircularProgressIndicator(),
+                    AFKProgressIndicator(
+                      linear: false,
+                    ),
                   ],
                 ),
               ),

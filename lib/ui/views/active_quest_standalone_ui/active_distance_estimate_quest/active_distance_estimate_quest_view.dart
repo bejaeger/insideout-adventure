@@ -36,232 +36,211 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                 title: "Estimating Distance",
                 onBackButton: model.navigateBack,
               ),
-              body: model.isBusy && !model.hasActiveQuest
-                  ? AFKProgressIndicator()
-                  : Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: kHorizontalPadding),
-                        child: ListView(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                // if (model.hasActiveQuest)
-                                //   AFKProgressIndicator(linear: true),
-                                verticalSpaceMedium,
-                                // Text(
-                                //     "Instructions: Start the quest and then walk ${model.distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance of tries!"),
-                                Text(
-                                    "Goal: Walk " +
-                                        model.distanceToTravel
-                                            .toStringAsFixed(0) +
-                                        " Meters",
-                                    style: textTheme(context)
-                                        .headline6!
-                                        .copyWith(color: kPrimaryColor)),
-                                verticalSpaceSmall,
-                                Image.network(
-                                    "https://c.tenor.com/PcfXDVatyLEAAAAC/guy-walking.gif",
-                                    height: 150),
-                                verticalSpaceMedium,
-                                model.questSuccessfullyFinished
-                                    ? Column(
-                                        children: [
-                                          Text(
-                                              "You are the best, you finished the quest",
-                                              textAlign: TextAlign.center,
-                                              style:
-                                                  textTheme(context).headline2),
-                                          verticalSpaceMedium,
-                                          ElevatedButton(
-                                              onPressed: () =>
-                                                  model.replaceWithMainView(
-                                                      index: BottomNavBarIndex
-                                                          .quest),
-                                              child: Text("More Quests",
-                                                  style: textTheme(context)
-                                                      .headline6!
-                                                      .copyWith(
-                                                          color:
-                                                              kWhiteTextColor))),
-                                        ],
-                                      )
-                                    : Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              ElevatedButton(
-                                                  onPressed:
-                                                      model.showInstructions,
-                                                  child: Text("Instructions",
-                                                      style: textTheme(context)
-                                                          .headline6!
-                                                          .copyWith(
-                                                              color:
-                                                                  kWhiteTextColor))),
-                                              !model.hasActiveQuest
-                                                  ? Flexible(
-                                                      child: Column(
-                                                        children: [
-                                                          ElevatedButton(
-                                                            onPressed: model
-                                                                    .hasEnoughSponsoring(
-                                                                        quest:
-                                                                            quest)
-                                                                ? () => model
-                                                                    .maybeStartQuest(
-                                                                        quest:
-                                                                            quest)
-                                                                : null,
-                                                            child: Text(
-                                                                "Start Quest",
-                                                                style: textTheme(
-                                                                        context)
-                                                                    .headline6!
-                                                                    .copyWith(
-                                                                        color:
-                                                                            kWhiteTextColor)),
-                                                          ),
-                                                          if (!model
+              body: Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: ListView(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // if (model.hasActiveQuest)
+                          //   AFKProgressIndicator(linear: true),
+                          verticalSpaceMedium,
+                          // Text(
+                          //     "Instructions: Start the quest and then walk ${model.distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance of tries!"),
+                          Text(
+                              "Goal: Walk " +
+                                  model.distanceToTravel.toStringAsFixed(0) +
+                                  " Meters",
+                              style: textTheme(context)
+                                  .headline6!
+                                  .copyWith(color: kPrimaryColor)),
+                          verticalSpaceSmall,
+                          Image.network(
+                              "https://c.tenor.com/PcfXDVatyLEAAAAC/guy-walking.gif",
+                              height: 150),
+                          verticalSpaceMedium,
+                          model.questSuccessfullyFinished
+                              ? Column(
+                                  children: [
+                                    Text(
+                                        "You are the best, you finished the quest",
+                                        textAlign: TextAlign.center,
+                                        style: textTheme(context).headline2),
+                                    verticalSpaceMedium,
+                                    ElevatedButton(
+                                        onPressed: () =>
+                                            model.replaceWithMainView(
+                                                index: BottomNavBarIndex.quest),
+                                        child: Text("More Quests",
+                                            style: textTheme(context)
+                                                .headline6!
+                                                .copyWith(
+                                                    color: kWhiteTextColor))),
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        ElevatedButton(
+                                            onPressed: model.showInstructions,
+                                            child: Text("Instructions",
+                                                style: textTheme(context)
+                                                    .headline6!
+                                                    .copyWith(
+                                                        color:
+                                                            kWhiteTextColor))),
+                                        !model.hasActiveQuest
+                                            ? Flexible(
+                                                child: Column(
+                                                  children: [
+                                                    ElevatedButton(
+                                                      onPressed: model
                                                               .hasEnoughSponsoring(
-                                                                  quest: quest))
-                                                            Text(
-                                                                "You don't have enough sponsoring to start the quest",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .red)),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  : Flexible(
-                                                      child: Column(
-                                                        children: [
-                                                          ElevatedButton(
-                                                            onPressed: model
-                                                                .revealDistance,
-                                                            child: (model
-                                                                        .isBusy &&
-                                                                    model
-                                                                        .hasActiveQuest)
-                                                                ? AFKProgressIndicator(
-                                                                    color:
-                                                                        kWhiteTextColor)
-                                                                : Text(
-                                                                    "Update Location",
-                                                                    style: textTheme(
-                                                                            context)
-                                                                        .headline6!
-                                                                        .copyWith(
-                                                                            color:
-                                                                                kWhiteTextColor)),
-                                                          ),
-                                                          // Text(
-                                                          //  "Your start position has been tagged"),
-                                                        ],
-                                                      ),
+                                                                  quest: quest)
+                                                          ? () => model
+                                                              .maybeStartQuest(
+                                                                  quest: quest)
+                                                          : null,
+                                                      child: model.isBusy
+                                                          ? AFKProgressIndicator(
+                                                              color:
+                                                                  kWhiteTextColor)
+                                                          : Text("Start Quest",
+                                                              style: textTheme(
+                                                                      context)
+                                                                  .headline6!
+                                                                  .copyWith(
+                                                                      color:
+                                                                          kWhiteTextColor)),
                                                     ),
-                                            ],
-                                          ),
-                                          verticalSpaceMedium,
-                                          AnimatedOpacity(
-                                            opacity:
-                                                !model.startedQuest ? 0.0 : 1.0,
-                                            duration: Duration(seconds: 2),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
+                                                    if (!model
+                                                        .hasEnoughSponsoring(
+                                                            quest: quest))
+                                                      Text(
+                                                          "You don't have enough sponsoring to start the quest",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red)),
+                                                  ],
+                                                ),
+                                              )
+                                            : Flexible(
+                                                child: Column(
+                                                  children: [
+                                                    ElevatedButton(
+                                                      onPressed:
+                                                          model.revealDistance,
+                                                      child: (model.isBusy &&
+                                                              model
+                                                                  .hasActiveQuest)
+                                                          ? AFKProgressIndicator(
+                                                              color:
+                                                                  kWhiteTextColor)
+                                                          : Text(
+                                                              "Update Location",
+                                                              style: textTheme(
+                                                                      context)
+                                                                  .headline6!
+                                                                  .copyWith(
+                                                                      color:
+                                                                          kWhiteTextColor)),
+                                                    ),
+                                                    // Text(
+                                                    //  "Your start position has been tagged"),
+                                                  ],
+                                                ),
+                                              ),
+                                      ],
+                                    ),
+                                    verticalSpaceMedium,
+                                    AnimatedOpacity(
+                                      opacity: !model.startedQuest ? 0.0 : 1.0,
+                                      duration: Duration(seconds: 2),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Flexible(
+                                            child: Column(
                                               children: [
-                                                Flexible(
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                          "Distance on last check",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          maxLines: 2,
-                                                          style:
-                                                              textTheme(context)
-                                                                  .headline6),
-                                                      Text(
-                                                          model.distanceTravelled
-                                                                  .toStringAsFixed(
-                                                                      0) +
-                                                              " meters",
-                                                          style:
-                                                              textTheme(context)
-                                                                  .headline4),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text("Available Tries",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style:
-                                                              textTheme(context)
-                                                                  .headline6),
-                                                      Text(
-                                                          model
-                                                              .numberOfAvailableTries
-                                                              .toString(),
-                                                          style:
-                                                              textTheme(context)
-                                                                  .headline3),
-                                                    ],
-                                                  ),
-                                                ),
+                                                Text("Distance on last check",
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
+                                                    style: textTheme(context)
+                                                        .headline6),
+                                                Text(
+                                                    model.distanceTravelled
+                                                            .toStringAsFixed(
+                                                                0) +
+                                                        " meters",
+                                                    style: textTheme(context)
+                                                        .headline4),
                                               ],
                                             ),
                                           ),
-                                          verticalSpaceMedium,
-                                          if (model.isSuperUser &&
-                                              model.currentSpeed != null)
-                                            Text("Current Speed",
-                                                textAlign: TextAlign.center,
-                                                maxLines: 2,
-                                                style: textTheme(context)
-                                                    .headline6),
-                                          if (model.isSuperUser &&
-                                              model.currentSpeed != null)
-                                            Text(
-                                                model.currentSpeed!
-                                                        .toStringAsFixed(1) +
-                                                    "m",
-                                                style: textTheme(context)
-                                                    .headline4),
-                                          if (model.isSuperUser &&
-                                              model.currentAccuracy != null)
-                                            Text("Current Accuracy",
-                                                textAlign: TextAlign.center,
-                                                maxLines: 2,
-                                                style: textTheme(context)
-                                                    .headline6),
-                                          if (model.isSuperUser &&
-                                              model.currentAccuracy != null)
-                                            Text(
-                                                model.currentAccuracy!
-                                                        .toStringAsFixed(1) +
-                                                    "m",
-                                                style: textTheme(context)
-                                                    .headline4),
-                                          verticalSpaceLarge,
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text("Available Tries",
+                                                    textAlign: TextAlign.center,
+                                                    style: textTheme(context)
+                                                        .headline6),
+                                                Text(
+                                                    model.numberOfAvailableTries
+                                                        .toString(),
+                                                    style: textTheme(context)
+                                                        .headline3),
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                    ),
+                                    verticalSpaceMedium,
+                                    if (model.isSuperUser &&
+                                        model.currentSpeed != null)
+                                      Text("Current Speed",
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
+                                          style: textTheme(context).headline6),
+                                    if (model.isSuperUser &&
+                                        model.currentSpeed != null)
+                                      Text(
+                                          model.currentSpeed!
+                                                  .toStringAsFixed(1) +
+                                              "m",
+                                          style: textTheme(context).headline4),
+                                    if (model.isSuperUser &&
+                                        model.currentAccuracy != null)
+                                      Text("Current Accuracy",
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
+                                          style: textTheme(context).headline6),
+                                    if (model.isSuperUser &&
+                                        model.currentAccuracy != null)
+                                      Text(
+                                          model.currentAccuracy!
+                                                  .toStringAsFixed(1) +
+                                              "m",
+                                          style: textTheme(context).headline4),
+                                    verticalSpaceLarge,
+                                  ],
+                                ),
+                        ],
                       ),
-                    ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           );
         });

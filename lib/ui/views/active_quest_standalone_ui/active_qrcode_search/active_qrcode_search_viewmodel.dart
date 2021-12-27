@@ -162,13 +162,12 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
 
         final bool completed = isQuestCompleted();
         if (completed) {
+          await showCollectedMarkerDialog();
           await showSuccessDialog();
           return;
           // checkQuestAndFinishWhenCompleted();
         } else {
-          await dialogService.showDialog(
-              title: "Successfully collected marker!",
-              description: getActiveQuestProgressDescription());
+          await showCollectedMarkerDialog();
           // if (result.marker!.nextLocationHint != null)
           //   await dialogService.showDialog(
           //       title: "Next hint",
@@ -185,13 +184,6 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
   void resetPreviousQuest() {
     markersOnMap = {};
     foundObjects = [];
-    showStartSwipe = true;
     super.resetPreviousQuest();
-  }
-
-  void resetSlider() async {
-    setBusy(true);
-    await Future.delayed(Duration(milliseconds: 50));
-    setBusy(false);
   }
 }

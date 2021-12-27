@@ -106,6 +106,13 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
     }
   }
 
+  Future showCollectedMarkerDialog() async {
+    await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
+    // await dialogService.showDialog(
+    //     title: "Successfully collected marker!",
+    //     description: getActiveQuestProgressDescription());
+  }
+
   @override
   void dispose() {
     _googleMapController?.dispose();
@@ -121,5 +128,6 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
 
   void resetPreviousQuest() {
     questSuccessfullyFinished = false;
+    showStartSwipe = true;
   }
 }

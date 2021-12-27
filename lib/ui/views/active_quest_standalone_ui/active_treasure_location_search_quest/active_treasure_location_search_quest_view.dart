@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
+import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
@@ -21,7 +22,7 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
     required this.quest,
   }) : super(key: key);
 
-  static const bool withMaps = true;
+  static const bool withMaps = false;
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +110,31 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                         //     ),
                         //   ),
                         // ),
+                        Column(
+                          children: [
+                            verticalSpaceSmall,
+                            if (model.showStartSwipe)
+                              AFKSlideButton(
+                                quest: quest,
+                                canStartQuest:
+                                    model.hasEnoughSponsoring(quest: quest) &&
+                                        (model.closeby != null &&
+                                            model.closeby == true),
+                                onSubmit: () =>
+                                    model.maybeStartQuest(quest: quest),
+                              ),
+                            if (!model.hasEnoughSponsoring(quest: quest))
+                              Container(
+                                  color: Colors.white,
+                                  child:
+                                      NotEnoughSponsoringNote(topPadding: 10)),
+                            if ((model.closeby == null ||
+                                model.closeby == false))
+                              Container(
+                                  color: Colors.white,
+                                  child: NotCloseToQuestNote()),
+                          ],
+                        ),
                         model.questSuccessfullyFinished
                             ? EmptyNote(
                                 onMoreButtonPressed: () =>
@@ -163,71 +189,34 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                             ),
                                           if (!model.hasActiveQuest)
                                             verticalSpaceSmall,
-                                          !model.hasActiveQuest
-                                              ? Column(
-                                                  children: [
-                                                    AnimatedOpacity(
-                                                      duration:
-                                                          Duration(seconds: 1),
-                                                      opacity: (model.closeby !=
-                                                                  null &&
-                                                              model.closeby ==
-                                                                  true)
-                                                          ? 1.0
-                                                          : 0.5,
-                                                      child: ElevatedButton(
-                                                        onPressed: model.hasEnoughSponsoring(
-                                                                    quest:
-                                                                        quest) &&
-                                                                (model.closeby !=
-                                                                        null &&
-                                                                    model.closeby ==
-                                                                        true)
-                                                            ? () => model
-                                                                .maybeStartQuest(
-                                                                    quest:
-                                                                        quest)
-                                                            : null,
-                                                        child: Text(
-                                                            "Start Quest",
+                                          if (model.hasActiveQuest)
+                                            Column(
+                                              children: [
+                                                ElevatedButton(
+                                                    onPressed:
+                                                        model.checkDistance,
+                                                    child: !model
+                                                            .isCheckingDistance
+                                                        ? Text("Check Distance",
                                                             style: textTheme(
                                                                     context)
                                                                 .headline6!
                                                                 .copyWith(
                                                                     color:
-                                                                        kWhiteTextColor)),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Column(
-                                                  children: [
-                                                    ElevatedButton(
-                                                        onPressed:
-                                                            model.checkDistance,
-                                                        child: !model
-                                                                .isCheckingDistance
-                                                            ? Text(
-                                                                "Check Distance",
-                                                                style: textTheme(
-                                                                        context)
-                                                                    .headline6!
-                                                                    .copyWith(
-                                                                        color:
-                                                                            kWhiteTextColor))
-                                                            : CircularProgressIndicator(
-                                                                color: Colors
-                                                                    .white)),
-                                                    // Text(
-                                                    //  "Your start position has been tagged"),
-                                                  ],
-                                                ),
-                                          if (model.closeby != null &&
-                                              model.closeby == true)
-                                            NotCloseToQuestNote(),
-                                          if (!model.hasEnoughSponsoring(
-                                              quest: quest))
-                                            NotEnoughSponsoringNote(),
+                                                                        kWhiteTextColor))
+                                                        : CircularProgressIndicator(
+                                                            color:
+                                                                Colors.white)),
+                                                // Text(
+                                                //  "Your start position has been tagged"),
+                                              ],
+                                            ),
+                                          // if (model.closeby != null &&
+                                          //     model.closeby == true)
+                                          //   NotCloseToQuestNote(),
+                                          // if (!model.hasEnoughSponsoring(
+                                          //     quest: quest))
+                                          //   NotEnoughSponsoringNote(),
                                           verticalSpaceMedium,
                                           if (model.activeQuestNullable
                                                   ?.currentDistanceInMeters !=

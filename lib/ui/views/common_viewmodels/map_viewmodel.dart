@@ -152,6 +152,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
 
   @override
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
+    log.i("Handling marker analysis result");
     if (result.isEmpty) {
       log.wtf("The object QuestQRCodeScanResult is empty!");
       return Future.value();
@@ -173,10 +174,8 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       if (result.marker != null) {
         if (hasActiveQuest) {
           log.i("Scanned marker sucessfully collected!");
+          await showCollectedMarkerDialog();
           await handleCollectedMarkerEvent(afkmarker: result.marker!);
-          await dialogService.showDialog(
-              title: "Successfully collected marker!",
-              description: getActiveQuestProgressDescription());
         }
       }
 

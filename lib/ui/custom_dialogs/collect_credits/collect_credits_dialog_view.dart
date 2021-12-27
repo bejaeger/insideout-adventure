@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/ui/custom_dialogs/collect_credits_dialog_viewmodel.dart';
+import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
@@ -72,7 +72,8 @@ class _BasicDialogContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     verticalSpaceSmall,
-                    Text(model.collectedCredits ? "SUCCESS!" : "You are dope!",
+                    Text(model.collectedCredits ? "ERFOLG!" : "Gratulation!",
+                        textAlign: TextAlign.center,
                         style: textTheme(context).headline6!.copyWith(
                             color: kPrimaryColor,
                             fontSize: 32,
@@ -80,12 +81,13 @@ class _BasicDialogContent extends StatelessWidget {
                     verticalSpaceSmall,
                     Text(
                         model.collectedCredits
-                            ? "You collected " +
+                            ? "Du verdienst " +
                                 request.data.quest.afkCredits.toString() +
                                 " AFK Credits"
-                            : "You earned " +
+                            : "Du hast " +
                                 request.data.quest.afkCredits.toString() +
-                                " AFK Credits",
+                                " AFK Credits verdient!",
+                        textAlign: TextAlign.center,
                         style: textTheme(context)
                             .headline4!
                             .copyWith(color: kPrimaryColor, fontSize: 18)),
@@ -111,7 +113,7 @@ class _BasicDialogContent extends StatelessWidget {
                     !model.collectedCredits
                         ? ElevatedButton(
                             onPressed: model.getCredits,
-                            child: Text("Collect Credits",
+                            child: Text("Weiter",
                                 style: textTheme(context)
                                     .headline6!
                                     .copyWith(color: kWhiteTextColor)))
@@ -121,7 +123,7 @@ class _BasicDialogContent extends StatelessWidget {
                               TextButton(
                                   onPressed: () => completer(
                                       DialogResponse(confirmed: true)),
-                                  child: Text("Go back",
+                                  child: Text("Zurück",
                                       style: textTheme(context)
                                           .headline6!
                                           .copyWith(

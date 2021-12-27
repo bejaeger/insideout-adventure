@@ -339,6 +339,7 @@ abstract class QuestViewModel extends BaseModel {
   // needs to be overrriden!
   // Future handleQrCodeScanEvent(QuestQRCodeScanResult result);
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
+    log.i("Handling marker analysis result");
     if (!hasActiveQuest &&
         (result.quests == null ||
             (result.quests != null && result.quests!.length == 0))) {
@@ -409,6 +410,12 @@ abstract class QuestViewModel extends BaseModel {
       currentIndex = 0;
     }
     notifyListeners();
+  }
+
+  void resetSlider() async {
+    setBusy(true);
+    await Future.delayed(Duration(milliseconds: 50));
+    setBusy(false);
   }
 
   // Can be overridden!

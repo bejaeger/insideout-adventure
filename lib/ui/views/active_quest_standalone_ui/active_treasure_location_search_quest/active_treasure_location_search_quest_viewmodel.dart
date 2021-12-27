@@ -43,6 +43,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     resetPreviousQuest();
     runBusyFuture(_geolocationService.getAndSetCurrentLocation());
     closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
+    loadQuestMarkers(quest: quest);
     notifyListeners();
   }
 
@@ -82,6 +83,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
       final position = await _geolocationService.getAndSetCurrentLocation();
       if (!(await checkAccuracy(position: position))) {
+        resetSlider();
         return false;
       }
 
@@ -97,16 +99,20 @@ class ActiveTreasureLocationSearchQuestViewModel
       }
       if (result is bool && result == false) {
         navigateBack();
-      } else {
-        await setInitialDistance();
-        addMarkerToMap(
-            quest: quest,
-            afkmarker: AFKMarker(
-                id: "checkpoint " + checkpoints.length.toString(),
-                qrCodeId: "checkpoint " + checkpoints.length.toString(),
-                lat: checkpoints.last.currentLat,
-                lon: checkpoints.last.currentLon));
+        return;
       }
+      await setInitialDistance();
+      addMarkerToMap(
+          quest: quest,
+          afkmarker: AFKMarker(
+              id: "checkpoint " + checkpoints.length.toString(),
+              qrCodeId: "checkpoint " + checkpoints.length.toString(),
+              lat: checkpoints.last.currentLat,
+              lon: checkpoints.last.currentLon));
+
+      await Future.delayed(Duration(seconds: 1));
+      showStartSwipe = false;
+      notifyListeners();
     } else {
       log.i("Not starting quest, quest is probably already running");
     }
@@ -162,6 +168,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     directionStatus = "Start Walking";
     questSuccessfullyFinished = false;
     setTrackingDeadTime(false);
+    super.resetPreviousQuest();
   }
 
   Future setInitialDistance() async {
@@ -498,11 +505,15 @@ class ActiveTreasureLocationSearchQuestViewModel
   // Map functionality
 
   @override
-  void loadQuestMarkers() {
-    log.i("Getting quest markers");
-    addMarkerToMap(
-        quest: activeQuest.quest, afkmarker: activeQuest.quest.startMarker);
-    log.v('These Are the values of the current Markers $markersOnMap');
+  void loadQuestMarkers({Quest? quest}) {
+    log.i("Loading quest markers");
+    if (quest != null) {
+      addMarkerToMap(quest: quest, afkmarker: quest.startMarker);
+    } else {
+      addMarkerToMap(
+          quest: activeQuest.quest, afkmarker: activeQuest.quest.startMarker);
+      log.v('These Are the values of the current Markers $markersOnMap');
+    }
     notifyListeners();
   }
 

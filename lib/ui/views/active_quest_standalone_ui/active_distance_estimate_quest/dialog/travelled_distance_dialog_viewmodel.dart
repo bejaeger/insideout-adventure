@@ -48,7 +48,7 @@ class TravelledDistanceDialogViewModel extends QuestCommonDialogViewModel {
       description = addString; // + "Try again in the next try";
       mainButtonTitle = "Got it";
     } else if (status == DistanceCheckStatus.toofar) {
-      title = "Wooww!";
+      title = "Too far!";
       description = addString; //  + "You went slightly too far, try again!";
       mainButtonTitle = "Got it";
     } else if (status == DistanceCheckStatus.notenough) {
