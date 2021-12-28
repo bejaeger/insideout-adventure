@@ -7,4 +7,5 @@ enum DialogType {
   CollectCredits,
   CheckTravelledDistance,
   CollectedMarker,
+  FoundTreasure,
 }

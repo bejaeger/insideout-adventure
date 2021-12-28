@@ -99,7 +99,7 @@ class _BasicDialogContent extends StatelessWidget {
                               padding: const EdgeInsets.all(16.0),
                               child: Image.asset(kAFKCreditsLogoPath,
                                   width: screenWidth(context, percentage: 0.4)),
-                            )
+                            )                          
                           : FittedBox(
                               fit: BoxFit.fill,
                               child: Icon(

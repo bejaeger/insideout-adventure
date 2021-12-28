@@ -7,9 +7,9 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/treasure_search/treasure_search_location.dart';
-import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/enums/quests/direction_status.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -18,7 +18,6 @@ import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stacked/src/state_management/reactive_service_mixin.dart';
 
 // Singleton ViewModel!
 
@@ -28,7 +27,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   double? get currentGPSAccuracy => _geolocationService.currentGPSAccuracy;
   StreamSubscription? _activeVibrationQuestSubscription;
-  String directionStatus = "Start Walking";
+  DirectionStatus directionStatus = DirectionStatus.unknown;
   bool isTrackingDeadTime = false;
   bool skipUpdatingQuestStatus = false;
   bool isCheckingDistance = false;
@@ -38,13 +37,17 @@ class ActiveTreasureLocationSearchQuestViewModel
   final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
 
   bool? closeby;
+  double currentDistanceInMeters = -1;
+  double previousDistanceInMeters = -1;
 
   void initialize({required Quest quest}) async {
+    setBusy(true);
     resetPreviousQuest();
-    runBusyFuture(_geolocationService.getAndSetCurrentLocation());
+    // await runBusyFuture(_geolocationService.getAndSetCurrentLocation());
     closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
     loadQuestMarkers(quest: quest);
-    notifyListeners();
+    await setInitialDistance(quest: quest);
+    setBusy(false);
   }
 
   // AUTOMATIC TRACKING
@@ -75,7 +78,6 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   Future maybeStartQuest({required Quest? quest}) async {
     if (quest != null) {
-      resetQuest();
       log.i("Starting vibration search quest with name ${quest.name}");
       if (quest.type == QuestType.TreasureLocationSearchAutomatic) {
         listenToActiveQuest();
@@ -101,7 +103,7 @@ class ActiveTreasureLocationSearchQuestViewModel
         navigateBack();
         return;
       }
-      await setInitialDistance();
+      await setInitialDistance(quest: quest);
       addMarkerToMap(
           quest: quest,
           afkmarker: AFKMarker(
@@ -109,7 +111,6 @@ class ActiveTreasureLocationSearchQuestViewModel
               qrCodeId: "checkpoint " + checkpoints.length.toString(),
               lat: checkpoints.last.currentLat,
               lon: checkpoints.last.currentLon));
-
       await Future.delayed(Duration(seconds: 1));
       showStartSwipe = false;
       notifyListeners();
@@ -120,6 +121,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   @override
   bool isQuestCompleted() {
+    // return true;
     if (!hasActiveQuest) {
       log.wtf(
           "No quest is active! This function should have never been called!");
@@ -127,37 +129,33 @@ class ActiveTreasureLocationSearchQuestViewModel
     } else {
       // option to add dummy checks for testing purposes
       if (flavorConfigProvider.dummyQuestCompletionVerification) {
-        return activeQuest.currentDistanceInMeters! < 9999;
+        return currentDistanceInMeters <  9999; // 9999;
       } else {
         // this is the true check configured in constants.dart
-        return activeQuest.currentDistanceInMeters! <
-            kMinDistanceToCatchTrophyInMeters;
+        return currentDistanceInMeters < kMinDistanceToCatchTrophyInMeters;
       }
     }
   }
 
   Future completeDistanceCheckAndUpdateQuestStatus() async {
-    if (activeQuest.lastDistanceInMeters == null ||
-        activeQuest.currentDistanceInMeters == null) {
-      lastActivatedQuestInfoText = "Start Walking and search for the Trophy!";
-    } else {
-      final completed = isQuestCompleted();
-      if (completed) {
-        // quest succesfully completed
-        await showSuccessDialog();
-        return;
-      }
-      // update UI on quest update
-      if (checkpoints.elementAt(checkpoints.length - 2).distanceToGoal >
-          checkpoints.last.distanceToGoal) {
-        await vibrateRightDirection();
-        directionStatus = "Getting closer!";
-      } else {
-        await vibrateWrongDirection();
-        directionStatus = "You are further away now!";
-      }
-      notifyListeners();
+    final completed = isQuestCompleted();
+    if (completed) {
+      // quest succesfully completed
+      await showFoundTreasureDialog();
+      await showSuccessDialog();
+      return;
     }
+    // update UI on quest update
+    if (checkpoints.elementAt(checkpoints.length - 2).distanceToGoal >
+        checkpoints.last.distanceToGoal) {
+      await vibrateRightDirection();
+      // directionStatus = "Getting closer!";
+      directionStatus = DirectionStatus.closer;
+    } else {
+      await vibrateWrongDirection();
+      directionStatus = DirectionStatus.further;
+    }
+    notifyListeners();
   }
 
   @override
@@ -165,44 +163,34 @@ class ActiveTreasureLocationSearchQuestViewModel
     cancelQuestListener();
     markersOnMap = {};
     checkpoints = [];
-    directionStatus = "Start Walking";
+    directionStatus = DirectionStatus.unknown;
     questSuccessfullyFinished = false;
+    currentDistanceInMeters = -1;
+    previousDistanceInMeters = -1;
     setTrackingDeadTime(false);
+    setIsCheckingDistance(false);
     super.resetPreviousQuest();
   }
 
-  Future setInitialDistance() async {
-    if (questService.activatedQuest == null) {
-      log.wtf("No quest is active to check distance to finish line");
-      return false;
-    }
-
-    ActivatedQuest tmpActivatedQuest = questService.activatedQuest!;
+  Future setInitialDistance({required Quest? quest}) async {
+    if (quest == null) return;
     final position = await _geolocationService.getAndSetCurrentLocation();
-    tmpActivatedQuest = questService.updateLatLonOnQuest(
-        activatedQuest: tmpActivatedQuest,
-        newLat: position.latitude,
-        newLon: position.latitude);
     final newDistanceInMeters = _geolocationService.distanceBetween(
       lat1: position.latitude,
       lon1: position.longitude,
-      lat2: tmpActivatedQuest.quest.finishMarker?.lat,
-      lon2: tmpActivatedQuest.quest.finishMarker?.lon,
+      lat2: quest.finishMarker?.lat,
+      lon2: quest.finishMarker?.lon,
     );
-    tmpActivatedQuest = questService.updateDistanceOnQuest(
-        activatedQuest: tmpActivatedQuest,
-        newDistance: newDistanceInMeters,
-        newLat: position.latitude,
-        newLon: position.longitude);
     checkpoints.add(TreasureSearchLocation(
         distanceToGoal: newDistanceInMeters,
         currentLat: position.latitude,
         currentLon: position.longitude,
         currentAccuracy: position.accuracy));
-
+    previousDistanceInMeters = currentDistanceInMeters;
+    currentDistanceInMeters = newDistanceInMeters;
     log.i(
         "Setting initial data for Treasure Search Quest $newDistanceInMeters meters");
-    questService.pushActivatedQuest(tmpActivatedQuest);
+    //questService.pushActivatedQuest(tmpActivatedQuest);
   }
 
   Future checkNewLocation() async {
@@ -216,47 +204,43 @@ class ActiveTreasureLocationSearchQuestViewModel
       return "You can't check the distance at the moment because other processes are running";
     }
     final position = await _geolocationService.getAndSetCurrentLocation();
-    if (!await checkAccuracy(position: position, showDialog: false)) {
+    if (!await checkAccuracy(position: position, showDialog: false, minAccuracy: kMinRequiredAccuracyLocationSearch)) {
       log.v(
           "Accuracy is ${position.accuracy} and not enough to take next point!");
       // setSkipUpdatingQuestStatus(true);
-      return "GPS Accuracy low, please walk futher and try again";
+      return "GPS Accuracy low, laufe weiter";
+      // return "GPS Accuracy low, please walk futher and try again";
     }
 
     final bool allow = isDistanceCheckAllowed(newPosition: position);
     // DUMMY
     if (allow || flavorConfigProvider.dummyQuestCompletionVerification) {
+      // if (true ) {
       setSkipUpdatingQuestStatus(false);
 
       // check distance to goal!
       final newDistanceInMeters = getNewDistanceToGoal(newPosition: position);
-
-      // this might actually be deprecated
-      tmpActivatedQuest = questService.updateDistanceOnQuest(
-          activatedQuest: tmpActivatedQuest,
-          newDistance: newDistanceInMeters,
-          newLat: position.latitude,
-          newLon: position.longitude);
       addCheckpoint(newPosition: position);
-
       log.i("Updating distance to goal to $newDistanceInMeters meters");
-      questService.pushActivatedQuest(tmpActivatedQuest);
-
       return true;
     } else {
       log.v("Not checking distance to goal!");
-      return "Please walk further before checking the distance again";
+      return "Laufe weiter";
     }
   }
 
   Future checkDistance() async {
+    setIsCheckingDistance(true);
+    notifyListeners();
     final results = await Future.wait([
       checkNewLocation(),
       artificialDelay(),
     ]);
     if (results[0] is String) {
       // show string on UI, else update distances
-      directionStatus = results[0];
+      directionStatus = DirectionStatus.denied;
+      // directionStatus = results[0];
+      showLaufeWeiterSnackbar();
       notifyListeners();
     } else if (results[0] is bool && results[0] == true) {
       if (results[0] is bool && results[0] == true) {
@@ -273,6 +257,9 @@ class ActiveTreasureLocationSearchQuestViewModel
       log.wtf(
           "Checking new location returned 'false' or something unknwon! Check code!");
     }
+    await Future.delayed(Duration(seconds: kCheckDistanceReloadDurationInSeconds));
+    setIsCheckingDistance(false);
+    notifyListeners();
   }
 
   void addCheckpoint({required Position newPosition}) {
@@ -289,6 +276,8 @@ class ActiveTreasureLocationSearchQuestViewModel
       previousLon: checkpoints.last.currentLon,
       previousAccuracy: checkpoints.last.currentAccuracy,
     ));
+    previousDistanceInMeters = currentDistanceInMeters;
+    currentDistanceInMeters = newDistance;
   }
 
   double getNewDistanceToGoal({required Position newPosition}) {
@@ -337,8 +326,9 @@ class ActiveTreasureLocationSearchQuestViewModel
     // treats accuracy as uncorrelated (conservative approach!)
     double propagatedAccuracy = getPropagatedAccuracy(newPosition: newPosition);
 
+    propagatedAccuracy = propagatedAccuracy * 0.7; // assume that there is some correlation between the two points
     // clamp it to between 30 and 80 to have some consistency.
-    double minDistanceFromLastCheck = propagatedAccuracy.clamp(20, 80);
+    double minDistanceFromLastCheck = propagatedAccuracy.clamp(10, 80);
 
     double? lastDistanceToGoal =
         questService.activatedQuest!.lastDistanceInMeters;
@@ -485,6 +475,21 @@ class ActiveTreasureLocationSearchQuestViewModel
     _activeVibrationQuestSubscription = null;
   }
 
+  void showReloadingInfo() {
+    snackbarService.showSnackbar(title: "Aufladen", message: "...");
+  }
+
+  void showStartQuestInfo() {
+    snackbarService.showSnackbar(title: "Starte erst die Mission", message: "");
+  }
+
+  void showLaufeWeiterSnackbar() {
+    snackbarService.showSnackbar(
+        title: "Laufe erst weiter",
+        message: "",
+        duration: Duration(seconds: 5));
+  }
+
   @override
   void dispose() {
     cancelQuestListener();
@@ -492,10 +497,8 @@ class ActiveTreasureLocationSearchQuestViewModel
   }
 
   Future artificialDelay() async {
-    setIsCheckingDistance(true);
     notifyListeners();
     await Future.delayed(Duration(milliseconds: 500));
-    setIsCheckingDistance(false);
     notifyListeners();
   }
 

@@ -5,6 +5,7 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui.dart';
+import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,6 +29,7 @@ void mainCommon(Flavor flavor) async {
 
     setupLocator();
     setupDialogUi();
+    setupSnackbarUi();
     setupBottomSheetUi();
     // setupBottomSheetUi();
     // setupSnackbarUi();

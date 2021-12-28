@@ -75,7 +75,7 @@ class ActivatedQuestPanel extends StatelessWidget {
                                           if (model.gpsAccuracyInfo != null)
                                             Text(model.gpsAccuracyInfo!,
                                                 style: TextStyle(
-                                                    color: kWhiteTextColor))
+                                                    color: kWhiteTextColor, fontSize: 6))
                                         ],
                                       ),
                                     ),

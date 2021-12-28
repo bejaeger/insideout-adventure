@@ -8,12 +8,14 @@ class AFKFloatingActionButton extends StatelessWidget {
   final double height;
   final double width;
   final String? title;
+  final Color? backgroundColor;
   const AFKFloatingActionButton(
       {Key? key,
       required this.icon,
       required this.onPressed,
       this.height = 75,
       this.width = 75,
+      this.backgroundColor,
       this.title})
       : super(key: key);
 
@@ -22,6 +24,7 @@ class AFKFloatingActionButton extends StatelessWidget {
     return Container(
       height: height,
       width: width,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         // boxShadow: [
@@ -37,7 +40,7 @@ class AFKFloatingActionButton extends StatelessWidget {
           splashColor: kDarkTurquoise,
           elevation: 8,
           heroTag: null,
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
           foregroundColor: Colors.black,
           onPressed: onPressed,
           child: Column(
