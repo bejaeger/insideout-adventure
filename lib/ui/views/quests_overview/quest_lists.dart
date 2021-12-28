@@ -30,15 +30,17 @@ class QuestLists extends StatelessWidget {
                     .asMap()
                     .map((index, quest) {
                       return MapEntry(
-                          index,
-                          QuestInfoCard(
-                              height: 200,
-                              marginRight: 5,
-                              width: screenWidth(context, percentage: 0.8),
-                              quest: quest,
-                              subtitle: quest.description,
-                              onCardPressed: () async =>
-                                  await model.onQuestInListTapped(quest)));
+                        index,
+                        QuestInfoCard(
+                          height: 200,
+                          marginRight: 5,
+                          width: screenWidth(context, percentage: 0.8),
+                          quest: quest,
+                          subtitle: quest.description,
+                          onCardPressed: () async =>
+                              await model.onQuestInListTapped(quest),
+                        ),
+                      );
                     })
                     .values
                     .toList(),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
@@ -40,10 +41,14 @@ class QuestService with ReactiveServiceMixin {
   // map of list of money pools with money Pool id as key
   List<ActivatedQuest> activatedQuestsHistory = [];
   StreamSubscription? _pastQuestsStreamSubscription;
-  List<Quest> nearbyQuests = [];
+  //Turned local variable pvt
+  List<Quest> _nearbyQuests = [];
   final log = getLogger("QuestService");
 
   ActivatedQuest? previouslyFinishedQuest;
+
+//Created a Getter for near by Quest
+  List<Quest> get getNearByQuest => _nearbyQuests;
 
   // dead time after update
   bool isTrackingDeadTime = false;
@@ -461,6 +466,18 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  Future<void> removeQuest({required Quest quest}) async {
+    try {
+      if (quest.id != "" || quest != null) {
+        await _firestoreApi.removeQuest(quest: quest);
+      } else {
+        log.wtf('You are Providing me Empty Ids ${quest.id}');
+      }
+    } catch (e) {
+      log.i(e.toString());
+    }
+  }
+
   Future trackDataDistanceEstimate(int seconds,
       {bool forceNoPush = false}) async {
     if (activatedQuest != null) {
@@ -634,22 +651,22 @@ class QuestService with ReactiveServiceMixin {
   }
 
   Future loadNearbyQuests({bool force = false}) async {
-    if (nearbyQuests.isEmpty || force) {
+    if (_nearbyQuests.isEmpty || force) {
       // TODO: In the future retrieve only nearby quests
-      nearbyQuests = await _firestoreApi.getNearbyQuests(
+      _nearbyQuests = await _firestoreApi.getNearbyQuests(
           pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests);
-      log.i("Found ${nearbyQuests.length} nearby quests.");
+      log.i("Found ${_nearbyQuests.length} nearby quests.");
     } else {
       log.i("Quests already loaded.");
     }
   }
 
   Future getQuestsOfType({required QuestType questType}) async {
-    if (nearbyQuests.isEmpty) {
+    if (_nearbyQuests.isEmpty) {
       // Not very efficient to load all quests and then extract only the ones of a specific type!
       await loadNearbyQuests();
     }
-    return extractQuestsOfType(quests: nearbyQuests, questType: questType);
+    return extractQuestsOfType(quests: _nearbyQuests, questType: questType);
   }
 
   List<Quest> extractQuestsOfType(
@@ -668,8 +685,8 @@ class QuestService with ReactiveServiceMixin {
   }
 
   void extractAllQuestTypes() {
-    if (nearbyQuests.isNotEmpty) {
-      for (Quest _q in nearbyQuests) {
+    if (_nearbyQuests.isNotEmpty) {
+      for (Quest _q in _nearbyQuests) {
         if (!allQuestTypes.any((element) => element == _q.type)) {
           allQuestTypes.add(_q.type);
         }
@@ -705,25 +722,25 @@ class QuestService with ReactiveServiceMixin {
   }
 
   Future sortNearbyQuests() async {
-    if (nearbyQuests.isNotEmpty) {
+    if (_nearbyQuests.isNotEmpty) {
       log.i("Check distances for current quest list");
 
       // need to use normal for loop to await results
-      for (var i = 0; i < nearbyQuests.length; i++) {
-        if (nearbyQuests[i].startMarker != null) {
+      for (var i = 0; i < _nearbyQuests.length; i++) {
+        if (_nearbyQuests[i].startMarker != null) {
           double distance =
               await _geolocationService.distanceBetweenUserAndCoordinates(
-                  lat: nearbyQuests[i].startMarker!.lat,
-                  lon: nearbyQuests[i].startMarker!.lon);
-          nearbyQuests[i] =
-              nearbyQuests[i].copyWith(distanceFromUser: distance);
+                  lat: _nearbyQuests[i].startMarker!.lat,
+                  lon: _nearbyQuests[i].startMarker!.lon);
+          _nearbyQuests[i] =
+              _nearbyQuests[i].copyWith(distanceFromUser: distance);
         } else {
-          nearbyQuests[i] = nearbyQuests[i]
+          _nearbyQuests[i] = _nearbyQuests[i]
               .copyWith(distanceFromUser: kUnrealisticallyHighDistance);
           sortedNearbyQuests = true;
         }
       }
-      nearbyQuests
+      _nearbyQuests
           .sort((a, b) => a.distanceFromUser!.compareTo(b.distanceFromUser!));
     } else {
       log.w(
@@ -768,11 +785,11 @@ class QuestService with ReactiveServiceMixin {
       {required String markerId}) async {
     // get Quests with start marker id
     late List<Quest> quests;
-    if (nearbyQuests.length == 0) {
+    if (_nearbyQuests.length == 0) {
       quests = await _firestoreApi.downloadQuestsWithStartMarkerId(
           startMarkerId: markerId);
     } else {
-      quests = nearbyQuests
+      quests = _nearbyQuests
           .where((element) => element.startMarker?.id == markerId)
           .toList();
     }

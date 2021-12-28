@@ -312,6 +312,11 @@ class FirestoreApi {
     }
   }
 
+  Future<void> removeQuest({required Quest quest}) async {
+    //Remove The quest from Firebase
+    await questsCollection.doc(quest.id).delete();
+  }
+
   Stream<User> getUserStream({required String uid}) {
     return usersCollection.doc(uid).snapshots().map((event) {
       if (!event.exists || event.data() == null) {
