@@ -9,6 +9,7 @@ List<Quest> getDummyQuests() {
     getDummyVibrationSearchQuest(),
 
     heidachTrohpy(),
+    heidachTrohpy2(),
     commercialTrophy(),
     //getDummyVibrationSearchQuest2(),
     // getDummyQuestQrCodeSearch(),
@@ -194,6 +195,20 @@ Quest heidachTrohpy() {
       type: QuestType.TreasureLocationSearch,
       startMarker: heidach1(),
       finishMarker: heidach2());
+}
+
+// burnaby quest
+Quest heidachTrohpy2() {
+  return Quest(
+      id: "heidach 2 trophy",
+      name: "Finde den Heidach 2 Schatz",
+      description:
+          "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
+      afkCredits: 50,
+      markers: [heidach3(), heidach4()],
+      type: QuestType.TreasureLocationSearch,
+      startMarker: heidach3(),
+      finishMarker: heidach4());
 }
 
 // Angola quest
@@ -801,6 +816,25 @@ AFKMarker heidach2() {
       qrCodeId: "heidach2",
       lat: 48.06701330843975,
       lon: 7.903736956224777,
+      nextLocationHint: "");
+}
+
+// TODO: Make second treasure hunt quest out of these!
+AFKMarker heidach3() {
+  return AFKMarker(
+      id: "heidach3",
+      qrCodeId: "heidach3",
+      lat: 48.068605211860955, 
+      lon: 7.904684129866282,
+      nextLocationHint: "");
+}
+
+AFKMarker heidach4() {
+  return AFKMarker(
+      id: "heidach4",
+      qrCodeId: "heidach4",
+      lat: 48.06814470824551,
+      lon: 7.906736569916654,
       nextLocationHint: "");
 }
 

@@ -91,6 +91,13 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
     notifyListeners();
   }
 
+  Future showFoundTreasureDialog() async {
+    await dialogService.showCustomDialog(
+      variant: DialogType.FoundTreasure,
+      data: activeQuest,
+    );
+  }
+
   //------------------------------------------------------------
   // Reactive Service Mixin Functionality from stacked ReactiveViewModel!
   late List<ReactiveServiceMixin> _reactiveServices;

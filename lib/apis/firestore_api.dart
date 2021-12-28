@@ -408,7 +408,7 @@ class FirestoreApi {
 
   // Returns dummy data for now!
   Future<List<Quest>> getNearbyQuests({bool? pushDummyQuests}) async {
-    if (pushDummyQuests != null && pushDummyQuests) {
+    if (pushDummyQuests == true) {
       //TODO push quests
       late List<Quest> questsOnFirestore;
       try {

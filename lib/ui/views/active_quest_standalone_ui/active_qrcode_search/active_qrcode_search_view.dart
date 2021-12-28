@@ -1,6 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
@@ -11,13 +10,10 @@ import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/ui/widgets/not_enough_sponsoring_note.dart';
-import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slide_to_act/slide_to_act.dart';
 import 'package:stacked/stacked.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ActiveQrCodeSearchView extends StatelessWidget {
   final Quest quest;
@@ -33,6 +29,9 @@ class ActiveQrCodeSearchView extends StatelessWidget {
         builder: (context, model, child) {
           return WillPopScope(
             onWillPop: () async {
+              if (!model.hasActiveQuest) {
+                model.navigateBack();
+              }
               return false;
             },
             child: SafeArea(
