@@ -67,7 +67,7 @@ class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
           final currentUser = userService.currentUser;
           log.v('User sync complete. User profile: $currentUser');
           if (localUserRole == UserRole.adminMaster) {
-            goToAdminHomeView(role: localUserRole!);
+            navToAdminHomeView(role: localUserRole!);
           } else {
             replaceWithHomeView();
           }

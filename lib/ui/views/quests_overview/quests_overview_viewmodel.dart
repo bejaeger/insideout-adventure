@@ -1,12 +1,8 @@
-import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
-import 'package:afkcredits/enums/quest_view_index.dart';
-import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
+import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
-class QuestsOverviewViewModel extends QuestViewModel {
+class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
   List<QuestType> get questTypes => questService.allQuestTypes;
 
   Future initialize({bool? force}) async {
@@ -29,7 +25,8 @@ class QuestsOverviewViewModel extends QuestViewModel {
 
   void navigateToQuestsOfSpecificTypeView(QuestType type) {
     // Use the below to have the nav bottom bar visible!
-    navigationService.navigateTo(
+    navToQuestsOfSpecificTypeView(role: currentUser.role, type: type);
+/*     navigationService.navigateTo(
       Routes.bottomBarLayoutTemplateView,
       arguments: BottomBarLayoutTemplateViewArguments(
         userRole: currentUser.role,
@@ -37,14 +34,17 @@ class QuestsOverviewViewModel extends QuestViewModel {
         questViewIndex: QuestViewType.singlequest,
         questType: type,
       ),
-    );
+    ); */
   }
 
   void navigateToMapView() {
-    navigationService.navigateTo(Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(
-            userRole: currentUser.role,
-            initialBottomNavBarIndex: BottomNavBarIndex.quest,
-            questViewIndex: QuestViewType.map));
+    navToMapView(role: currentUser.role);
+/*     navigationService.navigateTo(
+      Routes.bottomBarLayoutTemplateView,
+      arguments: BottomBarLayoutTemplateViewArguments(
+          userRole: currentUser.role,
+          initialBottomNavBarIndex: BottomNavBarIndex.quest,
+          questViewIndex: QuestViewType.map),
+    ); */
   }
 }
