@@ -120,7 +120,7 @@ abstract class AuthenticationViewModel extends FormViewModel
           method: AuthenticationMethod.dummy,
           fromLocalStorate: true);
 
-      goToAdminHomeView(role: UserRole.adminMaster);
+      navToAdminHomeView(role: UserRole.adminMaster);
     } else {
       if (!authResult.hasError && authResult.user == null) {
         log.wtf('We have no Error But user is Null');

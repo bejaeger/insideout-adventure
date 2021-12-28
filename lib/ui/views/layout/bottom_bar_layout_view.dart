@@ -279,7 +279,7 @@ class _BottomBarLayoutTemplateViewState
           AFKNavBarItem(
             icon: Icon(Icons.mark_email_read_outlined),
             inactiveIcon: Icon(Icons.mark_chat_read),
-            title: ("Home"),
+            title: ("Add Markers"),
           ),
         ];
     }

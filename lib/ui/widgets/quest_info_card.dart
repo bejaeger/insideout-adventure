@@ -3,7 +3,6 @@ import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class QuestInfoCard extends StatelessWidget {
@@ -93,30 +92,31 @@ class QuestInfoCard extends StatelessWidget {
                 child: FractionallySizedBox(
                   heightFactor: 0.3,
                   child: Container(
-                      // height: 60,
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 2,
-                              spreadRadius: 0.5,
-                              color: kShadowColor,
-                              offset: Offset(1, 1),
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.grey[200]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CreditsAmount(
-                            amount: quest.afkCredits,
-                            color: kDarkTurquoise,
+                    // height: 60,
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 2,
+                            spreadRadius: 0.5,
+                            color: kShadowColor,
+                            offset: Offset(1, 1),
                           ),
-                          Icon(Icons.arrow_forward_ios_rounded,
-                              color: kDarkTurquoise)
                         ],
-                      )),
+                        borderRadius: BorderRadius.circular(50),
+                        color: Colors.grey[200]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CreditsAmount(
+                          amount: quest.afkCredits,
+                          color: kDarkTurquoise,
+                        ),
+                        Icon(Icons.arrow_forward_ios_rounded,
+                            color: kDarkTurquoise)
+                      ],
+                    ),
+                  ),
                 ),
               ),
               if (sponsoringSentence != null) Text(sponsoringSentence!),

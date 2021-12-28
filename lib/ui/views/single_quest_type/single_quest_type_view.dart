@@ -1,12 +1,12 @@
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_quest_standalone_ui_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -35,28 +35,50 @@ class SingleQuestTypeView extends StatelessWidget {
                   body:
                       // Add the list of quests here!
                       // Use QuestInfoCard
-                      ListView(
-                          //itemExtent: 120,
-                          children: [
+                      GestureDetector(
+                    child: ListView(
+                      //itemExtent: 120,
+                      children: [
                         // TODO: provide this list sorted w.r.t. user distance!
                         ...model.currentQuests
                             .asMap()
                             .map((index, quest) {
                               return MapEntry(
-                                  index,
-                                  QuestInfoCard(
-                                      height: 200,
-                                      marginRight: kHorizontalPadding,
-                                      marginTop: 20,
-                                      quest: quest,
-                                      subtitle: quest.description,
-                                      onCardPressed: () async => await model
-                                          .onQuestInListTapped(quest)));
+                                index,
+                                QuestInfoCard(
+                                  height: 200,
+                                  marginRight: kHorizontalPadding,
+                                  marginTop: 20,
+                                  quest: quest,
+                                  subtitle: quest.description,
+                                  onCardPressed: () async {
+                                    if (UserRole.explorer ==
+                                            model.currentUser.role ||
+                                        UserRole.sponsor ==
+                                            model.currentUser.role) {
+                                      return await model
+                                          .onQuestInListTapped(quest);
+                                    }
+                                    //Call The Dismissible Widget.
+                                    print(
+                                      'You can edit the Quest: ' +
+                                          quest.name.toUpperCase(),
+                                    );
+                                  },
+                                  /*     onCardPressed: () async =>
+                                      await model.onQuestInListTapped(quest), */
+                                ),
+                              );
                             })
                             .values
                             .toList(),
                         verticalSpaceLarge,
-                      ]),
+                      ],
+                    ),
+                    onTap: () {
+                      print('Am Being Pressed ');
+                    },
+                  ),
                   // questType == QuestType.DistanceEstimate
                   //     ? DistanceEstimateCard(
                   //         onPressed: () =>

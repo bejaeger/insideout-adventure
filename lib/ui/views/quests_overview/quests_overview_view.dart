@@ -1,13 +1,9 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_lists.dart';
-import 'package:afkcredits/ui/views/quests_overview/quest_categories_list.dart/quest_categories_list.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits/ui/widgets/quest_info_card.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,7 +15,9 @@ class QuestsOverviewView extends StatefulWidget {
 }
 
 class _QuestsOverviewViewState extends State<QuestsOverviewView>
-    with TickerProviderStateMixin {
+// In my opnion, This view should be called quest_categories
+    with
+        TickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
