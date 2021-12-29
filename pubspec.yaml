@@ -126,16 +126,13 @@ flutter:
   assets:
     - assets/icons/
     - assets/icons/afk_credits.PNG
-<<<<<<< HEAD
     - assets/icons/trash_icon.svg
-=======
     - assets/icons/measure-distance.png    
     - assets/icons/magnet.png
     - assets/icons/drawing-compass.png
     - assets/icons/treasure.png
     - assets/icons/treasure-map.png
     - assets/icons/measure.png
->>>>>>> e4b1c8372eb749b4ceaa103f5d2cc2879903ed59
   # To add assets to your application, add an assets section, like this:
   #assets:
     - .env

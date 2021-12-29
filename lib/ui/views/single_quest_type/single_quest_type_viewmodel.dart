@@ -24,7 +24,11 @@ class SingleQuestViewModel extends QuestViewModel {
     }
   }
   Future<void> removeQuest({required Quest quest}) async {
+    //Remove Quest in the Firebase
     await _questService.removeQuest(quest: quest);
+    //Remove Quest In the List.
+    currentQuests.remove(quest);
+
     notifyListeners();
   }
 

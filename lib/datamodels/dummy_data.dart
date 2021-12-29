@@ -36,7 +36,7 @@ List<Quest> getDummyQuests() {
 // burnaby quest
 Quest getDummyQuest1() {
   return Quest(
-    id: "QuestId01",
+    id: "e2wlRWSXVqIZBqe5OkSO",
     name: "Grouse Grind",
     description: "Make it up the hill in less than 1 hour",
     afkCredits: 100,
@@ -55,7 +55,7 @@ Quest getDummyQuest1() {
 // Distance Estimate
 Quest getDistanceEstimate200() {
   return Quest(
-    id: "Distance Estimate 200",
+    id: "sANrbvqSYZJX8IS1CCKL",
     name: "Distance Estimate 200m",
     description: "Estimate 200m",
     afkCredits: 20,
@@ -68,7 +68,7 @@ Quest getDistanceEstimate200() {
 // Distance Estimate
 Quest getDistanceEstimate500() {
   return Quest(
-    id: "Distance Estimate 500",
+    id: "E46GBs5XcGwGHeSmCMSh",
     name: "Distance Estimate 500m",
     description: "Estimate 500m",
     afkCredits: 20,
@@ -81,7 +81,7 @@ Quest getDistanceEstimate500() {
 // Distance Estimate
 Quest getDistanceEstimate1000() {
   return Quest(
-    id: "Distance Estimate 1km",
+    id: "Sg9NFY1sReWmiL2t1Ks9",
     name: "Distance Estimate 1km",
     description: "Estimate 1km",
     afkCredits: 20,
@@ -94,7 +94,7 @@ Quest getDistanceEstimate1000() {
 // Distance Estimate
 Quest getDistanceEstimate2000() {
   return Quest(
-    id: "Distance Estimate 2km",
+    id: "kFMNafSAwBJA8DKLX275",
     name: "Distance Estimate 2km",
     description: "Estimate 2km",
     afkCredits: 999999999,
@@ -140,7 +140,7 @@ Quest getDummyVibrationSearchQuest2() {
 
 Quest getDummyVibrationSearchQuestFreiburg() {
   return Quest(
-    id: "FreiburgLocationSearch",
+    id: "BYC9JvJaz64vMmyuV2Cc",
     name: "Freiburg Location Search",
     description: "Find the AFK Credits",
     afkCredits: 10,
@@ -186,7 +186,7 @@ Quest streeth11th2ndVibration() {
 // burnaby quest
 Quest heidachTrohpy() {
   return Quest(
-      id: "heidach trophy",
+      id: "JxoJaX3QNKHmE8pTwIWl",
       name: "Finde den Schatz im Heidach",
       description:
           "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
@@ -200,7 +200,7 @@ Quest heidachTrohpy() {
 // burnaby quest
 Quest heidachTrohpy2() {
   return Quest(
-      id: "heidach 2 trophy",
+      id: "CIwxujQ9zSyu2ZFlvv7h",
       name: "Finde den Heidach 2 Schatz",
       description:
           "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
@@ -234,7 +234,7 @@ Quest getDummyQuest2() {
 // Angola quest
 Quest getDummyQuest3() {
   return Quest(
-    id: "QuestId03",
+    id: "tagiVjLVAUr8r3fPMqba",
     name: "Fun at Brentwood",
     description:
         "Whether it's long street or high street...you'll have the time of your life",
@@ -291,7 +291,7 @@ Quest getDummyQuestQrCodeSearch() {
 
 Quest getQrCodeHuntJaeger() {
   return Quest(
-    id: "Starenweg Hunt",
+    id: "aHynXLPBE68rxe3Y083L",
     name: "Versteckter Schatz bei Jägers!",
     description: "Finde alle Codes im Hause Jägers!",
     afkCredits: 50,
@@ -312,7 +312,7 @@ Quest getQrCodeHuntJaeger() {
 
 Quest getDummyQuestQrCodeHuntBelek() {
   return Quest(
-    id: "Belek Hunt",
+    id: "JcqRbwr6Cb08oTqo9zWW",
     name: "Versteckter Schatz bei Belek!",
     description: "Finde alle Codes im Hause Beleks!",
     afkCredits: 50,
@@ -332,7 +332,7 @@ Quest getDummyQuestQrCodeHuntBelek() {
 
 Quest getDummyQuestQrCodeSearchStarenweg() {
   return Quest(
-    id: "Starenweg Hunt",
+    id: "elkHlNMiRLHsagfcATc3",
     name: "Versteckte Schätze im Starenweg!",
     description: "Finde alle Codes im Starenweg!",
     afkCredits: 50,
@@ -351,7 +351,7 @@ Quest getDummyQuestQrCodeSearchStarenweg() {
 // Angola quest
 Quest getDummyQuest5() {
   return Quest(
-    id: "My Room",
+    id: "LSwSs2c6ZtVKk23qyWxD",
     name: "Party at Mine!",
     description: "Come and test it",
     afkCredits: 100,
@@ -366,7 +366,7 @@ Quest getDummyQuest5() {
 
 Quest getDummyQuest6() {
   return Quest(
-    id: "Starenweg Hike",
+    id: "nJiVPrgw2jcGrxoABCBW",
     name: "Starenweg Hike!",
     description: "",
     afkCredits: 1,
@@ -788,7 +788,7 @@ AFKMarker belekLocSearch() {
 // burnaby quest
 Quest getDummyVibrationSearchQuestHeuweiler() {
   return Quest(
-      id: "VibrationSearch",
+      id: "860CQjbdDk0Pggj3NgBv",
       name: "Heuweiler Trophy Search!",
       description: "Find the Trophy Hidden in Heuweiler Best Town!",
       afkCredits: 30,
@@ -824,7 +824,7 @@ AFKMarker heidach3() {
   return AFKMarker(
       id: "heidach3",
       qrCodeId: "heidach3",
-      lat: 48.068605211860955, 
+      lat: 48.068605211860955,
       lon: 7.904684129866282,
       nextLocationHint: "");
 }
@@ -840,7 +840,7 @@ AFKMarker heidach4() {
 
 Quest commercialTrophy() {
   return Quest(
-      id: "commercial trophy",
+      id: "Yz4HrA4AKxI2mHYmi4lt",
       name: "Find the biggest secret of commercial drive!",
       description:
           "Learn how to enjoy life by finding the treasure at commercial drive",

@@ -402,7 +402,8 @@ class QuestService with ReactiveServiceMixin {
           return;
         }
         final position = await _geolocationService.getAndSetCurrentLocation();
-        if (position.accuracy > kMinRequiredAccuracyVibrationSearch) {
+        //HARGUIALR COMMENTED THIS OUT
+        if (position.accuracy > kMaxAccuracyLocationSearch) {
           log.v(
               "Accuracy is ${position.accuracy} and not enough to take next point!");
           return;
