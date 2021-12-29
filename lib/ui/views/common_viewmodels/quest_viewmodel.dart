@@ -36,7 +36,8 @@ abstract class QuestViewModel extends BaseModel {
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
   final QRCodeService qrCodeService = locator<QRCodeService>();
-  List<Quest> get nearbyQuests => questService.nearbyQuests;
+  //Getter From the Neary By Quests.
+  List<Quest> get nearbyQuests => questService.getNearByQuest;
   List<double> distancesFromQuests = [];
   bool validatingMarker = false;
 

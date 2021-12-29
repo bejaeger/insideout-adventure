@@ -4,12 +4,14 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
+import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
 class SingleQuestViewModel extends QuestViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
 
   final log = getLogger("SingleQuestViewModel");
+  final _questService = locator<QuestService>();
 
   final QuestType? questType;
   List<Quest> currentQuests = [];
@@ -20,6 +22,14 @@ class SingleQuestViewModel extends QuestViewModel {
       currentQuests
           .forEach((element) => distancesFromQuests.add(double.infinity));
     }
+  }
+  Future<void> removeQuest({required Quest quest}) async {
+    //Remove Quest in the Firebase
+    await _questService.removeQuest(quest: quest);
+    //Remove Quest In the List.
+    currentQuests.remove(quest);
+
+    notifyListeners();
   }
 
   @override

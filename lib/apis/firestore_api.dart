@@ -27,6 +27,7 @@ class FirestoreApi {
   final firestoreInstance = FirebaseFirestore.instance;
   //List<UserFavPlaces>? places;
   // Create user documents
+  DocumentReference? _documentReference;
 
   Future<void> createUser(
       {required User user, required UserStatistics stats}) async {
@@ -312,6 +313,11 @@ class FirestoreApi {
     }
   }
 
+  Future<void> removeQuest({required Quest quest}) async {
+    //Remove The quest from Firebase
+    await questsCollection.doc(quest.id).delete();
+  }
+
   Stream<User> getUserStream({required String uid}) {
     return usersCollection.doc(uid).snapshots().map((event) {
       if (!event.exists || event.data() == null) {
@@ -429,7 +435,15 @@ class FirestoreApi {
 
   Future _uploadQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
-    questsCollection.add(quest.toJson());
+    //Get the Document Created Reference
+    _documentReference = await questsCollection.add(quest.toJson());
+    //update the newly created document reference with the Firestore Id.
+    //This is to make suret that the document has the same id as the quest.
+    await questsCollection
+        .doc(_documentReference!.id)
+        .update({'id': _documentReference!.id});
+    log.i(
+        'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
   }
 
   // Changed the Scope of the Method. from _pvt to public
