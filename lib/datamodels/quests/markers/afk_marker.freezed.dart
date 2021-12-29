@@ -24,18 +24,12 @@ class _$AFKMarkerTearOff {
   _AFKMarker call(
       {required String id,
       String? qrCodeId,
-      String? nextLocationSolution,
-      String? nextLocationHint,
-      String? nextLocationPictureHint,
       double? lat,
       double? lon,
       MarkerStatus markerStatus = MarkerStatus.testing}) {
     return _AFKMarker(
       id: id,
       qrCodeId: qrCodeId,
-      nextLocationSolution: nextLocationSolution,
-      nextLocationHint: nextLocationHint,
-      nextLocationPictureHint: nextLocationPictureHint,
       lat: lat,
       lon: lon,
       markerStatus: markerStatus,
@@ -54,9 +48,6 @@ const $AFKMarker = _$AFKMarkerTearOff();
 mixin _$AFKMarker {
   String get id => throw _privateConstructorUsedError;
   String? get qrCodeId => throw _privateConstructorUsedError;
-  String? get nextLocationSolution => throw _privateConstructorUsedError;
-  String? get nextLocationHint => throw _privateConstructorUsedError;
-  String? get nextLocationPictureHint => throw _privateConstructorUsedError;
   double? get lat => throw _privateConstructorUsedError;
   double? get lon => throw _privateConstructorUsedError;
   MarkerStatus get markerStatus => throw _privateConstructorUsedError;
@@ -74,9 +65,6 @@ abstract class $AFKMarkerCopyWith<$Res> {
   $Res call(
       {String id,
       String? qrCodeId,
-      String? nextLocationSolution,
-      String? nextLocationHint,
-      String? nextLocationPictureHint,
       double? lat,
       double? lon,
       MarkerStatus markerStatus});
@@ -94,9 +82,6 @@ class _$AFKMarkerCopyWithImpl<$Res> implements $AFKMarkerCopyWith<$Res> {
   $Res call({
     Object? id = freezed,
     Object? qrCodeId = freezed,
-    Object? nextLocationSolution = freezed,
-    Object? nextLocationHint = freezed,
-    Object? nextLocationPictureHint = freezed,
     Object? lat = freezed,
     Object? lon = freezed,
     Object? markerStatus = freezed,
@@ -109,18 +94,6 @@ class _$AFKMarkerCopyWithImpl<$Res> implements $AFKMarkerCopyWith<$Res> {
       qrCodeId: qrCodeId == freezed
           ? _value.qrCodeId
           : qrCodeId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nextLocationSolution: nextLocationSolution == freezed
-          ? _value.nextLocationSolution
-          : nextLocationSolution // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nextLocationHint: nextLocationHint == freezed
-          ? _value.nextLocationHint
-          : nextLocationHint // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nextLocationPictureHint: nextLocationPictureHint == freezed
-          ? _value.nextLocationPictureHint
-          : nextLocationPictureHint // ignore: cast_nullable_to_non_nullable
               as String?,
       lat: lat == freezed
           ? _value.lat
@@ -147,9 +120,6 @@ abstract class _$AFKMarkerCopyWith<$Res> implements $AFKMarkerCopyWith<$Res> {
   $Res call(
       {String id,
       String? qrCodeId,
-      String? nextLocationSolution,
-      String? nextLocationHint,
-      String? nextLocationPictureHint,
       double? lat,
       double? lon,
       MarkerStatus markerStatus});
@@ -168,9 +138,6 @@ class __$AFKMarkerCopyWithImpl<$Res> extends _$AFKMarkerCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? qrCodeId = freezed,
-    Object? nextLocationSolution = freezed,
-    Object? nextLocationHint = freezed,
-    Object? nextLocationPictureHint = freezed,
     Object? lat = freezed,
     Object? lon = freezed,
     Object? markerStatus = freezed,
@@ -183,18 +150,6 @@ class __$AFKMarkerCopyWithImpl<$Res> extends _$AFKMarkerCopyWithImpl<$Res>
       qrCodeId: qrCodeId == freezed
           ? _value.qrCodeId
           : qrCodeId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nextLocationSolution: nextLocationSolution == freezed
-          ? _value.nextLocationSolution
-          : nextLocationSolution // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nextLocationHint: nextLocationHint == freezed
-          ? _value.nextLocationHint
-          : nextLocationHint // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nextLocationPictureHint: nextLocationPictureHint == freezed
-          ? _value.nextLocationPictureHint
-          : nextLocationPictureHint // ignore: cast_nullable_to_non_nullable
               as String?,
       lat: lat == freezed
           ? _value.lat
@@ -218,9 +173,6 @@ class _$_AFKMarker implements _AFKMarker {
   _$_AFKMarker(
       {required this.id,
       this.qrCodeId,
-      this.nextLocationSolution,
-      this.nextLocationHint,
-      this.nextLocationPictureHint,
       this.lat,
       this.lon,
       this.markerStatus = MarkerStatus.testing});
@@ -233,12 +185,6 @@ class _$_AFKMarker implements _AFKMarker {
   @override
   final String? qrCodeId;
   @override
-  final String? nextLocationSolution;
-  @override
-  final String? nextLocationHint;
-  @override
-  final String? nextLocationPictureHint;
-  @override
   final double? lat;
   @override
   final double? lon;
@@ -248,7 +194,7 @@ class _$_AFKMarker implements _AFKMarker {
 
   @override
   String toString() {
-    return 'AFKMarker(id: $id, qrCodeId: $qrCodeId, nextLocationSolution: $nextLocationSolution, nextLocationHint: $nextLocationHint, nextLocationPictureHint: $nextLocationPictureHint, lat: $lat, lon: $lon, markerStatus: $markerStatus)';
+    return 'AFKMarker(id: $id, qrCodeId: $qrCodeId, lat: $lat, lon: $lon, markerStatus: $markerStatus)';
   }
 
   @override
@@ -260,16 +206,6 @@ class _$_AFKMarker implements _AFKMarker {
             (identical(other.qrCodeId, qrCodeId) ||
                 const DeepCollectionEquality()
                     .equals(other.qrCodeId, qrCodeId)) &&
-            (identical(other.nextLocationSolution, nextLocationSolution) ||
-                const DeepCollectionEquality().equals(
-                    other.nextLocationSolution, nextLocationSolution)) &&
-            (identical(other.nextLocationHint, nextLocationHint) ||
-                const DeepCollectionEquality()
-                    .equals(other.nextLocationHint, nextLocationHint)) &&
-            (identical(
-                    other.nextLocationPictureHint, nextLocationPictureHint) ||
-                const DeepCollectionEquality().equals(
-                    other.nextLocationPictureHint, nextLocationPictureHint)) &&
             (identical(other.lat, lat) ||
                 const DeepCollectionEquality().equals(other.lat, lat)) &&
             (identical(other.lon, lon) ||
@@ -284,9 +220,6 @@ class _$_AFKMarker implements _AFKMarker {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(qrCodeId) ^
-      const DeepCollectionEquality().hash(nextLocationSolution) ^
-      const DeepCollectionEquality().hash(nextLocationHint) ^
-      const DeepCollectionEquality().hash(nextLocationPictureHint) ^
       const DeepCollectionEquality().hash(lat) ^
       const DeepCollectionEquality().hash(lon) ^
       const DeepCollectionEquality().hash(markerStatus);
@@ -306,9 +239,6 @@ abstract class _AFKMarker implements AFKMarker {
   factory _AFKMarker(
       {required String id,
       String? qrCodeId,
-      String? nextLocationSolution,
-      String? nextLocationHint,
-      String? nextLocationPictureHint,
       double? lat,
       double? lon,
       MarkerStatus markerStatus}) = _$_AFKMarker;
@@ -320,12 +250,6 @@ abstract class _AFKMarker implements AFKMarker {
   String get id => throw _privateConstructorUsedError;
   @override
   String? get qrCodeId => throw _privateConstructorUsedError;
-  @override
-  String? get nextLocationSolution => throw _privateConstructorUsedError;
-  @override
-  String? get nextLocationHint => throw _privateConstructorUsedError;
-  @override
-  String? get nextLocationPictureHint => throw _privateConstructorUsedError;
   @override
   double? get lat => throw _privateConstructorUsedError;
   @override

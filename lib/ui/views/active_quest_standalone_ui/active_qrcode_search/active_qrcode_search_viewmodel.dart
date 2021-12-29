@@ -1,9 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
-import 'package:afkcredits/enums/dialog_type.dart';
-import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -11,7 +8,6 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:stacked/stacked.dart';
 
 class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
   final MarkerService _markerService = locator<MarkerService>();
@@ -19,8 +15,10 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
 
   List<AFKMarker> foundObjects = [];
   int indexHint = 0;
-  bool possibleToGetNextHint = false;
   bool? closeby;
+  bool animateProgress = false;
+  bool displayNewHint =
+      true; // bool to check whether hint should be displayed or not!
   final log = getLogger("ActiveQrCodeSearchViewModel");
 
   void initialize({required Quest quest}) async {
@@ -58,6 +56,7 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
 
         await Future.delayed(Duration(seconds: 1));
         showStartSwipe = false;
+        displayNewHint = true;
         notifyListeners();
       } else {
         log.wtf("Not starting quest, due to an unknown reason");
@@ -77,11 +76,18 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
   // This means it is simply the last object of foundObjects!
   String getCurrentHint() {
     if (!hasActiveQuest) {
-      return "Start the quest above to see the first hint";
+      // return "Start the quest above to see the first hint";
+      return "Starte um den ersten Hinweis zu sehen";
     } else {
-      //    return foundObjects[indexHint].nextLocationHint!;
-      return foundObjects.last.nextLocationHint ??
-          "No hint for this round, sorry! You are on your own...";
+      if (activeQuest.quest.markerNotes != null) {
+        if (foundObjects.length < activeQuest.quest.markerNotes!.length) {
+          return activeQuest.quest.markerNotes![foundObjects.length].note;
+        } else {
+          return "Kein Hinweis mehr übrig";
+        }
+      } else {
+        return "No hint for this round, sorry! You are on your own...";
+      }
     }
   }
 
@@ -163,11 +169,15 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
         final bool completed = isQuestCompleted();
         if (completed) {
           await showCollectedMarkerDialog();
+          // TODO: Show successfully finished quest!
           await showSuccessDialog();
           return;
           // checkQuestAndFinishWhenCompleted();
         } else {
           await showCollectedMarkerDialog();
+          log.i("After show collected marker dialog view!");
+          animateProgress = true;
+          displayNewHint = false;
           // if (result.marker!.nextLocationHint != null)
           //   await dialogService.showDialog(
           //       title: "Next hint",
@@ -179,11 +189,18 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
+  void setDisplayNewHint(bool set) {
+    displayNewHint = set;
+    notifyListeners();
+  }
+
   // -------------------------------------
   @override
   void resetPreviousQuest() {
     markersOnMap = {};
     foundObjects = [];
+    animateProgress = false;
+    displayNewHint = true;
     super.resetPreviousQuest();
   }
 }

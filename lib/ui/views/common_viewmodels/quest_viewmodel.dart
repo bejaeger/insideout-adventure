@@ -38,6 +38,7 @@ abstract class QuestViewModel extends BaseModel {
   final QRCodeService qrCodeService = locator<QRCodeService>();
   List<Quest> get nearbyQuests => questService.nearbyQuests;
   List<double> distancesFromQuests = [];
+  bool validatingMarker = false;
 
   QuestViewModel() {
     // listen to changes in wallet
@@ -64,12 +65,16 @@ abstract class QuestViewModel extends BaseModel {
         quests: nearbyQuests, questType: type);
   }
 
-  Future getLocation() async {
+  Future getLocation({bool forceAwait = false}) async {
     try {
       if (_geolocationService.getUserPosition == null) {
         await _geolocationService.getAndSetCurrentLocation();
       } else {
-        _geolocationService.getAndSetCurrentLocation();
+        if (forceAwait) {
+          await _geolocationService.getAndSetCurrentLocation();
+        } else {
+          _geolocationService.getAndSetCurrentLocation();
+        }
       }
     } catch (e) {
       if (e is GeolocationServiceException) {
@@ -227,8 +232,10 @@ abstract class QuestViewModel extends BaseModel {
         return MarkerAnalysisResult.empty();
       }
     }
+    validatingMarker = true;
     MarkerAnalysisResult scanResult =
         await questService.analyzeMarker(marker: marker);
+    validatingMarker = false;
     return scanResult;
   }
 
@@ -290,6 +297,10 @@ abstract class QuestViewModel extends BaseModel {
   // but markers weren't collected yet.
   Future cancelOrFinishQuest(
       {bool force = false, bool showDialog = true}) async {
+    if (!hasActiveQuest) {
+      log.wtf("No active quest present to cancel");
+      return;
+    }
     if (activeQuest.status != QuestStatus.success) {
       DialogResponse<dynamic>? continueQuest;
       if (!force) {

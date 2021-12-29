@@ -17,7 +17,7 @@ class Quest with _$Quest {
     AFKMarker? startMarker,
     AFKMarker? finishMarker,
     required List<AFKMarker> markers,
-    List<MarkerNote>? markerNotes, 
+    List<MarkerNote>? markerNotes,
     required num afkCredits,
     String? networkImagePath,
     List<num>? afkCreditsPerMarker,

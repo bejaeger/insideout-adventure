@@ -93,7 +93,7 @@ class _FakeBehaviorSubject_7<T> extends _i1.Fake
 
 class _FakePosition_8 extends _i1.Fake implements _i8.Position {}
 
-class _FakeQuestQRCodeScanResult_9 extends _i1.Fake
+class _FakeMarkerAnalysisResult_9 extends _i1.Fake
     implements _i9.MarkerAnalysisResult {}
 
 class _FakeActivatedQuest_10 extends _i1.Fake implements _i10.ActivatedQuest {}
@@ -1195,12 +1195,14 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
       returnValue: false) as bool);
   @override
   _i17.Future<_i9.MarkerAnalysisResult> analyzeMarker(
-          {_i11.AFKMarker? marker, bool? returnMarker = false}) =>
+          {_i11.AFKMarker? marker, bool? locationVerification = true}) =>
       (super.noSuchMethod(
-              Invocation.method(#handleQrCodeScanEvent, [],
-                  {#marker: marker, #returnMarker: returnMarker}),
+              Invocation.method(#analyzeMarker, [], {
+                #marker: marker,
+                #locationVerification: locationVerification
+              }),
               returnValue: Future<_i9.MarkerAnalysisResult>.value(
-                  _FakeQuestQRCodeScanResult_9()))
+                  _FakeMarkerAnalysisResult_9()))
           as _i17.Future<_i9.MarkerAnalysisResult>);
   @override
   _i17.Future<_i11.AFKMarker?> getMarkerFromQrCodeId({String? qrCodeId}) =>

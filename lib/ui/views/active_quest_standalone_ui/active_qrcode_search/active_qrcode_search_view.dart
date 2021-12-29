@@ -3,6 +3,7 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
@@ -13,23 +14,51 @@ import 'package:afkcredits/ui/widgets/not_enough_sponsoring_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
-class ActiveQrCodeSearchView extends StatelessWidget {
+class ActiveQrCodeSearchView extends StatefulWidget {
   final Quest quest;
   const ActiveQrCodeSearchView({Key? key, required this.quest})
       : super(key: key);
+
+  @override
+  State<ActiveQrCodeSearchView> createState() => _ActiveQrCodeSearchViewState();
+}
+
+class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
+    with TickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    );
+    _controller.forward();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActiveQrCodeSearchViewModel>.reactive(
         viewModelBuilder: () => locator<ActiveQrCodeSearchViewModel>(),
         disposeViewModel: false,
-        onModelReady: (model) => model.initialize(quest: quest),
+        onModelReady: (model) => model.initialize(quest: widget.quest),
         builder: (context, model, child) {
+          if (model.animateProgress) {
+            _controller.reset();
+            _controller.forward();
+            model.animateProgress = false;
+          }
           return WillPopScope(
             onWillPop: () async {
-              if (!model.hasActiveQuest) {
+              if (!model.hasActiveQuest && !model.questSuccessfullyFinished) {
                 model.navigateBack();
               }
               return false;
@@ -39,6 +68,11 @@ class ActiveQrCodeSearchView extends StatelessWidget {
                 appBar: CustomAppBar(
                   title: "Finde den Schatz!!",
                   onBackButton: model.navigateBack,
+                  showRedLiveButton: true,
+                ),
+                endDrawer: SizedBox(
+                  width: screenWidth(context, percentage: 0.8),
+                  child: const ActiveQuestDrawerView(),
                 ),
                 floatingActionButton: AFKFloatingActionButtons(
                   // title1: "SCAN",
@@ -62,110 +96,132 @@ class ActiveQrCodeSearchView extends StatelessWidget {
                                 model.replaceWithMainView(
                                     index: BottomNavBarIndex.quest),
                           )
-                        : Align(
-                            alignment: Alignment.center,
-                            child: Column(
-                              children: [
-                                verticalSpaceMedium,
-                                if (model.showStartSwipe)
-                                  AFKSlideButton(
-                                      quest: quest,
-                                      canStartQuest: model.hasEnoughSponsoring(
-                                          quest: quest),
-                                      onSubmit: () =>
-                                          model.maybeStartQuest(quest: quest)),
-                                if (!model.hasEnoughSponsoring(quest: quest))
-                                  NotEnoughSponsoringNote(topPadding: 10),
-                                if (!model.showStartSwipe &&
-                                    model.hasActiveQuest)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Text("Time"),
-                                            Text(model.timeElapsed.toString(),
-                                                maxLines: 1,
-                                                style: textTheme(context)
-                                                    .headline4),
-                                          ],
-                                        ),
-                                        verticalSpaceMedium,
-                                        Column(
-                                          children: [
-                                            Text("Fortschritt",
-                                                textAlign: TextAlign.center),
-                                            Text(
-                                                model.hasActiveQuest
-                                                    ? (model.foundObjects
-                                                                    .length -
-                                                                1)
-                                                            .toString() +
-                                                        " / " +
-                                                        (model
-                                                                    .activeQuest
-                                                                    .quest
-                                                                    .markers
-                                                                    .length -
-                                                                1)
-                                                            .toString()
-                                                    : "0 / " +
-                                                        quest.markers.length
-                                                            .toString(),
-                                                textAlign: TextAlign.center,
-                                                style: textTheme(context)
-                                                    .headline3),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                Expanded(
-                                    child: NextHintDisplay(
-                                        model: model, quest: quest)),
-                                // SizedBox(height: 5),
-                                if (model.isSuperUser)
-                                  Container(
-                                    height: 100,
-                                    child: Column(
-                                      children: [
-                                        Text("Scrollable list of Markers"),
-                                        Expanded(
-                                          child: ListView(
-                                            shrinkWrap: true,
-                                            children: [
-                                              ...quest.markers
-                                                  .map(
-                                                    (e) => TextButton(
-                                                      onPressed: () => model
-                                                          .displayMarker(e),
-                                                      child: Text(e.id),
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                        : Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Column(
                                   children: [
-                                    Text("Finde & Scan",
-                                        style: textTheme(context).headline6),
-                                    Icon(Icons.arrow_forward, size: 40),
-                                    SizedBox(width: 100),
+                                    verticalSpaceMedium,
+                                    if (model.showStartSwipe)
+                                      AFKSlideButton(
+                                          quest: widget.quest,
+                                          canStartQuest:
+                                              model.hasEnoughSponsoring(
+                                                  quest: widget.quest),
+                                          onSubmit: () => model.maybeStartQuest(
+                                              quest: widget.quest)),
+                                    if (!model.hasEnoughSponsoring(
+                                        quest: widget.quest))
+                                      NotEnoughSponsoringNote(topPadding: 10),
+                                    if (!model.showStartSwipe &&
+                                        model.hasActiveQuest)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Text("Time"),
+                                                Text(
+                                                    model.timeElapsed
+                                                        .toString(),
+                                                    maxLines: 1,
+                                                    style: textTheme(context)
+                                                        .headline4),
+                                              ],
+                                            ),
+                                            verticalSpaceMedium,
+                                            Column(
+                                              children: [
+                                                Text("Fortschritt",
+                                                    textAlign:
+                                                        TextAlign.center),
+                                                ScaleTransition(
+                                                  scale: _animation,
+                                                  child: Text(
+                                                      model.hasActiveQuest
+                                                          ? (model.foundObjects
+                                                                          .length -
+                                                                      1)
+                                                                  .toString() +
+                                                              " / " +
+                                                              (model
+                                                                          .activeQuest
+                                                                          .quest
+                                                                          .markers
+                                                                          .length -
+                                                                      1)
+                                                                  .toString()
+                                                          : "0 / " +
+                                                              widget
+                                                                  .quest
+                                                                  .markers
+                                                                  .length
+                                                                  .toString(),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: textTheme(context)
+                                                          .headline3),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    Expanded(
+                                        child: NextHintDisplay(
+                                            model: model, quest: widget.quest)),
+                                    // SizedBox(height: 5),
+                                    if (model.isSuperUser)
+                                      Container(
+                                        height: 100,
+                                        child: Column(
+                                          children: [
+                                            Text("Scrollable list of Markers"),
+                                            Expanded(
+                                              child: ListView(
+                                                shrinkWrap: true,
+                                                children: [
+                                                  ...widget.quest.markers
+                                                      .map(
+                                                        (e) => TextButton(
+                                                          onPressed: () => model
+                                                              .displayMarker(e),
+                                                          child: Text(e.id),
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text("Finde & Scan",
+                                            style:
+                                                textTheme(context).headline6),
+                                        Icon(Icons.arrow_forward, size: 40),
+                                        SizedBox(width: 100),
+                                      ],
+                                    ),
+                                    SizedBox(height: 28),
                                   ],
                                 ),
-                                SizedBox(height: 28),
-                              ],
-                            ),
+                              ),
+                              if (model.validatingMarker)
+                                AFKProgressIndicator(),
+                              if (model.validatingMarker)
+                                Container(
+                                    color: Colors.grey[400]!.withOpacity(0.6))
+                            ],
                           ),
               ),
             ),
@@ -206,15 +262,25 @@ class NextHintDisplay extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Nächster Hinweis",
-                          style: textTheme(context)
-                              .headline4!
-                              .copyWith(fontSize: 24)),
-                      Text("Wo ist der nächste Code?",
-                          textAlign: TextAlign.left,
-                          style: textTheme(context)
-                              .headline4!
-                              .copyWith(fontSize: 14)),
+                      if (model.foundObjects.length > 0 && model.displayNewHint)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                "Hinweis " +
+                                    (model.foundObjects.length)
+                                        .toStringAsFixed(0),
+                                style: textTheme(context)
+                                    .headline4!
+                                    .copyWith(fontSize: 24)),
+                            //Icon(Icons.help_outline, color: Colors.grey[700], size: 30),
+                          ],
+                        ),
+                      // Text("Wo ist der nächste Code?",
+                      //     textAlign: TextAlign.left,
+                      //     style: textTheme(context)
+                      //         .headline4!
+                      //         .copyWith(fontSize: 14)),
                     ],
                   ),
                 ),
@@ -224,8 +290,8 @@ class NextHintDisplay extends StatelessWidget {
             Expanded(
                 child: DisplayHint(
               hintString: model.getCurrentHint(),
-              // possibleToGetNextHint: model.possibleToGetNextHint,
-              // onNextHintPressed: model.getNextHint
+              displayNewHint: model.displayNewHint,
+              onNextHintPressed: () => model.setDisplayNewHint(true),
             )),
           if (quest.type == QuestType.QRCodeSearch)
             Expanded(
@@ -301,14 +367,14 @@ class NextHintDisplay extends StatelessWidget {
 
 class DisplayHint extends StatefulWidget {
   final String hintString;
-  // final bool possibleToGetNextHint;
-  // final void Function() onNextHintPressed;
-  const DisplayHint({
-    Key? key,
-    required this.hintString,
-    // required this.possibleToGetNextHint,
-    // required this.onNextHintPressed
-  }) : super(key: key);
+  final bool displayNewHint;
+  final void Function() onNextHintPressed;
+  const DisplayHint(
+      {Key? key,
+      required this.hintString,
+      required this.displayNewHint,
+      required this.onNextHintPressed})
+      : super(key: key);
 
   @override
   State<DisplayHint> createState() => _DisplayHintState();
@@ -331,7 +397,7 @@ class _DisplayHintState extends State<DisplayHint>
       parent: _controller,
       curve: Curves.elasticOut,
     );
-    // _controller.forward();
+    _controller.forward();
   }
 
   @override
@@ -342,36 +408,55 @@ class _DisplayHintState extends State<DisplayHint>
 
   @override
   Widget build(BuildContext context) {
+    _controller.forward();
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
+        // crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // if (!widget.possibleToGetNextHint)
-          Expanded(
-            child: RotationTransition(
-              turns: _animation,
-              child: Align(
-                child: Text(widget.hintString,
-                    //overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style:
-                        textTheme(context).headline6!.copyWith(fontSize: 30)),
-              ),
-            ),
-          ),
+          widget.displayNewHint
+              ? Expanded(
+                  child: RotationTransition(
+                    turns: _animation,
+                    child: Align(
+                      child: Text(widget.hintString,
+                          //overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: textTheme(context)
+                              .headline6!
+                              .copyWith(fontSize: 30)),
+                    ),
+                  ),
+                )
+              : Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(10),
+                      shadowColor: MaterialStateProperty.all(Colors.black),
+                    ),
+                    onPressed: () async {
+                      widget.onNextHintPressed();
+                      // _controller.forward();
+                      // await Future.delayed(Duration(seconds: 2));
+                      _controller.reset();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Shimmer.fromColors(
+                        baseColor: kWhiteTextColor,
+                        highlightColor: kGreyTextColor,
+                        period: const Duration(milliseconds: 1000),
+                        child: Text("Neuer Hinweis",
+                            style: textTheme(context)
+                                .headline6!
+                                .copyWith(color: kWhiteTextColor)),
+                      ),
+                    ),
+                  ),
+                ),
           verticalSpaceMedium,
-          // ElevatedButton(
-          //     onPressed: () async {
-          //       widget.onNextHintPressed();
-          //       _controller.forward();
-          //       await Future.delayed(Duration(seconds: 2));
-          //       _controller.reset();
-          //     },
-          //     child: Text("Get Hint",
-          //         style: textTheme(context)
-          //             .headline6!
-          //             .copyWith(color: kWhiteTextColor))),
         ],
       ),
     );
