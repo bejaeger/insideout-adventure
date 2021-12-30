@@ -36,7 +36,7 @@ List<Quest> getDummyQuests() {
 // burnaby quest
 Quest getDummyQuest1() {
   return Quest(
-    id: "e2wlRWSXVqIZBqe5OkSO",
+    id: "D1qn76RJwqDlcbtcKaLm",
     name: "Grouse Grind",
     description: "Make it up the hill in less than 1 hour",
     afkCredits: 100,
@@ -173,7 +173,7 @@ Quest getDummyVibrationSearchQuest4() {
 // burnaby quest
 Quest streeth11th2ndVibration() {
   return Quest(
-      id: "VibrationSearch at 11th and 2nd",
+      id: "aeyLAC1r0OsnA0IBj6uT",
       name: "10th Street Fun!",
       description: "Find the AFK Credits",
       afkCredits: 10,

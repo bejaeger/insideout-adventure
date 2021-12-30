@@ -26,10 +26,12 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
           RaiseQuestBottomSheetViewModel(quest: request.data),
       builder: (context, model, child) => Container(
         decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0))),
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16.0),
+            topRight: Radius.circular(16.0),
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
           child: Column(

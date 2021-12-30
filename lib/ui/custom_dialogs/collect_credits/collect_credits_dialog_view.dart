@@ -19,19 +19,21 @@ class CollectCreditsDialogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CollectCreditsDialogViewModel>.reactive(
-        viewModelBuilder: () => CollectCreditsDialogViewModel(),
-        builder: (context, model, child) => Dialog(
-              elevation: 5,
-              //insetPadding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.0)),
-              backgroundColor: Colors.white,
-              child: _BasicDialogContent(
-                request: request,
-                completer: completer,
-                model: model,
-              ),
-            ));
+      viewModelBuilder: () => CollectCreditsDialogViewModel(),
+      builder: (context, model, child) => Dialog(
+        elevation: 5,
+        //insetPadding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        backgroundColor: Colors.white,
+        child: _BasicDialogContent(
+          request: request,
+          completer: completer,
+          model: model,
+        ),
+      ),
+    );
   }
 }
 
@@ -99,7 +101,7 @@ class _BasicDialogContent extends StatelessWidget {
                               padding: const EdgeInsets.all(16.0),
                               child: Image.asset(kAFKCreditsLogoPath,
                                   width: screenWidth(context, percentage: 0.4)),
-                            )                          
+                            )
                           : FittedBox(
                               fit: BoxFit.fill,
                               child: Icon(

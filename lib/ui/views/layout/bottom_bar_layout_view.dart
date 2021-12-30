@@ -11,6 +11,7 @@ import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';

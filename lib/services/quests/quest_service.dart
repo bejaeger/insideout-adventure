@@ -28,6 +28,8 @@ class QuestService with ReactiveServiceMixin {
     listenToReactiveValues([_timeElapsed]);
   }
 
+  Quest? _questToUpdate;
+
   BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
       BehaviorSubject<ActivatedQuest?>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
@@ -49,6 +51,14 @@ class QuestService with ReactiveServiceMixin {
 
 //Created a Getter for near by Quest
   List<Quest> get getNearByQuest => _nearbyQuests;
+
+  Quest? get getQuestToUpdate => _questToUpdate;
+
+  void setQuestToUpdate({required Quest quest}) {
+    if (quest.id.isNotEmpty) {
+      _questToUpdate = quest;
+    }
+  }
 
   // dead time after update
   bool isTrackingDeadTime = false;
@@ -335,6 +345,14 @@ class QuestService with ReactiveServiceMixin {
       if (seconds % 1 == 0) {
         updateTimeElapsed(seconds);
       }
+    }
+  }
+
+  Future<void> updateQuestData({required Quest quest}) async {
+    if (quest.id != null || quest.id.isNotEmpty) {
+      await _firestoreApi.updateQuestData(quest: quest);
+    } else {
+      log.wtf('You cannot provide me, an Empty Quest ID: ${quest.id}');
     }
   }
 

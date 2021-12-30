@@ -16,6 +16,14 @@ mixin NavigationMixin {
     );
   }
 
+  void navToUpdatingQuestView() {
+    //navigationService.replaceWith(Routes.homeView);
+    _navigationService.navigateTo(
+      Routes.updatingQuestView,
+      //arguments: BottomBarLayoutTemplateViewArguments(userRole: role),
+    );
+  }
+
   void navToExplorerCreateAccount({required UserRole role}) {
     _navigationService.replaceWith(Routes.createAccountView,
         arguments: CreateAccountViewArguments(role: role));
@@ -43,6 +51,10 @@ mixin NavigationMixin {
           initialBottomNavBarIndex: BottomNavBarIndex.quest,
           questViewIndex: QuestViewType.map),
     );
+  }
+
+  void navBackToPreviousView() {
+    _navigationService.back();
   }
 
   void navToQuestsOfSpecificTypeView(

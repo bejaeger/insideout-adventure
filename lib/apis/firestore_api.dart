@@ -287,6 +287,21 @@ class FirestoreApi {
     }
   }
 
+  Future<void> updateQuestData({required Quest quest}) async {
+    try {
+      await questsCollection
+          .doc(quest.id)
+          .set(quest.toJson(), SetOptions(merge: true));
+
+      //return result;
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when updating user settings in quest collection",
+          devDetails: '$e');
+    }
+  }
+
   Future addSponsorIdToUser(
       {required String uid, required String sponsorId}) async {
     try {
