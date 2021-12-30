@@ -11,13 +11,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final String title;
   final bool drawer;
+  final bool showRedLiveButton;
   final void Function()? onBackButton;
   CustomAppBar(
       {Key? key,
       this.height = kAppBarExtendedHeight,
       required this.title,
       this.drawer = false,
-      this.onBackButton})
+      this.onBackButton, this.showRedLiveButton = false})
       : super(key: key);
 
   double get getHeight => height;
@@ -31,40 +32,59 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Size(screenWidth(context), height + kActiveQuestPanelMaxHeight),
         child: Stack(
           children: <Widget>[
-            ActivatedQuestPanel(heightAppBar: height),
+            if (!showRedLiveButton) ActivatedQuestPanel(heightAppBar: height),
             Container(
               alignment: Alignment.center,
               //clipBehavior: Clip.none,
               // Background
-              child: Stack(children: [
-                if (drawer)
-                  Align(
+              child: Stack(
+                children: [
+                  if (drawer)
+                    Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
-                          onTap: () => Scaffold.of(context).openEndDrawer(),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: kHorizontalPadding),
-                            child: Icon(Icons.menu,
-                                color: kWhiteTextColor, size: 35),
-                          ))),
-                Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    child: FittedBox(
-                      child: Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: textTheme(context)
-                            .headline5!
-                            .copyWith(color: kWhiteTextColor),
+                        onTap: () => Scaffold.of(context).openEndDrawer(),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kHorizontalPadding),
+                          child: Icon(Icons.menu,
+                              color: kWhiteTextColor, size: 35),
+                        ),
+                      ),
+                    ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: FittedBox(
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme(context)
+                              .headline5!
+                              .copyWith(color: kWhiteTextColor),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ]),
+                  if (showRedLiveButton)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: AnimatedOpacity(
+                        opacity: model.hasActiveQuest ? 1 : 0,
+                        duration: Duration(seconds: 1),
+                        child: GestureDetector(
+                          onTap: () => Scaffold.of(context).openEndDrawer(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: BlinkAnimation(),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               decoration: BoxDecoration(
                 color: kPrimaryColor,
                 boxShadow: [
@@ -106,4 +126,46 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize =>
       Size.fromHeight(height + kActiveQuestPanelMaxHeight);
+}
+
+class BlinkAnimation extends StatefulWidget {
+  @override
+  _BlinkAnimationState createState() => _BlinkAnimationState();
+}
+
+class _BlinkAnimationState extends State<BlinkAnimation>
+    with SingleTickerProviderStateMixin {
+  late Animation<Color?> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
+    final CurvedAnimation curve =
+        CurvedAnimation(parent: controller, curve: Curves.linear);
+    animation =
+        ColorTween(begin: Colors.red, end: Colors.red.shade900).animate(curve);
+    controller.repeat();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (BuildContext context, Widget? child) {
+        return Container(
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: kBlackHeadlineColor)),
+            child: Icon(Icons.circle, size: 30, color: animation.value));
+      },
+    );
+  }
+
+  dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }

@@ -75,7 +75,7 @@ class ActivatedQuestPanel extends StatelessWidget {
                                           if (model.gpsAccuracyInfo != null)
                                             Text(model.gpsAccuracyInfo!,
                                                 style: TextStyle(
-                                                    color: kWhiteTextColor, fontSize: 6))
+                                                    color: kWhiteTextColor, fontSize: 12))
                                         ],
                                       ),
                                     ),
@@ -196,6 +196,7 @@ class SmallButton extends StatelessWidget {
           ),
           padding: const EdgeInsets.all(10.0),
           child: Text(title,
+          textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey[50], fontSize: 16))),
     );
   }

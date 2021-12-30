@@ -58,11 +58,11 @@ class GeolocationService {
         if ((difference != null && difference.inSeconds.abs() > 5) ||
             getUserPosition == null) {
           // log.wtf("---------------------------------");
-          // log.i(DateTime.now().toString());
+          log.i("Getting current position now at ${DateTime.now().toString()}");
           final geolocatorPosition = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best,
           );
-          // log.i(DateTime.now().toString());
+          log.i("Retrieved position at ${DateTime.now().toString()}");
 
           currentGPSAccuracy = geolocatorPosition.accuracy;
           if (currentGPSAccuracy != null &&

@@ -54,7 +54,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Quest",
+                    getStringForCategory(model.quest.type),
                     style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -105,14 +105,14 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                     color: kBlackHeadlineColor),
               ),
               // verticalSpaceTiny,
-              Text(
-                getStringForCategory(model.quest.type),
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: kPrimaryColor),
-                // textAlign: TextAlign.left,
-              ),
+              // Text(
+              //   getStringForCategory(model.quest.type),
+              //   style: TextStyle(
+              //       fontSize: 20,
+              //       fontWeight: FontWeight.bold,
+              //       color: kPrimaryColor),
+              //   // textAlign: TextAlign.left,
+              // ),
               verticalSpaceMedium,
               Text(
                 request.description.toString(),
