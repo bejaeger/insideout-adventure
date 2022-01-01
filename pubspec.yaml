@@ -69,6 +69,8 @@ dependencies:
   json_annotation: ^4.3.0
 
   flutter_launcher_icons: ^0.9.1
+  notion_api: ^1.2.0
+  device_info: ^2.0.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

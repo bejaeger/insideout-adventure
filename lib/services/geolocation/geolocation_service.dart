@@ -1,28 +1,88 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/enums/position_retrieval.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
+import 'package:device_info/device_info.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show describeEnum, kIsWeb;
 import 'package:location/location.dart' as loc;
+import 'dart:io' show Platform;
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:notion_api/notion.dart';
+import 'package:notion_api/notion/general/lists/children.dart';
+import 'package:notion_api/notion/general/lists/properties.dart';
+import 'package:notion_api/notion/general/property.dart';
+import 'package:notion_api/notion/general/rich_text.dart';
+import 'package:notion_api/notion/general/types/notion_types.dart';
+import 'package:notion_api/notion/objects/database.dart';
+import 'package:notion_api/notion/objects/pages.dart';
+import 'package:notion_api/notion/objects/parent.dart';
+import 'package:notion_api/responses/notion_response.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:math';
 
 class GeolocationService {
+  late String trial;
+  GeolocationService() {
+    var rng = new Random();
+    trial = rng.nextInt(100000).toString();
+  }
   final log = getLogger('GeolocationService');
   final _firestoreApi = locator<FirestoreApi>();
   StreamSubscription? _currentPositionStreamSubscription;
+  final NotionClient notion =
+      NotionClient(token: 'secret_q0fv8n18xW5l1PS9ipqljUphAXvmvCyXqKfGjcqXvWs');
 
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
+  final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   Position? _position;
   Position? get getUserPosition => _position;
   double? currentGPSAccuracy;
   String? gpsAccuracyInfo;
+
+  // position with stream
+  Position? _livePosition;
+  Position? get getUserLivePosition => _livePosition;
+
+  // current position forced
+  Position? _currentPosition;
+  Position? get getCurrentPosition => _currentPosition;
+
+  // last known position
+  Position? _lastKnownPosition;
+  Position? get getLastKnownPosition => _lastKnownPosition;
+
+  List<PositionEntry> allPositions = [];
+
+  String currentLocationDistanceKey = "currentLocationDistance";
+  String liveLocationDistanceKey = "liveLocationDistance";
+  String lastKnownLocationDistanceKey = "lastKnownLocationDistance";
+  String triggeredByKey = "triggeredBy";
+
+  String currentLocationTimestampKey = "currentLocationTimestamp";
+  String liveLocationTimestampKey = "liveLocationTimestamp";
+  String lastKnownLocationTimestampKey = "lastKnownLocationTimestamp";
+
+  String currentLocationLatitudeKey = "currentLocationLatitude";
+  String liveLocationLatitudeKey = "liveLocationLatitude";
+  String lastKnownLocationLatitudeKey = "lastKnownLocationLatitude";
+
+  String currentLocationLongitudeKey = "currentLocationLongitude";
+  String liveLocationLongitudeKey = "liveLocationLongitude";
+  String lastKnownLocationLongitudeKey = "lastKnownLocationLongitude";
+
+  String currentLocationAccuracyKey = "currentLocationAccuracy";
+  String liveLocationAccuracyKey = "liveLocationAccuracy";
+  String lastKnownLocationAccuracyKey = "lastKnownLocationAccuracy";
+
+  String trialEntryKey = "trial";
+
+  String deviceInfoKey = "deviceInfo";
 
   void listenToPosition(
       {double distanceFilter = kMinDistanceFromLastCheckInMeters}) {
@@ -33,8 +93,10 @@ class GeolocationService {
               desiredAccuracy: LocationAccuracy.best,
               distanceFilter: distanceFilter.round())
           .listen((position) {
-        log.v("New position event fired, accuracy: ${position.accuracy}");
-        _position = position;
+        log.v("New position event fired from location listener!");
+        printPositionInfo(position);
+        _livePosition = position;
+        addPositionEntry(trigger: LocationRetrievalTrigger.listener);
       });
     }
   }
@@ -43,7 +105,8 @@ class GeolocationService {
     gpsAccuracyInfo = info;
   }
 
-  Future<Position> getAndSetCurrentLocation() async {
+  Future<Position> getAndSetCurrentLocation(
+      {bool forceGettingNewPosition = false}) async {
     //Verify If location is available on device.
     final checkGeolocation = await checkGeolocationAvailable();
     if (checkGeolocation == true) {
@@ -55,13 +118,17 @@ class GeolocationService {
         }
 
         // cooldown time of 5 seconds for distance check.
-        if ((difference != null && difference.inSeconds.abs() > 5) ||
+        if ((difference != null &&
+                difference.inSeconds.abs() > 5 &&
+                forceGettingNewPosition) ||
             getUserPosition == null) {
           // log.wtf("---------------------------------");
           log.i("Getting current position now at ${DateTime.now().toString()}");
           final geolocatorPosition = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best,
+            //forceAndroidLocationManager: true,
           );
+
           log.i("Retrieved position at ${DateTime.now().toString()}");
 
           currentGPSAccuracy = geolocatorPosition.accuracy;
@@ -73,10 +140,19 @@ class GeolocationService {
             setGPSAccuracyInfo(null);
           }
           _position = geolocatorPosition;
+          printPositionInfo(geolocatorPosition);
           return geolocatorPosition;
         } else {
           // return previous location
-          log.v("Returning previously fetched location");
+
+          final lastKnownPosition = await Geolocator.getLastKnownPosition();
+          if (lastKnownPosition != null) {
+            log.v("Returning last known position");
+            _position = lastKnownPosition;
+          } else {
+            log.v("Returning previously fetched position");
+          }
+          printPositionInfo(_position!);
           return _position!;
         }
 
@@ -167,18 +243,30 @@ class GeolocationService {
   }
  */
   Future<bool> isUserCloseby({required double lat, required double lon}) async {
+    log.v("Check if user is closeby marker based on last known location");
     final position = await getAndSetCurrentLocation();
-
-    if (position != null) {
-      double distanceInMeters = Geolocator.distanceBetween(
-          position.latitude, position.longitude, lat, lon);
-      if (distanceInMeters > kMaxDistanceFromMarkerInMeter) {
-        return false;
-      } else {
-        return true;
-      }
+    if (countAsCloseByMarker(position: position, lat: lat, lon: lon)) {
+      log.v("User is nearby the marker!");
+      return true;
+    } else {
+      // not nearby marker but try to recover with new forced calculation
+      log.v(
+          "User not nearby the marker, try calculating a NEW position and check again");
+      final position =
+          await getAndSetCurrentLocation(forceGettingNewPosition: true);
+      return countAsCloseByMarker(position: position, lat: lat, lon: lon);
     }
-    return false;
+  }
+
+  bool countAsCloseByMarker(
+      {required Position position, required double lat, required double lon}) {
+    double distanceInMeters = Geolocator.distanceBetween(
+        position.latitude, position.longitude, lat, lon);
+    if (distanceInMeters > kMaxDistanceFromMarkerInMeter) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<double> distanceBetweenUserAndCoordinates(
@@ -207,6 +295,11 @@ class GeolocationService {
     return distanceInMeters;
   }
 
+  void printPositionInfo(Position position) {
+    log.v(
+        "position lat, lon, accuracy, seconds ago: ${position.latitude}, ${position.longitude}, ${position.accuracy}, ${position.timestamp?.difference(DateTime.now()).inSeconds}");
+  }
+
   void cancelPositionListener() {
     _currentPositionStreamSubscription?.cancel();
     _currentPositionStreamSubscription = null;
@@ -214,7 +307,229 @@ class GeolocationService {
 
   void clearData() {
     _position = null;
+    _lastKnownPosition = null;
+    _currentPosition = null;
+    _livePosition = null;
     currentGPSAccuracy = null;
     cancelPositionListener();
   }
+
+  // ------------------------------------------------
+  // -------------------------------------------------
+  // R & D
+  Future addPositionEntry({required LocationRetrievalTrigger trigger}) async {
+    _lastKnownPosition = await Geolocator.getLastKnownPosition();
+    if (trigger != LocationRetrievalTrigger.onlyLastKnown) {
+      _currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+    }
+    final positionEntry = PositionEntry(
+        triggeredBy: trigger,
+        livePosition: _livePosition,
+        currentPosition: _currentPosition,
+        lastKnownPosition: _lastKnownPosition);
+    log.v("Adding position entry");
+    allPositions.add(positionEntry);
+    try {
+      return await pushNotionDatabaseEntry(positionEntry);
+    } catch (e) {
+      log.e("Error pushing entry to notion db: $e");
+      return false;
+    }
+  }
+
+  Future pushAllPositionsToNotion() async {
+    // compare to position in heidach!
+    allPositions.forEach((element) {
+      pushNotionDatabaseEntry(element);
+    });
+  }
+
+  Map<String, String> getDistanceToGoal(
+      {required PositionEntry positionEntry,
+      required double lat,
+      required double lon}) {
+    Map<String, String> distancesMap = {
+      currentLocationDistanceKey: "-1",
+      liveLocationDistanceKey: "-1",
+      lastKnownLocationDistanceKey: "-1",
+      triggeredByKey: "",
+    };
+    String distanceInMetersAsString = distanceBetween(
+            lat1: positionEntry.livePosition?.latitude,
+            lon1: positionEntry.livePosition?.longitude,
+            lat2: lat,
+            lon2: lon)
+        .toStringAsFixed(1);
+    distancesMap[liveLocationDistanceKey] = distanceInMetersAsString;
+    distanceInMetersAsString = distanceBetween(
+            lat1: positionEntry.currentPosition?.latitude,
+            lon1: positionEntry.currentPosition?.longitude,
+            lat2: lat,
+            lon2: lon)
+        .toStringAsFixed(1);
+    distancesMap[currentLocationDistanceKey] = distanceInMetersAsString;
+    distanceInMetersAsString = distanceBetween(
+            lat1: positionEntry.lastKnownPosition?.latitude,
+            lon1: positionEntry.lastKnownPosition?.longitude,
+            lat2: lat,
+            lon2: lon)
+        .toStringAsFixed(1);
+    distancesMap[lastKnownLocationDistanceKey] = distanceInMetersAsString;
+    distancesMap[triggeredByKey] =
+        describeEnum(positionEntry.triggeredBy).toString();
+    return distancesMap;
+  }
+
+  Future pushNotionDatabaseEntry(PositionEntry entry) async {
+    // ID of manually created database
+    final String databaseId = "3fa2284a2aec40a5a6d03089493be25a";
+
+    Page newEntry = Page(
+      parent: Parent.database(id: databaseId), // <- database
+      title: Text(allPositions.length.toString()),
+    );
+
+    String deviceInfoString = "";
+    if (Platform.isAndroid) {
+      // Android-specific code
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      log.v('Running on ${androidInfo.model}'); // e.g. "Moto G (4)"
+      deviceInfoString = "machine: " +
+          androidInfo.model +
+          ", systemVersion: " +
+          androidInfo.version.release;
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      log.v('Running on ${iosInfo.utsname.machine}'); // e.g. "iPod7,1"
+      deviceInfoString = "machine: " +
+          iosInfo.utsname.machine +
+          ", systenName: " +
+          iosInfo.systemName +
+          ", systemVersion: " +
+          iosInfo.systemVersion;
+      // iOS-specific code
+    }
+    addNotionDatabaseTextProperty(newEntry, deviceInfoKey, deviceInfoString);
+    addNotionDatabaseTextProperty(newEntry, trialEntryKey, trial);
+
+    // timestamps
+    addNotionDatabaseTextProperty(newEntry, currentLocationTimestampKey,
+        _currentPosition?.timestamp?.toString());
+    addNotionDatabaseTextProperty(newEntry, lastKnownLocationTimestampKey,
+        _lastKnownPosition?.timestamp?.toString());
+    addNotionDatabaseTextProperty(newEntry, liveLocationTimestampKey,
+        _livePosition?.timestamp?.toString());
+
+    // longitude
+    addNotionDatabaseTextProperty(newEntry, currentLocationLongitudeKey,
+        _currentPosition?.longitude.toString());
+    addNotionDatabaseTextProperty(newEntry, lastKnownLocationLongitudeKey,
+        _lastKnownPosition?.longitude.toString());
+    addNotionDatabaseTextProperty(newEntry, liveLocationLongitudeKey,
+        _livePosition?.longitude.toString());
+
+    // latitude
+    addNotionDatabaseTextProperty(newEntry, currentLocationLatitudeKey,
+        _currentPosition?.latitude.toString());
+    addNotionDatabaseTextProperty(newEntry, lastKnownLocationLatitudeKey,
+        _lastKnownPosition?.latitude.toString());
+    addNotionDatabaseTextProperty(
+        newEntry, liveLocationLatitudeKey, _livePosition?.latitude.toString());
+
+    // accuracy
+    addNotionDatabaseTextProperty(newEntry, currentLocationAccuracyKey,
+        _currentPosition?.accuracy.toString());
+    addNotionDatabaseTextProperty(newEntry, lastKnownLocationAccuracyKey,
+        _lastKnownPosition?.accuracy.toString());
+    addNotionDatabaseTextProperty(
+        newEntry, liveLocationAccuracyKey, _livePosition?.accuracy.toString());
+
+    // Add calculated distance to random location in heidach
+    Map<String, String> distancesToGoal = getDistanceToGoal(
+        positionEntry: entry, lat: 48.06701330843975, lon: 7.903736956224777);
+
+    [
+      currentLocationDistanceKey,
+      liveLocationDistanceKey,
+      lastKnownLocationDistanceKey,
+      triggeredByKey
+    ].forEach((element) {
+      addNotionDatabaseTextProperty(
+          newEntry, element, distancesToGoal[element]);
+    });
+    try {
+      final NotionResponse notionResponse = await notion.pages.create(newEntry);
+      if (notionResponse.hasError) {
+        log.e(
+            "Error when pushing data to notion database: ${notionResponse.message}");
+        return false;
+      } else {
+        log.i("Created entry in notion database");
+        return true;
+      }
+    } catch (e) {
+      log.wtf(e);
+      return false;
+    }
+  }
+
+  String getLastKnownDistancesToGoal() {
+    if (_lastKnownPosition == null) {
+      return "nan";
+    } else {
+      Map<String, String> distancesToGoal = getDistanceToGoal(
+          positionEntry: allPositions.last,
+          lat: 48.06701330843975,
+          lon: 7.903736956224777);
+      return distancesToGoal[lastKnownLocationDistanceKey] ?? "-1";
+    }
+  }
+    String getCurrentDistancesToGoal() {
+    if (_lastKnownPosition == null) {
+      return "nan";
+    } else {
+      Map<String, String> distancesToGoal = getDistanceToGoal(
+          positionEntry: allPositions.last,
+          lat: 48.06701330843975,
+          lon: 7.903736956224777);
+      return distancesToGoal[currentLocationDistanceKey] ?? "-1";
+    }
+  }
+    String getLiveDistancesToGoal() {
+    if (_lastKnownPosition == null) {
+      return "nan";
+    } else {
+      Map<String, String> distancesToGoal = getDistanceToGoal(
+          positionEntry: allPositions.last,
+          lat: 48.06701330843975,
+          lon: 7.903736956224777);
+      return distancesToGoal[liveLocationDistanceKey] ?? "-1";
+    }
+  }
+
+}
+
+void addNotionDatabaseTextProperty(
+    Page page, String propertyName, String? propertyContent) {
+  page.addProperty(
+    name: propertyName,
+    property: RichTextProp(
+      content: [
+        Text(propertyContent ?? "nan"),
+      ],
+    ),
+  );
+}
+
+class PositionEntry {
+  final Position? livePosition;
+  final Position? currentPosition;
+  final Position? lastKnownPosition;
+  final LocationRetrievalTrigger triggeredBy;
+  const PositionEntry(
+      {required this.triggeredBy,
+      required this.livePosition,
+      required this.currentPosition,
+      required this.lastKnownPosition});
 }

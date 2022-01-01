@@ -40,7 +40,7 @@ class BaseModel extends BaseViewModel {
   final LayoutService layoutService = locator<LayoutService>();
   final StopWatchService _stopWatchService = locator<StopWatchService>();
   final GiftCardService _giftCardService = locator<GiftCardService>();
-  final GeolocationService _geolocationService = locator<GeolocationService>();
+  final GeolocationService geolocationService = locator<GeolocationService>();
 
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
@@ -89,7 +89,7 @@ class BaseModel extends BaseViewModel {
     _giftCardService.clearData();
     await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
-    _geolocationService.clearData();
+    geolocationService.clearData();
   }
 
   void unregisterViewModels() {

@@ -1,0 +1,1 @@
+enum LocationRetrievalTrigger {listener, manualAll, onlyLastKnown}

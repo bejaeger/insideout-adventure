@@ -3,6 +3,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/position_retrieval.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
@@ -12,6 +13,11 @@ import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   final GiftCardService _giftCardService = locator<GiftCardService>();
+
+  String get currentDistance => geolocationService.getCurrentDistancesToGoal();
+  String get liveDistance => geolocationService.getLiveDistancesToGoal();
+  String get lastKnownDistance =>
+      geolocationService.getLastKnownDistancesToGoal();
 
   late final String name;
   ExplorerHomeViewModel() : super(explorerUid: "") {
@@ -24,7 +30,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       questService.activatedQuestsHistory;
   List<GiftCardPurchase> get purchasedGiftCards =>
       _giftCardService.purchasedGiftCards;
-
+  bool addingPositionToNotionDB = false;
   final log = getLogger("ExplorerHomeViewModel");
 
   Future listenToData() async {
@@ -42,6 +48,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       completerTwo.future,
     ]);
     setBusy(false);
+    // if (isSuperUser) {
+    //   geolocationService.listenToPosition();
+    // }
   }
 
   void navigateToQuests() {
@@ -76,5 +85,31 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
 
   Future navigateToGiftCardsView() async {
     await navigationService.navigateTo(Routes.purchasedGiftCardsView);
+  }
+
+  //-----------------------------------------
+  // Some R & D
+  // Future pushAllPositionsToNotion() async {
+  //   await geolocationService.pushAllPositionsToNotion();
+  // }
+
+  Future addPositionEntryManual({bool onlyLastKnownPosition = false}) async {
+    addingPositionToNotionDB = true;
+    notifyListeners();
+
+    final ok = await geolocationService.addPositionEntry(
+        trigger: onlyLastKnownPosition
+            ? LocationRetrievalTrigger.onlyLastKnown
+            : LocationRetrievalTrigger.manualAll);
+    if (ok) {
+      snackbarService.showSnackbar(
+          title: "Success", message: "Added position entry to notion db");
+    } else {
+      snackbarService.showSnackbar(
+          title: "Failure",
+          message: "Could not add position entry to notion db");
+    }
+    addingPositionToNotionDB = false;
+    notifyListeners();
   }
 }

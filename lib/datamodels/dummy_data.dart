@@ -9,13 +9,15 @@ List<Quest> getDummyQuests() {
   return [
     getDummyVibrationSearchQuest(),
     heidachTrohpy(),
+    manu(),
     heidachTrohpy2(),
     commercialTrophy(),
+    seeparkSpielplatz(),
     // getDummyVibrationSearchQuest2(),
     // getDummyQuestQrCodeSearch(),
     getDummyVibrationSearchQuestHeuweiler(),
     getQrCodeHuntJaeger(),
-    getDummyQuestQrCodeSearchStarenweg(),
+    // getDummyQuestQrCodeSearchStarenweg(),
     streeth11th2ndVibration(),
     getDummyVibrationSearchQuestFreiburg(),
     // getDummyVibrationSearchQuest4(),
@@ -317,23 +319,23 @@ Quest getQrCodeHuntJaeger() {
   );
 }
 
-Quest getDummyQuestQrCodeSearchStarenweg() {
-  return Quest(
-    id: "elkHlNMiRLHsagfcATc3",
-    name: "Versteckte Schätze im Starenweg!",
-    description: "Finde alle Codes im Starenweg!",
-    afkCredits: 50,
-    markers: [
-      starenweg1(),
-      starenweg2(),
-      starenweg3(),
-    ],
-    // TODO: QRCodeHuntIndoor
-    type: QuestType.QRCodeSearch,
-    startMarker: starenweg1(),
-    finishMarker: starenweg3(),
-  );
-}
+// Quest getDummyQuestQrCodeSearchStarenweg() {
+//   return Quest(
+//     id: "elkHlNMiRLHsagfcATc3",
+//     name: "Versteckte Schätze im Starenweg!",
+//     description: "Finde alle Codes im Starenweg!",
+//     afkCredits: 50,
+//     markers: [
+//       starenweg1(),
+//       starenweg2(),
+//       starenweg3(),
+//     ],
+//     // TODO: QRCodeHuntIndoor
+//     type: QuestType.QRCodeSearch,
+//     startMarker: starenweg1(),
+//     finishMarker: starenweg3(),
+//   );
+// }
 
 // Angola quest
 Quest getDummyQuest5() {
@@ -711,65 +713,65 @@ AFKMarker freiburg2() {
 
 AFKMarker belek1() {
   return AFKMarker(
-      id: "belek1",
-      qrCodeId: "belek1",
-      lat: 48.04959523177769,
-      lon: 7.901375792193425,
-      );
+    id: "belek1",
+    qrCodeId: "belek1",
+    lat: 48.04959523177769,
+    lon: 7.901375792193425,
+  );
 }
 
 AFKMarker belek2() {
   return AFKMarker(
-      id: "belek2",
-      qrCodeId: "belek2",
-      lat: 48.04959523177769,
-      lon: 7.901375792193425,
-      );
+    id: "belek2",
+    qrCodeId: "belek2",
+    lat: 48.04959523177769,
+    lon: 7.901375792193425,
+  );
 }
 
 AFKMarker belek3() {
   return AFKMarker(
-      id: "belek3",
-      qrCodeId: "belek3",
-      lat: 48.04959523177769,
-      lon: 7.901375792193425,
-      );
+    id: "belek3",
+    qrCodeId: "belek3",
+    lat: 48.04959523177769,
+    lon: 7.901375792193425,
+  );
 }
 
 AFKMarker belek4() {
   return AFKMarker(
-      id: "belek4",
-      qrCodeId: "belek4",
-      lat: 48.04959523177769,
-      lon: 7.901375792193425,
-      );
+    id: "belek4",
+    qrCodeId: "belek4",
+    lat: 48.04959523177769,
+    lon: 7.901375792193425,
+  );
 }
 
 AFKMarker belek5() {
   return AFKMarker(
-      id: "belek5",
-      qrCodeId: "belek5",
-      lat: 48.04959523177769,
-      lon: 7.901375792193425,
-      );
+    id: "belek5",
+    qrCodeId: "belek5",
+    lat: 48.04959523177769,
+    lon: 7.901375792193425,
+  );
 }
 
 AFKMarker belekLocSearch1() {
   return AFKMarker(
-      id: "belekLocSearch1",
-      qrCodeId: "belekLocSearch1",
-      lat: 48.050260829411386,
-      lon: 7.9010928692091635,
-      );
+    id: "belekLocSearch1",
+    qrCodeId: "belekLocSearch1",
+    lat: 48.050260829411386,
+    lon: 7.9010928692091635,
+  );
 }
 
 AFKMarker belekLocSearch() {
   return AFKMarker(
-      id: "belekLocSearch",
-      qrCodeId: "belekLocSearch",
-      lat: 48.05194200805362,
-      lon: 7.90323708024672,
-      );
+    id: "belekLocSearch",
+    qrCodeId: "belekLocSearch",
+    lat: 48.05194200805362,
+    lon: 7.90323708024672,
+  );
 }
 
 // burnaby quest
@@ -790,39 +792,75 @@ Quest getDummyVibrationSearchQuestHeuweiler() {
 
 AFKMarker heidach1() {
   return AFKMarker(
-      id: "heidach1",
-      qrCodeId: "heidach1",
-      lat: 48.06808982011085,
-      lon: 7.905153161233762,
-     );
+    id: "heidach1",
+    qrCodeId: "heidach1",
+    lat: 48.06808982011085,
+    lon: 7.905153161233762,
+  );
 }
 
 AFKMarker heidach2() {
   return AFKMarker(
-      id: "heidach2",
-      qrCodeId: "heidach2",
-      lat: 48.06701330843975,
-      lon: 7.903736956224777,
-     );
+    id: "heidach2",
+    qrCodeId: "heidach2",
+    lat: 48.06701330843975,
+    lon: 7.903736956224777,
+  );
+}
+
+AFKMarker seepark1() {
+  return AFKMarker(
+    id: "seepark1",
+    qrCodeId: "seepark1",
+    lat: 48.012339128991236,
+    lon: 7.823210791204063,
+  );
+}
+
+AFKMarker seepark2() {
+  return AFKMarker(
+    id: "seepark2",
+    qrCodeId: "seepark2",
+    lat: 48.0087772794013,
+    lon: 7.82192900039613,
+  );
+}
+
+AFKMarker manu1() {
+  return AFKMarker(
+    id: "manu1",
+    qrCodeId: "manu1",
+    lat: 48.009741428013236,
+    lon: 7.807971788403806,
+  );
+}
+
+AFKMarker manu2() {
+  return AFKMarker(
+    id: "manu2",
+    qrCodeId: "manu2",
+    lat: 48.01085711811334,
+    lon: 7.809597253462515,
+  );
 }
 
 // TODO: Make second treasure hunt quest out of these!
 AFKMarker heidach3() {
   return AFKMarker(
-      id: "heidach3",
-      qrCodeId: "heidach3",
-      lat: 48.068605211860955,
-      lon: 7.904684129866282,
-     );
+    id: "heidach3",
+    qrCodeId: "heidach3",
+    lat: 48.068605211860955,
+    lon: 7.904684129866282,
+  );
 }
 
 AFKMarker heidach4() {
   return AFKMarker(
-      id: "heidach4",
-      qrCodeId: "heidach4",
-      lat: 48.06814470824551,
-      lon: 7.906736569916654,
-     );
+    id: "heidach4",
+    qrCodeId: "heidach4",
+    lat: 48.06814470824551,
+    lon: 7.906736569916654,
+  );
 }
 
 Quest commercialTrophy() {
@@ -838,20 +876,44 @@ Quest commercialTrophy() {
       finishMarker: commercial2());
 }
 
+Quest seeparkSpielplatz() {
+  return Quest(
+      id: "Unknown",
+      name: "Finde den Spielplatz!",
+      description: "Im Seepark",
+      afkCredits: 50,
+      markers: [seepark1(), seepark2()],
+      type: QuestType.TreasureLocationSearch,
+      startMarker: seepark1(),
+      finishMarker: seepark2());
+}
+
+Quest manu() {
+  return Quest(
+      id: "Unknown",
+      name: "Finde Manu!",
+      description: "Im Seepark",
+      afkCredits: 50,
+      markers: [manu1(), manu2()],
+      type: QuestType.TreasureLocationSearch,
+      startMarker: manu1(),
+      finishMarker: manu2());
+}
+
 AFKMarker commercial1() {
   return AFKMarker(
-      id: "commercial1",
-      qrCodeId: "commercial1",
-      lat: 49.273658969631974,
-      lon: -123.0705730554199,
-     );
+    id: "commercial1",
+    qrCodeId: "commercial1",
+    lat: 49.273658969631974,
+    lon: -123.0705730554199,
+  );
 }
 
 AFKMarker commercial2() {
   return AFKMarker(
-      id: "commercial2",
-      qrCodeId: "commercial2",
-      lat: 49.27631049183584,
-      lon: -123.06956197567348,
-     );
+    id: "commercial2",
+    qrCodeId: "commercial2",
+    lat: 49.27631049183584,
+    lon: -123.06956197567348,
+  );
 }

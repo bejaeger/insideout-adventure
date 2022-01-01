@@ -83,7 +83,7 @@ class ActiveTreasureLocationSearchQuestViewModel
         listenToActiveQuest();
       }
 
-      final position = await _geolocationService.getAndSetCurrentLocation();
+      final position = await _geolocationService.getAndSetCurrentLocation(forceGettingNewPosition: true);
       if (!(await checkAccuracy(position: position))) {
         resetSlider();
         return false;
@@ -203,7 +203,7 @@ class ActiveTreasureLocationSearchQuestViewModel
       log.v("Skipping distance to goal check because tracking dead time is on");
       return "You can't check the distance at the moment because other processes are running";
     }
-    final position = await _geolocationService.getAndSetCurrentLocation();
+    final position = await _geolocationService.getAndSetCurrentLocation(forceGettingNewPosition: true);
     if (!await checkAccuracy(position: position, showDialog: false, minAccuracy: kMinRequiredAccuracyLocationSearch)) {
       log.v(
           "Accuracy is ${position.accuracy} and not enough to take next point!");
