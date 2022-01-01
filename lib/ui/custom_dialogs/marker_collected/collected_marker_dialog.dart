@@ -48,7 +48,6 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
   final log = getLogger("CollectedMarkerDialog");
   double height = 10;
   late final AnimationController _controller;
-  // ..repeat(reverse: true);
   late final Animation<double> _animation;
   @override
   void initState() {

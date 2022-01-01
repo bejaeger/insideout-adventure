@@ -501,8 +501,6 @@ PODS:
   - nanopb/encode (2.30908.0)
   - path_provider_ios (0.0.1):
     - Flutter
-  - pay_ios (0.0.1):
-    - Flutter
   - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (2.0.0)
@@ -537,7 +535,6 @@ DEPENDENCIES:
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
-  - pay_ios (from `.symlinks/plugins/pay_ios/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
@@ -601,8 +598,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/location/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
-  pay_ios:
-    :path: ".symlinks/plugins/pay_ios/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
   qr_code_scanner:
@@ -651,7 +646,6 @@ SPEC CHECKSUMS:
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
-  pay_ios: 8c7beb9c61d885f3f51b61f75f8793023fc8843a
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e

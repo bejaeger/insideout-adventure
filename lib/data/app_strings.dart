@@ -1,5 +1,5 @@
 const String WarningQuestNotFinished =
-    "Do you really want to finish the quest?";
+    "Cancel Incomplete Quest?";
 
 const String WarningScannedMarkerNotInQuest =
     "Scanned marker does not belong to quest.";

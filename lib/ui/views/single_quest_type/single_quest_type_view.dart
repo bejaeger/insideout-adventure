@@ -76,12 +76,14 @@ class SingleQuestTypeView extends StatelessWidget {
                                           marginTop: 20,
                                           quest: quest,
                                           subtitle: quest.description,
-                                          onCardPressed: () {
+                                          onCardPressed: () async {
+                                            //EditQuestView(completer: (DialogResponse<dynamic> ) {  },);
                                             //Call The Dismissible Widget.
-                                            print(
-                                              'You can edit the Quest: ' +
-                                                  quest.name.toUpperCase(),
-                                            );
+                                            model.setQuestToUpdate(
+                                                quest: quest);
+                                            model.navToUpdatingQuestView();
+                                            /*   await model.showConfirmationDialog(
+                                                quest: quest); */
                                           },
                                           /*     onCardPressed: () async =>
                                         await model.onQuestInListTapped(quest), */

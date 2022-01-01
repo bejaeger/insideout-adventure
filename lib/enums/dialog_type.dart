@@ -8,4 +8,5 @@ enum DialogType {
   CheckTravelledDistance,
   CollectedMarker,
   FoundTreasure,
+  EditQuestInformation,
 }

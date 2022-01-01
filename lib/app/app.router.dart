@@ -38,6 +38,7 @@ import '../ui/views/map/map_view.dart';
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
+import '../ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
@@ -48,6 +49,7 @@ import '../ui/views/transfer_funds/transfer_funds_view.dart';
 
 class Routes {
   static const String sponsorHomeView = '/sponsor-home-view';
+  static const String updatingQuestView = '/updating-quest-view';
   static const String explorerHomeView = '/explorer-home-view';
   static const String mapView = '/map-view';
   static const String loginView = '/login-view';
@@ -82,6 +84,7 @@ class Routes {
   static const String activeMapQuestView = '/active-map-quest-view';
   static const all = <String>{
     sponsorHomeView,
+    updatingQuestView,
     explorerHomeView,
     mapView,
     loginView,
@@ -116,6 +119,7 @@ class StackedRouter extends RouterBase {
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
     RouteDef(Routes.sponsorHomeView, page: SponsorHomeView),
+    RouteDef(Routes.updatingQuestView, page: UpdatingQuestView),
     RouteDef(Routes.explorerHomeView, page: ExplorerHomeView),
     RouteDef(Routes.mapView, page: MapView),
     RouteDef(Routes.loginView, page: LoginView),
@@ -153,6 +157,12 @@ class StackedRouter extends RouterBase {
     SponsorHomeView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const SponsorHomeView(),
+        settings: data,
+      );
+    },
+    UpdatingQuestView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const UpdatingQuestView(),
         settings: data,
       );
     },

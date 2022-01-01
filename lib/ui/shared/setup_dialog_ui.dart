@@ -6,6 +6,7 @@ import 'package:afkcredits/ui/custom_dialogs/marker_collected/collected_marker_d
 import 'package:afkcredits/ui/shared/custom_dialogs/money_transfer_dialog_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/dialog/travelled_distance_dialog_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/dialog/raised_purchased_dialogview.dart';
+import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 void setupDialogUi() {
@@ -23,8 +24,9 @@ void setupDialogUi() {
         TravelledDistanceDialogView(
             request: sheetRequest, completer: completer),
     DialogType.FoundTreasure: (context, sheetRequest, completer) =>
-        FoundTreasureDialog(
-            request: sheetRequest, completer: completer),
+        FoundTreasureDialog(request: sheetRequest, completer: completer),
+    /*    DialogType.EditQuestInformation: (context, sheetRequest, completer) =>
+        EditQuestView(request: sheetRequest, completer: completer), */
     // DialogType.Onboarding: (context, sheetRequest, completer) =>
     //     OnboardingDialogView(request: sheetRequest, completer: completer),
   };
