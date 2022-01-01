@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
@@ -420,14 +418,8 @@ class QuestService with ReactiveServiceMixin {
           return;
         }
         final position = await _geolocationService.getAndSetCurrentLocation();
-<<<<<<< HEAD
-        if (position.accuracy > kMinRequiredAccuracyLocationSearch) {
-||||||| e4b1c83
-        if (position.accuracy > kMinRequiredAccuracyVibrationSearch) {
-=======
-        //HARGUIALR COMMENTED THIS OUT
+
         if (position.accuracy > kMaxAccuracyLocationSearch) {
->>>>>>> 8f36b5c8e0cd85c6be1b5a9faeb9ab96db439c01
           log.v(
               "Accuracy is ${position.accuracy} and not enough to take next point!");
           return;
@@ -642,7 +634,6 @@ class QuestService with ReactiveServiceMixin {
 
   ////////////////////////////////////////////
   /// History of quests
-
   // adds listener to money pools the user is contributing to
   // allows to wait for the first emission of the stream via the completer
   Future<void>? setupPastQuestsListener(
