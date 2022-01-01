@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
@@ -420,8 +418,7 @@ class QuestService with ReactiveServiceMixin {
           return;
         }
         final position = await _geolocationService.getAndSetCurrentLocation();
-        if (position.accuracy > kMinRequiredAccuracyLocationSearch) {
-        //HARGUIALR COMMENTED THIS OUT
+
         if (position.accuracy > kMaxAccuracyLocationSearch) {
           log.v(
               "Accuracy is ${position.accuracy} and not enough to take next point!");
