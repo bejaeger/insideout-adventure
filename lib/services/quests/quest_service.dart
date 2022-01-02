@@ -799,6 +799,16 @@ class QuestService with ReactiveServiceMixin {
     return _firestoreApi.getQuest(questId: questId);
   }
 
+  Future createQuest({required Quest quest}) async {
+    //TODO: Refactor this code .
+    if (quest.id.isNotEmpty) {
+      await _firestoreApi.createQuest(quest: quest);
+    }
+
+    //update the newly created document reference with the Firestore Id.
+    //This is to make suret that the document has the same id as the quest.
+  }
+
   // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> downloadNearbyQuests() async {
     return await _firestoreApi.downloadNearbyQuests();

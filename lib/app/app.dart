@@ -1,7 +1,7 @@
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
-import 'package:afkcredits/datamodels/quests/create_quest/create_quest.dart';
+import 'package:afkcredits/datamodels/quests/create_quest/create_quest_view.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/services/environment_services.dart';

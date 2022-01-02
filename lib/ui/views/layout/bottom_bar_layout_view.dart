@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/datamodels/quests/create_quest/create_quest.dart';
+import 'package:afkcredits/datamodels/quests/create_quest/create_quest_view.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
@@ -115,7 +115,8 @@ class _BottomBarLayoutTemplateViewState
             ),
             navBarHeight: kBottomNavigationBarHeightCustom,
             padding: const NavBarPadding.only(top: 4.0, bottom: 4),
-            floatingActionButton: model.currentUser.role != UserRole.sponsor
+            floatingActionButton: model.currentUser.role != UserRole.sponsor &&
+                    model.currentUser.role != UserRole.adminMaster
                 ? AFKFloatingActionButtons(
                     // title1: "SCAN",
                     onPressed1: model.scanQrCode,
@@ -176,7 +177,7 @@ class _BottomBarLayoutTemplateViewState
         ];
       default:
         return [
-          // AdminHomeView(),
+          //AdminHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
@@ -267,11 +268,11 @@ class _BottomBarLayoutTemplateViewState
         ];
       default:
         return [
-          /*AFKNavBarItem(
+          /*    AFKNavBarItem(
             icon: Icon(Icons.home),
             inactiveIcon: Icon(Icons.home_outlined),
             title: "Home",
-          ),*/
+          ), */
           AFKNavBarItem(
             icon: Icon(
               Icons.explore,

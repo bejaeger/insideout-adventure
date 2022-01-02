@@ -462,6 +462,19 @@ class FirestoreApi {
         'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
   }
 
+  Future createQuest({required Quest quest}) async {
+    log.i("Upload quest with id ${quest.id} to firestore");
+    //Get the Document Created Reference
+    _documentReference = await questsCollection.add(quest.toJson());
+    //update the newly created document reference with the Firestore Id.
+    //This is to make suret that the document has the same id as the quest.
+    await questsCollection
+        .doc(_documentReference!.id)
+        .update({'id': _documentReference!.id});
+    log.i(
+        'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
+  }
+
   // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> downloadNearbyQuests() async {
     try {

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
-import '../datamodels/quests/create_quest/create_quest.dart';
+import '../datamodels/quests/create_quest/create_quest_view.dart';
 import '../datamodels/quests/quest.dart';
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/authentication_method.dart';

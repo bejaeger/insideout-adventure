@@ -53,15 +53,15 @@ const String AUTHORITYPROD = "us-central1-afk-credits-prod.cloudfunctions.net";
 // "us-central1-afkcredits.cloudfunctions.net";
 const String URIPATHPREPENDPROD = "";
 
-const List<QuestType> questType = [
-  QuestType.Hike,
-  QuestType.Hunt,
-  QuestType.DistanceEstimate,
-  QuestType.QRCodeHuntIndoor,
-  QuestType.QRCodeSearch,
-  QuestType.QRCodeSearchIndoor,
-  QuestType.TreasureLocationSearch,
-  QuestType.TreasureLocationSearchAutomatic
+const List<String> questType = [
+  "Hike",
+  "Hunt",
+  "DistanceEstimate",
+  "QRCodeHuntIndoor",
+  "QRCodeSearch",
+  "QRCodeSearchIndoor",
+  "TreasureLocationSearch",
+  "TreasureLocationSearchAutomatic"
 ];
 
 //////////////////////////////////////////////////////////
