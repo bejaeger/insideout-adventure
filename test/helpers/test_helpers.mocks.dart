@@ -440,6 +440,11 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
               Invocation.method(#getUserFavouritePlaces, [], {#userId: userId}))
           as _i17.Future<List<_i20.UserFavPlaces>?>?);
   @override
+  _i17.Future<List<_i11.AFKMarker?>?> getMarkers() =>
+      (super.noSuchMethod(Invocation.method(#getMarkers, []),
+              returnValue: Future<List<_i11.AFKMarker?>?>.value())
+          as _i17.Future<List<_i11.AFKMarker?>?>);
+  @override
   _i17.Future<_i2.User?> getUserWithName({String? name}) => (super.noSuchMethod(
       Invocation.method(#getUserWithName, [], {#name: name}),
       returnValue: Future<_i2.User?>.value()) as _i17.Future<_i2.User?>);
@@ -462,6 +467,11 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
   _i17.Future<dynamic> updateUserData({_i2.User? user}) =>
       (super.noSuchMethod(Invocation.method(#updateUserData, [], {#user: user}),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+  @override
+  _i17.Future<void> updateQuestData({_i22.Quest? quest}) => (super.noSuchMethod(
+      Invocation.method(#updateQuestData, [], {#quest: quest}),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
   @override
   _i17.Future<dynamic> addSponsorIdToUser({String? uid, String? sponsorId}) =>
       (super.noSuchMethod(
@@ -1167,6 +1177,16 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
       (super.noSuchMethod(Invocation.method(#trackTime, [seconds]),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
+  _i17.Future<void> updateQuestData({_i22.Quest? quest}) => (super.noSuchMethod(
+      Invocation.method(#updateQuestData, [], {#quest: quest}),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
+  @override
+  _i17.Future<List<_i11.AFKMarker?>?> getMarkers() =>
+      (super.noSuchMethod(Invocation.method(#getMarkers, []),
+              returnValue: Future<List<_i11.AFKMarker?>?>.value())
+          as _i17.Future<List<_i11.AFKMarker?>?>);
+  @override
   _i17.Future<dynamic> trackData(int? seconds, {bool? forceNoPush = false}) =>
       (super.noSuchMethod(
           Invocation.method(#trackData, [seconds], {#forceNoPush: forceNoPush}),
@@ -1466,10 +1486,10 @@ class MockMarkerService extends _i1.Mock implements _i42.MarkerService {
               returnValueForMissingStub: Future<void>.value())
       as _i17.Future<void>);
   @override
-  _i17.Future<List<_i11.AFKMarker>?> getQuestMarkers() =>
+  _i17.Future<List<_i11.AFKMarker?>?> getQuestMarkers() =>
       (super.noSuchMethod(Invocation.method(#getQuestMarkers, []),
-              returnValue: Future<List<_i11.AFKMarker>?>.value())
-          as _i17.Future<List<_i11.AFKMarker>?>);
+              returnValue: Future<List<_i11.AFKMarker?>?>.value())
+          as _i17.Future<List<_i11.AFKMarker?>?>);
   @override
   _i17.Future<void> setQuestMarkers({List<_i11.AFKMarker>? markers}) =>
       (super.noSuchMethod(

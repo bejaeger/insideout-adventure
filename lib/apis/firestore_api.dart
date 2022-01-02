@@ -196,7 +196,8 @@ class FirestoreApi {
   } */
 
   // Get Markers For the Quest.
-  Future<List<AFKMarker>?>? getMarkers() async {
+  // ignore: non_constant_identifier_names
+  Future<List<AFKMarker?>?> getMarkers() async {
     final _markers = await markersCollection.get();
     if (_markers.docs.isNotEmpty) {
       try {

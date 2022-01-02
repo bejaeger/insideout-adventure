@@ -354,6 +354,13 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  ///Get a List of Quests
+  // Get Markers For the Quest.
+  Future<List<AFKMarker?>?> getMarkers() async {
+    //So Far I will only return the Markers with the FB.
+    return await _firestoreApi.getMarkers();
+  }
+
   Future trackData(int seconds, {bool forceNoPush = false}) async {
     if (activatedQuest != null) {
       ActivatedQuest tmpActivatedQuest = activatedQuest!;

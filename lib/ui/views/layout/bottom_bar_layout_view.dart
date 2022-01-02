@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/quests/create_quest/create_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
@@ -175,7 +176,7 @@ class _BottomBarLayoutTemplateViewState
         ];
       default:
         return [
-          AdminHomeView(),
+          // AdminHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
@@ -185,6 +186,7 @@ class _BottomBarLayoutTemplateViewState
             ),
           if (widget.questViewIndex == QuestViewType.map) MapView(),
           AddMarkersView(),
+          CreateQuestView(),
         ];
     }
 
@@ -265,11 +267,11 @@ class _BottomBarLayoutTemplateViewState
         ];
       default:
         return [
-          AFKNavBarItem(
+          /*AFKNavBarItem(
             icon: Icon(Icons.home),
             inactiveIcon: Icon(Icons.home_outlined),
             title: "Home",
-          ),
+          ),*/
           AFKNavBarItem(
             icon: Icon(
               Icons.explore,
@@ -281,6 +283,11 @@ class _BottomBarLayoutTemplateViewState
             icon: Icon(Icons.mark_email_read_outlined),
             inactiveIcon: Icon(Icons.mark_chat_read),
             title: ("Add Markers"),
+          ),
+          AFKNavBarItem(
+            icon: Icon(Icons.note_add),
+            inactiveIcon: Icon(Icons.note_add_outlined),
+            title: ("Create Quest"),
           ),
         ];
     }

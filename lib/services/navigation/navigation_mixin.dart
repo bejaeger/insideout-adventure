@@ -4,10 +4,22 @@ import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/giftcard/gift_card_service.dart';
+import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 mixin NavigationMixin {
   final _navigationService = locator<NavigationService>();
+  final _questService = locator<QuestService>();
+  final GeolocationService _geolocationService = locator<GeolocationService>();
+  final GiftCardService _giftCardService = locator<GiftCardService>();
+  final TransfersHistoryService transfersHistoryService =
+      locator<TransfersHistoryService>();
+  final _userService = locator<UserService>();
+
   void navToAdminHomeView({required UserRole role}) {
     //navigationService.replaceWith(Routes.homeView);
     _navigationService.replaceWith(
@@ -55,6 +67,16 @@ mixin NavigationMixin {
 
   void navBackToPreviousView() {
     _navigationService.back();
+  }
+
+  Future logout() async {
+    // TODO: Check that there is no active quest present!
+    _questService.clearData();
+    _geolocationService.clearData();
+    _giftCardService.clearData();
+    await _userService.handleLogoutEvent(logOutFromFirebase: true);
+    transfersHistoryService.clearData();
+    _navigationService.clearStackAndShow(Routes.loginView);
   }
 
   void navToQuestsOfSpecificTypeView(

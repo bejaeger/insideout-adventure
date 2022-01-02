@@ -11,14 +11,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final String title;
   final bool drawer;
+  bool? alignLeft = false;
   final bool showRedLiveButton;
+  final Widget? widget;
   final void Function()? onBackButton;
   CustomAppBar(
       {Key? key,
       this.height = kAppBarExtendedHeight,
       required this.title,
+      this.alignLeft,
       this.drawer = false,
-      this.onBackButton, this.showRedLiveButton = false})
+      this.onBackButton,
+      this.widget,
+      this.showRedLiveButton = false})
       : super(key: key);
 
   double get getHeight => height;
@@ -53,7 +58,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                   Align(
-                    alignment: Alignment.center,
+                    alignment: alignLeft == true
+                        ? Alignment.centerLeft
+                        : Alignment.center,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       child: FittedBox(
@@ -65,6 +72,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               .headline5!
                               .copyWith(color: kWhiteTextColor),
                         ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: FittedBox(
+                        child: widget,
                       ),
                     ),
                   ),
@@ -113,10 +129,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             if (model.isSuperUser)
               Container(
-                  height: height,
-                  alignment: Alignment.topRight,
-                  child: Text("Super User",
-                      style: TextStyle(color: Colors.white))),
+                height: height,
+                alignment: Alignment.topRight,
+                child: Text(
+                  "Super User",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
           ],
         ),
       ),
