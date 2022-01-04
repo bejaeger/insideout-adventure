@@ -16,6 +16,19 @@
       ],
     },
     {
+      "name": "Mobile Dev Profile",
+      "program": "lib/main_dev.dart",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "dev",
+        "-t",
+        "lib/main_dev.dart",
+      ],
+    },
+    {
       "name": "Mobile Prod",
       "program": "lib/main_prod.dart",
       "request": "launch",

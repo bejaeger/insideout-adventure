@@ -94,7 +94,5 @@ app.*.map.json
 ios/build/
 ios/Runner/Info.plist
 ios/Runner/AppDelegate.swift
-ios/Config/dev/GoogleService-Info.plist
-ios/Config/prod/GoogleService-Info.plist
 #ios/Runner/GoogleService-Info.plist
 #ios/Runner/GoogleService-Info-2.plist
