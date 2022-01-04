@@ -17,12 +17,15 @@ import 'enums/connectivity_type.dart';
 import 'flavor_config.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 
+import 'firebase_options_dev.dart' as dev;
+
 const bool USE_EMULATOR = false;
 
 void mainCommon(Flavor flavor) async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+        options: dev.DefaultFirebaseOptions.currentPlatform);
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();
     }

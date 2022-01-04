@@ -96,3 +96,6 @@ ios/Runner/Info.plist
 ios/Runner/AppDelegate.swift
 #ios/Runner/GoogleService-Info.plist
 #ios/Runner/GoogleService-Info-2.plist
+
+# firebase config files
+lib/firebase_options_dev.dart
