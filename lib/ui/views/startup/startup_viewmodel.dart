@@ -6,8 +6,6 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/environment_services.dart';
-import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 import 'package:places_service/places_service.dart';

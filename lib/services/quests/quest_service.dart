@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
@@ -28,6 +26,8 @@ class QuestService with ReactiveServiceMixin {
     listenToReactiveValues([_timeElapsed]);
   }
 
+  Quest? _questToUpdate;
+
   BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
       BehaviorSubject<ActivatedQuest?>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
@@ -49,6 +49,14 @@ class QuestService with ReactiveServiceMixin {
 
 //Created a Getter for near by Quest
   List<Quest> get getNearByQuest => _nearbyQuests;
+
+  Quest? get getQuestToUpdate => _questToUpdate;
+
+  void setQuestToUpdate({required Quest quest}) {
+    if (quest.id.isNotEmpty) {
+      _questToUpdate = quest;
+    }
+  }
 
   // dead time after update
   bool isTrackingDeadTime = false;
@@ -338,6 +346,21 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  Future<void> updateQuestData({required Quest quest}) async {
+    if (quest.id != null || quest.id.isNotEmpty) {
+      await _firestoreApi.updateQuestData(quest: quest);
+    } else {
+      log.wtf('You cannot provide me, an Empty Quest ID: ${quest.id}');
+    }
+  }
+
+  ///Get a List of Quests
+  // Get Markers For the Quest.
+  Future<List<AFKMarker?>?> getMarkers() async {
+    //So Far I will only return the Markers with the FB.
+    return await _firestoreApi.getMarkers();
+  }
+
   Future trackData(int seconds, {bool forceNoPush = false}) async {
     if (activatedQuest != null) {
       ActivatedQuest tmpActivatedQuest = activatedQuest!;
@@ -368,6 +391,7 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  // DEPRECATED
   Future trackDataVibrationSearch(int seconds) async {
     if (activatedQuest != null) {
       ActivatedQuest tmpActivatedQuest = activatedQuest!;
@@ -617,7 +641,6 @@ class QuestService with ReactiveServiceMixin {
 
   ////////////////////////////////////////////
   /// History of quests
-
   // adds listener to money pools the user is contributing to
   // allows to wait for the first emission of the stream via the completer
   Future<void>? setupPastQuestsListener(
@@ -774,6 +797,16 @@ class QuestService with ReactiveServiceMixin {
 
   Future getQuest({required String questId}) async {
     return _firestoreApi.getQuest(questId: questId);
+  }
+
+  Future createQuest({required Quest quest}) async {
+    //TODO: Refactor this code .
+    if (quest.id.isNotEmpty) {
+      await _firestoreApi.createQuest(quest: quest);
+    }
+
+    //update the newly created document reference with the Firestore Id.
+    //This is to make suret that the document has the same id as the quest.
   }
 
   // Changed the Scope of the Method. from _pvt to public

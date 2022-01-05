@@ -1,3 +1,4 @@
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 const String kAppName = "AFK Credits";
@@ -51,6 +52,17 @@ const String URIPATHPREPENDDEV = "";
 const String AUTHORITYPROD = "us-central1-afk-credits-prod.cloudfunctions.net";
 // "us-central1-afkcredits.cloudfunctions.net";
 const String URIPATHPREPENDPROD = "";
+
+const List<String> questType = [
+  "Hike",
+  "Hunt",
+  "DistanceEstimate",
+  "QRCodeHuntIndoor",
+  "QRCodeSearch",
+  "QRCodeSearchIndoor",
+  "TreasureLocationSearch",
+  "TreasureLocationSearchAutomatic"
+];
 
 //////////////////////////////////////////////////////////
 /// Quest settings!

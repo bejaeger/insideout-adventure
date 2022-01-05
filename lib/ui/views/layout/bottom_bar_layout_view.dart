@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/quests/create_quest/create_quest_view.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
@@ -11,6 +12,7 @@ import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
@@ -113,7 +115,8 @@ class _BottomBarLayoutTemplateViewState
             ),
             navBarHeight: kBottomNavigationBarHeightCustom,
             padding: const NavBarPadding.only(top: 4.0, bottom: 4),
-            floatingActionButton: model.currentUser.role != UserRole.sponsor
+            floatingActionButton: model.currentUser.role != UserRole.sponsor &&
+                    model.currentUser.role != UserRole.adminMaster
                 ? AFKFloatingActionButtons(
                     // title1: "SCAN",
                     onPressed1: model.scanQrCode,
@@ -174,7 +177,7 @@ class _BottomBarLayoutTemplateViewState
         ];
       default:
         return [
-          AdminHomeView(),
+          //AdminHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
@@ -184,6 +187,7 @@ class _BottomBarLayoutTemplateViewState
             ),
           if (widget.questViewIndex == QuestViewType.map) MapView(),
           AddMarkersView(),
+          CreateQuestView(),
         ];
     }
 
@@ -264,11 +268,11 @@ class _BottomBarLayoutTemplateViewState
         ];
       default:
         return [
-          AFKNavBarItem(
+          /*    AFKNavBarItem(
             icon: Icon(Icons.home),
             inactiveIcon: Icon(Icons.home_outlined),
             title: "Home",
-          ),
+          ), */
           AFKNavBarItem(
             icon: Icon(
               Icons.explore,
@@ -280,6 +284,11 @@ class _BottomBarLayoutTemplateViewState
             icon: Icon(Icons.mark_email_read_outlined),
             inactiveIcon: Icon(Icons.mark_chat_read),
             title: ("Add Markers"),
+          ),
+          AFKNavBarItem(
+            icon: Icon(Icons.note_add),
+            inactiveIcon: Icon(Icons.note_add_outlined),
+            title: ("Create Quest"),
           ),
         ];
     }

@@ -196,7 +196,8 @@ class FirestoreApi {
   } */
 
   // Get Markers For the Quest.
-  Future<List<AFKMarker>?>? getMarkers() async {
+  // ignore: non_constant_identifier_names
+  Future<List<AFKMarker?>?> getMarkers() async {
     final _markers = await markersCollection.get();
     if (_markers.docs.isNotEmpty) {
       try {
@@ -283,6 +284,21 @@ class FirestoreApi {
       throw FirestoreApiException(
           message:
               "Unknown expection when updating user settings in users collection",
+          devDetails: '$e');
+    }
+  }
+
+  Future<void> updateQuestData({required Quest quest}) async {
+    try {
+      await questsCollection
+          .doc(quest.id)
+          .set(quest.toJson(), SetOptions(merge: true));
+
+      //return result;
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when updating user settings in quest collection",
           devDetails: '$e');
     }
   }
@@ -434,6 +450,19 @@ class FirestoreApi {
   }
 
   Future _uploadQuest({required Quest quest}) async {
+    log.i("Upload quest with id ${quest.id} to firestore");
+    //Get the Document Created Reference
+    _documentReference = await questsCollection.add(quest.toJson());
+    //update the newly created document reference with the Firestore Id.
+    //This is to make suret that the document has the same id as the quest.
+    await questsCollection
+        .doc(_documentReference!.id)
+        .update({'id': _documentReference!.id});
+    log.i(
+        'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
+  }
+
+  Future createQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
     _documentReference = await questsCollection.add(quest.toJson());

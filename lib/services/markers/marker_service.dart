@@ -41,7 +41,7 @@ class MarkerService {
   }
 
   //Get User Favourite Places
-  Future<List<AFKMarker>?> getQuestMarkers() async {
+  Future<List<AFKMarker?>?> getQuestMarkers() async {
     return await _firestoreApi.getMarkers();
   }
 

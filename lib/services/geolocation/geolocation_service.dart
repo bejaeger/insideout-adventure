@@ -242,6 +242,11 @@ class GeolocationService {
     return true;
   }
 
+/*   Future placemarkFromCoordinates(
+      {required Position cordinatesPositions}) async {
+    return await Geolocator.getLastKnownPosition(cordinatesPositions); 
+  } */
+
 /*   //Get User Favourite Places
   Future<List<Places>?> getPlaces() async {
     return await _firestoreApi.getPlaces();

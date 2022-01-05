@@ -1,6 +1,7 @@
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
+import 'package:afkcredits/datamodels/quests/create_quest/create_quest_view.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
@@ -39,6 +40,7 @@ import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_vi
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
@@ -55,6 +57,7 @@ import 'package:stacked_services/stacked_services.dart';
 @StackedApp(
   routes: [
     MaterialRoute(page: SponsorHomeView),
+    MaterialRoute(page: UpdatingQuestView),
     MaterialRoute(page: ExplorerHomeView),
     MaterialRoute(page: MapView),
     MaterialRoute(page: LoginView),
@@ -81,6 +84,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: ActiveDistanceEstimateQuestView),
     MaterialRoute(page: ActiveTreasureLocationSearchQuestView),
     MaterialRoute(page: ActiveMapQuestView),
+    MaterialRoute(page: CreateQuestView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

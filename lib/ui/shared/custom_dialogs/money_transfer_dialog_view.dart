@@ -19,17 +19,18 @@ class MoneyTransferDialogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MoneyTransferDialogViewModel>.reactive(
-        viewModelBuilder: () => MoneyTransferDialogViewModel(),
-        onModelReady: (model) => model.waitForTransfer(request: request),
-        builder: (context, model, child) => Dialog(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              child: _BasicDialogContent(
-                request: request,
-                completer: completer,
-                model: model,
-              ),
-            ));
+      viewModelBuilder: () => MoneyTransferDialogViewModel(),
+      onModelReady: (model) => model.waitForTransfer(request: request),
+      builder: (context, model, child) => Dialog(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        child: _BasicDialogContent(
+          request: request,
+          completer: completer,
+          model: model,
+        ),
+      ),
+    );
   }
 }
 
