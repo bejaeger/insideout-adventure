@@ -52,7 +52,8 @@ class ExplorerHomeView extends StatelessWidget {
                           Flexible(
                             flex: 10,
                             child: StatsCard(
-                                onCardPressed: model.showToEarnExplanationDialog,
+                                onCardPressed:
+                                    model.showToEarnExplanationDialog,
                                 statsType: StatsType.lockedCredits,
                                 height: 150,
                                 statistic:
@@ -65,7 +66,8 @@ class ExplorerHomeView extends StatelessWidget {
                           Flexible(
                             flex: 10,
                             child: StatsCard(
-                                onCardPressed: model.showEarnedExplanationDialog,
+                                onCardPressed:
+                                    model.showEarnedExplanationDialog,
                                 statsType: StatsType.unlockedCredits,
                                 height: 150,
                                 statistic: model
@@ -124,7 +126,7 @@ class ExplorerHomeView extends StatelessWidget {
                       //     ),
                       //   ],
                       // ),
-                
+
                       // verticalSpaceMedium,
                       // SectionHeader(
                       //   horizontalPadding: 0,
@@ -140,55 +142,74 @@ class ExplorerHomeView extends StatelessWidget {
                       // verticalSpaceLarge,
                       //SectionHeader(title: "Achievements"),
                       verticalSpaceLarge,
-                      // if (model.isSuperUser)
-                      //   Row(
-                      //     children: [
-                      //       Expanded(
-                      //         child: Column(
-                      //           children: [
-                      //             Text("current distance"),
-                      //             Text(model.currentDistance),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //       Expanded(
-                      //         child: Column(
-                      //           children: [
-                      //             Text("live distance"),
-                      //             Text(model.liveDistance),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //       Expanded(
-                      //         child: Column(
-                      //           children: [
-                      //             Text("last known distance"),
-                      //             Text(model.lastKnownDistance),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // if (model.isSuperUser) verticalSpaceMedium,
-                      // if (model.isSuperUser)
-                      //   model.addingPositionToNotionDB
-                      //       ? AFKProgressIndicator()
-                      //       : Wrap(
-                      //           alignment: WrapAlignment.spaceAround,
-                      //           runAlignment: WrapAlignment.spaceAround,
-                      //           children: [
-                      //             // SmallButton(onPressed: () => model.pushAllPositionsToNotion(), title: "Push to notion"),
-                      //             SmallButton(
-                      //                 onPressed: () =>
-                      //                     model.addPositionEntryManual(),
-                      //                 title: "Add All Position"),
-                      //             SmallButton(
-                      //                 onPressed: () =>
-                      //                     model.addPositionEntryManual(
-                      //                         onlyLastKnownPosition: true),
-                      //                 title: "Add Last Known Pos"),
-                      //           ],
-                      //         ),
+                      if (model.isSuperUser)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Text("Length positions"),
+                                  Text(model.allPositions.length.toString()),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      verticalSpaceMedium,
+                      if (model.isSuperUser)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Text("current distance"),
+                                  Text(model.currentDistance),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Text("live distance"),
+                                  Text(model.liveDistance),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Text("last known distance"),
+                                  Text(model.lastKnownDistance),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      if (model.isSuperUser) verticalSpaceMedium,
+                      if (model.isSuperUser)
+                        model.addingPositionToNotionDB
+                            ? AFKProgressIndicator()
+                            : Wrap(
+                                alignment: WrapAlignment.spaceAround,
+                                runAlignment: WrapAlignment.spaceAround,
+                                children: [
+                                  // SmallButton(onPressed: () => model.pushAllPositionsToNotion(), title: "Push to notion"),
+                                  SmallButton(
+                                      onPressed: () =>
+                                          model.addPositionEntryManual(),
+                                      title: "Add All Position"),
+                                  SmallButton(
+                                      onPressed: () =>
+                                          model.addPositionEntryManual(
+                                              onlyLastKnownPosition: true),
+                                      title: "Add Last Known Pos"),
+                                  if (!model.pushedToNotion)
+                                    SmallButton(
+                                        onPressed: () =>
+                                            model.pushAllPositionsToNotion(),
+                                        title: "Push to notion"),
+                                ],
+                              ),
                       verticalSpaceMassive,
                     ],
                   ),

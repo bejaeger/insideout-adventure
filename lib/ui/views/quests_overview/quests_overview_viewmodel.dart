@@ -9,7 +9,7 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
     setBusy(true);
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
-        await getLocation(forceAwait: true);
+        await getLocation(forceAwait: true, forceGettingNewPosition: false);
         await questService.loadNearbyQuests();
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();

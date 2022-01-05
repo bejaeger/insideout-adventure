@@ -66,15 +66,15 @@ abstract class QuestViewModel extends BaseModel {
         quests: nearbyQuests, questType: type);
   }
 
-  Future getLocation({bool forceAwait = false}) async {
+  Future getLocation({bool forceAwait = false, bool forceGettingNewPosition = true}) async {
     try {
       if (_geolocationService.getUserPosition == null) {
-        await _geolocationService.getAndSetCurrentLocation();
+        await _geolocationService.getAndSetCurrentLocation(forceGettingNewPosition: forceGettingNewPosition);
       } else {
         if (forceAwait) {
-          await _geolocationService.getAndSetCurrentLocation();
+          await _geolocationService.getAndSetCurrentLocation(forceGettingNewPosition: forceGettingNewPosition);
         } else {
-          _geolocationService.getAndSetCurrentLocation();
+          _geolocationService.getAndSetCurrentLocation(forceGettingNewPosition: forceGettingNewPosition);
         }
       }
     } catch (e) {

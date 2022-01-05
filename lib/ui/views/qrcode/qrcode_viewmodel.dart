@@ -3,7 +3,6 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/exceptions/qrcode_service_exception.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
-import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:stacked_services/stacked_services.dart';

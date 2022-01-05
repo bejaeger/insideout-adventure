@@ -8,10 +8,13 @@ import 'package:afkcredits/exceptions/qrcode_service_exception.dart';
 
 class QRCodeService {
   final log = getLogger("qr_code_service.dart");
-  final FirestoreApi _firestoreApi = locator<FirestoreApi>();
 
-  AFKMarker getMarkerFromQrCodeString({required String qrCodeString}) {
+  AFKMarker getMarkerFromQrCodeString({required String? qrCodeString}) {
+
     try {
+      if (qrCodeString == null) {
+        throw Exception("scanned qr code is null");
+      }
       final json = jsonDecode(qrCodeString);
       return AFKMarker.fromJson(json);
     } catch (e) {
