@@ -15,6 +15,7 @@ import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   final GiftCardService _giftCardService = locator<GiftCardService>();
 
+  bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
   String get liveDistance => geolocationService.getLiveDistancesToGoal();
   String get lastKnownDistance =>
@@ -52,9 +53,27 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       completerTwo.future,
     ]);
     setBusy(false);
+  }
+
+  void addLocationListener() {
     if (isSuperUser) {
-      geolocationService.listenToPosition();
+      geolocationService.listenToPositionAndAddToList();
+      notifyListeners();
     }
+  }
+
+  void cancelLocationListener() {
+    if (isSuperUser) {
+      geolocationService.cancelPositionListener();
+      notifyListeners();
+    }
+  }
+
+  Future askForLocationPermission() async {
+    final locationPermission =
+        await geolocationService.askForLocationPermission();
+    snackbarService.showSnackbar(
+        message: "Granted location: $locationPermission");
   }
 
   void navigateToQuests() {

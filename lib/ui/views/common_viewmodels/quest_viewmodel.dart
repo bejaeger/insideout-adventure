@@ -32,6 +32,7 @@ abstract class QuestViewModel extends BaseModel {
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
+      bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
   final QRCodeService qrCodeService = locator<QRCodeService>();
   //Getter From the Neary By Quests.
   List<Quest> get nearbyQuests => questService.getNearByQuest;
@@ -386,11 +387,10 @@ abstract class QuestViewModel extends BaseModel {
       return false;
     }
     if (isSuperUser) {
-      _geolocationService.setGPSAccuracyInfo(
-          "GPS accuracy: ${position.accuracy.toStringAsFixed(0)} m");
+      _geolocationService.setGPSAccuracyInfo(position.accuracy, isSuperUser);
     }
     if (position.accuracy > (minAccuracy ?? kMinLocationAccuracy)) {
-      _geolocationService.setGPSAccuracyInfo("Low GPS Accuracy");
+      _geolocationService.setGPSAccuracyInfo(position.accuracy);
       if (showDialog) {
         log.e("Accuracy low: ${position.accuracy}");
         await dialogService.showDialog(
@@ -421,7 +421,7 @@ abstract class QuestViewModel extends BaseModel {
     notifyListeners();
   }
 
-  void resetSlider() async {
+  Future resetSlider() async {
     setBusy(true);
     await Future.delayed(Duration(milliseconds: 50));
     setBusy(false);

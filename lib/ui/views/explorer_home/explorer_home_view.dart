@@ -153,6 +153,14 @@ class ExplorerHomeView extends StatelessWidget {
                                 ],
                               ),
                             ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Text("Currently Listening?"),
+                                  Text(model.isListeningToLocation.toString()),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       verticalSpaceMedium,
@@ -208,6 +216,12 @@ class ExplorerHomeView extends StatelessWidget {
                                         onPressed: () =>
                                             model.pushAllPositionsToNotion(),
                                         title: "Push to notion"),
+                                  SmallButton(
+                                      onPressed: 
+                                      model.isListeningToLocation ? model.cancelLocationListener : 
+                                      
+                                          model.addLocationListener,
+                                      title:   model.isListeningToLocation ? "Cancel position listener" :  "Start position listener"),
                                 ],
                               ),
                       verticalSpaceMassive,

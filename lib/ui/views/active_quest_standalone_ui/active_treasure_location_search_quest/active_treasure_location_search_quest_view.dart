@@ -21,7 +21,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
-class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
+class ActiveTreasureLocationSearchQuestView extends StatefulWidget {
   final Quest quest;
   const ActiveTreasureLocationSearchQuestView({
     Key? key,
@@ -31,16 +31,52 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
   static const bool withMaps = false;
 
   @override
+  State<ActiveTreasureLocationSearchQuestView> createState() =>
+      _ActiveTreasureLocationSearchQuestViewState();
+}
+
+class _ActiveTreasureLocationSearchQuestViewState
+    extends State<ActiveTreasureLocationSearchQuestView>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  AppLifecycleState _notification = AppLifecycleState.detached;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(
+        "ActiveTreasureLocationSearchQuestView: New AppLifecycleState: ${state.toString()}");
+    setState(() {
+      _notification = state;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<
             ActiveTreasureLocationSearchQuestViewModel>.reactive(
         viewModelBuilder: () =>
             locator<ActiveTreasureLocationSearchQuestViewModel>(),
         disposeViewModel: false,
-        onModelReady: (model) => model.initialize(quest: quest),
+        onModelReady: (model) => model.initialize(quest: widget.quest),
         builder: (context, model, child) {
-          bool activeDetector =
-              model.hasActiveQuest && !model.isCheckingDistance;
+          bool activeDetector = model.hasActiveQuest &&
+              !model.isCheckingDistance &&
+              model.allowCheckingPosition;
+          if (_notification == AppLifecycleState.resumed) {
+            print(
+                "ActiveTreasureLocationSearchQuestView: Rebuilding UI because app resumed");
+          }
           return WillPopScope(
             onWillPop: () async {
               if (!model.hasActiveQuest) {
@@ -51,10 +87,11 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
             child: SafeArea(
               child: Scaffold(
                 appBar: CustomAppBar(
-                  title: "Finde den Schatz!",
+                  title: "Find the Treasure!",
                   onBackButton: model.navigateBack,
                 ),
-                floatingActionButton: !model.questSuccessfullyFinished
+                floatingActionButton: !model.questSuccessfullyFinished &&
+                        model.hasActiveQuest
                     ? AFKFloatingActionButton(
                         backgroundColor: model.hasActiveQuest
                             ? Colors.orange
@@ -66,7 +103,7 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                 ? model.showReloadingInfo
                                 : model.showStartQuestInfo)
                             : model.checkDistance,
-                        icon: model.isCheckingDistance
+                        icon: !model.allowCheckingPosition
                             ? Container(
                                 constraints: BoxConstraints(
                                     maxWidth: 100, maxHeight: 100),
@@ -84,8 +121,18 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                     Align(
                                         alignment: Alignment.center,
                                         child: Opacity(
-                                            opacity: 0.7,
-                                            child: ReloadingWidget())),
+                                          opacity: 0.7,
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                alignment: Alignment.centerLeft,
+                                                height: 100,
+                                                color: Colors.grey[200],
+                                                width: 100,
+                                              ),
+                                            ],
+                                          ),
+                                        )),
                                   ],
                                 ),
                               )
@@ -96,22 +143,25 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                 highlightColor: Colors.white,
                                 period: const Duration(milliseconds: 1000),
                                 enabled: activeDetector,
-                                child: Image.asset(kMagnetIconPath, width: 50),
+                                child: model.isCheckingDistance
+                                    ? AFKProgressIndicator(color: Colors.white)
+                                    : Image.asset(kMagnetIconPath, width: 50),
                               ),
                       )
                     : null,
                 body: Column(
                   children: [
                     verticalSpaceMedium,
-                    if (model.showStartSwipe)
+                    if (model.showStartSwipe && !model.isBusy)
                       AFKSlideButton(
-                        quest: quest,
+                        quest: widget.quest,
                         canStartQuest: model.hasEnoughSponsoring(
-                                quest: quest) &&
+                                quest: widget.quest) &&
                             (model.closeby != null && model.closeby == true),
-                        onSubmit: () => model.maybeStartQuest(quest: quest),
+                        onSubmit: () =>
+                            model.maybeStartQuest(quest: widget.quest),
                       ),
-                    if (!model.hasEnoughSponsoring(quest: quest))
+                    if (!model.hasEnoughSponsoring(quest: widget.quest))
                       Container(
                           color: Colors.white,
                           child: NotEnoughSponsoringNote(topPadding: 10)),
@@ -119,7 +169,7 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                       Container(
                           color: Colors.white, child: NotCloseToQuestNote()),
                     if (!model.questSuccessfullyFinished)
-                      withMaps
+                      ActiveTreasureLocationSearchQuestView.withMaps
                           ? Expanded(
                               child: Container(
                                 height: screenHeight(context, percentage: 0.6) -
@@ -194,7 +244,8 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                                   ),
                                 // verticalSpaceMedium,
                                 CurrentQuestStatusInfo(
-                                  isBusy: model.isBusy,
+                                  isBusy: model.isCheckingDistance,
+                                  firedOnce: model.firedOnce,
                                   currentDistance:
                                       model.currentDistanceInMeters,
                                   previousDistance:
@@ -227,13 +278,21 @@ class ActiveTreasureLocationSearchQuestView extends StatelessWidget {
                     //   ),
                     // SizedBox(height: 20),
                     //if (model.hasActiveQuest)
-                    if (!model.questSuccessfullyFinished)
+                    if (!model.questSuccessfullyFinished &&
+                        model.hasActiveQuest)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Expanded(
-                              child: Text("Metalldetektor",
-                                  textAlign: TextAlign.right,
+                              child: Text(
+                                  !model.firedOnce
+                                      ? "Measure the distance"
+                                      : model.allowCheckingPosition
+                                          ? "Measure distance"
+                                          : "Walk to reload...",
+                                  textAlign: !model.firedOnce
+                                      ? TextAlign.center
+                                      : TextAlign.right,
                                   style: textTheme(context).headline6)),
                           Icon(Icons.arrow_forward, size: 40),
                           SizedBox(width: 130),
@@ -255,12 +314,14 @@ class CurrentQuestStatusInfo extends StatelessWidget {
   final double previousDistance;
   final ActivatedQuest? activatedQuest;
   final bool isBusy;
+  final bool firedOnce;
   const CurrentQuestStatusInfo(
       {Key? key,
       required this.activatedQuest,
       required this.directionStatus,
       required this.previousDistance,
       required this.currentDistance,
+      required this.firedOnce,
       this.isBusy = false})
       : super(key: key);
 
@@ -308,7 +369,10 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         //Image.asset(kDrawingCompassIconPath, width: 50),
-                        Text("${currentDistance.toStringAsFixed(1)} m",
+                        Text(
+                            firedOnce
+                                ? "${currentDistance.toStringAsFixed(1)} m"
+                                : "?",
                             textAlign: TextAlign.center,
                             style: textTheme(context).headline2),
                       ],
@@ -327,16 +391,18 @@ class CurrentQuestStatusInfo extends StatelessWidget {
   }
 
   String getDirectionStatusString(DirectionStatus? status) {
-    if (status == null) return "Laufe los!";
+    if (status == null) return "Start to walk!";
     switch (status) {
       case DirectionStatus.closer:
-        return "Näher!";
+        return "Closer!";
       case DirectionStatus.further:
-        return "Weiter weg!";
+        return "Further away!";
+      case DirectionStatus.notstarted:
+        return "";
       case DirectionStatus.denied:
         return "";
       default:
-        return "Laufe los!";
+        return "Start to walk!";
     }
   }
 
@@ -348,7 +414,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
       case DirectionStatus.further:
         return Colors.red;
       case DirectionStatus.denied:
-        return Colors.blue[200]!;
+        return Colors.grey[200]!;
       default:
         return Colors.grey[200]!;
     }
@@ -384,13 +450,19 @@ class _ReloadingWidgetState extends State<ReloadingWidget>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
           alignment: Alignment.centerLeft,
           height: 100,
-          color: Colors.grey[300],
+          color: Colors.grey[200],
           width: 100,
           child: SizeTransition(
             sizeFactor: _animation,
