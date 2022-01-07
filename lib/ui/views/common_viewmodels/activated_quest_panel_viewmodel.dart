@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
@@ -24,6 +25,9 @@ class ActivatedQuestPanelViewModel extends QuestViewModel {
     throw UnimplementedError();
   }
 
+  Future openSuperUserSettingsDialog() async {
+    await dialogService.showCustomDialog(variant: DialogType.SuperUserSettings);
+  }
   //////////////////////////
   /// Navigate to the view that shows the currently activated quest
   ///

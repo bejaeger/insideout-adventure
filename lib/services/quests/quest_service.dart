@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
@@ -27,7 +28,6 @@ class QuestService with ReactiveServiceMixin {
   }
 
   Quest? _questToUpdate;
-
   BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
       BehaviorSubject<ActivatedQuest?>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
@@ -70,6 +70,8 @@ class QuestService with ReactiveServiceMixin {
     _startedQuest = quest;
   }
 
+  int? activatedQuestTrialNumber;
+
   bool sortedNearbyQuests = false;
   List<QuestType> allQuestTypes = [];
   // num get numberCollectedMarkers =>
@@ -106,7 +108,7 @@ class QuestService with ReactiveServiceMixin {
     pushActivatedQuest(tmpActivatedQuest);
     // ! this here is important !
     setStartedQuest(quest);
-
+    setNewTrialNumber();
     // Start timer
     //Harguilar Commented This Out Timer
     _stopWatchService.startTimer();
@@ -874,6 +876,12 @@ class QuestService with ReactiveServiceMixin {
       required double newLat,
       required double newLon}) {
     return activatedQuest.copyWith(lastCheckLat: newLat, lastCheckLon: newLon);
+  }
+
+  // to identify trial number in diagnosis data
+  void setNewTrialNumber() {
+    var rng = new Random();
+    activatedQuestTrialNumber = rng.nextInt(100000);
   }
 
   void disposeActivatedQuest() {

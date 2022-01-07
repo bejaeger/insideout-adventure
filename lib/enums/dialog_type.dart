@@ -9,4 +9,5 @@ enum DialogType {
   CollectedMarker,
   FoundTreasure,
   EditQuestInformation,
+  SuperUserSettings,
 }

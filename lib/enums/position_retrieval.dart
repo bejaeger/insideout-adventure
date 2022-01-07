@@ -1,1 +1,1 @@
-enum LocationRetrievalTrigger {listener, manualAll, onlyLastKnown}
+enum LocationRetrievalTrigger {listener, manualAll, onlyLastKnown, liveQuest}

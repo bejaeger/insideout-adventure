@@ -131,9 +131,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               Container(
                 height: height,
                 alignment: Alignment.topRight,
-                child: Text(
-                  "Super User",
-                  style: TextStyle(color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Super User",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.all(0),
+                      onPressed: model.openSuperUserSettingsDialog, icon: Icon(Icons.settings, color: Colors.white))
+                  ],
                 ),
               ),
           ],
