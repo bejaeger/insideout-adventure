@@ -78,7 +78,7 @@ bool shownDummyModeDialog = false;
 // for Location Search
 
 // will be scaled down once closer to the treasure!
-const double kMinDistanceFromLastCheckInMeters = 30;
+const double kMinDistanceFromLastCheckInMeters = 40;
 const int kCheckDistanceReloadDurationInSeconds = 10;
 
 const double kMinDistanceToCatchTrophyInMeters = 30;

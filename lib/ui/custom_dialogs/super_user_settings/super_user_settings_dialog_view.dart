@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/custom_dialogs/super_user_settings/super_user_settings_dialog_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_app_bar/activated_quest_panel.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -28,17 +29,47 @@ class SuperUserSettingsDialogView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Recorded positions"),
-                  Text(model.allRecordedLocations.length.toString()),
-                ],
+              Container(
+                padding: const EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.grey[200],
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("# pushed / recorded positions: "),
+                        Text(model.numberPushedLocations.toString() +
+                            " / " +
+                            model.allRecordedLocations.length.toString()),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("current gps accuracy"),
+                        Text(model.currentGPSAccuracy != null
+                            ? model.currentGPSAccuracy!.toString() + " m"
+                            : "nan"),
+                      ],
+                    ),
+                    Wrap(
+                      children: [
+                        TextButton(
+                            onPressed: model.resetLocationsList,
+                            child: Text("Reset locations list"))
+                      ],
+                    )
+                  ],
+                ),
               ),
+              Divider(),
               SwitchListTile(
                   title: Text("Record location data?"),
                   subtitle: Text(
-                      "Data is recorded during the quest and pushed to notion at quest completion."),
+                      "Data is recorded during the quest and pushed to notion."),
                   value: model.isRecordingLocationData,
                   onChanged: (bool value) =>
                       model.setIsRecordingLocationData(value)),
@@ -51,8 +82,7 @@ class SuperUserSettingsDialogView extends StatelessWidget {
                       model.setIsPermanentAdminMode(value)),
               SwitchListTile(
                   title: Text("Permanent User Mode?"),
-                  subtitle: Text(
-                      "Don't show dialog to choose user mode or admin mode but always be user."),
+                  subtitle: Text("Same as above but always be user."),
                   value: model.isPermanentUserMode,
                   onChanged: (bool value) =>
                       model.setIsPermanentUserMode(value)),
@@ -64,9 +94,6 @@ class SuperUserSettingsDialogView extends StatelessWidget {
                     onPressed: () => completer(DialogResponse(confirmed: true)),
                     child: Text(
                       "Ok",
-                      style: textTheme(context)
-                          .headline6!
-                          .copyWith(color: kWhiteTextColor),
                     ),
                   ),
                 ],

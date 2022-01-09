@@ -33,7 +33,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
 
   double? _currentSpeed;
   double? get currentSpeed => _currentSpeed;
-  double? get currentAccuracy => _geolocationService.currentGPSAccuracy;
+  int? get currentAccuracy => _geolocationService.currentGPSAccuracy;
 
   bool startedQuest = false;
   bool questSuccessfullyFinished = false;

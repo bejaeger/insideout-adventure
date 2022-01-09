@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
-import 'package:afkcredits/datamodels/helpers/location_entry.dart';
+import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/position_retrieval.dart';
@@ -9,19 +9,22 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   final GiftCardService _giftCardService = locator<GiftCardService>();
+  final QuestTestingService _questTestingService =
+      locator<QuestTestingService>();
 
   bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
   String get liveDistance => geolocationService.getLiveDistancesToGoal();
   String get lastKnownDistance =>
       geolocationService.getLastKnownDistancesToGoal();
-  List<LocationEntry> get allPositions => geolocationService.allPositions;
+  List<QuestDataPoint> get allPositions => _questTestingService.allQuestDataPoints;
 
   late final String name;
   ExplorerHomeViewModel() : super(explorerUid: "") {
@@ -58,14 +61,19 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
 
   void addLocationListener() {
     if (isSuperUser) {
-      geolocationService.listenToPositionAndAddToList();
+      questService.listenToPosition(
+        viewModelCallback: () => notifyListeners(),
+        distanceFilter: 0,
+        pushToNotion: false,
+      );
+      // geolocationService.listenToPositionAndAddToList(distanceFilter: 100);
       notifyListeners();
     }
   }
 
   void cancelLocationListener() {
     if (isSuperUser) {
-      geolocationService.cancelPositionListener();
+      questService.cancelPositionListener();
       notifyListeners();
     }
   }
@@ -116,9 +124,18 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   Future pushAllPositionsToNotion() async {
     addingPositionToNotionDB = true;
     notifyListeners();
-    bool ok = await geolocationService.pushAllPositionsToNotion();
+    if (_questTestingService.allLocationsPushed()) {
+      snackbarService.showSnackbar(
+          title: "Done",
+          message: "All locations were already pushed to notion");
+      pushedToNotion = true;
+      return;
+    }
+    bool ok = await _questTestingService.pushAllPositionsToNotion();
     showResponseInfo(ok);
-    pushedToNotion = true;
+    if (ok == true) {
+      pushedToNotion = true;
+    }
     addingPositionToNotionDB = false;
     notifyListeners();
   }
@@ -126,11 +143,12 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   Future addPositionEntryManual({bool onlyLastKnownPosition = false}) async {
     addingPositionToNotionDB = true;
     notifyListeners();
-
-    final ok = await geolocationService.addCurrentLocationEntry(
+    final ok = await _questTestingService.maybeRecordData(
         trigger: onlyLastKnownPosition
-            ? LocationRetrievalTrigger.onlyLastKnown
-            : LocationRetrievalTrigger.manualAll);
+            ? QuestDataPointTrigger.onlyLastKnownLocationFetchingEvent
+            : QuestDataPointTrigger.manualLocationFetchingEvent, 
+            pushToNotion: false,
+            );
     showResponseInfo(ok);
     addingPositionToNotionDB = false;
     notifyListeners();
@@ -142,8 +160,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
           title: "Success", message: "Added position entry to notion db");
     } else {
       snackbarService.showSnackbar(
-          title: "Failure",
-          message: "Could not add position entry to notion db");
+          title: "Failure", message: "Connect to a network and try again");
     }
   }
 }

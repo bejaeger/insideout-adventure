@@ -8,13 +8,16 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/enums/position_retrieval.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-
+import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:nanoid/nanoid.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
@@ -38,6 +41,8 @@ class QuestService with ReactiveServiceMixin {
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final StopWatchService _stopWatchService =
       locator<StopWatchService>(); // Create instance.
+  final QuestTestingService _questTestingService =
+      locator<QuestTestingService>();
   // map of list of money pools with money Pool id as key
   List<ActivatedQuest> activatedQuestsHistory = [];
   StreamSubscription? _pastQuestsStreamSubscription;
@@ -70,7 +75,7 @@ class QuestService with ReactiveServiceMixin {
     _startedQuest = quest;
   }
 
-  int? activatedQuestTrialNumber;
+  String? activatedQuestTrialId;
 
   bool sortedNearbyQuests = false;
   List<QuestType> allQuestTypes = [];
@@ -104,13 +109,17 @@ class QuestService with ReactiveServiceMixin {
       }
     }
 
+    // ! quest activated!
     // Add quest to behavior subject
     pushActivatedQuest(tmpActivatedQuest);
     // ! this here is important !
     setStartedQuest(quest);
     setNewTrialNumber();
+    _questTestingService.maybeInitialize(
+        activatedQuest: activatedQuest,
+        activatedQuestTrialId: activatedQuestTrialId);
+
     // Start timer
-    //Harguilar Commented This Out Timer
     _stopWatchService.startTimer();
 
     if (quest.type == QuestType.QRCodeHuntIndoor ||
@@ -132,6 +141,29 @@ class QuestService with ReactiveServiceMixin {
       _stopWatchService.listenToSecondTime(callback: trackData);
     }
     return true;
+  }
+
+  Future<void> listenToPosition(
+      {double distanceFilter = kMinDistanceFromLastCheckInMeters,
+      void Function()? viewModelCallback,
+      bool pushToNotion = false}) async {
+    return await _geolocationService.startPositionListener(
+        distanceFilter: distanceFilter.round(),
+        onData: (Position position) {
+          log.v("New position event fired from location listener!");
+          _questTestingService.maybeRecordData(
+            trigger: QuestDataPointTrigger.locationListener,
+            position: position,
+            questTrialId: activatedQuestTrialId,
+            activatedQuest: activatedQuest,
+            pushToNotion: pushToNotion,
+          );
+        },
+        viewModelCallback: viewModelCallback);
+  }
+
+  void cancelPositionListener() {
+    _geolocationService.cancelPositionListener();
   }
 
   int get getNumberMarkersCollected => activatedQuest!.markersCollected
@@ -880,13 +912,15 @@ class QuestService with ReactiveServiceMixin {
 
   // to identify trial number in diagnosis data
   void setNewTrialNumber() {
-    var rng = new Random();
-    activatedQuestTrialNumber = rng.nextInt(100000);
+    activatedQuestTrialId = nanoid(6);
   }
 
   void disposeActivatedQuest() {
     _stopWatchService.resetTimer();
     _stopWatchService.cancelListener();
+    // cancelLocationListener();
+    cancelPositionListener();
+    _questTestingService.maybeReset();
     resetTimeElapsed();
     removeActivatedQuest();
   }

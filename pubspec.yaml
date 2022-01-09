@@ -29,7 +29,8 @@ dependencies:
   cloud_firestore: ^1.0.7
   cloud_functions: ^3.1.1
   connectivity_plus: ^2.0.2
-
+  nanoid: ^1.0.0
+  
   # Firebase Authentications
   firebase_auth: ^3.2.0
   google_sign_in: ^5.2.1

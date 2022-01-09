@@ -31,6 +31,7 @@ abstract class QuestViewModel extends BaseModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final QuestTestingService questTestingService = locator<QuestTestingService>();
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
+  int? get currentGPSAccuracy =>  _geolocationService.currentGPSAccuracy;
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
   bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
@@ -323,6 +324,9 @@ abstract class QuestViewModel extends BaseModel {
       }
       if (continueQuest?.confirmed == false || force) {
         questService.cancelIncompleteQuest();
+
+        // TODO: Handle quest testing service if some positions aren't pushed yet!
+
         resetQuest();
         replaceWithMainView(index: BottomNavBarIndex.quest);
         baseModelLog.i("replaced view with mapView");

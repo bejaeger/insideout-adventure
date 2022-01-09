@@ -7,6 +7,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/treasure_search/treasure_search_location.dart';
+import 'package:afkcredits/enums/position_retrieval.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
@@ -25,7 +26,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     extends ActiveQuestBaseViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
 
-  double? get currentGPSAccuracy => _geolocationService.currentGPSAccuracy;
+  int? get currentGPSAccuracy => _geolocationService.currentGPSAccuracy;
   StreamSubscription? _activeVibrationQuestSubscription;
   DirectionStatus directionStatus = DirectionStatus.notstarted;
   bool isTrackingDeadTime = false;
@@ -161,19 +162,23 @@ class ActiveTreasureLocationSearchQuestViewModel
       // quest succesfully completed
       await showFoundTreasureDialog();
       await showSuccessDialog();
-      return;
-    }
-    // update UI on quest update
-    if (checkpoints.elementAt(checkpoints.length - 2).distanceToGoal >
-        checkpoints.last.distanceToGoal) {
-      await vibrateRightDirection();
-      // directionStatus = "Getting closer!";
-      directionStatus = DirectionStatus.closer;
     } else {
-      await vibrateWrongDirection();
-      directionStatus = DirectionStatus.further;
+      // update UI on quest update
+      if (checkpoints.elementAt(checkpoints.length - 2).distanceToGoal >
+          checkpoints.last.distanceToGoal) {
+        await vibrateRightDirection();
+        // directionStatus = "Getting closer!";
+        directionStatus = DirectionStatus.closer;
+      } else {
+        await vibrateWrongDirection();
+        directionStatus = DirectionStatus.further;
+      }
+      notifyListeners();
     }
-    notifyListeners();
+    // TODO push quest event
+    questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.userAction,
+        userEventDescription: "Updated location");
   }
 
   @override
@@ -195,14 +200,25 @@ class ActiveTreasureLocationSearchQuestViewModel
   void setAllowCheckingPosition(bool allow) {
     log.v("Set allow checking position");
     allowCheckingPosition = allow;
+    questTestingService.maybeRecordData(
+      trigger: QuestDataPointTrigger.liveQuestUICallback,
+      userEventDescription: "Allow position check",
+    );
   }
 
   Future setInitialDistance({required Quest? quest}) async {
     if (quest == null) return;
-    await _geolocationService.listenToPosition(callback: () {
-      setAllowCheckingPosition(true);
-      notifyListeners();
-    });
+    await questService.listenToPosition(
+        distanceFilter: kMinDistanceFromLastCheckInMeters,
+        pushToNotion: true,
+        // TODO: Think of adding position to the viewModelCallback function
+        // Then we can add a filterGPSData function that only
+        // allows the user to check location based on certain conditions
+
+        viewModelCallback: () {
+          setAllowCheckingPosition(true);
+          notifyListeners();
+        });
     final position = await _geolocationService.getUserLivePosition;
     final newDistanceInMeters = _geolocationService.distanceBetween(
       lat1: position.latitude,
@@ -236,6 +252,8 @@ class ActiveTreasureLocationSearchQuestViewModel
 
     // TODO: Think whether we should rather use the NEW Current location and
     // restart the listener so it fires after another "DISTANCEFILTER" distance
+    // TODO: ALTERNATIVE: have smaller distanceFilter and additional filter to
+    // select when user can update location
     final position = await _geolocationService.getUserLivePosition;
     // if (!await checkAccuracy(
     //     position: position,
@@ -256,9 +274,7 @@ class ActiveTreasureLocationSearchQuestViewModel
       setSkipUpdatingQuestStatus(false);
 
       // check distance to goal!
-      final newDistanceInMeters = getNewDistanceToGoal(newPosition: position);
       addCheckpoint(newPosition: position);
-      log.i("Updating distance to goal to $newDistanceInMeters meters");
       return true;
     }
     // else {
@@ -269,6 +285,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   Future checkDistance() async {
     if (!firedOnce) {
+      // first distance check and setting up listeners
       if (hasActiveQuest) {
         setIsCheckingDistance(true);
         await Future.wait([
@@ -326,6 +343,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   void addCheckpoint({required Position newPosition}) {
     double newDistance = getNewDistanceToGoal(newPosition: newPosition);
+    log.i("Updating distance to goal to $newDistance meters");
     double distanceToPreviousCheckpoint =
         getDistanceToPreviousCheckpoint(newPosition: newPosition);
     checkpoints.add(TreasureSearchLocation(

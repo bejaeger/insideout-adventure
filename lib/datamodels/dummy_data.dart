@@ -917,3 +917,6 @@ AFKMarker commercial2() {
     lon: -123.06956197567348,
   );
 }
+
+const double kTestLat = 48.06701330843975;
+const double kTestLon = 7.903736956224777;
