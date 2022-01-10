@@ -13,8 +13,9 @@ class SuperUserSettingsDialogViewModel extends QuestViewModel {
   bool get isPermanentUserMode => _questTestingService.isPermanentUserMode;
   List<QuestDataPoint> get allRecordedLocations =>
       _questTestingService.allQuestDataPoints;
-
-  bool get isAllPositionsPushed => _questTestingService.allLocationsPushed();
+  bool addingPositionToNotionDB = false;
+  bool get isAllPositionsPushed =>
+      _questTestingService.allQuestDataPointsPushed();
   int get numberPushedLocations => _questTestingService.numberPushedLocations();
 
   void setIsRecordingLocationData(bool b) {
@@ -35,5 +36,33 @@ class SuperUserSettingsDialogViewModel extends QuestViewModel {
   void setIsPermanentUserMode(bool b) {
     _questTestingService.setIsPermanentUserMode(b);
     notifyListeners();
+  }
+
+  Future pushAllPositionsToNotion() async {
+    if (_questTestingService.allQuestDataPointsPushed()) {
+      snackbarService.showSnackbar(
+          title: "Done",
+          message: "All data were already pushed to notion");
+      return;
+    }
+    addingPositionToNotionDB = true;
+    notifyListeners();
+    bool ok = await _questTestingService.pushAllPositionsToNotion();
+    showResponseInfo(ok);
+    if (ok == false) {
+      snackbarService.showSnackbar(title: "Failed uploading data", message: "Connect to a network and try again.");
+    }
+    addingPositionToNotionDB = false;
+    notifyListeners();
+  }
+
+  void showResponseInfo(bool ok) {
+    if (ok) {
+      snackbarService.showSnackbar(
+          title: "Success", message: "Added quest data to notion db");
+    } else {
+      snackbarService.showSnackbar(
+          title: "Failure", message: "Connect to a network and try again");
+    }
   }
 }

@@ -64,7 +64,7 @@ class QuestTestingService {
   String? _questTrialId;
   String? _questId;
   String? _questCategory;
-
+bool _pushToNotion = false;
   void setIsRecordingLocationData(bool b) {
     _isRecordingLocationData = b;
   }
@@ -118,7 +118,7 @@ class QuestTestingService {
     Position? position,
     String? questTrialId,
     ActivatedQuest? activatedQuest,
-    bool pushToNotion = true,
+    bool pushToNotion = false,
   }) async {
     if (!isRecordingLocationData) return;
     QuestDataPoint questDataPoint = await addQuestDataPoint(
@@ -180,11 +180,15 @@ class QuestTestingService {
     bool ok = true;
     for (int i = 0; i < allQuestDataPoints.length; i++) {
       ok = ok & await pushNotionDatabaseEntry(allQuestDataPoints[i]);
+      if (ok) {
+        allQuestDataPoints[i].pushedToNotion = true;
+      }
+
     }
     return ok;
   }
 
-  bool allLocationsPushed() {
+  bool allQuestDataPointsPushed() {
     return !allQuestDataPoints.any((element) => element.pushedToNotion == false);
   }
 

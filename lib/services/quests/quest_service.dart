@@ -117,7 +117,8 @@ class QuestService with ReactiveServiceMixin {
     setNewTrialNumber();
     _questTestingService.maybeInitialize(
         activatedQuest: activatedQuest,
-        activatedQuestTrialId: activatedQuestTrialId);
+        activatedQuestTrialId: activatedQuestTrialId, 
+        );
 
     // Start timer
     _stopWatchService.startTimer();
@@ -460,7 +461,7 @@ class QuestService with ReactiveServiceMixin {
           return;
         }
         final position = await _geolocationService.getAndSetCurrentLocation();
-        if (position.accuracy > kMaxAccuracyLocationSearch) {
+        if (position.accuracy > kMinRequiredAccuracyLocationSearch) {
           log.v(
               "Accuracy is ${position.accuracy} and not enough to take next point!");
           return;

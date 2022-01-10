@@ -177,8 +177,10 @@ class ActiveTreasureLocationSearchQuestViewModel
     }
     // TODO push quest event
     questTestingService.maybeRecordData(
-        trigger: QuestDataPointTrigger.userAction,
-        userEventDescription: "Updated location");
+      trigger: QuestDataPointTrigger.userAction,
+      userEventDescription: "Updated location",
+      pushToNotion: true,
+    );
   }
 
   @override
@@ -201,6 +203,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     log.v("Set allow checking position");
     allowCheckingPosition = allow;
     questTestingService.maybeRecordData(
+      pushToNotion: true,
       trigger: QuestDataPointTrigger.liveQuestUICallback,
       userEventDescription: "Allow position check",
     );
@@ -214,7 +217,6 @@ class ActiveTreasureLocationSearchQuestViewModel
         // TODO: Think of adding position to the viewModelCallback function
         // Then we can add a filterGPSData function that only
         // allows the user to check location based on certain conditions
-
         viewModelCallback: () {
           setAllowCheckingPosition(true);
           notifyListeners();
@@ -477,7 +479,8 @@ class ActiveTreasureLocationSearchQuestViewModel
         log.wtf(
             "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten that the quest is still running!");
         // TODO: Could also be override function
-        await cancelIncompleteQuest();
+        setTrackingDeadTime(false);
+        await questService.cancelIncompleteQuest();
         return;
       }
     }
@@ -526,11 +529,6 @@ class ActiveTreasureLocationSearchQuestViewModel
         title: "How it works",
         description:
             "Start to walk and check the distance to the trophy regularly. You will see if you get closer or are further away! The trohphy is clever and sometimes moves around!!");
-  }
-
-  Future cancelIncompleteQuest() async {
-    setTrackingDeadTime(false);
-    await questService.cancelIncompleteQuest();
   }
 
   void setTrackingDeadTime(bool deadTime) {

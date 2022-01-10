@@ -12,6 +12,7 @@ import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
+import 'package:afkcredits/enums/user_settings_dialog_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
@@ -29,9 +30,10 @@ abstract class QuestViewModel extends BaseModel {
   StreamSubscription? _activeQuestSubscription;
   String lastActivatedQuestInfoText = "Active Quest";
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final QuestTestingService questTestingService = locator<QuestTestingService>();
+  final QuestTestingService questTestingService =
+      locator<QuestTestingService>();
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
-  int? get currentGPSAccuracy =>  _geolocationService.currentGPSAccuracy;
+  int? get currentGPSAccuracy => _geolocationService.currentGPSAccuracy;
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
   bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
@@ -323,9 +325,15 @@ abstract class QuestViewModel extends BaseModel {
         questService.setUIDeadTime(false);
       }
       if (continueQuest?.confirmed == false || force) {
-        questService.cancelIncompleteQuest();
-
         // TODO: Handle quest testing service if some positions aren't pushed yet!
+        if (questTestingService.isRecordingLocationData &&
+            !questTestingService.allQuestDataPointsPushed()) {
+          log.i("push to notion");
+          await dialogService.showCustomDialog(
+              variant: DialogType.SuperUserSettings,
+              data: UserSettingsDialogType.sendDiagnostice);
+        }
+        questService.cancelIncompleteQuest();
 
         resetQuest();
         replaceWithMainView(index: BottomNavBarIndex.quest);

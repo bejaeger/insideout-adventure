@@ -86,7 +86,6 @@ const double kMinRequiredAccuracyLocationSearch = 50;
 // for vibration search automatic
 const int kDeadTimeAfterVibrationInSeconds = 5;
 
-const double kMaxAccuracyLocationSearch = 20;
 
 //////////////////////////////////
 // for distance estimate

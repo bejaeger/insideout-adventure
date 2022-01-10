@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -63,7 +64,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
     if (isSuperUser) {
       questService.listenToPosition(
         viewModelCallback: () => notifyListeners(),
-        distanceFilter: 0,
+        distanceFilter: kMinRequiredAccuracyLocationSearch,
         pushToNotion: false,
       );
       // geolocationService.listenToPositionAndAddToList(distanceFilter: 100);
@@ -94,11 +95,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
             initialBottomNavBarIndex: BottomNavBarIndex.quest),
         transition: 'righttoleft',
         duration: Duration(milliseconds: 400));
-
-    // navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-    //     arguments: BottomBarLayoutTemplateViewArguments(
-    //         userRole: currentUser.role,
-    //         initialBottomNavBarIndex: BottomNavBarIndex.quest));
   }
 
   Future showToEarnExplanationDialog() async {
@@ -121,10 +117,12 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
 
   //-----------------------------------------
   // Some R & D
+  // TO BE DEPRECATED!
+  
   Future pushAllPositionsToNotion() async {
     addingPositionToNotionDB = true;
     notifyListeners();
-    if (_questTestingService.allLocationsPushed()) {
+    if (_questTestingService.allQuestDataPointsPushed()) {
       snackbarService.showSnackbar(
           title: "Done",
           message: "All locations were already pushed to notion");
