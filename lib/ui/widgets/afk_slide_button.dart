@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -28,20 +29,20 @@ class AFKSlideButton extends StatelessWidget {
         alignment: alignment ?? Alignment.center,
         outerColor: kPrimaryColor,
         //text: "Start",
-        child: canStartQuest
-            ? Shimmer.fromColors(
-                baseColor: kGreyTextColor,
-                highlightColor: Colors.white,
-                period: const Duration(milliseconds: 1000),
-                child: Text("Start",
+        child:  canStartQuest
+                ? Shimmer.fromColors(
+                    baseColor: kGreyTextColor,
+                    highlightColor: Colors.white,
+                    period: const Duration(milliseconds: 1000),
+                    child: Text("Start",
+                        style: textTheme(context)
+                            .headline6!
+                            .copyWith(fontSize: 22, color: kWhiteTextColor)),
+                  )
+                : Text("Cannot start",
                     style: textTheme(context)
                         .headline6!
                         .copyWith(fontSize: 22, color: kWhiteTextColor)),
-              )
-            : Text("Cannot start",
-                style: textTheme(context)
-                    .headline6!
-                    .copyWith(fontSize: 22, color: kWhiteTextColor)),
         height: 50,
         elevation: 10,
         sliderRotate: false,

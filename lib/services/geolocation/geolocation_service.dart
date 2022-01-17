@@ -34,6 +34,7 @@ class GeolocationService {
   final log = getLogger('GeolocationService');
   final _firestoreApi = locator<FirestoreApi>();
   StreamSubscription? _currentPositionStreamSubscription;
+  bool get isListeningToLocation => _currentPositionStreamSubscription != null;
   final NotionClient notion =
       NotionClient(token: 'secret_q0fv8n18xW5l1PS9ipqljUphAXvmvCyXqKfGjcqXvWs');
 
@@ -47,7 +48,9 @@ class GeolocationService {
 
   // position with stream
   Position? _livePosition;
-  Position? get getUserLivePosition => _livePosition;
+  Future<Position> get getUserLivePosition async =>
+      _livePosition ??
+      await getAndSetCurrentLocation(forceGettingNewPosition: false);
 
   // current position forced
   Position? _currentPosition;
@@ -84,7 +87,7 @@ class GeolocationService {
 
   String deviceInfoKey = "deviceInfo";
 
-  void listenToPosition(
+  void listenToPositionAndAddToList(
       {double distanceFilter = kMinDistanceFromLastCheckInMeters}) {
     if (_currentPositionStreamSubscription == null) {
       // TODO: Provide proper error message to user in case of
@@ -101,7 +104,56 @@ class GeolocationService {
     }
   }
 
-  setGPSAccuracyInfo(String? info) {
+  Future<void> listenToPosition(
+      {double distanceFilter = kMinDistanceFromLastCheckInMeters,
+      void Function()? callback}) {
+    Completer<void> completer = Completer();
+    if (_currentPositionStreamSubscription == null) {
+      // TODO: Provide proper error message to user in case of
+      // denied permission, no access to gps, ...
+      _currentPositionStreamSubscription = Geolocator.getPositionStream(
+              desiredAccuracy: LocationAccuracy.best,
+              distanceFilter: distanceFilter.round())
+          .listen(
+        (position) {
+          log.v("New position event fired from location listener!");
+          printPositionInfo(position);
+          _livePosition = position;
+          setGPSAccuracyInfo(position.accuracy);
+          if (callback != null) {
+            // don't fire callback on first event
+            if (completer.isCompleted) {
+              callback();
+            }
+          }
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
+        },
+      );
+    } else {
+      log.w("Position stream already listened to!");
+      completer.complete();
+    }
+    return completer.future;
+  }
+
+  Future<LocationPermission> askForLocationPermission() async {
+    log.v("Trying to request permissions");
+    final LocationPermission result = await Geolocator.requestPermission();
+    log.i("Granted permission: $result");
+    return result;
+  }
+
+  void setGPSAccuracyInfo(double accuracy, [bool isSuperUser = false]) {
+    String? info;
+    if (accuracy > kThresholdGPSAccuracyToShowInfo) {
+      info = "Low GPS Accuracy (${accuracy.toStringAsFixed(0)} m)";
+    } else {
+      if (isSuperUser) {
+        info = "GPS accuracy: ${accuracy.toStringAsFixed(0)} m";
+      }
+    }
     gpsAccuracyInfo = info;
   }
 
@@ -129,15 +181,7 @@ class GeolocationService {
           );
 
           log.i("Retrieved position at ${DateTime.now().toString()}");
-
-          currentGPSAccuracy = geolocatorPosition.accuracy;
-          if (currentGPSAccuracy != null &&
-              currentGPSAccuracy! > kThresholdGPSAccuracyToShowInfo) {
-            setGPSAccuracyInfo(
-                "Low GPS Accuracy (${currentGPSAccuracy?.toStringAsFixed(0)} m)");
-          } else {
-            setGPSAccuracyInfo(null);
-          }
+          setGPSAccuracyInfo(geolocatorPosition.accuracy);
           _position = geolocatorPosition;
           printPositionInfo(geolocatorPosition);
           return geolocatorPosition;
@@ -148,11 +192,14 @@ class GeolocationService {
           if (lastKnownPosition != null) {
             log.v("Returning last known position");
             _position = lastKnownPosition;
+            printPositionInfo(lastKnownPosition);
+            setGPSAccuracyInfo(lastKnownPosition.accuracy);
             return lastKnownPosition;
           } else {
             if (_position != null) {
               log.v("Returning previously fetched position");
               printPositionInfo(_position!);
+              setGPSAccuracyInfo(_position!.accuracy);
               return _position!;
             } else {
               log.v("Force getting new position");
@@ -160,22 +207,6 @@ class GeolocationService {
             }
           }
         }
-
-        // } else {
-        // final loc.Location location = new loc.Location();
-        // _position = await location.getLocation();
-        // }
-        // if (_position != null) {
-        //   log.v("Getting last known position instead");
-        //   final lastPosition = await Geolocator.getLastKnownPosition();
-        //   return lastPosition;
-        //   //return _position;
-        // } else {
-        //   _position = Geolocator.getCurrentPosition(
-        //       desiredAccuracy: LocationAccuracy.best);
-        //   return _position;
-        // }
-
       } catch (error) {
         log.e("Error when reading geolocation. Error thrown: $error");
         throw GeolocationServiceException(
@@ -272,7 +303,7 @@ class GeolocationService {
       {required Position position, required double lat, required double lon}) {
     double distanceInMeters = Geolocator.distanceBetween(
         position.latitude, position.longitude, lat, lon);
-    if (distanceInMeters > kMaxDistanceFromMarkerInMeter) {
+    if (distanceInMeters < kMaxDistanceFromMarkerInMeter) {
       return true;
     } else {
       return false;
@@ -320,6 +351,7 @@ class GeolocationService {
     _lastKnownPosition = null;
     _currentPosition = null;
     _livePosition = null;
+    allPositions = [];
     currentGPSAccuracy = null;
     cancelPositionListener();
   }
