@@ -1,11 +1,13 @@
-import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
+import 'package:uuid/uuid.dart';
+import '../quest.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
 
@@ -34,8 +36,14 @@ import 'create_quest_viewmodel.dart';
 // ignore: must_be_immutable
 class CreateQuestView extends StatelessWidget with $CreateQuestView {
   CreateQuestView({Key? key}) : super(key: key);
-  Marker? _startMarker;
-  Marker? _finishMarker;
+  String? questId;
+  String? afkCreditId;
+  num? afkCreditAmount;
+  QuestType? selectedQuestType;
+  // QuestType? _questType;
+  //GlobalKey<FormFieldState>? _key;
+/*   Marker? _startMarker;
+  Marker? _finishMarker; */
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateQuestViewModel>.reactive(
@@ -60,7 +68,6 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
           child: Container(
             padding: EdgeInsets.all(10),
             height: MediaQuery.of(context).size.height,
-            //width: MediaQuery.of(context).size.width / 2,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,41 +78,45 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                     labelText: 'Quest Name: ',
                   ),
                   controller: nameController,
+                  keyboardType: TextInputType.text,
                   // focusNode: nameFocusNode,
                 ),
                 verticalSpaceSmall,
                 TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Quest Description: ',
-                    ),
-                    controller: descriptionController),
+                  decoration: InputDecoration(
+                    labelText: 'Quest Description: ',
+                  ),
+                  // keyboardType: TextInputType.name,
+                  controller: descriptionController,
+                  keyboardType: TextInputType.text,
+                ),
                 verticalSpaceSmall,
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'AFK Credit Amount: ',
                   ),
                   keyboardType: TextInputType.number,
-                  /*  inputFormatters: <TextInputFormatter>[
+                  inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ], */
+                  ],
                   controller: afkCreditAmountController,
                 ),
                 verticalSpaceSmall,
-                DropdownButtonFormField<String>(
+                DropdownButtonFormField<QuestType>(
+                  //key: _key,
                   hint: Text('Select Quest Type'),
-                  items: questType.map((_questType) {
+                  isExpanded: true,
+                  items: QuestType.values.map((_questType) {
                     return DropdownMenuItem(
+                      // key: _key,
                       value: _questType,
                       child: Text(
-                        _questType.toString(),
-                      ), /* TextField(
-                          decoration: InputDecoration(),
-                          controller: questTypeController
-                            ..text = _questType.toString()) */
+                        _questType.toString().split('.').elementAt(1),
+                      ),
                     );
                   }).toList(),
-                  onChanged: (String? value) {
-                    //print(value.toString());
+                  onChanged: (QuestType? value) {
+                    selectedQuestType = value;
                   },
                 ),
                 verticalSpaceSmall,
@@ -115,105 +126,66 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                     //mapType: MapType.hybrid,
                     initialCameraPosition: model.initialCameraPosition(),
                     //Place Markers in the Map
-                    markers: {
-                      if (model.starterMarker != null) model.starterMarker!,
-                      if (model.finishedMarker != null) model.finishedMarker!
-                    },
+                    markers: model.markersOnMap,
+
                     //callback that’s called when the map is ready to us.
                     onMapCreated: model.onMapCreated,
 
                     onTap: model.displayMarkersOnMap,
                   ),
                 ),
-
-                /*           Expanded(
-                  child: DropdownButtonFormField(
-                    hint: Text('Select Start Marker'),
-                    items: model.getAFKMarkers?.map((_questIds) {
-                      return DropdownMenuItem(
-                        value: _questIds,
-                        child: Text(
-                          _questIds!.id.toString(),
-                        ) /* TextField(
-                            decoration: InputDecoration(),
-                            controller: questTypeController
-                              ..text = _questType.toString()) */
-                        ,
-                      );
-                    }).toList(),
-                    onChanged: (startMarker) {
-                      /* model.setMarkersId(
-                          startOrFinishMarker: startMarker as AFKMarker); */
-                      // print(value.toString());
-                    },
-                  ),
-                ), */
-                /*       ElevatedButton(
-                  // onPressed: model.navigateToExplorerHomeView,
-                  onPressed: model.logout,
-                  //child: Text("Go to explorer home/map")),
-                  child: Text("Logout  "),
-                ),
-                verticalSpaceSmall, */
-
-                /*               ListView.builder(
-                  itemCount: model.getAFKMarkers!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return widget(
-                      child: DropdownMenuItem(
-                        value: "",
-                        child: Text(model.getAFKMarkers![index]!.id),
-                      ),
-                    );
-                  },
-                ), */
-
-                // DropdownButtonFormField(items: onChanged: onChanged)
-
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(
+                      ElevatedButton.icon(
                         onPressed: () async {
-                          /*             await model.createQuest(
+                          /*       if (afkCreditAmountController.text.isNotEmpty &&
+                              descriptionController.text.isNotEmpty &&
+                              nameController.text.isNotEmpty &&
+                              questTypeController.text.isNotEmpty) { */
+                          afkCreditAmount =
+                              num.parse(afkCreditAmountController.text);
+                          var id = Uuid();
+                          questId = id.v1().toString().replaceAll('-', '');
+                          await model.createQuest(
                             quest: Quest(
-                                id: 'id',
-                                startMarker: Afa,
-                                name: nameController.text,
-                                description: descriptionController.text,
-                                type: "type",
-                                markers: markers,
-                                afkCredits: afkCredits),
-                          ); */
+                                id: questId!,
+                                startMarker: model.afkCredits.first,
+                                finishMarker: model.afkCredits.last,
+                                name: nameController.text.toString(),
+                                description:
+                                    descriptionController.text.toString(),
+                                type: selectedQuestType ?? QuestType.Hike,
+                                markers: model.afkCredits,
+                                afkCredits: afkCreditAmount!),
+                          );
                           model.resetMarkersValues();
+                          //_key!.currentState!.reset();
+                          //Clear Controllers
 
-                          final questName = nameController.text.toString();
-                          print(
-                              "Harguilar THis is your QUest Name: ${questName}");
-                        }, //completer(DialogResponse(confirmed: true)),
-                        child: Text(
-                          'Create',
-                          //request.mainButtonTitle.toString(),
-                          /* style: textTheme(context)
-                              .headline6!
-                              .copyWith(color: kBlackHeadlineColor), */
+                          nameController.clear();
+                          questTypeController.clear();
+                          afkCreditAmountController.clear();
+                          descriptionController.clear();
+                          /*     } else {
+                            model.displaySnackBars!.snackBarTextBoxEmpty();
+                          } */
+                        },
+                        icon: const Icon(Icons
+                            .addchart), //completer(DialogResponse(confirmed: true)),
+                        label: const Text(
+                          'Add',
                         ),
                       ),
                       horizontalSpaceSmall,
-                      ElevatedButton(
+                      ElevatedButton.icon(
                         onPressed: () {
                           model.navBackToPreviousView();
-                          /*     return completer(
-                            DialogResponse(confirmed: false),
-                          ); */
                         },
-                        child: Text(
+                        icon: const Icon(Icons.cancel),
+                        label: const Text(
                           "Cancel",
-                          //request.secondaryButtonTitle.toString(),
-                          /*   style: textTheme(context)
-                              .headline6!
-                              .copyWith(color: kBlackHeadlineColor), */
                         ),
                       ),
                     ],
@@ -224,8 +196,8 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
           ),
         ),
       ),
-      viewModelBuilder: () => CreateQuestViewModel(
-          finishedMarker: _finishMarker, starterMarker: _startMarker),
+
+      viewModelBuilder: () => CreateQuestViewModel(),
     );
   }
 }

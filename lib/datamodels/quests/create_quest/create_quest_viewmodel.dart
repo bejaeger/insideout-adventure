@@ -3,13 +3,14 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
-import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
+import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateQuestViewModel extends FormViewModel with NavigationMixin {
   List<AFKMarker?>? _afkMarkers;
@@ -18,16 +19,15 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
   final _questService = locator<QuestService>();
   final _markerService = locator<MarkerService>();
   CameraPosition? _initialCameraPosition;
+  DisplaySnackBars? displaySnackBars;
   final _log = getLogger('CreateQuestViewModel');
 
   Marker? starterMarker;
+  int index = 0;
   Marker? finishedMarker;
-
-  CreateQuestViewModel(
-      {required this.starterMarker, required this.finishedMarker});
-
-  AFKMarker? _startMarker;
-  AFKMarker? _finishMarker;
+  //Set<AFKMarker?>? afkCredits = {};
+  List<AFKMarker> afkCredits = [];
+  Set<Marker> markersOnMap = {};
 
   List<String>? markerIds = [];
   @override
@@ -41,24 +41,41 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
 
   void resetMarkersValues() {
     starterMarker = null;
+    //  markers = null;
+    markersOnMap = {};
     finishedMarker = null;
     notifyListeners();
   }
 
   Future<void> createQuest({required Quest quest}) async {
-    await _questService.createQuest(quest: quest);
+    if (quest != null) {
+      await _questService.createQuest(quest: quest);
+      //displaySnackBars!.snackBarCreatedQuest(quest: quest);
+    }
   }
 
   void displayMarkersOnMap(LatLng pos) {
     setBusy(true);
     try {
-      if (starterMarker == null ||
-          (starterMarker != null && finishedMarker != null)) {
-        starterMarker = returnMarkers(markerId: 'start', pos: pos);
-        _log.i('This is the Started Marker $starterMarker');
+      var id = Uuid();
+      var id2 = Uuid();
+      final markerId = id.v1().toString().replaceAll('-', '');
+      final qrdCdId = id2.v1().toString().replaceAll('-', '');
+
+      if (markersOnMap == null || (markersOnMap != null)) {
+        /*    if (starterMarker == null ||
+          (starterMarker != null && finishedMarker != null)) { */
+        //starterMarker = returnMarkers(markerId: 'start', pos: pos);
+        // markers!.add(returnMarkers(markerId: markerId, pos: pos));
+        markersOnMap.add(returnMarkers(markerId: markerId, pos: pos));
+        afkCredits
+            .add(returnAFK(pos: pos, markerId: markerId, qrCode: qrdCdId));
+
+        _log.i('This is the Started Marker $markersOnMap');
+        // _log.i('This is the Started Marker $starterMarker');
 
         // Reset finish
-        finishedMarker = null;
+        // finishedMarker = null;
       } else {
         finishedMarker = returnMarkers(markerId: 'finish', pos: pos);
         _log.i('This is the Started Marker $finishedMarker');
@@ -91,11 +108,6 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
       zoom: 11.5,
     );
     return _initialCameraPosition!;
-    /* } else {
-      _log.wtf(
-          'You Cannot Supply Empty Position ${_geolocationService.getUserPosition}');
-    }
-    return _initialCameraPosition!; */
   }
 
   void onMapCreated(GoogleMapController controller) {
@@ -116,12 +128,12 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
 
   void setMarkersId({required AFKMarker? startOrFinishMarker}) {
     setBusy(true);
-    _startMarker = startOrFinishMarker;
+    //_startMarker = startOrFinishMarker;
     setBusy(false);
     notifyListeners();
     _log.i("Harguilar You Have tried Look at the code Below");
     _log.i(nameValue);
-    _log.i(_startMarker!);
+    //_log.i(_startMarker!);
   }
 
   List<AFKMarker?>? get getAFKMarkers => _afkMarkers;
@@ -135,15 +147,23 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
   }
 
   //TODO: Refactor the Code Below with the Abstract Class.
-  Marker? returnMarkers({required LatLng pos, required String markerId}) {
+  Marker returnMarkers({required LatLng pos, required String markerId}) {
     return Marker(
       markerId: MarkerId(markerId),
       infoWindow: InfoWindow(title: markerId),
-      icon: markerId == 'start'
+      /*  icon: markerId == 'start'
           ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
-          : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue), */
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
       position: pos,
     );
+  }
+
+  //TODO: Refactor the Code Below with the Abstract Class.
+  AFKMarker returnAFK(
+      {required LatLng pos, required String markerId, required String qrCode}) {
+    return AFKMarker(
+        id: markerId, qrCodeId: qrCode, lat: pos.latitude, lon: pos.longitude);
   }
 
   @override

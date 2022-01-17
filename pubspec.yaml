@@ -90,6 +90,7 @@ dependencies:
   slide_to_act: ^2.0.1
   shimmer: ^2.0.0
   map_picker: ^0.0.3
+  image_picker: ^0.8.4+4
 
 dev_dependencies:
   flutter_test:
@@ -136,6 +137,9 @@ flutter:
     - assets/icons/treasure.png
     - assets/icons/treasure-map.png
     - assets/icons/measure.png
+    - assets/icons/create_quest.png
+    - assets/icons/giftcard.png
+
   # To add assets to your application, add an assets section, like this:
   #assets:
     - .env

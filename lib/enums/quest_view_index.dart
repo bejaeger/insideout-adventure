@@ -1,1 +1,1 @@
-enum QuestViewType {questlist, map, singlequest}
+enum QuestViewType { questlist, map, singlequest, createQuest }

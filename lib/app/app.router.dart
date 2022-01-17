@@ -6,7 +6,6 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -37,10 +36,14 @@ import '../ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_view.dart';
+import '../ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
+import '../ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
 import '../ui/views/quests_overview/edit_quest/edit_quest_view.dart';
+import '../ui/views/quests_overview/manage_quest/manage_quest_view.dart';
+import '../ui/views/quests_overview/quests_overview_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
@@ -85,6 +88,10 @@ class Routes {
       '/active-treasure-location-search-quest-view';
   static const String activeMapQuestView = '/active-map-quest-view';
   static const String createQuestView = '/create-quest-view';
+  static const String manageQuestView = '/manage-quest-view';
+  static const String manageGiftCardstView = '/manage-gift-cardst-view';
+  static const String questsOverviewView = '/quests-overview-view';
+  static const String addGiftCardsView = '/add-gift-cards-view';
   static const all = <String>{
     sponsorHomeView,
     updatingQuestView,
@@ -115,6 +122,10 @@ class Routes {
     activeTreasureLocationSearchQuestView,
     activeMapQuestView,
     createQuestView,
+    manageQuestView,
+    manageGiftCardstView,
+    questsOverviewView,
+    addGiftCardsView,
   };
 }
 
@@ -155,6 +166,10 @@ class StackedRouter extends RouterBase {
         page: ActiveTreasureLocationSearchQuestView),
     RouteDef(Routes.activeMapQuestView, page: ActiveMapQuestView),
     RouteDef(Routes.createQuestView, page: CreateQuestView),
+    RouteDef(Routes.manageQuestView, page: ManageQuestView),
+    RouteDef(Routes.manageGiftCardstView, page: ManageGiftCardstView),
+    RouteDef(Routes.questsOverviewView, page: QuestsOverviewView),
+    RouteDef(Routes.addGiftCardsView, page: AddGiftCardsView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -405,6 +420,33 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    ManageQuestView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const ManageQuestView(),
+        settings: data,
+      );
+    },
+    ManageGiftCardstView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const ManageGiftCardstView(),
+        settings: data,
+      );
+    },
+    QuestsOverviewView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const QuestsOverviewView(),
+        settings: data,
+      );
+    },
+    AddGiftCardsView: (data) {
+      var args = data.getArgs<AddGiftCardsViewArguments>(
+        orElse: () => AddGiftCardsViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AddGiftCardsView(key: args.key),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -537,4 +579,10 @@ class ActiveMapQuestViewArguments {
 class CreateQuestViewArguments {
   final Key? key;
   CreateQuestViewArguments({this.key});
+}
+
+/// AddGiftCardsView arguments holder class
+class AddGiftCardsViewArguments {
+  final Key? key;
+  AddGiftCardsViewArguments({this.key});
 }

@@ -1,4 +1,3 @@
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 const String kAppName = "AFK Credits";
@@ -63,7 +62,6 @@ const List<String> questType = [
   "TreasureLocationSearch",
   "TreasureLocationSearchAutomatic"
 ];
-
 //////////////////////////////////////////////////////////
 /// Quest settings!
 

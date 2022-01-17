@@ -44,6 +44,19 @@ class GiftCardService {
     }
   }
 
+  Future<bool> addGiftCardCategory(
+      {required GiftCardCategory giftCardCategory}) async {
+    //TODO: Refactor this code .
+    if (giftCardCategory.categoryId.isNotEmpty) {
+      return await _firestoreApi.addGiftCardCategory(
+          giftCardCategory: giftCardCategory);
+    }
+    return false;
+
+    //update the newly created document reference with the Firestore Id.
+    //This is to make suret that the document has the same id as the quest.
+  }
+
   Future fetchAllGiftCards() async {
     try {
       final allGiftCardCategories = await _firestoreApi.getAllGiftCards();

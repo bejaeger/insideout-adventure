@@ -663,6 +663,29 @@ class FirestoreApi {
         .doc(giftCardPurchase.transferId)
         .update(giftCardPurchase.toJson());
   }
+
+  Future<bool> addGiftCardCategory(
+      {required GiftCardCategory giftCardCategory}) async {
+    //TODO: Refactor this code .
+    if (giftCardCategory.categoryId.isNotEmpty) {
+      log.i("Upload quest with id ${giftCardCategory.categoryId} to firestore");
+      //Get the Document Created Reference
+      _documentReference =
+          await giftCardsCollection.add(giftCardCategory.toJson());
+      //update the newly created document reference with the Firestore Id.
+      //This is to make suret that the document has the same id as the quest.
+      await giftCardsCollection
+          .doc(_documentReference!.id)
+          .update({'id': _documentReference!.id});
+      log.i(
+          'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
+      return true;
+    }
+    return false;
+
+    //update the newly created document reference with the Firestore Id.
+    //This is to make suret that the document has the same id as the quest.
+  }
 }
 
 /////////////////////////////////////////////////////////
