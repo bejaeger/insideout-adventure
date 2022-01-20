@@ -18,7 +18,7 @@ import 'create_quest_viewmodel.dart';
     //FormTextField(name: 'distanceFromUser'),
     FormTextField(name: 'afkCreditAmount'),
     FormTextField(name: 'questType'),
-    FormDropdownField(
+/*     FormDropdownField(
       name: 'afkStartAndFinishMarkers',
       items: [
         StaticDropdownItem(
@@ -30,7 +30,7 @@ import 'create_quest_viewmodel.dart';
           value: 'finish',
         ),
       ],
-    ),
+    ), */
   ],
 )
 // ignore: must_be_immutable
@@ -168,9 +168,6 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                           questTypeController.clear();
                           afkCreditAmountController.clear();
                           descriptionController.clear();
-                          /*     } else {
-                            model.displaySnackBars!.snackBarTextBoxEmpty();
-                          } */
                         },
                         icon: const Icon(Icons
                             .addchart), //completer(DialogResponse(confirmed: true)),

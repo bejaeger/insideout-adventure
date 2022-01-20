@@ -19,7 +19,7 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
   final _questService = locator<QuestService>();
   final _markerService = locator<MarkerService>();
   CameraPosition? _initialCameraPosition;
-  DisplaySnackBars? displaySnackBars;
+  final displaySnackBars = DisplaySnackBars();
   final _log = getLogger('CreateQuestViewModel');
 
   Marker? starterMarker;
@@ -47,10 +47,15 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
     notifyListeners();
   }
 
-  Future<void> createQuest({required Quest quest}) async {
+  Future<bool?> createQuest({required Quest quest}) async {
     if (quest != null) {
-      await _questService.createQuest(quest: quest);
-      //displaySnackBars!.snackBarCreatedQuest(quest: quest);
+      bool? added = await _questService.createQuest(quest: quest);
+      if (added!) {
+        displaySnackBars.snackBarCreatedQuest(quest: quest);
+        this.navBackToPreviousView();
+      } else {
+        displaySnackBars.snackBarNotCreatedQuest(quest: quest);
+      }
     }
   }
 

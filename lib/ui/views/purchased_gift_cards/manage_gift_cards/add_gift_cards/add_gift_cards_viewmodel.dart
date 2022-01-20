@@ -9,7 +9,8 @@ import 'package:afkcredits/utils/cloud_storage_result/cloud_storage_result.dart'
 import 'package:afkcredits/utils/image_selector/image_selector.dart';
 import 'package:stacked/stacked.dart';
 
-class AddGiftCardsViewModel extends FormViewModel with NavigationMixin {
+abstract class GiftCardsImageViewModel extends FormViewModel
+    with NavigationMixin {
   final ImageSelector _imageSelector = locator<ImageSelector>();
   CloudStorageResult _storageResult = locator<CloudStorageResult>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
@@ -45,6 +46,11 @@ class AddGiftCardsViewModel extends FormViewModel with NavigationMixin {
     ))!;
   }
 
+  @override
+  void setFormStatus() {}
+}
+
+class AddGiftCardsViewModel extends GiftCardsImageViewModel {
   //Upload Image to Firebase.
   Future<bool>? addGiftCard(
       {required GiftCardCategory giftCardCategory}) async {
@@ -52,7 +58,4 @@ class AddGiftCardsViewModel extends FormViewModel with NavigationMixin {
         giftCardCategory: giftCardCategory);
     return true;
   }
-
-  @override
-  void setFormStatus() {}
 }

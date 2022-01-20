@@ -28,6 +28,10 @@ final CollectionReference usersCollection =
 // collection references
 final CollectionReference giftCardsCollection =
     FirebaseFirestore.instance.collection('giftCardCategories');
+
+final CollectionReference preGiftCardsCollection =
+    FirebaseFirestore.instance.collection('prePurchasedGiftCards');
+
 final CollectionReference paymentsCollection =
     FirebaseFirestore.instance.collection('transfers');
 final CollectionReference questsCollection =

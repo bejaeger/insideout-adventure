@@ -4,6 +4,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
+import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -462,7 +463,7 @@ class FirestoreApi {
         'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
   }
 
-  Future createQuest({required Quest quest}) async {
+  Future<bool?> createQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
     _documentReference = await questsCollection.add(quest.toJson());
@@ -471,8 +472,12 @@ class FirestoreApi {
     await questsCollection
         .doc(_documentReference!.id)
         .update({'id': _documentReference!.id});
-    log.i(
-        'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
+    if (_documentReference!.id.isNotEmpty) {
+      log.i(
+          'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
+      return true;
+    }
+    return false;
   }
 
   // Changed the Scope of the Method. from _pvt to public
@@ -675,6 +680,30 @@ class FirestoreApi {
       //update the newly created document reference with the Firestore Id.
       //This is to make suret that the document has the same id as the quest.
       await giftCardsCollection
+          .doc(_documentReference!.id)
+          .update({'id': _documentReference!.id});
+      log.i(
+          'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
+      return true;
+    }
+    return false;
+
+    //update the newly created document reference with the Firestore Id.
+    //This is to make suret that the document has the same id as the quest.
+  }
+
+  Future<bool> insertPrePurchasedGiftCardCategory(
+      {required PrePurchasedGiftCard prePurchasedGiftCard}) async {
+    //TODO: Refactor this code .
+    if (prePurchasedGiftCard.categoryId.isNotEmpty) {
+      log.i(
+          "Upload quest with id ${prePurchasedGiftCard.categoryId} to firestore");
+      //Get the Document Created Reference
+      _documentReference =
+          await preGiftCardsCollection.add(prePurchasedGiftCard.toJson());
+      //update the newly created document reference with the Firestore Id.
+      //This is to make suret that the document has the same id as the quest.
+      await preGiftCardsCollection
           .doc(_documentReference!.id)
           .update({'id': _documentReference!.id});
       log.i(

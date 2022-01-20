@@ -1,5 +1,4 @@
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/login/login_viewmodel.dart';
@@ -23,8 +22,9 @@ void main() {
         when(userService.getUserRole).thenReturn(UserRole.sponsor);
         final model = _getModel();
         await model.saveData(AuthenticationMethod.email);
-                verify(navigationService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.sponsor)));
-
+        verify(navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+            arguments: BottomBarLayoutTemplateViewArguments(
+                userRole: UserRole.sponsor)));
       });
 
       test(
@@ -46,7 +46,10 @@ void main() {
         when(userService.getUserRole).thenReturn(UserRole.explorer);
         final model = _getModel();
         await model.saveData(AuthenticationMethod.email);
-        verify(await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView, arguments: BottomBarLayoutTemplateViewArguments(userRole: UserRole.explorer)));
+        verify(await navigationService.replaceWith(
+            Routes.bottomBarLayoutTemplateView,
+            arguments: BottomBarLayoutTemplateViewArguments(
+                userRole: UserRole.explorer)));
       });
 
       test(

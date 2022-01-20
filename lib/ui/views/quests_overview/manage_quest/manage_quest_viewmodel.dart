@@ -18,11 +18,11 @@ class ManageQuestViewModel extends BaseViewModel with NavigationMixin {
         break;
       case 1:
         logger.i('User is Navigating to $navToQuestOverView');
-        navToQuestOverView();
+        //navToQuestOverView();
         break;
       case 2:
         logger.i('User is Navigating to $navToQuestOverView');
-        navToQuestOverView();
+        // navToQuestOverView();
         break;
       default:
         logger.i('User is Navigating to $navToCreateQuest');

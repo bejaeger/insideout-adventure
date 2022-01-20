@@ -9,7 +9,6 @@ import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 mixin NavigationMixin {
@@ -79,6 +78,11 @@ mixin NavigationMixin {
 
   void navToAddGiftCard() {
     _navigationService.navigateTo(Routes.addGiftCardsView);
+    //});
+  }
+
+  void navToInsertGiftCard() {
+    _navigationService.navigateTo(Routes.insertPrePurchasedGiftCardView);
     //});
   }
 

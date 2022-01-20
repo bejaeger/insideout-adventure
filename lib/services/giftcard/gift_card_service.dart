@@ -7,6 +7,7 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase_success_result/gift_card_purchase_success_result.dart';
+import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
 import 'package:afkcredits/enums/purchased_gift_card_status.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
@@ -50,6 +51,19 @@ class GiftCardService {
     if (giftCardCategory.categoryId.isNotEmpty) {
       return await _firestoreApi.addGiftCardCategory(
           giftCardCategory: giftCardCategory);
+    }
+    return false;
+
+    //update the newly created document reference with the Firestore Id.
+    //This is to make suret that the document has the same id as the quest.
+  }
+
+  Future<bool> insertPrePurchasedGiftCardCategory(
+      {required PrePurchasedGiftCard prePurchasedGiftCard}) async {
+    //TODO: Refactor this code .
+    if (prePurchasedGiftCard.categoryId.isNotEmpty) {
+      return await _firestoreApi.insertPrePurchasedGiftCardCategory(
+          prePurchasedGiftCard: prePurchasedGiftCard);
     }
     return false;
 

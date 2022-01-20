@@ -12,6 +12,7 @@ import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/manage_quest/manage_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
@@ -179,10 +180,27 @@ class _BottomBarLayoutTemplateViewState
         ];
       default:
         return [
-          ManageQuestView(),
-          // CreateQuestView(),
-          AddMarkersView(),
+          if (widget.questViewIndex == QuestViewType.questlist)
+            QuestsOverviewView(),
+          if (widget.questViewIndex == QuestViewType.singlequest)
+            SingleQuestTypeView(
+              quest: widget.quest,
+              questType: widget.questType,
+            ),
+          if (widget.questViewIndex == QuestViewType.map) MapView(),
+          // ManageQuestView(),
+/*
+          if (widget.questViewIndex == QuestViewType.questlist)
+            QuestsOverviewView(),
+
+          if (widget.questViewIndex == QuestViewType.singlequest)
+            SingleQuestTypeView(
+              quest: widget.quest,
+              questType: widget.questType,
+            ), */
+
           ManageGiftCardstView(),
+          //AddGiftCardsView(),
         ];
     }
   }
@@ -252,10 +270,11 @@ class _BottomBarLayoutTemplateViewState
       default:
         return [
           AFKNavBarItem(
-              icon: Icon(Icons.explore),
-              inactiveIcon: Icon(Icons.explore_outlined),
-              title: "Quest",
-              displayView: CreateQuestView()),
+            icon: Icon(Icons.explore),
+            inactiveIcon: Icon(Icons.explore_outlined),
+            title: "Quest",
+            displayView: CreateQuestView(),
+          ),
 /*           AFKNavBarItem(
             icon: Icon(
               Icons.explore,
@@ -263,11 +282,11 @@ class _BottomBarLayoutTemplateViewState
             inactiveIcon: Icon(Icons.explore_outlined),
             title: ("Quests"),
           ), */
-          AFKNavBarItem(
+          /*        AFKNavBarItem(
             icon: Icon(Icons.mark_email_read_outlined),
             inactiveIcon: Icon(Icons.mark_chat_read),
             title: ("Add Markers"),
-          ),
+          ), */
           AFKNavBarItem(
             icon: Icon(Icons.shop),
             inactiveIcon: Icon(Icons.shop_outlined),

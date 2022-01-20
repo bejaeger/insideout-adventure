@@ -12,15 +12,19 @@ import 'package:stacked/stacked.dart';
 const String NameValueKey = 'name';
 const String DescriptionValueKey = 'description';
 const String DistanceFromUserValueKey = 'distanceFromUser';
+const String AfkCreditAmountValueKey = 'afkCreditAmount';
 
 mixin $BasicDialogContent on StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController distanceFromUserController =
       TextEditingController();
+  final TextEditingController afkCreditAmountController =
+      TextEditingController();
   final FocusNode nameFocusNode = FocusNode();
   final FocusNode descriptionFocusNode = FocusNode();
   final FocusNode distanceFromUserFocusNode = FocusNode();
+  final FocusNode afkCreditAmountFocusNode = FocusNode();
 
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
@@ -28,6 +32,7 @@ mixin $BasicDialogContent on StatelessWidget {
     nameController.addListener(() => _updateFormData(model));
     descriptionController.addListener(() => _updateFormData(model));
     distanceFromUserController.addListener(() => _updateFormData(model));
+    afkCreditAmountController.addListener(() => _updateFormData(model));
   }
 
   /// Updates the formData on the FormViewModel
@@ -37,6 +42,7 @@ mixin $BasicDialogContent on StatelessWidget {
             NameValueKey: nameController.text,
             DescriptionValueKey: descriptionController.text,
             DistanceFromUserValueKey: distanceFromUserController.text,
+            AfkCreditAmountValueKey: afkCreditAmountController.text,
           }),
       );
 
@@ -50,6 +56,8 @@ mixin $BasicDialogContent on StatelessWidget {
     descriptionFocusNode.dispose();
     distanceFromUserController.dispose();
     distanceFromUserFocusNode.dispose();
+    afkCreditAmountController.dispose();
+    afkCreditAmountFocusNode.dispose();
   }
 }
 
@@ -58,11 +66,15 @@ extension ValueProperties on FormViewModel {
   String? get descriptionValue => this.formValueMap[DescriptionValueKey];
   String? get distanceFromUserValue =>
       this.formValueMap[DistanceFromUserValueKey];
+  String? get afkCreditAmountValue =>
+      this.formValueMap[AfkCreditAmountValueKey];
 
   bool get hasName => this.formValueMap.containsKey(NameValueKey);
   bool get hasDescription => this.formValueMap.containsKey(DescriptionValueKey);
   bool get hasDistanceFromUser =>
       this.formValueMap.containsKey(DistanceFromUserValueKey);
+  bool get hasAfkCreditAmount =>
+      this.formValueMap.containsKey(AfkCreditAmountValueKey);
 }
 
 extension Methods on FormViewModel {}

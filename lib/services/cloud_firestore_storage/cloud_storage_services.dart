@@ -8,7 +8,7 @@ class CloudStorageService {
   //final _db = Firestore.instance;
 
   Future<CloudStorageResult?> uploadImage({
-    required File imageToUpload,
+    required File? imageToUpload,
     required String title,
   }) async {
     try {
@@ -23,7 +23,7 @@ class CloudStorageService {
           FirebaseStorage.instance.ref().child(imageFileName);
 
       //upload the file
-      final uploadTask = await firebaseStorageRef.putFile(imageToUpload);
+      final uploadTask = await firebaseStorageRef.putFile(imageToUpload!);
 
       if (uploadTask != null) {
         var downloadUrl = await uploadTask.ref.getDownloadURL();

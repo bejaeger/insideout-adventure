@@ -36,6 +36,7 @@ import '../ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_view.dart';
+import '../ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_view.dart';
 import '../ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import '../ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
@@ -54,6 +55,8 @@ import '../ui/views/transfer_funds/transfer_funds_view.dart';
 
 class Routes {
   static const String sponsorHomeView = '/sponsor-home-view';
+  static const String insertPrePurchasedGiftCardView =
+      '/insert-pre-purchased-gift-card-view';
   static const String updatingQuestView = '/updating-quest-view';
   static const String explorerHomeView = '/explorer-home-view';
   static const String mapView = '/map-view';
@@ -94,6 +97,7 @@ class Routes {
   static const String addGiftCardsView = '/add-gift-cards-view';
   static const all = <String>{
     sponsorHomeView,
+    insertPrePurchasedGiftCardView,
     updatingQuestView,
     explorerHomeView,
     mapView,
@@ -134,6 +138,8 @@ class StackedRouter extends RouterBase {
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
     RouteDef(Routes.sponsorHomeView, page: SponsorHomeView),
+    RouteDef(Routes.insertPrePurchasedGiftCardView,
+        page: InsertPrePurchasedGiftCardView),
     RouteDef(Routes.updatingQuestView, page: UpdatingQuestView),
     RouteDef(Routes.explorerHomeView, page: ExplorerHomeView),
     RouteDef(Routes.mapView, page: MapView),
@@ -177,6 +183,15 @@ class StackedRouter extends RouterBase {
     SponsorHomeView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const SponsorHomeView(),
+        settings: data,
+      );
+    },
+    InsertPrePurchasedGiftCardView: (data) {
+      var args = data.getArgs<InsertPrePurchasedGiftCardViewArguments>(
+        orElse: () => InsertPrePurchasedGiftCardViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => InsertPrePurchasedGiftCardView(key: args.key),
         settings: data,
       );
     },
@@ -453,6 +468,12 @@ class StackedRouter extends RouterBase {
 /// ************************************************************************
 /// Arguments holder classes
 /// *************************************************************************
+
+/// InsertPrePurchasedGiftCardView arguments holder class
+class InsertPrePurchasedGiftCardViewArguments {
+  final Key? key;
+  InsertPrePurchasedGiftCardViewArguments({this.key});
+}
 
 /// LoginView arguments holder class
 class LoginViewArguments {

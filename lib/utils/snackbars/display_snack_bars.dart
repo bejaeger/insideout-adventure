@@ -18,6 +18,19 @@ class DisplaySnackBars {
     );
   }
 
+  void snackBarNotCreatedQuest({required Quest quest}) {
+    _snackBarService.showSnackbar(
+      message: "Quest Created  $quest",
+      title: 'Quest Created Successfully',
+      duration: Duration(seconds: 10),
+      onTap: (_) {
+        print('snackbar tapped');
+      },
+      mainButtonTitle: 'Ok',
+      onMainButtonTapped: () => print('Undo the action!'),
+    );
+  }
+
   void snackBarTextBoxEmpty() {
     _snackBarService.showSnackbar(
       message: 'One of the Field Value is Empty',
@@ -29,5 +42,12 @@ class DisplaySnackBars {
       mainButtonTitle: 'Ok',
       onMainButtonTapped: () => print('Undo the action!'),
     );
+  }
+
+  void snackBarUpdateQuest({required Quest quest}) {
+    _snackBarService.showSnackbar(
+        title: "Quest Updated ",
+        message: "Quest Updated with ${quest.name}",
+        duration: Duration(seconds: 10));
   }
 }

@@ -46,8 +46,9 @@ class AddGiftCardsView extends StatelessWidget with $AddGiftCardsView {
 }
 
 // ignore: must_be_immutable
+//TODO: Put this under Abstract Class.
 class AddGiftCard extends StatelessWidget {
-  AddGiftCardsViewModel? model;
+  var model;
   TextEditingController? amountController;
   AddGiftCard({required this.model, required this.amountController});
   GiftCardType? selectedGiftCardType;
@@ -76,7 +77,7 @@ class AddGiftCard extends StatelessWidget {
             verticalSpaceMedium,
             DropdownButtonFormField<GiftCardType>(
               //key: _key,
-              hint: Text('Select Type of Gift Card'),
+              hint: Text('Select Category'),
               isExpanded: true,
               items: GiftCardType.values.map((_giftCardType) {
                 return DropdownMenuItem(
@@ -171,24 +172,11 @@ class AddGiftCard extends StatelessWidget {
                     giftCardId = id.v1().toString().replaceAll('-', '');
 
                     model!.addGiftCard(
-                        giftCardCategory: GiftCardCategory(
-                            categoryId: giftCardId!,
-                            amount: giftCardAmount!,
-                            categoryName: selectedGiftCardType!));
-
-                    //model!.navBackToPreviousView();
-
-                    /* await model.createQuest(
-                      quest: Quest(
-                          id: questId!,
-                          startMarker: model.afkCredits.first,
-                          finishMarker: model.afkCredits.last,
-                          name: nameController.text.toString(),
-                          description: descriptionController.text.toString(),
-                          type: selectedQuestType ?? QuestType.Hike,
-                          markers: model.afkCredits,
-                          afkCredits: afkCreditAmount!),
-                    ); */
+                      giftCardCategory: GiftCardCategory(
+                          categoryId: giftCardId!,
+                          amount: giftCardAmount!,
+                          categoryName: selectedGiftCardType!),
+                    );
                   },
                   icon: const Icon(Icons.add_box),
                   label: const Text(

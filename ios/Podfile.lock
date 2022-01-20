@@ -517,12 +517,6 @@ PODS:
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
-  - Stripe (21.5.1):
-    - Stripe/Stripe3DS2 (= 21.5.1)
-  - Stripe/Stripe3DS2 (21.5.1)
-  - stripe_ios (0.0.1):
-    - Flutter
-    - Stripe (~> 21.5.1)
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -545,7 +539,6 @@ DEPENDENCIES:
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
-  - stripe_ios (from `.symlinks/plugins/stripe_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -573,7 +566,6 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - Reachability
-    - Stripe
 
 EXTERNAL SOURCES:
   cloud_firestore:
@@ -616,8 +608,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
-  stripe_ios:
-    :path: ".symlinks/plugins/stripe_ios/ios"
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
@@ -664,8 +654,6 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
-  Stripe: 515db5536fd659b5d79a0898ce1b882b61ab597e
-  stripe_ios: ce035050135b58a5a838e0d410d53b26f1dc026a
 
 PODFILE CHECKSUM: 488fccf438d644688926d96ca8c2984074faeae6
 
