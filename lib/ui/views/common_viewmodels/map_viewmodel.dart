@@ -28,13 +28,13 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       locator<FlavorConfigProvider>();
   bool initialized = false;
 
-  Future initialize() async {
+  Future initializeMapAndMarkers() async {
     if (hasActiveQuest) return;
     initialized = false;
     log.i("Initializing map view");
     setBusy(true);
     try {
-      if (_geolocationService.getUserPosition == null) {
+      if (_geolocationService.getUserLivePositionNullable == null) {
         await _geolocationService.getAndSetCurrentLocation();
       } else {
         _geolocationService.getAndSetCurrentLocation();
@@ -76,10 +76,11 @@ class MapViewModel extends ActiveQuestBaseViewModel {
   @override
   CameraPosition initialCameraPosition() {
     if (!hasActiveQuest) {
-      if (_geolocationService.getUserPosition != null) {
+      if (_geolocationService.getUserLivePositionNullable != null) {
         final CameraPosition _initialCameraPosition = CameraPosition(
-            target: LatLng(_geolocationService.getUserPosition!.latitude,
-                _geolocationService.getUserPosition!.longitude),
+            target: LatLng(
+                _geolocationService.getUserLivePositionNullable!.latitude,
+                _geolocationService.getUserLivePositionNullable!.longitude),
             zoom: 14);
         return _initialCameraPosition;
       } else {
@@ -102,8 +103,9 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       } else {
         // return current user position
         final CameraPosition _initialCameraPosition = CameraPosition(
-            target: LatLng(_geolocationService.getUserPosition!.latitude,
-                _geolocationService.getUserPosition!.longitude),
+            target: LatLng(
+                _geolocationService.getUserLivePositionNullable!.latitude,
+                _geolocationService.getUserLivePositionNullable!.longitude),
             zoom: 13);
         return _initialCameraPosition;
       }
@@ -241,8 +243,6 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       } else if (quest?.type == QuestType.TreasureLocationSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueViolet);
-      } else if (quest?.type == QuestType.TreasureLocationSearchAutomatic) {
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
       } else if (quest?.type == QuestType.QRCodeSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueYellow);

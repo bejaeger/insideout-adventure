@@ -32,5 +32,4 @@ const _$QuestTypeEnumMap = {
   QuestType.QRCodeSearchIndoor: 'QRCodeSearchIndoor',
   QuestType.DistanceEstimate: 'DistanceEstimate',
   QuestType.TreasureLocationSearch: 'TreasureLocationSearch',
-  QuestType.TreasureLocationSearchAutomatic: 'TreasureLocationSearchAutomatic',
 };

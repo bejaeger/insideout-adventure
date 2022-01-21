@@ -57,10 +57,10 @@ class AddMarkersViewModel extends BaseViewModel {
   }
 
   CameraPosition initialCameraPosition() {
-    if (_geolocationService.getUserPosition != null) {
+    if (_geolocationService.getUserLivePositionNullable != null) {
       final CameraPosition _initialCameraPosition = CameraPosition(
-          target: LatLng(_geolocationService.getUserPosition!.latitude,
-              _geolocationService.getUserPosition!.longitude),
+          target: LatLng(_geolocationService.getUserLivePositionNullable!.latitude,
+              _geolocationService.getUserLivePositionNullable!.longitude),
           zoom: 13);
       return _initialCameraPosition;
     } else {

@@ -93,9 +93,12 @@ const int kNumberTriesToRevealDistance = 3;
 // tolerance
 const double kMaxDeviationOfGoalInPercent = 0.2;
 const double kMinRequiredAccuracyDistanceEstimate = 50;
+const double kDistanceFilterDistanceEstimate = 10;
 
 ////////////////////////////
 /// General
 const double kThresholdGPSAccuracyToShowInfo = 50;
 const double kMinLocationAccuracy = 100;
 const double kUnrealisticallyHighDistance = 100000000;
+
+const int kDistanceFilterForCalibration = 5;

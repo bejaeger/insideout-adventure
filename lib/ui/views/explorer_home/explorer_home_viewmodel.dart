@@ -63,7 +63,10 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   void addLocationListener() {
     if (isSuperUser) {
       questService.listenToPosition(
-        viewModelCallback: () => notifyListeners(),
+        viewModelCallback: (_) {
+          setListenedToNewPosition(true);
+          notifyListeners();
+          },
         distanceFilter: kMinRequiredAccuracyLocationSearch,
         pushToNotion: false,
       );
@@ -122,7 +125,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   Future pushAllPositionsToNotion() async {
     addingPositionToNotionDB = true;
     notifyListeners();
-    if (_questTestingService.allQuestDataPointsPushed()) {
+    if (_questTestingService.isAllQuestDataPointsPushed()) {
       snackbarService.showSnackbar(
           title: "Done",
           message: "All locations were already pushed to notion");

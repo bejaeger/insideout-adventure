@@ -1,11 +1,13 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
-class SuperUserSettingsDialogViewModel extends QuestViewModel {
+class SuperUserDialogViewModel extends QuestViewModel {
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
+  final GeolocationService _geolocationService = locator<GeolocationService>();
 
   bool get isRecordingLocationData =>
       _questTestingService.isRecordingLocationData;
@@ -15,9 +17,9 @@ class SuperUserSettingsDialogViewModel extends QuestViewModel {
       _questTestingService.allQuestDataPoints;
   bool addingPositionToNotionDB = false;
   bool get isAllPositionsPushed =>
-      _questTestingService.allQuestDataPointsPushed();
+      _questTestingService.isAllQuestDataPointsPushed();
   int get numberPushedLocations => _questTestingService.numberPushedLocations();
-
+  bool get isListeningToPosition => _geolocationService.isListeningToLocation;
   void setIsRecordingLocationData(bool b) {
     _questTestingService.setIsRecordingLocationData(b);
     notifyListeners();
@@ -39,10 +41,9 @@ class SuperUserSettingsDialogViewModel extends QuestViewModel {
   }
 
   Future pushAllPositionsToNotion() async {
-    if (_questTestingService.allQuestDataPointsPushed()) {
+    if (_questTestingService.isAllQuestDataPointsPushed()) {
       snackbarService.showSnackbar(
-          title: "Done",
-          message: "All data were already pushed to notion");
+          title: "Done", message: "All data were already pushed to notion");
       return;
     }
     addingPositionToNotionDB = true;
@@ -50,7 +51,9 @@ class SuperUserSettingsDialogViewModel extends QuestViewModel {
     bool ok = await _questTestingService.pushAllPositionsToNotion();
     showResponseInfo(ok);
     if (ok == false) {
-      snackbarService.showSnackbar(title: "Failed uploading data", message: "Connect to a network and try again.");
+      snackbarService.showSnackbar(
+          title: "Failed uploading data",
+          message: "Connect to a network and try again.");
     }
     addingPositionToNotionDB = false;
     notifyListeners();

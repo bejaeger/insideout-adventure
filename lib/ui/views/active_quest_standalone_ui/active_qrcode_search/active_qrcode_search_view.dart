@@ -49,7 +49,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
     return ViewModelBuilder<ActiveQrCodeSearchViewModel>.reactive(
         viewModelBuilder: () => locator<ActiveQrCodeSearchViewModel>(),
         disposeViewModel: false,
-        onModelReady: (model) => model.initialize(quest: widget.quest),
+        onModelReady: (model) => model.initializeMapAndMarkers(quest: widget.quest),
         builder: (context, model, child) {
           if (model.animateProgress) {
             _controller.reset();
@@ -125,21 +125,18 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                           children: [
                                             Column(
                                               children: [
-                                                Text("Time"),
                                                 Text(
                                                     model.timeElapsed
                                                         .toString(),
                                                     maxLines: 1,
                                                     style: textTheme(context)
                                                         .headline4),
+                                                Text("Duration"),
                                               ],
                                             ),
                                             verticalSpaceMedium,
                                             Column(
                                               children: [
-                                                Text("Fortschritt",
-                                                    textAlign:
-                                                        TextAlign.center),
                                                 ScaleTransition(
                                                   scale: _animation,
                                                   child: Text(
@@ -167,6 +164,9 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                                       style: textTheme(context)
                                                           .headline3),
                                                 ),
+                                                Text("Progress",
+                                                    textAlign:
+                                                        TextAlign.center),
                                               ],
                                             ),
                                           ],

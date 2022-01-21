@@ -27,6 +27,8 @@ class ActivatedQuestPanelViewModel extends QuestViewModel {
 
   Future openSuperUserSettingsDialog() async {
     await dialogService.showCustomDialog(variant: DialogType.SuperUserSettings);
+     setListenedToNewPosition(false);
+     notifyListeners();
   }
   //////////////////////////
   /// Navigate to the view that shows the currently activated quest

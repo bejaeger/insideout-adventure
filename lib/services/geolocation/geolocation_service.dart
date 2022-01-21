@@ -11,13 +11,11 @@ import 'package:permission_handler/permission_handler.dart';
 
 class GeolocationService {
   final log = getLogger('GeolocationService');
-  StreamSubscription? _currentPositionStreamSubscription;
-  bool get isListeningToLocation => _currentPositionStreamSubscription != null;
+  StreamSubscription? _livePositionStreamSubscription;
+  bool get isListeningToLocation => _livePositionStreamSubscription != null;
 
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
-  Position? _position;
-  Position? get getUserPosition => _position;
   int? get currentGPSAccuracy => _livePosition?.accuracy.round();
   String? gpsAccuracyInfo;
 
@@ -26,14 +24,13 @@ class GeolocationService {
   Future<Position> get getUserLivePosition async =>
       _livePosition ??
       await getAndSetCurrentLocation(forceGettingNewPosition: false);
+  Position? get getUserLivePositionNullable => _livePosition;
 
+  // for testing
   // current position forced
   Position? _currentPosition;
-  Position? get getCurrentPosition => _currentPosition;
-
   // last known position
   Position? _lastKnownPosition;
-  Position? get getLastKnownPosition => _lastKnownPosition;
 
   String currentLocationDistanceKey = "currentLocationDistance";
   String liveLocationDistanceKey = "liveLocationDistance";
@@ -60,16 +57,23 @@ class GeolocationService {
 
   String deviceInfoKey = "deviceInfo";
 
-  Future<void> startPositionListener({
+  bool _listenedToNewPosition = false;
+  bool get listenedToNewPosition => _listenedToNewPosition;
+
+  int currentPositionDistanceFilter = -1;
+
+  Future<void> listenToPosition({
     required int distanceFilter,
     void Function(Position)? onData,
-    void Function()? viewModelCallback,
+    void Function(Position)? viewModelCallback,
+    bool skipFirstStreamEvent = false,
   }) async {
     Completer<void> completer = Completer();
-    if (_currentPositionStreamSubscription == null) {
+    if (_livePositionStreamSubscription == null) {
+      currentPositionDistanceFilter = distanceFilter.round();
       // TODO: Provide proper error message to user in case of
       // denied permission, no access to gps, ...
-      _currentPositionStreamSubscription = Geolocator.getPositionStream(
+      _livePositionStreamSubscription = Geolocator.getPositionStream(
               desiredAccuracy: LocationAccuracy.best,
               distanceFilter: distanceFilter.round())
           .listen(
@@ -82,9 +86,14 @@ class GeolocationService {
             onData(position);
           }
           if (viewModelCallback != null) {
-            // don't fire callback on first event
-            if (completer.isCompleted) {
-              viewModelCallback();
+            if (skipFirstStreamEvent)
+            // option to not fire callback on first event
+            {
+              if (completer.isCompleted) {
+                viewModelCallback(position);
+              }
+            } else {
+              viewModelCallback(position);
             }
           }
           if (!completer.isCompleted) {
@@ -118,6 +127,10 @@ class GeolocationService {
     gpsAccuracyInfo = info;
   }
 
+  void setListenedToNewPosition(bool set) {
+    _listenedToNewPosition = set;
+  }
+
   Future<Position> getAndSetCurrentLocation(
       {bool forceGettingNewPosition = false}) async {
     //Verify If location is available on device.
@@ -126,8 +139,9 @@ class GeolocationService {
       try {
         // if (!kIsWeb) {
         Duration? difference;
-        if (getUserPosition != null) {
-          difference = getUserPosition?.timestamp?.difference(DateTime.now());
+        if (getUserLivePositionNullable != null) {
+          difference = getUserLivePositionNullable?.timestamp
+              ?.difference(DateTime.now());
         }
 
         // cooldown time of 5 seconds for distance check and NEW positions should be retrieved.
@@ -143,7 +157,7 @@ class GeolocationService {
 
           log.i("Retrieved position at ${DateTime.now().toString()}");
           setGPSAccuracyInfo(geolocatorPosition.accuracy);
-          _position = geolocatorPosition;
+          _livePosition = geolocatorPosition;
           printPositionInfo(geolocatorPosition);
           return geolocatorPosition;
         } else {
@@ -152,16 +166,16 @@ class GeolocationService {
           final lastKnownPosition = await Geolocator.getLastKnownPosition();
           if (lastKnownPosition != null) {
             log.v("Returning last known position");
-            _position = lastKnownPosition;
+            _livePosition = lastKnownPosition;
             printPositionInfo(lastKnownPosition);
             setGPSAccuracyInfo(lastKnownPosition.accuracy);
             return lastKnownPosition;
           } else {
-            if (_position != null) {
+            if (_livePosition != null) {
               log.v("Returning previously fetched position");
-              printPositionInfo(_position!);
-              setGPSAccuracyInfo(_position!.accuracy);
-              return _position!;
+              printPositionInfo(_livePosition!);
+              setGPSAccuracyInfo(_livePosition!.accuracy);
+              return _livePosition!;
             } else {
               log.v("Force getting new position");
               return getAndSetCurrentLocation(forceGettingNewPosition: true);
@@ -189,7 +203,7 @@ class GeolocationService {
 
   Future setUserPosition({required dynamic position}) async {
     if (position != null) {
-      _position = position;
+      _livePosition = position;
       log.i('This is my current Posstion $position');
     } else {
       log.e('Null Position Passed $position');
@@ -272,12 +286,15 @@ class GeolocationService {
   }
 
   Future<double> distanceBetweenUserAndCoordinates(
-      {required double? lat, required double? lon}) async {
+      {required double? lat,
+      required double? lon,
+      bool forceGettingNewPosition = false}) async {
     if (lat == null || lon == null) {
       log.e("input latitude or longitude is null, cannot derive distance!");
       return -1;
     }
-    final position = await getAndSetCurrentLocation();
+    final position = await getAndSetCurrentLocation(
+        forceGettingNewPosition: forceGettingNewPosition);
     double distanceInMeters = Geolocator.distanceBetween(
         position.latitude, position.longitude, lat, lon);
     return distanceInMeters;
@@ -303,12 +320,11 @@ class GeolocationService {
   }
 
   void cancelPositionListener() {
-    _currentPositionStreamSubscription?.cancel();
-    _currentPositionStreamSubscription = null;
+    _livePositionStreamSubscription?.cancel();
+    _livePositionStreamSubscription = null;
   }
 
   void clearData() {
-    _position = null;
     _lastKnownPosition = null;
     _currentPosition = null;
     _livePosition = null;

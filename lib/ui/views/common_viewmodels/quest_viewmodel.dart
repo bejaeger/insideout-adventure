@@ -12,7 +12,7 @@ import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
-import 'package:afkcredits/enums/user_settings_dialog_type.dart';
+import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
@@ -42,6 +42,11 @@ abstract class QuestViewModel extends BaseModel {
   List<Quest> get nearbyQuests => questService.getNearByQuest;
   List<double> distancesFromQuests = [];
   bool validatingMarker = false;
+  bool showStartSwipe = true;
+
+  bool get listenedToNewPosition => _geolocationService.listenedToNewPosition;
+  int get currentPositionDistanceFilter =>
+      _geolocationService.currentPositionDistanceFilter;
 
   QuestViewModel() {
     // listen to changes in wallet
@@ -63,15 +68,78 @@ abstract class QuestViewModel extends BaseModel {
     );
   }
 
+  void initialize({required Quest quest}) async {
+    // start calibration listener
+    startPositionCalibrationListener();
+  }
+
   List<Quest> getQuestsOfType({required QuestType type}) {
     return questService.extractQuestsOfType(
         quests: nearbyQuests, questType: type);
   }
 
+  void startPositionCalibrationListener() {
+    log.i("Start position calibration listener");
+    _geolocationService.listenToPosition(
+        distanceFilter: kDistanceFilterForCalibration,
+        viewModelCallback: (_) {
+          setListenedToNewPosition(true);
+          notifyListeners();
+        });
+  }
+
+  void cancelPositionListener() {
+    log.i("Cancel position listener");
+    _geolocationService.cancelPositionListener();
+    setListenedToNewPosition(false);
+  }
+
+  ////////////////////////////////////////
+  // Navigation and dialogs
+  void navigateBackFromSingleQuestView() {
+    cancelPositionListener();
+    navigationService.back();
+  }
+
+  Future startQuestMain(
+      {required Quest quest,
+      Future Function(int)? periodicFuncFromViewModel}) async {
+    // cancel listener that was only used for calibration
+    cancelPositionListener();
+    try {
+      // if (quest.type == QuestType.VibrationSearch && startFromMap) {
+      //   await navigateToVibrationSearchView();
+      // }
+      questTestingService.maybeInitialize(user: currentUser);
+
+      /// Once The user Click on Start a Quest. It is her/him to new Page
+      /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
+      /// Quest.
+      final isQuestStarted = await questService.startQuest(
+          quest: quest,
+          uids: [currentUser.uid],
+          periodicFuncFromViewModel: periodicFuncFromViewModel);
+
+      // this will also change the MapViewModel to show the ActiveQuestView
+      if (isQuestStarted is String) {
+        await dialogService.showDialog(
+            title: "Sorry could not start the quest",
+            description: isQuestStarted);
+        return false;
+      }
+      showStartSwipe = false;
+      // Quest succesfully started!
+      return true;
+    } catch (e) {
+      baseModelLog.e("Could not start quest, error thrown: $e");
+      rethrow;
+    }
+  }
+
   Future getLocation(
       {bool forceAwait = false, bool forceGettingNewPosition = true}) async {
     try {
-      if (_geolocationService.getUserPosition == null) {
+      if (_geolocationService.getUserLivePositionNullable == null) {
         await _geolocationService.getAndSetCurrentLocation(
             forceGettingNewPosition: forceGettingNewPosition);
       } else {
@@ -163,6 +231,10 @@ abstract class QuestViewModel extends BaseModel {
           ? await navigateToActiveQuestUI(quest: quest)
           : await navigateToActiveQuestUI(quest: quest);
     }
+  }
+
+  Future showQuestInfoDialog({required Quest quest}) async {
+    await dialogService.showDialog(title: "Quest Name: ${quest.name}", description: "Description: ${quest.description}, AFK Credits To Earn: ${quest.afkCredits}");
   }
 
   Future navigateToActiveQuestUI({required Quest quest}) async {
@@ -290,8 +362,7 @@ abstract class QuestViewModel extends BaseModel {
           " markers";
     } else if (activeQuest.quest.type == QuestType.DistanceEstimate) {
       lastActivatedQuestInfoText = "Estimating Distance";
-    } else if (activeQuest.quest.type == QuestType.TreasureLocationSearch ||
-        activeQuest.quest.type == QuestType.TreasureLocationSearchAutomatic) {
+    } else if (activeQuest.quest.type == QuestType.TreasureLocationSearch) {
       log.wtf(
           "Should never be called, this is handled in ActiveVibrationSearchQuestViewModel.");
     } else {
@@ -327,11 +398,11 @@ abstract class QuestViewModel extends BaseModel {
       if (continueQuest?.confirmed == false || force) {
         // TODO: Handle quest testing service if some positions aren't pushed yet!
         if (questTestingService.isRecordingLocationData &&
-            !questTestingService.allQuestDataPointsPushed()) {
+            !questTestingService.isAllQuestDataPointsPushed()) {
           log.i("push to notion");
           await dialogService.showCustomDialog(
               variant: DialogType.SuperUserSettings,
-              data: UserSettingsDialogType.sendDiagnostice);
+              data: SuperUserDialogType.sendDiagnostics);
         }
         questService.cancelIncompleteQuest();
 
@@ -429,8 +500,7 @@ abstract class QuestViewModel extends BaseModel {
         log.e("Accuracy low: ${position.accuracy}");
         await dialogService.showDialog(
             title: "GPS Accuracy Too Low",
-            description:
-                "Please walk or wait for a few seconds and try again :)");
+            description: "Please walk a few meters and try again :)");
       }
       return false;
     } else {

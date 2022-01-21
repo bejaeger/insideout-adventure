@@ -14,7 +14,6 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
   GoogleMapController? _googleMapController;
   GoogleMapController? get getGoogleMapController => _googleMapController;
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  bool showStartSwipe = true;
   Set<Marker> markersOnMap = {};
   String get timeElapsed => questService.getMinutesElapsedString();
   bool questSuccessfullyFinished = false;
@@ -55,10 +54,10 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
               activeQuest.quest.startMarker!.lon!),
           zoom: 16);
     } else {
-      if (_geolocationService.getUserPosition != null) {
+      if (_geolocationService.getUserLivePositionNullable != null) {
         final CameraPosition _initialCameraPosition = CameraPosition(
-            target: LatLng(_geolocationService.getUserPosition!.latitude,
-                _geolocationService.getUserPosition!.longitude),
+            target: LatLng(_geolocationService.getUserLivePositionNullable!.latitude,
+                _geolocationService.getUserLivePositionNullable!.longitude),
             zoom: 16);
         return _initialCameraPosition;
       } else {
@@ -73,7 +72,7 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
   // ---------------------------------------------------
   // Function to call when quest was detected to be finished in individual viewmodel
   Future showSuccessDialog() async {
-    questService.setAndPushActiveQuestStatus(QuestStatus.success);
+    questService.setSuccessAsQuestStatus();
     log.i("SUCCESFFULLY FOUND trophy");
 
     // Make checkout procedure same for all quest types!

@@ -43,13 +43,7 @@ Size screenSize(BuildContext context) => MediaQuery.of(context).size;
 isDesktop(BuildContext context) => MediaQuery.of(context).size.width > 600;
 TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
 
-String formatDate(DateTime timestamp) {
-  return DateFormat.MMMEd().format(timestamp);
-}
 
-String formatDateDetails(DateTime timestamp) {
-  return DateFormat.yMd().add_jm().format(timestamp);
-}
 
 IconData getIconForCategory(QuestType category) {
   switch (category) {

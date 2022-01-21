@@ -116,9 +116,9 @@ class QuestService with ReactiveServiceMixin {
     setStartedQuest(quest);
     setNewTrialNumber();
     _questTestingService.maybeInitialize(
-        activatedQuest: activatedQuest,
-        activatedQuestTrialId: activatedQuestTrialId, 
-        );
+      activatedQuest: activatedQuest,
+      activatedQuestTrialId: activatedQuestTrialId,
+    );
 
     // Start timer
     _stopWatchService.startTimer();
@@ -128,8 +128,7 @@ class QuestService with ReactiveServiceMixin {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
 
-    if (quest.type == QuestType.TreasureLocationSearch ||
-        quest.type == QuestType.TreasureLocationSearchAutomatic) {
+    if (quest.type == QuestType.TreasureLocationSearch) {
       if (periodicFuncFromViewModel != null) {
         _stopWatchService.listenToSecondTime(
             callback: periodicFuncFromViewModel);
@@ -139,28 +138,38 @@ class QuestService with ReactiveServiceMixin {
     //   _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
     // }
     else if (quest.type == QuestType.Hike) {
-      _stopWatchService.listenToSecondTime(callback: trackData);
+      _stopWatchService.listenToSecondTime(callback: trackTime);
     }
+    // Quest succesfully started
+    _questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.userAction,
+        userEventDescription: "quest started",
+        pushToNotion: true);
     return true;
   }
 
   Future<void> listenToPosition(
       {double distanceFilter = kMinDistanceFromLastCheckInMeters,
-      void Function()? viewModelCallback,
-      bool pushToNotion = false}) async {
-    return await _geolocationService.startPositionListener(
+      void Function(Position)? viewModelCallback,
+      bool pushToNotion = false,
+      bool skipFirstStreamEvent = false, 
+      bool recordPositionDataEvent = true,
+      }) async {
+    return await _geolocationService.listenToPosition(
         distanceFilter: distanceFilter.round(),
         onData: (Position position) {
           log.v("New position event fired from location listener!");
-          _questTestingService.maybeRecordData(
+          if (recordPositionDataEvent)
+{          _questTestingService.maybeRecordData(
             trigger: QuestDataPointTrigger.locationListener,
             position: position,
             questTrialId: activatedQuestTrialId,
             activatedQuest: activatedQuest,
             pushToNotion: pushToNotion,
           );
-        },
-        viewModelCallback: viewModelCallback);
+}        },
+        viewModelCallback: viewModelCallback,
+        skipFirstStreamEvent: skipFirstStreamEvent);
   }
 
   void cancelPositionListener() {
@@ -192,6 +201,12 @@ class QuestService with ReactiveServiceMixin {
     // ---------------
     // 3.
     await uploadAndCleanUpFinishedQuest();
+
+    // Quest succesfully started
+    _questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.userAction,
+        userEventDescription: "Quest succesfully finished",
+        pushToNotion: true);
   }
 
   Future evaluateFinishedQuest() async {
@@ -292,6 +307,7 @@ class QuestService with ReactiveServiceMixin {
   Future cancelIncompleteQuest() async {
     if (activatedQuest != null) {
       log.i("Cancelling incomplete quest");
+      // Quest succesfully started
       // don't await for this call otherwise we will wait forever
       // in case of no data connection. Since we are just cancelling
       // a quest it's not crucial info for the app to immediately react to it.
@@ -301,7 +317,7 @@ class QuestService with ReactiveServiceMixin {
       pushActivatedQuest(
           activatedQuest!.copyWith(status: QuestStatus.cancelled));
       disposeActivatedQuest();
-      log.i("Cancelled incomplete ques");
+      log.i("Cancelled incomplete quest");
     } else {
       log.e(
           "Can't cancel the quest because there is no quest present. This function should have probably never been called! Please check!");
@@ -328,8 +344,6 @@ class QuestService with ReactiveServiceMixin {
     }
 
     if (activatedQuest?.quest.type == QuestType.TreasureLocationSearch ||
-        activatedQuest?.quest.type ==
-            QuestType.TreasureLocationSearchAutomatic ||
         activatedQuest?.quest.type == QuestType.DistanceEstimate) {
       if (activatedQuest?.status == QuestStatus.success) {
         pushActivatedQuest(activatedQuest!.copyWith(
@@ -369,7 +383,15 @@ class QuestService with ReactiveServiceMixin {
   }
 
   void setAndPushActiveQuestStatus(QuestStatus status) {
+    _questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.userAction,
+        userEventDescription: "New quest status: " + status.toString(),
+        pushToNotion: true);
     pushActivatedQuest(activatedQuest!.copyWith(status: status));
+  }
+
+  void setSuccessAsQuestStatus() {
+    setAndPushActiveQuestStatus(QuestStatus.success);
   }
 
   Future trackTime(int seconds) async {
@@ -768,7 +790,6 @@ class QuestService with ReactiveServiceMixin {
     }
     final type = usedQuest.type;
     if (type == QuestType.TreasureLocationSearch ||
-        type == QuestType.TreasureLocationSearchAutomatic ||
         type == QuestType.DistanceEstimate ||
         type == QuestType.QRCodeSearch ||
         type == QuestType.QRCodeSearchIndoor ||

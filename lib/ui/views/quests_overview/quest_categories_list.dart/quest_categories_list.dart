@@ -13,7 +13,7 @@ class QuestsCategoryList extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
       child: RefreshIndicator(
-        onRefresh: () async => model.initialize(force: true),
+        onRefresh: () async => model.initializeMapAndMarkers(force: true),
         child: Padding(
           padding: const EdgeInsets.only(top: 15.0),
           child: GridView.count(

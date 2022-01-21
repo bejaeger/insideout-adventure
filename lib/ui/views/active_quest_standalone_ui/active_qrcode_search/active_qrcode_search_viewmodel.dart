@@ -21,7 +21,7 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
       true; // bool to check whether hint should be displayed or not!
   final log = getLogger("ActiveQrCodeSearchViewModel");
 
-  void initialize({required Quest quest}) async {
+  void initializeMapAndMarkers({required Quest quest}) async {
     resetPreviousQuest();
     runBusyFuture(_geolocationService.getAndSetCurrentLocation());
     closeby = await _markerService.isUserCloseby(marker: quest.startMarker);

@@ -5,7 +5,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
   List<QuestType> get questTypes => questService.allQuestTypes;
 
-  Future initialize({bool? force}) async {
+  Future initializeMapAndMarkers({bool? force}) async {
     setBusy(true);
     try {
       if (questService.sortedNearbyQuests == false || force == true) {

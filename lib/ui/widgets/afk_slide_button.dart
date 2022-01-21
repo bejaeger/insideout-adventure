@@ -49,6 +49,8 @@ class AFKSlideButton extends StatelessWidget {
         //key: _key,
         onSubmit: canStartQuest ? onSubmit : null,
         borderRadius: 50,
+        //sliderButtonIcon: Icon(Icons.play_arrow)
+        // submittedIcon: Icon(Icons.railway_alert),
         // animationDuration: Duration(seconds: 1),
       ),
     );
