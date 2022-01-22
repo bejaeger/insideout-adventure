@@ -84,7 +84,8 @@ class QuestService with ReactiveServiceMixin {
   Future startQuest(
       {required Quest quest,
       required List<String> uids,
-      Future Function(int)? periodicFuncFromViewModel}) async {
+      Future Function(int)? periodicFuncFromViewModel,
+      bool countStartMarkerAsCollected = false}) async {
     // Get active quest
     ActivatedQuest tmpActivatedQuest =
         _getActivatedQuest(quest: quest, uids: uids);
@@ -107,6 +108,10 @@ class QuestService with ReactiveServiceMixin {
               "The quest that is to be started does not have a start marker!");
         }
       }
+    }
+
+    if (countStartMarkerAsCollected) {
+      tmpActivatedQuest.markersCollected[0] = true;
     }
 
     // ! quest activated!
@@ -137,7 +142,8 @@ class QuestService with ReactiveServiceMixin {
     //  else if (quest.type == QuestType.DistanceEstimate) {
     //   _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
     // }
-    else if (quest.type == QuestType.Hike) {
+    else if (quest.type == QuestType.QRCodeHike ||
+        quest.type == QuestType.GPSAreaHike) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
     // Quest succesfully started
@@ -148,26 +154,27 @@ class QuestService with ReactiveServiceMixin {
     return true;
   }
 
-  Future<void> listenToPosition(
-      {double distanceFilter = kMinDistanceFromLastCheckInMeters,
-      void Function(Position)? viewModelCallback,
-      bool pushToNotion = false,
-      bool skipFirstStreamEvent = false, 
-      bool recordPositionDataEvent = true,
-      }) async {
+  Future<void> listenToPosition({
+    double distanceFilter = kMinDistanceFromLastCheckInMeters,
+    void Function(Position)? viewModelCallback,
+    bool pushToNotion = false,
+    bool skipFirstStreamEvent = false,
+    bool recordPositionDataEvent = true,
+  }) async {
     return await _geolocationService.listenToPosition(
         distanceFilter: distanceFilter.round(),
         onData: (Position position) {
           log.v("New position event fired from location listener!");
-          if (recordPositionDataEvent)
-{          _questTestingService.maybeRecordData(
-            trigger: QuestDataPointTrigger.locationListener,
-            position: position,
-            questTrialId: activatedQuestTrialId,
-            activatedQuest: activatedQuest,
-            pushToNotion: pushToNotion,
-          );
-}        },
+          if (recordPositionDataEvent) {
+            _questTestingService.maybeRecordData(
+              trigger: QuestDataPointTrigger.locationListener,
+              position: position,
+              questTrialId: activatedQuestTrialId,
+              activatedQuest: activatedQuest,
+              pushToNotion: pushToNotion,
+            );
+          }
+        },
         viewModelCallback: viewModelCallback,
         skipFirstStreamEvent: skipFirstStreamEvent);
   }

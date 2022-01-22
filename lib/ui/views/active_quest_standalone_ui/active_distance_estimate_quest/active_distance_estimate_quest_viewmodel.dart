@@ -42,7 +42,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
 
   // User ACTION!
   Future probeDistance() async {
-    if (numberOfAvailableTries == 1 && !isSuperUser) {
+    if (numberOfAvailableTries == 1 && !useSuperUserFeatures) {
       final result = await dialogService.showDialog(
           title: "Sure?",
           description:
@@ -82,7 +82,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
 
     ////////////////////////////////////////////////////
     /// Temporary testing purposes
-    if (isSuperUser) {
+    if (useSuperUserFeatures) {
       _currentSpeed = _geolocationService.getUserLivePositionNullable?.speed;
     }
 
@@ -112,7 +112,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
     }
 
     if (activeQuestNullable?.status == QuestStatus.failed) {
-      if (isSuperUser) {
+      if (useSuperUserFeatures) {
         log.i("You are in admin mode and have infinite tries!");
       } else {
         log.i("Found that quest failed! cancelling incomplete quest");
@@ -210,7 +210,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       if (!(await checkAccuracy(
           position: position,
           minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
-        if (isSuperUser) {
+        if (useSuperUserFeatures) {
           if (await useSuperUserFeature()) {
             snackbarService.showSnackbar(
                 title: "Starting quest as super user",

@@ -73,7 +73,7 @@ class ActivatedQuestPanel extends StatelessWidget {
                                               text: model
                                                   .lastActivatedQuestInfoText),
                                           if (model.gpsAccuracyInfo != null &&
-                                              (model.isSuperUser ||
+                                              (model.useSuperUserFeatures ||
                                                   model.isDevFlavor))
                                             Text(model.gpsAccuracyInfo!,
                                                 style: TextStyle(

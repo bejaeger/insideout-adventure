@@ -15,6 +15,7 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
   GoogleMapController? get getGoogleMapController => _googleMapController;
   final GeolocationService _geolocationService = locator<GeolocationService>();
   Set<Marker> markersOnMap = {};
+  Set<Circle> areasOnMap = {};
   String get timeElapsed => questService.getMinutesElapsedString();
   bool questSuccessfullyFinished = false;
 
@@ -119,6 +120,11 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
     //     description: getActiveQuestProgressDescription());
   }
 
+  void navigateBackFromSingleQuestView() {
+    cancelPositionListener();
+    navigationService.back();
+  }
+  
   @override
   void dispose() {
     _googleMapController?.dispose();

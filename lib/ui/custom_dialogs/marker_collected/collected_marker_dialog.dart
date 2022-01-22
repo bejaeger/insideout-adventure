@@ -64,6 +64,12 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [

@@ -47,7 +47,10 @@ class BaseModel extends BaseViewModel {
 
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
-  bool get isSuperUser => userService.isSuperUser;
+  bool get isSuperUser =>  userService.isSuperUser;
+  bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
+      ? false
+      : userService.isSuperUser;
 
   final baseModelLog = getLogger("BaseModel");
   bool get hasActiveQuest => questService.hasActiveQuest;
@@ -122,7 +125,7 @@ class BaseModel extends BaseViewModel {
   }
 
   setListenedToNewPosition(bool set) {
-    if (isSuperUser) {
+    if (useSuperUserFeatures) {
       geolocationService.setListenedToNewPosition(set);
     }
   }
@@ -186,18 +189,21 @@ class BaseModel extends BaseViewModel {
         duration: Duration(seconds: 2));
   }
 
-  Future<bool> showAdminDialogAndGetResponse() async {
-    bool adminMode = true;
+  Future showAdminDialogAndGetResponse() async {
+    dynamic adminMode = true;
     dynamic response = await dialogService.showDialog(
         title: "You are in admin mode!",
         description:
             "Do you want to continue with admin mode (to see qr codes, ...) or normal user mode?",
         cancelTitle: "User Mode",
-        buttonTitle: "Admin Mode");
+        buttonTitle: "Admin Mode",
+        barrierDismissible: true);
     if (response?.confirmed == true) {
       adminMode = true;
-    } else {
+    } else if (response?.confirmed == false) {
       adminMode = false;
+    } else {
+      return "Dismissed";
     }
     return adminMode;
   }

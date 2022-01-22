@@ -142,7 +142,7 @@ class ExplorerHomeView extends StatelessWidget {
                       // verticalSpaceLarge,
                       //SectionHeader(title: "Achievements"),
                       verticalSpaceLarge,
-                      if (model.isSuperUser)
+                      if (model.useSuperUserFeatures)
                         Row(
                           children: [
                             Expanded(
@@ -164,7 +164,7 @@ class ExplorerHomeView extends StatelessWidget {
                           ],
                         ),
                       verticalSpaceMedium,
-                      if (model.isSuperUser)
+                      if (model.useSuperUserFeatures)
                         Row(
                           children: [
                             Expanded(
@@ -193,8 +193,8 @@ class ExplorerHomeView extends StatelessWidget {
                             ),
                           ],
                         ),
-                      if (model.isSuperUser) verticalSpaceMedium,
-                      if (model.isSuperUser)
+                      if (model.useSuperUserFeatures) verticalSpaceMedium,
+                      if (model.useSuperUserFeatures)
                         model.addingPositionToNotionDB
                             ? AFKProgressIndicator()
                             : Wrap(

@@ -1,5 +1,6 @@
 enum QuestType {
-  Hike,
+  QRCodeHike,
+  GPSAreaHike,
   Hunt,
   QRCodeHuntIndoor, // changes to UI w.r.t. outdoor hunt
   QRCodeSearch,
