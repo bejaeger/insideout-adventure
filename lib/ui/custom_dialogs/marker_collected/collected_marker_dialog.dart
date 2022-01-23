@@ -89,7 +89,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   verticalSpaceSmall,
-                  Text("Hinweis gefunden!",
+                  Text("Marker collected!",
                       textAlign: TextAlign.center,
                       style: textTheme(context).headline6!.copyWith(
                           color: kPrimaryColor,

@@ -14,6 +14,7 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
   GoogleMapController? _googleMapController;
   GoogleMapController? get getGoogleMapController => _googleMapController;
   final GeolocationService _geolocationService = locator<GeolocationService>();
+
   Set<Marker> markersOnMap = {};
   Set<Circle> areasOnMap = {};
   String get timeElapsed => questService.getMinutesElapsedString();
@@ -27,13 +28,17 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
   BitmapDescriptor defineMarkersColour(
       {required AFKMarker afkmarker, required Quest? quest});
 
-  void onMapCreated(GoogleMapController controller) {
+  void onMapCreated(GoogleMapController controller) async {
     if (hasActiveQuest) {
       setBusy(true);
       try {
         _googleMapController = controller;
+        // for camera position
+
         //Add Starter Marker
         loadQuestMarkers();
+
+        log.v("Animating camera to quest markers");
       } catch (error) {
         throw MapViewModelException(
             message: 'An error occured when creating the map',
@@ -45,7 +50,36 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
       notifyListeners();
     } else {
       _googleMapController = controller;
+      if (currentQuest != null)
+      // animate camera to markers
+      {
+        Future.delayed(
+            Duration(milliseconds: 200),
+            () => controller.animateCamera(CameraUpdate.newLatLngBounds(
+                boundsFromLatLngList(
+                    markerList: currentQuest!.markers
+                        .map((m) => LatLng(m.lat!, m.lon!))
+                        .toList()),
+                50)));
+      }
     }
+  }
+
+  LatLngBounds boundsFromLatLngList({required List<LatLng> markerList}) {
+    double? x0, x1, y0, y1;
+    for (LatLng latLng in markerList) {
+      if (x0 == null) {
+        x0 = x1 = latLng.latitude;
+        y0 = y1 = latLng.longitude;
+      } else {
+        if (latLng.latitude > x1!) x1 = latLng.latitude;
+        if (latLng.latitude < x0) x0 = latLng.latitude;
+        if (latLng.longitude > y1!) y1 = latLng.longitude;
+        if (latLng.longitude < y0!) y0 = latLng.longitude;
+      }
+    }
+    return LatLngBounds(
+        northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
   }
 
   CameraPosition initialCameraPosition() {
@@ -57,7 +91,8 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
     } else {
       if (_geolocationService.getUserLivePositionNullable != null) {
         final CameraPosition _initialCameraPosition = CameraPosition(
-            target: LatLng(_geolocationService.getUserLivePositionNullable!.latitude,
+            target: LatLng(
+                _geolocationService.getUserLivePositionNullable!.latitude,
                 _geolocationService.getUserLivePositionNullable!.longitude),
             zoom: 16);
         return _initialCameraPosition;
@@ -124,7 +159,7 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
     cancelPositionListener();
     navigationService.back();
   }
-  
+
   @override
   void dispose() {
     _googleMapController?.dispose();

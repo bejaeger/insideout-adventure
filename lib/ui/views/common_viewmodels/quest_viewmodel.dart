@@ -29,6 +29,7 @@ abstract class QuestViewModel extends BaseModel {
   final log = getLogger("QuestViewModel");
   StreamSubscription? _activeQuestSubscription;
   String lastActivatedQuestInfoText = "Active Quest";
+  Quest? currentQuest;
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
@@ -69,6 +70,7 @@ abstract class QuestViewModel extends BaseModel {
   }
 
   void initialize({required Quest quest}) async {
+    currentQuest = quest;
     // start calibration listener
     startPositionCalibrationListener();
   }
@@ -170,6 +172,7 @@ abstract class QuestViewModel extends BaseModel {
         }
         // }
       } else {
+        log.wtf("Could not get location of user");
         await showGenericInternalErrorDialog();
       }
     }

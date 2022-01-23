@@ -740,6 +740,7 @@ class QuestService with ReactiveServiceMixin {
   Future loadNearbyQuests({bool force = false}) async {
     if (_nearbyQuests.isEmpty || force) {
       // TODO: In the future retrieve only nearby quests
+      log.wtf("UseDummyQuests? ${_flavorConfigProvider.pushAndUseDummyQuests}");
       _nearbyQuests = await _firestoreApi.getNearbyQuests(
           pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests);
       log.i("Found ${_nearbyQuests.length} nearby quests.");

@@ -426,10 +426,12 @@ class FirestoreApi {
   // Returns dummy data for now!
   Future<List<Quest>> getNearbyQuests({bool? pushDummyQuests}) async {
     if (pushDummyQuests == true) {
-      //TODO push quests
+      // TODO push quests
       late List<Quest> questsOnFirestore;
       try {
+        log.i("Downloading quests now");
         questsOnFirestore = await downloadNearbyQuests();
+        log.i("Never go here");
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
@@ -477,22 +479,15 @@ class FirestoreApi {
 
   // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> downloadNearbyQuests() async {
-    try {
-      final quests = await questsCollection.get();
-      if (quests.docs.isNotEmpty) {
-        log.v('Found list of quests in database');
-        return quests.docs.map((docs) => Quest.fromJson(docs.data())).toList();
-      } else {
-        log.wtf('You are providing an Empty document for quests');
-        throw FirestoreApiException(
-            message: "Quest data could not be found",
-            devDetails: "Quest document is empty");
-      }
-    } catch (e) {
-      log.e("$e");
-      if (e is FirestoreApiException) rethrow;
+    final quests = await questsCollection.get();
+    if (quests.docs.isNotEmpty) {
+      log.v('Found list of quests in database');
+      return quests.docs.map((docs) => Quest.fromJson(docs.data())).toList();
+    } else {
+      log.wtf('There is no \'quests\' collection on firestore');
       throw FirestoreApiException(
-          message: "Error Was Thrown when loading quests", devDetails: "$e");
+          message: "Quest data could not be found",
+          devDetails: "Quest document is empty");
     }
   }
 
