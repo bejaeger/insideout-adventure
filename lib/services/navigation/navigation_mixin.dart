@@ -65,6 +65,27 @@ mixin NavigationMixin {
     );
   }
 
+  void navToQuestOverView() {
+    //SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+    _navigationService.navigateTo(Routes.questsOverviewView);
+    //});
+  }
+
+  void navToCreateQuest() {
+    _navigationService.navigateTo(Routes.createQuestView);
+    //});
+  }
+
+  void navToAddGiftCard() {
+    _navigationService.navigateTo(Routes.addGiftCardsView);
+    //});
+  }
+
+  void navToInsertGiftCard() {
+    _navigationService.navigateTo(Routes.insertPrePurchasedGiftCardView);
+    //});
+  }
+
   void navBackToPreviousView() {
     _navigationService.back();
   }

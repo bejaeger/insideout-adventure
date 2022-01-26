@@ -2,66 +2,72 @@
 // in afkcredits/test/helpers/test_helpers.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i17;
-import 'dart:ui' as _i47;
+import 'dart:async' as _i19;
+import 'dart:ui' as _i52;
 
-import 'package:afkcredits/apis/cloud_functions_api.dart' as _i28;
-import 'package:afkcredits/apis/firestore_api.dart' as _i21;
+import 'package:afkcredits/apis/cloud_functions_api.dart' as _i31;
+import 'package:afkcredits/apis/firestore_api.dart' as _i23;
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart'
-    as _i26;
+    as _i28;
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart'
-    as _i27;
-import 'package:afkcredits/datamodels/payments/money_transfer.dart' as _i24;
+    as _i29;
+import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart'
+    as _i30;
+import 'package:afkcredits/datamodels/payments/money_transfer.dart' as _i26;
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart'
-    as _i25;
+    as _i27;
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
-    as _i10;
-import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart' as _i11;
-import 'package:afkcredits/datamodels/quests/quest.dart' as _i22;
-import 'package:afkcredits/datamodels/users/admin/user_admin.dart' as _i18;
+    as _i12;
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart' as _i13;
+import 'package:afkcredits/datamodels/quests/quest.dart' as _i24;
+import 'package:afkcredits/datamodels/users/admin/user_admin.dart' as _i20;
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart'
-    as _i20;
+    as _i22;
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart'
-    as _i23;
+    as _i25;
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart'
-    as _i15;
+    as _i17;
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart'
     as _i3;
 import 'package:afkcredits/datamodels/users/user.dart' as _i2;
-import 'package:afkcredits/enums/authentication_method.dart' as _i19;
-import 'package:afkcredits/enums/quest_status.dart' as _i39;
-import 'package:afkcredits/enums/quest_type.dart' as _i38;
-import 'package:afkcredits/enums/quest_ui_style.dart' as _i40;
-import 'package:afkcredits/enums/user_role.dart' as _i16;
-import 'package:afkcredits/flavor_config.dart' as _i31;
-import 'package:afkcredits/services/environment_services.dart' as _i29;
+import 'package:afkcredits/enums/authentication_method.dart' as _i21;
+import 'package:afkcredits/enums/position_retrieval.dart' as _i40;
+import 'package:afkcredits/enums/quest_status.dart' as _i43;
+import 'package:afkcredits/enums/quest_type.dart' as _i42;
+import 'package:afkcredits/enums/quest_ui_style.dart' as _i44;
+import 'package:afkcredits/enums/user_role.dart' as _i18;
+import 'package:afkcredits/flavor_config.dart' as _i34;
+import 'package:afkcredits/services/environment_services.dart' as _i32;
 import 'package:afkcredits/services/geolocation/geolocation_service.dart'
-    as _i36;
-import 'package:afkcredits/services/giftcard/gift_card_service.dart' as _i44;
-import 'package:afkcredits/services/layout/layout_service.dart' as _i34;
-import 'package:afkcredits/services/local_storage_service.dart' as _i32;
-import 'package:afkcredits/services/markers/marker_service.dart' as _i42;
+    as _i39;
+import 'package:afkcredits/services/giftcard/gift_card_service.dart' as _i48;
+import 'package:afkcredits/services/layout/layout_service.dart' as _i37;
+import 'package:afkcredits/services/local_storage_service.dart' as _i35;
+import 'package:afkcredits/services/markers/marker_service.dart' as _i46;
 import 'package:afkcredits/services/payments/transfers_history_service.dart'
-    as _i35;
-import 'package:afkcredits/services/qrcodes/qrcode_service.dart' as _i43;
+    as _i38;
+import 'package:afkcredits/services/qrcodes/qrcode_service.dart' as _i47;
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart'
-    as _i9;
-import 'package:afkcredits/services/quests/quest_service.dart' as _i37;
-import 'package:afkcredits/services/quests/stopwatch_service.dart' as _i41;
+    as _i11;
+import 'package:afkcredits/services/quests/quest_service.dart' as _i41;
+import 'package:afkcredits/services/quests/stopwatch_service.dart' as _i45;
 import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart'
     as _i4;
-import 'package:afkcredits/services/users/user_service.dart' as _i14;
+import 'package:afkcredits/services/users/user_service.dart' as _i16;
 import 'package:cloud_firestore/cloud_firestore.dart' as _i5;
-import 'package:firebase_auth/firebase_auth.dart' as _i12;
-import 'package:flutter/material.dart' as _i46;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i33;
-import 'package:geolocator/geolocator.dart' as _i8;
+import 'package:device_info/device_info.dart' as _i9;
+import 'package:firebase_auth/firebase_auth.dart' as _i14;
+import 'package:flutter/material.dart' as _i50;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i36;
+import 'package:geolocator/geolocator.dart' as _i10;
+import 'package:get/get.dart' as _i51;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:notion_api/notion.dart' as _i8;
 import 'package:places_service/src/models/application_models.dart' as _i6;
-import 'package:places_service/src/places_service.dart' as _i30;
+import 'package:places_service/src/places_service.dart' as _i33;
 import 'package:rxdart/rxdart.dart' as _i7;
-import 'package:stacked_firebase_auth/stacked_firebase_auth.dart' as _i13;
-import 'package:stacked_services/stacked_services.dart' as _i45;
+import 'package:stacked_firebase_auth/stacked_firebase_auth.dart' as _i15;
+import 'package:stacked_services/stacked_services.dart' as _i49;
 
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: avoid_setters_without_getters
@@ -91,26 +97,31 @@ class _FakePlacesDetails_6 extends _i1.Fake implements _i6.PlacesDetails {}
 class _FakeBehaviorSubject_7<T> extends _i1.Fake
     implements _i7.BehaviorSubject<T> {}
 
-class _FakePosition_8 extends _i1.Fake implements _i8.Position {}
+class _FakeNotionClient_8 extends _i1.Fake implements _i8.NotionClient {}
 
-class _FakeMarkerAnalysisResult_9 extends _i1.Fake
-    implements _i9.MarkerAnalysisResult {}
+class _FakeDeviceInfoPlugin_9 extends _i1.Fake implements _i9.DeviceInfoPlugin {
+}
 
-class _FakeActivatedQuest_10 extends _i1.Fake implements _i10.ActivatedQuest {}
+class _FakePosition_10 extends _i1.Fake implements _i10.Position {}
 
-class _FakeAFKMarker_11 extends _i1.Fake implements _i11.AFKMarker {}
+class _FakeMarkerAnalysisResult_11 extends _i1.Fake
+    implements _i11.MarkerAnalysisResult {}
 
-class _FakeFirebaseAuth_12 extends _i1.Fake implements _i12.FirebaseAuth {}
+class _FakeActivatedQuest_12 extends _i1.Fake implements _i12.ActivatedQuest {}
 
-class _FakeFirebaseAuthenticationResult_13 extends _i1.Fake
-    implements _i13.FirebaseAuthenticationResult {}
+class _FakeAFKMarker_13 extends _i1.Fake implements _i13.AFKMarker {}
+
+class _FakeFirebaseAuth_14 extends _i1.Fake implements _i14.FirebaseAuth {}
+
+class _FakeFirebaseAuthenticationResult_15 extends _i1.Fake
+    implements _i15.FirebaseAuthenticationResult {}
 
 /// A class which mocks [UserService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserService extends _i1.Mock implements _i14.UserService {
+class MockUserService extends _i1.Mock implements _i16.UserService {
   @override
-  set sponsorReference(_i15.SponsorReference? _sponsorReference) => super
+  set sponsorReference(_i17.SponsorReference? _sponsorReference) => super
       .noSuchMethod(Invocation.setter(#sponsorReference, _sponsorReference),
           returnValueForMissingStub: null);
   @override
@@ -145,9 +156,9 @@ class MockUserService extends _i1.Mock implements _i14.UserService {
           .noSuchMethod(Invocation.getter(#hasLoggedInUser), returnValue: false)
       as bool);
   @override
-  _i16.UserRole get getUserRole =>
+  _i18.UserRole get getUserRole =>
       (super.noSuchMethod(Invocation.getter(#getUserRole),
-          returnValue: _i16.UserRole.sponsor) as _i16.UserRole);
+          returnValue: _i18.UserRole.sponsor) as _i18.UserRole);
   @override
   bool get isSuperUser =>
       (super.noSuchMethod(Invocation.getter(#isSuperUser), returnValue: false)
@@ -161,8 +172,8 @@ class MockUserService extends _i1.Mock implements _i14.UserService {
       (super.noSuchMethod(Invocation.getter(#supportedExplorersList),
           returnValue: <_i2.User>[]) as List<_i2.User>);
   @override
-  _i17.Future<void> syncUserAccount(
-          {String? uid, bool? fromLocalStorage = false, _i16.UserRole? role}) =>
+  _i19.Future<void> syncUserAccount(
+          {String? uid, bool? fromLocalStorage = false, _i18.UserRole? role}) =>
       (super.noSuchMethod(
               Invocation.method(#syncUserAccount, [], {
                 #uid: uid,
@@ -171,11 +182,11 @@ class MockUserService extends _i1.Mock implements _i14.UserService {
               }),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<void> syncOrCreateUserAdminAccount(
-          {_i18.UserAdmin? userAdmin,
-          _i19.AuthenticationMethod? method,
+  _i19.Future<void> syncOrCreateUserAdminAccount(
+          {_i20.UserAdmin? userAdmin,
+          _i21.AuthenticationMethod? method,
           bool? fromLocalStorate = false}) =>
       (super.noSuchMethod(
               Invocation.method(#syncOrCreateUserAdminAccount, [], {
@@ -185,53 +196,53 @@ class MockUserService extends _i1.Mock implements _i14.UserService {
               }),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<_i2.User> createUserAccountFromFirebaseUser(
-          {_i16.UserRole? role, _i19.AuthenticationMethod? authMethod}) =>
+  _i19.Future<_i2.User> createUserAccountFromFirebaseUser(
+          {_i18.UserRole? role, _i21.AuthenticationMethod? authMethod}) =>
       (super.noSuchMethod(
               Invocation.method(#createUserAccountFromFirebaseUser, [],
                   {#role: role, #authMethod: authMethod}),
               returnValue: Future<_i2.User>.value(_FakeUser_0()))
-          as _i17.Future<_i2.User>);
+          as _i19.Future<_i2.User>);
   @override
-  _i17.Future<_i2.User> createUserAccount({_i2.User? user}) =>
+  _i19.Future<_i2.User> createUserAccount({_i2.User? user}) =>
       (super.noSuchMethod(
               Invocation.method(#createUserAccount, [], {#user: user}),
               returnValue: Future<_i2.User>.value(_FakeUser_0()))
-          as _i17.Future<_i2.User>);
+          as _i19.Future<_i2.User>);
   @override
-  _i17.Future<void> createUserFavouritePlaces(
-          {String? userId, _i20.UserFavPlaces? favouritePlaces}) =>
+  _i19.Future<void> createUserFavouritePlaces(
+          {String? userId, _i22.UserFavPlaces? favouritePlaces}) =>
       (super.noSuchMethod(
               Invocation.method(#createUserFavouritePlaces, [],
                   {#userId: userId, #favouritePlaces: favouritePlaces}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<List<_i20.UserFavPlaces>?> getUserFavouritePlaces(
+  _i19.Future<List<_i22.UserFavPlaces>?> getUserFavouritePlaces(
           {String? userId}) =>
       (super.noSuchMethod(
               Invocation.method(#getUserFavouritePlaces, [], {#userId: userId}),
-              returnValue: Future<List<_i20.UserFavPlaces>?>.value())
-          as _i17.Future<List<_i20.UserFavPlaces>?>);
+              returnValue: Future<List<_i22.UserFavPlaces>?>.value())
+          as _i19.Future<List<_i22.UserFavPlaces>?>);
   @override
-  _i17.Future<String?> getLocallyLoggedInUserId() =>
+  _i19.Future<String?> getLocallyLoggedInUserId() =>
       (super.noSuchMethod(Invocation.method(#getLocallyLoggedInUserId, []),
-          returnValue: Future<String?>.value()) as _i17.Future<String?>);
+          returnValue: Future<String?>.value()) as _i19.Future<String?>);
   @override
-  _i17.Future<_i16.UserRole?> getLocallyLoggedUserRole() =>
+  _i19.Future<_i18.UserRole?> getLocallyLoggedUserRole() =>
       (super.noSuchMethod(Invocation.method(#getLocallyLoggedUserRole, []),
-              returnValue: Future<_i16.UserRole?>.value())
-          as _i17.Future<_i16.UserRole?>);
+              returnValue: Future<_i18.UserRole?>.value())
+          as _i19.Future<_i18.UserRole?>);
   @override
-  _i17.Future<_i4.AFKCreditsAuthenticationResultService> runLoginLogic(
-          {_i19.AuthenticationMethod? method,
+  _i19.Future<_i4.AFKCreditsAuthenticationResultService> runLoginLogic(
+          {_i21.AuthenticationMethod? method,
           String? emailOrName,
           String? stringPw,
           String? hashedPw,
-          _i16.UserRole? role}) =>
+          _i18.UserRole? role}) =>
       (super.noSuchMethod(
           Invocation.method(#runLoginLogic, [], {
             #method: method,
@@ -241,12 +252,12 @@ class MockUserService extends _i1.Mock implements _i14.UserService {
             #role: role
           }),
           returnValue: Future<_i4.AFKCreditsAuthenticationResultService>.value(
-              _FakeAFKCreditsAuthenticationResultService_2())) as _i17
+              _FakeAFKCreditsAuthenticationResultService_2())) as _i19
           .Future<_i4.AFKCreditsAuthenticationResultService>);
   @override
-  _i17.Future<_i4.AFKCreditsAuthenticationResultService> runCreateAccountLogic(
-          {_i19.AuthenticationMethod? method,
-          _i16.UserRole? role,
+  _i19.Future<_i4.AFKCreditsAuthenticationResultService> runCreateAccountLogic(
+          {_i21.AuthenticationMethod? method,
+          _i18.UserRole? role,
           String? fullName,
           String? email,
           String? password}) =>
@@ -259,64 +270,64 @@ class MockUserService extends _i1.Mock implements _i14.UserService {
             #password: password
           }),
           returnValue: Future<_i4.AFKCreditsAuthenticationResultService>.value(
-              _FakeAFKCreditsAuthenticationResultService_2())) as _i17
+              _FakeAFKCreditsAuthenticationResultService_2())) as _i19
           .Future<_i4.AFKCreditsAuthenticationResultService>);
   @override
   bool isSupportedExplorer({String? uid}) => (super.noSuchMethod(
       Invocation.method(#isSupportedExplorer, [], {#uid: uid}),
       returnValue: false) as bool);
   @override
-  _i17.Future<dynamic> createExplorerAccount(
+  _i19.Future<dynamic> createExplorerAccount(
           {String? name,
           String? password,
-          _i19.AuthenticationMethod? authMethod}) =>
+          _i21.AuthenticationMethod? authMethod}) =>
       (super.noSuchMethod(
           Invocation.method(#createExplorerAccount, [],
               {#name: name, #password: password, #authMethod: authMethod}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> addExplorerToSupportedExplorers({String? uid}) =>
+  _i19.Future<dynamic> addExplorerToSupportedExplorers({String? uid}) =>
       (super.noSuchMethod(
           Invocation.method(#addExplorerToSupportedExplorers, [], {#uid: uid}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   void setupUserDataListeners(
-          {_i17.Completer<void>? completer, void Function()? callback}) =>
+          {_i19.Completer<void>? completer, void Function()? callback}) =>
       super.noSuchMethod(
           Invocation.method(#setupUserDataListeners, [],
               {#completer: completer, #callback: callback}),
           returnValueForMissingStub: null);
   @override
-  _i17.Future<void> addExplorerStatsListeners(
+  _i19.Future<void> addExplorerStatsListeners(
           {List<String>? explorerIds, void Function()? callback}) =>
       (super.noSuchMethod(
               Invocation.method(#addExplorerStatsListeners, [],
                   {#explorerIds: explorerIds, #callback: callback}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<dynamic> addExplorerStatListener(
+  _i19.Future<dynamic> addExplorerStatListener(
           {String? explorerId, void Function()? callback}) =>
       (super.noSuchMethod(
           Invocation.method(#addExplorerStatListener, [],
               {#explorerId: explorerId, #callback: callback}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> validateSponsorPin({String? pin}) => (super.noSuchMethod(
+  _i19.Future<dynamic> validateSponsorPin({String? pin}) => (super.noSuchMethod(
       Invocation.method(#validateSponsorPin, [], {#pin: pin}),
-      returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+      returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> saveSponsorReference(
-          {String? uid, _i19.AuthenticationMethod? authMethod, String? pin}) =>
+  _i19.Future<dynamic> saveSponsorReference(
+          {String? uid, _i21.AuthenticationMethod? authMethod, String? pin}) =>
       (super.noSuchMethod(
           Invocation.method(#saveSponsorReference, [],
               {#uid: uid, #authMethod: authMethod, #pin: pin}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> clearSponsorReference() =>
+  _i19.Future<dynamic> clearSponsorReference() =>
       (super.noSuchMethod(Invocation.method(#clearSponsorReference, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   void removeFromExplorerLists({String? uid}) => super.noSuchMethod(
       Invocation.method(#removeFromExplorerLists, [], {#uid: uid}),
@@ -341,30 +352,30 @@ class MockUserService extends _i1.Mock implements _i14.UserService {
           .noSuchMethod(Invocation.method(#hashPassword, [pw]), returnValue: '')
       as String);
   @override
-  _i17.Future<dynamic> updateUserData({_i2.User? user}) =>
+  _i19.Future<dynamic> updateUserData({_i2.User? user}) =>
       (super.noSuchMethod(Invocation.method(#updateUserData, [], {#user: user}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> addSponsorIdToOtherUser(
+  _i19.Future<dynamic> addSponsorIdToOtherUser(
           {String? otherUsersId, String? sponsorId}) =>
       (super.noSuchMethod(
           Invocation.method(#addSponsorIdToOtherUser, [],
               {#otherUsersId: otherUsersId, #sponsorId: sponsorId}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> isUserAlreadyPresent({dynamic name}) => (super
+  _i19.Future<dynamic> isUserAlreadyPresent({dynamic name}) => (super
       .noSuchMethod(Invocation.method(#isUserAlreadyPresent, [], {#name: name}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   void cancelExplorerStatsListener({String? uid}) => super.noSuchMethod(
       Invocation.method(#cancelExplorerStatsListener, [], {#uid: uid}),
       returnValueForMissingStub: null);
   @override
-  _i17.Future<dynamic> handleLogoutEvent({bool? logOutFromFirebase = true}) =>
+  _i19.Future<dynamic> handleLogoutEvent({bool? logOutFromFirebase = true}) =>
       (super.noSuchMethod(
           Invocation.method(#handleLogoutEvent, [],
               {#logOutFromFirebase: logOutFromFirebase}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   String toString() => super.toString();
 }
@@ -372,212 +383,230 @@ class MockUserService extends _i1.Mock implements _i14.UserService {
 /// A class which mocks [FirestoreApi].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
+class MockFirestoreApi extends _i1.Mock implements _i23.FirestoreApi {
   @override
   _i5.FirebaseFirestore get firestoreInstance =>
       (super.noSuchMethod(Invocation.getter(#firestoreInstance),
           returnValue: _FakeFirebaseFirestore_3()) as _i5.FirebaseFirestore);
   @override
-  _i17.Future<void> createUser({_i2.User? user, _i3.UserStatistics? stats}) =>
+  _i19.Future<void> createUser({_i2.User? user, _i3.UserStatistics? stats}) =>
       (super.noSuchMethod(
               Invocation.method(#createUser, [], {#user: user, #stats: stats}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<void> createUserAdmin({_i18.UserAdmin? userAdmin}) =>
+  _i19.Future<void> createUserAdmin({_i20.UserAdmin? userAdmin}) =>
       (super.noSuchMethod(
               Invocation.method(#createUserAdmin, [], {#userAdmin: userAdmin}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<void> createUserInfo({_i2.User? user}) => (super.noSuchMethod(
+  _i19.Future<void> createUserInfo({_i2.User? user}) => (super.noSuchMethod(
       Invocation.method(#createUserInfo, [], {#user: user}),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i19.Future<void>);
   @override
-  _i17.Future<void> createUserStatistics(
+  _i19.Future<void> createUserStatistics(
           {String? uid, _i3.UserStatistics? stats}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #createUserStatistics, [], {#uid: uid, #stats: stats}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<void> createUserFavouritePlaces(
-          {dynamic userId, _i20.UserFavPlaces? favouritePlaces}) =>
+  _i19.Future<void> createUserFavouritePlaces(
+          {dynamic userId, _i22.UserFavPlaces? favouritePlaces}) =>
       (super.noSuchMethod(
               Invocation.method(#createUserFavouritePlaces, [],
                   {#userId: userId, #favouritePlaces: favouritePlaces}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<void> addMarkers({_i11.AFKMarker? markers}) => (super
+  _i19.Future<void> addMarkers({_i13.AFKMarker? markers}) => (super
           .noSuchMethod(Invocation.method(#addMarkers, [], {#markers: markers}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-      as _i17.Future<void>);
+      as _i19.Future<void>);
   @override
   _i5.DocumentReference createUserDocument() =>
       (super.noSuchMethod(Invocation.method(#createUserDocument, []),
           returnValue: _FakeDocumentReference_4()) as _i5.DocumentReference);
   @override
-  _i17.Future<_i2.User?> getUser({String? uid}) =>
+  _i19.Future<_i2.User?> getUser({String? uid}) =>
       (super.noSuchMethod(Invocation.method(#getUser, [], {#uid: uid}),
-          returnValue: Future<_i2.User?>.value()) as _i17.Future<_i2.User?>);
+          returnValue: Future<_i2.User?>.value()) as _i19.Future<_i2.User?>);
   @override
-  _i17.Future<_i18.UserAdmin?> getUserAdmin({String? uid}) =>
+  _i19.Future<_i20.UserAdmin?> getUserAdmin({String? uid}) =>
       (super.noSuchMethod(Invocation.method(#getUserAdmin, [], {#uid: uid}),
-              returnValue: Future<_i18.UserAdmin?>.value())
-          as _i17.Future<_i18.UserAdmin?>);
+              returnValue: Future<_i20.UserAdmin?>.value())
+          as _i19.Future<_i20.UserAdmin?>);
   @override
-  _i17.Future<List<_i20.UserFavPlaces>?>? getUserFavouritePlaces(
+  _i19.Future<List<_i22.UserFavPlaces>?>? getUserFavouritePlaces(
           {String? userId}) =>
       (super.noSuchMethod(
               Invocation.method(#getUserFavouritePlaces, [], {#userId: userId}))
-          as _i17.Future<List<_i20.UserFavPlaces>?>?);
+          as _i19.Future<List<_i22.UserFavPlaces>?>?);
   @override
-  _i17.Future<List<_i11.AFKMarker?>?> getMarkers() =>
+  _i19.Future<List<_i13.AFKMarker?>?> getMarkers() =>
       (super.noSuchMethod(Invocation.method(#getMarkers, []),
-              returnValue: Future<List<_i11.AFKMarker?>?>.value())
-          as _i17.Future<List<_i11.AFKMarker?>?>);
+              returnValue: Future<List<_i13.AFKMarker?>?>.value())
+          as _i19.Future<List<_i13.AFKMarker?>?>);
   @override
-  _i17.Future<_i2.User?> getUserWithName({String? name}) => (super.noSuchMethod(
+  _i19.Future<_i2.User?> getUserWithName({String? name}) => (super.noSuchMethod(
       Invocation.method(#getUserWithName, [], {#name: name}),
-      returnValue: Future<_i2.User?>.value()) as _i17.Future<_i2.User?>);
+      returnValue: Future<_i2.User?>.value()) as _i19.Future<_i2.User?>);
   @override
-  _i17.Future<_i3.UserStatistics> getUserSummaryStatistics({String? uid}) =>
+  _i19.Future<_i3.UserStatistics> getUserSummaryStatistics({String? uid}) =>
       (super.noSuchMethod(
               Invocation.method(#getUserSummaryStatistics, [], {#uid: uid}),
               returnValue:
                   Future<_i3.UserStatistics>.value(_FakeUserStatistics_1()))
-          as _i17.Future<_i3.UserStatistics>);
+          as _i19.Future<_i3.UserStatistics>);
   @override
-  _i17.Stream<_i3.UserStatistics> getUserSummaryStatisticsStream(
+  _i19.Stream<_i3.UserStatistics> getUserSummaryStatisticsStream(
           {String? uid}) =>
       (super.noSuchMethod(
           Invocation.method(#getUserSummaryStatisticsStream, [], {#uid: uid}),
           returnValue:
-              Stream<_i3.UserStatistics>.empty()) as _i17
+              Stream<_i3.UserStatistics>.empty()) as _i19
           .Stream<_i3.UserStatistics>);
   @override
-  _i17.Future<dynamic> updateUserData({_i2.User? user}) =>
+  _i19.Future<dynamic> updateUserData({_i2.User? user}) =>
       (super.noSuchMethod(Invocation.method(#updateUserData, [], {#user: user}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<void> updateQuestData({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i19.Future<void> updateQuestData({_i24.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#updateQuestData, [], {#quest: quest}),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i19.Future<void>);
   @override
-  _i17.Future<dynamic> addSponsorIdToUser({String? uid, String? sponsorId}) =>
+  _i19.Future<dynamic> addSponsorIdToUser({String? uid, String? sponsorId}) =>
       (super.noSuchMethod(
           Invocation.method(
               #addSponsorIdToUser, [], {#uid: uid, #sponsorId: sponsorId}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<void> removeQuest({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i19.Future<void> removeQuest({_i24.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#removeQuest, [], {#quest: quest}),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i19.Future<void>);
   @override
-  _i17.Stream<_i2.User> getUserStream({String? uid}) =>
+  _i19.Stream<_i2.User> getUserStream({String? uid}) =>
       (super.noSuchMethod(Invocation.method(#getUserStream, [], {#uid: uid}),
-          returnValue: Stream<_i2.User>.empty()) as _i17.Stream<_i2.User>);
+          returnValue: Stream<_i2.User>.empty()) as _i19.Stream<_i2.User>);
   @override
-  _i17.Stream<List<_i2.User>> getExplorersDataStream({String? uid}) =>
+  _i19.Stream<List<_i2.User>> getExplorersDataStream({String? uid}) =>
       (super.noSuchMethod(
               Invocation.method(#getExplorersDataStream, [], {#uid: uid}),
               returnValue: Stream<List<_i2.User>>.empty())
-          as _i17.Stream<List<_i2.User>>);
+          as _i19.Stream<List<_i2.User>>);
   @override
-  _i17.Future<List<_i23.PublicUserInfo>> queryExplorers(
+  _i19.Future<List<_i25.PublicUserInfo>> queryExplorers(
           {String? queryString}) =>
       (super.noSuchMethod(
           Invocation.method(#queryExplorers, [], {#queryString: queryString}),
-          returnValue: Future<List<_i23.PublicUserInfo>>.value(
-              <_i23.PublicUserInfo>[])) as _i17
-          .Future<List<_i23.PublicUserInfo>>);
+          returnValue: Future<List<_i25.PublicUserInfo>>.value(
+              <_i25.PublicUserInfo>[])) as _i19
+          .Future<List<_i25.PublicUserInfo>>);
   @override
-  _i17.Stream<List<_i24.MoneyTransfer>> getTransferDataStream(
-          {_i25.MoneyTransferQueryConfig? config, String? uid}) =>
+  _i19.Stream<List<_i26.MoneyTransfer>> getTransferDataStream(
+          {_i27.MoneyTransferQueryConfig? config, String? uid}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getTransferDataStream, [], {#config: config, #uid: uid}),
-              returnValue: Stream<List<_i24.MoneyTransfer>>.empty())
-          as _i17.Stream<List<_i24.MoneyTransfer>>);
+              returnValue: Stream<List<_i26.MoneyTransfer>>.empty())
+          as _i19.Stream<List<_i26.MoneyTransfer>>);
   @override
-  _i22.Quest? getQuest({String? questId}) =>
+  _i24.Quest? getQuest({String? questId}) =>
       (super.noSuchMethod(Invocation.method(#getQuest, [], {#questId: questId}))
-          as _i22.Quest?);
+          as _i24.Quest?);
   @override
-  _i17.Future<List<_i22.Quest>> getNearbyQuests({bool? pushDummyQuests}) =>
+  _i19.Future<List<_i24.Quest>> getNearbyQuests({bool? pushDummyQuests}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getNearbyQuests, [], {#pushDummyQuests: pushDummyQuests}),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i24.Quest>>.value(<_i24.Quest>[]))
+          as _i19.Future<List<_i24.Quest>>);
   @override
-  _i17.Future<List<_i22.Quest>> downloadNearbyQuests() =>
+  _i19.Future<bool?> createQuest({_i24.Quest? quest}) =>
+      (super.noSuchMethod(Invocation.method(#createQuest, [], {#quest: quest}),
+          returnValue: Future<bool?>.value()) as _i19.Future<bool?>);
+  @override
+  _i19.Future<List<_i24.Quest>> downloadNearbyQuests() =>
       (super.noSuchMethod(Invocation.method(#downloadNearbyQuests, []),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i24.Quest>>.value(<_i24.Quest>[]))
+          as _i19.Future<List<_i24.Quest>>);
   @override
-  _i17.Future<dynamic> pushFinishedQuest({_i10.ActivatedQuest? quest}) => (super
+  _i19.Future<dynamic> pushFinishedQuest({_i12.ActivatedQuest? quest}) => (super
       .noSuchMethod(Invocation.method(#pushFinishedQuest, [], {#quest: quest}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<_i11.AFKMarker?> getMarkerFromQrCodeId({String? qrCodeId}) =>
+  _i19.Future<_i13.AFKMarker?> getMarkerFromQrCodeId({String? qrCodeId}) =>
       (super.noSuchMethod(
           Invocation.method(#getMarkerFromQrCodeId, [], {#qrCodeId: qrCodeId}),
           returnValue:
-              Future<_i11.AFKMarker?>.value()) as _i17.Future<_i11.AFKMarker?>);
+              Future<_i13.AFKMarker?>.value()) as _i19.Future<_i13.AFKMarker?>);
   @override
-  _i17.Future<List<_i22.Quest>> downloadQuestsWithStartMarkerId(
+  _i19.Future<List<_i24.Quest>> downloadQuestsWithStartMarkerId(
           {String? startMarkerId}) =>
       (super.noSuchMethod(
               Invocation.method(#downloadQuestsWithStartMarkerId, [],
                   {#startMarkerId: startMarkerId}),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i24.Quest>>.value(<_i24.Quest>[]))
+          as _i19.Future<List<_i24.Quest>>);
   @override
-  _i17.Stream<List<_i10.ActivatedQuest>> getPastQuestsStream({String? uid}) =>
+  _i19.Stream<List<_i12.ActivatedQuest>> getPastQuestsStream({String? uid}) =>
       (super.noSuchMethod(
               Invocation.method(#getPastQuestsStream, [], {#uid: uid}),
-              returnValue: Stream<List<_i10.ActivatedQuest>>.empty())
-          as _i17.Stream<List<_i10.ActivatedQuest>>);
+              returnValue: Stream<List<_i12.ActivatedQuest>>.empty())
+          as _i19.Stream<List<_i12.ActivatedQuest>>);
   @override
-  _i17.Future<List<_i26.GiftCardCategory>> getGiftCardsForCategory(
+  _i19.Future<List<_i28.GiftCardCategory>> getGiftCardsForCategory(
           {String? categoryName}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getGiftCardsForCategory, [], {#categoryName: categoryName}),
-              returnValue: Future<List<_i26.GiftCardCategory>>.value(
-                  <_i26.GiftCardCategory>[]))
-          as _i17.Future<List<_i26.GiftCardCategory>>);
+              returnValue: Future<List<_i28.GiftCardCategory>>.value(
+                  <_i28.GiftCardCategory>[]))
+          as _i19.Future<List<_i28.GiftCardCategory>>);
   @override
-  _i17.Future<List<_i26.GiftCardCategory>> getAllGiftCards() =>
+  _i19.Future<List<_i28.GiftCardCategory>> getAllGiftCards() =>
       (super.noSuchMethod(Invocation.method(#getAllGiftCards, []),
-              returnValue: Future<List<_i26.GiftCardCategory>>.value(
-                  <_i26.GiftCardCategory>[]))
-          as _i17.Future<List<_i26.GiftCardCategory>>);
+              returnValue: Future<List<_i28.GiftCardCategory>>.value(
+                  <_i28.GiftCardCategory>[]))
+          as _i19.Future<List<_i28.GiftCardCategory>>);
   @override
-  _i17.Stream<List<_i27.GiftCardPurchase>> getPurchasedGiftCardsStream(
+  _i19.Stream<List<_i29.GiftCardPurchase>> getPurchasedGiftCardsStream(
           {String? uid}) =>
       (super.noSuchMethod(
               Invocation.method(#getPurchasedGiftCardsStream, [], {#uid: uid}),
-              returnValue: Stream<List<_i27.GiftCardPurchase>>.empty())
-          as _i17.Stream<List<_i27.GiftCardPurchase>>);
+              returnValue: Stream<List<_i29.GiftCardPurchase>>.empty())
+          as _i19.Stream<List<_i29.GiftCardPurchase>>);
   @override
-  _i17.Future<dynamic> updateGiftCardPurchase(
-          {_i27.GiftCardPurchase? giftCardPurchase, String? uid}) =>
+  _i19.Future<dynamic> updateGiftCardPurchase(
+          {_i29.GiftCardPurchase? giftCardPurchase, String? uid}) =>
       (super.noSuchMethod(
           Invocation.method(#updateGiftCardPurchase, [],
               {#giftCardPurchase: giftCardPurchase, #uid: uid}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
+  @override
+  _i19.Future<bool> addGiftCardCategory(
+          {_i28.GiftCardCategory? giftCardCategory}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #addGiftCardCategory, [], {#giftCardCategory: giftCardCategory}),
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
+  @override
+  _i19.Future<bool> insertPrePurchasedGiftCardCategory(
+          {_i30.PrePurchasedGiftCard? prePurchasedGiftCard}) =>
+      (super.noSuchMethod(
+          Invocation.method(#insertPrePurchasedGiftCardCategory, [],
+              {#prePurchasedGiftCard: prePurchasedGiftCard}),
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
   @override
   String toString() => super.toString();
 }
@@ -585,18 +614,18 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
 /// A class which mocks [CloudFunctionsApi].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockCloudFunctionsApi extends _i1.Mock implements _i28.CloudFunctionsApi {
+class MockCloudFunctionsApi extends _i1.Mock implements _i31.CloudFunctionsApi {
   @override
-  _i17.Future<dynamic> bookkeepFinishedQuest({_i10.ActivatedQuest? quest}) =>
+  _i19.Future<dynamic> bookkeepFinishedQuest({_i12.ActivatedQuest? quest}) =>
       (super.noSuchMethod(
           Invocation.method(#bookkeepFinishedQuest, [], {#quest: quest}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> processTransfer({_i24.MoneyTransfer? moneyTransfer}) =>
+  _i19.Future<dynamic> processTransfer({_i26.MoneyTransfer? moneyTransfer}) =>
       (super.noSuchMethod(
           Invocation.method(
               #processTransfer, [], {#moneyTransfer: moneyTransfer}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   String toString() => super.toString();
 }
@@ -605,11 +634,11 @@ class MockCloudFunctionsApi extends _i1.Mock implements _i28.CloudFunctionsApi {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockEnvironmentService extends _i1.Mock
-    implements _i29.EnvironmentService {
+    implements _i32.EnvironmentService {
   @override
-  _i17.Future<dynamic> initialise() =>
+  _i19.Future<dynamic> initialise() =>
       (super.noSuchMethod(Invocation.method(#initialise, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   String getValue(String? key, {bool? verbose = false}) => (super.noSuchMethod(
       Invocation.method(#getValue, [key], {#verbose: verbose}),
@@ -621,7 +650,7 @@ class MockEnvironmentService extends _i1.Mock
 /// A class which mocks [PlacesService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPlacesService extends _i1.Mock implements _i30.PlacesService {
+class MockPlacesService extends _i1.Mock implements _i33.PlacesService {
   @override
   _i6.PlacesLocation get currentPosition =>
       (super.noSuchMethod(Invocation.getter(#currentPosition),
@@ -631,22 +660,22 @@ class MockPlacesService extends _i1.Mock implements _i30.PlacesService {
       super.noSuchMethod(Invocation.method(#initialize, [], {#apiKey: apiKey}),
           returnValueForMissingStub: null);
   @override
-  _i17.Future<List<_i6.PlacesAutoCompleteResult>> getAutoComplete(
+  _i19.Future<List<_i6.PlacesAutoCompleteResult>> getAutoComplete(
           String? input) =>
       (super.noSuchMethod(Invocation.method(#getAutoComplete, [input]),
               returnValue: Future<List<_i6.PlacesAutoCompleteResult>>.value(
                   <_i6.PlacesAutoCompleteResult>[]))
-          as _i17.Future<List<_i6.PlacesAutoCompleteResult>>);
+          as _i19.Future<List<_i6.PlacesAutoCompleteResult>>);
   @override
-  _i17.Future<_i6.PlacesDetails> getPlaceDetails(String? placeId) =>
+  _i19.Future<_i6.PlacesDetails> getPlaceDetails(String? placeId) =>
       (super.noSuchMethod(Invocation.method(#getPlaceDetails, [placeId]),
               returnValue:
                   Future<_i6.PlacesDetails>.value(_FakePlacesDetails_6()))
-          as _i17.Future<_i6.PlacesDetails>);
+          as _i19.Future<_i6.PlacesDetails>);
   @override
-  _i17.Future<dynamic> getPlacesAtCurrentLocation() =>
+  _i19.Future<dynamic> getPlacesAtCurrentLocation() =>
       (super.noSuchMethod(Invocation.method(#getPlacesAtCurrentLocation, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   String toString() => super.toString();
 }
@@ -655,7 +684,7 @@ class MockPlacesService extends _i1.Mock implements _i30.PlacesService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFlavorConfigProvider extends _i1.Mock
-    implements _i31.FlavorConfigProvider {
+    implements _i34.FlavorConfigProvider {
   @override
   bool get allowDummyMarkerCollection =>
       (super.noSuchMethod(Invocation.getter(#allowDummyMarkerCollection),
@@ -694,10 +723,10 @@ class MockFlavorConfigProvider extends _i1.Mock
               _dummyQuestCompletionVerification),
           returnValueForMissingStub: null);
   @override
-  _i31.Flavor get flavor => (super.noSuchMethod(Invocation.getter(#flavor),
-      returnValue: _i31.Flavor.unknown) as _i31.Flavor);
+  _i34.Flavor get flavor => (super.noSuchMethod(Invocation.getter(#flavor),
+      returnValue: _i34.Flavor.unknown) as _i34.Flavor);
   @override
-  set flavor(_i31.Flavor? _flavor) =>
+  set flavor(_i34.Flavor? _flavor) =>
       super.noSuchMethod(Invocation.setter(#flavor, _flavor),
           returnValueForMissingStub: null);
   @override
@@ -713,11 +742,11 @@ class MockFlavorConfigProvider extends _i1.Mock
       (super.noSuchMethod(Invocation.getter(#uripathprepend), returnValue: '')
           as String);
   @override
-  void configure(_i31.Flavor? flavorIn) =>
+  void configure(_i34.Flavor? flavorIn) =>
       super.noSuchMethod(Invocation.method(#configure, [flavorIn]),
           returnValueForMissingStub: null);
   @override
-  String getTestUserEmail(_i16.UserRole? role) =>
+  String getTestUserEmail(_i18.UserRole? role) =>
       (super.noSuchMethod(Invocation.method(#getTestUserEmail, [role]),
           returnValue: '') as String);
   @override
@@ -725,7 +754,7 @@ class MockFlavorConfigProvider extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#getTestUserPassword, []),
           returnValue: '') as String);
   @override
-  String getTestUserId(_i16.UserRole? role) =>
+  String getTestUserId(_i18.UserRole? role) =>
       (super.noSuchMethod(Invocation.method(#getTestUserId, [role]),
           returnValue: '') as String);
   @override
@@ -736,7 +765,7 @@ class MockFlavorConfigProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockLocalStorageService extends _i1.Mock
-    implements _i32.LocalStorageService {
+    implements _i35.LocalStorageService {
   @override
   String get authTokenDataKey =>
       (super.noSuchMethod(Invocation.getter(#authTokenDataKey), returnValue: '')
@@ -746,31 +775,31 @@ class MockLocalStorageService extends _i1.Mock
       Invocation.setter(#authTokenDataKey, _authTokenDataKey),
       returnValueForMissingStub: null);
   @override
-  _i17.Future<dynamic> saveToDisk({String? key, dynamic value}) =>
+  _i19.Future<dynamic> saveToDisk({String? key, dynamic value}) =>
       (super.noSuchMethod(
           Invocation.method(#saveToDisk, [], {#key: key, #value: value}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> saveRoleToDisk({String? key, dynamic value}) =>
+  _i19.Future<dynamic> saveRoleToDisk({String? key, dynamic value}) =>
       (super.noSuchMethod(
           Invocation.method(#saveRoleToDisk, [], {#key: key, #value: value}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> deleteFromDisk({String? key}) =>
+  _i19.Future<dynamic> deleteFromDisk({String? key}) =>
       (super.noSuchMethod(Invocation.method(#deleteFromDisk, [], {#key: key}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> deleteRoleFromDisk({String? key}) => (super.noSuchMethod(
+  _i19.Future<dynamic> deleteRoleFromDisk({String? key}) => (super.noSuchMethod(
       Invocation.method(#deleteRoleFromDisk, [], {#key: key}),
-      returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+      returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> getFromDisk({String? key}) =>
+  _i19.Future<dynamic> getFromDisk({String? key}) =>
       (super.noSuchMethod(Invocation.method(#getFromDisk, [], {#key: key}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> getRoleFromDisk({String? key}) =>
+  _i19.Future<dynamic> getRoleFromDisk({String? key}) =>
       (super.noSuchMethod(Invocation.method(#getRoleFromDisk, [], {#key: key}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   String toString() => super.toString();
 }
@@ -779,14 +808,14 @@ class MockLocalStorageService extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFlutterSecureStorage extends _i1.Mock
-    implements _i33.FlutterSecureStorage {
+    implements _i36.FlutterSecureStorage {
   @override
-  _i17.Future<void> write(
+  _i19.Future<void> write(
           {String? key,
           String? value,
-          _i33.IOSOptions? iOptions = _i33.IOSOptions.defaultOptions,
-          _i33.AndroidOptions? aOptions,
-          _i33.LinuxOptions? lOptions}) =>
+          _i36.IOSOptions? iOptions = _i36.IOSOptions.defaultOptions,
+          _i36.AndroidOptions? aOptions,
+          _i36.LinuxOptions? lOptions}) =>
       (super.noSuchMethod(
               Invocation.method(#write, [], {
                 #key: key,
@@ -797,13 +826,13 @@ class MockFlutterSecureStorage extends _i1.Mock
               }),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<String?> read(
+  _i19.Future<String?> read(
           {String? key,
-          _i33.IOSOptions? iOptions = _i33.IOSOptions.defaultOptions,
-          _i33.AndroidOptions? aOptions,
-          _i33.LinuxOptions? lOptions}) =>
+          _i36.IOSOptions? iOptions = _i36.IOSOptions.defaultOptions,
+          _i36.AndroidOptions? aOptions,
+          _i36.LinuxOptions? lOptions}) =>
       (super.noSuchMethod(
           Invocation.method(#read, [], {
             #key: key,
@@ -811,13 +840,13 @@ class MockFlutterSecureStorage extends _i1.Mock
             #aOptions: aOptions,
             #lOptions: lOptions
           }),
-          returnValue: Future<String?>.value()) as _i17.Future<String?>);
+          returnValue: Future<String?>.value()) as _i19.Future<String?>);
   @override
-  _i17.Future<bool> containsKey(
+  _i19.Future<bool> containsKey(
           {String? key,
-          _i33.IOSOptions? iOptions = _i33.IOSOptions.defaultOptions,
-          _i33.AndroidOptions? aOptions,
-          _i33.LinuxOptions? lOptions}) =>
+          _i36.IOSOptions? iOptions = _i36.IOSOptions.defaultOptions,
+          _i36.AndroidOptions? aOptions,
+          _i36.LinuxOptions? lOptions}) =>
       (super.noSuchMethod(
           Invocation.method(#containsKey, [], {
             #key: key,
@@ -825,13 +854,13 @@ class MockFlutterSecureStorage extends _i1.Mock
             #aOptions: aOptions,
             #lOptions: lOptions
           }),
-          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
   @override
-  _i17.Future<void> delete(
+  _i19.Future<void> delete(
           {String? key,
-          _i33.IOSOptions? iOptions = _i33.IOSOptions.defaultOptions,
-          _i33.AndroidOptions? aOptions,
-          _i33.LinuxOptions? lOptions}) =>
+          _i36.IOSOptions? iOptions = _i36.IOSOptions.defaultOptions,
+          _i36.AndroidOptions? aOptions,
+          _i36.LinuxOptions? lOptions}) =>
       (super.noSuchMethod(
               Invocation.method(#delete, [], {
                 #key: key,
@@ -841,12 +870,12 @@ class MockFlutterSecureStorage extends _i1.Mock
               }),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
-  _i17.Future<Map<String, String>> readAll(
-          {_i33.IOSOptions? iOptions = _i33.IOSOptions.defaultOptions,
-          _i33.AndroidOptions? aOptions,
-          _i33.LinuxOptions? lOptions}) =>
+  _i19.Future<Map<String, String>> readAll(
+          {_i36.IOSOptions? iOptions = _i36.IOSOptions.defaultOptions,
+          _i36.AndroidOptions? aOptions,
+          _i36.LinuxOptions? lOptions}) =>
       (super.noSuchMethod(
               Invocation.method(#readAll, [], {
                 #iOptions: iOptions,
@@ -855,12 +884,12 @@ class MockFlutterSecureStorage extends _i1.Mock
               }),
               returnValue:
                   Future<Map<String, String>>.value(<String, String>{}))
-          as _i17.Future<Map<String, String>>);
+          as _i19.Future<Map<String, String>>);
   @override
-  _i17.Future<void> deleteAll(
-          {_i33.IOSOptions? iOptions = _i33.IOSOptions.defaultOptions,
-          _i33.AndroidOptions? aOptions,
-          _i33.LinuxOptions? lOptions}) =>
+  _i19.Future<void> deleteAll(
+          {_i36.IOSOptions? iOptions = _i36.IOSOptions.defaultOptions,
+          _i36.AndroidOptions? aOptions,
+          _i36.LinuxOptions? lOptions}) =>
       (super.noSuchMethod(
               Invocation.method(#deleteAll, [], {
                 #iOptions: iOptions,
@@ -869,7 +898,7 @@ class MockFlutterSecureStorage extends _i1.Mock
               }),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
   String toString() => super.toString();
 }
@@ -877,7 +906,7 @@ class MockFlutterSecureStorage extends _i1.Mock
 /// A class which mocks [LayoutService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLayoutService extends _i1.Mock implements _i34.LayoutService {
+class MockLayoutService extends _i1.Mock implements _i37.LayoutService {
   @override
   _i7.BehaviorSubject<bool> get showBottomNavBarSubject =>
       (super.noSuchMethod(Invocation.getter(#showBottomNavBarSubject),
@@ -905,16 +934,16 @@ class MockLayoutService extends _i1.Mock implements _i34.LayoutService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransfersHistoryService extends _i1.Mock
-    implements _i35.TransfersHistoryService {
+    implements _i38.TransfersHistoryService {
   @override
-  Map<_i25.MoneyTransferQueryConfig, List<_i24.MoneyTransfer>>
+  Map<_i27.MoneyTransferQueryConfig, List<_i26.MoneyTransfer>>
       get latestTransfers => (super
               .noSuchMethod(Invocation.getter(#latestTransfers), returnValue: <
-                  _i25.MoneyTransferQueryConfig, List<_i24.MoneyTransfer>>{})
-          as Map<_i25.MoneyTransferQueryConfig, List<_i24.MoneyTransfer>>);
+                  _i27.MoneyTransferQueryConfig, List<_i26.MoneyTransfer>>{})
+          as Map<_i27.MoneyTransferQueryConfig, List<_i26.MoneyTransfer>>);
   @override
   set latestTransfers(
-          Map<_i25.MoneyTransferQueryConfig, List<_i24.MoneyTransfer>>?
+          Map<_i27.MoneyTransferQueryConfig, List<_i26.MoneyTransfer>>?
               _latestTransfers) =>
       super.noSuchMethod(Invocation.setter(#latestTransfers, _latestTransfers),
           returnValueForMissingStub: null);
@@ -923,43 +952,43 @@ class MockTransfersHistoryService extends _i1.Mock
       (super.noSuchMethod(Invocation.getter(#currentUser),
           returnValue: _FakeUser_0()) as _i2.User);
   @override
-  _i17.Stream<List<_i24.MoneyTransfer>> getTransferDataStream(
-          {_i25.MoneyTransferQueryConfig? config}) =>
+  _i19.Stream<List<_i26.MoneyTransfer>> getTransferDataStream(
+          {_i27.MoneyTransferQueryConfig? config}) =>
       (super.noSuchMethod(
               Invocation.method(#getTransferDataStream, [], {#config: config}),
-              returnValue: Stream<List<_i24.MoneyTransfer>>.empty())
-          as _i17.Stream<List<_i24.MoneyTransfer>>);
+              returnValue: Stream<List<_i26.MoneyTransfer>>.empty())
+          as _i19.Stream<List<_i26.MoneyTransfer>>);
   @override
-  List<_i24.MoneyTransfer> getTransfers(
-          {_i25.MoneyTransferQueryConfig? config}) =>
+  List<_i26.MoneyTransfer> getTransfers(
+          {_i27.MoneyTransferQueryConfig? config}) =>
       (super.noSuchMethod(
           Invocation.method(#getTransfers, [], {#config: config}),
-          returnValue: <_i24.MoneyTransfer>[]) as List<_i24.MoneyTransfer>);
+          returnValue: <_i26.MoneyTransfer>[]) as List<_i26.MoneyTransfer>);
   @override
   void addTransferDataListener(
-          {_i25.MoneyTransferQueryConfig? config,
-          _i17.Completer<void>? completer,
+          {_i27.MoneyTransferQueryConfig? config,
+          _i19.Completer<void>? completer,
           void Function()? callback}) =>
       super.noSuchMethod(
           Invocation.method(#addTransferDataListener, [],
               {#config: config, #completer: completer, #callback: callback}),
           returnValueForMissingStub: null);
   @override
-  void pauseTransferDataListener({_i25.MoneyTransferQueryConfig? config}) =>
+  void pauseTransferDataListener({_i27.MoneyTransferQueryConfig? config}) =>
       super.noSuchMethod(
           Invocation.method(#pauseTransferDataListener, [], {#config: config}),
           returnValueForMissingStub: null);
   @override
-  void cancelTransferDataListener({_i25.MoneyTransferQueryConfig? config}) =>
+  void cancelTransferDataListener({_i27.MoneyTransferQueryConfig? config}) =>
       super.noSuchMethod(
           Invocation.method(#cancelTransferDataListener, [], {#config: config}),
           returnValueForMissingStub: null);
   @override
-  List<_i24.MoneyTransfer> getMoneyTransfersWithUniqueSender(
-          List<_i24.MoneyTransfer>? transfer) =>
+  List<_i26.MoneyTransfer> getMoneyTransfersWithUniqueSender(
+          List<_i26.MoneyTransfer>? transfer) =>
       (super.noSuchMethod(
           Invocation.method(#getMoneyTransfersWithUniqueSender, [transfer]),
-          returnValue: <_i24.MoneyTransfer>[]) as List<_i24.MoneyTransfer>);
+          returnValue: <_i26.MoneyTransfer>[]) as List<_i26.MoneyTransfer>);
   @override
   void clearData() => super.noSuchMethod(Invocation.method(#clearData, []),
       returnValueForMissingStub: null);
@@ -971,7 +1000,22 @@ class MockTransfersHistoryService extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGeolocationService extends _i1.Mock
-    implements _i36.GeolocationService {
+    implements _i39.GeolocationService {
+  @override
+  String get trial =>
+      (super.noSuchMethod(Invocation.getter(#trial), returnValue: '')
+          as String);
+  @override
+  set trial(String? _trial) =>
+      super.noSuchMethod(Invocation.setter(#trial, _trial),
+          returnValueForMissingStub: null);
+  @override
+  _i8.NotionClient get notion => (super.noSuchMethod(Invocation.getter(#notion),
+      returnValue: _FakeNotionClient_8()) as _i8.NotionClient);
+  @override
+  _i9.DeviceInfoPlugin get deviceInfo =>
+      (super.noSuchMethod(Invocation.getter(#deviceInfo),
+          returnValue: _FakeDeviceInfoPlugin_9()) as _i9.DeviceInfoPlugin);
   @override
   set currentGPSAccuracy(double? _currentGPSAccuracy) => super.noSuchMethod(
       Invocation.setter(#currentGPSAccuracy, _currentGPSAccuracy),
@@ -981,40 +1025,259 @@ class MockGeolocationService extends _i1.Mock
       super.noSuchMethod(Invocation.setter(#gpsAccuracyInfo, _gpsAccuracyInfo),
           returnValueForMissingStub: null);
   @override
-  void listenToPosition({double? distanceFilter = 30.0}) => super.noSuchMethod(
-      Invocation.method(
-          #listenToPosition, [], {#distanceFilter: distanceFilter}),
-      returnValueForMissingStub: null);
+  List<_i39.PositionEntry> get allPositions =>
+      (super.noSuchMethod(Invocation.getter(#allPositions),
+          returnValue: <_i39.PositionEntry>[]) as List<_i39.PositionEntry>);
   @override
-  _i17.Future<_i8.Position> getAndSetCurrentLocation() =>
-      (super.noSuchMethod(Invocation.method(#getAndSetCurrentLocation, []),
-              returnValue: Future<_i8.Position>.value(_FakePosition_8()))
-          as _i17.Future<_i8.Position>);
+  set allPositions(List<_i39.PositionEntry>? _allPositions) =>
+      super.noSuchMethod(Invocation.setter(#allPositions, _allPositions),
+          returnValueForMissingStub: null);
   @override
-  _i17.Future<dynamic> setUserPosition({dynamic position}) =>
+  String get currentLocationDistanceKey =>
+      (super.noSuchMethod(Invocation.getter(#currentLocationDistanceKey),
+          returnValue: '') as String);
+  @override
+  set currentLocationDistanceKey(String? _currentLocationDistanceKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #currentLocationDistanceKey, _currentLocationDistanceKey),
+          returnValueForMissingStub: null);
+  @override
+  String get liveLocationDistanceKey =>
+      (super.noSuchMethod(Invocation.getter(#liveLocationDistanceKey),
+          returnValue: '') as String);
+  @override
+  set liveLocationDistanceKey(String? _liveLocationDistanceKey) =>
+      super.noSuchMethod(
+          Invocation.setter(#liveLocationDistanceKey, _liveLocationDistanceKey),
+          returnValueForMissingStub: null);
+  @override
+  String get lastKnownLocationDistanceKey =>
+      (super.noSuchMethod(Invocation.getter(#lastKnownLocationDistanceKey),
+          returnValue: '') as String);
+  @override
+  set lastKnownLocationDistanceKey(String? _lastKnownLocationDistanceKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #lastKnownLocationDistanceKey, _lastKnownLocationDistanceKey),
+          returnValueForMissingStub: null);
+  @override
+  String get triggeredByKey =>
+      (super.noSuchMethod(Invocation.getter(#triggeredByKey), returnValue: '')
+          as String);
+  @override
+  set triggeredByKey(String? _triggeredByKey) =>
+      super.noSuchMethod(Invocation.setter(#triggeredByKey, _triggeredByKey),
+          returnValueForMissingStub: null);
+  @override
+  String get currentLocationTimestampKey =>
+      (super.noSuchMethod(Invocation.getter(#currentLocationTimestampKey),
+          returnValue: '') as String);
+  @override
+  set currentLocationTimestampKey(String? _currentLocationTimestampKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #currentLocationTimestampKey, _currentLocationTimestampKey),
+          returnValueForMissingStub: null);
+  @override
+  String get liveLocationTimestampKey =>
+      (super.noSuchMethod(Invocation.getter(#liveLocationTimestampKey),
+          returnValue: '') as String);
+  @override
+  set liveLocationTimestampKey(String? _liveLocationTimestampKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #liveLocationTimestampKey, _liveLocationTimestampKey),
+          returnValueForMissingStub: null);
+  @override
+  String get lastKnownLocationTimestampKey =>
+      (super.noSuchMethod(Invocation.getter(#lastKnownLocationTimestampKey),
+          returnValue: '') as String);
+  @override
+  set lastKnownLocationTimestampKey(String? _lastKnownLocationTimestampKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #lastKnownLocationTimestampKey, _lastKnownLocationTimestampKey),
+          returnValueForMissingStub: null);
+  @override
+  String get currentLocationLatitudeKey =>
+      (super.noSuchMethod(Invocation.getter(#currentLocationLatitudeKey),
+          returnValue: '') as String);
+  @override
+  set currentLocationLatitudeKey(String? _currentLocationLatitudeKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #currentLocationLatitudeKey, _currentLocationLatitudeKey),
+          returnValueForMissingStub: null);
+  @override
+  String get liveLocationLatitudeKey =>
+      (super.noSuchMethod(Invocation.getter(#liveLocationLatitudeKey),
+          returnValue: '') as String);
+  @override
+  set liveLocationLatitudeKey(String? _liveLocationLatitudeKey) =>
+      super.noSuchMethod(
+          Invocation.setter(#liveLocationLatitudeKey, _liveLocationLatitudeKey),
+          returnValueForMissingStub: null);
+  @override
+  String get lastKnownLocationLatitudeKey =>
+      (super.noSuchMethod(Invocation.getter(#lastKnownLocationLatitudeKey),
+          returnValue: '') as String);
+  @override
+  set lastKnownLocationLatitudeKey(String? _lastKnownLocationLatitudeKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #lastKnownLocationLatitudeKey, _lastKnownLocationLatitudeKey),
+          returnValueForMissingStub: null);
+  @override
+  String get currentLocationLongitudeKey =>
+      (super.noSuchMethod(Invocation.getter(#currentLocationLongitudeKey),
+          returnValue: '') as String);
+  @override
+  set currentLocationLongitudeKey(String? _currentLocationLongitudeKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #currentLocationLongitudeKey, _currentLocationLongitudeKey),
+          returnValueForMissingStub: null);
+  @override
+  String get liveLocationLongitudeKey =>
+      (super.noSuchMethod(Invocation.getter(#liveLocationLongitudeKey),
+          returnValue: '') as String);
+  @override
+  set liveLocationLongitudeKey(String? _liveLocationLongitudeKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #liveLocationLongitudeKey, _liveLocationLongitudeKey),
+          returnValueForMissingStub: null);
+  @override
+  String get lastKnownLocationLongitudeKey =>
+      (super.noSuchMethod(Invocation.getter(#lastKnownLocationLongitudeKey),
+          returnValue: '') as String);
+  @override
+  set lastKnownLocationLongitudeKey(String? _lastKnownLocationLongitudeKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #lastKnownLocationLongitudeKey, _lastKnownLocationLongitudeKey),
+          returnValueForMissingStub: null);
+  @override
+  String get currentLocationAccuracyKey =>
+      (super.noSuchMethod(Invocation.getter(#currentLocationAccuracyKey),
+          returnValue: '') as String);
+  @override
+  set currentLocationAccuracyKey(String? _currentLocationAccuracyKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #currentLocationAccuracyKey, _currentLocationAccuracyKey),
+          returnValueForMissingStub: null);
+  @override
+  String get liveLocationAccuracyKey =>
+      (super.noSuchMethod(Invocation.getter(#liveLocationAccuracyKey),
+          returnValue: '') as String);
+  @override
+  set liveLocationAccuracyKey(String? _liveLocationAccuracyKey) =>
+      super.noSuchMethod(
+          Invocation.setter(#liveLocationAccuracyKey, _liveLocationAccuracyKey),
+          returnValueForMissingStub: null);
+  @override
+  String get lastKnownLocationAccuracyKey =>
+      (super.noSuchMethod(Invocation.getter(#lastKnownLocationAccuracyKey),
+          returnValue: '') as String);
+  @override
+  set lastKnownLocationAccuracyKey(String? _lastKnownLocationAccuracyKey) =>
+      super.noSuchMethod(
+          Invocation.setter(
+              #lastKnownLocationAccuracyKey, _lastKnownLocationAccuracyKey),
+          returnValueForMissingStub: null);
+  @override
+  String get trialEntryKey =>
+      (super.noSuchMethod(Invocation.getter(#trialEntryKey), returnValue: '')
+          as String);
+  @override
+  set trialEntryKey(String? _trialEntryKey) =>
+      super.noSuchMethod(Invocation.setter(#trialEntryKey, _trialEntryKey),
+          returnValueForMissingStub: null);
+  @override
+  String get deviceInfoKey =>
+      (super.noSuchMethod(Invocation.getter(#deviceInfoKey), returnValue: '')
+          as String);
+  @override
+  set deviceInfoKey(String? _deviceInfoKey) =>
+      super.noSuchMethod(Invocation.setter(#deviceInfoKey, _deviceInfoKey),
+          returnValueForMissingStub: null);
+  @override
+  bool get isListeningToLocation =>
+      (super.noSuchMethod(Invocation.getter(#isListeningToLocation),
+          returnValue: false) as bool);
+  @override
+  _i19.Future<_i10.Position> get getUserLivePosition =>
+      (super.noSuchMethod(Invocation.getter(#getUserLivePosition),
+              returnValue: Future<_i10.Position>.value(_FakePosition_10()))
+          as _i19.Future<_i10.Position>);
+  @override
+  void listenToPositionAndAddToList({double? distanceFilter = 30.0}) =>
+      super.noSuchMethod(
+          Invocation.method(#listenToPositionAndAddToList, [],
+              {#distanceFilter: distanceFilter}),
+          returnValueForMissingStub: null);
+  @override
+  _i19.Future<void> listenToPosition(
+          {double? distanceFilter = 30.0, void Function()? callback}) =>
+      (super.noSuchMethod(
+              Invocation.method(#listenToPosition, [],
+                  {#distanceFilter: distanceFilter, #callback: callback}),
+              returnValue: Future<void>.value(),
+              returnValueForMissingStub: Future<void>.value())
+          as _i19.Future<void>);
+  @override
+  _i19.Future<_i10.LocationPermission> askForLocationPermission() =>
+      (super.noSuchMethod(Invocation.method(#askForLocationPermission, []),
+              returnValue: Future<_i10.LocationPermission>.value(
+                  _i10.LocationPermission.denied))
+          as _i19.Future<_i10.LocationPermission>);
+  @override
+  void setGPSAccuracyInfo(double? accuracy, [bool? isSuperUser = false]) =>
+      super.noSuchMethod(
+          Invocation.method(#setGPSAccuracyInfo, [accuracy, isSuperUser]),
+          returnValueForMissingStub: null);
+  @override
+  _i19.Future<_i10.Position> getAndSetCurrentLocation(
+          {bool? forceGettingNewPosition = false}) =>
+      (super.noSuchMethod(
+              Invocation.method(#getAndSetCurrentLocation, [],
+                  {#forceGettingNewPosition: forceGettingNewPosition}),
+              returnValue: Future<_i10.Position>.value(_FakePosition_10()))
+          as _i19.Future<_i10.Position>);
+  @override
+  _i19.Future<dynamic> setUserPosition({dynamic position}) =>
       (super.noSuchMethod(
           Invocation.method(#setUserPosition, [], {#position: position}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<bool> checkGeolocationAvailable() =>
+  _i19.Future<bool> checkGeolocationAvailable() =>
       (super.noSuchMethod(Invocation.method(#checkGeolocationAvailable, []),
-          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
   @override
-  _i17.Future<bool> handlePermission() =>
+  _i19.Future<bool> handlePermission() =>
       (super.noSuchMethod(Invocation.method(#handlePermission, []),
-          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
   @override
-  _i17.Future<bool> isUserCloseby({double? lat, double? lon}) =>
+  _i19.Future<bool> isUserCloseby({double? lat, double? lon}) =>
       (super.noSuchMethod(
           Invocation.method(#isUserCloseby, [], {#lat: lat, #lon: lon}),
-          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
   @override
-  _i17.Future<double> distanceBetweenUserAndCoordinates(
+  bool countAsCloseByMarker(
+          {_i10.Position? position, double? lat, double? lon}) =>
+      (super.noSuchMethod(
+          Invocation.method(#countAsCloseByMarker, [],
+              {#position: position, #lat: lat, #lon: lon}),
+          returnValue: false) as bool);
+  @override
+  _i19.Future<double> distanceBetweenUserAndCoordinates(
           {double? lat, double? lon}) =>
       (super.noSuchMethod(
           Invocation.method(
               #distanceBetweenUserAndCoordinates, [], {#lat: lat, #lon: lon}),
-          returnValue: Future<double>.value(0.0)) as _i17.Future<double>);
+          returnValue: Future<double>.value(0.0)) as _i19.Future<double>);
   @override
   double distanceBetween(
           {double? lat1, double? lon1, double? lat2, double? lon2}) =>
@@ -1023,6 +1286,10 @@ class MockGeolocationService extends _i1.Mock
               {#lat1: lat1, #lon1: lon1, #lat2: lat2, #lon2: lon2}),
           returnValue: 0.0) as double);
   @override
+  void printPositionInfo(_i10.Position? position) =>
+      super.noSuchMethod(Invocation.method(#printPositionInfo, [position]),
+          returnValueForMissingStub: null);
+  @override
   void cancelPositionListener() =>
       super.noSuchMethod(Invocation.method(#cancelPositionListener, []),
           returnValueForMissingStub: null);
@@ -1030,36 +1297,71 @@ class MockGeolocationService extends _i1.Mock
   void clearData() => super.noSuchMethod(Invocation.method(#clearData, []),
       returnValueForMissingStub: null);
   @override
+  _i19.Future<dynamic> addPositionEntry(
+          {_i40.LocationRetrievalTrigger? trigger,
+          bool? pushToNotion = false}) =>
+      (super.noSuchMethod(
+          Invocation.method(#addPositionEntry, [],
+              {#trigger: trigger, #pushToNotion: pushToNotion}),
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
+  @override
+  _i19.Future<dynamic> pushAllPositionsToNotion() =>
+      (super.noSuchMethod(Invocation.method(#pushAllPositionsToNotion, []),
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
+  @override
+  Map<String, String> getDistanceToGoal(
+          {_i39.PositionEntry? positionEntry, double? lat, double? lon}) =>
+      (super.noSuchMethod(
+          Invocation.method(#getDistanceToGoal, [],
+              {#positionEntry: positionEntry, #lat: lat, #lon: lon}),
+          returnValue: <String, String>{}) as Map<String, String>);
+  @override
+  _i19.Future<dynamic> pushNotionDatabaseEntry(_i39.PositionEntry? entry) =>
+      (super.noSuchMethod(Invocation.method(#pushNotionDatabaseEntry, [entry]),
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
+  @override
+  String getLastKnownDistancesToGoal() =>
+      (super.noSuchMethod(Invocation.method(#getLastKnownDistancesToGoal, []),
+          returnValue: '') as String);
+  @override
+  String getCurrentDistancesToGoal() =>
+      (super.noSuchMethod(Invocation.method(#getCurrentDistancesToGoal, []),
+          returnValue: '') as String);
+  @override
+  String getLiveDistancesToGoal() =>
+      (super.noSuchMethod(Invocation.method(#getLiveDistancesToGoal, []),
+          returnValue: '') as String);
+  @override
   String toString() => super.toString();
 }
 
 /// A class which mocks [QuestService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockQuestService extends _i1.Mock implements _i37.QuestService {
+class MockQuestService extends _i1.Mock implements _i41.QuestService {
   @override
-  _i7.BehaviorSubject<_i10.ActivatedQuest?> get activatedQuestSubject =>
+  _i7.BehaviorSubject<_i12.ActivatedQuest?> get activatedQuestSubject =>
       (super.noSuchMethod(Invocation.getter(#activatedQuestSubject),
-              returnValue: _FakeBehaviorSubject_7<_i10.ActivatedQuest?>())
-          as _i7.BehaviorSubject<_i10.ActivatedQuest?>);
+              returnValue: _FakeBehaviorSubject_7<_i12.ActivatedQuest?>())
+          as _i7.BehaviorSubject<_i12.ActivatedQuest?>);
   @override
   set activatedQuestSubject(
-          _i7.BehaviorSubject<_i10.ActivatedQuest?>? _activatedQuestSubject) =>
+          _i7.BehaviorSubject<_i12.ActivatedQuest?>? _activatedQuestSubject) =>
       super.noSuchMethod(
           Invocation.setter(#activatedQuestSubject, _activatedQuestSubject),
           returnValueForMissingStub: null);
   @override
-  List<_i10.ActivatedQuest> get activatedQuestsHistory =>
+  List<_i12.ActivatedQuest> get activatedQuestsHistory =>
       (super.noSuchMethod(Invocation.getter(#activatedQuestsHistory),
-          returnValue: <_i10.ActivatedQuest>[]) as List<_i10.ActivatedQuest>);
+          returnValue: <_i12.ActivatedQuest>[]) as List<_i12.ActivatedQuest>);
   @override
   set activatedQuestsHistory(
-          List<_i10.ActivatedQuest>? _activatedQuestsHistory) =>
+          List<_i12.ActivatedQuest>? _activatedQuestsHistory) =>
       super.noSuchMethod(
           Invocation.setter(#activatedQuestsHistory, _activatedQuestsHistory),
           returnValueForMissingStub: null);
   @override
-  set previouslyFinishedQuest(_i10.ActivatedQuest? _previouslyFinishedQuest) =>
+  set previouslyFinishedQuest(_i12.ActivatedQuest? _previouslyFinishedQuest) =>
       super.noSuchMethod(
           Invocation.setter(#previouslyFinishedQuest, _previouslyFinishedQuest),
           returnValueForMissingStub: null);
@@ -1088,17 +1390,17 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
       Invocation.setter(#sortedNearbyQuests, _sortedNearbyQuests),
       returnValueForMissingStub: null);
   @override
-  List<_i38.QuestType> get allQuestTypes =>
+  List<_i42.QuestType> get allQuestTypes =>
       (super.noSuchMethod(Invocation.getter(#allQuestTypes),
-          returnValue: <_i38.QuestType>[]) as List<_i38.QuestType>);
+          returnValue: <_i42.QuestType>[]) as List<_i42.QuestType>);
   @override
-  set allQuestTypes(List<_i38.QuestType>? _allQuestTypes) =>
+  set allQuestTypes(List<_i42.QuestType>? _allQuestTypes) =>
       super.noSuchMethod(Invocation.setter(#allQuestTypes, _allQuestTypes),
           returnValueForMissingStub: null);
   @override
-  List<_i22.Quest> get getNearByQuest =>
+  List<_i24.Quest> get getNearByQuest =>
       (super.noSuchMethod(Invocation.getter(#getNearByQuest),
-          returnValue: <_i22.Quest>[]) as List<_i22.Quest>);
+          returnValue: <_i24.Quest>[]) as List<_i24.Quest>);
   @override
   bool get hasActiveQuest => (super
           .noSuchMethod(Invocation.getter(#hasActiveQuest), returnValue: false)
@@ -1116,97 +1418,97 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
       (super.noSuchMethod(Invocation.getter(#timeElapsed), returnValue: 0)
           as int);
   @override
-  void setQuestToUpdate({_i22.Quest? quest}) => super.noSuchMethod(
+  void setQuestToUpdate({_i24.Quest? quest}) => super.noSuchMethod(
       Invocation.method(#setQuestToUpdate, [], {#quest: quest}),
       returnValueForMissingStub: null);
   @override
-  void setStartedQuest(_i22.Quest? quest) =>
+  void setStartedQuest(_i24.Quest? quest) =>
       super.noSuchMethod(Invocation.method(#setStartedQuest, [quest]),
           returnValueForMissingStub: null);
   @override
-  _i17.Future<dynamic> startQuest(
-          {_i22.Quest? quest,
+  _i19.Future<dynamic> startQuest(
+          {_i24.Quest? quest,
           List<String>? uids,
-          _i17.Future<dynamic> Function(int)? periodicFuncFromViewModel}) =>
+          _i19.Future<dynamic> Function(int)? periodicFuncFromViewModel}) =>
       (super.noSuchMethod(
           Invocation.method(#startQuest, [], {
             #quest: quest,
             #uids: uids,
             #periodicFuncFromViewModel: periodicFuncFromViewModel
           }),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> handleSuccessfullyFinishedQuest() => (super.noSuchMethod(
+  _i19.Future<dynamic> handleSuccessfullyFinishedQuest() => (super.noSuchMethod(
       Invocation.method(#handleSuccessfullyFinishedQuest, []),
-      returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+      returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> evaluateFinishedQuest() =>
+  _i19.Future<dynamic> evaluateFinishedQuest() =>
       (super.noSuchMethod(Invocation.method(#evaluateFinishedQuest, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> collectCredits() =>
+  _i19.Future<dynamic> collectCredits() =>
       (super.noSuchMethod(Invocation.method(#collectCredits, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> uploadAndCleanUpFinishedQuest() =>
+  _i19.Future<dynamic> uploadAndCleanUpFinishedQuest() =>
       (super.noSuchMethod(Invocation.method(#uploadAndCleanUpFinishedQuest, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> evaluateAndFinishQuest({bool? force = false}) =>
+  _i19.Future<dynamic> evaluateAndFinishQuest({bool? force = false}) =>
       (super.noSuchMethod(
           Invocation.method(#evaluateAndFinishQuest, [], {#force: force}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> continueIncompleteQuest() =>
+  _i19.Future<dynamic> continueIncompleteQuest() =>
       (super.noSuchMethod(Invocation.method(#continueIncompleteQuest, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> cancelIncompleteQuest() =>
+  _i19.Future<dynamic> cancelIncompleteQuest() =>
       (super.noSuchMethod(Invocation.method(#cancelIncompleteQuest, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   void evaluateQuestAndSetStatus() =>
       super.noSuchMethod(Invocation.method(#evaluateQuestAndSetStatus, []),
           returnValueForMissingStub: null);
   @override
-  void setAndPushActiveQuestStatus(_i39.QuestStatus? status) => super
+  void setAndPushActiveQuestStatus(_i43.QuestStatus? status) => super
       .noSuchMethod(Invocation.method(#setAndPushActiveQuestStatus, [status]),
           returnValueForMissingStub: null);
   @override
-  _i17.Future<dynamic> trackTime(int? seconds) =>
+  _i19.Future<dynamic> trackTime(int? seconds) =>
       (super.noSuchMethod(Invocation.method(#trackTime, [seconds]),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<void> updateQuestData({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i19.Future<void> updateQuestData({_i24.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#updateQuestData, [], {#quest: quest}),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i19.Future<void>);
   @override
-  _i17.Future<List<_i11.AFKMarker?>?> getMarkers() =>
+  _i19.Future<List<_i13.AFKMarker?>?> getMarkers() =>
       (super.noSuchMethod(Invocation.method(#getMarkers, []),
-              returnValue: Future<List<_i11.AFKMarker?>?>.value())
-          as _i17.Future<List<_i11.AFKMarker?>?>);
+              returnValue: Future<List<_i13.AFKMarker?>?>.value())
+          as _i19.Future<List<_i13.AFKMarker?>?>);
   @override
-  _i17.Future<dynamic> trackData(int? seconds, {bool? forceNoPush = false}) =>
+  _i19.Future<dynamic> trackData(int? seconds, {bool? forceNoPush = false}) =>
       (super.noSuchMethod(
           Invocation.method(#trackData, [seconds], {#forceNoPush: forceNoPush}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> trackDataVibrationSearch(int? seconds) => (super
+  _i19.Future<dynamic> trackDataVibrationSearch(int? seconds) => (super
       .noSuchMethod(Invocation.method(#trackDataVibrationSearch, [seconds]),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<void> removeQuest({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i19.Future<void> removeQuest({_i24.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#removeQuest, [], {#quest: quest}),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i19.Future<void>);
   @override
-  _i17.Future<dynamic> trackDataDistanceEstimate(int? seconds,
+  _i19.Future<dynamic> trackDataDistanceEstimate(int? seconds,
           {bool? forceNoPush = false}) =>
       (super.noSuchMethod(
           Invocation.method(#trackDataDistanceEstimate, [seconds],
               {#forceNoPush: forceNoPush}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   void setTrackingDeadTime(bool? deadTime) =>
       super.noSuchMethod(Invocation.method(#setTrackingDeadTime, [deadTime]),
@@ -1216,70 +1518,70 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
       super.noSuchMethod(Invocation.method(#setUIDeadTime, [deadTime]),
           returnValueForMissingStub: null);
   @override
-  void updateCollectedMarkers({_i11.AFKMarker? marker}) => super.noSuchMethod(
+  void updateCollectedMarkers({_i13.AFKMarker? marker}) => super.noSuchMethod(
       Invocation.method(#updateCollectedMarkers, [], {#marker: marker}),
       returnValueForMissingStub: null);
   @override
-  bool isMarkerCollected({_i11.AFKMarker? marker}) => (super.noSuchMethod(
+  bool isMarkerCollected({_i13.AFKMarker? marker}) => (super.noSuchMethod(
       Invocation.method(#isMarkerCollected, [], {#marker: marker}),
       returnValue: false) as bool);
   @override
-  _i17.Future<_i9.MarkerAnalysisResult> analyzeMarker(
-          {_i11.AFKMarker? marker, bool? locationVerification = true}) =>
+  _i19.Future<_i11.MarkerAnalysisResult> analyzeMarker(
+          {_i13.AFKMarker? marker, bool? locationVerification = true}) =>
       (super.noSuchMethod(
               Invocation.method(#analyzeMarker, [], {
                 #marker: marker,
                 #locationVerification: locationVerification
               }),
-              returnValue: Future<_i9.MarkerAnalysisResult>.value(
-                  _FakeMarkerAnalysisResult_9()))
-          as _i17.Future<_i9.MarkerAnalysisResult>);
+              returnValue: Future<_i11.MarkerAnalysisResult>.value(
+                  _FakeMarkerAnalysisResult_11()))
+          as _i19.Future<_i11.MarkerAnalysisResult>);
   @override
-  _i17.Future<_i11.AFKMarker?> getMarkerFromQrCodeId({String? qrCodeId}) =>
+  _i19.Future<_i13.AFKMarker?> getMarkerFromQrCodeId({String? qrCodeId}) =>
       (super.noSuchMethod(
           Invocation.method(#getMarkerFromQrCodeId, [], {#qrCodeId: qrCodeId}),
           returnValue:
-              Future<_i11.AFKMarker?>.value()) as _i17.Future<_i11.AFKMarker?>);
+              Future<_i13.AFKMarker?>.value()) as _i19.Future<_i13.AFKMarker?>);
   @override
-  _i17.Future<void>? setupPastQuestsListener(
-          {_i17.Completer<void>? completer,
+  _i19.Future<void>? setupPastQuestsListener(
+          {_i19.Completer<void>? completer,
           String? uid,
           void Function()? callback}) =>
       (super.noSuchMethod(
               Invocation.method(#setupPastQuestsListener, [],
                   {#completer: completer, #uid: uid, #callback: callback}),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>?);
+          as _i19.Future<void>?);
   @override
-  _i17.Future<dynamic> loadNearbyQuests({bool? force = false}) => (super
+  _i19.Future<dynamic> loadNearbyQuests({bool? force = false}) => (super
       .noSuchMethod(Invocation.method(#loadNearbyQuests, [], {#force: force}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> getQuestsOfType({_i38.QuestType? questType}) =>
+  _i19.Future<dynamic> getQuestsOfType({_i42.QuestType? questType}) =>
       (super.noSuchMethod(
           Invocation.method(#getQuestsOfType, [], {#questType: questType}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  List<_i22.Quest> extractQuestsOfType(
-          {List<_i22.Quest>? quests, _i38.QuestType? questType}) =>
+  List<_i24.Quest> extractQuestsOfType(
+          {List<_i24.Quest>? quests, _i42.QuestType? questType}) =>
       (super.noSuchMethod(
           Invocation.method(#extractQuestsOfType, [],
               {#quests: quests, #questType: questType}),
-          returnValue: <_i22.Quest>[]) as List<_i22.Quest>);
+          returnValue: <_i24.Quest>[]) as List<_i24.Quest>);
   @override
   void extractAllQuestTypes() =>
       super.noSuchMethod(Invocation.method(#extractAllQuestTypes, []),
           returnValueForMissingStub: null);
   @override
-  _i40.QuestUIStyle getQuestUIStyle({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i44.QuestUIStyle getQuestUIStyle({_i24.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#getQuestUIStyle, [], {#quest: quest}),
-      returnValue: _i40.QuestUIStyle.standalone) as _i40.QuestUIStyle);
+      returnValue: _i44.QuestUIStyle.standalone) as _i44.QuestUIStyle);
   @override
-  _i17.Future<dynamic> sortNearbyQuests() =>
+  _i19.Future<dynamic> sortNearbyQuests() =>
       (super.noSuchMethod(Invocation.method(#sortNearbyQuests, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  void pushActivatedQuest(_i10.ActivatedQuest? quest) =>
+  void pushActivatedQuest(_i12.ActivatedQuest? quest) =>
       super.noSuchMethod(Invocation.method(#pushActivatedQuest, [quest]),
           returnValueForMissingStub: null);
   @override
@@ -1287,26 +1589,30 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
       super.noSuchMethod(Invocation.method(#removeActivatedQuest, []),
           returnValueForMissingStub: null);
   @override
-  bool isMarkerInQuest({_i11.AFKMarker? marker}) => (super.noSuchMethod(
+  bool isMarkerInQuest({_i13.AFKMarker? marker}) => (super.noSuchMethod(
       Invocation.method(#isMarkerInQuest, [], {#marker: marker}),
       returnValue: false) as bool);
   @override
-  _i17.Future<dynamic> getQuest({String? questId}) =>
+  _i19.Future<dynamic> getQuest({String? questId}) =>
       (super.noSuchMethod(Invocation.method(#getQuest, [], {#questId: questId}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<List<_i22.Quest>> downloadNearbyQuests() =>
+  _i19.Future<bool?> createQuest({_i24.Quest? quest}) =>
+      (super.noSuchMethod(Invocation.method(#createQuest, [], {#quest: quest}),
+          returnValue: Future<bool?>.value()) as _i19.Future<bool?>);
+  @override
+  _i19.Future<List<_i24.Quest>> downloadNearbyQuests() =>
       (super.noSuchMethod(Invocation.method(#downloadNearbyQuests, []),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i24.Quest>>.value(<_i24.Quest>[]))
+          as _i19.Future<List<_i24.Quest>>);
   @override
-  _i17.Future<List<_i22.Quest>> getQuestsWithStartMarkerId(
+  _i19.Future<List<_i24.Quest>> getQuestsWithStartMarkerId(
           {String? markerId}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getQuestsWithStartMarkerId, [], {#markerId: markerId}),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i24.Quest>>.value(<_i24.Quest>[]))
+          as _i19.Future<List<_i24.Quest>>);
   @override
   void updateTimeElapsed(int? seconds) =>
       super.noSuchMethod(Invocation.method(#updateTimeElapsed, [seconds]),
@@ -1328,14 +1634,14 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
       super.noSuchMethod(Invocation.method(#updateTime, [seconds]),
           returnValueForMissingStub: null);
   @override
-  _i10.ActivatedQuest updateTimeOnQuest(
-          _i10.ActivatedQuest? activatedQuest, int? seconds) =>
+  _i12.ActivatedQuest updateTimeOnQuest(
+          _i12.ActivatedQuest? activatedQuest, int? seconds) =>
       (super.noSuchMethod(
           Invocation.method(#updateTimeOnQuest, [activatedQuest, seconds]),
-          returnValue: _FakeActivatedQuest_10()) as _i10.ActivatedQuest);
+          returnValue: _FakeActivatedQuest_12()) as _i12.ActivatedQuest);
   @override
-  _i10.ActivatedQuest updateDistanceOnQuest(
-          {_i10.ActivatedQuest? activatedQuest,
+  _i12.ActivatedQuest updateDistanceOnQuest(
+          {_i12.ActivatedQuest? activatedQuest,
           double? newDistance,
           double? newLat,
           double? newLon}) =>
@@ -1346,10 +1652,10 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
             #newLat: newLat,
             #newLon: newLon
           }),
-          returnValue: _FakeActivatedQuest_10()) as _i10.ActivatedQuest);
+          returnValue: _FakeActivatedQuest_12()) as _i12.ActivatedQuest);
   @override
-  _i10.ActivatedQuest updateLatLonOnQuest(
-          {_i10.ActivatedQuest? activatedQuest,
+  _i12.ActivatedQuest updateLatLonOnQuest(
+          {_i12.ActivatedQuest? activatedQuest,
           double? newLat,
           double? newLon}) =>
       (super.noSuchMethod(
@@ -1358,7 +1664,7 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
             #newLat: newLat,
             #newLon: newLon
           }),
-          returnValue: _FakeActivatedQuest_10()) as _i10.ActivatedQuest);
+          returnValue: _FakeActivatedQuest_12()) as _i12.ActivatedQuest);
   @override
   void disposeActivatedQuest() =>
       super.noSuchMethod(Invocation.method(#disposeActivatedQuest, []),
@@ -1390,7 +1696,7 @@ class MockQuestService extends _i1.Mock implements _i37.QuestService {
 /// A class which mocks [StopWatchService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStopWatchService extends _i1.Mock implements _i41.StopWatchService {
+class MockStopWatchService extends _i1.Mock implements _i45.StopWatchService {
   @override
   bool get flag =>
       (super.noSuchMethod(Invocation.getter(#flag), returnValue: false)
@@ -1399,7 +1705,7 @@ class MockStopWatchService extends _i1.Mock implements _i41.StopWatchService {
   set flag(bool? _flag) => super.noSuchMethod(Invocation.setter(#flag, _flag),
       returnValueForMissingStub: null);
   @override
-  set timerStream(_i17.Stream<int>? _timerStream) =>
+  set timerStream(_i19.Stream<int>? _timerStream) =>
       super.noSuchMethod(Invocation.setter(#timerStream, _timerStream),
           returnValueForMissingStub: null);
   @override
@@ -1428,7 +1734,7 @@ class MockStopWatchService extends _i1.Mock implements _i41.StopWatchService {
       (super.noSuchMethod(Invocation.method(#getSecondTime, []), returnValue: 0)
           as int);
   @override
-  void listenToSecondTime({_i17.Future<dynamic> Function(int)? callback}) =>
+  void listenToSecondTime({_i19.Future<dynamic> Function(int)? callback}) =>
       super.noSuchMethod(
           Invocation.method(#listenToSecondTime, [], {#callback: callback}),
           returnValueForMissingStub: null);
@@ -1445,12 +1751,12 @@ class MockStopWatchService extends _i1.Mock implements _i41.StopWatchService {
       super.noSuchMethod(Invocation.method(#resumeListener, []),
           returnValueForMissingStub: null);
   @override
-  _i17.Stream<int> stopWatchStream() =>
+  _i19.Stream<int> stopWatchStream() =>
       (super.noSuchMethod(Invocation.method(#stopWatchStream, []),
-          returnValue: Stream<int>.empty()) as _i17.Stream<int>);
+          returnValue: Stream<int>.empty()) as _i19.Stream<int>);
   @override
   void setTimerStreamSubscription(
-          {_i17.StreamSubscription<int>? timerSubscription}) =>
+          {_i19.StreamSubscription<int>? timerSubscription}) =>
       super.noSuchMethod(
           Invocation.method(#setTimerStreamSubscription, [],
               {#timerSubscription: timerSubscription}),
@@ -1470,33 +1776,33 @@ class MockStopWatchService extends _i1.Mock implements _i41.StopWatchService {
 /// A class which mocks [MarkerService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMarkerService extends _i1.Mock implements _i42.MarkerService {
+class MockMarkerService extends _i1.Mock implements _i46.MarkerService {
   @override
-  List<_i11.AFKMarker> get getSetMarkers =>
+  List<_i13.AFKMarker> get getSetMarkers =>
       (super.noSuchMethod(Invocation.getter(#getSetMarkers),
-          returnValue: <_i11.AFKMarker>[]) as List<_i11.AFKMarker>);
+          returnValue: <_i13.AFKMarker>[]) as List<_i13.AFKMarker>);
   @override
-  _i17.Future<bool> isUserCloseby({_i11.AFKMarker? marker}) => (super
+  _i19.Future<bool> isUserCloseby({_i13.AFKMarker? marker}) => (super
       .noSuchMethod(Invocation.method(#isUserCloseby, [], {#marker: marker}),
-          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
   @override
-  _i17.Future<void> addMarkers({_i11.AFKMarker? markers}) => (super
+  _i19.Future<void> addMarkers({_i13.AFKMarker? markers}) => (super
           .noSuchMethod(Invocation.method(#addMarkers, [], {#markers: markers}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-      as _i17.Future<void>);
+      as _i19.Future<void>);
   @override
-  _i17.Future<List<_i11.AFKMarker?>?> getQuestMarkers() =>
+  _i19.Future<List<_i13.AFKMarker?>?> getQuestMarkers() =>
       (super.noSuchMethod(Invocation.method(#getQuestMarkers, []),
-              returnValue: Future<List<_i11.AFKMarker?>?>.value())
-          as _i17.Future<List<_i11.AFKMarker?>?>);
+              returnValue: Future<List<_i13.AFKMarker?>?>.value())
+          as _i19.Future<List<_i13.AFKMarker?>?>);
   @override
-  _i17.Future<void> setQuestMarkers({List<_i11.AFKMarker>? markers}) =>
+  _i19.Future<void> setQuestMarkers({List<_i13.AFKMarker>? markers}) =>
       (super.noSuchMethod(
               Invocation.method(#setQuestMarkers, [], {#markers: markers}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>);
+          as _i19.Future<void>);
   @override
   String toString() => super.toString();
 }
@@ -1504,15 +1810,15 @@ class MockMarkerService extends _i1.Mock implements _i42.MarkerService {
 /// A class which mocks [QRCodeService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockQRCodeService extends _i1.Mock implements _i43.QRCodeService {
+class MockQRCodeService extends _i1.Mock implements _i47.QRCodeService {
   @override
-  _i11.AFKMarker getMarkerFromQrCodeString({String? qrCodeString}) =>
+  _i13.AFKMarker getMarkerFromQrCodeString({String? qrCodeString}) =>
       (super.noSuchMethod(
           Invocation.method(
               #getMarkerFromQrCodeString, [], {#qrCodeString: qrCodeString}),
-          returnValue: _FakeAFKMarker_11()) as _i11.AFKMarker);
+          returnValue: _FakeAFKMarker_13()) as _i13.AFKMarker);
   @override
-  String getQrCodeStringFromMarker({_i11.AFKMarker? marker}) =>
+  String getQrCodeStringFromMarker({_i13.AFKMarker? marker}) =>
       (super.noSuchMethod(
           Invocation.method(#getQrCodeStringFromMarker, [], {#marker: marker}),
           returnValue: '') as String);
@@ -1523,73 +1829,87 @@ class MockQRCodeService extends _i1.Mock implements _i43.QRCodeService {
 /// A class which mocks [GiftCardService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGiftCardService extends _i1.Mock implements _i44.GiftCardService {
+class MockGiftCardService extends _i1.Mock implements _i48.GiftCardService {
   @override
-  Map<String, List<_i26.GiftCardCategory>> get giftCardCategories =>
+  Map<String, List<_i28.GiftCardCategory>> get giftCardCategories =>
       (super.noSuchMethod(Invocation.getter(#giftCardCategories),
-              returnValue: <String, List<_i26.GiftCardCategory>>{})
-          as Map<String, List<_i26.GiftCardCategory>>);
+              returnValue: <String, List<_i28.GiftCardCategory>>{})
+          as Map<String, List<_i28.GiftCardCategory>>);
   @override
   set giftCardCategories(
-          Map<String, List<_i26.GiftCardCategory>>? _giftCardCategories) =>
+          Map<String, List<_i28.GiftCardCategory>>? _giftCardCategories) =>
       super.noSuchMethod(
           Invocation.setter(#giftCardCategories, _giftCardCategories),
           returnValueForMissingStub: null);
   @override
-  List<_i27.GiftCardPurchase> get purchasedGiftCards => (super.noSuchMethod(
+  List<_i29.GiftCardPurchase> get purchasedGiftCards => (super.noSuchMethod(
       Invocation.getter(#purchasedGiftCards),
-      returnValue: <_i27.GiftCardPurchase>[]) as List<_i27.GiftCardPurchase>);
+      returnValue: <_i29.GiftCardPurchase>[]) as List<_i29.GiftCardPurchase>);
   @override
-  set purchasedGiftCards(List<_i27.GiftCardPurchase>? _purchasedGiftCards) =>
+  set purchasedGiftCards(List<_i29.GiftCardPurchase>? _purchasedGiftCards) =>
       super.noSuchMethod(
           Invocation.setter(#purchasedGiftCards, _purchasedGiftCards),
           returnValueForMissingStub: null);
   @override
-  List<_i26.GiftCardCategory> getGiftCards({String? categoryName}) => (super
+  List<_i28.GiftCardCategory> getGiftCards({String? categoryName}) => (super
       .noSuchMethod(
           Invocation.method(#getGiftCards, [], {#categoryName: categoryName}),
-          returnValue: <_i26.GiftCardCategory>[]) as List<
-      _i26.GiftCardCategory>);
+          returnValue: <_i28.GiftCardCategory>[]) as List<
+      _i28.GiftCardCategory>);
   @override
-  _i17.Future<dynamic> fetchGiftCards({String? categoryName}) =>
+  _i19.Future<dynamic> fetchGiftCards({String? categoryName}) =>
       (super.noSuchMethod(
           Invocation.method(#fetchGiftCards, [], {#categoryName: categoryName}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> fetchAllGiftCards() =>
+  _i19.Future<bool> addGiftCardCategory(
+          {_i28.GiftCardCategory? giftCardCategory}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #addGiftCardCategory, [], {#giftCardCategory: giftCardCategory}),
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
+  @override
+  _i19.Future<bool> insertPrePurchasedGiftCardCategory(
+          {_i30.PrePurchasedGiftCard? prePurchasedGiftCard}) =>
+      (super.noSuchMethod(
+          Invocation.method(#insertPrePurchasedGiftCardCategory, [],
+              {#prePurchasedGiftCard: prePurchasedGiftCard}),
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
+  @override
+  _i19.Future<dynamic> fetchAllGiftCards() =>
       (super.noSuchMethod(Invocation.method(#fetchAllGiftCards, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<void>? setupPurchasedGiftCardsListener(
-          {_i17.Completer<void>? completer,
+  _i19.Future<void>? setupPurchasedGiftCardsListener(
+          {_i19.Completer<void>? completer,
           String? uid,
           void Function()? callback}) =>
       (super.noSuchMethod(
               Invocation.method(#setupPurchasedGiftCardsListener, [],
                   {#completer: completer, #uid: uid, #callback: callback}),
               returnValueForMissingStub: Future<void>.value())
-          as _i17.Future<void>?);
+          as _i19.Future<void>?);
   @override
   List<String> getUniqueCategoryNames(
-          {List<_i26.GiftCardCategory>? listOfGiftCardCategories}) =>
+          {List<_i28.GiftCardCategory>? listOfGiftCardCategories}) =>
       (super.noSuchMethod(
           Invocation.method(#getUniqueCategoryNames, [],
               {#listOfGiftCardCategories: listOfGiftCardCategories}),
           returnValue: <String>[]) as List<String>);
   @override
-  _i17.Future<dynamic> switchRedeemStatus(
-          {_i27.GiftCardPurchase? giftCardPurchase, String? uid}) =>
+  _i19.Future<dynamic> switchRedeemStatus(
+          {_i29.GiftCardPurchase? giftCardPurchase, String? uid}) =>
       (super.noSuchMethod(
           Invocation.method(#switchRedeemStatus, [],
               {#giftCardPurchase: giftCardPurchase, #uid: uid}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> purchaseGiftCard(
-          {_i27.GiftCardPurchase? giftCardPurchase}) =>
+  _i19.Future<dynamic> purchaseGiftCard(
+          {_i29.GiftCardPurchase? giftCardPurchase}) =>
       (super.noSuchMethod(
           Invocation.method(
               #purchaseGiftCard, [], {#giftCardPurchase: giftCardPurchase}),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   void clearData() => super.noSuchMethod(Invocation.method(#clearData, []),
       returnValueForMissingStub: null);
@@ -1604,7 +1924,7 @@ class MockGiftCardService extends _i1.Mock implements _i44.GiftCardService {
 /// A class which mocks [NavigationService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
+class MockNavigationService extends _i1.Mock implements _i49.NavigationService {
   @override
   String get previousRoute =>
       (super.noSuchMethod(Invocation.getter(#previousRoute), returnValue: '')
@@ -1614,9 +1934,9 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
       (super.noSuchMethod(Invocation.getter(#currentRoute), returnValue: '')
           as String);
   @override
-  _i46.GlobalKey<_i46.NavigatorState>? nestedNavigationKey(int? index) =>
+  _i50.GlobalKey<_i50.NavigatorState>? nestedNavigationKey(int? index) =>
       (super.noSuchMethod(Invocation.method(#nestedNavigationKey, [index]))
-          as _i46.GlobalKey<_i46.NavigatorState>?);
+          as _i50.GlobalKey<_i50.NavigatorState>?);
   @override
   void config(
           {bool? enableLog,
@@ -1636,17 +1956,17 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
           }),
           returnValueForMissingStub: null);
   @override
-  _i17.Future<T?>? navigateWithTransition<T>(_i46.Widget? page,
+  _i19.Future<T?>? navigateWithTransition<T>(_i50.Widget? page,
           {bool? opaque,
           String? transition = r'',
           Duration? duration,
           bool? popGesture,
           int? id,
-          _i46.Curve? curve,
-          _i45.Bindings? binding,
+          _i50.Curve? curve,
+          _i51.Bindings? binding,
           bool? fullscreenDialog = false,
           bool? preventDuplicates = true,
-          _i45.Transition? transitionClass}) =>
+          _i51.Transition? transitionClass}) =>
       (super.noSuchMethod(Invocation.method(#navigateWithTransition, [
         page
       ], {
@@ -1660,19 +1980,19 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
         #fullscreenDialog: fullscreenDialog,
         #preventDuplicates: preventDuplicates,
         #transitionClass: transitionClass
-      })) as _i17.Future<T?>?);
+      })) as _i19.Future<T?>?);
   @override
-  _i17.Future<T?>? replaceWithTransition<T>(_i46.Widget? page,
+  _i19.Future<T?>? replaceWithTransition<T>(_i50.Widget? page,
           {bool? opaque,
           String? transition = r'',
           Duration? duration,
           bool? popGesture,
           int? id,
-          _i46.Curve? curve,
-          _i45.Bindings? binding,
+          _i50.Curve? curve,
+          _i51.Bindings? binding,
           bool? fullscreenDialog = false,
           bool? preventDuplicates = true,
-          _i45.Transition? transitionClass}) =>
+          _i51.Transition? transitionClass}) =>
       (super.noSuchMethod(Invocation.method(#replaceWithTransition, [
         page
       ], {
@@ -1686,13 +2006,13 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
         #fullscreenDialog: fullscreenDialog,
         #preventDuplicates: preventDuplicates,
         #transitionClass: transitionClass
-      })) as _i17.Future<T?>?);
+      })) as _i19.Future<T?>?);
   @override
   bool back<T>({T? result, int? id}) => (super.noSuchMethod(
       Invocation.method(#back, [], {#result: result, #id: id}),
       returnValue: false) as bool);
   @override
-  void popUntil(_i46.RoutePredicate? predicate) =>
+  void popUntil(_i50.RoutePredicate? predicate) =>
       super.noSuchMethod(Invocation.method(#popUntil, [predicate]),
           returnValueForMissingStub: null);
   @override
@@ -1700,7 +2020,7 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
       super.noSuchMethod(Invocation.method(#popRepeated, [popTimes]),
           returnValueForMissingStub: null);
   @override
-  _i17.Future<T?>? navigateTo<T>(String? routeName,
+  _i19.Future<T?>? navigateTo<T>(String? routeName,
           {dynamic arguments,
           int? id,
           bool? preventDuplicates = true,
@@ -1712,19 +2032,19 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
         #id: id,
         #preventDuplicates: preventDuplicates,
         #parameters: parameters
-      })) as _i17.Future<T?>?);
+      })) as _i19.Future<T?>?);
   @override
-  _i17.Future<T?>? navigateToView<T>(_i46.Widget? view,
+  _i19.Future<T?>? navigateToView<T>(_i50.Widget? view,
           {dynamic arguments,
           int? id,
           bool? opaque,
-          _i46.Curve? curve,
-          _i45.Bindings? binding,
+          _i50.Curve? curve,
+          _i51.Bindings? binding,
           Duration? duration,
           bool? fullscreenDialog = false,
           bool? popGesture,
           bool? preventDuplicates = true,
-          _i45.Transition? transition}) =>
+          _i51.Transition? transition}) =>
       (super.noSuchMethod(Invocation.method(#navigateToView, [
         view
       ], {
@@ -1738,9 +2058,9 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
         #popGesture: popGesture,
         #preventDuplicates: preventDuplicates,
         #transition: transition
-      })) as _i17.Future<T?>?);
+      })) as _i19.Future<T?>?);
   @override
-  _i17.Future<T?>? replaceWith<T>(String? routeName,
+  _i19.Future<T?>? replaceWith<T>(String? routeName,
           {dynamic arguments,
           int? id,
           bool? preventDuplicates = true,
@@ -1752,9 +2072,9 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
         #id: id,
         #preventDuplicates: preventDuplicates,
         #parameters: parameters
-      })) as _i17.Future<T?>?);
+      })) as _i19.Future<T?>?);
   @override
-  _i17.Future<T?>? clearStackAndShow<T>(String? routeName,
+  _i19.Future<T?>? clearStackAndShow<T>(String? routeName,
           {dynamic arguments, int? id, Map<String, String>? parameters}) =>
       (super.noSuchMethod(Invocation.method(#clearStackAndShow, [
         routeName
@@ -1762,9 +2082,9 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
         #arguments: arguments,
         #id: id,
         #parameters: parameters
-      })) as _i17.Future<T?>?);
+      })) as _i19.Future<T?>?);
   @override
-  _i17.Future<T?>? clearTillFirstAndShow<T>(String? routeName,
+  _i19.Future<T?>? clearTillFirstAndShow<T>(String? routeName,
           {dynamic arguments,
           int? id,
           bool? preventDuplicates = true,
@@ -1776,22 +2096,22 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
         #id: id,
         #preventDuplicates: preventDuplicates,
         #parameters: parameters
-      })) as _i17.Future<T?>?);
+      })) as _i19.Future<T?>?);
   @override
-  _i17.Future<T?>? clearTillFirstAndShowView<T>(_i46.Widget? view,
+  _i19.Future<T?>? clearTillFirstAndShowView<T>(_i50.Widget? view,
           {dynamic arguments, int? id}) =>
       (super.noSuchMethod(Invocation.method(#clearTillFirstAndShowView, [view],
-          {#arguments: arguments, #id: id})) as _i17.Future<T?>?);
+          {#arguments: arguments, #id: id})) as _i19.Future<T?>?);
   @override
-  _i17.Future<T?>? pushNamedAndRemoveUntil<T>(String? routeName,
-          {_i46.RoutePredicate? predicate, dynamic arguments, int? id}) =>
+  _i19.Future<T?>? pushNamedAndRemoveUntil<T>(String? routeName,
+          {_i50.RoutePredicate? predicate, dynamic arguments, int? id}) =>
       (super.noSuchMethod(Invocation.method(#pushNamedAndRemoveUntil, [
         routeName
       ], {
         #predicate: predicate,
         #arguments: arguments,
         #id: id
-      })) as _i17.Future<T?>?);
+      })) as _i19.Future<T?>?);
   @override
   String toString() => super.toString();
 }
@@ -1799,14 +2119,14 @@ class MockNavigationService extends _i1.Mock implements _i45.NavigationService {
 /// A class which mocks [SnackbarService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSnackbarService extends _i1.Mock implements _i45.SnackbarService {
+class MockSnackbarService extends _i1.Mock implements _i49.SnackbarService {
   @override
-  void registerSnackbarConfig(_i45.SnackbarConfig? config) =>
+  void registerSnackbarConfig(_i49.SnackbarConfig? config) =>
       super.noSuchMethod(Invocation.method(#registerSnackbarConfig, [config]),
           returnValueForMissingStub: null);
   @override
   void registerCustomSnackbarconfig(
-          {dynamic customData, _i45.SnackbarConfig? config}) =>
+          {dynamic customData, _i49.SnackbarConfig? config}) =>
       super.noSuchMethod(
           Invocation.method(#registerCustomSnackbarconfig, [],
               {#customData: customData, #config: config}),
@@ -1814,7 +2134,7 @@ class MockSnackbarService extends _i1.Mock implements _i45.SnackbarService {
   @override
   void registerCustomMainButtonBuilder(
           {dynamic variant,
-          _i46.Widget Function(String?, Function?)? builder}) =>
+          _i50.Widget Function(String?, Function?)? builder}) =>
       super.noSuchMethod(
           Invocation.method(#registerCustomMainButtonBuilder, [],
               {#variant: variant, #builder: builder}),
@@ -1822,8 +2142,8 @@ class MockSnackbarService extends _i1.Mock implements _i45.SnackbarService {
   @override
   void registerCustomSnackbarConfig(
           {dynamic variant,
-          _i45.SnackbarConfig? config,
-          _i45.SnackbarConfig Function()? configBuilder}) =>
+          _i49.SnackbarConfig? config,
+          _i49.SnackbarConfig Function()? configBuilder}) =>
       super.noSuchMethod(
           Invocation.method(#registerCustomSnackbarConfig, [], {
             #variant: variant,
@@ -1850,7 +2170,7 @@ class MockSnackbarService extends _i1.Mock implements _i45.SnackbarService {
           }),
           returnValueForMissingStub: null);
   @override
-  _i17.Future<dynamic>? showCustomSnackBar(
+  _i19.Future<dynamic>? showCustomSnackBar(
           {String? message,
           dynamic customData,
           dynamic variant,
@@ -1868,7 +2188,7 @@ class MockSnackbarService extends _i1.Mock implements _i45.SnackbarService {
         #onMainButtonTapped: onMainButtonTapped,
         #onTap: onTap,
         #duration: duration
-      })) as _i17.Future<dynamic>?);
+      })) as _i19.Future<dynamic>?);
   @override
   String toString() => super.toString();
 }
@@ -1876,33 +2196,33 @@ class MockSnackbarService extends _i1.Mock implements _i45.SnackbarService {
 /// A class which mocks [DialogService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDialogService extends _i1.Mock implements _i45.DialogService {
+class MockDialogService extends _i1.Mock implements _i49.DialogService {
   @override
   void registerCustomDialogBuilders(
-          Map<dynamic, _i45.DialogBuilder>? builders) =>
+          Map<dynamic, _i49.DialogBuilder>? builders) =>
       super.noSuchMethod(
           Invocation.method(#registerCustomDialogBuilders, [builders]),
           returnValueForMissingStub: null);
   @override
   void registerCustomDialogBuilder(
           {dynamic variant,
-          _i46.Widget Function(_i46.BuildContext, _i45.DialogRequest<dynamic>,
-                  dynamic Function(_i45.DialogResponse<dynamic>))?
+          _i50.Widget Function(_i50.BuildContext, _i49.DialogRequest<dynamic>,
+                  dynamic Function(_i49.DialogResponse<dynamic>))?
               builder}) =>
       super.noSuchMethod(
           Invocation.method(#registerCustomDialogBuilder, [],
               {#variant: variant, #builder: builder}),
           returnValueForMissingStub: null);
   @override
-  _i17.Future<_i45.DialogResponse<dynamic>?> showDialog(
+  _i19.Future<_i49.DialogResponse<dynamic>?> showDialog(
           {String? title,
           String? description,
           String? cancelTitle,
-          _i47.Color? cancelTitleColor,
+          _i52.Color? cancelTitleColor,
           String? buttonTitle = r'Ok',
-          _i47.Color? buttonTitleColor,
+          _i52.Color? buttonTitleColor,
           bool? barrierDismissible = false,
-          _i45.DialogPlatform? dialogPlatform}) =>
+          _i49.DialogPlatform? dialogPlatform}) =>
       (super.noSuchMethod(
               Invocation.method(#showDialog, [], {
                 #title: title,
@@ -1914,10 +2234,10 @@ class MockDialogService extends _i1.Mock implements _i45.DialogService {
                 #barrierDismissible: barrierDismissible,
                 #dialogPlatform: dialogPlatform
               }),
-              returnValue: Future<_i45.DialogResponse<dynamic>?>.value())
-          as _i17.Future<_i45.DialogResponse<dynamic>?>);
+              returnValue: Future<_i49.DialogResponse<dynamic>?>.value())
+          as _i19.Future<_i49.DialogResponse<dynamic>?>);
   @override
-  _i17.Future<_i45.DialogResponse<T>?> showCustomDialog<T, R>(
+  _i19.Future<_i49.DialogResponse<T>?> showCustomDialog<T, R>(
           {dynamic variant,
           String? title,
           String? description,
@@ -1930,7 +2250,7 @@ class MockDialogService extends _i1.Mock implements _i45.DialogService {
           bool? showIconInAdditionalButton = false,
           String? additionalButtonTitle,
           bool? takesInput = false,
-          _i47.Color? barrierColor = const _i47.Color(2315255808),
+          _i52.Color? barrierColor = const _i52.Color(2315255808),
           bool? barrierDismissible = false,
           String? barrierLabel = r'',
           dynamic customData,
@@ -1955,16 +2275,16 @@ class MockDialogService extends _i1.Mock implements _i45.DialogService {
                 #customData: customData,
                 #data: data
               }),
-              returnValue: Future<_i45.DialogResponse<T>?>.value())
-          as _i17.Future<_i45.DialogResponse<T>?>);
+              returnValue: Future<_i49.DialogResponse<T>?>.value())
+          as _i19.Future<_i49.DialogResponse<T>?>);
   @override
-  _i17.Future<_i45.DialogResponse<dynamic>?> showConfirmationDialog(
+  _i19.Future<_i49.DialogResponse<dynamic>?> showConfirmationDialog(
           {String? title,
           String? description,
           String? cancelTitle = r'Cancel',
           String? confirmationTitle = r'Ok',
           bool? barrierDismissible = false,
-          _i45.DialogPlatform? dialogPlatform}) =>
+          _i49.DialogPlatform? dialogPlatform}) =>
       (super.noSuchMethod(
               Invocation.method(#showConfirmationDialog, [], {
                 #title: title,
@@ -1974,10 +2294,10 @@ class MockDialogService extends _i1.Mock implements _i45.DialogService {
                 #barrierDismissible: barrierDismissible,
                 #dialogPlatform: dialogPlatform
               }),
-              returnValue: Future<_i45.DialogResponse<dynamic>?>.value())
-          as _i17.Future<_i45.DialogResponse<dynamic>?>);
+              returnValue: Future<_i49.DialogResponse<dynamic>?>.value())
+          as _i19.Future<_i49.DialogResponse<dynamic>?>);
   @override
-  void completeDialog(_i45.DialogResponse<dynamic>? response) =>
+  void completeDialog(_i49.DialogResponse<dynamic>? response) =>
       super.noSuchMethod(Invocation.method(#completeDialog, [response]),
           returnValueForMissingStub: null);
   @override
@@ -1988,13 +2308,13 @@ class MockDialogService extends _i1.Mock implements _i45.DialogService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockBottomSheetService extends _i1.Mock
-    implements _i45.BottomSheetService {
+    implements _i49.BottomSheetService {
   @override
-  void setCustomSheetBuilders(Map<dynamic, _i45.SheetBuilder>? builders) =>
+  void setCustomSheetBuilders(Map<dynamic, _i49.SheetBuilder>? builders) =>
       super.noSuchMethod(Invocation.method(#setCustomSheetBuilders, [builders]),
           returnValueForMissingStub: null);
   @override
-  _i17.Future<_i45.SheetResponse<dynamic>?> showBottomSheet(
+  _i19.Future<_i49.SheetResponse<dynamic>?> showBottomSheet(
           {String? title,
           String? description,
           String? confirmButtonTitle = r'Ok',
@@ -2018,10 +2338,10 @@ class MockBottomSheetService extends _i1.Mock
                 #enterBottomSheetDuration: enterBottomSheetDuration,
                 #ignoreSafeArea: ignoreSafeArea
               }),
-              returnValue: Future<_i45.SheetResponse<dynamic>?>.value())
-          as _i17.Future<_i45.SheetResponse<dynamic>?>);
+              returnValue: Future<_i49.SheetResponse<dynamic>?>.value())
+          as _i19.Future<_i49.SheetResponse<dynamic>?>);
   @override
-  _i17.Future<_i45.SheetResponse<T>?> showCustomSheet<T, R>(
+  _i19.Future<_i49.SheetResponse<T>?> showCustomSheet<T, R>(
           {dynamic variant,
           String? title,
           String? description,
@@ -2034,7 +2354,7 @@ class MockBottomSheetService extends _i1.Mock
           bool? showIconInAdditionalButton = false,
           String? additionalButtonTitle,
           bool? takesInput = false,
-          _i47.Color? barrierColor = const _i47.Color(2315255808),
+          _i52.Color? barrierColor = const _i52.Color(2315255808),
           bool? barrierDismissible = true,
           bool? isScrollControlled = false,
           String? barrierLabel = r'',
@@ -2069,10 +2389,10 @@ class MockBottomSheetService extends _i1.Mock
                 #enterBottomSheetDuration: enterBottomSheetDuration,
                 #ignoreSafeArea: ignoreSafeArea
               }),
-              returnValue: Future<_i45.SheetResponse<T>?>.value())
-          as _i17.Future<_i45.SheetResponse<T>?>);
+              returnValue: Future<_i49.SheetResponse<T>?>.value())
+          as _i19.Future<_i49.SheetResponse<T>?>);
   @override
-  void completeSheet(_i45.SheetResponse<dynamic>? response) =>
+  void completeSheet(_i49.SheetResponse<dynamic>? response) =>
       super.noSuchMethod(Invocation.method(#completeSheet, [response]),
           returnValueForMissingStub: null);
   @override
@@ -2083,88 +2403,88 @@ class MockBottomSheetService extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFirebaseAuthenticationService extends _i1.Mock
-    implements _i13.FirebaseAuthenticationService {
+    implements _i15.FirebaseAuthenticationService {
   @override
-  _i12.FirebaseAuth get firebaseAuth =>
+  _i14.FirebaseAuth get firebaseAuth =>
       (super.noSuchMethod(Invocation.getter(#firebaseAuth),
-          returnValue: _FakeFirebaseAuth_12()) as _i12.FirebaseAuth);
+          returnValue: _FakeFirebaseAuth_14()) as _i14.FirebaseAuth);
   @override
   bool get hasUser =>
       (super.noSuchMethod(Invocation.getter(#hasUser), returnValue: false)
           as bool);
   @override
-  _i17.Stream<_i12.User?> get authStateChanges =>
+  _i19.Stream<_i14.User?> get authStateChanges =>
       (super.noSuchMethod(Invocation.getter(#authStateChanges),
-          returnValue: Stream<_i12.User?>.empty()) as _i17.Stream<_i12.User?>);
+          returnValue: Stream<_i14.User?>.empty()) as _i19.Stream<_i14.User?>);
   @override
-  _i17.Future<bool> emailExists(String? email) =>
+  _i19.Future<bool> emailExists(String? email) =>
       (super.noSuchMethod(Invocation.method(#emailExists, [email]),
-          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
   @override
-  _i17.Future<_i13.FirebaseAuthenticationResult> signInWithGoogle() =>
+  _i19.Future<_i15.FirebaseAuthenticationResult> signInWithGoogle() =>
       (super.noSuchMethod(Invocation.method(#signInWithGoogle, []),
-              returnValue: Future<_i13.FirebaseAuthenticationResult>.value(
-                  _FakeFirebaseAuthenticationResult_13()))
-          as _i17.Future<_i13.FirebaseAuthenticationResult>);
+              returnValue: Future<_i15.FirebaseAuthenticationResult>.value(
+                  _FakeFirebaseAuthenticationResult_15()))
+          as _i19.Future<_i15.FirebaseAuthenticationResult>);
   @override
-  _i17.Future<bool> isAppleSignInAvailable() =>
+  _i19.Future<bool> isAppleSignInAvailable() =>
       (super.noSuchMethod(Invocation.method(#isAppleSignInAvailable, []),
-          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i19.Future<bool>);
   @override
-  _i17.Future<_i13.FirebaseAuthenticationResult> signInWithApple(
+  _i19.Future<_i15.FirebaseAuthenticationResult> signInWithApple(
           {String? appleRedirectUri, String? appleClientId}) =>
       (super.noSuchMethod(
               Invocation.method(#signInWithApple, [], {
                 #appleRedirectUri: appleRedirectUri,
                 #appleClientId: appleClientId
               }),
-              returnValue: Future<_i13.FirebaseAuthenticationResult>.value(
-                  _FakeFirebaseAuthenticationResult_13()))
-          as _i17.Future<_i13.FirebaseAuthenticationResult>);
+              returnValue: Future<_i15.FirebaseAuthenticationResult>.value(
+                  _FakeFirebaseAuthenticationResult_15()))
+          as _i19.Future<_i15.FirebaseAuthenticationResult>);
   @override
-  _i17.Future<_i13.FirebaseAuthenticationResult> loginAnonymously() =>
+  _i19.Future<_i15.FirebaseAuthenticationResult> loginAnonymously() =>
       (super.noSuchMethod(Invocation.method(#loginAnonymously, []),
-              returnValue: Future<_i13.FirebaseAuthenticationResult>.value(
-                  _FakeFirebaseAuthenticationResult_13()))
-          as _i17.Future<_i13.FirebaseAuthenticationResult>);
+              returnValue: Future<_i15.FirebaseAuthenticationResult>.value(
+                  _FakeFirebaseAuthenticationResult_15()))
+          as _i19.Future<_i15.FirebaseAuthenticationResult>);
   @override
-  _i17.Future<_i13.FirebaseAuthenticationResult> loginWithEmail(
+  _i19.Future<_i15.FirebaseAuthenticationResult> loginWithEmail(
           {String? email, String? password}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #loginWithEmail, [], {#email: email, #password: password}),
-              returnValue: Future<_i13.FirebaseAuthenticationResult>.value(
-                  _FakeFirebaseAuthenticationResult_13()))
-          as _i17.Future<_i13.FirebaseAuthenticationResult>);
+              returnValue: Future<_i15.FirebaseAuthenticationResult>.value(
+                  _FakeFirebaseAuthenticationResult_15()))
+          as _i19.Future<_i15.FirebaseAuthenticationResult>);
   @override
-  _i17.Future<_i13.FirebaseAuthenticationResult> createAccountWithEmail(
+  _i19.Future<_i15.FirebaseAuthenticationResult> createAccountWithEmail(
           {String? email, String? password}) =>
       (super.noSuchMethod(
               Invocation.method(#createAccountWithEmail, [],
                   {#email: email, #password: password}),
-              returnValue: Future<_i13.FirebaseAuthenticationResult>.value(
-                  _FakeFirebaseAuthenticationResult_13()))
-          as _i17.Future<_i13.FirebaseAuthenticationResult>);
+              returnValue: Future<_i15.FirebaseAuthenticationResult>.value(
+                  _FakeFirebaseAuthenticationResult_15()))
+          as _i19.Future<_i15.FirebaseAuthenticationResult>);
   @override
-  _i17.Future<dynamic> logout() =>
+  _i19.Future<dynamic> logout() =>
       (super.noSuchMethod(Invocation.method(#logout, []),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> sendResetPasswordLink(String? email) =>
+  _i19.Future<dynamic> sendResetPasswordLink(String? email) =>
       (super.noSuchMethod(Invocation.method(#sendResetPasswordLink, [email]),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> validatePassword(String? password) =>
+  _i19.Future<dynamic> validatePassword(String? password) =>
       (super.noSuchMethod(Invocation.method(#validatePassword, [password]),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> updatePassword(String? password) =>
+  _i19.Future<dynamic> updatePassword(String? password) =>
       (super.noSuchMethod(Invocation.method(#updatePassword, [password]),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
-  _i17.Future<dynamic> updateEmail(String? email) =>
+  _i19.Future<dynamic> updateEmail(String? email) =>
       (super.noSuchMethod(Invocation.method(#updateEmail, [email]),
-          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+          returnValue: Future<dynamic>.value()) as _i19.Future<dynamic>);
   @override
   String generateNonce([int? length = 32]) =>
       (super.noSuchMethod(Invocation.method(#generateNonce, [length]),

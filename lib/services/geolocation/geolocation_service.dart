@@ -150,6 +150,17 @@ class GeolocationService {
         Duration? difference;
         if (getUserPosition != null) {
           difference = getUserPosition?.timestamp?.difference(DateTime.now());
+        } else {
+          //Harguilar Added This For Testing .
+          return _position = Position(
+              longitude: -8.831283,
+              latitude: 13.231734,
+              timestamp: DateTime.now(),
+              accuracy: 0.0,
+              altitude: 0.0,
+              heading: 0.0,
+              speed: 0.0,
+              speedAccuracy: 0.0);
         }
 
         // cooldown time of 5 seconds for distance check and NEW positions should be retrieved.

@@ -5,6 +5,7 @@ import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -801,10 +802,10 @@ class QuestService with ReactiveServiceMixin {
     return _firestoreApi.getQuest(questId: questId);
   }
 
-  Future createQuest({required Quest quest}) async {
+  Future<bool?> createQuest({required Quest quest}) async {
     //TODO: Refactor this code .
     if (quest.id.isNotEmpty) {
-      await _firestoreApi.createQuest(quest: quest);
+      return await _firestoreApi.createQuest(quest: quest);
     }
 
     //update the newly created document reference with the Firestore Id.
