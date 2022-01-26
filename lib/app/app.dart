@@ -3,6 +3,7 @@ import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/datamodels/quests/create_quest/create_quest_view.dart';
 import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/services/cloud_firestore_storage/cloud_storage_services.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
@@ -38,11 +39,16 @@ import 'package:afkcredits/ui/views/layout/custom_bottom_bar_layout_template_vie
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_view.dart';
+import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
+import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/manage_quest/manage_quest_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
@@ -50,6 +56,8 @@ import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transaction_history/transfers_history_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
+import 'package:afkcredits/utils/cloud_storage_result/cloud_storage_result.dart';
+import 'package:afkcredits/utils/image_selector/image_selector.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -59,6 +67,7 @@ import 'package:stacked_services/stacked_services.dart';
 @StackedApp(
   routes: [
     MaterialRoute(page: SponsorHomeView),
+    MaterialRoute(page: InsertPrePurchasedGiftCardView),
     MaterialRoute(page: UpdatingQuestView),
     MaterialRoute(page: ExplorerHomeView),
     MaterialRoute(page: MapView),
@@ -87,9 +96,16 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: ActiveTreasureLocationSearchQuestView),
     MaterialRoute(page: ActiveMapQuestView),
     MaterialRoute(page: CreateQuestView),
+    MaterialRoute(page: ManageQuestView),
+    MaterialRoute(page: ManageGiftCardstView),
+    MaterialRoute(page: QuestsOverviewView),
+    MaterialRoute(page: AddGiftCardsView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
+    LazySingleton(classType: CloudStorageService),
+    LazySingleton(classType: CloudStorageResult),
+    LazySingleton(classType: ImageSelector),
     LazySingleton(classType: DialogService),
     LazySingleton(classType: ConnectivityService),
     LazySingleton(classType: SnackbarService),

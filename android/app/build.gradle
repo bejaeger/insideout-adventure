@@ -26,7 +26,6 @@ apply plugin: 'kotlin-android'
 // apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-
 android {
     compileSdkVersion 31
 
@@ -76,12 +75,4 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-        // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:29.0.3')
-
-    // Declare the dependencies for the Crashlytics and Analytics libraries
-    // When using the BoM, you don't specify versions in Firebase library dependencies
-    // implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-analytics'
-
 }

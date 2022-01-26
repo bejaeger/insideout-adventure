@@ -19,6 +19,7 @@ import '../apis/cloud_functions_api.dart';
 import '../apis/direction_api.dart';
 import '../apis/firestore_api.dart';
 import '../flavor_config.dart';
+import '../services/cloud_firestore_storage/cloud_storage_services.dart';
 import '../services/connectivity/connectivity_service.dart';
 import '../services/environment_services.dart';
 import '../services/geolocation/geolocation_service.dart';
@@ -38,6 +39,8 @@ import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/ac
 import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
+import '../utils/cloud_storage_result/cloud_storage_result.dart';
+import '../utils/image_selector/image_selector.dart';
 
 final locator = StackedLocator.instance;
 
@@ -48,6 +51,9 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
 
 // Register dependencies
   locator.registerLazySingleton(() => NavigationService());
+  locator.registerLazySingleton(() => CloudStorageService());
+  locator.registerLazySingleton(() => CloudStorageResult());
+  locator.registerLazySingleton(() => ImageSelector());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => SnackbarService());

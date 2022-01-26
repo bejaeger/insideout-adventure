@@ -65,6 +65,27 @@ mixin NavigationMixin {
     );
   }
 
+  void navToQuestOverView() {
+    //SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+    _navigationService.navigateTo(Routes.questsOverviewView);
+    //});
+  }
+
+  void navToCreateQuest() {
+    _navigationService.navigateTo(Routes.createQuestView);
+    //});
+  }
+
+  void navToAddGiftCard() {
+    _navigationService.navigateTo(Routes.addGiftCardsView);
+    //});
+  }
+
+  void navToInsertGiftCard() {
+    _navigationService.navigateTo(Routes.insertPrePurchasedGiftCardView);
+    //});
+  }
+
   void navBackToPreviousView() {
     _navigationService.back();
   }
@@ -77,6 +98,10 @@ mixin NavigationMixin {
     await _userService.handleLogoutEvent(logOutFromFirebase: true);
     transfersHistoryService.clearData();
     _navigationService.clearStackAndShow(Routes.loginView);
+  }
+
+  void navigateToManageGiftCard() {
+    _navigationService.clearStackAndShow(Routes.manageGiftCardstView);
   }
 
   void navToQuestsOfSpecificTypeView(
