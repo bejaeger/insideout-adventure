@@ -72,7 +72,7 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
           (starterMarker != null && finishedMarker != null)) { */
         //starterMarker = returnMarkers(markerId: 'start', pos: pos);
         // markers!.add(returnMarkers(markerId: markerId, pos: pos));
-        markersOnMap.add(returnMarkers(markerId: markerId, pos: pos));
+        markersOnMap.add(addMarkers(markerId: markerId, pos: pos));
         afkCredits
             .add(returnAFK(pos: pos, markerId: markerId, qrCode: qrdCdId));
 
@@ -81,10 +81,10 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
 
         // Reset finish
         // finishedMarker = null;
-      } else {
-        finishedMarker = returnMarkers(markerId: 'finish', pos: pos);
-        _log.i('This is the Started Marker $finishedMarker');
-      }
+      } /* else {
+      finishedMarker = addMarkers(markerId: 'finish', pos: pos);
+      _log.i('This is the Started Marker $finishedMarker');
+      //} */
       //Add Starter Marker
     } catch (error) {
       throw MapViewModelException(
@@ -131,6 +131,10 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
     notifyListeners();
   }
 
+  void removeSelectedMarker(LatLng postion) {
+    notifyListeners();
+  }
+
   void setMarkersId({required AFKMarker? startOrFinishMarker}) {
     setBusy(true);
     //_startMarker = startOrFinishMarker;
@@ -152,7 +156,19 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
   }
 
   //TODO: Refactor the Code Below with the Abstract Class.
-  Marker returnMarkers({required LatLng pos, required String markerId}) {
+  Marker addMarkers({required LatLng pos, required String markerId}) {
+    return Marker(
+      markerId: MarkerId(markerId),
+      infoWindow: InfoWindow(title: markerId),
+      /*  icon: markerId == 'start'
+          ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
+          : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue), */
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      position: pos,
+    );
+  }
+
+  Marker removeMarkers({required LatLng pos, required String markerId}) {
     return Marker(
       markerId: MarkerId(markerId),
       infoWindow: InfoWindow(title: markerId),

@@ -18,19 +18,6 @@ import 'create_quest_viewmodel.dart';
     //FormTextField(name: 'distanceFromUser'),
     FormTextField(name: 'afkCreditAmount'),
     FormTextField(name: 'questType'),
-/*     FormDropdownField(
-      name: 'afkStartAndFinishMarkers',
-      items: [
-        StaticDropdownItem(
-          title: 'startMarker',
-          value: 'start',
-        ),
-        StaticDropdownItem(
-          title: 'finishMarker',
-          value: 'finish',
-        ),
-      ],
-    ), */
   ],
 )
 // ignore: must_be_immutable
@@ -40,10 +27,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
   String? afkCreditId;
   num? afkCreditAmount;
   QuestType? selectedQuestType;
-  // QuestType? _questType;
-  //GlobalKey<FormFieldState>? _key;
-/*   Marker? _startMarker;
-  Marker? _finishMarker; */
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateQuestViewModel>.reactive(
@@ -132,6 +116,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                     onMapCreated: model.onMapCreated,
 
                     onTap: model.displayMarkersOnMap,
+                    onLongPress: model.removeSelectedMarker,
                   ),
                 ),
                 Expanded(

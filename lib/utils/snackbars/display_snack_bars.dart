@@ -5,7 +5,7 @@ import 'package:stacked_services/stacked_services.dart';
 class DisplaySnackBars {
   final _snackBarService = locator<SnackbarService>();
 
-  void snackBarCreatedQuest({required Quest quest}) {
+  void snackBarCreatedQuest({required dynamic quest}) {
     _snackBarService.showSnackbar(
       message: "Quest Created  $quest",
       title: 'Quest Created Successfully',
@@ -44,10 +44,24 @@ class DisplaySnackBars {
     );
   }
 
+  void snackBarInsertedPrePurchasedGC() {
+    _snackBarService.showSnackbar(
+      message: 'Gift Cart Inserted Successfully',
+      title: 'Successful ',
+      //duration: Duration(seconds: 5),
+      onTap: (_) {
+        print('snackbar tapped');
+      },
+      mainButtonTitle: 'Ok',
+      onMainButtonTapped: () => print('Undo the action!'),
+    );
+  }
+
   void snackBarUpdateQuest({required Quest quest}) {
     _snackBarService.showSnackbar(
-        title: "Quest Updated ",
-        message: "Quest Updated with ${quest.name}",
-        duration: Duration(seconds: 10));
+      title: "Quest Updated ",
+      message: "Quest Updated with ${quest.name}",
+      duration: Duration(seconds: 10),
+    );
   }
 }

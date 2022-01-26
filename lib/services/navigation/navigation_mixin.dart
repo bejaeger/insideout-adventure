@@ -100,6 +100,10 @@ mixin NavigationMixin {
     _navigationService.clearStackAndShow(Routes.loginView);
   }
 
+  void navigateToManageGiftCard() {
+    _navigationService.clearStackAndShow(Routes.manageGiftCardstView);
+  }
+
   void navToQuestsOfSpecificTypeView(
       {required QuestType type, required UserRole role}) {
     // Use the below to have the nav bottom bar visible!

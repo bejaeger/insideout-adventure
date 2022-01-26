@@ -1,4 +1,3 @@
-import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
 import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -105,20 +104,21 @@ class InsertGiftCard extends StatelessWidget {
               children: [
                 ElevatedButton.icon(
                   onPressed: () async {
-                    var id = Uuid();
+                    if (giftCardCodeController!.text.isNotEmpty &&
+                        giftCardCodeController!.text.length == 16) {
+                      var id = Uuid();
 
-                    giftCardCode = int.parse(giftCardCodeController!.text);
-
-                    giftCardId = id.v1().toString().replaceAll('-', '');
-
-                    model!.insertPrePurchasedGiftCard(
-                      prePurchasedGiftCard: PrePurchasedGiftCard(
-                          categoryId: giftCardId!,
-                          giftCardCode: giftCardCode!,
-                          categoryName: selectedGiftCardType!),
-                    );
-
-                    model!.navBackToPreviousView();
+                      giftCardCode = int.parse(giftCardCodeController!.text);
+                      giftCardId = id.v1().toString().replaceAll('-', '');
+                      model!.insertPrePurchasedGiftCard(
+                        prePurchasedGiftCard: PrePurchasedGiftCard(
+                            categoryId: giftCardId!,
+                            giftCardCode: giftCardCode!,
+                            categoryName: selectedGiftCardType!),
+                      );
+                    } else {
+                      model!.emptyTextFields();
+                    }
                   },
                   icon: const Icon(Icons.add_box),
                   label: const Text(
