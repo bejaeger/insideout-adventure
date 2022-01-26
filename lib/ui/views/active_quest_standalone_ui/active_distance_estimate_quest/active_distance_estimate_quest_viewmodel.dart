@@ -189,7 +189,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   }
 
   @override
-  void initialize({required Quest quest}) {
+  Future initialize({required Quest quest}) async {
     super.initialize(quest: quest);
     resetPreviousQuest();
     distanceToTravel = quest.distanceToTravelInMeter!;

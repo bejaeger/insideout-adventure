@@ -69,6 +69,8 @@ class QuestService with ReactiveServiceMixin {
 
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
+  Quest? currentQuest;
+
   Quest? _startedQuest;
   Quest? get getStartedQuest => _startedQuest;
   void setStartedQuest(Quest? quest) {
@@ -631,6 +633,44 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  List<AFKMarker> markersToShowOnMap({Quest? questIn}) {
+    // late Quest quest;
+    List<AFKMarker> markers = [];
+    if (hasActiveQuest) {
+      if (activatedQuest!.quest.type == QuestType.QRCodeHike) {
+        markers = activatedQuest!.quest.markers;
+      }
+      if (activatedQuest!.quest.type == QuestType.GPSAreaHike) {
+        for (var i = 0; i < activatedQuest!.markersCollected.length; i++) {
+          if (activatedQuest!.markersCollected[i]) {
+            markers.add(activatedQuest!.quest.markers[i]);
+          }
+        }
+        int index = activatedQuest!.markersCollected
+            .lastIndexWhere((element) => element == true);
+        if (index + 1 < activatedQuest!.quest.markers.length) {
+          markers.add(activatedQuest!.quest.markers[index + 1]);
+        }
+      }
+    } else {
+      if (questIn == null) {
+        log.e(
+            "Cannot retrieve markers because no quest active and no quest provided");
+        return [];
+      }
+      if (questIn.type == QuestType.GPSAreaHike) {
+        markers.add(questIn.markers[0]);
+        if (questIn.markers.length > 1) {
+          markers.add(questIn.markers[1]);
+        }
+      }
+      if (questIn.type == QuestType.QRCodeHike) {
+        markers = questIn.markers;
+      }
+    }
+    return markers;
+  }
+
   bool isMarkerCollected({required AFKMarker marker}) {
     if (activatedQuest != null) {
       final index = activatedQuest!.quest.markers
@@ -740,7 +780,6 @@ class QuestService with ReactiveServiceMixin {
   Future loadNearbyQuests({bool force = false}) async {
     if (_nearbyQuests.isEmpty || force) {
       // TODO: In the future retrieve only nearby quests
-      log.wtf("UseDummyQuests? ${_flavorConfigProvider.pushAndUseDummyQuests}");
       _nearbyQuests = await _firestoreApi.getNearbyQuests(
           pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests);
       log.i("Found ${_nearbyQuests.length} nearby quests.");
@@ -859,6 +898,28 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  AFKMarker? getNextMarker({Quest? quest}) {
+    late int index;
+    if (hasActiveQuest) {
+      index = activatedQuest!.markersCollected
+          .lastIndexWhere((element) => element == true);
+      if (index < 0) {
+        // no marker collected yet
+        index = 1;
+      } else {
+        index++;
+      }
+      if (index < activatedQuest!.quest.markers.length) {
+        return activatedQuest!.quest.markers[index];
+      }
+    } else {
+      if (quest != null && (1 < quest.markers.length)) {
+        return quest.markers[1];
+      }
+    }
+    return null;
+  }
+
   Future getQuest({required String questId}) async {
     return _firestoreApi.getQuest(questId: questId);
   }
@@ -971,5 +1032,6 @@ class QuestService with ReactiveServiceMixin {
     activatedQuestsHistory = [];
     _pastQuestsStreamSubscription?.cancel();
     _pastQuestsStreamSubscription = null;
+    currentQuest = null;
   }
 }

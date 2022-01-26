@@ -6,7 +6,9 @@ import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/maps/maps_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 
@@ -14,12 +16,15 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
   GoogleMapController? _googleMapController;
   GoogleMapController? get getGoogleMapController => _googleMapController;
   final GeolocationService _geolocationService = locator<GeolocationService>();
+  final MapsService mapsService = locator<MapsService>();
+  bool questCenteredOnMap = true;
+  String mapStyle = "";
 
   Set<Marker> markersOnMap = {};
   Set<Circle> areasOnMap = {};
   String get timeElapsed => questService.getMinutesElapsedString();
   bool questSuccessfullyFinished = false;
-
+  bool questFinished = false;
   // Functions to override!
   void loadQuestMarkers();
   bool isQuestCompleted();
@@ -33,6 +38,8 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
       setBusy(true);
       try {
         _googleMapController = controller;
+        // await Future.delayed(Duration(milliseconds: 50));
+        // controller.setMapStyle(mapStyle);
         // for camera position
 
         //Add Starter Marker
@@ -50,36 +57,84 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
       notifyListeners();
     } else {
       _googleMapController = controller;
-      if (currentQuest != null)
-      // animate camera to markers
-      {
-        Future.delayed(
-            Duration(milliseconds: 200),
-            () => controller.animateCamera(CameraUpdate.newLatLngBounds(
-                boundsFromLatLngList(
-                    markerList: currentQuest!.markers
-                        .map((m) => LatLng(m.lat!, m.lon!))
-                        .toList()),
-                50)));
+      // await Future.delayed(Duration(milliseconds: 50));
+      // controller.setMapStyle(mapStyle);
+      if (currentQuest != null) {
+        // animate camera to markers
+        animateCameraToQuestMarkers(controller);
       }
     }
   }
 
-  LatLngBounds boundsFromLatLngList({required List<LatLng> markerList}) {
-    double? x0, x1, y0, y1;
-    for (LatLng latLng in markerList) {
-      if (x0 == null) {
-        x0 = x1 = latLng.latitude;
-        y0 = y1 = latLng.longitude;
-      } else {
-        if (latLng.latitude > x1!) x1 = latLng.latitude;
-        if (latLng.latitude < x0) x0 = latLng.latitude;
-        if (latLng.longitude > y1!) y1 = latLng.longitude;
-        if (latLng.longitude < y0!) y0 = latLng.longitude;
-      }
+  Future animateCameraToQuestMarkers(GoogleMapController? controller,
+      {int delay = 200}) async {
+    if (controller == null && getGoogleMapController == null) {
+      log.wtf(
+          "Cannot animate camera because no google maps controller present");
+      return;
     }
-    return LatLngBounds(
-        northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
+    Future.delayed(
+      Duration(milliseconds: delay),
+      () => animateCameraToBetweenCoordinates(
+        controller: controller ?? getGoogleMapController!,
+        latLngList: questService
+            .markersToShowOnMap(questIn: currentQuest)
+            .map((m) => LatLng(m.lat!, m.lon!))
+            .toList(),
+      ),
+    );
+  }
+
+  Future animateCameraToBetweenCoordinates(
+      {required GoogleMapController controller,
+      required List<LatLng> latLngList,
+      double padding = 75}) async {
+    await controller.animateCamera(
+      CameraUpdate.newLatLngBounds(
+          mapsService.boundsFromLatLngList(latLngList: latLngList), padding),
+    );
+  }
+
+  Future animateCameraToPreviewNextArea() async {
+    if (getGoogleMapController == null) {
+      log.e("Can't animate camera because google maps controller is null");
+      return;
+    }
+    // LatLng = getGoogleMapController.getZoomLevel()
+    // getGoogleMapController!.
+    AFKMarker? marker = questService.getNextMarker();
+    if (marker != null && marker.lat != null && marker.lon != null) {
+      double zoom = await getGoogleMapController!.getZoomLevel();
+      await getGoogleMapController!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: LatLng(marker.lat!, marker.lon!), zoom: zoom),
+        ),
+      );
+      await Future.delayed(Duration(seconds: 1));
+      Position pos = await geolocationService.getUserLivePosition;
+      await animateCameraToBetweenCoordinates(
+          controller: getGoogleMapController!,
+          latLngList: [
+            LatLng(pos.latitude, pos.longitude),
+            LatLng(marker.lat!, marker.lon!),
+          ],
+          padding: 100);
+    }
+    notifyListeners();
+  }
+
+  Future animateToUserPosition(GoogleMapController controller) async {
+    await controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: LatLng(
+                geolocationService.getUserLivePositionNullable!.latitude,
+                geolocationService.getUserLivePositionNullable!.longitude),
+            zoom: await controller.getZoomLevel()),
+      ),
+    );
+    questCenteredOnMap = false;
+    notifyListeners();
   }
 
   CameraPosition initialCameraPosition() {
@@ -162,6 +217,7 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
 
   @override
   void dispose() {
+    questCenteredOnMap = true;
     _googleMapController?.dispose();
     for (var reactiveService in _reactiveServices) {
       reactiveService.removeListener(_indicateChange);

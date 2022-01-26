@@ -115,7 +115,7 @@ class _BasicDialogContent extends StatelessWidget {
                     !model.collectedCredits
                         ? ElevatedButton(
                             onPressed: model.getCredits,
-                            child: Text("Weiter",
+                            child: Text("Get Credits",
                                 style: textTheme(context)
                                     .headline6!
                                     .copyWith(color: kWhiteTextColor)))

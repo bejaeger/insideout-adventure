@@ -191,8 +191,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     );
   }
 
-  void addStartAreaToMap(
-      {required Quest quest, required AFKMarker afkmarker}) {
+  void addStartAreaToMap({required Quest quest, required AFKMarker afkmarker}) {
     areasOnMap.add(
       Circle(
         circleId: CircleId(afkmarker
@@ -225,24 +224,9 @@ class MapViewModel extends ActiveQuestBaseViewModel {
   }
 
   void addNextArea({Quest? quest}) {
-    late int index;
-    if (hasActiveQuest) {
-      index = activeQuest.markersCollected
-          .lastIndexWhere((element) => element == true);
-      if (index < 0) {
-        // no marker collected yet
-        index = 1;
-      } else {
-        index++;
-      }
-    } else {
-      index = 1; // first area to be collected
-    }
-    log.i("Add area of marker with index: $index");
-    if (!hasActiveQuest || (hasActiveQuest && index < activeQuest.quest.markers.length)) {
-      addAreaToMap(
-          quest: quest ?? activeQuest.quest,
-          afkmarker: quest?.markers[index] ?? activeQuest.quest.markers[index]);
+    AFKMarker? marker = questService.getNextMarker(quest: quest);
+    if (marker != null) {
+      addAreaToMap(quest: quest ?? activeQuest.quest, afkmarker: marker);
     }
     notifyListeners();
   }
@@ -330,11 +314,18 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       // Move this to isQuestCompleted function and remove stuff from service!
       if (isQuestCompleted()) {
         //checkQuestAndFinishWhenCompleted();
+        await animateCameraToQuestMarkers(getGoogleMapController);
+        setBusy(true);
+        questFinished = true;
+        await Future.delayed(Duration(seconds: 4));
+        setBusy(false);
         // quest succesfully completed
         await showSuccessDialog();
         return;
       } else {
         addNextArea();
+        // animate camera to preview next marker
+        animateCameraToPreviewNextArea();
       }
     } else {
       dialogService.showDialog(
@@ -359,8 +350,8 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     areasOnMap = areasOnMap
         .map((item) => item.circleId == CircleId(afkmarker.id)
             ? item.copyWith(
-                fillColorParam: kPrimaryColor.withOpacity(0.5),
-                strokeColorParam: kPrimaryColor.withOpacity(0.6),
+                fillColorParam: Colors.green.withOpacity(0.5),
+                strokeColorParam: Colors.green.withOpacity(0.6),
               )
             : item)
         .toSet();

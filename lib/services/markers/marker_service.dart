@@ -32,6 +32,8 @@ class MarkerService {
     } else {
       log.e(
           "We will pretend that the user is nearby the marker (without checking actual GPS) because we run in test mode at the moment!");
+      await _geolocationService.setDistanceToLastCheckedMarker(
+          lat: marker.lat!, lon: marker.lon!);
       return true;
     }
   }
