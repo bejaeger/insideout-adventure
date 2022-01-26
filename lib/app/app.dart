@@ -14,6 +14,7 @@ import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
+import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -128,6 +129,8 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: MarkerService),
     LazySingleton(classType: DirectionsAPI),
     LazySingleton(classType: GiftCardService),
+    LazySingleton(classType: QuestTestingService),
+    
 
     LazySingleton(classType: PurchasedGiftCardsViewModel),
     LazySingleton(classType: ActiveTreasureLocationSearchQuestViewModel),

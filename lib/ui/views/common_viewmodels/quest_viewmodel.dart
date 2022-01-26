@@ -16,6 +16,7 @@ import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
+import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
@@ -28,11 +29,11 @@ abstract class QuestViewModel extends BaseModel {
   StreamSubscription? _activeQuestSubscription;
   String lastActivatedQuestInfoText = "Active Quest";
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final StopWatchService _stopWatchService = locator<StopWatchService>();
+  final QuestTestingService questTestingService = locator<QuestTestingService>();
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
-      bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
+  bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
   final QRCodeService qrCodeService = locator<QRCodeService>();
   //Getter From the Neary By Quests.
   List<Quest> get nearbyQuests => questService.getNearByQuest;
@@ -64,15 +65,19 @@ abstract class QuestViewModel extends BaseModel {
         quests: nearbyQuests, questType: type);
   }
 
-  Future getLocation({bool forceAwait = false, bool forceGettingNewPosition = true}) async {
+  Future getLocation(
+      {bool forceAwait = false, bool forceGettingNewPosition = true}) async {
     try {
       if (_geolocationService.getUserPosition == null) {
-        await _geolocationService.getAndSetCurrentLocation(forceGettingNewPosition: forceGettingNewPosition);
+        await _geolocationService.getAndSetCurrentLocation(
+            forceGettingNewPosition: forceGettingNewPosition);
       } else {
         if (forceAwait) {
-          await _geolocationService.getAndSetCurrentLocation(forceGettingNewPosition: forceGettingNewPosition);
+          await _geolocationService.getAndSetCurrentLocation(
+              forceGettingNewPosition: forceGettingNewPosition);
         } else {
-          _geolocationService.getAndSetCurrentLocation(forceGettingNewPosition: forceGettingNewPosition);
+          _geolocationService.getAndSetCurrentLocation(
+              forceGettingNewPosition: forceGettingNewPosition);
         }
       }
     } catch (e) {
@@ -375,6 +380,23 @@ abstract class QuestViewModel extends BaseModel {
         qrCodeService.getQrCodeStringFromMarker(marker: marker);
     navigationService.navigateTo(Routes.qRCodeView,
         arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
+  }
+
+  // -------------------------------------
+  // More common way to treat super user
+  Future<bool> useSuperUserFeature() async {
+    if (questTestingService.isPermanentAdminMode) {
+      return true;
+    }
+    if (questTestingService.isPermanentUserMode) {
+      return false;
+    }
+    final result = await showAdminDialogAndGetResponse();
+    if (result == true) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // -----------------------------------------

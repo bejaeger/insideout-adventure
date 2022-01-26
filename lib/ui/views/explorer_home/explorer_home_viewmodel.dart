@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
+import 'package:afkcredits/datamodels/helpers/location_entry.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/position_retrieval.dart';
@@ -20,7 +21,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   String get liveDistance => geolocationService.getLiveDistancesToGoal();
   String get lastKnownDistance =>
       geolocationService.getLastKnownDistancesToGoal();
-  List<PositionEntry> get allPositions => geolocationService.allPositions;
+  List<LocationEntry> get allPositions => geolocationService.allPositions;
 
   late final String name;
   ExplorerHomeViewModel() : super(explorerUid: "") {
@@ -126,7 +127,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
     addingPositionToNotionDB = true;
     notifyListeners();
 
-    final ok = await geolocationService.addPositionEntry(
+    final ok = await geolocationService.addCurrentLocationEntry(
         trigger: onlyLastKnownPosition
             ? LocationRetrievalTrigger.onlyLastKnown
             : LocationRetrievalTrigger.manualAll);

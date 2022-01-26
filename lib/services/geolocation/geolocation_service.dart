@@ -4,42 +4,24 @@ import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/helpers/location_entry.dart';
 import 'package:afkcredits/enums/position_retrieval.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
+import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:device_info/device_info.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart' show describeEnum, kIsWeb;
-import 'package:location/location.dart' as loc;
-import 'dart:io' show Platform;
-import 'package:afkcredits/app/app.logger.dart';
-import 'package:notion_api/notion.dart';
-import 'package:notion_api/notion/general/lists/children.dart';
-import 'package:notion_api/notion/general/lists/properties.dart';
-import 'package:notion_api/notion/general/property.dart';
-import 'package:notion_api/notion/general/rich_text.dart';
-import 'package:notion_api/notion/general/types/notion_types.dart';
-import 'package:notion_api/notion/objects/database.dart';
-import 'package:notion_api/notion/objects/pages.dart';
-import 'package:notion_api/notion/objects/parent.dart';
-import 'package:notion_api/responses/notion_response.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:math';
 
 class GeolocationService {
-  late String trial;
-  GeolocationService() {
-    var rng = new Random();
-    trial = rng.nextInt(100000).toString();
-  }
   final log = getLogger('GeolocationService');
   final _firestoreApi = locator<FirestoreApi>();
   StreamSubscription? _currentPositionStreamSubscription;
+  final QuestTestingService _questTestingService = locator<QuestTestingService>();
   bool get isListeningToLocation => _currentPositionStreamSubscription != null;
-  final NotionClient notion =
-      NotionClient(token: 'secret_q0fv8n18xW5l1PS9ipqljUphAXvmvCyXqKfGjcqXvWs');
 
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
-  final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  
 
   Position? _position;
   Position? get getUserPosition => _position;
@@ -60,7 +42,7 @@ class GeolocationService {
   Position? _lastKnownPosition;
   Position? get getLastKnownPosition => _lastKnownPosition;
 
-  List<PositionEntry> allPositions = [];
+  List<LocationEntry> allPositions = [];
 
   String currentLocationDistanceKey = "currentLocationDistance";
   String liveLocationDistanceKey = "liveLocationDistance";
@@ -99,7 +81,7 @@ class GeolocationService {
         log.v("New position event fired from location listener!");
         printPositionInfo(position);
         _livePosition = position;
-        addPositionEntry(trigger: LocationRetrievalTrigger.listener);
+        addCurrentLocationEntry(trigger: LocationRetrievalTrigger.listener);
       });
     }
   }
@@ -120,6 +102,7 @@ class GeolocationService {
           printPositionInfo(position);
           _livePosition = position;
           setGPSAccuracyInfo(position.accuracy);
+          _questTestingService.maybeRecordData(position);
           if (callback != null) {
             // don't fire callback on first event
             if (completer.isCompleted) {
@@ -367,10 +350,9 @@ class GeolocationService {
     cancelPositionListener();
   }
 
-  // ------------------------------------------------
-  // -------------------------------------------------
+  // ----------------------------------
   // R & D
-  Future addPositionEntry(
+  Future addCurrentLocationEntry(
       {required LocationRetrievalTrigger trigger,
       bool pushToNotion = false}) async {
     _lastKnownPosition = await Geolocator.getLastKnownPosition();
@@ -378,7 +360,7 @@ class GeolocationService {
       _currentPosition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best);
     }
-    final positionEntry = PositionEntry(
+    final positionEntry = LocationEntry(
         entryNumber: allPositions.length,
         triggeredBy: trigger,
         livePosition: _livePosition,
@@ -388,7 +370,7 @@ class GeolocationService {
     allPositions.add(positionEntry);
     if (pushToNotion) {
       try {
-        return await pushNotionDatabaseEntry(positionEntry);
+        return await _questTestingService.pushNotionDatabaseEntry(positionEntry);
       } catch (e) {
         log.e("Error pushing entry to notion db: $e");
         return false;
@@ -401,13 +383,13 @@ class GeolocationService {
   Future pushAllPositionsToNotion() async {
     bool ok = true;
     for (int i = 0; i < allPositions.length; i++) {
-      ok = ok & await pushNotionDatabaseEntry(allPositions[i]);
+      ok = ok & await _questTestingService.pushNotionDatabaseEntry(allPositions[i]);
     }
     return ok;
   }
 
   Map<String, String> getDistanceToGoal(
-      {required PositionEntry positionEntry,
+      {required LocationEntry positionEntry,
       required double lat,
       required double lon}) {
     Map<String, String> distancesMap = {
@@ -442,98 +424,6 @@ class GeolocationService {
     return distancesMap;
   }
 
-  Future pushNotionDatabaseEntry(PositionEntry entry) async {
-    // ID of manually created database
-    final String databaseId = "3fa2284a2aec40a5a6d03089493be25a";
-
-    Page newEntry = Page(
-      parent: Parent.database(id: databaseId), // <- database
-      title: Text(entry.entryNumber.toString()),
-    );
-
-    String deviceInfoString = "";
-    if (Platform.isAndroid) {
-      // Android-specific code
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      log.v('Running on ${androidInfo.model}'); // e.g. "Moto G (4)"
-      deviceInfoString = "machine: " +
-          androidInfo.model +
-          ", systemVersion: " +
-          androidInfo.version.release;
-    } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      log.v('Running on ${iosInfo.utsname.machine}'); // e.g. "iPod7,1"
-      deviceInfoString = "machine: " +
-          iosInfo.utsname.machine +
-          ", systemName: " +
-          iosInfo.systemName +
-          ", systemVersion: " +
-          iosInfo.systemVersion;
-      // iOS-specific code
-    }
-    addNotionDatabaseTextProperty(newEntry, deviceInfoKey, deviceInfoString);
-    addNotionDatabaseTextProperty(newEntry, trialEntryKey, trial);
-
-    // timestamps
-    addNotionDatabaseTextProperty(newEntry, currentLocationTimestampKey,
-        entry.currentPosition?.timestamp.toString());
-    addNotionDatabaseTextProperty(newEntry, lastKnownLocationTimestampKey,
-        entry.lastKnownPosition?.timestamp?.toString());
-    addNotionDatabaseTextProperty(newEntry, liveLocationTimestampKey,
-        entry.livePosition?.timestamp?.toString());
-
-    // longitude
-    addNotionDatabaseTextProperty(newEntry, currentLocationLongitudeKey,
-        entry.currentPosition?.longitude.toString());
-    addNotionDatabaseTextProperty(newEntry, lastKnownLocationLongitudeKey,
-        entry.lastKnownPosition?.longitude.toString());
-    addNotionDatabaseTextProperty(newEntry, liveLocationLongitudeKey,
-        entry.livePosition?.longitude.toString());
-
-    // latitude
-    addNotionDatabaseTextProperty(newEntry, currentLocationLatitudeKey,
-        entry.currentPosition?.latitude.toString());
-    addNotionDatabaseTextProperty(newEntry, lastKnownLocationLatitudeKey,
-        entry.lastKnownPosition?.latitude.toString());
-    addNotionDatabaseTextProperty(newEntry, liveLocationLatitudeKey,
-        entry.livePosition?.latitude.toString());
-
-    // accuracy
-    addNotionDatabaseTextProperty(newEntry, currentLocationAccuracyKey,
-        entry.currentPosition?.accuracy.toStringAsFixed(2));
-    addNotionDatabaseTextProperty(newEntry, lastKnownLocationAccuracyKey,
-        entry.lastKnownPosition?.accuracy.toStringAsFixed(2));
-    addNotionDatabaseTextProperty(newEntry, liveLocationAccuracyKey,
-        entry.livePosition?.accuracy.toStringAsFixed(2));
-
-    // Add calculated distance to random location in heidach
-    Map<String, String> distancesToGoal = getDistanceToGoal(
-        positionEntry: entry, lat: 48.06701330843975, lon: 7.903736956224777);
-
-    [
-      currentLocationDistanceKey,
-      liveLocationDistanceKey,
-      lastKnownLocationDistanceKey,
-      triggeredByKey
-    ].forEach((element) {
-      addNotionDatabaseTextProperty(
-          newEntry, element, distancesToGoal[element]);
-    });
-    try {
-      final NotionResponse notionResponse = await notion.pages.create(newEntry);
-      if (notionResponse.hasError) {
-        log.e(
-            "Error when pushing data to notion database: ${notionResponse.message}");
-        return false;
-      } else {
-        log.i("Created entry in notion database");
-        return true;
-      }
-    } catch (e) {
-      log.wtf(e);
-      return false;
-    }
-  }
 
   String getLastKnownDistancesToGoal() {
     if (_lastKnownPosition == null) {
@@ -584,28 +474,6 @@ class GeolocationService {
   }
 }
 
-void addNotionDatabaseTextProperty(
-    Page page, String propertyName, String? propertyContent) {
-  page.addProperty(
-    name: propertyName,
-    property: RichTextProp(
-      content: [
-        Text(propertyContent ?? "nan"),
-      ],
-    ),
-  );
-}
 
-class PositionEntry {
-  final Position? livePosition;
-  final Position? currentPosition;
-  final Position? lastKnownPosition;
-  final LocationRetrievalTrigger triggeredBy;
-  final int entryNumber;
-  const PositionEntry(
-      {required this.triggeredBy,
-      required this.livePosition,
-      required this.currentPosition,
-      required this.lastKnownPosition,
-      required this.entryNumber});
-}
+
+

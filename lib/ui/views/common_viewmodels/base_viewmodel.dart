@@ -13,6 +13,7 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -41,6 +42,7 @@ class BaseModel extends BaseViewModel {
   final StopWatchService _stopWatchService = locator<StopWatchService>();
   final GiftCardService _giftCardService = locator<GiftCardService>();
   final GeolocationService geolocationService = locator<GeolocationService>();
+  final QuestTestingService _questTestingService = locator<QuestTestingService>();
 
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
@@ -90,6 +92,7 @@ class BaseModel extends BaseViewModel {
     await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
     geolocationService.clearData();
+    _questTestingService.resetSettings();
   }
 
   void unregisterViewModels() {

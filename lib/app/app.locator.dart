@@ -30,6 +30,7 @@ import '../services/markers/marker_service.dart';
 import '../services/payments/payment_service.dart';
 import '../services/payments/transfers_history_service.dart';
 import '../services/qrcodes/qrcode_service.dart';
+import '../services/quest_testing_service/quest_testing_service.dart';
 import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/users/user_service.dart';
@@ -75,6 +76,7 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => MarkerService());
   locator.registerLazySingleton(() => DirectionsAPI());
   locator.registerLazySingleton(() => GiftCardService());
+  locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => PurchasedGiftCardsViewModel());
   locator.registerLazySingleton(
       () => ActiveTreasureLocationSearchQuestViewModel());

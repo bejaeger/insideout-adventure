@@ -92,8 +92,7 @@ class ActiveTreasureLocationSearchQuestViewModel
           position: position,
           minAccuracy: kMinRequiredAccuracyLocationSearch))) {
         if (isSuperUser) {
-          final result = await showAdminDialogAndGetResponse();
-          if (result == true) {
+          if (await useSuperUserFeature()) {
             snackbarService.showSnackbar(
                 title: "Starting quest as super user",
                 message:

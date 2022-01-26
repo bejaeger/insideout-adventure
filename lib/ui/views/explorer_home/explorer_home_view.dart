@@ -205,12 +205,12 @@ class ExplorerHomeView extends StatelessWidget {
                                   SmallButton(
                                       onPressed: () =>
                                           model.addPositionEntryManual(),
-                                      title: "Add All Position"),
+                                      title: "Fetch current Position"),
                                   SmallButton(
                                       onPressed: () =>
                                           model.addPositionEntryManual(
                                               onlyLastKnownPosition: true),
-                                      title: "Add Last Known Pos"),
+                                      title: "Fetch Last known Pos"),
                                   if (!model.pushedToNotion)
                                     SmallButton(
                                         onPressed: () =>
