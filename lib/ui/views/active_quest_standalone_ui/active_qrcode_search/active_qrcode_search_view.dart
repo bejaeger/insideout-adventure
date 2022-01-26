@@ -176,7 +176,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                         child: NextHintDisplay(
                                             model: model, quest: widget.quest)),
                                     // SizedBox(height: 5),
-                                    if (model.isSuperUser)
+                                    if (model.useSuperUserFeatures)
                                       Container(
                                         height: 100,
                                         child: Column(

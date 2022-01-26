@@ -16,12 +16,15 @@ import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:flutter/animation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -29,7 +32,9 @@ abstract class QuestViewModel extends BaseModel {
   final log = getLogger("QuestViewModel");
   StreamSubscription? _activeQuestSubscription;
   String lastActivatedQuestInfoText = "Active Quest";
+  Quest? get currentQuest => questService.currentQuest;
   final GeolocationService _geolocationService = locator<GeolocationService>();
+  final MarkerService _markerService = locator<MarkerService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
@@ -43,6 +48,10 @@ abstract class QuestViewModel extends BaseModel {
   List<double> distancesFromQuests = [];
   bool validatingMarker = false;
   bool showStartSwipe = true;
+  bool get isNearStartMarker =>
+      (_geolocationService.distanceToStartMarker > 0) &&
+      (_geolocationService.distanceToStartMarker <
+          kMaxDistanceFromMarkerInMeter);
 
   bool get listenedToNewPosition => _geolocationService.listenedToNewPosition;
   int get currentPositionDistanceFilter =>
@@ -53,7 +62,7 @@ abstract class QuestViewModel extends BaseModel {
     log.i("Setting up active quest listener");
     _activeQuestSubscription = questService.activatedQuestSubject.listen(
       (activatedQuest) {
-        if (activeQuestNullable?.quest.type == QuestType.Hike) {
+        if (activeQuestNullable?.quest.type == QuestType.QRCodeHike) {
           lastActivatedQuestInfoText = getActiveQuestProgressDescription();
         }
         // TODO: Check the number of rebuilds that is required here!
@@ -68,9 +77,12 @@ abstract class QuestViewModel extends BaseModel {
     );
   }
 
-  void initialize({required Quest quest}) async {
+  Future initialize({required Quest quest}) async {
+    questService.currentQuest = quest;
+    startPositionCalibrationListener(quest: quest);
+    await _geolocationService.setDistanceToStartMarker(
+        lat: quest.startMarker?.lat, lon: quest.startMarker?.lon);
     // start calibration listener
-    startPositionCalibrationListener();
   }
 
   List<Quest> getQuestsOfType({required QuestType type}) {
@@ -78,12 +90,14 @@ abstract class QuestViewModel extends BaseModel {
         quests: nearbyQuests, questType: type);
   }
 
-  void startPositionCalibrationListener() {
+  void startPositionCalibrationListener({required Quest quest}) {
     log.i("Start position calibration listener");
     _geolocationService.listenToPosition(
         distanceFilter: kDistanceFilterForCalibration,
         viewModelCallback: (_) {
           setListenedToNewPosition(true);
+          _geolocationService.setDistanceToStartMarker(
+              lat: quest.startMarker?.lat, lon: quest.startMarker?.lon);
           notifyListeners();
         });
   }
@@ -96,14 +110,11 @@ abstract class QuestViewModel extends BaseModel {
 
   ////////////////////////////////////////
   // Navigation and dialogs
-  void navigateBackFromSingleQuestView() {
-    cancelPositionListener();
-    navigationService.back();
-  }
 
   Future startQuestMain(
       {required Quest quest,
-      Future Function(int)? periodicFuncFromViewModel}) async {
+      Future Function(int)? periodicFuncFromViewModel,
+      bool countStartMarkerAsCollected = false}) async {
     // cancel listener that was only used for calibration
     cancelPositionListener();
     try {
@@ -118,7 +129,8 @@ abstract class QuestViewModel extends BaseModel {
       final isQuestStarted = await questService.startQuest(
           quest: quest,
           uids: [currentUser.uid],
-          periodicFuncFromViewModel: periodicFuncFromViewModel);
+          periodicFuncFromViewModel: periodicFuncFromViewModel,
+          countStartMarkerAsCollected: countStartMarkerAsCollected);
 
       // this will also change the MapViewModel to show the ActiveQuestView
       if (isQuestStarted is String) {
@@ -171,6 +183,7 @@ abstract class QuestViewModel extends BaseModel {
         }
         // }
       } else {
+        log.wtf("Could not get location of user");
         await showGenericInternalErrorDialog();
       }
     }
@@ -202,13 +215,17 @@ abstract class QuestViewModel extends BaseModel {
   Future onQuestInListTapped(Quest quest) async {
     log.i("Quest list item tapped!!!");
     if (hasActiveQuest == false) {
-      if (questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map) {
-        await displayQuestBottomSheet(
-          quest: quest,
-        );
-      } else {
-        await navigateToActiveQuestUI(quest: quest);
-      }
+      // if (questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map) {
+      //   await displayQuestBottomSheet(
+      //     quest: quest,
+      //   );
+      // } else {
+      await navigateToActiveQuestUI(quest: quest);
+
+      // ! This notify listeners is important as the
+      // the view renders the state based on whether a quest is active or not
+      notifyListeners();
+      // }
     } else {
       dialogService.showDialog(title: "You Currently Have a Running Quest !!!");
     }
@@ -219,6 +236,9 @@ abstract class QuestViewModel extends BaseModel {
     SheetResponse? sheetResponse = await bottomSheetService.showCustomSheet(
         variant: BottomSheetType.questInformation,
         title: quest.name,
+        enterBottomSheetDuration: Duration(milliseconds: 300),
+        // curve: Curves.easeInExpo,
+        // curve: Curves.linear,
         description: quest.description,
         mainButtonTitle: quest.type == QuestType.DistanceEstimate
             ? "Go to Quest"
@@ -234,26 +254,42 @@ abstract class QuestViewModel extends BaseModel {
   }
 
   Future showQuestInfoDialog({required Quest quest}) async {
-    await dialogService.showDialog(title: "Quest Name: ${quest.name}", description: "Description: ${quest.description}, AFK Credits To Earn: ${quest.afkCredits}");
+    await dialogService.showDialog(
+        title: quest.name + " - " + describeEnum(quest.type).toString(),
+        description: "Earn ${quest.afkCredits} AFK Credits by " +
+            getQuestDescriptionString(quest));
+  }
+
+  String getQuestDescriptionString(Quest quest) {
+    if (quest.type == QuestType.GPSAreaHike) {
+      return "collecting each checkpoint by walking to the shown red areas.";
+    } else if (quest.type == QuestType.QRCodeHike) {
+      return "finding all QR codes hidden in the highlighted areas.";
+    } else {
+      return "collecting all markers";
+    }
   }
 
   Future navigateToActiveQuestUI({required Quest quest}) async {
     log.i("Navigating to view with currently active quest");
 
     if (quest.type == QuestType.TreasureLocationSearch) {
-      navigationService.navigateTo(Routes.activeTreasureLocationSearchQuestView,
+      await navigationService.navigateTo(
+          Routes.activeTreasureLocationSearchQuestView,
           arguments:
               ActiveTreasureLocationSearchQuestViewArguments(quest: quest));
     } else if (quest.type == QuestType.DistanceEstimate) {
-      navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
+      await navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
           arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
     } else if (quest.type == QuestType.QRCodeSearch ||
         quest.type == QuestType.QRCodeSearchIndoor ||
         quest.type == QuestType.QRCodeHuntIndoor) {
-      navigationService.navigateTo(Routes.activeQrCodeSearchView,
+      await navigationService.navigateTo(Routes.activeQrCodeSearchView,
           arguments: ActiveQrCodeSearchViewArguments(quest: quest));
-    } else if (quest.type == QuestType.Hike || quest.type == QuestType.Hunt) {
-      navigationService.navigateTo(Routes.activeMapQuestView,
+    } else if (quest.type == QuestType.QRCodeHike ||
+        quest.type == QuestType.GPSAreaHike ||
+        quest.type == QuestType.Hunt) {
+      await navigationService.navigateTo(Routes.activeMapQuestView,
           arguments: ActiveMapQuestViewArguments(quest: quest));
     }
     // } else if (quest.type == QuestType.Hike) {
@@ -301,9 +337,9 @@ abstract class QuestViewModel extends BaseModel {
 
   Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
     final marker = await navigationService.navigateTo(Routes.qRCodeView);
-    if (isSuperUser && marker != null) {
+    if (useSuperUserFeatures && marker != null) {
       final adminMode = await showAdminDialogAndGetResponse();
-      if (adminMode) {
+      if (adminMode == true) {
         String qrCodeString =
             qrCodeService.getQrCodeStringFromMarker(marker: marker);
         await navigationService.navigateTo(Routes.qRCodeView,
@@ -319,7 +355,7 @@ abstract class QuestViewModel extends BaseModel {
   }
 
   String getActiveQuestProgressDescription() {
-    if (activeQuest.quest.type == QuestType.Hike ||
+    if (activeQuest.quest.type == QuestType.QRCodeHike ||
         activeQuest.quest.type == QuestType.Hunt ||
         activeQuest.quest.type == QuestType.QRCodeSearch) {
       final returnString = "Collected " +
@@ -347,7 +383,7 @@ abstract class QuestViewModel extends BaseModel {
           "NOT checking quest info after quest was updated because UI dead time is active");
       return;
     }
-    if (activeQuest.quest.type == QuestType.Hike ||
+    if (activeQuest.quest.type == QuestType.QRCodeHike ||
         activeQuest.quest.type == QuestType.Hunt ||
         activeQuest.quest.type == QuestType.QRCodeSearch) {
       lastActivatedQuestInfoText = "Active quest - " +
@@ -491,8 +527,9 @@ abstract class QuestViewModel extends BaseModel {
     if (position == null) {
       return false;
     }
-    if (isSuperUser) {
-      _geolocationService.setGPSAccuracyInfo(position.accuracy, isSuperUser);
+    if (useSuperUserFeatures) {
+      _geolocationService.setGPSAccuracyInfo(
+          position.accuracy, useSuperUserFeatures);
     }
     if (position.accuracy > (minAccuracy ?? kMinLocationAccuracy)) {
       _geolocationService.setGPSAccuracyInfo(position.accuracy);

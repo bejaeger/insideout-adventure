@@ -36,8 +36,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   List<TreasureSearchLocation> checkpoints = [];
   final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
-
-  bool? closeby;
+  
   double currentDistanceInMeters = -1;
   double previousDistanceInMeters = -1;
   int numberTimesFired = 0;
@@ -45,14 +44,12 @@ class ActiveTreasureLocationSearchQuestViewModel
   bool allowCheckingPosition = true;
 
   @override
-  void initialize({required Quest quest}) async {
-    super.initialize(quest: quest);
+  Future initialize({required Quest quest}) async {
     setBusy(true);
+    await super.initialize(quest: quest);
     // Add listener with a small distance filter to get most precise
     // start position!
     resetPreviousQuest();
-    // await runBusyFuture(_geolocationService.getAndSetCurrentLocation());
-    closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
     loadQuestMarkers(quest: quest);
     // await setInitialDistance(quest: quest);
     setBusy(false);
@@ -92,7 +89,7 @@ class ActiveTreasureLocationSearchQuestViewModel
       if (!(await checkAccuracy(
           position: position,
           minAccuracy: kMinRequiredAccuracyLocationSearch))) {
-        if (isSuperUser) {
+        if (useSuperUserFeatures) {
           if (await useSuperUserFeature()) {
             snackbarService.showSnackbar(
                 title: "Starting quest as super user",

@@ -92,7 +92,6 @@ class _ActiveTreasureLocationSearchQuestViewState
                     model.navigateBackFromSingleQuestView();
                   },
                 ),
-                
                 floatingActionButton: !model.questSuccessfullyFinished &&
                         model.hasActiveQuest
                     ? AFKFloatingActionButton(
@@ -156,21 +155,24 @@ class _ActiveTreasureLocationSearchQuestViewState
                   children: [
                     verticalSpaceMedium,
                     if (model.showStartSwipe && !model.isBusy)
-                      AFKSlideButton(
-                        quest: widget.quest,
-                        canStartQuest: model.hasEnoughSponsoring(
-                                quest: widget.quest) &&
-                            (model.closeby != null && model.closeby == true),
-                        onSubmit: () =>
-                            model.maybeStartQuest(quest: widget.quest),
-                      ),
+                      model.isNearStartMarker
+                          ? AFKSlideButton(
+                              quest: widget.quest,
+                              canStartQuest: model.hasEnoughSponsoring(
+                                      quest: widget.quest) &&
+                                  (model.isNearStartMarker != null &&
+                                      model.isNearStartMarker == true),
+                              onSubmit: () =>
+                                  model.maybeStartQuest(quest: widget.quest),
+                            )
+                          : Container(
+                              color: Colors.white,
+                              child: NotCloseToQuestNote(
+                                  controller: model.getGoogleMapController)),
                     if (!model.hasEnoughSponsoring(quest: widget.quest))
                       Container(
                           color: Colors.white,
                           child: NotEnoughSponsoringNote(topPadding: 10)),
-                    if ((model.closeby == null || model.closeby == false))
-                      Container(
-                          color: Colors.white, child: NotCloseToQuestNote()),
                     if (!model.questSuccessfullyFinished)
                       ActiveTreasureLocationSearchQuestView.withMaps
                           ? Expanded(
@@ -248,7 +250,8 @@ class _ActiveTreasureLocationSearchQuestViewState
                                 // verticalSpaceMedium,
                                 CurrentQuestStatusInfo(
                                   isBusy: model.isCheckingDistance,
-                                  isFirstDistanceCheck: model.isFirstDistanceCheck,
+                                  isFirstDistanceCheck:
+                                      model.isFirstDistanceCheck,
                                   currentDistance:
                                       model.currentDistanceInMeters,
                                   previousDistance:

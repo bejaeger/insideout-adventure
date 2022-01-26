@@ -97,6 +97,10 @@ const double kMaxDeviationOfGoalInPercent = 0.2;
 const double kMinRequiredAccuracyDistanceEstimate = 50;
 const double kDistanceFilterDistanceEstimate = 10;
 
+//////////////////////////////////
+// for distance estimate
+const double kDistanceFilterHikeQuest = 10;
+
 ////////////////////////////
 /// General
 const double kThresholdGPSAccuracyToShowInfo = 50;

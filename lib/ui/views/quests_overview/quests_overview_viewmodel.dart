@@ -20,7 +20,7 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
         questService.extractAllQuestTypes();
       }
     } catch (e) {
-      log.wtf("Error when loading quest, this should never happen. Error: $e");
+      log.wtf("Error when loading quests, this should never happen. Error: $e");
       await showGenericInternalErrorDialog();
     }
     setBusy(false);

@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<Quest> getDummyQuests() {
   return [
+    getZaehringenHike(),
     getDummyVibrationSearchQuest(),
     heidachTrohpy(),
     manu(),
@@ -47,7 +48,7 @@ Quest getDummyQuest1() {
       getDummyMarker3(),
       getDummyMarker4()
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: getDummyMarker1(),
     finishMarker: getDummyMarker2(),
   );
@@ -122,7 +123,6 @@ Quest getDummyVibrationSearchQuest() {
   );
 }
 
-
 Quest getDummyVibrationSearchQuestFreiburg() {
   return Quest(
     id: "BYC9JvJaz64vMmyuV2Cc",
@@ -138,7 +138,6 @@ Quest getDummyVibrationSearchQuestFreiburg() {
     finishMarker: freiburg2(),
   );
 }
-
 
 // burnaby quest
 Quest streeth11th2ndVibration() {
@@ -195,7 +194,7 @@ Quest getDummyQuest2() {
       getDummyMarker8(),
       getDummyMarker9()
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: getDummyMarker5(),
     finishMarker: getDummyMarker9(),
   );
@@ -217,7 +216,7 @@ Quest getDummyQuest3() {
       woodwayMarker5(),
       woodwayMarker6(),
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: woodwayMarker1(),
     finishMarker: woodwayMarker6(),
   );
@@ -236,7 +235,7 @@ Quest getDummyQuest4() {
       intimateWoodwayMarker3(),
       intimateWoodwayMarker4(),
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: intimateWoodwayMarker1(),
     finishMarker: intimateWoodwayMarker4(),
   );
@@ -316,7 +315,7 @@ Quest getDummyQuest5() {
     markers: [
       myRoomMarker(),
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: myRoomMarker(),
     finishMarker: myRoomMarker(),
   );
@@ -332,9 +331,26 @@ Quest getDummyQuest6() {
       starenweg4(),
       starenweg3(),
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: starenweg4(),
     finishMarker: starenweg3(),
+  );
+}
+
+Quest getZaehringenHike() {
+  return Quest(
+    id: "unknown",
+    name: "Zähringen GPS Area Hike!",
+    description: "",
+    afkCredits: 5,
+    markers: [
+      freiburg1(),
+      freiburg2(),
+      freiburg3(),
+    ],
+    type: QuestType.GPSAreaHike,
+    startMarker: freiburg1(),
+    finishMarker: freiburg3(),
   );
 }
 
@@ -679,6 +695,15 @@ AFKMarker freiburg2() {
       lat: 48.01694856856642,
       lon: 7.858700560921927);
 }
+
+AFKMarker freiburg3() {
+  return AFKMarker(
+      id: "freiburg3",
+      qrCodeId: "freiburg3",
+      lat: 48.01694856856642,
+      lon: 7.851700560921927);
+}
+
 
 AFKMarker belek1() {
   return AFKMarker(

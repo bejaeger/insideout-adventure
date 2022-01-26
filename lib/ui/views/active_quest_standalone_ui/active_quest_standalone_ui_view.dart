@@ -28,7 +28,7 @@ class ActiveQuestStandaloneUIView extends StatelessWidget {
                   ? ActiveTreasureLocationSearchQuestView(
                       quest: currentQuest,
                     )
-                  : currentQuest.type == QuestType.Hike
+                  : currentQuest.type == QuestType.QRCodeHike
                       ? MapView()
                       : currentQuest.type == QuestType.QRCodeSearch
                           ? ActiveQrCodeSearchView(quest: currentQuest)

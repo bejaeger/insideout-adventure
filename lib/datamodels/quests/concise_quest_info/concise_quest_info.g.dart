@@ -25,7 +25,8 @@ Map<String, dynamic> _$$_ConciseFinishedQuestInfoToJson(
     };
 
 const _$QuestTypeEnumMap = {
-  QuestType.Hike: 'Hike',
+  QuestType.QRCodeHike: 'QRCodeHike',
+  QuestType.GPSAreaHike: 'GPSAreaHike',
   QuestType.Hunt: 'Hunt',
   QuestType.QRCodeHuntIndoor: 'QRCodeHuntIndoor',
   QuestType.QRCodeSearch: 'QRCodeSearch',

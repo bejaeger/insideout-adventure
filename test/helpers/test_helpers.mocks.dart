@@ -999,175 +999,23 @@ class MockGeolocationService extends _i1.Mock
       super.noSuchMethod(Invocation.setter(#gpsAccuracyInfo, _gpsAccuracyInfo),
           returnValueForMissingStub: null);
   @override
-  String get currentLocationDistanceKey =>
-      (super.noSuchMethod(Invocation.getter(#currentLocationDistanceKey),
-          returnValue: '') as String);
+  double get distanceToLastCheckedMarker =>
+      (super.noSuchMethod(Invocation.getter(#distanceToLastCheckedMarker),
+          returnValue: 0.0) as double);
   @override
-  set currentLocationDistanceKey(String? _currentLocationDistanceKey) =>
+  set distanceToLastCheckedMarker(double? _distanceToLastCheckedMarker) =>
       super.noSuchMethod(
           Invocation.setter(
-              #currentLocationDistanceKey, _currentLocationDistanceKey),
+              #distanceToLastCheckedMarker, _distanceToLastCheckedMarker),
           returnValueForMissingStub: null);
   @override
-  String get liveLocationDistanceKey =>
-      (super.noSuchMethod(Invocation.getter(#liveLocationDistanceKey),
-          returnValue: '') as String);
+  double get distanceToStartMarker =>
+      (super.noSuchMethod(Invocation.getter(#distanceToStartMarker),
+          returnValue: 0.0) as double);
   @override
-  set liveLocationDistanceKey(String? _liveLocationDistanceKey) =>
+  set distanceToStartMarker(double? _distanceToStartMarker) =>
       super.noSuchMethod(
-          Invocation.setter(#liveLocationDistanceKey, _liveLocationDistanceKey),
-          returnValueForMissingStub: null);
-  @override
-  String get lastKnownLocationDistanceKey =>
-      (super.noSuchMethod(Invocation.getter(#lastKnownLocationDistanceKey),
-          returnValue: '') as String);
-  @override
-  set lastKnownLocationDistanceKey(String? _lastKnownLocationDistanceKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #lastKnownLocationDistanceKey, _lastKnownLocationDistanceKey),
-          returnValueForMissingStub: null);
-  @override
-  String get triggeredByKey =>
-      (super.noSuchMethod(Invocation.getter(#triggeredByKey), returnValue: '')
-          as String);
-  @override
-  set triggeredByKey(String? _triggeredByKey) =>
-      super.noSuchMethod(Invocation.setter(#triggeredByKey, _triggeredByKey),
-          returnValueForMissingStub: null);
-  @override
-  String get currentLocationTimestampKey =>
-      (super.noSuchMethod(Invocation.getter(#currentLocationTimestampKey),
-          returnValue: '') as String);
-  @override
-  set currentLocationTimestampKey(String? _currentLocationTimestampKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #currentLocationTimestampKey, _currentLocationTimestampKey),
-          returnValueForMissingStub: null);
-  @override
-  String get liveLocationTimestampKey =>
-      (super.noSuchMethod(Invocation.getter(#liveLocationTimestampKey),
-          returnValue: '') as String);
-  @override
-  set liveLocationTimestampKey(String? _liveLocationTimestampKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #liveLocationTimestampKey, _liveLocationTimestampKey),
-          returnValueForMissingStub: null);
-  @override
-  String get lastKnownLocationTimestampKey =>
-      (super.noSuchMethod(Invocation.getter(#lastKnownLocationTimestampKey),
-          returnValue: '') as String);
-  @override
-  set lastKnownLocationTimestampKey(String? _lastKnownLocationTimestampKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #lastKnownLocationTimestampKey, _lastKnownLocationTimestampKey),
-          returnValueForMissingStub: null);
-  @override
-  String get currentLocationLatitudeKey =>
-      (super.noSuchMethod(Invocation.getter(#currentLocationLatitudeKey),
-          returnValue: '') as String);
-  @override
-  set currentLocationLatitudeKey(String? _currentLocationLatitudeKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #currentLocationLatitudeKey, _currentLocationLatitudeKey),
-          returnValueForMissingStub: null);
-  @override
-  String get liveLocationLatitudeKey =>
-      (super.noSuchMethod(Invocation.getter(#liveLocationLatitudeKey),
-          returnValue: '') as String);
-  @override
-  set liveLocationLatitudeKey(String? _liveLocationLatitudeKey) =>
-      super.noSuchMethod(
-          Invocation.setter(#liveLocationLatitudeKey, _liveLocationLatitudeKey),
-          returnValueForMissingStub: null);
-  @override
-  String get lastKnownLocationLatitudeKey =>
-      (super.noSuchMethod(Invocation.getter(#lastKnownLocationLatitudeKey),
-          returnValue: '') as String);
-  @override
-  set lastKnownLocationLatitudeKey(String? _lastKnownLocationLatitudeKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #lastKnownLocationLatitudeKey, _lastKnownLocationLatitudeKey),
-          returnValueForMissingStub: null);
-  @override
-  String get currentLocationLongitudeKey =>
-      (super.noSuchMethod(Invocation.getter(#currentLocationLongitudeKey),
-          returnValue: '') as String);
-  @override
-  set currentLocationLongitudeKey(String? _currentLocationLongitudeKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #currentLocationLongitudeKey, _currentLocationLongitudeKey),
-          returnValueForMissingStub: null);
-  @override
-  String get liveLocationLongitudeKey =>
-      (super.noSuchMethod(Invocation.getter(#liveLocationLongitudeKey),
-          returnValue: '') as String);
-  @override
-  set liveLocationLongitudeKey(String? _liveLocationLongitudeKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #liveLocationLongitudeKey, _liveLocationLongitudeKey),
-          returnValueForMissingStub: null);
-  @override
-  String get lastKnownLocationLongitudeKey =>
-      (super.noSuchMethod(Invocation.getter(#lastKnownLocationLongitudeKey),
-          returnValue: '') as String);
-  @override
-  set lastKnownLocationLongitudeKey(String? _lastKnownLocationLongitudeKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #lastKnownLocationLongitudeKey, _lastKnownLocationLongitudeKey),
-          returnValueForMissingStub: null);
-  @override
-  String get currentLocationAccuracyKey =>
-      (super.noSuchMethod(Invocation.getter(#currentLocationAccuracyKey),
-          returnValue: '') as String);
-  @override
-  set currentLocationAccuracyKey(String? _currentLocationAccuracyKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #currentLocationAccuracyKey, _currentLocationAccuracyKey),
-          returnValueForMissingStub: null);
-  @override
-  String get liveLocationAccuracyKey =>
-      (super.noSuchMethod(Invocation.getter(#liveLocationAccuracyKey),
-          returnValue: '') as String);
-  @override
-  set liveLocationAccuracyKey(String? _liveLocationAccuracyKey) =>
-      super.noSuchMethod(
-          Invocation.setter(#liveLocationAccuracyKey, _liveLocationAccuracyKey),
-          returnValueForMissingStub: null);
-  @override
-  String get lastKnownLocationAccuracyKey =>
-      (super.noSuchMethod(Invocation.getter(#lastKnownLocationAccuracyKey),
-          returnValue: '') as String);
-  @override
-  set lastKnownLocationAccuracyKey(String? _lastKnownLocationAccuracyKey) =>
-      super.noSuchMethod(
-          Invocation.setter(
-              #lastKnownLocationAccuracyKey, _lastKnownLocationAccuracyKey),
-          returnValueForMissingStub: null);
-  @override
-  String get trialEntryKey =>
-      (super.noSuchMethod(Invocation.getter(#trialEntryKey), returnValue: '')
-          as String);
-  @override
-  set trialEntryKey(String? _trialEntryKey) =>
-      super.noSuchMethod(Invocation.setter(#trialEntryKey, _trialEntryKey),
-          returnValueForMissingStub: null);
-  @override
-  String get deviceInfoKey =>
-      (super.noSuchMethod(Invocation.getter(#deviceInfoKey), returnValue: '')
-          as String);
-  @override
-  set deviceInfoKey(String? _deviceInfoKey) =>
-      super.noSuchMethod(Invocation.setter(#deviceInfoKey, _deviceInfoKey),
+          Invocation.setter(#distanceToStartMarker, _distanceToStartMarker),
           returnValueForMissingStub: null);
   @override
   int get currentPositionDistanceFilter =>
@@ -1256,6 +1104,19 @@ class MockGeolocationService extends _i1.Mock
           Invocation.method(#countAsCloseByMarker, [],
               {#position: position, #lat: lat, #lon: lon}),
           returnValue: false) as bool);
+  @override
+  _i17.Future<dynamic> setDistanceToLastCheckedMarker(
+          {double? lat, double? lon}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #setDistanceToLastCheckedMarker, [], {#lat: lat, #lon: lon}),
+          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
+  @override
+  _i17.Future<dynamic> setDistanceToStartMarker({double? lat, double? lon}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #setDistanceToStartMarker, [], {#lat: lat, #lon: lon}),
+          returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
   _i17.Future<double> distanceBetweenUserAndCoordinates(
           {double? lat, double? lon, bool? forceGettingNewPosition = false}) =>
@@ -1354,6 +1215,10 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
       super.noSuchMethod(Invocation.setter(#isUIDeadTime, _isUIDeadTime),
           returnValueForMissingStub: null);
   @override
+  set currentQuest(_i22.Quest? _currentQuest) =>
+      super.noSuchMethod(Invocation.setter(#currentQuest, _currentQuest),
+          returnValueForMissingStub: null);
+  @override
   set activatedQuestTrialId(String? _activatedQuestTrialId) =>
       super.noSuchMethod(
           Invocation.setter(#activatedQuestTrialId, _activatedQuestTrialId),
@@ -1406,12 +1271,14 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
   _i17.Future<dynamic> startQuest(
           {_i22.Quest? quest,
           List<String>? uids,
-          _i17.Future<dynamic> Function(int)? periodicFuncFromViewModel}) =>
+          _i17.Future<dynamic> Function(int)? periodicFuncFromViewModel,
+          bool? countStartMarkerAsCollected = false}) =>
       (super.noSuchMethod(
           Invocation.method(#startQuest, [], {
             #quest: quest,
             #uids: uids,
-            #periodicFuncFromViewModel: periodicFuncFromViewModel
+            #periodicFuncFromViewModel: periodicFuncFromViewModel,
+            #countStartMarkerAsCollected: countStartMarkerAsCollected
           }),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
@@ -1524,6 +1391,11 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
   void updateCollectedMarkers({_i11.AFKMarker? marker}) => super.noSuchMethod(
       Invocation.method(#updateCollectedMarkers, [], {#marker: marker}),
       returnValueForMissingStub: null);
+  @override
+  List<_i11.AFKMarker> markersToShowOnMap({_i22.Quest? questIn}) =>
+      (super.noSuchMethod(
+          Invocation.method(#markersToShowOnMap, [], {#questIn: questIn}),
+          returnValue: <_i11.AFKMarker>[]) as List<_i11.AFKMarker>);
   @override
   bool isMarkerCollected({_i11.AFKMarker? marker}) => (super.noSuchMethod(
       Invocation.method(#isMarkerCollected, [], {#marker: marker}),

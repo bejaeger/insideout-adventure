@@ -111,10 +111,10 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
           infoWindow: InfoWindow(snippet: foundObjects.length.toString()),
           icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
           onTap: () async {
-            bool adminMode = false;
-            if (isSuperUser) {
+            dynamic adminMode = false;
+            if (useSuperUserFeatures) {
               adminMode = await showAdminDialogAndGetResponse();
-              if (adminMode) {
+              if (adminMode == true) {
                 displayMarker(afkmarker);
               }
             }
@@ -132,7 +132,7 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
   @override
   void loadQuestMarkers() {
     // for testing purposes, display location of qr code markers
-    if (isSuperUser) {
+    if (useSuperUserFeatures) {
       for (AFKMarker _m in activeQuest.quest.markers) {
         addMarkerToMap(quest: activeQuest.quest, afkmarker: _m);
       }

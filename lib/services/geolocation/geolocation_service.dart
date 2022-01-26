@@ -32,30 +32,8 @@ class GeolocationService {
   // last known position
   Position? _lastKnownPosition;
 
-  String currentLocationDistanceKey = "currentLocationDistance";
-  String liveLocationDistanceKey = "liveLocationDistance";
-  String lastKnownLocationDistanceKey = "lastKnownLocationDistance";
-  String triggeredByKey = "triggeredBy";
-
-  String currentLocationTimestampKey = "currentLocationTimestamp";
-  String liveLocationTimestampKey = "liveLocationTimestamp";
-  String lastKnownLocationTimestampKey = "lastKnownLocationTimestamp";
-
-  String currentLocationLatitudeKey = "currentLocationLatitude";
-  String liveLocationLatitudeKey = "liveLocationLatitude";
-  String lastKnownLocationLatitudeKey = "lastKnownLocationLatitude";
-
-  String currentLocationLongitudeKey = "currentLocationLongitude";
-  String liveLocationLongitudeKey = "liveLocationLongitude";
-  String lastKnownLocationLongitudeKey = "lastKnownLocationLongitude";
-
-  String currentLocationAccuracyKey = "currentLocationAccuracy";
-  String liveLocationAccuracyKey = "liveLocationAccuracy";
-  String lastKnownLocationAccuracyKey = "lastKnownLocationAccuracy";
-
-  String trialEntryKey = "trial";
-
-  String deviceInfoKey = "deviceInfo";
+  double distanceToLastCheckedMarker = -1;
+  double distanceToStartMarker = -1;
 
   bool _listenedToNewPosition = false;
   bool get listenedToNewPosition => _listenedToNewPosition;
@@ -278,11 +256,36 @@ class GeolocationService {
       {required Position position, required double lat, required double lon}) {
     double distanceInMeters = Geolocator.distanceBetween(
         position.latitude, position.longitude, lat, lon);
+    log.i("Distance from marker: $distanceInMeters");
+    distanceToLastCheckedMarker = distanceInMeters;
     if (distanceInMeters < kMaxDistanceFromMarkerInMeter) {
       return true;
     } else {
       return false;
     }
+  }
+
+  Future setDistanceToLastCheckedMarker(
+      {required double? lat, required double? lon}) async {
+    if (lat == null || lon == null) {
+      log.wtf("Coordinates are null, can't check distance!");
+      return;
+    }
+    final position = await getAndSetCurrentLocation();
+    distanceToLastCheckedMarker = Geolocator.distanceBetween(
+        position.latitude, position.longitude, lat, lon);
+  }
+
+  Future setDistanceToStartMarker(
+      {required double? lat, required double? lon}) async {
+    if (lat == null || lon == null) {
+      log.wtf("Coordinates are null, can't check distance!");
+      return;
+    }
+    final position = await getAndSetCurrentLocation();
+    distanceToStartMarker = Geolocator.distanceBetween(
+        position.latitude, position.longitude, lat, lon);
+    distanceToLastCheckedMarker = distanceToStartMarker;
   }
 
   Future<double> distanceBetweenUserAndCoordinates(
@@ -328,6 +331,8 @@ class GeolocationService {
     _lastKnownPosition = null;
     _currentPosition = null;
     _livePosition = null;
+    distanceToStartMarker = -1;
+    distanceToLastCheckedMarker = -1;
     cancelPositionListener();
   }
 

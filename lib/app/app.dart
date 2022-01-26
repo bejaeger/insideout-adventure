@@ -10,6 +10,7 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/maps/maps_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
@@ -130,7 +131,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: DirectionsAPI),
     LazySingleton(classType: GiftCardService),
     LazySingleton(classType: QuestTestingService),
-    
+    LazySingleton(classType: MapsService),
 
     LazySingleton(classType: PurchasedGiftCardsViewModel),
     LazySingleton(classType: ActiveTreasureLocationSearchQuestViewModel),

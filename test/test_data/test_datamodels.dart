@@ -112,7 +112,7 @@ Quest getTestQuest() {
       getTestMarker2(),
       getTestMarker3(),
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: getTestMarker1(),
     finishMarker: getTestMarker3(),
   );

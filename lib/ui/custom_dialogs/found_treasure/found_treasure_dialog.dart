@@ -108,7 +108,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                         onPressed: () =>
                             widget.completer(DialogResponse(confirmed: true)),
                         child: Text(
-                          "Weiter",
+                          "Continue",
                           style: textTheme(context)
                               .headline6!
                               .copyWith(color: kWhiteTextColor),

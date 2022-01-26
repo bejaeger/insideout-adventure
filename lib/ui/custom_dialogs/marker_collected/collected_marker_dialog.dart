@@ -64,6 +64,12 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -83,7 +89,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   verticalSpaceSmall,
-                  Text("Hinweis gefunden!",
+                  Text("Marker collected!",
                       textAlign: TextAlign.center,
                       style: textTheme(context).headline6!.copyWith(
                           color: kPrimaryColor,
