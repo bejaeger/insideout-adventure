@@ -6,5 +6,4 @@ enum QuestType {
   QRCodeSearchIndoor, // changes in UI!
   DistanceEstimate,
   TreasureLocationSearch,
-  TreasureLocationSearchAutomatic
 }

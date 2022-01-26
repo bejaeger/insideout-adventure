@@ -15,6 +15,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showRedLiveButton;
   final Widget? widget;
   final void Function()? onBackButton;
+    final void Function()? onAppBarButtonPressed;
+
+  final IconData appBarButtonIcon;
   CustomAppBar(
       {Key? key,
       this.height = kAppBarExtendedHeight,
@@ -23,7 +26,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.drawer = false,
       this.onBackButton,
       this.widget,
-      this.showRedLiveButton = false})
+      this.appBarButtonIcon = Icons.help,
+      this.showRedLiveButton = false, 
+      this.onAppBarButtonPressed})
       : super(key: key);
 
   double get getHeight => height;
@@ -99,6 +104,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ),
                     ),
+                  if (onAppBarButtonPressed != null)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: onAppBarButtonPressed,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kHorizontalPadding),
+                          child: Icon(appBarButtonIcon,
+                              color: kWhiteTextColor, size: 35),
+                        ),
+                      ),
+                    ),                    
                 ],
               ),
               decoration: BoxDecoration(
@@ -123,26 +141,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 height: height,
                 alignment: Alignment.centerLeft,
                 child: IconButton(
-                  onPressed: model.navigateBack,
+                  onPressed: onBackButton,
                   icon: Icon(Icons.arrow_back, color: Colors.white),
                 ),
               ),
             if (model.isSuperUser)
               Container(
                 height: height,
-                alignment: Alignment.topRight,
+                alignment: Alignment.topCenter,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    IconButton(
+                        visualDensity: VisualDensity.compact,
+                        padding: const EdgeInsets.all(0),
+                        onPressed: model.openSuperUserSettingsDialog,
+                        icon:
+                            Icon(Icons.settings, color: model.listenedToNewPosition ? Colors.orange : Colors.white, size: 16)),
                     Text(
                       "Super User",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      padding: const EdgeInsets.all(0),
-                      onPressed: model.openSuperUserSettingsDialog, icon: Icon(Icons.settings, color: Colors.white))
                   ],
                 ),
               ),

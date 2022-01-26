@@ -122,22 +122,6 @@ Quest getDummyVibrationSearchQuest() {
   );
 }
 
-// burnaby quest
-Quest getDummyVibrationSearchQuest2() {
-  return Quest(
-    id: "VibrationSearch 2",
-    name: "Woodway Vibrations Nr. 2",
-    description: "Find the AFK Credits",
-    afkCredits: 10,
-    markers: [
-      intimateWoodwayMarker7(),
-      intimateWoodwayMarker3(),
-    ],
-    type: QuestType.TreasureLocationSearchAutomatic,
-    startMarker: intimateWoodwayMarker7(),
-    finishMarker: intimateWoodwayMarker3(),
-  );
-}
 
 Quest getDummyVibrationSearchQuestFreiburg() {
   return Quest(
@@ -155,21 +139,6 @@ Quest getDummyVibrationSearchQuestFreiburg() {
   );
 }
 
-Quest getDummyVibrationSearchQuest4() {
-  return Quest(
-    id: "VibrationSearch 4",
-    name: "Brentwood Vibrations",
-    description: "Find the AFK Credits",
-    afkCredits: 10,
-    markers: [
-      start1(),
-      brentwood(),
-    ],
-    type: QuestType.TreasureLocationSearchAutomatic,
-    startMarker: start1(),
-    finishMarker: brentwood(),
-  );
-}
 
 // burnaby quest
 Quest streeth11th2ndVibration() {
@@ -917,3 +886,6 @@ AFKMarker commercial2() {
     lon: -123.06956197567348,
   );
 }
+
+const double kTestLat = 48.06701330843975;
+const double kTestLon = 7.903736956224777;

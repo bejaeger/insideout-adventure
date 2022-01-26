@@ -10,7 +10,7 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
   List<QuestType> get questTypes => questService.allQuestTypes;
   final logger = getLogger('ManageQuestViewModel');
 
-  Future initialize({bool? force}) async {
+  Future initializeMapAndMarkers({bool? force}) async {
     setBusy(true);
     try {
       if (questService.sortedNearbyQuests == false || force == true) {

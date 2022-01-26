@@ -80,7 +80,7 @@ bool shownDummyModeDialog = false;
 // for Location Search
 
 // will be scaled down once closer to the treasure!
-const double kMinDistanceFromLastCheckInMeters = 30;
+const double kMinDistanceFromLastCheckInMeters = 40;
 const int kCheckDistanceReloadDurationInSeconds = 10;
 
 const double kMinDistanceToCatchTrophyInMeters = 30;
@@ -88,7 +88,6 @@ const double kMinRequiredAccuracyLocationSearch = 50;
 // for vibration search automatic
 const int kDeadTimeAfterVibrationInSeconds = 5;
 
-const double kMaxAccuracyLocationSearch = 20;
 
 //////////////////////////////////
 // for distance estimate
@@ -96,9 +95,12 @@ const int kNumberTriesToRevealDistance = 3;
 // tolerance
 const double kMaxDeviationOfGoalInPercent = 0.2;
 const double kMinRequiredAccuracyDistanceEstimate = 50;
+const double kDistanceFilterDistanceEstimate = 10;
 
 ////////////////////////////
 /// General
 const double kThresholdGPSAccuracyToShowInfo = 50;
 const double kMinLocationAccuracy = 100;
 const double kUnrealisticallyHighDistance = 100000000;
+
+const int kDistanceFilterForCalibration = 5;

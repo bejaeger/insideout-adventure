@@ -14,12 +14,6 @@ const String NameValueKey = 'name';
 const String DescriptionValueKey = 'description';
 const String AfkCreditAmountValueKey = 'afkCreditAmount';
 const String QuestTypeValueKey = 'questType';
-const String AfkStartAndFinishMarkersValueKey = 'afkStartAndFinishMarkers';
-
-const Map<String, String> AfkStartAndFinishMarkersValueToTitleMap = {
-  'start': 'startMarker',
-  'finish': 'finishMarker',
-};
 
 mixin $CreateQuestView on StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -73,18 +67,24 @@ extension ValueProperties on FormViewModel {
   String? get afkCreditAmountValue =>
       this.formValueMap[AfkCreditAmountValueKey];
   String? get questTypeValue => this.formValueMap[QuestTypeValueKey];
-  String? get afkStartAndFinishMarkersValue =>
-      this.formValueMap[AfkStartAndFinishMarkersValueKey];
 
   bool get hasName => this.formValueMap.containsKey(NameValueKey);
   bool get hasDescription => this.formValueMap.containsKey(DescriptionValueKey);
   bool get hasAfkCreditAmount =>
       this.formValueMap.containsKey(AfkCreditAmountValueKey);
   bool get hasQuestType => this.formValueMap.containsKey(QuestTypeValueKey);
-  bool get hasAfkStartAndFinishMarkers =>
-      this.formValueMap.containsKey(AfkStartAndFinishMarkersValueKey);
 }
 
+<<<<<<< HEAD
+extension Methods on FormViewModel {}
+||||||| 52d14dc
+extension Methods on FormViewModel {
+  void setAfkStartAndFinishMarkers(String afkStartAndFinishMarkers) {
+    this.setData(this.formValueMap
+      ..addAll({AfkStartAndFinishMarkersValueKey: afkStartAndFinishMarkers}));
+  }
+}
+=======
 extension Methods on FormViewModel {
   void setAfkStartAndFinishMarkers(String afkStartAndFinishMarkers) {
     this.setData(this.formValueMap
@@ -171,3 +171,4 @@ extension ValueProperties on FormViewModel {
 
 extension Methods on FormViewModel {}
 >>>>>>> be96a6d436b7e248fa0f05d0dd519285ff001918
+>>>>>>> master

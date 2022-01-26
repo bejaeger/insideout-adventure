@@ -8,10 +8,12 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
+import 'package:afkcredits/enums/position_retrieval.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
@@ -33,13 +35,13 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
 
   double? _currentSpeed;
   double? get currentSpeed => _currentSpeed;
-  double? get currentAccuracy => _geolocationService.currentGPSAccuracy;
+  int? get currentAccuracy => _geolocationService.currentGPSAccuracy;
 
   bool startedQuest = false;
   bool questSuccessfullyFinished = false;
 
   // User ACTION!
-  Future revealDistance() async {
+  Future probeDistance() async {
     if (numberOfAvailableTries == 1 && !isSuperUser) {
       final result = await dialogService.showDialog(
           title: "Sure?",
@@ -52,30 +54,43 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       }
     }
     setBusy(true);
-    final distanceTravelledTest = await _geolocationService
-        .distanceBetweenUserAndCoordinates(lat: startingLat, lon: startingLon);
+    final Position currentPosition =
+        await _geolocationService.getUserLivePosition;
+
     if (!(await checkAccuracy(
-        position: _geolocationService.getUserPosition,
+        position: currentPosition,
         minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
       setBusy(false);
       return;
     }
+    final distanceTravelledTest = _geolocationService.distanceBetween(
+        lat1: currentPosition.latitude,
+        lon1: currentPosition.longitude,
+        lat2: startingLat,
+        lon2: startingLon);
     numberTries = numberTries + 1;
     distanceTravelled = distanceTravelledTest;
+
+    questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.userAction,
+        userEventDescription: "distance probed: ${distanceTravelled.toStringAsFixed(2)} m",
+        pushToNotion: true,
+        position: currentPosition);
+
     setBusy(false);
     // distanceTravelled = 1;
 
     ////////////////////////////////////////////////////
     /// Temporary testing purposes
     if (isSuperUser) {
-      _currentSpeed = _geolocationService.getUserPosition?.speed;
+      _currentSpeed = _geolocationService.getUserLivePositionNullable?.speed;
     }
 
     // -----------------------------------------------------
-    // We create a completer and parse it to the pop-up window.
+    // We create a completer and parse it to the calculation below.
+    // Then we display a pop-up that we give the completer as input.
     // The pop-up window shows a progress indicator and
     // displays a success or error dialog when the completer is completed
-    // in _processsPayment.
     var distanceCheckCompleter = Completer<DistanceCheckStatus>();
     try {
       _evaluateDistanceTravelled(
@@ -110,8 +125,8 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   }
 
   @override
-  isQuestCompleted(
-      {double distanceTravelled = 0, double distanceToTravel = 99999}) {
+  bool isQuestCompleted(
+      {double distanceTravelled = 0, double distanceToTravel = 999999}) {
     if (flavorConfigProvider.dummyQuestCompletionVerification) {
       return (distanceTravelled > (distanceToTravel - 201) &&
           distanceTravelled < (distanceToTravel + 201));
@@ -138,7 +153,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       // additional delay!
       await Future.delayed(Duration(seconds: 1));
       log.i("SUCCESS! Successfully estimated $distanceToTravel");
-      questService.setAndPushActiveQuestStatus(QuestStatus.success);
+      questService.setSuccessAsQuestStatus();
       completer.complete(DistanceCheckStatus.success);
       return;
     } else {
@@ -173,7 +188,9 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
     return dialogResult;
   }
 
+  @override
   void initialize({required Quest quest}) {
+    super.initialize(quest: quest);
     resetPreviousQuest();
     distanceToTravel = quest.distanceToTravelInMeter!;
   }
@@ -189,22 +206,37 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       }
       setBusy(true);
       log.i("Starting distance estimate quest with name ${quest.name}");
-      final position = await _geolocationService.getAndSetCurrentLocation();
+      final position = await _geolocationService.getUserLivePosition;
       if (!(await checkAccuracy(
           position: position,
           minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
-        setBusy(false);
-        return;
+        if (isSuperUser) {
+          if (await useSuperUserFeature()) {
+            snackbarService.showSnackbar(
+                title: "Starting quest as super user",
+                message:
+                    "Although accuracy is low: ${position.accuracy.toStringAsFixed(0)}");
+          } else {
+            await resetSlider();
+            return false;
+          }
+        }
       }
       log.i(
           "Starting quest by setting initial position to lat = $startingLat, lon = $startingLon");
       startingLat = position.latitude;
       startingLon = position.longitude;
 
-      await startQuestMain(quest: quest);
-      // snackbarService.showSnackbar(
-      //     message: "Tagged position, you can start to walk now :)");
+      final result = await startQuestMain(quest: quest);
+
       setBusy(false);
+      if (result == false) {
+        return;
+      }
+      log.v("Started quest");
+      // start listener that updates position regularly
+      questService.listenToPosition(
+          distanceFilter: kDistanceFilterDistanceEstimate, pushToNotion: true);
       await Future.delayed(Duration(seconds: 1));
       startedQuest = true;
       notifyListeners();

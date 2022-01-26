@@ -16,6 +16,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'enums/connectivity_type.dart';
 import 'flavor_config.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
+import 'package:flutter/services.dart';
 
 import 'firebase_options_dev.dart' as dev;
 
@@ -24,6 +25,8 @@ const bool USE_EMULATOR = false;
 void mainCommon(Flavor flavor) async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
+    await SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     await Firebase.initializeApp(
         options: dev.DefaultFirebaseOptions.currentPlatform);
     if (USE_EMULATOR) {

@@ -219,7 +219,6 @@ class ExplorerHomeView extends StatelessWidget {
                                   SmallButton(
                                       onPressed: 
                                       model.isListeningToLocation ? model.cancelLocationListener : 
-                                      
                                           model.addLocationListener,
                                       title:   model.isListeningToLocation ? "Cancel position listener" :  "Start position listener"),
                                 ],

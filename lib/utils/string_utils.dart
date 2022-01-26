@@ -1,5 +1,7 @@
 // Some small helper functions
 
+import 'package:intl/intl.dart';
+
 String getInitialsFromName(String name) {
   List<String> splitName = name.split(" ");
   List<String> initials = [];
@@ -32,4 +34,12 @@ String getFirstName(String name) {
 
 String getStringFromEnum(dynamic enumItem) {
   return enumItem.toString().split('.').last;
+}
+
+String formatDate(DateTime timestamp) {
+  return DateFormat.MMMEd().format(timestamp);
+}
+
+String formatDateDetails(DateTime timestamp) {
+  return DateFormat.yMd().add_jm().format(timestamp);
 }
