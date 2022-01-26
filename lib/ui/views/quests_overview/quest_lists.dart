@@ -1,4 +1,6 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/quest_category_card.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
@@ -18,38 +20,74 @@ class QuestLists extends StatelessWidget {
       child: ListView(
         children: [
           verticalSpaceMedium,
-          SectionHeader(title: "Near You"),
+          if (model.currentUser.role != UserRole.adminMaster)
+            SectionHeader(title: "Near You"),
+          if (model.currentUser.role == UserRole.adminMaster)
+            SectionHeader(title: "Create "),
           Container(
             height: 220,
-            child: ListView(
-              //itemExtent: 120,
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              children: [
-                ...model.nearbyQuests
-                    .asMap()
-                    .map((index, quest) {
-                      return MapEntry(
-                        index,
-                        QuestInfoCard(
-                          height: 200,
-                          marginRight: 5,
-                          width: screenWidth(context, percentage: 0.8),
-                          quest: quest,
-                          subtitle: quest.description,
-                          onCardPressed: () async =>
-                              await model.onQuestInListTapped(quest),
-                        ),
-                      );
-                    })
-                    .values
-                    .toList(),
-                verticalSpaceLarge,
-              ],
-            ),
+            child: model.currentUser.role != UserRole.adminMaster
+                ? ListView(
+                    //itemExtent: 120,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      ...model.nearbyQuests
+                          .asMap()
+                          .map((index, quest) {
+                            return MapEntry(
+                              index,
+                              QuestInfoCard(
+                                height: 200,
+                                marginRight: 5,
+                                width: screenWidth(context, percentage: 0.8),
+                                quest: quest,
+                                subtitle: quest.description,
+                                onCardPressed: () async =>
+                                    await model.onQuestInListTapped(quest),
+                              ),
+                            );
+                          })
+                          .values
+                          .toList(),
+                      verticalSpaceLarge,
+                    ],
+                  )
+                //:Todo Code To be Removed
+                : Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: assetsQuestImages.length,
+                      itemBuilder: (BuildContext context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            model.NavigateToQuestViews(index: index);
+
+                            print('Clikced By Felix ${index.toString()}');
+                          },
+                          child: Container(
+                            height: 250,
+                            child: Card(
+                              semanticContainer: true,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: Image.asset(assetsQuestImages[index]
+                                  //fit: BoxFit.fill,
+                                  ),
+                              elevation: 5,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ),
           verticalSpaceSmall,
-          SectionHeader(title: "Types"),
+          if (model.currentUser.role != UserRole.adminMaster)
+            SectionHeader(title: "Types"),
+          if (model.currentUser.role == UserRole.adminMaster)
+            SectionHeader(title: "Edit or Delete "),
           Container(
             padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
             child: GridView.count(

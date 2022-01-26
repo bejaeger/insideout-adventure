@@ -1,9 +1,14 @@
+import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
 class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
   List<QuestType> get questTypes => questService.allQuestTypes;
+  final logger = getLogger('ManageQuestViewModel');
 
   Future initializeMapAndMarkers({bool? force}) async {
     setBusy(true);
@@ -23,8 +28,8 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
 
   void navigateToQuestsOfSpecificTypeView(QuestType type) {
     // Use the below to have the nav bottom bar visible!
-    navToQuestsOfSpecificTypeView(role: currentUser.role, type: type);
-/*     navigationService.navigateTo(
+    // navToQuestsOfSpecificTypeView(role: currentUser.role, type: type);
+    navigationService.navigateTo(
       Routes.bottomBarLayoutTemplateView,
       arguments: BottomBarLayoutTemplateViewArguments(
         userRole: currentUser.role,
@@ -32,7 +37,29 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
         questViewIndex: QuestViewType.singlequest,
         questType: type,
       ),
-    ); */
+    );
+  }
+
+  void NavigateToQuestViews({required int index}) {
+    switch (index) {
+      case 0:
+        logger.i('User is Navigating to $navToCreateQuest');
+        navToCreateQuest();
+        break;
+      case 1:
+        logger.i('User is Navigating to $navToQuestOverView');
+        // navToQuestOverView();
+        break;
+      case 2:
+        logger.i('User is Navigating to $navToQuestOverView');
+        //navToQuestOverView();
+        break;
+      default:
+        logger.i('User is Navigating to $navToCreateQuest');
+
+        navToCreateQuest();
+        break;
+    }
   }
 
   void navigateToMapView() {

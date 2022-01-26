@@ -73,3 +73,72 @@ class GiftCardsList extends StatelessWidget {
     );
   }
 }
+
+class ManageGiftCardsList extends StatelessWidget {
+  final double? height;
+  final List<GiftCardCategory> giftCardList;
+  //final Future Function(GiftCardCategory) onGiftCardTap;
+  const ManageGiftCardsList({
+    Key? key,
+    this.height,
+    required this.giftCardList,
+    /* required this.onGiftCardTap */
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height ?? screenHeight(context) / 4,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: giftCardList.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            child: Card(
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if (giftCardList[index].imageUrl != null)
+                      Expanded(
+                        flex: 4,
+                        child: CachedNetworkImageWrapper(
+                          imageUrl: giftCardList[index].imageUrl!,
+                        ),
+                      ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Text(formatAmount(giftCardList[index].amount)
+                              .toString()),
+                          horizontalSpaceSmall,
+                          Text(
+                            describeEnum(
+                                giftCardList[index].categoryName.toString()),
+                          ),
+                          horizontalSpaceSmall,
+                          Text(centsToAfkCredits(giftCardList[index].amount)
+                                  .toString() +
+                              " AFKC"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            onTap: () {
+              //onGiftCardTap(giftCardList[index]);
+            },
+          );
+        },
+      ),
+    );
+  }
+}

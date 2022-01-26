@@ -49,15 +49,6 @@ class SectionHeader extends StatelessWidget {
                   size: 28,
                   color: kBlackHeadlineColor,
                 )),
-          // TextButton(
-          //   onPressed: onTextButtonTap,
-          //   child: Text(
-          //     textButtonText,
-          //     style: textTheme(context)
-          //         .headline6!
-          //         .copyWith(color: ColorSettings.greyTextColor, fontSize: 14),
-          //   ),
-          // ),
           if (trailingIcon != null) trailingIcon!,
         ],
       ),

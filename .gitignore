@@ -36,6 +36,9 @@ pubspec.lock
 #Android Services 
 android/app/src/*/google-services.json
 android/app/src/*/AndroidManifest.xml
+
+#Lib folder 
+lib/firebase_options.dart
 .env
 dotenv
 #ios/Xcode Related

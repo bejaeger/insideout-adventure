@@ -1,4 +1,3 @@
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 const String kAppName = "AFK Credits";
@@ -29,6 +28,10 @@ final CollectionReference usersCollection =
 // collection references
 final CollectionReference giftCardsCollection =
     FirebaseFirestore.instance.collection('giftCardCategories');
+
+final CollectionReference preGiftCardsCollection =
+    FirebaseFirestore.instance.collection('prePurchasedGiftCards');
+
 final CollectionReference paymentsCollection =
     FirebaseFirestore.instance.collection('transfers');
 final CollectionReference questsCollection =
@@ -63,7 +66,6 @@ const List<String> questType = [
   "TreasureLocationSearch",
   "TreasureLocationSearchAutomatic"
 ];
-
 //////////////////////////////////////////////////////////
 /// Quest settings!
 

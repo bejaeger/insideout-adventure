@@ -1,4 +1,5 @@
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/create_quest/create_quest_view.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -6,13 +7,14 @@ import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
-import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
+import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
+import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/manage_quest/manage_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
@@ -96,8 +98,9 @@ class _BottomBarLayoutTemplateViewState
                 )
               ],
               borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(16.0),
-                  topLeft: Radius.circular(16.0)),
+                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(16.0),
+              ),
               colorBehindNavBar: Colors.white,
             ),
             popAllScreensOnTapOfSelectedTab: true,
@@ -177,7 +180,6 @@ class _BottomBarLayoutTemplateViewState
         ];
       default:
         return [
-          //AdminHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
@@ -186,22 +188,21 @@ class _BottomBarLayoutTemplateViewState
               questType: widget.questType,
             ),
           if (widget.questViewIndex == QuestViewType.map) MapView(),
-          AddMarkersView(),
-          CreateQuestView(),
+          // ManageQuestView(),
+/*
+          if (widget.questViewIndex == QuestViewType.questlist)
+            QuestsOverviewView(),
+
+          if (widget.questViewIndex == QuestViewType.singlequest)
+            SingleQuestTypeView(
+              quest: widget.quest,
+              questType: widget.questType,
+            ), */
+
+          ManageGiftCardstView(),
+          //AddGiftCardsView(),
         ];
     }
-
-/*     return [
-      if (userRole == UserRole.sponsor) SponsorHomeView(),
-      //if (userRole == UserRole.admin) AdminHomeView(),
-      if (userRole == UserRole.adminMaster) HomeView(), //AddMarkersView(),
-      if (userRole == UserRole.explorer) ExplorerHomeView(),
-
-
-      if (userRole == UserRole.explorer) GiftCardView(),
-      if (userRole == UserRole.adminMaster) AddMarkersView(),
-      //MoneyPoolsView(),
-    ]; */
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems({required UserRole userRole}) {
@@ -268,34 +269,42 @@ class _BottomBarLayoutTemplateViewState
         ];
       default:
         return [
-          /*    AFKNavBarItem(
-            icon: Icon(Icons.home),
-            inactiveIcon: Icon(Icons.home_outlined),
-            title: "Home",
-          ), */
           AFKNavBarItem(
+            icon: Icon(Icons.explore),
+            inactiveIcon: Icon(Icons.explore_outlined),
+            title: "Quest",
+            displayView: CreateQuestView(),
+          ),
+/*           AFKNavBarItem(
             icon: Icon(
               Icons.explore,
             ),
             inactiveIcon: Icon(Icons.explore_outlined),
             title: ("Quests"),
-          ),
-          AFKNavBarItem(
+          ), */
+          /*        AFKNavBarItem(
             icon: Icon(Icons.mark_email_read_outlined),
             inactiveIcon: Icon(Icons.mark_chat_read),
             title: ("Add Markers"),
-          ),
+          ), */
           AFKNavBarItem(
+            icon: Icon(Icons.shop),
+            inactiveIcon: Icon(Icons.shop_outlined),
+            title: "Rewards",
+          ),
+
+          /*      AFKNavBarItem(
             icon: Icon(Icons.note_add),
             inactiveIcon: Icon(Icons.note_add_outlined),
             title: ("Create Quest"),
-          ),
+          ), */
         ];
     }
   }
 
   PersistentBottomNavBarItem AFKNavBarItem(
       {required Widget icon,
+      Widget? displayView,
       required Widget inactiveIcon,
       required String title,
       double? iconSize,
@@ -313,6 +322,13 @@ class _BottomBarLayoutTemplateViewState
       activeColorPrimary: activeColorPrimary ?? Colors.white,
       activeColorSecondary: activeColorSecondary ?? Colors.white,
       inactiveColorPrimary: inactiveColorPrimary ?? Colors.white70,
+      routeAndNavigatorSettings: RouteAndNavigatorSettings(
+        initialRoute: '/',
+        routes: {
+          '/displayView': (context) => displayView ?? CreateQuestView(),
+          // '/second': (context) => MainScreen3(),
+        },
+      ),
     );
   }
 }
