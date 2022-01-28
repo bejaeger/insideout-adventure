@@ -7,7 +7,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/treasure_search/treasure_search_location.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
@@ -36,7 +36,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   List<TreasureSearchLocation> checkpoints = [];
   final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
-  
+
   double currentDistanceInMeters = -1;
   double previousDistanceInMeters = -1;
   int numberTimesFired = 0;
@@ -120,8 +120,8 @@ class ActiveTreasureLocationSearchQuestViewModel
             pushToNotion: true,
             recordPositionDataEvent: false,
             // skipFirstStreamEvent: true,
-            // TODO: Think of adding position to the viewModelCallback function
-            // Then we can add a filterGPSData function that only
+
+            // Maybe we should add a filterGPSData function that only
             // allows the user to check location based on certain conditions
             viewModelCallback: (position) {
               if (allowCheckingPosition == false) {

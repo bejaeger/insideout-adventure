@@ -637,7 +637,7 @@ abstract class QuestViewModel extends BaseModel {
       if (canVibrate!) {
         log.i("Phone is able to vibrate");
       } else {
-        log.w("Phone is not able to!");
+        log.w("Phone is not able to vibrate!");
       }
     }
   }

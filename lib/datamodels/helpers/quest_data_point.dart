@@ -1,4 +1,4 @@
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -36,5 +36,3 @@ class QuestDataPoint {
     this.userEventDescription,
   });
 }
-
-

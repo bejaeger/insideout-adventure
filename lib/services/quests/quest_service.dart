@@ -9,7 +9,7 @@ import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_cat
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
@@ -167,7 +167,7 @@ class QuestService with ReactiveServiceMixin {
     return await _geolocationService.listenToPosition(
         distanceFilter: distanceFilter.round(),
         onData: (Position position) {
-          log.v("New position event fired from location listener!");
+          // log.v("New position event fired from location listener!");
           if (recordPositionDataEvent) {
             _questTestingService.maybeRecordData(
               trigger: QuestDataPointTrigger.locationListener,
@@ -207,6 +207,12 @@ class QuestService with ReactiveServiceMixin {
     // 2. bookkeep credits
     // 3. clean-up old quest
 
+    // Quest succesfully finished
+    _questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.userAction,
+        userEventDescription: "Quest succesfully finished",
+        pushToNotion: true);
+
     // ------------------
     // 1.
     // TODO
@@ -219,12 +225,6 @@ class QuestService with ReactiveServiceMixin {
     // ---------------
     // 3.
     await uploadAndCleanUpFinishedQuest();
-
-    // Quest succesfully started
-    _questTestingService.maybeRecordData(
-        trigger: QuestDataPointTrigger.userAction,
-        userEventDescription: "Quest succesfully finished",
-        pushToNotion: true);
   }
 
   Future evaluateFinishedQuest() async {

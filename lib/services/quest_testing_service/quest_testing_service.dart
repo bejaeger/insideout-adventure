@@ -5,7 +5,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -175,7 +175,7 @@ class QuestTestingService {
       completers[keyCompleterNew] = Completer();
       try {
         // the following pushes the data.
-        // in case this function is called multiple times we wait for a few seconds
+        // in case this function is called multiple times we await the completer
         keyCompleterPrevious.add(keyCompleterNew);
         if ((completers.length) > 1) {
           if (completers[
@@ -441,7 +441,7 @@ class QuestTestingService {
         log.e("Error when pushing data to notion: ${notionResponse.message}");
         return false;
       } else {
-        log.i("Pushed entry to notion database");
+        log.v("Pushed entry to notion database");
         return true;
       }
     } catch (e) {

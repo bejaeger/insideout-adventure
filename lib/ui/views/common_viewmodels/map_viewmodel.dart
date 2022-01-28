@@ -7,6 +7,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
@@ -334,9 +335,15 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-
   Future handleCollectedMarkerEvent({required AFKMarker afkmarker}) async {
     if (hasActiveQuest == true) {
+      questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.userAction,
+        pushToNotion: true,
+        userEventDescription:
+            "collected marker " + getNumberMarkersCollectedString(),
+      );
+
       // Move this to isQuestCompleted function and remove stuff from service!
       if (isQuestCompleted()) {
         //checkQuestAndFinishWhenCompleted();
@@ -351,9 +358,6 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         return;
       } else {
         addNextArea();
-
-        // TODO: Can be improved by adding animation to animateCameraToPreviewNext()
-        // TODO: And first animating to JUST collected marker
         // animate camera to preview next marker
         animateCameraToPreviewNextArea();
       }
@@ -362,6 +366,13 @@ class MapViewModel extends ActiveQuestBaseViewModel {
           title: "Quest Not Running",
           description: "Verify Your Quest Because is not running");
     }
+  }
+
+  String getNumberMarkersCollectedString() {
+    // minus one because start marker is counted as collected from the start!
+    return (numMarkersCollected - 1).toString() +
+        " / " +
+        (activeQuest.markersCollected.length - 1).toString();
   }
 
   @override

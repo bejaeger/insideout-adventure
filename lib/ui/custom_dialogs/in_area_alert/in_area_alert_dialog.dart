@@ -176,7 +176,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     opacity: _animation,
                     child: TextButton(
                       onPressed: () =>
-                          widget.completer(DialogResponse(confirmed: true)),
+                          widget.completer(DialogResponse(confirmed: false)),
                       child: Text(
                         "Go Back",
                         style: TextStyle(color: kBlackHeadlineColor),

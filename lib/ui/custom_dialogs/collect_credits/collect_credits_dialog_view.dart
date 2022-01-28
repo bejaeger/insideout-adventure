@@ -74,7 +74,10 @@ class _BasicDialogContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     verticalSpaceSmall,
-                    Text(model.collectedCredits ? "SUCCESS!" : "Congratulations!",
+                    Text(
+                        model.collectedCredits
+                            ? "SUCCESS!"
+                            : "Congratulations!",
                         textAlign: TextAlign.center,
                         style: textTheme(context).headline6!.copyWith(
                             color: kPrimaryColor,
@@ -83,10 +86,10 @@ class _BasicDialogContent extends StatelessWidget {
                     verticalSpaceSmall,
                     Text(
                         model.collectedCredits
-                            ? "You earned " +
+                            ? "You get " +
                                 request.data.quest.afkCredits.toString() +
                                 " AFK Credits"
-                            : "You earned " +
+                            : "You get " +
                                 request.data.quest.afkCredits.toString() +
                                 " AFK Credits!",
                         textAlign: TextAlign.center,
@@ -128,8 +131,7 @@ class _BasicDialogContent extends StatelessWidget {
                                   child: Text("Continue",
                                       style: textTheme(context)
                                           .headline6!
-                                          .copyWith(
-                                              color: Colors.blue))),
+                                          .copyWith(color: Colors.blue))),
                             ],
                           )
                   ],

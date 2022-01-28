@@ -8,7 +8,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -73,7 +73,8 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
 
     questTestingService.maybeRecordData(
         trigger: QuestDataPointTrigger.userAction,
-        userEventDescription: "distance probed: ${distanceTravelled.toStringAsFixed(2)} m",
+        userEventDescription:
+            "distance probed: ${distanceTravelled.toStringAsFixed(2)} m",
         pushToNotion: true,
         position: currentPosition);
 

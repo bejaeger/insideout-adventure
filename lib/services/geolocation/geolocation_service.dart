@@ -3,7 +3,7 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart' show describeEnum, kIsWeb;
@@ -40,6 +40,11 @@ class GeolocationService {
 
   int currentPositionDistanceFilter = -1;
 
+  // Maybe we should add a filterGPSData function that only
+  // allows the user to check location based on certain conditions
+  // Maybe this should be a callback that notifies the user when GPS
+  // is bad!
+
   Future<void> listenToPosition({
     required int distanceFilter,
     void Function(Position)? onData,
@@ -56,7 +61,6 @@ class GeolocationService {
               distanceFilter: distanceFilter.round())
           .listen(
         (position) {
-          log.v("New position event fired from location listener!");
           printPositionInfo(position);
           _livePosition = position;
           setGPSAccuracyInfo(position.accuracy);
@@ -311,6 +315,19 @@ class GeolocationService {
     return distanceInMeters;
   }
 
+  double distanceBetweenPositionAndCoordinates(
+      {required Position? position,
+      required double? lat,
+      required double? lon}) {
+    if (lat == null || lon == null) {
+      log.e("input latitude or longitude is null, cannot derive distance!");
+      return -1;
+    }
+    double distanceInMeters = Geolocator.distanceBetween(
+        position!.latitude, position.longitude, lat, lon);
+    return distanceInMeters;
+  }
+
   double distanceBetween(
       {required double? lat1,
       required double? lon1,
@@ -327,7 +344,7 @@ class GeolocationService {
 
   void printPositionInfo(Position position) {
     log.v(
-        "position lat, lon, accuracy, seconds ago: ${position.latitude}, ${position.longitude}, ${position.accuracy}, ${position.timestamp?.difference(DateTime.now()).inSeconds}");
+        "New fired position lat, lon, accuracy, seconds ago: ${position.latitude}, ${position.longitude}, ${position.accuracy}, ${position.timestamp?.difference(DateTime.now()).inSeconds}");
   }
 
   void cancelPositionListener() {
