@@ -63,7 +63,7 @@ class QuestTestingService {
 
   bool _isRecordingLocationData = true;
   bool _isPermanentAdminMode = false;
-  bool _isPermanentUserMode = false;
+  bool _isPermanentUserMode = true;
 
   int? distanceFilter;
 

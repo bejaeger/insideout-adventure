@@ -511,44 +511,6 @@ class ActiveTreasureLocationSearchQuestViewModel
     }
   }
 
-  //-------------------------------------------
-  // Helper
-
-  Future vibrateWrongDirection() async {
-    await checkCanVibrate();
-    if (canVibrate!) {
-      final Iterable<Duration> pauses = [
-        const Duration(milliseconds: 500),
-        const Duration(milliseconds: 500),
-      ];
-      log.v("Phone is supposed to vibrate now");
-      // vibrate - sleep 0.2s - vibrate - sleep 0.2s - vibrate - sleep 0.2s - vibrate
-      Vibrate.vibrateWithPauses(pauses);
-    }
-  }
-
-  Future vibrateRightDirection() async {
-    // Check if the device can vibrate
-    await checkCanVibrate();
-    if (canVibrate!) {
-      log.v("Phone is supposed to vibrate now");
-      // vibrate for default (500ms on android, about 500ms on iphone)
-      Vibrate.vibrate();
-      Vibrate.feedback(FeedbackType.success);
-    }
-  }
-
-  Future checkCanVibrate() async {
-    if (canVibrate == null) {
-      canVibrate = await Vibrate.canVibrate;
-      if (canVibrate!) {
-        log.i("Phone is able to vibrate");
-      } else {
-        log.w("Phone is not able to!");
-      }
-    }
-  }
-
   Future showInstructions() async {
     await dialogService.showDialog(
         title: "How it works",

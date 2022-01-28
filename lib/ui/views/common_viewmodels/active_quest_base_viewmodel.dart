@@ -4,10 +4,12 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/maps_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -19,16 +21,18 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
   final MapsService mapsService = locator<MapsService>();
   bool questCenteredOnMap = true;
   String mapStyle = "";
+  bool showCollectedMarkerAnimation = false;
 
   Set<Marker> markersOnMap = {};
   Set<Circle> areasOnMap = {};
   String get timeElapsed => questService.getMinutesElapsedString();
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
+  bool isAnimatingCamera = false;
   // Functions to override!
   void loadQuestMarkers();
   bool isQuestCompleted();
-  void updateMapMarkers({required AFKMarker afkmarker}) {}
+  // void updateMapMarkers({required AFKMarker afkmarker}) {}
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker});
   BitmapDescriptor defineMarkersColour(
       {required AFKMarker afkmarker, required Quest? quest});
@@ -95,7 +99,43 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
     );
   }
 
+  @override
+  void updateMapMarkers({required AFKMarker afkmarker}) {
+    markersOnMap = markersOnMap
+        .map((item) => item.markerId == MarkerId(afkmarker.id)
+            ? item.copyWith(
+                iconParam:
+                    defineMarkersColour(afkmarker: afkmarker, quest: null))
+            : item)
+        .toSet();
+    notifyListeners();
+  }
+
+  // TODO all google maps controller stuff to a UI helper class!
+  void updateMapArea({required AFKMarker afkmarker}) {
+    areasOnMap = areasOnMap
+        .map((item) => item.circleId == CircleId(afkmarker.id)
+            ? item.copyWith(
+                fillColorParam: Colors.green.withOpacity(0.5),
+                strokeColorParam: Colors.green.withOpacity(0.6),
+              )
+            : item)
+        .toSet();
+    notifyListeners();
+  }
+
+  void updateMapDisplay({required AFKMarker afkmarker}) {
+    if (activeQuest.quest.type == QuestType.QRCodeHike) {
+      updateMapMarkers(afkmarker: afkmarker);
+      updateMapArea(afkmarker: afkmarker);
+    } else if (activeQuest.quest.type == QuestType.GPSAreaHike) {
+      updateMapArea(afkmarker: afkmarker);
+    }
+  }
+
   Future animateCameraToPreviewNextArea() async {
+    isAnimatingCamera = true;
+    notifyListeners();
     if (getGoogleMapController == null) {
       log.e("Can't animate camera because google maps controller is null");
       return;
@@ -103,23 +143,48 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
     // LatLng = getGoogleMapController.getZoomLevel()
     // getGoogleMapController!.
     AFKMarker? marker = questService.getNextMarker();
-    if (marker != null && marker.lat != null && marker.lon != null) {
-      double zoom = await getGoogleMapController!.getZoomLevel();
+    AFKMarker? previousMarker = questService.getPreviousMarker();
+    if (marker != null &&
+        marker.lat != null &&
+        marker.lon != null &&
+        previousMarker != null &&
+        previousMarker.lat != null &&
+        previousMarker.lon != null) {
       await getGoogleMapController!.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: LatLng(marker.lat!, marker.lon!), zoom: zoom),
+        CameraUpdate.newLatLng(
+          LatLng(previousMarker.lat!, previousMarker.lon!),
         ),
       );
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(milliseconds: 1200));
+      triggerCollectedMarkerAnimation();
+      // await Future.delayed(Duration(milliseconds: 1000));
+      updateMapDisplay(afkmarker: previousMarker);
+      await Future.delayed(Duration(milliseconds: 1200));
+      await getGoogleMapController!.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(marker.lat!, marker.lon!),
+        ),
+      );
+      await Future.delayed(Duration(milliseconds: 1200));
       Position pos = await geolocationService.getUserLivePosition;
       await animateCameraToBetweenCoordinates(
-          controller: getGoogleMapController!,
-          latLngList: [
-            LatLng(pos.latitude, pos.longitude),
-            LatLng(marker.lat!, marker.lon!),
-          ],
-          padding: 100);
+        controller: getGoogleMapController!,
+        latLngList: [
+          //LatLng(pos.latitude, pos.longitude),
+          LatLng(previousMarker.lat!, previousMarker.lon!),
+          LatLng(marker.lat!, marker.lon!),
+        ],
+      );
     }
+    await Future.delayed(Duration(milliseconds: 1200));
+    isAnimatingCamera = false;
+    notifyListeners();
+    snackbarService.showSnackbar(
+        title: "Let's go", message: "The next marker is waiting!");
+  }
+
+  void triggerCollectedMarkerAnimation() {
+    showCollectedMarkerAnimation = true;
     notifyListeners();
   }
 

@@ -186,6 +186,14 @@ class QuestService with ReactiveServiceMixin {
     _geolocationService.cancelPositionListener();
   }
 
+  void pausePositionListener() {
+    _geolocationService.pausePositionListener();
+  }
+
+  void resumePositionListener() {
+    _geolocationService.resumePositionListener();
+  }
+
   int get getNumberMarkersCollected => activatedQuest!.markersCollected
       .where((element) => element == true)
       .toList()
@@ -916,6 +924,26 @@ class QuestService with ReactiveServiceMixin {
     } else {
       if (quest != null && (1 < quest.markers.length)) {
         return quest.markers[1];
+      }
+    }
+    return null;
+  }
+
+  AFKMarker? getPreviousMarker({Quest? quest}) {
+    late int index;
+    if (hasActiveQuest) {
+      index = activatedQuest!.markersCollected
+          .lastIndexWhere((element) => element == true);
+      if (index < 0) {
+        // no marker collected yet
+        index = 0;
+      }
+      if (index < activatedQuest!.quest.markers.length) {
+        return activatedQuest!.quest.markers[index];
+      }
+    } else {
+      if (quest != null && (0 < quest.markers.length)) {
+        return quest.markers[0];
       }
     }
     return null;

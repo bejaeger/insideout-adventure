@@ -329,11 +329,12 @@ Quest getDummyQuest6() {
     afkCredits: 1,
     markers: [
       starenweg4(),
-      starenweg3(),
+      heidach2(),
+      heidach4(),
     ],
     type: QuestType.QRCodeHike,
     startMarker: starenweg4(),
-    finishMarker: starenweg3(),
+    finishMarker: heidach4(),
   );
 }
 

@@ -141,7 +141,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                                 name: nameController.text.toString(),
                                 description:
                                     descriptionController.text.toString(),
-                                type: selectedQuestType ?? QuestType.Hike,
+                                type: selectedQuestType ?? QuestType.QRCodeHike,
                                 markers: model.afkCredits,
                                 afkCredits: afkCreditAmount!),
                           );

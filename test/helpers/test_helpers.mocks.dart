@@ -3,7 +3,7 @@
 // Do not manually edit this file.
 
 import 'dart:async' as _i17;
-import 'dart:ui' as _i50;
+import 'dart:ui' as _i49;
 
 import 'package:afkcredits/apis/cloud_functions_api.dart' as _i29;
 import 'package:afkcredits/apis/firestore_api.dart' as _i21;
@@ -59,7 +59,6 @@ import 'package:firebase_auth/firebase_auth.dart' as _i12;
 import 'package:flutter/material.dart' as _i48;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i34;
 import 'package:geolocator/geolocator.dart' as _i8;
-import 'package:get/get.dart' as _i49;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:places_service/src/models/application_models.dart' as _i6;
 import 'package:places_service/src/places_service.dart' as _i31;
@@ -1093,16 +1092,25 @@ class MockGeolocationService extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#handlePermission, []),
           returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
   @override
-  _i17.Future<bool> isUserCloseby({double? lat, double? lon}) =>
+  _i17.Future<bool> isUserCloseby(
+          {double? lat, double? lon, int? threshold = 50}) =>
       (super.noSuchMethod(
-          Invocation.method(#isUserCloseby, [], {#lat: lat, #lon: lon}),
+          Invocation.method(#isUserCloseby, [],
+              {#lat: lat, #lon: lon, #threshold: threshold}),
           returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
   @override
   bool countAsCloseByMarker(
-          {_i8.Position? position, double? lat, double? lon}) =>
+          {_i8.Position? position,
+          double? lat,
+          double? lon,
+          int? threshold = 50}) =>
       (super.noSuchMethod(
-          Invocation.method(#countAsCloseByMarker, [],
-              {#position: position, #lat: lat, #lon: lon}),
+          Invocation.method(#countAsCloseByMarker, [], {
+            #position: position,
+            #lat: lat,
+            #lon: lon,
+            #threshold: threshold
+          }),
           returnValue: false) as bool);
   @override
   _i17.Future<dynamic> setDistanceToLastCheckedMarker(
@@ -1141,6 +1149,14 @@ class MockGeolocationService extends _i1.Mock
   @override
   void cancelPositionListener() =>
       super.noSuchMethod(Invocation.method(#cancelPositionListener, []),
+          returnValueForMissingStub: null);
+  @override
+  void pausePositionListener() =>
+      super.noSuchMethod(Invocation.method(#pausePositionListener, []),
+          returnValueForMissingStub: null);
+  @override
+  void resumePositionListener() =>
+      super.noSuchMethod(Invocation.method(#resumePositionListener, []),
           returnValueForMissingStub: null);
   @override
   void clearData() => super.noSuchMethod(Invocation.method(#clearData, []),
@@ -1302,6 +1318,14 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
   @override
   void cancelPositionListener() =>
       super.noSuchMethod(Invocation.method(#cancelPositionListener, []),
+          returnValueForMissingStub: null);
+  @override
+  void pausePositionListener() =>
+      super.noSuchMethod(Invocation.method(#pausePositionListener, []),
+          returnValueForMissingStub: null);
+  @override
+  void resumePositionListener() =>
+      super.noSuchMethod(Invocation.method(#resumePositionListener, []),
           returnValueForMissingStub: null);
   @override
   _i17.Future<dynamic> handleSuccessfullyFinishedQuest() => (super.noSuchMethod(
@@ -1842,10 +1866,10 @@ class MockNavigationService extends _i1.Mock implements _i47.NavigationService {
           bool? popGesture,
           int? id,
           _i48.Curve? curve,
-          _i49.Bindings? binding,
+          _i47.Bindings? binding,
           bool? fullscreenDialog = false,
           bool? preventDuplicates = true,
-          _i49.Transition? transitionClass}) =>
+          _i47.Transition? transitionClass}) =>
       (super.noSuchMethod(Invocation.method(#navigateWithTransition, [
         page
       ], {
@@ -1868,10 +1892,10 @@ class MockNavigationService extends _i1.Mock implements _i47.NavigationService {
           bool? popGesture,
           int? id,
           _i48.Curve? curve,
-          _i49.Bindings? binding,
+          _i47.Bindings? binding,
           bool? fullscreenDialog = false,
           bool? preventDuplicates = true,
-          _i49.Transition? transitionClass}) =>
+          _i47.Transition? transitionClass}) =>
       (super.noSuchMethod(Invocation.method(#replaceWithTransition, [
         page
       ], {
@@ -1918,12 +1942,12 @@ class MockNavigationService extends _i1.Mock implements _i47.NavigationService {
           int? id,
           bool? opaque,
           _i48.Curve? curve,
-          _i49.Bindings? binding,
+          _i47.Bindings? binding,
           Duration? duration,
           bool? fullscreenDialog = false,
           bool? popGesture,
           bool? preventDuplicates = true,
-          _i49.Transition? transition}) =>
+          _i47.Transition? transition}) =>
       (super.noSuchMethod(Invocation.method(#navigateToView, [
         view
       ], {
@@ -2097,9 +2121,9 @@ class MockDialogService extends _i1.Mock implements _i47.DialogService {
           {String? title,
           String? description,
           String? cancelTitle,
-          _i50.Color? cancelTitleColor,
+          _i49.Color? cancelTitleColor,
           String? buttonTitle = r'Ok',
-          _i50.Color? buttonTitleColor,
+          _i49.Color? buttonTitleColor,
           bool? barrierDismissible = false,
           _i47.DialogPlatform? dialogPlatform}) =>
       (super.noSuchMethod(
@@ -2129,7 +2153,7 @@ class MockDialogService extends _i1.Mock implements _i47.DialogService {
           bool? showIconInAdditionalButton = false,
           String? additionalButtonTitle,
           bool? takesInput = false,
-          _i50.Color? barrierColor = const _i50.Color(2315255808),
+          _i49.Color? barrierColor = const _i49.Color(2315255808),
           bool? barrierDismissible = false,
           String? barrierLabel = r'',
           dynamic customData,
@@ -2233,7 +2257,7 @@ class MockBottomSheetService extends _i1.Mock
           bool? showIconInAdditionalButton = false,
           String? additionalButtonTitle,
           bool? takesInput = false,
-          _i50.Color? barrierColor = const _i50.Color(2315255808),
+          _i49.Color? barrierColor = const _i49.Color(2315255808),
           bool? barrierDismissible = true,
           bool? isScrollControlled = false,
           String? barrierLabel = r'',

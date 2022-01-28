@@ -236,10 +236,14 @@ class GeolocationService {
     return await _firestoreApi.getPlaces();
   }
  */
-  Future<bool> isUserCloseby({required double lat, required double lon}) async {
-    log.v("Check if user is closeby marker based on last known location");
+  Future<bool> isUserCloseby(
+      {required double lat,
+      required double lon,
+      int threshold = kMaxDistanceFromMarkerInMeter}) async {
+    // log.v("Check if user is closeby marker based on last known location");
     final position = await getAndSetCurrentLocation();
-    if (countAsCloseByMarker(position: position, lat: lat, lon: lon)) {
+    if (countAsCloseByMarker(
+        position: position, lat: lat, lon: lon, threshold: threshold)) {
       log.v("User is nearby the marker!");
       return true;
     } else {
@@ -248,17 +252,21 @@ class GeolocationService {
           "User not nearby the marker, try calculating a NEW position and check again");
       final position =
           await getAndSetCurrentLocation(forceGettingNewPosition: true);
-      return countAsCloseByMarker(position: position, lat: lat, lon: lon);
+      return countAsCloseByMarker(
+          position: position, lat: lat, lon: lon, threshold: threshold);
     }
   }
 
   bool countAsCloseByMarker(
-      {required Position position, required double lat, required double lon}) {
+      {required Position position,
+      required double lat,
+      required double lon,
+      int threshold = kMaxDistanceFromMarkerInMeter}) {
     double distanceInMeters = Geolocator.distanceBetween(
         position.latitude, position.longitude, lat, lon);
-    log.i("Distance from marker: $distanceInMeters");
+    // log.v("Distance from marker: $distanceInMeters");
     distanceToLastCheckedMarker = distanceInMeters;
-    if (distanceInMeters < kMaxDistanceFromMarkerInMeter) {
+    if (distanceInMeters < threshold.toDouble()) {
       return true;
     } else {
       return false;
@@ -325,6 +333,14 @@ class GeolocationService {
   void cancelPositionListener() {
     _livePositionStreamSubscription?.cancel();
     _livePositionStreamSubscription = null;
+  }
+
+  void pausePositionListener() {
+    _livePositionStreamSubscription?.pause();
+  }
+
+  void resumePositionListener() {
+    _livePositionStreamSubscription?.resume();
   }
 
   void clearData() {

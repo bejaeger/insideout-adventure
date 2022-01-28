@@ -20,13 +20,14 @@ import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:battery_plus/battery_plus.dart';
 
 abstract class QuestViewModel extends BaseModel {
   final log = getLogger("QuestViewModel");
@@ -48,10 +49,11 @@ abstract class QuestViewModel extends BaseModel {
   List<double> distancesFromQuests = [];
   bool validatingMarker = false;
   bool showStartSwipe = true;
-  bool get isNearStartMarker =>
-      (_geolocationService.distanceToStartMarker > 0) &&
-      (_geolocationService.distanceToStartMarker <
-          kMaxDistanceFromMarkerInMeter);
+  bool get isNearStartMarker => !flavorConfigProvider.enableGPSVerification
+      ? true
+      : (_geolocationService.distanceToStartMarker > 0) &&
+          (_geolocationService.distanceToStartMarker <
+              kMaxDistanceFromMarkerInMeter);
 
   bool get listenedToNewPosition => _geolocationService.listenedToNewPosition;
   int get currentPositionDistanceFilter =>
@@ -93,13 +95,14 @@ abstract class QuestViewModel extends BaseModel {
   void startPositionCalibrationListener({required Quest quest}) {
     log.i("Start position calibration listener");
     _geolocationService.listenToPosition(
-        distanceFilter: kDistanceFilterForCalibration,
-        viewModelCallback: (_) {
-          setListenedToNewPosition(true);
-          _geolocationService.setDistanceToStartMarker(
-              lat: quest.startMarker?.lat, lon: quest.startMarker?.lon);
-          notifyListeners();
-        });
+      distanceFilter: kDistanceFilterForCalibration,
+      viewModelCallback: (_) {
+        setListenedToNewPosition(true);
+        _geolocationService.setDistanceToStartMarker(
+            lat: quest.startMarker?.lat, lon: quest.startMarker?.lon);
+        notifyListeners();
+      },
+    );
   }
 
   void cancelPositionListener() {
@@ -117,6 +120,7 @@ abstract class QuestViewModel extends BaseModel {
       bool countStartMarkerAsCollected = false}) async {
     // cancel listener that was only used for calibration
     cancelPositionListener();
+    // await checkIfBatterySaveModeOn();
     try {
       // if (quest.type == QuestType.VibrationSearch && startFromMap) {
       //   await navigateToVibrationSearchView();
@@ -145,6 +149,26 @@ abstract class QuestViewModel extends BaseModel {
     } catch (e) {
       baseModelLog.e("Could not start quest, error thrown: $e");
       rethrow;
+    }
+  }
+
+  Future checkIfBatterySaveModeOn() async {
+    // Instantiate it
+    try {
+      final Battery battery = Battery();
+      final isInBatterySaveMode = await battery.isInBatterySaveMode;
+      if (isInBatterySaveMode != true) {
+        return;
+      } else if (isInBatterySaveMode == true) {
+        dialogService.showDialog(
+            title: "Your phone is in battery save mode",
+            description: "For best performance, please disable it");
+        await Future.delayed(Duration(milliseconds: 300));
+      }
+    } catch (e) {
+      log.e("Could not check battery save mode!");
+      log.e("Error: $e");
+      return;
     }
   }
 
@@ -237,8 +261,10 @@ abstract class QuestViewModel extends BaseModel {
         variant: BottomSheetType.questInformation,
         title: quest.name,
         enterBottomSheetDuration: Duration(milliseconds: 300),
+        // exitBottomSheetDuration: Duration(milliseconds: 1),
         // curve: Curves.easeInExpo,
         // curve: Curves.linear,
+        barrierColor: Colors.black45,
         description: quest.description,
         mainButtonTitle: quest.type == QuestType.DistanceEstimate
             ? "Go to Quest"
@@ -332,7 +358,7 @@ abstract class QuestViewModel extends BaseModel {
       );
       return;
     }
-    await handleMarkerAnalysisResult(result);
+    return await handleMarkerAnalysisResult(result);
   }
 
   Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
@@ -472,6 +498,8 @@ abstract class QuestViewModel extends BaseModel {
   ////////////////////////////
   // needs to be overrriden!
   // Future handleQrCodeScanEvent(QuestQRCodeScanResult result);
+  // ! Check this!
+  // DEPRECATED: Not sure if this is every being called!
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
     log.i("Handling marker analysis result");
     if (!hasActiveQuest &&
@@ -492,6 +520,7 @@ abstract class QuestViewModel extends BaseModel {
         );
       }
     }
+    return false;
   }
 
   void displayMarker(AFKMarker marker) {
@@ -570,6 +599,48 @@ abstract class QuestViewModel extends BaseModel {
 
   // Can be overridden!
   void resetQuest() {}
+
+  //-------------------------------------------
+  // Helper
+
+  Future vibrateAlert() async {
+    await checkCanVibrate();
+    if (canVibrate!) {
+      final Iterable<Duration> pauses = [
+        const Duration(milliseconds: 500),
+        const Duration(milliseconds: 500),
+      ];
+      log.v("Phone is supposed to vibrate now");
+      // vibrate - sleep 0.2s - vibrate - sleep 0.2s - vibrate - sleep 0.2s - vibrate
+      await Vibrate.vibrateWithPauses(pauses);
+    }
+  }
+
+  Future vibrateWrongDirection() async {
+    await vibrateAlert();
+  }
+
+  Future vibrateRightDirection() async {
+    // Check if the device can vibrate
+    await checkCanVibrate();
+    if (canVibrate!) {
+      log.v("Phone is supposed to vibrate now");
+      // vibrate for default (500ms on android, about 500ms on iphone)
+      await Vibrate.vibrate();
+      // Vibrate.feedback(FeedbackType.success);
+    }
+  }
+
+  Future checkCanVibrate() async {
+    if (canVibrate == null) {
+      canVibrate = await Vibrate.canVibrate;
+      if (canVibrate!) {
+        log.i("Phone is able to vibrate");
+      } else {
+        log.w("Phone is not able to!");
+      }
+    }
+  }
 
   //////////////////////////////////////////
   /// Clean-up

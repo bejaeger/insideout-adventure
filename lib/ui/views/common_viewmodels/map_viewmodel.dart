@@ -30,7 +30,18 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       locator<FlavorConfigProvider>();
   bool initialized = false;
 
-  Future initializeMapAndMarkers() async {
+  // used for animating camera
+  double _mapWidth = 0;
+  double _mapHeight = 0;
+  double _devicePixelRatio = 0;
+
+  Future initializeMapAndMarkers(
+      {required double mapWidth,
+      required double mapHeight,
+      required double devicePixelRatio}) async {
+    _mapWidth = mapWidth;
+    _mapHeight = mapHeight;
+    _devicePixelRatio = devicePixelRatio;
     if (hasActiveQuest) return;
     initialized = false;
     log.i("Initializing map view");
@@ -139,6 +150,25 @@ class MapViewModel extends ActiveQuestBaseViewModel {
           if (!useSuperUserFeatures || adminMode == false) {
             if (hasActiveQuest == false) {
               if (afkmarker == quest.startMarker) {
+                if (getGoogleMapController != null) {
+                  final screenCoordinates = await getGoogleMapController!
+                      .getScreenCoordinate(
+                          LatLng(afkmarker.lat!, afkmarker.lon!));
+                  // some magic to move the marker to the desired position!
+                  double xMove = (-_mapWidth * _devicePixelRatio / 2 +
+                          screenCoordinates.x) /
+                      _devicePixelRatio;
+                  double yMove = (-_mapHeight * _devicePixelRatio / 2 +
+                              screenCoordinates.y) /
+                          _devicePixelRatio +
+                      150;
+                  await getGoogleMapController!
+                      .animateCamera(CameraUpdate.scrollBy(xMove, yMove));
+                  // await Future.delayed(Duration(milliseconds: 200));
+                } else {
+                  log.e(
+                      "google map controller is not available, can't update position!");
+                }
                 await displayQuestBottomSheet(
                   quest: quest,
                   startMarker: afkmarker,
@@ -161,6 +191,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     );
   }
 
+  // used in single quest view! not on general map view
   void addStartMarkerToMap(
       {required Quest quest, required AFKMarker afkmarker}) {
     markersOnMap.add(
@@ -262,7 +293,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     log.i("Handling marker analysis result");
     if (result.isEmpty) {
       log.wtf("The object QuestQRCodeScanResult is empty!");
-      return Future.value();
+      return false;
     }
     if (result.hasError) {
       log.e("Error occured: ${result.errorMessage}");
@@ -270,11 +301,13 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         title: "Failed to collect marker!",
         description: result.errorMessage!,
       );
+      return false;
     } else {
       if (!hasActiveQuest && result.quests == null) {
         await dialogService.showDialog(
             title:
                 "The scanned marker is not a start of a quest. Please go to the starting point");
+        return false;
       }
 
       if (result.marker != null) {
@@ -283,6 +316,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
           await showCollectedMarkerDialog();
           await handleCollectedMarkerEvent(afkmarker: result.marker!);
         }
+        return true;
       }
 
       if (result.quests != null && result.quests!.length > 0) {
@@ -296,24 +330,17 @@ class MapViewModel extends ActiveQuestBaseViewModel {
           );
         }
       }
+      return false;
     }
   }
 
-  void updateMapDisplay({required AFKMarker afkmarker}) {
-    if (activeQuest.quest.type == QuestType.QRCodeHike) {
-      updateMapMarkers(afkmarker: afkmarker);
-    } else if (activeQuest.quest.type == QuestType.GPSAreaHike) {
-      updateMapArea(afkmarker: afkmarker);
-    }
-  }
 
   Future handleCollectedMarkerEvent({required AFKMarker afkmarker}) async {
     if (hasActiveQuest == true) {
-      updateMapDisplay(afkmarker: afkmarker);
-
       // Move this to isQuestCompleted function and remove stuff from service!
       if (isQuestCompleted()) {
         //checkQuestAndFinishWhenCompleted();
+        updateMapDisplay(afkmarker: afkmarker);
         await animateCameraToQuestMarkers(getGoogleMapController);
         setBusy(true);
         questFinished = true;
@@ -324,6 +351,9 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         return;
       } else {
         addNextArea();
+
+        // TODO: Can be improved by adding animation to animateCameraToPreviewNext()
+        // TODO: And first animating to JUST collected marker
         // animate camera to preview next marker
         animateCameraToPreviewNextArea();
       }
@@ -332,30 +362,6 @@ class MapViewModel extends ActiveQuestBaseViewModel {
           title: "Quest Not Running",
           description: "Verify Your Quest Because is not running");
     }
-  }
-
-  @override
-  void updateMapMarkers({required AFKMarker afkmarker}) {
-    markersOnMap = markersOnMap
-        .map((item) => item.markerId == MarkerId(afkmarker.id)
-            ? item.copyWith(
-                iconParam:
-                    defineMarkersColour(afkmarker: afkmarker, quest: null))
-            : item)
-        .toSet();
-    notifyListeners();
-  }
-
-  void updateMapArea({required AFKMarker afkmarker}) {
-    areasOnMap = areasOnMap
-        .map((item) => item.circleId == CircleId(afkmarker.id)
-            ? item.copyWith(
-                fillColorParam: Colors.green.withOpacity(0.5),
-                strokeColorParam: Colors.green.withOpacity(0.6),
-              )
-            : item)
-        .toSet();
-    notifyListeners();
   }
 
   @override
