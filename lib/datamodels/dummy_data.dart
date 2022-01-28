@@ -705,7 +705,6 @@ AFKMarker freiburg3() {
       lon: 7.851700560921927);
 }
 
-
 AFKMarker belek1() {
   return AFKMarker(
     id: "belek1",

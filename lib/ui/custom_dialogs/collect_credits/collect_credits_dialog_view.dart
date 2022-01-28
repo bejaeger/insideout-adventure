@@ -86,7 +86,7 @@ class _BasicDialogContent extends StatelessWidget {
                     verticalSpaceSmall,
                     Text(
                         model.collectedCredits
-                            ? "You get " +
+                            ? "You earned " +
                                 request.data.quest.afkCredits.toString() +
                                 " AFK Credits"
                             : "You get " +
@@ -131,7 +131,8 @@ class _BasicDialogContent extends StatelessWidget {
                                   child: Text("Continue",
                                       style: textTheme(context)
                                           .headline6!
-                                          .copyWith(color: Colors.blue))),
+                                          .copyWith(
+                                              color: kBlackHeadlineColor))),
                             ],
                           )
                   ],

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
@@ -81,6 +82,10 @@ class QuestTestingService {
 
   Database? _questDataPointsDatabase;
 
+  // next marker to calculate distance to next marker
+  // in location listener
+  AFKMarker? _nextMarker;
+
   // counter whether data is pushed
   // to wait in case function is called a second time
   Map<String, Completer> completers = {};
@@ -127,6 +132,7 @@ class QuestTestingService {
     ActivatedQuest? activatedQuest,
     String? activatedQuestTrialId,
     User? user,
+    AFKMarker? marker,
   }) {
     if (!isRecordingLocationData) return;
     // function called multiple times with different inputs;
@@ -144,8 +150,15 @@ class QuestTestingService {
     if (user != null) {
       _currentUserName = user.fullName;
     }
+    if (marker != null) {
+      _nextMarker = marker;
+    }
     log.i(
         "Initialized quest testing data for quest with trial id '$_questTrialId', and quest id '$_questId' and user name $_currentUserName");
+  }
+
+  void newNextMarker(AFKMarker? marker) {
+    _nextMarker = marker;
   }
 
   Future maybeRecordData({
@@ -225,18 +238,22 @@ class QuestTestingService {
     if (trigger == QuestDataPointTrigger.manualLocationFetchingEvent) {
       await geolocationService.getLastKnownAndCurrentPosition(trigger: trigger);
     }
+    double distanceToNextMarker =
+        await geolocationService.distanceBetweenUserAndCoordinates(
+            lat: _nextMarker?.lat, lon: _nextMarker?.lon);
     final questDataPoint = QuestDataPoint(
       questId: activatedQuest?.quest.id ?? _questId,
       questTrialId: questTrialId ?? _questTrialId,
       timestamp: DateTime.now(),
       questCategory: _questCategory,
+      questName: _questName,
       entryNumber: _numberQuestDataPoints,
       triggeredBy: trigger,
       livePosition: position ?? geolocationService.getUserLivePositionNullable,
       currentPosition: null,
       lastKnownPosition: null,
       currentLocationDistance: geolocationService.getCurrentDistancesToGoal(),
-      liveLocationDistance: geolocationService.getLiveDistancesToGoal(),
+      distanceToNextMarker: distanceToNextMarker.toStringAsFixed(1),
       // liveLocationAccuracy: geolocationService.getLiveDistancesToGoal(),
       lastKnownLocationDistance:
           geolocationService.getLastKnownDistancesToGoal(),
@@ -344,6 +361,8 @@ class QuestTestingService {
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
         activeQuestCategoryKey, entry.questCategory);
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
+        activeQuestNameKey, entry.questName);
+    addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
         trialEntryKey, entry.questTrialId ?? trial);
 
     // timestamps
@@ -405,7 +424,7 @@ class QuestTestingService {
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
         currentLocationDistanceKey, entry.currentLocationDistance);
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
-        liveLocationDistanceKey, entry.liveLocationDistance);
+        liveLocationDistanceKey, entry.distanceToNextMarker);
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
         lastKnownLocationDistanceKey, entry.lastKnownLocationDistance);
 
@@ -477,7 +496,7 @@ class QuestTestingService {
   ///
   ///  these are the names of the properties in the notion database
   String currentLocationDistanceKey = "currentLocationDistance";
-  String liveLocationDistanceKey = "1liveLocationDistance";
+  String liveLocationDistanceKey = "1distanceToNextMarker";
   String lastKnownLocationDistanceKey = "lastKnownLocationDistance";
   String triggeredByKey = "4triggeredBy";
   String userEventDescriptionKey = "3userEventDescription";
@@ -502,6 +521,8 @@ class QuestTestingService {
 
   String trialEntryKey = "questTrial";
   String deviceInfoKey = "deviceInfo";
+
   String activeQuestIdKey = "questId";
   String activeQuestCategoryKey = "questCategory";
+  String activeQuestNameKey = "7questName";
 }

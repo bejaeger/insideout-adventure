@@ -8,6 +8,7 @@ import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/maps_service.dart';
+import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -66,7 +67,35 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
       if (currentQuest != null) {
         // animate camera to markers
         animateCameraToQuestMarkers(controller);
+        if (currentQuest!.type == QuestType.QRCodeHike) {
+          showInfoWindowOfNextMarker(quest: currentQuest!);
+        }
       }
+    }
+  }
+
+  void showInfoWindowOfNextMarker({Quest? quest, AFKMarker? marker}) async {
+    if (quest == null && marker == null) return;
+    late MarkerId markerId;
+    if (quest != null) {
+      if (quest.markers.length > 1) {
+        markerId = MarkerId(quest.markers[1].id);
+      }
+    }
+    if (marker != null) {
+      markerId = MarkerId(marker.id);
+    }
+    try {
+      Future.delayed(Duration(seconds: marker != null ? 0 : 1), () {
+        getGoogleMapController?.showMarkerInfoWindow(markerId);
+        notifyListeners();
+      });
+    } catch (e) {
+      log.e(
+          "This is a weird error from google maps when showing the marker info: $e");
+      log.wtf(
+          "We tried to circumvent it with a delay and didn't bother about it any longer");
+      return;
     }
   }
 
@@ -130,6 +159,7 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
       updateMapArea(afkmarker: afkmarker);
     } else if (activeQuest.quest.type == QuestType.GPSAreaHike) {
       updateMapArea(afkmarker: afkmarker);
+      updateMapMarkers(afkmarker: afkmarker);
     }
   }
 
@@ -159,14 +189,34 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
       triggerCollectedMarkerAnimation();
       // await Future.delayed(Duration(milliseconds: 1000));
       updateMapDisplay(afkmarker: previousMarker);
-      await Future.delayed(Duration(milliseconds: 1200));
+      await Future.delayed(Duration(milliseconds: 800));
+      if (currentQuest?.type == QuestType.GPSAreaHike) {
+        await showCollectedMarkerDialog();
+        await Future.delayed(Duration(milliseconds: 200));
+      }
       await getGoogleMapController!.animateCamera(
         CameraUpdate.newLatLng(
           LatLng(marker.lat!, marker.lon!),
         ),
       );
-      await Future.delayed(Duration(milliseconds: 1200));
-      Position pos = await geolocationService.getUserLivePosition;
+      if (currentQuest?.type == QuestType.GPSAreaHike) {
+        await Future.delayed(Duration(milliseconds: 800));
+        addNextArea(marker: marker);
+        addNextMarker(marker: marker);
+        await Future.delayed(Duration(milliseconds: 600));
+        double currentZoom = await getGoogleMapController!.getZoomLevel();
+        await getGoogleMapController!.animateCamera(CameraUpdate.newLatLngZoom(
+            LatLng(marker.lat!, marker.lon!), currentZoom + 1));
+        await Future.delayed(Duration(milliseconds: 600));
+      } else {
+        if (currentQuest!.type == QuestType.QRCodeHike) {
+          await Future.delayed(Duration(milliseconds: 600));
+          showInfoWindowOfNextMarker(marker: marker);
+          await Future.delayed(Duration(milliseconds: 600));
+        } else {
+          await Future.delayed(Duration(milliseconds: 1200));
+        }
+      }
       await animateCameraToBetweenCoordinates(
         controller: getGoogleMapController!,
         latLngList: [
@@ -177,10 +227,64 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
       );
     }
     await Future.delayed(Duration(milliseconds: 1200));
+    if (currentQuest?.type == QuestType.GPSAreaHike) {
+      await Future.delayed(Duration(milliseconds: 600));
+    }
     isAnimatingCamera = false;
     notifyListeners();
-    snackbarService.showSnackbar(
-        title: "Let's go", message: "The next marker is waiting!");
+    if (currentQuest?.type == QuestType.GPSAreaHike) {
+      dialogService.showDialog(
+          title: "New checkpoint spotted!",
+          description: "Find the next location!");
+    } else {
+      snackbarService.showSnackbar(
+          title: "Let's go", message: "The next marker is waiting!");
+    }
+  }
+
+  void addNextArea({Quest? quest, AFKMarker? marker}) {
+    AFKMarker? actualMarker =
+        marker ?? questService.getNextMarker(quest: quest);
+    if (actualMarker != null) {
+      addAreaToMap(quest: quest ?? activeQuest.quest, afkmarker: actualMarker);
+    }
+    notifyListeners();
+  }
+
+  void addNextMarker({Quest? quest, AFKMarker? marker}) {
+    AFKMarker? actualMarker =
+        marker ?? questService.getNextMarker(quest: quest);
+    if (actualMarker != null) {
+      addMarkerToMap(
+          quest: quest ?? activeQuest.quest, afkmarker: actualMarker);
+    }
+    notifyListeners();
+  }
+
+  void addAreaToMap({required Quest quest, required AFKMarker afkmarker}) {
+    areasOnMap.add(
+      Circle(
+        circleId: CircleId(afkmarker
+            .id), // google maps marker id of start marker will be our quest id
+        center: LatLng(afkmarker.lat!, afkmarker.lon!),
+        fillColor: Colors.red.withOpacity(0.5),
+        strokeColor: Colors.red.withOpacity(0.6),
+        strokeWidth: 2,
+        radius: 50,
+        consumeTapEvents: true,
+        onTap: () async {
+          // event triggered when user taps on circle
+          if (hasActiveQuest) {
+            MarkerAnalysisResult markerResult =
+                await questService.analyzeMarker(marker: afkmarker);
+            await handleMarkerAnalysisResult(markerResult);
+          } else {
+            await dialogService.showDialog(
+                title: "Walk to this area to collect the checkpoint");
+          }
+        },
+      ),
+    );
   }
 
   void triggerCollectedMarkerAnimation() {

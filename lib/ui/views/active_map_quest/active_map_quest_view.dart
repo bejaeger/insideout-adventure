@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
@@ -165,7 +166,8 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                                                 : Container(
                                                     color: Colors.white,
                                                     child: NotCloseToQuestNote(
-                                                      questType: widget.quest.type,
+                                                        questType:
+                                                            widget.quest.type,
                                                         controller: model
                                                             .getGoogleMapController),
                                                   ),
@@ -282,22 +284,27 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                       // title2: "START",
                       // iconData2: Icons.star,
                       onPressed1: () async {
-                        model.triggerCollectedMarkerAnimation();
+                        // model.triggerCollectedMarkerAnimation();
                         // @see: https://stackoverflow.com/questions/55989773/how-to-zoom-between-two-google-map-markers-in-flutter
                         // model.getGoogleMapController!.animateCamera(
-                        //     // CameraUpdate.newLatLngBounds(
-                        //     //   LatLngBounds(
-                        //     //     southwest: LatLng(quest.markers[1].lat!,
-                        //     //         quest.markers[1].lon!),
-                        //     //     northeast: LatLng(quest.markers[0].lat!,
-                        //     //         quest.markers[0].lon!),
-                        //     //   ),
-                        //     //   15));
+                        // //     // CameraUpdate.newLatLngBounds(
+                        // //     //   LatLngBounds(
+                        // //     //     southwest: LatLng(quest.markers[1].lat!,
+                        // //     //         quest.markers[1].lon!),
+                        // //     //     northeast: LatLng(quest.markers[0].lat!,
+                        // //     //         quest.markers[0].lon!),
+                        // //     //   ),
+                        // //     //   15));
                         //     CameraUpdate.newCameraPosition(
                         //         model.initialCameraPosition()));
-                        // await model.scanQrCode();
+                        if (widget.quest.type == QuestType.QRCodeHike)
+                          await model.scanQrCode();
+                        if (widget.quest.type == QuestType.GPSAreaHike)
+                          await model.collectMarkerFromGPSLocation();
                       },
-                      iconData1: Icons.qr_code_scanner_rounded,
+                      iconData1: widget.quest.type == QuestType.QRCodeHike
+                          ? Icons.qr_code_scanner_rounded
+                          : Icons.add_circle_outline_rounded,
                     )
                   : null,
             ),

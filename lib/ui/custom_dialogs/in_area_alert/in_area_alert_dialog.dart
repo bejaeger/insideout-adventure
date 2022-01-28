@@ -94,7 +94,9 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                 children: [
                   verticalSpaceSmall,
                   Text(
-                    "Checkpoint in area!",
+                    widget.isQrCodeInArea
+                        ? "Marker in area!"
+                        : "Checkpoint reached!",
                     textAlign: TextAlign.center,
                     style: textTheme(context).headline6!.copyWith(
                         color: kPrimaryColor,
@@ -104,7 +106,10 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                   verticalSpaceTiny,
                   FadeTransition(
                     opacity: _animation,
-                    child: Text("Look for the marker and scan it",
+                    child: Text(
+                        widget.isQrCodeInArea
+                            ? "Look for the marker and scan it"
+                            : "",
                         textAlign: TextAlign.center,
                         style: textTheme(context).headline6!.copyWith(
                             color: kPrimaryColor,
@@ -117,7 +122,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     child: GestureDetector(
                       onTap: () async {
                         dynamic scanned =
-                            await widget.request.data["scanQrCodeFunction"]();
+                            await widget.request.data["function"]();
                         if (scanned is bool && scanned == true) {
                           widget.completer(DialogResponse(confirmed: true));
                         }
@@ -145,8 +150,9 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                                 CircleAvatar(
                                   backgroundColor: kPrimaryColor,
                                   child: Icon(
-                                    Icons.qr_code_scanner,
-                                    //size: 100,
+                                    widget.isQrCodeInArea
+                                        ? Icons.qr_code_scanner
+                                        : Icons.add_circle_outline_rounded,
                                     color: Colors.grey[50],
                                   ),
                                 ),
@@ -158,29 +164,42 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     ),
                   ),
                   verticalSpaceTiny,
-                  if (widget.isQrCodeInArea)
-                    ScaleTransition(
-                      scale: _animation,
-                      // duration: Duration(milliseconds: 500),
-                      // height: height,
-                      child: Text(
-                        "OPEN SCANNER",
-                        style: textTheme(context)
-                            .headline6!
-                            .copyWith(color: kPrimaryColor),
-                      ),
+
+                  ScaleTransition(
+                    scale: _animation,
+                    // duration: Duration(milliseconds: 500),
+                    // height: height,
+                    child: Text(
+                      widget.isQrCodeInArea ? "OPEN SCANNER" : "COLLECT",
+                      style: textTheme(context)
+                          .headline6!
+                          .copyWith(color: kPrimaryColor),
                     ),
+                  ),
                   verticalSpaceLarge,
                   //QrCodeButton(),
                   FadeTransition(
                     opacity: _animation,
-                    child: TextButton(
-                      onPressed: () =>
-                          widget.completer(DialogResponse(confirmed: false)),
-                      child: Text(
-                        "Go Back",
-                        style: TextStyle(color: kBlackHeadlineColor),
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () => widget
+                              .completer(DialogResponse(confirmed: false)),
+                          child: Text(
+                            "Go Back",
+                            style: TextStyle(color: kBlackHeadlineColor),
+                          ),
+                        ),
+                        if (widget.isQrCodeInArea)
+                          TextButton(
+                            onPressed: () => print("hi"),
+                            child: Text(
+                              "Show Hint",
+                              style: TextStyle(color: kBlackHeadlineColor),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],

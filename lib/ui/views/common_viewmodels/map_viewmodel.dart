@@ -133,7 +133,8 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         markerId: MarkerId(afkmarker
             .id), // google maps marker id of start marker will be our quest id
         position: LatLng(afkmarker.lat!, afkmarker.lon!),
-        infoWindow: InfoWindow(snippet: quest.name),
+        infoWindow: InfoWindow(title: "NEXT MARKER"),
+        // InfoWindow(snippet: quest.name),
         icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
         onTap: () async {
           // event triggered when user taps marker
@@ -255,40 +256,6 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     );
   }
 
-  void addNextArea({Quest? quest}) {
-    AFKMarker? marker = questService.getNextMarker(quest: quest);
-    if (marker != null) {
-      addAreaToMap(quest: quest ?? activeQuest.quest, afkmarker: marker);
-    }
-    notifyListeners();
-  }
-
-  void addAreaToMap({required Quest quest, required AFKMarker afkmarker}) {
-    areasOnMap.add(
-      Circle(
-        circleId: CircleId(afkmarker
-            .id), // google maps marker id of start marker will be our quest id
-        center: LatLng(afkmarker.lat!, afkmarker.lon!),
-        fillColor: Colors.red.withOpacity(0.5),
-        strokeColor: Colors.red.withOpacity(0.6),
-        strokeWidth: 2,
-        radius: 50,
-        consumeTapEvents: true,
-        onTap: () async {
-          // event triggered when user taps on circle
-          if (hasActiveQuest) {
-            MarkerAnalysisResult markerResult =
-                await questService.analyzeMarker(marker: afkmarker);
-            await handleMarkerAnalysisResult(markerResult);
-          } else {
-            await dialogService.showDialog(
-                title: "Walk to this area to collect the checkpoint");
-          }
-        },
-      ),
-    );
-  }
-
   @override
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
     log.i("Handling marker analysis result");
@@ -298,8 +265,8 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     }
     if (result.hasError) {
       log.e("Error occured: ${result.errorMessage}");
-      dialogService.showDialog(
-        title: "Failed to collect marker!",
+      await dialogService.showDialog(
+        title: "Can't collect marker!",
         description: result.errorMessage!,
       );
       return false;
@@ -314,7 +281,9 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       if (result.marker != null) {
         if (hasActiveQuest) {
           log.i("Scanned marker sucessfully collected!");
-          await showCollectedMarkerDialog();
+          if (currentQuest?.type == QuestType.QRCodeHike) {
+            await showCollectedMarkerDialog();
+          }
           await handleCollectedMarkerEvent(afkmarker: result.marker!);
         }
         return true;
@@ -357,7 +326,8 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         await showSuccessDialog();
         return;
       } else {
-        addNextArea();
+        // addNextArea();
+        // addNextMarker();
         // animate camera to preview next marker
         animateCameraToPreviewNextArea();
       }
@@ -382,7 +352,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       final index = activeQuest.quest.markers
           .indexWhere((element) => element == afkmarker);
       if (!activeQuest.markersCollected[index]) {
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
       } else {
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
       }
@@ -397,8 +367,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueYellow);
       } else {
-        return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueYellow);
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
       }
     }
   }

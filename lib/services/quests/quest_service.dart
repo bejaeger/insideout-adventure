@@ -126,6 +126,7 @@ class QuestService with ReactiveServiceMixin {
     _questTestingService.maybeInitialize(
       activatedQuest: activatedQuest,
       activatedQuestTrialId: activatedQuestTrialId,
+      marker: getNextMarker(),
     );
 
     // Start timer
@@ -742,7 +743,10 @@ class QuestService with ReactiveServiceMixin {
       log.i(
           "Marker verified! Continue with updated collected markers in activated quest");
       updateCollectedMarkers(marker: fullMarker);
+      // set next marker for log data
+      _questTestingService.newNextMarker(getNextMarker());
       // return marker that was succesfully scanned
+
       return MarkerAnalysisResult.marker(marker: fullMarker);
     }
   }

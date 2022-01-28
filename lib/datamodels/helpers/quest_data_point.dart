@@ -13,9 +13,10 @@ class QuestDataPoint {
   final int entryNumber;
   final String? questId;
   final String? questCategory;
+  final String? questName;
   final DateTime timestamp;
   String? currentLocationDistance;
-  String? liveLocationDistance;
+  String? distanceToNextMarker;
   String? lastKnownLocationDistance;
   bool pushedToNotion = false;
   String? questTrialId;
@@ -23,6 +24,7 @@ class QuestDataPoint {
   QuestDataPoint({
     this.triggeredBy,
     this.questCategory,
+    this.questName,
     this.livePosition,
     this.currentPosition,
     this.lastKnownPosition,
@@ -30,7 +32,7 @@ class QuestDataPoint {
     required this.timestamp,
     this.questTrialId,
     this.currentLocationDistance,
-    this.liveLocationDistance,
+    this.distanceToNextMarker,
     this.lastKnownLocationDistance,
     this.questId,
     this.userEventDescription,
