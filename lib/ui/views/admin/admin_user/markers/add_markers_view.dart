@@ -134,8 +134,10 @@ class _AddMarkersViewState extends State<AddMarkersView> {
                           ? () async => null
                           : () async {
                               _googleMapController!.animateCamera(
-                                  CameraUpdate.newCameraPosition(
-                                      model.initialCameraPosition()));
+                                CameraUpdate.newCameraPosition(
+                                  model.initialCameraPosition(),
+                                ),
+                              );
                             },
                       icon: const Icon(Icons.qr_code_scanner_rounded,
                           size: 30, color: Colors.white),

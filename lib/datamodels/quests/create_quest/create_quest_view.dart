@@ -116,7 +116,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                     onMapCreated: model.onMapCreated,
 
                     onTap: model.displayMarkersOnMap,
-                    onLongPress: model.removeSelectedMarker,
+                    // onLongPress: model.removeMarkers,
                   ),
                 ),
                 Expanded(
