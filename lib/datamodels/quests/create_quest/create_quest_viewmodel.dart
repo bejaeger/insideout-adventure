@@ -113,16 +113,9 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
   CameraPosition initialCameraPosition() {
     //if (_geolocationService.getUserLivePositionNullable != null) {
     _initialCameraPosition = CameraPosition(
-<<<<<<< HEAD
-      target: LatLng(37.773972, -122.431297)
-
-      /* LatLng(_geolocationService.getUserPosition!.latitude,
-              _geolocationService.getUserPosition!.longitude) */
-=======
       target: LatLng(37.773972,
           -122.431297) /* LatLng(_geolocationService.getUserLivePosition!.latitude,
               _geolocationService.getUserLivePosition!.longitude) */
->>>>>>> 2f6a7e811ebc69e541916f0419fab58187081993
       ,
       zoom: 11.5,
     );
