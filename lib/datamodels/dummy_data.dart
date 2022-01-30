@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<Quest> getDummyQuests() {
   return [
+    getZaehringenHike(),
     getDummyVibrationSearchQuest(),
     heidachTrohpy(),
     manu(),
@@ -47,7 +48,7 @@ Quest getDummyQuest1() {
       getDummyMarker3(),
       getDummyMarker4()
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: getDummyMarker1(),
     finishMarker: getDummyMarker2(),
   );
@@ -122,23 +123,6 @@ Quest getDummyVibrationSearchQuest() {
   );
 }
 
-// burnaby quest
-Quest getDummyVibrationSearchQuest2() {
-  return Quest(
-    id: "VibrationSearch 2",
-    name: "Woodway Vibrations Nr. 2",
-    description: "Find the AFK Credits",
-    afkCredits: 10,
-    markers: [
-      intimateWoodwayMarker7(),
-      intimateWoodwayMarker3(),
-    ],
-    type: QuestType.TreasureLocationSearchAutomatic,
-    startMarker: intimateWoodwayMarker7(),
-    finishMarker: intimateWoodwayMarker3(),
-  );
-}
-
 Quest getDummyVibrationSearchQuestFreiburg() {
   return Quest(
     id: "BYC9JvJaz64vMmyuV2Cc",
@@ -152,22 +136,6 @@ Quest getDummyVibrationSearchQuestFreiburg() {
     type: QuestType.TreasureLocationSearch,
     startMarker: freiburg1(),
     finishMarker: freiburg2(),
-  );
-}
-
-Quest getDummyVibrationSearchQuest4() {
-  return Quest(
-    id: "VibrationSearch 4",
-    name: "Brentwood Vibrations",
-    description: "Find the AFK Credits",
-    afkCredits: 10,
-    markers: [
-      start1(),
-      brentwood(),
-    ],
-    type: QuestType.TreasureLocationSearchAutomatic,
-    startMarker: start1(),
-    finishMarker: brentwood(),
   );
 }
 
@@ -226,7 +194,7 @@ Quest getDummyQuest2() {
       getDummyMarker8(),
       getDummyMarker9()
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: getDummyMarker5(),
     finishMarker: getDummyMarker9(),
   );
@@ -248,7 +216,7 @@ Quest getDummyQuest3() {
       woodwayMarker5(),
       woodwayMarker6(),
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: woodwayMarker1(),
     finishMarker: woodwayMarker6(),
   );
@@ -267,7 +235,7 @@ Quest getDummyQuest4() {
       intimateWoodwayMarker3(),
       intimateWoodwayMarker4(),
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: intimateWoodwayMarker1(),
     finishMarker: intimateWoodwayMarker4(),
   );
@@ -347,7 +315,7 @@ Quest getDummyQuest5() {
     markers: [
       myRoomMarker(),
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: myRoomMarker(),
     finishMarker: myRoomMarker(),
   );
@@ -363,9 +331,26 @@ Quest getDummyQuest6() {
       starenweg4(),
       starenweg3(),
     ],
-    type: QuestType.Hike,
+    type: QuestType.QRCodeHike,
     startMarker: starenweg4(),
     finishMarker: starenweg3(),
+  );
+}
+
+Quest getZaehringenHike() {
+  return Quest(
+    id: "unknown",
+    name: "Zähringen GPS Area Hike!",
+    description: "",
+    afkCredits: 5,
+    markers: [
+      freiburg1(),
+      freiburg2(),
+      freiburg3(),
+    ],
+    type: QuestType.GPSAreaHike,
+    startMarker: freiburg1(),
+    finishMarker: freiburg3(),
   );
 }
 
@@ -711,6 +696,15 @@ AFKMarker freiburg2() {
       lon: 7.858700560921927);
 }
 
+AFKMarker freiburg3() {
+  return AFKMarker(
+      id: "freiburg3",
+      qrCodeId: "freiburg3",
+      lat: 48.01694856856642,
+      lon: 7.851700560921927);
+}
+
+
 AFKMarker belek1() {
   return AFKMarker(
     id: "belek1",
@@ -917,3 +911,6 @@ AFKMarker commercial2() {
     lon: -123.06956197567348,
   );
 }
+
+const double kTestLat = 48.06701330843975;
+const double kTestLon = 7.903736956224777;

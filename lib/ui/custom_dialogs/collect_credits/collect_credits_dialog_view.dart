@@ -74,7 +74,7 @@ class _BasicDialogContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     verticalSpaceSmall,
-                    Text(model.collectedCredits ? "ERFOLG!" : "Gratulation!",
+                    Text(model.collectedCredits ? "SUCCESS!" : "Congratulations!",
                         textAlign: TextAlign.center,
                         style: textTheme(context).headline6!.copyWith(
                             color: kPrimaryColor,
@@ -83,12 +83,12 @@ class _BasicDialogContent extends StatelessWidget {
                     verticalSpaceSmall,
                     Text(
                         model.collectedCredits
-                            ? "Du verdienst " +
+                            ? "You earned " +
                                 request.data.quest.afkCredits.toString() +
                                 " AFK Credits"
-                            : "Du hast " +
+                            : "You earned " +
                                 request.data.quest.afkCredits.toString() +
-                                " AFK Credits verdient!",
+                                " AFK Credits!",
                         textAlign: TextAlign.center,
                         style: textTheme(context)
                             .headline4!
@@ -115,7 +115,7 @@ class _BasicDialogContent extends StatelessWidget {
                     !model.collectedCredits
                         ? ElevatedButton(
                             onPressed: model.getCredits,
-                            child: Text("Weiter",
+                            child: Text("Get Credits",
                                 style: textTheme(context)
                                     .headline6!
                                     .copyWith(color: kWhiteTextColor)))
@@ -125,11 +125,11 @@ class _BasicDialogContent extends StatelessWidget {
                               TextButton(
                                   onPressed: () => completer(
                                       DialogResponse(confirmed: true)),
-                                  child: Text("Zurück",
+                                  child: Text("Continue",
                                       style: textTheme(context)
                                           .headline6!
                                           .copyWith(
-                                              color: kBlackHeadlineColor))),
+                                              color: Colors.blue))),
                             ],
                           )
                   ],

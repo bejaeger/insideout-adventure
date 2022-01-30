@@ -10,7 +10,7 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
   List<QuestType> get questTypes => questService.allQuestTypes;
   final logger = getLogger('ManageQuestViewModel');
 
-  Future initialize({bool? force}) async {
+  Future initializeMapAndMarkers({bool? force}) async {
     setBusy(true);
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
@@ -20,7 +20,7 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
         questService.extractAllQuestTypes();
       }
     } catch (e) {
-      log.wtf("Error when loading quest, this should never happen. Error: $e");
+      log.wtf("Error when loading quests, this should never happen. Error: $e");
       await showGenericInternalErrorDialog();
     }
     setBusy(false);

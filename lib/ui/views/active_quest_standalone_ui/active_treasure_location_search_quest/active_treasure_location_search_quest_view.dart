@@ -80,7 +80,7 @@ class _ActiveTreasureLocationSearchQuestViewState
           return WillPopScope(
             onWillPop: () async {
               if (!model.hasActiveQuest) {
-                model.navigateBack();
+                model.navigateBackFromSingleQuestView();
               }
               return false;
             },
@@ -88,7 +88,9 @@ class _ActiveTreasureLocationSearchQuestViewState
               child: Scaffold(
                 appBar: CustomAppBar(
                   title: "Find the Treasure!",
-                  onBackButton: model.navigateBack,
+                  onBackButton: () {
+                    model.navigateBackFromSingleQuestView();
+                  },
                 ),
                 floatingActionButton: !model.questSuccessfullyFinished &&
                         model.hasActiveQuest
@@ -153,21 +155,24 @@ class _ActiveTreasureLocationSearchQuestViewState
                   children: [
                     verticalSpaceMedium,
                     if (model.showStartSwipe && !model.isBusy)
-                      AFKSlideButton(
-                        quest: widget.quest,
-                        canStartQuest: model.hasEnoughSponsoring(
-                                quest: widget.quest) &&
-                            (model.closeby != null && model.closeby == true),
-                        onSubmit: () =>
-                            model.maybeStartQuest(quest: widget.quest),
-                      ),
+                      model.isNearStartMarker
+                          ? AFKSlideButton(
+                              quest: widget.quest,
+                              canStartQuest: model.hasEnoughSponsoring(
+                                      quest: widget.quest) &&
+                                  (model.isNearStartMarker != null &&
+                                      model.isNearStartMarker == true),
+                              onSubmit: () =>
+                                  model.maybeStartQuest(quest: widget.quest),
+                            )
+                          : Container(
+                              color: Colors.white,
+                              child: NotCloseToQuestNote(
+                                  controller: model.getGoogleMapController)),
                     if (!model.hasEnoughSponsoring(quest: widget.quest))
                       Container(
                           color: Colors.white,
                           child: NotEnoughSponsoringNote(topPadding: 10)),
-                    if ((model.closeby == null || model.closeby == false))
-                      Container(
-                          color: Colors.white, child: NotCloseToQuestNote()),
                     if (!model.questSuccessfullyFinished)
                       ActiveTreasureLocationSearchQuestView.withMaps
                           ? Expanded(
@@ -245,7 +250,8 @@ class _ActiveTreasureLocationSearchQuestViewState
                                 // verticalSpaceMedium,
                                 CurrentQuestStatusInfo(
                                   isBusy: model.isCheckingDistance,
-                                  firedOnce: model.firedOnce,
+                                  isFirstDistanceCheck:
+                                      model.isFirstDistanceCheck,
                                   currentDistance:
                                       model.currentDistanceInMeters,
                                   previousDistance:
@@ -285,12 +291,12 @@ class _ActiveTreasureLocationSearchQuestViewState
                         children: [
                           Expanded(
                               child: Text(
-                                  !model.firedOnce
+                                  !model.isFirstDistanceCheck
                                       ? "Measure the distance"
                                       : model.allowCheckingPosition
                                           ? "Measure distance"
                                           : "Walk to reload...",
-                                  textAlign: !model.firedOnce
+                                  textAlign: !model.isFirstDistanceCheck
                                       ? TextAlign.center
                                       : TextAlign.right,
                                   style: textTheme(context).headline6)),
@@ -314,14 +320,14 @@ class CurrentQuestStatusInfo extends StatelessWidget {
   final double previousDistance;
   final ActivatedQuest? activatedQuest;
   final bool isBusy;
-  final bool firedOnce;
+  final bool isFirstDistanceCheck;
   const CurrentQuestStatusInfo(
       {Key? key,
       required this.activatedQuest,
       required this.directionStatus,
       required this.previousDistance,
       required this.currentDistance,
-      required this.firedOnce,
+      required this.isFirstDistanceCheck,
       this.isBusy = false})
       : super(key: key);
 
@@ -370,7 +376,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                       children: [
                         //Image.asset(kDrawingCompassIconPath, width: 50),
                         Text(
-                            firedOnce
+                            !isFirstDistanceCheck
                                 ? "${currentDistance.toStringAsFixed(1)} m"
                                 : "?",
                             textAlign: TextAlign.center,

@@ -61,24 +61,25 @@ class ActiveQuestDrawerView extends StatelessWidget {
                     children: [
                       Expanded(
                         child: SmallButton(
+                            title: "Information",
+                            onPressed: () => model.showQuestInfoDialog(quest: model.activeQuest.quest)),
+                      ),
+                    ],
+                  ),
+                ),
+                verticalSpaceMedium,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: SmallButton(
                             title: "Cancel Quest",
                             onPressed: model.isBusy
                                 ? () => null
                                 : () async =>
                                     await model.cancelOrFinishQuest()),
-                        // child: ElevatedButton(
-                        //   // onPressed: model.navigateToExplorerHomeView,
-                        //   onPressed: model.isBusy
-                        //                         ? () => null
-                        //                         : () async => await model
-                        //                             .cancelOrFinishQuest(),
-                        //   //child: Text("Go to explorer home/map")),
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.all(12.0),
-                        //     child:
-                        //         Text("Cancel Quest", style: TextStyle(fontSize: 20)),
-                        //   ),
-                        // ),
                       ),
                     ],
                   ),

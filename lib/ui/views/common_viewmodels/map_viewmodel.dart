@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
@@ -14,6 +15,7 @@ import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/src/state_management/reactive_service_mixin.dart';
 
@@ -28,13 +30,13 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       locator<FlavorConfigProvider>();
   bool initialized = false;
 
-  Future initialize() async {
+  Future initializeMapAndMarkers() async {
     if (hasActiveQuest) return;
     initialized = false;
     log.i("Initializing map view");
     setBusy(true);
     try {
-      if (_geolocationService.getUserPosition == null) {
+      if (_geolocationService.getUserLivePositionNullable == null) {
         await _geolocationService.getAndSetCurrentLocation();
       } else {
         _geolocationService.getAndSetCurrentLocation();
@@ -76,10 +78,11 @@ class MapViewModel extends ActiveQuestBaseViewModel {
   @override
   CameraPosition initialCameraPosition() {
     if (!hasActiveQuest) {
-      if (_geolocationService.getUserPosition != null) {
+      if (_geolocationService.getUserLivePositionNullable != null) {
         final CameraPosition _initialCameraPosition = CameraPosition(
-            target: LatLng(_geolocationService.getUserPosition!.latitude,
-                _geolocationService.getUserPosition!.longitude),
+            target: LatLng(
+                _geolocationService.getUserLivePositionNullable!.latitude,
+                _geolocationService.getUserLivePositionNullable!.longitude),
             zoom: 14);
         return _initialCameraPosition;
       } else {
@@ -102,8 +105,9 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       } else {
         // return current user position
         final CameraPosition _initialCameraPosition = CameraPosition(
-            target: LatLng(_geolocationService.getUserPosition!.latitude,
-                _geolocationService.getUserPosition!.longitude),
+            target: LatLng(
+                _geolocationService.getUserLivePositionNullable!.latitude,
+                _geolocationService.getUserLivePositionNullable!.longitude),
             zoom: 13);
         return _initialCameraPosition;
       }
@@ -114,39 +118,142 @@ class MapViewModel extends ActiveQuestBaseViewModel {
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
     markersOnMap.add(
       Marker(
-          markerId: MarkerId(afkmarker
-              .id), // google maps marker id of start marker will be our quest id
-          position: LatLng(afkmarker.lat!, afkmarker.lon!),
-          infoWindow: InfoWindow(snippet: quest.name),
-          icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
-          onTap: () async {
-            // event triggered when user taps marker
+        markerId: MarkerId(afkmarker
+            .id), // google maps marker id of start marker will be our quest id
+        position: LatLng(afkmarker.lat!, afkmarker.lon!),
+        infoWindow: InfoWindow(snippet: quest.name),
+        icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
+        onTap: () async {
+          // event triggered when user taps marker
 
-            bool adminMode = false;
-            if (isSuperUser) {
-              adminMode = await showAdminDialogAndGetResponse();
-              if (adminMode) {
-                String qrCodeString =
-                    _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
-                navigationService.navigateTo(Routes.qRCodeView,
-                    arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-              }
+          dynamic adminMode = false;
+          if (useSuperUserFeatures) {
+            adminMode = await showAdminDialogAndGetResponse();
+            if (adminMode == true) {
+              String qrCodeString =
+                  _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
+              navigationService.navigateTo(Routes.qRCodeView,
+                  arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
             }
-            if (!isSuperUser || adminMode == false) {
-              if (hasActiveQuest == false) {
+          }
+          if (!useSuperUserFeatures || adminMode == false) {
+            if (hasActiveQuest == false) {
+              if (afkmarker == quest.startMarker) {
                 await displayQuestBottomSheet(
                   quest: quest,
                   startMarker: afkmarker,
                 );
               } else {
-                // what happens when the user collects a marker
-                log.i("Quest active, handling qrCodeScanEvent");
-                MarkerAnalysisResult markerResult =
-                    await questService.analyzeMarker(marker: afkmarker);
-                await handleMarkerAnalysisResult(markerResult);
+                dialogService.showDialog(
+                    title: "Start the quest and collect this marker");
               }
+            } else {
+              // what happens when the user collects a marker
+              log.i("Quest active, handling qrCodeScanEvent");
+              MarkerAnalysisResult markerResult =
+                  await questService.analyzeMarker(marker: afkmarker);
+              await handleMarkerAnalysisResult(markerResult);
             }
-          }),
+          }
+          log.i("adminMode = $adminMode");
+        },
+      ),
+    );
+  }
+
+  void addStartMarkerToMap(
+      {required Quest quest, required AFKMarker afkmarker}) {
+    markersOnMap.add(
+      Marker(
+        markerId: MarkerId(afkmarker
+            .id), // google maps marker id of start marker will be our quest id
+        position: LatLng(afkmarker.lat!, afkmarker.lon!),
+        infoWindow: InfoWindow(snippet: quest.name),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        onTap: () async {
+          // event triggered when user taps marker
+          dynamic adminMode = false;
+          if (useSuperUserFeatures) {
+            adminMode = await showAdminDialogAndGetResponse();
+            if (adminMode == true) {
+              String qrCodeString =
+                  _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
+              navigationService.navigateTo(Routes.qRCodeView,
+                  arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
+            }
+          }
+          if (!useSuperUserFeatures || adminMode == false)
+            await dialogService.showDialog(
+                title: "This is the starting area!",
+                description: "Move to this location and start the quest.");
+        },
+      ),
+    );
+  }
+
+  void addStartAreaToMap({required Quest quest, required AFKMarker afkmarker}) {
+    areasOnMap.add(
+      Circle(
+        circleId: CircleId(afkmarker
+            .id), // google maps marker id of start marker will be our quest id
+        center: LatLng(afkmarker.lat!, afkmarker.lon!),
+        fillColor: Colors.green.withOpacity(0.5),
+        strokeColor: Colors.green.withOpacity(0.6),
+        strokeWidth: 2,
+        radius: kMaxDistanceFromMarkerInMeter.toDouble(),
+        consumeTapEvents: true,
+        onTap: () async {
+          // event triggered when user taps marker
+          dynamic adminMode = false;
+          if (useSuperUserFeatures) {
+            adminMode = await showAdminDialogAndGetResponse();
+            if (adminMode == true) {
+              String qrCodeString =
+                  _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
+              navigationService.navigateTo(Routes.qRCodeView,
+                  arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
+            }
+          }
+          if (!useSuperUserFeatures || adminMode == false)
+            await dialogService.showDialog(
+                title: "This is the starting area!",
+                description: "Move to this location and start the quest.");
+        },
+      ),
+    );
+  }
+
+  void addNextArea({Quest? quest}) {
+    AFKMarker? marker = questService.getNextMarker(quest: quest);
+    if (marker != null) {
+      addAreaToMap(quest: quest ?? activeQuest.quest, afkmarker: marker);
+    }
+    notifyListeners();
+  }
+
+  void addAreaToMap({required Quest quest, required AFKMarker afkmarker}) {
+    areasOnMap.add(
+      Circle(
+        circleId: CircleId(afkmarker
+            .id), // google maps marker id of start marker will be our quest id
+        center: LatLng(afkmarker.lat!, afkmarker.lon!),
+        fillColor: Colors.red.withOpacity(0.5),
+        strokeColor: Colors.red.withOpacity(0.6),
+        strokeWidth: 2,
+        radius: 50,
+        consumeTapEvents: true,
+        onTap: () async {
+          // event triggered when user taps on circle
+          if (hasActiveQuest) {
+            MarkerAnalysisResult markerResult =
+                await questService.analyzeMarker(marker: afkmarker);
+            await handleMarkerAnalysisResult(markerResult);
+          } else {
+            await dialogService.showDialog(
+                title: "Walk to this area to collect the checkpoint");
+          }
+        },
+      ),
     );
   }
 
@@ -170,7 +277,6 @@ class MapViewModel extends ActiveQuestBaseViewModel {
                 "The scanned marker is not a start of a quest. Please go to the starting point");
       }
 
-      // TODO: Check this because this should probably never happen
       if (result.marker != null) {
         if (hasActiveQuest) {
           log.i("Scanned marker sucessfully collected!");
@@ -193,16 +299,33 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
+  void updateMapDisplay({required AFKMarker afkmarker}) {
+    if (activeQuest.quest.type == QuestType.QRCodeHike) {
+      updateMapMarkers(afkmarker: afkmarker);
+    } else if (activeQuest.quest.type == QuestType.GPSAreaHike) {
+      updateMapArea(afkmarker: afkmarker);
+    }
+  }
+
   Future handleCollectedMarkerEvent({required AFKMarker afkmarker}) async {
     if (hasActiveQuest == true) {
-      updateMapMarkers(afkmarker: afkmarker);
+      updateMapDisplay(afkmarker: afkmarker);
 
       // Move this to isQuestCompleted function and remove stuff from service!
       if (isQuestCompleted()) {
         //checkQuestAndFinishWhenCompleted();
+        await animateCameraToQuestMarkers(getGoogleMapController);
+        setBusy(true);
+        questFinished = true;
+        await Future.delayed(Duration(seconds: 4));
+        setBusy(false);
         // quest succesfully completed
         await showSuccessDialog();
         return;
+      } else {
+        addNextArea();
+        // animate camera to preview next marker
+        animateCameraToPreviewNextArea();
       }
     } else {
       dialogService.showDialog(
@@ -223,6 +346,18 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     notifyListeners();
   }
 
+  void updateMapArea({required AFKMarker afkmarker}) {
+    areasOnMap = areasOnMap
+        .map((item) => item.circleId == CircleId(afkmarker.id)
+            ? item.copyWith(
+                fillColorParam: Colors.green.withOpacity(0.5),
+                strokeColorParam: Colors.green.withOpacity(0.6),
+              )
+            : item)
+        .toSet();
+    notifyListeners();
+  }
+
   @override
   BitmapDescriptor defineMarkersColour(
       {required AFKMarker afkmarker, required Quest? quest}) {
@@ -235,14 +370,12 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
       }
     } else {
-      if (quest?.type == QuestType.Hike) {
+      if (quest?.type == QuestType.QRCodeHike) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueOrange);
       } else if (quest?.type == QuestType.TreasureLocationSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueViolet);
-      } else if (quest?.type == QuestType.TreasureLocationSearchAutomatic) {
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
       } else if (quest?.type == QuestType.QRCodeSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueYellow);

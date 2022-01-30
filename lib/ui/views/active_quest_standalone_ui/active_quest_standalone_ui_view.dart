@@ -24,13 +24,11 @@ class ActiveQuestStandaloneUIView extends StatelessWidget {
               ? ActiveDistanceEstimateQuestView(
                   quest: currentQuest,
                 )
-              : currentQuest.type == QuestType.TreasureLocationSearch ||
-                      currentQuest.type ==
-                          QuestType.TreasureLocationSearchAutomatic
+              : currentQuest.type == QuestType.TreasureLocationSearch
                   ? ActiveTreasureLocationSearchQuestView(
                       quest: currentQuest,
                     )
-                  : currentQuest.type == QuestType.Hike
+                  : currentQuest.type == QuestType.QRCodeHike
                       ? MapView()
                       : currentQuest.type == QuestType.QRCodeSearch
                           ? ActiveQrCodeSearchView(quest: currentQuest)

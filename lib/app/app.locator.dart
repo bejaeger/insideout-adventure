@@ -26,6 +26,7 @@ import '../services/geolocation/geolocation_service.dart';
 import '../services/giftcard/gift_card_service.dart';
 import '../services/layout/layout_service.dart';
 import '../services/local_storage_service.dart';
+import '../services/maps/maps_service.dart';
 import '../services/markers/marker_service.dart';
 import '../services/payments/payment_service.dart';
 import '../services/payments/transfers_history_service.dart';
@@ -77,6 +78,7 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => DirectionsAPI());
   locator.registerLazySingleton(() => GiftCardService());
   locator.registerLazySingleton(() => QuestTestingService());
+  locator.registerLazySingleton(() => MapsService());
   locator.registerLazySingleton(() => PurchasedGiftCardsViewModel());
   locator.registerLazySingleton(
       () => ActiveTreasureLocationSearchQuestViewModel());

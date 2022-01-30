@@ -1,31 +1,22 @@
 import 'dart:async';
-import 'dart:math';
-import 'package:afkcredits/apis/firestore_api.dart';
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/helpers/location_entry.dart';
+import 'package:afkcredits/datamodels/dummy_data.dart';
+import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/enums/position_retrieval.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
-import 'package:device_info/device_info.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart' show describeEnum, kIsWeb;
 import 'package:permission_handler/permission_handler.dart';
 
 class GeolocationService {
   final log = getLogger('GeolocationService');
-  final _firestoreApi = locator<FirestoreApi>();
-  StreamSubscription? _currentPositionStreamSubscription;
-  final QuestTestingService _questTestingService = locator<QuestTestingService>();
-  bool get isListeningToLocation => _currentPositionStreamSubscription != null;
+  StreamSubscription? _livePositionStreamSubscription;
+  bool get isListeningToLocation => _livePositionStreamSubscription != null;
 
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
-  
 
-  Position? _position;
-  Position? get getUserPosition => _position;
-  double? currentGPSAccuracy;
+  int? get currentGPSAccuracy => _livePosition?.accuracy.round();
   String? gpsAccuracyInfo;
 
   // position with stream
@@ -33,67 +24,34 @@ class GeolocationService {
   Future<Position> get getUserLivePosition async =>
       _livePosition ??
       await getAndSetCurrentLocation(forceGettingNewPosition: false);
+  Position? get getUserLivePositionNullable => _livePosition;
 
+  // for testing
   // current position forced
   Position? _currentPosition;
-  Position? get getCurrentPosition => _currentPosition;
-
   // last known position
   Position? _lastKnownPosition;
-  Position? get getLastKnownPosition => _lastKnownPosition;
 
-  List<LocationEntry> allPositions = [];
+  double distanceToLastCheckedMarker = -1;
+  double distanceToStartMarker = -1;
 
-  String currentLocationDistanceKey = "currentLocationDistance";
-  String liveLocationDistanceKey = "liveLocationDistance";
-  String lastKnownLocationDistanceKey = "lastKnownLocationDistance";
-  String triggeredByKey = "triggeredBy";
+  bool _listenedToNewPosition = false;
+  bool get listenedToNewPosition => _listenedToNewPosition;
 
-  String currentLocationTimestampKey = "currentLocationTimestamp";
-  String liveLocationTimestampKey = "liveLocationTimestamp";
-  String lastKnownLocationTimestampKey = "lastKnownLocationTimestamp";
+  int currentPositionDistanceFilter = -1;
 
-  String currentLocationLatitudeKey = "currentLocationLatitude";
-  String liveLocationLatitudeKey = "liveLocationLatitude";
-  String lastKnownLocationLatitudeKey = "lastKnownLocationLatitude";
-
-  String currentLocationLongitudeKey = "currentLocationLongitude";
-  String liveLocationLongitudeKey = "liveLocationLongitude";
-  String lastKnownLocationLongitudeKey = "lastKnownLocationLongitude";
-
-  String currentLocationAccuracyKey = "currentLocationAccuracy";
-  String liveLocationAccuracyKey = "liveLocationAccuracy";
-  String lastKnownLocationAccuracyKey = "lastKnownLocationAccuracy";
-
-  String trialEntryKey = "trial";
-
-  String deviceInfoKey = "deviceInfo";
-
-  void listenToPositionAndAddToList(
-      {double distanceFilter = kMinDistanceFromLastCheckInMeters}) {
-    if (_currentPositionStreamSubscription == null) {
-      // TODO: Provide proper error message to user in case of
-      // denied permission, no access to gps, ...
-      _currentPositionStreamSubscription = Geolocator.getPositionStream(
-              desiredAccuracy: LocationAccuracy.best,
-              distanceFilter: distanceFilter.round())
-          .listen((position) {
-        log.v("New position event fired from location listener!");
-        printPositionInfo(position);
-        _livePosition = position;
-        addCurrentLocationEntry(trigger: LocationRetrievalTrigger.listener);
-      });
-    }
-  }
-
-  Future<void> listenToPosition(
-      {double distanceFilter = kMinDistanceFromLastCheckInMeters,
-      void Function()? callback}) {
+  Future<void> listenToPosition({
+    required int distanceFilter,
+    void Function(Position)? onData,
+    void Function(Position)? viewModelCallback,
+    bool skipFirstStreamEvent = false,
+  }) async {
     Completer<void> completer = Completer();
-    if (_currentPositionStreamSubscription == null) {
+    if (_livePositionStreamSubscription == null) {
+      currentPositionDistanceFilter = distanceFilter.round();
       // TODO: Provide proper error message to user in case of
       // denied permission, no access to gps, ...
-      _currentPositionStreamSubscription = Geolocator.getPositionStream(
+      _livePositionStreamSubscription = Geolocator.getPositionStream(
               desiredAccuracy: LocationAccuracy.best,
               distanceFilter: distanceFilter.round())
           .listen(
@@ -102,11 +60,18 @@ class GeolocationService {
           printPositionInfo(position);
           _livePosition = position;
           setGPSAccuracyInfo(position.accuracy);
-          _questTestingService.maybeRecordData(position);
-          if (callback != null) {
-            // don't fire callback on first event
-            if (completer.isCompleted) {
-              callback();
+          if (onData != null) {
+            onData(position);
+          }
+          if (viewModelCallback != null) {
+            if (skipFirstStreamEvent)
+            // option to not fire callback on first event
+            {
+              if (completer.isCompleted) {
+                viewModelCallback(position);
+              }
+            } else {
+              viewModelCallback(position);
             }
           }
           if (!completer.isCompleted) {
@@ -140,6 +105,10 @@ class GeolocationService {
     gpsAccuracyInfo = info;
   }
 
+  void setListenedToNewPosition(bool set) {
+    _listenedToNewPosition = set;
+  }
+
   Future<Position> getAndSetCurrentLocation(
       {bool forceGettingNewPosition = false}) async {
     //Verify If location is available on device.
@@ -148,19 +117,9 @@ class GeolocationService {
       try {
         // if (!kIsWeb) {
         Duration? difference;
-        if (getUserPosition != null) {
-          difference = getUserPosition?.timestamp?.difference(DateTime.now());
-        } else {
-          //Harguilar Added This For Testing .
-          return _position = Position(
-              longitude: -8.831283,
-              latitude: 13.231734,
-              timestamp: DateTime.now(),
-              accuracy: 0.0,
-              altitude: 0.0,
-              heading: 0.0,
-              speed: 0.0,
-              speedAccuracy: 0.0);
+        if (getUserLivePositionNullable != null) {
+          difference = getUserLivePositionNullable?.timestamp
+              ?.difference(DateTime.now());
         }
 
         // cooldown time of 5 seconds for distance check and NEW positions should be retrieved.
@@ -176,7 +135,7 @@ class GeolocationService {
 
           log.i("Retrieved position at ${DateTime.now().toString()}");
           setGPSAccuracyInfo(geolocatorPosition.accuracy);
-          _position = geolocatorPosition;
+          _livePosition = geolocatorPosition;
           printPositionInfo(geolocatorPosition);
           return geolocatorPosition;
         } else {
@@ -185,16 +144,16 @@ class GeolocationService {
           final lastKnownPosition = await Geolocator.getLastKnownPosition();
           if (lastKnownPosition != null) {
             log.v("Returning last known position");
-            _position = lastKnownPosition;
+            _livePosition = lastKnownPosition;
             printPositionInfo(lastKnownPosition);
             setGPSAccuracyInfo(lastKnownPosition.accuracy);
             return lastKnownPosition;
           } else {
-            if (_position != null) {
+            if (_livePosition != null) {
               log.v("Returning previously fetched position");
-              printPositionInfo(_position!);
-              setGPSAccuracyInfo(_position!.accuracy);
-              return _position!;
+              printPositionInfo(_livePosition!);
+              setGPSAccuracyInfo(_livePosition!.accuracy);
+              return _livePosition!;
             } else {
               log.v("Force getting new position");
               return getAndSetCurrentLocation(forceGettingNewPosition: true);
@@ -222,7 +181,7 @@ class GeolocationService {
 
   Future setUserPosition({required dynamic position}) async {
     if (position != null) {
-      _position = position;
+      _livePosition = position;
       log.i('This is my current Posstion $position');
     } else {
       log.e('Null Position Passed $position');
@@ -297,6 +256,8 @@ class GeolocationService {
       {required Position position, required double lat, required double lon}) {
     double distanceInMeters = Geolocator.distanceBetween(
         position.latitude, position.longitude, lat, lon);
+    log.i("Distance from marker: $distanceInMeters");
+    distanceToLastCheckedMarker = distanceInMeters;
     if (distanceInMeters < kMaxDistanceFromMarkerInMeter) {
       return true;
     } else {
@@ -304,13 +265,39 @@ class GeolocationService {
     }
   }
 
-  Future<double> distanceBetweenUserAndCoordinates(
+  Future setDistanceToLastCheckedMarker(
       {required double? lat, required double? lon}) async {
+    if (lat == null || lon == null) {
+      log.wtf("Coordinates are null, can't check distance!");
+      return;
+    }
+    final position = await getAndSetCurrentLocation();
+    distanceToLastCheckedMarker = Geolocator.distanceBetween(
+        position.latitude, position.longitude, lat, lon);
+  }
+
+  Future setDistanceToStartMarker(
+      {required double? lat, required double? lon}) async {
+    if (lat == null || lon == null) {
+      log.wtf("Coordinates are null, can't check distance!");
+      return;
+    }
+    final position = await getAndSetCurrentLocation();
+    distanceToStartMarker = Geolocator.distanceBetween(
+        position.latitude, position.longitude, lat, lon);
+    distanceToLastCheckedMarker = distanceToStartMarker;
+  }
+
+  Future<double> distanceBetweenUserAndCoordinates(
+      {required double? lat,
+      required double? lon,
+      bool forceGettingNewPosition = false}) async {
     if (lat == null || lon == null) {
       log.e("input latitude or longitude is null, cannot derive distance!");
       return -1;
     }
-    final position = await getAndSetCurrentLocation();
+    final position = await getAndSetCurrentLocation(
+        forceGettingNewPosition: forceGettingNewPosition);
     double distanceInMeters = Geolocator.distanceBetween(
         position.latitude, position.longitude, lat, lon);
     return distanceInMeters;
@@ -336,144 +323,64 @@ class GeolocationService {
   }
 
   void cancelPositionListener() {
-    _currentPositionStreamSubscription?.cancel();
-    _currentPositionStreamSubscription = null;
+    _livePositionStreamSubscription?.cancel();
+    _livePositionStreamSubscription = null;
   }
 
   void clearData() {
-    _position = null;
     _lastKnownPosition = null;
     _currentPosition = null;
     _livePosition = null;
-    allPositions = [];
-    currentGPSAccuracy = null;
+    distanceToStartMarker = -1;
+    distanceToLastCheckedMarker = -1;
     cancelPositionListener();
   }
 
-  // ----------------------------------
-  // R & D
-  Future addCurrentLocationEntry(
-      {required LocationRetrievalTrigger trigger,
-      bool pushToNotion = false}) async {
+  Future getLastKnownAndCurrentPosition(
+      {required QuestDataPointTrigger trigger}) async {
     _lastKnownPosition = await Geolocator.getLastKnownPosition();
-    if (trigger != LocationRetrievalTrigger.onlyLastKnown) {
+    if (trigger != QuestDataPointTrigger.onlyLastKnownLocationFetchingEvent) {
       _currentPosition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best);
     }
-    final positionEntry = LocationEntry(
-        entryNumber: allPositions.length,
-        triggeredBy: trigger,
-        livePosition: _livePosition,
-        currentPosition: _currentPosition,
-        lastKnownPosition: _lastKnownPosition);
-    log.v("Adding position entry");
-    allPositions.add(positionEntry);
-    if (pushToNotion) {
-      try {
-        return await _questTestingService.pushNotionDatabaseEntry(positionEntry);
-      } catch (e) {
-        log.e("Error pushing entry to notion db: $e");
-        return false;
-      }
-    } else {
-      return true;
-    }
   }
-
-  Future pushAllPositionsToNotion() async {
-    bool ok = true;
-    for (int i = 0; i < allPositions.length; i++) {
-      ok = ok & await _questTestingService.pushNotionDatabaseEntry(allPositions[i]);
-    }
-    return ok;
-  }
-
-  Map<String, String> getDistanceToGoal(
-      {required LocationEntry positionEntry,
-      required double lat,
-      required double lon}) {
-    Map<String, String> distancesMap = {
-      currentLocationDistanceKey: "-1",
-      liveLocationDistanceKey: "-1",
-      lastKnownLocationDistanceKey: "-1",
-      triggeredByKey: "",
-    };
-    String distanceInMetersAsString = distanceBetween(
-            lat1: positionEntry.livePosition?.latitude,
-            lon1: positionEntry.livePosition?.longitude,
-            lat2: lat,
-            lon2: lon)
-        .toStringAsFixed(1);
-    distancesMap[liveLocationDistanceKey] = distanceInMetersAsString;
-    distanceInMetersAsString = distanceBetween(
-            lat1: positionEntry.currentPosition?.latitude,
-            lon1: positionEntry.currentPosition?.longitude,
-            lat2: lat,
-            lon2: lon)
-        .toStringAsFixed(1);
-    distancesMap[currentLocationDistanceKey] = distanceInMetersAsString;
-    distanceInMetersAsString = distanceBetween(
-            lat1: positionEntry.lastKnownPosition?.latitude,
-            lon1: positionEntry.lastKnownPosition?.longitude,
-            lat2: lat,
-            lon2: lon)
-        .toStringAsFixed(1);
-    distancesMap[lastKnownLocationDistanceKey] = distanceInMetersAsString;
-    distancesMap[triggeredByKey] =
-        describeEnum(positionEntry.triggeredBy).toString();
-    return distancesMap;
-  }
-
 
   String getLastKnownDistancesToGoal() {
     if (_lastKnownPosition == null) {
       return "nan";
     } else {
-      if (allPositions.length > 0) {
-        Map<String, String> distancesToGoal = getDistanceToGoal(
-            positionEntry: allPositions.last,
-            lat: 48.06701330843975,
-            lon: 7.903736956224777);
-        return distancesToGoal[lastKnownLocationDistanceKey] ?? "-1";
-      } else {
-        return "nan";
-      }
+      return distanceBetween(
+              lat1: _lastKnownPosition?.latitude,
+              lon1: _lastKnownPosition?.longitude,
+              lat2: kTestLat,
+              lon2: kTestLon)
+          .toStringAsFixed(1);
     }
   }
 
   String getCurrentDistancesToGoal() {
-    if (_lastKnownPosition == null) {
+    if (_currentPosition == null) {
       return "nan";
     } else {
-      if (allPositions.length > 0) {
-        Map<String, String> distancesToGoal = getDistanceToGoal(
-            positionEntry: allPositions.last,
-            lat: 48.06701330843975,
-            lon: 7.903736956224777);
-        return distancesToGoal[currentLocationDistanceKey] ?? "-1";
-      } else {
-        return "nan";
-      }
+      return distanceBetween(
+              lat1: _currentPosition?.latitude,
+              lon1: _currentPosition?.longitude,
+              lat2: kTestLat,
+              lon2: kTestLon)
+          .toStringAsFixed(1);
     }
   }
 
   String getLiveDistancesToGoal() {
-    if (_lastKnownPosition == null) {
+    if (_livePosition == null) {
       return "nan";
     } else {
-      if (allPositions.length > 0) {
-        Map<String, String> distancesToGoal = getDistanceToGoal(
-            positionEntry: allPositions.last,
-            lat: 48.06701330843975,
-            lon: 7.903736956224777);
-        return distancesToGoal[liveLocationDistanceKey] ?? "-1";
-      } else {
-        return "nan";
-      }
+      return distanceBetween(
+              lat1: _livePosition?.latitude,
+              lon1: _livePosition?.longitude,
+              lat2: kTestLat,
+              lon2: kTestLon)
+          .toStringAsFixed(1);
     }
   }
 }
-
-
-
-

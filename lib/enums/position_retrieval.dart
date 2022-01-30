@@ -1,1 +1,1 @@
-enum LocationRetrievalTrigger {listener, manualAll, onlyLastKnown, liveQuest}
+enum QuestDataPointTrigger {locationListener, manualLocationFetchingEvent, onlyLastKnownLocationFetchingEvent, liveQuest, userAction, liveQuestUICallback}

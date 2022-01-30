@@ -21,7 +21,7 @@ class EmptyNote extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-              title ?? "Du hast die Mission geschafft!",// "You are the best, you successfully finished the quest",
+              title ?? "You mastered this mission!",// "You are the best, you successfully finished the quest",
               textAlign: TextAlign.center,
               style: textTheme(context).headline3),
         ),

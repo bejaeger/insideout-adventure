@@ -43,14 +43,6 @@ Size screenSize(BuildContext context) => MediaQuery.of(context).size;
 isDesktop(BuildContext context) => MediaQuery.of(context).size.width > 600;
 TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
 
-String formatDate(DateTime timestamp) {
-  return DateFormat.MMMEd().format(timestamp);
-}
-
-String formatDateDetails(DateTime timestamp) {
-  return DateFormat.yMd().add_jm().format(timestamp);
-}
-
 IconData getIconForCategory(QuestType category) {
   switch (category) {
     case QuestType.DistanceEstimate:
@@ -61,10 +53,12 @@ IconData getIconForCategory(QuestType category) {
       return Icons.search_rounded;
     case QuestType.QRCodeHuntIndoor:
       return Icons.pets;
-    case QuestType.Hike:
+    case QuestType.QRCodeHike:
       return Icons.nature_people;
-    default:
+    case QuestType.GPSAreaHike:
       return Icons.explore;
+    default:
+      return Icons.map;
   }
 }
 
@@ -79,8 +73,10 @@ String getStringForCategory(QuestType? category) {
       return "QR Code Search";
     case QuestType.QRCodeHuntIndoor:
       return "Indoor QR Code Hunt";
-    case QuestType.Hike:
-      return "Hike";
+    case QuestType.QRCodeHike:
+      return "QR Code Hike";
+    case QuestType.GPSAreaHike:
+      return "GPS Area Hike";
     case QuestType.QRCodeSearch:
       return "QR Code Search";
     default:
@@ -91,8 +87,10 @@ String getStringForCategory(QuestType? category) {
 Color getColorOfType(QuestType type) {
   if (type == QuestType.TreasureLocationSearch)
     return Colors.orange;
-  else if (type == QuestType.Hike) {
+  else if (type == QuestType.QRCodeHike) {
     return Colors.red;
+  } else if (type == QuestType.GPSAreaHike) {
+    return Colors.green;
   } else if (type == QuestType.DistanceEstimate) {
     return Colors.blue;
   } else if (type == QuestType.QRCodeSearch) {

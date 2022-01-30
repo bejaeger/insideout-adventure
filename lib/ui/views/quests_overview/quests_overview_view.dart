@@ -25,7 +25,7 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
     return ViewModelBuilder<QuestsOverviewViewModel>.reactive(
       viewModelBuilder: () => QuestsOverviewViewModel(),
       onModelReady: (model) {
-        model.initialize();
+        model.initializeMapAndMarkers();
         _tabController = TabController(
           length: 2,
           vsync: this,

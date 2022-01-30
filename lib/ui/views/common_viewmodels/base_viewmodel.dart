@@ -42,11 +42,15 @@ class BaseModel extends BaseViewModel {
   final StopWatchService _stopWatchService = locator<StopWatchService>();
   final GiftCardService _giftCardService = locator<GiftCardService>();
   final GeolocationService geolocationService = locator<GeolocationService>();
-  final QuestTestingService _questTestingService = locator<QuestTestingService>();
+  final QuestTestingService _questTestingService =
+      locator<QuestTestingService>();
 
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
-  bool get isSuperUser => userService.isSuperUser;
+  bool get isSuperUser =>  userService.isSuperUser;
+  bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
+      ? false
+      : userService.isSuperUser;
 
   final baseModelLog = getLogger("BaseModel");
   bool get hasActiveQuest => questService.hasActiveQuest;
@@ -120,6 +124,12 @@ class BaseModel extends BaseViewModel {
     navigationService.clearStackAndShow(Routes.loginView);
   }
 
+  setListenedToNewPosition(bool set) {
+    if (useSuperUserFeatures) {
+      geolocationService.setListenedToNewPosition(set);
+    }
+  }
+
   Future setShowBottomNavBar(bool show) async {
     if (show == true) {
       await Future.delayed(Duration(milliseconds: 150));
@@ -127,35 +137,35 @@ class BaseModel extends BaseViewModel {
     //layoutService.setShowBottomNavBar(show);
   }
 
-  Future startQuestMain(
-      {required Quest quest,
-      Future Function(int)? periodicFuncFromViewModel}) async {
-    try {
-      // if (quest.type == QuestType.VibrationSearch && startFromMap) {
-      //   await navigateToVibrationSearchView();
-      // }
+  // Future startQuestMain(
+  //     {required Quest quest,
+  //     Future Function(int)? periodicFuncFromViewModel}) async {
+  //   try {
+  //     // if (quest.type == QuestType.VibrationSearch && startFromMap) {
+  //     //   await navigateToVibrationSearchView();
+  //     // }
 
-      /// Once The user Click on Start a Quest. It is her/him to new Page
-      /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
-      /// Quest.
-      final isQuestStarted = await questService.startQuest(
-          quest: quest,
-          uids: [currentUser.uid],
-          periodicFuncFromViewModel: periodicFuncFromViewModel);
+  //     /// Once The user Click on Start a Quest. It is her/him to new Page
+  //     /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
+  //     /// Quest.
+  //     final isQuestStarted = await questService.startQuest(
+  //         quest: quest,
+  //         uids: [currentUser.uid],
+  //         periodicFuncFromViewModel: periodicFuncFromViewModel);
 
-      // this will also change the MapViewModel to show the ActiveQuestView
-      if (isQuestStarted is String) {
-        await dialogService.showDialog(
-            title: "Sorry could not start the quest",
-            description: isQuestStarted);
-        return false;
-      }
-      return true;
-    } catch (e) {
-      baseModelLog.e("Could not start quest, error thrown: $e");
-      rethrow;
-    }
-  }
+  //     // this will also change the MapViewModel to show the ActiveQuestView
+  //     if (isQuestStarted is String) {
+  //       await dialogService.showDialog(
+  //           title: "Sorry could not start the quest",
+  //           description: isQuestStarted);
+  //       return false;
+  //     }
+  //     return true;
+  //   } catch (e) {
+  //     baseModelLog.e("Could not start quest, error thrown: $e");
+  //     rethrow;
+  //   }
+  // }
 
   bool hasEnoughSponsoring({required Quest? quest}) {
     if (quest == null) {
@@ -179,18 +189,21 @@ class BaseModel extends BaseViewModel {
         duration: Duration(seconds: 2));
   }
 
-  Future<bool> showAdminDialogAndGetResponse() async {
-    bool adminMode = true;
+  Future showAdminDialogAndGetResponse() async {
+    dynamic adminMode = true;
     dynamic response = await dialogService.showDialog(
         title: "You are in admin mode!",
         description:
             "Do you want to continue with admin mode (to see qr codes, ...) or normal user mode?",
         cancelTitle: "User Mode",
-        buttonTitle: "Admin Mode");
+        buttonTitle: "Admin Mode",
+        barrierDismissible: true);
     if (response?.confirmed == true) {
       adminMode = true;
-    } else {
+    } else if (response?.confirmed == false) {
       adminMode = false;
+    } else {
+      return "Dismissed";
     }
     return adminMode;
   }
