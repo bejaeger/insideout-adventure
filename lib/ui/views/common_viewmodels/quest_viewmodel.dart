@@ -22,6 +22,7 @@ import 'package:afkcredits/services/quest_testing_service/quest_testing_service.
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:open_settings/open_settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
@@ -120,7 +121,9 @@ abstract class QuestViewModel extends BaseModel {
       bool countStartMarkerAsCollected = false}) async {
     // cancel listener that was only used for calibration
     cancelPositionListener();
-    // await checkIfBatterySaveModeOn();
+    if (await checkIfBatterySaveModeOn()) {
+      return false;
+    }
     try {
       // if (quest.type == QuestType.VibrationSearch && startFromMap) {
       //   await navigateToVibrationSearchView();
@@ -152,23 +155,47 @@ abstract class QuestViewModel extends BaseModel {
     }
   }
 
-  Future checkIfBatterySaveModeOn() async {
+  Future<bool> checkIfBatterySaveModeOn() async {
     // Instantiate it
     try {
       final Battery battery = Battery();
       final isInBatterySaveMode = await battery.isInBatterySaveMode;
       if (isInBatterySaveMode != true) {
-        return;
+        return false;
       } else if (isInBatterySaveMode == true) {
-        dialogService.showDialog(
-            title: "Your phone is in battery save mode",
-            description: "For best performance, please disable it");
-        await Future.delayed(Duration(milliseconds: 300));
+        final result = await dialogService.showDialog(
+          title: "Disable Battery Saver",
+          description:
+              "For best performance, please disable Power Saver in Settings/Battery.",
+          buttonTitle: "SETTINGS",
+          cancelTitle: "START ANYWAY",
+          barrierDismissible: true,
+        );
+        if (result?.confirmed == true) {
+          try {
+            await OpenSettings.openBatterySaverSetting();
+            return true;
+          } catch (e) {
+            log.e("Could not open settings");
+            await dialogService.showDialog(
+              title: "Could not open settings",
+              description:
+                  "Sorry, we could not open your settings. Please navigate to Settings/Battery yourself",
+            );
+            return true;
+          }
+          // await checkIfBatterySaveModeOn();
+        } else if (result?.confirmed == false) {
+          return false;
+        }
+        return true;
+        // await Future.delayed(Duration(milliseconds: 300));
       }
+      return true;
     } catch (e) {
       log.e("Could not check battery save mode!");
       log.e("Error: $e");
-      return;
+      return false;
     }
   }
 

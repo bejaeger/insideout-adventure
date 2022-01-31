@@ -31,7 +31,7 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart'
     as _i3;
 import 'package:afkcredits/datamodels/users/user.dart' as _i2;
 import 'package:afkcredits/enums/authentication_method.dart' as _i19;
-import 'package:afkcredits/enums/position_retrieval.dart' as _i38;
+import 'package:afkcredits/enums/quest_data_point_trigger.dart' as _i38;
 import 'package:afkcredits/enums/quest_status.dart' as _i41;
 import 'package:afkcredits/enums/quest_type.dart' as _i40;
 import 'package:afkcredits/enums/quest_ui_style.dart' as _i42;

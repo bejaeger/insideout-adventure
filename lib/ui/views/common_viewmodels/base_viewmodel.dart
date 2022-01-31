@@ -47,7 +47,7 @@ class BaseModel extends BaseViewModel {
 
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
-  bool get isSuperUser =>  userService.isSuperUser;
+  bool get isSuperUser => userService.isSuperUser;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
       : userService.isSuperUser;
@@ -96,7 +96,7 @@ class BaseModel extends BaseViewModel {
     await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
     geolocationService.clearData();
-    _questTestingService.resetSettings();
+    _questTestingService.maybeReset();
   }
 
   void unregisterViewModels() {

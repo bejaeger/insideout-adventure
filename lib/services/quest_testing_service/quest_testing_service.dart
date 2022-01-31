@@ -112,8 +112,7 @@ class QuestTestingService {
   void resetSettings() {
     _isRecordingLocationData = true;
     _isPermanentAdminMode = false;
-    _isPermanentUserMode = false;
-    allQuestDataPoints = [];
+    _isPermanentUserMode = true;
   }
 
   void maybeReset() async {
@@ -180,16 +179,15 @@ class QuestTestingService {
       activatedQuest: activatedQuest,
       userEventDescription: userEventDescription,
     );
-    _numberQuestDataPoints = _numberQuestDataPoints + 1;
     log.v("Adding quest data point location entry");
     bool returnValue = true;
     if (pushToNotion) {
       String keyCompleterNew = nanoid(8);
       completers[keyCompleterNew] = Completer();
+      keyCompleterPrevious.add(keyCompleterNew);
       try {
         // the following pushes the data.
         // in case this function is called multiple times we await the completer
-        keyCompleterPrevious.add(keyCompleterNew);
         if ((completers.length) > 1) {
           if (completers[
                   keyCompleterPrevious[keyCompleterPrevious.length - 2]] !=
@@ -202,9 +200,8 @@ class QuestTestingService {
         final result = await pushNotionDatabaseEntry(questDataPoint);
         if (completers[keyCompleterNew] != null) {
           completers[keyCompleterNew]!.complete();
-          completers.remove(keyCompleterNew);
+          //completers.remove(keyCompleterNew);
         }
-
         if (result == true) {
           questDataPoint.pushedToNotion = true;
         }
@@ -215,8 +212,8 @@ class QuestTestingService {
         log.e("User desription: $userEventDescription");
         if (completers[keyCompleterNew] != null) {
           completers[keyCompleterNew]!.complete();
+          //completers.remove(keyCompleterNew);
         }
-        completers.remove(keyCompleterNew);
         returnValue = false;
       }
     }
@@ -296,6 +293,7 @@ class QuestTestingService {
       log.i("location entry nr. ${entry.entryNumber} already pushed to notion");
       return false;
     }
+
     // ID of manually created database
     String databaseId = "3fa2284a2aec40a5a6d03089493be25a";
 
@@ -345,6 +343,7 @@ class QuestTestingService {
       }
     }
 
+    _numberQuestDataPoints = _numberQuestDataPoints + 1;
     Page newDatabaseEntry = Page(
       parent: Parent.database(
           id: _questDataPointsDatabase?.id ?? "nan"), // <- database

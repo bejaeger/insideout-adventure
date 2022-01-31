@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<Quest> getDummyQuests() {
   return [
+    starenWegNoListener(),
     getZaehringenHike(),
     getDummyVibrationSearchQuest(),
     heidachTrohpy(),
@@ -335,6 +336,23 @@ Quest getDummyQuest6() {
     type: QuestType.QRCodeHike,
     startMarker: starenweg4(),
     finishMarker: heidach4(),
+  );
+}
+
+Quest starenWegNoListener() {
+  return Quest(
+    id: "nJiVPrgw2jcGrxoABCBW",
+    name: "Starenweg Hike No Listener!",
+    description: "",
+    afkCredits: 1,
+    markers: [
+      heidach4(),
+      heidach2(),
+      starenweg4(),
+    ],
+    type: QuestType.GPSAreaHike,
+    startMarker: heidach4(),
+    finishMarker: starenweg4(),
   );
 }
 
