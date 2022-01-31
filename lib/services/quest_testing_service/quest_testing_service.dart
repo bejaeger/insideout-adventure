@@ -62,7 +62,7 @@ class QuestTestingService {
   bool get isPermanentUserMode =>
       _isPermanentUserMode && userService.isSuperUser;
 
-  bool _isRecordingLocationData = true;
+  bool _isRecordingLocationData = false;
   bool _isPermanentAdminMode = false;
   bool _isPermanentUserMode = true;
 

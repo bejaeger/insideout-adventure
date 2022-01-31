@@ -104,105 +104,99 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                 child: Column(
                   children: [
                     Container(
-                        // decoration: BoxDecoration(
-                        //   boxShadow: [
-                        //     BoxShadow(
-                        //         offset: Offset(0, 100),
-                        //         blurRadius: 4,
-                        //         spreadRadius: 2,
-                        //         color: kShadowColor)
-                        //   ],
-                        // ),
-                        alignment: Alignment.center,
-                        height: 100,
-                        child: model.questFinished &&
-                                !model.questSuccessfullyFinished
-                            ? model.isBusy
-                                ? AFKProgressIndicator()
-                                : Container()
-                            : model.questSuccessfullyFinished
-                                ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                          "You mastered this mission!", // "You are the best, you successfully finished the quest",
-                                          textAlign: TextAlign.center,
-                                          style: textTheme(context).headline5),
-                                      verticalSpaceTiny,
-                                      ElevatedButton(
-                                          onPressed: () =>
-                                              model.replaceWithMainView(
-                                                  index:
-                                                      BottomNavBarIndex.quest),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "More Quests",
-                                            ),
-                                          )),
-                                    ],
-                                  )
-                                : model.isBusy
-                                    ? AFKProgressIndicator()
-                                    : Stack(
-                                        children: [
-                                          AnimatedOpacity(
-                                            opacity:
-                                                model.showStartSwipe ? 1 : 0,
-                                            duration:
-                                                Duration(milliseconds: 50),
-                                            child: model.isNearStartMarker
-                                                ? AFKSlideButton(
-                                                    //alignment: Alignment(0, 0),
-                                                    quest: widget.quest,
-                                                    canStartQuest: model
-                                                        .hasEnoughSponsoring(
-                                                            quest:
-                                                                widget.quest),
-                                                    onSubmit: () =>
-                                                        model.maybeStartQuest(
-                                                            quest:
-                                                                widget.quest))
-                                                : Container(
-                                                    color: Colors.white,
-                                                    child: NotCloseToQuestNote(
-                                                        questType:
-                                                            widget.quest.type,
-                                                        controller: model
-                                                            .getGoogleMapController),
-                                                  ),
+                      // decoration: BoxDecoration(
+                      //   boxShadow: [
+                      //     BoxShadow(
+                      //         offset: Offset(0, 100),
+                      //         blurRadius: 4,
+                      //         spreadRadius: 2,
+                      //         color: kShadowColor)
+                      //   ],
+                      // ),
+                      alignment: Alignment.center,
+                      height: 100,
+                      child: model.questFinished &&
+                              !model.questSuccessfullyFinished
+                          ? model.isBusy
+                              ? AFKProgressIndicator()
+                              : Container()
+                          : model.questSuccessfullyFinished
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                        "You mastered this mission!", // "You are the best, you successfully finished the quest",
+                                        textAlign: TextAlign.center,
+                                        style: textTheme(context).headline5),
+                                    verticalSpaceTiny,
+                                    ElevatedButton(
+                                        onPressed: () =>
+                                            model.replaceWithMainView(
+                                                index: BottomNavBarIndex.quest),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "More Quests",
                                           ),
-                                          AnimatedOpacity(
-                                            opacity:
-                                                model.hasActiveQuest ? 1 : 0,
-                                            duration: Duration(seconds: 1),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                LiveQuestStatistic(
-                                                  title: "Duration",
-                                                  statistic:
-                                                      model.hasActiveQuest
-                                                          ? model.timeElapsed
-                                                          : "0",
+                                        )),
+                                  ],
+                                )
+                              : model.isBusy
+                                  ? AFKProgressIndicator()
+                                  : Stack(
+                                      children: [
+                                        AnimatedOpacity(
+                                          opacity: model.showStartSwipe ? 1 : 0,
+                                          duration: Duration(milliseconds: 50),
+                                          child: model.isNearStartMarker
+                                              ? AFKSlideButton(
+                                                  //alignment: Alignment(0, 0),
+                                                  quest: widget.quest,
+                                                  canStartQuest:
+                                                      model.hasEnoughSponsoring(
+                                                          quest: widget.quest),
+                                                  onSubmit: () =>
+                                                      model.maybeStartQuest(
+                                                          quest: widget.quest))
+                                              : Container(
+                                                  color: Colors.white,
+                                                  child: NotCloseToQuestNote(
+                                                      questType:
+                                                          widget.quest.type,
+                                                      controller: model
+                                                          .getGoogleMapController),
                                                 ),
-                                                ScaleTransition(
-                                                  scale: _animation,
-                                                  child: LiveQuestStatistic(
-                                                    title: "Markers collected",
-                                                    statistic: model
-                                                            .hasActiveQuest
-                                                        ? model
-                                                            .getNumberMarkersCollectedString()
-                                                        : "0",
-                                                  ),
+                                        ),
+                                        AnimatedOpacity(
+                                          opacity: model.hasActiveQuest ? 1 : 0,
+                                          duration: Duration(seconds: 1),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              LiveQuestStatistic(
+                                                title: "Duration",
+                                                statistic: model.hasActiveQuest
+                                                    ? model.timeElapsed
+                                                    : "0",
+                                              ),
+                                              ScaleTransition(
+                                                scale: _animation,
+                                                child: LiveQuestStatistic(
+                                                  title: "Markers collected",
+                                                  statistic: model
+                                                          .hasActiveQuest
+                                                      ? model
+                                                          .getNumberMarkersCollectedString()
+                                                      : "0",
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      )),
+                                        ),
+                                      ],
+                                    ),
+                    ),
                     // if (model.isBusy)
                     //   Align(
                     //       alignment: Alignment.center,

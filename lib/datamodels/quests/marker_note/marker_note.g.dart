@@ -11,6 +11,7 @@ _$_MarkerNote _$$_MarkerNoteFromJson(Map<String, dynamic> json) =>
       note: json['note'] as String,
       imagePath: json['imagePath'] as String?,
       solution: json['solution'] as String?,
+      hint: json['hint'] as String?,
     );
 
 Map<String, dynamic> _$$_MarkerNoteToJson(_$_MarkerNote instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$$_MarkerNoteToJson(_$_MarkerNote instance) =>
       'note': instance.note,
       'imagePath': instance.imagePath,
       'solution': instance.solution,
+      'hint': instance.hint,
     };

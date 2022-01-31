@@ -122,6 +122,7 @@ abstract class QuestViewModel extends BaseModel {
     // cancel listener that was only used for calibration
     cancelPositionListener();
     if (await checkIfBatterySaveModeOn()) {
+      resetSlider();
       return false;
     }
     try {
@@ -144,6 +145,7 @@ abstract class QuestViewModel extends BaseModel {
         await dialogService.showDialog(
             title: "Sorry could not start the quest",
             description: isQuestStarted);
+        resetSlider();
         return false;
       }
       showStartSwipe = false;
@@ -163,6 +165,7 @@ abstract class QuestViewModel extends BaseModel {
       if (isInBatterySaveMode != true) {
         return false;
       } else if (isInBatterySaveMode == true) {
+        log.i("Phone is in battery save mode, show dialog");
         final result = await dialogService.showDialog(
           title: "Disable Battery Saver",
           description:
@@ -177,10 +180,11 @@ abstract class QuestViewModel extends BaseModel {
             return true;
           } catch (e) {
             log.e("Could not open settings");
+            await Future.delayed(Duration(milliseconds: 500));
             await dialogService.showDialog(
-              title: "Could not open settings",
+              title: "Could Not Open Settings",
               description:
-                  "Sorry, we could not open your settings. Please navigate to Settings/Battery yourself",
+                  "Sorry, we could not open your settings. Please navigate to Settings/Battery yourself.",
             );
             return true;
           }
@@ -318,6 +322,8 @@ abstract class QuestViewModel extends BaseModel {
       return "collecting each checkpoint by walking to the shown red areas.";
     } else if (quest.type == QuestType.QRCodeHike) {
       return "finding all QR codes hidden in the highlighted areas.";
+    } else if (quest.type == QuestType.DistanceEstimate) {
+      return "walking the specified distance.";
     } else {
       return "collecting all markers";
     }

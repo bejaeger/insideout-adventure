@@ -9,6 +9,7 @@ import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_cat
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/enums/marker_collection_failure_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
@@ -146,8 +147,9 @@ class QuestService with ReactiveServiceMixin {
     //  else if (quest.type == QuestType.DistanceEstimate) {
     //   _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
     // }
-    else if (quest.type == QuestType.QRCodeHike ||
-        quest.type == QuestType.GPSAreaHike) {
+    else if (quest.type == QuestType.QRCodeHike) {
+      // ||
+      // quest.type == QuestType.GPSAreaHike) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
     // Quest succesfully started
@@ -715,7 +717,8 @@ class QuestService with ReactiveServiceMixin {
       if (!isMarkerInQuest(marker: marker)) {
         log.w("Scanned marker does not belong to currently active quest");
         return MarkerAnalysisResult.error(
-            errorMessage: WarningScannedMarkerNotInQuest);
+            errorMessage: WarningScannedMarkerNotInQuest,
+            errorType: MarkerCollectionFailureType.alreadyCollected);
       }
 
       // Marker is in quest so let's get full marker with lat and long by reading from already downloaded

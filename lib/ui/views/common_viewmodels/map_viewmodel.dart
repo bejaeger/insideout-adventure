@@ -7,6 +7,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/enums/marker_collection_failure_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
@@ -133,11 +134,18 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         markerId: MarkerId(afkmarker
             .id), // google maps marker id of start marker will be our quest id
         position: LatLng(afkmarker.lat!, afkmarker.lon!),
-        infoWindow: InfoWindow(title: "NEXT MARKER"),
+        infoWindow: InfoWindow(
+            title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
         // InfoWindow(snippet: quest.name),
         icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
         onTap: () async {
           // event triggered when user taps marker
+
+          if (getGoogleMapController != null) {
+            // needed to avoid navigating to that marker!
+            getGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(
+                await getGoogleMapController!.getVisibleRegion(), 0));
+          }
 
           dynamic adminMode = false;
           if (useSuperUserFeatures) {
@@ -176,15 +184,25 @@ class MapViewModel extends ActiveQuestBaseViewModel {
                   startMarker: afkmarker,
                 );
               } else {
-                dialogService.showDialog(
-                    title: "Start the quest and collect this marker");
+                if (quest.type != QuestType.QRCodeHike) {
+                  dialogService.showDialog(
+                      title: "Checkpoint",
+                      description:
+                          "Start the quest and reach this checkpoint.");
+                } else {
+                  dialogService.showDialog(
+                      title: "Marker",
+                      description: "Start the quest and collect this marker.");
+                }
               }
             } else {
               // what happens when the user collects a marker
               log.i("Quest active, handling qrCodeScanEvent");
-              MarkerAnalysisResult markerResult =
-                  await questService.analyzeMarker(marker: afkmarker);
-              await handleMarkerAnalysisResult(markerResult);
+              if (flavorConfigProvider.allowDummyMarkerCollection) {
+                MarkerAnalysisResult markerResult =
+                    await questService.analyzeMarker(marker: afkmarker);
+                await handleMarkerAnalysisResult(markerResult);
+              }
             }
           }
           log.i("adminMode = $adminMode");
@@ -201,9 +219,16 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         markerId: MarkerId(afkmarker
             .id), // google maps marker id of start marker will be our quest id
         position: LatLng(afkmarker.lat!, afkmarker.lon!),
-        infoWindow: InfoWindow(snippet: quest.name),
+        infoWindow: InfoWindow(
+            title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
         onTap: () async {
+          if (getGoogleMapController != null) {
+            // needed to avoid navigating to that marker!
+            getGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(
+                await getGoogleMapController!.getVisibleRegion(), 0));
+          }
+
           // event triggered when user taps marker
           dynamic adminMode = false;
           if (useSuperUserFeatures) {
@@ -217,7 +242,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
           }
           if (!useSuperUserFeatures || adminMode == false)
             await dialogService.showDialog(
-                title: "This is the starting area!",
+                title: "The Start",
                 description: "Move to this location and start the quest.");
         },
       ),
@@ -236,6 +261,12 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         radius: kMaxDistanceFromMarkerInMeter.toDouble(),
         consumeTapEvents: true,
         onTap: () async {
+          if (getGoogleMapController != null) {
+            // needed to avoid navigating to that marker!
+            getGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(
+                await getGoogleMapController!.getVisibleRegion(), 0));
+          }
+
           // event triggered when user taps marker
           dynamic adminMode = false;
           if (useSuperUserFeatures) {
@@ -249,7 +280,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
           }
           if (!useSuperUserFeatures || adminMode == false)
             await dialogService.showDialog(
-                title: "This is the starting area!",
+                title: "The Start",
                 description: "Move to this location and start the quest.");
         },
       ),
@@ -265,10 +296,12 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     }
     if (result.hasError) {
       log.e("Error occured: ${result.errorMessage}");
+      // if (result.errorType != MarkerCollectionFailureType.alreadyCollected) {
       await dialogService.showDialog(
         title: "Can't collect marker!",
         description: result.errorMessage!,
       );
+      // }
       return false;
     } else {
       if (!hasActiveQuest && result.quests == null) {

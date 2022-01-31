@@ -61,8 +61,6 @@ class ActiveMapQuestViewModel extends MapViewModel {
       final result =
           await startQuestMain(quest: quest, countStartMarkerAsCollected: true);
       if (result == false) {
-        log.wtf("Not starting quest, due to an unknown reason");
-        resetSlider();
         return;
       }
       // quest started

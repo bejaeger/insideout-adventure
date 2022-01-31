@@ -45,12 +45,11 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
     _controller.forward();
   }
 
-    @override
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +216,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text("Finde & Scan",
+                                        Text("Find & Scan",
                                             style:
                                                 textTheme(context).headline6),
                                         Icon(Icons.arrow_forward, size: 40),

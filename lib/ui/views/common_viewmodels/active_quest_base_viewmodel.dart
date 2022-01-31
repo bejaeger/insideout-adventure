@@ -86,10 +86,14 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
       markerId = MarkerId(marker.id);
     }
     try {
-      Future.delayed(Duration(seconds: marker != null ? 0 : 1), () {
-        getGoogleMapController?.showMarkerInfoWindow(markerId);
-        notifyListeners();
-      });
+      Future.delayed(
+        Duration(seconds: marker != null ? 0 : 1),
+        () {
+          getGoogleMapController?.showMarkerInfoWindow(markerId);
+          log.wtf("marker Id to show info of: $markerId");
+          notifyListeners();
+        },
+      );
     } catch (e) {
       log.e(
           "This is a weird error from google maps when showing the marker info: $e");
@@ -134,7 +138,8 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
         .map((item) => item.markerId == MarkerId(afkmarker.id)
             ? item.copyWith(
                 iconParam:
-                    defineMarkersColour(afkmarker: afkmarker, quest: null))
+                    defineMarkersColour(afkmarker: afkmarker, quest: null),
+                infoWindowParam: InfoWindow(title: "ALREADY COLLECTED"))
             : item)
         .toSet();
     notifyListeners();
@@ -154,13 +159,8 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
   }
 
   void updateMapDisplay({required AFKMarker afkmarker}) {
-    if (activeQuest.quest.type == QuestType.QRCodeHike) {
-      updateMapMarkers(afkmarker: afkmarker);
-      updateMapArea(afkmarker: afkmarker);
-    } else if (activeQuest.quest.type == QuestType.GPSAreaHike) {
-      updateMapArea(afkmarker: afkmarker);
-      updateMapMarkers(afkmarker: afkmarker);
-    }
+    updateMapArea(afkmarker: afkmarker);
+    updateMapMarkers(afkmarker: afkmarker);
   }
 
   Future animateCameraToPreviewNextArea() async {
@@ -172,11 +172,11 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
     }
     // LatLng = getGoogleMapController.getZoomLevel()
     // getGoogleMapController!.
-    AFKMarker? marker = questService.getNextMarker();
+    AFKMarker? nextMarker = questService.getNextMarker();
     AFKMarker? previousMarker = questService.getPreviousMarker();
-    if (marker != null &&
-        marker.lat != null &&
-        marker.lon != null &&
+    if (nextMarker != null &&
+        nextMarker.lat != null &&
+        nextMarker.lon != null &&
         previousMarker != null &&
         previousMarker.lat != null &&
         previousMarker.lon != null) {
@@ -196,22 +196,23 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
       }
       await getGoogleMapController!.animateCamera(
         CameraUpdate.newLatLng(
-          LatLng(marker.lat!, marker.lon!),
+          LatLng(nextMarker.lat!, nextMarker.lon!),
         ),
       );
       if (currentQuest?.type == QuestType.GPSAreaHike) {
         await Future.delayed(Duration(milliseconds: 800));
-        addNextArea(marker: marker);
-        addNextMarker(marker: marker);
+        addNextArea(marker: nextMarker);
+        addNextMarker(marker: nextMarker);
         await Future.delayed(Duration(milliseconds: 600));
         double currentZoom = await getGoogleMapController!.getZoomLevel();
+        showInfoWindowOfNextMarker(marker: nextMarker);
         await getGoogleMapController!.animateCamera(CameraUpdate.newLatLngZoom(
-            LatLng(marker.lat!, marker.lon!), currentZoom + 1));
+            LatLng(nextMarker.lat!, nextMarker.lon!), currentZoom + 1));
         await Future.delayed(Duration(milliseconds: 600));
       } else {
         if (currentQuest!.type == QuestType.QRCodeHike) {
           await Future.delayed(Duration(milliseconds: 600));
-          showInfoWindowOfNextMarker(marker: marker);
+          showInfoWindowOfNextMarker(marker: nextMarker);
           await Future.delayed(Duration(milliseconds: 600));
         } else {
           await Future.delayed(Duration(milliseconds: 1200));
@@ -222,7 +223,7 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
         latLngList: [
           //LatLng(pos.latitude, pos.longitude),
           LatLng(previousMarker.lat!, previousMarker.lon!),
-          LatLng(marker.lat!, marker.lon!),
+          LatLng(nextMarker.lat!, nextMarker.lon!),
         ],
       );
     }
@@ -273,11 +274,19 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
         radius: 50,
         consumeTapEvents: true,
         onTap: () async {
+          if (getGoogleMapController != null) {
+            // needed to avoid navigating to that marker!
+            getGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(
+                await getGoogleMapController!.getVisibleRegion(), 0));
+          }
+
           // event triggered when user taps on circle
           if (hasActiveQuest) {
-            MarkerAnalysisResult markerResult =
-                await questService.analyzeMarker(marker: afkmarker);
-            await handleMarkerAnalysisResult(markerResult);
+            if (flavorConfigProvider.allowDummyMarkerCollection) {
+              MarkerAnalysisResult markerResult =
+                  await questService.analyzeMarker(marker: afkmarker);
+              await handleMarkerAnalysisResult(markerResult);
+            }
           } else {
             await dialogService.showDialog(
                 title: "Walk to this area to collect the checkpoint");
