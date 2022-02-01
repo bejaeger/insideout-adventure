@@ -2,7 +2,6 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
-import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
@@ -11,17 +10,14 @@ import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
-import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/maps_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
-import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -31,6 +27,8 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 abstract class ActiveQuestBaseViewModel extends BaseModel {
+  // ---------------------------------------------------------
+  // Services
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final MapsService mapsService = locator<MapsService>();
   final QuestTestingService questTestingService =
@@ -47,9 +45,12 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
           (_geolocationService.distanceToStartMarker <
               kMaxDistanceFromMarkerInMeter);
   Quest? get currentQuest => questService.currentQuest;
+  // timeElapsed is a reactive value
+  String get timeElapsed => questService.getMinutesElapsedString();
+  final log = getLogger("ActiveQuestBaseViewModel");
 
   // -----------------------------------------------------------
-  // UI reactors
+  // UI state
   bool questCenteredOnMap = true;
   String mapStyle = "";
   bool showCollectedMarkerAnimation = false;
@@ -58,51 +59,74 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
   Set<Marker> markersOnMap = {};
   Set<Circle> areasOnMap = {};
-  String get timeElapsed => questService.getMinutesElapsedString();
+
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
   bool isAnimatingCamera = false;
 
-  final log = getLogger("ActiveQuestBaseViewModel");
-
-  @mustCallSuper
-  Future initialize({required Quest quest}) async {
-    questService.currentQuest = quest;
-    startPositionCalibrationListener(quest: quest);
-    await _geolocationService.setDistanceToStartMarker(
-        lat: quest.startMarker?.lat, lon: quest.startMarker?.lon);
-    // start calibration listener
-  }
-
+  // ------------------------------------------
   // Functions to override!
+  // TODO: Check this!
   void loadQuestMarkers();
   bool isQuestCompleted();
-  // Should be overridden!
-  void resetQuest() {}
-
   // void updateMapMarkers({required AFKMarker afkmarker}) {}
+  // TODO: check what is happening with the below
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker});
   BitmapDescriptor defineMarkersColour(
       {required AFKMarker afkmarker, required Quest? quest});
 
-  Future showQuestInfoDialog({required Quest quest}) async {
-    await dialogService.showDialog(
-        title: quest.name + " - " + describeEnum(quest.type).toString(),
-        description: "Earn ${quest.afkCredits} AFK Credits by " +
-            getQuestDescriptionString(quest));
+  ///------------------------------------------------------------
+  /// Main Functions
+  /// -----------------------------------------------------------
+  @mustCallSuper
+  Future initialize({required Quest quest}) async {
+    // sets current quest in service so it is accessible anywhere
+    questService.currentQuest = quest;
+    // start calibration listener to get accurate position
+    // this also sets the distance to the start marker
+    startPositionCalibrationListener(quest: quest);
   }
 
-  String getQuestDescriptionString(Quest quest) {
-    if (quest.type == QuestType.GPSAreaHike) {
-      return "collecting each checkpoint by walking to the shown red areas.";
-    } else if (quest.type == QuestType.QRCodeHike) {
-      return "finding all QR codes hidden in the highlighted areas.";
-    } else if (quest.type == QuestType.DistanceEstimate) {
-      return "walking the specified distance.";
-    } else if (quest.type == QuestType.TreasureLocationSearch) {
-      return "finding the treasure.";
-    } else {
-      return "collecting all markers";
+  // Main function always called when quest is started
+  Future startQuestMain(
+      {required Quest quest,
+      Future Function(int)? periodicFuncFromViewModel,
+      bool countStartMarkerAsCollected = false}) async {
+    // cancel listener that was only used for calibration
+    cancelPositionListener();
+    if (await checkIfBatterySaveModeOn()) {
+      resetSlider();
+      return false;
+    }
+    try {
+      // if (quest.type == QuestType.VibrationSearch && startFromMap) {
+      //   await navigateToVibrationSearchView();
+      // }
+      questTestingService.maybeInitialize(user: currentUser);
+
+      /// Once The user Click on Start a Quest. It is her/him to new Page
+      /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
+      /// Quest.
+      final isQuestStarted = await questService.startQuest(
+          quest: quest,
+          uids: [currentUser.uid],
+          periodicFuncFromViewModel: periodicFuncFromViewModel,
+          countStartMarkerAsCollected: countStartMarkerAsCollected);
+
+      // this will also change the MapViewModel to show the ActiveQuestView
+      if (isQuestStarted is String) {
+        await dialogService.showDialog(
+            title: "Sorry could not start the quest",
+            description: isQuestStarted);
+        resetSlider();
+        return false;
+      }
+      showStartSwipe = false;
+      // Quest succesfully started!
+      return true;
+    } catch (e) {
+      baseModelLog.e("Could not start quest, error thrown: $e");
+      rethrow;
     }
   }
 
@@ -168,7 +192,32 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     setBusy(false);
   }
 
-  void displayMarker(AFKMarker marker) {
+  Future checkAccuracy(
+      {required Position? position,
+      bool showDialog = true,
+      double? minAccuracy}) async {
+    if (position == null) {
+      return false;
+    }
+    if (useSuperUserFeatures) {
+      _geolocationService.setGPSAccuracyInfo(
+          position.accuracy, useSuperUserFeatures);
+    }
+    if (position.accuracy > (minAccuracy ?? kMinLocationAccuracy)) {
+      _geolocationService.setGPSAccuracyInfo(position.accuracy);
+      if (showDialog) {
+        log.e("Accuracy low: ${position.accuracy}");
+        await dialogService.showDialog(
+            title: "GPS Accuracy Too Low",
+            description: "Please walk a few meters and try again :)");
+      }
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  void displayQrCode(AFKMarker marker) {
     String qrCodeString =
         qrCodeService.getQrCodeStringFromMarker(marker: marker);
     navigationService.navigateTo(Routes.qRCodeView,
@@ -231,28 +280,24 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     setBusy(false);
   }
 
-  Future checkAccuracy(
-      {required Position? position,
-      bool showDialog = true,
-      double? minAccuracy}) async {
-    if (position == null) {
-      return false;
-    }
-    if (useSuperUserFeatures) {
-      _geolocationService.setGPSAccuracyInfo(
-          position.accuracy, useSuperUserFeatures);
-    }
-    if (position.accuracy > (minAccuracy ?? kMinLocationAccuracy)) {
-      _geolocationService.setGPSAccuracyInfo(position.accuracy);
-      if (showDialog) {
-        log.e("Accuracy low: ${position.accuracy}");
-        await dialogService.showDialog(
-            title: "GPS Accuracy Too Low",
-            description: "Please walk a few meters and try again :)");
-      }
-      return false;
+  Future showQuestInfoDialog({required Quest quest}) async {
+    await dialogService.showDialog(
+        title: quest.name + " - " + describeEnum(quest.type).toString(),
+        description: "Earn ${quest.afkCredits} AFK Credits by " +
+            getQuestDescriptionString(quest));
+  }
+
+  String getQuestDescriptionString(Quest quest) {
+    if (quest.type == QuestType.GPSAreaHike) {
+      return "collecting each checkpoint by walking to the shown red areas.";
+    } else if (quest.type == QuestType.QRCodeHike) {
+      return "finding all QR codes hidden in the highlighted areas.";
+    } else if (quest.type == QuestType.DistanceEstimate) {
+      return "walking the specified distance.";
+    } else if (quest.type == QuestType.TreasureLocationSearch) {
+      return "finding the treasure.";
     } else {
-      return true;
+      return "collecting all markers";
     }
   }
 
@@ -301,9 +346,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
   Future showCollectedMarkerDialog() async {
     await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
-    // await dialogService.showDialog(
-    //     title: "Successfully collected marker!",
-    //     description: getActiveQuestProgressDescription());
   }
 
   void startPositionCalibrationListener({required Quest quest}) {
@@ -323,51 +365,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     log.i("Cancel position listener");
     _geolocationService.cancelPositionListener();
     setListenedToNewPosition(false);
-  }
-
-  ////////////////////////////////////////
-  // Navigation and dialogs
-
-  Future startQuestMain(
-      {required Quest quest,
-      Future Function(int)? periodicFuncFromViewModel,
-      bool countStartMarkerAsCollected = false}) async {
-    // cancel listener that was only used for calibration
-    cancelPositionListener();
-    if (await checkIfBatterySaveModeOn()) {
-      resetSlider();
-      return false;
-    }
-    try {
-      // if (quest.type == QuestType.VibrationSearch && startFromMap) {
-      //   await navigateToVibrationSearchView();
-      // }
-      questTestingService.maybeInitialize(user: currentUser);
-
-      /// Once The user Click on Start a Quest. It is her/him to new Page
-      /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
-      /// Quest.
-      final isQuestStarted = await questService.startQuest(
-          quest: quest,
-          uids: [currentUser.uid],
-          periodicFuncFromViewModel: periodicFuncFromViewModel,
-          countStartMarkerAsCollected: countStartMarkerAsCollected);
-
-      // this will also change the MapViewModel to show the ActiveQuestView
-      if (isQuestStarted is String) {
-        await dialogService.showDialog(
-            title: "Sorry could not start the quest",
-            description: isQuestStarted);
-        resetSlider();
-        return false;
-      }
-      showStartSwipe = false;
-      // Quest succesfully started!
-      return true;
-    } catch (e) {
-      baseModelLog.e("Could not start quest, error thrown: $e");
-      rethrow;
-    }
   }
 
   Future<bool> checkIfBatterySaveModeOn() async {

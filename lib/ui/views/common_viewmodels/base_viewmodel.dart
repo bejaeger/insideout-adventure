@@ -134,36 +134,6 @@ class BaseModel extends BaseViewModel {
     //layoutService.setShowBottomNavBar(show);
   }
 
-  // Future startQuestMain(
-  //     {required Quest quest,
-  //     Future Function(int)? periodicFuncFromViewModel}) async {
-  //   try {
-  //     // if (quest.type == QuestType.VibrationSearch && startFromMap) {
-  //     //   await navigateToVibrationSearchView();
-  //     // }
-
-  //     /// Once The user Click on Start a Quest. It is her/him to new Page
-  //     /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
-  //     /// Quest.
-  //     final isQuestStarted = await questService.startQuest(
-  //         quest: quest,
-  //         uids: [currentUser.uid],
-  //         periodicFuncFromViewModel: periodicFuncFromViewModel);
-
-  //     // this will also change the MapViewModel to show the ActiveQuestView
-  //     if (isQuestStarted is String) {
-  //       await dialogService.showDialog(
-  //           title: "Sorry could not start the quest",
-  //           description: isQuestStarted);
-  //       return false;
-  //     }
-  //     return true;
-  //   } catch (e) {
-  //     baseModelLog.e("Could not start quest, error thrown: $e");
-  //     rethrow;
-  //   }
-  // }
-
   bool hasEnoughSponsoring({required Quest? quest}) {
     if (quest == null) {
       baseModelLog.e(
