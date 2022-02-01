@@ -14,9 +14,15 @@ import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class NotCloseToQuestNote extends StatelessWidget {
-  final GoogleMapController? controller;
+  final void Function()? animateCameraToUserPosition;
+  final void Function()? animateCameraToQuestMarkers;
+
   final QuestType? questType;
-  const NotCloseToQuestNote({Key? key, this.controller, this.questType})
+  const NotCloseToQuestNote(
+      {Key? key,
+      this.animateCameraToUserPosition,
+      this.animateCameraToQuestMarkers,
+      this.questType})
       : super(key: key);
 
   String _getInfoString(QuestType? questType) {
@@ -60,12 +66,17 @@ class NotCloseToQuestNote extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  if (controller != null)
+                  if (animateCameraToUserPosition != null &&
+                      animateCameraToQuestMarkers != null)
                     model.questCenteredOnMap
                         ? Flexible(
                             child: ElevatedButton(
-                              onPressed: () =>
-                                  model.animateToUserPosition(controller!),
+                              onPressed: () {
+                                animateCameraToUserPosition!();
+                                model.questCenteredOnMap = false;
+                                model.notifyListeners();
+                                return;
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -78,13 +89,19 @@ class NotCloseToQuestNote extends StatelessWidget {
                           )
                         : Flexible(
                             child: ElevatedButton(
-                              onPressed: () async {
-                                await model.animateCameraToQuestMarkers(
-                                    controller!,
-                                    delay: 0);
+                              onPressed: () {
+                                animateCameraToQuestMarkers!();
                                 model.questCenteredOnMap = true;
                                 model.notifyListeners();
+                                return;
                               },
+                              // () async {
+                              //   await model.animateCameraToQuestMarkers(
+                              //       controller!,
+                              //       delay: 0);
+                              //   model.questCenteredOnMap = true;
+                              //   model.notifyListeners();
+                              // },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

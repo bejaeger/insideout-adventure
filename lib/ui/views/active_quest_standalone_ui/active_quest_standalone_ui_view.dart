@@ -4,7 +4,7 @@ import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_e
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_quest_standalone_ui_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
-import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -29,7 +29,7 @@ class ActiveQuestStandaloneUIView extends StatelessWidget {
                       quest: currentQuest,
                     )
                   : currentQuest.type == QuestType.QRCodeHike
-                      ? MapView()
+                      ? MapOverviewView()
                       : currentQuest.type == QuestType.QRCodeSearch
                           ? ActiveQrCodeSearchView(quest: currentQuest)
                           : Text(

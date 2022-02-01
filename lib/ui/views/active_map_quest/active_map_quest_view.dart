@@ -171,8 +171,18 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                                                   child: NotCloseToQuestNote(
                                                       questType:
                                                           widget.quest.type,
-                                                      controller: model
-                                                          .getGoogleMapController),
+                                                      animateCameraToUserPosition:
+                                                          () => model
+                                                              .animateToUserPosition(
+                                                                  model
+                                                                      .getGoogleMapController),
+                                                      animateCameraToQuestMarkers:
+                                                          () {
+                                                        model.animateCameraToQuestMarkers(
+                                                            model
+                                                                .getGoogleMapController,
+                                                            delay: 0);
+                                                      }),
                                                 ),
                                         ),
                                         AnimatedOpacity(

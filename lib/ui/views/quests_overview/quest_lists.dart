@@ -16,7 +16,7 @@ class QuestLists extends StatelessWidget {
   Widget build(BuildContext context) {
     //Actually I meant this one should be the quest Categories.
     return RefreshIndicator(
-      onRefresh: () async => model.initializeMapAndMarkers(force: true),
+      onRefresh: () async => model.initializeQuests(force: true),
       child: ListView(
         children: [
           verticalSpaceMedium,

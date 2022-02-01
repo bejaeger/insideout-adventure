@@ -10,7 +10,7 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
   List<QuestType> get questTypes => questService.allQuestTypes;
   final logger = getLogger('ManageQuestViewModel');
 
-  Future initializeMapAndMarkers({bool? force}) async {
+  Future initializeQuests({bool? force}) async {
     setBusy(true);
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
@@ -64,12 +64,5 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
 
   void navigateToMapView() {
     navToMapView(role: currentUser.role);
-/*     navigationService.navigateTo(
-      Routes.bottomBarLayoutTemplateView,
-      arguments: BottomBarLayoutTemplateViewArguments(
-          userRole: currentUser.role,
-          initialBottomNavBarIndex: BottomNavBarIndex.quest,
-          questViewIndex: QuestViewType.map),
-    ); */
   }
 }

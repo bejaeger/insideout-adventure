@@ -171,45 +171,44 @@ class _ActiveTreasureLocationSearchQuestViewState
                             )
                           : Container(
                               color: Colors.white,
-                              child: NotCloseToQuestNote(
-                                  controller: model.getGoogleMapController)),
+                              child: NotCloseToQuestNote()),
                     if (!model.hasEnoughSponsoring(quest: widget.quest))
                       Container(
                           color: Colors.white,
                           child: NotEnoughSponsoringNote(topPadding: 10)),
-                    if (!model.questSuccessfullyFinished)
-                      ActiveTreasureLocationSearchQuestView.withMaps
-                          ? Expanded(
-                              child: Container(
-                                height: screenHeight(context, percentage: 0.6) -
-                                    kAppBarExtendedHeight,
-                                child: GoogleMap(
-                                  //mapType: MapType.hybrid,
-                                  initialCameraPosition:
-                                      model.initialCameraPosition(),
-                                  //Place Markers in the Map
-                                  markers: model.markersOnMap,
-                                  //callback that’s called when the map is ready to us.
-                                  onMapCreated: model.onMapCreated,
-                                  //For showing your current location on Map with a blue dot.
-                                  myLocationEnabled: true,
-                                  // Button used for bringing the user location to the center of the camera view.
-                                  myLocationButtonEnabled: false,
-                                  //Remove the Zoom in and out button
-                                  zoomControlsEnabled: false,
+                    // if (!model.questSuccessfullyFinished)
+                    //   ActiveTreasureLocationSearchQuestView.withMaps
+                    //       ? Expanded(
+                    //           child: Container(
+                    //             height: screenHeight(context, percentage: 0.6) -
+                    //                 kAppBarExtendedHeight,
+                    //             child: GoogleMap(
+                    //               //mapType: MapType.hybrid,
+                    //               initialCameraPosition:
+                    //                   model.initialCameraPosition(),
+                    //               //Place Markers in the Map
+                    //               markers: model.markersOnMap,
+                    //               //callback that’s called when the map is ready to us.
+                    //               onMapCreated: model.onMapCreated,
+                    //               //For showing your current location on Map with a blue dot.
+                    //               myLocationEnabled: true,
+                    //               // Button used for bringing the user location to the center of the camera view.
+                    //               myLocationButtonEnabled: false,
+                    //               //Remove the Zoom in and out button
+                    //               zoomControlsEnabled: false,
 
-                                  //onTap: model.handleTap(),
-                                  //Enable Traffic Mode.
-                                  //trafficEnabled: true,
-                                ),
-                              ),
-                            )
-                          : Column(
-                              children: [
-                                verticalSpaceMedium,
-                                SizedBox(height: 0, width: 0),
-                              ],
-                            ),
+                    //               //onTap: model.handleTap(),
+                    //               //Enable Traffic Mode.
+                    //               //trafficEnabled: true,
+                    //             ),
+                    //           ),
+                    //         )
+                    //       : Column(
+                    //           children: [
+                    //             verticalSpaceMedium,
+                    //             SizedBox(height: 0, width: 0),
+                    //           ],
+                    //         ),
                     // : Column(
                     //     crossAxisAlignment: CrossAxisAlignment.center,
                     //     children: [

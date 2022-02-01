@@ -8,7 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 List<Quest> getDummyQuests() {
   return [
     starenWegNoListener(),
-    // getZaehringenHike(),
+    getZaehringenHike(),
     getDummyVibrationSearchQuest(),
     // heidachTrohpy(),
     // manu(),
