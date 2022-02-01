@@ -7,6 +7,7 @@ import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
+import 'package:afkcredits/utils/markers/markers.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -20,7 +21,10 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
   final _markerService = locator<MarkerService>();
   CameraPosition? _initialCameraPosition;
   final displaySnackBars = DisplaySnackBars();
+  final markers = Marks();
   final _log = getLogger('CreateQuestViewModel');
+
+  bool found = false;
 
   Marker? starterMarker;
   int index = 0;
@@ -67,24 +71,31 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
       final markerId = id.v1().toString().replaceAll('-', '');
       final qrdCdId = id2.v1().toString().replaceAll('-', '');
 
-      if (markersOnMap == null || (markersOnMap != null)) {
-        /*    if (starterMarker == null ||
-          (starterMarker != null && finishedMarker != null)) { */
-        //starterMarker = returnMarkers(markerId: 'start', pos: pos);
-        // markers!.add(returnMarkers(markerId: markerId, pos: pos));
-        markersOnMap.add(addMarkers(markerId: markerId, pos: pos));
-        afkCredits
-            .add(returnAFK(pos: pos, markerId: markerId, qrCode: qrdCdId));
+      _log.i('The Current Marker Id is: ${markerId}');
 
-        _log.i('This is the Started Marker $markersOnMap');
-        // _log.i('This is the Started Marker $starterMarker');
+      if (markersOnMap.length > 0) {
+        for (Marker marker in markersOnMap) {
+          if (marker.markerId.toString() == markerId) {
+            found = true;
+            removeMarker(marker: marker);
+            break;
+          }
+        }
+      } else {
+        markersOnMap.add(markers.addMarkers(markerId: markerId, pos: pos));
+        afkCredits.add(
+          markers.returnAFK(pos: pos, markerId: markerId, qrCode: qrdCdId),
+        );
+      }
 
-        // Reset finish
-        // finishedMarker = null;
-      } /* else {
-      finishedMarker = addMarkers(markerId: 'finish', pos: pos);
-      _log.i('This is the Started Marker $finishedMarker');
-      //} */
+      if (!found) {
+        markersOnMap.add(markers.addMarkers(markerId: markerId, pos: pos));
+        afkCredits.add(
+          markers.returnAFK(pos: pos, markerId: markerId, qrCode: qrdCdId),
+        );
+      }
+      // _log.i('This is the Started Marker $markersOnMap');
+
       //Add Starter Marker
     } catch (error) {
       throw MapViewModelException(
@@ -97,10 +108,6 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
     notifyListeners();
   }
 
-  //Get Start and Finish Markers;
-
-  /*  Marker get getStartMarker => _starterMarker!;
-  Marker get getFinishedMarker => _finishedMarker!; */
   //TODO: Refactor: This code might end up extending from an abstract class so far This is the approach.
   //Or End up creating a common Map Layout for all the views that involves Map.
   CameraPosition initialCameraPosition() {
@@ -131,11 +138,7 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
     notifyListeners();
   }
 
-  void removeSelectedMarker(LatLng postion) {
-    notifyListeners();
-  }
-
-  void setMarkersId({required AFKMarker? startOrFinishMarker}) {
+/*   void setMarkersId({required AFKMarker? startOrFinishMarker}) {
     setBusy(true);
     //_startMarker = startOrFinishMarker;
     setBusy(false);
@@ -143,7 +146,7 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
     _log.i("Harguilar You Have tried Look at the code Below");
     _log.i(nameValue);
     //_log.i(_startMarker!);
-  }
+  } */
 
   List<AFKMarker?>? get getAFKMarkers => _afkMarkers;
 
@@ -156,35 +159,10 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
   }
 
   //TODO: Refactor the Code Below with the Abstract Class.
-  Marker addMarkers({required LatLng pos, required String markerId}) {
-    return Marker(
-      markerId: MarkerId(markerId),
-      infoWindow: InfoWindow(title: markerId),
-      /*  icon: markerId == 'start'
-          ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
-          : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue), */
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-      position: pos,
-    );
-  }
 
-  Marker removeMarkers({required LatLng pos, required String markerId}) {
-    return Marker(
-      markerId: MarkerId(markerId),
-      infoWindow: InfoWindow(title: markerId),
-      /*  icon: markerId == 'start'
-          ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
-          : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue), */
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-      position: pos,
-    );
-  }
-
-  //TODO: Refactor the Code Below with the Abstract Class.
-  AFKMarker returnAFK(
-      {required LatLng pos, required String markerId, required String qrCode}) {
-    return AFKMarker(
-        id: markerId, qrCodeId: qrCode, lat: pos.latitude, lon: pos.longitude);
+  void removeMarker({required Marker marker}) {
+    markersOnMap.remove(marker);
+    notifyListeners();
   }
 
   @override

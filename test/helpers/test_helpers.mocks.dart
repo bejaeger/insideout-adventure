@@ -8,23 +8,23 @@ import 'dart:ui' as _i50;
 import 'package:afkcredits/apis/cloud_functions_api.dart' as _i29;
 import 'package:afkcredits/apis/firestore_api.dart' as _i21;
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart'
-    as _i26;
+    as _i22;
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart'
     as _i27;
 import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart'
     as _i28;
-import 'package:afkcredits/datamodels/payments/money_transfer.dart' as _i24;
+import 'package:afkcredits/datamodels/payments/money_transfer.dart' as _i25;
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart'
-    as _i25;
+    as _i26;
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
     as _i10;
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart' as _i11;
-import 'package:afkcredits/datamodels/quests/quest.dart' as _i22;
+import 'package:afkcredits/datamodels/quests/quest.dart' as _i23;
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart' as _i18;
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart'
     as _i20;
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart'
-    as _i23;
+    as _i24;
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart'
     as _i15;
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart'
@@ -382,6 +382,14 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
       (super.noSuchMethod(Invocation.getter(#firestoreInstance),
           returnValue: _FakeFirebaseFirestore_3()) as _i5.FirebaseFirestore);
   @override
+  List<_i22.GiftCardCategory> get giftCartCategory => (super.noSuchMethod(
+      Invocation.getter(#giftCartCategory),
+      returnValue: <_i22.GiftCardCategory>[]) as List<_i22.GiftCardCategory>);
+  @override
+  set giftCartCategory(List<_i22.GiftCardCategory>? _giftCartCategory) => super
+      .noSuchMethod(Invocation.setter(#giftCartCategory, _giftCartCategory),
+          returnValueForMissingStub: null);
+  @override
   _i17.Future<void> createUser({_i2.User? user, _i3.UserStatistics? stats}) =>
       (super.noSuchMethod(
               Invocation.method(#createUser, [], {#user: user, #stats: stats}),
@@ -472,7 +480,7 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
       (super.noSuchMethod(Invocation.method(#updateUserData, [], {#user: user}),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
-  _i17.Future<void> updateQuestData({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i17.Future<void> updateQuestData({_i23.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#updateQuestData, [], {#quest: quest}),
       returnValue: Future<void>.value(),
       returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
@@ -483,7 +491,7 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
               #addSponsorIdToUser, [], {#uid: uid, #sponsorId: sponsorId}),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
-  _i17.Future<void> removeQuest({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i17.Future<void> removeQuest({_i23.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#removeQuest, [], {#quest: quest}),
       returnValue: Future<void>.value(),
       returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
@@ -498,41 +506,41 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
               returnValue: Stream<List<_i2.User>>.empty())
           as _i17.Stream<List<_i2.User>>);
   @override
-  _i17.Future<List<_i23.PublicUserInfo>> queryExplorers(
+  _i17.Future<List<_i24.PublicUserInfo>> queryExplorers(
           {String? queryString}) =>
       (super.noSuchMethod(
           Invocation.method(#queryExplorers, [], {#queryString: queryString}),
-          returnValue: Future<List<_i23.PublicUserInfo>>.value(
-              <_i23.PublicUserInfo>[])) as _i17
-          .Future<List<_i23.PublicUserInfo>>);
+          returnValue: Future<List<_i24.PublicUserInfo>>.value(
+              <_i24.PublicUserInfo>[])) as _i17
+          .Future<List<_i24.PublicUserInfo>>);
   @override
-  _i17.Stream<List<_i24.MoneyTransfer>> getTransferDataStream(
-          {_i25.MoneyTransferQueryConfig? config, String? uid}) =>
+  _i17.Stream<List<_i25.MoneyTransfer>> getTransferDataStream(
+          {_i26.MoneyTransferQueryConfig? config, String? uid}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getTransferDataStream, [], {#config: config, #uid: uid}),
-              returnValue: Stream<List<_i24.MoneyTransfer>>.empty())
-          as _i17.Stream<List<_i24.MoneyTransfer>>);
+              returnValue: Stream<List<_i25.MoneyTransfer>>.empty())
+          as _i17.Stream<List<_i25.MoneyTransfer>>);
   @override
-  _i22.Quest? getQuest({String? questId}) =>
+  _i23.Quest? getQuest({String? questId}) =>
       (super.noSuchMethod(Invocation.method(#getQuest, [], {#questId: questId}))
-          as _i22.Quest?);
+          as _i23.Quest?);
   @override
-  _i17.Future<List<_i22.Quest>> getNearbyQuests({bool? pushDummyQuests}) =>
+  _i17.Future<List<_i23.Quest>> getNearbyQuests({bool? pushDummyQuests}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getNearbyQuests, [], {#pushDummyQuests: pushDummyQuests}),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i23.Quest>>.value(<_i23.Quest>[]))
+          as _i17.Future<List<_i23.Quest>>);
   @override
-  _i17.Future<bool?> createQuest({_i22.Quest? quest}) =>
+  _i17.Future<bool?> createQuest({_i23.Quest? quest}) =>
       (super.noSuchMethod(Invocation.method(#createQuest, [], {#quest: quest}),
           returnValue: Future<bool?>.value()) as _i17.Future<bool?>);
   @override
-  _i17.Future<List<_i22.Quest>> downloadNearbyQuests() =>
+  _i17.Future<List<_i23.Quest>> downloadNearbyQuests() =>
       (super.noSuchMethod(Invocation.method(#downloadNearbyQuests, []),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i23.Quest>>.value(<_i23.Quest>[]))
+          as _i17.Future<List<_i23.Quest>>);
   @override
   _i17.Future<dynamic> pushFinishedQuest({_i10.ActivatedQuest? quest}) => (super
       .noSuchMethod(Invocation.method(#pushFinishedQuest, [], {#quest: quest}),
@@ -544,13 +552,13 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
           returnValue:
               Future<_i11.AFKMarker?>.value()) as _i17.Future<_i11.AFKMarker?>);
   @override
-  _i17.Future<List<_i22.Quest>> downloadQuestsWithStartMarkerId(
+  _i17.Future<List<_i23.Quest>> downloadQuestsWithStartMarkerId(
           {String? startMarkerId}) =>
       (super.noSuchMethod(
               Invocation.method(#downloadQuestsWithStartMarkerId, [],
                   {#startMarkerId: startMarkerId}),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i23.Quest>>.value(<_i23.Quest>[]))
+          as _i17.Future<List<_i23.Quest>>);
   @override
   _i17.Stream<List<_i10.ActivatedQuest>> getPastQuestsStream({String? uid}) =>
       (super.noSuchMethod(
@@ -558,20 +566,20 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
               returnValue: Stream<List<_i10.ActivatedQuest>>.empty())
           as _i17.Stream<List<_i10.ActivatedQuest>>);
   @override
-  _i17.Future<List<_i26.GiftCardCategory>> getGiftCardsForCategory(
+  _i17.Future<List<_i22.GiftCardCategory>> getGiftCardsForCategory(
           {String? categoryName}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getGiftCardsForCategory, [], {#categoryName: categoryName}),
-              returnValue: Future<List<_i26.GiftCardCategory>>.value(
-                  <_i26.GiftCardCategory>[]))
-          as _i17.Future<List<_i26.GiftCardCategory>>);
+              returnValue: Future<List<_i22.GiftCardCategory>>.value(
+                  <_i22.GiftCardCategory>[]))
+          as _i17.Future<List<_i22.GiftCardCategory>>);
   @override
-  _i17.Future<List<_i26.GiftCardCategory>> getAllGiftCards() =>
+  _i17.Future<List<_i22.GiftCardCategory>> getAllGiftCards() =>
       (super.noSuchMethod(Invocation.method(#getAllGiftCards, []),
-              returnValue: Future<List<_i26.GiftCardCategory>>.value(
-                  <_i26.GiftCardCategory>[]))
-          as _i17.Future<List<_i26.GiftCardCategory>>);
+              returnValue: Future<List<_i22.GiftCardCategory>>.value(
+                  <_i22.GiftCardCategory>[]))
+          as _i17.Future<List<_i22.GiftCardCategory>>);
   @override
   _i17.Stream<List<_i27.GiftCardPurchase>> getPurchasedGiftCardsStream(
           {String? uid}) =>
@@ -588,7 +596,7 @@ class MockFirestoreApi extends _i1.Mock implements _i21.FirestoreApi {
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
   _i17.Future<bool> addGiftCardCategory(
-          {_i26.GiftCardCategory? giftCardCategory}) =>
+          {_i22.GiftCardCategory? giftCardCategory}) =>
       (super.noSuchMethod(
           Invocation.method(
               #addGiftCardCategory, [], {#giftCardCategory: giftCardCategory}),
@@ -614,7 +622,7 @@ class MockCloudFunctionsApi extends _i1.Mock implements _i29.CloudFunctionsApi {
           Invocation.method(#bookkeepFinishedQuest, [], {#quest: quest}),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
-  _i17.Future<dynamic> processTransfer({_i24.MoneyTransfer? moneyTransfer}) =>
+  _i17.Future<dynamic> processTransfer({_i25.MoneyTransfer? moneyTransfer}) =>
       (super.noSuchMethod(
           Invocation.method(
               #processTransfer, [], {#moneyTransfer: moneyTransfer}),
@@ -929,14 +937,14 @@ class MockLayoutService extends _i1.Mock implements _i35.LayoutService {
 class MockTransfersHistoryService extends _i1.Mock
     implements _i36.TransfersHistoryService {
   @override
-  Map<_i25.MoneyTransferQueryConfig, List<_i24.MoneyTransfer>>
+  Map<_i26.MoneyTransferQueryConfig, List<_i25.MoneyTransfer>>
       get latestTransfers => (super
               .noSuchMethod(Invocation.getter(#latestTransfers), returnValue: <
-                  _i25.MoneyTransferQueryConfig, List<_i24.MoneyTransfer>>{})
-          as Map<_i25.MoneyTransferQueryConfig, List<_i24.MoneyTransfer>>);
+                  _i26.MoneyTransferQueryConfig, List<_i25.MoneyTransfer>>{})
+          as Map<_i26.MoneyTransferQueryConfig, List<_i25.MoneyTransfer>>);
   @override
   set latestTransfers(
-          Map<_i25.MoneyTransferQueryConfig, List<_i24.MoneyTransfer>>?
+          Map<_i26.MoneyTransferQueryConfig, List<_i25.MoneyTransfer>>?
               _latestTransfers) =>
       super.noSuchMethod(Invocation.setter(#latestTransfers, _latestTransfers),
           returnValueForMissingStub: null);
@@ -945,21 +953,21 @@ class MockTransfersHistoryService extends _i1.Mock
       (super.noSuchMethod(Invocation.getter(#currentUser),
           returnValue: _FakeUser_0()) as _i2.User);
   @override
-  _i17.Stream<List<_i24.MoneyTransfer>> getTransferDataStream(
-          {_i25.MoneyTransferQueryConfig? config}) =>
+  _i17.Stream<List<_i25.MoneyTransfer>> getTransferDataStream(
+          {_i26.MoneyTransferQueryConfig? config}) =>
       (super.noSuchMethod(
               Invocation.method(#getTransferDataStream, [], {#config: config}),
-              returnValue: Stream<List<_i24.MoneyTransfer>>.empty())
-          as _i17.Stream<List<_i24.MoneyTransfer>>);
+              returnValue: Stream<List<_i25.MoneyTransfer>>.empty())
+          as _i17.Stream<List<_i25.MoneyTransfer>>);
   @override
-  List<_i24.MoneyTransfer> getTransfers(
-          {_i25.MoneyTransferQueryConfig? config}) =>
+  List<_i25.MoneyTransfer> getTransfers(
+          {_i26.MoneyTransferQueryConfig? config}) =>
       (super.noSuchMethod(
           Invocation.method(#getTransfers, [], {#config: config}),
-          returnValue: <_i24.MoneyTransfer>[]) as List<_i24.MoneyTransfer>);
+          returnValue: <_i25.MoneyTransfer>[]) as List<_i25.MoneyTransfer>);
   @override
   void addTransferDataListener(
-          {_i25.MoneyTransferQueryConfig? config,
+          {_i26.MoneyTransferQueryConfig? config,
           _i17.Completer<void>? completer,
           void Function()? callback}) =>
       super.noSuchMethod(
@@ -967,21 +975,21 @@ class MockTransfersHistoryService extends _i1.Mock
               {#config: config, #completer: completer, #callback: callback}),
           returnValueForMissingStub: null);
   @override
-  void pauseTransferDataListener({_i25.MoneyTransferQueryConfig? config}) =>
+  void pauseTransferDataListener({_i26.MoneyTransferQueryConfig? config}) =>
       super.noSuchMethod(
           Invocation.method(#pauseTransferDataListener, [], {#config: config}),
           returnValueForMissingStub: null);
   @override
-  void cancelTransferDataListener({_i25.MoneyTransferQueryConfig? config}) =>
+  void cancelTransferDataListener({_i26.MoneyTransferQueryConfig? config}) =>
       super.noSuchMethod(
           Invocation.method(#cancelTransferDataListener, [], {#config: config}),
           returnValueForMissingStub: null);
   @override
-  List<_i24.MoneyTransfer> getMoneyTransfersWithUniqueSender(
-          List<_i24.MoneyTransfer>? transfer) =>
+  List<_i25.MoneyTransfer> getMoneyTransfersWithUniqueSender(
+          List<_i25.MoneyTransfer>? transfer) =>
       (super.noSuchMethod(
           Invocation.method(#getMoneyTransfersWithUniqueSender, [transfer]),
-          returnValue: <_i24.MoneyTransfer>[]) as List<_i24.MoneyTransfer>);
+          returnValue: <_i25.MoneyTransfer>[]) as List<_i25.MoneyTransfer>);
   @override
   void clearData() => super.noSuchMethod(Invocation.method(#clearData, []),
       returnValueForMissingStub: null);
@@ -1239,7 +1247,7 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
       super.noSuchMethod(Invocation.setter(#isUIDeadTime, _isUIDeadTime),
           returnValueForMissingStub: null);
   @override
-  set currentQuest(_i22.Quest? _currentQuest) =>
+  set currentQuest(_i23.Quest? _currentQuest) =>
       super.noSuchMethod(Invocation.setter(#currentQuest, _currentQuest),
           returnValueForMissingStub: null);
   @override
@@ -1264,9 +1272,9 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
       super.noSuchMethod(Invocation.setter(#allQuestTypes, _allQuestTypes),
           returnValueForMissingStub: null);
   @override
-  List<_i22.Quest> get getNearByQuest =>
+  List<_i23.Quest> get getNearByQuest =>
       (super.noSuchMethod(Invocation.getter(#getNearByQuest),
-          returnValue: <_i22.Quest>[]) as List<_i22.Quest>);
+          returnValue: <_i23.Quest>[]) as List<_i23.Quest>);
   @override
   bool get hasActiveQuest => (super
           .noSuchMethod(Invocation.getter(#hasActiveQuest), returnValue: false)
@@ -1284,16 +1292,16 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
       (super.noSuchMethod(Invocation.getter(#timeElapsed), returnValue: 0)
           as int);
   @override
-  void setQuestToUpdate({_i22.Quest? quest}) => super.noSuchMethod(
+  void setQuestToUpdate({_i23.Quest? quest}) => super.noSuchMethod(
       Invocation.method(#setQuestToUpdate, [], {#quest: quest}),
       returnValueForMissingStub: null);
   @override
-  void setStartedQuest(_i22.Quest? quest) =>
+  void setStartedQuest(_i23.Quest? quest) =>
       super.noSuchMethod(Invocation.method(#setStartedQuest, [quest]),
           returnValueForMissingStub: null);
   @override
   _i17.Future<dynamic> startQuest(
-          {_i22.Quest? quest,
+          {_i23.Quest? quest,
           List<String>? uids,
           _i17.Future<dynamic> Function(int)? periodicFuncFromViewModel,
           bool? countStartMarkerAsCollected = false}) =>
@@ -1381,7 +1389,7 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
       (super.noSuchMethod(Invocation.method(#trackTime, [seconds]),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
-  _i17.Future<void> updateQuestData({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i17.Future<void> updateQuestData({_i23.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#updateQuestData, [], {#quest: quest}),
       returnValue: Future<void>.value(),
       returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
@@ -1400,7 +1408,7 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
       .noSuchMethod(Invocation.method(#trackDataVibrationSearch, [seconds]),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
-  _i17.Future<void> removeQuest({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i17.Future<void> removeQuest({_i23.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#removeQuest, [], {#quest: quest}),
       returnValue: Future<void>.value(),
       returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
@@ -1424,7 +1432,7 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
       Invocation.method(#updateCollectedMarkers, [], {#marker: marker}),
       returnValueForMissingStub: null);
   @override
-  List<_i11.AFKMarker> markersToShowOnMap({_i22.Quest? questIn}) =>
+  List<_i11.AFKMarker> markersToShowOnMap({_i23.Quest? questIn}) =>
       (super.noSuchMethod(
           Invocation.method(#markersToShowOnMap, [], {#questIn: questIn}),
           returnValue: <_i11.AFKMarker>[]) as List<_i11.AFKMarker>);
@@ -1469,18 +1477,18 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
           Invocation.method(#getQuestsOfType, [], {#questType: questType}),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
-  List<_i22.Quest> extractQuestsOfType(
-          {List<_i22.Quest>? quests, _i40.QuestType? questType}) =>
+  List<_i23.Quest> extractQuestsOfType(
+          {List<_i23.Quest>? quests, _i40.QuestType? questType}) =>
       (super.noSuchMethod(
           Invocation.method(#extractQuestsOfType, [],
               {#quests: quests, #questType: questType}),
-          returnValue: <_i22.Quest>[]) as List<_i22.Quest>);
+          returnValue: <_i23.Quest>[]) as List<_i23.Quest>);
   @override
   void extractAllQuestTypes() =>
       super.noSuchMethod(Invocation.method(#extractAllQuestTypes, []),
           returnValueForMissingStub: null);
   @override
-  _i42.QuestUIStyle getQuestUIStyle({_i22.Quest? quest}) => (super.noSuchMethod(
+  _i42.QuestUIStyle getQuestUIStyle({_i23.Quest? quest}) => (super.noSuchMethod(
       Invocation.method(#getQuestUIStyle, [], {#quest: quest}),
       returnValue: _i42.QuestUIStyle.standalone) as _i42.QuestUIStyle);
   @override
@@ -1504,22 +1512,22 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
       (super.noSuchMethod(Invocation.method(#getQuest, [], {#questId: questId}),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
-  _i17.Future<bool?> createQuest({_i22.Quest? quest}) =>
+  _i17.Future<bool?> createQuest({_i23.Quest? quest}) =>
       (super.noSuchMethod(Invocation.method(#createQuest, [], {#quest: quest}),
           returnValue: Future<bool?>.value()) as _i17.Future<bool?>);
   @override
-  _i17.Future<List<_i22.Quest>> downloadNearbyQuests() =>
+  _i17.Future<List<_i23.Quest>> downloadNearbyQuests() =>
       (super.noSuchMethod(Invocation.method(#downloadNearbyQuests, []),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i23.Quest>>.value(<_i23.Quest>[]))
+          as _i17.Future<List<_i23.Quest>>);
   @override
-  _i17.Future<List<_i22.Quest>> getQuestsWithStartMarkerId(
+  _i17.Future<List<_i23.Quest>> getQuestsWithStartMarkerId(
           {String? markerId}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #getQuestsWithStartMarkerId, [], {#markerId: markerId}),
-              returnValue: Future<List<_i22.Quest>>.value(<_i22.Quest>[]))
-          as _i17.Future<List<_i22.Quest>>);
+              returnValue: Future<List<_i23.Quest>>.value(<_i23.Quest>[]))
+          as _i17.Future<List<_i23.Quest>>);
   @override
   void updateTimeElapsed(int? seconds) =>
       super.noSuchMethod(Invocation.method(#updateTimeElapsed, [seconds]),
@@ -1735,13 +1743,13 @@ class MockQRCodeService extends _i1.Mock implements _i45.QRCodeService {
 /// See the documentation for Mockito's code generation for more information.
 class MockGiftCardService extends _i1.Mock implements _i46.GiftCardService {
   @override
-  Map<String, List<_i26.GiftCardCategory>> get giftCardCategories =>
+  Map<String, List<_i22.GiftCardCategory>> get giftCardCategories =>
       (super.noSuchMethod(Invocation.getter(#giftCardCategories),
-              returnValue: <String, List<_i26.GiftCardCategory>>{})
-          as Map<String, List<_i26.GiftCardCategory>>);
+              returnValue: <String, List<_i22.GiftCardCategory>>{})
+          as Map<String, List<_i22.GiftCardCategory>>);
   @override
   set giftCardCategories(
-          Map<String, List<_i26.GiftCardCategory>>? _giftCardCategories) =>
+          Map<String, List<_i22.GiftCardCategory>>? _giftCardCategories) =>
       super.noSuchMethod(
           Invocation.setter(#giftCardCategories, _giftCardCategories),
           returnValueForMissingStub: null);
@@ -1755,11 +1763,15 @@ class MockGiftCardService extends _i1.Mock implements _i46.GiftCardService {
           Invocation.setter(#purchasedGiftCards, _purchasedGiftCards),
           returnValueForMissingStub: null);
   @override
-  List<_i26.GiftCardCategory> getGiftCards({String? categoryName}) => (super
+  List<_i5.QuerySnapshot> get giftCardQuerySnapShot =>
+      (super.noSuchMethod(Invocation.getter(#giftCardQuerySnapShot),
+          returnValue: <_i5.QuerySnapshot>[]) as List<_i5.QuerySnapshot>);
+  @override
+  List<_i22.GiftCardCategory> getGiftCards({String? categoryName}) => (super
       .noSuchMethod(
           Invocation.method(#getGiftCards, [], {#categoryName: categoryName}),
-          returnValue: <_i26.GiftCardCategory>[]) as List<
-      _i26.GiftCardCategory>);
+          returnValue: <_i22.GiftCardCategory>[]) as List<
+      _i22.GiftCardCategory>);
   @override
   _i17.Future<dynamic> fetchGiftCards({String? categoryName}) =>
       (super.noSuchMethod(
@@ -1767,7 +1779,7 @@ class MockGiftCardService extends _i1.Mock implements _i46.GiftCardService {
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);
   @override
   _i17.Future<bool> addGiftCardCategory(
-          {_i26.GiftCardCategory? giftCardCategory}) =>
+          {_i22.GiftCardCategory? giftCardCategory}) =>
       (super.noSuchMethod(
           Invocation.method(
               #addGiftCardCategory, [], {#giftCardCategory: giftCardCategory}),
@@ -1779,6 +1791,12 @@ class MockGiftCardService extends _i1.Mock implements _i46.GiftCardService {
           Invocation.method(#insertPrePurchasedGiftCardCategory, [],
               {#prePurchasedGiftCard: prePurchasedGiftCard}),
           returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
+  @override
+  void setListGiftCards({List<_i22.GiftCardCategory>? giftCardCategory}) =>
+      super.noSuchMethod(
+          Invocation.method(
+              #setListGiftCards, [], {#giftCardCategory: giftCardCategory}),
+          returnValueForMissingStub: null);
   @override
   _i17.Future<dynamic> fetchAllGiftCards() =>
       (super.noSuchMethod(Invocation.method(#fetchAllGiftCards, []),
@@ -1795,7 +1813,7 @@ class MockGiftCardService extends _i1.Mock implements _i46.GiftCardService {
           as _i17.Future<void>?);
   @override
   List<String> getUniqueCategoryNames(
-          {List<_i26.GiftCardCategory>? listOfGiftCardCategories}) =>
+          {List<_i22.GiftCardCategory>? listOfGiftCardCategories}) =>
       (super.noSuchMethod(
           Invocation.method(#getUniqueCategoryNames, [],
               {#listOfGiftCardCategories: listOfGiftCardCategories}),

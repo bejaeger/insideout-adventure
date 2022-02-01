@@ -30,6 +30,8 @@ class FirestoreApi {
   // Create user documents
   DocumentReference? _documentReference;
 
+  List<GiftCardCategory> giftCartCategory = [];
+
   Future<void> createUser(
       {required User user, required UserStatistics stats}) async {
     try {
@@ -617,9 +619,19 @@ class FirestoreApi {
     }
   }
 
+  getListQuerySnapShot({QuerySnapshot? query}) {
+    List<QuerySnapshot> snapShot = [];
+    if (query!.docs.isNotEmpty) {
+      snapShot.add(query);
+      return snapShot;
+    } else
+      return [];
+  }
+
   Future<List<GiftCardCategory>> getAllGiftCards() async {
     try {
       final giftCards = await giftCardsCollection.get();
+      getListQuerySnapShot(query: giftCards);
       if (giftCards.docs.isNotEmpty) {
         log.v('This is our List of Gift Cards: $giftCards in our Database');
         return giftCards.docs

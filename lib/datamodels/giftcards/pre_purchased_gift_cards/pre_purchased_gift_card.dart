@@ -11,8 +11,9 @@ class PrePurchasedGiftCard with _$PrePurchasedGiftCard {
     required String categoryId,
     // required double amount,
     //String? imageUrl,
+    required String id,
     required int giftCardCode,
-    required GiftCardType categoryName,
+    required String categoryName,
   }) = _PrePurchasedGiftCard;
 
   factory PrePurchasedGiftCard.fromJson(Map<String, dynamic> json) =>
