@@ -20,13 +20,15 @@ import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:flutter/animation.dart';
+import 'package:open_settings/open_settings.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:battery_plus/battery_plus.dart';
 
 abstract class QuestViewModel extends BaseModel {
   final log = getLogger("QuestViewModel");
@@ -34,7 +36,6 @@ abstract class QuestViewModel extends BaseModel {
   String lastActivatedQuestInfoText = "Active Quest";
   Quest? get currentQuest => questService.currentQuest;
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final MarkerService _markerService = locator<MarkerService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
@@ -48,17 +49,17 @@ abstract class QuestViewModel extends BaseModel {
   List<double> distancesFromQuests = [];
   bool validatingMarker = false;
   bool showStartSwipe = true;
-  bool get isNearStartMarker =>
-      (_geolocationService.distanceToStartMarker > 0) &&
-      (_geolocationService.distanceToStartMarker <
-          kMaxDistanceFromMarkerInMeter);
+  bool get isNearStartMarker => !flavorConfigProvider.enableGPSVerification
+      ? true
+      : (_geolocationService.distanceToStartMarker > 0) &&
+          (_geolocationService.distanceToStartMarker <
+              kMaxDistanceFromMarkerInMeter);
 
   bool get listenedToNewPosition => _geolocationService.listenedToNewPosition;
   int get currentPositionDistanceFilter =>
       _geolocationService.currentPositionDistanceFilter;
 
   QuestViewModel() {
-    // listen to changes in wallet
     log.i("Setting up active quest listener");
     _activeQuestSubscription = questService.activatedQuestSubject.listen(
       (activatedQuest) {
@@ -67,7 +68,6 @@ abstract class QuestViewModel extends BaseModel {
         }
         // TODO: Check the number of rebuilds that is required here!
         notifyListeners();
-
         if (activatedQuest?.status == QuestStatus.success ||
             activatedQuest?.status == QuestStatus.cancelled ||
             activatedQuest?.status == QuestStatus.failed) {
@@ -93,13 +93,14 @@ abstract class QuestViewModel extends BaseModel {
   void startPositionCalibrationListener({required Quest quest}) {
     log.i("Start position calibration listener");
     _geolocationService.listenToPosition(
-        distanceFilter: kDistanceFilterForCalibration,
-        viewModelCallback: (_) {
-          setListenedToNewPosition(true);
-          _geolocationService.setDistanceToStartMarker(
-              lat: quest.startMarker?.lat, lon: quest.startMarker?.lon);
-          notifyListeners();
-        });
+      distanceFilter: kDistanceFilterForCalibration,
+      viewModelCallback: (_) {
+        setListenedToNewPosition(true);
+        _geolocationService.setDistanceToStartMarker(
+            lat: quest.startMarker?.lat, lon: quest.startMarker?.lon);
+        notifyListeners();
+      },
+    );
   }
 
   void cancelPositionListener() {
@@ -117,6 +118,10 @@ abstract class QuestViewModel extends BaseModel {
       bool countStartMarkerAsCollected = false}) async {
     // cancel listener that was only used for calibration
     cancelPositionListener();
+    if (await checkIfBatterySaveModeOn()) {
+      resetSlider();
+      return false;
+    }
     try {
       // if (quest.type == QuestType.VibrationSearch && startFromMap) {
       //   await navigateToVibrationSearchView();
@@ -137,6 +142,7 @@ abstract class QuestViewModel extends BaseModel {
         await dialogService.showDialog(
             title: "Sorry could not start the quest",
             description: isQuestStarted);
+        resetSlider();
         return false;
       }
       showStartSwipe = false;
@@ -145,6 +151,52 @@ abstract class QuestViewModel extends BaseModel {
     } catch (e) {
       baseModelLog.e("Could not start quest, error thrown: $e");
       rethrow;
+    }
+  }
+
+  Future<bool> checkIfBatterySaveModeOn() async {
+    // Instantiate it
+    try {
+      final Battery battery = Battery();
+      final isInBatterySaveMode = await battery.isInBatterySaveMode;
+      if (isInBatterySaveMode != true) {
+        return false;
+      } else if (isInBatterySaveMode == true) {
+        log.i("Phone is in battery save mode, show dialog");
+        final result = await dialogService.showDialog(
+          title: "Disable Battery Saver",
+          description:
+              "For best performance, please disable Power Saver in Settings/Battery.",
+          buttonTitle: "SETTINGS",
+          cancelTitle: "START ANYWAY",
+          barrierDismissible: true,
+        );
+        if (result?.confirmed == true) {
+          try {
+            await OpenSettings.openBatterySaverSetting();
+            return true;
+          } catch (e) {
+            log.e("Could not open settings");
+            await Future.delayed(Duration(milliseconds: 500));
+            await dialogService.showDialog(
+              title: "Could Not Open Settings",
+              description:
+                  "Sorry, we could not open your settings. Please navigate to Settings/Battery yourself.",
+            );
+            return true;
+          }
+          // await checkIfBatterySaveModeOn();
+        } else if (result?.confirmed == false) {
+          return false;
+        }
+        return true;
+        // await Future.delayed(Duration(milliseconds: 300));
+      }
+      return true;
+    } catch (e) {
+      log.e("Could not check battery save mode!");
+      log.e("Error: $e");
+      return false;
     }
   }
 
@@ -213,7 +265,6 @@ abstract class QuestViewModel extends BaseModel {
   }
 
   Future onQuestInListTapped(Quest quest) async {
-    log.i("Quest list item tapped!!!");
     if (hasActiveQuest == false) {
       // if (questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map) {
       //   await displayQuestBottomSheet(
@@ -237,8 +288,10 @@ abstract class QuestViewModel extends BaseModel {
         variant: BottomSheetType.questInformation,
         title: quest.name,
         enterBottomSheetDuration: Duration(milliseconds: 300),
+        // exitBottomSheetDuration: Duration(milliseconds: 1),
         // curve: Curves.easeInExpo,
         // curve: Curves.linear,
+        barrierColor: Colors.black45,
         description: quest.description,
         mainButtonTitle: quest.type == QuestType.DistanceEstimate
             ? "Go to Quest"
@@ -265,6 +318,10 @@ abstract class QuestViewModel extends BaseModel {
       return "collecting each checkpoint by walking to the shown red areas.";
     } else if (quest.type == QuestType.QRCodeHike) {
       return "finding all QR codes hidden in the highlighted areas.";
+    } else if (quest.type == QuestType.DistanceEstimate) {
+      return "walking the specified distance.";
+    } else if (quest.type == QuestType.TreasureLocationSearch) {
+      return "finding the treasure.";
     } else {
       return "collecting all markers";
     }
@@ -332,7 +389,7 @@ abstract class QuestViewModel extends BaseModel {
       );
       return;
     }
-    await handleMarkerAnalysisResult(result);
+    return await handleMarkerAnalysisResult(result);
   }
 
   Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
@@ -355,9 +412,12 @@ abstract class QuestViewModel extends BaseModel {
   }
 
   String getActiveQuestProgressDescription() {
-    if (activeQuest.quest.type == QuestType.QRCodeHike ||
-        activeQuest.quest.type == QuestType.Hunt ||
-        activeQuest.quest.type == QuestType.QRCodeSearch) {
+    if (activeQuestNullable == null) {
+      return "";
+    }
+    if (activeQuestNullable?.quest.type == QuestType.QRCodeHike ||
+        activeQuestNullable?.quest.type == QuestType.Hunt ||
+        activeQuestNullable?.quest.type == QuestType.QRCodeSearch) {
       final returnString = "Collected " +
           numMarkersCollected.toString() +
           " of " +
@@ -373,39 +433,39 @@ abstract class QuestViewModel extends BaseModel {
   /// Vibration Search Quest
   ////////////////////////////////////////
 
-  // MAYBE THIS COULD BE An abstract class to be overridden by the
-  // specific viewmodels for the particular quests!
-  // To disentangle stuff!
-  Future getActivatedQuestInfoText() async {
-    log.v("Checking quest info after quest was updated");
-    if (questService.isUIDeadTime == true) {
-      log.i(
-          "NOT checking quest info after quest was updated because UI dead time is active");
-      return;
-    }
-    if (activeQuest.quest.type == QuestType.QRCodeHike ||
-        activeQuest.quest.type == QuestType.Hunt ||
-        activeQuest.quest.type == QuestType.QRCodeSearch) {
-      lastActivatedQuestInfoText = "Active quest - " +
-          getHourMinuteSecondsTime +
-          /*        " " +
-            model.activeQuest.timeElapsed
-                .toString() f+ */
-          " elapsed - " +
-          numMarkersCollected.toString() +
-          " / " +
-          activeQuest.markersCollected.length.toString() +
-          " markers";
-    } else if (activeQuest.quest.type == QuestType.DistanceEstimate) {
-      lastActivatedQuestInfoText = "Estimating Distance";
-    } else if (activeQuest.quest.type == QuestType.TreasureLocationSearch) {
-      log.wtf(
-          "Should never be called, this is handled in ActiveVibrationSearchQuestViewModel.");
-    } else {
-      lastActivatedQuestInfoText = "UNKNOWN QUEST RUNNING";
-    }
-    notifyListeners();
-  }
+  // // MAYBE THIS COULD BE An abstract class to be overridden by the
+  // // specific viewmodels for the particular quests!
+  // // To disentangle stuff!
+  // Future getActivatedQuestInfoText() async {
+  //   log.v("Checking quest info after quest was updated");
+  //   if (questService.isUIDeadTime == true) {
+  //     log.i(
+  //         "NOT checking quest info after quest was updated because UI dead time is active");
+  //     return;
+  //   }
+  //   if (activeQuest.quest.type == QuestType.QRCodeHike ||
+  //       activeQuest.quest.type == QuestType.Hunt ||
+  //       activeQuest.quest.type == QuestType.QRCodeSearch) {
+  //     lastActivatedQuestInfoText = "Active quest - " +
+  //         getHourMinuteSecondsTime +
+  //         /*        " " +
+  //           model.activeQuest.timeElapsed
+  //               .toString() f+ */
+  //         " elapsed - " +
+  //         numMarkersCollected.toString() +
+  //         " / " +
+  //         activeQuest.markersCollected.length.toString() +
+  //         " markers";
+  //   } else if (activeQuest.quest.type == QuestType.DistanceEstimate) {
+  //     lastActivatedQuestInfoText = "Estimating Distance";
+  //   } else if (activeQuest.quest.type == QuestType.TreasureLocationSearch) {
+  //     log.wtf(
+  //         "Should never be called, this is handled in ActiveVibrationSearchQuestViewModel.");
+  //   } else {
+  //     lastActivatedQuestInfoText = "UNKNOWN QUEST RUNNING";
+  //   }
+  //   notifyListeners();
+  // }
 
   // function called to cancel quest OR when quest is finished
   // but markers weren't collected yet.
@@ -421,8 +481,8 @@ abstract class QuestViewModel extends BaseModel {
         baseModelLog.w("Quest is incomplete, show dialog");
         continueQuest = await dialogService.showConfirmationDialog(
             title: WarningQuestNotFinished,
-            cancelTitle: "Cancel Quest",
-            confirmationTitle: "Continue Quest");
+            cancelTitle: "CANCEL QUEST",
+            confirmationTitle: "CONTINUE QUEST");
       } else {
         baseModelLog.w("You are forcing to end the quest");
       }
@@ -472,6 +532,8 @@ abstract class QuestViewModel extends BaseModel {
   ////////////////////////////
   // needs to be overrriden!
   // Future handleQrCodeScanEvent(QuestQRCodeScanResult result);
+  // ! Check this!
+  // DEPRECATED: Not sure if this is every being called!
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
     log.i("Handling marker analysis result");
     if (!hasActiveQuest &&
@@ -492,6 +554,7 @@ abstract class QuestViewModel extends BaseModel {
         );
       }
     }
+    return false;
   }
 
   void displayMarker(AFKMarker marker) {
@@ -570,6 +633,48 @@ abstract class QuestViewModel extends BaseModel {
 
   // Can be overridden!
   void resetQuest() {}
+
+  //-------------------------------------------
+  // Helper
+
+  Future vibrateAlert() async {
+    await checkCanVibrate();
+    if (canVibrate!) {
+      final Iterable<Duration> pauses = [
+        const Duration(milliseconds: 500),
+        const Duration(milliseconds: 500),
+      ];
+      log.v("Phone is supposed to vibrate now");
+      // vibrate - sleep 0.2s - vibrate - sleep 0.2s - vibrate - sleep 0.2s - vibrate
+      await Vibrate.vibrateWithPauses(pauses);
+    }
+  }
+
+  Future vibrateWrongDirection() async {
+    await vibrateAlert();
+  }
+
+  Future vibrateRightDirection() async {
+    // Check if the device can vibrate
+    await checkCanVibrate();
+    if (canVibrate!) {
+      log.v("Phone is supposed to vibrate now");
+      // vibrate for default (500ms on android, about 500ms on iphone)
+      await Vibrate.vibrate();
+      // Vibrate.feedback(FeedbackType.success);
+    }
+  }
+
+  Future checkCanVibrate() async {
+    if (canVibrate == null) {
+      canVibrate = await Vibrate.canVibrate;
+      if (canVibrate!) {
+        log.i("Phone is able to vibrate");
+      } else {
+        log.w("Phone is not able to vibrate!");
+      }
+    }
+  }
 
   //////////////////////////////////////////
   /// Clean-up

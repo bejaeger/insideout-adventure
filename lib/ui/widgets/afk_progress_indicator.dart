@@ -5,15 +5,16 @@ class AFKProgressIndicator extends StatelessWidget {
   final bool centered;
   final bool linear;
   final Color? color;
+  final Alignment? alignment;
   const AFKProgressIndicator(
-      {Key? key, this.centered = true, this.linear = false, this.color})
+      {Key? key, this.centered = true, this.linear = false, this.color, this.alignment})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return linear == false
         ? Align(
-            alignment: Alignment.center,
+            alignment: alignment ?? Alignment.center,
             child: CircularProgressIndicator(color: color ?? kPrimaryColor),
           )
         : LinearProgressIndicator(

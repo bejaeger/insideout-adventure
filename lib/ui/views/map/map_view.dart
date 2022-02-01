@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
+import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,9 +21,17 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    final devicePixelRatio =
+        Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
     return ViewModelBuilder<MapViewModel>.reactive(
         //disposeViewModel: false,
-        onModelReady: (model) => model.initializeMapAndMarkers(),
+        onModelReady: (model) => model.initializeMapAndMarkers(
+          devicePixelRatio: devicePixelRatio,
+            mapWidth: screenWidth(context),
+            mapHeight: screenHeight(context) -
+                    kBottomNavigationBarHeightCustom -
+                    kAppBarExtendedHeight)
+                ,
         viewModelBuilder: () => MapViewModel(),
         builder: (context, model, child) {
           return GoogleMapsScreen(model: model);
@@ -64,6 +75,7 @@ class GoogleMapsScreen extends StatelessWidget {
       // Button used for bringing the user location to the center of the camera view.
       myLocationButtonEnabled: true,
 
+      mapToolbarEnabled: false,
       //onTap: model.handleTap(),
       //Enable Traffic Mode.
       //trafficEnabled: true,

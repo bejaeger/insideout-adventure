@@ -434,7 +434,6 @@ class FirestoreApi {
       try {
         log.i("Downloading quests now");
         questsOnFirestore = await downloadNearbyQuests();
-        log.i("Never go here");
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");

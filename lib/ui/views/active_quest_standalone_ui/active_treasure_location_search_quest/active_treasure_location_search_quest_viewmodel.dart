@@ -7,7 +7,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/treasure_search/treasure_search_location.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
@@ -36,7 +36,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   List<TreasureSearchLocation> checkpoints = [];
   final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
-  
+
   double currentDistanceInMeters = -1;
   double previousDistanceInMeters = -1;
   int numberTimesFired = 0;
@@ -53,32 +53,6 @@ class ActiveTreasureLocationSearchQuestViewModel
     loadQuestMarkers(quest: quest);
     // await setInitialDistance(quest: quest);
     setBusy(false);
-  }
-
-  // AUTOMATIC TRACKING
-  void listenToActiveQuest() {
-    log.i("Add listener to active vibration search quest");
-    if (_activeVibrationQuestSubscription == null) {
-      _activeVibrationQuestSubscription =
-          questService.activatedQuestSubject.listen(
-        (activatedQuest) {
-          log.wtf("Listening to quest update");
-          if (activatedQuest?.status == QuestStatus.active ||
-              activatedQuest?.status == QuestStatus.incomplete) {
-            if (!skipUpdatingQuestStatus) {
-              completeDistanceCheckAndUpdateQuestStatus();
-              skipUpdatingQuestStatus = false;
-            }
-          }
-          if (activatedQuest?.status == QuestStatus.success ||
-              activatedQuest?.status == QuestStatus.cancelled ||
-              activatedQuest?.status == QuestStatus.failed) {
-            cancelQuestListener();
-          }
-          notifyListeners();
-        },
-      );
-    }
   }
 
   Future maybeStartQuest({required Quest? quest}) async {
@@ -120,8 +94,8 @@ class ActiveTreasureLocationSearchQuestViewModel
             pushToNotion: true,
             recordPositionDataEvent: false,
             // skipFirstStreamEvent: true,
-            // TODO: Think of adding position to the viewModelCallback function
-            // Then we can add a filterGPSData function that only
+
+            // Maybe we should add a filterGPSData function that only
             // allows the user to check location based on certain conditions
             viewModelCallback: (position) {
               if (allowCheckingPosition == false) {
@@ -507,44 +481,6 @@ class ActiveTreasureLocationSearchQuestViewModel
         setTrackingDeadTime(false);
         await questService.cancelIncompleteQuest();
         return;
-      }
-    }
-  }
-
-  //-------------------------------------------
-  // Helper
-
-  Future vibrateWrongDirection() async {
-    await checkCanVibrate();
-    if (canVibrate!) {
-      final Iterable<Duration> pauses = [
-        const Duration(milliseconds: 500),
-        const Duration(milliseconds: 500),
-      ];
-      log.v("Phone is supposed to vibrate now");
-      // vibrate - sleep 0.2s - vibrate - sleep 0.2s - vibrate - sleep 0.2s - vibrate
-      Vibrate.vibrateWithPauses(pauses);
-    }
-  }
-
-  Future vibrateRightDirection() async {
-    // Check if the device can vibrate
-    await checkCanVibrate();
-    if (canVibrate!) {
-      log.v("Phone is supposed to vibrate now");
-      // vibrate for default (500ms on android, about 500ms on iphone)
-      Vibrate.vibrate();
-      Vibrate.feedback(FeedbackType.success);
-    }
-  }
-
-  Future checkCanVibrate() async {
-    if (canVibrate == null) {
-      canVibrate = await Vibrate.canVibrate;
-      if (canVibrate!) {
-        log.i("Phone is able to vibrate");
-      } else {
-        log.w("Phone is not able to!");
       }
     }
   }

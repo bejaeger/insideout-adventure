@@ -91,6 +91,10 @@ class _ActiveTreasureLocationSearchQuestViewState
                   onBackButton: () {
                     model.navigateBackFromSingleQuestView();
                   },
+                  onAppBarButtonPressed: model.hasActiveQuest
+                      ? null
+                      : () => model.showQuestInfoDialog(quest: widget.quest),
+                  appBarButtonIcon: Icons.help,
                 ),
                 floatingActionButton: !model.questSuccessfullyFinished &&
                         model.hasActiveQuest
@@ -291,8 +295,8 @@ class _ActiveTreasureLocationSearchQuestViewState
                         children: [
                           Expanded(
                               child: Text(
-                                  !model.isFirstDistanceCheck
-                                      ? "Measure the distance"
+                                  model.isFirstDistanceCheck
+                                      ? "Measure initial distance"
                                       : model.allowCheckingPosition
                                           ? "Measure distance"
                                           : "Walk to reload...",

@@ -6,9 +6,12 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
+import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/ui/widgets/not_enough_sponsoring_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +37,6 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
       },
       builder: (context, model, child) {
         bool activeButton = model.hasActiveQuest;
-        print(" ------------------------------------------- REBUILDING");
         return WillPopScope(
           onWillPop: () async {
             if (!model.hasActiveQuest) {
@@ -48,39 +50,43 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                 title: "Estimating Distance",
                 onBackButton: model.navigateBackFromSingleQuestView,
                 showRedLiveButton: true,
+                onAppBarButtonPressed: model.hasActiveQuest
+                    ? null
+                    : () => model.showInstructions(),
+                appBarButtonIcon: Icons.help,
               ),
               endDrawer: SizedBox(
                 width: screenWidth(context, percentage: 0.8),
                 child: const ActiveQuestDrawerView(),
               ),
-              floatingActionButton: !model.questSuccessfullyFinished &&
-                      model.hasActiveQuest
-                  ? AFKFloatingActionButton(
-                      backgroundColor: model.hasActiveQuest
-                          ? Colors.orange.shade400
-                          : Colors.grey[600],
-                      width: 100,
-                      height: 100,
-                      onPressed:
-                          !activeButton ? () => null : model.probeDistance,
-                      icon: Shimmer.fromColors(
-                              baseColor:
-                                  activeButton ? Colors.black : Colors.grey[200]!,
-                              highlightColor: Colors.white,
-                              period: const Duration(milliseconds: 1000),
-                              enabled: activeButton,
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    kRulerIconPath,
-                                    width: 50,
-                                  ),
-                                  Text("Measure")
-                                ],
-                              ),
+              floatingActionButton:
+                  !model.questSuccessfullyFinished && model.hasActiveQuest
+                      ? AFKFloatingActionButton(
+                          backgroundColor: model.hasActiveQuest
+                              ? Colors.orange.shade400
+                              : Colors.grey[600],
+                          width: 100,
+                          height: 100,
+                          onPressed:
+                              !activeButton ? () => null : model.probeDistance,
+                          icon: Shimmer.fromColors(
+                            baseColor:
+                                activeButton ? Colors.black : Colors.grey[200]!,
+                            highlightColor: Colors.white,
+                            period: const Duration(milliseconds: 1000),
+                            enabled: activeButton,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  kRulerIconPath,
+                                  width: 50,
+                                ),
+                                Text("Measure")
+                              ],
                             ),
-                    )
-                  : null,
+                          ),
+                        )
+                      : null,
               body: Align(
                 alignment: Alignment.center,
                 child: Padding(
@@ -88,26 +94,85 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                       horizontal: kHorizontalPadding),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // if (model.hasActiveQuest)
-                      //   AFKProgressIndicator(linear: true),
-                      verticalSpaceMedium,
+                      Container(
+                        // decoration: BoxDecoration(
+                        //   boxShadow: [
+                        //     BoxShadow(
+                        //         offset: Offset(0, 100),
+                        //         blurRadius: 4,
+                        //         spreadRadius: 2,
+                        //         color: kShadowColor)
+                        //   ],
+                        // ),
+                        alignment: Alignment.center,
+                        height: 100,
+                        child: model.isBusy
+                            ? AFKProgressIndicator()
+                            : Stack(
+                                children: [
+                                  AnimatedOpacity(
+                                    opacity: model.showStartSwipe ? 1 : 0,
+                                    duration: Duration(milliseconds: 50),
+                                    child: model.isNearStartMarker
+                                        ? AFKSlideButton(
+                                            //alignment: Alignment(0, 0),
+                                            quest: quest,
+                                            canStartQuest:
+                                                model.hasEnoughSponsoring(
+                                                    quest: quest),
+                                            onSubmit: () => model
+                                                .maybeStartQuest(quest: quest))
+                                        : Container(
+                                            color: Colors.white,
+                                            child: NotCloseToQuestNote(
+                                                questType: quest.type,
+                                                controller: model
+                                                    .getGoogleMapController),
+                                          ),
+                                  ),
+                                  AnimatedOpacity(
+                                    opacity: model.hasActiveQuest ? 1 : 0,
+                                    duration: Duration(seconds: 1),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        LiveQuestStatistic(
+                                          title: "Distance on last check",
+                                          statistic: model.distanceTravelled
+                                                  .toStringAsFixed(0) +
+                                              " m",
+                                        ),
+                                        LiveQuestStatistic(
+                                          title: "Available Tries",
+                                          statistic: model.hasActiveQuest
+                                              ? model.numberOfAvailableTries
+                                                  .toString()
+                                              : "0",
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+
+                      verticalSpaceLarge,
                       // Text(
                       //     "Instructions: Start the quest and then walk ${model.distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance of tries!"),
+                      Image.network(
+                          "https://c.tenor.com/PcfXDVatyLEAAAAC/guy-walking.gif",
+                          height: 150),
+                      verticalSpaceMedium,
                       Text(
                           "Goal: Walk " +
                               model.distanceToTravel.toStringAsFixed(0) +
                               " Meters",
                           textAlign: TextAlign.center,
-                          style: textTheme(context)
-                              .headline3!
-                              .copyWith(color: kPrimaryColor)),
-                      verticalSpaceSmall,
-                      if (!model.hasActiveQuest)
-                        Image.network(
-                            "https://c.tenor.com/PcfXDVatyLEAAAAC/guy-walking.gif",
-                            height: 150),
+                          style: textTheme(context).headline5!.copyWith(
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.w600)),
                       verticalSpaceMedium,
                       model.questSuccessfullyFinished
                           ? Column(
@@ -125,114 +190,10 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                                             .copyWith(color: kWhiteTextColor))),
                               ],
                             )
-                          : Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    if (!model.hasActiveQuest)
-                                      ElevatedButton(
-                                          onPressed: model.showInstructions,
-                                          child: Text("Instructions",
-                                              style: textTheme(context)
-                                                  .headline6!
-                                                  .copyWith(
-                                                      color: kWhiteTextColor))),
-                                    // if (model.hasActiveQuest)
-                                    //   Flexible(
-                                    //     child: Column(
-                                    //       children: [
-                                    //         ElevatedButton(
-                                    //           onPressed:
-                                    //               model.probeDistance,
-                                    //           child: (model.isBusy &&
-                                    //                   model.hasActiveQuest)
-                                    //               ? AFKProgressIndicator(
-                                    //                   color:
-                                    //                       kWhiteTextColor)
-                                    //               : Text("Update Location",
-                                    //                   style: textTheme(
-                                    //                           context)
-                                    //                       .headline6!
-                                    //                       .copyWith(
-                                    //                           color:
-                                    //                               kWhiteTextColor)),
-                                    //         ),
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                  ],
-                                ),
-                                verticalSpaceMedium,
-                                if (model.showStartSwipe && !model.isBusy)
-                                  AFKSlideButton(
-                                    quest: quest,
-                                    canStartQuest: model.hasEnoughSponsoring(
-                                      quest: quest,
-                                    ),
-                                    onSubmit: () =>
-                                        model.maybeStartQuest(quest: quest),
-                                  ),
-                                if (!model.hasEnoughSponsoring(quest: quest))
-                                  Container(
-                                      color: Colors.white,
-                                      child: NotEnoughSponsoringNote(
-                                          topPadding: 10)),
-                                verticalSpaceMedium,
-                                AnimatedOpacity(
-                                  opacity: !model.startedQuest ? 0.0 : 1.0,
-                                  duration: Duration(seconds: 2),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            FittedBox(
-                                              child: Text(
-                                                  model.distanceTravelled
-                                                          .toStringAsFixed(0) +
-                                                      " m",
-                                                      //maxLines: 1,
-                                                  style: textTheme(context)
-                                                      .headline2),
-                                            ),
-                                            Text("Distance on last check",
-                                                textAlign: TextAlign.center,
-                                                maxLines: 2,
-                                                style: textTheme(context)
-                                                    .bodyText2),
-                                          ],
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                model.numberOfAvailableTries
-                                                    .toString(),
-                                                style: textTheme(context)
-                                                    .headline2),
-                                            Text("Available Tries",
-                                                textAlign: TextAlign.center,
-                                                style: textTheme(context)
-                                                    .bodyText2),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                verticalSpaceLarge,
-                              ],
-                            ),
+                          : SizedBox(
+                              height: 0,
+                              width: 0,
+                            )
                     ],
                   ),
                 ),

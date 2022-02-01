@@ -7,30 +7,25 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<Quest> getDummyQuests() {
   return [
-    getZaehringenHike(),
+    starenWegNoListener(),
+    // getZaehringenHike(),
     getDummyVibrationSearchQuest(),
-    heidachTrohpy(),
-    manu(),
-    heidachTrohpy2(),
-    commercialTrophy(),
-    seeparkSpielplatz(),
-    // getDummyVibrationSearchQuest2(),
-    // getDummyQuestQrCodeSearch(),
-    getDummyVibrationSearchQuestHeuweiler(),
-    getQrCodeHuntJaeger(),
-    // getDummyQuestQrCodeSearchStarenweg(),
-    streeth11th2ndVibration(),
-    getDummyVibrationSearchQuestFreiburg(),
-    // getDummyVibrationSearchQuest4(),
+    // heidachTrohpy(),
+    // manu(),
+    // heidachTrohpy2(),
+    // commercialTrophy(),
+    // seeparkSpielplatz(),
+    // getDummyVibrationSearchQuestHeuweiler(),
+    // getQrCodeHuntJaeger(),
+    // streeth11th2ndVibration(),
+    // getDummyVibrationSearchQuestFreiburg(),
     getDistanceEstimate200(),
-    getDistanceEstimate500(),
-    getDistanceEstimate1000(),
-    getDistanceEstimate2000(),
-    getDummyQuest1(),
-    getDummyQuest3(),
-    // getDummyQuest4(),
-    // getDummyQuest2(),
-    getDummyQuest5(),
+    // getDistanceEstimate500(),
+    // getDistanceEstimate1000(),
+    // getDistanceEstimate2000(),
+    // getDummyQuest1(),
+    // getDummyQuest3(),
+    // getDummyQuest5(),
     getDummyQuest6(),
   ];
 }
@@ -329,11 +324,29 @@ Quest getDummyQuest6() {
     afkCredits: 1,
     markers: [
       starenweg4(),
-      starenweg3(),
+      heidach2(),
+      heidach4(),
     ],
     type: QuestType.QRCodeHike,
     startMarker: starenweg4(),
-    finishMarker: starenweg3(),
+    finishMarker: heidach4(),
+  );
+}
+
+Quest starenWegNoListener() {
+  return Quest(
+    id: "nJiVPrgw2jcGrxoABCBW",
+    name: "Starenweg Hike No Listener!",
+    description: "",
+    afkCredits: 1,
+    markers: [
+      heidach4(),
+      heidach2(),
+      starenweg4(),
+    ],
+    type: QuestType.GPSAreaHike,
+    startMarker: heidach4(),
+    finishMarker: starenweg4(),
   );
 }
 
@@ -703,7 +716,6 @@ AFKMarker freiburg3() {
       lat: 48.01694856856642,
       lon: 7.851700560921927);
 }
-
 
 AFKMarker belek1() {
   return AFKMarker(

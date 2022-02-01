@@ -8,7 +8,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -44,23 +44,21 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   Future probeDistance() async {
     if (numberOfAvailableTries == 1 && !useSuperUserFeatures) {
       final result = await dialogService.showDialog(
-          title: "Sure?",
+          title: "SURE?",
           description:
               "This is your last try, are you sure you want to reveal the distance?",
-          buttonTitle: "Yes",
-          cancelTitle: "No");
+          buttonTitle: "YES",
+          cancelTitle: "NO");
       if (result?.confirmed == false) {
         return;
       }
     }
-    setBusy(true);
     final Position currentPosition =
         await _geolocationService.getUserLivePosition;
 
     if (!(await checkAccuracy(
         position: currentPosition,
         minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
-      setBusy(false);
       return;
     }
     final distanceTravelledTest = _geolocationService.distanceBetween(
@@ -73,11 +71,11 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
 
     questTestingService.maybeRecordData(
         trigger: QuestDataPointTrigger.userAction,
-        userEventDescription: "distance probed: ${distanceTravelled.toStringAsFixed(2)} m",
+        userEventDescription:
+            "distance probed: ${distanceTravelled.toStringAsFixed(2)} m",
         pushToNotion: true,
         position: currentPosition);
 
-    setBusy(false);
     // distanceTravelled = 1;
 
     ////////////////////////////////////////////////////
@@ -204,7 +202,6 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
         replaceWithMainView(index: BottomNavBarIndex.quest);
         return;
       }
-      setBusy(true);
       log.i("Starting distance estimate quest with name ${quest.name}");
       final position = await _geolocationService.getUserLivePosition;
       if (!(await checkAccuracy(
@@ -228,8 +225,6 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       startingLon = position.longitude;
 
       final result = await startQuestMain(quest: quest);
-
-      setBusy(false);
       if (result == false) {
         return;
       }
@@ -237,7 +232,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       // start listener that updates position regularly
       questService.listenToPosition(
           distanceFilter: kDistanceFilterDistanceEstimate, pushToNotion: true);
-      await Future.delayed(Duration(seconds: 1));
+      //await Future.delayed(Duration(seconds: 1));
       startedQuest = true;
       notifyListeners();
     } else {

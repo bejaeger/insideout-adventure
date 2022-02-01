@@ -46,7 +46,7 @@ abstract class AuthenticationViewModel extends FormViewModel
       } catch (e) {
         log.e("Failed initializing user with error: ${e.toString()}");
         String publicFacingMessage =
-            "Authentication successful but initiliazation failed due to an internal problem. Please, try again later or contact our support.";
+            "You could not be logged in. We apologize. Please, try again later or contact our support.";
         if (e is UserServiceException)
           setValidationMessage(e.prettyDetails ?? publicFacingMessage);
         if (e is FirestoreApiException)

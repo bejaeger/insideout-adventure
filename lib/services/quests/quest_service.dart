@@ -9,7 +9,8 @@ import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_cat
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/marker_collection_failure_type.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
@@ -126,10 +127,13 @@ class QuestService with ReactiveServiceMixin {
     _questTestingService.maybeInitialize(
       activatedQuest: activatedQuest,
       activatedQuestTrialId: activatedQuestTrialId,
+      marker: getNextMarker(),
     );
 
-    // Start timer
-    _stopWatchService.startTimer();
+    if (quest.type != QuestType.GPSAreaHike) {
+      // Start timer
+      _stopWatchService.startTimer();
+    }
 
     if (quest.type == QuestType.QRCodeHuntIndoor ||
         quest.type == QuestType.QRCodeSearch) {
@@ -145,8 +149,9 @@ class QuestService with ReactiveServiceMixin {
     //  else if (quest.type == QuestType.DistanceEstimate) {
     //   _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
     // }
-    else if (quest.type == QuestType.QRCodeHike ||
-        quest.type == QuestType.GPSAreaHike) {
+    else if (quest.type == QuestType.QRCodeHike) {
+      // ||
+      // quest.type == QuestType.GPSAreaHike) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
     // Quest succesfully started
@@ -167,7 +172,7 @@ class QuestService with ReactiveServiceMixin {
     return await _geolocationService.listenToPosition(
         distanceFilter: distanceFilter.round(),
         onData: (Position position) {
-          log.v("New position event fired from location listener!");
+          // log.v("New position event fired from location listener!");
           if (recordPositionDataEvent) {
             _questTestingService.maybeRecordData(
               trigger: QuestDataPointTrigger.locationListener,
@@ -186,6 +191,14 @@ class QuestService with ReactiveServiceMixin {
     _geolocationService.cancelPositionListener();
   }
 
+  void pausePositionListener() {
+    _geolocationService.pausePositionListener();
+  }
+
+  void resumePositionListener() {
+    _geolocationService.resumePositionListener();
+  }
+
   int get getNumberMarkersCollected => activatedQuest!.markersCollected
       .where((element) => element == true)
       .toList()
@@ -199,6 +212,12 @@ class QuestService with ReactiveServiceMixin {
     // 2. bookkeep credits
     // 3. clean-up old quest
 
+    // Quest succesfully finished
+    _questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.userAction,
+        userEventDescription: "Quest succesfully finished",
+        pushToNotion: true);
+
     // ------------------
     // 1.
     // TODO
@@ -211,12 +230,6 @@ class QuestService with ReactiveServiceMixin {
     // ---------------
     // 3.
     await uploadAndCleanUpFinishedQuest();
-
-    // Quest succesfully started
-    _questTestingService.maybeRecordData(
-        trigger: QuestDataPointTrigger.userAction,
-        userEventDescription: "Quest succesfully finished",
-        pushToNotion: true);
   }
 
   Future evaluateFinishedQuest() async {
@@ -706,7 +719,8 @@ class QuestService with ReactiveServiceMixin {
       if (!isMarkerInQuest(marker: marker)) {
         log.w("Scanned marker does not belong to currently active quest");
         return MarkerAnalysisResult.error(
-            errorMessage: WarningScannedMarkerNotInQuest);
+            errorMessage: WarningScannedMarkerNotInQuest,
+            errorType: MarkerCollectionFailureType.alreadyCollected);
       }
 
       // Marker is in quest so let's get full marker with lat and long by reading from already downloaded
@@ -734,7 +748,10 @@ class QuestService with ReactiveServiceMixin {
       log.i(
           "Marker verified! Continue with updated collected markers in activated quest");
       updateCollectedMarkers(marker: fullMarker);
+      // set next marker for log data
+      _questTestingService.newNextMarker(getNextMarker());
       // return marker that was succesfully scanned
+
       return MarkerAnalysisResult.marker(marker: fullMarker);
     }
   }
@@ -921,6 +938,26 @@ class QuestService with ReactiveServiceMixin {
     return null;
   }
 
+  AFKMarker? getPreviousMarker({Quest? quest}) {
+    late int index;
+    if (hasActiveQuest) {
+      index = activatedQuest!.markersCollected
+          .lastIndexWhere((element) => element == true);
+      if (index < 0) {
+        // no marker collected yet
+        index = 0;
+      }
+      if (index < activatedQuest!.quest.markers.length) {
+        return activatedQuest!.quest.markers[index];
+      }
+    } else {
+      if (quest != null && (0 < quest.markers.length)) {
+        return quest.markers[0];
+      }
+    }
+    return null;
+  }
+
   Future getQuest({required String questId}) async {
     return _firestoreApi.getQuest(questId: questId);
   }
@@ -962,7 +999,8 @@ class QuestService with ReactiveServiceMixin {
   }
 
   String getMinutesElapsedString() {
-    return _stopWatchService.secondsToMinuteSecondTime(timeElapsed);
+    // return _stopWatchService.secondsToMinuteSecondTime(timeElapsed);
+    return _stopWatchService.durationString(timeElapsed);
   }
 
   String getHoursElapsedString() {

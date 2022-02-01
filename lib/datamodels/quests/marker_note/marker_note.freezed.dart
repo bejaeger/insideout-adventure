@@ -22,11 +22,15 @@ class _$MarkerNoteTearOff {
   const _$MarkerNoteTearOff();
 
   _MarkerNote call(
-      {required String note, String? imagePath, String? solution}) {
+      {required String note,
+      String? imagePath,
+      String? solution,
+      String? hint}) {
     return _MarkerNote(
       note: note,
       imagePath: imagePath,
       solution: solution,
+      hint: hint,
     );
   }
 
@@ -42,7 +46,8 @@ const $MarkerNote = _$MarkerNoteTearOff();
 mixin _$MarkerNote {
   String get note => throw _privateConstructorUsedError;
   String? get imagePath => throw _privateConstructorUsedError;
-  String? get solution => throw _privateConstructorUsedError;
+  String? get solution => throw _privateConstructorUsedError; //
+  String? get hint => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -55,7 +60,7 @@ abstract class $MarkerNoteCopyWith<$Res> {
   factory $MarkerNoteCopyWith(
           MarkerNote value, $Res Function(MarkerNote) then) =
       _$MarkerNoteCopyWithImpl<$Res>;
-  $Res call({String note, String? imagePath, String? solution});
+  $Res call({String note, String? imagePath, String? solution, String? hint});
 }
 
 /// @nodoc
@@ -71,6 +76,7 @@ class _$MarkerNoteCopyWithImpl<$Res> implements $MarkerNoteCopyWith<$Res> {
     Object? note = freezed,
     Object? imagePath = freezed,
     Object? solution = freezed,
+    Object? hint = freezed,
   }) {
     return _then(_value.copyWith(
       note: note == freezed
@@ -85,6 +91,10 @@ class _$MarkerNoteCopyWithImpl<$Res> implements $MarkerNoteCopyWith<$Res> {
           ? _value.solution
           : solution // ignore: cast_nullable_to_non_nullable
               as String?,
+      hint: hint == freezed
+          ? _value.hint
+          : hint // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -95,7 +105,7 @@ abstract class _$MarkerNoteCopyWith<$Res> implements $MarkerNoteCopyWith<$Res> {
           _MarkerNote value, $Res Function(_MarkerNote) then) =
       __$MarkerNoteCopyWithImpl<$Res>;
   @override
-  $Res call({String note, String? imagePath, String? solution});
+  $Res call({String note, String? imagePath, String? solution, String? hint});
 }
 
 /// @nodoc
@@ -113,6 +123,7 @@ class __$MarkerNoteCopyWithImpl<$Res> extends _$MarkerNoteCopyWithImpl<$Res>
     Object? note = freezed,
     Object? imagePath = freezed,
     Object? solution = freezed,
+    Object? hint = freezed,
   }) {
     return _then(_MarkerNote(
       note: note == freezed
@@ -127,6 +138,10 @@ class __$MarkerNoteCopyWithImpl<$Res> extends _$MarkerNoteCopyWithImpl<$Res>
           ? _value.solution
           : solution // ignore: cast_nullable_to_non_nullable
               as String?,
+      hint: hint == freezed
+          ? _value.hint
+          : hint // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -134,7 +149,7 @@ class __$MarkerNoteCopyWithImpl<$Res> extends _$MarkerNoteCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_MarkerNote implements _MarkerNote {
-  _$_MarkerNote({required this.note, this.imagePath, this.solution});
+  _$_MarkerNote({required this.note, this.imagePath, this.solution, this.hint});
 
   factory _$_MarkerNote.fromJson(Map<String, dynamic> json) =>
       _$$_MarkerNoteFromJson(json);
@@ -145,10 +160,12 @@ class _$_MarkerNote implements _MarkerNote {
   final String? imagePath;
   @override
   final String? solution;
+  @override //
+  final String? hint;
 
   @override
   String toString() {
-    return 'MarkerNote(note: $note, imagePath: $imagePath, solution: $solution)';
+    return 'MarkerNote(note: $note, imagePath: $imagePath, solution: $solution, hint: $hint)';
   }
 
   @override
@@ -162,7 +179,9 @@ class _$_MarkerNote implements _MarkerNote {
                     .equals(other.imagePath, imagePath)) &&
             (identical(other.solution, solution) ||
                 const DeepCollectionEquality()
-                    .equals(other.solution, solution)));
+                    .equals(other.solution, solution)) &&
+            (identical(other.hint, hint) ||
+                const DeepCollectionEquality().equals(other.hint, hint)));
   }
 
   @override
@@ -170,7 +189,8 @@ class _$_MarkerNote implements _MarkerNote {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(note) ^
       const DeepCollectionEquality().hash(imagePath) ^
-      const DeepCollectionEquality().hash(solution);
+      const DeepCollectionEquality().hash(solution) ^
+      const DeepCollectionEquality().hash(hint);
 
   @JsonKey(ignore: true)
   @override
@@ -187,7 +207,8 @@ abstract class _MarkerNote implements MarkerNote {
   factory _MarkerNote(
       {required String note,
       String? imagePath,
-      String? solution}) = _$_MarkerNote;
+      String? solution,
+      String? hint}) = _$_MarkerNote;
 
   factory _MarkerNote.fromJson(Map<String, dynamic> json) =
       _$_MarkerNote.fromJson;
@@ -198,6 +219,8 @@ abstract class _MarkerNote implements MarkerNote {
   String? get imagePath => throw _privateConstructorUsedError;
   @override
   String? get solution => throw _privateConstructorUsedError;
+  @override //
+  String? get hint => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$MarkerNoteCopyWith<_MarkerNote> get copyWith =>

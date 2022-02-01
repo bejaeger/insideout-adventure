@@ -4,8 +4,9 @@ import 'dart:math';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -61,9 +62,9 @@ class QuestTestingService {
   bool get isPermanentUserMode =>
       _isPermanentUserMode && userService.isSuperUser;
 
-  bool _isRecordingLocationData = true;
+  bool _isRecordingLocationData = false;
   bool _isPermanentAdminMode = false;
-  bool _isPermanentUserMode = false;
+  bool _isPermanentUserMode = true;
 
   int? distanceFilter;
 
@@ -80,6 +81,10 @@ class QuestTestingService {
   int _numberQuestDataPoints = 0;
 
   Database? _questDataPointsDatabase;
+
+  // next marker to calculate distance to next marker
+  // in location listener
+  AFKMarker? _nextMarker;
 
   // counter whether data is pushed
   // to wait in case function is called a second time
@@ -107,8 +112,7 @@ class QuestTestingService {
   void resetSettings() {
     _isRecordingLocationData = true;
     _isPermanentAdminMode = false;
-    _isPermanentUserMode = false;
-    allQuestDataPoints = [];
+    _isPermanentUserMode = true;
   }
 
   void maybeReset() async {
@@ -127,6 +131,7 @@ class QuestTestingService {
     ActivatedQuest? activatedQuest,
     String? activatedQuestTrialId,
     User? user,
+    AFKMarker? marker,
   }) {
     if (!isRecordingLocationData) return;
     // function called multiple times with different inputs;
@@ -144,8 +149,15 @@ class QuestTestingService {
     if (user != null) {
       _currentUserName = user.fullName;
     }
+    if (marker != null) {
+      _nextMarker = marker;
+    }
     log.i(
         "Initialized quest testing data for quest with trial id '$_questTrialId', and quest id '$_questId' and user name $_currentUserName");
+  }
+
+  void newNextMarker(AFKMarker? marker) {
+    _nextMarker = marker;
   }
 
   Future maybeRecordData({
@@ -167,16 +179,15 @@ class QuestTestingService {
       activatedQuest: activatedQuest,
       userEventDescription: userEventDescription,
     );
-    _numberQuestDataPoints = _numberQuestDataPoints + 1;
     log.v("Adding quest data point location entry");
     bool returnValue = true;
     if (pushToNotion) {
       String keyCompleterNew = nanoid(8);
       completers[keyCompleterNew] = Completer();
+      keyCompleterPrevious.add(keyCompleterNew);
       try {
         // the following pushes the data.
-        // in case this function is called multiple times we wait for a few seconds
-        keyCompleterPrevious.add(keyCompleterNew);
+        // in case this function is called multiple times we await the completer
         if ((completers.length) > 1) {
           if (completers[
                   keyCompleterPrevious[keyCompleterPrevious.length - 2]] !=
@@ -189,9 +200,8 @@ class QuestTestingService {
         final result = await pushNotionDatabaseEntry(questDataPoint);
         if (completers[keyCompleterNew] != null) {
           completers[keyCompleterNew]!.complete();
-          completers.remove(keyCompleterNew);
+          //completers.remove(keyCompleterNew);
         }
-
         if (result == true) {
           questDataPoint.pushedToNotion = true;
         }
@@ -202,8 +212,8 @@ class QuestTestingService {
         log.e("User desription: $userEventDescription");
         if (completers[keyCompleterNew] != null) {
           completers[keyCompleterNew]!.complete();
+          //completers.remove(keyCompleterNew);
         }
-        completers.remove(keyCompleterNew);
         returnValue = false;
       }
     }
@@ -225,18 +235,22 @@ class QuestTestingService {
     if (trigger == QuestDataPointTrigger.manualLocationFetchingEvent) {
       await geolocationService.getLastKnownAndCurrentPosition(trigger: trigger);
     }
+    double distanceToNextMarker =
+        await geolocationService.distanceBetweenUserAndCoordinates(
+            lat: _nextMarker?.lat, lon: _nextMarker?.lon);
     final questDataPoint = QuestDataPoint(
       questId: activatedQuest?.quest.id ?? _questId,
       questTrialId: questTrialId ?? _questTrialId,
       timestamp: DateTime.now(),
       questCategory: _questCategory,
+      questName: _questName,
       entryNumber: _numberQuestDataPoints,
       triggeredBy: trigger,
       livePosition: position ?? geolocationService.getUserLivePositionNullable,
       currentPosition: null,
       lastKnownPosition: null,
       currentLocationDistance: geolocationService.getCurrentDistancesToGoal(),
-      liveLocationDistance: geolocationService.getLiveDistancesToGoal(),
+      distanceToNextMarker: distanceToNextMarker.toStringAsFixed(1),
       // liveLocationAccuracy: geolocationService.getLiveDistancesToGoal(),
       lastKnownLocationDistance:
           geolocationService.getLastKnownDistancesToGoal(),
@@ -279,6 +293,7 @@ class QuestTestingService {
       log.i("location entry nr. ${entry.entryNumber} already pushed to notion");
       return false;
     }
+
     // ID of manually created database
     String databaseId = "3fa2284a2aec40a5a6d03089493be25a";
 
@@ -328,6 +343,7 @@ class QuestTestingService {
       }
     }
 
+    _numberQuestDataPoints = _numberQuestDataPoints + 1;
     Page newDatabaseEntry = Page(
       parent: Parent.database(
           id: _questDataPointsDatabase?.id ?? "nan"), // <- database
@@ -343,6 +359,8 @@ class QuestTestingService {
         activeQuestIdKey, entry.questId);
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
         activeQuestCategoryKey, entry.questCategory);
+    addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
+        activeQuestNameKey, entry.questName);
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
         trialEntryKey, entry.questTrialId ?? trial);
 
@@ -405,7 +423,7 @@ class QuestTestingService {
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
         currentLocationDistanceKey, entry.currentLocationDistance);
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
-        liveLocationDistanceKey, entry.liveLocationDistance);
+        liveLocationDistanceKey, entry.distanceToNextMarker);
     addNotionDatabaseTextProperty(newDatabaseEntry, _questDataPointsDatabase,
         lastKnownLocationDistanceKey, entry.lastKnownLocationDistance);
 
@@ -441,7 +459,7 @@ class QuestTestingService {
         log.e("Error when pushing data to notion: ${notionResponse.message}");
         return false;
       } else {
-        log.i("Pushed entry to notion database");
+        log.v("Pushed entry to notion database");
         return true;
       }
     } catch (e) {
@@ -477,7 +495,7 @@ class QuestTestingService {
   ///
   ///  these are the names of the properties in the notion database
   String currentLocationDistanceKey = "currentLocationDistance";
-  String liveLocationDistanceKey = "1liveLocationDistance";
+  String liveLocationDistanceKey = "1distanceToNextMarker";
   String lastKnownLocationDistanceKey = "lastKnownLocationDistance";
   String triggeredByKey = "4triggeredBy";
   String userEventDescriptionKey = "3userEventDescription";
@@ -502,6 +520,8 @@ class QuestTestingService {
 
   String trialEntryKey = "questTrial";
   String deviceInfoKey = "deviceInfo";
+
   String activeQuestIdKey = "questId";
   String activeQuestCategoryKey = "questCategory";
+  String activeQuestNameKey = "7questName";
 }

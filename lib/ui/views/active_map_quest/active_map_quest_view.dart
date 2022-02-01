@@ -2,13 +2,13 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -16,21 +16,63 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 
-class ActiveMapQuestView extends StatelessWidget {
+class ActiveMapQuestView extends StatefulWidget {
   final Quest quest;
   const ActiveMapQuestView({Key? key, required this.quest}) : super(key: key);
+
+  @override
+  State<ActiveMapQuestView> createState() => _ActiveMapQuestViewState();
+}
+
+class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
+    with TickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.fastLinearToSlowEaseIn,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActiveMapQuestViewModel>.reactive(
       viewModelBuilder: () => ActiveMapQuestViewModel(),
       onModelReady: (model) {
-        // TODO: change to initialize
-        model.initialize(quest: quest);
+        model.initialize(quest: widget.quest);
         return;
       },
-      disposeViewModel: false,
+      fireOnModelReadyOnce: true,
       builder: (context, model, child) {
+        if (model.showCollectedMarkerAnimation) {
+          _controller.reset();
+          _controller.forward();
+          model.showCollectedMarkerAnimation = false;
+        }
+
+        if (!model.hasActiveQuest && !model.showStartSwipe)
+          return SafeArea(
+            child: Scaffold(
+              body: Center(
+                child: Text("SOMETHING BROKE"),
+              ),
+            ),
+          );
+
         return WillPopScope(
           onWillPop: () async {
             if (!model.hasActiveQuest) {
@@ -46,7 +88,7 @@ class ActiveMapQuestView extends StatelessWidget {
                 showRedLiveButton: true,
                 onAppBarButtonPressed: model.hasActiveQuest
                     ? null
-                    : () => model.showQuestInfoDialog(quest: quest),
+                    : () => model.showQuestInfoDialog(quest: widget.quest),
                 appBarButtonIcon: Icons.help,
                 //drawer: model.hasActiveQuest ? true : false,
                 // onAppBarButtonPressed: model.hasActiveQuest
@@ -109,39 +151,59 @@ class ActiveMapQuestView extends StatelessWidget {
                                 )
                               : model.isBusy
                                   ? AFKProgressIndicator()
-                                  : model.showStartSwipe
-                                      ? model.isNearStartMarker
-                                          ? AFKSlideButton(
-                                              //alignment: Alignment(0, 0),
-                                              quest: quest,
-                                              canStartQuest:
-                                                  model.hasEnoughSponsoring(
-                                                      quest: quest),
-                                              onSubmit: () =>
-                                                  model.maybeStartQuest(
-                                                      quest: quest))
-                                          : Container(
-                                              color: Colors.white,
-                                              child: NotCloseToQuestNote(
-                                                  controller: model
-                                                      .getGoogleMapController))
-                                      : model.hasActiveQuest
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                LiveQuestStatistic(
-                                                  title: "Duration",
-                                                  statistic: model.timeElapsed,
+                                  : Stack(
+                                      children: [
+                                        AnimatedOpacity(
+                                          opacity: model.showStartSwipe ? 1 : 0,
+                                          duration: Duration(milliseconds: 50),
+                                          child: model.isNearStartMarker
+                                              ? AFKSlideButton(
+                                                  //alignment: Alignment(0, 0),
+                                                  quest: widget.quest,
+                                                  canStartQuest:
+                                                      model.hasEnoughSponsoring(
+                                                          quest: widget.quest),
+                                                  onSubmit: () =>
+                                                      model.maybeStartQuest(
+                                                          quest: widget.quest))
+                                              : Container(
+                                                  color: Colors.white,
+                                                  child: NotCloseToQuestNote(
+                                                      questType:
+                                                          widget.quest.type,
+                                                      controller: model
+                                                          .getGoogleMapController),
                                                 ),
-                                                LiveQuestStatistic(
+                                        ),
+                                        AnimatedOpacity(
+                                          opacity: model.hasActiveQuest ? 1 : 0,
+                                          duration: Duration(seconds: 1),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              LiveQuestStatistic(
+                                                title: "Duration",
+                                                statistic: model.hasActiveQuest
+                                                    ? model.timeElapsed
+                                                    : "0",
+                                              ),
+                                              ScaleTransition(
+                                                scale: _animation,
+                                                child: LiveQuestStatistic(
                                                   title: "Markers collected",
                                                   statistic: model
-                                                      .getNumberMarkersCollectedString(),
+                                                          .hasActiveQuest
+                                                      ? model
+                                                          .getNumberMarkersCollectedString()
+                                                      : "0",
                                                 ),
-                                              ],
-                                            )
-                                          : Container(),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                     ),
                     // if (model.isBusy)
                     //   Align(
@@ -168,25 +230,48 @@ class ActiveMapQuestView extends StatelessWidget {
                             //Remove the Zoom in and out button
                             zoomControlsEnabled: false,
 
+                            mapToolbarEnabled: false,
                             //onTap: model.handleTap(),
                             //Enable Traffic Mode.
                             //trafficEnabled: true,
                           ),
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                              height: 1,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: Offset(0, 0),
-                                      blurRadius: 0.2,
-                                      spreadRadius: 0,
-                                      color: kShadowColor.withOpacity(0.15))
-                                ],
+                          if (!model.hasActiveQuest)
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.grey[50]!,
+                                      Colors.grey[50]!.withOpacity(0.0),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          if (model.hasActiveQuest)
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                height: 1,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 0),
+                                        blurRadius: 0.2,
+                                        spreadRadius: 0,
+                                        color: kShadowColor.withOpacity(0.15))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          if (model.isAnimatingCamera)
+                            AFKProgressIndicator(
+                              alignment: Alignment.topCenter,
+                            ),
                         ],
                       ),
                     ),
@@ -201,21 +286,27 @@ class ActiveMapQuestView extends StatelessWidget {
                       // title2: "START",
                       // iconData2: Icons.star,
                       onPressed1: () async {
+                        // model.triggerCollectedMarkerAnimation();
                         // @see: https://stackoverflow.com/questions/55989773/how-to-zoom-between-two-google-map-markers-in-flutter
-                        model.getGoogleMapController!.animateCamera(
-                            // CameraUpdate.newLatLngBounds(
-                            //   LatLngBounds(
-                            //     southwest: LatLng(quest.markers[1].lat!,
-                            //         quest.markers[1].lon!),
-                            //     northeast: LatLng(quest.markers[0].lat!,
-                            //         quest.markers[0].lon!),
-                            //   ),
-                            //   15));
-                            CameraUpdate.newCameraPosition(
-                                model.initialCameraPosition()));
-                        await model.scanQrCode();
+                        // model.getGoogleMapController!.animateCamera(
+                        // //     // CameraUpdate.newLatLngBounds(
+                        // //     //   LatLngBounds(
+                        // //     //     southwest: LatLng(quest.markers[1].lat!,
+                        // //     //         quest.markers[1].lon!),
+                        // //     //     northeast: LatLng(quest.markers[0].lat!,
+                        // //     //         quest.markers[0].lon!),
+                        // //     //   ),
+                        // //     //   15));
+                        //     CameraUpdate.newCameraPosition(
+                        //         model.initialCameraPosition()));
+                        if (widget.quest.type == QuestType.QRCodeHike)
+                          await model.scanQrCode();
+                        if (widget.quest.type == QuestType.GPSAreaHike)
+                          await model.collectMarkerFromGPSLocation();
                       },
-                      iconData1: Icons.qr_code_scanner_rounded,
+                      iconData1: widget.quest.type == QuestType.QRCodeHike
+                          ? Icons.qr_code_scanner_rounded
+                          : Icons.add_circle_outline_rounded,
                     )
                   : null,
             ),
