@@ -55,32 +55,6 @@ class ActiveTreasureLocationSearchQuestViewModel
     setBusy(false);
   }
 
-  // AUTOMATIC TRACKING
-  void listenToActiveQuest() {
-    log.i("Add listener to active vibration search quest");
-    if (_activeVibrationQuestSubscription == null) {
-      _activeVibrationQuestSubscription =
-          questService.activatedQuestSubject.listen(
-        (activatedQuest) {
-          log.wtf("Listening to quest update");
-          if (activatedQuest?.status == QuestStatus.active ||
-              activatedQuest?.status == QuestStatus.incomplete) {
-            if (!skipUpdatingQuestStatus) {
-              completeDistanceCheckAndUpdateQuestStatus();
-              skipUpdatingQuestStatus = false;
-            }
-          }
-          if (activatedQuest?.status == QuestStatus.success ||
-              activatedQuest?.status == QuestStatus.cancelled ||
-              activatedQuest?.status == QuestStatus.failed) {
-            cancelQuestListener();
-          }
-          notifyListeners();
-        },
-      );
-    }
-  }
-
   Future maybeStartQuest({required Quest? quest}) async {
     if (quest != null) {
       log.i("Starting vibration search quest with name ${quest.name}");

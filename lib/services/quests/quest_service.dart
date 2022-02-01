@@ -130,8 +130,10 @@ class QuestService with ReactiveServiceMixin {
       marker: getNextMarker(),
     );
 
-    // Start timer
-    _stopWatchService.startTimer();
+    if (quest.type != QuestType.GPSAreaHike) {
+      // Start timer
+      _stopWatchService.startTimer();
+    }
 
     if (quest.type == QuestType.QRCodeHuntIndoor ||
         quest.type == QuestType.QRCodeSearch) {
@@ -997,7 +999,8 @@ class QuestService with ReactiveServiceMixin {
   }
 
   String getMinutesElapsedString() {
-    return _stopWatchService.secondsToMinuteSecondTime(timeElapsed);
+    // return _stopWatchService.secondsToMinuteSecondTime(timeElapsed);
+    return _stopWatchService.durationString(timeElapsed);
   }
 
   String getHoursElapsedString() {

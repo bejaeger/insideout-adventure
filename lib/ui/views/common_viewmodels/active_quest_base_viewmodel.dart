@@ -90,7 +90,6 @@ abstract class ActiveQuestBaseViewModel extends QuestViewModel {
         Duration(seconds: marker != null ? 0 : 1),
         () {
           getGoogleMapController?.showMarkerInfoWindow(markerId);
-          log.wtf("marker Id to show info of: $markerId");
           notifyListeners();
         },
       );

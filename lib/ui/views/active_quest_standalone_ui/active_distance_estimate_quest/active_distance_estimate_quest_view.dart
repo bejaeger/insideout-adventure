@@ -37,7 +37,6 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
       },
       builder: (context, model, child) {
         bool activeButton = model.hasActiveQuest;
-        print(" ------------------------------------------- REBUILDING");
         return WillPopScope(
           onWillPop: () async {
             if (!model.hasActiveQuest) {

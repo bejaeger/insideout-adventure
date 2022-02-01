@@ -11,8 +11,19 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ActiveMapQuestViewModel extends MapViewModel {
+  /// If user enters an area, the following AFKMarker will be set that corresponds to the marker.
+  /// If the user walks outside the area (geofence) (+ some extra buffer zone)
+  /// the marker is set to null again (after some time delay to avoid multiple dialogs
+  /// that open because location events were fired in the background
+  /// while the first dialog was open)
+  /// If null: allow to show alert dialog when user enters geofence
+  /// If not null: don't show alert dialog on additional location listener events
+  /// @see checkIfInAreaOfMarker()
+  AFKMarker? markerInArea;
+
   @override
   Future initialize({required Quest quest}) async {
+    log.i("Initializing active map quest of tye: ${quest.type}");
     resetPreviousQuest();
     setBusy(true);
     await super.initialize(quest: quest);
@@ -78,21 +89,12 @@ class ActiveMapQuestViewModel extends MapViewModel {
           },
         );
       }
-      await Future.delayed(Duration(seconds: 1));
       showStartSwipe = false;
       notifyListeners();
       //resetSlider();
     }
   }
 
-  /// If user enters an area, the following AFKMarker will be set that corresponds to the marker.
-  /// If the user walks outside the area (geofence) (+ some extra buffer zone)
-  /// the marker is set to null again (after some time delay to avoid multiple dialogs
-  /// that open because location events were fired in the background
-  /// while the first dialog was open)
-  /// If null: allow to show alert dialog when user enters geofence
-  /// If not null: don't show alert dialog on additional location listener events
-  AFKMarker? markerInArea;
   Future checkIfInAreaOfMarker(
       {required AFKMarker? marker, required Position position}) async {
     if (marker != null) {

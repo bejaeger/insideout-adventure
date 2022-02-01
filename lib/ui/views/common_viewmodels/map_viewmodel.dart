@@ -372,10 +372,14 @@ class MapViewModel extends ActiveQuestBaseViewModel {
   }
 
   String getNumberMarkersCollectedString() {
-    // minus one because start marker is counted as collected from the start!
-    return (numMarkersCollected - 1).toString() +
-        " / " +
-        (activeQuest.markersCollected.length - 1).toString();
+    if (questService.hasActiveQuest) {
+      // minus one because start marker is counted as collected from the start!
+      return (numMarkersCollected - 1).toString() +
+          " / " +
+          (activeQuest.markersCollected.length - 1).toString();
+    } else {
+      return "0";
+    }
   }
 
   @override

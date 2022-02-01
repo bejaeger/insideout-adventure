@@ -8,13 +8,8 @@ import 'package:afkcredits/app/app.logger.dart';
 class StopWatchService {
   final StopWatchTimer _stopWatchTimer = StopWatchTimer(); // Create instance.
   StreamSubscription? _streamSubscription;
-  StreamSubscription<int>? _timerSubscription;
-
-  String _hoursStr = '00';
-  String _minutesStr = '00';
-  String _secondsStr = '00';
-
   final log = getLogger("StopWatchService");
+
   void startTimer() {
     _stopWatchTimer.onExecute.add(StopWatchExecute.start);
   }
@@ -29,6 +24,14 @@ class StopWatchService {
 
   int getSecondTime() {
     return _stopWatchTimer.secondTime.value;
+  }
+
+  int getMinuteTime() {
+    return _stopWatchTimer.minuteTime.value;
+  }
+
+  int getHourTime() {
+    return (_stopWatchTimer.minuteTime.value ~/ 60);
   }
 
   void listenToSecondTime({required Future Function(int) callback}) {
@@ -60,26 +63,6 @@ class StopWatchService {
   /////// Timers Services added By Harguilar
   bool flag = true;
   Stream<int>? timerStream;
-  // StreamSubscription<int>? timerSubscription;
-
-  String get getHours => _hoursStr;
-  String get getMinutes => _minutesStr;
-  String get getSeconds => _secondsStr;
-
-/*   void setHours({required String hours}) {
-    _hoursStr = hours;
-    print('Harguilar Number of Hours: $_hoursStr');
-  }
-
-  void setMinutes({required String minutes}) {
-    _minutesStr = minutes;
-    print('Harguilar Number of Minutes: $_minutesStr');
-  }
-
-  void setSeconds({required String seconds}) {
-    _secondsStr = seconds;
-    print('Harguilar Number of Seconds: $_secondsStr');
-  } */
 
   Stream<int> stopWatchStream() {
     StreamController<int>? streamController;
@@ -118,12 +101,22 @@ class StopWatchService {
     return streamController.stream;
   }
 
-  void setTimerStreamSubscription(
-      {required StreamSubscription<int> timerSubscription}) {
-    _timerSubscription = timerSubscription;
-  }
+  // Helper functions
+  String durationString(int? value) {
+    if (value == null) return "00:00:00";
+    int h = value ~/ 3600;
+    int m = ((value - h * 3600)) ~/ 60;
+    int s = value - (h * 3600) - (m * 60);
 
-  StreamSubscription<int>? get getTimerSubscription => _timerSubscription;
+    String hourLeft =
+        h.toString().length < 2 ? "" + h.toString() : h.toString();
+    String minuteLeft =
+        m.toString().length < 2 ? "0" + m.toString() : m.toString();
+    String secondsLeft =
+        s.toString().length < 2 ? "0" + s.toString() : s.toString();
+    String result = "$hourLeft" + ":" + "$minuteLeft" + ":" + "$secondsLeft";
+    return result;
+  }
 
   // Helper functions
   String secondsToHourMinuteSecondTime(int? value) {

@@ -9,7 +9,6 @@ import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -57,13 +56,22 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
         model.initialize(quest: widget.quest);
         return;
       },
-      disposeViewModel: false,
+      fireOnModelReadyOnce: true,
       builder: (context, model, child) {
         if (model.showCollectedMarkerAnimation) {
           _controller.reset();
           _controller.forward();
           model.showCollectedMarkerAnimation = false;
         }
+
+        if (!model.hasActiveQuest && !model.showStartSwipe)
+          return SafeArea(
+            child: Scaffold(
+              body: Center(
+                child: Text("SOMETHING BROKE"),
+              ),
+            ),
+          );
 
         return WillPopScope(
           onWillPop: () async {

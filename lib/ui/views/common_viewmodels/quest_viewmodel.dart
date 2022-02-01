@@ -36,7 +36,6 @@ abstract class QuestViewModel extends BaseModel {
   String lastActivatedQuestInfoText = "Active Quest";
   Quest? get currentQuest => questService.currentQuest;
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final MarkerService _markerService = locator<MarkerService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
   String? get gpsAccuracyInfo => _geolocationService.gpsAccuracyInfo;
@@ -61,7 +60,6 @@ abstract class QuestViewModel extends BaseModel {
       _geolocationService.currentPositionDistanceFilter;
 
   QuestViewModel() {
-    // listen to changes in wallet
     log.i("Setting up active quest listener");
     _activeQuestSubscription = questService.activatedQuestSubject.listen(
       (activatedQuest) {
@@ -70,7 +68,6 @@ abstract class QuestViewModel extends BaseModel {
         }
         // TODO: Check the number of rebuilds that is required here!
         notifyListeners();
-
         if (activatedQuest?.status == QuestStatus.success ||
             activatedQuest?.status == QuestStatus.cancelled ||
             activatedQuest?.status == QuestStatus.failed) {
@@ -268,7 +265,6 @@ abstract class QuestViewModel extends BaseModel {
   }
 
   Future onQuestInListTapped(Quest quest) async {
-    log.i("Quest list item tapped!!!");
     if (hasActiveQuest == false) {
       // if (questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map) {
       //   await displayQuestBottomSheet(
@@ -324,6 +320,8 @@ abstract class QuestViewModel extends BaseModel {
       return "finding all QR codes hidden in the highlighted areas.";
     } else if (quest.type == QuestType.DistanceEstimate) {
       return "walking the specified distance.";
+    } else if (quest.type == QuestType.TreasureLocationSearch) {
+      return "finding the treasure.";
     } else {
       return "collecting all markers";
     }
@@ -414,9 +412,12 @@ abstract class QuestViewModel extends BaseModel {
   }
 
   String getActiveQuestProgressDescription() {
-    if (activeQuest.quest.type == QuestType.QRCodeHike ||
-        activeQuest.quest.type == QuestType.Hunt ||
-        activeQuest.quest.type == QuestType.QRCodeSearch) {
+    if (activeQuestNullable == null) {
+      return "";
+    }
+    if (activeQuestNullable?.quest.type == QuestType.QRCodeHike ||
+        activeQuestNullable?.quest.type == QuestType.Hunt ||
+        activeQuestNullable?.quest.type == QuestType.QRCodeSearch) {
       final returnString = "Collected " +
           numMarkersCollected.toString() +
           " of " +
@@ -432,39 +433,39 @@ abstract class QuestViewModel extends BaseModel {
   /// Vibration Search Quest
   ////////////////////////////////////////
 
-  // MAYBE THIS COULD BE An abstract class to be overridden by the
-  // specific viewmodels for the particular quests!
-  // To disentangle stuff!
-  Future getActivatedQuestInfoText() async {
-    log.v("Checking quest info after quest was updated");
-    if (questService.isUIDeadTime == true) {
-      log.i(
-          "NOT checking quest info after quest was updated because UI dead time is active");
-      return;
-    }
-    if (activeQuest.quest.type == QuestType.QRCodeHike ||
-        activeQuest.quest.type == QuestType.Hunt ||
-        activeQuest.quest.type == QuestType.QRCodeSearch) {
-      lastActivatedQuestInfoText = "Active quest - " +
-          getHourMinuteSecondsTime +
-          /*        " " +
-            model.activeQuest.timeElapsed
-                .toString() f+ */
-          " elapsed - " +
-          numMarkersCollected.toString() +
-          " / " +
-          activeQuest.markersCollected.length.toString() +
-          " markers";
-    } else if (activeQuest.quest.type == QuestType.DistanceEstimate) {
-      lastActivatedQuestInfoText = "Estimating Distance";
-    } else if (activeQuest.quest.type == QuestType.TreasureLocationSearch) {
-      log.wtf(
-          "Should never be called, this is handled in ActiveVibrationSearchQuestViewModel.");
-    } else {
-      lastActivatedQuestInfoText = "UNKNOWN QUEST RUNNING";
-    }
-    notifyListeners();
-  }
+  // // MAYBE THIS COULD BE An abstract class to be overridden by the
+  // // specific viewmodels for the particular quests!
+  // // To disentangle stuff!
+  // Future getActivatedQuestInfoText() async {
+  //   log.v("Checking quest info after quest was updated");
+  //   if (questService.isUIDeadTime == true) {
+  //     log.i(
+  //         "NOT checking quest info after quest was updated because UI dead time is active");
+  //     return;
+  //   }
+  //   if (activeQuest.quest.type == QuestType.QRCodeHike ||
+  //       activeQuest.quest.type == QuestType.Hunt ||
+  //       activeQuest.quest.type == QuestType.QRCodeSearch) {
+  //     lastActivatedQuestInfoText = "Active quest - " +
+  //         getHourMinuteSecondsTime +
+  //         /*        " " +
+  //           model.activeQuest.timeElapsed
+  //               .toString() f+ */
+  //         " elapsed - " +
+  //         numMarkersCollected.toString() +
+  //         " / " +
+  //         activeQuest.markersCollected.length.toString() +
+  //         " markers";
+  //   } else if (activeQuest.quest.type == QuestType.DistanceEstimate) {
+  //     lastActivatedQuestInfoText = "Estimating Distance";
+  //   } else if (activeQuest.quest.type == QuestType.TreasureLocationSearch) {
+  //     log.wtf(
+  //         "Should never be called, this is handled in ActiveVibrationSearchQuestViewModel.");
+  //   } else {
+  //     lastActivatedQuestInfoText = "UNKNOWN QUEST RUNNING";
+  //   }
+  //   notifyListeners();
+  // }
 
   // function called to cancel quest OR when quest is finished
   // but markers weren't collected yet.
@@ -480,8 +481,8 @@ abstract class QuestViewModel extends BaseModel {
         baseModelLog.w("Quest is incomplete, show dialog");
         continueQuest = await dialogService.showConfirmationDialog(
             title: WarningQuestNotFinished,
-            cancelTitle: "Cancel Quest",
-            confirmationTitle: "Continue Quest");
+            cancelTitle: "CANCEL QUEST",
+            confirmationTitle: "CONTINUE QUEST");
       } else {
         baseModelLog.w("You are forcing to end the quest");
       }

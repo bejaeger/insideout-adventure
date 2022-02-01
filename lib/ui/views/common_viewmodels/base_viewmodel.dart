@@ -17,10 +17,6 @@ import 'package:afkcredits/services/quest_testing_service/quest_testing_service.
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_viewmodel.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
-import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -72,21 +68,6 @@ class BaseModel extends BaseViewModel {
 
   bool? canVibrate;
 
-  // void setTimer() {
-  //   //Clock Timer
-  //   final timerStream = _stopWatchService.stopWatchStream();
-
-  //   _timerSubscription = timerStream.listen((int time) {
-  //     hours = ((time / (60 * 60)) % 60).floor().toString().padLeft(2, '0');
-  //     minutes = ((time / 60) % 60).floor().toString().padLeft(2, '0');
-  //     seconds = (time % 60).floor().toString().padLeft(2, '0');
-  //   });
-  //   _stopWatchService.setTimerStreamSubscription(
-  //       timerSubscription: _timerSubscription!);
-  //   setBusy(false);
-  //   notifyListeners();
-  // }
-
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
 
@@ -102,7 +83,6 @@ class BaseModel extends BaseViewModel {
   void unregisterViewModels() {
     // unregister all singleton viewmodels when logging out
     // TODO: remove data from viewmodels on loggin!
-
     // if (locator.isRegistered<ActiveTreasureLocationSearchQuestViewModel>()) {
     //   locator.unregister<ActiveTreasureLocationSearchQuestViewModel>();
     // }
