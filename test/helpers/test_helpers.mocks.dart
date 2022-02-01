@@ -3,7 +3,7 @@
 // Do not manually edit this file.
 
 import 'dart:async' as _i17;
-import 'dart:ui' as _i49;
+import 'dart:ui' as _i50;
 
 import 'package:afkcredits/apis/cloud_functions_api.dart' as _i29;
 import 'package:afkcredits/apis/firestore_api.dart' as _i21;
@@ -59,6 +59,7 @@ import 'package:firebase_auth/firebase_auth.dart' as _i12;
 import 'package:flutter/material.dart' as _i48;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i34;
 import 'package:geolocator/geolocator.dart' as _i8;
+import 'package:get/get.dart' as _i49;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:places_service/src/models/application_models.dart' as _i6;
 import 'package:places_service/src/places_service.dart' as _i31;
@@ -1136,6 +1137,13 @@ class MockGeolocationService extends _i1.Mock
           }),
           returnValue: Future<double>.value(0.0)) as _i17.Future<double>);
   @override
+  double distanceBetweenPositionAndCoordinates(
+          {_i8.Position? position, double? lat, double? lon}) =>
+      (super.noSuchMethod(
+          Invocation.method(#distanceBetweenPositionAndCoordinates, [],
+              {#position: position, #lat: lat, #lon: lon}),
+          returnValue: 0.0) as double);
+  @override
   double distanceBetween(
           {double? lat1, double? lon1, double? lat2, double? lon2}) =>
       (super.noSuchMethod(
@@ -1612,18 +1620,6 @@ class MockStopWatchService extends _i1.Mock implements _i43.StopWatchService {
       super.noSuchMethod(Invocation.setter(#timerStream, _timerStream),
           returnValueForMissingStub: null);
   @override
-  String get getHours =>
-      (super.noSuchMethod(Invocation.getter(#getHours), returnValue: '')
-          as String);
-  @override
-  String get getMinutes =>
-      (super.noSuchMethod(Invocation.getter(#getMinutes), returnValue: '')
-          as String);
-  @override
-  String get getSeconds =>
-      (super.noSuchMethod(Invocation.getter(#getSeconds), returnValue: '')
-          as String);
-  @override
   void startTimer() => super.noSuchMethod(Invocation.method(#startTimer, []),
       returnValueForMissingStub: null);
   @override
@@ -1635,6 +1631,14 @@ class MockStopWatchService extends _i1.Mock implements _i43.StopWatchService {
   @override
   int getSecondTime() =>
       (super.noSuchMethod(Invocation.method(#getSecondTime, []), returnValue: 0)
+          as int);
+  @override
+  int getMinuteTime() =>
+      (super.noSuchMethod(Invocation.method(#getMinuteTime, []), returnValue: 0)
+          as int);
+  @override
+  int getHourTime() =>
+      (super.noSuchMethod(Invocation.method(#getHourTime, []), returnValue: 0)
           as int);
   @override
   void listenToSecondTime({_i17.Future<dynamic> Function(int)? callback}) =>
@@ -1658,12 +1662,9 @@ class MockStopWatchService extends _i1.Mock implements _i43.StopWatchService {
       (super.noSuchMethod(Invocation.method(#stopWatchStream, []),
           returnValue: Stream<int>.empty()) as _i17.Stream<int>);
   @override
-  void setTimerStreamSubscription(
-          {_i17.StreamSubscription<int>? timerSubscription}) =>
-      super.noSuchMethod(
-          Invocation.method(#setTimerStreamSubscription, [],
-              {#timerSubscription: timerSubscription}),
-          returnValueForMissingStub: null);
+  String durationString(int? value) =>
+      (super.noSuchMethod(Invocation.method(#durationString, [value]),
+          returnValue: '') as String);
   @override
   String secondsToHourMinuteSecondTime(int? value) => (super.noSuchMethod(
       Invocation.method(#secondsToHourMinuteSecondTime, [value]),
@@ -1866,10 +1867,10 @@ class MockNavigationService extends _i1.Mock implements _i47.NavigationService {
           bool? popGesture,
           int? id,
           _i48.Curve? curve,
-          _i47.Bindings? binding,
+          _i49.Bindings? binding,
           bool? fullscreenDialog = false,
           bool? preventDuplicates = true,
-          _i47.Transition? transitionClass}) =>
+          _i49.Transition? transitionClass}) =>
       (super.noSuchMethod(Invocation.method(#navigateWithTransition, [
         page
       ], {
@@ -1892,10 +1893,10 @@ class MockNavigationService extends _i1.Mock implements _i47.NavigationService {
           bool? popGesture,
           int? id,
           _i48.Curve? curve,
-          _i47.Bindings? binding,
+          _i49.Bindings? binding,
           bool? fullscreenDialog = false,
           bool? preventDuplicates = true,
-          _i47.Transition? transitionClass}) =>
+          _i49.Transition? transitionClass}) =>
       (super.noSuchMethod(Invocation.method(#replaceWithTransition, [
         page
       ], {
@@ -1942,12 +1943,12 @@ class MockNavigationService extends _i1.Mock implements _i47.NavigationService {
           int? id,
           bool? opaque,
           _i48.Curve? curve,
-          _i47.Bindings? binding,
+          _i49.Bindings? binding,
           Duration? duration,
           bool? fullscreenDialog = false,
           bool? popGesture,
           bool? preventDuplicates = true,
-          _i47.Transition? transition}) =>
+          _i49.Transition? transition}) =>
       (super.noSuchMethod(Invocation.method(#navigateToView, [
         view
       ], {
@@ -2121,9 +2122,9 @@ class MockDialogService extends _i1.Mock implements _i47.DialogService {
           {String? title,
           String? description,
           String? cancelTitle,
-          _i49.Color? cancelTitleColor,
+          _i50.Color? cancelTitleColor,
           String? buttonTitle = r'Ok',
-          _i49.Color? buttonTitleColor,
+          _i50.Color? buttonTitleColor,
           bool? barrierDismissible = false,
           _i47.DialogPlatform? dialogPlatform}) =>
       (super.noSuchMethod(
@@ -2153,7 +2154,7 @@ class MockDialogService extends _i1.Mock implements _i47.DialogService {
           bool? showIconInAdditionalButton = false,
           String? additionalButtonTitle,
           bool? takesInput = false,
-          _i49.Color? barrierColor = const _i49.Color(2315255808),
+          _i50.Color? barrierColor = const _i50.Color(2315255808),
           bool? barrierDismissible = false,
           String? barrierLabel = r'',
           dynamic customData,
@@ -2257,7 +2258,7 @@ class MockBottomSheetService extends _i1.Mock
           bool? showIconInAdditionalButton = false,
           String? additionalButtonTitle,
           bool? takesInput = false,
-          _i49.Color? barrierColor = const _i49.Color(2315255808),
+          _i50.Color? barrierColor = const _i50.Color(2315255808),
           bool? barrierDismissible = true,
           bool? isScrollControlled = false,
           String? barrierLabel = r'',
