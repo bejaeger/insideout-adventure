@@ -309,72 +309,73 @@ class NextHintDisplay extends StatelessWidget {
               displayNewHint: model.displayNewHint,
               onNextHintPressed: () => model.setDisplayNewHint(true),
             )),
-          if (quest.type == QuestType.QRCodeSearch)
-            Expanded(
-              child: Container(
-//                       margin: const EdgeInsets.all(20),
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 4, spreadRadius: 2, color: kShadowColor)
-                    ]),
-                child: Stack(
-                  children: [
-                    GoogleMap(
-                      //mapType: MapType.hybrid,
-                      initialCameraPosition: model.initialCameraPosition(),
-                      //Place Markers in the Map
-                      markers: model.markersOnMap,
-                      //callback that’s called when the map is ready to us.
-                      onMapCreated: model.onMapCreated,
-                      //For showing your current location on Map with a blue dot.
-                      myLocationEnabled: true,
-                      // Button used for bringing the user location to the center of the camera view.
-                      myLocationButtonEnabled: false,
-                      //Remove the Zoom in and out button
-                      zoomControlsEnabled: false,
-                      //onTap: model.handleTap(),
-                      //Enable Traffic Mode.
-                      //trafficEnabled: true,
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Container(
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(16.0)),
-                          child:
-                              Column(mainAxisSize: MainAxisSize.min, children: [
-                            Text("Find codes in the displayed area",
-                                textAlign: TextAlign.center,
-                                style: textTheme(context).headline6),
-                          ]),
-                        ),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Container(
-                            height: 200,
-                            width: 200,
-                            padding: const EdgeInsets.all(20.0),
-                            decoration: BoxDecoration(
-                                //border: Border.all(color: kPrimaryColor),
-                                color: kPrimaryColor.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(180.0)),
-                          ),
-                        ))
-                  ],
-                ),
-              ),
-            ),
+//           if (quest.type == QuestType.QRCodeSearch)
+//             Expanded(
+//               child: Container(
+// //                       margin: const EdgeInsets.all(20),
+//                 clipBehavior: Clip.antiAlias,
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(20.0),
+//                   boxShadow: [
+//                     BoxShadow(
+//                         blurRadius: 4, spreadRadius: 2, color: kShadowColor)
+//                   ],
+//                 ),
+//                 child: Stack(
+//                   children: [
+//                     GoogleMap(
+//                       //mapType: MapType.hybrid,
+//                       initialCameraPosition: model.initialCameraPosition(),
+//                       //Place Markers in the Map
+//                       markers: model.markersOnMap,
+//                       //callback that’s called when the map is ready to us.
+//                       onMapCreated: model.onMapCreated,
+//                       //For showing your current location on Map with a blue dot.
+//                       myLocationEnabled: true,
+//                       // Button used for bringing the user location to the center of the camera view.
+//                       myLocationButtonEnabled: false,
+//                       //Remove the Zoom in and out button
+//                       zoomControlsEnabled: false,
+//                       //onTap: model.handleTap(),
+//                       //Enable Traffic Mode.
+//                       //trafficEnabled: true,
+//                     ),
+//                     Align(
+//                       alignment: Alignment.topCenter,
+//                       child: Padding(
+//                         padding: const EdgeInsets.all(15.0),
+//                         child: Container(
+//                           padding: const EdgeInsets.all(20.0),
+//                           decoration: BoxDecoration(
+//                               color: Colors.white.withOpacity(0.9),
+//                               borderRadius: BorderRadius.circular(16.0)),
+//                           child:
+//                               Column(mainAxisSize: MainAxisSize.min, children: [
+//                             Text("Find codes in the displayed area",
+//                                 textAlign: TextAlign.center,
+//                                 style: textTheme(context).headline6),
+//                           ]),
+//                         ),
+//                       ),
+//                     ),
+//                     Align(
+//                         alignment: Alignment.center,
+//                         child: Padding(
+//                           padding: const EdgeInsets.all(15.0),
+//                           child: Container(
+//                             height: 200,
+//                             width: 200,
+//                             padding: const EdgeInsets.all(20.0),
+//                             decoration: BoxDecoration(
+//                                 //border: Border.all(color: kPrimaryColor),
+//                                 color: kPrimaryColor.withOpacity(0.2),
+//                                 borderRadius: BorderRadius.circular(180.0)),
+//                           ),
+//                         ))
+//                   ],
+//                 ),
+//               ),
+//             ),
         ],
       ),
     );

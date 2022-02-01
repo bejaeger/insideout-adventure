@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/helpers/distance_check_status_model.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/quest_status_dialog_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/quest_common_dialog_viewmodel.dart';
 
 class TravelledDistanceDialogViewModel extends QuestCommonDialogViewModel {
   final log = getLogger("TravelledDistanceDialogViewModel");

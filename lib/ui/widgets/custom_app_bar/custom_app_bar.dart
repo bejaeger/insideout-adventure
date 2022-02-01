@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showRedLiveButton;
   final Widget? widget;
   final void Function()? onBackButton;
-    final void Function()? onAppBarButtonPressed;
+  final void Function()? onAppBarButtonPressed;
 
   final IconData appBarButtonIcon;
   CustomAppBar(
@@ -27,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onBackButton,
       this.widget,
       this.appBarButtonIcon = Icons.help,
-      this.showRedLiveButton = false, 
+      this.showRedLiveButton = false,
       this.onAppBarButtonPressed})
       : super(key: key);
 
@@ -116,7 +116,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               color: kWhiteTextColor, size: 35),
                         ),
                       ),
-                    ),                    
+                    ),
                 ],
               ),
               decoration: BoxDecoration(
@@ -156,8 +156,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         visualDensity: VisualDensity.compact,
                         padding: const EdgeInsets.all(0),
                         onPressed: model.openSuperUserSettingsDialog,
-                        icon:
-                            Icon(Icons.settings, color: model.listenedToNewPosition ? Colors.orange : Colors.white, size: 16)),
+                        icon: Icon(Icons.settings,
+                            color: model.listenedToNewPosition
+                                ? Colors.orange
+                                : Colors.white,
+                            size: 16)),
                     Text(
                       "Super User",
                       style: TextStyle(color: Colors.white, fontSize: 12),

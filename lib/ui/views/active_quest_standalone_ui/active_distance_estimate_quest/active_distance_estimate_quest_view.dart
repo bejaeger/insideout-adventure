@@ -12,7 +12,6 @@ import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
-import 'package:afkcredits/ui/widgets/not_enough_sponsoring_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -126,9 +125,8 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                                         : Container(
                                             color: Colors.white,
                                             child: NotCloseToQuestNote(
-                                                questType: quest.type,
-                                                controller: model
-                                                    .getGoogleMapController),
+                                              questType: quest.type,
+                                            ),
                                           ),
                                   ),
                                   AnimatedOpacity(

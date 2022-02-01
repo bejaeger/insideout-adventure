@@ -2,13 +2,10 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/marker_collection_failure_type.dart';
-import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
@@ -16,12 +13,10 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
-import 'package:flutter/material.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stacked/src/state_management/reactive_service_mixin.dart';
 
-class MapViewModel extends ActiveQuestBaseViewModel {
+class MapOverviewViewModel extends MapBaseViewModel {
   final log = getLogger('MapViewModel');
   final _geolocationService = locator<GeolocationService>();
 
@@ -32,10 +27,15 @@ class MapViewModel extends ActiveQuestBaseViewModel {
       locator<FlavorConfigProvider>();
   bool initialized = false;
 
+  GoogleMapController? _googleMapController;
+  GoogleMapController? get getGoogleMapController => _googleMapController;
+
   // used for animating camera
   double _mapWidth = 0;
   double _mapHeight = 0;
   double _devicePixelRatio = 0;
+
+  Set<Marker> markersOnMap = {};
 
   Future initializeMapAndMarkers(
       {required double mapWidth,
@@ -211,82 +211,6 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     );
   }
 
-  // used in single quest view! not on general map view
-  void addStartMarkerToMap(
-      {required Quest quest, required AFKMarker afkmarker}) {
-    markersOnMap.add(
-      Marker(
-        markerId: MarkerId(afkmarker
-            .id), // google maps marker id of start marker will be our quest id
-        position: LatLng(afkmarker.lat!, afkmarker.lon!),
-        infoWindow: InfoWindow(
-            title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-        onTap: () async {
-          if (getGoogleMapController != null) {
-            // needed to avoid navigating to that marker!
-            getGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(
-                await getGoogleMapController!.getVisibleRegion(), 0));
-          }
-
-          // event triggered when user taps marker
-          dynamic adminMode = false;
-          if (useSuperUserFeatures) {
-            adminMode = await showAdminDialogAndGetResponse();
-            if (adminMode == true) {
-              String qrCodeString =
-                  _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
-              navigationService.navigateTo(Routes.qRCodeView,
-                  arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-            }
-          }
-          if (!useSuperUserFeatures || adminMode == false)
-            await dialogService.showDialog(
-                title: "The Start",
-                description: "Move to this location and start the quest.");
-        },
-      ),
-    );
-  }
-
-  void addStartAreaToMap({required Quest quest, required AFKMarker afkmarker}) {
-    areasOnMap.add(
-      Circle(
-        circleId: CircleId(afkmarker
-            .id), // google maps marker id of start marker will be our quest id
-        center: LatLng(afkmarker.lat!, afkmarker.lon!),
-        fillColor: Colors.green.withOpacity(0.5),
-        strokeColor: Colors.green.withOpacity(0.6),
-        strokeWidth: 2,
-        radius: kMaxDistanceFromMarkerInMeter.toDouble(),
-        consumeTapEvents: true,
-        onTap: () async {
-          if (getGoogleMapController != null) {
-            // needed to avoid navigating to that marker!
-            getGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(
-                await getGoogleMapController!.getVisibleRegion(), 0));
-          }
-
-          // event triggered when user taps marker
-          dynamic adminMode = false;
-          if (useSuperUserFeatures) {
-            adminMode = await showAdminDialogAndGetResponse();
-            if (adminMode == true) {
-              String qrCodeString =
-                  _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
-              navigationService.navigateTo(Routes.qRCodeView,
-                  arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-            }
-          }
-          if (!useSuperUserFeatures || adminMode == false)
-            await dialogService.showDialog(
-                title: "The Start",
-                description: "Move to this location and start the quest.");
-        },
-      ),
-    );
-  }
-
   @override
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
     log.i("Handling marker analysis result");
@@ -311,14 +235,8 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         return false;
       }
 
+      // TODO: Double-check what happens here!
       if (result.marker != null) {
-        if (hasActiveQuest) {
-          log.i("Scanned marker sucessfully collected!");
-          if (currentQuest?.type == QuestType.QRCodeHike) {
-            await showCollectedMarkerDialog();
-          }
-          await handleCollectedMarkerEvent(afkmarker: result.marker!);
-        }
         return true;
       }
 
@@ -334,51 +252,6 @@ class MapViewModel extends ActiveQuestBaseViewModel {
         }
       }
       return false;
-    }
-  }
-
-  Future handleCollectedMarkerEvent({required AFKMarker afkmarker}) async {
-    if (hasActiveQuest == true) {
-      questTestingService.maybeRecordData(
-        trigger: QuestDataPointTrigger.userAction,
-        pushToNotion: true,
-        userEventDescription:
-            "collected marker " + getNumberMarkersCollectedString(),
-      );
-
-      // Move this to isQuestCompleted function and remove stuff from service!
-      if (isQuestCompleted()) {
-        //checkQuestAndFinishWhenCompleted();
-        updateMapDisplay(afkmarker: afkmarker);
-        await animateCameraToQuestMarkers(getGoogleMapController);
-        setBusy(true);
-        questFinished = true;
-        await Future.delayed(Duration(seconds: 4));
-        setBusy(false);
-        // quest succesfully completed
-        await showSuccessDialog();
-        return;
-      } else {
-        // addNextArea();
-        // addNextMarker();
-        // animate camera to preview next marker
-        animateCameraToPreviewNextArea();
-      }
-    } else {
-      dialogService.showDialog(
-          title: "Quest Not Running",
-          description: "Verify Your Quest Because is not running");
-    }
-  }
-
-  String getNumberMarkersCollectedString() {
-    if (questService.hasActiveQuest) {
-      // minus one because start marker is counted as collected from the start!
-      return (numMarkersCollected - 1).toString() +
-          " / " +
-          (activeQuest.markersCollected.length - 1).toString();
-    } else {
-      return "0";
     }
   }
 
@@ -409,17 +282,6 @@ class MapViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-  @override
-  void loadQuestMarkers() {
-    log.i("Getting quest markers");
-    setBusy(true);
-    for (AFKMarker _m in activeQuest.quest.markers) {
-      addMarkerToMap(quest: activeQuest.quest, afkmarker: _m);
-    }
-    log.v('These Are the values of the current Markers $markersOnMap');
-    setBusy(false);
-  }
-
   void extractStartMarkersAndAddToMap() {
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
@@ -435,7 +297,7 @@ class MapViewModel extends ActiveQuestBaseViewModel {
   }
 
   @override
-  bool isQuestCompleted() {
-    return questService.isAllMarkersCollected;
+  void onMapCreated(GoogleMapController controller) {
+    _googleMapController = controller;
   }
 }

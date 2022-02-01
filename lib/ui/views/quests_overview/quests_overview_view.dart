@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_lists.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
@@ -25,7 +25,7 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
     return ViewModelBuilder<QuestsOverviewViewModel>.reactive(
       viewModelBuilder: () => QuestsOverviewViewModel(),
       onModelReady: (model) {
-        model.initializeMapAndMarkers();
+        model.initializeQuests();
         _tabController = TabController(
           length: 2,
           vsync: this,
@@ -76,7 +76,7 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
           children: [
             model.isBusy ? AFKProgressIndicator() : QuestLists(model: model),
             // Icon(Icons.apps),
-            model.isBusy ? AFKProgressIndicator() : MapView(),
+            model.isBusy ? AFKProgressIndicator() : MapOverviewView(),
             // model.isBusy
             //     ? AFKProgressIndicator()
             //     : QuestsCategoryList(model: model),

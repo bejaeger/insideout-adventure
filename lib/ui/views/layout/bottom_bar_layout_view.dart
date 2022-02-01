@@ -9,7 +9,7 @@ import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_viewmodel.dart';
-import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
@@ -146,7 +146,7 @@ class _BottomBarLayoutTemplateViewState
               quest: widget.quest,
               questType: widget.questType,
             ),
-          if (widget.questViewIndex == QuestViewType.map) MapView(),
+          if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
         ];
       case UserRole.explorer:
         return [
@@ -158,7 +158,7 @@ class _BottomBarLayoutTemplateViewState
               quest: widget.quest,
               questType: widget.questType,
             ),
-          if (widget.questViewIndex == QuestViewType.map) MapView(),
+          if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
           GiftCardView(),
         ];
       case UserRole.superUser:
@@ -171,7 +171,7 @@ class _BottomBarLayoutTemplateViewState
               quest: widget.quest,
               questType: widget.questType,
             ),
-          if (widget.questViewIndex == QuestViewType.map) MapView(),
+          if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
           GiftCardView(),
         ];
       default:
@@ -183,7 +183,7 @@ class _BottomBarLayoutTemplateViewState
               quest: widget.quest,
               questType: widget.questType,
             ),
-          if (widget.questViewIndex == QuestViewType.map) MapView(),
+          if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
           // ManageQuestView(),
 /*
           if (widget.questViewIndex == QuestViewType.questlist)
