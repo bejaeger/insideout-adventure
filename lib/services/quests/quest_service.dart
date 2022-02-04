@@ -284,7 +284,6 @@ class QuestService with ReactiveServiceMixin {
       return;
     } else {
       _stopWatchService.stopTimer();
-      _stopWatchService.pauseListener();
       trackData(_stopWatchService.getSecondTime(), forceNoPush: true);
       // updateData();
 
@@ -319,7 +318,7 @@ class QuestService with ReactiveServiceMixin {
     // TODO: recover quest! of all types!
 
     if (activatedQuest != null) {
-      _stopWatchService.resumeListener();
+      _stopWatchService.resume();
       _stopWatchService.startTimer();
       pushActivatedQuest(activatedQuest!.copyWith(status: QuestStatus.active));
     } else {

@@ -1,62 +1,50 @@
 // A wrapper around the stop watch package
 
-import 'dart:async';
-
 import 'package:afkcredits/services/common_services/pausable_service.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/services/quests/stopwatch_timer_custom.dart';
 
 class StopWatchService extends PausableService {
   final StopWatchTimer _stopWatchTimer = StopWatchTimer(); // Create instance.
-  StreamSubscription? _streamSubscription;
   final log = getLogger("StopWatchService");
 
   // getter
-  bool get isListening => _streamSubscription != null;
+  bool get isListening => _stopWatchTimer.isRunning;
 
   void startTimer() {
-    _stopWatchTimer.onExecute.add(StopWatchExecute.start);
+    _stopWatchTimer.start();
   }
 
-  // ADD PAUSE OPTION!
   void stopTimer() {
-    _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
+    _stopWatchTimer.stop();
   }
 
   void resetTimer() {
-    _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
+    _stopWatchTimer.reset();
   }
 
   int getSecondTime() {
-    return _stopWatchTimer.secondTime.value;
+    return _stopWatchTimer.secondTime;
   }
 
-  int getMinuteTime() {
-    return _stopWatchTimer.minuteTime.value;
-  }
+  // int getMinuteTime() {
+  //   return _stopWatchTimer.minuteTime.value;
+  // }
 
-  int getHourTime() {
-    return (_stopWatchTimer.minuteTime.value ~/ 60);
-  }
+  // int getHourTime() {
+  //   return (_stopWatchTimer.minuteTime.value ~/ 60);
+  // }
 
-  void listenToSecondTime({required Future Function(int) callback}) {
-    if (_streamSubscription == null) {
-      _streamSubscription = _stopWatchTimer.secondTime.listen(
-        (value) {
-          callback(value);
-          // if (value % 10 == 0) log.v('secondTime $value');
-        },
-      );
-    } else {
-      log.w("second time already listened to!");
-    }
+  void listenToSecondTime({required void Function(int) callback}) {
+    _stopWatchTimer.setOnChangeSecond(callback);
+    _stopWatchTimer.start();
   }
 
   @override
   void resume() {
     if (servicePaused == true) {
       log.v('Stopwatch listener resumed');
-      resumeListener();
+      _stopWatchTimer.resume();
       super.resume();
     }
   }
@@ -66,26 +54,13 @@ class StopWatchService extends PausableService {
     if (isListening == true &&
         (servicePaused == null || servicePaused == false)) {
       log.v('Stopwatch listener paused');
-      // ! WARNING! This will not pause the stopwatch listener internal to the package
-      // ! Need to write my own version of the stopwatch!
-      pauseListener();
+      _stopWatchTimer.stop();
       super.pause();
     }
   }
 
   void cancelListener() {
-    _streamSubscription?.cancel();
-    _streamSubscription = null;
-  }
-
-  void pauseListener() {
-    _streamSubscription?.pause();
-  }
-
-  void resumeListener() {
-    if (_streamSubscription != null && _streamSubscription!.isPaused) {
-      _streamSubscription!.resume();
-    }
+    _stopWatchTimer.stop();
   }
 
   // TODO: Delete deprecated code below

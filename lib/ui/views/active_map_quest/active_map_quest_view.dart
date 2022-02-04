@@ -50,6 +50,7 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
 
   @override
   Widget build(BuildContext context) {
+    print("--- rebuilding map view -- ");
     return ViewModelBuilder<ActiveMapQuestViewModel>.reactive(
       viewModelBuilder: () => ActiveMapQuestViewModel(),
       onModelReady: (model) {
