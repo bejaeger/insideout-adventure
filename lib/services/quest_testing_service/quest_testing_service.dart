@@ -238,6 +238,7 @@ class QuestTestingService {
     double distanceToNextMarker =
         await geolocationService.distanceBetweenUserAndCoordinates(
             lat: _nextMarker?.lat, lon: _nextMarker?.lon);
+    _numberQuestDataPoints = _numberQuestDataPoints + 1;
     final questDataPoint = QuestDataPoint(
       questId: activatedQuest?.quest.id ?? _questId,
       questTrialId: questTrialId ?? _questTrialId,
@@ -343,11 +344,10 @@ class QuestTestingService {
       }
     }
 
-    _numberQuestDataPoints = _numberQuestDataPoints + 1;
     Page newDatabaseEntry = Page(
       parent: Parent.database(
           id: _questDataPointsDatabase?.id ?? "nan"), // <- database
-      title: Text(_numberQuestDataPoints.toString()),
+      title: Text(entry.entryNumber.toString()),
     );
 
     // either add a page to an existing database

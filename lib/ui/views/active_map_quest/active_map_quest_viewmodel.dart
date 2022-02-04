@@ -82,20 +82,19 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
         return;
       }
       // quest started
-      if (quest.type != QuestType.GPSAreaHike) {
-        questService.listenToPosition(
-          distanceFilter: kDistanceFilterHikeQuest,
-          pushToNotion: true,
-          viewModelCallback: (userLivePosition) async {
-            // ! this only ever checks the "next" marker
-            // ! that is only really defined if the checkpoints are ordered!
-            // ! Need to have a method in place that allows some freedom here.
-            checkIfInAreaOfMarker(
-                marker: questService.getNextMarker(),
-                position: userLivePosition);
-          },
-        );
-      }
+      //if (quest.type != QuestType.GPSAreaHike) {
+      questService.listenToPosition(
+        distanceFilter: kDistanceFilterHikeQuest,
+        pushToNotion: true,
+        viewModelCallback: (userLivePosition) async {
+          // ! this only ever checks the "next" marker
+          // ! that is only really defined if the checkpoints are ordered!
+          // ! Need to have a method in place that allows some freedom here.
+          checkIfInAreaOfMarker(
+              marker: questService.getNextMarker(), position: userLivePosition);
+        },
+      );
+      //}
       showStartSwipe = false;
       notifyListeners();
       //resetSlider();

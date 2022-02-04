@@ -95,6 +95,7 @@ class QuestService with ReactiveServiceMixin {
         _getActivatedQuest(quest: quest, uids: uids);
 
     // Location check
+    // TODO: Double check this
     if (quest.type != QuestType.DistanceEstimate) {
       try {
         AFKMarker fullMarker = tmpActivatedQuest.quest.markers

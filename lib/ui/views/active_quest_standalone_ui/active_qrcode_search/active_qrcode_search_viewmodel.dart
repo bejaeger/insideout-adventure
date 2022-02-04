@@ -115,7 +115,7 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
             if (useSuperUserFeatures) {
               adminMode = await showAdminDialogAndGetResponse();
               if (adminMode == true) {
-                displayMarker(afkmarker);
+                displayQrCode(afkmarker);
               }
             }
           }),

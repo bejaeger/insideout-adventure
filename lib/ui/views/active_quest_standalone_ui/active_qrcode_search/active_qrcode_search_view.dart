@@ -201,7 +201,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                                       .map(
                                                         (e) => TextButton(
                                                           onPressed: () => model
-                                                              .displayMarker(e),
+                                                              .displayQrCode(e),
                                                           child: Text(e.id),
                                                         ),
                                                       )
