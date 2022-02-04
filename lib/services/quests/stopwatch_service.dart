@@ -1,109 +1,296 @@
 // A wrapper around the stop watch package
+import 'dart:async';
+import 'dart:math';
+
+import 'package:flutter/material.dart';
 
 import 'package:afkcredits/services/common_services/pausable_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/services/quests/stopwatch_timer_custom.dart';
+
+enum StopWatchMode { countUp, countDown }
 
 class StopWatchService extends PausableService {
-  final StopWatchTimer _stopWatchTimer = StopWatchTimer(); // Create instance.
   final log = getLogger("StopWatchService");
 
+  final bool isLapHours;
+  final StopWatchMode mode;
+  Function(int)? onChange;
+  Function(int)? onChangeRawSecond;
+  Function(int)? onChangeRawMinute;
+  final VoidCallback? onEnded;
+
   // getter
-  bool get isListening => _stopWatchTimer.isRunning;
+  bool get isRunning => _timer != null && _timer!.isActive;
+  int get initialPresetTime => _initialPresetTime;
+  int get getSecondTime => _second;
 
-  void startTimer() {
-    _stopWatchTimer.start();
+  /// Private
+  // ! WARNING this should not change from 1000
+  int timerDuration = 1000; // in ms
+  Timer? _timer;
+  int _startTimeAbsolute = 0;
+  int _stopTimeAbsolute = 0;
+  int _stopTimeRelative = 0;
+  late int _presetTime;
+  int _second = 0;
+  // int? _minute;
+  // List<StopWatchRecord> _records = [];
+  late int _initialPresetTime;
+
+  // constructor
+  StopWatchService({
+    this.isLapHours = true,
+    this.mode = StopWatchMode.countUp,
+    int presetMillisecond = 0,
+    this.onChange,
+    this.onChangeRawSecond,
+    this.onChangeRawMinute,
+    this.onEnded,
+  }) {
+    /// Set presetTime
+    _presetTime = presetMillisecond;
+    _initialPresetTime = presetMillisecond;
   }
-
-  void stopTimer() {
-    _stopWatchTimer.stop();
-  }
-
-  void resetTimer() {
-    _stopWatchTimer.reset();
-  }
-
-  int getSecondTime() {
-    return _stopWatchTimer.secondTime;
-  }
-
-  // int getMinuteTime() {
-  //   return _stopWatchTimer.minuteTime.value;
-  // }
-
-  // int getHourTime() {
-  //   return (_stopWatchTimer.minuteTime.value ~/ 60);
-  // }
 
   void listenToSecondTime({required void Function(int) callback}) {
-    _stopWatchTimer.setOnChangeSecond(callback);
-    _stopWatchTimer.start();
+    setOnChangeSecond(callback);
+    startTimer();
   }
 
   @override
   void resume() {
     if (servicePaused == true) {
       log.v('Stopwatch listener resumed');
-      _stopWatchTimer.resume();
+      resumeTimer();
       super.resume();
     }
   }
 
   @override
   void pause() {
-    if (isListening == true &&
+    if (isRunning == true &&
         (servicePaused == null || servicePaused == false)) {
       log.v('Stopwatch listener paused');
-      _stopWatchTimer.stop();
+      stopTimer();
       super.pause();
     }
   }
 
-  void cancelListener() {
-    _stopWatchTimer.stop();
+  void _increment(Timer timer) {
+    if (mode == StopWatchMode.countUp) {
+      final time = _getCountUpTime(timer.tick);
+      periodicFunction(time);
+      // _elapsedTime.add(time);
+    } else if (mode == StopWatchMode.countDown) {
+      final time = _getCountDownTime(timer.tick);
+      if (time == 0) {
+        stopTimer();
+        if (onEnded != null) {
+          onEnded!();
+        }
+      }
+    } else {
+      throw Exception('No support mode');
+    }
   }
 
-  // TODO: Delete deprecated code below
-  /////// Timers Services added By Harguilar
-  // bool flag = true;
-  // Stream<int>? timerStream;
+  // TODO: probably presetTime and stopTimeRelative is the same
+  int _getCountUpTime(num tick) =>
+      tick.toInt() * timerDuration + _stopTimeRelative + _presetTime;
 
-  // Stream<int> stopWatchStream() {
-  //   StreamController<int>? streamController;
-  //   Timer? timer;
-  //   Duration timerInterval = Duration(seconds: 1);
-  //   int counter = 0;
+  int _getCountDownTime(num tick) => max(
+        _presetTime - (tick.toInt() * timerDuration + _stopTimeRelative),
+        0,
+      );
 
-  //   void stopTimer() {
-  //     if (timer != null) {
-  //       timer!.cancel();
-  //       timer = null;
-  //       counter = 0;
-  //       streamController!.close();
-  //     }
+  void resumeTimer() {
+    if (!isRunning) {
+      _stopTimeRelative = _stopTimeRelative +
+          (DateTime.now().millisecondsSinceEpoch - _stopTimeAbsolute);
+      // the following is to update immediately when resuming
+      final time = _getCountUpTime(0);
+      periodicFunction(time);
+      // otherwise the Timer.periodic function waits for a minute to execute the update!
+      startTimer();
+    }
+  }
+
+  void startTimer() {
+    if (!isRunning) {
+      _startTimeAbsolute = DateTime.now().millisecondsSinceEpoch;
+      _timer =
+          Timer.periodic(Duration(milliseconds: timerDuration), _increment);
+    }
+  }
+
+  // value in ms
+  void periodicFunction(int value) {
+    final latestSecond = getRawSecond(value);
+    if (_second != latestSecond) {
+      // _secondTimeController.add(latestSecond);
+      _second = latestSecond;
+      if (onChangeRawSecond != null) {
+        onChangeRawSecond!(latestSecond);
+      }
+    }
+  }
+
+  void stopTimer() {
+    _timer?.cancel();
+    _timer = null;
+    _stopTimeRelative +=
+        DateTime.now().millisecondsSinceEpoch - _startTimeAbsolute;
+    _stopTimeAbsolute = DateTime.now().millisecondsSinceEpoch;
+  }
+
+  void resetTimer() {
+    if (isRunning) {
+      stopTimer();
+      _timer?.cancel();
+      _timer = null;
+    }
+    _startTimeAbsolute = 0;
+    _stopTimeRelative = 0;
+    _stopTimeAbsolute = 0;
+    _second = 0;
+    // _minute = null;
+    // _records = [];
+    // _recordsController.add(_records);
+  }
+
+  setOnChangeSecond(void Function(int)? onChangeSecond) {
+    onChangeRawSecond = onChangeSecond;
+  }
+
+  // void lap() {
+  //   if (isRunning) {
+  //     final rawValue = _rawTimeController.value;
+  //     _records.add(StopWatchRecord(
+  //       rawValue: rawValue,
+  //       hours: getRawHours(rawValue),
+  //       minute: getRawMinute(rawValue),
+  //       second: getRawSecond(rawValue),
+  //       displayTime: getDisplayTime(rawValue, hours: isLapHours),
+  //     ));
+  //     _recordsController.add(_records);
   //   }
-
-  //   void tick(_) {
-  //     counter++;
-  //     streamController!.add(counter);
-  //     if (!flag) {
-  //       stopTimer();
-  //     }
-  //   }
-
-  //   void startTimer() {
-  //     timer = Timer.periodic(timerInterval, tick);
-  //   }
-
-  //   streamController = StreamController<int>(
-  //     onListen: startTimer,
-  //     onCancel: stopTimer,
-  //     onResume: startTimer,
-  //     onPause: stopTimer,
-  //   );
-
-  //   return streamController.stream;
   // }
+
+  // -------------------------------------
+  // preset time functionality
+  void setPresetHoursTime(int value) =>
+      setPresetTime(mSec: value * 3600 * 1000);
+
+  void setPresetMinuteTime(int value) => setPresetTime(mSec: value * 60 * 1000);
+
+  void setPresetSecondTime(int value) => setPresetTime(mSec: value * 1000);
+
+  /// Set preset time. 1000 mSec => 1 sec
+  void setPresetTime({required int mSec}) {
+    _presetTime += mSec;
+  }
+
+  void clearPresetTime() {
+    if (mode == StopWatchMode.countUp) {
+      _presetTime = _initialPresetTime;
+    } else if (mode == StopWatchMode.countDown) {
+      _presetTime = _initialPresetTime;
+    } else {
+      throw Exception('No support mode');
+    }
+  }
+
+  // ----------------------------------------------------------------
+  // static functions
+
+  /// Get display time.
+  static String getDisplayTime(
+    int value, {
+    bool hours = true,
+    bool minute = true,
+    bool second = true,
+    bool milliSecond = true,
+    String hoursRightBreak = ':',
+    String minuteRightBreak = ':',
+    String secondRightBreak = '.',
+  }) {
+    final hoursStr = getDisplayTimeHours(value);
+    final mStr = getDisplayTimeMinute(value, hours: hours);
+    final sStr = getDisplayTimeSecond(value);
+    final msStr = getDisplayTimeMillisecond(value);
+    var result = '';
+    if (hours) {
+      result += '$hoursStr';
+    }
+    if (minute) {
+      if (hours) {
+        result += hoursRightBreak;
+      }
+      result += '$mStr';
+    }
+    if (second) {
+      if (minute) {
+        result += minuteRightBreak;
+      }
+      result += '$sStr';
+    }
+    if (milliSecond) {
+      if (second) {
+        result += secondRightBreak;
+      }
+      result += '$msStr';
+    }
+    return result;
+  }
+
+  /// Get display hours time.
+  static String getDisplayTimeHours(int mSec) {
+    return getRawHours(mSec).floor().toString().padLeft(2, '0');
+  }
+
+  /// Get display minute time.
+  static String getDisplayTimeMinute(int mSec, {bool hours = false}) {
+    if (hours) {
+      return getMinute(mSec).floor().toString().padLeft(2, '0');
+    } else {
+      return getRawMinute(mSec).floor().toString().padLeft(2, '0');
+    }
+  }
+
+  /// Get display second time.
+  static String getDisplayTimeSecond(int mSec) {
+    final s = (mSec % 60000 / 1000).floor();
+    return s.toString().padLeft(2, '0');
+  }
+
+  /// Get display millisecond time.
+  static String getDisplayTimeMillisecond(int mSec) {
+    final ms = (mSec % 1000 / 10).floor();
+    return ms.toString().padLeft(2, '0');
+  }
+
+  /// Get Raw Hours.
+  static int getRawHours(int milliSecond) =>
+      (milliSecond / (3600 * 1000)).floor();
+
+  /// Get Raw Minute. 0 ~ 59. 1 hours = 0.
+  static int getMinute(int milliSecond) =>
+      (milliSecond / (60 * 1000) % 60).floor();
+
+  /// Get Raw Minute
+  static int getRawMinute(int milliSecond) => (milliSecond / 60000).floor();
+
+  /// Get Raw Second
+  static int getRawSecond(int milliSecond) => (milliSecond / 1000).floor();
+
+  /// Get milli second from hour
+  static int getMilliSecFromHour(int hour) => (hour * (3600 * 1000)).floor();
+
+  /// Get milli second from minute
+  static int getMilliSecFromMinute(int minute) => (minute * 60000).floor();
+
+  /// Get milli second from second
+  static int getMilliSecFromSecond(int second) => (second * 1000).floor();
 
   // ---------------------------------------------------
   // Helper functions

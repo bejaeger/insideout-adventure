@@ -131,10 +131,7 @@ class QuestService with ReactiveServiceMixin {
       marker: getNextMarker(),
     );
 
-    if (quest.type != QuestType.GPSAreaHike) {
-      // Start timer
-      _stopWatchService.startTimer();
-    }
+    _stopWatchService.startTimer();
 
     if (quest.type == QuestType.QRCodeHuntIndoor ||
         quest.type == QuestType.QRCodeSearch) {
@@ -150,9 +147,8 @@ class QuestService with ReactiveServiceMixin {
     //  else if (quest.type == QuestType.DistanceEstimate) {
     //   _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
     // }
-    else if (quest.type == QuestType.QRCodeHike) {
-      // ||
-      // quest.type == QuestType.GPSAreaHike) {
+    else if (quest.type == QuestType.QRCodeHike ||
+        quest.type == QuestType.GPSAreaHike) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
     // Quest succesfully started
@@ -284,7 +280,7 @@ class QuestService with ReactiveServiceMixin {
       return;
     } else {
       _stopWatchService.stopTimer();
-      trackData(_stopWatchService.getSecondTime(), forceNoPush: true);
+      trackData(_stopWatchService.getSecondTime, forceNoPush: true);
       // updateData();
 
       // TODO: Add evaluation (how many afk credits were earned) for all quest types
@@ -419,7 +415,6 @@ class QuestService with ReactiveServiceMixin {
 
   Future trackTime(int seconds) async {
     if (activatedQuest != null) {
-      ActivatedQuest tmpActivatedQuest = activatedQuest!;
       if (seconds % 1 == 0) {
         updateTimeElapsed(seconds);
       }
@@ -1046,8 +1041,8 @@ class QuestService with ReactiveServiceMixin {
   }
 
   void disposeActivatedQuest() {
+    _stopWatchService.stopTimer();
     _stopWatchService.resetTimer();
-    _stopWatchService.cancelListener();
     // cancelLocationListener();
     cancelPositionListener();
     _questTestingService.maybeReset();

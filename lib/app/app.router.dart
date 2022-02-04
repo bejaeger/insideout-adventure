@@ -59,7 +59,7 @@ class Routes {
       '/insert-pre-purchased-gift-card-view';
   static const String updatingQuestView = '/updating-quest-view';
   static const String explorerHomeView = '/explorer-home-view';
-  static const String mapView = '/map-view';
+  static const String mapOverviewView = '/map-overview-view';
   static const String loginView = '/login-view';
   static const String createAccountView = '/create-account-view';
   static const String createAccountUserRoleView =
@@ -100,7 +100,7 @@ class Routes {
     insertPrePurchasedGiftCardView,
     updatingQuestView,
     explorerHomeView,
-    mapView,
+    mapOverviewView,
     loginView,
     createAccountView,
     createAccountUserRoleView,
@@ -142,7 +142,7 @@ class StackedRouter extends RouterBase {
         page: InsertPrePurchasedGiftCardView),
     RouteDef(Routes.updatingQuestView, page: UpdatingQuestView),
     RouteDef(Routes.explorerHomeView, page: ExplorerHomeView),
-    RouteDef(Routes.mapView, page: MapOverviewView),
+    RouteDef(Routes.mapOverviewView, page: MapOverviewView),
     RouteDef(Routes.loginView, page: LoginView),
     RouteDef(Routes.createAccountView, page: CreateAccountView),
     RouteDef(Routes.createAccountUserRoleView, page: CreateAccountUserRoleView),
