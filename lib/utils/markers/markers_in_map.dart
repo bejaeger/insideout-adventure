@@ -1,6 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/utils/markers/markers.dart';

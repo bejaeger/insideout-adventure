@@ -67,6 +67,7 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
     notifyListeners();
   }
 
+  // ignore: todo
   //TODO: Refactor: This code might end up extending from an abstract class so far This is the approach.
   //Or End up creating a common Map Layout for all the views that involves Map.
   CameraPosition initialCameraPosition() {
@@ -84,15 +85,15 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
     notifyListeners();
   }
 
-  List<AFKMarker> get getAFKMarkers => _afkMarkers!;
+  //List<AFKMarker> get getAFKMarkers => _afkMarkers!;
 
-  Future<void> getQuestMarkers() async {
+  /*  Future<void> getQuestMarkers() async {
     setBusy(true);
     // ignore: await_only_futures
-    _afkMarkers = await _markerService.getQuestMarkers();
+    _afkMarkers = await markersInMap.getAFKMarkers;
     setBusy(false);
     notifyListeners();
-  }
+  } */
 
   @override
   void dispose() {

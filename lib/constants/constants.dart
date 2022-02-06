@@ -88,7 +88,6 @@ const double kMinRequiredAccuracyLocationSearch = 50;
 // for vibration search automatic
 const int kDeadTimeAfterVibrationInSeconds = 5;
 
-
 //////////////////////////////////
 // for distance estimate
 const int kNumberTriesToRevealDistance = 3;
@@ -96,6 +95,8 @@ const int kNumberTriesToRevealDistance = 3;
 const double kMaxDeviationOfGoalInPercent = 0.2;
 const double kMinRequiredAccuracyDistanceEstimate = 50;
 const double kDistanceFilterDistanceEstimate = 10;
+const double latitude = 49.268429;
+const double longitude = -122.997176;
 
 //////////////////////////////////
 // for distance estimate

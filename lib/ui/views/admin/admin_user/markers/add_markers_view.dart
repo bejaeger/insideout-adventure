@@ -199,7 +199,9 @@ class MarkerToAddSection extends StatelessWidget {
                   width: 150,
                   height: 40,
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      model.markersInMap.resetMarkersValues();
+                    },
                     child: const Text("Cancel"),
                     style: OutlinedButton.styleFrom(
                         backgroundColor: kPrimaryColor,
@@ -246,7 +248,7 @@ class DisplayAllMarkersSection extends StatelessWidget {
             ),
             verticalSpaceSmall,
             Container(
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height / 2,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Card(

@@ -14,6 +14,8 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../../constants/constants.dart';
+
 class AddMarkersViewModel extends BaseViewModel {
   final log = getLogger("AddMarkersViewModel");
   final _geolocationService = locator<GeolocationService>();
@@ -33,7 +35,7 @@ class AddMarkersViewModel extends BaseViewModel {
   CameraPosition initialCameraPosition() {
     if (_geolocationService.getUserLivePositionNullable != null) {
       final CameraPosition _initialCameraPosition =
-          CameraPosition(target: LatLng(49.268429, -122.997176), zoom: 13);
+          CameraPosition(target: LatLng(latitude, longitude), zoom: 14);
       return _initialCameraPosition;
     } else {
       return CameraPosition(
@@ -55,20 +57,57 @@ class AddMarkersViewModel extends BaseViewModel {
 
   void addStartMarkers({required List<Quest> quest}) {
     int idx = 0;
+    bool found = false;
     while (idx < _getListOfQUest!.length) {
-      for (AFKMarker _m in _getListOfQUest![idx].markers) {
-        markers.add(
-          Marker(
-            markerId: MarkerId(_m.id),
-            position: LatLng(_m.lat!, _m.lon!),
-            infoWindow: InfoWindow(snippet: _getListOfQUest![idx].name),
-            //icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
-          ),
-        );
+      for (AFKMarker _marker in _getListOfQUest![idx].markers) {
+        if (_marker.id.isNotEmpty) {
+          markers.add(
+            Marker(
+                markerId: MarkerId(_marker.id),
+                position:
+                    LatLng(_marker.lat ?? latitude, _marker.lon ?? longitude),
+                infoWindow: InfoWindow(snippet: _getListOfQUest![idx].name),
+                onTap: () {
+                  log.i("TAPPED TAPPED");
+                  int i = 0;
+                  while (i < _getListOfQUest!.length) {
+                    for (int j = 0;
+                        j < _getListOfQUest![i].markers.length;
+                        j++) {
+                      if (_marker.id == _getListOfQUest![i].markers[j].id) {
+                        log.i("HARGUILAR LOOK BELOW");
+                        //Place This info into a Dialog or Bottosheet.
+                        log.i(_getListOfQUest![i].name);
+                        if (_marker.id == _getListOfQUest![i].markers.last.id) {
+                          log.i(
+                              'This Marker is finishing Markers ${_marker.id}');
+                        } else if (_marker.id ==
+                            _getListOfQUest![i].markers.first.id)
+                          log.i('This Marker is Starter Markers ${_marker.id}');
+                        else {
+                          log.i(
+                              'This Marker is In Between Markers ${_marker.id}');
+                        }
+
+                        found = true;
+                        break;
+                      }
+                    }
+                    if (found) {
+                      break;
+                    }
+                    i++;
+                  }
+                }
+                //icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
+                ),
+          );
+        } else {
+          log.i('We are not allowing Empty Values');
+        }
       }
       idx++;
     }
-    log.i(markers);
     notifyListeners();
   }
 
