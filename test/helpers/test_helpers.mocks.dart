@@ -31,7 +31,11 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart'
     as _i3;
 import 'package:afkcredits/datamodels/users/user.dart' as _i2;
 import 'package:afkcredits/enums/authentication_method.dart' as _i19;
+<<<<<<< HEAD
 import 'package:afkcredits/enums/position_retrieval.dart' as _i38;
+=======
+import 'package:afkcredits/enums/quest_data_point_trigger.dart' as _i38;
+>>>>>>> 06e0d9308e1cd9d46dec054deb54adc4ca8bbe8d
 import 'package:afkcredits/enums/quest_status.dart' as _i41;
 import 'package:afkcredits/enums/quest_type.dart' as _i40;
 import 'package:afkcredits/enums/quest_ui_style.dart' as _i42;
@@ -1101,16 +1105,25 @@ class MockGeolocationService extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#handlePermission, []),
           returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
   @override
-  _i17.Future<bool> isUserCloseby({double? lat, double? lon}) =>
+  _i17.Future<bool> isUserCloseby(
+          {double? lat, double? lon, int? threshold = 50}) =>
       (super.noSuchMethod(
-          Invocation.method(#isUserCloseby, [], {#lat: lat, #lon: lon}),
+          Invocation.method(#isUserCloseby, [],
+              {#lat: lat, #lon: lon, #threshold: threshold}),
           returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
   @override
   bool countAsCloseByMarker(
-          {_i8.Position? position, double? lat, double? lon}) =>
+          {_i8.Position? position,
+          double? lat,
+          double? lon,
+          int? threshold = 50}) =>
       (super.noSuchMethod(
-          Invocation.method(#countAsCloseByMarker, [],
-              {#position: position, #lat: lat, #lon: lon}),
+          Invocation.method(#countAsCloseByMarker, [], {
+            #position: position,
+            #lat: lat,
+            #lon: lon,
+            #threshold: threshold
+          }),
           returnValue: false) as bool);
   @override
   _i17.Future<dynamic> setDistanceToLastCheckedMarker(
@@ -1136,6 +1149,13 @@ class MockGeolocationService extends _i1.Mock
           }),
           returnValue: Future<double>.value(0.0)) as _i17.Future<double>);
   @override
+  double distanceBetweenPositionAndCoordinates(
+          {_i8.Position? position, double? lat, double? lon}) =>
+      (super.noSuchMethod(
+          Invocation.method(#distanceBetweenPositionAndCoordinates, [],
+              {#position: position, #lat: lat, #lon: lon}),
+          returnValue: 0.0) as double);
+  @override
   double distanceBetween(
           {double? lat1, double? lon1, double? lat2, double? lon2}) =>
       (super.noSuchMethod(
@@ -1151,6 +1171,17 @@ class MockGeolocationService extends _i1.Mock
       super.noSuchMethod(Invocation.method(#cancelPositionListener, []),
           returnValueForMissingStub: null);
   @override
+<<<<<<< HEAD
+=======
+  void pausePositionListener() =>
+      super.noSuchMethod(Invocation.method(#pausePositionListener, []),
+          returnValueForMissingStub: null);
+  @override
+  void resumePositionListener() =>
+      super.noSuchMethod(Invocation.method(#resumePositionListener, []),
+          returnValueForMissingStub: null);
+  @override
+>>>>>>> 06e0d9308e1cd9d46dec054deb54adc4ca8bbe8d
   void clearData() => super.noSuchMethod(Invocation.method(#clearData, []),
       returnValueForMissingStub: null);
   @override
@@ -1311,6 +1342,17 @@ class MockQuestService extends _i1.Mock implements _i39.QuestService {
   void cancelPositionListener() =>
       super.noSuchMethod(Invocation.method(#cancelPositionListener, []),
           returnValueForMissingStub: null);
+<<<<<<< HEAD
+=======
+  @override
+  void pausePositionListener() =>
+      super.noSuchMethod(Invocation.method(#pausePositionListener, []),
+          returnValueForMissingStub: null);
+  @override
+  void resumePositionListener() =>
+      super.noSuchMethod(Invocation.method(#resumePositionListener, []),
+          returnValueForMissingStub: null);
+>>>>>>> 06e0d9308e1cd9d46dec054deb54adc4ca8bbe8d
   @override
   _i17.Future<dynamic> handleSuccessfullyFinishedQuest() => (super.noSuchMethod(
       Invocation.method(#handleSuccessfullyFinishedQuest, []),
@@ -1596,18 +1638,6 @@ class MockStopWatchService extends _i1.Mock implements _i43.StopWatchService {
       super.noSuchMethod(Invocation.setter(#timerStream, _timerStream),
           returnValueForMissingStub: null);
   @override
-  String get getHours =>
-      (super.noSuchMethod(Invocation.getter(#getHours), returnValue: '')
-          as String);
-  @override
-  String get getMinutes =>
-      (super.noSuchMethod(Invocation.getter(#getMinutes), returnValue: '')
-          as String);
-  @override
-  String get getSeconds =>
-      (super.noSuchMethod(Invocation.getter(#getSeconds), returnValue: '')
-          as String);
-  @override
   void startTimer() => super.noSuchMethod(Invocation.method(#startTimer, []),
       returnValueForMissingStub: null);
   @override
@@ -1619,6 +1649,14 @@ class MockStopWatchService extends _i1.Mock implements _i43.StopWatchService {
   @override
   int getSecondTime() =>
       (super.noSuchMethod(Invocation.method(#getSecondTime, []), returnValue: 0)
+          as int);
+  @override
+  int getMinuteTime() =>
+      (super.noSuchMethod(Invocation.method(#getMinuteTime, []), returnValue: 0)
+          as int);
+  @override
+  int getHourTime() =>
+      (super.noSuchMethod(Invocation.method(#getHourTime, []), returnValue: 0)
           as int);
   @override
   void listenToSecondTime({_i17.Future<dynamic> Function(int)? callback}) =>
@@ -1642,12 +1680,9 @@ class MockStopWatchService extends _i1.Mock implements _i43.StopWatchService {
       (super.noSuchMethod(Invocation.method(#stopWatchStream, []),
           returnValue: Stream<int>.empty()) as _i17.Stream<int>);
   @override
-  void setTimerStreamSubscription(
-          {_i17.StreamSubscription<int>? timerSubscription}) =>
-      super.noSuchMethod(
-          Invocation.method(#setTimerStreamSubscription, [],
-              {#timerSubscription: timerSubscription}),
-          returnValueForMissingStub: null);
+  String durationString(int? value) =>
+      (super.noSuchMethod(Invocation.method(#durationString, [value]),
+          returnValue: '') as String);
   @override
   String secondsToHourMinuteSecondTime(int? value) => (super.noSuchMethod(
       Invocation.method(#secondsToHourMinuteSecondTime, [value]),

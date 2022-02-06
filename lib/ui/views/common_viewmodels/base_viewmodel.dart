@@ -2,25 +2,27 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
+import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_viewmodel.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
-import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -44,15 +46,24 @@ class BaseModel extends BaseViewModel {
   final GeolocationService geolocationService = locator<GeolocationService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
+  final QRCodeService qrCodeService = locator<QRCodeService>();
+  final baseModelLog = getLogger("BaseModel");
 
+  // ------------------------------------------------------
+  // getters
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
-  bool get isSuperUser =>  userService.isSuperUser;
+  bool get isSuperUser => userService.isSuperUser;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
       : userService.isSuperUser;
+  int? get currentGPSAccuracy => geolocationService.currentGPSAccuracy;
+  int get currentPositionDistanceFilter =>
+      geolocationService.currentPositionDistanceFilter;
+  String? get gpsAccuracyInfo => geolocationService.gpsAccuracyInfo;
+  bool get listenedToNewPosition => geolocationService.listenedToNewPosition;
 
-  final baseModelLog = getLogger("BaseModel");
+  // --------------------------------------------------
   bool get hasActiveQuest => questService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => questService.activatedQuest!;
@@ -72,20 +83,7 @@ class BaseModel extends BaseViewModel {
 
   bool? canVibrate;
 
-  // void setTimer() {
-  //   //Clock Timer
-  //   final timerStream = _stopWatchService.stopWatchStream();
-
-  //   _timerSubscription = timerStream.listen((int time) {
-  //     hours = ((time / (60 * 60)) % 60).floor().toString().padLeft(2, '0');
-  //     minutes = ((time / 60) % 60).floor().toString().padLeft(2, '0');
-  //     seconds = (time % 60).floor().toString().padLeft(2, '0');
-  //   });
-  //   _stopWatchService.setTimerStreamSubscription(
-  //       timerSubscription: _timerSubscription!);
-  //   setBusy(false);
-  //   notifyListeners();
-  // }
+  bool validatingMarker = false;
 
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
@@ -96,13 +94,12 @@ class BaseModel extends BaseViewModel {
     await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
     geolocationService.clearData();
-    _questTestingService.resetSettings();
+    _questTestingService.maybeReset();
   }
 
   void unregisterViewModels() {
     // unregister all singleton viewmodels when logging out
     // TODO: remove data from viewmodels on loggin!
-
     // if (locator.isRegistered<ActiveTreasureLocationSearchQuestViewModel>()) {
     //   locator.unregister<ActiveTreasureLocationSearchQuestViewModel>();
     // }
@@ -242,37 +239,114 @@ class BaseModel extends BaseViewModel {
             "An internal error occured on our side. Sorry, please try again later.");
   }
 
-  Future handleSuccessfullyFinishedQuest() async {
-    if (activeQuestNullable?.status == QuestStatus.success) {
-      baseModelLog.i("Found that quest was successfully finished!");
+  // TODO: MAYBE this can go into the base_viewmodel as it's needed also in other screens!
+  Future scanQrCode() async {
+    // navigate to qr code view, validate results in quest service, and continue
+    MarkerAnalysisResult result = await navigateToQrcodeViewAndReturnResult();
+    if (result.isEmpty) {
+      baseModelLog.wtf("The object QuestQRCodeScanResult is empty!");
+      return;
+    }
+    if (result.hasError) {
+      baseModelLog.e("Error occured: ${result.errorMessage}");
+      dialogService.showDialog(
+        title: "Failed to collect marker!",
+        description: result.errorMessage!,
+      );
+      return;
+    }
+    return await handleMarkerAnalysisResult(result);
+  }
 
-      try {
-        await questService.handleSuccessfullyFinishedQuest();
-        return true;
-      } catch (e) {
-        if (e is QuestServiceException) {
-          baseModelLog.e(e);
-          await dialogService.showDialog(
-              title: e.prettyDetails, buttonTitle: 'Ok');
-          replaceWithMainView(index: BottomNavBarIndex.quest);
-          questService.setUIDeadTime(false);
-        } else if (e is CloudFunctionsApiException) {
-          baseModelLog.e(e);
-          await dialogService.showDialog(
-              title: e.prettyDetails, buttonTitle: 'Ok');
-          questService.setUIDeadTime(false);
-        } else {
-          baseModelLog.e("Unknown error occured from evaluateAndFinishQuest");
-          questService.setUIDeadTime(false);
-          setBusy(false);
-          rethrow;
-        }
-        setBusy(false);
-        return false;
+  Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
+    final marker = await navigationService.navigateTo(Routes.qRCodeView);
+    if (useSuperUserFeatures && marker != null) {
+      final adminMode = await showAdminDialogAndGetResponse();
+      if (adminMode == true) {
+        String qrCodeString =
+            qrCodeService.getQrCodeStringFromMarker(marker: marker);
+        await navigationService.navigateTo(Routes.qRCodeView,
+            arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
+        return MarkerAnalysisResult.empty();
       }
-    } else {
-      baseModelLog.w(
-          "Active quest either null or not successfull. Either way, this function should not have been called!");
+    }
+    validatingMarker = true;
+    MarkerAnalysisResult scanResult =
+        await questService.analyzeMarker(marker: marker);
+    validatingMarker = false;
+    return scanResult;
+  }
+
+  ////////////////////////////
+  // can be overriden?
+  Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
+    baseModelLog.i("Handling marker analysis result");
+    if (!hasActiveQuest &&
+        (result.quests == null ||
+            (result.quests != null && result.quests!.length == 0))) {
+      await dialogService.showDialog(
+          title:
+              "The scanned marker is not a start of a quest. Please go to the starting point");
+    }
+    if (result.quests != null && result.quests!.length > 0) {
+      // TODO: Handle case where more than one quest is returned here!
+      // For now, just start first quest!
+      if (!hasActiveQuest) {
+        baseModelLog.i("Found quests associated to the scanned start marker.");
+        await displayQuestBottomSheet(
+          quest: result.quests![0],
+          startMarker: result.quests![0].startMarker,
+        );
+      }
+    }
+    return false;
+  }
+
+  Future displayQuestBottomSheet(
+      {required Quest quest, AFKMarker? startMarker}) async {
+    SheetResponse? sheetResponse = await bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.questInformation,
+        title: quest.name,
+        enterBottomSheetDuration: Duration(milliseconds: 300),
+        // exitBottomSheetDuration: Duration(milliseconds: 1),
+        // curve: Curves.easeInExpo,
+        // curve: Curves.linear,
+        // barrierColor: Colors.black45,
+        description: quest.description,
+        mainButtonTitle: quest.type == QuestType.DistanceEstimate
+            ? "Go to Quest"
+            : "Go to Quest",
+        secondaryButtonTitle: "Close",
+        data: quest);
+    if (sheetResponse?.confirmed == true) {
+      baseModelLog
+          .i("Looking at details of quest OR starting quest immediately");
+      questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
+          ? await navigateToActiveQuestUI(quest: quest)
+          : await navigateToActiveQuestUI(quest: quest);
+    }
+  }
+
+  Future navigateToActiveQuestUI({required Quest quest}) async {
+    baseModelLog.i("Navigating to view with currently active quest");
+    if (quest.type == QuestType.TreasureLocationSearch) {
+      await navigationService.navigateTo(
+          Routes.activeTreasureLocationSearchQuestView,
+          arguments:
+              ActiveTreasureLocationSearchQuestViewArguments(quest: quest));
+    } else if (quest.type == QuestType.DistanceEstimate) {
+      await navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
+          arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
+    } else if (quest.type == QuestType.QRCodeSearch ||
+        quest.type == QuestType.QRCodeSearchIndoor ||
+        quest.type == QuestType.QRCodeHuntIndoor) {
+      await navigationService.navigateTo(Routes.activeQrCodeSearchView,
+          arguments: ActiveQrCodeSearchViewArguments(quest: quest));
+    } else if (quest.type == QuestType.QRCodeHike ||
+        quest.type == QuestType.GPSAreaHike ||
+        quest.type == QuestType.Hunt) {
+      await navigationService.navigateTo(Routes.activeMapQuestView,
+          arguments: ActiveMapQuestViewArguments(quest: quest));
     }
   }
 

@@ -15,7 +15,7 @@ class QuestLists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async => model.initializeMapAndMarkers(force: true),
+      onRefresh: () async => model.initializeQuests(force: true),
       child: ListView(
         children: [
           verticalSpaceMedium,

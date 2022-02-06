@@ -1,26 +1,37 @@
+import 'dart:io';
+
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
+import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
-import '../common_viewmodels/map_viewmodel.dart';
+import 'map_overview_viewmodel.dart';
 
-class MapView extends StatefulWidget {
-  const MapView({Key? key}) : super(key: key);
+class MapOverviewView extends StatefulWidget {
+  const MapOverviewView({Key? key}) : super(key: key);
 
   @override
-  State<MapView> createState() => _MapViewState();
+  State<MapOverviewView> createState() => _MapOverviewViewState();
 }
 
-class _MapViewState extends State<MapView> with AutomaticKeepAliveClientMixin {
+class _MapOverviewViewState extends State<MapOverviewView>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MapViewModel>.reactive(
+    final devicePixelRatio =
+        Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
+    return ViewModelBuilder<MapOverviewViewModel>.reactive(
         //disposeViewModel: false,
-        onModelReady: (model) => model.initializeMapAndMarkers(),
-        viewModelBuilder: () => MapViewModel(),
+        onModelReady: (model) => model.initializeMapAndMarkers(
+            devicePixelRatio: devicePixelRatio,
+            mapWidth: screenWidth(context),
+            mapHeight: screenHeight(context) -
+                kBottomNavigationBarHeightCustom -
+                kAppBarExtendedHeight),
+        viewModelBuilder: () => MapOverviewViewModel(),
         builder: (context, model, child) {
           return GoogleMapsScreen(model: model);
         });
@@ -31,7 +42,7 @@ class _MapViewState extends State<MapView> with AutomaticKeepAliveClientMixin {
 }
 
 class GoogleMapsScreen extends StatelessWidget {
-  final model;
+  final MapOverviewViewModel model;
   const GoogleMapsScreen({
     Key? key,
     required this.model,
@@ -63,6 +74,7 @@ class GoogleMapsScreen extends StatelessWidget {
       // Button used for bringing the user location to the center of the camera view.
       myLocationButtonEnabled: true,
 
+      mapToolbarEnabled: false,
       //onTap: model.handleTap(),
       //Enable Traffic Mode.
       //trafficEnabled: true,

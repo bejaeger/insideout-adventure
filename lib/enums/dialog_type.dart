@@ -10,4 +10,6 @@ enum DialogType {
   FoundTreasure,
   EditQuestInformation,
   SuperUserSettings,
+  CheckpointInArea,
+  QrCodeInArea,
 }

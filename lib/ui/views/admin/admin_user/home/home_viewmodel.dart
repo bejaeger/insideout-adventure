@@ -33,7 +33,6 @@ class HomeViewModel extends QuestViewModel {
   }
 
   Future onQuestInListTapped(Quest quest) async {
-    log.i("Quest list item tapped!!!");
     if (hasActiveQuest == false) {
       /*    await displayQuestBottomSheet(
         quest: quest,

@@ -1,0 +1,1 @@
+enum MarkerCollectionFailureType { alreadyCollected, notInArea }

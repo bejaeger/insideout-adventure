@@ -10,6 +10,7 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/empty_note.dart';
+import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/not_enough_sponsoring_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -39,9 +40,15 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
     );
     _animation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.elasticOut,
+      curve: Curves.easeInOut,
     );
     _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -49,7 +56,8 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
     return ViewModelBuilder<ActiveQrCodeSearchViewModel>.reactive(
         viewModelBuilder: () => locator<ActiveQrCodeSearchViewModel>(),
         disposeViewModel: false,
-        onModelReady: (model) => model.initializeMapAndMarkers(quest: widget.quest),
+        onModelReady: (model) =>
+            model.initializeMapAndMarkers(quest: widget.quest),
         builder: (context, model, child) {
           if (model.animateProgress) {
             _controller.reset();
@@ -66,7 +74,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
             child: SafeArea(
               child: Scaffold(
                 appBar: CustomAppBar(
-                  title: "Finde den Schatz!!",
+                  title: "Find the trophy!!",
                   onBackButton: model.navigateBack,
                   showRedLiveButton: true,
                 ),
@@ -121,54 +129,57 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                             horizontal: 20.0),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceAround,
                                           children: [
-                                            Column(
-                                              children: [
-                                                Text(
-                                                    model.timeElapsed
-                                                        .toString(),
-                                                    maxLines: 1,
-                                                    style: textTheme(context)
-                                                        .headline4),
-                                                Text("Duration"),
-                                              ],
-                                            ),
-                                            verticalSpaceMedium,
-                                            Column(
-                                              children: [
-                                                ScaleTransition(
-                                                  scale: _animation,
-                                                  child: Text(
-                                                      model.hasActiveQuest
-                                                          ? (model.foundObjects
-                                                                          .length -
-                                                                      1)
-                                                                  .toString() +
-                                                              " / " +
-                                                              (model
-                                                                          .activeQuest
-                                                                          .quest
-                                                                          .markers
-                                                                          .length -
-                                                                      1)
-                                                                  .toString()
-                                                          : "0 / " +
-                                                              widget
+                                            LiveQuestStatistic(
+                                                title: "Duration",
+                                                statistic: model.timeElapsed),
+                                            LiveQuestStatistic(
+                                              title: "Hints Found",
+                                              statistic: model.hasActiveQuest
+                                                  ? (model.foundObjects.length -
+                                                              1)
+                                                          .toString() +
+                                                      " / " +
+                                                      (model
+                                                                  .activeQuest
                                                                   .quest
                                                                   .markers
-                                                                  .length
-                                                                  .toString(),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: textTheme(context)
-                                                          .headline3),
-                                                ),
-                                                Text("Progress",
-                                                    textAlign:
-                                                        TextAlign.center),
-                                              ],
+                                                                  .length -
+                                                              1)
+                                                          .toString()
+                                                  : "0 / " +
+                                                      widget
+                                                          .quest.markers.length
+                                                          .toString(),
                                             ),
+                                            // Column(
+                                            //   children: [
+                                            //     Text(
+                                            //         model.timeElapsed
+                                            //             .toString(),
+                                            //         maxLines: 1,
+                                            //         style: textTheme(context)
+                                            //             .headline4),
+                                            //     Text("Duration"),
+                                            //   ],
+                                            // ),
+                                            //verticalSpaceMedium,
+                                            // Column(
+                                            //   children: [
+                                            //     ScaleTransition(
+                                            //       scale: _animation,
+                                            //       child: Text("hi",
+                                            //           textAlign:
+                                            //               TextAlign.center,
+                                            //           style: textTheme(context)
+                                            //               .headline3),
+                                            //     ),
+                                            //     Text("Progress",
+                                            //         textAlign:
+                                            //             TextAlign.center),
+                                            //   ],
+                                            // ),
                                           ],
                                         ),
                                       ),
@@ -205,7 +216,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text("Finde & Scan",
+                                        Text("Find & Scan",
                                             style:
                                                 textTheme(context).headline6),
                                         Icon(Icons.arrow_forward, size: 40),
@@ -244,8 +255,13 @@ class NextHintDisplay extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.0),
               color: Colors.grey[200],
               boxShadow: [
-                  BoxShadow(blurRadius: 4, spreadRadius: 2, color: kShadowColor)
-                ])
+                BoxShadow(
+                    blurRadius: 4,
+                    spreadRadius: 1,
+                    color: kShadowColor,
+                    offset: Offset(1, 1))
+              ],
+            )
           : null,
       margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       child: Column(
@@ -293,72 +309,73 @@ class NextHintDisplay extends StatelessWidget {
               displayNewHint: model.displayNewHint,
               onNextHintPressed: () => model.setDisplayNewHint(true),
             )),
-          if (quest.type == QuestType.QRCodeSearch)
-            Expanded(
-              child: Container(
-//                       margin: const EdgeInsets.all(20),
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 4, spreadRadius: 2, color: kShadowColor)
-                    ]),
-                child: Stack(
-                  children: [
-                    GoogleMap(
-                      //mapType: MapType.hybrid,
-                      initialCameraPosition: model.initialCameraPosition(),
-                      //Place Markers in the Map
-                      markers: model.markersOnMap,
-                      //callback that’s called when the map is ready to us.
-                      onMapCreated: model.onMapCreated,
-                      //For showing your current location on Map with a blue dot.
-                      myLocationEnabled: true,
-                      // Button used for bringing the user location to the center of the camera view.
-                      myLocationButtonEnabled: false,
-                      //Remove the Zoom in and out button
-                      zoomControlsEnabled: false,
-                      //onTap: model.handleTap(),
-                      //Enable Traffic Mode.
-                      //trafficEnabled: true,
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Container(
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(16.0)),
-                          child:
-                              Column(mainAxisSize: MainAxisSize.min, children: [
-                            Text("Find codes in the displayed area",
-                                textAlign: TextAlign.center,
-                                style: textTheme(context).headline6),
-                          ]),
-                        ),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Container(
-                            height: 200,
-                            width: 200,
-                            padding: const EdgeInsets.all(20.0),
-                            decoration: BoxDecoration(
-                                //border: Border.all(color: kPrimaryColor),
-                                color: kPrimaryColor.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(180.0)),
-                          ),
-                        ))
-                  ],
-                ),
-              ),
-            ),
+//           if (quest.type == QuestType.QRCodeSearch)
+//             Expanded(
+//               child: Container(
+// //                       margin: const EdgeInsets.all(20),
+//                 clipBehavior: Clip.antiAlias,
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(20.0),
+//                   boxShadow: [
+//                     BoxShadow(
+//                         blurRadius: 4, spreadRadius: 2, color: kShadowColor)
+//                   ],
+//                 ),
+//                 child: Stack(
+//                   children: [
+//                     GoogleMap(
+//                       //mapType: MapType.hybrid,
+//                       initialCameraPosition: model.initialCameraPosition(),
+//                       //Place Markers in the Map
+//                       markers: model.markersOnMap,
+//                       //callback that’s called when the map is ready to us.
+//                       onMapCreated: model.onMapCreated,
+//                       //For showing your current location on Map with a blue dot.
+//                       myLocationEnabled: true,
+//                       // Button used for bringing the user location to the center of the camera view.
+//                       myLocationButtonEnabled: false,
+//                       //Remove the Zoom in and out button
+//                       zoomControlsEnabled: false,
+//                       //onTap: model.handleTap(),
+//                       //Enable Traffic Mode.
+//                       //trafficEnabled: true,
+//                     ),
+//                     Align(
+//                       alignment: Alignment.topCenter,
+//                       child: Padding(
+//                         padding: const EdgeInsets.all(15.0),
+//                         child: Container(
+//                           padding: const EdgeInsets.all(20.0),
+//                           decoration: BoxDecoration(
+//                               color: Colors.white.withOpacity(0.9),
+//                               borderRadius: BorderRadius.circular(16.0)),
+//                           child:
+//                               Column(mainAxisSize: MainAxisSize.min, children: [
+//                             Text("Find codes in the displayed area",
+//                                 textAlign: TextAlign.center,
+//                                 style: textTheme(context).headline6),
+//                           ]),
+//                         ),
+//                       ),
+//                     ),
+//                     Align(
+//                         alignment: Alignment.center,
+//                         child: Padding(
+//                           padding: const EdgeInsets.all(15.0),
+//                           child: Container(
+//                             height: 200,
+//                             width: 200,
+//                             padding: const EdgeInsets.all(20.0),
+//                             decoration: BoxDecoration(
+//                                 //border: Border.all(color: kPrimaryColor),
+//                                 color: kPrimaryColor.withOpacity(0.2),
+//                                 borderRadius: BorderRadius.circular(180.0)),
+//                           ),
+//                         ))
+//                   ],
+//                 ),
+//               ),
+//             ),
         ],
       ),
     );
@@ -395,7 +412,7 @@ class _DisplayHintState extends State<DisplayHint>
     );
     _animation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.elasticOut,
+      curve: Curves.elasticInOut,
     );
     _controller.forward();
   }

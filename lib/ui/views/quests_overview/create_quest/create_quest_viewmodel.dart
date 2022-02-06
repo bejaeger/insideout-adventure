@@ -13,7 +13,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class CreateQuestViewModel extends FormViewModel with NavigationMixin {
-  List<AFKMarker?>? _afkMarkers;
+  List<AFKMarker>? _afkMarkers;
   GoogleMapController? _googleMapController;
   GoogleMapController? get getGoogleMapController => _googleMapController;
   final _questService = locator<QuestService>();
@@ -48,16 +48,16 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
       final added = await _questService.createQuest(quest: quest);
       if (added!) {
         displaySnackBars.snackBarCreatedQuest(/* quest: quest */);
-        await Future.delayed(
-          const Duration(seconds: 4),
-          () {
-            this.navBackToPreviousView();
-          },
-        );
       } else {
         displaySnackBars.snackBarNotCreatedQuest(/* quest: quest */);
       }
     }
+    await Future.delayed(
+      const Duration(seconds: 4),
+      () {
+        this.navBackToPreviousView();
+      },
+    );
   }
 
   void displayMarkersOnMap(LatLng pos) {
@@ -84,7 +84,7 @@ class CreateQuestViewModel extends FormViewModel with NavigationMixin {
     notifyListeners();
   }
 
-  List<AFKMarker?>? get getAFKMarkers => _afkMarkers;
+  List<AFKMarker> get getAFKMarkers => _afkMarkers!;
 
   Future<void> getQuestMarkers() async {
     setBusy(true);

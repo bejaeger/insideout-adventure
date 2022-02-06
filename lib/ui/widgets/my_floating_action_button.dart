@@ -37,24 +37,25 @@ class AFKFloatingActionButton extends StatelessWidget {
         // ],
       ),
       child: FloatingActionButton(
-          splashColor: kDarkTurquoise,
-          elevation: 8,
-          heroTag: null,
-          backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
-          foregroundColor: Colors.black,
-          onPressed: onPressed,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              if (title != null) verticalSpaceTiny,
-              if (title != null)
-                Text(title!,
-                    style: textTheme(context)
-                        .bodyText2!
-                        .copyWith(color: kWhiteTextColor, fontSize: 12))
-            ],
-          )),
+        splashColor: kDarkTurquoise,
+        elevation: 4,
+        heroTag: null,
+        backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
+        foregroundColor: Colors.black,
+        onPressed: onPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            if (title != null) verticalSpaceTiny,
+            if (title != null)
+              Text(title!,
+                  style: textTheme(context)
+                      .bodyText2!
+                      .copyWith(color: kWhiteTextColor, fontSize: 12))
+          ],
+        ),
+      ),
     );
   }
 }

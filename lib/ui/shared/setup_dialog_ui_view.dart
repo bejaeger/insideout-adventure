@@ -2,6 +2,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_view.dart';
 import 'package:afkcredits/ui/custom_dialogs/found_treasure/found_treasure_dialog.dart';
+import 'package:afkcredits/ui/custom_dialogs/in_area_alert/in_area_alert_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/marker_collected/collected_marker_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/super_user_dialog/super_user_dialog_view.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/money_transfer_dialog_view.dart';
@@ -28,6 +29,10 @@ void setupDialogUi() {
         FoundTreasureDialog(request: sheetRequest, completer: completer),
     DialogType.SuperUserSettings: (context, sheetRequest, completer) =>
         SuperUserDialogView(request: sheetRequest, completer: completer),
+    DialogType.QrCodeInArea: (context, sheetRequest, completer) =>
+        InAreaAlertDialogView(request: sheetRequest, completer: completer, isQrCodeInArea: true),
+    DialogType.CheckpointInArea: (context, sheetRequest, completer) =>
+        InAreaAlertDialogView(request: sheetRequest, completer: completer, isQrCodeInArea: false),
     /*    DialogType.EditQuestInformation: (context, sheetRequest, completer) =>
         EditQuestView(request: sheetRequest, completer: completer), */
     // DialogType.Onboarding: (context, sheetRequest, completer) =>

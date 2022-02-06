@@ -26,12 +26,15 @@ class AFKSlideButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
       child: SlideAction(
+        sliderButtonIconPadding: 12,
+        sliderButtonIconSize: 22,
+        // sliderButtonIcon: Icon(Icons.play_arrow, color: kPrimaryColor),
         alignment: alignment ?? Alignment.center,
         outerColor: kPrimaryColor,
         //text: "Start",
         child:  canStartQuest
                 ? Shimmer.fromColors(
-                    baseColor: kGreyTextColor,
+                    baseColor: kGreyTextColor.withOpacity(0.9),
                     highlightColor: Colors.white,
                     period: const Duration(milliseconds: 1000),
                     child: Text("Start",
@@ -44,7 +47,7 @@ class AFKSlideButton extends StatelessWidget {
                         .headline6!
                         .copyWith(fontSize: 22, color: kWhiteTextColor)),
         height: 50,
-        elevation: 10,
+        elevation: 1,
         sliderRotate: false,
         //key: _key,
         onSubmit: canStartQuest ? onSubmit : null,

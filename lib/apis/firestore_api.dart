@@ -200,7 +200,7 @@ class FirestoreApi {
 
   // Get Markers For the Quest.
   // ignore: non_constant_identifier_names
-  Future<List<AFKMarker?>?> getMarkers() async {
+  Future<List<AFKMarker>> getMarkers() async {
     final _markers = await markersCollection.get();
     if (_markers.docs.isNotEmpty) {
       try {
@@ -212,7 +212,7 @@ class FirestoreApi {
             message: 'Failed to get the Markers', devDetails: '$e');
       }
     } else {
-      return null;
+      return [];
     }
   }
 
@@ -433,7 +433,6 @@ class FirestoreApi {
       try {
         log.i("Downloading quests now");
         questsOnFirestore = await downloadNearbyQuests();
-        log.i("Never go here");
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");

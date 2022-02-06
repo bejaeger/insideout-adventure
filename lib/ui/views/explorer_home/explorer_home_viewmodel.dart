@@ -5,7 +5,7 @@ import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_pur
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/position_retrieval.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
@@ -25,7 +25,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   String get liveDistance => geolocationService.getLiveDistancesToGoal();
   String get lastKnownDistance =>
       geolocationService.getLastKnownDistancesToGoal();
-  List<QuestDataPoint> get allPositions => _questTestingService.allQuestDataPoints;
+  List<QuestDataPoint> get allPositions =>
+      _questTestingService.allQuestDataPoints;
 
   late final String name;
   ExplorerHomeViewModel() : super(explorerUid: "") {
@@ -66,7 +67,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
         viewModelCallback: (_) {
           setListenedToNewPosition(true);
           notifyListeners();
-          },
+        },
         distanceFilter: kMinRequiredAccuracyLocationSearch,
         pushToNotion: false,
       );
@@ -121,7 +122,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   //-----------------------------------------
   // Some R & D
   // TO BE DEPRECATED!
-  
+
   Future pushAllPositionsToNotion() async {
     addingPositionToNotionDB = true;
     notifyListeners();
@@ -145,11 +146,11 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
     addingPositionToNotionDB = true;
     notifyListeners();
     final ok = await _questTestingService.maybeRecordData(
-        trigger: onlyLastKnownPosition
-            ? QuestDataPointTrigger.onlyLastKnownLocationFetchingEvent
-            : QuestDataPointTrigger.manualLocationFetchingEvent, 
-            pushToNotion: false,
-            );
+      trigger: onlyLastKnownPosition
+          ? QuestDataPointTrigger.onlyLastKnownLocationFetchingEvent
+          : QuestDataPointTrigger.manualLocationFetchingEvent,
+      pushToNotion: false,
+    );
     showResponseInfo(ok);
     addingPositionToNotionDB = false;
     notifyListeners();

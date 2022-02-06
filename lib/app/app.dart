@@ -37,7 +37,7 @@ import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:afkcredits/ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
-import 'package:afkcredits/ui/views/map/map_view.dart';
+import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
@@ -71,7 +71,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: InsertPrePurchasedGiftCardView),
     MaterialRoute(page: UpdatingQuestView),
     MaterialRoute(page: ExplorerHomeView),
-    MaterialRoute(page: MapView),
+    MaterialRoute(page: MapOverviewView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: CreateAccountView),
     MaterialRoute(page: CreateAccountUserRoleView),

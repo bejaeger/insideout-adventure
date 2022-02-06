@@ -34,7 +34,7 @@ import '../ui/views/layout/bottom_bar_layout_view.dart';
 import '../ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
-import '../ui/views/map/map_view.dart';
+import '../ui/views/map/map_overview_view.dart';
 import '../ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_view.dart';
 import '../ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import '../ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
@@ -142,7 +142,7 @@ class StackedRouter extends RouterBase {
         page: InsertPrePurchasedGiftCardView),
     RouteDef(Routes.updatingQuestView, page: UpdatingQuestView),
     RouteDef(Routes.explorerHomeView, page: ExplorerHomeView),
-    RouteDef(Routes.mapView, page: MapView),
+    RouteDef(Routes.mapView, page: MapOverviewView),
     RouteDef(Routes.loginView, page: LoginView),
     RouteDef(Routes.createAccountView, page: CreateAccountView),
     RouteDef(Routes.createAccountUserRoleView, page: CreateAccountUserRoleView),
@@ -207,9 +207,9 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    MapView: (data) {
+    MapOverviewView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const MapView(),
+        builder: (context) => const MapOverviewView(),
         settings: data,
       );
     },
