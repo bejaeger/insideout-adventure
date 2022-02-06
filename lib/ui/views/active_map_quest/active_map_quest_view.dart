@@ -50,7 +50,6 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
 
   @override
   Widget build(BuildContext context) {
-    print("--- rebuilding map view -- ");
     return ViewModelBuilder<ActiveMapQuestViewModel>.reactive(
       viewModelBuilder: () => ActiveMapQuestViewModel(),
       onModelReady: (model) {
@@ -64,16 +63,6 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
           _controller.forward();
           model.showCollectedMarkerAnimation = false;
         }
-
-        if (!model.hasActiveQuest && !model.showStartSwipe)
-          return SafeArea(
-            child: Scaffold(
-              body: Center(
-                child: Text("SOMETHING BROKE"),
-              ),
-            ),
-          );
-
         return WillPopScope(
           onWillPop: () async {
             if (!model.hasActiveQuest) {

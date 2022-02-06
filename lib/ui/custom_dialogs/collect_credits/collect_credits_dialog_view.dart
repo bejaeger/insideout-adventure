@@ -19,18 +19,24 @@ class CollectCreditsDialogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CollectCreditsDialogViewModel>.reactive(
-      viewModelBuilder: () => CollectCreditsDialogViewModel(),
-      builder: (context, model, child) => Dialog(
-        elevation: 5,
-        //insetPadding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        backgroundColor: Colors.white,
-        child: _BasicDialogContent(
-          request: request,
-          completer: completer,
-          model: model,
+      viewModelBuilder: () =>
+          CollectCreditsDialogViewModel(status: request.data["status"]),
+      builder: (context, model, child) => WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: Dialog(
+          elevation: 5,
+          //insetPadding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          backgroundColor: Colors.white,
+          child: _BasicDialogContent(
+            request: request,
+            completer: completer,
+            model: model,
+          ),
         ),
       ),
     );
@@ -53,6 +59,8 @@ class _BasicDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("------------------------------------");
+    print(model.status);
     return Stack(
       children: [
         AnimatedOpacity(
@@ -75,7 +83,7 @@ class _BasicDialogContent extends StatelessWidget {
                   children: [
                     verticalSpaceSmall,
                     Text(
-                        model.collectedCredits
+                        model.hasCollectedCreditsInDialog
                             ? "SUCCESS!"
                             : "Congratulations!",
                         textAlign: TextAlign.center,
@@ -85,12 +93,14 @@ class _BasicDialogContent extends StatelessWidget {
                             fontWeight: FontWeight.w800)),
                     verticalSpaceSmall,
                     Text(
-                        model.collectedCredits
-                            ? "You earned " +
-                                request.data.quest.afkCredits.toString() +
+                        model.isNeedToCollectCredits
+                            ? "You get " +
+                                request.data["activeQuest"].quest.afkCredits
+                                    .toString() +
                                 " AFK Credits"
-                            : "You get " +
-                                request.data.quest.afkCredits.toString() +
+                            : "You mastered this mission and earned " +
+                                request.data["activeQuest"].quest.afkCredits
+                                    .toString() +
                                 " AFK Credits!",
                         textAlign: TextAlign.center,
                         style: textTheme(context)
@@ -99,7 +109,7 @@ class _BasicDialogContent extends StatelessWidget {
                     verticalSpaceSmall,
                     AnimatedSwitcher(
                       duration: Duration(milliseconds: 1),
-                      child: !model.collectedCredits
+                      child: !model.hasCollectedCreditsInDialog
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Image.asset(kAFKCreditsLogoPath,
@@ -115,26 +125,32 @@ class _BasicDialogContent extends StatelessWidget {
                             ),
                     ),
                     verticalSpaceMedium,
-                    !model.collectedCredits
+                    if (model.isNoNetwork)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Text(
+                            "Please make sure you have an active network connection.",
+                            style: TextStyle(color: Colors.red),
+                            textAlign: TextAlign.center),
+                      ),
+                    if (model.isNoNetwork) verticalSpaceTiny,
+                    model.isNeedToCollectCredits
                         ? ElevatedButton(
                             onPressed: model.getCredits,
                             child: Text("Get Credits",
                                 style: textTheme(context)
                                     .headline6!
                                     .copyWith(color: kWhiteTextColor)))
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              TextButton(
-                                  onPressed: () => completer(
-                                      DialogResponse(confirmed: true)),
-                                  child: Text("Continue",
-                                      style: textTheme(context)
-                                          .headline6!
-                                          .copyWith(
-                                              color: kBlackHeadlineColor))),
-                            ],
-                          )
+                        : ElevatedButton(
+                            onPressed: () =>
+                                completer(DialogResponse(confirmed: true)),
+                            child: Text(
+                              "Continue",
+                              style: textTheme(context)
+                                  .headline6!
+                                  .copyWith(color: kWhiteTextColor),
+                            ),
+                          ),
                   ],
                 ),
               ),

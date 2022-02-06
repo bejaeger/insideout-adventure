@@ -5,6 +5,7 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
@@ -51,29 +52,22 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
   // -----------------------------------------------------------
   // UI state
-  bool questCenteredOnMap = true;
-  String mapStyle = "";
   bool showCollectedMarkerAnimation = false;
   bool showStartSwipe = true;
-  String lastActivatedQuestInfoText = "Active Quest";
-
-  Set<Marker> markersOnMap = {};
-  Set<Circle> areasOnMap = {};
 
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
-  bool isAnimatingCamera = false;
+
+  bool questCenteredOnMap = true;
+
+  // TODO: maybe deprecated
+  String lastActivatedQuestInfoText = "Active Quest";
 
   // ------------------------------------------
   // Functions to override!
   // TODO: Check this!
-  void loadQuestMarkers();
   bool isQuestCompleted();
   // void updateMapMarkers({required AFKMarker afkmarker}) {}
-  // TODO: check what is happening with the below
-  void addMarkerToMap({required Quest quest, required AFKMarker afkmarker});
-  BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker, required Quest? quest});
 
   ///------------------------------------------------------------
   /// Main Functions
@@ -94,6 +88,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       bool countStartMarkerAsCollected = false}) async {
     // cancel listener that was only used for calibration
     cancelPositionListener();
+    // TODO: this might not be needed
     if (await checkIfBatterySaveModeOn()) {
       resetSlider();
       return false;
@@ -125,7 +120,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       // Quest succesfully started!
       return true;
     } catch (e) {
-      baseModelLog.e("Could not start quest, error thrown: $e");
+      log.e("Could not start quest, error thrown: $e");
       rethrow;
     }
   }
@@ -141,18 +136,17 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     if (activeQuest.status != QuestStatus.success) {
       DialogResponse<dynamic>? continueQuest;
       if (!force) {
-        baseModelLog.w("Quest is incomplete, show dialog");
+        log.w("Quest is incomplete, show dialog");
         continueQuest = await dialogService.showConfirmationDialog(
             title: WarningQuestNotFinished,
             cancelTitle: "CANCEL QUEST",
             confirmationTitle: "CONTINUE QUEST");
       } else {
-        baseModelLog.w("You are forcing to end the quest");
+        log.w("You are forcing to end the quest");
       }
 
       if (continueQuest?.confirmed == true) {
         await questService.continueIncompleteQuest();
-        questService.setUIDeadTime(false);
       }
       if (continueQuest?.confirmed == false || force) {
         // TODO: Handle quest testing service if some positions aren't pushed yet!
@@ -167,14 +161,12 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
         resetPreviousQuest();
         replaceWithMainView(index: BottomNavBarIndex.quest);
-        baseModelLog.i("replaced view with mapView");
+        log.i("replaced view with mapView");
       }
-      questService.setUIDeadTime(false);
     } else {
       if (questService.previouslyFinishedQuest == null) {
-        baseModelLog.wtf(
+        log.wtf(
             "Quest was successfully finished but previouslyFinishedQuest was not set! This should never happen and is due to an internal error in quest service..");
-        questService.setUIDeadTime(false);
         setBusy(false);
         throw Exception(
             "Internal Error: For developers, please set the variable 'previouslyFinishedQuest' in the quest service.");
@@ -185,7 +177,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
         data: questService.previouslyFinishedQuest!,
       );
       replaceWithMainView(index: BottomNavBarIndex.quest);
-      questService.setUIDeadTime(false);
       setBusy(false);
       return true;
     }
@@ -224,36 +215,41 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
         arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
   }
 
-  Future handleSuccessfullyFinishedQuest() async {
+  // showDialogs = true determines that dialogs should be shown on exceptions
+  // showDialogs = false specifies that exceptions are handled by returning
+  // adequate data;
+  Future<CollectCreditsStatus> handleSuccessfullyFinishedQuest(
+      {bool showDialogs = true}) async {
     if (activeQuestNullable?.status == QuestStatus.success) {
-      baseModelLog.i("Found that quest was successfully finished!");
+      log.i("Found that quest was successfully finished!");
       try {
         await questService.handleSuccessfullyFinishedQuest();
-        return true;
+        return CollectCreditsStatus.done;
       } catch (e) {
         if (e is QuestServiceException) {
-          baseModelLog.e(e);
-          await dialogService.showDialog(
-              title: e.prettyDetails, buttonTitle: 'Ok');
-          replaceWithMainView(index: BottomNavBarIndex.quest);
-          questService.setUIDeadTime(false);
+          log.e(e);
+          if (showDialogs) {
+            await dialogService.showDialog(
+                title: e.prettyDetails, buttonTitle: 'Ok');
+          }
+          return CollectCreditsStatus.todo;
         } else if (e is CloudFunctionsApiException) {
-          baseModelLog.e(e);
-          await dialogService.showDialog(
-              title: e.prettyDetails, buttonTitle: 'Ok');
-          questService.setUIDeadTime(false);
+          log.e(e);
+          if (showDialogs) {
+            await dialogService.showDialog(
+                title: e.prettyDetails, buttonTitle: 'Ok');
+          }
+          return CollectCreditsStatus.noNetwork;
         } else {
-          baseModelLog.e("Unknown error occured from evaluateAndFinishQuest");
-          questService.setUIDeadTime(false);
+          log.e("Unknown error occured from evaluateAndFinishQuest");
           setBusy(false);
           rethrow;
         }
-        setBusy(false);
-        return false;
       }
     } else {
-      baseModelLog.w(
+      log.w(
           "Active quest either null or not successfull. Either way, this function should not have been called!");
+      return CollectCreditsStatus.todo;
     }
   }
 
@@ -303,7 +299,9 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
   // ---------------------------------------------------
   // Function to call when quest was detected to be finished in individual viewmodel
-  Future showSuccessDialog() async {
+  Future showSuccessDialog(
+      {CollectCreditsStatus collectCreditsStatus =
+          CollectCreditsStatus.todo}) async {
     questService.setSuccessAsQuestStatus();
     log.i("SUCCESFFULLY FOUND trophy");
 
@@ -311,7 +309,10 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     // Function in quest_viewmodel!
     final result = await dialogService.showCustomDialog(
       variant: DialogType.CollectCredits,
-      data: activeQuest,
+      data: {
+        "activeQuest": activeQuestNullable ?? previouslyFinishedQuest,
+        "status": collectCreditsStatus,
+      },
     );
     if (result?.confirmed == true) {
       // this means everything went fine!
@@ -462,7 +463,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
   @override
   void dispose() {
-    questCenteredOnMap = true;
     for (var reactiveService in _reactiveServices) {
       reactiveService.removeListener(_indicateChange);
     }

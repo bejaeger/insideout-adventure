@@ -207,16 +207,14 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       if (!(await checkAccuracy(
           position: position,
           minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
-        if (useSuperUserFeatures) {
-          if (await useSuperUserFeature()) {
-            snackbarService.showSnackbar(
-                title: "Starting quest as super user",
-                message:
-                    "Although accuracy is low: ${position.accuracy.toStringAsFixed(0)}");
-          } else {
-            await resetSlider();
-            return false;
-          }
+        if (await useSuperUserFeature()) {
+          snackbarService.showSnackbar(
+              title: "Starting quest as super user",
+              message:
+                  "Although accuracy is low: ${position.accuracy.toStringAsFixed(0)}");
+        } else {
+          await resetSlider();
+          return false;
         }
       }
       log.i(
@@ -258,23 +256,6 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   @override
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) {
     // TODO: implement handleQrCodeScanEvent
-    throw UnimplementedError();
-  }
-
-  @override
-  void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
-    // TODO: implement addMarkerToMap
-  }
-
-  @override
-  void loadQuestMarkers() {
-    // TODO: implement loadQuestMarkers
-  }
-
-  @override
-  BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker, required Quest? quest}) {
-    // TODO: implement defineMarkersColour
     throw UnimplementedError();
   }
 }

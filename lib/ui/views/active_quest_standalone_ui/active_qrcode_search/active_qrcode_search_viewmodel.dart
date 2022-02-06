@@ -21,6 +21,11 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
       true; // bool to check whether hint should be displayed or not!
   final log = getLogger("ActiveQrCodeSearchViewModel");
 
+  // set of markers and areas on map
+  Set<Marker> markersOnMap = {};
+
+  // -------------------------------
+  // functions
   void initializeMapAndMarkers({required Quest quest}) async {
     resetPreviousQuest();
     runBusyFuture(_geolocationService.getAndSetCurrentLocation());
@@ -100,7 +105,6 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-  @override
   void addMarkerToMap({required Quest quest, required AFKMarker? afkmarker}) {
     if (afkmarker == null) return;
     markersOnMap.add(
@@ -123,13 +127,6 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
     notifyListeners();
   }
 
-  @override
-  BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker, required Quest? quest}) {
-    return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-  }
-
-  @override
   void loadQuestMarkers() {
     // for testing purposes, display location of qr code markers
     if (useSuperUserFeatures) {
@@ -142,6 +139,40 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
     // This should be used to specify an area on the map that should
     // be searched through for markers!
     return;
+  }
+
+  BitmapDescriptor defineMarkersColour(
+      {required AFKMarker afkmarker,
+      required Quest? quest,
+      bool isFinishMarker = false}) {
+    if (hasActiveQuest) {
+      final index = activeQuest.quest.markers
+          .indexWhere((element) => element == afkmarker);
+      if (!activeQuest.markersCollected[index]) {
+        if (!isFinishMarker) {
+          return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+        } else {
+          // finish marker gets different icon
+          return BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueOrange);
+        }
+      } else {
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+      }
+    } else {
+      if (quest?.type == QuestType.QRCodeHike) {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueOrange);
+      } else if (quest?.type == QuestType.TreasureLocationSearch) {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueViolet);
+      } else if (quest?.type == QuestType.QRCodeSearch) {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueYellow);
+      } else {
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+      }
+    }
   }
 
   @override

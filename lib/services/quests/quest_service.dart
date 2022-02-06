@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
-import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -64,10 +62,6 @@ class QuestService with ReactiveServiceMixin {
       _questToUpdate = quest;
     }
   }
-
-  // dead time after update
-  bool isTrackingDeadTime = false;
-  bool isUIDeadTime = false;
 
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
@@ -204,6 +198,14 @@ class QuestService with ReactiveServiceMixin {
   bool get isAllMarkersCollected =>
       activatedQuest!.quest.markers.length == getNumberMarkersCollected;
 
+  bool isFinishMarker(AFKMarker marker) {
+    return activatedQuest?.quest.finishMarker == marker;
+  }
+
+  bool isStartMarker(AFKMarker marker) {
+    return activatedQuest?.quest.startMarker == marker;
+  }
+
   Future handleSuccessfullyFinishedQuest() async {
     // 1. Get credits collected, time elapsed and other potential data at the end of the quest
     // 2. bookkeep credits
@@ -229,6 +231,8 @@ class QuestService with ReactiveServiceMixin {
     await uploadAndCleanUpFinishedQuest();
   }
 
+  // TODO: Calculate how many credits were
+  // earned here
   Future evaluateFinishedQuest() async {
     pushActivatedQuest(activatedQuest!.copyWith(
         status: QuestStatus.success,
@@ -265,8 +269,6 @@ class QuestService with ReactiveServiceMixin {
     // keep copy of finished quest to show in success dialog view
     previouslyFinishedQuest = activatedQuest;
     disposeActivatedQuest();
-    setUIDeadTime(false);
-    setTrackingDeadTime(false);
   }
 
   // Handle the scenario when a user finishes a hike
@@ -402,11 +404,13 @@ class QuestService with ReactiveServiceMixin {
   }
 
   void setAndPushActiveQuestStatus(QuestStatus status) {
-    _questTestingService.maybeRecordData(
-        trigger: QuestDataPointTrigger.userAction,
-        userEventDescription: "New quest status: " + status.toString(),
-        pushToNotion: true);
-    pushActivatedQuest(activatedQuest!.copyWith(status: status));
+    if (hasActiveQuest) {
+      _questTestingService.maybeRecordData(
+          trigger: QuestDataPointTrigger.userAction,
+          userEventDescription: "New quest status: " + status.toString(),
+          pushToNotion: true);
+      pushActivatedQuest(activatedQuest!.copyWith(status: status));
+    }
   }
 
   void setSuccessAsQuestStatus() {
@@ -496,10 +500,6 @@ class QuestService with ReactiveServiceMixin {
       }
       bool push = false;
       if (seconds % 3 == 0) {
-        if (isTrackingDeadTime) {
-          log.v("Skipping distance to goal check because dead time is on");
-          return;
-        }
         final position = await _geolocationService.getAndSetCurrentLocation();
         if (position.accuracy > kMinRequiredAccuracyLocationSearch) {
           log.v(
@@ -556,11 +556,8 @@ class QuestService with ReactiveServiceMixin {
       //}
       if (push) {
         pushActivatedQuest(tmpActivatedQuest);
-        setTrackingDeadTime(true);
         await Future.delayed(
             Duration(seconds: kDeadTimeAfterVibrationInSeconds));
-        if (tmpActivatedQuest.status != QuestStatus.success)
-          setTrackingDeadTime(false);
       }
     }
   }
@@ -601,16 +598,6 @@ class QuestService with ReactiveServiceMixin {
         pushActivatedQuest(tmpActivatedQuest);
       }
     }
-  }
-
-  void setTrackingDeadTime(bool deadTime) {
-    log.v("Setting quest data tracking dead time to $deadTime");
-    isTrackingDeadTime = deadTime;
-  }
-
-  void setUIDeadTime(bool deadTime) {
-    log.v("Setting quest data UI update dead time to $deadTime");
-    isUIDeadTime = deadTime;
   }
 
   void updateCollectedMarkers({required AFKMarker marker}) {

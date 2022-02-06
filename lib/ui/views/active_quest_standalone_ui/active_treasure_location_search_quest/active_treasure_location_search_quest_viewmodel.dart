@@ -43,6 +43,9 @@ class ActiveTreasureLocationSearchQuestViewModel
   bool get isFirstDistanceCheck => numberTimesFired == 0;
   bool allowCheckingPosition = true;
 
+  // markers on map
+  Set<Marker> markersOnMap = {};
+
   @override
   Future initialize({required Quest quest}) async {
     setBusy(true);
@@ -545,7 +548,6 @@ class ActiveTreasureLocationSearchQuestViewModel
   ////////////////////////////////////////
   // Map functionality
 
-  @override
   void loadQuestMarkers({Quest? quest}) {
     log.i("Loading quest markers");
     if (quest != null) {

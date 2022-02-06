@@ -170,25 +170,8 @@ class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
   }
 
   @override
-  void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
-    // TODO: implement addMarkerToMap
-  }
-
-  @override
-  BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker, required Quest? quest}) {
-    // TODO: implement defineMarkersColour
-    throw UnimplementedError();
-  }
-
-  @override
   bool isQuestCompleted() {
     // TODO: implement isQuestCompleted
     throw UnimplementedError();
-  }
-
-  @override
-  void loadQuestMarkers() {
-    // TODO: implement loadQuestMarkers
   }
 }
