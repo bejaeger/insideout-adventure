@@ -1,7 +1,7 @@
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class Marks {
+class AFKMarks {
   Marker addMarkers({required LatLng pos, required String markerId}) {
     return Marker(
       markerId: MarkerId(markerId),

@@ -1,16 +1,17 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/datamodels/quests/create_quest/create_quest_view.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
+import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
@@ -197,6 +198,7 @@ class _BottomBarLayoutTemplateViewState
 
           ManageGiftCardstView(),
           //AddGiftCardsView(),
+          AddMarkersView(),
         ];
     }
   }
@@ -287,6 +289,11 @@ class _BottomBarLayoutTemplateViewState
             icon: Icon(Icons.shop),
             inactiveIcon: Icon(Icons.shop_outlined),
             title: "Rewards",
+          ),
+          AFKNavBarItem(
+            icon: Icon(Icons.mark_as_unread_sharp),
+            inactiveIcon: Icon(Icons.markunread_sharp),
+            title: "Markers",
           ),
 
           /*      AFKNavBarItem(

@@ -1,3 +1,4 @@
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -7,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:uuid/uuid.dart';
-import '../quest.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
 
@@ -15,7 +15,6 @@ import 'create_quest_viewmodel.dart';
   fields: [
     FormTextField(name: 'name'),
     FormTextField(name: 'description'),
-    //FormTextField(name: 'distanceFromUser'),
     FormTextField(name: 'afkCreditAmount'),
     FormTextField(name: 'questType'),
   ],
@@ -110,7 +109,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                     //mapType: MapType.hybrid,
                     initialCameraPosition: model.initialCameraPosition(),
                     //Place Markers in the Map
-                    markers: model.markersOnMap,
+                    markers: model.markersInMap.getMarkersOnMap,
 
                     //callback that’s called when the map is ready to us.
                     onMapCreated: model.onMapCreated,
@@ -125,10 +124,6 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                     children: [
                       ElevatedButton.icon(
                         onPressed: () async {
-                          /*       if (afkCreditAmountController.text.isNotEmpty &&
-                              descriptionController.text.isNotEmpty &&
-                              nameController.text.isNotEmpty &&
-                              questTypeController.text.isNotEmpty) { */
                           afkCreditAmount =
                               num.parse(afkCreditAmountController.text);
                           var id = Uuid();
@@ -136,19 +131,20 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                           await model.createQuest(
                             quest: Quest(
                                 id: questId!,
-                                startMarker: model.afkCredits.first,
-                                finishMarker: model.afkCredits.last,
+                                startMarker:
+                                    model.markersInMap.getAFKMarkers.first,
+                                finishMarker:
+                                    model.markersInMap.getAFKMarkers.last,
                                 name: nameController.text.toString(),
                                 description:
                                     descriptionController.text.toString(),
-                                type: selectedQuestType ?? QuestType.Hike,
-                                markers: model.afkCredits,
+                                type: selectedQuestType!,
+                                markers: model.markersInMap.getAFKMarkers,
                                 afkCredits: afkCreditAmount!),
                           );
                           model.resetMarkersValues();
-                          //_key!.currentState!.reset();
-                          //Clear Controllers
 
+                          //Clear Controllers
                           nameController.clear();
                           questTypeController.clear();
                           afkCreditAmountController.clear();
@@ -163,6 +159,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                       horizontalSpaceSmall,
                       ElevatedButton.icon(
                         onPressed: () {
+                          model.resetMarkersValues();
                           model.navBackToPreviousView();
                         },
                         icon: const Icon(Icons.cancel),

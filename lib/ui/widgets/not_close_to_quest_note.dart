@@ -36,12 +36,13 @@ class NotCloseToQuestNote extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16.0)),
                   // width: screenWidth(context, percentage: 0.5),
                   child: Text(
-                      "You are ${(model.distanceFromQuest * 0.001).toStringAsFixed(1)} km away from the start of the quest. Move to the green area shown below.",
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      style: textTheme(context)
-                          .bodyText2!
-                          .copyWith(color: Colors.red, fontSize: 16)),
+                    "You are ${(model.distanceFromQuest * 0.001).toStringAsFixed(1)} km away from the start of the quest. Move to the green area shown below.",
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: textTheme(context)
+                        .bodyText2!
+                        .copyWith(color: Colors.red, fontSize: 16),
+                  ),
                 ),
               ),
               Row(
@@ -66,8 +67,9 @@ class NotCloseToQuestNote extends StatelessWidget {
                         : Flexible(
                             child: ElevatedButton(
                               onPressed: () async {
-                                await model
-                                    .animateCameraToQuestMarkers(controller!, delay: 0);
+                                await model.animateCameraToQuestMarkers(
+                                    controller!,
+                                    delay: 0);
                                 model.questCenteredOnMap = true;
                                 model.notifyListeners();
                               },
@@ -111,8 +113,7 @@ class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final log = getLogger("NotCloseToQuestNoteViewModel");
 
-  double get distanceFromQuest =>
-      _geolocationService.distanceToStartMarker;
+  double get distanceFromQuest => _geolocationService.distanceToStartMarker;
 
   void launchMapsForNavigation() async {
     AFKMarker? marker = _questService.currentQuest?.startMarker;

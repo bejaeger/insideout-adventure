@@ -2,7 +2,6 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -90,34 +89,36 @@ class QuestListScreen extends StatelessWidget {
     return isBusy == false
         ? Container(
             child: ListView(
-            //itemExtent: 120,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: kHorizontalPadding),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'List of Quests',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    TextButton(
-                      onPressed: switchToMap,
-                      child: Text(
-                        'Back to Map',
+              //itemExtent: 120,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: kHorizontalPadding),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'List of Quests',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20.0, color: kDarkTurquoise),
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: switchToMap,
+                        child: Text(
+                          'Back to Map',
+                          textAlign: TextAlign.center,
+                          style:
+                              TextStyle(fontSize: 20.0, color: kDarkTurquoise),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              ...getListOfQuestCards(quests)
-            ],
-          ))
+                ...getListOfQuestCards(quests)
+              ],
+            ),
+          )
         : CircularProgressIndicator();
   }
 

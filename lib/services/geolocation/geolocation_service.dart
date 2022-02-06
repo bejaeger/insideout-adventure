@@ -2,11 +2,9 @@ import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
-import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/enums/position_retrieval.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter/foundation.dart' show describeEnum, kIsWeb;
 import 'package:permission_handler/permission_handler.dart';
 
 class GeolocationService {

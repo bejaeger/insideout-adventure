@@ -20,8 +20,9 @@ class GiftCardsSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SectionHeader(
-                  horizontalPadding: 0,
-                  title: describeEnum(giftCards[0].categoryName).toString()),
+                horizontalPadding: 0,
+                title: describeEnum(giftCards[0].categoryName).toString(),
+              ),
               GiftCardsList(
                   giftCardList: giftCards, onGiftCardTap: onGiftCardTap),
             ],

@@ -429,7 +429,6 @@ class FirestoreApi {
   // Returns dummy data for now!
   Future<List<Quest>> getNearbyQuests({bool? pushDummyQuests}) async {
     if (pushDummyQuests == true) {
-      // TODO push quests
       late List<Quest> questsOnFirestore;
       try {
         log.i("Downloading quests now");
@@ -457,7 +456,9 @@ class FirestoreApi {
   Future _uploadQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
-    _documentReference = await questsCollection.add(quest.toJson());
+    _documentReference = await questsCollection.add(
+      quest.toJson(),
+    );
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
     await questsCollection
@@ -467,7 +468,7 @@ class FirestoreApi {
         'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
   }
 
-  Future<bool?> createQuest({required Quest quest}) async {
+  Future<bool> createQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
     _documentReference = await questsCollection.add(quest.toJson());
@@ -489,7 +490,13 @@ class FirestoreApi {
     final quests = await questsCollection.get();
     if (quests.docs.isNotEmpty) {
       log.v('Found list of quests in database');
-      return quests.docs.map((docs) => Quest.fromJson(docs.data())).toList();
+      return quests.docs
+          .map(
+            (docs) => Quest.fromJson(
+              docs.data(),
+            ),
+          )
+          .toList();
     } else {
       log.wtf('There is no \'quests\' collection on firestore');
       throw FirestoreApiException(
