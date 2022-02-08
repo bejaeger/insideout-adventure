@@ -89,12 +89,14 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   verticalSpaceSmall,
-                  Text("Marker collected!",
-                      textAlign: TextAlign.center,
-                      style: textTheme(context).headline6!.copyWith(
-                          color: kPrimaryColor,
-                          fontSize: 32,
-                          fontWeight: FontWeight.w800)),
+                  Text(
+                    "Marker collected!",
+                    textAlign: TextAlign.center,
+                    style: textTheme(context).headline6!.copyWith(
+                        color: kPrimaryColor,
+                        fontSize: 32,
+                        fontWeight: FontWeight.w800),
+                  ),
                   verticalSpaceSmall,
                   Align(
                     alignment: Alignment.center,

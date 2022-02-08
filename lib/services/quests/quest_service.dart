@@ -17,10 +17,10 @@ import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:nanoid/nanoid.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:nanoid/nanoid.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:stacked/stacked.dart';
@@ -953,10 +953,11 @@ class QuestService with ReactiveServiceMixin {
   }
 
   Future<bool?> createQuest({required Quest quest}) async {
-    //TODO: Refactor this code .
+    //TODO: Refactor this code.
     if (quest.id.isNotEmpty) {
       return await _firestoreApi.createQuest(quest: quest);
     }
+    return null;
 
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
@@ -1031,6 +1032,7 @@ class QuestService with ReactiveServiceMixin {
   }
 
   // to identify trial number in diagnosis data
+  //Harguilar Commented out
   void setNewTrialNumber() {
     activatedQuestTrialId = nanoid(6);
   }

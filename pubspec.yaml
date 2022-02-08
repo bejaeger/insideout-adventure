@@ -53,7 +53,8 @@ dependencies:
   qr_flutter: ^4.0.0
   qr_code_scanner: ^0.6.1
   # Stacked State Management
-  stacked: ^2.2.3
+  #stacked: ^2.2.3
+  stacked: ^2.2.8
   stacked_services: ^0.8.16
   #stacked_firebase_auth: ^0.2.10+2
   stacked_firebase_auth: ^0.2.4

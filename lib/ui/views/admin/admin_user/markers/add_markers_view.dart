@@ -1,7 +1,7 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/marker_status.dart';
-import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,18 +15,19 @@ class AddMarkersView extends StatefulWidget {
 
 class _AddMarkersViewState extends State<AddMarkersView> {
   GoogleMapController? _googleMapController;
-  Marker? userMarkers;
-
+  GoogleMapController? _googleMapDisplayController;
   @override
   void dispose() {
     _googleMapController!.dispose();
+    _googleMapDisplayController!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddMarkersViewModel>.reactive(
-      viewModelBuilder: () => AddMarkersViewModel(marker: userMarkers),
+      viewModelBuilder: () => AddMarkersViewModel(),
+      onModelReady: (model) => model.setQuestList(),
       builder: (context, model, child) => model.isBusy
           ? Container(
               child: Center(
@@ -34,97 +35,280 @@ class _AddMarkersViewState extends State<AddMarkersView> {
               ),
             )
           : Scaffold(
-              appBar: CustomAppBar(
-                title: 'Add AFK Markers',
-              ),
-              body: Container(
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  //alignment: Alignment.center,
-                  children: [
-                    Expanded(
-                      flex: 8,
-                      child: GoogleMap(
-                        myLocationButtonEnabled: false,
-                        zoomControlsEnabled: false,
-                        initialCameraPosition: model.initialCameraPosition(),
-                        onMapCreated: (controller) =>
-                            _googleMapController = controller,
-                        markers: {
-                          if (userMarkers != null) userMarkers!,
-                        },
-                        onLongPress: model.addMarkerToMap,
-                      ),
+              body: CustomScrollView(
+                slivers: [
+                  const SliverAppBar(
+                    centerTitle: true,
+                    title: Text(
+                      ' Manage AFK Markers',
                     ),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Radio(
-                            value: 1,
-                            activeColor: Colors.blueAccent,
-                            groupValue: model.getGroupId,
-                            onChanged: (int? selectMarkerStatus) =>
-                                model.checkMarkerStatus(
-                                    checkMarkerStatus: selectMarkerStatus),
-                          ),
-                          Text('Testing'),
-                        ],
-                      ),
-                    ),
-                    verticalSpaceSmall,
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Radio(
-                            value: 2,
-                            activeColor: Colors.lightGreen,
-                            groupValue: model.getGroupId,
-                            onChanged: (int? selectMarkerStatus) =>
-                                model.checkMarkerStatus(
-                                    checkMarkerStatus: selectMarkerStatus),
-                          ),
-                          Text('Placed'),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          if (model.getGroupId == 1) {
-                            model.addMarkersToFirebase(
-                                status: MarkerStatus.testing);
-                          } else {
-                            model.addMarkersToFirebase(
-                                status: MarkerStatus.placed);
-                          }
-                          model.setGroupNumber();
-                        },
-                        child: Container(
-                          height: 50.0,
-                          width: double.infinity,
-                          child: Center(
-                            child: Text(
-                              "Add Markers",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Sofia",
-                                  fontSize: 19.0),
-                            ),
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
-                            ),
-                            color: kPrimaryColor,
-                          ),
+                    floating: true,
+                    expandedHeight: 80,
+                    collapsedHeight: 100,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        verticalSpaceMedium,
+                        MarkerToAddSection(
+                          googleMapController: _googleMapController,
+                          model: model,
                         ),
-                      ),
+                        verticalSpaceMedium,
+                        DisplayAllMarkersSection(
+                          googlController: _googleMapDisplayController,
+                          model: model,
+                        ),
+                      ],
                     ),
-                    verticalSpaceMedium,
-                  ],
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
+}
+
+class MarkerToAddSection extends StatelessWidget {
+  AddMarkersViewModel model;
+  GoogleMapController? googleMapController;
+  MarkerToAddSection(
+      {Key? key, required this.model, required this.googleMapController})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 8,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            verticalSpaceSmall,
+            Text(
+              "Marker To ADD",
+              textAlign: TextAlign.left,
+              style: textTheme(context).headline6!.copyWith(
+                  color: kBlackHeadlineColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800),
+            ),
+            verticalSpaceSmall,
+            Container(
+              height: MediaQuery.of(context).size.height / 4,
+              child: GoogleMap(
+                //enable zoom gestures
+                zoomGesturesEnabled: true,
+                //minMaxZoomPreference: MinMaxZoomPreference(13,17)
+
+                //For showing your current location on Map with a blue dot.
+                // myLocationEnabled: true,
+                //Remove the Zoom in and out button
+                zoomControlsEnabled: true,
+
+                // Button used for bringing the user location to the center of the camera view.
+                myLocationButtonEnabled: true,
+
+                initialCameraPosition: model.initialCameraPosition(),
+                onMapCreated: (controller) => googleMapController = controller,
+                markers: model.markersInMap.getMarkersOnMap.length > 0
+                    ? {
+                        model.markersInMap.getMarkersOnMap.last,
+                      }
+                    : model.markersInMap.getMarkersOnMap,
+                onTap: model.addMarkerToMap,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Transform.scale(
+                  scale: 1.5,
+                  child: Radio(
+                    value: 1,
+                    activeColor: Colors.blueAccent,
+                    groupValue: model.getGroupId,
+                    onChanged: (int? selectMarkerStatus) =>
+                        model.checkMarkerStatus(
+                            checkMarkerStatus: selectMarkerStatus),
+                  ),
+                ),
+                Text(
+                  "Testing",
+                  textAlign: TextAlign.left,
+                  style: textTheme(context).headline6!.copyWith(
+                      color: kBlackHeadlineColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800),
+                ),
+                SizedBox(
+                  width: 40,
+                ),
+                Transform.scale(
+                  scale: 1.5,
+                  child: Radio(
+                    value: 2,
+                    activeColor: Colors.lightGreen,
+                    groupValue: model.getGroupId,
+                    onChanged: (int? selectMarkerStatus) =>
+                        model.checkMarkerStatus(
+                            checkMarkerStatus: selectMarkerStatus),
+                  ),
+                ),
+                Text(
+                  "Placed",
+                  textAlign: TextAlign.left,
+                  style: textTheme(context).headline6!.copyWith(
+                      color: kBlackHeadlineColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800),
+                ),
+              ],
+            ),
+            verticalSpaceSmall,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 150,
+                  height: 40,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      if (model.getGroupId == 1) {
+                        model.addMarkersToFirebase(
+                            status: MarkerStatus.testing,
+                            afkMarker: model.markersInMap.getMarkersOnMap.last);
+                      } else {
+                        model.addMarkersToFirebase(
+                            status: MarkerStatus.placed,
+                            afkMarker: model.markersInMap.getMarkersOnMap.last);
+                      }
+                      model.setGroupNumber();
+                    },
+                    child: const Text("Add Markers"),
+                    style: OutlinedButton.styleFrom(
+                        backgroundColor: kPrimaryColor,
+                        primary: kWhiteTextColor,
+                        // shape: const StadiumBorder(),
+                        shadowColor: Colors.purpleAccent),
+                  ),
+                ),
+                SizedBox(
+                  width: 150,
+                  height: 40,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      model.markersInMap.resetMarkersValues();
+                    },
+                    child: const Text("Cancel"),
+                    style: OutlinedButton.styleFrom(
+                        backgroundColor: kPrimaryColor,
+                        primary: kWhiteTextColor,
+                        // shape: const StadiumBorder(),
+                        shadowColor: Colors.purpleAccent),
+                  ),
+                ),
+              ],
+            ),
+            verticalSpaceSmall,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DisplayAllMarkersSection extends StatelessWidget {
+  AddMarkersViewModel model;
+  GoogleMapController? googlController;
+  DisplayAllMarkersSection(
+      {Key? key, required this.model, required this.googlController})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 8,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            verticalSpaceSmall,
+            Text(
+              "Display Available Markers",
+              textAlign: TextAlign.left,
+              style: textTheme(context).headline6!.copyWith(
+                  color: kBlackHeadlineColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800),
+            ),
+            verticalSpaceSmall,
+            Container(
+              height: MediaQuery.of(context).size.height / 2,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Card(
+                  elevation: 8,
+                  child: GoogleMap(
+                      zoomGesturesEnabled: true,
+                      // myLocationButtonEnabled: false,
+                      zoomControlsEnabled: false,
+                      initialCameraPosition: model.initialCameraPosition(),
+                      onMapCreated: (controller) =>
+                          googlController = controller,
+                      markers: model.markers
+                      //onTap: model.addMarkerToMap,
+                      ),
                 ),
               ),
-              floatingActionButton: Stack(
+            ),
+            verticalSpaceSmall,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 150,
+                  height: 40,
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    child: const Text("Manage Markers"),
+                    style: OutlinedButton.styleFrom(
+                        backgroundColor: kPrimaryColor,
+                        primary: kWhiteTextColor,
+                        // shape: const StadiumBorder(),
+                        shadowColor: Colors.purpleAccent),
+                  ),
+                ),
+                SizedBox(
+                  width: 150,
+                  height: 40,
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    child: const Text("Cancel"),
+                    style: OutlinedButton.styleFrom(
+                        backgroundColor: kPrimaryColor,
+                        primary: kWhiteTextColor,
+                        // shape: const StadiumBorder(),
+                        shadowColor: Colors.purpleAccent),
+                  ),
+                ),
+              ],
+            ),
+            verticalSpaceSmall,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+/*       
+floatingActionButton: Stack(
                 children: [
                   Positioned(
                     bottom: 70,
@@ -145,7 +329,4 @@ class _AddMarkersViewState extends State<AddMarkersView> {
                   ),
                 ],
               ),
-            ),
-    );
-  }
-}
+               */

@@ -4,31 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'basic_dialog_content/basic_dialog_content.dart';
 
-/* class EditQuestView extends StatelessWidget {
-  final DialogRequest request;
-  final Function(DialogResponse) completer;
-  const EditQuestView(
-      {Key? key, required this.completer, required this.request})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder<EditQuestViewModel>.reactive(
-      builder: (context, model, child) => Dialog(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        child: BasicDialogContent(
-         // completer: completer,
-           model: model,
-          //request: request,
-          quest: request.data,
-        ),
-      ),
-      viewModelBuilder: () => EditQuestViewModel(quest: request.data),
-    );
-  }
-} */
-
 class UpdatingQuestView extends StatelessWidget {
   const UpdatingQuestView({Key? key}) : super(key: key);
 
@@ -38,7 +13,7 @@ class UpdatingQuestView extends StatelessWidget {
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
-            title: "Updating Quest ",
+            title: "Edit Quest ",
             onBackButton: model.navBackToPreviousView,
           ),
           body: BasicDialogContent(quest: model.getUpdatedQuest, model: model),

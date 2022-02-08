@@ -19,7 +19,7 @@ class ManageGiftCardstView extends StatelessWidget {
           slivers: [
             const SliverAppBar(
               centerTitle: true,
-              title: Text("Manage Gift Card"),
+              title: Text("Gift Card"),
               floating: true,
               expandedHeight: 80,
             ),
@@ -75,7 +75,6 @@ class GiftCardListButton extends StatelessWidget {
                   child: Image.asset(
                     assetsGiftCardImages[index],
                     fit: BoxFit.cover,
-
                     //fit: BoxFit.fill,
                   ),
                   elevation: 10,

@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
-import '../datamodels/quests/create_quest/create_quest_view.dart';
 import '../datamodels/quests/quest.dart';
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/authentication_method.dart';
@@ -42,6 +41,7 @@ import '../ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_vie
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
+import '../ui/views/quests_overview/create_quest/create_quest_view.dart';
 import '../ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import '../ui/views/quests_overview/manage_quest/manage_quest_view.dart';
 import '../ui/views/quests_overview/quests_overview_view.dart';

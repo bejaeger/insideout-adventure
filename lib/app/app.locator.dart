@@ -41,6 +41,7 @@ import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_q
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import '../utils/cloud_storage_result/cloud_storage_result.dart';
 import '../utils/image_selector/image_selector.dart';
+import '../utils/markers/markers_in_map.dart';
 
 final locator = StackedLocator.instance;
 
@@ -79,6 +80,7 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => GiftCardService());
   locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => MapsService());
+  locator.registerLazySingleton(() => MarkersInMap());
   locator.registerLazySingleton(() => PurchasedGiftCardsViewModel());
   locator.registerLazySingleton(
       () => ActiveTreasureLocationSearchQuestViewModel());

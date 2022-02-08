@@ -67,12 +67,12 @@ class AFKBottomNavigationBar extends StatelessWidget {
                           Container(
                             alignment: Alignment.center,
                             width: screenWidth(context, percentage: 0.5),
-                            child: IconButton(
-                              onPressed: model.onMapPressed,
+                            /*  child: IconButton(
+                             // onPressed: model.onMapPressed,
                               icon: Icon(Icons.explore,
                                   size: kBottomNavigationBarIconSize,
                                   color: kBottomNavigationBarIconColor),
-                            ),
+                            ), */
                           ),
                         ],
                       ),

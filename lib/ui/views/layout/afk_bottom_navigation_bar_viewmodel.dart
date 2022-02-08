@@ -32,7 +32,7 @@ class AFKBottomNavigationBarViewModel
     notifyListeners();
   }
 
-  void onMapPressed() {
+/*   void onMapPressed() {
     //navigationService.clearStackAndShow(Routes.mapScreen);
     if (questService.hasActiveQuest == false) {
       navigationService.clearStackAndShow(Routes.mapOverviewView);
@@ -43,5 +43,5 @@ class AFKBottomNavigationBarViewModel
       _currentIndex = BottomNavBarIndex.quest;
     }
     notifyListeners();
-  }
+  } */
 }

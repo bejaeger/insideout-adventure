@@ -101,34 +101,36 @@ class QuestListScreen extends StatelessWidget {
     return isBusy == false
         ? Container(
             child: ListView(
-            //itemExtent: 120,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: kHorizontalPadding),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'List of Quests',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    TextButton(
-                      onPressed: switchToMap,
-                      child: Text(
-                        'Back to Map',
+              //itemExtent: 120,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: kHorizontalPadding),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'List of Quests',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20.0, color: kDarkTurquoise),
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: switchToMap,
+                        child: Text(
+                          'Back to Map',
+                          textAlign: TextAlign.center,
+                          style:
+                              TextStyle(fontSize: 20.0, color: kDarkTurquoise),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              ...getListOfQuestCards(quests)
-            ],
-          ))
+                ...getListOfQuestCards(quests)
+              ],
+            ),
+          )
         : CircularProgressIndicator();
   }
 

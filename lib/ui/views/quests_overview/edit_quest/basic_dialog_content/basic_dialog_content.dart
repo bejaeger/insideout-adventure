@@ -44,77 +44,94 @@ class BasicDialogContent extends StatelessWidget with $BasicDialogContent {
       builder: (context, model, child) => Scaffold(
         backgroundColor: Colors.white,
         body: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              verticalSpaceSmall,
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Quest Name: ',
-                ),
-                controller: nameController..text = quest!.name.toString(),
-                focusNode: nameFocusNode,
-              ),
-              verticalSpaceSmall,
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Quest Description: ',
-                ),
-                controller: descriptionController
-                  ..text = quest!.description.toString(),
-              ),
-              verticalSpaceSmall,
-              TextField(
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
-                decoration: InputDecoration(
-                  labelText: 'AFk Credits Amount: ',
-                ),
-                controller: afkCreditAmountController
-                  ..text = quest!.afkCredits.toString(),
-              ),
-              verticalSpaceSmall,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      await model.updateQuestData(
-                        quest: Quest(
-                          id: quest!.id,
-                          name: nameController.text.toString(),
-                          description: descriptionController.text.toString(),
-                          type: quest!.type,
-                          markers: quest!.markers,
-                          afkCredits: num.parse(afkCreditAmountController.text),
-                        ),
-                      );
-                    }, //completer(DialogResponse(confirmed: true)),
-                    child: Text(
-                      'Update',
-                      //request.mainButtonTitle.toString(),
-                      style: textTheme(context)
-                          .headline6!
-                          .copyWith(color: kBlackHeadlineColor),
-                    ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                verticalSpaceSmall,
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Quest Name: ',
                   ),
-                  horizontalSpaceSmall,
-                  ElevatedButton(
-                    onPressed: () {
-                      model.navBackToPreviousView();
-                    },
-                    child: Text(
-                      "Cancel",
-                      //request.secondaryButtonTitle.toString(),
-                      style: textTheme(context)
-                          .headline6!
-                          .copyWith(color: kBlackHeadlineColor),
-                    ),
+                  controller: nameController..text = quest!.name.toString(),
+                  focusNode: nameFocusNode,
+                ),
+                verticalSpaceSmall,
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Quest Description: ',
                   ),
-                ],
-              )
-            ],
+                  controller: descriptionController
+                    ..text = quest!.description.toString(),
+                ),
+                verticalSpaceSmall,
+                TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
+                  decoration: InputDecoration(
+                    labelText: 'AFk Credits Amount: ',
+                  ),
+                  controller: afkCreditAmountController
+                    ..text = quest!.afkCredits.toString(),
+                ),
+                verticalSpaceSmall,
+                /*         GoogleMap(
+                  zoomControlsEnabled: false,
+                  //mapType: MapType.hybrid,
+                  initialCameraPosition: model.initialCameraPosition(),
+                  //Place Markers in the Map
+                  markers: quest!.markers,
+
+                  //callback that’s called when the map is ready to us.
+                  onMapCreated: model.onMapCreated,
+
+                  onTap: model.displayMarkersOnMap,
+                  // onLongPress: model.removeMarkers,
+                ), */
+                verticalSpaceSmall,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        await model.updateQuestData(
+                          quest: Quest(
+                            id: quest!.id,
+                            name: nameController.text.toString(),
+                            description: descriptionController.text.toString(),
+                            type: quest!.type,
+                            markers: quest!.markers,
+                            afkCredits:
+                                num.parse(afkCreditAmountController.text),
+                          ),
+                        );
+                      }, //completer(DialogResponse(confirmed: true)),
+                      child: Text(
+                        'Update',
+                        //request.mainButtonTitle.toString(),
+                        style: textTheme(context)
+                            .headline6!
+                            .copyWith(color: kBlackHeadlineColor),
+                      ),
+                    ),
+                    horizontalSpaceSmall,
+                    ElevatedButton(
+                      onPressed: () {
+                        model.navBackToPreviousView();
+                      },
+                      child: Text(
+                        "Cancel",
+                        //request.secondaryButtonTitle.toString(),
+                        style: textTheme(context)
+                            .headline6!
+                            .copyWith(color: kBlackHeadlineColor),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
