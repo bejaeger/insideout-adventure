@@ -55,6 +55,7 @@ class UserService {
 
   UserRole get getUserRole => currentUser.role;
   bool get isSuperUser => currentUser.role == UserRole.superUser;
+  bool get isAdminMaster => currentUser.role == UserRole.adminMaster;
   bool get hasRole => currentUserNullable == null ? false : true;
 
   // store list of supportedExplorers

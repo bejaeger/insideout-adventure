@@ -128,15 +128,16 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                                         style: textTheme(context).headline5),
                                     verticalSpaceTiny,
                                     ElevatedButton(
-                                        onPressed: () =>
-                                            model.replaceWithMainView(
-                                                index: BottomNavBarIndex.quest),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "More Quests",
-                                          ),
-                                        )),
+                                      onPressed: () =>
+                                          model.replaceWithMainView(
+                                              index: BottomNavBarIndex.quest),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "More Quests",
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 )
                               : model.isBusy || model.distanceToStartMarker < 0
@@ -175,31 +176,36 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                                                       }),
                                                 ),
                                         ),
-                                        AnimatedOpacity(
-                                          opacity: model.hasActiveQuest ? 1 : 0,
-                                          duration: Duration(seconds: 1),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              LiveQuestStatistic(
-                                                title: "Duration",
-                                                statistic: model.hasActiveQuest
-                                                    ? model.timeElapsed
-                                                    : "0",
-                                              ),
-                                              ScaleTransition(
-                                                scale: _animation,
-                                                child: LiveQuestStatistic(
-                                                  title: "Markers collected",
-                                                  statistic: model
-                                                          .hasActiveQuest
-                                                      ? model
-                                                          .getNumberMarkersCollectedString()
-                                                      : "0",
+                                        IgnorePointer(
+                                          ignoring: !model.hasActiveQuest,
+                                          child: AnimatedOpacity(
+                                            opacity:
+                                                model.hasActiveQuest ? 1 : 0,
+                                            duration: Duration(seconds: 1),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                LiveQuestStatistic(
+                                                  title: "Duration",
+                                                  statistic:
+                                                      model.hasActiveQuest
+                                                          ? model.timeElapsed
+                                                          : "0",
                                                 ),
-                                              ),
-                                            ],
+                                                ScaleTransition(
+                                                  scale: _animation,
+                                                  child: LiveQuestStatistic(
+                                                    title: "Markers collected",
+                                                    statistic: model
+                                                            .hasActiveQuest
+                                                        ? model
+                                                            .getNumberMarkersCollectedString()
+                                                        : "0",
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],

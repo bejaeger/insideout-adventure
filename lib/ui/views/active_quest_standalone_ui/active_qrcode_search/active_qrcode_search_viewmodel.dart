@@ -46,7 +46,7 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
       final position = await _geolocationService.getAndSetCurrentLocation();
 
       if (quest.type != QuestType.QRCodeSearchIndoor &&
-          quest.type != QuestType.QRCodeHuntIndoor) {
+          quest.type != QuestType.QRCodeHunt) {
         if (!(await checkAccuracy(position: position))) {
           resetSlider();
           return false;

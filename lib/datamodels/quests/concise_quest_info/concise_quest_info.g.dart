@@ -28,7 +28,7 @@ const _$QuestTypeEnumMap = {
   QuestType.QRCodeHike: 'QRCodeHike',
   QuestType.GPSAreaHike: 'GPSAreaHike',
   QuestType.Hunt: 'Hunt',
-  QuestType.QRCodeHuntIndoor: 'QRCodeHuntIndoor',
+  QuestType.QRCodeHunt: 'QRCodeHuntIndoor',
   QuestType.QRCodeSearch: 'QRCodeSearch',
   QuestType.QRCodeSearchIndoor: 'QRCodeSearchIndoor',
   QuestType.DistanceEstimate: 'DistanceEstimate',

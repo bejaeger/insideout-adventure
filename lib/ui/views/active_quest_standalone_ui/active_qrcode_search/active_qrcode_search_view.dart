@@ -394,7 +394,7 @@ class NextClueCard extends StatelessWidget {
                 ),
               ),
             ),
-          if (quest.type == QuestType.QRCodeHuntIndoor)
+          if (quest.type == QuestType.QRCodeHunt)
             Expanded(
               child: DisplayClue(
                 hintString: model.getCurrentClue(),

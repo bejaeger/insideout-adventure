@@ -8,6 +8,7 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
@@ -54,6 +55,7 @@ class BaseModel extends BaseViewModel {
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
+  bool get isAdminMaster => userService.isAdminMaster;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
       : userService.isSuperUser;
@@ -309,7 +311,7 @@ class BaseModel extends BaseViewModel {
           arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
     } else if (quest.type == QuestType.QRCodeSearch ||
         quest.type == QuestType.QRCodeSearchIndoor ||
-        quest.type == QuestType.QRCodeHuntIndoor) {
+        quest.type == QuestType.QRCodeHunt) {
       await navigationService.navigateTo(Routes.activeQrCodeSearchView,
           arguments: ActiveQrCodeSearchViewArguments(quest: quest));
     } else if (quest.type == QuestType.QRCodeHike ||
@@ -318,6 +320,12 @@ class BaseModel extends BaseViewModel {
       await navigationService.navigateTo(Routes.activeMapQuestView,
           arguments: ActiveMapQuestViewArguments(quest: quest));
     }
+  }
+
+  Future openSuperUserSettingsDialog() async {
+    await dialogService.showCustomDialog(variant: DialogType.SuperUserSettings);
+    setListenedToNewPosition(false);
+    notifyListeners();
   }
 
   //////////////////////////////////////////

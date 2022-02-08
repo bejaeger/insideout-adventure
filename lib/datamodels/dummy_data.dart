@@ -277,7 +277,7 @@ Quest getQrCodeHuntJaeger() {
       starenweg6(),
     ],
     // TODO: QRCodeHuntIndoor
-    type: QuestType.QRCodeHuntIndoor,
+    type: QuestType.QRCodeHunt,
     startMarker: starenweg1(),
     finishMarker: starenweg6(),
   );
@@ -300,7 +300,7 @@ Quest getQrCodeHuntJaeger2() {
       starenweg1(),
     ],
     // TODO: QRCodeHuntIndoor
-    type: QuestType.QRCodeHuntIndoor,
+    type: QuestType.QRCodeHunt,
     startMarker: heidach2(),
     finishMarker: starenweg1(),
   );
