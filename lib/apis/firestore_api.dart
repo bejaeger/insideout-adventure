@@ -432,20 +432,20 @@ class FirestoreApi {
       late List<Quest> questsOnFirestore;
       try {
         log.i("Downloading quests now");
-        // questsOnFirestore = await downloadNearbyQuests();
+        questsOnFirestore = await downloadNearbyQuests();
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
         questsOnFirestore = [];
       }
       final quests = getDummyQuests();
-      // quests.forEach((el1) {
-      //   if (!questsOnFirestore.any((el2) => el2.id == el1.id)) {
-      //     // dummy quest not yet on firestore
-      //     // adding it
-      //     _uploadQuest(quest: el1);
-      //   }
-      // });
+      quests.forEach((el1) {
+        if (!questsOnFirestore.any((el2) => el2.id == el1.id)) {
+          // dummy quest not yet on firestore
+          // adding it
+          _uploadQuest(quest: el1);
+        }
+      });
       return quests;
     } else {
       return await downloadNearbyQuests();
