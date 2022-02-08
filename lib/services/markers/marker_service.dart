@@ -20,8 +20,7 @@ class MarkerService {
     if (marker == null) {
       return false;
     }
-    if (_flavorConfigProvider.enableGPSVerification &&
-        !_userService.isSuperUser) {
+    if (_flavorConfigProvider.enableGPSVerification) {
       if (marker.lat != null && marker.lon != null) {
         return await _geolocationService.isUserCloseby(
             lat: marker.lat!, lon: marker.lon!);

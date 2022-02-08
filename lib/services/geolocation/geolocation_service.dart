@@ -1,15 +1,11 @@
 import 'dart:async';
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
-import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/common_services/pausable_service.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter/foundation.dart' show describeEnum, kIsWeb;
 import 'package:permission_handler/permission_handler.dart';
 
 class GeolocationService extends PausableService {
@@ -298,6 +294,11 @@ class GeolocationService extends PausableService {
     }
   }
 
+  void resetStoredDistancesToMarkers() {
+    distanceToLastCheckedMarker = -1;
+    distanceToStartMarker = -1;
+  }
+
   Future setDistanceToLastCheckedMarker(
       {required double? lat, required double? lon}) async {
     if (lat == null || lon == null) {
@@ -310,14 +311,19 @@ class GeolocationService extends PausableService {
   }
 
   Future setDistanceToStartMarker(
-      {required double? lat, required double? lon}) async {
+      {required double? lat, required double? lon, Position? position}) async {
     if (lat == null || lon == null) {
       log.wtf("Coordinates are null, can't check distance!");
       return;
     }
-    final position = await getAndSetCurrentLocation();
+    late Position positionActual;
+    if (position == null) {
+      positionActual = await getAndSetCurrentLocation();
+    } else {
+      positionActual = position;
+    }
     distanceToStartMarker = Geolocator.distanceBetween(
-        position.latitude, position.longitude, lat, lon);
+        positionActual.latitude, positionActual.longitude, lat, lon);
     distanceToLastCheckedMarker = distanceToStartMarker;
   }
 

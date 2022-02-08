@@ -117,7 +117,7 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                               !model.questSuccessfullyFinished
                           ? model.isBusy
                               ? AFKProgressIndicator()
-                              : Container()
+                              : SizedBox(height: 0, width: 0)
                           : model.questSuccessfullyFinished
                               ? Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -139,7 +139,7 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                                         )),
                                   ],
                                 )
-                              : model.isBusy
+                              : model.isBusy || model.distanceToStartMarker < 0
                                   ? AFKProgressIndicator()
                                   : Stack(
                                       children: [

@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/dialog/travelled_distance_dialog_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -19,24 +20,26 @@ class TravelledDistanceDialogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TravelledDistanceDialogViewModel>.reactive(
-        viewModelBuilder: () => TravelledDistanceDialogViewModel(),
-        onModelReady: (model) => model.waitForProcess(request: request),
-        builder: (context, model, child) => Dialog(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.0)),
-              backgroundColor: Colors.white,
-              child: _BasicDialogContent(
-                request: request,
-                completer: completer,
-                model: model,
-              ),
-            ));
+      viewModelBuilder: () => TravelledDistanceDialogViewModel(
+          status: CollectCreditsStatus.todo), // hardcoded status here!
+      onModelReady: (model) => model.waitForProcess(request: request),
+      builder: (context, model, child) => Dialog(
+        elevation: 0,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+        backgroundColor: Colors.white,
+        child: _BasicDialogContent(
+          request: request,
+          completer: completer,
+          model: model,
+        ),
+      ),
+    );
   }
 }
 
 class _BasicDialogContent extends StatelessWidget {
-  final dynamic model;
+  final TravelledDistanceDialogViewModel model;
   final DialogRequest request;
   final Function(DialogResponse dialogResponse) completer;
 
@@ -76,12 +79,12 @@ class _BasicDialogContent extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   verticalSpaceMedium,
-                  if (model.collectedCredits) verticalSpaceMedium,
+                  if (model.hasCollectedCreditsInDialog) verticalSpaceMedium,
                   Row(
                     children: [
                       Expanded(
                         child: Text(
-                            !model.collectedCredits
+                            !model.hasCollectedCreditsInDialog
                                 ? (model.title ?? '')
                                 : "Collected Credits",
                             maxLines: 1,
@@ -91,8 +94,8 @@ class _BasicDialogContent extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (!model.collectedCredits) verticalSpaceMedium,
-                  if (!model.collectedCredits)
+                  if (!model.hasCollectedCreditsInDialog) verticalSpaceMedium,
+                  if (!model.hasCollectedCreditsInDialog)
                     Text(
                       model.description ?? '',
                       textAlign: TextAlign.center,
@@ -113,13 +116,13 @@ class _BasicDialogContent extends StatelessWidget {
                             model.secondaryButtonTitle!,
                           ),
                         ),
-                      model.collectedCredits == false
+                      model.hasCollectedCreditsInDialog == false
                           ? ElevatedButton(
-                              onPressed:
-                                  model.status == DistanceCheckStatus.success
-                                      ? model.getCredits
-                                      : () => completer(
-                                          DialogResponse(confirmed: false)),
+                              onPressed: model.distanceCheckStatus ==
+                                      DistanceCheckStatus.success
+                                  ? model.getCredits
+                                  : () => completer(
+                                      DialogResponse(confirmed: false)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
@@ -155,9 +158,9 @@ class _BasicDialogContent extends StatelessWidget {
               child: CircleAvatar(
                 minRadius: 20,
                 maxRadius: 32,
-                backgroundColor: _getStatusColor(model.status),
+                backgroundColor: _getStatusColor(model.distanceCheckStatus),
                 child: Icon(
-                  _getStatusIcon(model.status),
+                  _getStatusIcon(model.distanceCheckStatus),
                   size: 32,
                   color: Colors.white,
                 ),
@@ -188,7 +191,7 @@ class _BasicDialogContent extends StatelessWidget {
                 CircularProgressIndicator(color: kPrimaryColor),
                 verticalSpaceMedium,
                 Text(
-                    model.status == DistanceCheckStatus.success
+                    model.distanceCheckStatus == DistanceCheckStatus.success
                         ? "Getting credits..."
                         : "Checking distance...",
                     style: textTheme(context).headline6),

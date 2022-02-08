@@ -17,7 +17,6 @@ import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/ui/widgets/not_enough_sponsoring_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
@@ -159,19 +158,20 @@ class _ActiveTreasureLocationSearchQuestViewState
                   children: [
                     verticalSpaceMedium,
                     if (model.showStartSwipe && !model.isBusy)
-                      model.isNearStartMarker
-                          ? AFKSlideButton(
-                              quest: widget.quest,
-                              canStartQuest: model.hasEnoughSponsoring(
-                                      quest: widget.quest) &&
-                                  (model.isNearStartMarker != null &&
-                                      model.isNearStartMarker == true),
-                              onSubmit: () =>
-                                  model.maybeStartQuest(quest: widget.quest),
-                            )
-                          : Container(
-                              color: Colors.white,
-                              child: NotCloseToQuestNote()),
+                      model.distanceToStartMarker < 0
+                          ? AFKProgressIndicator()
+                          : model.isNearStartMarker
+                              ? AFKSlideButton(
+                                  quest: widget.quest,
+                                  canStartQuest: model.hasEnoughSponsoring(
+                                          quest: widget.quest) &&
+                                      (model.isNearStartMarker == true),
+                                  onSubmit: () => model.maybeStartQuest(
+                                      quest: widget.quest),
+                                )
+                              : Container(
+                                  color: Colors.white,
+                                  child: NotCloseToQuestNote()),
                     if (!model.hasEnoughSponsoring(quest: widget.quest))
                       Container(
                           color: Colors.white,

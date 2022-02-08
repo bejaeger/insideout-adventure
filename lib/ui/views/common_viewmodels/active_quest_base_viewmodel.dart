@@ -21,7 +21,6 @@ import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:open_settings/open_settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -30,25 +29,25 @@ import 'package:afkcredits/app/app.logger.dart';
 abstract class ActiveQuestBaseViewModel extends BaseModel {
   // ---------------------------------------------------------
   // Services
-  final GeolocationService _geolocationService = locator<GeolocationService>();
   final MapsService mapsService = locator<MapsService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
+  final log = getLogger("ActiveQuestBaseViewModel");
 
   // ----------------------------------------------------------
   // getters
   bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
   bool get isNearStartMarker => !flavorConfigProvider.enableGPSVerification
       ? true
-      : (_geolocationService.distanceToStartMarker > 0) &&
-          (_geolocationService.distanceToStartMarker <
+      : (geolocationService.distanceToStartMarker > 0) &&
+          (geolocationService.distanceToStartMarker <
               kMaxDistanceFromMarkerInMeter);
   Quest? get currentQuest => questService.currentQuest;
   // timeElapsed is a reactive value
   String get timeElapsed => questService.getMinutesElapsedString();
-  final log = getLogger("ActiveQuestBaseViewModel");
+  double get distanceToStartMarker => geolocationService.distanceToStartMarker;
 
   // -----------------------------------------------------------
   // UI state
@@ -76,6 +75,10 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
   Future initialize({required Quest quest}) async {
     // sets current quest in service so it is accessible anywhere
     questService.currentQuest = quest;
+
+    // set distance to marker immediately if location was checked within the last 30 seconds.
+    maybeSetDistanceToStartMarker(quest: quest);
+
     // start calibration listener to get accurate position
     // this also sets the distance to the start marker
     startPositionCalibrationListener(quest: quest);
@@ -191,11 +194,11 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       return false;
     }
     if (useSuperUserFeatures) {
-      _geolocationService.setGPSAccuracyInfo(
+      geolocationService.setGPSAccuracyInfo(
           position.accuracy, useSuperUserFeatures);
     }
     if (position.accuracy > (minAccuracy ?? kMinLocationAccuracy)) {
-      _geolocationService.setGPSAccuracyInfo(position.accuracy);
+      geolocationService.setGPSAccuracyInfo(position.accuracy);
       if (showDialog) {
         log.e("Accuracy low: ${position.accuracy}");
         await dialogService.showDialog(
@@ -349,14 +352,31 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
   }
 
+  void maybeSetDistanceToStartMarker({required Quest quest}) async {
+    final position = await geolocationService.getUserLivePosition;
+    if (position.timestamp != null) {
+      if (position.accuracy < 100 &&
+          position.timestamp!
+              .isAfter(DateTime.now().subtract(const Duration(seconds: 30)))) {
+        geolocationService.setDistanceToStartMarker(
+            lat: quest.startMarker?.lat,
+            lon: quest.startMarker?.lon,
+            position: position);
+        notifyListeners();
+      }
+    }
+  }
+
   void startPositionCalibrationListener({required Quest quest}) {
     log.i("Start position calibration listener");
-    _geolocationService.listenToPosition(
+    geolocationService.listenToPosition(
       distanceFilter: kDistanceFilterForCalibration,
-      viewModelCallback: (_) {
+      viewModelCallback: (position) {
         setListenedToNewPosition(true);
-        _geolocationService.setDistanceToStartMarker(
-            lat: quest.startMarker?.lat, lon: quest.startMarker?.lon);
+        geolocationService.setDistanceToStartMarker(
+            lat: quest.startMarker?.lat,
+            lon: quest.startMarker?.lon,
+            position: position);
         notifyListeners();
       },
     );
@@ -364,7 +384,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
   void cancelPositionListener() {
     log.i("Cancel position listener");
-    _geolocationService.cancelPositionListener();
+    geolocationService.cancelPositionListener();
     setListenedToNewPosition(false);
   }
 
@@ -416,6 +436,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
   void navigateBackFromSingleQuestView() {
     cancelPositionListener();
+    geolocationService.resetStoredDistancesToMarkers();
     navigationService.back();
   }
 

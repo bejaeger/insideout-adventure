@@ -32,7 +32,6 @@ class ActiveTreasureLocationSearchQuestViewModel
   bool isTrackingDeadTime = false;
   bool skipUpdatingQuestStatus = false;
   bool isCheckingDistance = false;
-  final MarkerService _markerService = locator<MarkerService>();
 
   List<TreasureSearchLocation> checkpoints = [];
   final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
@@ -127,7 +126,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     } else {
       // option to add dummy checks for testing purposes
       if (flavorConfigProvider.dummyQuestCompletionVerification) {
-        return currentDistanceInMeters < 9999; // 9999;
+        return true;
       } else {
         // this is the true check configured in constants.dart
         return currentDistanceInMeters < kMinDistanceToCatchTrophyInMeters;
@@ -139,6 +138,10 @@ class ActiveTreasureLocationSearchQuestViewModel
     final completed = isQuestCompleted();
     if (completed) {
       // quest succesfully completed
+
+      // TODO: Could start uploading credits already here!
+      // TODO: And pass a "inProgress" status to showSuccessDialog() plus a completer!
+
       await showFoundTreasureDialog();
       await showSuccessDialog();
     } else {

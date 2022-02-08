@@ -1,7 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/maps_service.dart';
@@ -9,7 +8,6 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -173,5 +171,10 @@ class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
   bool isQuestCompleted() {
     // TODO: implement isQuestCompleted
     throw UnimplementedError();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
