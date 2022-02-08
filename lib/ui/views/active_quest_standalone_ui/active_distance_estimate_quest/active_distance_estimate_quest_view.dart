@@ -11,7 +11,6 @@ import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
-import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -111,24 +110,16 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                             : Stack(
                                 children: [
                                   AnimatedOpacity(
-                                    opacity: model.showStartSwipe ? 1 : 0,
-                                    duration: Duration(milliseconds: 50),
-                                    child: model.isNearStartMarker
-                                        ? AFKSlideButton(
-                                            //alignment: Alignment(0, 0),
-                                            quest: quest,
-                                            canStartQuest:
-                                                model.hasEnoughSponsoring(
-                                                    quest: quest),
-                                            onSubmit: () => model
-                                                .maybeStartQuest(quest: quest))
-                                        : Container(
-                                            color: Colors.white,
-                                            child: NotCloseToQuestNote(
-                                              questType: quest.type,
-                                            ),
-                                          ),
-                                  ),
+                                      opacity: model.showStartSwipe ? 1 : 0,
+                                      duration: Duration(milliseconds: 50),
+                                      child: AFKSlideButton(
+                                          //alignment: Alignment(0, 0),
+                                          quest: quest,
+                                          canStartQuest:
+                                              model.hasEnoughSponsoring(
+                                                  quest: quest),
+                                          onSubmit: () => model.maybeStartQuest(
+                                              quest: quest))),
                                   AnimatedOpacity(
                                     opacity: model.hasActiveQuest ? 1 : 0,
                                     duration: Duration(seconds: 1),
@@ -159,25 +150,27 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                       verticalSpaceLarge,
                       // Text(
                       //     "Instructions: Start the quest and then walk ${model.distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance of tries!"),
-                      Image.network(
-                          "https://c.tenor.com/PcfXDVatyLEAAAAC/guy-walking.gif",
-                          height: 150),
+                      if (!model.questSuccessfullyFinished)
+                        Image.network(
+                            "https://c.tenor.com/PcfXDVatyLEAAAAC/guy-walking.gif",
+                            height: 150),
                       verticalSpaceMedium,
-                      Text(
-                          "Goal: Walk " +
-                              model.distanceToTravel.toStringAsFixed(0) +
-                              " Meters",
-                          textAlign: TextAlign.center,
-                          style: textTheme(context).headline5!.copyWith(
-                              color: kPrimaryColor,
-                              fontWeight: FontWeight.w600)),
+                      if (!model.questSuccessfullyFinished)
+                        Text(
+                            "Goal: Walk " +
+                                model.distanceToTravel.toStringAsFixed(0) +
+                                " Meters",
+                            textAlign: TextAlign.center,
+                            style: textTheme(context).headline5!.copyWith(
+                                color: kPrimaryColor,
+                                fontWeight: FontWeight.w600)),
                       verticalSpaceMedium,
                       model.questSuccessfullyFinished
                           ? Column(
                               children: [
                                 Text("You are the best, you finished the quest",
                                     textAlign: TextAlign.center,
-                                    style: textTheme(context).headline2),
+                                    style: textTheme(context).headline4),
                                 verticalSpaceMedium,
                                 ElevatedButton(
                                     onPressed: () => model.replaceWithMainView(

@@ -1,4 +1,3 @@
-
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +18,7 @@ class LiveQuestStatistic extends StatefulWidget {
 class _LiveQuestStatisticState extends State<LiveQuestStatistic> {
   @override
   Widget build(BuildContext context) {
+    // print("--- rebuilding DURATION: ${widget.statistic} -- ");
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

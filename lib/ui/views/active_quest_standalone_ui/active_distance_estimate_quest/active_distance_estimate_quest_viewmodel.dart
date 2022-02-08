@@ -44,9 +44,8 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   Future probeDistance() async {
     if (numberOfAvailableTries == 1 && !useSuperUserFeatures) {
       final result = await dialogService.showDialog(
-          title: "SURE?",
-          description:
-              "This is your last try, are you sure you want to reveal the distance?",
+          title: "Last Try!",
+          description: "Are you sure you want to reveal the distance?",
           buttonTitle: "YES",
           cancelTitle: "NO");
       if (result?.confirmed == false) {
@@ -126,8 +125,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   bool isQuestCompleted(
       {double distanceTravelled = 0, double distanceToTravel = 999999}) {
     if (flavorConfigProvider.dummyQuestCompletionVerification) {
-      return (distanceTravelled > (distanceToTravel - 201) &&
-          distanceTravelled < (distanceToTravel + 201));
+      return true;
     } else {
       return (distanceTravelled >
               (distanceToTravel - kMinDistanceToCatchTrophyInMeters) &&
@@ -207,16 +205,14 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       if (!(await checkAccuracy(
           position: position,
           minAccuracy: kMinRequiredAccuracyDistanceEstimate))) {
-        if (useSuperUserFeatures) {
-          if (await useSuperUserFeature()) {
-            snackbarService.showSnackbar(
-                title: "Starting quest as super user",
-                message:
-                    "Although accuracy is low: ${position.accuracy.toStringAsFixed(0)}");
-          } else {
-            await resetSlider();
-            return false;
-          }
+        if (await useSuperUserFeature()) {
+          snackbarService.showSnackbar(
+              title: "Starting quest as super user",
+              message:
+                  "Although accuracy is low: ${position.accuracy.toStringAsFixed(0)}");
+        } else {
+          await resetSlider();
+          return false;
         }
       }
       log.i(
@@ -244,7 +240,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
     await dialogService.showDialog(
         title: "How it works",
         description:
-            "Start the quest and then walk ${distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance of tries!");
+            "Start the quest and then walk ${distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance tries!");
   }
 
   @override
@@ -258,23 +254,6 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   @override
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) {
     // TODO: implement handleQrCodeScanEvent
-    throw UnimplementedError();
-  }
-
-  @override
-  void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
-    // TODO: implement addMarkerToMap
-  }
-
-  @override
-  void loadQuestMarkers() {
-    // TODO: implement loadQuestMarkers
-  }
-
-  @override
-  BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker, required Quest? quest}) {
-    // TODO: implement defineMarkersColour
     throw UnimplementedError();
   }
 }

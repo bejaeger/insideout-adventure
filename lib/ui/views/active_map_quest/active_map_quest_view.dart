@@ -63,16 +63,6 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
           _controller.forward();
           model.showCollectedMarkerAnimation = false;
         }
-
-        if (!model.hasActiveQuest && !model.showStartSwipe)
-          return SafeArea(
-            child: Scaffold(
-              body: Center(
-                child: Text("SOMETHING BROKE"),
-              ),
-            ),
-          );
-
         return WillPopScope(
           onWillPop: () async {
             if (!model.hasActiveQuest) {
@@ -127,7 +117,7 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                               !model.questSuccessfullyFinished
                           ? model.isBusy
                               ? AFKProgressIndicator()
-                              : Container()
+                              : SizedBox(height: 0, width: 0)
                           : model.questSuccessfullyFinished
                               ? Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -149,7 +139,7 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                                         )),
                                   ],
                                 )
-                              : model.isBusy
+                              : model.isBusy || model.distanceToStartMarker < 0
                                   ? AFKProgressIndicator()
                                   : Stack(
                                       children: [

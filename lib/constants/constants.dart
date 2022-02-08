@@ -106,6 +106,10 @@ const double kDistanceFilterHikeQuest = 10;
 // QRCodeHike
 const int kDistanceFromCenterOfArea = 50;
 
+//////////////////////////////////
+/// QrCode Hunt
+const int kMaxDistanceFromMarkerInMeterQrCodeHunt = 200;
+
 ////////////////////////////
 /// General
 const double kThresholdGPSAccuracyToShowInfo = 50;

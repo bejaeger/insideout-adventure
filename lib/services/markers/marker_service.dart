@@ -16,15 +16,15 @@ class MarkerService {
   final _firestoreApi = locator<FirestoreApi>();
   List<AFKMarker>? _markersLists;
 
-  Future<bool> isUserCloseby({required AFKMarker? marker}) async {
+  Future<bool> isUserCloseby(
+      {required AFKMarker? marker, int? geofenceRadius}) async {
     if (marker == null) {
       return false;
     }
-    if (_flavorConfigProvider.enableGPSVerification &&
-        !_userService.isSuperUser) {
+    if (_flavorConfigProvider.enableGPSVerification) {
       if (marker.lat != null && marker.lon != null) {
         return await _geolocationService.isUserCloseby(
-            lat: marker.lat!, lon: marker.lon!);
+            lat: marker.lat!, lon: marker.lon!, threshold: geofenceRadius);
       } else {
         log.wtf("Marker does not have coordinates assigned yet!");
         return false;

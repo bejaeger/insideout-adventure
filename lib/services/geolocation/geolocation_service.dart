@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
-import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
+import 'package:afkcredits/services/common_services/pausable_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class GeolocationService {
+class GeolocationService extends PausableService {
   final log = getLogger('GeolocationService');
   StreamSubscription? _livePositionStreamSubscription;
   bool get isListeningToLocation => _livePositionStreamSubscription != null;
@@ -67,9 +67,8 @@ class GeolocationService {
             onData(position);
           }
           if (viewModelCallback != null) {
-            if (skipFirstStreamEvent)
             // option to not fire callback on first event
-            {
+            if (skipFirstStreamEvent) {
               if (completer.isCompleted) {
                 viewModelCallback(position);
               }
@@ -87,6 +86,25 @@ class GeolocationService {
       completer.complete();
     }
     return completer.future;
+  }
+
+  @override
+  void resume() {
+    if (servicePaused == true) {
+      log.v('Geolocation listener resumed');
+      resumePositionListener();
+      super.resume();
+    }
+  }
+
+  @override
+  void pause() {
+    if (isListeningToLocation == true &&
+        (servicePaused == null || servicePaused == false)) {
+      log.v('Geolocation listener paused');
+      pausePositionListener();
+      super.pause();
+    }
   }
 
   Future<LocationPermission> askForLocationPermission() async {
@@ -240,13 +258,14 @@ class GeolocationService {
   }
  */
   Future<bool> isUserCloseby(
-      {required double lat,
-      required double lon,
-      int threshold = kMaxDistanceFromMarkerInMeter}) async {
+      {required double lat, required double lon, int? threshold}) async {
     // log.v("Check if user is closeby marker based on last known location");
     final position = await getAndSetCurrentLocation();
     if (countAsCloseByMarker(
-        position: position, lat: lat, lon: lon, threshold: threshold)) {
+        position: position,
+        lat: lat,
+        lon: lon,
+        threshold: threshold ?? kMaxDistanceFromMarkerInMeter)) {
       log.v("User is nearby the marker!");
       return true;
     } else {
@@ -256,7 +275,10 @@ class GeolocationService {
       final position =
           await getAndSetCurrentLocation(forceGettingNewPosition: true);
       return countAsCloseByMarker(
-          position: position, lat: lat, lon: lon, threshold: threshold);
+          position: position,
+          lat: lat,
+          lon: lon,
+          threshold: threshold ?? kMaxDistanceFromMarkerInMeter);
     }
   }
 
@@ -276,6 +298,11 @@ class GeolocationService {
     }
   }
 
+  void resetStoredDistancesToMarkers() {
+    distanceToLastCheckedMarker = -1;
+    distanceToStartMarker = -1;
+  }
+
   Future setDistanceToLastCheckedMarker(
       {required double? lat, required double? lon}) async {
     if (lat == null || lon == null) {
@@ -288,14 +315,19 @@ class GeolocationService {
   }
 
   Future setDistanceToStartMarker(
-      {required double? lat, required double? lon}) async {
+      {required double? lat, required double? lon, Position? position}) async {
     if (lat == null || lon == null) {
       log.wtf("Coordinates are null, can't check distance!");
       return;
     }
-    final position = await getAndSetCurrentLocation();
+    late Position positionActual;
+    if (position == null) {
+      positionActual = await getAndSetCurrentLocation();
+    } else {
+      positionActual = position;
+    }
     distanceToStartMarker = Geolocator.distanceBetween(
-        position.latitude, position.longitude, lat, lon);
+        positionActual.latitude, positionActual.longitude, lat, lon);
     distanceToLastCheckedMarker = distanceToStartMarker;
   }
 
