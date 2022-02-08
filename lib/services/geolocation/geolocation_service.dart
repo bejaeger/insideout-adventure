@@ -258,13 +258,14 @@ class GeolocationService extends PausableService {
   }
  */
   Future<bool> isUserCloseby(
-      {required double lat,
-      required double lon,
-      int threshold = kMaxDistanceFromMarkerInMeter}) async {
+      {required double lat, required double lon, int? threshold}) async {
     // log.v("Check if user is closeby marker based on last known location");
     final position = await getAndSetCurrentLocation();
     if (countAsCloseByMarker(
-        position: position, lat: lat, lon: lon, threshold: threshold)) {
+        position: position,
+        lat: lat,
+        lon: lon,
+        threshold: threshold ?? kMaxDistanceFromMarkerInMeter)) {
       log.v("User is nearby the marker!");
       return true;
     } else {
@@ -274,7 +275,10 @@ class GeolocationService extends PausableService {
       final position =
           await getAndSetCurrentLocation(forceGettingNewPosition: true);
       return countAsCloseByMarker(
-          position: position, lat: lat, lon: lon, threshold: threshold);
+          position: position,
+          lat: lat,
+          lon: lon,
+          threshold: threshold ?? kMaxDistanceFromMarkerInMeter);
     }
   }
 

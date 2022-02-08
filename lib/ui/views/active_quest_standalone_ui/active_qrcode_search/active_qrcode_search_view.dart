@@ -11,10 +11,10 @@ import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
-import 'package:afkcredits/ui/widgets/not_enough_sponsoring_note.dart';
+import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
+import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
@@ -54,197 +54,277 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActiveQrCodeSearchViewModel>.reactive(
-        viewModelBuilder: () => locator<ActiveQrCodeSearchViewModel>(),
-        disposeViewModel: false,
-        onModelReady: (model) =>
-            model.initializeMapAndMarkers(quest: widget.quest),
-        builder: (context, model, child) {
-          if (model.animateProgress) {
-            _controller.reset();
-            _controller.forward();
-            model.animateProgress = false;
-          }
-          return WillPopScope(
-            onWillPop: () async {
-              if (!model.hasActiveQuest && !model.questSuccessfullyFinished) {
-                model.navigateBack();
-              }
-              return false;
-            },
-            child: SafeArea(
-              child: Scaffold(
-                appBar: CustomAppBar(
-                  title: "Find the trophy!!",
-                  onBackButton: model.navigateBack,
-                  showRedLiveButton: true,
-                ),
-                endDrawer: SizedBox(
-                  width: screenWidth(context, percentage: 0.8),
-                  child: const ActiveQuestDrawerView(),
-                ),
-                floatingActionButton: AFKFloatingActionButtons(
-                  // title1: "SCAN",
-                  // onPressed2: model.hasActiveQuest
-                  //     ? null
-                  //     : () => model.maybeStartQuest(quest: quest),
-                  // title2: "START",
-                  //iconData2: Icons.star,
-                  onPressed1: model.scanQrCode,
-                  iconData1: Icons.qr_code_scanner_rounded,
-                  yOffset: 0,
-                  // title2: "LIST",
-                  // onPressed2: model.navigateBack,
-                  // iconData2: Icons.list_rounded,
-                ),
-                body: model.isBusy
-                    ? AFKProgressIndicator()
-                    : model.questSuccessfullyFinished
-                        ? EmptyNote(
-                            onMoreButtonPressed: () =>
-                                model.replaceWithMainView(
-                                    index: BottomNavBarIndex.quest),
-                          )
-                        : Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.center,
-                                child: Column(
-                                  children: [
-                                    verticalSpaceMedium,
-                                    if (model.showStartSwipe)
-                                      AFKSlideButton(
-                                          quest: widget.quest,
-                                          canStartQuest:
-                                              model.hasEnoughSponsoring(
-                                                  quest: widget.quest),
-                                          onSubmit: () => model.maybeStartQuest(
-                                              quest: widget.quest)),
-                                    if (!model.hasEnoughSponsoring(
-                                        quest: widget.quest))
-                                      NotEnoughSponsoringNote(topPadding: 10),
-                                    if (!model.showStartSwipe &&
-                                        model.hasActiveQuest)
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            LiveQuestStatistic(
-                                                title: "Duration",
-                                                statistic: model.timeElapsed),
-                                            LiveQuestStatistic(
-                                              title: "Hints Found",
-                                              statistic: model.hasActiveQuest
-                                                  ? (model.foundObjects.length -
-                                                              1)
-                                                          .toString() +
-                                                      " / " +
-                                                      (model
-                                                                  .activeQuest
-                                                                  .quest
-                                                                  .markers
-                                                                  .length -
-                                                              1)
-                                                          .toString()
-                                                  : "0 / " +
-                                                      widget
-                                                          .quest.markers.length
-                                                          .toString(),
-                                            ),
-                                            // Column(
-                                            //   children: [
-                                            //     Text(
-                                            //         model.timeElapsed
-                                            //             .toString(),
-                                            //         maxLines: 1,
-                                            //         style: textTheme(context)
-                                            //             .headline4),
-                                            //     Text("Duration"),
-                                            //   ],
-                                            // ),
-                                            //verticalSpaceMedium,
-                                            // Column(
-                                            //   children: [
-                                            //     ScaleTransition(
-                                            //       scale: _animation,
-                                            //       child: Text("hi",
-                                            //           textAlign:
-                                            //               TextAlign.center,
-                                            //           style: textTheme(context)
-                                            //               .headline3),
-                                            //     ),
-                                            //     Text("Progress",
-                                            //         textAlign:
-                                            //             TextAlign.center),
-                                            //   ],
-                                            // ),
-                                          ],
-                                        ),
-                                      ),
-                                    Expanded(
-                                        child: NextHintDisplay(
-                                            model: model, quest: widget.quest)),
-                                    // SizedBox(height: 5),
-                                    if (model.useSuperUserFeatures)
-                                      Container(
-                                        height: 100,
-                                        child: Column(
-                                          children: [
-                                            Text("Scrollable list of Markers"),
-                                            Expanded(
-                                              child: ListView(
-                                                shrinkWrap: true,
-                                                children: [
-                                                  ...widget.quest.markers
-                                                      .map(
-                                                        (e) => TextButton(
-                                                          onPressed: () => model
-                                                              .displayQrCode(e),
-                                                          child: Text(e.id),
-                                                        ),
-                                                      )
-                                                      .toList(),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+      viewModelBuilder: () => locator<ActiveQrCodeSearchViewModel>(),
+      disposeViewModel: false,
+      onModelReady: (model) => model.initialize(quest: widget.quest),
+      builder: (context, model, child) {
+        if (model.animateProgress) {
+          _controller.reset();
+          _controller.forward();
+          model.animateProgress = false;
+        }
+        return WillPopScope(
+          onWillPop: () async {
+            if (!model.hasActiveQuest && !model.questSuccessfullyFinished) {
+              model.navigateBackFromSingleQuestView();
+            }
+            return false;
+          },
+          child: SafeArea(
+            child: Scaffold(
+              appBar: CustomAppBar(
+                title: "Treasure Hunt",
+                onBackButton: model.navigateBackFromSingleQuestView,
+                showRedLiveButton: true,
+                onAppBarButtonPressed: model.hasActiveQuest
+                    ? null
+                    : () => model.showQuestInfoDialog(quest: widget.quest),
+              ),
+              endDrawer: SizedBox(
+                width: screenWidth(context, percentage: 0.8),
+                child: const ActiveQuestDrawerView(),
+              ),
+              floatingActionButton: !model.hasActiveQuest
+                  ? SizedBox(height: 0, width: 0)
+                  : Container(
+                      height: 100,
+                      width: 100,
+                      child: Align(
+                        child: AFKFloatingActionButton(
+                          // title1: "SCAN",
+                          // onPressed2: model.hasActiveQuest
+                          //     ? null
+                          //     : () => model.maybeStartQuest(quest: quest),
+                          // title2: "START",
+                          //iconData2: Icons.star,
+                          onPressed: model.scanQrCode,
+                          backgroundColor: Colors.orange[300],
+                          icon: Shimmer.fromColors(
+                            baseColor: model.hasActiveQuest
+                                ? Colors.black
+                                : Colors.grey[400]!,
+                            highlightColor: Colors.white,
+                            period: const Duration(milliseconds: 1000),
+                            enabled: model.hasActiveQuest,
+                            child: Icon(Icons.qr_code_scanner_rounded,
+                                size: 36, color: Colors.grey[100]),
+                          ),
+                          //yOffset: 0,
+                          //isShimmering: true,
 
-                                    Row(
+                          // title2: "LIST",
+                          // onPressed2: model.navigateBack,
+                          // iconData2: Icons.list_rounded,
+                        ),
+                      ),
+                    ),
+              body: model.isBusy
+                  ? AFKProgressIndicator()
+                  : model.questSuccessfullyFinished
+                      ? EmptyNote(
+                          onMoreButtonPressed: () => model.replaceWithMainView(
+                              index: BottomNavBarIndex.quest),
+                        )
+                      : Stack(
+                          children: [
+                            Column(
+                              children: [
+                                // TODO: This whole container should be made a widget!
+                                Container(
+                                  // decoration: BoxDecoration(
+                                  //   boxShadow: [
+                                  //     BoxShadow(
+                                  //         offset: Offset(0, 100),
+                                  //         blurRadius: 4,
+                                  //         spreadRadius: 2,
+                                  //         color: kShadowColor)
+                                  //   ],
+                                  // ),
+                                  alignment: Alignment.center,
+                                  height: 100,
+                                  child: model.questFinished &&
+                                          !model.questSuccessfullyFinished
+                                      ? model.isBusy
+                                          ? AFKProgressIndicator()
+                                          : SizedBox(height: 0, width: 0)
+                                      : model.questSuccessfullyFinished
+                                          ? Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                    "You mastered this mission!", // "You are the best, you successfully finished the quest",
+                                                    textAlign: TextAlign.center,
+                                                    style: textTheme(context)
+                                                        .headline5),
+                                                verticalSpaceTiny,
+                                                ElevatedButton(
+                                                    onPressed: () => model
+                                                        .replaceWithMainView(
+                                                            index:
+                                                                BottomNavBarIndex
+                                                                    .quest),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Text(
+                                                        "More Quests",
+                                                      ),
+                                                    )),
+                                              ],
+                                            )
+                                          : model.isBusy ||
+                                                  model.distanceToStartMarker <
+                                                      0
+                                              ? AFKProgressIndicator()
+                                              : Stack(
+                                                  children: [
+                                                    AnimatedOpacity(
+                                                      opacity:
+                                                          model.showStartSwipe
+                                                              ? 1
+                                                              : 0,
+                                                      duration: Duration(
+                                                          milliseconds: 50),
+                                                      child: model
+                                                              .isNearStartMarker
+                                                          ? AFKSlideButton(
+                                                              //alignment: Alignment(0, 0),
+                                                              quest:
+                                                                  widget.quest,
+                                                              canStartQuest: model
+                                                                  .hasEnoughSponsoring(
+                                                                      quest: widget
+                                                                          .quest),
+                                                              onSubmit: () => model
+                                                                  .maybeStartQuest(
+                                                                      quest: widget
+                                                                          .quest))
+                                                          : Container(
+                                                              color:
+                                                                  Colors.white,
+                                                              child:
+                                                                  NotCloseToQuestNote(
+                                                                questType:
+                                                                    widget.quest
+                                                                        .type,
+                                                              ),
+                                                            ),
+                                                    ),
+                                                    IgnorePointer(
+                                                      ignoring:
+                                                          !model.hasActiveQuest,
+                                                      child: AnimatedOpacity(
+                                                        opacity:
+                                                            model.hasActiveQuest
+                                                                ? 1
+                                                                : 0,
+                                                        duration: Duration(
+                                                            seconds: 1),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            LiveQuestStatistic(
+                                                                title:
+                                                                    "Duration",
+                                                                statistic: model
+                                                                    .timeElapsed),
+                                                            LiveQuestStatistic(
+                                                              title:
+                                                                  "Codes Found",
+                                                              statistic: model
+                                                                  .getCurrentProgressString(),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                ),
+                                Expanded(
+                                    child: Stack(
+                                  children: [
+                                    NextClueCard(
+                                        model: model, quest: widget.quest),
+                                    Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text("Find & Scan",
-                                            style:
-                                                textTheme(context).headline6),
-                                        Icon(Icons.arrow_forward, size: 40),
-                                        SizedBox(width: 100),
+                                        AnimatedOpacity(
+                                          opacity: model.hasActiveQuest &&
+                                                  model.foundObjects.length -
+                                                          1 <
+                                                      1
+                                              ? 1
+                                              : 0,
+                                          duration: Duration(seconds: 1),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Text("Find & Scan",
+                                                  style: textTheme(context)
+                                                      .headline6),
+                                              Icon(Icons.arrow_forward,
+                                                  size: 40),
+                                              SizedBox(width: 110),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 45),
                                       ],
                                     ),
-                                    SizedBox(height: 28),
                                   ],
-                                ),
-                              ),
-                              if (model.validatingMarker)
-                                AFKProgressIndicator(),
-                              if (model.validatingMarker)
-                                Container(
-                                    color: Colors.grey[400]!.withOpacity(0.6))
-                            ],
-                          ),
-              ),
+                                )),
+                                // SizedBox(height: 5),
+                                if (model.useSuperUserFeatures)
+                                  Container(
+                                    height: 100,
+                                    child: Column(
+                                      children: [
+                                        Text("Scrollable list of Markers"),
+                                        Expanded(
+                                          child: ListView(
+                                            shrinkWrap: true,
+                                            children: [
+                                              ...widget.quest.markers
+                                                  .map(
+                                                    (e) => TextButton(
+                                                      onPressed: () => model
+                                                          .displayQrCode(e),
+                                                      child: Text(e.id),
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            if (model.validatingMarker) AFKProgressIndicator(),
+                            if (model.validatingMarker)
+                              Container(
+                                  color: Colors.grey[400]!.withOpacity(0.6))
+                          ],
+                        ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
 
-class NextHintDisplay extends StatelessWidget {
+class NextClueCard extends StatelessWidget {
   final ActiveQrCodeSearchViewModel model;
   final Quest quest;
-  const NextHintDisplay({Key? key, required this.model, required this.quest})
+  const NextClueCard({Key? key, required this.model, required this.quest})
       : super(key: key);
 
   @override
@@ -253,7 +333,7 @@ class NextHintDisplay extends StatelessWidget {
       decoration: quest.type != QuestType.QRCodeSearch
           ? BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
-              color: Colors.grey[200],
+              color: Colors.orange[100], //Colors.grey[200],
               boxShadow: [
                 BoxShadow(
                     blurRadius: 4,
@@ -263,7 +343,7 @@ class NextHintDisplay extends StatelessWidget {
               ],
             )
           : null,
-      margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+      margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,18 +358,30 @@ class NextHintDisplay extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (model.foundObjects.length > 0 && model.displayNewHint)
+                      if (model.foundObjects.length > 0 && model.displayNewClue)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                                "Hinweis " +
+                                "Clue Nr. " +
                                     (model.foundObjects.length)
                                         .toStringAsFixed(0),
                                 style: textTheme(context)
                                     .headline4!
                                     .copyWith(fontSize: 24)),
-                            //Icon(Icons.help_outline, color: Colors.grey[700], size: 30),
+                            GestureDetector(
+                              onTap: model.showNotImplementedSnackbar,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.help_outline,
+                                      color: Colors.grey[700], size: 30),
+                                  Text("Need hint?",
+                                      style:
+                                          TextStyle(color: Colors.grey[700])),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       // Text("Wo ist der nächste Code?",
@@ -304,11 +396,12 @@ class NextHintDisplay extends StatelessWidget {
             ),
           if (quest.type == QuestType.QRCodeHuntIndoor)
             Expanded(
-                child: DisplayHint(
-              hintString: model.getCurrentHint(),
-              displayNewHint: model.displayNewHint,
-              onNextHintPressed: () => model.setDisplayNewHint(true),
-            )),
+              child: DisplayClue(
+                hintString: model.getCurrentClue(),
+                displayNewHint: model.displayNewClue,
+                onNextCluePressed: () => model.setDisplayNewClue(true),
+              ),
+            ),
 //           if (quest.type == QuestType.QRCodeSearch)
 //             Expanded(
 //               child: Container(
@@ -382,22 +475,22 @@ class NextHintDisplay extends StatelessWidget {
   }
 }
 
-class DisplayHint extends StatefulWidget {
+class DisplayClue extends StatefulWidget {
   final String hintString;
   final bool displayNewHint;
-  final void Function() onNextHintPressed;
-  const DisplayHint(
+  final void Function() onNextCluePressed;
+  const DisplayClue(
       {Key? key,
       required this.hintString,
       required this.displayNewHint,
-      required this.onNextHintPressed})
+      required this.onNextCluePressed})
       : super(key: key);
 
   @override
-  State<DisplayHint> createState() => _DisplayHintState();
+  State<DisplayClue> createState() => _DisplayClueState();
 }
 
-class _DisplayHintState extends State<DisplayHint>
+class _DisplayClueState extends State<DisplayClue>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
   // ..repeat(reverse: true);
@@ -454,7 +547,7 @@ class _DisplayHintState extends State<DisplayHint>
                       shadowColor: MaterialStateProperty.all(Colors.black),
                     ),
                     onPressed: () async {
-                      widget.onNextHintPressed();
+                      widget.onNextCluePressed();
                       // _controller.forward();
                       // await Future.delayed(Duration(seconds: 2));
                       _controller.reset();
@@ -465,7 +558,7 @@ class _DisplayHintState extends State<DisplayHint>
                         baseColor: kWhiteTextColor,
                         highlightColor: kGreyTextColor,
                         period: const Duration(milliseconds: 1000),
-                        child: Text("Neuer Hinweis",
+                        child: Text("New Clue",
                             style: textTheme(context)
                                 .headline6!
                                 .copyWith(color: kWhiteTextColor)),

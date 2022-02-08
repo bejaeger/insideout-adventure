@@ -219,8 +219,8 @@ class BaseModel extends BaseViewModel {
     }
     if (result.hasError) {
       baseModelLog.e("Error occured: ${result.errorMessage}");
-      dialogService.showDialog(
-        title: "Failed to collect marker!",
+      await dialogService.showDialog(
+        title: "Cannot collect marker!",
         description: result.errorMessage!,
       );
       return;

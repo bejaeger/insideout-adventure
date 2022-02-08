@@ -16,7 +16,8 @@ List<Quest> getDummyQuests() {
     // commercialTrophy(),
     // seeparkSpielplatz(),
     // getDummyVibrationSearchQuestHeuweiler(),
-    // getQrCodeHuntJaeger(),
+    getQrCodeHuntJaeger(),
+    getQrCodeHuntJaeger2(),
     // streeth11th2ndVibration(),
     // getDummyVibrationSearchQuestFreiburg(),
     getDistanceEstimate200(),
@@ -279,6 +280,29 @@ Quest getQrCodeHuntJaeger() {
     type: QuestType.QRCodeHuntIndoor,
     startMarker: starenweg1(),
     finishMarker: starenweg6(),
+  );
+}
+
+Quest getQrCodeHuntJaeger2() {
+  return Quest(
+    id: "aHynXLPBE68rxe3Y083Lblubb",
+    name: "Second treasure hunt",
+    description: "Find hidden codes at Jaegers!",
+    afkCredits: 50,
+    markerNotes: [
+      MarkerNote(note: "Start"),
+      MarkerNote(note: "In einem der Bäder"),
+      MarkerNote(note: "Was da los!"),
+    ],
+    markers: [
+      heidach2(),
+      woodwayMarker1(),
+      starenweg1(),
+    ],
+    // TODO: QRCodeHuntIndoor
+    type: QuestType.QRCodeHuntIndoor,
+    startMarker: heidach2(),
+    finishMarker: starenweg1(),
   );
 }
 

@@ -127,7 +127,7 @@ class QuestService with ReactiveServiceMixin {
 
     _stopWatchService.startTimer();
 
-    if (quest.type == QuestType.QRCodeHuntIndoor ||
+    if (quest.type == QuestType.QRCodeHunt ||
         quest.type == QuestType.QRCodeSearch) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
@@ -712,8 +712,8 @@ class QuestService with ReactiveServiceMixin {
 
       // 2.
       if (locationVerification) {
-        final bool closeby =
-            await _markerService.isUserCloseby(marker: fullMarker);
+        final bool closeby = await _markerService.isUserCloseby(
+            marker: fullMarker, geofenceRadius: getGeoFenceForCurrentQuest());
         if (!closeby) {
           log.w("User is not nearby marker!");
           return MarkerAnalysisResult.error(
@@ -735,6 +735,14 @@ class QuestService with ReactiveServiceMixin {
       // return marker that was succesfully scanned
 
       return MarkerAnalysisResult.marker(marker: fullMarker);
+    }
+  }
+
+  int getGeoFenceForCurrentQuest() {
+    if (currentQuest?.type == QuestType.QRCodeHunt) {
+      return kMaxDistanceFromMarkerInMeterQrCodeHunt;
+    } else {
+      return kMaxDistanceFromMarkerInMeter;
     }
   }
 
@@ -840,7 +848,7 @@ class QuestService with ReactiveServiceMixin {
         type == QuestType.DistanceEstimate ||
         type == QuestType.QRCodeSearch ||
         type == QuestType.QRCodeSearchIndoor ||
-        type == QuestType.QRCodeHuntIndoor) {
+        type == QuestType.QRCodeHunt) {
       return QuestUIStyle.standalone;
     } else {
       return QuestUIStyle.map;
