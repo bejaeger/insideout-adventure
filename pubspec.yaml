@@ -39,7 +39,8 @@ dependencies:
   # flutter_facebook_auth: ^3.1.1
   #Google Maps
   google_maps_flutter: ^2.0.6
-
+  flip_card: ^0.6.0
+  
   #Geolocation 
   geolocator: ^7.7.1
   places_service: ^0.1.0

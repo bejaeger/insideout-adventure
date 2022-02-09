@@ -9,7 +9,6 @@ import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
-import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -72,14 +71,19 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
 
   void addMarkers({required Quest quest}) {
     for (AFKMarker _m in questService.markersToShowOnMap(questIn: quest)) {
-      addMarkerToMap(quest: quest, afkmarker: _m);
+      if (_m != quest.startMarker) {
+        addMarkerToMap(quest: quest, afkmarker: _m);
+      }
     }
     // notifyListeners();
   }
 
   void addAreas({required Quest quest}) {
     for (AFKMarker _m in questService.markersToShowOnMap(questIn: quest)) {
-      addAreaToMap(quest: quest, afkmarker: _m);
+      // don't add area if it's the start marker because that is handled separately
+      if (_m != quest.startMarker) {
+        addAreaToMap(quest: quest, afkmarker: _m);
+      }
     }
     // notifyListeners();
   }
@@ -560,7 +564,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
         // for camera position
 
         //Add Starter Marker
-        loadQuestMarkers();
+        // loadQuestMarkers();
 
         log.v("Animating camera to quest markers");
       } catch (error) {
@@ -621,14 +625,19 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
           "Cannot animate camera because no google maps controller present");
       return;
     }
+    List<LatLng> latLngListToShow = questService
+        .markersToShowOnMap(questIn: currentQuest)
+        .map((m) => LatLng(m.lat!, m.lon!))
+        .toList();
+    if (hasActiveQuest == false && currentQuest?.type == QuestType.QRCodeHunt ||
+        currentQuest?.type == QuestType.GPSAreaHunt) {
+      latLngListToShow.add(geolocationService.getUserLatLng);
+    }
     Future.delayed(
       Duration(milliseconds: delay),
       () => animateCameraToBetweenCoordinates(
         controller: controller ?? getGoogleMapController!,
-        latLngList: questService
-            .markersToShowOnMap(questIn: currentQuest)
-            .map((m) => LatLng(m.lat!, m.lon!))
-            .toList(),
+        latLngList: latLngListToShow,
       ),
     );
   }
@@ -636,7 +645,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
   Future animateCameraToBetweenCoordinates(
       {required GoogleMapController controller,
       required List<LatLng> latLngList,
-      double padding = 75}) async {
+      double padding = 100}) async {
     await controller.animateCamera(
       CameraUpdate.newLatLngBounds(
           mapsService.boundsFromLatLngList(latLngList: latLngList), padding),

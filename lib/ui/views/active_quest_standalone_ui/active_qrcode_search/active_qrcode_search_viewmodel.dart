@@ -5,13 +5,18 @@ import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
+import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_view.dart';
+import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
+//class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
+class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
   final MarkerService _markerService = locator<MarkerService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
+  final void Function([Future Function()]) flipCard;
+  ActiveQrCodeSearchViewModel({required this.flipCard});
 
   //getters
   bool get firstClueFound => foundObjects.length > 1;
@@ -120,27 +125,31 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-  void addMarkerToMap({required Quest quest, required AFKMarker? afkmarker}) {
-    if (afkmarker == null) return;
-    markersOnMap.add(
-      Marker(
-          markerId: MarkerId(afkmarker
-              .id), // google maps marker id of start marker will be our quest id
-          position: LatLng(afkmarker.lat!, afkmarker.lon!),
-          infoWindow: InfoWindow(snippet: foundObjects.length.toString()),
-          icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
-          onTap: () async {
-            dynamic adminMode = false;
-            if (useSuperUserFeatures) {
-              adminMode = await showAdminDialogAndGetResponse();
-              if (adminMode == true) {
-                displayQrCode(afkmarker);
-              }
-            }
-          }),
-    );
-    notifyListeners();
-  }
+  // @override
+  // void addMarkerToMap(
+  //     {required Quest quest,
+  //     required AFKMarker? afkmarker,
+  //     bool isFinishMarker = false}) {
+  //   if (afkmarker == null) return;
+  //   markersOnMap.add(
+  //     Marker(
+  //         markerId: MarkerId(afkmarker
+  //             .id), // google maps marker id of start marker will be our quest id
+  //         position: LatLng(afkmarker.lat!, afkmarker.lon!),
+  //         infoWindow: InfoWindow(snippet: foundObjects.length.toString()),
+  //         icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
+  //         onTap: () async {
+  //           dynamic adminMode = false;
+  //           if (useSuperUserFeatures) {
+  //             adminMode = await showAdminDialogAndGetResponse();
+  //             if (adminMode == true) {
+  //               displayQrCode(afkmarker);
+  //             }
+  //           }
+  //         }),
+  //   );
+  //   notifyListeners();
+  // }
 
   void loadQuestMarkers() {
     // for testing purposes, display location of qr code markers
@@ -149,7 +158,6 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
         addMarkerToMap(quest: activeQuest.quest, afkmarker: _m);
       }
     }
-
     // TODO:
     // This should be used to specify an area on the map that should
     // be searched through for markers!

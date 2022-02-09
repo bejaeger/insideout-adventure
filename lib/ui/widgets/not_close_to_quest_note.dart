@@ -37,6 +37,7 @@ class NotCloseToQuestNote extends StatelessWidget {
     return ViewModelBuilder<NotCloseToQuestNoteViewModel>.reactive(
       viewModelBuilder: () => NotCloseToQuestNoteViewModel(),
       builder: (context, model, child) => Container(
+        color: Colors.grey[50],
         height: 100,
         child: Padding(
           padding: const EdgeInsets.symmetric(

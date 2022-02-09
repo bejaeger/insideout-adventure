@@ -6,6 +6,7 @@ import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/services/common_services/pausable_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class GeolocationService extends PausableService {
@@ -23,6 +24,9 @@ class GeolocationService extends PausableService {
   Future<Position> get getUserLivePosition async =>
       _livePosition ??
       await getAndSetCurrentLocation(forceGettingNewPosition: false);
+  LatLng get getUserLatLng =>
+      LatLng(_livePosition!.latitude, _livePosition!.longitude);
+
   Position? get getUserLivePositionNullable => _livePosition;
 
   // for testing

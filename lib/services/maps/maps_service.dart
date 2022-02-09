@@ -20,6 +20,10 @@ class MapsService {
   }
 
   LatLngBounds boundsFromLatLngList({required List<LatLng> latLngList}) {
+    if (latLngList.length == 0) {
+      log.e("Can't created LatLngBounds from empty list!");
+      throw Exception("Can't created LatLngBounds from empty list!");
+    }
     double? x0, x1, y0, y1;
     for (LatLng latLng in latLngList) {
       if (x0 == null) {

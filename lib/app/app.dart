@@ -137,7 +137,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: PurchasedGiftCardsViewModel),
     LazySingleton(classType: ActiveTreasureLocationSearchQuestViewModel),
     LazySingleton(classType: ActiveDistanceEstimateQuestViewModel),
-    LazySingleton(classType: ActiveQrCodeSearchViewModel),
+    // LazySingleton(classType: ActiveQrCodeSearchViewModel),
 
     // Services
   ],

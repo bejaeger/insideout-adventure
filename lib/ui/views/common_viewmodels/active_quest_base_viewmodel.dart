@@ -48,7 +48,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
   // timeElapsed is a reactive value
   String get timeElapsed => questService.getMinutesElapsedString();
   double get distanceToStartMarker => geolocationService.distanceToStartMarker;
-
+  bool get isCalculatingDistanceToStartMarker => distanceToStartMarker < 0;
   // -----------------------------------------------------------
   // UI state
   bool showCollectedMarkerAnimation = false;

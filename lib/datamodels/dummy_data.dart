@@ -296,7 +296,7 @@ Quest getQrCodeHuntJaeger2() {
     ],
     markers: [
       heidach2(),
-      woodwayMarker1(),
+      heidach1(),
       starenweg1(),
     ],
     // TODO: QRCodeHuntIndoor

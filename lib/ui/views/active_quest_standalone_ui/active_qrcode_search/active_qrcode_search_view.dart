@@ -1,11 +1,8 @@
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
@@ -14,7 +11,11 @@ import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:flip_card/flip_card.dart';
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
@@ -31,6 +32,8 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
+  late final FlipCardController _flipCardController;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +45,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
       parent: _controller,
       curve: Curves.easeInOut,
     );
+    _flipCardController = FlipCardController();
     _controller.forward();
   }
 
@@ -51,10 +55,29 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
     super.dispose();
   }
 
+  bool isShowClue = true;
+  bool isFlipping = false;
+  void flipCard([Future Function()? animateCamera]) async {
+    if (!isFlipping) {
+      isShowClue = !isShowClue;
+      setState(() {});
+      isFlipping = true;
+      _flipCardController.toggleCard();
+      Future.delayed(Duration(milliseconds: 510), () {
+        isFlipping = false;
+        setState(() {});
+      });
+      if (isShowClue == false && animateCamera != null) {
+        print("------------------------- ANIMATING");
+        animateCamera();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActiveQrCodeSearchViewModel>.reactive(
-      viewModelBuilder: () => locator<ActiveQrCodeSearchViewModel>(),
+      viewModelBuilder: () => ActiveQrCodeSearchViewModel(flipCard: flipCard),
       disposeViewModel: false,
       onModelReady: (model) => model.initialize(quest: widget.quest),
       builder: (context, model, child) {
@@ -63,6 +86,17 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
           _controller.forward();
           model.animateProgress = false;
         }
+
+        // TODO: handle this in viewmodel
+        if (!model.isNearStartMarker &&
+            !model.isCalculatingDistanceToStartMarker) {
+          SchedulerBinding.instance?.addPostFrameCallback((_) {
+            if (isShowClue == true) {
+              Future.delayed(Duration(milliseconds: 0), () => flipCard(null));
+            }
+          });
+        }
+
         return WillPopScope(
           onWillPop: () async {
             if (!model.hasActiveQuest && !model.questSuccessfullyFinished) {
@@ -86,37 +120,65 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
               ),
               floatingActionButton: !model.hasActiveQuest
                   ? SizedBox(height: 0, width: 0)
-                  : Container(
-                      height: 100,
-                      width: 100,
-                      child: Align(
-                        child: AFKFloatingActionButton(
-                          // title1: "SCAN",
-                          // onPressed2: model.hasActiveQuest
-                          //     ? null
-                          //     : () => model.maybeStartQuest(quest: quest),
-                          // title2: "START",
-                          //iconData2: Icons.star,
-                          onPressed: model.scanQrCode,
-                          backgroundColor: Colors.orange[300],
-                          icon: Shimmer.fromColors(
-                            baseColor: model.hasActiveQuest
-                                ? Colors.black
-                                : Colors.grey[400]!,
-                            highlightColor: Colors.white,
-                            period: const Duration(milliseconds: 1000),
-                            enabled: model.hasActiveQuest,
-                            child: Icon(Icons.qr_code_scanner_rounded,
-                                size: 36, color: Colors.grey[100]),
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          height: 80,
+                          width: 80,
+                          child: Align(
+                            child: AFKFloatingActionButton(
+                              onPressed: () => flipCard(() =>
+                                  model.animateCameraToQuestMarkers(
+                                      model.getGoogleMapController)),
+                              backgroundColor: Colors.orange[300],
+                              icon: Column(
+                                children: [
+                                  Icon(
+                                      isShowClue == true
+                                          ? Icons.map
+                                          : Icons.list,
+                                      size: 36,
+                                      color: Colors.grey[800]),
+                                  Text(isShowClue == true ? "Map" : "Clue")
+                                ],
+                              ),
+                            ),
                           ),
-                          //yOffset: 0,
-                          //isShimmering: true,
-
-                          // title2: "LIST",
-                          // onPressed2: model.navigateBack,
-                          // iconData2: Icons.list_rounded,
                         ),
-                      ),
+                        Container(
+                          height: 100,
+                          width: 100,
+                          child: Align(
+                            child: AFKFloatingActionButton(
+                              // title1: "SCAN",
+                              // onPressed2: model.hasActiveQuest
+                              //     ? null
+                              //     : () => model.maybeStartQuest(quest: quest),
+                              // title2: "START",
+                              //iconData2: Icons.star,
+                              onPressed: model.scanQrCode,
+                              backgroundColor: Colors.orange[300],
+                              icon: Shimmer.fromColors(
+                                baseColor: model.hasActiveQuest
+                                    ? Colors.black
+                                    : Colors.grey[400]!,
+                                highlightColor: Colors.white,
+                                period: const Duration(milliseconds: 1000),
+                                enabled: model.hasActiveQuest,
+                                child: Icon(Icons.qr_code_scanner_rounded,
+                                    size: 36, color: Colors.grey[100]),
+                              ),
+                              //yOffset: 0,
+                              //isShimmering: true,
+
+                              // title2: "LIST",
+                              // onPressed2: model.navigateBack,
+                              // iconData2: Icons.list_rounded,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
               body: model.isBusy
                   ? AFKProgressIndicator()
@@ -175,8 +237,8 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                               ],
                                             )
                                           : model.isBusy ||
-                                                  model.distanceToStartMarker <
-                                                      0
+                                                  model
+                                                      .isCalculatingDistanceToStartMarker
                                               ? AFKProgressIndicator()
                                               : Stack(
                                                   children: [
@@ -248,32 +310,45 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                 Expanded(
                                     child: Stack(
                                   children: [
-                                    NextClueCard(
-                                        model: model, quest: widget.quest),
+                                    FlipCard(
+                                      flipOnTouch: false,
+                                      speed: 500,
+                                      controller: _flipCardController,
+                                      fill: Fill
+                                          .fillBack, // Fill the back side of the card to make in the same size as the front.
+                                      direction:
+                                          FlipDirection.HORIZONTAL, // default
+                                      front: NextClueCard(
+                                          model: model, quest: widget.quest),
+                                      back: NextClueCard(
+                                          model: model,
+                                          quest: widget.quest,
+                                          showMap: true),
+                                    ),
                                     Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        AnimatedOpacity(
-                                          opacity: model.hasActiveQuest &&
-                                                  model.foundObjects.length -
-                                                          1 <
-                                                      1
-                                              ? 1
-                                              : 0,
-                                          duration: Duration(seconds: 1),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Text("Find & Scan",
-                                                  style: textTheme(context)
-                                                      .headline6),
-                                              Icon(Icons.arrow_forward,
-                                                  size: 40),
-                                              SizedBox(width: 110),
-                                            ],
-                                          ),
-                                        ),
+                                        // AnimatedOpacity(
+                                        //   opacity: model.hasActiveQuest &&
+                                        //           model.foundObjects.length -
+                                        //                   1 <
+                                        //               1
+                                        //       ? 1
+                                        //       : 0,
+                                        //   duration: Duration(seconds: 1),
+                                        //   child: Row(
+                                        //     mainAxisAlignment:
+                                        //         MainAxisAlignment.end,
+                                        //     children: [
+                                        //       Text("Find & Scan",
+                                        //           style: textTheme(context)
+                                        //               .headline6),
+                                        //       Icon(Icons.arrow_forward,
+                                        //           size: 40),
+                                        //       SizedBox(width: 110),
+                                        //     ],
+                                        //   ),
+                                        // ),
                                         SizedBox(height: 45),
                                       ],
                                     ),
@@ -324,13 +399,18 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
 class NextClueCard extends StatelessWidget {
   final ActiveQrCodeSearchViewModel model;
   final Quest quest;
-  const NextClueCard({Key? key, required this.model, required this.quest})
+  final bool showMap;
+  const NextClueCard(
+      {Key? key,
+      required this.model,
+      required this.quest,
+      this.showMap = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: quest.type != QuestType.QRCodeSearch
+      decoration: !showMap
           ? BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               color: Colors.orange[100], //Colors.grey[200],
@@ -343,12 +423,12 @@ class NextClueCard extends StatelessWidget {
               ],
             )
           : null,
-      margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+      margin: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (quest.type != QuestType.QRCodeSearch)
+          if (!showMap)
             Container(
               alignment: Alignment.center,
               child: Padding(
@@ -394,81 +474,77 @@ class NextClueCard extends StatelessWidget {
                 ),
               ),
             ),
-          if (quest.type == QuestType.QRCodeHunt)
+          if (!showMap)
+            !model.isNearStartMarker || model.isCalculatingDistanceToStartMarker
+                ? AFKProgressIndicator(
+                    alignment: Alignment.center,
+                  )
+                : Expanded(
+                    child: DisplayClue(
+                      hintString: model.getCurrentClue(),
+                      displayNewHint: model.displayNewClue,
+                      onNextCluePressed: () => model.setDisplayNewClue(true),
+                    ),
+                  ),
+          if (showMap)
             Expanded(
-              child: DisplayClue(
-                hintString: model.getCurrentClue(),
-                displayNewHint: model.displayNewClue,
-                onNextCluePressed: () => model.setDisplayNewClue(true),
+              child: Container(
+//                       margin: const EdgeInsets.all(20),
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 4, spreadRadius: 2, color: kShadowColor)
+                  ],
+                ),
+                child: Stack(
+                  children: [
+                    GoogleMap(
+                      //mapType: MapType.hybrid,
+                      initialCameraPosition: model.initialCameraPosition(),
+                      //Place Markers in the Map
+                      markers: model.markersOnMap,
+                      circles: model.areasOnMap,
+                      //callback that’s called when the map is ready to us.
+                      onMapCreated: model.onMapCreated,
+                      //For showing your current location on Map with a blue dot.
+                      myLocationEnabled: true,
+                      // Button used for bringing the user location to the center of the camera view.
+                      myLocationButtonEnabled: false,
+                      //Remove the Zoom in and out button
+                      zoomControlsEnabled: false,
+                      //onTap: model.handleTap(),
+                      //Enable Traffic Mode.
+                      //trafficEnabled: true,
+                    ),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(16.0)),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                  model.hasActiveQuest
+                                      ? "Your collected areas"
+                                      : "Go to the highlighted area and start the quest",
+                                  textAlign: TextAlign.center,
+                                  style: textTheme(context).headline6),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-//           if (quest.type == QuestType.QRCodeSearch)
-//             Expanded(
-//               child: Container(
-// //                       margin: const EdgeInsets.all(20),
-//                 clipBehavior: Clip.antiAlias,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(20.0),
-//                   boxShadow: [
-//                     BoxShadow(
-//                         blurRadius: 4, spreadRadius: 2, color: kShadowColor)
-//                   ],
-//                 ),
-//                 child: Stack(
-//                   children: [
-//                     GoogleMap(
-//                       //mapType: MapType.hybrid,
-//                       initialCameraPosition: model.initialCameraPosition(),
-//                       //Place Markers in the Map
-//                       markers: model.markersOnMap,
-//                       //callback that’s called when the map is ready to us.
-//                       onMapCreated: model.onMapCreated,
-//                       //For showing your current location on Map with a blue dot.
-//                       myLocationEnabled: true,
-//                       // Button used for bringing the user location to the center of the camera view.
-//                       myLocationButtonEnabled: false,
-//                       //Remove the Zoom in and out button
-//                       zoomControlsEnabled: false,
-//                       //onTap: model.handleTap(),
-//                       //Enable Traffic Mode.
-//                       //trafficEnabled: true,
-//                     ),
-//                     Align(
-//                       alignment: Alignment.topCenter,
-//                       child: Padding(
-//                         padding: const EdgeInsets.all(15.0),
-//                         child: Container(
-//                           padding: const EdgeInsets.all(20.0),
-//                           decoration: BoxDecoration(
-//                               color: Colors.white.withOpacity(0.9),
-//                               borderRadius: BorderRadius.circular(16.0)),
-//                           child:
-//                               Column(mainAxisSize: MainAxisSize.min, children: [
-//                             Text("Find codes in the displayed area",
-//                                 textAlign: TextAlign.center,
-//                                 style: textTheme(context).headline6),
-//                           ]),
-//                         ),
-//                       ),
-//                     ),
-//                     Align(
-//                         alignment: Alignment.center,
-//                         child: Padding(
-//                           padding: const EdgeInsets.all(15.0),
-//                           child: Container(
-//                             height: 200,
-//                             width: 200,
-//                             padding: const EdgeInsets.all(20.0),
-//                             decoration: BoxDecoration(
-//                                 //border: Border.all(color: kPrimaryColor),
-//                                 color: kPrimaryColor.withOpacity(0.2),
-//                                 borderRadius: BorderRadius.circular(180.0)),
-//                           ),
-//                         ))
-//                   ],
-//                 ),
-//               ),
-//             ),
         ],
       ),
     );
