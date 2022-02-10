@@ -8,6 +8,7 @@ import 'package:afkcredits/services/common_services/pausable_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:math' as math;
 
 class GeolocationService extends PausableService {
   final log = getLogger('GeolocationService');
@@ -450,5 +451,18 @@ class GeolocationService extends PausableService {
               lon2: kTestLon)
           .toStringAsFixed(1);
     }
+  }
+
+  LatLng getLatLngShiftedLon({required LatLng latLng, double offset = 100}) {
+    //Earth’s radius, sphere
+    double R = 6378137;
+    //Coordinate offsets in radians
+    // final double dLat = offset/R;
+    final double dLon =
+        offset / (R * math.cos(math.pi * latLng.latitude / 180));
+    //OffsetPosition, decimal degrees
+    // final double newLat = latLng.latitude + dLat * 180/math.pi;
+    final double newLon = latLng.longitude + dLon * 180 / math.pi;
+    return LatLng(latLng.latitude, newLon);
   }
 }

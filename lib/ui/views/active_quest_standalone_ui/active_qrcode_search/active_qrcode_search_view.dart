@@ -1,6 +1,8 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
@@ -16,6 +18,7 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
@@ -30,48 +33,52 @@ class ActiveQrCodeSearchView extends StatefulWidget {
 
 class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
     with TickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _animation;
+  // late final AnimationController _controller;
+  // late final Animation<double> _animation;
   late final FlipCardController _flipCardController;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    );
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    );
+    // _controller = AnimationController(
+    //   duration: const Duration(seconds: 1),
+    //   vsync: this,
+    // );
+    // _animation = CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Curves.easeInOut,
+    // );
     _flipCardController = FlipCardController();
-    _controller.forward();
+    // _controller.forward();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    // _controller.dispose();
     super.dispose();
   }
 
+  final flipDuration = 500;
   bool isShowClue = true;
   bool isFlipping = false;
-  void flipCard([Future Function()? animateCamera]) async {
-    if (!isFlipping) {
-      isShowClue = !isShowClue;
-      setState(() {});
-      isFlipping = true;
-      _flipCardController.toggleCard();
-      Future.delayed(Duration(milliseconds: 510), () {
-        isFlipping = false;
-        setState(() {});
-      });
-      if (isShowClue == false && animateCamera != null) {
-        print("------------------------- ANIMATING");
-        animateCamera();
-      }
+  bool flipCard(
+      {Future Function()? animateCamera, bool? flipToMap, bool? flipToClue}) {
+    if (isFlipping) return false;
+    // flip only if the clue is shown at the moment
+    if (flipToMap == true && !isShowClue) return false;
+    // flip only if the map is shown at the moment
+    if (flipToClue == true && isShowClue) return false;
+    isShowClue = !isShowClue;
+    setState(() {});
+    isFlipping = true;
+    _flipCardController.toggleCard();
+    Future.delayed(Duration(milliseconds: flipDuration + 10), () {
+      isFlipping = false;
+    });
+    if (isShowClue == false && animateCamera != null) {
+      animateCamera();
     }
+    return true;
   }
 
   @override
@@ -81,18 +88,18 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
       disposeViewModel: false,
       onModelReady: (model) => model.initialize(quest: widget.quest),
       builder: (context, model, child) {
-        if (model.animateProgress) {
-          _controller.reset();
-          _controller.forward();
-          model.animateProgress = false;
-        }
+        // if (model.animateProgress) {
+        //   _controller.reset();
+        //   _controller.forward();
+        //   model.animateProgress = false;
+        // }
 
         // TODO: handle this in viewmodel
         if (!model.isNearStartMarker &&
             !model.isCalculatingDistanceToStartMarker) {
           SchedulerBinding.instance?.addPostFrameCallback((_) {
             if (isShowClue == true) {
-              Future.delayed(Duration(milliseconds: 0), () => flipCard(null));
+              Future.delayed(Duration(milliseconds: 0), () => flipCard());
             }
           });
         }
@@ -128,9 +135,10 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                           width: 80,
                           child: Align(
                             child: AFKFloatingActionButton(
-                              onPressed: () => flipCard(() =>
-                                  model.animateCameraToQuestMarkers(
-                                      model.getGoogleMapController)),
+                              onPressed: () => flipCard(
+                                  animateCamera: () =>
+                                      model.animateCameraToQuestMarkers(
+                                          model.getGoogleMapController)),
                               backgroundColor: Colors.orange[300],
                               icon: Column(
                                 children: [
@@ -157,18 +165,27 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                               //     : () => model.maybeStartQuest(quest: quest),
                               // title2: "START",
                               //iconData2: Icons.star,
-                              onPressed: model.scanQrCode,
+                              onPressed:
+                                  widget.quest.type == QuestType.QRCodeHunt
+                                      ? model.scanQrCode
+                                      : model.collectMarkerFromGPSLocation,
                               backgroundColor: Colors.orange[300],
                               icon: Shimmer.fromColors(
-                                baseColor: model.hasActiveQuest
-                                    ? Colors.black
-                                    : Colors.grey[400]!,
-                                highlightColor: Colors.white,
-                                period: const Duration(milliseconds: 1000),
-                                enabled: model.hasActiveQuest,
-                                child: Icon(Icons.qr_code_scanner_rounded,
-                                    size: 36, color: Colors.grey[100]),
-                              ),
+                                  baseColor: model.hasActiveQuest
+                                      ? Colors.black
+                                      : Colors.grey[400]!,
+                                  highlightColor: Colors.white,
+                                  period: const Duration(milliseconds: 1000),
+                                  enabled: model.hasActiveQuest,
+                                  child:
+                                      widget.quest.type == QuestType.QRCodeHunt
+                                          ? Icon(Icons.qr_code_scanner_rounded,
+                                              size: 36, color: Colors.grey[100])
+                                          : model.validatingMarkerInArea
+                                              ? AFKProgressIndicator()
+                                              : Image.asset(kPinInAreaIcon,
+                                                  color: kWhiteTextColor,
+                                                  height: 40)),
                               //yOffset: 0,
                               //isShimmering: true,
 
@@ -312,7 +329,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                   children: [
                                     FlipCard(
                                       flipOnTouch: false,
-                                      speed: 500,
+                                      speed: flipDuration,
                                       controller: _flipCardController,
                                       fill: Fill
                                           .fillBack, // Fill the back side of the card to make in the same size as the front.
@@ -325,12 +342,83 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                           quest: widget.quest,
                                           showMap: true),
                                     ),
+                                    IgnorePointer(
+                                      ignoring: !model.displayButtonNewClue,
+                                      child: AnimatedOpacity(
+                                        duration: Duration(milliseconds: 500),
+                                        opacity:
+                                            model.displayButtonNewClue ? 1 : 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 30.0,
+                                              left: 30,
+                                              right: 30),
+                                          child: Align(
+                                            alignment:
+                                                model.currentQuest?.type ==
+                                                        QuestType.GPSAreaHunt
+                                                    ? Alignment.bottomLeft
+                                                    : Alignment.center,
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.orange),
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                        10),
+                                                // shadowColor:
+                                                //     MaterialStateProperty.all(
+                                                //         Colors.black),
+                                              ),
+                                              onPressed: () async {
+                                                await model
+                                                    .setDisplayNewClue(true);
+                                                // _controller.forward();
+                                                // await Future.delayed(Duration(seconds: 2));
+                                                // _controller.reset();
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(16.0),
+                                                child: Shimmer.fromColors(
+                                                  baseColor: kWhiteTextColor,
+                                                  highlightColor: kGreyTextColor
+                                                      .withOpacity(0.6),
+                                                  period: const Duration(
+                                                      milliseconds: 1000),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                          Icons
+                                                              .play_arrow_rounded,
+                                                          size: 36,
+                                                          color:
+                                                              kWhiteTextColor),
+                                                      Text("New Clue",
+                                                          style: textTheme(
+                                                                  context)
+                                                              .headline6!
+                                                              .copyWith(
+                                                                  color:
+                                                                      kWhiteTextColor)),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         // AnimatedOpacity(
                                         //   opacity: model.hasActiveQuest &&
-                                        //           model.foundObjects.length -
+                                        //           model.getNumberMarkersCollected -
                                         //                   1 <
                                         //               1
                                         //       ? 1
@@ -438,13 +526,14 @@ class NextClueCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (model.foundObjects.length > 0 && model.displayNewClue)
+                      if (model.getNumberMarkersCollected > 0 &&
+                          model.displayClue)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                                 "Clue Nr. " +
-                                    (model.foundObjects.length)
+                                    (model.getNumberMarkersCollected)
                                         .toStringAsFixed(0),
                                 style: textTheme(context)
                                     .headline4!
@@ -480,11 +569,14 @@ class NextClueCard extends StatelessWidget {
                     alignment: Alignment.center,
                   )
                 : Expanded(
-                    child: DisplayClue(
-                      hintString: model.getCurrentClue(),
-                      displayNewHint: model.displayNewClue,
-                      onNextCluePressed: () => model.setDisplayNewClue(true),
-                    ),
+                    child: model.displayClue
+                        ? DisplayClue(
+                            hintString: model.getCurrentClue(),
+                            onNextCluePressed: () =>
+                                model.setDisplayNewClue(true),
+                            animateProgress: model.animateProgress,
+                          )
+                        : SizedBox(height: 0, width: 0),
                   ),
           if (showMap)
             Expanded(
@@ -517,28 +609,27 @@ class NextClueCard extends StatelessWidget {
                       //onTap: model.handleTap(),
                       //Enable Traffic Mode.
                       //trafficEnabled: true,
+                      mapToolbarEnabled: false,
                     ),
                     Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
-                        child: Container(
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(16.0)),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                  model.hasActiveQuest
-                                      ? "Your collected areas"
-                                      : "Go to the highlighted area and start the quest",
-                                  textAlign: TextAlign.center,
-                                  style: textTheme(context).headline6),
-                            ],
-                          ),
-                        ),
+                        child: model.isAnimatingCamera
+                            ? AFKProgressIndicator(
+                                alignment: Alignment.topCenter)
+                            : Container(
+                                padding: const EdgeInsets.all(20.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.9),
+                                    borderRadius: BorderRadius.circular(16.0)),
+                                child: Text(
+                                    model.hasActiveQuest
+                                        ? "Your collected areas"
+                                        : "Go to the highlighted area and start the quest",
+                                    textAlign: TextAlign.center,
+                                    style: textTheme(context).headline6),
+                              ),
                       ),
                     ),
                   ],
@@ -553,13 +644,13 @@ class NextClueCard extends StatelessWidget {
 
 class DisplayClue extends StatefulWidget {
   final String hintString;
-  final bool displayNewHint;
+  final bool animateProgress;
   final void Function() onNextCluePressed;
   const DisplayClue(
       {Key? key,
       required this.hintString,
-      required this.displayNewHint,
-      required this.onNextCluePressed})
+      required this.onNextCluePressed,
+      required this.animateProgress})
       : super(key: key);
 
   @override
@@ -594,57 +685,17 @@ class _DisplayClueState extends State<DisplayClue>
 
   @override
   Widget build(BuildContext context) {
-    _controller.forward();
+    // TODO: THIS IS REBUILDING EVERY SECOND!!!!!!!!!!!!!!!!!
+    // TODO SHOULD NOT BE THE CASE!
     return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          widget.displayNewHint
-              ? Expanded(
-                  child: RotationTransition(
-                    turns: _animation,
-                    child: Align(
-                      child: Text(widget.hintString,
-                          //overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: textTheme(context)
-                              .headline6!
-                              .copyWith(fontSize: 30)),
-                    ),
-                  ),
-                )
-              : Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(10),
-                      shadowColor: MaterialStateProperty.all(Colors.black),
-                    ),
-                    onPressed: () async {
-                      widget.onNextCluePressed();
-                      // _controller.forward();
-                      // await Future.delayed(Duration(seconds: 2));
-                      _controller.reset();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Shimmer.fromColors(
-                        baseColor: kWhiteTextColor,
-                        highlightColor: kGreyTextColor,
-                        period: const Duration(milliseconds: 1000),
-                        child: Text("New Clue",
-                            style: textTheme(context)
-                                .headline6!
-                                .copyWith(color: kWhiteTextColor)),
-                      ),
-                    ),
-                  ),
-                ),
-          verticalSpaceMedium,
-        ],
-      ),
-    );
+        padding: const EdgeInsets.all(20),
+        alignment: Alignment(0, -0.1),
+        child: RotationTransition(
+          turns: _animation,
+          child: Text(widget.hintString,
+              //overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: textTheme(context).headline6!.copyWith(fontSize: 30)),
+        ));
   }
 }

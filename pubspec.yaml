@@ -147,6 +147,7 @@ flutter:
     - assets/icons/create_quest.png
     - assets/icons/giftcard.png
     - assets/icons/money.png
+    - assets/icons/location-icon.ico
 
   # To add assets to your application, add an assets section, like this:
   #assets:

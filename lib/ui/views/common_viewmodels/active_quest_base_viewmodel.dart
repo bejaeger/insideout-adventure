@@ -91,9 +91,13 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       bool countStartMarkerAsCollected = false}) async {
     // cancel listener that was only used for calibration
     cancelPositionListener();
+
     // TODO: this might not be needed
-    if (await checkIfBatterySaveModeOn()) {
-      resetSlider();
+    // if (await checkIfBatterySaveModeOn()) {
+    //   resetSlider();
+    //   return false;
+    // }
+    if (!hasEnoughSponsoring(quest: quest)) {
       return false;
     }
     try {

@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -310,10 +311,11 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                         if (widget.quest.type == QuestType.GPSAreaHike)
                           await model.collectMarkerFromGPSLocation();
                       },
-                      iconData1: widget.quest.type == QuestType.QRCodeHike
-                          ? Icons.qr_code_scanner_rounded
-                          : Icons.add_circle_outline_rounded,
-                    )
+                      icon1: widget.quest.type == QuestType.QRCodeHike
+                          ? Icon(Icons.qr_code_scanner_rounded,
+                              size: 34, color: Colors.white)
+                          : Image.asset(kPinInAreaIcon,
+                              color: kWhiteTextColor, height: 40))
                   : null,
             ),
           ),
