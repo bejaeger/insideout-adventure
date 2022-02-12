@@ -30,6 +30,7 @@ import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
 import '../ui/views/gift_cards/gift_card_view.dart';
+import '../ui/views/history_and_achievements/history_and_achievements_view.dart';
 import '../ui/views/layout/bottom_bar_layout_view.dart';
 import '../ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
@@ -95,6 +96,8 @@ class Routes {
   static const String manageGiftCardstView = '/manage-gift-cardst-view';
   static const String questsOverviewView = '/quests-overview-view';
   static const String addGiftCardsView = '/add-gift-cards-view';
+  static const String historyAndAchievementsView =
+      '/history-and-achievements-view';
   static const all = <String>{
     sponsorHomeView,
     insertPrePurchasedGiftCardView,
@@ -130,6 +133,7 @@ class Routes {
     manageGiftCardstView,
     questsOverviewView,
     addGiftCardsView,
+    historyAndAchievementsView,
   };
 }
 
@@ -176,6 +180,8 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.manageGiftCardstView, page: ManageGiftCardstView),
     RouteDef(Routes.questsOverviewView, page: QuestsOverviewView),
     RouteDef(Routes.addGiftCardsView, page: AddGiftCardsView),
+    RouteDef(Routes.historyAndAchievementsView,
+        page: HistoryAndAchievementsView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -462,6 +468,18 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    HistoryAndAchievementsView: (data) {
+      var args = data.getArgs<HistoryAndAchievementsViewArguments>(
+        orElse: () => HistoryAndAchievementsViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => HistoryAndAchievementsView(
+          key: args.key,
+          initialIndex: args.initialIndex,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -606,4 +624,11 @@ class CreateQuestViewArguments {
 class AddGiftCardsViewArguments {
   final Key? key;
   AddGiftCardsViewArguments({this.key});
+}
+
+/// HistoryAndAchievementsView arguments holder class
+class HistoryAndAchievementsViewArguments {
+  final Key? key;
+  final int initialIndex;
+  HistoryAndAchievementsViewArguments({this.key, this.initialIndex = 0});
 }

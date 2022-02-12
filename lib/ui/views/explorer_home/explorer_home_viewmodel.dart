@@ -7,15 +7,12 @@ import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
-import 'package:afkcredits/services/gamification/gamification_service.dart';
-import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
-import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   final GiftCardService _giftCardService = locator<GiftCardService>();
@@ -130,6 +127,16 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
 
   Future navigateToGiftCardsView() async {
     await navigationService.navigateTo(Routes.purchasedGiftCardsView);
+  }
+
+  void navigateToAchievementsView() {
+    navigationService.navigateTo(Routes.historyAndAchievementsView,
+        arguments: HistoryAndAchievementsViewArguments(initialIndex: 1));
+  }
+
+  void navigateToQuestHistoryView() {
+    navigationService.navigateTo(Routes.historyAndAchievementsView,
+        arguments: HistoryAndAchievementsViewArguments(initialIndex: 0));
   }
 
   //-----------------------------------------

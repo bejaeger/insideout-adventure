@@ -6,9 +6,11 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/enums/stats_type.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/achievement_card.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/activated_quest_panel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/finished_quest_card.dart';
 import 'package:afkcredits/ui/widgets/nav_button_widget.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
@@ -151,11 +153,12 @@ class ExplorerHomeView extends StatelessWidget {
                       //   ],
                       // ),
                       verticalSpaceSmall,
+                      verticalSpaceSmall,
                       SectionHeader(
                         horizontalPadding: 0,
                         title: "Achievements",
                         titleOpacity: 0.6,
-                        //onTextButtonTap: () => print("HI"),
+                        onButtonTap: model.navigateToAchievementsView,
                       ),
                       if (model.activatedQuestsHistory.length > 0)
                         AchievementsGrid(
@@ -163,10 +166,12 @@ class ExplorerHomeView extends StatelessWidget {
                           onPressed: () => null,
                         ),
                       verticalSpaceSmall,
+                      verticalSpaceSmall,
                       SectionHeader(
                         horizontalPadding: 0,
                         title: "Quest History",
                         titleOpacity: 0.6,
+                        onButtonTap: model.navigateToQuestHistoryView,
                       ),
                       if (model.activatedQuestsHistory.length > 0)
                         QuestsGrid(
@@ -308,144 +313,6 @@ class AchievementsGrid extends StatelessWidget {
             //onTap: () => null,
           );
         },
-      ),
-    );
-  }
-}
-
-class AchievementCard extends StatelessWidget {
-  final Achievement achievement;
-  const AchievementCard({Key? key, required this.achievement})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
-        alignment: Alignment.center,
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                children: [
-                  Flexible(
-                      //heightFactor: 0.6,
-                      child: Icon(Icons.trip_origin_sharp,
-                          size: 50, color: Colors.orange.shade400)),
-                  verticalSpaceSmall,
-                  Text(achievement.name,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ),
-            if (!achievement.completed)
-              Container(
-                color: Colors.grey.withOpacity(0.5),
-              ),
-            achievement.completed
-                ? Banner(
-                    message: "UNLOCKED",
-                    location: BannerLocation.topStart,
-                    color: Colors.green)
-                : Banner(message: "LOCKED", location: BannerLocation.topStart),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class FinishedQuestCard extends StatelessWidget {
-  final ActivatedQuest quest;
-  final void Function()? onTap;
-
-  FinishedQuestCard({required this.quest, this.onTap});
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        elevation: 2,
-        //clipBehavior: Clip.hardEdge,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Container(
-          height: 200,
-          decoration: BoxDecoration(
-            //border:
-            //  Border.all(color: Colors.black.withOpacity(0.1), width: 2.0),
-            borderRadius: BorderRadius.circular(15.0),
-            //color: kPrimaryColor.withOpacity(0.2),
-          ),
-          //width: screenWidthPercentage(context, percentage: 0.8),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              if (quest.quest.networkImagePath != null)
-                Container(
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.transparent,
-                          Colors.orange.withOpacity(0.5)
-                        ],
-                      ),
-                      image: DecorationImage(
-                        image: NetworkImage(quest.quest.networkImagePath!),
-                        fit: BoxFit.cover,
-                      )),
-                ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: screenWidth(context, percentage: 0.8),
-                    child: Text(
-                      quest.quest.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme(context).headline6,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(describeEnum(quest.quest.type.toString()),
-                        style: textTheme(context)
-                            .bodyText1!
-                            .copyWith(color: kPrimaryColor)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        AFKCreditsIcon(height: 30),
-                        // Text("Earned Credits: ",
-                        //     style: textTheme(context)
-                        //         .bodyText1!
-                        //         .copyWith(color: kWhiteTextColor)),
-                        Text(quest.afkCreditsEarned.toString(),
-                            style: textTheme(context)
-                                .headline6!
-                                .copyWith(color: kPrimaryColor)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

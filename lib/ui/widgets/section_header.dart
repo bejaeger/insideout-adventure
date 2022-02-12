@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 
 class SectionHeader extends StatelessWidget {
-  final void Function()? onTextButtonTap;
+  final void Function()? onButtonTap;
   final String title;
   final String textButtonText;
   final Widget? trailingIcon;
@@ -21,13 +21,13 @@ class SectionHeader extends StatelessWidget {
   const SectionHeader(
       {Key? key,
       required this.title,
-      this.onTextButtonTap,
+      this.onButtonTap,
       this.textButtonText = "SEE ALL",
       this.trailingIcon,
       this.titleSize = 24,
       this.horizontalPadding,
       this.verticalPadding,
-      this.titleOpacity = 1})
+      this.titleOpacity = 0.7})
       : super(key: key);
 
   @override
@@ -43,14 +43,15 @@ class SectionHeader extends StatelessWidget {
               style: textTheme(context).headline6!.copyWith(
                   fontSize: titleSize,
                   color: kBlackHeadlineColor.withOpacity(titleOpacity))),
-          if (onTextButtonTap != null)
-            IconButton(
-                onPressed: onTextButtonTap,
-                icon: Icon(
-                  Icons.more_horiz,
-                  size: 28,
-                  color: kBlackHeadlineColor,
-                )),
+          if (onButtonTap != null)
+            GestureDetector(
+              onTap: onButtonTap,
+              child: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 24,
+                color: kBlackHeadlineColor.withOpacity(titleOpacity),
+              ),
+            ),
           if (trailingIcon != null) trailingIcon!,
         ],
       ),
