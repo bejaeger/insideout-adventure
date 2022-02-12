@@ -20,6 +20,10 @@ class GamificationService {
       {required Completer<void> completer,
       required String uid,
       void Function()? callback}) async {
+    // ! REMOVE THIS WHEN IMPLEMENTED IN DATABASE!
+    _achievementsStreamSubscription?.cancel();
+    _achievementsStreamSubscription = null;
+
     if (_achievementsStreamSubscription == null) {
       bool listenedOnce = false;
       _achievementsStreamSubscription =
@@ -44,5 +48,12 @@ class GamificationService {
       log.w("Already listening to list of quests, not adding another listener");
       completer.complete();
     }
+  }
+
+  void clearData() {
+    log.i("Clear gamification data");
+    achievements = [];
+    _achievementsStreamSubscription?.cancel();
+    _achievementsStreamSubscription = null;
   }
 }

@@ -21,8 +21,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   final GiftCardService _giftCardService = locator<GiftCardService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
-  final GamificationService _gamificationService =
-      locator<GamificationService>();
 
   bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
@@ -43,7 +41,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       questService.activatedQuestsHistory;
   List<GiftCardPurchase> get purchasedGiftCards =>
       _giftCardService.purchasedGiftCards;
-  List<Achievement> get achievements => _gamificationService.achievements;
+  List<Achievement> get achievements => gamificationService.achievements;
   bool addingPositionToNotionDB = false;
   bool pushedToNotion = false;
 
@@ -63,7 +61,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       uid: currentUser.uid,
       callback: () => notifyListeners(),
     );
-    _gamificationService.setupAchievementsListener(
+    gamificationService.setupAchievementsListener(
       completer: completerThree,
       uid: currentUser.uid,
       callback: () => notifyListeners(),

@@ -16,6 +16,7 @@ class SectionHeader extends StatelessWidget {
   final double titleSize;
   final double? horizontalPadding;
   final double? verticalPadding;
+  final double titleOpacity;
 
   const SectionHeader(
       {Key? key,
@@ -25,7 +26,8 @@ class SectionHeader extends StatelessWidget {
       this.trailingIcon,
       this.titleSize = 24,
       this.horizontalPadding,
-      this.verticalPadding})
+      this.verticalPadding,
+      this.titleOpacity = 1})
       : super(key: key);
 
   @override
@@ -38,9 +40,9 @@ class SectionHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title,
-              style: textTheme(context)
-                  .headline6!
-                  .copyWith(fontSize: titleSize, color: kBlackHeadlineColor)),
+              style: textTheme(context).headline6!.copyWith(
+                  fontSize: titleSize,
+                  color: kBlackHeadlineColor.withOpacity(titleOpacity))),
           if (onTextButtonTap != null)
             IconButton(
                 onPressed: onTextButtonTap,

@@ -34,12 +34,18 @@ List<Quest> getDummyQuests() {
 
 getDummyAchievements() {
   return [
+    Achievement(id: "1", credits: 5, name: "Complete 1 quest", completed: true),
     Achievement(
-        id: "1", credits: 5, name: "Completed 1 quest", completed: true),
+        id: "1", credits: 10, name: "Complete 5 quests", completed: false),
     Achievement(
-        id: "1", credits: 10, name: "Completed 5 quests", completed: false),
+        id: "1",
+        credits: 5,
+        name: "Complete 2 quests on one day",
+        completed: false),
     Achievement(
-        id: "1", credits: 5, name: "2 quests on one day", completed: false),
+        id: "1", credits: 5, name: "Earn 200 credits", completed: false),
+    Achievement(
+        id: "1", credits: 5, name: "Claim 1 gift card", completed: false),
     Achievement(
         id: "1", credits: 10, name: "4 quests in one week", completed: false),
   ];

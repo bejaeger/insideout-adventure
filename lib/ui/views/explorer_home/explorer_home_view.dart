@@ -13,7 +13,9 @@ import 'package:afkcredits/ui/widgets/nav_button_widget.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/constants/layout.dart';
@@ -29,7 +31,7 @@ class ExplorerHomeView extends StatelessWidget {
       fireOnModelReadyOnce: true,
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(
-          title: "Hi Explorer ${model.name}!",
+          title: "Hi ${model.name}!",
           drawer: true,
         ),
         endDrawer: SizedBox(
@@ -42,7 +44,7 @@ class ExplorerHomeView extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
                 child: RefreshIndicator(
-                  onRefresh: () async => model.notifyListeners(),
+                  onRefresh: () async => model.listenToData(),
                   child: ListView(
                     children: [
                       verticalSpaceMedium,
@@ -55,7 +57,7 @@ class ExplorerHomeView extends StatelessWidget {
                                 onCardPressed:
                                     model.showToEarnExplanationDialog,
                                 statsType: StatsType.lockedCredits,
-                                height: 150,
+                                height: 140,
                                 statistic:
                                     // availableSponsoring IN CENTS!!!!!!
                                     formatAfkCreditsFromCents(model
@@ -69,7 +71,7 @@ class ExplorerHomeView extends StatelessWidget {
                                 onCardPressed:
                                     model.showEarnedExplanationDialog,
                                 statsType: StatsType.unlockedCredits,
-                                height: 150,
+                                height: 140,
                                 statistic: model
                                     .currentUserStats.afkCreditsBalance
                                     .toString(),
@@ -100,20 +102,23 @@ class ExplorerHomeView extends StatelessWidget {
                             child: GestureDetector(
                               onTap: model.navigateToGiftCardsView,
                               child: Container(
+                                padding:
+                                    const EdgeInsets.only(top: 5, bottom: 5),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(16.0),
-                                  color: Colors.green,
+                                  color: kPrimaryColor.withOpacity(0.8),
                                 ),
                                 child: Row(
                                   children: [
+                                    horizontalSpaceSmall,
                                     Icon(
                                       Icons.card_giftcard_outlined,
-                                      color: kWhiteTextColor.withOpacity(0.8),
-                                      size: 70,
+                                      color: kWhiteTextColor,
+                                      size: 40,
                                     ),
                                     Spacer(),
                                     Text(
-                                      'CLAIM REWARDS',
+                                      'Get Rewards',
                                       style: textTheme(context)
                                           .headline6!
                                           .copyWith(color: kWhiteTextColor),
@@ -121,6 +126,7 @@ class ExplorerHomeView extends StatelessWidget {
                                     Spacer(),
                                     Icon(Icons.arrow_forward_ios,
                                         color: kWhiteTextColor),
+                                    horizontalSpaceSmall,
                                   ],
                                 ),
                               ),
@@ -148,6 +154,7 @@ class ExplorerHomeView extends StatelessWidget {
                       SectionHeader(
                         horizontalPadding: 0,
                         title: "Achievements",
+                        titleOpacity: 0.6,
                       ),
                       if (model.activatedQuestsHistory.length > 0)
                         AchievementsGrid(
@@ -158,8 +165,8 @@ class ExplorerHomeView extends StatelessWidget {
                       SectionHeader(
                         horizontalPadding: 0,
                         title: "Quest History",
+                        titleOpacity: 0.6,
                       ),
-                      verticalSpaceSmall,
                       if (model.activatedQuestsHistory.length > 0)
                         QuestsGrid(
                           activatedQuests: model.activatedQuestsHistory,
@@ -277,7 +284,7 @@ class ExplorerCreditStats extends StatelessWidget {
               flex: 5,
               child: StatsCard(
                   statsType: StatsType.lockedCredits,
-                  height: 150,
+                  height: 140,
                   statistic:
                       // availableSponsoring IN CENTS!!!!!!
                       formatAfkCreditsFromCents(userStats.availableSponsoring),
@@ -288,7 +295,7 @@ class ExplorerCreditStats extends StatelessWidget {
               flex: 5,
               child: StatsCard(
                   statsType: StatsType.unlockedCredits,
-                  height: 150,
+                  height: 140,
                   statistic: userStats.afkCreditsBalance.toString(),
                   title: kCurrentAFKCreditsDescription),
             ),
@@ -425,7 +432,7 @@ class AchievementCard extends StatelessWidget {
               ),
             achievement.completed
                 ? Banner(
-                    message: "SUCCESS",
+                    message: "UNLOCKED",
                     location: BannerLocation.topStart,
                     color: Colors.green)
                 : Banner(message: "LOCKED", location: BannerLocation.topStart),
@@ -447,11 +454,16 @@ class FinishedQuestCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         elevation: 2,
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: SizedBox(
-          //width: screenWidthPercentage(context, percentage: 0.8),
+        //clipBehavior: Clip.hardEdge,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Container(
           height: 200,
+          decoration: BoxDecoration(
+            border: Border.all(color: kPrimaryColor.withOpacity(0.5)),
+            borderRadius: BorderRadius.circular(15.0),
+            color: kPrimaryColor.withOpacity(0.2),
+          ),
+          //width: screenWidthPercentage(context, percentage: 0.8),
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -471,24 +483,10 @@ class FinishedQuestCard extends StatelessWidget {
                         fit: BoxFit.cover,
                       )),
                 ),
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    //stops: [0.0, 1.0],
-                    colors: [
-                      Colors.white,
-                      //kPrimaryColor.withOpacity(0.2),
-                    ],
-                  ),
-                ),
-              ),
               Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
                     width: screenWidth(context, percentage: 0.8),
                     child: Text(
@@ -500,32 +498,31 @@ class FinishedQuestCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: kPrimaryColor.withOpacity(0.8),
-                  ),
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(describeEnum(quest.quest.type.toString()),
+                        style: textTheme(context)
+                            .bodyText1!
+                            .copyWith(color: kPrimaryColor)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        horizontalSpaceSmall,
-                        Text("Earned Credits: ",
-                            style: textTheme(context)
-                                .bodyText1!
-                                .copyWith(color: kWhiteTextColor)),
+                        AFKCreditsIcon(height: 30),
+                        // Text("Earned Credits: ",
+                        //     style: textTheme(context)
+                        //         .bodyText1!
+                        //         .copyWith(color: kWhiteTextColor)),
                         Text(quest.afkCreditsEarned.toString(),
                             style: textTheme(context)
-                                .bodyText1!
-                                .copyWith(color: kWhiteTextColor)),
-                        horizontalSpaceSmall,
+                                .headline6!
+                                .copyWith(color: kPrimaryColor)),
                       ],
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],

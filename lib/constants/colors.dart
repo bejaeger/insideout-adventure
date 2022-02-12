@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 // current primary color before we care about UI
 const Color kPrimaryColor = Color(0xFF00baa8);
+//const Color kPrimaryColor = Colors.green;
+
 const Color kDarkTurquoise = Color(0xFF008979);
 
 const Color kBlackHeadlineColor = Colors.black;
