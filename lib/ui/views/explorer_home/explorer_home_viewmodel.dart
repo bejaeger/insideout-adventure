@@ -1,11 +1,13 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
+import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
@@ -19,6 +21,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   final GiftCardService _giftCardService = locator<GiftCardService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
+  final GamificationService _gamificationService =
+      locator<GamificationService>();
 
   bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
@@ -39,6 +43,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       questService.activatedQuestsHistory;
   List<GiftCardPurchase> get purchasedGiftCards =>
       _giftCardService.purchasedGiftCards;
+  List<Achievement> get achievements => _gamificationService.achievements;
   bool addingPositionToNotionDB = false;
   bool pushedToNotion = false;
 
@@ -48,15 +53,25 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
     setBusy(true);
     Completer completer = Completer<void>();
     Completer completerTwo = Completer<void>();
+    Completer completerThree = Completer<void>();
     userService.setupUserDataListeners(
-        completer: completer, callback: () => notifyListeners());
+      completer: completer,
+      callback: () => notifyListeners(),
+    );
     questService.setupPastQuestsListener(
-        completer: completerTwo,
-        uid: currentUser.uid,
-        callback: () => notifyListeners());
+      completer: completerTwo,
+      uid: currentUser.uid,
+      callback: () => notifyListeners(),
+    );
+    _gamificationService.setupAchievementsListener(
+      completer: completerThree,
+      uid: currentUser.uid,
+      callback: () => notifyListeners(),
+    );
     await Future.wait([
       completer.future,
       completerTwo.future,
+      completerThree.future,
     ]);
     setBusy(false);
   }

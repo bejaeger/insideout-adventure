@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/enums/stats_type.dart';
@@ -11,7 +12,6 @@ import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/nav_button_widget.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
-import 'package:afkcredits/ui/widgets/verify_network_connection/verify_network_connection.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -77,35 +77,53 @@ class ExplorerHomeView extends StatelessWidget {
                           ),
                         ],
                       ),
+                      verticalSpaceSmall,
                       Row(
                         children: [
-                          Flexible(
+                          // Flexible(
+                          //   flex: 10,
+                          //   child: NavButtonWidget(
+                          //     color: Colors.blue,
+                          //     title: 'ASK FOR CREDITS',
+                          //     titleColor: kWhiteTextColor,
+                          //     icon: Icon(
+                          //       Icons.arrow_downward_rounded,
+                          //       color: kGreyTextColor.withOpacity(0.9),
+                          //       size: 70,
+                          //     ),
+                          //     onTap: model.showNotImplementedSnackbar,
+                          //   ),
+                          // ),
+                          // Spacer(),
+                          Expanded(
                             flex: 10,
-                            child: NavButtonWidget(
-                              color: Colors.blue,
-                              title: 'ASK FOR CREDITS',
-                              titleColor: kWhiteTextColor,
-                              icon: Icon(
-                                Icons.arrow_downward_rounded,
-                                color: kGreyTextColor.withOpacity(0.9),
-                                size: 70,
-                              ),
-                              onTap: model.showNotImplementedSnackbar,
-                            ),
-                          ),
-                          Spacer(),
-                          Flexible(
-                            flex: 10,
-                            child: NavButtonWidget(
-                              color: Colors.green,
-                              title: 'GIFT CARDS',
-                              titleColor: kWhiteTextColor,
-                              icon: Icon(
-                                Icons.card_giftcard_outlined,
-                                color: kGreyTextColor.withOpacity(0.9),
-                                size: 70,
-                              ),
+                            child: GestureDetector(
                               onTap: model.navigateToGiftCardsView,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  color: Colors.green,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.card_giftcard_outlined,
+                                      color: kWhiteTextColor.withOpacity(0.8),
+                                      size: 70,
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      'CLAIM REWARDS',
+                                      style: textTheme(context)
+                                          .headline6!
+                                          .copyWith(color: kWhiteTextColor),
+                                    ),
+                                    Spacer(),
+                                    Icon(Icons.arrow_forward_ios,
+                                        color: kWhiteTextColor),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -126,19 +144,27 @@ class ExplorerHomeView extends StatelessWidget {
                       //     ),
                       //   ],
                       // ),
-
-                      // verticalSpaceMedium,
-                      // SectionHeader(
-                      //   horizontalPadding: 0,
-                      //   title: "Achievements",
-                      // ),
-                      // verticalSpaceSmall,
-                      // model.activatedQuestsHistory.length == 0
-                      //     ? Container(height: 0)
-                      //     : QuestsGrid(
-                      //         activatedQuests: model.activatedQuestsHistory,
-                      //         onPressed: () => null,
-                      //       ),
+                      verticalSpaceSmall,
+                      SectionHeader(
+                        horizontalPadding: 0,
+                        title: "Achievements",
+                      ),
+                      if (model.activatedQuestsHistory.length > 0)
+                        AchievementsGrid(
+                          achievements: model.achievements,
+                          onPressed: () => null,
+                        ),
+                      verticalSpaceSmall,
+                      SectionHeader(
+                        horizontalPadding: 0,
+                        title: "Quest History",
+                      ),
+                      verticalSpaceSmall,
+                      if (model.activatedQuestsHistory.length > 0)
+                        QuestsGrid(
+                          activatedQuests: model.activatedQuestsHistory,
+                          onPressed: () => null,
+                        ),
                       // verticalSpaceLarge,
                       //SectionHeader(title: "Achievements"),
                       verticalSpaceLarge,
@@ -217,10 +243,12 @@ class ExplorerHomeView extends StatelessWidget {
                                             model.pushAllPositionsToNotion(),
                                         title: "Push to notion"),
                                   SmallButton(
-                                      onPressed: 
-                                      model.isListeningToLocation ? model.cancelLocationListener : 
-                                          model.addLocationListener,
-                                      title:   model.isListeningToLocation ? "Cancel position listener" :  "Start position listener"),
+                                      onPressed: model.isListeningToLocation
+                                          ? model.cancelLocationListener
+                                          : model.addLocationListener,
+                                      title: model.isListeningToLocation
+                                          ? "Cancel position listener"
+                                          : "Start position listener"),
                                 ],
                               ),
                       verticalSpaceMassive,
@@ -301,7 +329,7 @@ class QuestsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 150,
       child: GridView.builder(
         scrollDirection: Axis.horizontal,
         physics: ScrollPhysics(),
@@ -325,6 +353,89 @@ class QuestsGrid extends StatelessWidget {
   }
 }
 
+class AchievementsGrid extends StatelessWidget {
+  final List<Achievement> achievements;
+  final void Function() onPressed;
+  const AchievementsGrid({
+    Key? key,
+    required this.achievements,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 120,
+      child: GridView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          childAspectRatio: 1,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 1,
+        ),
+        itemCount: achievements.length,
+        itemBuilder: (context, index) {
+          final Achievement data = achievements[index];
+          return AchievementCard(
+            achievement: data,
+            //onTap: () => null,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class AchievementCard extends StatelessWidget {
+  final Achievement achievement;
+  const AchievementCard({Key? key, required this.achievement})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Container(
+        alignment: Alignment.center,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                children: [
+                  Flexible(
+                      //heightFactor: 0.6,
+                      child: Icon(Icons.trip_origin_sharp,
+                          size: 50, color: Colors.orange.shade400)),
+                  verticalSpaceSmall,
+                  Text(achievement.name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+            if (!achievement.completed)
+              Container(
+                color: Colors.grey.withOpacity(0.5),
+              ),
+            achievement.completed
+                ? Banner(
+                    message: "SUCCESS",
+                    location: BannerLocation.topStart,
+                    color: Colors.green)
+                : Banner(message: "LOCKED", location: BannerLocation.topStart),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class FinishedQuestCard extends StatelessWidget {
   final ActivatedQuest quest;
   final void Function()? onTap;
@@ -335,7 +446,7 @@ class FinishedQuestCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        elevation: 5,
+        elevation: 2,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: SizedBox(
@@ -352,7 +463,7 @@ class FinishedQuestCard extends StatelessWidget {
                         end: Alignment.bottomRight,
                         colors: [
                           Colors.transparent,
-                          Colors.black87.withOpacity(0.5)
+                          Colors.orange.withOpacity(0.5)
                         ],
                       ),
                       image: DecorationImage(
@@ -367,8 +478,8 @@ class FinishedQuestCard extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     //stops: [0.0, 1.0],
                     colors: [
-                      Colors.black54.withOpacity(0.4),
-                      Colors.transparent,
+                      Colors.white,
+                      //kPrimaryColor.withOpacity(0.2),
                     ],
                   ),
                 ),
@@ -384,7 +495,7 @@ class FinishedQuestCard extends StatelessWidget {
                       quest.quest.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: textTheme(context).headline5,
+                      style: textTheme(context).headline6,
                     ),
                   ),
                 ),
@@ -404,9 +515,13 @@ class FinishedQuestCard extends StatelessWidget {
                       children: [
                         horizontalSpaceSmall,
                         Text("Earned Credits: ",
-                            style: textTheme(context).bodyText1),
+                            style: textTheme(context)
+                                .bodyText1!
+                                .copyWith(color: kWhiteTextColor)),
                         Text(quest.afkCreditsEarned.toString(),
-                            style: textTheme(context).bodyText1),
+                            style: textTheme(context)
+                                .bodyText1!
+                                .copyWith(color: kWhiteTextColor)),
                         horizontalSpaceSmall,
                       ],
                     ),

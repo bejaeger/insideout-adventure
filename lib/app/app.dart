@@ -5,6 +5,7 @@ import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/cloud_firestore_storage/cloud_storage_services.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
+import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
@@ -132,6 +133,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: DirectionsAPI),
     LazySingleton(classType: GiftCardService),
     LazySingleton(classType: QuestTestingService),
+    LazySingleton(classType: GamificationService),
     LazySingleton(classType: MapsService),
     LazySingleton(classType: MarkersInMap),
     LazySingleton(classType: PurchasedGiftCardsViewModel),

@@ -1,3 +1,4 @@
+import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/quests/marker_note/marker_note.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -28,6 +29,19 @@ List<Quest> getDummyQuests() {
     // getDummyQuest3(),
     // getDummyQuest5(),
     getDummyQuest6(),
+  ];
+}
+
+getDummyAchievements() {
+  return [
+    Achievement(
+        id: "1", credits: 5, name: "Completed 1 quest", completed: true),
+    Achievement(
+        id: "1", credits: 10, name: "Completed 5 quests", completed: false),
+    Achievement(
+        id: "1", credits: 5, name: "2 quests on one day", completed: false),
+    Achievement(
+        id: "1", credits: 10, name: "4 quests in one week", completed: false),
   ];
 }
 
