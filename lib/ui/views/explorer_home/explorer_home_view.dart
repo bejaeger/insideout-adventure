@@ -155,6 +155,7 @@ class ExplorerHomeView extends StatelessWidget {
                         horizontalPadding: 0,
                         title: "Achievements",
                         titleOpacity: 0.6,
+                        //onTextButtonTap: () => print("HI"),
                       ),
                       if (model.activatedQuestsHistory.length > 0)
                         AchievementsGrid(
@@ -174,90 +175,6 @@ class ExplorerHomeView extends StatelessWidget {
                         ),
                       // verticalSpaceLarge,
                       //SectionHeader(title: "Achievements"),
-                      verticalSpaceLarge,
-                      if (model.useSuperUserFeatures)
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text("Length positions"),
-                                  Text(model.allPositions.length.toString()),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text("Currently Listening?"),
-                                  Text(model.isListeningToLocation.toString()),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      verticalSpaceMedium,
-                      if (model.useSuperUserFeatures)
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text("current distance"),
-                                  Text(model.currentDistance),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text("live distance"),
-                                  Text(model.liveDistance),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text("last known distance"),
-                                  Text(model.lastKnownDistance),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      if (model.useSuperUserFeatures) verticalSpaceMedium,
-                      if (model.useSuperUserFeatures)
-                        model.addingPositionToNotionDB
-                            ? AFKProgressIndicator()
-                            : Wrap(
-                                alignment: WrapAlignment.spaceAround,
-                                runAlignment: WrapAlignment.spaceAround,
-                                children: [
-                                  // SmallButton(onPressed: () => model.pushAllPositionsToNotion(), title: "Push to notion"),
-                                  SmallButton(
-                                      onPressed: () =>
-                                          model.addPositionEntryManual(),
-                                      title: "Fetch current Position"),
-                                  SmallButton(
-                                      onPressed: () =>
-                                          model.addPositionEntryManual(
-                                              onlyLastKnownPosition: true),
-                                      title: "Fetch Last known Pos"),
-                                  if (!model.pushedToNotion)
-                                    SmallButton(
-                                        onPressed: () =>
-                                            model.pushAllPositionsToNotion(),
-                                        title: "Push to notion"),
-                                  SmallButton(
-                                      onPressed: model.isListeningToLocation
-                                          ? model.cancelLocationListener
-                                          : model.addLocationListener,
-                                      title: model.isListeningToLocation
-                                          ? "Cancel position listener"
-                                          : "Start position listener"),
-                                ],
-                              ),
                       verticalSpaceMassive,
                     ],
                   ),
@@ -459,9 +376,10 @@ class FinishedQuestCard extends StatelessWidget {
         child: Container(
           height: 200,
           decoration: BoxDecoration(
-            border: Border.all(color: kPrimaryColor.withOpacity(0.5)),
+            //border:
+            //  Border.all(color: Colors.black.withOpacity(0.1), width: 2.0),
             borderRadius: BorderRadius.circular(15.0),
-            color: kPrimaryColor.withOpacity(0.2),
+            //color: kPrimaryColor.withOpacity(0.2),
           ),
           //width: screenWidthPercentage(context, percentage: 0.8),
           child: Stack(

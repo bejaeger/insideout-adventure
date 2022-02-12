@@ -245,7 +245,7 @@ class BaseModel extends BaseViewModel {
   Future maybeCheatAndCollectNextMarker() async {
     if (useSuperUserFeatures) {
       final admin = await showAdminDialogAndGetResponse();
-      if (admin) {
+      if (admin == true) {
         // collect next marker automatically!
         AFKMarker? nextMarker = questService.getNextMarker();
         await questService.analyzeMarker(marker: nextMarker);
