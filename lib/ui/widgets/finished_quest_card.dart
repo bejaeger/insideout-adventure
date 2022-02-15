@@ -16,11 +16,21 @@ class FinishedQuestCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         elevation: 2,
+        clipBehavior: Clip.antiAlias,
         //clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Container(
           height: 200,
           decoration: BoxDecoration(
+            color: kDarkTurquoise.withOpacity(0.2),
+            // gradient: LinearGradient(
+            //   begin: Alignment.topCenter,
+            //   end: Alignment.bottomCenter,
+            //   colors: [
+            //     kNiceOrange.withOpacity(0.4),
+            //     kNiceOrange.withOpacity(0.8),
+            //   ],
+            // ),
             //border:
             //  Border.all(color: Colors.black.withOpacity(0.1), width: 2.0),
             borderRadius: BorderRadius.circular(15.0),
@@ -33,30 +43,42 @@ class FinishedQuestCard extends StatelessWidget {
               if (quest.quest.networkImagePath != null)
                 Container(
                   decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.transparent,
-                          Colors.orange.withOpacity(0.5)
-                        ],
-                      ),
-                      image: DecorationImage(
-                        image: NetworkImage(quest.quest.networkImagePath!),
-                        fit: BoxFit.cover,
-                      )),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.transparent,
+                        Colors.orange.withOpacity(0.5)
+                      ],
+                    ),
+                    image: DecorationImage(
+                      image: NetworkImage(quest.quest.networkImagePath!),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: screenWidth(context, percentage: 0.8),
-                    child: Text(
-                      quest.quest.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme(context).headline6,
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16.0)),
+                    color: kDarkTurquoise.withOpacity(0.9),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14.0, vertical: 7.0),
+                    child: SizedBox(
+                      width: screenWidth(context, percentage: 0.8),
+                      child: Text(
+                        quest.quest.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: textTheme(context)
+                            .headline6!
+                            .copyWith(fontSize: 15, color: kWhiteTextColor),
+                      ),
                     ),
                   ),
                 ),
@@ -65,23 +87,23 @@ class FinishedQuestCard extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(describeEnum(quest.quest.type.toString()),
                         style: textTheme(context)
                             .bodyText1!
-                            .copyWith(color: kPrimaryColor)),
+                            .copyWith(color: kGreyTextColor)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        AFKCreditsIcon(height: 30),
+                        AFKCreditsIcon(height: 40),
                         // Text("Earned Credits: ",
                         //     style: textTheme(context)
                         //         .bodyText1!
                         //         .copyWith(color: kWhiteTextColor)),
                         Text(quest.afkCreditsEarned.toString(),
                             style: textTheme(context)
-                                .headline6!
+                                .headline4!
                                 .copyWith(color: kPrimaryColor)),
                       ],
                     ),

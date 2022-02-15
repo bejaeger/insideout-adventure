@@ -24,10 +24,10 @@ class SectionHeader extends StatelessWidget {
       this.onButtonTap,
       this.textButtonText = "SEE ALL",
       this.trailingIcon,
-      this.titleSize = 24,
+      this.titleSize = 20,
       this.horizontalPadding,
       this.verticalPadding,
-      this.titleOpacity = 0.7})
+      this.titleOpacity = 1})
       : super(key: key);
 
   @override
@@ -48,7 +48,7 @@ class SectionHeader extends StatelessWidget {
               onTap: onButtonTap,
               child: Icon(
                 Icons.arrow_forward_ios_rounded,
-                size: 24,
+                size: 20,
                 color: kBlackHeadlineColor.withOpacity(titleOpacity),
               ),
             ),

@@ -15,6 +15,7 @@ import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ActiveDistanceEstimateQuestView extends StatelessWidget {
   final Quest quest;
@@ -151,18 +152,33 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                       // Text(
                       //     "Instructions: Start the quest and then walk ${model.distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance of tries!"),
                       if (!model.questSuccessfullyFinished)
-                        Image.network(
-                            "https://c.tenor.com/PcfXDVatyLEAAAAC/guy-walking.gif",
-                            height: 150),
+                        Container(
+                          height: 180,
+                          clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 1,
+                                  spreadRadius: 0.1,
+                                  offset: Offset(1, 1),
+                                  color: kShadowColor)
+                            ],
+                          ),
+                          child: FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image:
+                                  "https://c.tenor.com/PcfXDVatyLEAAAAC/guy-walking.gif"),
+                        ),
                       verticalSpaceMedium,
                       if (!model.questSuccessfullyFinished)
                         Text(
-                            "Goal: Walk " +
+                            "Walk " +
                                 model.distanceToTravel.toStringAsFixed(0) +
                                 " Meters",
                             textAlign: TextAlign.center,
                             style: textTheme(context).headline5!.copyWith(
-                                color: kPrimaryColor,
+                                color: kDarkTurquoise,
                                 fontWeight: FontWeight.w600)),
                       verticalSpaceMedium,
                       model.questSuccessfullyFinished
