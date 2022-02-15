@@ -14,6 +14,7 @@ import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
+import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
@@ -48,6 +49,9 @@ class BaseModel extends BaseViewModel {
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final QRCodeService qrCodeService = locator<QRCodeService>();
+  final GamificationService gamificationService =
+      locator<GamificationService>();
+
   final baseModelLog = getLogger("BaseModel");
 
   // ------------------------------------------------------
@@ -97,6 +101,7 @@ class BaseModel extends BaseViewModel {
     transfersHistoryService.clearData();
     geolocationService.clearData();
     _questTestingService.maybeReset();
+    gamificationService.clearData();
   }
 
   void unregisterViewModels() {
@@ -240,7 +245,7 @@ class BaseModel extends BaseViewModel {
   Future maybeCheatAndCollectNextMarker() async {
     if (useSuperUserFeatures) {
       final admin = await showAdminDialogAndGetResponse();
-      if (admin) {
+      if (admin == true) {
         // collect next marker automatically!
         AFKMarker? nextMarker = questService.getNextMarker();
         await questService.analyzeMarker(marker: nextMarker);

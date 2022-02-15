@@ -22,6 +22,7 @@ import '../flavor_config.dart';
 import '../services/cloud_firestore_storage/cloud_storage_services.dart';
 import '../services/connectivity/connectivity_service.dart';
 import '../services/environment_services.dart';
+import '../services/gamification/gamification_service.dart';
 import '../services/geolocation/geolocation_service.dart';
 import '../services/giftcard/gift_card_service.dart';
 import '../services/layout/layout_service.dart';
@@ -78,6 +79,7 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => DirectionsAPI());
   locator.registerLazySingleton(() => GiftCardService());
   locator.registerLazySingleton(() => QuestTestingService());
+  locator.registerLazySingleton(() => GamificationService());
   locator.registerLazySingleton(() => MapsService());
   locator.registerLazySingleton(() => MarkersInMap());
   locator.registerLazySingleton(() => PurchasedGiftCardsViewModel());

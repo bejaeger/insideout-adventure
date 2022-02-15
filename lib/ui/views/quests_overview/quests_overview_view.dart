@@ -69,14 +69,6 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
                 child: _tabbar),
           ),
         ),
-        // floatingActionButton: AFKFloatingActionButtons(
-        //   // title1: "SCAN",
-        //   onPressed1: model.scanQrCode,
-        //   iconData1: Icons.qr_code_scanner_rounded,
-        //   // title2: "LIST",
-        //   // onPressed2: model.navigateBack,
-        //   // iconData2: Icons.list_rounded,
-        // ),
         body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           controller: _tabController,
@@ -94,68 +86,50 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
   }
 
   TabBar get _tabbar => TabBar(
-          // isScrollable: true,
-          controller: _tabController,
-          unselectedLabelColor: Colors.white70,
-          labelColor: kWhiteTextColor,
-          indicatorSize: TabBarIndicatorSize.tab,
-          indicator: BoxDecoration(
-              gradient:
-                  LinearGradient(colors: [kDarkTurquoise, kDarkTurquoise]),
-              borderRadius: BorderRadius.circular(50),
-              color: kPrimaryColor),
-          tabs: [
-            Tab(
-              child: Align(
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Icon(Icons.list_rounded, size: 30),
-                    ),
-                    Text(
-                      "List",
-                    ),
-                  ],
-                ),
+        // isScrollable: true,
+        controller: _tabController,
+        unselectedLabelColor: Colors.white70,
+        labelColor: kWhiteTextColor,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicator: BoxDecoration(
+            gradient: LinearGradient(colors: [kDarkTurquoise, kDarkTurquoise]),
+            borderRadius: BorderRadius.circular(50),
+            color: kPrimaryColor),
+        tabs: [
+          Tab(
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Icon(Icons.list_rounded, size: 30),
+                  ),
+                  Text(
+                    "List",
+                  ),
+                ],
               ),
             ),
-            Tab(
-              child: Align(
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.map_rounded, size: 30),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Map",
-                      ),
+          ),
+          Tab(
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.map_rounded, size: 30),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      "Map",
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            // Tab(
-            //   child: Align(
-            //     alignment: Alignment.center,
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: [
-            //         Icon(Icons.category_rounded, size: 30),
-            //         FittedBox(
-            //           fit: BoxFit.contain,
-            //           child: Text(
-            //             "CATEGORY",
-            //             //  maxLines: 1,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // )
-          ]);
+          ),
+        ],
+      );
 }

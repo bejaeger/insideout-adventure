@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
@@ -595,6 +596,30 @@ class FirestoreApi {
               "Unknown expection when listening to past quests the user has successfully done",
           devDetails: '$e');
     }
+  }
+
+  ////////////////////////////////////////////////////////
+  // Quest collection
+  Stream<List<Achievement>> getAchievementsStream({required String uid}) {
+    // TODO: Dummy for now!
+    return Stream.value(getDummyAchievements());
+    // try {
+    //   final returnStream = activatedQuestsCollection
+    //       .where("uids", arrayContains: uid)
+    //       .orderBy("createdAt", descending: true)
+    //       .where("status",
+    //           isEqualTo: describeEnum(QuestStatus.success.toString()))
+    //       .snapshots()
+    //       .map((event) => event.docs
+    //           .map((doc) => ActivatedQuest.fromJson(doc.data()))
+    //           .toList());
+    //   return returnStream;
+    // } catch (e) {
+    //   throw FirestoreApiException(
+    //       message:
+    //           "Unknown expection when listening to past quests the user has successfully done",
+    //       devDetails: '$e');
+    // }
   }
 
   ////////////////////////////////////////////////////////
