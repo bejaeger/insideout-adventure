@@ -125,8 +125,11 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
             "This is the amount you successfully earned already! You can spend credits on gift cards!");
   }
 
-  Future navigateToGiftCardsView() async {
-    await navigationService.navigateTo(Routes.purchasedGiftCardsView);
+  Future navigateToRewardsView() async {
+    await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+        arguments: BottomBarLayoutTemplateViewArguments(
+            userRole: currentUser.role,
+            initialBottomNavBarIndex: BottomNavBarIndex.giftcard));
   }
 
   void navigateToAchievementsView() {

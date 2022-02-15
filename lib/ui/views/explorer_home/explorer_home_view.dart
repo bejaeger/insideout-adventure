@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -11,6 +12,7 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/activated_quest_panel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/finished_quest_card.dart';
+import 'package:afkcredits/ui/widgets/large_button.dart';
 import 'package:afkcredits/ui/widgets/nav_button_widget.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
@@ -82,82 +84,18 @@ class ExplorerHomeView extends StatelessWidget {
                         ],
                       ),
                       verticalSpaceSmall,
-                      Row(
-                        children: [
-                          // Flexible(
-                          //   flex: 10,
-                          //   child: NavButtonWidget(
-                          //     color: Colors.blue,
-                          //     title: 'ASK FOR CREDITS',
-                          //     titleColor: kWhiteTextColor,
-                          //     icon: Icon(
-                          //       Icons.arrow_downward_rounded,
-                          //       color: kGreyTextColor.withOpacity(0.9),
-                          //       size: 70,
-                          //     ),
-                          //     onTap: model.showNotImplementedSnackbar,
-                          //   ),
-                          // ),
-                          // Spacer(),
-                          Expanded(
-                            flex: 10,
-                            child: GestureDetector(
-                              onTap: model.navigateToGiftCardsView,
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.only(top: 5, bottom: 5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                  color: kPrimaryColor.withOpacity(0.8),
-                                ),
-                                child: Row(
-                                  children: [
-                                    horizontalSpaceSmall,
-                                    Icon(
-                                      Icons.card_giftcard_outlined,
-                                      color: kWhiteTextColor,
-                                      size: 40,
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      'Get Rewards',
-                                      style: textTheme(context)
-                                          .headline6!
-                                          .copyWith(color: kWhiteTextColor),
-                                    ),
-                                    Spacer(),
-                                    Icon(Icons.arrow_forward_ios,
-                                        color: kWhiteTextColor),
-                                    horizontalSpaceSmall,
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      LargeButton(
+                        title: "GET REWARDS",
+                        onPressed: model.navigateToRewardsView,
+                        imageUrl: kRewardImpageUrl,
+                        backgroundColor: kDarkTurquoise.withOpacity(0.9),
+                        titleColor: kWhiteTextColor,
                       ),
-                      // Row(
-                      //   children: [
-                      //     Expanded(
-                      //       child: NavButtonWidget(
-                      //         padding: 0,
-                      //         title: 'ACHIEVEMENTS',
-                      //         icon: const Icon(
-                      //           Icons.badge_rounded,
-                      //           color: kDarkTurquoise,
-                      //           size: 70,
-                      //         ),
-                      //         onTap: model.showNotImplementedSnackbar,
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
                       verticalSpaceSmall,
                       verticalSpaceSmall,
                       SectionHeader(
                         horizontalPadding: 0,
                         title: "Achievements",
-                        titleOpacity: 0.6,
                         onButtonTap: model.navigateToAchievementsView,
                       ),
                       if (model.activatedQuestsHistory.length > 0)
@@ -170,7 +108,6 @@ class ExplorerHomeView extends StatelessWidget {
                       SectionHeader(
                         horizontalPadding: 0,
                         title: "Quest History",
-                        titleOpacity: 0.6,
                         onButtonTap: model.navigateToQuestHistoryView,
                       ),
                       if (model.activatedQuestsHistory.length > 0)
