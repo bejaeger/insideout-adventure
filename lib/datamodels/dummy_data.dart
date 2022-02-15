@@ -270,16 +270,16 @@ Quest getQrCodeHuntJaeger() {
     ],
     markers: [
       starenweg1(),
-      starenweg2(),
+      heidach4(),
+      heidach3(),
+      heidach2(),
+      heidach1(),
       starenweg3(),
-      starenweg4(),
-      starenweg5(),
-      starenweg6(),
     ],
     // TODO: QRCodeHuntIndoor
     type: QuestType.QRCodeHunt,
     startMarker: starenweg1(),
-    finishMarker: starenweg6(),
+    finishMarker: starenweg3(),
   );
 }
 
@@ -296,11 +296,11 @@ Quest getQrCodeHuntJaeger2() {
     ],
     markers: [
       heidach2(),
-      woodwayMarker1(),
+      heidach4(),
       starenweg1(),
     ],
     // TODO: QRCodeHuntIndoor
-    type: QuestType.QRCodeHunt,
+    type: QuestType.GPSAreaHunt,
     startMarker: heidach2(),
     finishMarker: starenweg1(),
   );

@@ -142,7 +142,10 @@ class BaseModel extends BaseViewModel {
           "Attempted to check whether sponsoring is enough for quest that is null!");
       return false;
     }
-    return quest.afkCredits <= currentUserStats.availableSponsoring;
+    // TODO: Pay attention to this here
+    // return quest.afkCredits <= currentUserStats.availableSponsoring;
+    // TODO: For now we always assume we have enough funding
+    return true;
   }
 
   ////////////////////////////////////////
@@ -213,6 +216,10 @@ class BaseModel extends BaseViewModel {
 
   // TODO: MAYBE this can go into the base_viewmodel as it's needed also in other screens!
   Future scanQrCode() async {
+    if (await maybeCheatAndCollectNextMarker()) {
+      return;
+    }
+
     // navigate to qr code view, validate results in quest service, and continue
     MarkerAnalysisResult result = await navigateToQrcodeViewAndReturnResult();
     if (result.isEmpty) {
@@ -228,6 +235,21 @@ class BaseModel extends BaseViewModel {
       return;
     }
     return await handleMarkerAnalysisResult(result);
+  }
+
+  Future maybeCheatAndCollectNextMarker() async {
+    if (useSuperUserFeatures) {
+      final admin = await showAdminDialogAndGetResponse();
+      if (admin) {
+        // collect next marker automatically!
+        AFKMarker? nextMarker = questService.getNextMarker();
+        await questService.analyzeMarker(marker: nextMarker);
+        final result = MarkerAnalysisResult.marker(marker: nextMarker);
+        await handleMarkerAnalysisResult(result);
+        return true;
+      }
+    }
+    return false;
   }
 
   Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
@@ -311,7 +333,8 @@ class BaseModel extends BaseViewModel {
           arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
     } else if (quest.type == QuestType.QRCodeSearch ||
         quest.type == QuestType.QRCodeSearchIndoor ||
-        quest.type == QuestType.QRCodeHunt) {
+        quest.type == QuestType.QRCodeHunt ||
+        quest.type == QuestType.GPSAreaHunt) {
       await navigationService.navigateTo(Routes.activeQrCodeSearchView,
           arguments: ActiveQrCodeSearchViewArguments(quest: quest));
     } else if (quest.type == QuestType.QRCodeHike ||

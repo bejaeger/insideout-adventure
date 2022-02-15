@@ -60,7 +60,7 @@ const List<String> questType = [
   "Hike",
   "Hunt",
   "DistanceEstimate",
-  "QRCodeHuntIndoor",
+  "QRCodeHunt",
   "QRCodeSearch",
   "QRCodeSearchIndoor",
   "TreasureLocationSearch",

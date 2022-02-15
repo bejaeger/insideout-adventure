@@ -7,9 +7,7 @@ import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_type.dart';
-import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
-import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +32,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
   // UI state
   String mapStyle = "";
   bool isAnimatingCamera = false;
+  bool validatingMarkerInArea = false;
 
   // set of markers and areas on map
   Set<Marker> markersOnMap = {};
@@ -72,14 +71,19 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
 
   void addMarkers({required Quest quest}) {
     for (AFKMarker _m in questService.markersToShowOnMap(questIn: quest)) {
-      addMarkerToMap(quest: quest, afkmarker: _m);
+      if (_m != quest.startMarker) {
+        addMarkerToMap(quest: quest, afkmarker: _m);
+      }
     }
     // notifyListeners();
   }
 
   void addAreas({required Quest quest}) {
     for (AFKMarker _m in questService.markersToShowOnMap(questIn: quest)) {
-      addAreaToMap(quest: quest, afkmarker: _m);
+      // don't add area if it's the start marker because that is handled separately
+      if (_m != quest.startMarker) {
+        addAreaToMap(quest: quest, afkmarker: _m);
+      }
     }
     // notifyListeners();
   }
@@ -89,6 +93,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
       final result =
           await startQuestMain(quest: quest, countStartMarkerAsCollected: true);
       if (result == false) {
+        log.wtf("Not starting quest, due to an unknown reason");
         return;
       }
       // quest started
@@ -130,26 +135,30 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
             trigger: QuestDataPointTrigger.liveQuestUICallback,
             position: position,
             pushToNotion: true,
-            userEventDescription: "in area of qrcode",
+            userEventDescription: "in area of marker",
           );
-          vibrateAlert();
-          questService.pausePositionListener();
-          final result = await showQrCodeIsInAreaDialog();
-          if (result?.confirmed == false) {
-            log.i(
-                "Did close the area alert dialog without having fetched the marker");
-            // this allows to show the dialog again!
-            // but only after a certain dead time.
-            // The dead time avoids additional dialogs appear immediately
-            // after closing the first one when marker was NOT collected.
-            // (cause of location listener events fired in the background
-            // WHILE the dialog was open)
-            Future.delayed(Duration(seconds: 4), () {
-              //isInAreaOfMarker = false;
-              markerInArea = null;
-            });
+          if (currentQuest?.type == QuestType.QRCodeHike ||
+              currentQuest?.type == QuestType.GPSAreaHike) {
+            vibrateAlert();
+            questService.pausePositionListener();
+            final result = await showQrCodeIsInAreaDialog();
+
+            if (result?.confirmed == false) {
+              log.i(
+                  "Did close the area alert dialog without having fetched the marker");
+              // this allows to show the dialog again!
+              // but only after a certain dead time.
+              // The dead time avoids additional dialogs appear immediately
+              // after closing the first one when marker was NOT collected.
+              // (cause of location listener events fired in the background
+              // WHILE the dialog was open)
+              Future.delayed(Duration(seconds: 4), () {
+                //isInAreaOfMarker = false;
+                markerInArea = null;
+              });
+            }
+            questService.resumePositionListener();
           }
-          questService.resumePositionListener();
         }
         // apply a tolerance of 10 meters here to mark the user as NOT in area.
         // Useful when, because of bad gps accuracy, the user is "jumping" in and out
@@ -183,11 +192,20 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
       );
     } else {
       log.wtf("Unknown quest type");
-      showGenericInternalErrorDialog();
+      //showGenericInternalErrorDialog();
     }
   }
 
   Future collectMarkerFromGPSLocation() async {
+    if (await maybeCheatAndCollectNextMarker()) {
+      return;
+    }
+
+    validatingMarkerInArea = true;
+    notifyListeners();
+    await Future.delayed(Duration(milliseconds: 500));
+    validatingMarkerInArea = false;
+    notifyListeners();
     if (!hasActiveQuest) {
       await dialogService.showDialog(
           title: "Start the quest to collect markers");
@@ -195,8 +213,8 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
     }
     if (markerInArea == null) {
       await dialogService.showDialog(
-        title: "Can't collect marker!",
-        description: "You are not in the area of a marker",
+        title: "Cannot collect marker!",
+        description: "You are not in the area of a checkpoint!",
       );
       return;
     }
@@ -357,10 +375,15 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
                   arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
             }
           }
-          if (!useSuperUserFeatures || adminMode == false)
+          if (!useSuperUserFeatures || adminMode == false) if (hasActiveQuest) {
+            await dialogService.showDialog(
+                title: "You started here",
+                description: "This was the beginning");
+          } else {
             await dialogService.showDialog(
                 title: "The Start",
                 description: "Move to this location and start the quest.");
+          }
         },
       ),
     );
@@ -405,13 +428,22 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
   }
 
   void addAreaToMap({required Quest quest, required AFKMarker afkmarker}) {
+    // implement the color choice better!
+    Color? color;
+    if (hasActiveQuest) {
+      if (questService.isMarkerCollected(marker: afkmarker)) {
+        color = Colors.green;
+      } else {
+        color = Colors.red;
+      }
+    }
     areasOnMap.add(
       Circle(
         circleId: CircleId(afkmarker
             .id), // google maps marker id of start marker will be our quest id
         center: LatLng(afkmarker.lat!, afkmarker.lon!),
-        fillColor: Colors.red.withOpacity(0.5),
-        strokeColor: Colors.red.withOpacity(0.6),
+        fillColor: color?.withOpacity(0.5) ?? Colors.red.withOpacity(0.5),
+        strokeColor: color?.withOpacity(0.6) ?? Colors.red.withOpacity(0.6),
         strokeWidth: 2,
         radius: 50,
         consumeTapEvents: true,
@@ -545,6 +577,10 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
   @override
   void resetPreviousQuest() {
     //isInAreaOfMarker = false;
+    // markersOnMap = {};
+    // areasOnMap = {};
+    validatingMarkerInArea = false;
+    isAnimatingCamera = false;
     markerInArea = null;
     questCenteredOnMap = true;
     super.resetPreviousQuest();
@@ -560,7 +596,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
         // for camera position
 
         //Add Starter Marker
-        loadQuestMarkers();
+        // loadQuestMarkers();
 
         log.v("Animating camera to quest markers");
       } catch (error) {
@@ -621,14 +657,25 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
           "Cannot animate camera because no google maps controller present");
       return;
     }
+    List<LatLng> latLngListToAnimate = questService
+        .markersToShowOnMap(questIn: currentQuest)
+        .map((m) => LatLng(m.lat!, m.lon!))
+        .toList();
+    if ((hasActiveQuest == false || latLngListToAnimate.length == 1) &&
+            currentQuest?.type == QuestType.QRCodeHunt ||
+        currentQuest?.type == QuestType.GPSAreaHunt) {
+      latLngListToAnimate.add(geolocationService.getUserLatLng);
+    }
+
+    // add ghost latLong positions (in-place) to avoid  zooming
+    // too far if only two positions very close by are shown!
+    potentiallyAddGhostLatLng(latLngList: latLngListToAnimate);
+
     Future.delayed(
       Duration(milliseconds: delay),
       () => animateCameraToBetweenCoordinates(
         controller: controller ?? getGoogleMapController!,
-        latLngList: questService
-            .markersToShowOnMap(questIn: currentQuest)
-            .map((m) => LatLng(m.lat!, m.lon!))
-            .toList(),
+        latLngList: latLngListToAnimate,
       ),
     );
   }
@@ -636,11 +683,28 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
   Future animateCameraToBetweenCoordinates(
       {required GoogleMapController controller,
       required List<LatLng> latLngList,
-      double padding = 75}) async {
+      double padding = 100}) async {
     await controller.animateCamera(
       CameraUpdate.newLatLngBounds(
           mapsService.boundsFromLatLngList(latLngList: latLngList), padding),
     );
+  }
+
+  void potentiallyAddGhostLatLng({required List<LatLng> latLngList}) {
+    if (latLngList.length == 2) {
+      if (geolocationService.distanceBetween(
+              lat1: latLngList[0].latitude,
+              lon1: latLngList[0].longitude,
+              lat2: latLngList[1].latitude,
+              lon2: latLngList[1].longitude) <
+          150) {
+        // add ghost latLng positions for padding of camera!
+        latLngList.add(geolocationService.getLatLngShiftedLon(
+            latLng: latLngList[0], offset: 80));
+        latLngList.add(geolocationService.getLatLngShiftedLon(
+            latLng: latLngList[0], offset: -80));
+      }
+    }
   }
 
   void updateMapMarkers({required AFKMarker afkmarker}) {

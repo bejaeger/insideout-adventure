@@ -128,6 +128,7 @@ class QuestService with ReactiveServiceMixin {
     _stopWatchService.startTimer();
 
     if (quest.type == QuestType.QRCodeHunt ||
+        quest.type == QuestType.GPSAreaHunt ||
         quest.type == QuestType.QRCodeSearch) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
@@ -190,10 +191,12 @@ class QuestService with ReactiveServiceMixin {
     _geolocationService.resumePositionListener();
   }
 
-  int get getNumberMarkersCollected => activatedQuest!.markersCollected
-      .where((element) => element == true)
-      .toList()
-      .length;
+  int get getNumberMarkersCollected => activatedQuest == null
+      ? 0
+      : activatedQuest!.markersCollected
+          .where((element) => element == true)
+          .toList()
+          .length;
   // TODO: unit test this?
   bool get isAllMarkersCollected =>
       activatedQuest!.quest.markers.length == getNumberMarkersCollected;
@@ -629,6 +632,18 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  List<AFKMarker> getCollectedMarkers() {
+    List<AFKMarker> markers = [];
+    if (hasActiveQuest) {
+      for (int i = 0; i < currentQuest!.markers.length; i++) {
+        if (activatedQuest!.markersCollected[i] == true) {
+          markers.add(currentQuest!.markers[i]);
+        }
+      }
+    }
+    return markers;
+  }
+
   List<AFKMarker> markersToShowOnMap({Quest? questIn}) {
     // late Quest quest;
     List<AFKMarker> markers = [];
@@ -648,11 +663,22 @@ class QuestService with ReactiveServiceMixin {
           markers.add(activatedQuest!.quest.markers[index + 1]);
         }
       }
+      if (activatedQuest!.quest.type == QuestType.QRCodeHunt ||
+          activatedQuest!.quest.type == QuestType.GPSAreaHunt) {
+        for (var i = 0; i < activatedQuest!.markersCollected.length; i++) {
+          if (activatedQuest!.markersCollected[i]) {
+            markers.add(activatedQuest!.quest.markers[i]);
+          }
+        }
+      }
     } else {
       if (questIn == null) {
         log.e(
             "Cannot retrieve markers because no quest active and no quest provided");
         return [];
+      }
+      if (questIn.type == QuestType.QRCodeHike) {
+        markers = questIn.markers;
       }
       if (questIn.type == QuestType.GPSAreaHike) {
         markers.add(questIn.markers[0]);
@@ -660,8 +686,9 @@ class QuestService with ReactiveServiceMixin {
           markers.add(questIn.markers[1]);
         }
       }
-      if (questIn.type == QuestType.QRCodeHike) {
-        markers = questIn.markers;
+      if (questIn.type == QuestType.QRCodeHunt ||
+          questIn.type == QuestType.GPSAreaHunt) {
+        markers.add(questIn.markers[0]);
       }
     }
     return markers;
@@ -848,7 +875,8 @@ class QuestService with ReactiveServiceMixin {
         type == QuestType.DistanceEstimate ||
         type == QuestType.QRCodeSearch ||
         type == QuestType.QRCodeSearchIndoor ||
-        type == QuestType.QRCodeHunt) {
+        type == QuestType.QRCodeHunt ||
+        type == QuestType.GPSAreaHunt) {
       return QuestUIStyle.standalone;
     } else {
       return QuestUIStyle.map;
