@@ -3,6 +3,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
@@ -33,7 +34,9 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
       Routes.bottomBarLayoutTemplateView,
       arguments: BottomBarLayoutTemplateViewArguments(
         userRole: currentUser.role,
-        initialBottomNavBarIndex: BottomNavBarIndex.quest,
+        initialBottomNavBarIndex: currentUser.role == UserRole.adminMaster
+            ? BottomNavBarIndex.home
+            : BottomNavBarIndex.quest,
         questViewIndex: QuestViewType.singlequest,
         questType: type,
       ),

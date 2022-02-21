@@ -440,13 +440,15 @@ class FirestoreApi {
         questsOnFirestore = [];
       }
       final quests = getDummyQuests();
-      quests.forEach((el1) {
-        if (!questsOnFirestore.any((el2) => el2.id == el1.id)) {
-          // dummy quest not yet on firestore
-          // adding it
-          _uploadQuest(quest: el1);
-        }
-      });
+      quests.forEach(
+        (el1) {
+          if (!questsOnFirestore.any((el2) => el2.name == el1.name)) {
+            // dummy quest not yet on firestore
+            // adding it
+            _uploadQuest(quest: el1);
+          }
+        },
+      );
       return quests;
     } else {
       return await downloadNearbyQuests();

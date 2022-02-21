@@ -98,7 +98,7 @@ class ExplorerHomeView extends StatelessWidget {
                         title: "Achievements",
                         onButtonTap: model.navigateToAchievementsView,
                       ),
-                      if (model.activatedQuestsHistory.length > 0)
+                      if (model.achievements.length > 0)
                         AchievementsGrid(
                           achievements: model.achievements,
                           onPressed: () => null,
