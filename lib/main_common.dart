@@ -20,6 +20,7 @@ import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 
 import 'firebase_options_dev.dart' as dev;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 const bool USE_EMULATOR = false;
 
@@ -28,8 +29,11 @@ void mainCommon(Flavor flavor) async {
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    await Firebase.initializeApp(
-        options: dev.DefaultFirebaseOptions.currentPlatform);
+    // initialize firebase app via index.html
+    if (!kIsWeb) {
+      await Firebase.initializeApp(
+          options: dev.DefaultFirebaseOptions.currentPlatform);
+    }
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();
     }
