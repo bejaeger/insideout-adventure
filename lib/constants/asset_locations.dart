@@ -1,4 +1,6 @@
 const String kAFKCreditsLogoPath = "assets/icons/afk_credits.PNG";
+const String kMapPath = "assets/icons/map.png";
+const String kQrcodePath = "assets/icons/qrcode.png";
 const String kMeasureDistanceIconPath = "assets/icons/measure-distance.png";
 const String kMagnetIconPath = "assets/icons/magnet.png";
 
@@ -13,13 +15,13 @@ const String kCreatGiftCardMoney = "assets/icons/money.png";
 const List<String> assetsGiftCardImages = [
   kCreatGiftCard,
   kCreatGiftCardMoney,
-  kCreatGiftCard,
-  kCreatGiftCard,
+/*   kCreatGiftCard,
+  kCreatGiftCard, */
 ];
 
 const List<String> assetsQuestImages = [
   kCreateQuest,
+/*   kCreateQuest,
   kCreateQuest,
-  kCreateQuest,
-  kCreateQuest,
+  kCreateQuest, */
 ];

@@ -36,6 +36,20 @@ mixin NavigationMixin {
     );
   }
 
+  void navToSingleMarkerView() {
+    //navigationService.replaceWith(Routes.homeView);
+    _navigationService.navigateTo(
+      Routes.singleMarkerView,
+    );
+  }
+
+  void navToQrcodeView() {
+    //navigationService.replaceWith(Routes.homeView);
+    _navigationService.navigateTo(
+      Routes.qRCodeView,
+    );
+  }
+
   void navToExplorerCreateAccount({required UserRole role}) {
     _navigationService.replaceWith(Routes.createAccountView,
         arguments: CreateAccountViewArguments(role: role));

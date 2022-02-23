@@ -11,7 +11,7 @@ _$_GiftCardCategory _$$_GiftCardCategoryFromJson(Map<String, dynamic> json) =>
       categoryId: json['categoryId'] as String,
       amount: (json['amount'] as num).toDouble(),
       imageUrl: json['imageUrl'] as String?,
-      categoryName: $enumDecode(_$GiftCardTypeEnumMap, json['categoryName']),
+      categoryName: json['categoryName'] as String,
     );
 
 Map<String, dynamic> _$$_GiftCardCategoryToJson(_$_GiftCardCategory instance) =>
@@ -19,12 +19,5 @@ Map<String, dynamic> _$$_GiftCardCategoryToJson(_$_GiftCardCategory instance) =>
       'categoryId': instance.categoryId,
       'amount': instance.amount,
       'imageUrl': instance.imageUrl,
-      'categoryName': _$GiftCardTypeEnumMap[instance.categoryName],
+      'categoryName': instance.categoryName,
     };
-
-const _$GiftCardTypeEnumMap = {
-  GiftCardType.Playstation: 'Playstation',
-  GiftCardType.Xbox: 'Xbox',
-  GiftCardType.Steam: 'Steam',
-  GiftCardType.Nintendo: 'Nintendo',
-};

@@ -1,7 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class QuestCategoryCard extends StatelessWidget {

@@ -62,12 +62,11 @@ class QuestLists extends StatelessWidget {
                       itemBuilder: (BuildContext context, index) {
                         return GestureDetector(
                           onTap: () {
-                            model.NavigateToQuestViews(index: index);
-
-                            print('Clikced By Felix ${index.toString()}');
+                            model.navigateToQuestViews(index: index);
                           },
                           child: Container(
                             height: 250,
+                            width: 350,
                             child: Card(
                               semanticContainer: true,
                               clipBehavior: Clip.antiAliasWithSaveLayer,

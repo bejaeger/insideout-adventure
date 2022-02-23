@@ -28,7 +28,7 @@ import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_l
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
-import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers_view.dart';
+import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
@@ -58,16 +58,18 @@ import 'package:afkcredits/ui/views/transaction_history/transfers_history_view.d
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
 import 'package:afkcredits/utils/cloud_storage_result/cloud_storage_result.dart';
 import 'package:afkcredits/utils/image_selector/image_selector.dart';
-import 'package:afkcredits/utils/markers/markers_in_map.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
+
 @StackedApp(
   routes: [
     MaterialRoute(page: SponsorHomeView),
+    MaterialRoute(page: SingleMarkerView),
     MaterialRoute(page: InsertPrePurchasedGiftCardView),
     MaterialRoute(page: UpdatingQuestView),
     MaterialRoute(page: ExplorerHomeView),
@@ -133,7 +135,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: GiftCardService),
     LazySingleton(classType: QuestTestingService),
     LazySingleton(classType: MapsService),
-    LazySingleton(classType: MarkersInMap),
+    //LazySingleton(classType: MarkersInMap),
     LazySingleton(classType: PurchasedGiftCardsViewModel),
     LazySingleton(classType: ActiveTreasureLocationSearchQuestViewModel),
     LazySingleton(classType: ActiveDistanceEstimateQuestViewModel),

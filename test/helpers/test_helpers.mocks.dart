@@ -1791,12 +1791,6 @@ class MockGiftCardService extends _i1.Mock implements _i46.GiftCardService {
               {#prePurchasedGiftCard: prePurchasedGiftCard}),
           returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
   @override
-  void setListGiftCards({List<_i22.GiftCardCategory>? giftCardCategory}) =>
-      super.noSuchMethod(
-          Invocation.method(
-              #setListGiftCards, [], {#giftCardCategory: giftCardCategory}),
-          returnValueForMissingStub: null);
-  @override
   _i17.Future<dynamic> fetchAllGiftCards() =>
       (super.noSuchMethod(Invocation.method(#fetchAllGiftCards, []),
           returnValue: Future<dynamic>.value()) as _i17.Future<dynamic>);

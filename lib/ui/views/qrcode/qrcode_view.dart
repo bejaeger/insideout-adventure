@@ -14,9 +14,8 @@ class QRCodeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<QRCodeViewModel>.reactive(
-        viewModelBuilder: () => QRCodeViewModel(),
-        builder: (context, model, child) => 
-        Scaffold(
+      viewModelBuilder: () => QRCodeViewModel(),
+      builder: (context, model, child) => Scaffold(
         body: qrCodeString == null
             ? ScanQRCode(
                 analyzeScanResult: model.analyzeScanResult,
@@ -25,9 +24,10 @@ class QRCodeView extends StatelessWidget {
             : ShowQRCode(
                 qrCodeString: qrCodeString!,
                 onBackPressed: model.navigateBack,
-              )),
-        // MyQRCode(userInfo: model.getUserInfo()),
-        );
+              ),
+      ),
+      // MyQRCode(userInfo: model.getUserInfo()),
+    );
   }
 }
 
@@ -147,11 +147,13 @@ class _ScanQRCodeState extends State<ScanQRCode> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) async {
-      // analyzes scanned result and navigates to new
-      // screen if qr code scan was successfull
-      await widget.analyzeScanResult(result: scanData);
-    });
+    controller.scannedDataStream.listen(
+      (scanData) async {
+        // analyzes scanned result and navigates to new
+        // screen if qr code scan was successfull
+        await widget.analyzeScanResult(result: scanData);
+      },
+    );
   }
 
   @override

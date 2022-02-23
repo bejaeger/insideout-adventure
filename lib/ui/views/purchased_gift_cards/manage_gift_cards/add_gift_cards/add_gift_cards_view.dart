@@ -13,14 +13,12 @@ import 'add_gift_cards_viewmodel.dart';
   fields: [
     FormTextField(name: 'amount'),
     FormTextField(name: 'description'),
+    FormTextField(name: 'category'),
   ],
 )
 // ignore: must_be_immutable
 class AddGiftCardsView extends StatelessWidget with $AddGiftCardsView {
   AddGiftCardsView({Key? key}) : super(key: key);
-
-  // GlobalKey<FormFieldState>? _key;
-
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddGiftCardsViewModel>.reactive(
@@ -36,6 +34,7 @@ class AddGiftCardsView extends StatelessWidget with $AddGiftCardsView {
             AddGiftCard(
               model: model,
               amountController: amountController,
+              categoryController: categoryController,
             ),
           ],
         ),
@@ -50,7 +49,11 @@ class AddGiftCardsView extends StatelessWidget with $AddGiftCardsView {
 class AddGiftCard extends StatelessWidget {
   var model;
   TextEditingController? amountController;
-  AddGiftCard({required this.model, required this.amountController});
+  TextEditingController? categoryController;
+  AddGiftCard(
+      {required this.model,
+      required this.amountController,
+      required this.categoryController});
   GiftCardType? selectedGiftCardType;
   String? giftCardId;
   // String? afkCreditId;
@@ -75,21 +78,13 @@ class AddGiftCard extends StatelessWidget {
               // focusNode: nameFocusNode,
             ),
             verticalSpaceMedium,
-            DropdownButtonFormField<GiftCardType>(
-              //key: _key,
-              hint: Text('Select Category'),
-              isExpanded: true,
-              items: GiftCardType.values.map((_giftCardType) {
-                return DropdownMenuItem(
-                  value: _giftCardType,
-                  child: Text(
-                    _giftCardType.toString().split('.').elementAt(1),
-                  ),
-                );
-              }).toList(),
-              onChanged: (GiftCardType? value) {
-                selectedGiftCardType = value;
-              },
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Category Name: ',
+              ),
+              controller: categoryController,
+              keyboardType: TextInputType.text,
+              // focusNode: nameFocusNode,
             ),
             verticalSpaceMedium,
             GestureDetector(
@@ -166,17 +161,22 @@ class AddGiftCard extends StatelessWidget {
               children: [
                 ElevatedButton.icon(
                   onPressed: () async {
-                    var id = Uuid();
-                    giftCardAmount =
-                        num.parse(amountController!.text) as double?;
-                    giftCardId = id.v1().toString().replaceAll('-', '');
-
-                    model!.addGiftCard(
-                      giftCardCategory: GiftCardCategory(
-                          categoryId: giftCardId!,
-                          amount: giftCardAmount!,
-                          categoryName: selectedGiftCardType!),
-                    );
+                    if (amountController!.text.isNotEmpty &&
+                        categoryController!.text.isNotEmpty) {
+                      var id = Uuid();
+                      //selectedGiftCardType = enum.parse();
+                      //  categoryController!.text;
+                      giftCardAmount = double.parse(amountController!.text);
+                      giftCardId = id.v1().toString().replaceAll('-', '');
+                      model!.addGiftCard(
+                        giftCardCategory: GiftCardCategory(
+                            categoryId: giftCardId!,
+                            amount: giftCardAmount!,
+                            categoryName: categoryController!.text),
+                      );
+                    } else {
+                      model.showEmptyMarkerSnackbar();
+                    }
                   },
                   icon: const Icon(Icons.add_box),
                   label: const Text(

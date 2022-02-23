@@ -1,7 +1,4 @@
 import 'dart:convert';
-
-import 'package:afkcredits/apis/firestore_api.dart';
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/exceptions/qrcode_service_exception.dart';
@@ -10,7 +7,6 @@ class QRCodeService {
   final log = getLogger("qr_code_service.dart");
 
   AFKMarker getMarkerFromQrCodeString({required String? qrCodeString}) {
-
     try {
       if (qrCodeString == null) {
         throw Exception("scanned qr code is null");

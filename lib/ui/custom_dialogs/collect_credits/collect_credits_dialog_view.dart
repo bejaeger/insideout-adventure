@@ -85,25 +85,28 @@ class _BasicDialogContent extends StatelessWidget {
                             fontWeight: FontWeight.w800)),
                     verticalSpaceSmall,
                     Text(
-                        model.collectedCredits
-                            ? "You earned " +
-                                request.data.quest.afkCredits.toString() +
-                                " AFK Credits"
-                            : "You get " +
-                                request.data.quest.afkCredits.toString() +
-                                " AFK Credits!",
-                        textAlign: TextAlign.center,
-                        style: textTheme(context)
-                            .headline4!
-                            .copyWith(color: kPrimaryColor, fontSize: 18)),
+                      model.collectedCredits
+                          ? "You earned " +
+                              request.data.quest.afkCredits.toString() +
+                              " AFK Credits"
+                          : "You get " +
+                              request.data.quest.afkCredits.toString() +
+                              " AFK Credits!",
+                      textAlign: TextAlign.center,
+                      style: textTheme(context)
+                          .headline4!
+                          .copyWith(color: kPrimaryColor, fontSize: 18),
+                    ),
                     verticalSpaceSmall,
                     AnimatedSwitcher(
                       duration: Duration(milliseconds: 1),
                       child: !model.collectedCredits
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: Image.asset(kAFKCreditsLogoPath,
-                                  width: screenWidth(context, percentage: 0.4)),
+                              child: Image.asset(
+                                kAFKCreditsLogoPath,
+                                width: screenWidth(context, percentage: 0.4),
+                              ),
                             )
                           : FittedBox(
                               fit: BoxFit.fill,
