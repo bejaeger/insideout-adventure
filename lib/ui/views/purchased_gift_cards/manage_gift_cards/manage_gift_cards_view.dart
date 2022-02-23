@@ -42,12 +42,15 @@ class ManageGiftCardstView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              "model!.getPrePurchasedGiftCard![index]!.categoryName",
+                              model.getPrePurchasedGiftCard![index]!
+                                  .categoryName,
                               style: TextStyle(color: Colors.red),
                             ),
                             //  verticalSpaceSmall,
                             Text(
-                              "  model!.getPrePurchasedGiftCard![index]!.giftCardCode",
+                              model
+                                  .getPrePurchasedGiftCard![index]!.giftCardCode
+                                  .toString(),
                               style: TextStyle(color: Colors.red),
                             ),
                             //verticalSpaceSmall,
