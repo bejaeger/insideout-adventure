@@ -35,11 +35,11 @@ class AFKBottomNavigationBarViewModel
 /*   void onMapPressed() {
     //navigationService.clearStackAndShow(Routes.mapScreen);
     if (questService.hasActiveQuest == false) {
-      navigationService.clearStackAndShow(Routes.mapView);
+      navigationService.clearStackAndShow(Routes.mapOverviewView);
       _currentIndex = BottomNavBarIndex.quest;
     } else {
       // this is not functional, would need to add activeQuestView here most likely
-      navigationService.clearStackAndShow(Routes.mapView);
+      navigationService.clearStackAndShow(Routes.mapOverviewView);
       _currentIndex = BottomNavBarIndex.quest;
     }
     notifyListeners();

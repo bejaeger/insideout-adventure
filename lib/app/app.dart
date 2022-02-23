@@ -5,6 +5,7 @@ import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/cloud_firestore_storage/cloud_storage_services.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
+import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
@@ -33,6 +34,7 @@ import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
+import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:afkcredits/ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
@@ -103,6 +105,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: ManageGiftCardstView),
     MaterialRoute(page: QuestsOverviewView),
     MaterialRoute(page: AddGiftCardsView),
+    MaterialRoute(page: HistoryAndAchievementsView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -134,12 +137,13 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: DirectionsAPI),
     LazySingleton(classType: GiftCardService),
     LazySingleton(classType: QuestTestingService),
+    LazySingleton(classType: GamificationService),
     LazySingleton(classType: MapsService),
     //LazySingleton(classType: MarkersInMap),
     LazySingleton(classType: PurchasedGiftCardsViewModel),
     LazySingleton(classType: ActiveTreasureLocationSearchQuestViewModel),
     LazySingleton(classType: ActiveDistanceEstimateQuestViewModel),
-    LazySingleton(classType: ActiveQrCodeSearchViewModel),
+    // LazySingleton(classType: ActiveQrCodeSearchViewModel),
 
     // Services
   ],

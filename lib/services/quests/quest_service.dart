@@ -63,10 +63,6 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
-  // dead time after update
-  bool isTrackingDeadTime = false;
-  bool isUIDeadTime = false;
-
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
   Quest? currentQuest;
@@ -93,6 +89,7 @@ class QuestService with ReactiveServiceMixin {
         _getActivatedQuest(quest: quest, uids: uids);
 
     // Location check
+    // TODO: Double check this
     if (quest.type != QuestType.DistanceEstimate) {
       try {
         AFKMarker fullMarker = tmpActivatedQuest.quest.markers
@@ -128,12 +125,10 @@ class QuestService with ReactiveServiceMixin {
       marker: getNextMarker(),
     );
 
-    if (quest.type != QuestType.GPSAreaHike) {
-      // Start timer
-      _stopWatchService.startTimer();
-    }
+    _stopWatchService.startTimer();
 
-    if (quest.type == QuestType.QRCodeHuntIndoor ||
+    if (quest.type == QuestType.QRCodeHunt ||
+        quest.type == QuestType.GPSAreaHunt ||
         quest.type == QuestType.QRCodeSearch) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
@@ -147,9 +142,8 @@ class QuestService with ReactiveServiceMixin {
     //  else if (quest.type == QuestType.DistanceEstimate) {
     //   _stopWatchService.listenToSecondTime(callback: trackDataDistanceEstimate);
     // }
-    else if (quest.type == QuestType.QRCodeHike) {
-      // ||
-      // quest.type == QuestType.GPSAreaHike) {
+    else if (quest.type == QuestType.QRCodeHike ||
+        quest.type == QuestType.GPSAreaHike) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
     // Quest succesfully started
@@ -197,13 +191,23 @@ class QuestService with ReactiveServiceMixin {
     _geolocationService.resumePositionListener();
   }
 
-  int get getNumberMarkersCollected => activatedQuest!.markersCollected
-      .where((element) => element == true)
-      .toList()
-      .length;
+  int get getNumberMarkersCollected => activatedQuest == null
+      ? 0
+      : activatedQuest!.markersCollected
+          .where((element) => element == true)
+          .toList()
+          .length;
   // TODO: unit test this?
   bool get isAllMarkersCollected =>
       activatedQuest!.quest.markers.length == getNumberMarkersCollected;
+
+  bool isFinishMarker(AFKMarker marker) {
+    return activatedQuest?.quest.finishMarker == marker;
+  }
+
+  bool isStartMarker(AFKMarker marker) {
+    return activatedQuest?.quest.startMarker == marker;
+  }
 
   Future handleSuccessfullyFinishedQuest() async {
     // 1. Get credits collected, time elapsed and other potential data at the end of the quest
@@ -230,6 +234,8 @@ class QuestService with ReactiveServiceMixin {
     await uploadAndCleanUpFinishedQuest();
   }
 
+  // TODO: Calculate how many credits were
+  // earned here
   Future evaluateFinishedQuest() async {
     pushActivatedQuest(activatedQuest!.copyWith(
         status: QuestStatus.success,
@@ -266,8 +272,6 @@ class QuestService with ReactiveServiceMixin {
     // keep copy of finished quest to show in success dialog view
     previouslyFinishedQuest = activatedQuest;
     disposeActivatedQuest();
-    setUIDeadTime(false);
-    setTrackingDeadTime(false);
   }
 
   // Handle the scenario when a user finishes a hike
@@ -281,8 +285,7 @@ class QuestService with ReactiveServiceMixin {
       return;
     } else {
       _stopWatchService.stopTimer();
-      _stopWatchService.pauseListener();
-      trackData(_stopWatchService.getSecondTime(), forceNoPush: true);
+      trackData(_stopWatchService.getSecondTime, forceNoPush: true);
       // updateData();
 
       // TODO: Add evaluation (how many afk credits were earned) for all quest types
@@ -316,7 +319,7 @@ class QuestService with ReactiveServiceMixin {
     // TODO: recover quest! of all types!
 
     if (activatedQuest != null) {
-      _stopWatchService.resumeListener();
+      _stopWatchService.resume();
       _stopWatchService.startTimer();
       pushActivatedQuest(activatedQuest!.copyWith(status: QuestStatus.active));
     } else {
@@ -404,11 +407,13 @@ class QuestService with ReactiveServiceMixin {
   }
 
   void setAndPushActiveQuestStatus(QuestStatus status) {
-    _questTestingService.maybeRecordData(
-        trigger: QuestDataPointTrigger.userAction,
-        userEventDescription: "New quest status: " + status.toString(),
-        pushToNotion: true);
-    pushActivatedQuest(activatedQuest!.copyWith(status: status));
+    if (hasActiveQuest) {
+      _questTestingService.maybeRecordData(
+          trigger: QuestDataPointTrigger.userAction,
+          userEventDescription: "New quest status: " + status.toString(),
+          pushToNotion: true);
+      pushActivatedQuest(activatedQuest!.copyWith(status: status));
+    }
   }
 
   void setSuccessAsQuestStatus() {
@@ -417,7 +422,6 @@ class QuestService with ReactiveServiceMixin {
 
   Future trackTime(int seconds) async {
     if (activatedQuest != null) {
-      ActivatedQuest tmpActivatedQuest = activatedQuest!;
       if (seconds % 1 == 0) {
         updateTimeElapsed(seconds);
       }
@@ -499,10 +503,6 @@ class QuestService with ReactiveServiceMixin {
       }
       bool push = false;
       if (seconds % 3 == 0) {
-        if (isTrackingDeadTime) {
-          log.v("Skipping distance to goal check because dead time is on");
-          return;
-        }
         final position = await _geolocationService.getAndSetCurrentLocation();
         if (position.accuracy > kMinRequiredAccuracyLocationSearch) {
           log.v(
@@ -559,11 +559,8 @@ class QuestService with ReactiveServiceMixin {
       //}
       if (push) {
         pushActivatedQuest(tmpActivatedQuest);
-        setTrackingDeadTime(true);
         await Future.delayed(
             Duration(seconds: kDeadTimeAfterVibrationInSeconds));
-        if (tmpActivatedQuest.status != QuestStatus.success)
-          setTrackingDeadTime(false);
       }
     }
   }
@@ -606,16 +603,6 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
-  void setTrackingDeadTime(bool deadTime) {
-    log.v("Setting quest data tracking dead time to $deadTime");
-    isTrackingDeadTime = deadTime;
-  }
-
-  void setUIDeadTime(bool deadTime) {
-    log.v("Setting quest data UI update dead time to $deadTime");
-    isUIDeadTime = deadTime;
-  }
-
   void updateCollectedMarkers({required AFKMarker marker}) {
     if (activatedQuest != null) {
       final index = activatedQuest!.quest.markers
@@ -645,6 +632,18 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  List<AFKMarker> getCollectedMarkers() {
+    List<AFKMarker> markers = [];
+    if (hasActiveQuest) {
+      for (int i = 0; i < currentQuest!.markers.length; i++) {
+        if (activatedQuest!.markersCollected[i] == true) {
+          markers.add(currentQuest!.markers[i]);
+        }
+      }
+    }
+    return markers;
+  }
+
   List<AFKMarker> markersToShowOnMap({Quest? questIn}) {
     // late Quest quest;
     List<AFKMarker> markers = [];
@@ -664,11 +663,22 @@ class QuestService with ReactiveServiceMixin {
           markers.add(activatedQuest!.quest.markers[index + 1]);
         }
       }
+      if (activatedQuest!.quest.type == QuestType.QRCodeHunt ||
+          activatedQuest!.quest.type == QuestType.GPSAreaHunt) {
+        for (var i = 0; i < activatedQuest!.markersCollected.length; i++) {
+          if (activatedQuest!.markersCollected[i]) {
+            markers.add(activatedQuest!.quest.markers[i]);
+          }
+        }
+      }
     } else {
       if (questIn == null) {
         log.e(
             "Cannot retrieve markers because no quest active and no quest provided");
         return [];
+      }
+      if (questIn.type == QuestType.QRCodeHike) {
+        markers = questIn.markers;
       }
       if (questIn.type == QuestType.GPSAreaHike) {
         markers.add(questIn.markers[0]);
@@ -676,8 +686,9 @@ class QuestService with ReactiveServiceMixin {
           markers.add(questIn.markers[1]);
         }
       }
-      if (questIn.type == QuestType.QRCodeHike) {
-        markers = questIn.markers;
+      if (questIn.type == QuestType.QRCodeHunt ||
+          questIn.type == QuestType.GPSAreaHunt) {
+        markers.add(questIn.markers[0]);
       }
     }
     return markers;
@@ -728,8 +739,8 @@ class QuestService with ReactiveServiceMixin {
 
       // 2.
       if (locationVerification) {
-        final bool closeby =
-            await _markerService.isUserCloseby(marker: fullMarker);
+        final bool closeby = await _markerService.isUserCloseby(
+            marker: fullMarker, geofenceRadius: getGeoFenceForCurrentQuest());
         if (!closeby) {
           log.w("User is not nearby marker!");
           return MarkerAnalysisResult.error(
@@ -751,6 +762,14 @@ class QuestService with ReactiveServiceMixin {
       // return marker that was succesfully scanned
 
       return MarkerAnalysisResult.marker(marker: fullMarker);
+    }
+  }
+
+  int getGeoFenceForCurrentQuest() {
+    if (currentQuest?.type == QuestType.QRCodeHunt) {
+      return kMaxDistanceFromMarkerInMeterQrCodeHunt;
+    } else {
+      return kMaxDistanceFromMarkerInMeter;
     }
   }
 
@@ -856,7 +875,8 @@ class QuestService with ReactiveServiceMixin {
         type == QuestType.DistanceEstimate ||
         type == QuestType.QRCodeSearch ||
         type == QuestType.QRCodeSearchIndoor ||
-        type == QuestType.QRCodeHuntIndoor) {
+        type == QuestType.QRCodeHunt ||
+        type == QuestType.GPSAreaHunt) {
       return QuestUIStyle.standalone;
     } else {
       return QuestUIStyle.map;
@@ -1046,8 +1066,8 @@ class QuestService with ReactiveServiceMixin {
   }
 
   void disposeActivatedQuest() {
+    _stopWatchService.stopTimer();
     _stopWatchService.resetTimer();
-    _stopWatchService.cancelListener();
     // cancelLocationListener();
     cancelPositionListener();
     _questTestingService.maybeReset();

@@ -1,17 +1,18 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
+  final FlavorConfigProvider _flavorConfigProvider =
+      locator<FlavorConfigProvider>();
 
+  // getters
   bool get isRecordingLocationData =>
       _questTestingService.isRecordingLocationData;
   bool get isPermanentAdminMode => _questTestingService.isPermanentAdminMode;
@@ -23,6 +24,14 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
       _questTestingService.isAllQuestDataPointsPushed();
   int get numberPushedLocations => _questTestingService.numberPushedLocations();
   bool get isListeningToPosition => _geolocationService.isListeningToLocation;
+
+  bool get allowDummyMarkerCollection =>
+      _flavorConfigProvider.allowDummyMarkerCollection;
+  bool get enableGPSVerification => _flavorConfigProvider.enableGPSVerification;
+  bool get dummyQuestCompletionVerification =>
+      _flavorConfigProvider.dummyQuestCompletionVerification;
+
+  // setters
   void setIsRecordingLocationData(bool b) {
     _questTestingService.setIsRecordingLocationData(b);
     notifyListeners();
@@ -40,6 +49,21 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
 
   void setIsPermanentUserMode(bool b) {
     _questTestingService.setIsPermanentUserMode(b);
+    notifyListeners();
+  }
+
+  void setAllowDummyMarkerCollection(bool b) {
+    _flavorConfigProvider.allowDummyMarkerCollection = b;
+    notifyListeners();
+  }
+
+  void setEnableGPSVerification(bool b) {
+    _flavorConfigProvider.enableGPSVerification = b;
+    notifyListeners();
+  }
+
+  void setDummyQuestCompletionVerification(bool b) {
+    _flavorConfigProvider.dummyQuestCompletionVerification = b;
     notifyListeners();
   }
 
@@ -73,25 +97,8 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   }
 
   @override
-  void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
-    // TODO: implement addMarkerToMap
-  }
-
-  @override
-  BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker, required Quest? quest}) {
-    // TODO: implement defineMarkersColour
-    throw UnimplementedError();
-  }
-
-  @override
   bool isQuestCompleted() {
     // TODO: implement isQuestCompleted
     throw UnimplementedError();
-  }
-
-  @override
-  void loadQuestMarkers() {
-    // TODO: implement loadQuestMarkers
   }
 }

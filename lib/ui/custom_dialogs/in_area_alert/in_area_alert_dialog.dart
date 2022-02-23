@@ -195,7 +195,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                           TextButton(
                             onPressed: () => print("hi"),
                             child: Text(
-                              "Show Hint",
+                              "Show Clue",
                               style: TextStyle(color: kBlackHeadlineColor),
                             ),
                           ),

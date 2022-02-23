@@ -8,11 +8,13 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
+import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
@@ -47,6 +49,9 @@ class BaseModel extends BaseViewModel {
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final QRCodeService qrCodeService = locator<QRCodeService>();
+  final GamificationService gamificationService =
+      locator<GamificationService>();
+
   final baseModelLog = getLogger("BaseModel");
 
   // ------------------------------------------------------
@@ -54,6 +59,7 @@ class BaseModel extends BaseViewModel {
   User get currentUser => userService.currentUser;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
+  bool get isAdminMaster => userService.isAdminMaster;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
       : userService.isSuperUser;
@@ -95,6 +101,7 @@ class BaseModel extends BaseViewModel {
     transfersHistoryService.clearData();
     geolocationService.clearData();
     _questTestingService.maybeReset();
+    gamificationService.clearData();
   }
 
   void unregisterViewModels() {
@@ -134,43 +141,16 @@ class BaseModel extends BaseViewModel {
     //layoutService.setShowBottomNavBar(show);
   }
 
-  // Future startQuestMain(
-  //     {required Quest quest,
-  //     Future Function(int)? periodicFuncFromViewModel}) async {
-  //   try {
-  //     // if (quest.type == QuestType.VibrationSearch && startFromMap) {
-  //     //   await navigateToVibrationSearchView();
-  //     // }
-
-  //     /// Once The user Click on Start a Quest. It is her/him to new Page
-  //     /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
-  //     /// Quest.
-  //     final isQuestStarted = await questService.startQuest(
-  //         quest: quest,
-  //         uids: [currentUser.uid],
-  //         periodicFuncFromViewModel: periodicFuncFromViewModel);
-
-  //     // this will also change the MapViewModel to show the ActiveQuestView
-  //     if (isQuestStarted is String) {
-  //       await dialogService.showDialog(
-  //           title: "Sorry could not start the quest",
-  //           description: isQuestStarted);
-  //       return false;
-  //     }
-  //     return true;
-  //   } catch (e) {
-  //     baseModelLog.e("Could not start quest, error thrown: $e");
-  //     rethrow;
-  //   }
-  // }
-
   bool hasEnoughSponsoring({required Quest? quest}) {
     if (quest == null) {
       baseModelLog.e(
           "Attempted to check whether sponsoring is enough for quest that is null!");
       return false;
     }
-    return quest.afkCredits <= currentUserStats.availableSponsoring;
+    // TODO: Pay attention to this here
+    // return quest.afkCredits <= currentUserStats.availableSponsoring;
+    // TODO: For now we always assume we have enough funding
+    return true;
   }
 
   ////////////////////////////////////////
@@ -241,6 +221,10 @@ class BaseModel extends BaseViewModel {
 
   // TODO: MAYBE this can go into the base_viewmodel as it's needed also in other screens!
   Future scanQrCode() async {
+    if (await maybeCheatAndCollectNextMarker()) {
+      return;
+    }
+
     // navigate to qr code view, validate results in quest service, and continue
     MarkerAnalysisResult result = await navigateToQrcodeViewAndReturnResult();
     if (result.isEmpty) {
@@ -249,13 +233,28 @@ class BaseModel extends BaseViewModel {
     }
     if (result.hasError) {
       baseModelLog.e("Error occured: ${result.errorMessage}");
-      dialogService.showDialog(
-        title: "Failed to collect marker!",
+      await dialogService.showDialog(
+        title: "Cannot collect marker!",
         description: result.errorMessage!,
       );
       return;
     }
     return await handleMarkerAnalysisResult(result);
+  }
+
+  Future maybeCheatAndCollectNextMarker() async {
+    if (useSuperUserFeatures) {
+      final admin = await showAdminDialogAndGetResponse();
+      if (admin == true) {
+        // collect next marker automatically!
+        AFKMarker? nextMarker = questService.getNextMarker();
+        await questService.analyzeMarker(marker: nextMarker);
+        final result = MarkerAnalysisResult.marker(marker: nextMarker);
+        await handleMarkerAnalysisResult(result);
+        return true;
+      }
+    }
+    return false;
   }
 
   Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
@@ -339,7 +338,8 @@ class BaseModel extends BaseViewModel {
           arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
     } else if (quest.type == QuestType.QRCodeSearch ||
         quest.type == QuestType.QRCodeSearchIndoor ||
-        quest.type == QuestType.QRCodeHuntIndoor) {
+        quest.type == QuestType.QRCodeHunt ||
+        quest.type == QuestType.GPSAreaHunt) {
       await navigationService.navigateTo(Routes.activeQrCodeSearchView,
           arguments: ActiveQrCodeSearchViewArguments(quest: quest));
     } else if (quest.type == QuestType.QRCodeHike ||
@@ -348,6 +348,12 @@ class BaseModel extends BaseViewModel {
       await navigationService.navigateTo(Routes.activeMapQuestView,
           arguments: ActiveMapQuestViewArguments(quest: quest));
     }
+  }
+
+  Future openSuperUserSettingsDialog() async {
+    await dialogService.showCustomDialog(variant: DialogType.SuperUserSettings);
+    setListenedToNewPosition(false);
+    notifyListeners();
   }
 
   //////////////////////////////////////////

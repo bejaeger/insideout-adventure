@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -63,16 +64,6 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
           _controller.forward();
           model.showCollectedMarkerAnimation = false;
         }
-
-        if (!model.hasActiveQuest && !model.showStartSwipe)
-          return SafeArea(
-            child: Scaffold(
-              body: Center(
-                child: Text("SOMETHING BROKE"),
-              ),
-            ),
-          );
-
         return WillPopScope(
           onWillPop: () async {
             if (!model.hasActiveQuest) {
@@ -127,7 +118,7 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                               !model.questSuccessfullyFinished
                           ? model.isBusy
                               ? AFKProgressIndicator()
-                              : Container()
+                              : SizedBox(height: 0, width: 0)
                           : model.questSuccessfullyFinished
                               ? Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -138,18 +129,19 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                                         style: textTheme(context).headline5),
                                     verticalSpaceTiny,
                                     ElevatedButton(
-                                        onPressed: () =>
-                                            model.replaceWithMainView(
-                                                index: BottomNavBarIndex.quest),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "More Quests",
-                                          ),
-                                        )),
+                                      onPressed: () =>
+                                          model.replaceWithMainView(
+                                              index: BottomNavBarIndex.quest),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "More Quests",
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 )
-                              : model.isBusy
+                              : model.isBusy || model.distanceToStartMarker < 0
                                   ? AFKProgressIndicator()
                                   : Stack(
                                       children: [
@@ -185,31 +177,36 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                                                       }),
                                                 ),
                                         ),
-                                        AnimatedOpacity(
-                                          opacity: model.hasActiveQuest ? 1 : 0,
-                                          duration: Duration(seconds: 1),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              LiveQuestStatistic(
-                                                title: "Duration",
-                                                statistic: model.hasActiveQuest
-                                                    ? model.timeElapsed
-                                                    : "0",
-                                              ),
-                                              ScaleTransition(
-                                                scale: _animation,
-                                                child: LiveQuestStatistic(
-                                                  title: "Markers collected",
-                                                  statistic: model
-                                                          .hasActiveQuest
-                                                      ? model
-                                                          .getNumberMarkersCollectedString()
-                                                      : "0",
+                                        IgnorePointer(
+                                          ignoring: !model.hasActiveQuest,
+                                          child: AnimatedOpacity(
+                                            opacity:
+                                                model.hasActiveQuest ? 1 : 0,
+                                            duration: Duration(seconds: 1),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                LiveQuestStatistic(
+                                                  title: "Duration",
+                                                  statistic:
+                                                      model.hasActiveQuest
+                                                          ? model.timeElapsed
+                                                          : "0",
                                                 ),
-                                              ),
-                                            ],
+                                                ScaleTransition(
+                                                  scale: _animation,
+                                                  child: LiveQuestStatistic(
+                                                    title: "Markers collected",
+                                                    statistic: model
+                                                            .hasActiveQuest
+                                                        ? model
+                                                            .getNumberMarkersCollectedString()
+                                                        : "0",
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -314,10 +311,11 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                         if (widget.quest.type == QuestType.GPSAreaHike)
                           await model.collectMarkerFromGPSLocation();
                       },
-                      iconData1: widget.quest.type == QuestType.QRCodeHike
-                          ? Icons.qr_code_scanner_rounded
-                          : Icons.add_circle_outline_rounded,
-                    )
+                      icon1: widget.quest.type == QuestType.QRCodeHike
+                          ? Icon(Icons.qr_code_scanner_rounded,
+                              size: 34, color: Colors.white)
+                          : Image.asset(kPinInAreaIcon,
+                              color: kWhiteTextColor, height: 40))
                   : null,
             ),
           ),

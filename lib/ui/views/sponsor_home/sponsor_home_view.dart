@@ -60,7 +60,7 @@ class SponsorHomeView extends StatelessWidget {
               if (model.latestTransfers.length > 0)
                 SectionHeader(
                   title: "Recent Payments",
-                  onTextButtonTap: model.navigateToTransferHistoryView,
+                  onButtonTap: model.navigateToTransferHistoryView,
                 ),
               if (model.latestTransfers.length > 0)
                 Padding(

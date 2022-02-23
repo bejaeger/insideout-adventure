@@ -648,7 +648,7 @@ SPEC CHECKSUMS:
   flutter_vibrate: 9f4c2ab57008965f78969472367c329dd77eb801
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geolocator_apple: b741765c55dc21950e3e106e8b3584e55cf81ce5
-  google_maps_flutter: df4e7de95264aa0a2f11aac0fc7e313acb8ffc7e
+  google_maps_flutter: abdb8dee6c52d4be36ad131ee6ebfacd14417c5a
   google_sign_in: c5cecea71f3be43282263550556e311c4cc03582
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleMaps: c213fc2334b7374144cede914da779b99be0ab74
@@ -658,7 +658,7 @@ SPEC CHECKSUMS:
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
-  image_picker: 9aa50e1d8cdacdbed739e925b7eea16d014367e6
+  image_picker: 0d37d1cb66231c2473a0e3ccb8d062d0c2b3d297
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   map_launcher: e325db1261d029ff33e08e03baccffe09593ffea

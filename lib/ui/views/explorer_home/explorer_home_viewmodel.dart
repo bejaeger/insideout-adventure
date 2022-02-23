@@ -1,19 +1,18 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
-import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
-import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   final GiftCardService _giftCardService = locator<GiftCardService>();
@@ -39,6 +38,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       questService.activatedQuestsHistory;
   List<GiftCardPurchase> get purchasedGiftCards =>
       _giftCardService.purchasedGiftCards;
+  List<Achievement> get achievements => gamificationService.achievements;
   bool addingPositionToNotionDB = false;
   bool pushedToNotion = false;
 
@@ -48,15 +48,25 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
     setBusy(true);
     Completer completer = Completer<void>();
     Completer completerTwo = Completer<void>();
+    Completer completerThree = Completer<void>();
     userService.setupUserDataListeners(
-        completer: completer, callback: () => notifyListeners());
+      completer: completer,
+      callback: () => notifyListeners(),
+    );
     questService.setupPastQuestsListener(
-        completer: completerTwo,
-        uid: currentUser.uid,
-        callback: () => notifyListeners());
+      completer: completerTwo,
+      uid: currentUser.uid,
+      callback: () => notifyListeners(),
+    );
+    gamificationService.setupAchievementsListener(
+      completer: completerThree,
+      uid: currentUser.uid,
+      callback: () => notifyListeners(),
+    );
     await Future.wait([
       completer.future,
       completerTwo.future,
+      completerThree.future,
     ]);
     setBusy(false);
   }
@@ -115,8 +125,21 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
             "This is the amount you successfully earned already! You can spend credits on gift cards!");
   }
 
-  Future navigateToGiftCardsView() async {
-    await navigationService.navigateTo(Routes.purchasedGiftCardsView);
+  Future navigateToRewardsView() async {
+    await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+        arguments: BottomBarLayoutTemplateViewArguments(
+            userRole: currentUser.role,
+            initialBottomNavBarIndex: BottomNavBarIndex.giftcard));
+  }
+
+  void navigateToAchievementsView() {
+    navigationService.navigateTo(Routes.historyAndAchievementsView,
+        arguments: HistoryAndAchievementsViewArguments(initialIndex: 1));
+  }
+
+  void navigateToQuestHistoryView() {
+    navigationService.navigateTo(Routes.historyAndAchievementsView,
+        arguments: HistoryAndAchievementsViewArguments(initialIndex: 0));
   }
 
   //-----------------------------------------

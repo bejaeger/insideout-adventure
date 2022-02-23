@@ -42,6 +42,7 @@ final CollectionReference markersCollection =
     FirebaseFirestore.instance.collection("markers");
 final CollectionReference activatedQuestsCollection =
     FirebaseFirestore.instance.collection(activatedQuestsCollectionKey);
+const int kMaxDistanceFromMarkerInMeterQrCodeHunt = 200;
 
 ////////////////////////////////////////////////////
 /// Cloud functions
@@ -60,7 +61,7 @@ const List<String> questType = [
   "Hike",
   "Hunt",
   "DistanceEstimate",
-  "QRCodeHuntIndoor",
+  "QRCodeHunt",
   "QRCodeSearch",
   "QRCodeSearchIndoor",
   "TreasureLocationSearch",
@@ -106,6 +107,8 @@ const double kDistanceFilterHikeQuest = 10;
 // QRCodeHike
 const int kDistanceFromCenterOfArea = 50;
 
+//////////////////////////////////
+/// QrCode Hunt
 ////////////////////////////
 /// General
 const double kThresholdGPSAccuracyToShowInfo = 50;

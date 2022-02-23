@@ -9,7 +9,7 @@ class MarkerNote with _$MarkerNote {
     required String note,
     String? imagePath,
     String? solution, //
-    String? hint,
+    String? clue,
   }) = _MarkerNote;
 
   factory MarkerNote.fromJson(Map<String, dynamic> json) =>

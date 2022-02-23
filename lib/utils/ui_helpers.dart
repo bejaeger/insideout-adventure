@@ -52,7 +52,7 @@ IconData getIconForCategory(QuestType category) {
       return Icons.location_on;
     case QuestType.QRCodeSearchIndoor:
       return Icons.search_rounded;
-    case QuestType.QRCodeHuntIndoor:
+    case QuestType.QRCodeHunt:
       return Icons.pets;
     case QuestType.QRCodeHike:
       return Icons.nature_people;
@@ -72,8 +72,10 @@ String getStringForCategory(QuestType? category) {
       return "Treasure Search";
     case QuestType.QRCodeSearchIndoor:
       return "QR Code Search";
-    case QuestType.QRCodeHuntIndoor:
-      return "Indoor QR Code Hunt";
+    case QuestType.QRCodeHunt:
+      return "QR Code Hunt";
+    case QuestType.GPSAreaHunt:
+      return "GPS Area Hunt";
     case QuestType.QRCodeHike:
       return "QR Code Hike";
     case QuestType.GPSAreaHike:

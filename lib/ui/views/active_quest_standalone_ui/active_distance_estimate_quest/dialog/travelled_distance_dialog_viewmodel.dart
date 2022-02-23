@@ -1,13 +1,18 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/helpers/distance_check_status_model.dart';
+import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_common_dialog_viewmodel.dart';
 
 class TravelledDistanceDialogViewModel extends QuestCommonDialogViewModel {
   final log = getLogger("TravelledDistanceDialogViewModel");
+  DistanceCheckStatusModel? distanceCheckStatusModel;
+  DistanceCheckStatus? distanceCheckStatus;
 
-  DistanceCheckStatusModel? distanceCheckStatus;
-  DistanceCheckStatus? status;
+  CollectCreditsStatus status;
+  TravelledDistanceDialogViewModel({required this.status})
+      : super(status: status);
+
   String? title;
   String? description;
   String? mainButtonTitle;
@@ -20,20 +25,23 @@ class TravelledDistanceDialogViewModel extends QuestCommonDialogViewModel {
       _setStatusText(DistanceCheckStatus.warning, request);
     } else {
       setBusy(true);
-      distanceCheckStatus = request.data["distanceCheckStatus"]!;
-      await _waitForTransferAndSetStatusText(distanceCheckStatus!, request);
+      distanceCheckStatusModel = request.data["distanceCheckStatus"]!;
+      await _waitForTransferAndSetStatusText(
+          distanceCheckStatusModel!, request);
       setBusy(false);
     }
   }
 
   Future _waitForTransferAndSetStatusText(
-      DistanceCheckStatusModel distanceCheckStatus, dynamic request) async {
-    status = await distanceCheckStatus.futureStatus;
-    _setStatusText(status!, request, distanceCheckStatus.distanceInMeter);
+      DistanceCheckStatusModel distanceCheckStatusModel,
+      dynamic request) async {
+    distanceCheckStatus = await distanceCheckStatusModel.futureStatus;
+    _setStatusText(distanceCheckStatus!, request,
+        distanceCheckStatusModel.distanceInMeter);
   }
 
 // TODO: Ultimately put in app strings file!
-  void _setStatusText(DistanceCheckStatus status, dynamic request,
+  void _setStatusText(DistanceCheckStatus distanceCheckStatus, dynamic request,
       [double? distanceInMeter]) {
     String addString = "";
     if (distanceInMeter != null) {
@@ -43,27 +51,27 @@ class TravelledDistanceDialogViewModel extends QuestCommonDialogViewModel {
           getDistanceToTravel() +
           " Meters. ";
     }
-    if (status == DistanceCheckStatus.almost) {
+    if (distanceCheckStatus == DistanceCheckStatus.almost) {
       title = "You are almost there!";
       description = addString; // + "Try again in the next try";
       mainButtonTitle = "Got it";
-    } else if (status == DistanceCheckStatus.toofar) {
+    } else if (distanceCheckStatus == DistanceCheckStatus.toofar) {
       title = "Too far!";
       description = addString; //  + "You went slightly too far, try again!";
       mainButtonTitle = "Got it";
-    } else if (status == DistanceCheckStatus.notenough) {
+    } else if (distanceCheckStatus == DistanceCheckStatus.notenough) {
       title = "Not there yet!";
       description =
           addString; //  + "You still have some way to go, try again!";
       mainButtonTitle = "Got it";
-    } else if (status == DistanceCheckStatus.success) {
+    } else if (distanceCheckStatus == DistanceCheckStatus.success) {
       title = "SUCCESS";
       description = addString +
           "You earned " +
           request.data["quest"].quest.afkCredits.toStringAsFixed(0) +
           " AFK Credits!";
       mainButtonTitle = "Get Credits!";
-    } else if (status == DistanceCheckStatus.failed) {
+    } else if (distanceCheckStatus == DistanceCheckStatus.failed) {
       log.i(
           "The order was succesfull but there was no pre-purchased gift card available!");
       title = "Unsuccesful";

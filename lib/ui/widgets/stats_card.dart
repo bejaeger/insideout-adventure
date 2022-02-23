@@ -21,7 +21,7 @@ class StatsCard extends StatelessWidget {
   const StatsCard(
       {Key? key,
       required this.statistic,
-      this.height: 130,
+      this.height: 120,
       this.title,
       this.subtitle,
       this.onButtonPressed,
@@ -47,10 +47,10 @@ class StatsCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(25.0),
             boxShadow: [
               BoxShadow(
-                blurRadius: 5,
+                blurRadius: 2,
                 color: Colors.black26,
-                spreadRadius: 1,
-                offset: Offset(3, 3),
+                spreadRadius: 0.1,
+                offset: Offset(1, 1),
               ),
             ],
           ),
@@ -75,7 +75,7 @@ class StatsCard extends StatelessWidget {
                             child: Text(
                               title!,
                               style: textTheme(context).headline4!.copyWith(
-                                  fontSize: 18,
+                                  fontSize: 14,
                                   color: kDarkTurquoise,
                                   fontWeight: FontWeight.w600),
                             ),
@@ -177,9 +177,10 @@ class AFKCreditsIcon extends StatelessWidget {
             //fit: StackFit.expand,
             children: [
               Align(
-                  alignment: Alignment.center,
-                  child: Image.asset(kAFKCreditsLogoPath,
-                      height: (height ?? 70) - 10.0)),
+                alignment: Alignment.center,
+                child: Image.asset(kAFKCreditsLogoPath,
+                    height: (height ?? 70) - 10.0),
+              ),
               if (locked)
                 Align(
                   alignment: locked ? Alignment.center : Alignment.bottomRight,

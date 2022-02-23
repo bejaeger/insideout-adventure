@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -23,18 +24,25 @@ class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
   Future<void> runStartupLogic() async {
     await _environmentService.initialise();
     //final placesKey =  _environment.getValue(key)
-    if (Platform.isIOS) {
-      _placesService.initialize(
-          apiKey: _environmentService.getValue(GoogleMapsEnvKeyIOS));
-    } else if (Platform.isAndroid)
-      _placesService.initialize(
-          apiKey: _environmentService.getValue(GoogleMapsEnvKey));
-
+    if (!kIsWeb) {
+      // Platform call causes crash when running on web (22.02.22)
+      if (Platform.isIOS) {
+        _placesService.initialize(
+            apiKey: _environmentService.getValue(GoogleMapsEnvKeyIOS));
+      } else if (Platform.isAndroid) {
+        _placesService.initialize(
+            apiKey: _environmentService.getValue(GoogleMapsEnvKey));
+      }
+    }
     // TODO: Check for network connection!
 
     try {
-      final localUserId = await userService.getLocallyLoggedInUserId();
-      final localUserRole = await userService.getLocallyLoggedUserRole();
+      String? localUserId;
+      UserRole? localUserRole;
+      if (!kIsWeb) {
+        localUserId = await userService.getLocallyLoggedInUserId();
+        localUserRole = await userService.getLocallyLoggedUserRole();
+      }
       if (localUserId != null) {
         log.v(
             'We have a user session on local storage. Sync the user profile ...');

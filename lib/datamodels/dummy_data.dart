@@ -1,3 +1,4 @@
+import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/quests/marker_note/marker_note.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -16,7 +17,8 @@ List<Quest> getDummyQuests() {
     // commercialTrophy(),
     // seeparkSpielplatz(),
     // getDummyVibrationSearchQuestHeuweiler(),
-    // getQrCodeHuntJaeger(),
+    getQrCodeHuntJaeger(),
+    getQrCodeHuntJaeger2(),
     // streeth11th2ndVibration(),
     // getDummyVibrationSearchQuestFreiburg(),
     getDistanceEstimate200(),
@@ -27,6 +29,25 @@ List<Quest> getDummyQuests() {
     // getDummyQuest3(),
     // getDummyQuest5(),
     getDummyQuest6(),
+  ];
+}
+
+getDummyAchievements() {
+  return [
+    Achievement(id: "1", credits: 5, name: "Complete 1 quest", completed: true),
+    Achievement(
+        id: "1", credits: 10, name: "Complete 5 quests", completed: false),
+    Achievement(
+        id: "1",
+        credits: 5,
+        name: "Complete 2 quests on one day",
+        completed: false),
+    Achievement(
+        id: "1", credits: 5, name: "Earn 200 credits", completed: false),
+    Achievement(
+        id: "1", credits: 5, name: "Claim 1 gift card", completed: false),
+    Achievement(
+        id: "1", credits: 10, name: "4 quests in one week", completed: false),
   ];
 }
 
@@ -269,16 +290,39 @@ Quest getQrCodeHuntJaeger() {
     ],
     markers: [
       starenweg1(),
-      starenweg2(),
+      heidach4(),
+      heidach3(),
+      heidach2(),
+      heidach1(),
       starenweg3(),
-      starenweg4(),
-      starenweg5(),
-      starenweg6(),
     ],
     // TODO: QRCodeHuntIndoor
-    type: QuestType.QRCodeHuntIndoor,
+    type: QuestType.QRCodeHunt,
     startMarker: starenweg1(),
-    finishMarker: starenweg6(),
+    finishMarker: starenweg3(),
+  );
+}
+
+Quest getQrCodeHuntJaeger2() {
+  return Quest(
+    id: "aHynXLPBE68rxe3Y083Lblubb",
+    name: "Second treasure hunt",
+    description: "Find hidden codes at Jaegers!",
+    afkCredits: 50,
+    markerNotes: [
+      MarkerNote(note: "Start"),
+      MarkerNote(note: "In einem der Bäder"),
+      MarkerNote(note: "Was da los!"),
+    ],
+    markers: [
+      heidach2(),
+      heidach4(),
+      starenweg1(),
+    ],
+    // TODO: QRCodeHuntIndoor
+    type: QuestType.GPSAreaHunt,
+    startMarker: heidach2(),
+    finishMarker: starenweg1(),
   );
 }
 

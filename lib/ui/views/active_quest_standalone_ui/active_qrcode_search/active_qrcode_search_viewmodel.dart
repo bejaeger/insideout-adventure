@@ -1,147 +1,102 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
-  final MarkerService _markerService = locator<MarkerService>();
+//class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
+class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
+  final bool Function(
+      {Future Function() animateCamera,
+      bool? flipToMap,
+      bool? flipToClue}) flipCard;
+  ActiveQrCodeSearchViewModel({required this.flipCard});
 
-  List<AFKMarker> foundObjects = [];
-  int indexHint = 0;
-  bool? closeby;
+  //getters
+  bool get firstClueFound => questService.getNumberMarkersCollected > 1;
+  int get getNumberMarkersCollected => questService.getNumberMarkersCollected;
+
+  // UI state
+  List<AFKMarker> get foundObjects => questService.getCollectedMarkers();
+  // List<AFKMarker> foundObjects = [];
+  int indexClue = 0;
   bool animateProgress = false;
-  bool displayNewHint =
+  bool displayClue =
       true; // bool to check whether hint should be displayed or not!
+  bool displayButtonNewClue = false;
   final log = getLogger("ActiveQrCodeSearchViewModel");
 
-  void initializeMapAndMarkers({required Quest quest}) async {
+  // -------------------------------
+  // functions
+  @override
+  Future initialize({required Quest quest}) async {
     resetPreviousQuest();
-    runBusyFuture(_geolocationService.getAndSetCurrentLocation());
-    closeby = await _markerService.isUserCloseby(marker: quest.startMarker);
-    notifyListeners();
+    super.initialize(quest: quest);
   }
 
-  Future maybeStartQuest({required Quest? quest}) async {
-    if (!hasEnoughSponsoring(quest: quest)) {
-      return null;
-    }
-    if (quest != null && !hasActiveQuest) {
-      resetPreviousQuest();
-      log.i("Maybe starting Qr code search quest with name ${quest.name}");
-      //setBusy(true);
-      final position = await _geolocationService.getAndSetCurrentLocation();
+  Future maybeStartHuntQuest({required Quest? quest}) async {
+    displayClue = true;
+    await maybeStartQuest(quest: quest);
+  }
 
-      if (quest.type != QuestType.QRCodeSearchIndoor &&
-          quest.type != QuestType.QRCodeHuntIndoor) {
-        if (!(await checkAccuracy(position: position))) {
-          resetSlider();
-          return false;
-        }
-      }
-      final result = await startQuestMain(quest: quest);
-      if (result is bool && result == true) {
-        // adding start marker as it contains the first hint and
-        // is only used to bring the user to the screen with the active quest UI
-        foundObjects.add(quest.markers[0]);
-        // this might be redundant. Could also use 'handleQrCodeScanEvent' in questService
-        // which performs geolocation verification!
-        questService.updateCollectedMarkers(marker: quest.markers[0]);
+  bool maybeFlipCardToMap() {
+    return flipCard(
+        animateCamera: () =>
+            animateCameraToQuestMarkers(getGoogleMapController),
+        flipToMap: true);
+  }
 
-        await Future.delayed(Duration(seconds: 1));
-        showStartSwipe = false;
-        displayNewHint = true;
-        notifyListeners();
-      } else {
-        log.wtf("Not starting quest, due to an unknown reason");
-      }
-      resetSlider();
+  bool maybeFlipCardToClue() {
+    return flipCard(flipToClue: true);
+  }
 
-      //setBusy(false);
-      // if (result is bool && result == false) {
-      //   navigateBack();
-      // } else {}
+  String getCurrentProgressString() {
+    if (currentQuest != null) {
+      return hasActiveQuest
+          ? (questService.getNumberMarkersCollected - 1).toString() +
+              " / " +
+              (activeQuest.quest.markers.length - 1).toString()
+          : "0 / " + currentQuest!.markers.length.toString();
     } else {
-      log.w("Not starting quest, quest is probably already running");
+      return "";
     }
   }
 
   // Retrieve current hint which is attached to the previously collected marker.
   // This means it is simply the last object of foundObjects!
-  String getCurrentHint() {
+  String getCurrentClue() {
     if (!hasActiveQuest) {
       // return "Start the quest above to see the first hint";
-      return "Starte um den ersten Hinweis zu sehen";
+      return "Start to see the first clue";
     } else {
       if (activeQuest.quest.markerNotes != null) {
-        if (foundObjects.length < activeQuest.quest.markerNotes!.length) {
-          return activeQuest.quest.markerNotes![foundObjects.length].note;
+        if (questService.getNumberMarkersCollected <
+            activeQuest.quest.markerNotes!.length) {
+          return activeQuest
+              .quest.markerNotes![questService.getNumberMarkersCollected].note;
         } else {
-          return "Kein Hinweis mehr übrig";
+          return "No clues left";
         }
       } else {
-        return "No hint for this round, sorry! You are on your own...";
+        return "No clue for this round, sorry! You are on your own...";
       }
     }
   }
 
   // Retrieve current hint which is attached to the previously collected marker.
   // This means it is simply the last object of foundObjects!
-  void getNextHint() {
-    if (foundObjects.length >= indexHint + 1) {
-      indexHint = indexHint + 1;
+  void getNextClue() {
+    if (questService.getNumberMarkersCollected >= indexClue + 1) {
+      indexClue = indexClue + 1;
       notifyListeners();
     }
-  }
-
-  @override
-  void addMarkerToMap({required Quest quest, required AFKMarker? afkmarker}) {
-    if (afkmarker == null) return;
-    markersOnMap.add(
-      Marker(
-          markerId: MarkerId(afkmarker
-              .id), // google maps marker id of start marker will be our quest id
-          position: LatLng(afkmarker.lat!, afkmarker.lon!),
-          infoWindow: InfoWindow(snippet: foundObjects.length.toString()),
-          icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
-          onTap: () async {
-            dynamic adminMode = false;
-            if (useSuperUserFeatures) {
-              adminMode = await showAdminDialogAndGetResponse();
-              if (adminMode == true) {
-                displayMarker(afkmarker);
-              }
-            }
-          }),
-    );
-    notifyListeners();
-  }
-
-  @override
-  BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker, required Quest? quest}) {
-    return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-  }
-
-  @override
-  void loadQuestMarkers() {
-    // for testing purposes, display location of qr code markers
-    if (useSuperUserFeatures) {
-      for (AFKMarker _m in activeQuest.quest.markers) {
-        addMarkerToMap(quest: activeQuest.quest, afkmarker: _m);
-      }
-    }
-
-    // TODO:
-    // This should be used to specify an area on the map that should
-    // be searched through for markers!
-    return;
   }
 
   @override
@@ -151,21 +106,38 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
 
   @override
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
+    // potentially add artificial delay for UX improvement?
+    // validatingMarker = true;
+    // notifyListeners();
+    // await Future.delayed(Duration(seconds: 1));
+    // validatingMarker = false;
+    // notifyListeners();
+
     if (!hasActiveQuest) {
       log.wtf("No quest running");
       dialogService.showDialog(title: "Please start the quest first");
       return;
     }
+    //
+    if (result.isEmpty) {
+      log.wtf("The object QuestQRCodeScanResult is empty!");
+      return false;
+    }
+    if (result.hasError) {
+      log.e("Error occured: ${result.errorMessage}");
+      // if (result.errorType != MarkerCollectionFailureType.alreadyCollected) {
+      await dialogService.showDialog(
+        title: "Cannot collect marker!",
+        description: result.errorMessage!,
+      );
+      // }
+      return false;
+    }
     if (result.marker != null) {
       if (hasActiveQuest) {
         log.i("Scanned marker sucessfully collected!");
         // add scanned marker on map!
-        addMarkerToMap(quest: activeQuest.quest, afkmarker: result.marker!);
-
-        // this might be redundant as this is also taken care of in quest service
-        // maybe we should remove the version in the service though!
-        foundObjects.add(result.marker!);
-
+        displayClue = false;
         final bool completed = isQuestCompleted();
         if (completed) {
           await showCollectedMarkerDialog();
@@ -174,10 +146,39 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
           return;
           // checkQuestAndFinishWhenCompleted();
         } else {
+          questTestingService.maybeRecordData(
+            trigger: QuestDataPointTrigger.userAction,
+            pushToNotion: true,
+            userEventDescription:
+                "collected marker " + getNumberMarkersCollectedString(),
+          );
+
           await showCollectedMarkerDialog();
-          log.i("After show collected marker dialog view!");
-          animateProgress = true;
-          displayNewHint = false;
+
+          // for now do the animation only for GPS Area Hunt!
+          if (currentQuest!.type == QuestType.GPSAreaHunt) {
+            if (maybeFlipCardToMap()) {
+              await Future.delayed(Duration(milliseconds: 500));
+            } else {
+              animateCameraToQuestMarkers(getGoogleMapController);
+            }
+            isAnimatingCamera = true;
+            await Future.delayed(Duration(milliseconds: 1000));
+          }
+
+          if (currentQuest!.type == QuestType.QRCodeHunt) {
+            addMarkerToMap(quest: activeQuest.quest, afkmarker: result.marker!);
+          }
+          addAreaToMap(quest: activeQuest.quest, afkmarker: result.marker!);
+
+          if (currentQuest!.type == QuestType.GPSAreaHunt) {
+            notifyListeners();
+            await Future.delayed(Duration(milliseconds: 1000));
+          }
+          isAnimatingCamera = false;
+          displayButtonNewClue = true;
+
+          // animateProgress = true;
           // if (result.marker!.nextLocationHint != null)
           //   await dialogService.showDialog(
           //       title: "Next hint",
@@ -189,18 +190,23 @@ class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-  void setDisplayNewHint(bool set) {
-    displayNewHint = set;
+  Future setDisplayNewClue(bool set) async {
+    displayClue = set;
+    displayButtonNewClue = false;
     notifyListeners();
+    if (maybeFlipCardToClue()) {
+      await Future.delayed(Duration(milliseconds: 800));
+    }
+    // animateProgress = true;
+    // notifyListeners();
   }
 
   // -------------------------------------
   @override
   void resetPreviousQuest() {
-    markersOnMap = {};
-    foundObjects = [];
     animateProgress = false;
-    displayNewHint = true;
+    displayClue = true;
+    displayButtonNewClue = false;
     super.resetPreviousQuest();
   }
 }

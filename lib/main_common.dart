@@ -3,6 +3,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/lifecycle_manager.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
@@ -19,6 +20,7 @@ import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 
 import 'firebase_options_dev.dart' as dev;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 const bool USE_EMULATOR = false;
 
@@ -27,8 +29,11 @@ void mainCommon(Flavor flavor) async {
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    await Firebase.initializeApp(
-        options: dev.DefaultFirebaseOptions.currentPlatform);
+    // initialize firebase app via index.html
+    if (!kIsWeb) {
+      await Firebase.initializeApp(
+          options: dev.DefaultFirebaseOptions.currentPlatform);
+    }
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();
     }
@@ -57,47 +62,49 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<ConnectivityType>(
-      create: (context) =>
-          ConnectivityService().connectionStatusController.stream,
-      initialData: ConnectivityType.Offline,
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: kAppName,
-          theme: ThemeData(
-            elevatedButtonTheme:
-                ElevatedButtonThemeData(style: getRaisedButtonStyle()),
-            primaryColor: kPrimaryColor,
-            appBarTheme: AppBarTheme(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(16),
+    return LifeCycleManager(
+      child: StreamProvider<ConnectivityType>(
+        create: (context) =>
+            ConnectivityService().connectionStatusController.stream,
+        initialData: ConnectivityType.Offline,
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: kAppName,
+            theme: ThemeData(
+              elevatedButtonTheme:
+                  ElevatedButtonThemeData(style: getRaisedButtonStyle()),
+              primaryColor: kPrimaryColor,
+              appBarTheme: AppBarTheme(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(16),
+                    ),
                   ),
-                ),
-                color: kPrimaryColor,
-                elevation: 5,
-                toolbarHeight: 80,
-                centerTitle: true),
-            primaryIconTheme: IconThemeData(color: Colors.white),
-            primaryTextTheme: TextTheme(
-              headline6: TextStyle(
-                  // color of app bar title
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  height: 1.3),
+                  color: kPrimaryColor,
+                  elevation: 5,
+                  toolbarHeight: 80,
+                  centerTitle: true),
+              primaryIconTheme: IconThemeData(color: Colors.white),
+              primaryTextTheme: TextTheme(
+                headline6: TextStyle(
+                    // color of app bar title
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    height: 1.3),
+              ),
             ),
-          ),
-          navigatorKey: StackedService.navigatorKey,
-          onGenerateRoute: StackedRouter().onGenerateRoute,
+            navigatorKey: StackedService.navigatorKey,
+            onGenerateRoute: StackedRouter().onGenerateRoute,
 
-          ///////////////////////////
-          /// Use the following with the AFK Custom bottom nav bar
-          // builder: (context, child) => LayoutTemplateView(childView: child!),
+            ///////////////////////////
+            /// Use the following with the AFK Custom bottom nav bar
+            // builder: (context, child) => LayoutTemplateView(childView: child!),
 
-          /////////////////////////////
-          /// Use this when persistent nav bar is used
-          home: StartUpView()),
+            /////////////////////////////
+            /// Use this when persistent nav bar is used
+            home: StartUpView()),
+      ),
     );
   }
 }
