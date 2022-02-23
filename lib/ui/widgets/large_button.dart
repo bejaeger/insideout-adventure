@@ -12,6 +12,7 @@ class LargeButton extends StatelessWidget {
   final Color backgroundColor;
   final Color titleColor;
   final double fontSize;
+  final bool withBorder;
   const LargeButton({
     Key? key,
     required this.onPressed,
@@ -21,6 +22,7 @@ class LargeButton extends StatelessWidget {
     this.imageUrl,
     this.imagePath,
     this.fontSize = 22,
+    this.withBorder = false,
   }) : super(key: key);
 
   @override
@@ -38,6 +40,8 @@ class LargeButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.0),
             color: backgroundColor,
+            border:
+                withBorder ? Border.all(width: 1, color: kDarkTurquoise) : null,
             // boxShadow: [
             //   BoxShadow(
             //     blurRadius: 2,

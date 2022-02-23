@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
@@ -33,6 +34,9 @@ class SponsorHomeView extends StatelessWidget {
               verticalSpaceMedium,
               SectionHeader(
                 title: "Sponsored Explorers",
+                onButtonTap: model.showAddExplorerBottomSheet,
+                buttonIcon: Icon(Icons.add_circle_outline_rounded,
+                    color: kDarkTurquoise),
               ),
               if (model.supportedExplorers.length == 0)
                 model.isBusy
@@ -62,6 +66,7 @@ class SponsorHomeView extends StatelessWidget {
                   title: "Recent Payments",
                   onButtonTap: model.navigateToTransferHistoryView,
                 ),
+              if (model.latestTransfers.length > 0) verticalSpaceSmall,
               if (model.latestTransfers.length > 0)
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -111,43 +116,30 @@ class ExplorersList extends StatelessWidget {
       //scrollDirection: Axis.horizontal,
       physics: ScrollPhysics(),
       shrinkWrap: true,
-      itemCount: min(explorers.length + 1, 10),
+      itemCount: explorers.length,
       itemBuilder: (context, index) {
-        if (index == min(explorers.length, 9)) {
-          return Column(
-            children: [
-              horizontalSpaceMedium,
-              ElevatedButton(
-                  // onPressed: model.navigateToExplorerHomeView,
-                  onPressed: onAddNewExplorerPressed,
-                  //child: Text("Go to explorer home/map")),
-                  child: Text("Add Explorer")),
-            ],
-          );
-        } else {
-          return Column(
-            children: [
-              horizontalSpaceSmall,
-              UserListTile(
-                onTilePressed: onExplorerPressed == null
-                    ? null
-                    : (
-                        [PublicUserInfo? userInfo,
-                        UserStatistics? userStats]) async {
-                        onExplorerPressed!(uid: userInfo!.uid);
-                      },
-                // userStats: explorersStats == null || explorersStats?.length == 0
-                //     ? null
-                //     : explorersStats![explorers[index].uid],
-                userInfo: PublicUserInfo(
-                  name: explorers[index].fullName,
-                  email: explorers[index].email,
-                  uid: explorers[index].uid,
-                ),
+        return Column(
+          children: [
+            horizontalSpaceSmall,
+            UserListTile(
+              onTilePressed: onExplorerPressed == null
+                  ? null
+                  : (
+                      [PublicUserInfo? userInfo,
+                      UserStatistics? userStats]) async {
+                      onExplorerPressed!(uid: userInfo!.uid);
+                    },
+              // userStats: explorersStats == null || explorersStats?.length == 0
+              //     ? null
+              //     : explorersStats![explorers[index].uid],
+              userInfo: PublicUserInfo(
+                name: explorers[index].fullName,
+                email: explorers[index].email,
+                uid: explorers[index].uid,
               ),
-            ],
-          );
-        }
+            ),
+          ],
+        );
       },
     );
   }

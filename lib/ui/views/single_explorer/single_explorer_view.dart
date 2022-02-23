@@ -83,54 +83,98 @@ class _SingleExplorerViewState extends State<SingleExplorerView> {
                                     ),
                                   ),
                                 ),
-                              verticalSpaceSmall,
-                              Divider(thickness: 2),
                               verticalSpaceMedium,
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Flexible(
                                     flex: 5,
-                                    child: SimpleStatisticsDisplay(
-                                      title: "Current balance",
-                                      statistic: model.stats.afkCreditsBalance
-                                          .toString(),
-                                      showCreditsSymbol: true,
+                                    child: Column(
+                                      children: [
+                                        SimpleStatisticsDisplay(
+                                          title: "Total Earned",
+                                          statistic: model
+                                              .stats.lifetimeEarnings
+                                              .toString(),
+                                          showCreditsSymbol: true,
+                                        ),
+                                        verticalSpaceSmall,
+                                        Text(
+                                            "Equivalent to " +
+                                                formatAFKCreditsToActivityHours(
+                                                    model.stats
+                                                        .lifetimeEarnings) +
+                                                " hours of physical activity",
+                                            style: textTheme(context)
+                                                .headline6!
+                                                .copyWith(
+                                                    fontSize: 15,
+                                                    color: kDarkTurquoise,
+                                                    fontStyle:
+                                                        FontStyle.italic))
+                                      ],
                                     ),
                                   ),
                                   Spacer(),
                                   Flexible(
                                     flex: 5,
-                                    child: SimpleStatisticsDisplay(
-                                      title: "Total Earned",
-                                      statistic: model.stats.lifetimeEarnings
-                                          .toString(),
-                                      showCreditsSymbol: true,
+                                    child: Column(
+                                      children: [
+                                        SimpleStatisticsDisplay(
+                                          title: "Current balance",
+                                          statistic: model
+                                              .stats.afkCreditsBalance
+                                              .toString(),
+                                          showCreditsSymbol: true,
+                                        ),
+                                        verticalSpaceSmall,
+                                        Text("Last mission done on 02/02/2022",
+                                            style: textTheme(context)
+                                                .headline6!
+                                                .copyWith(
+                                                    fontSize: 15,
+                                                    color: kDarkTurquoise,
+                                                    fontStyle:
+                                                        FontStyle.italic))
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                               verticalSpaceMedium,
+                              Divider(thickness: 2),
+                            ],
+                          ),
+                        ),
+                        SectionHeader(title: "Current Sponsoring"),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kHorizontalPadding),
+                          child: Column(
+                            children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Flexible(
                                     flex: 5,
                                     child: SimpleStatisticsDisplay(
-                                      title: "Current sponsoring",
                                       statistic: formatAfkCreditsFromCents(
                                           model.stats.availableSponsoring),
                                       showCreditsSymbol: true,
+                                      dollarValue: formatDollarFromCents(
+                                          model.stats.availableSponsoring),
                                     ),
                                   ),
                                   Spacer(),
                                   Flexible(
                                     flex: 5,
                                     child: LargeButton(
-                                        backgroundColor: kPrimaryColor,
-                                        titleColor: Colors.grey[50]!,
+                                        backgroundColor: Colors.transparent,
+                                        titleColor: kDarkTurquoise,
                                         onPressed: model.navigateToAddFundsView,
-                                        fontSize: 18,
+                                        fontSize: 16,
+                                        withBorder: true,
                                         title: "Sponsor Activities"),
                                   ),
                                 ],
@@ -139,7 +183,11 @@ class _SingleExplorerViewState extends State<SingleExplorerView> {
                           ),
                         ),
                         verticalSpaceMedium,
-                        Divider(thickness: 2),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kHorizontalPadding),
+                          child: Divider(thickness: 2),
+                        ),
                         SectionHeader(title: "Stats"),
                         Padding(
                           padding: const EdgeInsets.symmetric(

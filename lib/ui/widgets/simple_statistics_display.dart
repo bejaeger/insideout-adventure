@@ -4,39 +4,53 @@ import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
 class SimpleStatisticsDisplay extends StatelessWidget {
-  final String title;
+  final String? title;
   final String statistic;
   final bool showCreditsSymbol;
+  final String? dollarValue;
   const SimpleStatisticsDisplay({
     Key? key,
-    required this.title,
+    this.title,
     required this.statistic,
     this.showCreditsSymbol = false,
+    this.dollarValue,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // print("--- rebuilding DURATION: ${widget.statistic} -- ");
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: showCreditsSymbol
           ? CrossAxisAlignment.start
           : CrossAxisAlignment.center,
       children: [
-        Row(
+        Column(
           children: [
-            if (showCreditsSymbol) AFKCreditsIcon(height: 40),
-            Text(
-              statistic,
-              style: textTheme(context).bodyText2!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: kBlackHeadlineColor),
+            if (dollarValue != null)
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("\$ " + dollarValue! + " equals",
+                      style: textTheme(context)
+                          .headline6!
+                          .copyWith(fontSize: 15))),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (showCreditsSymbol)
+                  AFKCreditsIcon(height: 40, alignment: Alignment.centerLeft),
+                Text(
+                  statistic,
+                  style: textTheme(context).bodyText2!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: kBlackHeadlineColor),
+                ),
+              ],
             ),
           ],
         ),
         verticalSpaceTiny,
-        Text(title),
+        if (title != null) Text(title!),
       ],
     );
   }
