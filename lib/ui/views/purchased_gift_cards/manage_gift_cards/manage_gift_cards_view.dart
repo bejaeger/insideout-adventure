@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import '../../../widgets/afk_progress_indicator.dart';
 import 'manage_gift_card_viewmodel.dart';
 
 class ManageGiftCardstView extends StatelessWidget {
@@ -33,31 +34,9 @@ class ManageGiftCardstView extends StatelessWidget {
             SliverToBoxAdapter(
               child: SectionHeader(title: "PrePurchased Gift Cards "),
             ),
-
-            //sliver: ListOfGiftCardsToDisplay(model: model),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                  (context, index) => Card(
-                        elevation: 2,
-                        child: Column(
-                          children: [
-                            Text(
-                              model.getPrePurchasedGiftCard![index]!
-                                  .categoryName,
-                              style: TextStyle(color: Colors.red),
-                            ),
-                            //  verticalSpaceSmall,
-                            Text(
-                              model
-                                  .getPrePurchasedGiftCard![index]!.giftCardCode
-                                  .toString(),
-                              style: TextStyle(color: Colors.red),
-                            ),
-                            //verticalSpaceSmall,
-                          ],
-                        ),
-                      ),
-                  childCount: model.getAllGiftCardCategories.length),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              sliver: ListOfGiftCardsToDisplay(model: model),
             ),
           ],
         ),
@@ -108,35 +87,35 @@ class GiftCardListButton extends StatelessWidget {
   }
 }
 
-/* // ignore: must_be_immutable
+// ignore: must_be_immutable
 class ListOfGiftCardsToDisplay extends StatelessWidget {
   ManageGiftCardViewModel? model;
   ListOfGiftCardsToDisplay({required this.model});
   @override
   Widget build(BuildContext context) {
-    return /* model!.getPrePurchasedGiftCard!.isNotEmpty
-        ? */
-        SliverList(
+    return SliverList(
       delegate: SliverChildBuilderDelegate(
-          (context, index) => Card(
-                elevation: 2,
-                child: Column(
-                  children: [
-                    Text(
-                      "model!.getPrePurchasedGiftCard![index]!.categoryName",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    //  verticalSpaceSmall,
-                    Text(
-                      "  model!.getPrePurchasedGiftCard![index]!.giftCardCode",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    //verticalSpaceSmall,
-                  ],
-                ),
-              ),
+          (context, index) => model!.getPrePurchasedGiftCard!.isNotEmpty
+              ? Card(
+                  elevation: 2,
+                  child: Column(
+                    children: [
+                      Text(
+                        model!.getPrePurchasedGiftCard![index]!.categoryName,
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      //  verticalSpaceSmall,
+                      Text(
+                        model!.getPrePurchasedGiftCard![index]!.giftCardCode
+                            .toString(),
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      //verticalSpaceSmall,
+                    ],
+                  ),
+                )
+              : AFKProgressIndicator(),
           childCount: model!.getAllGiftCardCategories.length),
     );
-    // : AFKProgressIndicator();
   }
-} */
+}
