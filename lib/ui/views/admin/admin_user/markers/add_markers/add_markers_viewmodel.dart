@@ -98,7 +98,8 @@ class AddMarkersViewModel extends AFKMarks with NavigationMixin {
                             'This Markers is a Start Marker ${_afkMarkers.id}');
                     found = true;
                     break;
-                  } else if (_afkMarkers.id == quest[i].finishMarker!.id) {
+                  } else if (_afkMarkers.id == quest[i].finishMarker!.id &&
+                      quest[i].finishMarker!.id.isNotEmpty) {
                     log.i('Started Finish IS HERE');
                     _dialogService.showConfirmationDialog(
                         title: 'Marker Information',
