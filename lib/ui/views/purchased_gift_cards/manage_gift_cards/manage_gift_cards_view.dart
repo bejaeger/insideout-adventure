@@ -59,10 +59,6 @@ class ManageGiftCardstView extends StatelessWidget {
                       ),
                   childCount: model.getAllGiftCardCategories.length),
             ),
-
-            SliverToBoxAdapter(
-              child: SectionHeader(title: "PrePurchased Gift Cards "),
-            ),
           ],
         ),
       ),
