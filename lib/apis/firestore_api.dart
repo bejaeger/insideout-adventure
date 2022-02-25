@@ -487,6 +487,7 @@ class FirestoreApi {
     return false;
   }
 
+  // TODO: Only dowload nearby quests in the future
   // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> downloadNearbyQuests() async {
     final quests = await questsCollection.get();

@@ -14,7 +14,7 @@ class FlavorConfigProvider {
   // if true the dummy quests configued in dummy_data.dart
   // are going to be pushed to firestore and are also the ones
   // used for running the app
-  bool pushAndUseDummyQuests = true;
+  bool pushAndUseDummyQuests = false;
 
   // dummy checks for quest completion for testing purposes
   bool dummyQuestCompletionVerification = false;
