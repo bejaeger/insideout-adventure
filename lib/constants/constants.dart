@@ -42,6 +42,7 @@ final CollectionReference markersCollection =
     FirebaseFirestore.instance.collection("markers");
 final CollectionReference activatedQuestsCollection =
     FirebaseFirestore.instance.collection(activatedQuestsCollectionKey);
+const int kMaxDistanceFromMarkerInMeterQrCodeHunt = 200;
 
 ////////////////////////////////////////////////////
 /// Cloud functions
@@ -108,8 +109,6 @@ const int kDistanceFromCenterOfArea = 50;
 
 //////////////////////////////////
 /// QrCode Hunt
-const int kMaxDistanceFromMarkerInMeterQrCodeHunt = 200;
-
 ////////////////////////////
 /// General
 const double kThresholdGPSAccuracyToShowInfo = 50;

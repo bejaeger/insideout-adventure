@@ -7,18 +7,14 @@ import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_g
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 
 class InsertPrePurchasedGiftCardViewModel extends GiftCardsImageViewModel {
-  final logger = getLogger('ManageQuestViewModel');
+  final logger = getLogger('InsertPrePurchasedGiftCardViewModel');
   final _giftCardService = locator<GiftCardService>();
   final displaySnackBars = DisplaySnackBars();
   List<GiftCardCategory>? _listOfGiftCard = [];
   List<String> listOfGiftCategories = [];
 
-  //bool checkPurchasedGiftCard = false;
-
   @override
-  void setFormStatus() {
-    // TODO: implement setFormStatus
-  }
+  void setFormStatus() {}
   //Upload Image to Firebase.
   Future<bool>? insertPrePurchasedGiftCard(
       {required PrePurchasedGiftCard prePurchasedGiftCard}) async {
@@ -28,12 +24,6 @@ class InsertPrePurchasedGiftCardViewModel extends GiftCardsImageViewModel {
               prePurchasedGiftCard: prePurchasedGiftCard);
       if (checkIsert) {
         displaySnackBars.snackBarInsertedPrePurchasedGC();
-        await Future.delayed(
-          const Duration(seconds: 4),
-          () {
-            this.navBackToPreviousView();
-          },
-        );
 
         return checkIsert;
       }
@@ -41,13 +31,22 @@ class InsertPrePurchasedGiftCardViewModel extends GiftCardsImageViewModel {
     return false;
   }
 
-  List<GiftCardCategory> get getListOfGiftCard => _listOfGiftCard!;
+  List<GiftCardCategory?> get getListOfGiftCard => _listOfGiftCard!;
 
-  void setListGiftCard() {
+  Future<void> setListGiftCard() async {
     setBusy(true);
+    await loadAllGiftCards();
     _listOfGiftCard = _giftCardService.getListOfGiftCard;
     setBusy(false);
     notifyListeners();
+  }
+
+//ADDED HERE
+  Future loadAllGiftCards() async {
+    //setBusy(true);
+    //log.i("Loading gift cards");
+    await _giftCardService.fetchAllGiftCards();
+    //setBusy(false);
   }
 
   void emptyTextFields() {

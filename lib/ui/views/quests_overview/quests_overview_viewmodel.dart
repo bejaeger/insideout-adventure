@@ -6,10 +6,14 @@ import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
+import 'package:stacked_services/stacked_services.dart';
+
+import '../../../app/app.locator.dart';
 
 class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
   List<QuestType> get questTypes => questService.allQuestTypes;
   final logger = getLogger('ManageQuestViewModel');
+  final _dialogService = locator<DialogService>();
 
   Future initializeQuests({bool? force}) async {
     setBusy(true);
@@ -43,7 +47,7 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
     );
   }
 
-  void NavigateToQuestViews({required int index}) {
+  void navigateToQuestViews({required int index}) {
     switch (index) {
       case 0:
         logger.i('User is Navigating to $navToCreateQuest');
@@ -51,6 +55,8 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
         break;
       case 1:
         logger.i('User is Navigating to $navToQuestOverView');
+        _dialogService.showDialog();
+
         // navToQuestOverView();
         break;
       case 2:

@@ -25,7 +25,8 @@ import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_q
 import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
 import '../ui/views/admin/admin_user/home/home_view.dart';
-import '../ui/views/admin/admin_user/markers/add_markers_view.dart';
+import '../ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
+import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
@@ -56,6 +57,7 @@ import '../ui/views/transfer_funds/transfer_funds_view.dart';
 
 class Routes {
   static const String sponsorHomeView = '/sponsor-home-view';
+  static const String singleMarkerView = '/single-marker-view';
   static const String insertPrePurchasedGiftCardView =
       '/insert-pre-purchased-gift-card-view';
   static const String updatingQuestView = '/updating-quest-view';
@@ -100,6 +102,7 @@ class Routes {
       '/history-and-achievements-view';
   static const all = <String>{
     sponsorHomeView,
+    singleMarkerView,
     insertPrePurchasedGiftCardView,
     updatingQuestView,
     explorerHomeView,
@@ -142,6 +145,7 @@ class StackedRouter extends RouterBase {
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
     RouteDef(Routes.sponsorHomeView, page: SponsorHomeView),
+    RouteDef(Routes.singleMarkerView, page: SingleMarkerView),
     RouteDef(Routes.insertPrePurchasedGiftCardView,
         page: InsertPrePurchasedGiftCardView),
     RouteDef(Routes.updatingQuestView, page: UpdatingQuestView),
@@ -189,6 +193,12 @@ class StackedRouter extends RouterBase {
     SponsorHomeView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const SponsorHomeView(),
+        settings: data,
+      );
+    },
+    SingleMarkerView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SingleMarkerView(),
         settings: data,
       );
     },

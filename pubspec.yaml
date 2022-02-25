@@ -47,6 +47,8 @@ dependencies:
 
   #Managing App Permissions 
   permission_handler: ^8.3.0
+  currency_text_input_formatter: ^2.1.5
+  money2: ^2.2.1
   #permission_handler: ^8.1.4+2
   #Generate Random IDs
   uuid: ^3.0.5
@@ -147,6 +149,8 @@ flutter:
     - assets/icons/create_quest.png
     - assets/icons/giftcard.png
     - assets/icons/money.png
+    - assets/icons/qrcode.png
+    - assets/icons/map.png
     - assets/icons/location-icon.ico
 
   # To add assets to your application, add an assets section, like this:

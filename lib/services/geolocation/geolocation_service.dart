@@ -294,7 +294,7 @@ class GeolocationService extends PausableService {
       int threshold = kMaxDistanceFromMarkerInMeter}) {
     double distanceInMeters = Geolocator.distanceBetween(
         position.latitude, position.longitude, lat, lon);
-    // log.v("Distance from marker: $distanceInMeters");
+    // log.v("D, Position positionistance from marker: $distanceInMeters");
     distanceToLastCheckedMarker = distanceInMeters;
     if (distanceInMeters < threshold.toDouble()) {
       return true;

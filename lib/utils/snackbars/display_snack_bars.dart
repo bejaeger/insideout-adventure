@@ -75,8 +75,10 @@ class DisplaySnackBars {
   void showEmptyMarkerSnackbar() {
     _snackBarService.showSnackbar(
       title: "Not Added",
-      message: "Select One of The Fields",
+      message: "One of The Fields is Empty",
       duration: Duration(seconds: 2),
     );
   }
 }
+
+class DisplayDialogs {}

@@ -237,6 +237,7 @@ class FirestoreApi {
     } catch (e) {
       log.e("Error when getting user document: $e");
     }
+    return null;
   }
 
   ///////////////////////////////////////////////////////
@@ -466,8 +467,6 @@ class FirestoreApi {
     await questsCollection
         .doc(_documentReference!.id)
         .update({'id': _documentReference!.id});
-    log.i(
-        'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
   }
 
   Future<bool> createQuest({required Quest quest}) async {
@@ -481,7 +480,7 @@ class FirestoreApi {
         .update({'id': _documentReference!.id});
     if (_documentReference!.id.isNotEmpty) {
       log.i(
-          'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
+          'This is the Document Id Being Created Harguilar ${_documentReference!.id}');
       return true;
     }
     return false;
@@ -652,6 +651,26 @@ class FirestoreApi {
           message: "Error Was Thrown",
           devDetails: "$e" + GiftCardType.Steam.toString());
     }
+  }
+
+  Future<List<PrePurchasedGiftCard?>> getPreGiftCardsForCategory() async {
+    try {
+      final prePurchasedGiftCards = await preGiftCardsCollection.get();
+      if (prePurchasedGiftCards.docs.isNotEmpty) {
+        log.v(
+            'This is our List of Gift Cards: $prePurchasedGiftCards in our Database');
+        return prePurchasedGiftCards.docs
+            .map((docs) => PrePurchasedGiftCard.fromJson(docs.data()))
+            .toList();
+      } else {
+        log.wtf('You are Providing me Empty Document $prePurchasedGiftCards');
+      }
+    } catch (e) {
+      throw FirestoreApiException(
+          message: "Error Was Thrown",
+          devDetails: "$e" + GiftCardType.Steam.toString());
+    }
+    return [];
   }
 
   getListQuerySnapShot({QuerySnapshot? query}) {

@@ -3,19 +3,21 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
+import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:flutter/foundation.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 class ManageGiftCardViewModel extends BaseViewModel with NavigationMixin {
   final log = getLogger('ManageGiftCardViewModel');
 
   final _giftCardService = locator<GiftCardService>();
 
-  final _dialogService = locator<DialogService>();
-  final BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
+  List<PrePurchasedGiftCard?>? _prePurhcasedGiftCards = [];
+
+  //final _dialogService = locator<DialogService>();
+  //final BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
 
   List<GiftCardCategory> getGiftCardCategories({required String categoryName}) {
     return _giftCardService.getGiftCards(categoryName: categoryName);
@@ -31,13 +33,14 @@ class ManageGiftCardViewModel extends BaseViewModel with NavigationMixin {
     setBusy(false);
   }
 
+/*
   Future loadAllGiftCards() async {
     setBusy(true);
     log.i("Loading gift cards");
     await _giftCardService.fetchAllGiftCards();
     setBusy(false);
   }
-
+*/
   ///////////////////////////////////////
   /// Helper functions
   List<String> getUniqueCategoryNames() {
@@ -62,16 +65,27 @@ class ManageGiftCardViewModel extends BaseViewModel with NavigationMixin {
     });
     return returnList;
   }
+
+  List<PrePurchasedGiftCard?>? get getPrePurchasedGiftCard =>
+      _prePurhcasedGiftCards;
+
+  Future<void> prePurchasedGiftCard() async {
+    setBusy(true);
+    _prePurhcasedGiftCards =
+        await _giftCardService.getPreGiftCardsForCategory();
+    setBusy(false);
+    notifyListeners();
+  }
   //TODO: Ended Here: I see These methods going into  an Abstract Class.
 
-  void NavigateToSpecificGiftCardsView({required int index}) {
+  void navToSpecificGiftCardsView({required int index}) {
     switch (index) {
       case 0:
-        DisplayLogs(display: navToAddGiftCard);
+        // DisplayLogs(display: navToAddGiftCard);
         navToAddGiftCard();
         break;
       case 1:
-        DisplayLogs(display: navToInsertGiftCard);
+        // DisplayLogs(display: navToInsertGiftCard);
         navToInsertGiftCard();
         break;
       case 2:
@@ -79,10 +93,10 @@ class ManageGiftCardViewModel extends BaseViewModel with NavigationMixin {
         // navToQuestOverView();
         break;
       default:
-        //log.i('User is Navigating to $navToCreateQuest');
+      //log.i('User is Navigating to $navToCreateQuest');
 
-        //navToCreateQuest();
-        break;
+      //navToCreateQuest();
+
     }
   }
 
