@@ -82,8 +82,7 @@ class ManageGiftCardsList extends StatelessWidget {
                               .toString()),
                           horizontalSpaceSmall,
                           Text(
-                            describeEnum(
-                                giftCardList[index].categoryName.toString()),
+                            giftCardList[index].categoryName.toString(),
                           ),
                           horizontalSpaceSmall,
                           Text(centsToAfkCredits(giftCardList[index].amount)

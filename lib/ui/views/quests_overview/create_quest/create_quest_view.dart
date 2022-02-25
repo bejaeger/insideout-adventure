@@ -170,9 +170,14 @@ class QuestCardList extends StatelessWidget {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () async {
+                      print(afkCreditAmountController!.text.isNotEmpty);
+                      print(nameController!.text.isNotEmpty);
+                      print(selectedQuestType != null);
+                      print(descriptionController!.text.isNotEmpty);
+                      print(model.getAFKMarkers.isNotEmpty);
                       if (afkCreditAmountController!.text.isNotEmpty &&
                           nameController!.text.isNotEmpty &&
-                          questTypeController!.text.isNotEmpty &&
+                          selectedQuestType != null &&
                           descriptionController!.text.isNotEmpty &&
                           model.getAFKMarkers.isNotEmpty) {
                         afkCreditAmount =

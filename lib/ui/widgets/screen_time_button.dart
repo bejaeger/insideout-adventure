@@ -58,6 +58,7 @@ class ScreenTimeButton extends StatelessWidget {
               if (imageUrl != null)
                 Container(
                   width: 100,
+                  height: 60,
                   padding:
                       const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
                   decoration: BoxDecoration(
@@ -86,16 +87,19 @@ class ScreenTimeButton extends StatelessWidget {
                   ),
                 ),
               verticalSpaceSmall,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text(
-                  title,
-                  style:
-                      textTheme(context).headline6!.copyWith(color: titleColor),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    title,
+                    style: textTheme(context)
+                        .headline6!
+                        .copyWith(color: titleColor),
+                  ),
                 ),
               ),
               //Icon(Icons.arrow_forward_ios, color: titleColor),
-              Spacer(),
+              //Spacer(),
               Container(
                 padding: const EdgeInsets.all(4.0),
                 decoration: BoxDecoration(

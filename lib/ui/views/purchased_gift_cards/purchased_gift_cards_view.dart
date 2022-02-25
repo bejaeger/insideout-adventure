@@ -125,13 +125,11 @@ class GiftCardPurchasePreview extends StatelessWidget {
               ),
             )
           : CircleAvatar(
-              child: Text(describeEnum(giftCard.giftCardCategory.categoryName)
-                  .toString()),
+              child: Text(giftCard.giftCardCategory.categoryName.toString()),
             ),
       isThreeLine: true,
-      title: Text(
-          describeEnum(giftCard.giftCardCategory.categoryName).toString() +
-              titleSuffix),
+      title:
+          Text(giftCard.giftCardCategory.categoryName.toString() + titleSuffix),
       subtitle: Text(
         "" +
             formatAmount(giftCard.giftCardCategory.amount) +
