@@ -200,7 +200,7 @@ class MapOverviewViewModel extends MapBaseViewModel {
               log.i("Quest active, handling qrCodeScanEvent");
               if (flavorConfigProvider.allowDummyMarkerCollection) {
                 MarkerAnalysisResult markerResult =
-                    await questService.analyzeMarker(marker: afkmarker);
+                    await activeQuestService.analyzeMarker(marker: afkmarker);
                 await handleMarkerAnalysisResult(markerResult);
               }
             }

@@ -15,6 +15,7 @@ import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/maps/maps_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
+import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -33,6 +34,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       locator<QuestTestingService>();
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
+  final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
+
   final log = getLogger("ActiveQuestBaseViewModel");
 
   // ----------------------------------------------------------
@@ -43,9 +46,9 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       : (geolocationService.distanceToStartMarker > 0) &&
           (geolocationService.distanceToStartMarker <
               kMaxDistanceFromMarkerInMeter);
-  Quest? get currentQuest => questService.currentQuest;
+  Quest? get currentQuest => activeQuestService.currentQuest;
   // timeElapsed is a reactive value
-  String get timeElapsed => questService.getMinutesElapsedString();
+  String get timeElapsed => activeQuestService.getMinutesElapsedString();
   double get distanceToStartMarker => geolocationService.distanceToStartMarker;
   bool get isCalculatingDistanceToStartMarker => distanceToStartMarker < 0;
   // -----------------------------------------------------------
@@ -73,7 +76,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
   @mustCallSuper
   Future initialize({required Quest quest}) async {
     // sets current quest in service so it is accessible anywhere
-    questService.currentQuest = quest;
+    activeQuestService.currentQuest = quest;
 
     // set distance to marker immediately if location was checked within the last 30 seconds.
     maybeSetDistanceToStartMarker(quest: quest);
@@ -108,7 +111,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       /// Once The user Click on Start a Quest. It is her/him to new Page
       /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
       /// Quest.
-      final isQuestStarted = await questService.startQuest(
+      final isQuestStarted = await activeQuestService.startQuest(
           quest: quest,
           uids: [currentUser.uid],
           periodicFuncFromViewModel: periodicFuncFromViewModel,
@@ -152,7 +155,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       }
 
       if (continueQuest?.confirmed == true) {
-        await questService.continueIncompleteQuest();
+        await activeQuestService.continueIncompleteQuest();
       }
       if (continueQuest?.confirmed == false || force) {
         // TODO: Handle quest testing service if some positions aren't pushed yet!
@@ -163,14 +166,14 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
               variant: DialogType.SuperUserSettings,
               data: SuperUserDialogType.sendDiagnostics);
         }
-        await questService.cancelIncompleteQuest();
+        await activeQuestService.cancelIncompleteQuest();
 
         resetPreviousQuest();
         replaceWithMainView(index: BottomNavBarIndex.quest);
         log.i("replaced view with mapView");
       }
     } else {
-      if (questService.previouslyFinishedQuest == null) {
+      if (activeQuestService.previouslyFinishedQuest == null) {
         log.wtf(
             "Quest was successfully finished but previouslyFinishedQuest was not set! This should never happen and is due to an internal error in quest service..");
         setBusy(false);
@@ -180,7 +183,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       // Quest succesfully finished!
       await dialogService.showCustomDialog(
         variant: DialogType.CollectCredits,
-        data: questService.previouslyFinishedQuest!,
+        data: activeQuestService.previouslyFinishedQuest!,
       );
       replaceWithMainView(index: BottomNavBarIndex.quest);
       setBusy(false);
@@ -229,7 +232,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     if (activeQuestNullable?.status == QuestStatus.success) {
       log.i("Found that quest was successfully finished!");
       try {
-        await questService.handleSuccessfullyFinishedQuest();
+        await activeQuestService.handleSuccessfullyFinishedQuest();
         return CollectCreditsStatus.done;
       } catch (e) {
         if (e is QuestServiceException) {
@@ -309,7 +312,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
   Future showSuccessDialog(
       {CollectCreditsStatus collectCreditsStatus =
           CollectCreditsStatus.todo}) async {
-    questService.setSuccessAsQuestStatus();
+    activeQuestService.setSuccessAsQuestStatus();
     log.i("SUCCESFFULLY FOUND trophy");
 
     // Make checkout procedure same for all quest types!

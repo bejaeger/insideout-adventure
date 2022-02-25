@@ -113,7 +113,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
         log.i("You are in admin mode and have infinite tries!");
       } else {
         log.i("Found that quest failed! cancelling incomplete quest");
-        await questService.cancelIncompleteQuest();
+        await activeQuestService.cancelIncompleteQuest();
         replaceWithMainView(index: BottomNavBarIndex.quest);
       }
     }
@@ -149,12 +149,12 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       // additional delay!
       await Future.delayed(Duration(seconds: 1));
       log.i("SUCCESS! Successfully estimated $distanceToTravel");
-      questService.setSuccessAsQuestStatus();
+      activeQuestService.setSuccessAsQuestStatus();
       completer.complete(DistanceCheckStatus.success);
       return;
     } else {
       if (numberOfAvailableTries <= 0) {
-        questService.setAndPushActiveQuestStatus(QuestStatus.failed);
+        activeQuestService.setAndPushActiveQuestStatus(QuestStatus.failed);
         completer.complete(DistanceCheckStatus.failed);
       } else {
         if (distanceTravelled < distanceToTravel) {
@@ -226,7 +226,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
       }
       log.v("Started quest");
       // start listener that updates position regularly
-      questService.listenToPosition(
+      activeQuestService.listenToPosition(
           distanceFilter: kDistanceFilterDistanceEstimate, pushToNotion: true);
       //await Future.delayed(Duration(seconds: 1));
       startedQuest = true;

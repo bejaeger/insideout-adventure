@@ -452,15 +452,19 @@ class UserService {
           List<String> newUids = users.map((e) => e.uid).toList();
           List<String> currentUids =
               supportedExplorersList.map((e) => e.uid).toList();
-          currentUids.forEach((element) {
-            if (!newUids.contains(element)) {
-              removeFromExplorerLists(uid: element);
-            }
-          });
+          currentUids.forEach(
+            (element) {
+              if (!newUids.contains(element)) {
+                removeFromExplorerLists(uid: element);
+              }
+            },
+          );
           // update existing explorers
-          users.forEach((user) {
-            supportedExplorers[user.uid] = user;
-          });
+          users.forEach(
+            (user) {
+              supportedExplorers[user.uid] = user;
+            },
+          );
 
           await addExplorerStatsListeners(
               explorerIds: newUids, callback: callback);
@@ -552,6 +556,9 @@ class UserService {
 
   //////////////////////////////////////////
   /// Some smaller helper functions
+  bool isSponsored({required String uid}) {
+    return supportedExplorersList.any((element) => element.uid == uid);
+  }
 
   void removeFromExplorerLists({required String uid}) {
     supportedExplorers.remove(uid);

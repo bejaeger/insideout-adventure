@@ -70,7 +70,8 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
   }
 
   void addMarkers({required Quest quest}) {
-    for (AFKMarker _m in questService.markersToShowOnMap(questIn: quest)) {
+    for (AFKMarker _m
+        in activeQuestService.markersToShowOnMap(questIn: quest)) {
       if (_m != quest.startMarker) {
         addMarkerToMap(quest: quest, afkmarker: _m);
       }
@@ -79,7 +80,8 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
   }
 
   void addAreas({required Quest quest}) {
-    for (AFKMarker _m in questService.markersToShowOnMap(questIn: quest)) {
+    for (AFKMarker _m
+        in activeQuestService.markersToShowOnMap(questIn: quest)) {
       // don't add area if it's the start marker because that is handled separately
       if (_m != quest.startMarker) {
         addAreaToMap(quest: quest, afkmarker: _m);
@@ -98,7 +100,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
       }
       // quest started
       //if (quest.type != QuestType.GPSAreaHike) {
-      questService.listenToPosition(
+      activeQuestService.listenToPosition(
         distanceFilter: kDistanceFilterHikeQuest,
         pushToNotion: true,
         viewModelCallback: (userLivePosition) async {
@@ -106,7 +108,8 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
           // ! that is only really defined if the checkpoints are ordered!
           // ! Need to have a method in place that allows some freedom here.
           checkIfInAreaOfMarker(
-              marker: questService.getNextMarker(), position: userLivePosition);
+              marker: activeQuestService.getNextMarker(),
+              position: userLivePosition);
         },
       );
       //}
@@ -140,7 +143,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
           if (currentQuest?.type == QuestType.QRCodeHike ||
               currentQuest?.type == QuestType.GPSAreaHike) {
             vibrateAlert();
-            questService.pausePositionListener();
+            activeQuestService.pausePositionListener();
             final result = await showQrCodeIsInAreaDialog();
 
             if (result?.confirmed == false) {
@@ -157,7 +160,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
                 markerInArea = null;
               });
             }
-            questService.resumePositionListener();
+            activeQuestService.resumePositionListener();
           }
         }
         // apply a tolerance of 10 meters here to mark the user as NOT in area.
@@ -219,7 +222,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
       return;
     }
     MarkerAnalysisResult markerResult =
-        await questService.analyzeMarker(marker: markerInArea);
+        await activeQuestService.analyzeMarker(marker: markerInArea);
     return await handleMarkerAnalysisResult(markerResult);
   }
 
@@ -235,7 +238,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
   }
 
   String getNumberMarkersCollectedString() {
-    if (questService.hasActiveQuest) {
+    if (activeQuestService.hasActiveQuest) {
       // minus one because start marker is counted as collected from the start!
       return (numMarkersCollected - 1).toString() +
           " / " +
@@ -293,9 +296,9 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
             .id), // google maps marker id of start marker will be our quest id
         position: LatLng(afkmarker.lat!, afkmarker.lon!),
         infoWindow: InfoWindow(
-            title: questService.isStartMarker(afkmarker)
+            title: activeQuestService.isStartMarker(afkmarker)
                 ? "START"
-                : questService.isFinishMarker(afkmarker)
+                : activeQuestService.isFinishMarker(afkmarker)
                     ? "FINISH"
                     : "GO HERE"),
         // InfoWindow(snippet: quest.name),
@@ -336,7 +339,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
               log.i("Quest active, handling qrCodeScanEvent");
               if (flavorConfigProvider.allowDummyMarkerCollection) {
                 MarkerAnalysisResult markerResult =
-                    await questService.analyzeMarker(marker: afkmarker);
+                    await activeQuestService.analyzeMarker(marker: afkmarker);
                 await handleMarkerAnalysisResult(markerResult);
               }
             }
@@ -431,7 +434,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
     // implement the color choice better!
     Color? color;
     if (hasActiveQuest) {
-      if (questService.isMarkerCollected(marker: afkmarker)) {
+      if (activeQuestService.isMarkerCollected(marker: afkmarker)) {
         color = Colors.green;
       } else {
         color = Colors.red;
@@ -458,7 +461,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
           if (hasActiveQuest) {
             if (flavorConfigProvider.allowDummyMarkerCollection) {
               MarkerAnalysisResult markerResult =
-                  await questService.analyzeMarker(marker: afkmarker);
+                  await activeQuestService.analyzeMarker(marker: afkmarker);
               await handleMarkerAnalysisResult(markerResult);
             }
           } else {
@@ -550,7 +553,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
     await animateCameraToQuestMarkers(getGoogleMapController);
     setBusy(true);
     questFinished = true;
-    questService.setSuccessAsQuestStatus();
+    activeQuestService.setSuccessAsQuestStatus();
 
     CollectCreditsStatus collectCreditsStatus = CollectCreditsStatus.todo;
     try {
@@ -657,7 +660,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
           "Cannot animate camera because no google maps controller present");
       return;
     }
-    List<LatLng> latLngListToAnimate = questService
+    List<LatLng> latLngListToAnimate = activeQuestService
         .markersToShowOnMap(questIn: currentQuest)
         .map((m) => LatLng(m.lat!, m.lon!))
         .toList();
@@ -745,8 +748,8 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
     }
     // LatLng = getGoogleMapController.getZoomLevel()
     // getGoogleMapController!.
-    AFKMarker? nextMarker = questService.getNextMarker();
-    AFKMarker? previousMarker = questService.getPreviousMarker();
+    AFKMarker? nextMarker = activeQuestService.getNextMarker();
+    AFKMarker? previousMarker = activeQuestService.getPreviousMarker();
     if (nextMarker != null &&
         nextMarker.lat != null &&
         nextMarker.lon != null &&
@@ -818,7 +821,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
 
   void addNextArea({Quest? quest, AFKMarker? marker}) {
     AFKMarker? actualMarker =
-        marker ?? questService.getNextMarker(quest: quest);
+        marker ?? activeQuestService.getNextMarker(quest: quest);
     if (actualMarker != null) {
       addAreaToMap(quest: quest ?? activeQuest.quest, afkmarker: actualMarker);
     }
@@ -827,7 +830,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
 
   void addNextMarker({Quest? quest, AFKMarker? marker}) {
     AFKMarker? actualMarker =
-        marker ?? questService.getNextMarker(quest: quest);
+        marker ?? activeQuestService.getNextMarker(quest: quest);
     if (actualMarker != null) {
       addMarkerToMap(
           quest: quest ?? activeQuest.quest, afkmarker: actualMarker);
@@ -837,7 +840,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
 
   void maybeAddFinishMarker({AFKMarker? marker}) {
     if (marker == null) return;
-    if (questService.isFinishMarker(marker)) {
+    if (activeQuestService.isFinishMarker(marker)) {
       addMarkerToMap(
           quest: activeQuest.quest, afkmarker: marker, isFinishMarker: true);
     }
@@ -899,7 +902,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
 
   @override
   bool isQuestCompleted() {
-    return questService.isAllMarkersCollected;
+    return activeQuestService.isAllMarkersCollected;
   }
 
   @override

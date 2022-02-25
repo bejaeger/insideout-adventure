@@ -25,12 +25,14 @@ class _$PublicUserInfoTearOff {
       {required String uid,
       required String name,
       String? email,
-      String? errorMessage}) {
+      String? errorMessage,
+      bool? isSponsored}) {
     return _PublicUserInfo(
       uid: uid,
       name: name,
       email: email,
       errorMessage: errorMessage,
+      isSponsored: isSponsored,
     );
   }
 
@@ -48,6 +50,7 @@ mixin _$PublicUserInfo {
   String get name => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
+  bool? get isSponsored => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -60,7 +63,12 @@ abstract class $PublicUserInfoCopyWith<$Res> {
   factory $PublicUserInfoCopyWith(
           PublicUserInfo value, $Res Function(PublicUserInfo) then) =
       _$PublicUserInfoCopyWithImpl<$Res>;
-  $Res call({String uid, String name, String? email, String? errorMessage});
+  $Res call(
+      {String uid,
+      String name,
+      String? email,
+      String? errorMessage,
+      bool? isSponsored});
 }
 
 /// @nodoc
@@ -78,6 +86,7 @@ class _$PublicUserInfoCopyWithImpl<$Res>
     Object? name = freezed,
     Object? email = freezed,
     Object? errorMessage = freezed,
+    Object? isSponsored = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -96,6 +105,10 @@ class _$PublicUserInfoCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      isSponsored: isSponsored == freezed
+          ? _value.isSponsored
+          : isSponsored // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -107,7 +120,12 @@ abstract class _$PublicUserInfoCopyWith<$Res>
           _PublicUserInfo value, $Res Function(_PublicUserInfo) then) =
       __$PublicUserInfoCopyWithImpl<$Res>;
   @override
-  $Res call({String uid, String name, String? email, String? errorMessage});
+  $Res call(
+      {String uid,
+      String name,
+      String? email,
+      String? errorMessage,
+      bool? isSponsored});
 }
 
 /// @nodoc
@@ -127,6 +145,7 @@ class __$PublicUserInfoCopyWithImpl<$Res>
     Object? name = freezed,
     Object? email = freezed,
     Object? errorMessage = freezed,
+    Object? isSponsored = freezed,
   }) {
     return _then(_PublicUserInfo(
       uid: uid == freezed
@@ -145,6 +164,10 @@ class __$PublicUserInfoCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      isSponsored: isSponsored == freezed
+          ? _value.isSponsored
+          : isSponsored // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -153,7 +176,11 @@ class __$PublicUserInfoCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_PublicUserInfo implements _PublicUserInfo {
   _$_PublicUserInfo(
-      {required this.uid, required this.name, this.email, this.errorMessage});
+      {required this.uid,
+      required this.name,
+      this.email,
+      this.errorMessage,
+      this.isSponsored});
 
   factory _$_PublicUserInfo.fromJson(Map<String, dynamic> json) =>
       _$$_PublicUserInfoFromJson(json);
@@ -166,10 +193,12 @@ class _$_PublicUserInfo implements _PublicUserInfo {
   final String? email;
   @override
   final String? errorMessage;
+  @override
+  final bool? isSponsored;
 
   @override
   String toString() {
-    return 'PublicUserInfo(uid: $uid, name: $name, email: $email, errorMessage: $errorMessage)';
+    return 'PublicUserInfo(uid: $uid, name: $name, email: $email, errorMessage: $errorMessage, isSponsored: $isSponsored)';
   }
 
   @override
@@ -184,7 +213,10 @@ class _$_PublicUserInfo implements _PublicUserInfo {
                 const DeepCollectionEquality().equals(other.email, email)) &&
             (identical(other.errorMessage, errorMessage) ||
                 const DeepCollectionEquality()
-                    .equals(other.errorMessage, errorMessage)));
+                    .equals(other.errorMessage, errorMessage)) &&
+            (identical(other.isSponsored, isSponsored) ||
+                const DeepCollectionEquality()
+                    .equals(other.isSponsored, isSponsored)));
   }
 
   @override
@@ -193,7 +225,8 @@ class _$_PublicUserInfo implements _PublicUserInfo {
       const DeepCollectionEquality().hash(uid) ^
       const DeepCollectionEquality().hash(name) ^
       const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(errorMessage);
+      const DeepCollectionEquality().hash(errorMessage) ^
+      const DeepCollectionEquality().hash(isSponsored);
 
   @JsonKey(ignore: true)
   @override
@@ -211,7 +244,8 @@ abstract class _PublicUserInfo implements PublicUserInfo {
       {required String uid,
       required String name,
       String? email,
-      String? errorMessage}) = _$_PublicUserInfo;
+      String? errorMessage,
+      bool? isSponsored}) = _$_PublicUserInfo;
 
   factory _PublicUserInfo.fromJson(Map<String, dynamic> json) =
       _$_PublicUserInfo.fromJson;
@@ -224,6 +258,8 @@ abstract class _PublicUserInfo implements PublicUserInfo {
   String? get email => throw _privateConstructorUsedError;
   @override
   String? get errorMessage => throw _privateConstructorUsedError;
+  @override
+  bool? get isSponsored => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$PublicUserInfoCopyWith<_PublicUserInfo> get copyWith =>

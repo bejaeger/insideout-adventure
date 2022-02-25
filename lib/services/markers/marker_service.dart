@@ -8,7 +8,6 @@ import 'package:afkcredits/services/users/user_service.dart';
 
 class MarkerService {
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final UserService _userService = locator<UserService>();
   final FlavorConfigProvider _flavorConfigProvider =
       locator<FlavorConfigProvider>();
 
@@ -44,7 +43,7 @@ class MarkerService {
 
   //Get User Favourite Places
   Future<List<AFKMarker>> getQuestMarkers() async {
-    return await _firestoreApi.getMarkers();
+    return await _firestoreApi.getAllMarkers();
   }
 
   Future<void> setQuestMarkers({required List<AFKMarker> markers}) async {

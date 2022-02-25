@@ -34,7 +34,7 @@ class DrawerWidgetView extends StatelessWidget {
                               'MENU',
                               style: textTheme(context).headline6!.copyWith(
                                     color: kDarkTurquoise,
-                                    fontSize: 35,
+                                    fontSize: 30,
                                   ),
                             ),
                           ),
@@ -101,12 +101,12 @@ class DrawerWidgetView extends StatelessWidget {
                       Expanded(
                         child: ElevatedButton(
                           // onPressed: model.navigateToExplorerHomeView,
-                          onPressed: model.logout,
+                          onPressed: model.navigateToGiftCardsView,
                           //child: Text("Go to explorer home/map")),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child:
-                                Text("LOGOUT", style: TextStyle(fontSize: 24)),
+                            child: Text("Gift Cards",
+                                style: TextStyle(fontSize: 20)),
                           ),
                         ),
                       ),
@@ -125,8 +125,8 @@ class DrawerWidgetView extends StatelessWidget {
                             //child: Text("Go to explorer home/map")),
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
-                              child: Text("PARENTS AREA",
-                                  style: TextStyle(fontSize: 24)),
+                              child: Text("Parents Area \u279A",
+                                  style: TextStyle(fontSize: 20)),
                             ),
                           ),
                         ),
@@ -134,6 +134,29 @@ class DrawerWidgetView extends StatelessWidget {
                     ),
                   ),
 
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                              padding: const EdgeInsets.all(0.0),
+                              primary: kBlackHeadlineColor),
+                          // onPressed: model.navigateToExplorerHomeView,
+                          onPressed: model.logout,
+                          //child: Text("Go to explorer home/map")),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child:
+                                Text("Logout", style: TextStyle(fontSize: 20)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 verticalSpaceLarge,
 
                 // Row(

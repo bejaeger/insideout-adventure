@@ -4,7 +4,6 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/maps_service.dart';
-import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -137,14 +136,13 @@ class NotCloseToQuestNote extends StatelessWidget {
 
 class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
   final MapsService _mapsService = locator<MapsService>();
-  final QuestService _questService = locator<QuestService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final log = getLogger("NotCloseToQuestNoteViewModel");
 
   double get distanceFromQuest => _geolocationService.distanceToStartMarker;
 
   void launchMapsForNavigation() async {
-    AFKMarker? marker = _questService.currentQuest?.startMarker;
+    AFKMarker? marker = activeQuestService.currentQuest?.startMarker;
     if (marker == null) {
       log.e("Can't open map because no quest or no marker found!");
       snackbarService.showSnackbar(

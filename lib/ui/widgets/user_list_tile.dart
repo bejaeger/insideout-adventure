@@ -37,41 +37,44 @@ class UserListTile extends StatelessWidget {
           ),
           child: Center(
             child: ListTile(
-                leading: CircleAvatar(
-                  radius: 20,
-                  backgroundColor: kDarkTurquoise,
-                  child: Text(getInitialsFromName(userInfo.name),
-                      style: TextStyle(color: Colors.white, fontSize: 14)),
+              leading: CircleAvatar(
+                radius: 20,
+                backgroundColor: kDarkTurquoise,
+                child: Text(getInitialsFromName(userInfo.name),
+                    style: TextStyle(color: Colors.white, fontSize: 14)),
+              ),
+              title: Text(
+                userInfo.name,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black,
                 ),
-                title: Text(
-                  userInfo.name,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.black,
-                  ),
-                ),
-                subtitle: userInfo.email != null && userInfo.email != ""
-                    ? Text(
-                        userInfo.email!.toLowerCase(),
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.grey,
-                        ),
-                      )
-                    : null,
-                trailing: userStats == null
-                    ? null
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("Earned: " +
-                              userStats!.afkCreditsBalance.toString() +
-                              " AFK Credits"),
-                          Text("Sponsoring: " +
-                              formatAmount(userStats!.availableSponsoring)),
-                        ],
-                      )),
+              ),
+              // subtitle: userInfo.email != null && userInfo.email != ""
+              //     ? Text(
+              //         userInfo.email!.toLowerCase(),
+              //         style: TextStyle(
+              //           fontSize: 14.0,
+              //           color: Colors.grey,
+              //         ),
+              //       )
+              //     : null,
+              trailing: userStats == null
+                  ? userInfo.isSponsored == true
+                      ? Text("\u2714")
+                      : null
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Earned: " +
+                            userStats!.afkCreditsBalance.toString() +
+                            " AFK Credits"),
+                        Text("Sponsoring: " +
+                            formatAmount(userStats!.availableSponsoring)),
+                      ],
+                    ),
+            ),
           ),
         ),
       ),

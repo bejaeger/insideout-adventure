@@ -73,7 +73,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
 
   void addLocationListener() {
     if (useSuperUserFeatures) {
-      questService.listenToPosition(
+      activeQuestService.listenToPosition(
         viewModelCallback: (_) {
           setListenedToNewPosition(true);
           notifyListeners();
@@ -88,7 +88,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
 
   void cancelLocationListener() {
     if (useSuperUserFeatures) {
-      questService.cancelPositionListener();
+      activeQuestService.cancelPositionListener();
       notifyListeners();
     }
   }

@@ -36,8 +36,17 @@ class SearchExplorerViewModel extends SearchFunctionalityViewModel {
 
   Future queryUsers(String queryString) async {
     try {
-      userInfoList =
+      List<PublicUserInfo> userInfoListTmp =
           await _firestoreApi.queryExplorers(queryString: queryString);
+      userInfoList = [];
+      userInfoListTmp.forEach((element) {
+        if (userService.isSponsored(uid: element.uid)) {
+          userInfoList.add(element.copyWith(isSponsored: true));
+        } else {
+          userInfoList.add(element);
+        }
+      });
+      log.wtf(userInfoList);
       notifyListeners();
     } catch (e) {
       log.e("Something went wrong when querying for the input '$queryString'");
