@@ -11,6 +11,8 @@ class LargeButton extends StatelessWidget {
   final String? imagePath;
   final Color backgroundColor;
   final Color titleColor;
+  final double fontSize;
+  final bool withBorder;
   const LargeButton({
     Key? key,
     required this.onPressed,
@@ -19,6 +21,8 @@ class LargeButton extends StatelessWidget {
     this.titleColor = kGreyTextColor,
     this.imageUrl,
     this.imagePath,
+    this.fontSize = 22,
+    this.withBorder = false,
   }) : super(key: key);
 
   @override
@@ -32,9 +36,12 @@ class LargeButton extends StatelessWidget {
         ),
         child: Container(
           height: 90,
+          padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.0),
             color: backgroundColor,
+            border:
+                withBorder ? Border.all(width: 1, color: kDarkTurquoise) : null,
             // boxShadow: [
             //   BoxShadow(
             //     blurRadius: 2,
@@ -79,10 +86,12 @@ class LargeButton extends StatelessWidget {
                     ),
                   ),
                 ),
-              Text(title,
-                  style: textTheme(context)
-                      .headline6!
-                      .copyWith(color: titleColor)),
+              Expanded(
+                child: Text(title,
+                    style: textTheme(context)
+                        .headline6!
+                        .copyWith(color: titleColor, fontSize: fontSize)),
+              ),
               Icon(Icons.arrow_forward_ios, color: titleColor),
             ],
           ),

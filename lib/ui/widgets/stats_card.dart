@@ -161,10 +161,12 @@ class StatsCard extends StatelessWidget {
 class AFKCreditsIcon extends StatelessWidget {
   final bool locked;
   final double? height;
+  final Alignment alignment;
   const AFKCreditsIcon({
     Key? key,
     this.locked = false,
     this.height,
+    this.alignment = Alignment.center,
   }) : super(key: key);
 
   @override
@@ -177,7 +179,7 @@ class AFKCreditsIcon extends StatelessWidget {
             //fit: StackFit.expand,
             children: [
               Align(
-                alignment: Alignment.center,
+                alignment: alignment,
                 child: Image.asset(kAFKCreditsLogoPath,
                     height: (height ?? 70) - 10.0),
               ),

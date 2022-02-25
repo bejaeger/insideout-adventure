@@ -39,7 +39,7 @@ class UserListTile extends StatelessWidget {
             child: ListTile(
                 leading: CircleAvatar(
                   radius: 20,
-                  backgroundColor: kPrimaryColor,
+                  backgroundColor: kDarkTurquoise,
                   child: Text(getInitialsFromName(userInfo.name),
                       style: TextStyle(color: Colors.white, fontSize: 14)),
                 ),
