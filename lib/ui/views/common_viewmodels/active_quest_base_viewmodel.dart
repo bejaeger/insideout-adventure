@@ -13,7 +13,6 @@ import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
-import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/maps_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
@@ -248,7 +247,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
           }
           return CollectCreditsStatus.noNetwork;
         } else {
-          log.e("Unknown error occured from evaluateAndFinishQuest");
+          log.e(
+              "Unknown error occured f{CollectCreditsStatus collectCreditsStatus}rom evaluateAndFinishQuest");
           setBusy(false);
           rethrow;
         }

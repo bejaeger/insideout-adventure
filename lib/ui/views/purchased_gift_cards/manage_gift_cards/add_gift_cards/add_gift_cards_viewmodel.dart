@@ -7,10 +7,11 @@ import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/utils/cloud_storage_result/cloud_storage_result.dart';
 import 'package:afkcredits/utils/image_selector/image_selector.dart';
+import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:stacked/stacked.dart';
 
 abstract class GiftCardsImageViewModel extends FormViewModel
-    with NavigationMixin {
+    with NavigationMixin, DisplaySnackBars {
   final ImageSelector _imageSelector = locator<ImageSelector>();
   CloudStorageResult _storageResult = locator<CloudStorageResult>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();

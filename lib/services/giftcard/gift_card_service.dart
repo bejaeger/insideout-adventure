@@ -12,7 +12,6 @@ import 'package:afkcredits/enums/purchased_gift_card_status.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 
@@ -25,7 +24,7 @@ class GiftCardService {
 
   StreamSubscription? _purchasedGiftCardsStreamSubscription;
   List<GiftCardPurchase> purchasedGiftCards = [];
-  List<GiftCardCategory>? _giftCartCategory;
+  List<GiftCardCategory>? _giftCartCategory = [];
 
   List<GiftCardCategory> getGiftCards({required String categoryName}) {
     if (giftCardCategories.keys.contains(categoryName)) {
@@ -73,9 +72,13 @@ class GiftCardService {
     //This is to make suret that the document has the same id as the quest.
   }
 
+  Future<List<PrePurchasedGiftCard?>> getPreGiftCardsForCategory() async {
+    return await _firestoreApi.getPreGiftCardsForCategory();
+  }
+
   Future<bool> insertPrePurchasedGiftCardCategory(
       {required PrePurchasedGiftCard prePurchasedGiftCard}) async {
-    //TODO: Refactor this code .
+    //TODO: Refactor this code.
     if (prePurchasedGiftCard.categoryId.isNotEmpty) {
       return await _firestoreApi.insertPrePurchasedGiftCardCategory(
           prePurchasedGiftCard: prePurchasedGiftCard);
@@ -86,21 +89,14 @@ class GiftCardService {
     //This is to make suret that the document has the same id as the quest.
   }
 
-  void setListGiftCards({required List<GiftCardCategory> giftCardCategory}) {
-    if (giftCardCategory.isNotEmpty) {
-      _giftCartCategory = giftCardCategory;
-    } else {
-      print('WTF Empty List');
-    }
-  }
-
   List<QuerySnapshot> get giftCardQuerySnapShot =>
       _firestoreApi.getListQuerySnapShot();
 
   Future fetchAllGiftCards() async {
     try {
       final allGiftCardCategories = await _firestoreApi.getAllGiftCards();
-      setListGiftCards(giftCardCategory: allGiftCardCategories);
+      _giftCartCategory = allGiftCardCategories;
+      //setListGiftCards(giftCardCategory: allGiftCardCategories);
       // Need to do some gynmastics to convert the list of category names
       // to a easier to handle map
       final uniqueCategories = getUniqueCategoryNames(
@@ -108,8 +104,7 @@ class GiftCardService {
 
       uniqueCategories.forEach((element) {
         giftCardCategories[element] = allGiftCardCategories
-            .where((category) =>
-                describeEnum(category.categoryName).toString() == element)
+            .where((category) => category.categoryName.toString() == element)
             .toList();
       });
       log.i(
@@ -164,7 +159,8 @@ class GiftCardService {
     List<String> categoryNames = [];
 
     listOfGiftCardCategories.forEach((element) {
-      final categoryName = describeEnum(element.categoryName).toString();
+      //final categoryName = describeEnum(element.categoryName).toString();
+      final categoryName = element.categoryName.toString();
 
       if (!categoryNames.contains(categoryName)) {
         categoryNames.add(categoryName);

@@ -112,8 +112,10 @@ class _BasicDialogContent extends StatelessWidget {
                       child: !model.hasCollectedCreditsInDialog
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: Image.asset(kAFKCreditsLogoPath,
-                                  width: screenWidth(context, percentage: 0.4)),
+                              child: Image.asset(
+                                kAFKCreditsLogoPath,
+                                width: screenWidth(context, percentage: 0.4),
+                              ),
                             )
                           : FittedBox(
                               fit: BoxFit.fill,

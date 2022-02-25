@@ -1,5 +1,5 @@
 // ignore_for_file: must_be_immutable
-
+/*
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/marker_status.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -306,27 +306,4 @@ class DisplayAllMarkersSection extends StatelessWidget {
   }
 }
 
-
-/*       
-floatingActionButton: Stack(
-                children: [
-                  Positioned(
-                    bottom: 70,
-                    right: 4,
-                    child: AFKFloatingActionButton(
-                      onPressed: model.initialCameraPosition() == null
-                          ? () async => null
-                          : () async {
-                              _googleMapController!.animateCamera(
-                                CameraUpdate.newCameraPosition(
-                                  model.initialCameraPosition(),
-                                ),
-                              );
-                            },
-                      icon: const Icon(Icons.qr_code_scanner_rounded,
-                          size: 30, color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-               */
+*/

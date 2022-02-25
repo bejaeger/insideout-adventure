@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -15,7 +17,7 @@ import 'create_quest_viewmodel.dart';
     FormTextField(name: 'name'),
     FormTextField(name: 'description'),
     FormTextField(name: 'afkCreditAmount'),
-    /*   FormTextField(name: 'markerNotes'), */
+    //FormTextField(name: 'markerNotes'),
     FormTextField(name: 'questType'),
   ],
 )
@@ -33,17 +35,6 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
       // onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
-          /*   appBar: CustomAppBar(
-            alignLeft: true,
-            title: "Create a Quest",
-            widget: IconButton(
-              color: Colors.white,
-              icon: Icon(Icons.person),
-              onPressed: () {
-                model.logout();
-              },
-            ),
-          ), */
           body: CustomScrollView(
             slivers: [
               const SliverAppBar(
@@ -164,7 +155,7 @@ class QuestCardList extends StatelessWidget {
                 //mapType: MapType.hybrid,
                 initialCameraPosition: model.initialCameraPosition(),
                 //Place Markers in the Map
-                markers: model.markersInMap.getMarkersOnMap,
+                markers: model.getMarkersOnMap,
 
                 //callback that’s called when the map is ready to us.
                 onMapCreated: model.onMapCreated,
@@ -179,28 +170,37 @@ class QuestCardList extends StatelessWidget {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () async {
-                      afkCreditAmount =
-                          num.parse(afkCreditAmountController!.text);
-                      var id = Uuid();
-                      questId = id.v1().toString().replaceAll('-', '');
-                      await model.createQuest(
-                        quest: Quest(
-                            id: questId!,
-                            startMarker: model.markersInMap.getAFKMarkers.first,
-                            finishMarker: model.markersInMap.getAFKMarkers.last,
-                            name: nameController!.text.toString(),
-                            description: descriptionController!.text.toString(),
-                            type: selectedQuestType ?? QuestType.QRCodeHike,
-                            markers: model.markersInMap.getAFKMarkers,
-                            afkCredits: afkCreditAmount!),
-                      );
-                      model.resetMarkersValues();
+                      if (afkCreditAmountController!.text.isNotEmpty &&
+                          nameController!.text.isNotEmpty &&
+                          questTypeController!.text.isNotEmpty &&
+                          descriptionController!.text.isNotEmpty &&
+                          model.getAFKMarkers.isNotEmpty) {
+                        afkCreditAmount =
+                            num.parse(afkCreditAmountController!.text);
+                        var id = Uuid();
+                        questId = id.v1().toString().replaceAll('-', '');
+                        await model.createQuest(
+                          quest: Quest(
+                              id: questId!,
+                              startMarker: model.getAFKMarkers.first,
+                              finishMarker: model.getAFKMarkers.last,
+                              name: nameController!.text.toString(),
+                              description:
+                                  descriptionController!.text.toString(),
+                              type: selectedQuestType ?? QuestType.QRCodeHike,
+                              markers: model.getAFKMarkers,
+                              afkCredits: afkCreditAmount!),
+                        );
+                        model.resetMarkersValues();
 
-                      //Clear Controllers
-                      nameController!.clear();
-                      questTypeController!.clear();
-                      afkCreditAmountController!.clear();
-                      descriptionController!.clear();
+                        //Clear Controllers
+                        nameController!.clear();
+                        questTypeController!.clear();
+                        afkCreditAmountController!.clear();
+                        descriptionController!.clear();
+                      } else {
+                        model.displayEmptyTextsSnackBar();
+                      }
                     },
                     icon: const Icon(Icons
                         .addchart), //completer(DialogResponse(confirmed: true)),
