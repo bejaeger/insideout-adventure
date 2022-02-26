@@ -23,33 +23,34 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
       viewModelBuilder: () => CreateAccountViewModel(role: role),
       onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) => Scaffold(
-          body: AuthenticationLayout(
-        busy: model.isBusy,
-        onMainButtonTapped: () => model.saveData(AuthenticationMethod.email),
-        onBackPressed: model.replaceWithSelectRoleView,
-        validationMessage: model.validationMessage,
-        title: 'Create $roleString Account',
-        subtitle: 'Enter your name, email and password for sign up.',
-        mainButtonTitle: 'SIGN UP',
-        form: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: 'Full Name'),
-              controller: fullNameController,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Email'),
-              controller: emailController,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-              controller: passwordController,
-            ),
-          ],
+        body: AuthenticationLayout(
+          busy: model.isBusy,
+          onMainButtonTapped: () => model.saveData(AuthenticationMethod.email),
+          onBackPressed: model.replaceWithSelectRoleView,
+          validationMessage: model.validationMessage,
+          title: 'Create $roleString Account',
+          subtitle: 'Enter your name, email and password for sign up.',
+          mainButtonTitle: 'SIGN UP',
+          form: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Full Name'),
+                controller: fullNameController,
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Email'),
+                controller: emailController,
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Password'),
+                obscureText: true,
+                controller: passwordController,
+              ),
+            ],
+          ),
+          showTermsText: true,
         ),
-        showTermsText: true,
-      )),
+      ),
     );
   }
 }

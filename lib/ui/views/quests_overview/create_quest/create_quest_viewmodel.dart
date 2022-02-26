@@ -30,12 +30,6 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     final added = await _questService.createQuest(quest: quest);
     if (added!) {
       _displaySnackBars.snackBarCreatedQuest();
-      await Future.delayed(
-        const Duration(seconds: 4),
-        () {
-          this.navBackToPreviousView();
-        },
-      );
       return true;
     } else {
       _displaySnackBars.snackBarNotCreatedQuest();

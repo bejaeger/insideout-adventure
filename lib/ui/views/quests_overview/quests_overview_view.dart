@@ -33,26 +33,11 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          leading: model.isAdminMaster
-              ? GestureDetector(onTap: model.logout, child: Text("Logout"))
-              : model.isSuperUser
-                  ? GestureDetector(
-                      onTap: model.openSuperUserSettingsDialog,
-                      child: Text("Super User"))
-                  : null,
           title: Text(
             "Quests",
             style:
                 textTheme(context).headline5!.copyWith(color: kWhiteTextColor),
           ),
-          // backgroundColor: kPrimaryColor,
-          // elevation: 0,
-          // shape: RoundedRectangleBorder(
-          //   borderRadius: BorderRadius.only(
-          //     bottomLeft: Radius.circular(12.0),
-          //     bottomRight: Radius.circular(12.0),
-          //   ),
-          // ),
           bottom: PreferredSize(
             preferredSize:
                 Size(_tabbar.preferredSize.width, _tabbar.preferredSize.height),
