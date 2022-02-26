@@ -11,6 +11,7 @@ class PublicUserInfo with _$PublicUserInfo {
     required String name,
     String? email,
     String? errorMessage,
+    bool? isSponsored,
   }) = _PublicUserInfo;
 
   factory PublicUserInfo.fromJson(Map<String, dynamic> json) =>

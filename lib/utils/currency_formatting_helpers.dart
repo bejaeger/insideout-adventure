@@ -55,3 +55,12 @@ int centsToAfkCredits(num cents) {
 String formatAfkCreditsFromCents(num cents) {
   return ((cents * kCentsToAfkCreditsConversionFactor).round()).toString();
 }
+
+String formatDollarFromCents(num cents) {
+  return ((cents * 0.01).round()).toString();
+}
+
+String formatAFKCreditsToActivityHours(num credits) {
+  // assume 100 credits are worth 1 hour activities
+  return ((credits * 0.01).round()).toString();
+}

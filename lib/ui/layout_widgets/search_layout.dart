@@ -1,4 +1,5 @@
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/search_test_field.dart';
 import 'package:afkcredits/utils/debouncer.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -63,7 +64,7 @@ class SearchLayout extends StatelessWidget {
           ),
           verticalSpaceSmall,
           isBusy
-              ? CircularProgressIndicator()
+              ? AFKProgressIndicator()
               : ListView.builder(
                   shrinkWrap: true,
                   itemCount: queryResult.length,

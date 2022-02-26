@@ -163,7 +163,7 @@ abstract class QuestViewModel extends BaseModel {
       }
     }
     MarkerAnalysisResult scanResult =
-        await questService.analyzeMarker(marker: marker);
+        await activeQuestService.analyzeMarker(marker: marker);
     return scanResult;
   }
 

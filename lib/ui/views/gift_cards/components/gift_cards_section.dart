@@ -21,7 +21,7 @@ class GiftCardsSection extends StatelessWidget {
             children: [
               SectionHeader(
                 horizontalPadding: 0,
-                title: describeEnum(giftCards[0].categoryName).toString(),
+                title: giftCards[0].categoryName.toString(),
               ),
               GiftCardsList(
                   giftCardList: giftCards, onGiftCardTap: onGiftCardTap),

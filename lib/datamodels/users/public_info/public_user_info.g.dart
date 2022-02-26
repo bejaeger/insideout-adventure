@@ -12,6 +12,7 @@ _$_PublicUserInfo _$$_PublicUserInfoFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       email: json['email'] as String?,
       errorMessage: json['errorMessage'] as String?,
+      isSponsored: json['isSponsored'] as bool?,
     );
 
 Map<String, dynamic> _$$_PublicUserInfoToJson(_$_PublicUserInfo instance) =>
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$_PublicUserInfoToJson(_$_PublicUserInfo instance) =>
       'name': instance.name,
       'email': instance.email,
       'errorMessage': instance.errorMessage,
+      'isSponsored': instance.isSponsored,
     };

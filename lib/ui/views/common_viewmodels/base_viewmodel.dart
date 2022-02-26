@@ -21,6 +21,7 @@ import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
+import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
@@ -38,6 +39,7 @@ class BaseModel extends BaseViewModel {
   final UserService userService = locator<UserService>();
   final SnackbarService snackbarService = locator<SnackbarService>();
   final QuestService questService = locator<QuestService>();
+  final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
   final DialogService dialogService = locator<DialogService>();
   final BottomSheetService bottomSheetService = locator<BottomSheetService>();
   final TransfersHistoryService transfersHistoryService =
@@ -70,12 +72,12 @@ class BaseModel extends BaseViewModel {
   bool get listenedToNewPosition => geolocationService.listenedToNewPosition;
 
   // --------------------------------------------------
-  bool get hasActiveQuest => questService.hasActiveQuest;
+  bool get hasActiveQuest => activeQuestService.hasActiveQuest;
   // only access this
-  ActivatedQuest get activeQuest => questService.activatedQuest!;
+  ActivatedQuest get activeQuest => activeQuestService.activatedQuest!;
   ActivatedQuest get previouslyFinishedQuest =>
-      questService.previouslyFinishedQuest!;
-  ActivatedQuest? get activeQuestNullable => questService.activatedQuest;
+      activeQuestService.previouslyFinishedQuest!;
+  ActivatedQuest? get activeQuestNullable => activeQuestService.activatedQuest;
   String? seconds;
   String? hours;
   String? minutes;
@@ -96,6 +98,7 @@ class BaseModel extends BaseViewModel {
 
   Future clearServiceData({bool logOutFromFirebase = true}) async {
     questService.clearData();
+    activeQuestService.clearData();
     _giftCardService.clearData();
     await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
@@ -247,8 +250,8 @@ class BaseModel extends BaseViewModel {
       final admin = await showAdminDialogAndGetResponse();
       if (admin == true) {
         // collect next marker automatically!
-        AFKMarker? nextMarker = questService.getNextMarker();
-        await questService.analyzeMarker(marker: nextMarker);
+        AFKMarker? nextMarker = activeQuestService.getNextMarker();
+        await activeQuestService.analyzeMarker(marker: nextMarker);
         final result = MarkerAnalysisResult.marker(marker: nextMarker);
         await handleMarkerAnalysisResult(result);
         return true;
@@ -271,7 +274,7 @@ class BaseModel extends BaseViewModel {
     }
     validatingMarker = true;
     MarkerAnalysisResult scanResult =
-        await questService.analyzeMarker(marker: marker);
+        await activeQuestService.analyzeMarker(marker: marker);
     validatingMarker = false;
     return scanResult;
   }

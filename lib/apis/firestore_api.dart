@@ -201,7 +201,7 @@ class FirestoreApi {
 
   // Get Markers For the Quest.
   // ignore: non_constant_identifier_names
-  Future<List<AFKMarker>> getMarkers() async {
+  Future<List<AFKMarker>> getAllMarkers() async {
     final _markers = await markersCollection.get();
     if (_markers.docs.isNotEmpty) {
       try {
@@ -377,12 +377,14 @@ class FirestoreApi {
         .where("role", isEqualTo: getStringFromEnum(UserRole.explorer))
         .where("fullNameSearch", arrayContains: queryString.toLowerCase())
         .get();
-    final results = foundUsers.docs.map((DocumentSnapshot doc) {
-      return PublicUserInfo(
-          name: doc.get("fullName"),
-          uid: doc.get("uid"),
-          email: doc.get("email"));
-    }).toList();
+    final results = foundUsers.docs.map(
+      (DocumentSnapshot doc) {
+        return PublicUserInfo(
+            name: doc.get("fullName"),
+            uid: doc.get("uid"),
+            email: doc.get("email"));
+      },
+    ).toList();
     log.v("Queried users and found ${results.length} matches");
     return results;
   }
@@ -486,6 +488,7 @@ class FirestoreApi {
     return false;
   }
 
+  // TODO: Only dowload nearby quests in the future
   // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> downloadNearbyQuests() async {
     final quests = await questsCollection.get();

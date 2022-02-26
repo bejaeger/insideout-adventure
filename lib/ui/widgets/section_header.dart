@@ -12,21 +12,23 @@ class SectionHeader extends StatelessWidget {
   final void Function()? onButtonTap;
   final String title;
   final String textButtonText;
-  final Widget? trailingIcon;
+  final Widget? otherTrailingIcon;
   final double titleSize;
   final double? horizontalPadding;
   final double? verticalPadding;
   final double titleOpacity;
+  final Widget? buttonIcon;
 
   const SectionHeader(
       {Key? key,
       required this.title,
       this.onButtonTap,
       this.textButtonText = "SEE ALL",
-      this.trailingIcon,
+      this.otherTrailingIcon,
       this.titleSize = 20,
       this.horizontalPadding,
       this.verticalPadding,
+      this.buttonIcon,
       this.titleOpacity = 1})
       : super(key: key);
 
@@ -46,13 +48,14 @@ class SectionHeader extends StatelessWidget {
           if (onButtonTap != null)
             GestureDetector(
               onTap: onButtonTap,
-              child: Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 20,
-                color: kBlackHeadlineColor.withOpacity(titleOpacity),
-              ),
+              child: buttonIcon ??
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 20,
+                    color: kBlackHeadlineColor.withOpacity(titleOpacity),
+                  ),
             ),
-          if (trailingIcon != null) trailingIcon!,
+          if (otherTrailingIcon != null) otherTrailingIcon!,
         ],
       ),
     );

@@ -18,8 +18,8 @@ class _AddMarkersViewState extends State<AddMarkersView> {
   GoogleMapController? _googleMapDisplayController;
   @override
   void dispose() {
-    _googleMapController!.dispose();
-    _googleMapDisplayController!.dispose();
+    _googleMapController?.dispose();
+    _googleMapDisplayController?.dispose();
     super.dispose();
   }
 

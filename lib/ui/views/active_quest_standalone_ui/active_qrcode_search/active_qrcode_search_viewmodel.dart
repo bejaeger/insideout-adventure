@@ -20,11 +20,12 @@ class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
   ActiveQrCodeSearchViewModel({required this.flipCard});
 
   //getters
-  bool get firstClueFound => questService.getNumberMarkersCollected > 1;
-  int get getNumberMarkersCollected => questService.getNumberMarkersCollected;
+  bool get firstClueFound => activeQuestService.getNumberMarkersCollected > 1;
+  int get getNumberMarkersCollected =>
+      activeQuestService.getNumberMarkersCollected;
 
   // UI state
-  List<AFKMarker> get foundObjects => questService.getCollectedMarkers();
+  List<AFKMarker> get foundObjects => activeQuestService.getCollectedMarkers();
   // List<AFKMarker> foundObjects = [];
   int indexClue = 0;
   bool animateProgress = false;
@@ -60,7 +61,7 @@ class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
   String getCurrentProgressString() {
     if (currentQuest != null) {
       return hasActiveQuest
-          ? (questService.getNumberMarkersCollected - 1).toString() +
+          ? (activeQuestService.getNumberMarkersCollected - 1).toString() +
               " / " +
               (activeQuest.quest.markers.length - 1).toString()
           : "0 / " + currentQuest!.markers.length.toString();
@@ -77,10 +78,10 @@ class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
       return "Start to see the first clue";
     } else {
       if (activeQuest.quest.markerNotes != null) {
-        if (questService.getNumberMarkersCollected <
+        if (activeQuestService.getNumberMarkersCollected <
             activeQuest.quest.markerNotes!.length) {
-          return activeQuest
-              .quest.markerNotes![questService.getNumberMarkersCollected].note;
+          return activeQuest.quest
+              .markerNotes![activeQuestService.getNumberMarkersCollected].note;
         } else {
           return "No clues left";
         }
@@ -93,7 +94,7 @@ class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
   // Retrieve current hint which is attached to the previously collected marker.
   // This means it is simply the last object of foundObjects!
   void getNextClue() {
-    if (questService.getNumberMarkersCollected >= indexClue + 1) {
+    if (activeQuestService.getNumberMarkersCollected >= indexClue + 1) {
       indexClue = indexClue + 1;
       notifyListeners();
     }
@@ -101,7 +102,7 @@ class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
 
   @override
   bool isQuestCompleted() {
-    return questService.isAllMarkersCollected;
+    return activeQuestService.isAllMarkersCollected;
   }
 
   @override

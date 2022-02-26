@@ -1,3 +1,5 @@
+import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -18,35 +20,59 @@ class RaisedPurchasedDialogView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<RaisedPurchasedDialogViewModel>.reactive(
       builder: (context, model, child) => Dialog(
-        child: Card(
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+        elevation: 5,
+        insetPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               if (request.data.imageUrl != null)
-                Image.network(
-                  request.data.imageUrl!,
-                  fit: BoxFit.fill,
-                ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(formatAmount(request.data.amount)),
-                  horizontalSpaceSmall,
-                  Text(
-                    request.data.categoryName.toString(),
+                Center(
+                  child: Image.network(
+                    request.data.imageUrl!,
+                    height: 150,
+                    //fit: BoxFit.fill,
                   ),
-                  horizontalSpaceSmall,
-                  Text(centsToAfkCredits(request.data.amount).toString() +
-                      " AFKC"),
+                ),
+              verticalSpaceSmall,
+              Center(
+                child: Text(
+                  formatAmount(request.data.amount) +
+                      " " +
+                      request.data.categoryName.toString() +
+                      " gift card",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              verticalSpaceMedium,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Price: ", style: textTheme(context).headline4),
+                  AFKCreditsIcon(height: 50),
+                  Text(centsToAfkCredits(request.data.amount).toString(),
+                      style: textTheme(context).headline4),
                 ],
               ),
-              Text("Available Credits: " +
-                  model.currentUserStats.afkCreditsBalance.toString()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Available:"),
+                  AFKCreditsIcon(
+                    height: 25,
+                    alignment: Alignment.centerRight,
+                  ),
+                  horizontalSpaceTiny,
+                  Text(model.currentUserStats.afkCreditsBalance.toString()),
+                ],
+              ),
+              verticalSpaceMedium,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -61,14 +87,14 @@ class RaisedPurchasedDialogView extends StatelessWidget {
                           color: Colors.black),
                     ),
                   ),
-                  MaterialButton(
+                  ElevatedButton(
                     onPressed: () => completer(DialogResponse(confirmed: true)),
                     child: Text(
                       request.mainButtonTitle.toString(),
                       style: TextStyle(
                           fontSize: 20,
                           //fontWeight: FontWeight.bold,
-                          color: Colors.black),
+                          color: kWhiteTextColor),
                     ),
                   )
                 ],

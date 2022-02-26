@@ -1,11 +1,11 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/components/gift_cards_section.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/large_button.dart';
 import 'package:afkcredits/ui/widgets/screen_time_button.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +22,11 @@ class GiftCardView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(
           title: 'Get Your Rewards',
+          drawer: true,
+        ),
+        endDrawer: SizedBox(
+          width: screenWidth(context, percentage: 0.8),
+          child: const DrawerWidgetView(),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
@@ -71,7 +76,6 @@ class GiftCardView extends StatelessWidget {
                                       giftCards: e,
                                       onGiftCardTap: model
                                           .displayGiftCardDialogAndProcessPurchase),
-                                  verticalSpaceSmall,
                                 ],
                               ),
                             )

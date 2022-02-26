@@ -91,7 +91,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
       // start listening to position
       await Future.wait([
-        questService.listenToPosition(
+        activeQuestService.listenToPosition(
             distanceFilter: kMinDistanceFromLastCheckInMeters,
             pushToNotion: true,
             recordPositionDataEvent: false,
@@ -219,11 +219,11 @@ class ActiveTreasureLocationSearchQuestViewModel
   }
 
   Future fetchNewPosition() async {
-    if (questService.activatedQuest == null) {
+    if (activeQuestService.activatedQuest == null) {
       log.wtf("No quest is active to check distance to finish line");
       return "No quest is currently active, please start the quest first";
     }
-    ActivatedQuest tmpActivatedQuest = questService.activatedQuest!;
+    ActivatedQuest tmpActivatedQuest = activeQuestService.activatedQuest!;
     if (isTrackingDeadTime) {
       log.v("Skipping distance to goal check because tracking dead time is on");
       return "You can't check the distance at the moment because other processes are running";
@@ -402,7 +402,7 @@ class ActiveTreasureLocationSearchQuestViewModel
   // which seems to perform much better!
   // TODO THIS IS POSSIBLY DEPRECATED
   bool isDistanceCheckAllowed({required Position newPosition}) {
-    if (questService.activatedQuest == null) {
+    if (activeQuestService.activatedQuest == null) {
       log.wtf("no quest active at the moment");
       return false;
     }
@@ -419,7 +419,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     double minDistanceFromLastCheck = propagatedAccuracy.clamp(10, 80);
 
     double? lastDistanceToGoal =
-        questService.activatedQuest!.lastDistanceInMeters;
+        activeQuestService.activatedQuest!.lastDistanceInMeters;
     late bool allow;
     if (lastDistanceToGoal != null) {
       // to allow for more chances to check closer to the finish line to increase
@@ -453,7 +453,7 @@ class ActiveTreasureLocationSearchQuestViewModel
   }
 
   Future periodicUpdate(int seconds) async {
-    if (questService.activatedQuest != null) {
+    if (activeQuestService.activatedQuest != null) {
       //void updateTime(int seconds) {
 
       // set initial data!
@@ -467,7 +467,8 @@ class ActiveTreasureLocationSearchQuestViewModel
         //   directionStatus = push;
         //   notifyListeners();
         // }
-        questService.updateTimeOnQuest(questService.activatedQuest!, seconds);
+        activeQuestService.updateTimeOnQuest(
+            activeQuestService.activatedQuest!, seconds);
       }
 
       // push quest
@@ -475,7 +476,7 @@ class ActiveTreasureLocationSearchQuestViewModel
         setTrackingDeadTime(true);
         await Future.delayed(
             Duration(seconds: kDeadTimeAfterVibrationInSeconds));
-        if (questService.activatedQuest!.status != QuestStatus.success)
+        if (activeQuestService.activatedQuest!.status != QuestStatus.success)
           setTrackingDeadTime(false);
       }
 
@@ -485,7 +486,7 @@ class ActiveTreasureLocationSearchQuestViewModel
             "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten that the quest is still running!");
         // TODO: Could also be override function
         setTrackingDeadTime(false);
-        await questService.cancelIncompleteQuest();
+        await activeQuestService.cancelIncompleteQuest();
         return;
       }
     }

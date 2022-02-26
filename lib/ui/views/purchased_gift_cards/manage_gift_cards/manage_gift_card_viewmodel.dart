@@ -58,8 +58,8 @@ class ManageGiftCardViewModel extends BaseViewModel with NavigationMixin {
     List<List<GiftCardCategory>> returnList = [];
 
     getUniqueCategoryNames().forEach((categoryName) {
-      if (!returnList.any((listOfGiftCards) => listOfGiftCards.any((giftCard) =>
-          describeEnum(giftCard.categoryName).toString() == categoryName))) {
+      if (!returnList.any((listOfGiftCards) => listOfGiftCards.any(
+          (giftCard) => giftCard.categoryName.toString() == categoryName))) {
         returnList.add(getGiftCardCategories(categoryName: categoryName));
       }
     });

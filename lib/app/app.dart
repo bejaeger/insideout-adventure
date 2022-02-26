@@ -16,6 +16,7 @@ import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
+import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -129,6 +130,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: FlutterSecureStorage),
     LazySingleton(classType: TransfersHistoryService),
     LazySingleton(classType: QuestService),
+    LazySingleton(classType: ActiveQuestService),
     // LazySingleton(classType: AFKCreditsAuthenticationResultService),
     LazySingleton(classType: PaymentService),
     LazySingleton(classType: StopWatchService),
