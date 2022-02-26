@@ -154,29 +154,6 @@ class InsertGiftCard extends StatelessWidget {
                         model!.navBackToPreviousView();
                       },
                     ),
-
-                    /*      Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () async 
-                          icon: const Icon(Icons.add_box),
-                          label: const Text(
-                            "add  ",
-                          ),
-                        ),
-                        horizontalSpaceSmall,
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            model!.navBackToPreviousView();
-                          },
-                          icon: const Icon(Icons.cancel),
-                          label: const Text(
-                            "Cancel",
-                          ),
-                        ),
-                      ],
-                    ), */
                   ],
                 ),
               ),
