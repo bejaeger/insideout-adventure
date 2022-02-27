@@ -1,6 +1,5 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, unnecessary_statements
 
-import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../datamodels/quests/quest.dart';
+import '../../../layout_widgets/buttons_layouts.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
 
@@ -43,14 +44,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                 // floating: true,
                 expandedHeight: 80,
                 pinned: true,
-                actions: [
-                  /*     
-              IconButton(
-                    color: Colors.white,
-                    icon: Icon(Icons.person), onPressed: () {  },
-                    
-                  ), */
-                ],
+                actions: [],
               ),
               SliverPadding(
                 padding:
@@ -145,7 +139,9 @@ class QuestCardList extends StatelessWidget {
                 );
               }).toList(),
               onChanged: (QuestType? value) {
+                //if (selectedQuestType!.name.isNotEmpty) {
                 selectedQuestType = value;
+                value = null;
               },
             ),
             verticalSpaceSmall,
@@ -164,69 +160,49 @@ class QuestCardList extends StatelessWidget {
                 // onLongPress: model.removeMarkers,
               ),
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      print(afkCreditAmountController!.text.isNotEmpty);
-                      print(nameController!.text.isNotEmpty);
-                      print(selectedQuestType != null);
-                      print(descriptionController!.text.isNotEmpty);
-                      print(model.getAFKMarkers.isNotEmpty);
-                      if (afkCreditAmountController!.text.isNotEmpty &&
-                          nameController!.text.isNotEmpty &&
-                          selectedQuestType != null &&
-                          descriptionController!.text.isNotEmpty &&
-                          model.getAFKMarkers.isNotEmpty) {
-                        afkCreditAmount =
-                            num.parse(afkCreditAmountController!.text);
-                        var id = Uuid();
-                        questId = id.v1().toString().replaceAll('-', '');
-                        await model.createQuest(
-                          quest: Quest(
-                              id: questId!,
-                              startMarker: model.getAFKMarkers.first,
-                              finishMarker: model.getAFKMarkers.last,
-                              name: nameController!.text.toString(),
-                              description:
-                                  descriptionController!.text.toString(),
-                              type: selectedQuestType ?? QuestType.QRCodeHike,
-                              markers: model.getAFKMarkers,
-                              afkCredits: afkCreditAmount!),
-                        );
-                        model.resetMarkersValues();
+            verticalSpaceSmall,
+            CustomAFKButton(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainButtonTitle: 'Add',
+              secundaryButtonTitle: 'Cancel',
+              onSecondaryButtonTapped: () {
+                {
+                  model.resetMarkersValues();
+                  model.navBackToPreviousView();
+                }
+              },
+              onMainButtonTapped: () async {
+                if (afkCreditAmountController!.text.isNotEmpty &&
+                    nameController!.text.isNotEmpty &&
+                    //selectedQuestType!.name.isNotEmpty &&
+                    descriptionController!.text.isNotEmpty) {
+                  afkCreditAmount = num.parse(afkCreditAmountController!.text);
+                  var id = Uuid();
+                  questId = id.v1().toString().replaceAll('-', '');
+                  await model.createQuest(
+                    quest: Quest(
+                        id: questId!,
+                        startMarker: model.getAFKMarkers.first,
+                        finishMarker: model.getAFKMarkers.last,
+                        name: nameController!.text.toString(),
+                        description: descriptionController!.text.toString(),
+                        type: selectedQuestType ?? QuestType.QRCodeHike,
+                        markers: model.getAFKMarkers,
+                        afkCredits: afkCreditAmount!),
+                  );
 
-                        //Clear Controllers
-                        nameController!.clear();
-                        questTypeController!.clear();
-                        afkCreditAmountController!.clear();
-                        descriptionController!.clear();
-                      } else {
-                        model.displayEmptyTextsSnackBar();
-                      }
-                    },
-                    icon: const Icon(Icons
-                        .addchart), //completer(DialogResponse(confirmed: true)),
-                    label: const Text(
-                      'Add',
-                    ),
-                  ),
-                  horizontalSpaceSmall,
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      model.resetMarkersValues();
-                      model.navBackToPreviousView();
-                    },
-                    icon: const Icon(Icons.cancel),
-                    label: const Text(
-                      "Cancel",
-                    ),
-                  ),
-                ],
-              ),
-            )
+                  model.resetMarkersValues();
+                  //Clear Controllers
+                  nameController!.clear();
+                  questTypeController!.clear();
+                  afkCreditAmountController!.clear();
+                  descriptionController!.clear();
+                  model.navBackToPreviousView();
+                } else {
+                  model.displayEmptyTextsSnackBar();
+                }
+              },
+            ),
           ],
         ),
       ),

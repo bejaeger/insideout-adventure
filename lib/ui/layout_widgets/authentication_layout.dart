@@ -90,13 +90,14 @@ class AuthenticationLayout extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
-                    onTap: onForgotPassword,
-                    child: Text(
-                      'Forget Password?',
-                      style: textTheme(context).bodyText2!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    )),
+                  onTap: onForgotPassword,
+                  child: Text(
+                    'Forget Password?',
+                    style: textTheme(context).bodyText2!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
               ),
             verticalSpaceRegular,
             if (validationMessage != null)

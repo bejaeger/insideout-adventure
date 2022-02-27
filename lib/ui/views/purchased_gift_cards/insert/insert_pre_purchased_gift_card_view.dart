@@ -8,6 +8,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../utils/currency/format_currency.dart';
+import '../../../layout_widgets/buttons_layouts.dart';
 import 'insert_pre_purchased_gift_card_view.form.dart';
 import 'insert_pre_purchased_gift_card_viewmodel.dart';
 
@@ -73,7 +74,7 @@ class InsertGiftCard extends StatelessWidget {
   String? giftCardId;
   // String? afkCreditId;
   double? giftCardAmount;
-  int? giftCardCode;
+  String? giftCardCode;
   final formatCurrency = FormatCurrency();
   @override
   Widget build(BuildContext context) {
@@ -126,46 +127,31 @@ class InsertGiftCard extends StatelessWidget {
                       },
                     ),
                     verticalSpaceMedium,
-                    Row(
+                    CustomAFKButton(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () async {
-                            if (giftCardCodeController!.text.isNotEmpty &&
-                                giftCardCodeController!.text.length == 16) {
-                              var id = Uuid();
-                              giftCardCode =
-                                  int.parse(giftCardCodeController!.text);
-                              giftCardId =
-                                  id.v1().toString().replaceAll('-', '');
-                              model!.insertPrePurchasedGiftCard(
-                                prePurchasedGiftCard: PrePurchasedGiftCard(
-                                    id: giftCardId!,
-                                    categoryId: categoryId!,
-                                    giftCardCode: giftCardCode.toString(),
-                                    categoryName: selectedGiftCardType!),
-                              );
-                            } else {
-                              model!.emptyTextFields();
-                            }
-                            model!.navBackToPreviousView();
-                          },
-                          icon: const Icon(Icons.add_box),
-                          label: const Text(
-                            "add  ",
-                          ),
-                        ),
-                        horizontalSpaceSmall,
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            model!.navBackToPreviousView();
-                          },
-                          icon: const Icon(Icons.cancel),
-                          label: const Text(
-                            "Cancel",
-                          ),
-                        ),
-                      ],
+                      mainButtonTitle: 'Add',
+                      secundaryButtonTitle: 'Cancel',
+                      onMainButtonTapped: () {
+                        if (giftCardCodeController!.text.isNotEmpty &&
+                            giftCardCodeController!.text.length == 16) {
+                          var id = Uuid();
+                          giftCardCode = giftCardCodeController!.text;
+                          giftCardId = id.v1().toString().replaceAll('-', '');
+                          model!.insertPrePurchasedGiftCard(
+                            prePurchasedGiftCard: PrePurchasedGiftCard(
+                                id: giftCardId!,
+                                categoryId: categoryId!,
+                                giftCardCode: giftCardCode!,
+                                categoryName: selectedGiftCardType!),
+                          );
+                        } else {
+                          model!.emptyTextFields();
+                        }
+                        model!.navBackToPreviousView();
+                      },
+                      onSecondaryButtonTapped: () {
+                        model!.navBackToPreviousView();
+                      },
                     ),
                   ],
                 ),
