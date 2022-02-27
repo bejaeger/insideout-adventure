@@ -20,7 +20,7 @@ class CreditsAmount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 24,
+      height: 22,
       alignment: Alignment.center,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,7 +30,7 @@ class CreditsAmount extends StatelessWidget {
           Text(
             amountString ?? amount.toStringAsFixed(0),
             style: textTheme(context).bodyText2!.copyWith(
-                color: color, fontSize: 24, fontWeight: FontWeight.w400),
+                color: color, fontSize: 22, fontWeight: FontWeight.w400),
           ),
         ],
       ),

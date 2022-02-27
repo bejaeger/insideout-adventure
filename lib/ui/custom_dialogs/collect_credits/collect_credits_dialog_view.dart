@@ -59,8 +59,6 @@ class _BasicDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("------------------------------------");
-    print(model.status);
     return Stack(
       children: [
         AnimatedOpacity(

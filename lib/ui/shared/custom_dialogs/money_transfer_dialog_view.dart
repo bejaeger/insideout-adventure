@@ -23,7 +23,11 @@ class MoneyTransferDialogView extends StatelessWidget {
       onModelReady: (model) => model.waitForTransfer(request: request),
       builder: (context, model, child) => Dialog(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
         child: _BasicDialogContent(
           request: request,
           completer: completer,
@@ -50,8 +54,8 @@ class _BasicDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      if (!model.isBusy) ...[
+    return Stack(
+      children: [
         AnimatedOpacity(
           duration: Duration(milliseconds: 500),
           opacity: model.isBusy ? 0.0 : 1.0,
@@ -125,17 +129,26 @@ class _BasicDialogContent extends StatelessWidget {
             ],
           ),
         ),
-      ],
-      if (model.isBusy)
-        Center(
-          child: Container(
-            color: Colors.transparent,
-            width: 50,
-            height: 50,
-            child: CircularProgressIndicator(),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.center,
+            child: AnimatedOpacity(
+              duration: Duration(milliseconds: 50),
+              opacity: model.isBusy ? 1.0 : 0.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: kPrimaryColor),
+                  verticalSpaceMedium,
+                  Text("Processing...", style: textTheme(context).headline6),
+                ],
+              ),
+            ),
           ),
         ),
-    ]);
+      ],
+    );
   }
 
   Color _getStatusColor(TransferDialogStatus? status) {

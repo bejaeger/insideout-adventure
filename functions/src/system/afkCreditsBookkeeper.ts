@@ -127,6 +127,45 @@ export class AFKCreditsBookkeeper {
 
   }
 
+  // update Statistics when a quest has been finished by user with uid uid
+  async updateStatsOnScreenTimePurchase(transaction: any, uid: string, amount: number, hours: number) {
+    log("Entering updateStatsOnScreenTimePurchase()");
+
+    // fetch documents
+    const userDocRef = this.dbManager.getUserSummaryStatisticsDocument(uid);
+    const userDoc = await transaction.get(userDocRef);
+    // validate documents
+    if (!userDoc.exists) {
+      throw Error('Summary statistics document or global stats document does not exist');
+    }
+    const userStats = userDoc.data();
+
+    const afkCreditsToDeduct = this.kCentsToAfkCreditsConversionFactor * amount;
+
+    // ! This check is crucual!
+    if (userStats != null) {
+      log('Fetched user statistics document');
+      // Validate request (validate whether current amount of GW is enough)
+      if (!this.hasEnoughAFKCredits(userStats["afkCreditsBalance"], afkCreditsToDeduct)) {
+        throw Error(`Current AFK Credits balance is not enough to buy screen time.`);
+      }
+    } else {
+      throw Error("No data in summary statistics document!");
+    }
+
+    // Check whether screen card is already available or needs to be provided manually!
+    const increment = admin.firestore.FieldValue.increment(afkCreditsToDeduct);
+    const incrementHours = admin.firestore.FieldValue.increment(hours);
+    const decrement = admin.firestore.FieldValue.increment(-afkCreditsToDeduct);
+    const docRefRecipient = this.dbManager.getUserSummaryStatisticsDocument(uid);
+    transaction.update(docRefRecipient, {
+      afkCreditsBalance: decrement, // increment afk credits balance
+      afkCreditsSpent: increment, // increment lifetime earnings
+      numberScreenTimeHoursPurchased: incrementHours,  // increment number of quests completed
+    });
+
+  }
+
   ///////////////////////////////////////////////////////////////
   // Helper and validating functions
 

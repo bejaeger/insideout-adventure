@@ -58,7 +58,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
                           child: Icon(Icons.menu,
-                              color: kWhiteTextColor, size: 35),
+                              color: kWhiteTextColor, size: 30),
                         ),
                       ),
                     ),

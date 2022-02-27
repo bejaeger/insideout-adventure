@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express";
 import { Post } from "firebase-backend";
 import { AFKCreditsBookkeeper } from "../../system/afkCreditsBookkeeper";
@@ -47,7 +46,6 @@ export default new Post((request: Request, response: Response) => {
             const amount = giftCardCategory["amount"];
             const categoryId = giftCardCategory["categoryId"];
 
-
             try {
                 await db.runTransaction(async (t: any) => {
                     const response: any = await giftCardManager.checkForPrepaidGiftCard(t, categoryId);
@@ -65,7 +63,7 @@ export default new Post((request: Request, response: Response) => {
                     } else {
                         returnData["needToProvideGiftCard"] = true;
                         data["status"] = "pending";
-
+                        data["code"] = "";
                     }
                     t.set(docRef, data);
                 });

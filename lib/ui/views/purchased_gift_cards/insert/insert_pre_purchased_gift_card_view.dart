@@ -142,7 +142,7 @@ class InsertGiftCard extends StatelessWidget {
                                 prePurchasedGiftCard: PrePurchasedGiftCard(
                                     id: giftCardId!,
                                     categoryId: categoryId!,
-                                    giftCardCode: giftCardCode!,
+                                    giftCardCode: giftCardCode.toString(),
                                     categoryName: selectedGiftCardType!),
                               );
                             } else {

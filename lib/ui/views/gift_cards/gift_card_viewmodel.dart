@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase_success_result/gift_card_purchase_success_result.dart';
 import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/money_transfer_dialog_status.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
@@ -14,21 +16,25 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class GiftCardViewModel extends BaseModel {
   final SnackbarService? _snackbarService = locator<SnackbarService>();
 
   final _giftCardService = locator<GiftCardService>();
-
+  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
   final _dialogService = locator<DialogService>();
   final BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
 
   List<GiftCardCategory> getGiftCardCategories({required String categoryName}) {
     return _giftCardService.getGiftCards(categoryName: categoryName);
+  }
+
+  List<ScreenTimePurchase> getScreenTimeCategories() {
+    return getDummyScreenTimes(uid: currentUser.uid);
   }
 
   Map<String, List<GiftCardCategory>> get getAllGiftCardCategories =>
@@ -93,6 +99,26 @@ class GiftCardViewModel extends BaseModel {
           setShowBottomNavBar(true);
         }
       }
+    }
+  }
+
+  Future processScreenTimePurchase(
+      ScreenTimePurchase screenTimePurchase) async {
+    // Ask for another final confirmation
+    SheetResponse? finalConfirmation =
+        await _showFinalConfirmationBottomSheetScreenTime(
+            afkCredits: centsToAfkCredits(screenTimePurchase.amount),
+            screenTime: screenTimePurchase.hours);
+
+    if (finalConfirmation?.confirmed == false) {
+      await _showAndAwaitSnackbar("You can come back any time :)");
+      return;
+    } else if (finalConfirmation?.confirmed == true) {
+      setBusy(true);
+      await _screenTimeService.purchaseScreenTime(
+          screenTimePurchase: screenTimePurchase);
+      setBusy(false);
+      return;
     }
   }
 
@@ -167,8 +193,20 @@ class GiftCardViewModel extends BaseModel {
     return await _bottomSheetService!.showBottomSheet(
       barrierDismissible: true,
       title: 'Confirmation',
+      description: "Buy gift card for $afkCredits AFK Credits?",
+      confirmButtonTitle: 'Yes',
+      cancelButtonTitle: 'No',
+    );
+  }
+
+  // bottom sheets
+  Future _showFinalConfirmationBottomSheetScreenTime(
+      {required int afkCredits, required num screenTime}) async {
+    return await _bottomSheetService!.showBottomSheet(
+      barrierDismissible: true,
+      title: 'Confirmation',
       description:
-          "Are you sure you would like buy this gift card for $afkCredits AFK Credits?",
+          "Buy  $screenTime hours of screen time for $afkCredits AFK Credits?",
       confirmButtonTitle: 'Yes',
       cancelButtonTitle: 'No',
     );

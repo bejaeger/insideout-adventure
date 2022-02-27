@@ -11,6 +11,7 @@ import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart'
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
@@ -724,11 +725,36 @@ class FirestoreApi {
     }
   }
 
+  Stream<List<ScreenTimePurchase>> getPurchasedScreenTimesStream(
+      {required String uid}) {
+    try {
+      final returnStream = getUserScreenTimeCollection(uid: uid)
+          .orderBy("purchasedAt", descending: true)
+          .snapshots()
+          .map((event) => event.docs
+              .map((doc) => ScreenTimePurchase.fromJson(doc.data()))
+              .toList());
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message: "Unknown expection when listening to purchased screen times",
+          devDetails: '$e');
+    }
+  }
+
   Future updateGiftCardPurchase(
       {required GiftCardPurchase giftCardPurchase, required String uid}) async {
     getUserGiftCardsCollection(uid: uid)
         .doc(giftCardPurchase.transferId)
         .update(giftCardPurchase.toJson());
+  }
+
+  Future updateScreenTimePurchase(
+      {required ScreenTimePurchase screenTimePurchase,
+      required String uid}) async {
+    getUserScreenTimeCollection(uid: uid)
+        .doc(screenTimePurchase.purchaseId)
+        .update(screenTimePurchase.toJson());
   }
 
   Future<bool> addGiftCardCategory(
@@ -805,4 +831,8 @@ DocumentReference getMarkersDocs({required String markerId}) {
 
 CollectionReference getUserGiftCardsCollection({required String uid}) {
   return usersCollection.doc(uid).collection(purchasedGiftCardsCollectionKey);
+}
+
+CollectionReference getUserScreenTimeCollection({required String uid}) {
+  return usersCollection.doc(uid).collection(purchasedScreenTimeCollectionKey);
 }

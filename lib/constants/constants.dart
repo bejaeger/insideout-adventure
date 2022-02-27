@@ -21,6 +21,7 @@ final String activatedQuestsCollectionKey = "activatedQuests";
 // document keys
 final String userSummaryStatisticsDocumentKey = "summaryStats";
 final String purchasedGiftCardsCollectionKey = "giftcards";
+final String purchasedScreenTimeCollectionKey = "screentime";
 
 // collection references
 final CollectionReference usersCollection =
