@@ -232,6 +232,7 @@ class QuestService with ReactiveServiceMixin {
     _nearbyQuests = [];
     _questToUpdate = null;
     allQuestTypes = [];
+    sortedNearbyQuests = false;
     _pastQuestsStreamSubscription?.cancel();
     _pastQuestsStreamSubscription = null;
   }

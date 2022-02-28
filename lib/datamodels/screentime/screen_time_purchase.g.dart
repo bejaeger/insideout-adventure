@@ -12,10 +12,10 @@ _$_ScreenTimePurchase _$$_ScreenTimePurchaseFromJson(
       purchaseId: json['purchaseId'] as String,
       uid: json['uid'] as String,
       purchasedAt: json['purchasedAt'] ?? '',
-      redeemedAt: json['redeemedAt'] ?? '',
+      activatedOn: json['activatedOn'] ?? '',
       hours: json['hours'] as num,
       status: $enumDecode(_$ScreenTimeVoucherStatusEnumMap, json['status']),
-      amount: json['amount'] as int,
+      amount: (json['amount'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$$_ScreenTimePurchaseToJson(
@@ -24,7 +24,7 @@ Map<String, dynamic> _$$_ScreenTimePurchaseToJson(
       'purchaseId': instance.purchaseId,
       'uid': instance.uid,
       'purchasedAt': instance.purchasedAt,
-      'redeemedAt': instance.redeemedAt,
+      'activatedOn': instance.activatedOn,
       'hours': instance.hours,
       'status': _$ScreenTimeVoucherStatusEnumMap[instance.status],
       'amount': instance.amount,
@@ -33,4 +33,5 @@ Map<String, dynamic> _$$_ScreenTimePurchaseToJson(
 const _$ScreenTimeVoucherStatusEnumMap = {
   ScreenTimeVoucherStatus.used: 'used',
   ScreenTimeVoucherStatus.unused: 'unused',
+  ScreenTimeVoucherStatus.active: 'active',
 };

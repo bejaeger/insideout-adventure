@@ -37,6 +37,12 @@ void mainCommon(Flavor flavor) async {
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();
     }
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: kPrimaryColor,
+        systemNavigationBarColor: kBlackHeadlineColor,
+      ),
+    );
 
     setupLocator();
     setupDialogUi();

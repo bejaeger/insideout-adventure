@@ -83,6 +83,10 @@ class _BottomBarLayoutTemplateViewState
                 true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
             backgroundColor: kPrimaryColor, // Default is Colors.white.
             decoration: NavBarDecoration(
+              // gradient: LinearGradient(
+              //     colors: [kPrimaryColor, kDarkTurquoise],
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter),
               boxShadow: [
                 BoxShadow(
                   color: kShadowColor,

@@ -45,12 +45,12 @@ class GiftCardViewModel extends BaseModel {
   // Displays dialog with gift card info
   // If user selects 'purchase' a GiftCardPurchase object is created
   // and parsesd to the giftcardservice where the purchase is further processed
-  Future displayGiftCardDialogAndProcessPurchase(
-      GiftCardCategory giftCard) async {
+  Future handleGiftCardPurchase(GiftCardCategory giftCard) async {
     DialogResponse? dialogResponse = await _dialogService.showCustomDialog(
-        variant: DialogType.PurchaseGiftCards,
+        variant: DialogType.PurchaseGiftCard,
         data: giftCard,
         mainButtonTitle: 'Purchase',
+        barrierDismissible: true,
         secondaryButtonTitle: 'Cancel');
 
     if (dialogResponse?.confirmed == true) {
@@ -79,7 +79,7 @@ class GiftCardViewModel extends BaseModel {
         // in _processsPayment.
         var purchaseCompleter = Completer<TransferDialogStatus>();
         try {
-          _processPayment(purchaseCompleter, giftCard);
+          _processGiftCardPayment(purchaseCompleter, giftCard);
         } catch (e) {
           log.wtf(
               "Something very mysterious went wrong when purchasing gift card, error thrown: $e");
@@ -94,35 +94,70 @@ class GiftCardViewModel extends BaseModel {
                 await purchaseCompleter.future !=
                     TransferDialogStatus.warning)) {
           log.i("Navigating to purchased gift card view");
-          setShowBottomNavBar(false);
           await navigationService.navigateTo(Routes.purchasedGiftCardsView);
-          setShowBottomNavBar(true);
         }
       }
     }
   }
 
-  Future processScreenTimePurchase(
-      ScreenTimePurchase screenTimePurchase) async {
-    // Ask for another final confirmation
-    SheetResponse? finalConfirmation =
-        await _showFinalConfirmationBottomSheetScreenTime(
-            afkCredits: centsToAfkCredits(screenTimePurchase.amount),
-            screenTime: screenTimePurchase.hours);
+  Future handleScreenTimePurchase(ScreenTimePurchase screenTimePurchase) async {
+    DialogResponse? dialogResponse = await _dialogService.showCustomDialog(
+        variant: DialogType.PurchaseScreenTime,
+        data: screenTimePurchase,
+        mainButtonTitle: 'Purchase',
+        barrierDismissible: true,
+        secondaryButtonTitle: 'Cancel');
 
-    if (finalConfirmation?.confirmed == false) {
-      await _showAndAwaitSnackbar("You can come back any time :)");
-      return;
-    } else if (finalConfirmation?.confirmed == true) {
-      setBusy(true);
-      await _screenTimeService.purchaseScreenTime(
-          screenTimePurchase: screenTimePurchase);
-      setBusy(false);
-      return;
+    if (dialogResponse?.confirmed == true) {
+      // Make quick check if available AFK Credits are enough
+      if (!hasEnoughBalance(screenTimePurchase.amount)) {
+        await _dialogService.showDialog(
+            title: "You don't have enough AFK Credits",
+            description: "Continue earning ;)");
+        return;
+      }
+
+      // Ask for another final confirmation
+      SheetResponse? finalConfirmation =
+          await _showFinalConfirmationBottomSheetScreenTime(
+              afkCredits: centsToAfkCredits(screenTimePurchase.amount),
+              screenTime: screenTimePurchase.hours);
+
+      if (finalConfirmation?.confirmed == false) {
+        await _showAndAwaitSnackbar("You can come back any time :)");
+        return;
+      } else if (finalConfirmation?.confirmed == true) {
+        // -----------------------------------------------------
+        // We create a completer and parse it to the pop-up window.
+        // The pop-up window shows a progress indicator and
+        // displays a success or error dialog when the completer is completed
+        // in _processsPayment.
+        var purchaseCompleter = Completer<TransferDialogStatus>();
+        try {
+          _processScreenTimePayment(purchaseCompleter, screenTimePurchase);
+        } catch (e) {
+          log.wtf(
+              "Something very mysterious went wrong when purchasing gift card, error thrown: $e");
+          purchaseCompleter.complete(TransferDialogStatus.error);
+        }
+        dynamic dialogResult = await _showMoneyTransferDialog(
+            moneyTransferCompleter: purchaseCompleter,
+            type: TransferType.ScreenTimePurchase);
+
+        if (dialogResult?.confirmed == true &&
+            (await purchaseCompleter.future != TransferDialogStatus.error ||
+                await purchaseCompleter.future !=
+                    TransferDialogStatus.warning)) {
+          log.i("Navigating to purchased screen time view");
+          await navigationService.navigateTo(Routes.purchasedScreenTimeView);
+        }
+        return;
+      }
     }
   }
 
-  Future _processPayment(Completer<TransferDialogStatus> purchaseCompleter,
+  Future _processGiftCardPayment(
+      Completer<TransferDialogStatus> purchaseCompleter,
       GiftCardCategory giftCard) async {
     // FOR now, implemented dummy payment processing here
     try {
@@ -137,6 +172,31 @@ class GiftCardViewModel extends BaseModel {
       } else {
         purchaseCompleter.complete(TransferDialogStatus.success);
       }
+    } catch (e) {
+      log.e("Error when processing gift card purchase, error thrown $e");
+      if (e is MoneyTransferException) {
+        purchaseCompleter.complete(TransferDialogStatus.error);
+      } else if (e is UserServiceException) {
+        purchaseCompleter.complete(TransferDialogStatus.error);
+      } else if (e is FirestoreApiException) {
+        purchaseCompleter.complete(TransferDialogStatus.error);
+      } else {
+        rethrow;
+      }
+      return;
+    }
+  }
+
+  Future _processScreenTimePayment(
+      Completer<TransferDialogStatus> purchaseCompleter,
+      ScreenTimePurchase screenTimePurchase) async {
+    // FOR now, implemented dummy payment processing here
+    try {
+      await _screenTimeService.purchaseScreenTime(
+          screenTimePurchase: screenTimePurchase);
+      log.i("screen time purchased: $screenTimePurchase");
+      // the completion event will be listened to in the pop-up dialog
+      purchaseCompleter.complete(TransferDialogStatus.success);
     } catch (e) {
       log.e("Error when processing gift card purchase, error thrown $e");
       if (e is MoneyTransferException) {

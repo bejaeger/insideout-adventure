@@ -1,1 +1,1 @@
-enum ScreenTimeVoucherStatus { used, unused }
+enum ScreenTimeVoucherStatus { used, unused, active }

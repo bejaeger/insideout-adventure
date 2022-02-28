@@ -29,7 +29,7 @@ List<Quest> getDummyQuests() {
     // getDummyQuest1(),
     // getDummyQuest3(),
     // getDummyQuest5(),
-    getDummyQuest6(),
+    // getDummyQuest6(),
   ];
 }
 

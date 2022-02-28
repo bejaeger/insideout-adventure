@@ -1,24 +1,28 @@
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'raised_purchased_dialog_viewmodel.dart';
+import 'package:transparent_image/transparent_image.dart';
+import 'reward_purchase_dialog_viewmodel.dart';
 
-class RaisedPurchasedDialogView extends StatelessWidget {
+class RewardPurchaseDialogView extends StatelessWidget {
   final DialogRequest request;
   final Function(DialogResponse) completer;
-  const RaisedPurchasedDialogView({
+  final bool isScreenTime;
+  const RewardPurchaseDialogView({
     Key? key,
     required this.request,
     required this.completer,
+    required this.isScreenTime,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<RaisedPurchasedDialogViewModel>.reactive(
+    return ViewModelBuilder<RewardPurchaseDialogViewModel>.reactive(
       builder: (context, model, child) => Dialog(
         elevation: 5,
         insetPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
@@ -32,10 +36,15 @@ class RaisedPurchasedDialogView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if (request.data.imageUrl != null)
+              if (isScreenTime ||
+                  (!isScreenTime && request.data?.imageUrl != null))
                 Center(
-                  child: Image.network(
-                    request.data.imageUrl!,
+                  child: FadeInImage.memoryNetwork(
+                    fadeInDuration: Duration(milliseconds: 200),
+                    placeholder: kTransparentImage,
+                    image: isScreenTime
+                        ? kScreenTimeImageUrl
+                        : request.data.imageUrl!,
                     height: 150,
                     //fit: BoxFit.fill,
                   ),
@@ -43,10 +52,12 @@ class RaisedPurchasedDialogView extends StatelessWidget {
               verticalSpaceSmall,
               Center(
                 child: Text(
-                  formatAmount(request.data.amount) +
-                      " " +
-                      request.data.categoryName.toString() +
-                      " gift card",
+                  isScreenTime
+                      ? "Voucher for ${request.data.hours} hours screen time"
+                      : formatAmount(request.data.amount) +
+                          " " +
+                          request.data.categoryName.toString() +
+                          " gift card",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -103,7 +114,7 @@ class RaisedPurchasedDialogView extends StatelessWidget {
           ),
         ),
       ),
-      viewModelBuilder: () => RaisedPurchasedDialogViewModel(),
+      viewModelBuilder: () => RewardPurchaseDialogViewModel(),
     );
   }
 }

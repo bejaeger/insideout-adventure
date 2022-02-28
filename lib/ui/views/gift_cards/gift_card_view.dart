@@ -47,7 +47,7 @@ class GiftCardView extends StatelessWidget {
                         ScreenTimeVoucherList(
                           screenTimeVoucherList:
                               model.getScreenTimeCategories(),
-                          onPressed: model.processScreenTimePurchase,
+                          onPressed: model.handleScreenTimePurchase,
                         ),
                         verticalSpaceLarge,
                         Text("GIFT CARDS",
@@ -61,8 +61,8 @@ class GiftCardView extends StatelessWidget {
                                 children: [
                                   GiftCardsSection(
                                       giftCards: e,
-                                      onGiftCardTap: model
-                                          .displayGiftCardDialogAndProcessPurchase),
+                                      onGiftCardTap:
+                                          model.handleGiftCardPurchase),
                                 ],
                               ),
                             )

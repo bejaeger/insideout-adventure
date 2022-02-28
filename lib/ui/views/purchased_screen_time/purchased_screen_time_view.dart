@@ -3,6 +3,7 @@ import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/ui/views/purchased_screen_time/purchased_screen_time_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/empty_note.dart';
+import 'package:afkcredits/ui/widgets/screen_time_voucher.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -30,7 +31,8 @@ class PurchasedScreenTimeView extends StatelessWidget {
                   child: ScreenTimeCardsList(
                     onBuyScreenTimePressed: model.navigateToScreenTimeView,
                     screenTimeVouchers: model.purchasedScreenTime,
-                    onRedeemedPressed: model.onRedeemedPressed,
+                    onTap: model.onActivatePressed,
+                    onSeeVoucherTap: model.onVoucherTap,
                   ),
                 ),
         ),
@@ -41,14 +43,17 @@ class PurchasedScreenTimeView extends StatelessWidget {
 
 class ScreenTimeCardsList extends StatelessWidget {
   final List<ScreenTimePurchase> screenTimeVouchers;
-  final void Function(ScreenTimePurchase) onRedeemedPressed;
+  final Future Function(ScreenTimePurchase, bool) onTap;
   final void Function() onBuyScreenTimePressed;
-  ScreenTimeCardsList({
-    Key? key,
-    required this.screenTimeVouchers,
-    required this.onRedeemedPressed,
-    required this.onBuyScreenTimePressed,
-  }) : super(key: key);
+  final void Function(ScreenTimePurchase) onSeeVoucherTap;
+
+  ScreenTimeCardsList(
+      {Key? key,
+      required this.screenTimeVouchers,
+      required this.onTap,
+      required this.onBuyScreenTimePressed,
+      required this.onSeeVoucherTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,41 +78,14 @@ class ScreenTimeCardsList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   verticalSpaceRegular,
-                  ScreenTimePurchasePreview(
+                  ScreenTimeVoucher(
                     screenTimeVoucher: screenTimeVouchers[index],
-                    onTap: onRedeemedPressed,
+                    onTap: onTap,
+                    onSeeVoucherTap: onSeeVoucherTap,
                   ),
                 ],
               );
             },
           );
-  }
-}
-
-class ScreenTimePurchasePreview extends StatelessWidget {
-  final ScreenTimePurchase screenTimeVoucher;
-  final void Function(ScreenTimePurchase) onTap;
-
-  const ScreenTimePurchasePreview(
-      {Key? key, required this.screenTimeVoucher, required this.onTap})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        width: screenWidth(context, percentage: 0.8),
-        height: 150,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("You have"),
-            Text(screenTimeVoucher.hours.toString(),
-                style: textTheme(context).headline4),
-            Text("hours of screen time"),
-          ],
-        ),
-      ),
-    );
   }
 }

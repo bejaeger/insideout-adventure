@@ -50,17 +50,18 @@ class ScreenTimeService {
     }
   }
 
-  Future switchScreenTimeStatus(
-      {required ScreenTimePurchase screenTimePurchase,
-      required String uid}) async {
-    ScreenTimeVoucherStatus newStatus = screenTimePurchase.status;
+  Future switchScreenTimeStatus({
+    required ScreenTimePurchase screenTimePurchase,
+    required ScreenTimeVoucherStatus newStatus,
+    required String uid,
+  }) async {
     log.i("Switching status of screen time to $newStatus");
-    ScreenTimePurchase newScreenTimePurchase = purchasedScreenTimeVouchers
-        .where((element) => element.purchaseId == screenTimePurchase.purchaseId)
-        .first
-        .copyWith(status: newStatus);
-    _firestoreApi.updateScreenTimePurchase(
-        screenTimePurchase: newScreenTimePurchase, uid: uid);
+    ScreenTimePurchase newScreenTimePurchase =
+        screenTimePurchase.copyWith(status: newStatus);
+    await _firestoreApi.updateScreenTimePurchase(
+        screenTimePurchase: newScreenTimePurchase,
+        newStatus: newStatus,
+        uid: uid);
   }
 
   Future purchaseScreenTime(

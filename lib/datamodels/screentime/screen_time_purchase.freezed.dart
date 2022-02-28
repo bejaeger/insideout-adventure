@@ -25,15 +25,15 @@ class _$ScreenTimePurchaseTearOff {
       {required String purchaseId,
       required String uid,
       dynamic purchasedAt = "",
-      dynamic redeemedAt = "",
+      dynamic activatedOn = "",
       required num hours,
       required ScreenTimeVoucherStatus status,
-      required int amount}) {
+      required double amount}) {
     return _ScreenTimePurchase(
       purchaseId: purchaseId,
       uid: uid,
       purchasedAt: purchasedAt,
-      redeemedAt: redeemedAt,
+      activatedOn: activatedOn,
       hours: hours,
       status: status,
       amount: amount,
@@ -53,10 +53,10 @@ mixin _$ScreenTimePurchase {
   String get purchaseId => throw _privateConstructorUsedError;
   String get uid => throw _privateConstructorUsedError;
   dynamic get purchasedAt => throw _privateConstructorUsedError;
-  dynamic get redeemedAt => throw _privateConstructorUsedError;
+  dynamic get activatedOn => throw _privateConstructorUsedError;
   num get hours => throw _privateConstructorUsedError;
   ScreenTimeVoucherStatus get status => throw _privateConstructorUsedError;
-  int get amount => throw _privateConstructorUsedError;
+  double get amount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -73,10 +73,10 @@ abstract class $ScreenTimePurchaseCopyWith<$Res> {
       {String purchaseId,
       String uid,
       dynamic purchasedAt,
-      dynamic redeemedAt,
+      dynamic activatedOn,
       num hours,
       ScreenTimeVoucherStatus status,
-      int amount});
+      double amount});
 }
 
 /// @nodoc
@@ -93,7 +93,7 @@ class _$ScreenTimePurchaseCopyWithImpl<$Res>
     Object? purchaseId = freezed,
     Object? uid = freezed,
     Object? purchasedAt = freezed,
-    Object? redeemedAt = freezed,
+    Object? activatedOn = freezed,
     Object? hours = freezed,
     Object? status = freezed,
     Object? amount = freezed,
@@ -111,9 +111,9 @@ class _$ScreenTimePurchaseCopyWithImpl<$Res>
           ? _value.purchasedAt
           : purchasedAt // ignore: cast_nullable_to_non_nullable
               as dynamic,
-      redeemedAt: redeemedAt == freezed
-          ? _value.redeemedAt
-          : redeemedAt // ignore: cast_nullable_to_non_nullable
+      activatedOn: activatedOn == freezed
+          ? _value.activatedOn
+          : activatedOn // ignore: cast_nullable_to_non_nullable
               as dynamic,
       hours: hours == freezed
           ? _value.hours
@@ -126,7 +126,7 @@ class _$ScreenTimePurchaseCopyWithImpl<$Res>
       amount: amount == freezed
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
     ));
   }
 }
@@ -142,10 +142,10 @@ abstract class _$ScreenTimePurchaseCopyWith<$Res>
       {String purchaseId,
       String uid,
       dynamic purchasedAt,
-      dynamic redeemedAt,
+      dynamic activatedOn,
       num hours,
       ScreenTimeVoucherStatus status,
-      int amount});
+      double amount});
 }
 
 /// @nodoc
@@ -164,7 +164,7 @@ class __$ScreenTimePurchaseCopyWithImpl<$Res>
     Object? purchaseId = freezed,
     Object? uid = freezed,
     Object? purchasedAt = freezed,
-    Object? redeemedAt = freezed,
+    Object? activatedOn = freezed,
     Object? hours = freezed,
     Object? status = freezed,
     Object? amount = freezed,
@@ -182,9 +182,9 @@ class __$ScreenTimePurchaseCopyWithImpl<$Res>
           ? _value.purchasedAt
           : purchasedAt // ignore: cast_nullable_to_non_nullable
               as dynamic,
-      redeemedAt: redeemedAt == freezed
-          ? _value.redeemedAt
-          : redeemedAt // ignore: cast_nullable_to_non_nullable
+      activatedOn: activatedOn == freezed
+          ? _value.activatedOn
+          : activatedOn // ignore: cast_nullable_to_non_nullable
               as dynamic,
       hours: hours == freezed
           ? _value.hours
@@ -197,7 +197,7 @@ class __$ScreenTimePurchaseCopyWithImpl<$Res>
       amount: amount == freezed
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
     ));
   }
 }
@@ -209,7 +209,7 @@ class _$_ScreenTimePurchase implements _ScreenTimePurchase {
       {required this.purchaseId,
       required this.uid,
       this.purchasedAt = "",
-      this.redeemedAt = "",
+      this.activatedOn = "",
       required this.hours,
       required this.status,
       required this.amount});
@@ -226,17 +226,17 @@ class _$_ScreenTimePurchase implements _ScreenTimePurchase {
   final dynamic purchasedAt;
   @JsonKey(defaultValue: "")
   @override
-  final dynamic redeemedAt;
+  final dynamic activatedOn;
   @override
   final num hours;
   @override
   final ScreenTimeVoucherStatus status;
   @override
-  final int amount;
+  final double amount;
 
   @override
   String toString() {
-    return 'ScreenTimePurchase(purchaseId: $purchaseId, uid: $uid, purchasedAt: $purchasedAt, redeemedAt: $redeemedAt, hours: $hours, status: $status, amount: $amount)';
+    return 'ScreenTimePurchase(purchaseId: $purchaseId, uid: $uid, purchasedAt: $purchasedAt, activatedOn: $activatedOn, hours: $hours, status: $status, amount: $amount)';
   }
 
   @override
@@ -251,9 +251,9 @@ class _$_ScreenTimePurchase implements _ScreenTimePurchase {
             (identical(other.purchasedAt, purchasedAt) ||
                 const DeepCollectionEquality()
                     .equals(other.purchasedAt, purchasedAt)) &&
-            (identical(other.redeemedAt, redeemedAt) ||
+            (identical(other.activatedOn, activatedOn) ||
                 const DeepCollectionEquality()
-                    .equals(other.redeemedAt, redeemedAt)) &&
+                    .equals(other.activatedOn, activatedOn)) &&
             (identical(other.hours, hours) ||
                 const DeepCollectionEquality().equals(other.hours, hours)) &&
             (identical(other.status, status) ||
@@ -268,7 +268,7 @@ class _$_ScreenTimePurchase implements _ScreenTimePurchase {
       const DeepCollectionEquality().hash(purchaseId) ^
       const DeepCollectionEquality().hash(uid) ^
       const DeepCollectionEquality().hash(purchasedAt) ^
-      const DeepCollectionEquality().hash(redeemedAt) ^
+      const DeepCollectionEquality().hash(activatedOn) ^
       const DeepCollectionEquality().hash(hours) ^
       const DeepCollectionEquality().hash(status) ^
       const DeepCollectionEquality().hash(amount);
@@ -289,10 +289,10 @@ abstract class _ScreenTimePurchase implements ScreenTimePurchase {
       {required String purchaseId,
       required String uid,
       dynamic purchasedAt,
-      dynamic redeemedAt,
+      dynamic activatedOn,
       required num hours,
       required ScreenTimeVoucherStatus status,
-      required int amount}) = _$_ScreenTimePurchase;
+      required double amount}) = _$_ScreenTimePurchase;
 
   factory _ScreenTimePurchase.fromJson(Map<String, dynamic> json) =
       _$_ScreenTimePurchase.fromJson;
@@ -304,13 +304,13 @@ abstract class _ScreenTimePurchase implements ScreenTimePurchase {
   @override
   dynamic get purchasedAt => throw _privateConstructorUsedError;
   @override
-  dynamic get redeemedAt => throw _privateConstructorUsedError;
+  dynamic get activatedOn => throw _privateConstructorUsedError;
   @override
   num get hours => throw _privateConstructorUsedError;
   @override
   ScreenTimeVoucherStatus get status => throw _privateConstructorUsedError;
   @override
-  int get amount => throw _privateConstructorUsedError;
+  double get amount => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$ScreenTimePurchaseCopyWith<_ScreenTimePurchase> get copyWith =>

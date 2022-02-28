@@ -3,7 +3,7 @@ enum DialogType {
   Stats,
   MoneyTransfer,
   Onboarding,
-  PurchaseGiftCards,
+  PurchaseGiftCard,
   CollectCredits,
   CheckTravelledDistance,
   CollectedMarker,
@@ -12,4 +12,5 @@ enum DialogType {
   SuperUserSettings,
   CheckpointInArea,
   QrCodeInArea,
+  PurchaseScreenTime,
 }

@@ -146,10 +146,6 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: GamificationService),
     LazySingleton(classType: MapsService),
     //LazySingleton(classType: MarkersInMap),
-    LazySingleton(classType: PurchasedGiftCardsViewModel),
-    LazySingleton(classType: ActiveTreasureLocationSearchQuestViewModel),
-    LazySingleton(classType: ActiveDistanceEstimateQuestViewModel),
-    // LazySingleton(classType: ActiveQrCodeSearchViewModel),
 
     // Services
   ],

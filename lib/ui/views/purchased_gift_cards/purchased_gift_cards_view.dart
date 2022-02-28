@@ -18,8 +18,7 @@ class PurchasedGiftCardsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<PurchasedGiftCardsViewModel>.reactive(
       onModelReady: (model) => model.listenToData(),
-      disposeViewModel: false,
-      viewModelBuilder: () => locator<PurchasedGiftCardsViewModel>(),
+      viewModelBuilder: () => PurchasedGiftCardsViewModel(),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(

@@ -10,10 +10,10 @@ class ScreenTimePurchase with _$ScreenTimePurchase {
     required String purchaseId,
     required String uid,
     @Default("") dynamic purchasedAt,
-    @Default("") dynamic redeemedAt,
+    @Default("") dynamic activatedOn,
     required num hours,
     required ScreenTimeVoucherStatus status,
-    required int amount,
+    required double amount,
   }) = _ScreenTimePurchase;
 
   factory ScreenTimePurchase.fromJson(Map<String, dynamic> json) =>

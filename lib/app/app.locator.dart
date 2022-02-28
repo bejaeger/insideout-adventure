@@ -38,9 +38,6 @@ import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/screentime/screen_time_service.dart';
 import '../services/users/user_service.dart';
-import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_viewmodel.dart';
-import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
-import '../ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import '../utils/cloud_storage_result/cloud_storage_result.dart';
 import '../utils/image_selector/image_selector.dart';
 
@@ -84,8 +81,4 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => GamificationService());
   locator.registerLazySingleton(() => MapsService());
-  locator.registerLazySingleton(() => PurchasedGiftCardsViewModel());
-  locator.registerLazySingleton(
-      () => ActiveTreasureLocationSearchQuestViewModel());
-  locator.registerLazySingleton(() => ActiveDistanceEstimateQuestViewModel());
 }

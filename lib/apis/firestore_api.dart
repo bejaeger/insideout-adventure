@@ -19,6 +19,7 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/enums/screen_time_voucher_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/utils/string_utils.dart';
@@ -751,10 +752,16 @@ class FirestoreApi {
 
   Future updateScreenTimePurchase(
       {required ScreenTimePurchase screenTimePurchase,
+      required ScreenTimeVoucherStatus newStatus,
       required String uid}) async {
-    getUserScreenTimeCollection(uid: uid)
-        .doc(screenTimePurchase.purchaseId)
-        .update(screenTimePurchase.toJson());
+    late ScreenTimePurchase newScreenTimePurchase;
+    newScreenTimePurchase = screenTimePurchase.copyWith(
+        activatedOn: newStatus == ScreenTimeVoucherStatus.unused
+            ? ""
+            : FieldValue.serverTimestamp());
+    await getUserScreenTimeCollection(uid: uid)
+        .doc(newScreenTimePurchase.purchaseId)
+        .update(newScreenTimePurchase.toJson());
   }
 
   Future<bool> addGiftCardCategory(

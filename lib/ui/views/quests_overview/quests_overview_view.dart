@@ -33,6 +33,13 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
+          leading: model.isAdminMaster
+              ? GestureDetector(onTap: model.logout, child: Text("Logout"))
+              : model.isSuperUser
+                  ? GestureDetector(
+                      onTap: model.openSuperUserSettingsDialog,
+                      child: Text("Super User"))
+                  : null,
           title: Text(
             "Quests",
             style:
