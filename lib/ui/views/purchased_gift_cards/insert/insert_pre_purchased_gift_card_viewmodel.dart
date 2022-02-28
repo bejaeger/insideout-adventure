@@ -32,14 +32,14 @@ class InsertPrePurchasedGiftCardViewModel extends GiftCardsImageViewModel {
     } else {
       var id = Uuid();
       String giftCardId = id.v1().toString().replaceAll('-', '');
-      int _giftCardCode = int.parse(giftCardCode);
+      //int _giftCardCode = int.parse(giftCardCode);
 
       bool checkIsert =
           await _giftCardService.insertPrePurchasedGiftCardCategory(
         prePurchasedGiftCard: PrePurchasedGiftCard(
             categoryId: categoryId!,
             id: giftCardId,
-            giftCardCode: _giftCardCode,
+            giftCardCode: giftCardCode,
             categoryName: categoryName!),
       );
       if (checkIsert) {
