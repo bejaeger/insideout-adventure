@@ -156,6 +156,10 @@ class BaseModel extends BaseViewModel {
     return true;
   }
 
+  bool hasEnoughCredits({required int credits}) {
+    return currentUserStats.afkCreditsBalance >= credits;
+  }
+
   ////////////////////////////////////////
   // Navigation and dialogs
   void navigateBack() {

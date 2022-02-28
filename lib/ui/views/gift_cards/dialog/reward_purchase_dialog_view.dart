@@ -71,18 +71,28 @@ class RewardPurchaseDialogView extends StatelessWidget {
                       style: textTheme(context).headline4),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Available:"),
-                  AFKCreditsIcon(
-                    height: 25,
-                    alignment: Alignment.centerRight,
-                  ),
-                  horizontalSpaceTiny,
-                  Text(model.currentUserStats.afkCreditsBalance.toString()),
-                ],
-              ),
+              model.hasEnoughCredits(
+                      credits: centsToAfkCredits(request.data.amount))
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Available:"),
+                        AFKCreditsIcon(
+                          height: 25,
+                          alignment: Alignment.centerRight,
+                        ),
+                        horizontalSpaceTiny,
+                        Text(model.currentUserStats.afkCreditsBalance
+                            .toString()),
+                      ],
+                    )
+                  : Center(
+                      child: Text("Not enough credits",
+                          //textAlign: TextAlign.center,
+                          style: textTheme(context)
+                              .bodyText1!
+                              .copyWith(color: Colors.red)),
+                    ),
               verticalSpaceMedium,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -99,7 +109,10 @@ class RewardPurchaseDialogView extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () => completer(DialogResponse(confirmed: true)),
+                    onPressed: model.hasEnoughCredits(
+                            credits: centsToAfkCredits(request.data.amount))
+                        ? () => completer(DialogResponse(confirmed: true))
+                        : null,
                     child: Text(
                       request.mainButtonTitle.toString(),
                       style: TextStyle(
