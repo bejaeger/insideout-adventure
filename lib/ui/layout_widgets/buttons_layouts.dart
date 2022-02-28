@@ -29,7 +29,6 @@ class CustomAFKButton extends StatelessWidget {
           height: 40,
           child: ElevatedButton(
             onPressed: onMainButtonTapped,
-            //completer(DialogResponse(confirmed: true)),
             child: busy
                 ? CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation(Colors.green),

@@ -319,15 +319,17 @@ class DisplayAllMarkersSection extends StatelessWidget {
                 child: Card(
                   elevation: 8,
                   child: GoogleMap(
-                      zoomGesturesEnabled: true,
-                      // myLocationButtonEnabled: false,
-                      zoomControlsEnabled: false,
-                      initialCameraPosition: model.initialCameraPosition(),
-                      onMapCreated: (controller) =>
-                          googlController = controller,
-                      markers: model.markers
-                      //onTap: model.addMarkerToMap,
-                      ),
+                    zoomGesturesEnabled: true,
+                    // myLocationButtonEnabled: false,
+                    zoomControlsEnabled: true,
+                    initialCameraPosition: model.initialCameraPosition(),
+                    onMapCreated: (controller) => googlController = controller,
+                    markers: model.markers,
+                    scrollGesturesEnabled: true,
+                    myLocationEnabled: true,
+                    //gestureRecognizers: Set()
+                    //onTap: model.addMarkerToMap,
+                  ),
                 ),
               ),
             ),

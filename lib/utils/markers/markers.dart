@@ -1,11 +1,11 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../app/app.locator.dart';
-import '../../constants/constants.dart';
 import '../../datamodels/dummy_data.dart';
 import '../../enums/marker_status.dart';
 import '../../exceptions/firestore_api_exception.dart';
@@ -20,15 +20,16 @@ abstract class AFKMarks extends FormViewModel {
   List<AFKMarker> _afkCredits = [];
   final _geolocationService = locator<GeolocationService>();
   final markersServices = locator<MarkerService>();
+  Position? _position;
 
   Set<Marker> get getMarkersOnMap => _markersOnMap;
 
   List<AFKMarker> get getAFKMarkers => _afkCredits;
 
   CameraPosition initialCameraPosition() {
-    if (_geolocationService.getUserLivePositionNullable != null) {
-      final CameraPosition _initialCameraPosition =
-          CameraPosition(target: LatLng(latitude, longitude), zoom: 14);
+    if (_position != null) {
+      final CameraPosition _initialCameraPosition = CameraPosition(
+          target: LatLng(_position!.latitude, _position!.longitude), zoom: 14);
       return _initialCameraPosition;
     } else {
       return CameraPosition(
@@ -36,6 +37,12 @@ abstract class AFKMarks extends FormViewModel {
         zoom: 21,
       );
     }
+  }
+
+  Position? get getCurrentPostion => _position;
+  void setPosition() async {
+    _position = await _geolocationService.setCurrentUserPosition();
+    logger.i(_position);
   }
 
   Marker addMarkers({required LatLng pos, required String markerId}) {
