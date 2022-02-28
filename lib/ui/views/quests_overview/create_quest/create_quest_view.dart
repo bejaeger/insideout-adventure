@@ -142,7 +142,7 @@ class QuestCardList extends StatelessWidget {
             verticalSpaceSmall,
             Expanded(
               child: GoogleMap(
-                zoomControlsEnabled: true,
+                // zoomControlsEnabled: true,
                 //mapType: MapType.hybrid,
                 initialCameraPosition: model.initialCameraPosition(),
                 //Place Markers in the Map
@@ -150,8 +150,8 @@ class QuestCardList extends StatelessWidget {
                 //callback that’s called when the map is ready to us.
                 onMapCreated: model.onMapCreated,
                 onTap: model.displayMarkersOnMap,
-                scrollGesturesEnabled: true,
-                myLocationEnabled: true,
+                // scrollGesturesEnabled: true,
+                //myLocationEnabled: true,
                 // gestureRecognizers: Set()
               ),
             ),

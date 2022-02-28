@@ -6,7 +6,6 @@ import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_cat
 import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
-import 'package:flutter/foundation.dart';
 import 'package:stacked/stacked.dart';
 
 class ManageGiftCardViewModel extends BaseViewModel with NavigationMixin {

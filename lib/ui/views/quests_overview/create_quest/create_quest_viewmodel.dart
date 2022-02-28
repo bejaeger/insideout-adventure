@@ -58,16 +58,18 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
             markers: getAFKMarkers,
             afkCredits: afkCreditAmount),
       );
+      navBackToPreviousView();
       if (added!) {
         _displaySnackBars.snackBarCreatedQuest();
         _log.i('You created Quest Succefully');
-        navBackToPreviousView();
+        //  navBackToPreviousView();
         resetMarkersValues();
         return true;
       } else {
         _displaySnackBars.snackBarNotCreatedQuest();
       }
     }
+    navBackToPreviousView();
     return false;
   }
 
