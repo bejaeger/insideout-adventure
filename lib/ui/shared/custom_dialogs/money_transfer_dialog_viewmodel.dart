@@ -41,9 +41,8 @@ class MoneyTransferDialogViewModel extends BaseModel {
   void _setStatusText(TransferDialogStatus status, dynamic request,
       [TransferType? type]) {
     if (status == TransferDialogStatus.error) {
-      title = "Transfer Failed";
-      description =
-          "Sorry, an internal error occured on our side. Please try again later";
+      title = "Failure";
+      description = "Oops, something went wrong. Please try again later.";
       mainButtonTitle = "Got it";
     } else if (status == TransferDialogStatus.success) {
       if (type == TransferType.Sponsor2Explorer) {
@@ -55,6 +54,10 @@ class MoneyTransferDialogViewModel extends BaseModel {
       } else if (type == TransferType.GiftCardPurchase) {
         title = "Succesfully Purchased Gift Card!";
         mainButtonTitle = "See Gift Cards";
+        secondaryButtonTitle = "Go Back";
+      } else if (type == TransferType.ScreenTimePurchase) {
+        title = "Succesfully Purchased Screen Time!";
+        mainButtonTitle = "See Vouchers";
         secondaryButtonTitle = "Go Back";
       } else {
         title = "Success!!";

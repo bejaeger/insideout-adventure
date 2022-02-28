@@ -1,7 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/nav_button_widget.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -42,15 +41,16 @@ class DrawerWidgetView extends StatelessWidget {
                       ),
                     ),
                     Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(25.0),
-                          child: GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Icon(Icons.arrow_back,
-                                color: kDarkTurquoise, size: 35),
-                          ),
-                        )),
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: GestureDetector(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Icon(Icons.arrow_back,
+                              color: kDarkTurquoise, size: 35),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 // Row(
@@ -113,6 +113,27 @@ class DrawerWidgetView extends StatelessWidget {
                     ],
                   ),
                 ),
+                verticalSpaceMedium,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          // onPressed: model.navigateToExplorerHomeView,
+                          onPressed: model.navigateToScreenTimeView,
+                          //child: Text("Go to explorer home/map")),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text("Screen Time",
+                                style: TextStyle(fontSize: 20)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 if (model.currentUser.createdByUserWithId != null)
                   Padding(
                     padding: const EdgeInsets.all(kHorizontalPadding),
@@ -133,7 +154,7 @@ class DrawerWidgetView extends StatelessWidget {
                       ],
                     ),
                   ),
-
+                verticalSpaceMedium,
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: kHorizontalPadding),

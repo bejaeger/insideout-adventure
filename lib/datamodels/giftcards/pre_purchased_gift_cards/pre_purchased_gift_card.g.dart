@@ -11,7 +11,7 @@ _$_PrePurchasedGiftCard _$$_PrePurchasedGiftCardFromJson(
     _$_PrePurchasedGiftCard(
       categoryId: json['categoryId'] as String,
       id: json['id'] as String,
-      giftCardCode: json['giftCardCode'] as int,
+      giftCardCode: json['giftCardCode'] as String,
       categoryName: json['categoryName'] as String,
     );
 

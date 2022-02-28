@@ -64,9 +64,7 @@ class _ActiveTreasureLocationSearchQuestViewState
   Widget build(BuildContext context) {
     return ViewModelBuilder<
             ActiveTreasureLocationSearchQuestViewModel>.reactive(
-        viewModelBuilder: () =>
-            locator<ActiveTreasureLocationSearchQuestViewModel>(),
-        disposeViewModel: false,
+        viewModelBuilder: () => ActiveTreasureLocationSearchQuestViewModel(),
         onModelReady: (model) => model.initialize(quest: widget.quest),
         builder: (context, model, child) {
           bool activeDetector = model.hasActiveQuest &&

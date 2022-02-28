@@ -1,12 +1,14 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/components/gift_cards_section.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/screen_time_button.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -42,25 +44,10 @@ class GiftCardView extends StatelessWidget {
                                 .headline4!
                                 .copyWith(fontSize: 26)),
                         verticalSpaceSmall,
-                        Row(
-                          children: [
-                            ScreenTimeButton(
-                              onPressed: model.showNotImplementedSnackbar,
-                              title: "1 hour",
-                              credits: 50,
-                              backgroundColor: kDarkTurquoise,
-                              titleColor: kWhiteTextColor,
-                              imageUrl: kScreenTimeImageUrl,
-                            ),
-                            ScreenTimeButton(
-                              onPressed: model.showNotImplementedSnackbar,
-                              title: "2 hours",
-                              credits: 100,
-                              backgroundColor: kDarkTurquoise,
-                              titleColor: kWhiteTextColor,
-                              imageUrl: kScreenTimeImageUrl,
-                            ),
-                          ],
+                        ScreenTimeVoucherList(
+                          screenTimeVoucherList:
+                              model.getScreenTimeCategories(),
+                          onPressed: model.handleScreenTimePurchase,
                         ),
                         verticalSpaceLarge,
                         Text("GIFT CARDS",
@@ -74,8 +61,8 @@ class GiftCardView extends StatelessWidget {
                                 children: [
                                   GiftCardsSection(
                                       giftCards: e,
-                                      onGiftCardTap: model
-                                          .displayGiftCardDialogAndProcessPurchase),
+                                      onGiftCardTap:
+                                          model.handleGiftCardPurchase),
                                 ],
                               ),
                             )
@@ -87,6 +74,39 @@ class GiftCardView extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ScreenTimeVoucherList extends StatelessWidget {
+  final double? height;
+  final List<ScreenTimePurchase> screenTimeVoucherList;
+  final Future Function(ScreenTimePurchase) onPressed;
+  const ScreenTimeVoucherList(
+      {Key? key,
+      this.height,
+      required this.screenTimeVoucherList,
+      required this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height ?? 160,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: screenTimeVoucherList.length,
+        itemBuilder: (context, index) {
+          return ScreenTimeButton(
+            title: "${screenTimeVoucherList[index].hours} hours",
+            credits: centsToAfkCredits(screenTimeVoucherList[index].amount),
+            backgroundColor: kDarkTurquoise,
+            titleColor: kWhiteTextColor,
+            imageUrl: kScreenTimeImageUrl,
+            onPressed: () => onPressed(screenTimeVoucherList[index]),
+          );
+        },
       ),
     );
   }

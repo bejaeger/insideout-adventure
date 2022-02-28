@@ -12,7 +12,7 @@ class PrePurchasedGiftCard with _$PrePurchasedGiftCard {
     // required double amount,
     //String? imageUrl,
     required String id,
-    required int giftCardCode,
+    required String giftCardCode,
     required String categoryName,
   }) = _PrePurchasedGiftCard;
 

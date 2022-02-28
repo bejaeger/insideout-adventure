@@ -30,4 +30,5 @@ const _$TransferTypeEnumMap = {
   TransferType.Sponsor2Explorer: 'Sponsor2Explorer',
   TransferType.Explorer2AFK: 'Explorer2AFK',
   TransferType.GiftCardPurchase: 'GiftCardPurchase',
+  TransferType.ScreenTimePurchase: 'ScreenTimePurchase',
 };

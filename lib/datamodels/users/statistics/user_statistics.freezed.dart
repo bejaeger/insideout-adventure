@@ -28,6 +28,7 @@ class _$UserStatisticsTearOff {
       required num lifetimeEarnings,
       required int numberQuestsCompleted,
       required int numberGiftCardsPurchased,
+      required num numberScreenTimeHoursPurchased,
       required List<ConciseFinishedQuestInfo> completedQuests,
       required String uid}) {
     return _UserStatistics(
@@ -37,6 +38,7 @@ class _$UserStatisticsTearOff {
       lifetimeEarnings: lifetimeEarnings,
       numberQuestsCompleted: numberQuestsCompleted,
       numberGiftCardsPurchased: numberGiftCardsPurchased,
+      numberScreenTimeHoursPurchased: numberScreenTimeHoursPurchased,
       completedQuests: completedQuests,
       uid: uid,
     );
@@ -59,6 +61,7 @@ mixin _$UserStatistics {
   num get lifetimeEarnings => throw _privateConstructorUsedError; // in credits
   int get numberQuestsCompleted => throw _privateConstructorUsedError;
   int get numberGiftCardsPurchased => throw _privateConstructorUsedError;
+  num get numberScreenTimeHoursPurchased => throw _privateConstructorUsedError;
   List<ConciseFinishedQuestInfo> get completedQuests =>
       throw _privateConstructorUsedError;
   String get uid => throw _privateConstructorUsedError;
@@ -81,6 +84,7 @@ abstract class $UserStatisticsCopyWith<$Res> {
       num lifetimeEarnings,
       int numberQuestsCompleted,
       int numberGiftCardsPurchased,
+      num numberScreenTimeHoursPurchased,
       List<ConciseFinishedQuestInfo> completedQuests,
       String uid});
 }
@@ -102,6 +106,7 @@ class _$UserStatisticsCopyWithImpl<$Res>
     Object? lifetimeEarnings = freezed,
     Object? numberQuestsCompleted = freezed,
     Object? numberGiftCardsPurchased = freezed,
+    Object? numberScreenTimeHoursPurchased = freezed,
     Object? completedQuests = freezed,
     Object? uid = freezed,
   }) {
@@ -130,6 +135,10 @@ class _$UserStatisticsCopyWithImpl<$Res>
           ? _value.numberGiftCardsPurchased
           : numberGiftCardsPurchased // ignore: cast_nullable_to_non_nullable
               as int,
+      numberScreenTimeHoursPurchased: numberScreenTimeHoursPurchased == freezed
+          ? _value.numberScreenTimeHoursPurchased
+          : numberScreenTimeHoursPurchased // ignore: cast_nullable_to_non_nullable
+              as num,
       completedQuests: completedQuests == freezed
           ? _value.completedQuests
           : completedQuests // ignore: cast_nullable_to_non_nullable
@@ -156,6 +165,7 @@ abstract class _$UserStatisticsCopyWith<$Res>
       num lifetimeEarnings,
       int numberQuestsCompleted,
       int numberGiftCardsPurchased,
+      num numberScreenTimeHoursPurchased,
       List<ConciseFinishedQuestInfo> completedQuests,
       String uid});
 }
@@ -179,6 +189,7 @@ class __$UserStatisticsCopyWithImpl<$Res>
     Object? lifetimeEarnings = freezed,
     Object? numberQuestsCompleted = freezed,
     Object? numberGiftCardsPurchased = freezed,
+    Object? numberScreenTimeHoursPurchased = freezed,
     Object? completedQuests = freezed,
     Object? uid = freezed,
   }) {
@@ -207,6 +218,10 @@ class __$UserStatisticsCopyWithImpl<$Res>
           ? _value.numberGiftCardsPurchased
           : numberGiftCardsPurchased // ignore: cast_nullable_to_non_nullable
               as int,
+      numberScreenTimeHoursPurchased: numberScreenTimeHoursPurchased == freezed
+          ? _value.numberScreenTimeHoursPurchased
+          : numberScreenTimeHoursPurchased // ignore: cast_nullable_to_non_nullable
+              as num,
       completedQuests: completedQuests == freezed
           ? _value.completedQuests
           : completedQuests // ignore: cast_nullable_to_non_nullable
@@ -230,6 +245,7 @@ class _$_UserStatistics implements _UserStatistics {
       required this.lifetimeEarnings,
       required this.numberQuestsCompleted,
       required this.numberGiftCardsPurchased,
+      required this.numberScreenTimeHoursPurchased,
       required this.completedQuests,
       required this.uid});
 
@@ -249,13 +265,15 @@ class _$_UserStatistics implements _UserStatistics {
   @override
   final int numberGiftCardsPurchased;
   @override
+  final num numberScreenTimeHoursPurchased;
+  @override
   final List<ConciseFinishedQuestInfo> completedQuests;
   @override
   final String uid;
 
   @override
   String toString() {
-    return 'UserStatistics(afkCreditsBalance: $afkCreditsBalance, afkCreditsSpent: $afkCreditsSpent, availableSponsoring: $availableSponsoring, lifetimeEarnings: $lifetimeEarnings, numberQuestsCompleted: $numberQuestsCompleted, numberGiftCardsPurchased: $numberGiftCardsPurchased, completedQuests: $completedQuests, uid: $uid)';
+    return 'UserStatistics(afkCreditsBalance: $afkCreditsBalance, afkCreditsSpent: $afkCreditsSpent, availableSponsoring: $availableSponsoring, lifetimeEarnings: $lifetimeEarnings, numberQuestsCompleted: $numberQuestsCompleted, numberGiftCardsPurchased: $numberGiftCardsPurchased, numberScreenTimeHoursPurchased: $numberScreenTimeHoursPurchased, completedQuests: $completedQuests, uid: $uid)';
   }
 
   @override
@@ -282,6 +300,11 @@ class _$_UserStatistics implements _UserStatistics {
                 const DeepCollectionEquality().equals(
                     other.numberGiftCardsPurchased,
                     numberGiftCardsPurchased)) &&
+            (identical(other.numberScreenTimeHoursPurchased,
+                    numberScreenTimeHoursPurchased) ||
+                const DeepCollectionEquality().equals(
+                    other.numberScreenTimeHoursPurchased,
+                    numberScreenTimeHoursPurchased)) &&
             (identical(other.completedQuests, completedQuests) ||
                 const DeepCollectionEquality()
                     .equals(other.completedQuests, completedQuests)) &&
@@ -298,6 +321,7 @@ class _$_UserStatistics implements _UserStatistics {
       const DeepCollectionEquality().hash(lifetimeEarnings) ^
       const DeepCollectionEquality().hash(numberQuestsCompleted) ^
       const DeepCollectionEquality().hash(numberGiftCardsPurchased) ^
+      const DeepCollectionEquality().hash(numberScreenTimeHoursPurchased) ^
       const DeepCollectionEquality().hash(completedQuests) ^
       const DeepCollectionEquality().hash(uid);
 
@@ -320,6 +344,7 @@ abstract class _UserStatistics implements UserStatistics {
       required num lifetimeEarnings,
       required int numberQuestsCompleted,
       required int numberGiftCardsPurchased,
+      required num numberScreenTimeHoursPurchased,
       required List<ConciseFinishedQuestInfo> completedQuests,
       required String uid}) = _$_UserStatistics;
 
@@ -338,6 +363,8 @@ abstract class _UserStatistics implements UserStatistics {
   int get numberQuestsCompleted => throw _privateConstructorUsedError;
   @override
   int get numberGiftCardsPurchased => throw _privateConstructorUsedError;
+  @override
+  num get numberScreenTimeHoursPurchased => throw _privateConstructorUsedError;
   @override
   List<ConciseFinishedQuestInfo> get completedQuests =>
       throw _privateConstructorUsedError;

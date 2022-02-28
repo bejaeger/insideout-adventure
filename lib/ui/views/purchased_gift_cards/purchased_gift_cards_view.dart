@@ -8,7 +8,6 @@ import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,8 +18,7 @@ class PurchasedGiftCardsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<PurchasedGiftCardsViewModel>.reactive(
       onModelReady: (model) => model.listenToData(),
-      disposeViewModel: false,
-      viewModelBuilder: () => locator<PurchasedGiftCardsViewModel>(),
+      viewModelBuilder: () => PurchasedGiftCardsViewModel(),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(

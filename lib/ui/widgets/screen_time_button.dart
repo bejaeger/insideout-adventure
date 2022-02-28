@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ScreenTimeButton extends StatelessWidget {
-  final void Function() onPressed;
+  final Future Function() onPressed;
   final String title;
   final String? imageUrl;
   final String? imagePath;
@@ -88,8 +89,9 @@ class ScreenTimeButton extends StatelessWidget {
                 ),
               verticalSpaceSmall,
               Expanded(
-                child: Padding(
+                child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  alignment: Alignment(0, -0.4),
                   child: Text(
                     title,
                     style: textTheme(context)

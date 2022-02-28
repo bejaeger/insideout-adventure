@@ -24,7 +24,7 @@ class _$PrePurchasedGiftCardTearOff {
   _PrePurchasedGiftCard call(
       {required String categoryId,
       required String id,
-      required int giftCardCode,
+      required String giftCardCode,
       required String categoryName}) {
     return _PrePurchasedGiftCard(
       categoryId: categoryId,
@@ -49,7 +49,7 @@ mixin _$PrePurchasedGiftCard {
       throw _privateConstructorUsedError; // required double amount,
 //String? imageUrl,
   String get id => throw _privateConstructorUsedError;
-  int get giftCardCode => throw _privateConstructorUsedError;
+  String get giftCardCode => throw _privateConstructorUsedError;
   String get categoryName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -64,7 +64,7 @@ abstract class $PrePurchasedGiftCardCopyWith<$Res> {
           $Res Function(PrePurchasedGiftCard) then) =
       _$PrePurchasedGiftCardCopyWithImpl<$Res>;
   $Res call(
-      {String categoryId, String id, int giftCardCode, String categoryName});
+      {String categoryId, String id, String giftCardCode, String categoryName});
 }
 
 /// @nodoc
@@ -95,7 +95,7 @@ class _$PrePurchasedGiftCardCopyWithImpl<$Res>
       giftCardCode: giftCardCode == freezed
           ? _value.giftCardCode
           : giftCardCode // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       categoryName: categoryName == freezed
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ abstract class _$PrePurchasedGiftCardCopyWith<$Res>
       __$PrePurchasedGiftCardCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String categoryId, String id, int giftCardCode, String categoryName});
+      {String categoryId, String id, String giftCardCode, String categoryName});
 }
 
 /// @nodoc
@@ -145,7 +145,7 @@ class __$PrePurchasedGiftCardCopyWithImpl<$Res>
       giftCardCode: giftCardCode == freezed
           ? _value.giftCardCode
           : giftCardCode // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       categoryName: categoryName == freezed
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
@@ -172,7 +172,7 @@ class _$_PrePurchasedGiftCard implements _PrePurchasedGiftCard {
 //String? imageUrl,
   final String id;
   @override
-  final int giftCardCode;
+  final String giftCardCode;
   @override
   final String categoryName;
 
@@ -222,7 +222,7 @@ abstract class _PrePurchasedGiftCard implements PrePurchasedGiftCard {
   factory _PrePurchasedGiftCard(
       {required String categoryId,
       required String id,
-      required int giftCardCode,
+      required String giftCardCode,
       required String categoryName}) = _$_PrePurchasedGiftCard;
 
   factory _PrePurchasedGiftCard.fromJson(Map<String, dynamic> json) =
@@ -234,7 +234,7 @@ abstract class _PrePurchasedGiftCard implements PrePurchasedGiftCard {
 //String? imageUrl,
   String get id => throw _privateConstructorUsedError;
   @override
-  int get giftCardCode => throw _privateConstructorUsedError;
+  String get giftCardCode => throw _privateConstructorUsedError;
   @override
   String get categoryName => throw _privateConstructorUsedError;
   @override

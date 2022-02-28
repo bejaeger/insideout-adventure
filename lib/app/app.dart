@@ -19,6 +19,7 @@ import 'package:afkcredits/services/quest_testing_service/quest_testing_service.
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
@@ -46,6 +47,7 @@ import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_g
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
+import 'package:afkcredits/ui/views/purchased_screen_time/purchased_screen_time_view.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
@@ -107,6 +109,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: QuestsOverviewView),
     MaterialRoute(page: AddGiftCardsView),
     MaterialRoute(page: HistoryAndAchievementsView),
+    MaterialRoute(page: PurchasedScreenTimeView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -138,14 +141,11 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: MarkerService),
     LazySingleton(classType: DirectionsAPI),
     LazySingleton(classType: GiftCardService),
+    LazySingleton(classType: ScreenTimeService),
     LazySingleton(classType: QuestTestingService),
     LazySingleton(classType: GamificationService),
     LazySingleton(classType: MapsService),
     //LazySingleton(classType: MarkersInMap),
-    LazySingleton(classType: PurchasedGiftCardsViewModel),
-    LazySingleton(classType: ActiveTreasureLocationSearchQuestViewModel),
-    LazySingleton(classType: ActiveDistanceEstimateQuestViewModel),
-    // LazySingleton(classType: ActiveQrCodeSearchViewModel),
 
     // Services
   ],

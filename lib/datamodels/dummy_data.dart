@@ -2,8 +2,9 @@ import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/quests/marker_note/marker_note.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/enums/quest_type.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:afkcredits/enums/screen_time_voucher_status.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<Quest> getDummyQuests() {
@@ -28,7 +29,7 @@ List<Quest> getDummyQuests() {
     // getDummyQuest1(),
     // getDummyQuest3(),
     // getDummyQuest5(),
-    getDummyQuest6(),
+    // getDummyQuest6(),
   ];
 }
 
@@ -48,6 +49,36 @@ getDummyAchievements() {
         id: "1", credits: 5, name: "Claim 1 gift card", completed: false),
     Achievement(
         id: "1", credits: 10, name: "4 quests in one week", completed: false),
+  ];
+}
+
+// TODO: Probably should introduce screen time category!?
+List<ScreenTimePurchase> getDummyScreenTimes({required String uid}) {
+  return [
+    ScreenTimePurchase(
+        purchaseId: "",
+        uid: uid,
+        hours: 0.5,
+        status: ScreenTimeVoucherStatus.unused,
+        amount: 500),
+    ScreenTimePurchase(
+        purchaseId: "",
+        uid: uid,
+        hours: 1,
+        status: ScreenTimeVoucherStatus.unused,
+        amount: 1000),
+    ScreenTimePurchase(
+        purchaseId: "",
+        uid: uid,
+        hours: 2,
+        status: ScreenTimeVoucherStatus.unused,
+        amount: 2000),
+    ScreenTimePurchase(
+        purchaseId: "",
+        uid: uid,
+        hours: 5,
+        status: ScreenTimeVoucherStatus.unused,
+        amount: 5000),
   ];
 }
 

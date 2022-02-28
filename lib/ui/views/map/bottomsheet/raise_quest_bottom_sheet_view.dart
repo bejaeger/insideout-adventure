@@ -2,7 +2,6 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -57,7 +56,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                     child: Text(
                       getStringForCategory(model.quest.type),
                       style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: kPrimaryColor),
                       // textAlign: TextAlign.left,
@@ -142,14 +141,24 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
+                  // ElevatedButton(
+                  //   onPressed: () => completer(SheetResponse(confirmed: false)),
+                  //   child: Text(
+                  //     request.secondaryButtonTitle.toString(),
+                  //     style: TextStyle(
+                  //         fontSize: 20,
+                  //         //fontWeight: FontWeight.bold,
+                  //         color: kWhiteTextColor),
+                  //   ),
+                  // ),
+                  MaterialButton(
                     onPressed: () => completer(SheetResponse(confirmed: false)),
                     child: Text(
                       request.secondaryButtonTitle.toString(),
                       style: TextStyle(
                           fontSize: 20,
                           //fontWeight: FontWeight.bold,
-                          color: kWhiteTextColor),
+                          color: Colors.black),
                     ),
                   ),
                   ElevatedButton(

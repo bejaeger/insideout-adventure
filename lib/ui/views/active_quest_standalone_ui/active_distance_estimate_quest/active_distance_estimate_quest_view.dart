@@ -28,8 +28,7 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActiveDistanceEstimateQuestViewModel>.reactive(
-      viewModelBuilder: () => locator<ActiveDistanceEstimateQuestViewModel>(),
-      disposeViewModel: false,
+      viewModelBuilder: () => ActiveDistanceEstimateQuestViewModel(),
       onModelReady: (model) {
         model.initialize(quest: quest);
         return;

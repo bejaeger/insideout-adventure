@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
+import 'package:afkcredits/datamodels/giftcards/gift_card_purchase_success_result/gift_card_purchase_success_result.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
@@ -116,6 +119,86 @@ class CloudFunctionsApi {
             prettyDetails:
                 "An internal error occured on our side, please apologize and try again later.");
       }
+    }
+  }
+
+  ///////////////////////////////////////////////
+  /// Call Cloud Function
+  Future purchaseScreenTime(
+      {required ScreenTimePurchase screenTimePurchase}) async {
+    try {
+      log.i("Calling restful server function bookkeepScreenTimePurchase");
+      Uri url = Uri.https(
+          _flavorConfigProvider.authority,
+          p.join(_flavorConfigProvider.uripathprepend,
+              "transfers-api/bookkeepscreentimepurchase"));
+      http.Response? response = await http.post(url,
+          body: json.encode(screenTimePurchase.toJson()),
+          headers: {"Accept": "application/json"});
+      dynamic result = json.decode(response.body);
+      if (result["error"] == null) {
+        return true;
+      } else {
+        log.e("Error when buying screen time: ${result["error"]["message"]}");
+        throw CloudFunctionsApiException(
+            message:
+                "An error occured in the cloud function 'bookkeepScreenTimePurchase'",
+            devDetails:
+                "Error message from cloud function: ${result["error"]["message"]}",
+            prettyDetails:
+                "Sorry, something went wrong, please try again later.");
+      }
+    } catch (e) {
+      log.e("Couldn't process screen time purchase: ${e.toString()}");
+      throw CloudFunctionsApiException(
+          message:
+              "Something failed when calling the https function bookkeepScreenTimePurchase",
+          devDetails:
+              "This should not happen and is due to an error on the Firestore side or the datamodels that were being pushed!",
+          prettyDetails:
+              "An internal error occured on our side, please apologize and try again later.");
+    }
+  }
+
+  Future purchaseGiftCard({required GiftCardPurchase giftCardPurchase}) async {
+    try {
+      log.i("Calling restful server function bookkeepGiftCardPurchase");
+
+      Uri url = Uri.https(
+          _flavorConfigProvider.authority,
+          p.join(_flavorConfigProvider.uripathprepend,
+              "transfers-api/bookkeepgiftcardpurchase"));
+      http.Response? response = await http.post(url,
+          body: json.encode(giftCardPurchase.toJson()),
+          headers: {"Accept": "application/json"});
+      log.i("posted http request");
+      dynamic result = json.decode(response.body);
+      log.i("decoded json response");
+
+      if (result["error"] == null) {
+        log.i(
+            "Added the following gift card purchase document to ${result["data"]["transferId"]}: ${giftCardPurchase.toJson()}");
+        return GiftCardPurchaseSuccessResult.fromJson(result["data"]);
+      } else {
+        log.e(
+            "Error when creating money transfer: ${result["error"]["message"]}");
+        throw CloudFunctionsApiException(
+            message:
+                "An error occured in the cloud function 'bookkeepGiftCardPurchase'",
+            devDetails:
+                "Error message from cloud function: ${result["error"]["message"]}",
+            prettyDetails:
+                "An internal error occured on our side, please apologize and try again later.");
+      }
+    } catch (e) {
+      log.e("Couldn't process transfer: ${e.toString()}");
+      throw CloudFunctionsApiException(
+          message:
+              "Something failed when calling the https function bookkeepGiftCardPurchase",
+          devDetails:
+              "This should not happen and is due to an error on the Firestore side or the datamodels that were being pushed!",
+          prettyDetails:
+              "An internal error occured on our side, please apologize and try again later.");
     }
   }
 }

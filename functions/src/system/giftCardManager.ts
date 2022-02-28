@@ -31,7 +31,7 @@ export class GiftCardManager {
     if (!doc) {
       return null;
     } else {
-      const code = doc.data()["code"];
+      const code = doc.data()["giftCardCode"];
       const docId = doc.ref;
       log(`Found pre-purchased gift card code: ${code} under document with id ${docId}`);
       return { code: code, giftCardDocId: docId };

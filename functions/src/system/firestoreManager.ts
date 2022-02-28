@@ -27,6 +27,11 @@ export class FirestoreManager {
       return this.db.collection("users").doc(uid).collection("giftcards").doc();
     }
 
+    createScreenTimePurchaseDocument(uid: string) {
+      log('creating new screen time document path: users/uid/screentime');
+      return this.db.collection("users").doc(uid).collection("screentime").doc();
+    }
+
     async getPrePurchasedGiftCard(categoryId: string) {
       const snapshot = await this.db.collection("prePurchasedGiftCards").where("categoryId", "==", categoryId).get();
       if (snapshot.empty) {

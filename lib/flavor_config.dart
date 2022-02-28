@@ -8,8 +8,8 @@ class FlavorConfigProvider {
   // TODO: Add this to a specific flavor!
   // We should add a "test" flavor!
 
-  bool allowDummyMarkerCollection = true;
-  bool enableGPSVerification = false;
+  bool allowDummyMarkerCollection = false;
+  bool enableGPSVerification = true;
 
   // if true the dummy quests configued in dummy_data.dart
   // are going to be pushed to firestore and are also the ones

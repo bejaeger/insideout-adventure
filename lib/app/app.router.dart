@@ -41,6 +41,7 @@ import '../ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_v
 import '../ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import '../ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
 import '../ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
+import '../ui/views/purchased_screen_time/purchased_screen_time_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
 import '../ui/views/quests_overview/create_quest/create_quest_view.dart';
@@ -100,6 +101,7 @@ class Routes {
   static const String addGiftCardsView = '/add-gift-cards-view';
   static const String historyAndAchievementsView =
       '/history-and-achievements-view';
+  static const String purchasedScreenTimeView = '/purchased-screen-time-view';
   static const all = <String>{
     sponsorHomeView,
     singleMarkerView,
@@ -137,6 +139,7 @@ class Routes {
     questsOverviewView,
     addGiftCardsView,
     historyAndAchievementsView,
+    purchasedScreenTimeView,
   };
 }
 
@@ -186,6 +189,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.addGiftCardsView, page: AddGiftCardsView),
     RouteDef(Routes.historyAndAchievementsView,
         page: HistoryAndAchievementsView),
+    RouteDef(Routes.purchasedScreenTimeView, page: PurchasedScreenTimeView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -487,6 +491,12 @@ class StackedRouter extends RouterBase {
           key: args.key,
           initialIndex: args.initialIndex,
         ),
+        settings: data,
+      );
+    },
+    PurchasedScreenTimeView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const PurchasedScreenTimeView(),
         settings: data,
       );
     },

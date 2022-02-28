@@ -40,6 +40,10 @@ String formatDate(DateTime timestamp) {
   return DateFormat.MMMEd().format(timestamp);
 }
 
+String formatDateDetailsType2(DateTime timestamp) {
+  return DateFormat.yMMMEd().add_jm().format(timestamp);
+}
+
 String formatDateDetails(DateTime timestamp) {
   return DateFormat.yMd().add_jm().format(timestamp);
 }

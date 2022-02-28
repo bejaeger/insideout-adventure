@@ -14,6 +14,8 @@ _$_UserStatistics _$$_UserStatisticsFromJson(Map<String, dynamic> json) =>
       lifetimeEarnings: json['lifetimeEarnings'] as num,
       numberQuestsCompleted: json['numberQuestsCompleted'] as int,
       numberGiftCardsPurchased: json['numberGiftCardsPurchased'] as int,
+      numberScreenTimeHoursPurchased:
+          json['numberScreenTimeHoursPurchased'] as num,
       completedQuests: (json['completedQuests'] as List<dynamic>)
           .map((e) =>
               ConciseFinishedQuestInfo.fromJson(e as Map<String, dynamic>))
@@ -29,6 +31,7 @@ Map<String, dynamic> _$$_UserStatisticsToJson(_$_UserStatistics instance) =>
       'lifetimeEarnings': instance.lifetimeEarnings,
       'numberQuestsCompleted': instance.numberQuestsCompleted,
       'numberGiftCardsPurchased': instance.numberGiftCardsPurchased,
+      'numberScreenTimeHoursPurchased': instance.numberScreenTimeHoursPurchased,
       'completedQuests':
           instance.completedQuests.map((e) => e.toJson()).toList(),
       'uid': instance.uid,
