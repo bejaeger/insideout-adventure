@@ -20,6 +20,8 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final _geoLocationService = locator<GeolocationService>();
   //CameraPosition? _initialCameraPosition;
   final _displaySnackBars = DisplaySnackBars();
+  bool isLoading = false;
+  bool result = false;
 
   List<String>? markerIds = [];
   @override
@@ -37,12 +39,13 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     notifyListeners();
   }
 
-  Future<bool?> createQuest({required QuestType selectedQuestType}) async {
-    if (afkCreditAmountValue!.isEmpty ||
-        nameValue!.isEmpty ||
-        descriptionValue!.isEmpty) {
+  Future<bool?> _createQuest({QuestType? selectedQuestType}) async {
+    if (afkCreditAmountValue?.toString() == null ||
+        nameValue?.toString() == null ||
+        descriptionValue?.toString() == null) {
       _log.wtf('You Are Giving me Empty Fields');
       displayEmptyTextsSnackBar();
+      return false;
     } else {
       num afkCreditAmount = num.parse(afkCreditAmountValue!);
       var id = Uuid();
@@ -54,23 +57,31 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
             finishMarker: getAFKMarkers.last,
             name: nameValue.toString(),
             description: descriptionValue.toString(),
-            type: selectedQuestType,
+            type: selectedQuestType!,
             markers: getAFKMarkers,
             afkCredits: afkCreditAmount),
       );
-      navBackToPreviousView();
+      //navBackToPreviousView();
       if (added!) {
-        _displaySnackBars.snackBarCreatedQuest();
-        _log.i('You created Quest Succefully');
-        //  navBackToPreviousView();
-        resetMarkersValues();
         return true;
-      } else {
-        _displaySnackBars.snackBarNotCreatedQuest();
       }
     }
-    navBackToPreviousView();
     return false;
+    //return null;
+    /*  navBackToPreviousView();
+    return false; */
+  }
+
+  Future<void> clearFieldsAndNavigate({QuestType? selectedQuestType}) async {
+    result = await _createQuest() ?? false;
+    if (result) {
+      _displaySnackBars.snackBarCreatedQuest();
+      resetMarkersValues();
+      navBackToPreviousView();
+    } else {
+      _displaySnackBars.snackBarNotCreatedQuest();
+      // navBackToPreviousView();
+    }
   }
 
   void displayMarkersOnMap(LatLng pos) {

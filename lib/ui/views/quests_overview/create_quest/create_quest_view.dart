@@ -157,7 +157,7 @@ class QuestCardList extends StatelessWidget {
             ),
             verticalSpaceSmall,
             CustomAFKButton(
-              busy: model.isBusy,
+              busy: model.isLoading,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainButtonTitle: 'Add',
               secundaryButtonTitle: 'Cancel',
@@ -168,15 +168,16 @@ class QuestCardList extends StatelessWidget {
                 }
               },
               onMainButtonTapped: () async {
-                await model.createQuest(
+                await model.clearFieldsAndNavigate(
                     selectedQuestType: selectedQuestType ?? QuestType.Hunt);
-                model.resetMarkersValues();
+                //model.resetMarkersValues();
 
                 //Clear Controllers
                 nameController!.clear();
                 questTypeController!.clear();
                 afkCreditAmountController!.clear();
                 descriptionController!.clear();
+                // model.clearFieldsAndNavigate();
               },
             ),
           ],

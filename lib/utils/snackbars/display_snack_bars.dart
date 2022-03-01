@@ -20,8 +20,8 @@ class DisplaySnackBars {
 
   void snackBarNotCreatedQuest(/* {required Quest quest} */) {
     _snackBarService.showSnackbar(
-      message: "Quest Created  ",
-      title: 'Quest Created Successfully',
+      message: "Quest Not Created  ",
+      title: 'Could Not Created Quest',
       // duration: Duration(seconds: 10),
       onTap: (_) {
         print('snackbar tapped');
