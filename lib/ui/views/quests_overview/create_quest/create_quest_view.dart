@@ -77,11 +77,6 @@ class QuestCardList extends StatelessWidget {
       required this.descriptionController,
       required this.nameController,
       required this.questTypeController});
-
-  String? afkCreditId;
-  num? afkCreditAmount;
-  QuestType? selectedQuestType;
-
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -129,14 +124,17 @@ class QuestCardList extends StatelessWidget {
               items: QuestType.values.map((_questType) {
                 return DropdownMenuItem(
                   value: _questType,
-                  child: Text(
-                    _questType.toString().split('.').elementAt(1),
-                  ),
+                  child: model.isLoading == false
+                      ? Text(
+                          _questType.toString().split('.').elementAt(1),
+                        )
+                      : Text(
+                          "Select Quest Type",
+                        ),
                 );
               }).toList(),
-              onChanged: (QuestType? value) {
-                selectedQuestType = value;
-                value = null;
+              onChanged: (QuestType? questType) {
+                model.setQuestType(questType: questType!);
               },
             ),
             verticalSpaceSmall,
@@ -168,8 +166,8 @@ class QuestCardList extends StatelessWidget {
                 }
               },
               onMainButtonTapped: () async {
-                await model.clearFieldsAndNavigate(
-                    selectedQuestType: selectedQuestType ?? QuestType.Hunt);
+                await model.clearFieldsAndNavigate();
+
                 //model.resetMarkersValues();
 
                 //Clear Controllers
