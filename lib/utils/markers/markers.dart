@@ -17,14 +17,14 @@ abstract class AFKMarks extends FormViewModel {
   final logger = getLogger('AFKMarks');
 
   Set<Marker> _markersOnMap = {};
-  List<AFKMarker> _afkCredits = [];
+  List<AFKMarker> _afkMarkers = [];
   final _geolocationService = locator<GeolocationService>();
   final markersServices = locator<MarkerService>();
   Position? _position;
 
   Set<Marker> get getMarkersOnMap => _markersOnMap;
 
-  List<AFKMarker> get getAFKMarkers => _afkCredits;
+  List<AFKMarker> get getAFKMarkers => _afkMarkers;
 
   CameraPosition initialCameraPosition() {
     if (_position != null) {
@@ -34,7 +34,7 @@ abstract class AFKMarks extends FormViewModel {
     } else {
       return CameraPosition(
         target: getDummyCoordinates(),
-        zoom: 21,
+        zoom: 15,
       );
     }
   }
@@ -52,29 +52,26 @@ abstract class AFKMarks extends FormViewModel {
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
       position: pos,
       onTap: () {
-        removeMarker(
-          marker: Marker(markerId: MarkerId(markerId), position: pos),
-        );
+        removeMarker(marker: Marker(markerId: MarkerId(markerId)));
       },
     );
   }
 
-  AFKMarker returnAFK(
+  AFKMarker returnAFKMarker(
       {required LatLng pos, required String markerId, required String qrCode}) {
     return AFKMarker(
         id: markerId, qrCodeId: qrCode, lat: pos.latitude, lon: pos.longitude);
   }
 
-  void _addMarkersAndAFKCredits(
+  void _addMarkerOnMapAndAFKMarker(
       {required String markerId,
       required LatLng position,
       required String qrdCodeId}) {
     _markersOnMap.add(
       addMarkers(markerId: markerId, pos: position),
     );
-
-    _afkCredits.add(
-      returnAFK(pos: position, markerId: markerId, qrCode: qrdCodeId),
+    _afkMarkers.add(
+      returnAFKMarker(pos: position, markerId: markerId, qrCode: qrdCodeId),
     );
   }
 
@@ -92,17 +89,14 @@ abstract class AFKMarks extends FormViewModel {
   void resetMarkersValues() {
     //_markersOnMap = {};
     _markersOnMap.clear();
-    _afkCredits = [];
+    _afkMarkers = [];
     notifyListeners();
   }
 
   void removeMarker({required Marker marker}) {
-    _markersOnMap.forEach((element) {
-      if (element.markerId == marker.markerId) {
-        _markersOnMap.remove(element);
-        notifyListeners();
-      }
-    });
+    _markersOnMap.removeWhere((element) => element.markerId == marker.markerId);
+    _afkMarkers.removeWhere((element) => element.id == marker.markerId.value);
+    notifyListeners();
   }
 
   void addMarkerOnMap({required LatLng pos}) {
@@ -112,38 +106,7 @@ abstract class AFKMarks extends FormViewModel {
       final markerId = id.v1().toString().replaceAll('-', '');
       final qrdCdId = id2.v1().toString().replaceAll('-', '');
 
-      _addSingleMarkerAndAFKCredits(
-          markerId: markerId, position: pos, qrdCodeId: qrdCdId);
-    } catch (error) {
-      throw MapViewModelException(
-          message: 'An error occured when creating the map',
-          devDetails: "Error message from Map View Model $error ",
-          prettyDetails:
-              "An internal error occured on our side, sorry, please try again later.");
-    }
-  }
-
-  void _addSingleMarkerAndAFKCredits(
-      {required String markerId,
-      required LatLng position,
-      required String qrdCodeId}) {
-/*
-     _singleMarkerOnMap =
-        _afkMarkers.addMarkers(markerId: markerId, pos: position);
-
-    _singleAfkCredits = _afkMarkers.returnAFK(
-        pos: position, markerId: markerId, qrCode: qrdCodeId); 
-        */
-  }
-
-  void addMarkersOnMap({required LatLng pos}) {
-    try {
-      var id = Uuid();
-      var id2 = Uuid();
-      final markerId = id.v1().toString().replaceAll('-', '');
-      final qrdCdId = id2.v1().toString().replaceAll('-', '');
-
-      _addMarkersAndAFKCredits(
+      _addMarkerOnMapAndAFKMarker(
           markerId: markerId, position: pos, qrdCodeId: qrdCdId);
     } catch (error) {
       throw MapViewModelException(

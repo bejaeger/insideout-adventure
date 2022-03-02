@@ -26,7 +26,7 @@ class SingleMarkerViewModel extends AFKMarks with NavigationMixin {
 
   void addMarkerToMap(LatLng position) {
     setBusy(true);
-    addMarkersOnMap(pos: position);
+    addMarkerOnMap(pos: position);
     setBusy(false);
     notifyListeners();
   }

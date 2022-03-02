@@ -195,12 +195,12 @@ class QuestService with ReactiveServiceMixin {
     return _firestoreApi.getQuest(questId: questId);
   }
 
-  Future<bool?> createQuest({required Quest quest}) async {
+  Future<bool> createQuest({required Quest quest}) async {
     //TODO: Refactor this code.
     if (quest.id.isNotEmpty) {
       return await _firestoreApi.createQuest(quest: quest);
     }
-    return null;
+    return false;
 
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.

@@ -1,3 +1,4 @@
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -24,36 +25,38 @@ class CustomAFKButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SizedBox(
-          width: 150,
-          height: 40,
-          child: ElevatedButton(
-            onPressed: onMainButtonTapped,
-            child: busy
-                ? CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(Colors.green),
-                  )
-                : Text(
-                    mainButtonTitle!,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14),
-                  ),
+        Expanded(
+          child: SizedBox(
+            width: 150,
+            height: 40,
+            child: ElevatedButton(
+              onPressed: onSecondaryButtonTapped,
+              child: Text(
+                secundaryButtonTitle!,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14),
+              ),
+            ),
           ),
         ),
         horizontalSpaceMedium,
-        SizedBox(
-          width: 150,
-          height: 40,
-          child: ElevatedButton(
-            onPressed: onSecondaryButtonTapped,
-            child: Text(
-              secundaryButtonTitle!,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14),
+        Expanded(
+          child: SizedBox(
+            width: 150,
+            height: 40,
+            child: ElevatedButton(
+              onPressed: onMainButtonTapped,
+              child: busy
+                  ? AFKProgressIndicator(color: Colors.white)
+                  : Text(
+                      mainButtonTitle!,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14),
+                    ),
             ),
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
@@ -26,6 +27,11 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   bool result = false;
   QuestType? _questType;
 
+  String? afkCreditsInputValidationMessage;
+  String? nameInputValidationMessage;
+  String? questTypeInputValidationMessage;
+  String? afkMarkersInputValidationMessage;
+
   List<String>? markerIds = [];
   @override
   void setFormStatus() {
@@ -42,59 +48,106 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     notifyListeners();
   }
 
-  Future<bool?> _createQuest() async {
-    if (afkCreditAmountValue?.toString() == null ||
-        nameValue?.toString() == null ||
-        descriptionValue?.toString() == null) {
-      _log.wtf('You Are Giving me Empty Fields');
-      displayEmptyTextsSnackBar();
-      return false;
-    } else {
-      isLoading = true;
-      notifyListeners();
-      num afkCreditAmount = num.parse(afkCreditAmountValue.toString());
-      var id = Uuid();
-      final questId = id.v1().toString().replaceAll('-', '');
-      final added = await _questService.createQuest(
-        quest: Quest(
-            id: questId,
-            startMarker: getAFKMarkers.first,
-            finishMarker: getAFKMarkers.last,
-            name: nameValue.toString(),
-            description: descriptionValue.toString(),
-            type: _questType ?? QuestType.Hunt,
-            markers: getAFKMarkers,
-            afkCredits: afkCreditAmount),
-      );
-      isLoading = false;
-      notifyListeners();
-      if (added!) {
-        _displaySnackBars.snackBarCreatedQuest();
-        return true;
+  bool isValidUserInputs() {
+    resetValidationMessages();
+    bool isValid = true;
+    if (afkCreditAmountValue == null) {
+      afkCreditsInputValidationMessage = 'Choose AFK Credits amount';
+      isValid = false;
+    }
+    // also check type of afkCredits input
+    try {
+      num tmpValue = num.parse(afkCreditAmountValue.toString());
+    } catch (e) {
+      if (e is FormatException) {
+        afkCreditsInputValidationMessage = "Please provide a numerical value";
+        isValid = false;
+      } else {
+        rethrow;
       }
     }
+    if (nameValue == null) {
+      nameInputValidationMessage = 'Choose Quest name';
+      isValid = false;
+    }
+    if (_questType == null) {
+      questTypeInputValidationMessage = "Choose a quest type";
+      isValid = false;
+    }
+    if (!isValid) {
+      _log.e("Input not valid");
+      displayEmptyTextsSnackBar();
+      notifyListeners();
+    }
+    return isValid;
+  }
+
+  bool isValidMarkerInput() {
+    if (getAFKMarkers.length < 2) {
+      afkMarkersInputValidationMessage = "Choose at least 2 markers";
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool?> _createQuest() async {
+    if (!isValidUserInputs()) return false;
+    isLoading = true;
+    notifyListeners();
+    num afkCreditAmount = num.parse(afkCreditAmountValue.toString());
+    var id = Uuid();
+    final questId = id.v1().toString().replaceAll('-', '');
+    final added = await _questService.createQuest(
+      quest: Quest(
+          id: questId,
+          startMarker: getAFKMarkers.first,
+          finishMarker: getAFKMarkers.last,
+          name: nameValue.toString(),
+          description: descriptionValue.toString(),
+          type: _questType!,
+          markers: getAFKMarkers,
+          afkCredits: afkCreditAmount),
+    );
+    isLoading = false;
+    notifyListeners();
+    if (added) {
+      _log.i("Quest added successfully!");
+      _displaySnackBars.snackBarCreatedQuest();
+      // not 100% sure why the delay is needed here
+      await Future.delayed(Duration(seconds: 2));
+      return true;
+    }
+
+    _displaySnackBars.snackBarNotCreatedQuest();
     return false;
   }
 
-  Future<void> clearFieldsAndNavigate() async {
+  Future<bool> clearFieldsAndNavigate() async {
     result = await _createQuest() ?? false;
     if (result) {
       resetMarkersValues();
       _navigationService.back();
-    } else {
-      _displaySnackBars.snackBarNotCreatedQuest();
     }
+    return result;
   }
 
   void displayMarkersOnMap(LatLng pos) {
     setBusy(true);
-    addMarkersOnMap(pos: pos);
+    addMarkerOnMap(pos: pos);
     setBusy(false);
     notifyListeners();
   }
 
-  void displayEmptyTextsSnackBar() {
-    _displaySnackBars.snackBarTextBoxEmpty();
+  void resetValidationMessages() {
+    afkCreditsInputValidationMessage = null;
+    nameInputValidationMessage = null;
+    questTypeInputValidationMessage = null;
+    afkMarkersInputValidationMessage = null;
+    notifyListeners();
+  }
+
+  void displayEmptyTextsSnackBar([String? message]) {
+    _displaySnackBars.snackBarTextBoxEmpty(message);
   }
 
   void onMapCreated(GoogleMapController controller) {
