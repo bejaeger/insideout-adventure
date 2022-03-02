@@ -340,15 +340,12 @@ class BaseModel extends BaseViewModel {
     } else if (quest.type == QuestType.DistanceEstimate) {
       await navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
           arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
-    } else if (quest.type == QuestType.QRCodeSearch ||
-        quest.type == QuestType.QRCodeSearchIndoor ||
-        quest.type == QuestType.QRCodeHunt ||
+    } else if (quest.type == QuestType.QRCodeHunt ||
         quest.type == QuestType.GPSAreaHunt) {
       await navigationService.navigateTo(Routes.activeQrCodeSearchView,
           arguments: ActiveQrCodeSearchViewArguments(quest: quest));
     } else if (quest.type == QuestType.QRCodeHike ||
-        quest.type == QuestType.GPSAreaHike ||
-        quest.type == QuestType.Hunt) {
+        quest.type == QuestType.GPSAreaHike) {
       await navigationService.navigateTo(Routes.activeMapQuestView,
           arguments: ActiveMapQuestViewArguments(quest: quest));
     }

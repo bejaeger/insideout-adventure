@@ -30,10 +30,8 @@ class ActiveQuestStandaloneUIView extends StatelessWidget {
                     )
                   : currentQuest.type == QuestType.QRCodeHike
                       ? MapOverviewView()
-                      : currentQuest.type == QuestType.QRCodeSearch
-                          ? ActiveQrCodeSearchView(quest: currentQuest)
-                          : Text(
-                              "ERROR! Active quest view requested with unknown type. This should be reported to a developer. Thank you!");
+                      : Text(
+                          "ERROR! Active quest view requested with unknown type. This should be reported to a developer. Thank you!");
         });
   }
 }

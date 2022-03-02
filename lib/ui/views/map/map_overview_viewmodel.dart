@@ -98,11 +98,11 @@ class MapOverviewViewModel extends MapBaseViewModel {
     if (!hasActiveQuest) {
       if (_geolocationService.getUserLivePositionNullable != null) {
         final CameraPosition _initialCameraPosition = CameraPosition(
-            tilt: 90,
+            // tilt: 90,
             target: LatLng(
                 _geolocationService.getUserLivePositionNullable!.latitude,
                 _geolocationService.getUserLivePositionNullable!.longitude),
-            zoom: 16);
+            zoom: 14);
         return _initialCameraPosition;
       } else {
         return CameraPosition(
@@ -279,9 +279,6 @@ class MapOverviewViewModel extends MapBaseViewModel {
       } else if (quest?.type == QuestType.TreasureLocationSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueViolet);
-      } else if (quest?.type == QuestType.QRCodeSearch) {
-        return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueYellow);
       } else {
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
       }

@@ -54,11 +54,8 @@ Map<String, dynamic> _$$_QuestToJson(_$_Quest instance) => <String, dynamic>{
 const _$QuestTypeEnumMap = {
   QuestType.QRCodeHike: 'QRCodeHike',
   QuestType.GPSAreaHike: 'GPSAreaHike',
-  QuestType.Hunt: 'Hunt',
   QuestType.QRCodeHunt: 'QRCodeHunt',
   QuestType.GPSAreaHunt: 'GPSAreaHunt',
-  QuestType.QRCodeSearch: 'QRCodeSearch',
-  QuestType.QRCodeSearchIndoor: 'QRCodeSearchIndoor',
   QuestType.DistanceEstimate: 'DistanceEstimate',
   QuestType.TreasureLocationSearch: 'TreasureLocationSearch',
 };

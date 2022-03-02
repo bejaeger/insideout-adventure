@@ -100,8 +100,7 @@ class ActiveQuestService with ReactiveServiceMixin {
     _stopWatchService.startTimer();
 
     if (quest.type == QuestType.QRCodeHunt ||
-        quest.type == QuestType.GPSAreaHunt ||
-        quest.type == QuestType.QRCodeSearch) {
+        quest.type == QuestType.GPSAreaHunt) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
 

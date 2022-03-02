@@ -288,23 +288,6 @@ Quest getDummyQuest4() {
   );
 }
 
-Quest getDummyQuestQrCodeSearch() {
-  return Quest(
-    id: "QuestIdQrCodeSearch",
-    name: "Search For Codes at Woodway",
-    description: "Find hidden codes at Woodway place",
-    afkCredits: 50,
-    markers: [
-      intimateWoodwayMarker2(),
-      intimateWoodwayMarker3(),
-      intimateWoodwayMarker4(),
-    ],
-    type: QuestType.QRCodeSearch,
-    startMarker: intimateWoodwayMarker2(),
-    finishMarker: intimateWoodwayMarker4(),
-  );
-}
-
 Quest getQrCodeHuntJaeger() {
   return Quest(
     id: "aHynXLPBE68rxe3Y083L",

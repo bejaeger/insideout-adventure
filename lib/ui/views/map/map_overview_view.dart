@@ -83,69 +83,69 @@ class GoogleMapsScreen extends StatelessWidget {
           //Enable Traffic Mode.
           //trafficEnabled: true,
         ),
-        IgnorePointer(
-          child: Container(
-            color: Colors.green.withOpacity(0.1),
-          ),
-        ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: IgnorePointer(
-              child: Container(
-            height: 135,
-            child: Stack(
-              children: [
-                Container(
-                  height: 100,
-                  width: screenWidth(context),
-                  color: Colors.blue,
-                  child: Image.network(
-                    "https://prooptimania.s3.us-east-2.amazonaws.com/ckfinder/images/luz-azul-cielo-azul.jpg",
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomCenter,
-                  ),
-                ),
-                Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.white.withOpacity(0.3),
-                        Colors.white.withOpacity(0.1)
-                      ],
-                      // begin: Alignment.bottomCenter,
-                      // end: Alignment.topCenter,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 70,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white.withOpacity(0.0),
-                          Colors.white.withOpacity(0.9),
-                          Colors.white.withOpacity(0.9),
-                          Colors.white.withOpacity(0.0),
-                        ],
-                        stops: [
-                          0.0,
-                          0.45,
-                          0.55,
-                          1.0,
-                        ],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )),
-        ),
+        // IgnorePointer(
+        //   child: Container(
+        //     color: Colors.green.withOpacity(0.1),
+        //   ),
+        // ),
+        // Align(
+        //   alignment: Alignment.topCenter,
+        //   child: IgnorePointer(
+        //       child: Container(
+        //     height: 135,
+        //     child: Stack(
+        //       children: [
+        //         Container(
+        //           height: 100,
+        //           width: screenWidth(context),
+        //           color: Colors.blue,
+        //           child: Image.network(
+        //             "https://prooptimania.s3.us-east-2.amazonaws.com/ckfinder/images/luz-azul-cielo-azul.jpg",
+        //             fit: BoxFit.cover,
+        //             alignment: Alignment.bottomCenter,
+        //           ),
+        //         ),
+        //         Container(
+        //           height: 100,
+        //           decoration: BoxDecoration(
+        //             gradient: LinearGradient(
+        //               colors: [
+        //                 Colors.white.withOpacity(0.3),
+        //                 Colors.white.withOpacity(0.1)
+        //               ],
+        //               // begin: Alignment.bottomCenter,
+        //               // end: Alignment.topCenter,
+        //             ),
+        //           ),
+        //         ),
+        //         Align(
+        //           alignment: Alignment.bottomCenter,
+        //           child: Container(
+        //             height: 70,
+        //             decoration: BoxDecoration(
+        //               gradient: LinearGradient(
+        //                 colors: [
+        //                   Colors.white.withOpacity(0.0),
+        //                   Colors.white.withOpacity(0.9),
+        //                   Colors.white.withOpacity(0.9),
+        //                   Colors.white.withOpacity(0.0),
+        //                 ],
+        //                 stops: [
+        //                   0.0,
+        //                   0.45,
+        //                   0.55,
+        //                   1.0,
+        //                 ],
+        //                 begin: Alignment.bottomCenter,
+        //                 end: Alignment.topCenter,
+        //               ),
+        //             ),
+        //           ),
+        //         )
+        //       ],
+        //     ),
+        //   ),),
+        // ),
       ],
     );
   }

@@ -50,8 +50,6 @@ IconData getIconForCategory(QuestType category) {
       return Icons.arrow_right_alt;
     case QuestType.TreasureLocationSearch:
       return Icons.location_on;
-    case QuestType.QRCodeSearchIndoor:
-      return Icons.search_rounded;
     case QuestType.QRCodeHunt:
       return Icons.pets;
     case QuestType.QRCodeHike:
@@ -70,8 +68,6 @@ String getStringForCategory(QuestType? category) {
       return "Estimating Distance";
     case QuestType.TreasureLocationSearch:
       return "Treasure Search";
-    case QuestType.QRCodeSearchIndoor:
-      return "QR Code Search";
     case QuestType.QRCodeHunt:
       return "QR Code Hunt";
     case QuestType.GPSAreaHunt:
@@ -80,8 +76,6 @@ String getStringForCategory(QuestType? category) {
       return "QR Code Hike";
     case QuestType.GPSAreaHike:
       return "GPS Area Hike";
-    case QuestType.QRCodeSearch:
-      return "QR Code Search";
     default:
       return "Default Quest";
   }
@@ -96,8 +90,6 @@ Color getColorOfType(QuestType type) {
     return Colors.green;
   } else if (type == QuestType.DistanceEstimate) {
     return Colors.blue;
-  } else if (type == QuestType.QRCodeSearch) {
-    return Colors.green;
   } else {
     return Colors.cyan;
   }

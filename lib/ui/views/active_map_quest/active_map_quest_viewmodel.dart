@@ -891,9 +891,6 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
       } else if (quest?.type == QuestType.TreasureLocationSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueViolet);
-      } else if (quest?.type == QuestType.QRCodeSearch) {
-        return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueYellow);
       } else {
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
       }
