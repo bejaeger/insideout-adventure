@@ -133,7 +133,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
 
   void displayMarkersOnMap(LatLng pos) {
     setBusy(true);
-    addMarkersOnMap(pos: pos);
+    addMarkerOnMap(pos: pos);
     setBusy(false);
     notifyListeners();
   }
