@@ -95,35 +95,39 @@ class MarkerToAddSection extends StatelessWidget {
           verticalSpaceSmall,
           Row(
             children: [
-              InkWell(
-                onTap: () {
-                  model.navToSingleMarkerView();
-                }, // Handle your callback.
-                splashColor: Colors.brown.withOpacity(0.5),
-                child: Ink(
-                  height: 200,
-                  width: 180,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(kMapPath),
-                      fit: BoxFit.cover,
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    model.navToSingleMarkerView();
+                  }, // Handle your callback.
+                  splashColor: Colors.brown.withOpacity(0.5),
+                  child: Ink(
+                    height: 200,
+                    width: 180,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(kMapPath),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
               ),
               horizontalSpaceSmall,
-              InkWell(
-                onTap: () {
-                  model.navToQrcodeView();
-                }, // Handle your callback.
-                splashColor: Colors.brown.withOpacity(0.5),
-                child: Ink(
-                  height: 200,
-                  width: 180,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(kQrcodePath),
-                      fit: BoxFit.cover,
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    model.navToQrcodeView();
+                  }, // Handle your callback.
+                  splashColor: Colors.brown.withOpacity(0.5),
+                  child: Ink(
+                    height: 200,
+                    width: 180,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(kQrcodePath),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
