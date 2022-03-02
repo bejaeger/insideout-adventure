@@ -13,7 +13,7 @@ class DisplaySnackBars {
       onTap: (_) {
         print('snackbar tapped');
       },
-      mainButtonTitle: 'Ok',
+      //mainButtonTitle: 'Ok',
       onMainButtonTapped: () => print('Undo the action!'),
     );
   }
@@ -26,20 +26,20 @@ class DisplaySnackBars {
       onTap: (_) {
         print('snackbar tapped');
       },
-      mainButtonTitle: 'Ok',
+      //mainButtonTitle: 'Ok',
       onMainButtonTapped: () => print('Undo the action!'),
     );
   }
 
-  void snackBarTextBoxEmpty() {
+  void snackBarTextBoxEmpty([String? message]) {
     _snackBarService.showSnackbar(
-      message: 'One of the Field Value is Empty',
-      title: 'Empty Field',
-      duration: Duration(seconds: 5),
+      message: message ?? 'At least one of the input fields is empty',
+      title: 'Input not valid',
+      // duration: Duration(seconds: 5),
       onTap: (_) {
         print('snackbar tapped');
       },
-      mainButtonTitle: 'Ok',
+      //mainButtonTitle: 'Ok',
       onMainButtonTapped: () => print('Undo the action!'),
     );
   }
@@ -52,7 +52,7 @@ class DisplaySnackBars {
       onTap: (_) {
         print('snackbar tapped');
       },
-      mainButtonTitle: 'Ok',
+      //mainButtonTitle: 'Ok',
       onMainButtonTapped: () => print('Undo the action!'),
     );
   }
@@ -61,7 +61,7 @@ class DisplaySnackBars {
     _snackBarService.showSnackbar(
       title: "Quest Updated ",
       message: "Quest Updated with ${quest.name}",
-      duration: Duration(seconds: 5),
+      // duration: Duration(seconds: 5),
     );
   }
 

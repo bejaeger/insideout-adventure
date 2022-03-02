@@ -2,6 +2,7 @@
 
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,7 +18,6 @@ import 'create_quest_viewmodel.dart';
     FormTextField(name: 'description'),
     FormTextField(name: 'afkCreditAmount'),
     //FormTextField(name: 'markerNotes'),
-    FormTextField(name: 'questType'),
   ],
 )
 // ignore: must_be_immutable
@@ -48,11 +48,11 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 sliver: QuestCardList(
-                    model: model,
-                    nameController: nameController,
-                    afkCreditAmountController: afkCreditAmountController,
-                    descriptionController: descriptionController,
-                    questTypeController: questTypeController),
+                  model: model,
+                  nameController: nameController,
+                  afkCreditAmountController: afkCreditAmountController,
+                  descriptionController: descriptionController,
+                ),
               ),
             ],
           ),
@@ -69,14 +69,22 @@ class QuestCardList extends StatelessWidget {
   final TextEditingController? nameController;
   final TextEditingController? descriptionController;
   final TextEditingController? afkCreditAmountController;
-  final TextEditingController? questTypeController;
 
-  QuestCardList(
-      {required this.model,
-      required this.afkCreditAmountController,
-      required this.descriptionController,
-      required this.nameController,
-      required this.questTypeController});
+  showErrorTextBox(String? message) {
+    if (message != null) {
+      return Text(message, style: TextStyle(color: Colors.red));
+    }
+    if (message == null) {
+      return SizedBox(height: 0, width: 0);
+    }
+  }
+
+  QuestCardList({
+    required this.model,
+    required this.afkCreditAmountController,
+    required this.descriptionController,
+    required this.nameController,
+  });
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -96,6 +104,7 @@ class QuestCardList extends StatelessWidget {
               keyboardType: TextInputType.text,
               // focusNode: nameFocusNode,
             ),
+            showErrorTextBox(model.nameInputValidationMessage),
             verticalSpaceSmall,
             TextField(
               decoration: InputDecoration(
@@ -116,6 +125,7 @@ class QuestCardList extends StatelessWidget {
               ],
               controller: afkCreditAmountController,
             ),
+            showErrorTextBox(model.afkCreditsInputValidationMessage),
             verticalSpaceSmall,
             DropdownButtonFormField<QuestType>(
               //key: _key,
@@ -137,6 +147,7 @@ class QuestCardList extends StatelessWidget {
                 model.setQuestType(questType: questType!);
               },
             ),
+            showErrorTextBox(model.questTypeInputValidationMessage),
             verticalSpaceSmall,
             Expanded(
               child: GoogleMap(
@@ -153,6 +164,7 @@ class QuestCardList extends StatelessWidget {
                 // gestureRecognizers: Set()
               ),
             ),
+            showErrorTextBox(model.afkMarkersInputValidationMessage),
             verticalSpaceSmall,
             CustomAFKButton(
               busy: model.isLoading,
@@ -166,16 +178,13 @@ class QuestCardList extends StatelessWidget {
                 }
               },
               onMainButtonTapped: () async {
-                await model.clearFieldsAndNavigate();
-
-                //model.resetMarkersValues();
-
+                final result = await model.clearFieldsAndNavigate();
                 //Clear Controllers
-                nameController!.clear();
-                questTypeController!.clear();
-                afkCreditAmountController!.clear();
-                descriptionController!.clear();
-                // model.clearFieldsAndNavigate();
+                if (result) {
+                  nameController!.clear();
+                  afkCreditAmountController!.clear();
+                  descriptionController!.clear();
+                }
               },
             ),
           ],
