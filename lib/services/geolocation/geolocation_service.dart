@@ -465,4 +465,12 @@ class GeolocationService extends PausableService {
     final double newLon = latLng.longitude + dLon * 180 / math.pi;
     return LatLng(latLng.latitude, newLon);
   }
+
+  Future<Position?> setCurrentUserPosition() async {
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
+//  Position get getCUrrentUserPostion => _position!;
+
 }

@@ -7,8 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
-import 'package:uuid/uuid.dart';
-import '../../../../datamodels/quests/quest.dart';
 import '../../../layout_widgets/buttons_layouts.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
@@ -30,7 +28,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateQuestViewModel>.reactive(
       onModelReady: (model) {
-        // model.getQuestMarkers();
+        if (model.getCurrentPostion == null) model.setPosition();
         listenToFormUpdated(model);
       },
       // onModelReady: (model) => listenToFormUpdated(model),
@@ -79,12 +77,6 @@ class QuestCardList extends StatelessWidget {
       required this.descriptionController,
       required this.nameController,
       required this.questTypeController});
-
-  String? questId;
-  String? afkCreditId;
-  num? afkCreditAmount;
-  QuestType? selectedQuestType;
-
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -131,37 +123,39 @@ class QuestCardList extends StatelessWidget {
               isExpanded: true,
               items: QuestType.values.map((_questType) {
                 return DropdownMenuItem(
-                  // key: _key,
                   value: _questType,
-                  child: Text(
-                    _questType.toString().split('.').elementAt(1),
-                  ),
+                  child: model.isLoading == false
+                      ? Text(
+                          _questType.toString().split('.').elementAt(1),
+                        )
+                      : Text(
+                          "Select Quest Type",
+                        ),
                 );
               }).toList(),
-              onChanged: (QuestType? value) {
-                //if (selectedQuestType!.name.isNotEmpty) {
-                selectedQuestType = value;
-                // value = null;
+              onChanged: (QuestType? questType) {
+                model.setQuestType(questType: questType!);
               },
             ),
             verticalSpaceSmall,
             Expanded(
               child: GoogleMap(
-                zoomControlsEnabled: false,
+                // zoomControlsEnabled: true,
                 //mapType: MapType.hybrid,
                 initialCameraPosition: model.initialCameraPosition(),
                 //Place Markers in the Map
                 markers: model.getMarkersOnMap,
-
                 //callback that’s called when the map is ready to us.
                 onMapCreated: model.onMapCreated,
-
                 onTap: model.displayMarkersOnMap,
-                // onLongPress: model.removeMarkers,
+                // scrollGesturesEnabled: true,
+                //myLocationEnabled: true,
+                // gestureRecognizers: Set()
               ),
             ),
             verticalSpaceSmall,
             CustomAFKButton(
+              busy: model.isLoading,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainButtonTitle: 'Add',
               secundaryButtonTitle: 'Cancel',
@@ -172,35 +166,16 @@ class QuestCardList extends StatelessWidget {
                 }
               },
               onMainButtonTapped: () async {
-                if (afkCreditAmountController!.text.isNotEmpty &&
-                    nameController!.text.isNotEmpty &&
-                    selectedQuestType != null &&
-                    descriptionController!.text.isNotEmpty) {
-                  afkCreditAmount = num.parse(afkCreditAmountController!.text);
-                  var id = Uuid();
-                  questId = id.v1().toString().replaceAll('-', '');
-                  await model.createQuest(
-                    quest: Quest(
-                        id: questId!,
-                        startMarker: model.getAFKMarkers.first,
-                        finishMarker: model.getAFKMarkers.last,
-                        name: nameController!.text.toString(),
-                        description: descriptionController!.text.toString(),
-                        type: selectedQuestType!,
-                        markers: model.getAFKMarkers,
-                        afkCredits: afkCreditAmount!),
-                  );
+                await model.clearFieldsAndNavigate();
 
-                  model.resetMarkersValues();
-                  //Clear Controllers
-                  nameController!.clear();
-                  questTypeController!.clear();
-                  afkCreditAmountController!.clear();
-                  descriptionController!.clear();
-                  model.navBackToPreviousView();
-                } else {
-                  model.displayEmptyTextsSnackBar();
-                }
+                //model.resetMarkersValues();
+
+                //Clear Controllers
+                nameController!.clear();
+                questTypeController!.clear();
+                afkCreditAmountController!.clear();
+                descriptionController!.clear();
+                // model.clearFieldsAndNavigate();
               },
             ),
           ],

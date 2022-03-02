@@ -1,12 +1,10 @@
 // ignore_for_file: must_be_immutable
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
-import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
-import 'package:uuid/uuid.dart';
 import '../../../../utils/currency/format_currency.dart';
 import '../../../layout_widgets/buttons_layouts.dart';
 import 'insert_pre_purchased_gift_card_view.form.dart';
@@ -31,7 +29,10 @@ class InsertPrePurchasedGiftCardView extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<InsertPrePurchasedGiftCardViewModel>.reactive(
-      onModelReady: (model) => model.setListGiftCard(),
+      onModelReady: (model) {
+        model.setListGiftCard();
+        // listenToFormUpdated(model);
+      },
       builder: (context, model, child) => model.getListOfGiftCard.isNotEmpty
           ? Scaffold(
               body: CustomScrollView(
@@ -69,12 +70,10 @@ class InsertGiftCard extends StatelessWidget {
       {required this.model,
       required this.amountController,
       this.giftCardCodeController});
-  String? selectedGiftCardType;
+  String? selectedGiftCardcategoryName;
   String? categoryId;
-  String? giftCardId;
-  // String? afkCreditId;
-  double? giftCardAmount;
-  String? giftCardCode;
+  //double? giftCardAmount;
+
   final formatCurrency = FormatCurrency();
   @override
   Widget build(BuildContext context) {
@@ -121,9 +120,10 @@ class InsertGiftCard extends StatelessWidget {
                         },
                       ).toList(),
                       onChanged: (GiftCardCategory? value) {
-                        selectedGiftCardType = value!.categoryName.toString();
+                        selectedGiftCardcategoryName =
+                            value?.categoryName.toString();
 
-                        categoryId = value.categoryId.toString();
+                        categoryId = value?.categoryId.toString();
                       },
                     ),
                     verticalSpaceMedium,
@@ -132,21 +132,12 @@ class InsertGiftCard extends StatelessWidget {
                       mainButtonTitle: 'Add',
                       secundaryButtonTitle: 'Cancel',
                       onMainButtonTapped: () {
-                        if (giftCardCodeController!.text.isNotEmpty &&
-                            giftCardCodeController!.text.length == 16) {
-                          var id = Uuid();
-                          giftCardCode = giftCardCodeController!.text;
-                          giftCardId = id.v1().toString().replaceAll('-', '');
-                          model!.insertPrePurchasedGiftCard(
-                            prePurchasedGiftCard: PrePurchasedGiftCard(
-                                id: giftCardId!,
-                                categoryId: categoryId!,
-                                giftCardCode: giftCardCode!,
-                                categoryName: selectedGiftCardType!),
-                          );
-                        } else {
-                          model!.emptyTextFields();
-                        }
+                        model!.insertPrePurchasedGiftCard(
+                          categoryId: categoryId?.toString(),
+                          categoryName:
+                              selectedGiftCardcategoryName?.toString(),
+                          giftCardCode: giftCardCodeController!.text.toString(),
+                        );
                         model!.navBackToPreviousView();
                       },
                       onSecondaryButtonTapped: () {

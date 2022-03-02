@@ -664,7 +664,11 @@ class FirestoreApi {
         log.v(
             'This is our List of Gift Cards: $prePurchasedGiftCards in our Database');
         return prePurchasedGiftCards.docs
-            .map((docs) => PrePurchasedGiftCard.fromJson(docs.data()))
+            .map(
+              (docs) => PrePurchasedGiftCard.fromJson(
+                docs.data(),
+              ),
+            )
             .toList();
       } else {
         log.wtf('You are Providing me Empty Document $prePurchasedGiftCards');

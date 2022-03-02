@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_pur
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_viewmodel.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
+import 'package:uuid/uuid.dart';
 
 class InsertPrePurchasedGiftCardViewModel extends GiftCardsImageViewModel {
   final logger = getLogger('InsertPrePurchasedGiftCardViewModel');
@@ -14,17 +15,35 @@ class InsertPrePurchasedGiftCardViewModel extends GiftCardsImageViewModel {
   List<String> listOfGiftCategories = [];
 
   @override
-  void setFormStatus() {}
+  void setFormStatus() {
+    logger.i('Set the Form With Data: $formValueMap');
+  }
+
   //Upload Image to Firebase.
   Future<bool>? insertPrePurchasedGiftCard(
-      {required PrePurchasedGiftCard prePurchasedGiftCard}) async {
-    if (prePurchasedGiftCard.categoryId.isNotEmpty) {
+      {required String? categoryId,
+      required String? categoryName,
+      required String giftCardCode}) async {
+    if ((giftCardCode == "") ||
+        (giftCardCode.length != 16) ||
+        (categoryName?.toString() == null) ||
+        (categoryId?.toString() == null)) {
+      emptyTextFields();
+    } else {
+      var id = Uuid();
+      String giftCardId = id.v1().toString().replaceAll('-', '');
+      //int _giftCardCode = int.parse(giftCardCode);
+
       bool checkIsert =
           await _giftCardService.insertPrePurchasedGiftCardCategory(
-              prePurchasedGiftCard: prePurchasedGiftCard);
+        prePurchasedGiftCard: PrePurchasedGiftCard(
+            categoryId: categoryId!,
+            id: giftCardId,
+            giftCardCode: giftCardCode,
+            categoryName: categoryName!),
+      );
       if (checkIsert) {
         displaySnackBars.snackBarInsertedPrePurchasedGC();
-
         return checkIsert;
       }
     }
@@ -50,6 +69,7 @@ class InsertPrePurchasedGiftCardViewModel extends GiftCardsImageViewModel {
   }
 
   void emptyTextFields() {
+    logger.wtf('You are Proving Empty Fields');
     displaySnackBars.snackBarTextBoxEmpty();
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +53,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
 
   @override
   void dispose() {
-    _googleMapController!.dispose();
+    _googleMapController?.dispose();
     super.dispose();
   }
 
