@@ -100,11 +100,11 @@ class BaseModel extends BaseViewModel {
     questService.clearData();
     activeQuestService.clearData();
     _giftCardService.clearData();
-    await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
     transfersHistoryService.clearData();
     geolocationService.clearData();
     _questTestingService.maybeReset();
     gamificationService.clearData();
+    await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
   }
 
   void unregisterViewModels() {

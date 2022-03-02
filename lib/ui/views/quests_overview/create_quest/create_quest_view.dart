@@ -141,7 +141,7 @@ class QuestCardList extends StatelessWidget {
               onChanged: (QuestType? value) {
                 //if (selectedQuestType!.name.isNotEmpty) {
                 selectedQuestType = value;
-                value = null;
+                // value = null;
               },
             ),
             verticalSpaceSmall,
@@ -174,7 +174,7 @@ class QuestCardList extends StatelessWidget {
               onMainButtonTapped: () async {
                 if (afkCreditAmountController!.text.isNotEmpty &&
                     nameController!.text.isNotEmpty &&
-                    //selectedQuestType!.name.isNotEmpty &&
+                    selectedQuestType != null &&
                     descriptionController!.text.isNotEmpty) {
                   afkCreditAmount = num.parse(afkCreditAmountController!.text);
                   var id = Uuid();
@@ -186,7 +186,7 @@ class QuestCardList extends StatelessWidget {
                         finishMarker: model.getAFKMarkers.last,
                         name: nameController!.text.toString(),
                         description: descriptionController!.text.toString(),
-                        type: selectedQuestType ?? QuestType.QRCodeHike,
+                        type: selectedQuestType!,
                         markers: model.getAFKMarkers,
                         afkCredits: afkCreditAmount!),
                   );

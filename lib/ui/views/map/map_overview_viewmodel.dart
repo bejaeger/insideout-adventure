@@ -15,6 +15,7 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class MapOverviewViewModel extends MapBaseViewModel {
   final log = getLogger('MapViewModel');
@@ -36,11 +37,15 @@ class MapOverviewViewModel extends MapBaseViewModel {
   double _devicePixelRatio = 0;
 
   Set<Marker> markersOnMap = {};
+  String mapStyle = "";
 
   Future initializeMapAndMarkers(
       {required double mapWidth,
       required double mapHeight,
       required double devicePixelRatio}) async {
+    await rootBundle.loadString('assets/DayStyle.json').then((string) {
+      mapStyle = string;
+    });
     _mapWidth = mapWidth;
     _mapHeight = mapHeight;
     _devicePixelRatio = devicePixelRatio;
@@ -93,10 +98,11 @@ class MapOverviewViewModel extends MapBaseViewModel {
     if (!hasActiveQuest) {
       if (_geolocationService.getUserLivePositionNullable != null) {
         final CameraPosition _initialCameraPosition = CameraPosition(
+            tilt: 90,
             target: LatLng(
                 _geolocationService.getUserLivePositionNullable!.latitude,
                 _geolocationService.getUserLivePositionNullable!.longitude),
-            zoom: 14);
+            zoom: 16);
         return _initialCameraPosition;
       } else {
         return CameraPosition(
@@ -298,6 +304,7 @@ class MapOverviewViewModel extends MapBaseViewModel {
 
   @override
   void onMapCreated(GoogleMapController controller) {
+    controller.setMapStyle(mapStyle);
     _googleMapController = controller;
   }
 }

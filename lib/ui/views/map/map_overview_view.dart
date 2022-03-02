@@ -50,34 +50,103 @@ class GoogleMapsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      onTap: (_) => model.notifyListeners(),
-      //mapType: MapType.hybrid,
-      initialCameraPosition: model.initialCameraPosition(),
+    return Stack(
+      children: [
+        GoogleMap(
+          onTap: (_) => model.notifyListeners(),
+          //mapType: MapType.hybrid,
+          initialCameraPosition: model.initialCameraPosition(),
 
-      //Place Markers in the Map
-      markers: model.markersOnMap,
-      // onCameraMove: ,
+          //Place Markers in the Map
+          markers: model.markersOnMap,
+          // onCameraMove: ,
 
-      //callback that’s called when the map is ready to use.
-      onMapCreated: model.onMapCreated,
+          //callback that’s called when the map is ready to use.
+          onMapCreated: model.onMapCreated,
 
-      //enable zoom gestures
-      zoomGesturesEnabled: true,
-      //minMaxZoomPreference: MinMaxZoomPreference(13,17)
+          //enable zoom gestures
+          zoomGesturesEnabled: true,
+          //minMaxZoomPreference: MinMaxZoomPreference(13,17)
 
-      //For showing your current location on Map with a blue dot.
-      myLocationEnabled: true,
-      //Remove the Zoom in and out button
-      zoomControlsEnabled: false,
+          //For showing your current location on Map with a blue dot.
+          myLocationEnabled: true,
+          //Remove the Zoom in and out button
+          zoomControlsEnabled: false,
 
-      // Button used for bringing the user location to the center of the camera view.
-      myLocationButtonEnabled: true,
+          tiltGesturesEnabled: true,
 
-      mapToolbarEnabled: false,
-      //onTap: model.handleTap(),
-      //Enable Traffic Mode.
-      //trafficEnabled: true,
+          // Button used for bringing the user location to the center of the camera view.
+          myLocationButtonEnabled: true,
+
+          mapToolbarEnabled: false,
+          //onTap: model.handleTap(),
+          //Enable Traffic Mode.
+          //trafficEnabled: true,
+        ),
+        IgnorePointer(
+          child: Container(
+            color: Colors.green.withOpacity(0.1),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: IgnorePointer(
+              child: Container(
+            height: 135,
+            child: Stack(
+              children: [
+                Container(
+                  height: 100,
+                  width: screenWidth(context),
+                  color: Colors.blue,
+                  child: Image.network(
+                    "https://prooptimania.s3.us-east-2.amazonaws.com/ckfinder/images/luz-azul-cielo-azul.jpg",
+                    fit: BoxFit.cover,
+                    alignment: Alignment.bottomCenter,
+                  ),
+                ),
+                Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.white.withOpacity(0.3),
+                        Colors.white.withOpacity(0.1)
+                      ],
+                      // begin: Alignment.bottomCenter,
+                      // end: Alignment.topCenter,
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 70,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white.withOpacity(0.0),
+                          Colors.white.withOpacity(0.9),
+                          Colors.white.withOpacity(0.9),
+                          Colors.white.withOpacity(0.0),
+                        ],
+                        stops: [
+                          0.0,
+                          0.45,
+                          0.55,
+                          1.0,
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )),
+        ),
+      ],
     );
   }
 }

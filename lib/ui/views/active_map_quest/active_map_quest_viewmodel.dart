@@ -47,9 +47,9 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
     setBusy(true);
     await super.initialize(quest: quest);
     // Option to add custom map style
-    // await rootBundle.loadString('assets/map_style.txt').then((string) {
-    //   mapStyle = string;
-    // });
+    await rootBundle.loadString('assets/DayStyle.json').then((string) {
+      mapStyle = string;
+    });
     setBusy(false);
 
     if (quest.type == QuestType.QRCodeHike) {
@@ -595,7 +595,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
       try {
         _googleMapController = controller;
         // await Future.delayed(Duration(milliseconds: 50));
-        // controller.setMapStyle(mapStyle);
+        controller.setMapStyle(mapStyle);
         // for camera position
 
         //Add Starter Marker
@@ -614,7 +614,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
     } else {
       _googleMapController = controller;
       // await Future.delayed(Duration(milliseconds: 50));
-      // controller.setMapStyle(mapStyle);
+      controller.setMapStyle(mapStyle);
       if (currentQuest != null) {
         // animate camera to markers
         animateCameraToQuestMarkers(controller);
