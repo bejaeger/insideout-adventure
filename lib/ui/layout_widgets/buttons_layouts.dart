@@ -1,3 +1,4 @@
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -29,18 +30,14 @@ class CustomAFKButton extends StatelessWidget {
             width: 150,
             height: 40,
             child: ElevatedButton(
-              onPressed: onMainButtonTapped,
-              child: busy
-                  ? CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Colors.green),
-                    )
-                  : Text(
-                      mainButtonTitle!,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
+              onPressed: onSecondaryButtonTapped,
+              child: Text(
+                secundaryButtonTitle!,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14),
+              ),
             ),
           ),
         ),
@@ -50,14 +47,16 @@ class CustomAFKButton extends StatelessWidget {
             width: 150,
             height: 40,
             child: ElevatedButton(
-              onPressed: onSecondaryButtonTapped,
-              child: Text(
-                secundaryButtonTitle!,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14),
-              ),
+              onPressed: onMainButtonTapped,
+              child: busy
+                  ? AFKProgressIndicator(color: Colors.white)
+                  : Text(
+                      mainButtonTitle!,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14),
+                    ),
             ),
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
@@ -48,6 +49,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   }
 
   bool isValidUserInputs() {
+    resetValidationMessages();
     bool isValid = true;
     if (afkCreditAmountValue == null) {
       afkCreditsInputValidationMessage = 'Choose AFK Credits amount';
@@ -72,10 +74,6 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       questTypeInputValidationMessage = "Choose a quest type";
       isValid = false;
     }
-    if (getAFKMarkers.length < 2) {
-      afkMarkersInputValidationMessage = "Choose at least 2 markers";
-      isValid = false;
-    }
     if (!isValid) {
       _log.e("Input not valid");
       displayEmptyTextsSnackBar();
@@ -84,8 +82,15 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     return isValid;
   }
 
+  bool isValidMarkerInput() {
+    if (getAFKMarkers.length < 2) {
+      afkMarkersInputValidationMessage = "Choose at least 2 markers";
+      return false;
+    }
+    return true;
+  }
+
   Future<bool?> _createQuest() async {
-    resetValidationMessages();
     if (!isValidUserInputs()) return false;
     isLoading = true;
     notifyListeners();
@@ -105,8 +110,6 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     );
     isLoading = false;
     notifyListeners();
-    _log.i("I am here");
-    print("added");
     if (added) {
       _log.i("Quest added successfully!");
       _displaySnackBars.snackBarCreatedQuest();
@@ -114,7 +117,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       await Future.delayed(Duration(seconds: 2));
       return true;
     }
-    print("WHY HERE!?");
+
     _displaySnackBars.snackBarNotCreatedQuest();
     return false;
   }

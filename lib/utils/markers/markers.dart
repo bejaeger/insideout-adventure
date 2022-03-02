@@ -34,7 +34,7 @@ abstract class AFKMarks extends FormViewModel {
     } else {
       return CameraPosition(
         target: getDummyCoordinates(),
-        zoom: 21,
+        zoom: 15,
       );
     }
   }
