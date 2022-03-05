@@ -301,7 +301,7 @@ class MapOverviewViewModel extends MapBaseViewModel {
 
   @override
   void onMapCreated(GoogleMapController controller) {
-    controller.setMapStyle(mapStyle);
+    // controller.setMapStyle(mapStyle);
     _googleMapController = controller;
   }
 }

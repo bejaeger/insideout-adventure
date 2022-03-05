@@ -102,6 +102,7 @@ ios/Runner/AppDelegate.swift
 
 # firebase config files
 lib/firebase_options_dev.dart
+lib/firebase_options_prod.dart
 
 #
 # since no unit tests are used atm we can remove that from git

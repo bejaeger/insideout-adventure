@@ -28,6 +28,7 @@ class QuestCommonDialogViewModel extends ActiveQuestBaseViewModel {
       }
       status = CollectCreditsStatus.done;
     } else if (result == CollectCreditsStatus.todo) {
+      setBusy(false);
       return;
     }
     setBusy(false);

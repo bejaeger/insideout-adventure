@@ -32,6 +32,10 @@ class LoginViewModel extends AuthenticationViewModel {
     if (_flavorConfigProvider.flavor == Flavor.dev) {
       return () => saveData(AuthenticationMethod.dummy, userRole);
     }
+    // provide dummy login also in prod database!
+    if (_flavorConfigProvider.flavor == Flavor.prod) {
+      return () => saveData(AuthenticationMethod.dummy, userRole);
+    }
   }
 
 /*   @override

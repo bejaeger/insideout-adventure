@@ -347,7 +347,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     _reactToServices(reactiveServices);
   }
   List<ReactiveServiceMixin> get reactiveServices =>
-      [questService]; // _reactiveServices;
+      [activeQuestService]; // _reactiveServices;
   void _reactToServices(List<ReactiveServiceMixin> reactiveServices) {
     _reactiveServices = reactiveServices;
     for (var reactiveService in _reactiveServices) {

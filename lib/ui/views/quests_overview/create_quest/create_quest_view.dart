@@ -226,8 +226,9 @@ class ChooseMarkersView extends StatelessWidget with $CreateQuestView {
               //callback that’s called when the map is ready to us.
               onMapCreated: model.onMapCreated,
               onTap: model.displayMarkersOnMap,
+
               // scrollGesturesEnabled: true,
-              //myLocationEnabled: true,
+              myLocationEnabled: true,
               // gestureRecognizers: Set()
             ),
           ),
