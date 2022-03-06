@@ -33,12 +33,10 @@ void mainCommon(Flavor flavor) async {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     // initialize firebase app via index.html
     if (!kIsWeb) {
-      // await Firebase.initializeApp(
-      //     options: flavor == Flavor.dev
-      //         ? dev.DefaultFirebaseOptions.currentPlatform
-      //         : prod.DefaultFirebaseOptions.currentPlatform);
       await Firebase.initializeApp(
-          options: prod.DefaultFirebaseOptions.currentPlatform);
+          options: flavor == Flavor.dev
+              ? dev.DefaultFirebaseOptions.currentPlatform
+              : prod.DefaultFirebaseOptions.currentPlatform);
     }
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();
