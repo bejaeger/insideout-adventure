@@ -4,7 +4,6 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
@@ -12,6 +11,7 @@ import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 
 abstract class QuestViewModel extends BaseModel {
   final log = getLogger("QuestViewModel");

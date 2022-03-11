@@ -20,7 +20,7 @@ import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 
 import 'firebase_options_dev.dart' as dev;
-import 'firebase_options_prod.dart' as prod;
+//import 'firebase_options_prod.dart' as prod;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -38,7 +38,10 @@ void mainCommon(Flavor flavor) async {
       //         ? dev.DefaultFirebaseOptions.currentPlatform
       //         : prod.DefaultFirebaseOptions.currentPlatform);
       await Firebase.initializeApp(
-          options: prod.DefaultFirebaseOptions.currentPlatform);
+          options: dev.DefaultFirebaseOptions.currentPlatform);
+
+/*       await Firebase.initializeApp(
+          options: prod.DefaultFirebaseOptions.currentPlatform); */
     }
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();

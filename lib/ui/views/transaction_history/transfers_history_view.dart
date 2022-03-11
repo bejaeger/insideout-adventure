@@ -1,5 +1,5 @@
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 import 'package:afkcredits/ui/views/transaction_history/transfers_history_viewmodel.dart';

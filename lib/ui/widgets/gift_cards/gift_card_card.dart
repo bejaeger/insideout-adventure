@@ -3,7 +3,7 @@ import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_cat
 import 'package:afkcredits/ui/widgets/cach_network_image/cached_network_image_wrapper.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class GiftCardCard extends StatelessWidget {

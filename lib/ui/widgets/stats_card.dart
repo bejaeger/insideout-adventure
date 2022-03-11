@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/stats_type.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class StatsCard extends StatelessWidget {

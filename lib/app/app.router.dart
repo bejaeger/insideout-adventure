@@ -6,15 +6,14 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked/stacked_annotations.dart';
 
 import '../datamodels/quests/quest.dart';
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/authentication_method.dart';
 import '../enums/bottom_nav_bar_index.dart';
-import '../enums/quest_type.dart';
 import '../enums/quest_view_index.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';

@@ -3,7 +3,7 @@ import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_lists.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

@@ -1,6 +1,5 @@
 import 'package:afkcredits/ui/layout_widgets/layout_settings.dart';
-import 'package:afkcredits/ui/shared/colors/color_settings.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBarSmall extends StatelessWidget {

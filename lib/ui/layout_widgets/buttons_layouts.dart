@@ -1,5 +1,6 @@
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
+
 import 'package:flutter/material.dart';
 
 class CustomAFKButton extends StatelessWidget {

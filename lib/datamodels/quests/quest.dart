@@ -1,6 +1,6 @@
 import 'package:afkcredits/datamodels/quests/marker_note/marker_note.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
-import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'quest.freezed.dart';

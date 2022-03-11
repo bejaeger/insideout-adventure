@@ -16,7 +16,7 @@ import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:stacked/stacked.dart';

@@ -1,8 +1,7 @@
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/quest_category_card.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 
 class QuestsCategoryList extends StatelessWidget {
   final QuestsOverviewViewModel model;
@@ -26,7 +25,7 @@ class QuestsCategoryList extends StatelessWidget {
             children: [
               ...model.questTypes
                   .map(
-                    (e) => QuestCategoryCard(
+                    (e) => AfkCreditsCategoryCard(
                       onPressed: model.navigateToQuestsOfSpecificTypeView,
                       category: e,
                       backgroundColor: getColorOfType(e),

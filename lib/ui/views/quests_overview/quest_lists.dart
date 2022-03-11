@@ -2,10 +2,9 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/quest_category_card.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class QuestLists extends StatelessWidget {
@@ -98,7 +97,7 @@ class QuestLists extends StatelessWidget {
               children: [
                 ...model.questTypes
                     .map(
-                      (e) => QuestCategoryCard(
+                      (e) => AfkCreditsCategoryCard(
                         onPressed: model.navigateToQuestsOfSpecificTypeView,
                         category: e,
                         backgroundColor: getColorOfType(e),

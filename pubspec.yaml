@@ -101,6 +101,9 @@ dependencies:
   map_picker: ^0.0.3
   image_picker: ^0.8.4+4
   progress_indicator_button: ^0.0.3
+  afkcredits_ui: 
+    path: ./afkcredits_ui/
+    
 
 dev_dependencies:
   flutter_test:

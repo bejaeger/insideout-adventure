@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class EmptyNote extends StatelessWidget {
@@ -21,7 +21,8 @@ class EmptyNote extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-              title ?? "You mastered this mission!",// "You are the best, you successfully finished the quest",
+              title ??
+                  "You mastered this mission!", // "You are the best, you successfully finished the quest",
               textAlign: TextAlign.center,
               style: textTheme(context).headline3),
         ),

@@ -6,7 +6,7 @@ import 'package:afkcredits/ui/views/history_and_achievements/history_and_achieve
 import 'package:afkcredits/ui/widgets/achievement_card.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/finished_quest_card.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

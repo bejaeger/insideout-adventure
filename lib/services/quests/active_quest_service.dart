@@ -10,7 +10,6 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/marker_collection_failure_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -18,6 +17,7 @@ import 'package:afkcredits/services/quest_testing_service/quest_testing_service.
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:rxdart/subjects.dart';

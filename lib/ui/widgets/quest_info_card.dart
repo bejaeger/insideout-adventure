@@ -2,8 +2,10 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
+
+import '../../utils/ui_helpers.dart';
 
 class QuestInfoCard extends StatelessWidget {
   final double height;

@@ -1,4 +1,3 @@
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
@@ -15,7 +14,7 @@ import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/ui/widgets/not_enough_sponsoring_note.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';

@@ -1,4 +1,3 @@
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
@@ -7,7 +6,7 @@ import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_vi
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

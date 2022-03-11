@@ -1,17 +1,16 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
 import 'package:afkcredits/utils/markers/markers.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../datamodels/quests/quest.dart';
-import '../../../../enums/quest_type.dart';
 import '../../../../services/geolocation/geolocation_service.dart';
 
 class CreateQuestViewModel extends AFKMarks with NavigationMixin {

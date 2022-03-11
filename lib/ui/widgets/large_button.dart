@@ -1,6 +1,5 @@
 import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 

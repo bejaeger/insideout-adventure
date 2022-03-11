@@ -1,6 +1,6 @@
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/enums/gift_card_type.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';

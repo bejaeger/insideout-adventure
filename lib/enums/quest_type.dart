@@ -1,4 +1,4 @@
-enum QuestType {
+/* enum QuestType {
   QRCodeHike,
   GPSAreaHike,
   // Hunt,
@@ -8,4 +8,4 @@ enum QuestType {
   // QRCodeSearchIndoor, // changes in UI!
   DistanceEstimate,
   TreasureLocationSearch,
-}
+} */

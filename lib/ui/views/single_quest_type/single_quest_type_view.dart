@@ -1,11 +1,10 @@
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,7 +19,7 @@ class SingleQuestTypeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SingleQuestViewModel>.reactive(
-      viewModelBuilder: () => SingleQuestViewModel(questType: questType),
+      viewModelBuilder: () => SingleQuestViewModel(questType: questType!),
       onModelReady: (model) {
         SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
           model.notifyListeners();

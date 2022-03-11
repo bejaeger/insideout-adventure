@@ -1,8 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CollectedMarkerDialog extends StatelessWidget {

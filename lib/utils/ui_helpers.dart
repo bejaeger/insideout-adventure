@@ -1,6 +1,5 @@
-import 'package:afkcredits/enums/quest_type.dart';
-import 'package:flutter/material.dart';
 
+/* 
 const Widget horizontalSpaceTiny = SizedBox(width: 5.0);
 const Widget horizontalSpaceSmall = SizedBox(width: 10.0);
 const Widget horizontalSpaceRegular = SizedBox(width: 18.0);
@@ -43,7 +42,8 @@ Size screenSize(BuildContext context) => MediaQuery.of(context).size;
 
 isDesktop(BuildContext context) => MediaQuery.of(context).size.width > 600;
 TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
-
+ */
+/* 
 IconData getIconForCategory(QuestType category) {
   switch (category) {
     case QuestType.DistanceEstimate:
@@ -94,3 +94,4 @@ Color getColorOfType(QuestType type) {
     return Colors.cyan;
   }
 }
+ */

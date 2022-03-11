@@ -3,8 +3,8 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/dialog/travelled_distance_dialog_viewmodel.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 

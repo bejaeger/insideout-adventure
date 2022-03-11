@@ -2,6 +2,7 @@ import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_viewmodel.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.form.dart';
 import 'package:stacked/stacked.dart';
@@ -28,23 +29,38 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
           onMainButtonTapped: () => model.saveData(AuthenticationMethod.email),
           onBackPressed: model.replaceWithSelectRoleView,
           validationMessage: model.validationMessage,
-          title: 'Create $roleString Account',
-          subtitle: 'Enter your name, email and password for sign up.',
+          title: AfkCreditsText.headingOne('Create $roleString Account'),
+          subtitle: AfkCreditsText.subheading(
+              'Enter your name, email and password for sign up.'),
           mainButtonTitle: 'SIGN UP',
           form: Column(
             children: [
-              TextField(
-                decoration: InputDecoration(labelText: 'Full Name'),
+              //    PratokenteText.headingLogin('Full Name: '),
+              AfkCreditsInputField(
+                leading: Icon(Icons.person),
                 controller: fullNameController,
+                trailing: Icon(Icons.close),
+                trailingTapped: () => fullNameController.clear(),
+                //leading: Text('Email'),
               ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Email'),
+              verticalSpaceRegular,
+              // PratokenteText.headingLogin('Email: '),
+              AfkCreditsInputField(
                 controller: emailController,
+                leading: Icon(Icons.email),
+                trailing: Icon(Icons.close),
+                trailingTapped: () => emailController.clear(),
+                //leading: Text('Email'),
               ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
+              verticalSpaceRegular,
+              //PratokenteText.headingLogin('Password: '),
+              AfkCreditsInputField(
+                leading: Icon(Icons.lock),
                 controller: passwordController,
+                password: true,
+                trailing: Icon(Icons.close),
+                trailingTapped: () => passwordController.clear(),
+                //leading: Text('Email'),
               ),
             ],
           ),

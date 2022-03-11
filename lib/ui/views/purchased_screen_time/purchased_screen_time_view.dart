@@ -4,7 +4,7 @@ import 'package:afkcredits/ui/views/purchased_screen_time/purchased_screen_time_
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/empty_note.dart';
 import 'package:afkcredits/ui/widgets/screen_time_voucher.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

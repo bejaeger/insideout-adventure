@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/search_test_field.dart';
 import 'package:afkcredits/utils/debouncer.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class SearchLayout extends StatelessWidget {

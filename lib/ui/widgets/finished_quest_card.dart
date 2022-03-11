@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

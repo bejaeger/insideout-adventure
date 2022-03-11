@@ -1,11 +1,11 @@
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
 
 class AuthenticationLayout extends StatelessWidget {
-  final String? title;
-  final String? subtitle;
+  final Widget? title;
+  final Widget? subtitle;
   final String? mainButtonTitle;
   final Widget? form;
   final String? googleText;
@@ -69,18 +69,16 @@ class AuthenticationLayout extends StatelessWidget {
                 ),
                 onPressed: onBackPressed,
               ),
-            Text(
-              title!,
-              style: textTheme(context).headline4,
-            ),
+            // Text(
+            title!,
+            /*  style: textTheme(context).headline4,
+            ), */
             verticalSpaceSmall,
             Align(
               alignment: Alignment.centerLeft,
               child: SizedBox(
                 width: screenWidth(context, percentage: 0.7),
-                child: Text(
-                  subtitle!,
-                ),
+                child: subtitle!,
               ),
             ),
             verticalSpaceRegular,

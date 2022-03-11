@@ -15,7 +15,7 @@ const Color kDarkTurquoise = Color(0xFF00827e);
 const Color kBlackHeadlineColor = Colors.black;
 
 const Color kTextFieldBackground = Color(0xFFEEEEEE);
-const Color kGreyTextColor = Color(0xFF424242);
+//const Color kGreyTextColor = Color(0xFF424242);
 
 const Color kNiceOrange = Color(0xFFE6B97F);
 const Color kNiceLightRed = Color(0xFFDD9C8B);

@@ -7,7 +7,7 @@ import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/enums/screen_time_voucher_status.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 

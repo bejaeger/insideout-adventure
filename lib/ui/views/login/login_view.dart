@@ -1,7 +1,7 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -39,17 +39,40 @@ class LoginView extends StatelessWidget with $LoginView {
           onMainButtonTapped: () => model
               .saveData(AuthenticationMethod.EmailOrSponsorCreatedExplorer),
           validationMessage: model.validationMessage,
-          title: 'Welcome to AFK Credits',
-          subtitle: 'real-world quests, in-game rewards',
+          title: AfkCreditsText.headingOne(
+            'Welcome to AFK Credits',
+            align: TextAlign.center,
+          ),
+          subtitle:
+              AfkCreditsText.subheading('real-world quests, in-game rewards'),
           mainButtonTitle: 'SIGN IN',
           form: Column(
             children: [
-              TextField(
+              AfkCreditsInputField(
+                controller: emailOrNameController,
+                leading: Icon(Icons.email),
+                //  placeholder: "Email",
+                trailing: Icon(Icons.close),
+                trailingTapped: () => emailOrNameController.clear(),
+                //leading: Text('Email'),
+              ),
+              verticalSpaceRegular,
+
+              /*        TextField(
                 decoration:
                     InputDecoration(labelText: 'Email or explorer name'),
                 controller: emailOrNameController,
+              ), */
+              AfkCreditsInputField(
+                leading: Icon(Icons.lock),
+                controller: passwordController,
+                // placeholder: "Password",
+                //leading: Text('Password'),
+                password: true,
+                trailing: Icon(Icons.close),
+                trailingTapped: () => passwordController.clear(),
               ),
-              TextField(
+              /*         TextField(
                 decoration: InputDecoration(
                   labelText: 'Password',
                   suffixIcon: IconButton(
@@ -63,7 +86,7 @@ class LoginView extends StatelessWidget with $LoginView {
                 ),
                 obscureText: (model.isPwShown) ? false : true,
                 controller: passwordController,
-              ),
+              ), */
               // with custom text
             ],
           ),

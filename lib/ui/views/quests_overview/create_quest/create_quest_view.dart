@@ -2,14 +2,14 @@
 
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/enums/quest_type.dart';
-import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import '../../../layout_widgets/buttons_layouts.dart';
+import '../../../widgets/error_text_box/error_text_box.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
 
@@ -112,7 +112,7 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
               keyboardType: TextInputType.text,
               // focusNode: nameFocusNode,
             ),
-            showErrorTextBox(model.nameInputValidationMessage),
+            ErrorTextBox(message: model.nameInputValidationMessage.toString()),
             verticalSpaceSmall,
             TextField(
               decoration: InputDecoration(
@@ -133,7 +133,8 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
               ],
               controller: afkCreditAmountController,
             ),
-            showErrorTextBox(model.afkCreditsInputValidationMessage),
+            ErrorTextBox(
+                message: model.afkCreditsInputValidationMessage.toString()),
             verticalSpaceSmall,
             DropdownButtonFormField<QuestType>(
               //key: _key,
@@ -159,8 +160,10 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
                 model.setQuestType(questType: questType!);
               },
             ),
-            showErrorTextBox(model.questTypeInputValidationMessage),
-            showErrorTextBox(model.afkMarkersInputValidationMessage),
+            ErrorTextBox(
+                message: model.questTypeInputValidationMessage.toString()),
+            ErrorTextBox(
+                message: model.afkMarkersInputValidationMessage.toString()),
             verticalSpaceSmall,
             Spacer(),
             Padding(
@@ -298,10 +301,11 @@ class ChooseMarkersView extends StatelessWidget with $CreateQuestView {
   }
 }
 
-Widget showErrorTextBox(String? message) {
+/* Widget showErrorTextBox(String? message) {
   if (message != null) {
     return Text(message, style: TextStyle(color: Colors.red));
   } else {
     return SizedBox(height: 0, width: 0);
   }
 }
+ */

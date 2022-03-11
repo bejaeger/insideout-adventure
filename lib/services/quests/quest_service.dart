@@ -6,11 +6,11 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class QuestService with ReactiveServiceMixin {

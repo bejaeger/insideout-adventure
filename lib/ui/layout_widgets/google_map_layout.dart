@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
 
 class GoogleMapLayout extends StatelessWidget {
   final bool? googleMapLayout;

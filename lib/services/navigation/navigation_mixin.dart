@@ -1,7 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
@@ -9,6 +8,7 @@ import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 mixin NavigationMixin {

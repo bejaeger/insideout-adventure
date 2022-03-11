@@ -2,12 +2,10 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 //class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {

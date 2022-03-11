@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';

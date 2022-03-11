@@ -1,7 +1,7 @@
 import 'package:afkcredits/ui/layout_widgets/layout_settings.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar_small.dart';
 import 'package:afkcredits/ui/widgets/layouts/constrained_width_layout.dart';
-import 'package:afkcredits/utils/ui_helpers.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 // Layout for view using a tab bar
 

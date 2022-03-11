@@ -8,7 +8,6 @@ import 'package:afkcredits/ui/custom_dialogs/super_user_dialog/super_user_dialog
 import 'package:afkcredits/ui/shared/custom_dialogs/money_transfer_dialog_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/dialog/travelled_distance_dialog_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/dialog/reward_purchase_dialog_view.dart';
-import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 void setupDialogUi() {
