@@ -101,6 +101,7 @@ dependencies:
   map_picker: ^0.0.3
   image_picker: ^0.8.4+4
   progress_indicator_button: ^0.0.3
+  transparent_pointer: ^1.0.0
   afkcredits_ui: 
     path: ./afkcredits_ui/
     
@@ -144,6 +145,7 @@ flutter:
   assets:
     - assets/map_style.txt
     - assets/DayStyle.json
+    - assets/PokemonStyle.json
     - assets/icons/
     - assets/icons/afk_credits.PNG
     - assets/icons/trash_icon.svg

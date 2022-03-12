@@ -16,6 +16,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'dart:math';
 
 class MapOverviewViewModel extends MapBaseViewModel {
   final log = getLogger('MapViewModel');
@@ -27,6 +28,7 @@ class MapOverviewViewModel extends MapBaseViewModel {
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
   bool initialized = false;
+  bool ignoreRotationGestures = false;
 
   GoogleMapController? _googleMapController;
   GoogleMapController? get getGoogleMapController => _googleMapController;
@@ -43,9 +45,11 @@ class MapOverviewViewModel extends MapBaseViewModel {
       {required double mapWidth,
       required double mapHeight,
       required double devicePixelRatio}) async {
-    await rootBundle.loadString('assets/DayStyle.json').then((string) {
-      mapStyle = string;
-    });
+    await rootBundle.loadString('assets/DayStyle.json').then(
+      (string) {
+        mapStyle = string;
+      },
+    );
     _mapWidth = mapWidth;
     _mapHeight = mapHeight;
     _devicePixelRatio = devicePixelRatio;
@@ -93,21 +97,87 @@ class MapOverviewViewModel extends MapBaseViewModel {
     setBusy(false);
   }
 
+  double currentBearing = 0.0;
+  void rotate({
+    required double dxPan,
+    required double dyPan,
+    required double dxGlob,
+    required double dyGlob,
+    required double screenWidth,
+    required double screenHeight,
+  }) {
+    bool isLeft = dxGlob < screenWidth / 2;
+    bool isRight = !isLeft;
+    bool isBelowAvatar = dyGlob < (screenHeight / 2 + 100);
+    bool isAboveAvatar = !isBelowAvatar;
+    if (isLeft) {
+      currentBearing += dyPan;
+    }
+    if (isRight) {
+      currentBearing -= dyPan;
+    }
+    if (isBelowAvatar) {
+      currentBearing -= dxPan;
+    }
+    if (isAboveAvatar) {
+      currentBearing += dxPan;
+    }
+    getGoogleMapController!.moveCamera(
+      CameraUpdate.newCameraPosition(
+          getZoomedInCameraPosition(newBearing: currentBearing)),
+    );
+  }
+
+  CameraPosition getZoomedInCameraPosition({double? newBearing}) {
+    return CameraPosition(
+      bearing: newBearing != null ? newBearing * 0.4 : currentBearing * 0.4,
+      target: LatLng(_geolocationService.getUserLivePositionNullable!.latitude,
+          _geolocationService.getUserLivePositionNullable!.longitude),
+      zoom: 17.8,
+      tilt: 90,
+    );
+  }
+
+  CameraPosition getZoomedOutCameraPosition({double? newBearing}) {
+    return CameraPosition(
+      bearing: newBearing != null ? newBearing * 0.4 : currentBearing * 0.4,
+      target: LatLng(_geolocationService.getUserLivePositionNullable!.latitude,
+          _geolocationService.getUserLivePositionNullable!.longitude),
+      zoom: 13,
+      tilt: 90,
+    );
+  }
+
+  bool zoomedIn = true;
+  void changeZoom() {
+    if (zoomedIn) {
+      getGoogleMapController!.moveCamera(
+        CameraUpdate.newCameraPosition(getZoomedOutCameraPosition()),
+      );
+      ignoreRotationGestures = true;
+      zoomedIn = false;
+    } else {
+      getGoogleMapController!.moveCamera(
+        CameraUpdate.newCameraPosition(getZoomedInCameraPosition()),
+      );
+      ignoreRotationGestures = false;
+      zoomedIn = true;
+    }
+    notifyListeners();
+  }
+
   @override
   CameraPosition initialCameraPosition() {
     if (!hasActiveQuest) {
       if (_geolocationService.getUserLivePositionNullable != null) {
-        final CameraPosition _initialCameraPosition = CameraPosition(
-            // tilt: 90,
-            target: LatLng(
-                _geolocationService.getUserLivePositionNullable!.latitude,
-                _geolocationService.getUserLivePositionNullable!.longitude),
-            zoom: 14);
+        final CameraPosition _initialCameraPosition =
+            getZoomedInCameraPosition();
         return _initialCameraPosition;
       } else {
         return CameraPosition(
           target: getDummyCoordinates(),
-          zoom: 14,
+          tilt: 90,
+          zoom: 17.5,
         );
       }
     } else {
@@ -301,7 +371,7 @@ class MapOverviewViewModel extends MapBaseViewModel {
 
   @override
   void onMapCreated(GoogleMapController controller) {
-    // controller.setMapStyle(mapStyle);
+    controller.setMapStyle(mapStyle);
     _googleMapController = controller;
   }
 }

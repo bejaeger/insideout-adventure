@@ -7,17 +7,22 @@ import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
+import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
+import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   final GiftCardService _giftCardService = locator<GiftCardService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
+  final FlavorConfigProvider flavorConfigProvider =
+      locator<FlavorConfigProvider>();
 
   bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
@@ -44,6 +49,13 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
 
   final log = getLogger("ExplorerHomeViewModel");
 
+  Future initialize() async {
+    setBusy(true);
+    await listenToData();
+    await initializeQuests();
+    setBusy(false);
+  }
+
   Future listenToData() async {
     setBusy(true);
     Completer completer = Completer<void>();
@@ -63,33 +75,77 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       uid: currentUser.uid,
       callback: () => notifyListeners(),
     );
+    addLocationListener();
     await Future.wait([
       completer.future,
       completerTwo.future,
       completerThree.future,
+      getLocation(forceAwait: true, forceGettingNewPosition: false),
     ]);
-    setBusy(false);
   }
 
-  void addLocationListener() {
-    if (useSuperUserFeatures) {
-      activeQuestService.listenToPosition(
-        viewModelCallback: (_) {
-          setListenedToNewPosition(true);
-          notifyListeners();
-        },
-        distanceFilter: kMinRequiredAccuracyLocationSearch,
-        pushToNotion: false,
-      );
-      // geolocationService.listenToPositionAndAddToList(distanceFilter: 100);
-      notifyListeners();
+  Future initializeQuests({bool? force}) async {
+    try {
+      if (questService.sortedNearbyQuests == false || force == true) {
+        await questService.loadNearbyQuests(force: true);
+        await questService.sortNearbyQuests();
+        questService.extractAllQuestTypes();
+      }
+    } catch (e) {
+      log.wtf("Error when loading quests, this should never happen. Error: $e");
+      await showGenericInternalErrorDialog();
     }
+  }
+
+  void addLocationListener() async {
+    await geolocationService.listenToPosition(
+      distanceFilter: 10,
+      onData: (Position position) {
+        log.v("New position event fired from location listener!");
+      },
+    );
   }
 
   void cancelLocationListener() {
     if (useSuperUserFeatures) {
       activeQuestService.cancelPositionListener();
       notifyListeners();
+    }
+  }
+
+  Future getLocation(
+      {bool forceAwait = false, bool forceGettingNewPosition = true}) async {
+    try {
+      if (geolocationService.getUserLivePositionNullable == null) {
+        await geolocationService.getAndSetCurrentLocation(
+            forceGettingNewPosition: forceGettingNewPosition);
+      } else {
+        if (forceAwait) {
+          await geolocationService.getAndSetCurrentLocation(
+              forceGettingNewPosition: forceGettingNewPosition);
+        } else {
+          geolocationService.getAndSetCurrentLocation(
+              forceGettingNewPosition: forceGettingNewPosition);
+        }
+      }
+    } catch (e) {
+      if (e is GeolocationServiceException) {
+        if (flavorConfigProvider.enableGPSVerification) {
+          await dialogService.showDialog(
+              title: "Sorry", description: e.prettyDetails);
+        } else {
+          if (!shownDummyModeDialog) {
+            await dialogService.showDialog(
+                title: "Dummy mode active",
+                description:
+                    "GPS connection not available, you can still try out the quests by tapping on the markers");
+            shownDummyModeDialog = true;
+          }
+        }
+      } else {
+        log.wtf("Could not get location of user");
+        await showGenericInternalErrorDialog();
+      }
     }
   }
 

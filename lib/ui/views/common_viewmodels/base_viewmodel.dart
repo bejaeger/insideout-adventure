@@ -197,9 +197,12 @@ class BaseModel extends BaseViewModel {
   }
 
   Future replaceWithHomeView() async {
-    await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-        arguments:
-            BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+    await navigationService.replaceWith(
+      Routes.explorerHomeView,
+    );
+    // await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+    //     arguments:
+    //         BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
   Future replaceWithMainView({required BottomNavBarIndex index}) async {
