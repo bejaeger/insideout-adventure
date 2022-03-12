@@ -20,7 +20,7 @@ import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 
 import 'firebase_options_dev.dart' as dev;
-//import 'firebase_options_prod.dart' as prod;
+import 'firebase_options_prod.dart' as prod;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 

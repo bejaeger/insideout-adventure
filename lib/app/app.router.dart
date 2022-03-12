@@ -9,6 +9,7 @@
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
 import '../datamodels/quests/quest.dart';
 import '../datamodels/users/public_info/public_user_info.dart';
