@@ -15,6 +15,7 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:rxdart/rxdart.dart';
@@ -28,16 +29,19 @@ class MapOverviewViewModel extends MapBaseViewModel {
   // -----------------------------------------------
   // Services
   final log = getLogger('MapViewModel');
-  final _geolocationService = locator<GeolocationService>();
   final MapService mapService = locator<MapService>();
   final QuestService questService = locator<QuestService>();
   final _qrCodeService = locator<QRCodeService>();
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
 
+  // -----------------------------
+  // Getters
+  Position? get userLocation => geolocationService.getUserLivePositionNullable;
+  bool get isAvatarView => mapService.isAvatarView;
+
   // -------------------------------------------------
   // State variables
-  bool get isAvatarView => mapService.isAvatarView;
   bool initialized = false;
 
   GoogleMapController? mapController;
@@ -49,6 +53,25 @@ class MapOverviewViewModel extends MapBaseViewModel {
 
   Set<Marker> markersOnMap = {};
   String mapStyle = "";
+
+  final cameraBearingZoom =
+      BehaviorSubject<List<double>>.seeded([kInitialBearing, kInitialZoom]);
+  double _tilt = kInitialTilt;
+  void changeCameraTilt(double tilt) {
+    _tilt = tilt;
+  }
+
+  void changeCameraZoom(double zoom) {
+    cameraBearingZoom.add([cameraBearingZoom.value[0], zoom]);
+  }
+
+  void changeCameraBearing(double bearing) {
+    cameraBearingZoom.add([bearing, cameraBearingZoom.value[1]]);
+  }
+
+  double get getBearing => cameraBearingZoom.value[0];
+  double get getZoom => cameraBearingZoom.value[1];
+  double get getTilt => _tilt;
 
   Future initializeMapAndMarkers(
       {required double mapWidth,
@@ -67,10 +90,10 @@ class MapOverviewViewModel extends MapBaseViewModel {
     log.i("Initializing map view");
     setBusy(true);
     try {
-      if (_geolocationService.getUserLivePositionNullable == null) {
-        await _geolocationService.getAndSetCurrentLocation();
+      if (userLocation == null) {
+        await geolocationService.getAndSetCurrentLocation();
       } else {
-        _geolocationService.getAndSetCurrentLocation();
+        geolocationService.getAndSetCurrentLocation();
       }
     } catch (e) {
       if (e is GeolocationServiceException) {
@@ -110,10 +133,8 @@ class MapOverviewViewModel extends MapBaseViewModel {
             getBearing: getBearing,
             getZoom: getZoom,
             getTilt: getTilt,
-            currentLat:
-                _geolocationService.getUserLivePositionNullable!.latitude,
-            currentLon:
-                _geolocationService.getUserLivePositionNullable!.longitude);
+            currentLat: userLocation!.latitude,
+            currentLon: userLocation!.longitude);
       },
     );
 
@@ -127,8 +148,8 @@ class MapOverviewViewModel extends MapBaseViewModel {
   //         CameraPosition(
   //           bearing: getBearing,
   //           target: LatLng(
-  //               _geolocationService.getUserLivePositionNullable!.latitude,
-  //               _geolocationService.getUserLivePositionNullable!.longitude),
+  //               userPosition!.latitude,
+  //               userPosition!.longitude),
   //           zoom: getZoom,
   //           tilt: getTilt,
   //         ),
@@ -188,24 +209,6 @@ class MapOverviewViewModel extends MapBaseViewModel {
     // );
   }
 
-  final cameraBearingZoom = BehaviorSubject<List<double>>.seeded([0.0, 17.8]);
-  double _tilt = 90;
-  void changeCameraTilt(double tilt) {
-    _tilt = tilt;
-  }
-
-  void changeCameraZoom(double zoom) {
-    cameraBearingZoom.add([cameraBearingZoom.value[0], zoom]);
-  }
-
-  void changeCameraBearing(double bearing) {
-    cameraBearingZoom.add([bearing, cameraBearingZoom.value[1]]);
-  }
-
-  double get getBearing => cameraBearingZoom.value[0];
-  double get getZoom => cameraBearingZoom.value[1];
-  double get getTilt => _tilt;
-
   // final cameraBearing = BehaviorSubject<double>.seeded(0.0);
   // final cameraTilt = BehaviorSubject<double>.seeded(90);
 
@@ -215,8 +218,7 @@ class MapOverviewViewModel extends MapBaseViewModel {
     changeCameraTilt(90);
     return CameraPosition(
       bearing: getBearing,
-      target: LatLng(_geolocationService.getUserLivePositionNullable!.latitude,
-          _geolocationService.getUserLivePositionNullable!.longitude),
+      target: LatLng(userLocation!.latitude, userLocation!.longitude),
       // zoom: (17.8 * (1 + (scale - 1) * 0.5)).clamp(17, 18.5),
       zoom: getZoom,
       tilt: getTilt,
@@ -228,9 +230,7 @@ class MapOverviewViewModel extends MapBaseViewModel {
     _tilt = 0;
     return CameraPosition(
       bearing: getBearing,
-      target: LatLng(
-          _geolocationService.getUserLivePositionNullable!.latitude - 0.005,
-          _geolocationService.getUserLivePositionNullable!.longitude),
+      target: LatLng(userLocation!.latitude - 0.005, userLocation!.longitude),
       zoom: 13,
       tilt: getTilt,
     );
@@ -243,59 +243,59 @@ class MapOverviewViewModel extends MapBaseViewModel {
           getBearing: getBearing,
           getZoom: getZoom,
           getTilt: getTilt,
-          currentLat: _geolocationService.getUserLivePositionNullable!.latitude,
-          currentLon:
-              _geolocationService.getUserLivePositionNullable!.longitude);
+          currentLat: userLocation!.latitude,
+          currentLon: userLocation!.longitude);
       mapService.setIsAvatarView(false);
     } else {
       animateCameraToAvatarView(
           getBearing: getBearing,
           getZoom: getZoom,
           getTilt: getTilt,
-          currentLat: _geolocationService.getUserLivePositionNullable!.latitude,
-          currentLon:
-              _geolocationService.getUserLivePositionNullable!.longitude);
+          currentLat: userLocation!.latitude,
+          currentLon: userLocation!.longitude);
       mapService.setIsAvatarView(true);
     }
     notifyListeners();
   }
 
-  @override
-  CameraPosition initialCameraPosition() {
-    if (!hasActiveQuest) {
-      if (_geolocationService.getUserLivePositionNullable != null) {
-        final CameraPosition _initialCameraPosition =
-            getZoomedInCameraPosition();
-        return _initialCameraPosition;
-      } else {
-        return CameraPosition(
-          target: getDummyCoordinates(),
-          tilt: 90,
-          zoom: 17.5,
-        );
-      }
-    } else {
-      // HAS ACTIVE QUEST
-      if (activeQuest.quest.startMarker != null) {
-        final CameraPosition _initialCameraPosition = CameraPosition(
-          //In Future I will change these values to dynamically Change the Initial Camera Position
-          //Based on teh city
-          target: LatLng(activeQuest.quest.startMarker!.lat!,
-              activeQuest.quest.startMarker!.lon!),
-          zoom: 15,
-        );
-        return _initialCameraPosition;
-      } else {
-        // return current user position
-        final CameraPosition _initialCameraPosition = CameraPosition(
-            target: LatLng(
-                _geolocationService.getUserLivePositionNullable!.latitude,
-                _geolocationService.getUserLivePositionNullable!.longitude),
-            zoom: 13);
-        return _initialCameraPosition;
-      }
-    }
-  }
+  // @override
+  // CameraPosition initialCameraPosition() {
+  //   if (!hasActiveQuest) {
+  //     if (userPosition != null) {
+  //       final CameraPosition _initialCameraPosition =
+  //           getZoomedInCameraPosition();
+  //       return _initialCameraPosition;
+  //     } else {
+  //       log.wtf(
+  //           "THIS SHOULD NOT HAPPEN: geolocation not loaded before map was opened");
+  //       return CameraPosition(
+  //         target: getDummyCoordinates(),
+  //         tilt: 90,
+  //         zoom: 17.5,
+  //       );
+  //     }
+  //   } else {
+  //     // HAS ACTIVE QUEST
+  //     if (activeQuest.quest.startMarker != null) {
+  //       final CameraPosition _initialCameraPosition = CameraPosition(
+  //         //In Future I will change these values to dynamically Change the Initial Camera Position
+  //         //Based on teh city
+  //         target: LatLng(activeQuest.quest.startMarker!.lat!,
+  //             activeQuest.quest.startMarker!.lon!),
+  //         zoom: 15,
+  //       );
+  //       return _initialCameraPosition;
+  //     } else {
+  //       // return current user position
+  //       final CameraPosition _initialCameraPosition = CameraPosition(
+  //           target: LatLng(
+  //               userPosition!.latitude,
+  //               userPosition!.longitude),
+  //           zoom: 13);
+  //       return _initialCameraPosition;
+  //     }
+  //   }
+  // }
 
   @override
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {

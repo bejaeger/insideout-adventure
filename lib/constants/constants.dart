@@ -68,6 +68,13 @@ const List<String> questType = [
   "TreasureLocationSearch",
   "TreasureLocationSearchAutomatic"
 ];
+
+///////////////////////////////////////
+/// Map Settings
+const double kInitialZoom = 17.8;
+const double kInitialBearing = 9;
+const double kInitialTilt = 90;
+
 //////////////////////////////////////////////////////////
 /// Quest settings!
 

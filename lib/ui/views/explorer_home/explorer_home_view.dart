@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
+import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/enums/stats_type.dart';
@@ -23,6 +25,7 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/constants/layout.dart';
@@ -259,6 +262,27 @@ class GoogleMapsScreen extends StatelessWidget {
     required this.onMapCreated,
   }) : super(key: key);
 
+  CameraPosition initialCameraPosition({
+    required Position? userLocation,
+  }) {
+    if (userLocation != null) {
+      return CameraPosition(
+        bearing: kInitialBearing,
+        target: LatLng(userLocation.latitude, userLocation.longitude),
+        zoom: kInitialZoom,
+        tilt: kInitialTilt,
+      );
+    } else {
+      print(
+          "ERROR! ==>> THIS SHOULD NEVER HAPPEN! User Location could not be found!");
+      return CameraPosition(
+        target: getDummyCoordinates(),
+        tilt: 90,
+        zoom: 17.5,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -280,7 +304,8 @@ class GoogleMapsScreen extends StatelessWidget {
                 child: GoogleMap(
                   onTap: (_) => model.notifyListeners(),
                   //mapType: MapType.hybrid,
-                  initialCameraPosition: model.initialCameraPosition(),
+                  initialCameraPosition:
+                      initialCameraPosition(userLocation: model.userLocation),
 
                   //Place Markers in the Map
                   markers: model.markersOnMap,
