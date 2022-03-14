@@ -19,6 +19,28 @@ class MapOverviewView extends StatefulWidget {
 
 class _MapOverviewViewState extends State<MapOverviewView>
     with AutomaticKeepAliveClientMixin {
+  // TODO: DUMMY VALUES FOR NOW!
+  // NEED TO RECONSIDER? THIS VIEW!
+  // TODO: Not sure if it's needed at all!
+  void moveCamera(
+      {required double getBearing,
+      required double getZoom,
+      required double getTilt,
+      required double currentLat,
+      required double currentLon}) {}
+  void animateCameraToBirdsView(
+      {required double getBearing,
+      required double getZoom,
+      required double getTilt,
+      required double currentLat,
+      required double currentLon}) {}
+  void animateCameraToAvatarView(
+      {required double getBearing,
+      required double getZoom,
+      required double getTilt,
+      required double currentLat,
+      required double currentLon}) {}
+
   @override
   Widget build(BuildContext context) {
     final devicePixelRatio =
@@ -31,7 +53,11 @@ class _MapOverviewViewState extends State<MapOverviewView>
             mapHeight: screenHeight(context) -
                 kBottomNavigationBarHeightCustom -
                 kAppBarExtendedHeight),
-        viewModelBuilder: () => MapOverviewViewModel(),
+        viewModelBuilder: () => MapOverviewViewModel(
+              moveCamera: moveCamera,
+              animateCameraToBirdsView: animateCameraToBirdsView,
+              animateCameraToAvatarView: animateCameraToAvatarView,
+            ),
         builder: (context, model, child) {
           return GoogleMapsScreen(model: model);
         });

@@ -2,8 +2,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-class MapsService {
+class MapService {
   final log = getLogger("MapsService");
+
+  // whether map is zoomed in to avatar with tilt
+  bool isAvatarView = true;
+  void setIsAvatarView(bool set) {
+    isAvatarView = set;
+  }
 
   Future launchMapsForNavigation(double lat, double lon) async {
     final availableMaps = await MapLauncher.installedMaps;

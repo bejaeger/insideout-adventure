@@ -12,7 +12,7 @@ import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
-import 'package:afkcredits/services/maps/maps_service.dart';
+import 'package:afkcredits/services/maps/map_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
@@ -29,7 +29,7 @@ import 'package:afkcredits/app/app.logger.dart';
 abstract class ActiveQuestBaseViewModel extends BaseModel {
   // ---------------------------------------------------------
   // Services
-  final MapsService mapsService = locator<MapsService>();
+  final MapService mapsService = locator<MapService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
   final FlavorConfigProvider flavorConfigProvider =

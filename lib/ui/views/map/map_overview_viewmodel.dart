@@ -9,6 +9,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/maps/map_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
@@ -16,22 +17,30 @@ import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'dart:math';
+import 'package:rxdart/rxdart.dart';
 
 class MapOverviewViewModel extends MapBaseViewModel {
+  MapOverviewViewModel(
+      {required this.moveCamera,
+      required this.animateCameraToAvatarView,
+      required this.animateCameraToBirdsView});
+
+  // -----------------------------------------------
+  // Services
   final log = getLogger('MapViewModel');
   final _geolocationService = locator<GeolocationService>();
-
-  //Quest? userQuest;
+  final MapService mapService = locator<MapService>();
   final QuestService questService = locator<QuestService>();
   final _qrCodeService = locator<QRCodeService>();
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
-  bool initialized = false;
-  bool ignoreRotationGestures = false;
 
-  GoogleMapController? _googleMapController;
-  GoogleMapController? get getGoogleMapController => _googleMapController;
+  // -------------------------------------------------
+  // State variables
+  bool get isAvatarView => mapService.isAvatarView;
+  bool initialized = false;
+
+  GoogleMapController? mapController;
 
   // used for animating camera
   double _mapWidth = 0;
@@ -94,74 +103,159 @@ class MapOverviewViewModel extends MapBaseViewModel {
       log.wtf("Error when loading quest, this should never happen. Error: $e");
       await showGenericInternalErrorDialog();
     }
+
+    cameraBearingZoom.listen(
+      (_) {
+        moveCamera(
+            getBearing: getBearing,
+            getZoom: getZoom,
+            getTilt: getTilt,
+            currentLat:
+                _geolocationService.getUserLivePositionNullable!.latitude,
+            currentLon:
+                _geolocationService.getUserLivePositionNullable!.longitude);
+      },
+    );
+
     setBusy(false);
   }
 
-  double currentBearing = 0.0;
+  // void moveZoomedInCamera() {
+  //   if (mapController != null) {
+  //     mapController!.moveCamera(
+  //       CameraUpdate.newCameraPosition(
+  //         CameraPosition(
+  //           bearing: getBearing,
+  //           target: LatLng(
+  //               _geolocationService.getUserLivePositionNullable!.latitude,
+  //               _geolocationService.getUserLivePositionNullable!.longitude),
+  //           zoom: getZoom,
+  //           tilt: getTilt,
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
+
+  void dontMoveCamera() async {
+    mapController!.moveCamera(CameraUpdate.scrollBy(0, 0));
+  }
+
+  double previousRotation = 0;
   void rotate({
     required double dxPan,
     required double dyPan,
     required double dxGlob,
     required double dyGlob,
+    required double scale,
+    required double rotation,
     required double screenWidth,
     required double screenHeight,
   }) {
     bool isLeft = dxGlob < screenWidth / 2;
     bool isRight = !isLeft;
-    bool isBelowAvatar = dyGlob < (screenHeight / 2 + 100);
+    bool isBelowAvatar = dyGlob < (screenHeight / 2 + 200);
     bool isAboveAvatar = !isBelowAvatar;
+    double deltaBearing = 0;
     if (isLeft) {
-      currentBearing += dyPan;
+      deltaBearing += dyPan;
     }
     if (isRight) {
-      currentBearing -= dyPan;
+      deltaBearing -= dyPan;
     }
     if (isBelowAvatar) {
-      currentBearing -= dxPan;
+      deltaBearing -= dxPan;
     }
     if (isAboveAvatar) {
-      currentBearing += dxPan;
+      deltaBearing += dxPan;
     }
-    getGoogleMapController!.moveCamera(
-      CameraUpdate.newCameraPosition(
-          getZoomedInCameraPosition(newBearing: currentBearing)),
+    double deltaRotation = previousRotation - rotation;
+    if (rotation != 0.0) {
+      deltaBearing = deltaRotation.clamp(-0.010, 0.010) * 200;
+    }
+    // moveZoomedInCamera(bearing: deltaBearing + cameraBearing.value);
+    cameraBearingZoom.add(
+      [
+        getBearing + deltaBearing * 0.4,
+        (getZoom + (scale - 1) * 0.1).clamp(17, 19)
+      ],
     );
+    previousRotation = rotation;
+    // cameraZoom.add(cameraZoom.value * (1 + (scale - 1) * 0.5).clamp(17, 18.5));
+    // mapController!.moveCamera(
+    //   CameraUpdate.newCameraPosition(
+    //       getZoomedInCameraPosition(newBearing: currentBearing, scale: scale)),
+    // );
   }
 
-  CameraPosition getZoomedInCameraPosition({double? newBearing}) {
+  final cameraBearingZoom = BehaviorSubject<List<double>>.seeded([0.0, 17.8]);
+  double _tilt = 90;
+  void changeCameraTilt(double tilt) {
+    _tilt = tilt;
+  }
+
+  void changeCameraZoom(double zoom) {
+    cameraBearingZoom.add([cameraBearingZoom.value[0], zoom]);
+  }
+
+  void changeCameraBearing(double bearing) {
+    cameraBearingZoom.add([bearing, cameraBearingZoom.value[1]]);
+  }
+
+  double get getBearing => cameraBearingZoom.value[0];
+  double get getZoom => cameraBearingZoom.value[1];
+  double get getTilt => _tilt;
+
+  // final cameraBearing = BehaviorSubject<double>.seeded(0.0);
+  // final cameraTilt = BehaviorSubject<double>.seeded(90);
+
+  CameraPosition getZoomedInCameraPosition(
+      {double? newBearing, double scale = 1.0}) {
+    // cameraZoom.add(17.8);
+    changeCameraTilt(90);
     return CameraPosition(
-      bearing: newBearing != null ? newBearing * 0.4 : currentBearing * 0.4,
+      bearing: getBearing,
       target: LatLng(_geolocationService.getUserLivePositionNullable!.latitude,
           _geolocationService.getUserLivePositionNullable!.longitude),
-      zoom: 17.8,
-      tilt: 90,
+      // zoom: (17.8 * (1 + (scale - 1) * 0.5)).clamp(17, 18.5),
+      zoom: getZoom,
+      tilt: getTilt,
+      //tilt: (90 * (1 + (scale - 1) * 10)).clamp(60, 90),
     );
   }
 
   CameraPosition getZoomedOutCameraPosition({double? newBearing}) {
+    _tilt = 0;
     return CameraPosition(
-      bearing: newBearing != null ? newBearing * 0.4 : currentBearing * 0.4,
-      target: LatLng(_geolocationService.getUserLivePositionNullable!.latitude,
+      bearing: getBearing,
+      target: LatLng(
+          _geolocationService.getUserLivePositionNullable!.latitude - 0.005,
           _geolocationService.getUserLivePositionNullable!.longitude),
       zoom: 13,
-      tilt: 90,
+      tilt: getTilt,
     );
   }
 
-  bool zoomedIn = true;
-  void changeZoom() {
-    if (zoomedIn) {
-      getGoogleMapController!.moveCamera(
-        CameraUpdate.newCameraPosition(getZoomedOutCameraPosition()),
-      );
-      ignoreRotationGestures = true;
-      zoomedIn = false;
+  void changeMapZoom() {
+    if (isAvatarView) {
+      changeCameraTilt(0);
+      animateCameraToBirdsView(
+          getBearing: getBearing,
+          getZoom: getZoom,
+          getTilt: getTilt,
+          currentLat: _geolocationService.getUserLivePositionNullable!.latitude,
+          currentLon:
+              _geolocationService.getUserLivePositionNullable!.longitude);
+      mapService.setIsAvatarView(false);
     } else {
-      getGoogleMapController!.moveCamera(
-        CameraUpdate.newCameraPosition(getZoomedInCameraPosition()),
-      );
-      ignoreRotationGestures = false;
-      zoomedIn = true;
+      animateCameraToAvatarView(
+          getBearing: getBearing,
+          getZoom: getZoom,
+          getTilt: getTilt,
+          currentLat: _geolocationService.getUserLivePositionNullable!.latitude,
+          currentLon:
+              _geolocationService.getUserLivePositionNullable!.longitude);
+      mapService.setIsAvatarView(true);
     }
     notifyListeners();
   }
@@ -210,17 +304,19 @@ class MapOverviewViewModel extends MapBaseViewModel {
         markerId: MarkerId(afkmarker
             .id), // google maps marker id of start marker will be our quest id
         position: LatLng(afkmarker.lat!, afkmarker.lon!),
-        infoWindow: InfoWindow(
-            title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
+        //infoWindow:
+        //  InfoWindow(
+        //     title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
         // InfoWindow(snippet: quest.name),
         icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
         onTap: () async {
           // event triggered when user taps marker
 
-          if (getGoogleMapController != null) {
+          if (mapController != null) {
             // needed to avoid navigating to that marker!
-            getGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(
-                await getGoogleMapController!.getVisibleRegion(), 0));
+            // mapController!.moveCamera(CameraUpdate.newLatLngBounds(
+            //     await mapController!.getVisibleRegion(), 0));
+            dontMoveCamera();
           }
 
           dynamic adminMode = false;
@@ -236,8 +332,8 @@ class MapOverviewViewModel extends MapBaseViewModel {
           if (!useSuperUserFeatures || adminMode == false) {
             if (hasActiveQuest == false) {
               if (afkmarker == quest.startMarker) {
-                if (getGoogleMapController != null) {
-                  final screenCoordinates = await getGoogleMapController!
+                if (mapController != null) {
+                  final screenCoordinates = await mapController!
                       .getScreenCoordinate(
                           LatLng(afkmarker.lat!, afkmarker.lon!));
                   // some magic to move the marker to the desired position!
@@ -248,8 +344,9 @@ class MapOverviewViewModel extends MapBaseViewModel {
                               screenCoordinates.y) /
                           _devicePixelRatio +
                       150;
-                  await getGoogleMapController!
-                      .animateCamera(CameraUpdate.scrollBy(xMove, yMove));
+                  // TODO: Moves camera to marker. Avoid for now!
+                  // await mapController!
+                  //     .animateCamera(CameraUpdate.scrollBy(xMove, yMove));
                   // await Future.delayed(Duration(milliseconds: 200));
                 } else {
                   log.e(
@@ -371,7 +468,38 @@ class MapOverviewViewModel extends MapBaseViewModel {
 
   @override
   void onMapCreated(GoogleMapController controller) {
-    controller.setMapStyle(mapStyle);
-    _googleMapController = controller;
+    // controller.setMapStyle(mapStyle);
+    // _googleMapController = controller;
   }
+
+  @override
+  void dispose() {
+    // cameraZoom.close();
+    // cameraBearing.close();
+    // cameraTilt.close();
+    cameraBearingZoom.close();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  ///////////////////////////////////////////////////////////////////
+  // Map Callback functions
+  final void Function(
+      {required double getBearing,
+      required double getZoom,
+      required double getTilt,
+      required double currentLat,
+      required double currentLon}) moveCamera;
+  final void Function(
+      {required double getBearing,
+      required double getZoom,
+      required double getTilt,
+      required double currentLat,
+      required double currentLon}) animateCameraToBirdsView;
+  final void Function(
+      {required double getBearing,
+      required double getZoom,
+      required double getTilt,
+      required double currentLat,
+      required double currentLon}) animateCameraToAvatarView;
 }
