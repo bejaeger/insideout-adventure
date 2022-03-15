@@ -10,6 +10,7 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/maps/map_controller_service.dart';
 import 'package:afkcredits/services/maps/map_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/payments/payment_service.dart';

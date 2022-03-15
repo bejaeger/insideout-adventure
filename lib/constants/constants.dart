@@ -72,7 +72,7 @@ const List<String> questType = [
 ///////////////////////////////////////
 /// Map Settings
 const double kInitialZoom = 17.8;
-const double kInitialBearing = 9;
+const double kInitialBearing = 0;
 const double kInitialTilt = 90;
 
 //////////////////////////////////////////////////////////
@@ -124,3 +124,5 @@ const double kMinLocationAccuracy = 100;
 const double kUnrealisticallyHighDistance = 100000000;
 
 const int kDistanceFilterForCalibration = 5;
+
+const int kDefaultGeolocationDistanceFilter = 10;

@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/app_strings.dart';
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/constants/image_urls.dart';
@@ -9,10 +11,11 @@ import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/enums/stats_type.dart';
+import 'package:afkcredits/services/maps/map_controller_service.dart';
 import 'package:afkcredits/ui/shared/maps/maps_controller_mixin.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
-import 'package:afkcredits/ui/views/map/map_overview_viewmodel.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/achievement_card.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
@@ -34,7 +37,7 @@ import 'package:transparent_pointer/transparent_pointer.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-GoogleMapController? mapController;
+import 'dart:math' as m;
 
 class ExplorerHomeView extends StatefulWidget {
   const ExplorerHomeView({Key? key}) : super(key: key);
@@ -47,7 +50,8 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
-      viewModelBuilder: () => ExplorerHomeViewModel(),
+      viewModelBuilder: () => ExplorerHomeViewModel(
+          animateToPosition: MapControllerService.animateToPosition),
       onModelReady: (model) => model.initialize(),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
@@ -84,78 +88,16 @@ class MainMapView extends StatelessWidget {
   //with MapControllerMixin {
   const MainMapView({Key? key}) : super(key: key);
 
-  void moveCamera({
-    required double getBearing,
-    required double getZoom,
-    required double getTilt,
-    required double currentLat,
-    required double currentLon,
-  }) {
-    if (mapController == null) return;
-    mapController!.moveCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          bearing: getBearing,
-          target: LatLng(currentLat, currentLon),
-          zoom: getZoom,
-          tilt: getTilt,
-        ),
-      ),
-    );
-  }
-
-  void animateCameraToAvatarView({
-    required double getBearing,
-    required double getZoom,
-    required double getTilt,
-    required double currentLat,
-    required double currentLon,
-  }) {
-    if (mapController == null) return;
-    // changeCameraTilt(90);
-    CameraPosition position = CameraPosition(
-      bearing: getBearing,
-      target: LatLng(currentLat, currentLon),
-      zoom: getZoom,
-      tilt: getTilt,
-    );
-    animateCamera(position);
-  }
-
-  void animateCameraToBirdsView({
-    required double getBearing,
-    required double getZoom,
-    required double getTilt,
-    required double currentLat,
-    required double currentLon,
-  }) {
-    if (mapController == null) return;
-    CameraPosition position = CameraPosition(
-      bearing: getBearing,
-      target: LatLng(currentLat + 0.005, currentLon),
-      // target: LatLng(currentLat, currentLon),
-      zoom: 13,
-      tilt: getTilt,
-    );
-    animateCamera(position);
-  }
-
-  void animateCamera(CameraPosition position) {
-    mapController!.animateCamera(
-      CameraUpdate.newCameraPosition(position),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final devicePixelRatio =
         Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
-    return ViewModelBuilder<MapOverviewViewModel>.reactive(
-      viewModelBuilder: () => MapOverviewViewModel(
-        moveCamera: moveCamera,
-        animateCameraToBirdsView: animateCameraToBirdsView,
-        animateCameraToAvatarView: animateCameraToAvatarView,
-      ),
+    return ViewModelBuilder<MapViewModel>.reactive(
+      viewModelBuilder: () => MapViewModel(
+          moveCamera: MapControllerService.moveCamera,
+          configureAndAddMapMarker:
+              MapControllerService.configureAndAddMapMarker,
+          animateCamera: MapControllerService.animateCamera),
       onModelReady: (model) => model.initializeMapAndMarkers(
         devicePixelRatio: devicePixelRatio,
         mapWidth: screenWidth(context),
@@ -166,11 +108,6 @@ class MainMapView extends StatelessWidget {
           //CloudOverlay(overlay: true),
           GoogleMapsScreen(
             model: model,
-            onMapCreated: (GoogleMapController controller) {
-              controller.setMapStyle(model.mapStyle);
-              mapController = controller;
-              model.mapController = controller;
-            },
           ),
           RotationGestureWidget(
             ignoreGestures: !model
@@ -198,7 +135,10 @@ class MainMapView extends StatelessWidget {
           ),
           //IgnorePointer(child: Container(color: Colors.white.withOpacity(0.1))),
           RightFloatingButtons(
-              onPressed: model.changeMapZoom, zoomedIn: model.isAvatarView),
+              onCompassTap: model.rotateToNorth,
+              bearing: model.bearing,
+              onZoomPressed: model.changeMapZoom,
+              zoomedIn: model.isAvatarView),
         ],
       ),
     );
@@ -254,34 +194,11 @@ class RotationGestureWidget extends StatelessWidget {
 }
 
 class GoogleMapsScreen extends StatelessWidget {
-  final MapOverviewViewModel model;
-  final void Function(GoogleMapController) onMapCreated;
+  final MapViewModel model;
   const GoogleMapsScreen({
     Key? key,
     required this.model,
-    required this.onMapCreated,
   }) : super(key: key);
-
-  CameraPosition initialCameraPosition({
-    required Position? userLocation,
-  }) {
-    if (userLocation != null) {
-      return CameraPosition(
-        bearing: kInitialBearing,
-        target: LatLng(userLocation.latitude, userLocation.longitude),
-        zoom: kInitialZoom,
-        tilt: kInitialTilt,
-      );
-    } else {
-      print(
-          "ERROR! ==>> THIS SHOULD NEVER HAPPEN! User Location could not be found!");
-      return CameraPosition(
-        target: getDummyCoordinates(),
-        tilt: 90,
-        zoom: 17.5,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -305,35 +222,31 @@ class GoogleMapsScreen extends StatelessWidget {
                   onTap: (_) => model.notifyListeners(),
                   //mapType: MapType.hybrid,
                   initialCameraPosition:
-                      initialCameraPosition(userLocation: model.userLocation),
-
+                      MapControllerService.initialCameraPosition(
+                          userLocation: model.userLocation),
                   //Place Markers in the Map
-                  markers: model.markersOnMap,
-                  // onCameraMove: ,
-
+                  markers: MapControllerService.markersOnMap,
                   //callback that’s called when the map is ready to use.
-                  onMapCreated: onMapCreated,
-                  //  (GoogleMapController controller) {
-                  //   controller.setMapStyle(model.mapStyle);
-                  //   mapController = controller;
-                  //   model.mapController = controller;
-                  // },
-
+                  onMapCreated: (GoogleMapController controller) {
+                    controller.setMapStyle(model.mapStyle);
+                    MapControllerService.setMapController(controller);
+                  },
                   //enable zoom gestures
                   zoomGesturesEnabled: true,
                   //minMaxZoomPreference: MinMaxZoomPreference(13,17)
-
                   //For showing your current location on Map with a blue dot.
                   myLocationEnabled: true,
                   //Remove the Zoom in and out button
                   zoomControlsEnabled: false,
-                  tiltGesturesEnabled: true,
-
+                  tiltGesturesEnabled: false,
                   // Button used for bringing the user location to the center of the camera view.
                   myLocationButtonEnabled: false,
                   mapToolbarEnabled: false,
                   buildingsEnabled: false,
                   compassEnabled: false,
+                  onCameraMove: (position) {
+                    model.changeCameraBearing(position.bearing);
+                  },
                   // gestureRecognizers: Set()
                   //   ..add(
                   //     Factory<PanGestureRecognizer>(
@@ -349,9 +262,6 @@ class GoogleMapsScreen extends StatelessWidget {
                   //     },
                   //   ),
                   // ),
-                  //onTap: model.handleTap(),
-                  //Enable Traffic Mode.
-                  //trafficEnabled: true,
                 ),
               ),
             ),
@@ -515,35 +425,65 @@ class MainHeader extends StatelessWidget {
 }
 
 class RightFloatingButtons extends StatelessWidget {
-  final void Function() onPressed;
+  final void Function() onZoomPressed;
+  final void Function() onCompassTap;
+  final double bearing;
   final bool zoomedIn;
-  const RightFloatingButtons(
-      {Key? key, required this.onPressed, required this.zoomedIn})
-      : super(key: key);
+  const RightFloatingButtons({
+    Key? key,
+    required this.bearing,
+    required this.onZoomPressed,
+    required this.zoomedIn,
+    required this.onCompassTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 100,
-          right: 10,
-        ),
-        child: GestureDetector(
-          onTap: onPressed,
-          child: Container(
-            width: 80,
-            height: 60,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[800]!, width: 2.0),
-                borderRadius: BorderRadius.circular(15.0),
-                color: Colors.white.withOpacity(0.6)),
-            alignment: Alignment.center,
-            child: zoomedIn == true ? Text("Zoom Out") : Text("Zoom In"),
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 15, top: 100),
+            child: AnimatedOpacity(
+              opacity: (bearing > 5 || bearing < -5) ? 1 : 1,
+              duration: Duration(milliseconds: 500),
+              child: GestureDetector(
+                onTap: onCompassTap,
+                child: Transform.rotate(
+                  angle: -bearing * m.pi / 180,
+                  child: Image.asset(
+                    kCompassIcon,
+                    height: 38,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
-      ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 100,
+              right: 10,
+            ),
+            child: GestureDetector(
+              onTap: onZoomPressed,
+              child: Container(
+                width: 80,
+                height: 60,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[800]!, width: 2.0),
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.white.withOpacity(0.6)),
+                alignment: Alignment.center,
+                child: zoomedIn == true ? Text("Zoom Out") : Text("Zoom In"),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -575,6 +515,7 @@ class MainFooter extends StatelessWidget {
     );
   }
 }
+
 
 // !!! DEPRECATED VERSION
 

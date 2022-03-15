@@ -25,6 +25,8 @@ class MapService {
     );
   }
 
+  // TODO:
+  // DEPRECATE THE FOLLOWING
   LatLngBounds boundsFromLatLngList({required List<LatLng> latLngList}) {
     if (latLngList.length == 0) {
       log.e("Can't created LatLngBounds from empty list!");

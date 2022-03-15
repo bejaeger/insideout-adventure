@@ -12,6 +12,7 @@ const String kCreateQuest = "assets/icons/create_quest.png";
 const String kCreatGiftCard = "assets/icons/giftcard.png";
 const String kCreatGiftCardMoney = "assets/icons/money.png";
 const String kPinInAreaIcon = "assets/icons/location-icon.ico";
+const String kCompassIcon = "assets/icons/cardinal-point.png";
 
 const List<String> assetsGiftCardImages = [
   kCreatGiftCard,

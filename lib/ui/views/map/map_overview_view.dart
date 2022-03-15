@@ -8,7 +8,7 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
-import 'map_overview_viewmodel.dart';
+import 'map_viewmodel.dart';
 
 class MapOverviewView extends StatelessWidget {
   const MapOverviewView({Key? key}) : super(key: key);

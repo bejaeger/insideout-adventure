@@ -18,12 +18,16 @@ import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:geolocator/geolocator.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel {
+  //-------------------------------------------------------
+  // services
   final GiftCardService _giftCardService = locator<GiftCardService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
 
+  // --------------------------------------------------
+  // getters
   bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
   String get liveDistance => geolocationService.getLiveDistancesToGoal();
@@ -31,19 +35,23 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       geolocationService.getLastKnownDistancesToGoal();
   List<QuestDataPoint> get allPositions =>
       _questTestingService.allQuestDataPoints;
-
-  late final String name;
-  ExplorerHomeViewModel() : super(explorerUid: "") {
-    // have to do that otherwise we get a null error when
-    // switching account to the sponsor account
-    this.name = currentUser.fullName;
-  }
-
   List<ActivatedQuest> get activatedQuestsHistory =>
       questService.activatedQuestsHistory;
   List<GiftCardPurchase> get purchasedGiftCards =>
       _giftCardService.purchasedGiftCards;
   List<Achievement> get achievements => gamificationService.achievements;
+
+  // ---------------------------------------
+  // state
+  late final String name;
+  final void Function(Position position) animateToPosition;
+  ExplorerHomeViewModel({required this.animateToPosition})
+      : super(explorerUid: "") {
+    // have to do that otherwise we get a null error when
+    // switching account to the sponsor account
+    this.name = currentUser.fullName;
+  }
+
   bool addingPositionToNotionDB = false;
   bool pushedToNotion = false;
 
@@ -99,8 +107,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
 
   void addLocationListener() async {
     await geolocationService.listenToPosition(
-      distanceFilter: 10,
+      distanceFilter: kDefaultGeolocationDistanceFilter,
       onData: (Position position) {
+        animateToPosition(position);
         log.v("New position event fired from location listener!");
       },
     );
