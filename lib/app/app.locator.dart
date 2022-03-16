@@ -27,7 +27,7 @@ import '../services/geolocation/geolocation_service.dart';
 import '../services/giftcard/gift_card_service.dart';
 import '../services/layout/layout_service.dart';
 import '../services/local_storage_service.dart';
-import '../services/maps/map_service.dart';
+import '../services/maps/map_state_service.dart';
 import '../services/markers/marker_service.dart';
 import '../services/payments/payment_service.dart';
 import '../services/payments/transfers_history_service.dart';
@@ -80,5 +80,5 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => ScreenTimeService());
   locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => GamificationService());
-  locator.registerLazySingleton(() => MapService());
+  locator.registerLazySingleton(() => MapStateService());
 }

@@ -12,10 +12,12 @@ import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:stacked/stacked.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   //-------------------------------------------------------
@@ -40,16 +42,29 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
   List<GiftCardPurchase> get purchasedGiftCards =>
       _giftCardService.purchasedGiftCards;
   List<Achievement> get achievements => gamificationService.achievements;
+  Position? get userLocation => geolocationService.getUserLivePositionNullable;
 
   // ---------------------------------------
   // state
   late final String name;
-  final void Function(Position position) animateToPosition;
-  ExplorerHomeViewModel({required this.animateToPosition})
-      : super(explorerUid: "") {
+  ExplorerHomeViewModel() : super(explorerUid: "") {
     // have to do that otherwise we get a null error when
     // switching account to the sponsor account
     this.name = currentUser.fullName;
+    _reactToServices(reactiveServices);
+  }
+
+  final LayoutService layoutService = locator<LayoutService>();
+  bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
+  void switchIsShowingQuestDetails() {
+    layoutService.switchIsShowingQuestDetails();
+    notifyListeners();
+  }
+
+  void popQuestDetails() {
+    restorePreviousCameraPosition();
+    // resetMarkers();
+    switchIsShowingQuestDetails();
   }
 
   bool addingPositionToNotionDB = false;
@@ -109,7 +124,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
     await geolocationService.listenToPosition(
       distanceFilter: kDefaultGeolocationDistanceFilter,
       onData: (Position position) {
-        animateToPosition(position);
+        setNewLatLon(lat: position.latitude, lon: position.longitude);
+        updateMap();
         log.v("New position event fired from location listener!");
       },
     );
@@ -252,5 +268,29 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
       snackbarService.showSnackbar(
           title: "Failure", message: "Connect to a network and try again");
     }
+  }
+
+  //------------------------------------------------------------
+  // Reactive Service Mixin Functionality from stacked ReactiveViewModel!
+  late List<ReactiveServiceMixin> _reactiveServices;
+  List<ReactiveServiceMixin> get reactiveServices =>
+      [layoutService]; // _reactiveServices;
+  void _reactToServices(List<ReactiveServiceMixin> reactiveServices) {
+    _reactiveServices = reactiveServices;
+    for (var reactiveService in _reactiveServices) {
+      reactiveService.addListener(_indicateChange);
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var reactiveService in _reactiveServices) {
+      reactiveService.removeListener(_indicateChange);
+    }
+    super.dispose();
+  }
+
+  void _indicateChange() {
+    notifyListeners();
   }
 }

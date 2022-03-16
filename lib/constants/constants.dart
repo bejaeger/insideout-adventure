@@ -126,3 +126,8 @@ const double kUnrealisticallyHighDistance = 100000000;
 const int kDistanceFilterForCalibration = 5;
 
 const int kDefaultGeolocationDistanceFilter = 10;
+
+/////////////////////////////////////
+// Google Maps View SEttings
+const double kMaxZoom = 19;
+const double kMinZoomAvatarView = 17;

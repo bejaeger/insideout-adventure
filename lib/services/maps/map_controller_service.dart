@@ -17,20 +17,20 @@ class MapControllerService {
   }
 
   static void moveCamera({
-    required double getBearing,
-    required double getZoom,
-    required double getTilt,
-    required double currentLat,
-    required double currentLon,
+    required double bearing,
+    required double zoom,
+    required double tilt,
+    required double lat,
+    required double lon,
   }) {
     if (_mapController == null) return;
     _mapController!.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          bearing: getBearing,
-          target: LatLng(currentLat, currentLon),
-          zoom: getZoom,
-          tilt: getTilt,
+          bearing: bearing,
+          target: LatLng(lat, lon),
+          zoom: zoom,
+          tilt: tilt,
         ),
       ),
     );
@@ -60,11 +60,13 @@ class MapControllerService {
     );
   }
 
-  static void animateToPosition(Position position, {bool force = false}) {
+  static void animateNewLatLon(
+      {required double lat, required double lon, bool force = false}) {
+    if (_mapController == null) return;
     runAnimation(
       () => _mapController!.animateCamera(
         CameraUpdate.newLatLng(
-          LatLng(position.latitude, position.longitude),
+          LatLng(lat, lon),
         ),
       ),
       force: force,
@@ -107,10 +109,8 @@ class MapControllerService {
       // InfoWindow(snippet: quest.name),
       icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
       onTap: () async {
-        if (_mapController != null) {
-          // needed to avoid navigating to that marker!
-          dontMoveCamera();
-        }
+        // needed to avoid navigating to that marker!
+        dontMoveCamera();
         await onTap();
       },
     );

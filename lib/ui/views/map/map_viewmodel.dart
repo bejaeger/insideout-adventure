@@ -5,28 +5,31 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
-import 'package:afkcredits/services/maps/map_service.dart';
+import 'package:afkcredits/services/layout/layout_service.dart';
+import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:rxdart/rxdart.dart';
 
-class MapViewModel extends QuestViewModel {
+class MapViewModel extends MapBaseViewModel {
+  // Viewmodel that receives callback functions to update map
+  // Functions declared at the bottom of this file
   MapViewModel(
       {required this.moveCamera,
       required this.animateCamera,
-      required this.configureAndAddMapMarker});
+      required this.configureAndAddMapMarker,
+      required this.animateNewLatLon});
 
   // -----------------------------------------------
   // Services
   final log = getLogger('MapViewModel');
-  final MapService mapService = locator<MapService>();
   final QuestService questService = locator<QuestService>();
   final _qrCodeService = locator<QRCodeService>();
   final FlavorConfigProvider flavorConfigProvider =
@@ -35,36 +38,14 @@ class MapViewModel extends QuestViewModel {
   // -----------------------------
   // Getters
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
-  bool get isAvatarView => mapService.isAvatarView;
+  bool get isAvatarView => mapStateService.isAvatarView;
 
   // -------------------------------------------------
   // State variables
   bool initialized = false;
-
-  // used for animating camera when pressing on quest marker
-  // double _mapWidth = 0;
-  // double _mapHeight = 0;
-  // double _devicePixelRatio = 0;
-
   String mapStyle = "";
 
   // last element of cameraBearingZoom determines whether listener should be fired!
-
-  final bearingSubject = BehaviorSubject<double>.seeded(kInitialBearing);
-  double get bearing => bearingSubject.value;
-  double tilt = kInitialTilt;
-  void changeCameraTilt(double tiltIn) {
-    tilt = tiltIn;
-  }
-
-  double zoom = kInitialZoom;
-  void changeCameraZoom(double zoomIn) {
-    zoom = zoomIn;
-  }
-
-  void changeCameraBearing(double bearingIn) {
-    bearingSubject.add(bearingIn);
-  }
 
   Future initializeMapAndMarkers(
       {required double mapWidth,
@@ -75,9 +56,6 @@ class MapViewModel extends QuestViewModel {
         mapStyle = string;
       },
     );
-    // _mapWidth = mapWidth;
-    // _mapHeight = mapHeight;
-    // _devicePixelRatio = devicePixelRatio;
     if (hasActiveQuest) return;
     initialized = false;
     log.i("Initializing map view");
@@ -120,30 +98,23 @@ class MapViewModel extends QuestViewModel {
       await showGenericInternalErrorDialog();
     }
 
-    bearingSubject.listen(
+    mapStateService.bearingSubject.listen(
       (bearing) {
         notifyListeners();
       },
     );
+    mapStateService.mapEventListener.listen(
+      (MapUpdate type) {
+        log.wtf("Received Map Update of type $type");
+        if (type == MapUpdate.animate) {
+          _animateCamera();
+        } else if (type == MapUpdate.animateNewLatLon) {
+          _animateNewLatLon;
+        }
+      },
+    );
     setBusy(false);
   }
-
-  // void moveZoomedInCamera() {
-  //   if (mapController != null) {
-  //     mapController!.moveCamera(
-  //       CameraUpdate.newCameraPosition(
-  //         CameraPosition(
-  //           bearing: getBearing,
-  //           target: LatLng(
-  //               userPosition!.latitude,
-  //               userPosition!.longitude),
-  //           zoom: getZoom,
-  //           tilt: getTilt,
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
 
   double previousRotation = 0;
   void rotate({
@@ -179,25 +150,44 @@ class MapViewModel extends QuestViewModel {
     }
     // moveZoomedInCamera(bearing: deltaBearing + cameraBearing.value);
     changeCameraBearing(bearing + deltaBearing * 0.4);
-    changeCameraZoom((zoom + (scale - 1) * 0.08).clamp(17, 19));
+    changeCameraZoom(
+        (zoom + (scale - 1) * 0.08).clamp(kMinZoomAvatarView, kMaxZoom));
     _moveCamera();
     previousRotation = rotation;
   }
 
-  void _moveCamera() {
-    moveCamera(
-        getBearing: bearing,
-        getZoom: zoom,
-        getTilt: tilt,
-        currentLat: userLocation!.latitude,
-        currentLon: userLocation!.longitude);
+  void _animateNewLatLon() {
+    if (newLat != null && newLon != null) {
+      animateNewLatLon(lat: newLat!, lon: newLon!);
+    }
+    // reset to avoid any unnecessary state
+    mapStateService.resetNewLatLon();
   }
 
-  void _animateCamera({double? customLat, double? customLon}) {
+  void _moveCamera(
+      {double? customBearing,
+      double? customZoom,
+      double? customTilt,
+      double? customLat,
+      double? customLon}) {
+    moveCamera(
+        bearing: customBearing ?? bearing,
+        zoom: customZoom ?? zoom,
+        tilt: customTilt ?? tilt,
+        lat: customLat ?? userLocation!.latitude,
+        lon: customLon ?? userLocation!.longitude);
+  }
+
+  void _animateCamera(
+      {double? customBearing,
+      double? customZoom,
+      double? customTilt,
+      double? customLat,
+      double? customLon}) {
     animateCamera(
-        bearing: bearing,
-        zoom: zoom,
-        tilt: tilt,
+        bearing: customBearing ?? bearing,
+        zoom: customZoom ?? zoom,
+        tilt: customTilt ?? tilt,
         lat: customLat ?? userLocation!.latitude,
         lon: customLon ?? userLocation!.longitude);
   }
@@ -217,52 +207,41 @@ class MapViewModel extends QuestViewModel {
   void changeMapZoom() {
     if (isAvatarView) {
       _animateCameraToBirdsView();
-      mapService.setIsAvatarView(false);
+      mapStateService.setIsAvatarView(false);
     } else {
       _animateCameraToAvatarView();
-      mapService.setIsAvatarView(true);
+      mapStateService.setIsAvatarView(true);
     }
     notifyListeners();
   }
 
-  // @override
-  // CameraPosition initialCameraPosition() {
-  //   if (!hasActiveQuest) {
-  //     if (userPosition != null) {
-  //       final CameraPosition _initialCameraPosition =
-  //           getZoomedInCameraPosition();
-  //       return _initialCameraPosition;
-  //     } else {
-  //       log.wtf(
-  //           "THIS SHOULD NOT HAPPEN: geolocation not loaded before map was opened");
-  //       return CameraPosition(
-  //         target: getDummyCoordinates(),
-  //         tilt: 90,
-  //         zoom: 17.5,
-  //       );
-  //     }
-  //   } else {
-  //     // HAS ACTIVE QUEST
-  //     if (activeQuest.quest.startMarker != null) {
-  //       final CameraPosition _initialCameraPosition = CameraPosition(
-  //         //In Future I will change these values to dynamically Change the Initial Camera Position
-  //         //Based on teh city
-  //         target: LatLng(activeQuest.quest.startMarker!.lat!,
-  //             activeQuest.quest.startMarker!.lon!),
-  //         zoom: 15,
-  //       );
-  //       return _initialCameraPosition;
-  //     } else {
-  //       // return current user position
-  //       final CameraPosition _initialCameraPosition = CameraPosition(
-  //           target: LatLng(
-  //               userPosition!.latitude,
-  //               userPosition!.longitude),
-  //           zoom: 13);
-  //       return _initialCameraPosition;
-  //     }
-  //   }
-  // }
+  final LayoutService layoutService = locator<LayoutService>();
+  bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
+  void switchIsShowingQuestDetails() {
+    layoutService.switchIsShowingQuestDetails();
+    notifyListeners();
+  }
+
+  void showQuestDetails({required Quest quest}) {
+    // to be able to reset camera from quest (nice UX)
+    takeSnapshotOfCameraPosition();
+
+    if (quest.startMarker != null) {
+      if (!isAvatarView) {
+        changeCameraTilt(90);
+      }
+      changeCameraZoom(kMaxZoom);
+      _animateCamera(
+          customLat: quest.startMarker!.lat, customLon: quest.startMarker!.lon);
+    }
+    switchIsShowingQuestDetails();
+  }
+
+  void takeSnapshotOfCameraPosition() {
+    mapStateService.previousBearing = bearing;
+    mapStateService.previousZoom = zoom;
+    mapStateService.previousTilt = tilt;
+  }
 
   @override
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
@@ -283,30 +262,14 @@ class MapViewModel extends QuestViewModel {
         if (!useSuperUserFeatures || adminMode == false) {
           if (hasActiveQuest == false) {
             if (afkmarker == quest.startMarker) {
-              // if (mapController != null) {
-              //   final screenCoordinates = await mapController!
-              //       .getScreenCoordinate(
-              //           LatLng(afkmarker.lat!, afkmarker.lon!));
-              //   // some magic to move the marker to the desired position!
-              //   double xMove =
-              //       (-_mapWidth * _devicePixelRatio / 2 + screenCoordinates.x) /
-              //           _devicePixelRatio;
-              //   double yMove = (-_mapHeight * _devicePixelRatio / 2 +
-              //               screenCoordinates.y) /
-              //           _devicePixelRatio +
-              //       150;
-              //   // TODO: Moves camera to marker. Avoid for now!
-              //   // await mapController!
-              //   //     .animateCamera(CameraUpdate.scrollBy(xMove, yMove));
-              //   // await Future.delayed(Duration(milliseconds: 200));
-              // } else {
-              //   log.e(
-              //       "google map controller is not available, can't update position!");
-              // }
-              await displayQuestBottomSheet(
+              final result = await displayQuestBottomSheet(
                 quest: quest,
                 startMarker: afkmarker,
               );
+              if (result?.confirmed == true) {
+                // showQuestDetails
+                showQuestDetails(quest: quest);
+              }
             } else {
               if (quest.type != QuestType.QRCodeHike) {
                 dialogService.showDialog(
@@ -429,7 +392,6 @@ class MapViewModel extends QuestViewModel {
     // cameraZoom.close();
     // cameraBearing.close();
     // cameraTilt.close();
-    bearingSubject.close();
     // TODO: implement dispose
     super.dispose();
   }
@@ -437,11 +399,11 @@ class MapViewModel extends QuestViewModel {
   ///////////////////////////////////////////////////////////////////
   // Map Callback functions
   final void Function(
-      {required double getBearing,
-      required double getZoom,
-      required double getTilt,
-      required double currentLat,
-      required double currentLon}) moveCamera;
+      {required double bearing,
+      required double zoom,
+      required double tilt,
+      required double lat,
+      required double lon}) moveCamera;
   final void Function(
       {required double bearing,
       required double zoom,
@@ -452,4 +414,8 @@ class MapViewModel extends QuestViewModel {
       {required Quest quest,
       required AFKMarker afkmarker,
       required Future Function() onTap}) configureAndAddMapMarker;
+  final void Function({
+    required double lat,
+    required double lon,
+  }) animateNewLatLon;
 }

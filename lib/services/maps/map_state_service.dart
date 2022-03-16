@@ -1,14 +1,67 @@
+import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/enums/map_updates.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:stacked/stacked.dart';
 
-class MapService {
+class MapStateService with ReactiveServiceMixin {
   final log = getLogger("MapsService");
 
   // whether map is zoomed in to avatar with tilt
   bool isAvatarView = true;
   void setIsAvatarView(bool set) {
     isAvatarView = set;
+  }
+
+  double tilt = kInitialTilt;
+  double zoom = kInitialZoom;
+  double get bearing => bearingSubject.value;
+  final bearingSubject = BehaviorSubject<double>.seeded(kInitialBearing);
+  final mapEventListener = BehaviorSubject<MapUpdate>();
+  void closeListener() {
+    bearingSubject.close();
+    mapEventListener.close();
+  }
+
+  // to create snapshot of previous camera position
+  // accessible everywhere in the app
+  double? previousBearing;
+  double? previousZoom;
+  double? previousTilt;
+
+  double? newLat;
+  double? newLon;
+
+  void restorePreviousCameraPosition() {
+    if (previousBearing != null) {
+      bearingSubject.add(previousBearing!);
+    }
+    if (previousZoom != null) {
+      zoom = previousZoom!;
+    }
+    if (previousTilt != null) {
+      tilt = previousTilt!;
+    }
+    previousBearing = null;
+    previousZoom = null;
+    previousTilt = null;
+    updateMap();
+  }
+
+  void setNewLatLon({required double lat, required double lon}) {
+    newLat = lat;
+    newLon = lon;
+  }
+
+  void resetNewLatLon() {
+    newLat = null;
+    newLon = null;
+  }
+
+  void updateMap() {
+    mapEventListener.add(MapUpdate.animate);
   }
 
   Future launchMapsForNavigation(double lat, double lon) async {

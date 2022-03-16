@@ -11,7 +11,7 @@ import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/maps/map_controller_service.dart';
-import 'package:afkcredits/services/maps/map_service.dart';
+import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
@@ -145,7 +145,8 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: ScreenTimeService),
     LazySingleton(classType: QuestTestingService),
     LazySingleton(classType: GamificationService),
-    LazySingleton(classType: MapService),
+    LazySingleton(classType: MapStateService),
+
     //LazySingleton(classType: MarkersInMap),
 
     // Services

@@ -308,7 +308,7 @@ class BaseModel extends BaseViewModel {
     return false;
   }
 
-  Future displayQuestBottomSheet(
+  Future<SheetResponse?> displayQuestBottomSheet(
       {required Quest quest, AFKMarker? startMarker}) async {
     SheetResponse? sheetResponse = await bottomSheetService.showCustomSheet(
         variant: BottomSheetType.questInformation,
@@ -324,13 +324,14 @@ class BaseModel extends BaseViewModel {
             : "Go to Quest",
         secondaryButtonTitle: "Close",
         data: quest);
-    if (sheetResponse?.confirmed == true) {
-      baseModelLog
-          .i("Looking at details of quest OR starting quest immediately");
-      questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
-          ? await navigateToActiveQuestUI(quest: quest)
-          : await navigateToActiveQuestUI(quest: quest);
-    }
+    return sheetResponse;
+    // if (sheetResponse?.confirmed == true) {
+    //   baseModelLog
+    //       .i("Looking at details of quest OR starting quest immediately");
+    //   return true;
+    // questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
+    //     ? await navigateToActiveQuestUI(quest: quest)
+    //     : await navigateToActiveQuestUI(quest: quest);
   }
 
   Future navigateToActiveQuestUI({required Quest quest}) async {

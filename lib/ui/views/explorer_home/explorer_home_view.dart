@@ -50,8 +50,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
-      viewModelBuilder: () => ExplorerHomeViewModel(
-          animateToPosition: MapControllerService.animateToPosition),
+      viewModelBuilder: () => ExplorerHomeViewModel(),
       onModelReady: (model) => model.initialize(),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
@@ -60,8 +59,31 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
               // bottom layer
               if (!model.isBusy) MainMapView(),
               if (model.isBusy) MapLoadingOverlay(),
-              MainHeader(onPressed: model.logout),
-              MainFooter(),
+              AnimatedSwitcher(
+                duration: Duration(milliseconds: 500),
+                child: !model.isShowingQuestDetails
+                    ? Stack(
+                        children: [
+                          MainHeader(onPressed: model.logout),
+                          MainFooter(
+                              onMiddleTap: model.switchIsShowingQuestDetails),
+                        ],
+                      )
+                    : Align(
+                        alignment: Alignment.bottomCenter,
+                        child: GestureDetector(
+                          onTap: model.popQuestDetails,
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 25.0),
+                              child: Icon(Icons.close_outlined, size: 35),
+                            ),
+                          ),
+                        ),
+                      ),
+              ),
             ],
           ),
         ),
@@ -94,15 +116,17 @@ class MainMapView extends StatelessWidget {
         Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
     return ViewModelBuilder<MapViewModel>.reactive(
       viewModelBuilder: () => MapViewModel(
-          moveCamera: MapControllerService.moveCamera,
-          configureAndAddMapMarker:
-              MapControllerService.configureAndAddMapMarker,
-          animateCamera: MapControllerService.animateCamera),
+        moveCamera: MapControllerService.moveCamera,
+        configureAndAddMapMarker: MapControllerService.configureAndAddMapMarker,
+        animateCamera: MapControllerService.animateCamera,
+        animateNewLatLon: MapControllerService.animateNewLatLon,
+      ),
       onModelReady: (model) => model.initializeMapAndMarkers(
         devicePixelRatio: devicePixelRatio,
         mapWidth: screenWidth(context),
         mapHeight: screenHeight(context),
       ),
+      disposeViewModel: false,
       builder: (context, model, child) => Stack(
         children: [
           //CloudOverlay(overlay: true),
@@ -371,9 +395,11 @@ class CloudOverlay extends StatelessWidget {
 }
 
 class OutLineBox extends StatelessWidget {
+  final String? text;
   final double? width;
   final double? height;
-  const OutLineBox({Key? key, this.width, this.height}) : super(key: key);
+  const OutLineBox({Key? key, this.width, this.height, this.text})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -383,6 +409,9 @@ class OutLineBox extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey[800]!, width: 2.0),
         borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: SizedBox.expand(
+        child: text != null ? Text(text!) : SizedBox.expand(),
       ),
     );
   }
@@ -489,7 +518,8 @@ class RightFloatingButtons extends StatelessWidget {
 }
 
 class MainFooter extends StatelessWidget {
-  const MainFooter({Key? key}) : super(key: key);
+  final void Function() onMiddleTap;
+  const MainFooter({Key? key, required this.onMiddleTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -505,7 +535,8 @@ class MainFooter extends StatelessWidget {
             OutLineBox(width: 80),
             horizontalSpaceLarge,
             Expanded(
-              child: OutLineBox(),
+              child: GestureDetector(
+                  onTap: onMiddleTap, child: OutLineBox(text: "Show Quest")),
             ),
             horizontalSpaceLarge,
             OutLineBox(width: 80),
