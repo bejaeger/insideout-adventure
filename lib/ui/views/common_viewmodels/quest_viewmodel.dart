@@ -7,6 +7,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
@@ -15,34 +16,27 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 
 abstract class QuestViewModel extends BaseModel {
   final log = getLogger("QuestViewModel");
+  final LayoutService layoutService = locator<LayoutService>();
 
-  // StreamSubscription? _activeQuestSubscription;
+  // -----------------------------------------------
+  // Setters
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
-  bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
   final QRCodeService qrCodeService = locator<QRCodeService>();
-  //Getter From the Neary By Quests.
+
+  // ------------------------------------------
+  // Getters
+  bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
+  bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
+
+  // -----------------------------------------
+  // State
   List<double> distancesFromQuests = [];
 
-  // QuestViewModel() {
-  //   // log.i("Setting up active quest listener");
-  //   // _activeQuestSubscription = questService.activatedQuestSubject.listen(
-  //   //   (activatedQuest) {
-  //   //     if (activeQuestNullable?.quest.type == QuestType.QRCodeHike) {
-  //   //       lastActivatedQuestInfoText = getActiveQuestProgressDescription();
-  //   //     }
-  //   //     // TODO: Check the number of rebuilds that is required here!
-  //   //     notifyListeners();
-  //   //     if (activatedQuest?.status == QuestStatus.success ||
-  //   //         activatedQuest?.status == QuestStatus.cancelled ||
-  //   //         activatedQuest?.status == QuestStatus.failed) {
-  //   //       cancelQuestListener();
-  //   //     }
-  //   //   },
-  //   // );
-  // }
+  // ---------------------------------------
+  // Methods
 
   List<Quest> getQuestsOfType({required QuestType type}) {
     return questService.extractQuestsOfType(
@@ -190,6 +184,14 @@ abstract class QuestViewModel extends BaseModel {
       }
     }
     return false;
+  }
+
+  void switchIsShowingQuestDetails() {
+    layoutService.switchIsShowingQuestDetails();
+  }
+
+  void setIsShowingQuestDetails(bool set) {
+    layoutService.setIsShowingQuestDetails(set);
   }
 
   int currentIndex = 0;

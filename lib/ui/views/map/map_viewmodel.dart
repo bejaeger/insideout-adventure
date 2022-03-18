@@ -9,23 +9,24 @@ import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/map_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class MapViewModel extends MapBaseViewModel {
+class MapViewModel extends QuestViewModel with MapStateControlMixin {
   // Viewmodel that receives callback functions to update map
   // Functions declared at the bottom of this file
   MapViewModel(
       {required this.moveCamera,
       required this.animateCamera,
       required this.configureAndAddMapMarker,
-      required this.animateNewLatLon});
+      required this.animateNewLatLon,
+      required this.resetMapMarkers});
 
   // -----------------------------------------------
   // Services
@@ -39,6 +40,8 @@ class MapViewModel extends MapBaseViewModel {
   // Getters
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
   bool get isAvatarView => mapStateService.isAvatarView;
+  bool get suppressOneFingerRotations =>
+      mapStateService.suppressOneFingerRotations;
 
   // -------------------------------------------------
   // State variables
@@ -110,6 +113,10 @@ class MapViewModel extends MapBaseViewModel {
           _animateCamera();
         } else if (type == MapUpdate.animateNewLatLon) {
           _animateNewLatLon;
+        } else if (type == MapUpdate.restoreSnapshot) {
+          _animateCamera(forceUseLocation: true);
+        } else if (type == MapUpdate.addAllQuestMarkers) {
+          extractStartMarkersAndAddToMap();
         }
       },
     );
@@ -170,6 +177,12 @@ class MapViewModel extends MapBaseViewModel {
       double? customTilt,
       double? customLat,
       double? customLon}) {
+    if (hasSelectedQuest && customLat == null && customLon == null) {
+      if (selectedQuest!.startMarker != null) {
+        customLat = selectedQuest!.startMarker!.lat;
+        customLon = selectedQuest!.startMarker!.lon;
+      }
+    }
     moveCamera(
         bearing: customBearing ?? bearing,
         zoom: customZoom ?? zoom,
@@ -178,18 +191,31 @@ class MapViewModel extends MapBaseViewModel {
         lon: customLon ?? userLocation!.longitude);
   }
 
-  void _animateCamera(
-      {double? customBearing,
-      double? customZoom,
-      double? customTilt,
-      double? customLat,
-      double? customLon}) {
+  void _animateCamera({
+    double? customBearing,
+    double? customZoom,
+    double? customTilt,
+    double? customLat,
+    double? customLon,
+    bool? force,
+    bool? forceUseLocation,
+  }) {
+    if (hasSelectedQuest &&
+        customLat == null &&
+        customLon == null &&
+        forceUseLocation != true) {
+      if (selectedQuest!.startMarker != null) {
+        customLat = selectedQuest!.startMarker!.lat;
+        customLon = selectedQuest!.startMarker!.lon;
+      }
+    }
     animateCamera(
         bearing: customBearing ?? bearing,
         zoom: customZoom ?? zoom,
         tilt: customTilt ?? tilt,
         lat: customLat ?? userLocation!.latitude,
-        lon: customLon ?? userLocation!.longitude);
+        lon: customLon ?? userLocation!.longitude,
+        force: force);
   }
 
   void _animateCameraToBirdsView() {
@@ -215,32 +241,36 @@ class MapViewModel extends MapBaseViewModel {
     notifyListeners();
   }
 
-  final LayoutService layoutService = locator<LayoutService>();
-  bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
-  void switchIsShowingQuestDetails() {
-    layoutService.switchIsShowingQuestDetails();
-    notifyListeners();
-  }
-
   void showQuestDetails({required Quest quest}) {
+    // 1. set selected quest to show on screen
+    activeQuestService.setSelectedQuest(quest);
     // to be able to reset camera from quest (nice UX)
+
+    // 2. take snapshot so we can easily restore current view
     takeSnapshotOfCameraPosition();
 
+    // 3. animate camera to quest start
+    // TODO: Maybe this needs to become more advanced
+    // TODO: for different types of quests
     if (quest.startMarker != null) {
-      if (!isAvatarView) {
-        changeCameraTilt(90);
-      }
+      changeCameraTilt(90);
       changeCameraZoom(kMaxZoom);
       _animateCamera(
-          customLat: quest.startMarker!.lat, customLon: quest.startMarker!.lon);
+          customLat: quest.startMarker!.lat,
+          customLon: quest.startMarker!.lon,
+          force: true);
     }
-    switchIsShowingQuestDetails();
-  }
+    mapStateService.setIsAvatarView(true);
 
-  void takeSnapshotOfCameraPosition() {
-    mapStateService.previousBearing = bearing;
-    mapStateService.previousZoom = zoom;
-    mapStateService.previousTilt = tilt;
+    // 4. show ONLY markers relevant to quest
+    if (quest.startMarker != null) {
+      resetMapMarkers();
+      addMarkerToMap(quest: quest, afkmarker: quest.startMarker!);
+    }
+
+    // 5. set bool to show quest to change view
+    setIsShowingQuestDetails(true);
+    notifyListeners();
   }
 
   @override
@@ -262,12 +292,17 @@ class MapViewModel extends MapBaseViewModel {
         if (!useSuperUserFeatures || adminMode == false) {
           if (hasActiveQuest == false) {
             if (afkmarker == quest.startMarker) {
-              final result = await displayQuestBottomSheet(
-                quest: quest,
-                startMarker: afkmarker,
-              );
-              if (result?.confirmed == true) {
-                // showQuestDetails
+              if (!isAvatarView) {
+                final result = await displayQuestBottomSheet(
+                  quest: quest,
+                  startMarker: afkmarker,
+                );
+                if (result?.confirmed == true) {
+                  // showQuestDetails
+                  showQuestDetails(quest: quest);
+                }
+              } else {
+                // show quest directly when in avatar view
                 showQuestDetails(quest: quest);
               }
             } else {
@@ -384,7 +419,8 @@ class MapViewModel extends MapBaseViewModel {
   void rotateToNorth() {
     if (userLocation == null) return;
     changeCameraBearing(0);
-    _moveCamera();
+    // _moveCamera();
+    _animateCamera();
   }
 
   @override
@@ -409,7 +445,8 @@ class MapViewModel extends MapBaseViewModel {
       required double zoom,
       required double tilt,
       required double lat,
-      required double lon}) animateCamera;
+      required double lon,
+      bool? force}) animateCamera;
   final void Function(
       {required Quest quest,
       required AFKMarker afkmarker,
@@ -418,4 +455,5 @@ class MapViewModel extends MapBaseViewModel {
     required double lat,
     required double lon,
   }) animateNewLatLon;
+  final void Function() resetMapMarkers;
 }

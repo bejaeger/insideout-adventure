@@ -14,12 +14,14 @@ import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stacked/stacked.dart';
 
-class ExplorerHomeViewModel extends SwitchAccountsViewModel {
+class ExplorerHomeViewModel extends SwitchAccountsViewModel
+    with MapStateControlMixin {
   //-------------------------------------------------------
   // services
   final GiftCardService _giftCardService = locator<GiftCardService>();
@@ -52,19 +54,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel {
     // switching account to the sponsor account
     this.name = currentUser.fullName;
     _reactToServices(reactiveServices);
-  }
-
-  final LayoutService layoutService = locator<LayoutService>();
-  bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
-  void switchIsShowingQuestDetails() {
-    layoutService.switchIsShowingQuestDetails();
-    notifyListeners();
-  }
-
-  void popQuestDetails() {
-    restorePreviousCameraPosition();
-    // resetMarkers();
-    switchIsShowingQuestDetails();
   }
 
   bool addingPositionToNotionDB = false;

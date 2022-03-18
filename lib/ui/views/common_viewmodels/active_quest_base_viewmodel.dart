@@ -66,8 +66,11 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
   // ------------------------------------------
   // Functions to override!
-  // TODO: Check this!
   bool isQuestCompleted();
+
+  //  {
+  //   return false;
+  // }
   // void updateMapMarkers({required AFKMarker afkmarker}) {}
 
   ///------------------------------------------------------------

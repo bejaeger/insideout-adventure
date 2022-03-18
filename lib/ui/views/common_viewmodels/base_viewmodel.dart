@@ -69,6 +69,8 @@ class BaseModel extends BaseViewModel {
   bool get listenedToNewPosition => geolocationService.listenedToNewPosition;
 
   // --------------------------------------------------
+  bool get hasSelectedQuest => activeQuestService.hasSelectedQuest;
+  Quest? get selectedQuest => activeQuestService.selectedQuest;
   bool get hasActiveQuest => activeQuestService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => activeQuestService.activatedQuest!;

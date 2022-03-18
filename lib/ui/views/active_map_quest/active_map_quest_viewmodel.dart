@@ -9,13 +9,15 @@ import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
+class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
+    with MapStateControlMixin {
   /// If user enters an area, the following AFKMarker will be set that corresponds to the marker.
   /// If the user walks outside the area (geofence) (+ some extra buffer zone)
   /// the marker is set to null again (after some time delay to avoid multiple dialogs
@@ -899,6 +901,22 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel {
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
       }
     }
+  }
+
+  // TODO: Unit test!
+  // All this is essential and should probably be unit tested
+  void popQuestDetails() async {
+    // 1. Restore camera
+    restorePreviousCameraPosition();
+    // 2. add back all quests
+    addAllQuestMarkers();
+    // 3. set bool to update views
+    layoutService.setIsShowingQuestDetails(false);
+    notifyListeners();
+    // 4. reset selected quest after delay so the fade out is smooth
+    await Future.delayed(Duration(seconds: 1));
+    activeQuestService.resetSetSelectedQuest();
+    notifyListeners();
   }
 
   @override

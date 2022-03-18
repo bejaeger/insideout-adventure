@@ -1,14 +1,16 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
-class MapBaseViewModel extends QuestViewModel {
+mixin MapStateControlMixin {
   // Class implementing common functionality to update and get map information
 
   // --------------------------------------
   // Services
   final MapStateService mapStateService = locator<MapStateService>();
+  // final LayoutService layoutService = locator<LayoutService>();
 
   // ----------------------------------------
   // Getters
@@ -19,6 +21,7 @@ class MapBaseViewModel extends QuestViewModel {
   double? get newLon => mapStateService.newLon;
   bool get isAvatarView => mapStateService.isAvatarView;
 
+  // bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
   // -------------------------------------
   // functions
   void changeCameraTilt(double tiltIn) {
@@ -56,4 +59,23 @@ class MapBaseViewModel extends QuestViewModel {
   void restorePreviousCameraPosition() {
     mapStateService.restorePreviousCameraPosition();
   }
+
+  void addAllQuestMarkers() {
+    mapStateService.addAllQuestMarkers();
+  }
+
+  void setSuppressOneFingerRotations(bool set) {
+    mapStateService.setSuppressOneFingerRotations(set);
+  }
+
+  void takeSnapshotOfCameraPosition() {
+    mapStateService.previousViewWasAvatarView = isAvatarView;
+    mapStateService.previousBearing = bearing;
+    mapStateService.previousZoom = zoom;
+    mapStateService.previousTilt = tilt;
+  }
+
+  // void switchIsShowingQuestDetails() {
+  //   layoutService.switchIsShowingQuestDetails();
+  // }
 }

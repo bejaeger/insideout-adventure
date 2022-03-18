@@ -49,6 +49,18 @@ class ActiveQuestService with ReactiveServiceMixin {
   // state
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
+  bool get hasSelectedQuest => selectedQuest != null;
+  Quest? selectedQuest;
+
+  void setSelectedQuest(Quest quest) {
+    selectedQuest = quest;
+  }
+
+  void resetSetSelectedQuest() {
+    selectedQuest = null;
+  }
+
+  // Maybe deprecated?
   Quest? currentQuest;
   String? activatedQuestTrialId;
 

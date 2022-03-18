@@ -4,9 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:stacked/stacked.dart';
 
-class MapStateService with ReactiveServiceMixin {
+class MapStateService {
   final log = getLogger("MapsService");
 
   // whether map is zoomed in to avatar with tilt
@@ -15,24 +14,34 @@ class MapStateService with ReactiveServiceMixin {
     isAvatarView = set;
   }
 
+  // whether map is focused on specific quest
+  bool isQuestDetailsView = false;
+  void setIsQuestDetailsView(bool set) {
+    isQuestDetailsView = set;
+  }
+
   double tilt = kInitialTilt;
   double zoom = kInitialZoom;
   double get bearing => bearingSubject.value;
   final bearingSubject = BehaviorSubject<double>.seeded(kInitialBearing);
   final mapEventListener = BehaviorSubject<MapUpdate>();
-  void closeListener() {
-    bearingSubject.close();
-    mapEventListener.close();
-  }
 
   // to create snapshot of previous camera position
   // accessible everywhere in the app
   double? previousBearing;
   double? previousZoom;
   double? previousTilt;
+  bool? previousViewWasAvatarView;
 
+  // if map should be moved to specific lat/lon
   double? newLat;
   double? newLon;
+
+  // touch events
+  bool suppressOneFingerRotations = false;
+  void setSuppressOneFingerRotations(bool set) {
+    suppressOneFingerRotations = set;
+  }
 
   void restorePreviousCameraPosition() {
     if (previousBearing != null) {
@@ -44,10 +53,14 @@ class MapStateService with ReactiveServiceMixin {
     if (previousTilt != null) {
       tilt = previousTilt!;
     }
+    if (previousViewWasAvatarView == false) {
+      isAvatarView = false;
+    }
     previousBearing = null;
     previousZoom = null;
     previousTilt = null;
-    updateMap();
+    previousViewWasAvatarView = null;
+    restoreMapSnapshot();
   }
 
   void setNewLatLon({required double lat, required double lon}) {
@@ -62,6 +75,14 @@ class MapStateService with ReactiveServiceMixin {
 
   void updateMap() {
     mapEventListener.add(MapUpdate.animate);
+  }
+
+  void restoreMapSnapshot() {
+    mapEventListener.add(MapUpdate.restoreSnapshot);
+  }
+
+  void addAllQuestMarkers() {
+    mapEventListener.add(MapUpdate.addAllQuestMarkers);
   }
 
   Future launchMapsForNavigation(double lat, double lon) async {
@@ -79,7 +100,7 @@ class MapStateService with ReactiveServiceMixin {
   }
 
   // TODO:
-  // DEPRECATE THE FOLLOWING
+  // DEPRECATE THE FOLLOWING (needs google map dependency!)
   LatLngBounds boundsFromLatLngList({required List<LatLng> latLngList}) {
     if (latLngList.length == 0) {
       log.e("Can't created LatLngBounds from empty list!");
@@ -99,5 +120,13 @@ class MapStateService with ReactiveServiceMixin {
     }
     return LatLngBounds(
         northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
+  }
+
+  ////////////////////////////////////////////////////////
+  /// Clean up
+  ///
+  void closeListener() {
+    bearingSubject.close();
+    mapEventListener.close();
   }
 }

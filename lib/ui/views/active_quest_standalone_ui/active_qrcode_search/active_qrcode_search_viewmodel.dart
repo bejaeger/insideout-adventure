@@ -98,10 +98,10 @@ class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
     }
   }
 
-  @override
-  bool isQuestCompleted() {
-    return activeQuestService.isAllMarkersCollected;
-  }
+  // @override
+  // bool isQuestCompleted() {
+  //   return activeQuestService.isAllMarkersCollected;
+  // }
 
   @override
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {

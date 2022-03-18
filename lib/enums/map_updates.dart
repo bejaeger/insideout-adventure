@@ -1,1 +1,7 @@
-enum MapUpdate { animate, move, animateNewLatLon }
+enum MapUpdate {
+  animate,
+  move,
+  animateNewLatLon,
+  restoreSnapshot,
+  addAllQuestMarkers
+}

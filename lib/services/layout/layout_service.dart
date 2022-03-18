@@ -23,6 +23,10 @@ class LayoutService with ReactiveServiceMixin {
     _isShowingQuestDetails.value = !_isShowingQuestDetails.value;
   }
 
+  void setIsShowingQuestDetails(bool set) {
+    _isShowingQuestDetails.value = set;
+  }
+
   ReactiveValue<bool> _isShowingQuestDetails = ReactiveValue<bool>(false);
   bool get isShowingQuestDetails => _isShowingQuestDetails.value;
   void setIsShowQinguestDetails(bool show) {

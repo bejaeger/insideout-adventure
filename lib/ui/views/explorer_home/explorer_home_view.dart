@@ -11,8 +11,10 @@ import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/enums/stats_type.dart';
-import 'package:afkcredits/services/maps/map_controller_service.dart';
+import 'package:afkcredits/services/maps/google_map_service.dart';
 import 'package:afkcredits/ui/shared/maps/maps_controller_mixin.dart';
+import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
@@ -59,33 +61,86 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
               // bottom layer
               if (!model.isBusy) MainMapView(),
               if (model.isBusy) MapLoadingOverlay(),
-              AnimatedSwitcher(
-                duration: Duration(milliseconds: 500),
-                child: !model.isShowingQuestDetails
-                    ? Stack(
-                        children: [
-                          MainHeader(onPressed: model.logout),
-                          MainFooter(
-                              onMiddleTap: model.switchIsShowingQuestDetails),
-                        ],
-                      )
-                    : Align(
-                        alignment: Alignment.bottomCenter,
-                        child: GestureDetector(
-                          onTap: model.popQuestDetails,
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 25.0),
-                              child: Icon(Icons.close_outlined, size: 35),
-                            ),
-                          ),
-                        ),
-                      ),
-              ),
+              MainHeader(
+                  isShowingQuestDetails: model.isShowingQuestDetails,
+                  onPressed: model.logout),
+              MainFooter(
+                  isShowingQuestDetails: model.isShowingQuestDetails,
+                  onMiddleTap: () => null),
+              QuestDetailsOverlay(
+                  isShowingQuestDetails: model.isShowingQuestDetails),
+              // AnimatedSwitcher(
+              //   duration: Duration(milliseconds: 500),
+              //   child: !model.isShowingQuestDetails
+              //       ? Stack(
+              //           children: [
+              //             MainHeader(onPressed: model.logout),
+              //             MainFooter(
+              //                 onMiddleTap: model.switchIsShowingQuestDetails),
+              //           ],
+              //         )
+              //       : Align(
+              //           alignment: Alignment.bottomCenter,
+              //           child: GestureDetector(
+              //             onTap: model.popQuestDetails,
+              //             child: Container(
+              //               height: 50,
+              //               width: 50,
+              //               child: Padding(
+              //                 padding: const EdgeInsets.only(bottom: 25.0),
+              //                 child: Icon(Icons.close_outlined, size: 35),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              // ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class QuestDetailsOverlay extends StatelessWidget {
+  final bool isShowingQuestDetails;
+  const QuestDetailsOverlay({Key? key, required this.isShowingQuestDetails})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<ActiveMapQuestViewModel>.reactive(
+      viewModelBuilder: () => ActiveMapQuestViewModel(),
+      builder: (context, model, child) => AnimatedOpacity(
+        duration: Duration(milliseconds: 500),
+        opacity: isShowingQuestDetails ? 1 : 0,
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40.0),
+                  child: AfkCreditsText.headingTwo(
+                      model.selectedQuest?.name ?? "QUEST"),
+                )),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: GestureDetector(
+                onTap: isShowingQuestDetails ? model.popQuestDetails : null,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, border: Border.all(width: 2)),
+                    child: Icon(Icons.close_outlined, size: 24),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -105,7 +160,9 @@ class MapLoadingOverlay extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable
+// This is the main class with the google map
+// that has the viewmodel attached that takes care
+// of all map functionality
 class MainMapView extends StatelessWidget {
   //with MapControllerMixin {
   const MainMapView({Key? key}) : super(key: key);
@@ -116,11 +173,11 @@ class MainMapView extends StatelessWidget {
         Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
     return ViewModelBuilder<MapViewModel>.reactive(
       viewModelBuilder: () => MapViewModel(
-        moveCamera: MapControllerService.moveCamera,
-        configureAndAddMapMarker: MapControllerService.configureAndAddMapMarker,
-        animateCamera: MapControllerService.animateCamera,
-        animateNewLatLon: MapControllerService.animateNewLatLon,
-      ),
+          moveCamera: GoogleMapService.moveCamera,
+          configureAndAddMapMarker: GoogleMapService.configureAndAddMapMarker,
+          animateCamera: GoogleMapService.animateCamera,
+          animateNewLatLon: GoogleMapService.animateNewLatLon,
+          resetMapMarkers: GoogleMapService.resetMapMarkers),
       onModelReady: (model) => model.initializeMapAndMarkers(
         devicePixelRatio: devicePixelRatio,
         mapWidth: screenWidth(context),
@@ -134,8 +191,9 @@ class MainMapView extends StatelessWidget {
             model: model,
           ),
           RotationGestureWidget(
-            ignoreGestures: !model
-                .isAvatarView, // ignore gestures when we are in bird's view
+            ignoreGestures: !model.isAvatarView ||
+                model
+                    .suppressOneFingerRotations, // ignore gestures when we are in bird's view
             onRotate: (ScaleUpdateDetails details) => model.rotate(
               dxPan: details.focalPointDelta.dx,
               //details.delta.dx,
@@ -162,7 +220,8 @@ class MainMapView extends StatelessWidget {
               onCompassTap: model.rotateToNorth,
               bearing: model.bearing,
               onZoomPressed: model.changeMapZoom,
-              zoomedIn: model.isAvatarView),
+              zoomedIn: model.isAvatarView,
+              isShowingQuestDetails: model.isShowingQuestDetails),
         ],
       ),
     );
@@ -232,9 +291,11 @@ class GoogleMapsScreen extends StatelessWidget {
         child: ListView(
           physics: NeverScrollableScrollPhysics(),
           children: [
+            // This container is used to push the center of the map
+            // a bit further down on the screen (similar to Pokemon Go)
             AnimatedContainer(
               height: model.isAvatarView == true ? 150 : 0,
-              duration: Duration(seconds: 1),
+              duration: Duration(milliseconds: 500),
               color: Colors.transparent,
             ),
             Container(
@@ -245,15 +306,14 @@ class GoogleMapsScreen extends StatelessWidget {
                 child: GoogleMap(
                   onTap: (_) => model.notifyListeners(),
                   //mapType: MapType.hybrid,
-                  initialCameraPosition:
-                      MapControllerService.initialCameraPosition(
-                          userLocation: model.userLocation),
+                  initialCameraPosition: GoogleMapService.initialCameraPosition(
+                      userLocation: model.userLocation),
                   //Place Markers in the Map
-                  markers: MapControllerService.markersOnMap,
+                  markers: GoogleMapService.markersOnMap,
                   //callback that’s called when the map is ready to use.
                   onMapCreated: (GoogleMapController controller) {
                     controller.setMapStyle(model.mapStyle);
-                    MapControllerService.setMapController(controller);
+                    GoogleMapService.setMapController(controller);
                   },
                   //enable zoom gestures
                   zoomGesturesEnabled: true,
@@ -270,6 +330,7 @@ class GoogleMapsScreen extends StatelessWidget {
                   compassEnabled: false,
                   onCameraMove: (position) {
                     model.changeCameraBearing(position.bearing);
+                    model.changeCameraZoom(position.zoom);
                   },
                   // gestureRecognizers: Set()
                   //   ..add(
@@ -394,11 +455,11 @@ class CloudOverlay extends StatelessWidget {
   }
 }
 
-class OutLineBox extends StatelessWidget {
+class OutlineBox extends StatelessWidget {
   final String? text;
   final double? width;
   final double? height;
-  const OutLineBox({Key? key, this.width, this.height, this.text})
+  const OutlineBox({Key? key, this.width, this.height, this.text})
       : super(key: key);
 
   @override
@@ -411,43 +472,50 @@ class OutLineBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: SizedBox.expand(
-        child: text != null ? Text(text!) : SizedBox.expand(),
+        child: text != null ? Center(child: Text(text!)) : SizedBox.expand(),
       ),
     );
   }
 }
 
 class MainHeader extends StatelessWidget {
+  final bool isShowingQuestDetails;
   final void Function()? onPressed;
-  const MainHeader({Key? key, this.onPressed}) : super(key: key);
+  const MainHeader(
+      {Key? key, this.onPressed, required this.isShowingQuestDetails})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      //color: Colors.blue.withOpacity(0.5),
-      padding: const EdgeInsets.symmetric(
-          horizontal: kHorizontalPadding, vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          GestureDetector(
-            child: OutLineBox(width: 80),
-            onTap: onPressed,
-          ),
-          Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              OutLineBox(width: 60),
-              horizontalSpaceMedium,
-              // AFKCreditsIcon(height: 40),
-              // AfkCreditsText.headingThree("40"),
-              OutLineBox(width: 60),
-            ],
-          ),
-        ],
+    return AnimatedOpacity(
+      opacity: isShowingQuestDetails ? 0 : 1,
+      duration: Duration(milliseconds: 500),
+      child: Container(
+        height: 60,
+        //color: Colors.blue.withOpacity(0.5),
+        padding: const EdgeInsets.symmetric(
+            horizontal: kHorizontalPadding, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            GestureDetector(
+              child: OutlineBox(width: 80),
+              onTap: onPressed,
+            ),
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                OutlineBox(width: 60),
+                horizontalSpaceMedium,
+                // AFKCreditsIcon(height: 40),
+                // AfkCreditsText.headingThree("40"),
+                OutlineBox(width: 60),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -458,12 +526,14 @@ class RightFloatingButtons extends StatelessWidget {
   final void Function() onCompassTap;
   final double bearing;
   final bool zoomedIn;
+  final bool isShowingQuestDetails;
   const RightFloatingButtons({
     Key? key,
     required this.bearing,
     required this.onZoomPressed,
     required this.zoomedIn,
     required this.onCompassTap,
+    required this.isShowingQuestDetails,
   }) : super(key: key);
 
   @override
@@ -492,22 +562,35 @@ class RightFloatingButtons extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              bottom: 100,
-              right: 10,
-            ),
-            child: GestureDetector(
-              onTap: onZoomPressed,
-              child: Container(
-                width: 80,
-                height: 60,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[800]!, width: 2.0),
-                    borderRadius: BorderRadius.circular(15.0),
-                    color: Colors.white.withOpacity(0.6)),
-                alignment: Alignment.center,
-                child: zoomedIn == true ? Text("Zoom Out") : Text("Zoom In"),
+          child: AnimatedOpacity(
+            duration: Duration(milliseconds: 500),
+            opacity: isShowingQuestDetails ? 0 : 1,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                bottom: 120,
+                right: 10,
+              ),
+              child: GestureDetector(
+                onTap: isShowingQuestDetails ? null : onZoomPressed,
+                child: Container(
+                  width: 55,
+                  height: 55,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: kShadowColor,
+                            //offset: Offset(1, 1),
+                            blurRadius: 0.5,
+                            spreadRadius: 0.2)
+                      ],
+                      border: Border.all(color: Colors.grey[800]!, width: 2.0),
+                      borderRadius: BorderRadius.circular(90.0),
+                      color: Colors.white.withOpacity(1)),
+                  alignment: Alignment.center,
+                  child: zoomedIn == true
+                      ? Icon(Icons.my_location_rounded)
+                      : Icon(Icons.location_searching),
+                ),
               ),
             ),
           ),
@@ -518,35 +601,43 @@ class RightFloatingButtons extends StatelessWidget {
 }
 
 class MainFooter extends StatelessWidget {
+  final bool isShowingQuestDetails;
   final void Function() onMiddleTap;
-  const MainFooter({Key? key, required this.onMiddleTap}) : super(key: key);
+  const MainFooter(
+      {Key? key,
+      required this.onMiddleTap,
+      required this.isShowingQuestDetails})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
-        height: 100,
-        //color: Colors.blue.withOpacity(0.5),
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            OutLineBox(width: 80),
-            horizontalSpaceLarge,
-            Expanded(
-              child: GestureDetector(
-                  onTap: onMiddleTap, child: OutLineBox(text: "Show Quest")),
-            ),
-            horizontalSpaceLarge,
-            OutLineBox(width: 80),
-          ],
+      child: AnimatedOpacity(
+        opacity: isShowingQuestDetails ? 0 : 1,
+        duration: Duration(milliseconds: 500),
+        child: Container(
+          height: 100,
+          //color: Colors.blue.withOpacity(0.5),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              OutlineBox(width: 80, text: "SCREEN TIME"),
+              horizontalSpaceLarge,
+              Expanded(
+                child: GestureDetector(
+                    onTap: onMiddleTap, child: OutlineBox(text: "MENU")),
+              ),
+              horizontalSpaceLarge,
+              OutlineBox(width: 80, text: "LIST"),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
 
 // !!! DEPRECATED VERSION
 

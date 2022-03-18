@@ -2,11 +2,12 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-class MapControllerService {
+class GoogleMapService {
   static GoogleMapController? _mapController;
 
   static final mapLogger = getLogger("MapControllerService");
@@ -42,7 +43,7 @@ class MapControllerService {
     required double tilt,
     required double lat,
     required double lon,
-    bool force = false,
+    bool? force = false,
   }) {
     if (_mapController == null) return;
     CameraPosition position = CameraPosition(
@@ -103,6 +104,7 @@ class MapControllerService {
       markerId: MarkerId(afkmarker
           .id), // google maps marker id of start marker will be our quest id
       position: LatLng(afkmarker.lat!, afkmarker.lon!),
+
       //infoWindow:
       //  InfoWindow(
       //     title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
@@ -117,6 +119,10 @@ class MapControllerService {
     markersOnMap.add(marker);
   }
 
+  static void resetMapMarkers() {
+    markersOnMap = {};
+  }
+
   static void dontMoveCamera() async {
     if (_mapController == null) return;
     _mapController!.moveCamera(CameraUpdate.scrollBy(0, 0));
@@ -125,7 +131,7 @@ class MapControllerService {
   // Ensures that animation is not interrupted e.g. when clicking "Zoom In"
   // and at the same time the location listener wants to update the position
   static bool isAnimating = false;
-  static runAnimation(void Function() animation, {bool force = false}) async {
+  static runAnimation(void Function() animation, {bool? force = false}) async {
     if (isAnimating == true && force != true) {
       // wait for 1 second before executing animation
       await Future.delayed(Duration(seconds: 1));
@@ -171,25 +177,23 @@ class MapControllerService {
   /// Map Style
   static BitmapDescriptor defineMarkersColour(
       {required AFKMarker afkmarker, required Quest? quest}) {
-    return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+    //   return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+    // }
+    // if (hasActiveQuest) {
+    //   final index = activeQuest.quest.markers
+    //       .indexWhere((element) => element == afkmarker);
+    //   if (!activeQuest.markersCollected[index]) {
+    //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+    //   } else {
+    //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+    //   }
+    // } else {
+    if (quest?.type == QuestType.QRCodeHike) {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
+    } else if (quest?.type == QuestType.TreasureLocationSearch) {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
+    } else {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+    }
   }
-  // if (hasActiveQuest) {
-  //   final index = activeQuest.quest.markers
-  //       .indexWhere((element) => element == afkmarker);
-  //   if (!activeQuest.markersCollected[index]) {
-  //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-  //   } else {
-  //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-  //   }
-  // } else {
-  //   if (quest?.type == QuestType.QRCodeHike) {
-  //     return BitmapDescriptor.defaultMarkerWithHue(
-  //         BitmapDescriptor.hueOrange);
-  //   } else if (quest?.type == QuestType.TreasureLocationSearch) {
-  //     return BitmapDescriptor.defaultMarkerWithHue(
-  //         BitmapDescriptor.hueViolet);
-  //   } else {
-  //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-  //   }
-  // }
 }
