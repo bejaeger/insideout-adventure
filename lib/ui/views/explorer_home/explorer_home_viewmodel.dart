@@ -111,10 +111,10 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   void addLocationListener() async {
     await geolocationService.listenToPosition(
-      distanceFilter: kDefaultGeolocationDistanceFilter,
+      distanceFilter: 1, // kDefaultGeolocationDistanceFilter,
       onData: (Position position) {
         setNewLatLon(lat: position.latitude, lon: position.longitude);
-        updateMap();
+        animateOnNewLocation();
         log.v("New position event fired from location listener!");
       },
     );

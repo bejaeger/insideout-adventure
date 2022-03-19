@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,6 +13,8 @@ class GoogleMapService {
 
   static final mapLogger = getLogger("MapControllerService");
   static Set<Marker> markersOnMap = {};
+
+  static bool isAnimating = false;
 
   static void setMapController(GoogleMapController controller) {
     _mapController = controller;
@@ -24,7 +27,7 @@ class GoogleMapService {
     required double lat,
     required double lon,
   }) {
-    if (_mapController == null) return;
+    if (_mapController == null || isAnimating) return;
     _mapController!.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -43,7 +46,7 @@ class GoogleMapService {
     required double tilt,
     required double lat,
     required double lon,
-    bool? force = false,
+    bool? force,
   }) {
     if (_mapController == null) return;
     CameraPosition position = CameraPosition(
@@ -62,8 +65,9 @@ class GoogleMapService {
   }
 
   static void animateNewLatLon(
-      {required double lat, required double lon, bool force = false}) {
+      {required double lat, required double lon, bool? force}) {
     if (_mapController == null) return;
+    if (isAnimating && force != true) return;
     runAnimation(
       () => _mapController!.animateCamera(
         CameraUpdate.newLatLng(
@@ -130,12 +134,11 @@ class GoogleMapService {
 
   // Ensures that animation is not interrupted e.g. when clicking "Zoom In"
   // and at the same time the location listener wants to update the position
-  static bool isAnimating = false;
-  static runAnimation(void Function() animation, {bool? force = false}) async {
+  static runAnimation(void Function() animation, {bool? force}) async {
     if (isAnimating == true && force != true) {
       // wait for 1 second before executing animation
       await Future.delayed(Duration(seconds: 1));
-      runAnimation(animation);
+      runAnimation(animation, force: force);
     }
     isAnimating = true;
     try {
@@ -196,4 +199,14 @@ class GoogleMapService {
       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
     }
   }
+
+  // static Future<MapViewModel> presolveMapViewModel() async {
+  //   MapViewModel _instance = MapViewModel(
+  //       moveCamera: moveCamera,
+  //       animateCamera: animateCamera,
+  //       configureAndAddMapMarker: configureAndAddMapMarker,
+  //       animateNewLatLon: animateNewLatLon,
+  //       resetMapMarkers: resetMapMarkers);
+  //   return Future.value(_instance);
+  // }
 }

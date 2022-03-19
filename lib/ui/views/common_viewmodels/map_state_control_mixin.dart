@@ -19,6 +19,7 @@ mixin MapStateControlMixin {
   double get zoom => mapStateService.zoom;
   double? get newLat => mapStateService.newLat;
   double? get newLon => mapStateService.newLon;
+  double? get lastBirdViewZoom => mapStateService.lastBirdViewZoom;
   bool get isAvatarView => mapStateService.isAvatarView;
 
   // bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
@@ -48,12 +49,20 @@ mixin MapStateControlMixin {
     }
   }
 
+  void changeCameraLatLon(double lat, double lon) {
+    mapStateService.setCurrentatLon(lat: lat, lon: lon);
+  }
+
   void setNewLatLon({required double lat, required double lon}) {
     mapStateService.setNewLatLon(lat: lat, lon: lon);
   }
 
-  void updateMap() {
-    mapStateService.updateMap();
+  void animateOnNewLocation() {
+    mapStateService.animateOnNewLocation();
+  }
+
+  void animateMap() {
+    mapStateService.animateMap();
   }
 
   void restorePreviousCameraPosition() {
@@ -69,10 +78,11 @@ mixin MapStateControlMixin {
   }
 
   void takeSnapshotOfCameraPosition() {
-    mapStateService.previousViewWasAvatarView = isAvatarView;
-    mapStateService.previousBearing = bearing;
-    mapStateService.previousZoom = zoom;
-    mapStateService.previousTilt = tilt;
+    mapStateService.takeSnapshotOfCameraPosition();
+  }
+
+  void takeSnapshotOfBirdViewCameraPosition() {
+    mapStateService.takeSnapshotOfBirdViewCameraPosition();
   }
 
   // void switchIsShowingQuestDetails() {

@@ -32,6 +32,16 @@ class MapStateService {
   double? previousZoom;
   double? previousTilt;
   bool? previousViewWasAvatarView;
+  double? previousLat;
+  double? previousLon;
+
+  // variable holding last bird view zoom to restore back to it
+  double? lastBirdViewZoom;
+
+  // if map should be restored to specific lat/lon
+  // (if in birds view and zooming into map and restoring view)
+  double? currentLat;
+  double? currentLon;
 
   // if map should be moved to specific lat/lon
   double? newLat;
@@ -41,6 +51,19 @@ class MapStateService {
   bool suppressOneFingerRotations = false;
   void setSuppressOneFingerRotations(bool set) {
     suppressOneFingerRotations = set;
+  }
+
+  void takeSnapshotOfCameraPosition() {
+    previousViewWasAvatarView = isAvatarView;
+    previousBearing = bearing;
+    previousZoom = zoom;
+    previousTilt = tilt;
+    previousLat = currentLat;
+    previousLon = currentLon;
+  }
+
+  void takeSnapshotOfBirdViewCameraPosition() {
+    lastBirdViewZoom = zoom;
   }
 
   void restorePreviousCameraPosition() {
@@ -56,11 +79,24 @@ class MapStateService {
     if (previousViewWasAvatarView == false) {
       isAvatarView = false;
     }
+    if (previousLat != null) {
+      newLat = previousLat;
+    }
+    if (previousLon != null) {
+      newLon = previousLon;
+    }
     previousBearing = null;
     previousZoom = null;
     previousTilt = null;
+    previousLon = null;
+    previousLat = null;
     previousViewWasAvatarView = null;
     restoreMapSnapshot();
+  }
+
+  void setCurrentatLon({required double lat, required double lon}) {
+    currentLat = lat;
+    currentLon = lon;
   }
 
   void setNewLatLon({required double lat, required double lon}) {
@@ -73,8 +109,12 @@ class MapStateService {
     newLon = null;
   }
 
-  void updateMap() {
+  void animateMap() {
     mapEventListener.add(MapUpdate.animate);
+  }
+
+  void animateOnNewLocation() {
+    mapEventListener.add(MapUpdate.animateOnNewLocation);
   }
 
   void restoreMapSnapshot() {

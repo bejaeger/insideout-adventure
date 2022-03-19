@@ -172,17 +172,19 @@ class MainMapView extends StatelessWidget {
     final devicePixelRatio =
         Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
     return ViewModelBuilder<MapViewModel>.reactive(
-      viewModelBuilder: () => MapViewModel(
-          moveCamera: GoogleMapService.moveCamera,
-          configureAndAddMapMarker: GoogleMapService.configureAndAddMapMarker,
-          animateCamera: GoogleMapService.animateCamera,
-          animateNewLatLon: GoogleMapService.animateNewLatLon,
-          resetMapMarkers: GoogleMapService.resetMapMarkers),
-      onModelReady: (model) => model.initializeMapAndMarkers(
-        devicePixelRatio: devicePixelRatio,
-        mapWidth: screenWidth(context),
-        mapHeight: screenHeight(context),
-      ),
+      viewModelBuilder: () => locator<MapViewModel>(),
+      onModelReady: (model) {
+        model.passFunctions(
+            moveCamera: GoogleMapService.moveCamera,
+            configureAndAddMapMarker: GoogleMapService.configureAndAddMapMarker,
+            animateCamera: GoogleMapService.animateCamera,
+            animateNewLatLon: GoogleMapService.animateNewLatLon,
+            resetMapMarkers: GoogleMapService.resetMapMarkers);
+        model.initializeMapAndMarkers(
+            devicePixelRatio: devicePixelRatio,
+            mapWidth: screenWidth(context),
+            mapHeight: screenHeight(context));
+      },
       disposeViewModel: false,
       builder: (context, model, child) => Stack(
         children: [
@@ -331,6 +333,8 @@ class GoogleMapsScreen extends StatelessWidget {
                   onCameraMove: (position) {
                     model.changeCameraBearing(position.bearing);
                     model.changeCameraZoom(position.zoom);
+                    model.changeCameraLatLon(
+                        position.target.latitude, position.target.longitude);
                   },
                   // gestureRecognizers: Set()
                   //   ..add(

@@ -69,12 +69,6 @@ const List<String> questType = [
   "TreasureLocationSearchAutomatic"
 ];
 
-///////////////////////////////////////
-/// Map Settings
-const double kInitialZoom = 17.8;
-const double kInitialBearing = 0;
-const double kInitialTilt = 90;
-
 //////////////////////////////////////////////////////////
 /// Quest settings!
 
@@ -128,6 +122,11 @@ const int kDistanceFilterForCalibration = 5;
 const int kDefaultGeolocationDistanceFilter = 10;
 
 /////////////////////////////////////
-// Google Maps View SEttings
+// Google Maps View Settings
+const double kInitialZoom = 17.8;
+const double kInitialBearing = 0;
+const double kInitialTilt = 90;
+
 const double kMaxZoom = 19;
+const double kInitialZoomBirdsView = 12;
 const double kMinZoomAvatarView = 17;

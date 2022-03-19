@@ -38,6 +38,7 @@ import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/screentime/screen_time_service.dart';
 import '../services/users/user_service.dart';
+import '../ui/views/map/map_viewmodel.dart';
 import '../utils/cloud_storage_result/cloud_storage_result.dart';
 import '../utils/image_selector/image_selector.dart';
 
@@ -81,4 +82,5 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => GamificationService());
   locator.registerLazySingleton(() => MapStateService());
+  locator.registerLazySingleton(() => MapViewModel());
 }

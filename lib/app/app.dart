@@ -43,6 +43,7 @@ import 'package:afkcredits/ui/views/layout/custom_bottom_bar_layout_template_vie
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_overview_view.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
@@ -65,6 +66,7 @@ import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
 import 'package:afkcredits/utils/cloud_storage_result/cloud_storage_result.dart';
 import 'package:afkcredits/utils/image_selector/image_selector.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
@@ -148,6 +150,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: MapStateService),
 
     //LazySingleton(classType: MarkersInMap),
+    LazySingleton(classType: MapViewModel),
 
     // Services
   ],
