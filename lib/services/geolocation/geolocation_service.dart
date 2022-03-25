@@ -9,9 +9,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:math' as math;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GeolocationService extends PausableService {
   final log = getLogger('GeolocationService');
+  StreamSubscription? _livePositionMainStreamSubscription;
+  bool get isListeningToMainLocation =>
+      _livePositionMainStreamSubscription != null;
+  // listener for active quests
   StreamSubscription? _livePositionStreamSubscription;
   bool get isListeningToLocation => _livePositionStreamSubscription != null;
 
@@ -58,9 +63,57 @@ class GeolocationService extends PausableService {
     Completer<void> completer = Completer();
     if (_livePositionStreamSubscription == null) {
       currentPositionDistanceFilter = distanceFilter.round();
+      pauseMainPositionListener();
       // TODO: Provide proper error message to user in case of
       // denied permission, no access to gps, ...
       _livePositionStreamSubscription = Geolocator.getPositionStream(
+              desiredAccuracy: LocationAccuracy.best,
+              distanceFilter: distanceFilter.round())
+          .listen(
+        (position) {
+          printPositionInfo(position);
+          _livePosition = position;
+          setGPSAccuracyInfo(position.accuracy);
+          if (onData != null) {
+            onData(position);
+          }
+          if (viewModelCallback != null) {
+            // option to not fire callback on first event
+            if (skipFirstStreamEvent) {
+              if (completer.isCompleted) {
+                viewModelCallback(position);
+              }
+            } else {
+              viewModelCallback(position);
+            }
+          }
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
+        },
+      );
+    } else {
+      log.w("Quest position stream already listened to!");
+      completer.complete();
+    }
+    return completer.future;
+  }
+
+  // this uses another stream subscription that is paused
+  // when an active quest is present and resumed if it's cancelled!
+  // This guarantees that we always have the main location listener active!
+  Future<void> listenToPositionMain({
+    required int distanceFilter,
+    void Function(Position)? onData,
+    void Function(Position)? viewModelCallback,
+    bool skipFirstStreamEvent = false,
+  }) async {
+    Completer<void> completer = Completer();
+    if (_livePositionMainStreamSubscription == null) {
+      currentPositionDistanceFilter = distanceFilter.round();
+      // TODO: Provide proper error message to user in case of
+      // denied permission, no access to gps, ...
+      _livePositionMainStreamSubscription = Geolocator.getPositionStream(
               desiredAccuracy: LocationAccuracy.best,
               distanceFilter: distanceFilter.round())
           .listen(
@@ -96,18 +149,29 @@ class GeolocationService extends PausableService {
   @override
   void resume() {
     if (servicePaused == true) {
-      log.v('Geolocation listener resumed');
-      resumePositionListener();
+      if (isListeningToLocation == true) {
+        log.v('Quest Geolocation listener resumed');
+        resumePositionListener();
+      }
+      if (isListeningToMainLocation == true) {
+        log.v('Main Geolocation listener resumed');
+        resumeMainPositionListener();
+      }
       super.resume();
     }
   }
 
   @override
   void pause() {
-    if (isListeningToLocation == true &&
-        (servicePaused == null || servicePaused == false)) {
-      log.v('Geolocation listener paused');
-      pausePositionListener();
+    if (servicePaused == null || servicePaused == false) {
+      if (isListeningToLocation == true) {
+        log.v('Quest Geolocation listener paused');
+        pausePositionListener();
+      }
+      if (isListeningToMainLocation == true) {
+        log.v('Main Geolocation listener paused');
+        pauseMainPositionListener();
+      }
       super.pause();
     }
   }
@@ -149,9 +213,9 @@ class GeolocationService extends PausableService {
         }
 
         // cooldown time of 5 seconds for distance check and NEW positions should be retrieved.
-        if ((difference != null &&
-            difference.inSeconds.abs() > 5 &&
-            forceGettingNewPosition)) {
+        if (((difference != null && difference.inSeconds.abs() > 5) ||
+                difference == null) &&
+            forceGettingNewPosition) {
           // log.wtf("---------------------------------");
           log.i("Getting current position now at ${DateTime.now().toString()}");
           final geolocatorPosition = await Geolocator.getCurrentPosition(
@@ -167,7 +231,8 @@ class GeolocationService extends PausableService {
         } else {
           // return previous location
 
-          final lastKnownPosition = await Geolocator.getLastKnownPosition();
+          final lastKnownPosition =
+              kIsWeb ? null : await Geolocator.getLastKnownPosition();
           if (lastKnownPosition != null) {
             log.v("Returning last known position");
             _livePosition = lastKnownPosition;
@@ -252,16 +317,6 @@ class GeolocationService extends PausableService {
     return true;
   }
 
-/*   Future placemarkFromCoordinates(
-      {required Position cordinatesPositions}) async {
-    return await Geolocator.getLastKnownPosition(cordinatesPositions); 
-  } */
-
-/*   //Get User Favourite Places
-  Future<List<Places>?> getPlaces() async {
-    return await _firestoreApi.getPlaces();
-  }
- */
   Future<bool> isUserCloseby(
       {required double lat, required double lon, int? threshold}) async {
     // log.v("Check if user is closeby marker based on last known location");
@@ -388,12 +443,25 @@ class GeolocationService extends PausableService {
     _livePositionStreamSubscription = null;
   }
 
+  void cancelMainPositionListener() {
+    _livePositionMainStreamSubscription?.cancel();
+    _livePositionMainStreamSubscription = null;
+  }
+
   void pausePositionListener() {
     _livePositionStreamSubscription?.pause();
   }
 
   void resumePositionListener() {
     _livePositionStreamSubscription?.resume();
+  }
+
+  void pauseMainPositionListener() {
+    _livePositionMainStreamSubscription?.pause();
+  }
+
+  void resumeMainPositionListener() {
+    _livePositionMainStreamSubscription?.resume();
   }
 
   void clearData() {

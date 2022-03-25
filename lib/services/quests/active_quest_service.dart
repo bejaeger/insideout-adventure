@@ -160,6 +160,7 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   void cancelPositionListener() {
     _geolocationService.cancelPositionListener();
+    _geolocationService.resumeMainPositionListener();
   }
 
   void pausePositionListener() {

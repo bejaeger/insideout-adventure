@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'gift_card_category.dart';
@@ -34,7 +35,7 @@ class _$GiftCardCategoryTearOff {
     );
   }
 
-  GiftCardCategory fromJson(Map<String, Object> json) {
+  GiftCardCategory fromJson(Map<String, Object?> json) {
     return GiftCardCategory.fromJson(json);
   }
 }
@@ -186,27 +187,23 @@ class _$_GiftCardCategory implements _GiftCardCategory {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _GiftCardCategory &&
-            (identical(other.categoryId, categoryId) ||
-                const DeepCollectionEquality()
-                    .equals(other.categoryId, categoryId)) &&
-            (identical(other.amount, amount) ||
-                const DeepCollectionEquality().equals(other.amount, amount)) &&
-            (identical(other.imageUrl, imageUrl) ||
-                const DeepCollectionEquality()
-                    .equals(other.imageUrl, imageUrl)) &&
-            (identical(other.categoryName, categoryName) ||
-                const DeepCollectionEquality()
-                    .equals(other.categoryName, categoryName)));
+        (other.runtimeType == runtimeType &&
+            other is _GiftCardCategory &&
+            const DeepCollectionEquality()
+                .equals(other.categoryId, categoryId) &&
+            const DeepCollectionEquality().equals(other.amount, amount) &&
+            const DeepCollectionEquality().equals(other.imageUrl, imageUrl) &&
+            const DeepCollectionEquality()
+                .equals(other.categoryName, categoryName));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(categoryId) ^
-      const DeepCollectionEquality().hash(amount) ^
-      const DeepCollectionEquality().hash(imageUrl) ^
-      const DeepCollectionEquality().hash(categoryName);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(categoryId),
+      const DeepCollectionEquality().hash(amount),
+      const DeepCollectionEquality().hash(imageUrl),
+      const DeepCollectionEquality().hash(categoryName));
 
   @JsonKey(ignore: true)
   @override
@@ -230,13 +227,13 @@ abstract class _GiftCardCategory implements GiftCardCategory {
       _$_GiftCardCategory.fromJson;
 
   @override
-  String get categoryId => throw _privateConstructorUsedError;
+  String get categoryId;
   @override
-  double get amount => throw _privateConstructorUsedError;
+  double get amount;
   @override
-  String? get imageUrl => throw _privateConstructorUsedError;
+  String? get imageUrl;
   @override
-  String get categoryName => throw _privateConstructorUsedError;
+  String get categoryName;
   @override
   @JsonKey(ignore: true)
   _$GiftCardCategoryCopyWith<_GiftCardCategory> get copyWith =>

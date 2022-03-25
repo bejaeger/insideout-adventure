@@ -21,6 +21,7 @@ mixin MapStateControlMixin {
   double? get newLon => mapStateService.newLon;
   double? get lastBirdViewZoom => mapStateService.lastBirdViewZoom;
   bool get isAvatarView => mapStateService.isAvatarView;
+  int get characterNumber => mapStateService.characterNumber;
 
   // bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
   // -------------------------------------
@@ -61,12 +62,13 @@ mixin MapStateControlMixin {
     mapStateService.animateOnNewLocation();
   }
 
-  void animateMap() {
-    mapStateService.animateMap();
+  void animateMap({bool forceUseLocation = false}) {
+    mapStateService.animateMap(forceUseLocation: forceUseLocation);
   }
 
-  void restorePreviousCameraPosition() {
-    mapStateService.restorePreviousCameraPosition();
+  void restorePreviousCameraPosition({bool moveInsteadOfAnimate = false}) {
+    mapStateService.restorePreviousCameraPosition(
+        moveInsteadOfAnimate: moveInsteadOfAnimate);
   }
 
   void addAllQuestMarkers() {

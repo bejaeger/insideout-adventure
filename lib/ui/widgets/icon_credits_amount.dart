@@ -20,18 +20,20 @@ class CreditsAmount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 22,
+      //height: 22,
       alignment: Alignment.center,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(kAFKCreditsLogoPath, color: color),
+          Image.asset(kAFKCreditsLogoPath, color: color, height: 30),
           horizontalSpaceTiny,
-          Text(
-            amountString ?? amount.toStringAsFixed(0),
-            style: textTheme(context).bodyText2!.copyWith(
-                color: color, fontSize: 22, fontWeight: FontWeight.w400),
-          ),
+          AfkCreditsText.headingThree(
+              amountString ?? amount.toStringAsFixed(0)),
+          // Text(
+          //   amountString ?? amount.toStringAsFixed(0),
+          //   style: textTheme(context).bodyText2!.copyWith(
+          //       color: color, fontSize: 22, fontWeight: FontWeight.w400),
+          // ),
         ],
       ),
     );

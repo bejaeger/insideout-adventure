@@ -10,7 +10,7 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../../../app/app.locator.dart';
 
-class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
+class QuestsOverviewViewModel extends QuestViewModel {
   List<QuestType> get questTypes => questService.allQuestTypes;
   final logger = getLogger('ManageQuestViewModel');
   final _dialogService = locator<DialogService>();

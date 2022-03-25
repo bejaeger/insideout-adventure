@@ -1,9 +1,11 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -123,6 +125,48 @@ class GoogleMapService {
     markersOnMap.add(marker);
   }
 
+  static void addARObjectToMap(
+      {required void Function(double lat, double lon, bool isCoin) onTap,
+      required double lat,
+      required double lon,
+      required bool isCoin}) async {
+    final coinBitmap = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(3, 3)), kAFKCreditsLogoSmallPath);
+    final treasureBitmap = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(3, 3)), kTreasureIconSmallPath);
+    Marker marker = Marker(
+      markerId: MarkerId("COIN" +
+          isCoin
+              .toString()), // google maps marker id of start marker will be our quest id
+      //position: LatLng(49.26813866276503, -122.98950899176373),
+      position: LatLng(lat, lon),
+      icon: isCoin ? coinBitmap : treasureBitmap,
+      onTap: () async {
+        // needed to avoid navigating to that marker!
+        dontMoveCamera();
+        onTap(lat, lon, isCoin);
+      },
+    );
+    // Marker markerTreasure = Marker(
+    //   markerId: MarkerId(
+    //       "TREASURE"), // google maps marker id of start marker will be our quest id
+    //   position: LatLng(49.26843866276503, -122.99103899176373),
+
+    //   //infoWindow:
+    //   //  InfoWindow(
+    //   //     title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
+    //   // InfoWindow(snippet: quest.name),
+    //   icon: treasureBitmap,
+    //   onTap: () async {
+    //     // needed to avoid navigating to that marker!
+    //     dontMoveCamera();
+    //     onTap(false);
+    //   },
+    // );
+    markersOnMap.add(marker);
+    // markersOnMap.add(markerTreasure);
+  }
+
   static void resetMapMarkers() {
     markersOnMap = {};
   }
@@ -199,14 +243,16 @@ class GoogleMapService {
       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
     }
   }
+}
 
-  // static Future<MapViewModel> presolveMapViewModel() async {
-  //   MapViewModel _instance = MapViewModel(
-  //       moveCamera: moveCamera,
-  //       animateCamera: animateCamera,
-  //       configureAndAddMapMarker: configureAndAddMapMarker,
-  //       animateNewLatLon: animateNewLatLon,
-  //       resetMapMarkers: resetMapMarkers);
-  //   return Future.value(_instance);
-  // }
+Future<MapViewModel> presolveMapViewModel() async {
+  MapViewModel _instance = MapViewModel(
+    moveCamera: GoogleMapService.moveCamera,
+    animateCamera: GoogleMapService.animateCamera,
+    configureAndAddMapMarker: GoogleMapService.configureAndAddMapMarker,
+    animateNewLatLon: GoogleMapService.animateNewLatLon,
+    resetMapMarkers: GoogleMapService.resetMapMarkers,
+    addARObjectToMap: GoogleMapService.addARObjectToMap,
+  );
+  return Future.value(_instance);
 }

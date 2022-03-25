@@ -33,6 +33,7 @@ String getFirstName(String name) {
 }
 
 String getStringFromEnum(dynamic enumItem) {
+  if (enumItem == null) return "";
   return enumItem.toString().split('.').last;
 }
 

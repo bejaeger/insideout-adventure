@@ -83,10 +83,11 @@ bool shownDummyModeDialog = false;
 // for Location Search
 
 // will be scaled down once closer to the treasure!
-const double kMinDistanceFromLastCheckInMeters = 40;
+const double kMinDistanceFromLastCheckInMeters = 20;
 const int kCheckDistanceReloadDurationInSeconds = 10;
 
-const double kMinDistanceToCatchTrophyInMeters = 30;
+const double kMinDistanceToCatchTrophyInMeters = 40;
+// const double kMinDistanceToCatchTrophyInMeters = 100;
 const double kMinRequiredAccuracyLocationSearch = 50;
 // for vibration search automatic
 const int kDeadTimeAfterVibrationInSeconds = 5;
@@ -128,5 +129,6 @@ const double kInitialBearing = 0;
 const double kInitialTilt = 90;
 
 const double kMaxZoom = 19;
+// const double kMaxZoom = 50;
 const double kInitialZoomBirdsView = 12;
 const double kMinZoomAvatarView = 17;

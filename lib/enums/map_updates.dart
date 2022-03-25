@@ -3,6 +3,8 @@ enum MapUpdate {
   move,
   animateNewLatLon,
   animateOnNewLocation,
+  forceAnimateToLocation,
   restoreSnapshot,
+  restoreSnapshotByMoving,
   addAllQuestMarkers
 }

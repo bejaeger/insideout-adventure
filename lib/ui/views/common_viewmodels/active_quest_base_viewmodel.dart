@@ -13,9 +13,12 @@ import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
+import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -26,7 +29,8 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-abstract class ActiveQuestBaseViewModel extends BaseModel {
+abstract class ActiveQuestBaseViewModel extends BaseModel
+    with MapStateControlMixin, NavigationMixin {
   // ---------------------------------------------------------
   // Services
   final MapStateService mapsService = locator<MapStateService>();
@@ -35,6 +39,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
   final FlavorConfigProvider flavorConfigProvider =
       locator<FlavorConfigProvider>();
   final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
+  final MapViewModel mapViewModel = locator<MapViewModel>();
 
   final log = getLogger("ActiveQuestBaseViewModel");
 
@@ -128,8 +133,20 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
         resetSlider();
         return false;
       }
+      //layoutService.setIsShowingQuestDetails(false);
       showStartSwipe = false;
-      // Quest succesfully started!
+      // Quest is succesfully started!
+
+      // animate map to current avatar again
+      // if (userLocation != null) {
+      //   mapStateService.setNewLatLon(
+      //       lat: userLocation!.latitude, lon: userLocation!.longitude);
+      // }
+
+      // selected quest is reset...hopefully I'm not accessing it in the active quest haha :D
+      activeQuestService.resetSetSelectedQuest();
+      animateMap(forceUseLocation: true);
+
       return true;
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
@@ -172,7 +189,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
         await activeQuestService.cancelIncompleteQuest();
 
         resetPreviousQuest();
-        replaceWithMainView(index: BottomNavBarIndex.quest);
+        popQuestDetails();
+        //replaceWithMainView(index: BottomNavBarIndex.quest);
         log.i("replaced view with mapView");
       }
     } else {
@@ -193,6 +211,26 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       return true;
     }
     setBusy(false);
+  }
+
+  // TODO: Unit test!
+  // All this is essential and should probably be unit tested
+  void popQuestDetails() async {
+    layoutService.setIsMovingCamera(true);
+
+    // 1. Restore camera
+    restorePreviousCameraPosition();
+    // 2. add back all quests
+    addAllQuestMarkers();
+    // 3. set bool to update views
+    layoutService.setIsShowingQuestDetails(false);
+    notifyListeners();
+    // 4. reset selected quest after delay so the fade out is smooth
+    await Future.delayed(Duration(seconds: 1));
+    activeQuestService.resetSetSelectedQuest();
+
+    layoutService.setIsMovingCamera(false);
+    notifyListeners();
   }
 
   Future checkAccuracy(
@@ -218,6 +256,33 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     } else {
       return true;
     }
+  }
+
+  void showNextARObjects() {
+    // TODO: I am not sure if this is the best possibility!
+    // But maybe it is!?
+    final AFKMarker? marker = activeQuestService.getNextMarker();
+    if (marker == null || marker.lon == null && marker.lat == null) {
+      log.wtf(
+          "There is no next marker! This should never happen, investigate!");
+      return;
+    }
+    mapViewModel.resetMapMarkers();
+    mapViewModel.addARObjectToMap(
+      lat: marker.lat!,
+      lon: marker.lon!,
+      isCoin: true,
+      onTap: (double lat, double lon, bool isCoin) async {
+        // 2. First take snapshot
+        mapViewModel.takeSnapshotOfCameraPosition();
+
+        // 3. is showing AR View
+        layoutService.setIsShowingARView(true);
+
+        // 4. Open AR view with nice zoom in and fade out triggered
+        await mapViewModel.openARView(lat, lon, isCoin);
+      },
+    );
   }
 
   void displayQrCode(AFKMarker marker) {

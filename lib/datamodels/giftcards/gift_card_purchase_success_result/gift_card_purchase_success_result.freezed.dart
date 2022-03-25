@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'gift_card_purchase_success_result.dart';
@@ -30,7 +31,7 @@ class _$GiftCardPurchaseSuccessResultTearOff {
     );
   }
 
-  GiftCardPurchaseSuccessResult fromJson(Map<String, Object> json) {
+  GiftCardPurchaseSuccessResult fromJson(Map<String, Object?> json) {
     return GiftCardPurchaseSuccessResult.fromJson(json);
   }
 }
@@ -151,20 +152,19 @@ class _$_GiftCardPurchaseSuccessResult
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _GiftCardPurchaseSuccessResult &&
-            (identical(other.transferId, transferId) ||
-                const DeepCollectionEquality()
-                    .equals(other.transferId, transferId)) &&
-            (identical(other.needToProvideGiftCard, needToProvideGiftCard) ||
-                const DeepCollectionEquality().equals(
-                    other.needToProvideGiftCard, needToProvideGiftCard)));
+        (other.runtimeType == runtimeType &&
+            other is _GiftCardPurchaseSuccessResult &&
+            const DeepCollectionEquality()
+                .equals(other.transferId, transferId) &&
+            const DeepCollectionEquality()
+                .equals(other.needToProvideGiftCard, needToProvideGiftCard));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(transferId) ^
-      const DeepCollectionEquality().hash(needToProvideGiftCard);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(transferId),
+      const DeepCollectionEquality().hash(needToProvideGiftCard));
 
   @JsonKey(ignore: true)
   @override
@@ -188,9 +188,9 @@ abstract class _GiftCardPurchaseSuccessResult
       _$_GiftCardPurchaseSuccessResult.fromJson;
 
   @override
-  String get transferId => throw _privateConstructorUsedError;
+  String get transferId;
   @override
-  bool get needToProvideGiftCard => throw _privateConstructorUsedError;
+  bool get needToProvideGiftCard;
   @override
   @JsonKey(ignore: true)
   _$GiftCardPurchaseSuccessResultCopyWith<_GiftCardPurchaseSuccessResult>

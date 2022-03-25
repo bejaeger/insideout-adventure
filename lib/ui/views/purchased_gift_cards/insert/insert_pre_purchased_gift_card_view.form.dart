@@ -61,6 +61,27 @@ extension ValueProperties on FormViewModel {
   bool get hasCategory => this.formValueMap.containsKey(CategoryValueKey);
   bool get hasGiftCardCode =>
       this.formValueMap.containsKey(GiftCardCodeValueKey);
+
+  bool get hasAmountValidationMessage =>
+      this.fieldsValidationMessages[AmountValueKey]?.isNotEmpty ?? false;
+  bool get hasCategoryValidationMessage =>
+      this.fieldsValidationMessages[CategoryValueKey]?.isNotEmpty ?? false;
+  bool get hasGiftCardCodeValidationMessage =>
+      this.fieldsValidationMessages[GiftCardCodeValueKey]?.isNotEmpty ?? false;
+
+  String? get amountValidationMessage =>
+      this.fieldsValidationMessages[AmountValueKey];
+  String? get categoryValidationMessage =>
+      this.fieldsValidationMessages[CategoryValueKey];
+  String? get giftCardCodeValidationMessage =>
+      this.fieldsValidationMessages[GiftCardCodeValueKey];
 }
 
-extension Methods on FormViewModel {}
+extension Methods on FormViewModel {
+  setAmountValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[AmountValueKey] = validationMessage;
+  setCategoryValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[CategoryValueKey] = validationMessage;
+  setGiftCardCodeValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[GiftCardCodeValueKey] = validationMessage;
+}

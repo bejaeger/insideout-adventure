@@ -60,6 +60,27 @@ extension ValueProperties on FormViewModel {
   bool get hasAmount => this.formValueMap.containsKey(AmountValueKey);
   bool get hasDescription => this.formValueMap.containsKey(DescriptionValueKey);
   bool get hasCategory => this.formValueMap.containsKey(CategoryValueKey);
+
+  bool get hasAmountValidationMessage =>
+      this.fieldsValidationMessages[AmountValueKey]?.isNotEmpty ?? false;
+  bool get hasDescriptionValidationMessage =>
+      this.fieldsValidationMessages[DescriptionValueKey]?.isNotEmpty ?? false;
+  bool get hasCategoryValidationMessage =>
+      this.fieldsValidationMessages[CategoryValueKey]?.isNotEmpty ?? false;
+
+  String? get amountValidationMessage =>
+      this.fieldsValidationMessages[AmountValueKey];
+  String? get descriptionValidationMessage =>
+      this.fieldsValidationMessages[DescriptionValueKey];
+  String? get categoryValidationMessage =>
+      this.fieldsValidationMessages[CategoryValueKey];
 }
 
-extension Methods on FormViewModel {}
+extension Methods on FormViewModel {
+  setAmountValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[AmountValueKey] = validationMessage;
+  setDescriptionValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[DescriptionValueKey] = validationMessage;
+  setCategoryValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[CategoryValueKey] = validationMessage;
+}

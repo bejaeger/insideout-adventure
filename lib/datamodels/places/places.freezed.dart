@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'places.dart';
@@ -38,7 +39,7 @@ class _$PlacesTearOff {
     );
   }
 
-  Places fromJson(Map<String, Object> json) {
+  Places fromJson(Map<String, Object?> json) {
     return Places.fromJson(json);
   }
 }
@@ -215,30 +216,25 @@ class _$_Places implements _Places {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Places &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.lat, lat) ||
-                const DeepCollectionEquality().equals(other.lat, lat)) &&
-            (identical(other.lon, lon) ||
-                const DeepCollectionEquality().equals(other.lon, lon)) &&
-            (identical(other.image, image) ||
-                const DeepCollectionEquality().equals(other.image, image)) &&
-            (identical(other.questId, questId) ||
-                const DeepCollectionEquality().equals(other.questId, questId)));
+        (other.runtimeType == runtimeType &&
+            other is _Places &&
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality().equals(other.lat, lat) &&
+            const DeepCollectionEquality().equals(other.lon, lon) &&
+            const DeepCollectionEquality().equals(other.image, image) &&
+            const DeepCollectionEquality().equals(other.questId, questId));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(lat) ^
-      const DeepCollectionEquality().hash(lon) ^
-      const DeepCollectionEquality().hash(image) ^
-      const DeepCollectionEquality().hash(questId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(name),
+      const DeepCollectionEquality().hash(lat),
+      const DeepCollectionEquality().hash(lon),
+      const DeepCollectionEquality().hash(image),
+      const DeepCollectionEquality().hash(questId));
 
   @JsonKey(ignore: true)
   @override
@@ -263,17 +259,17 @@ abstract class _Places implements Places {
   factory _Places.fromJson(Map<String, dynamic> json) = _$_Places.fromJson;
 
   @override
-  String get id => throw _privateConstructorUsedError;
+  String get id;
   @override
-  String? get name => throw _privateConstructorUsedError;
+  String? get name;
   @override
-  double? get lat => throw _privateConstructorUsedError;
+  double? get lat;
   @override
-  double? get lon => throw _privateConstructorUsedError;
+  double? get lon;
   @override
-  String? get image => throw _privateConstructorUsedError;
+  String? get image;
   @override
-  String? get questId => throw _privateConstructorUsedError;
+  String? get questId;
   @override
   @JsonKey(ignore: true)
   _$PlacesCopyWith<_Places> get copyWith => throw _privateConstructorUsedError;

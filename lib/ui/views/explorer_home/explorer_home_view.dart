@@ -9,29 +9,46 @@ import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
+import 'package:afkcredits/enums/quests/direction_status.dart';
 import 'package:afkcredits/enums/stats_type.dart';
 import 'package:afkcredits/services/maps/google_map_service.dart';
+import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/shared/maps/maps_controller_mixin.dart';
 import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/main_footer_viewmodel.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
+import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/achievement_card.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
+import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/explorer_home_widgets/afk_credits_display.dart';
 import 'package:afkcredits/ui/widgets/finished_quest_card.dart';
+import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/large_button.dart';
+import 'package:afkcredits/ui/widgets/explorer_home_widgets/main_avatar_view.dart';
+import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
+import 'package:afkcredits/ui/widgets/round_close_button.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
@@ -40,6 +57,10 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import 'dart:math' as m;
+
+import 'package:afkcredits/app/app.logger.dart';
+
+final log = getLogger("REBUILD LOGGER");
 
 class ExplorerHomeView extends StatefulWidget {
   const ExplorerHomeView({Key? key}) : super(key: key);
@@ -52,110 +73,355 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
-      viewModelBuilder: () => ExplorerHomeViewModel(),
-      onModelReady: (model) => model.initialize(),
-      builder: (context, model, child) => SafeArea(
-        child: Scaffold(
-          body: Stack(
-            children: [
-              // bottom layer
-              if (!model.isBusy) MainMapView(),
-              if (model.isBusy) MapLoadingOverlay(),
-              MainHeader(
-                  isShowingQuestDetails: model.isShowingQuestDetails,
-                  onPressed: model.logout),
-              MainFooter(
-                  isShowingQuestDetails: model.isShowingQuestDetails,
-                  onMiddleTap: () => null),
-              QuestDetailsOverlay(
-                  isShowingQuestDetails: model.isShowingQuestDetails),
-              // AnimatedSwitcher(
-              //   duration: Duration(milliseconds: 500),
-              //   child: !model.isShowingQuestDetails
-              //       ? Stack(
-              //           children: [
-              //             MainHeader(onPressed: model.logout),
-              //             MainFooter(
-              //                 onMiddleTap: model.switchIsShowingQuestDetails),
-              //           ],
-              //         )
-              //       : Align(
-              //           alignment: Alignment.bottomCenter,
-              //           child: GestureDetector(
-              //             onTap: model.popQuestDetails,
-              //             child: Container(
-              //               height: 50,
-              //               width: 50,
-              //               child: Padding(
-              //                 padding: const EdgeInsets.only(bottom: 25.0),
-              //                 child: Icon(Icons.close_outlined, size: 35),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              // ),
-            ],
-          ),
-        ),
+        // TODO: Explorer Home ViewModel for now is reactive to layout service
+        // TODO: Maybe that is not desired eventually, as it might trigger
+        // TODO: Many unnecessary rebuilds
+        viewModelBuilder: () => ExplorerHomeViewModel(),
+        onModelReady: (model) => model.initialize(),
+        builder: (context, model, child) {
+          log.wtf("==>> MAIN REBUILD");
+          log.wtf("==>> Rebuild ExplorerHomeView");
+          return SafeArea(
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  // bottom layer
+                  //if (!model.isBusy)
+                  if (!model.isBusy) MainMapView(),
+                  if (model.showLoadingScreen)
+                    MapLoadingOverlay(show: model.showFullLoadingScreen),
+                  MainHeader(
+                    isShowingQuestDetails: model.isShowingQuestDetails,
+                    onPressed: model.logout,
+                    onCreditsPressed: model.navToCreditsScreenTimeView,
+                  ),
+                  MainFooter(onMiddleTap: () => null),
+                  QuestListOverlayView(),
+
+                  QuestDetailsOverlay(),
+
+                  OverlayedCloseButton(),
+
+                  if (model.isShowingARView) BlackFadeOut(),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+}
+
+class BlackFadeOut extends StatefulWidget {
+  const BlackFadeOut({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<BlackFadeOut> createState() => _BlackFadeOutState();
+}
+
+class _BlackFadeOutState extends State<BlackFadeOut>
+    with TickerProviderStateMixin {
+  late final AnimationController _controller;
+  // ..repeat(reverse: true);
+  late final Animation<double> _animation;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeIn,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _animation,
+      child: Container(
+        color: Colors.black,
       ),
     );
   }
 }
 
 class QuestDetailsOverlay extends StatelessWidget {
-  final bool isShowingQuestDetails;
-  const QuestDetailsOverlay({Key? key, required this.isShowingQuestDetails})
-      : super(key: key);
+  const QuestDetailsOverlay({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActiveMapQuestViewModel>.reactive(
-      viewModelBuilder: () => ActiveMapQuestViewModel(),
-      builder: (context, model, child) => AnimatedOpacity(
-        duration: Duration(milliseconds: 500),
-        opacity: isShowingQuestDetails ? 1 : 0,
-        child: Stack(
-          children: [
-            Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
-                  child: AfkCreditsText.headingTwo(
-                      model.selectedQuest?.name ?? "QUEST"),
-                )),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: GestureDetector(
-                onTap: isShowingQuestDetails ? model.popQuestDetails : null,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Container(
-                    height: 40,
-                    width: 40,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, border: Border.all(width: 2)),
-                    child: Icon(Icons.close_outlined, size: 24),
-                  ),
+        viewModelBuilder: () => ActiveMapQuestViewModel(),
+        builder: (context, model, child) {
+          final Quest? quest =
+              model.selectedQuest ?? model.activeQuestNullable?.quest ?? null;
+          return IgnorePointer(
+            // TODO: When in quest preview the pointer will not really be ignored here...
+            ignoring: !model.isShowingQuestDetails,
+            child: AnimatedOpacity(
+              duration: Duration(milliseconds: 500),
+              opacity: model.isShowingQuestDetails ? 1 : 0.0,
+              child: MainStack(
+                onBackPressed:
+                    model.isShowingQuestDetails ? model.popQuestDetails : null,
+                showBackButton: !model.hasActiveQuest,
+                child: Stack(
+                  children: [
+                    IgnorePointer(
+                      ignoring: true,
+                      child: Container(
+                        height: 400,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.white.withOpacity(0.0),
+                              Colors.white.withOpacity(0.5),
+                            ],
+                            stops: [0.0, 1.0],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (model.hasActiveQuest)
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: GestureDetector(
+                              child: Icon(Icons.close),
+                              onTap: model.cancelOrFinishQuest),
+                        ),
+                      ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      //color: Colors.purple.withOpacity(0.2),
+                                      border:
+                                          Border.all(color: Colors.grey[600]!),
+                                    ),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: AfkCreditsText.tag(
+                                      getStringFromEnum(quest?.type),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              verticalSpaceTiny,
+                              AfkCreditsText.headingTwo(quest?.name ?? "QUEST"),
+                              verticalSpaceTiny,
+                              CreditsAmount(amount: quest?.afkCredits ?? -1),
+                              verticalSpaceMedium,
+                              if (quest != null)
+                                if (quest.type ==
+                                    QuestType.TreasureLocationSearch)
+                                  // TODO: Make this a specific new View for each type of quest
+                                  Expanded(
+                                    child: TreasureLocationSearch(
+                                        onStartQuest: () =>
+                                            model.notifyListeners(),
+                                        quest: quest),
+                                  ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
+  }
+}
+
+// TODO: I can make that more general for the different types of quests!
+class TreasureLocationSearch extends StatelessWidget {
+  final Quest quest;
+  final void Function() onStartQuest;
+  const TreasureLocationSearch({
+    Key? key,
+    required this.quest,
+    required this.onStartQuest,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<
+            ActiveTreasureLocationSearchQuestViewModel>.reactive(
+        viewModelBuilder: () => ActiveTreasureLocationSearchQuestViewModel(),
+        onModelReady: (model) => model.initialize(quest: quest),
+        builder: (context, model, child) {
+          bool activeDetector = model.hasActiveQuest &&
+              !model.isCheckingDistance &&
+              model.allowCheckingPosition;
+
+          return Stack(
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IgnorePointer(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: CurrentQuestStatusInfo(
+                    // isBusy: false,
+                    // isFirstDistanceCheck: true,
+                    // currentDistance: 100,
+                    // previousDistance: 110,
+                    // directionStatus: DirectionStatus.unknown,
+                    isBusy: model.isCheckingDistance,
+                    isFirstDistanceCheck: model.isFirstDistanceCheck,
+                    currentDistance: model.currentDistanceInMeters,
+                    previousDistance: model.previousDistanceInMeters,
+                    activatedQuest: model.activeQuestNullable,
+                    directionStatus: model.directionStatus,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(bottom: model.hasActiveQuest ? 0 : 70.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (!model.hasActiveQuest)
+                        Expanded(
+                          child: AfkCreditsButton(
+                              onTap: model.showInstructions,
+                              title: "Tutorial",
+                              color: kPrimaryColor.withOpacity(0.7),
+                              leading:
+                                  Icon(Icons.help, color: Colors.grey[100])),
+                        ),
+                      horizontalSpaceSmall,
+                      if (model.showStartSwipe && !model.isBusy)
+                        // model.distanceToStartMarker < 0
+                        //     ? AFKProgressIndicator()
+                        //     :
+                        Expanded(
+                          child: AFKSlideButton(
+                            alignment: Alignment.bottomCenter,
+                            canStartQuest:
+                                true, // model.isNearStartMarker == true,
+                            quest: quest,
+                            onSubmit: () => model.maybeStartQuest(
+                                quest: quest,
+                                onStartQuestCallback: onStartQuest),
+                          ),
+                        ),
+                      !model.questSuccessfullyFinished && model.hasActiveQuest
+                          ? AFKFloatingActionButton(
+                              backgroundColor: model.hasActiveQuest
+                                  ? Colors.orange
+                                  : Colors.grey[600],
+                              width: 80,
+                              height: 80,
+                              onPressed: !activeDetector
+                                  ? (model.hasActiveQuest
+                                      ? model.showReloadingInfo
+                                      : model.showStartQuestInfo)
+                                  : model.checkDistance,
+                              icon: !model.allowCheckingPosition
+                                  ? Container(
+                                      constraints: BoxConstraints(
+                                          maxWidth: 80, maxHeight: 80),
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Image.asset(kMagnetIconPath,
+                                                alignment: Alignment.center,
+                                                width: 40,
+                                                height: 80,
+                                                color: Colors.black),
+                                          ),
+                                          Align(
+                                              alignment: Alignment.center,
+                                              child: Opacity(
+                                                opacity: 0.7,
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      height: 80,
+                                                      color: Colors.grey[200],
+                                                      width: 80,
+                                                    ),
+                                                  ],
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                    )
+                                  : Shimmer.fromColors(
+                                      baseColor: activeDetector
+                                          ? Colors.black
+                                          : Colors.grey[200]!,
+                                      highlightColor: Colors.white,
+                                      period:
+                                          const Duration(milliseconds: 1000),
+                                      enabled: activeDetector,
+                                      child: model.isCheckingDistance
+                                          ? AFKProgressIndicator(
+                                              color: Colors.white)
+                                          : Image.asset(kMagnetIconPath,
+                                              width: 40),
+                                    ),
+                            )
+                          : SizedBox(height: 0, width: 0),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }
 
 class MapLoadingOverlay extends StatelessWidget {
-  const MapLoadingOverlay({Key? key}) : super(key: key);
+  final bool show;
+  const MapLoadingOverlay({Key? key, required this.show}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.green.withOpacity(0.4),
-      alignment: Alignment.center,
-      child: AfkCreditsText.body("Loading..."),
+    return AnimatedOpacity(
+      opacity: show ? 1 : 0,
+      duration: Duration(milliseconds: 500),
+      child: Container(
+        color: Colors.grey[100],
+        alignment: Alignment.center,
+        child: AfkCreditsText.headingThree("Loading..."),
+      ),
     );
   }
 }
@@ -169,21 +435,10 @@ class MainMapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final devicePixelRatio =
-        Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
     return ViewModelBuilder<MapViewModel>.reactive(
       viewModelBuilder: () => locator<MapViewModel>(),
       onModelReady: (model) {
-        model.passFunctions(
-            moveCamera: GoogleMapService.moveCamera,
-            configureAndAddMapMarker: GoogleMapService.configureAndAddMapMarker,
-            animateCamera: GoogleMapService.animateCamera,
-            animateNewLatLon: GoogleMapService.animateNewLatLon,
-            resetMapMarkers: GoogleMapService.resetMapMarkers);
-        model.initializeMapAndMarkers(
-            devicePixelRatio: devicePixelRatio,
-            mapWidth: screenWidth(context),
-            mapHeight: screenHeight(context));
+        model.initializeMapAndMarkers();
       },
       disposeViewModel: false,
       builder: (context, model, child) => Stack(
@@ -219,11 +474,92 @@ class MainMapView extends StatelessWidget {
           ),
           //IgnorePointer(child: Container(color: Colors.white.withOpacity(0.1))),
           RightFloatingButtons(
-              onCompassTap: model.rotateToNorth,
-              bearing: model.bearing,
-              onZoomPressed: model.changeMapZoom,
-              zoomedIn: model.isAvatarView,
-              isShowingQuestDetails: model.isShowingQuestDetails),
+            onCompassTap: model.rotateToNorth,
+            bearing: model.bearing,
+            onZoomPressed: model.changeMapZoom,
+            zoomedIn: model.isAvatarView,
+            isShowingQuestDetails: model.isShowingQuestDetails,
+            onChangeCharacterTap: model.nextCharacter,
+          ),
+
+          // RIPPLE Effect
+          if (model.hasActiveQuest)
+            Positioned(
+              //alignment: Alignment(0, 0.4),
+              bottom: 105,
+              left: 2,
+              right: 2,
+              child: IgnorePointer(
+                child: Lottie.network(
+                  'https://assets7.lottiefiles.com/packages/lf20_Ei9xER.json',
+                  height: 200,
+                  width: 200,
+                ),
+              ),
+            ),
+          // Load a Lottie file from a remote url
+          Positioned(
+            //alignment: Alignment(0, 0.4),
+            bottom: 185,
+            left: 2,
+            right: 2,
+            child: AnimatedOpacity(
+              duration: Duration(milliseconds: 300),
+              opacity: ((model.isShowingQuestDetails ||
+                          !model.isAvatarView ||
+                          model.isShowingARView ||
+                          model.isMovingCamera) &&
+                      !model.hasActiveQuest)
+                  ? 0
+                  : 1,
+              child: IgnorePointer(
+                child: model.characterNumber == 0
+                    ? Lottie.network(
+                        // chilling dude
+                        'https://assets2.lottiefiles.com/packages/lf20_0w4fvbov.json',
+                        height: 150,
+                        width: 150,
+                      )
+                    : model.characterNumber == 1
+                        ?
+                        // Left!
+                        Lottie.network(
+// walking normal girl
+                            'https://assets6.lottiefiles.com/private_files/lf30_afru6l2d.json',
+                            height: 165,
+                            width: 165,
+                          )
+                        : model.characterNumber == 2
+                            ? Lottie.network(
+                                // stick figure running to the right
+                                'https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f5c27455-a334-4e03-b223-0a29781f875f/lf30_editor_s2qny0a9.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220325%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220325T012411Z&X-Amz-Expires=86400&X-Amz-Signature=d08e495b50bdec5471fa5ce4ad9894f75ddf6abddc2b59835d417fa27f6e8fe4&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22lf30_editor_s2qny0a9.json%22&x-id=GetObject',
+                                height: 150,
+                                width: 150,
+                              )
+                            : model.characterNumber == 3
+                                ? Lottie.network(
+                                    // dude walking to the right
+                                    'https://assets3.lottiefiles.com/packages/lf20_4jip3mqj.json',
+
+                                    height: 160,
+                                    width: 160,
+                                  )
+                                : model.characterNumber == 4
+                                    ? Lottie.network(
+                                        // colored stick figure walking to the left
+                                        'https://assets3.lottiefiles.com/packages/lf20_tbbtmun4.json',
+                                        height: 165,
+                                        width: 165,
+                                      )
+                                    : Lottie.network(
+                                        // weird figure walking to the right
+                                        'https://raw.githubusercontent.com/xvrh/lottie-flutter/master/example/assets/lottiefiles/walking.json',
+                                        height: 150,
+                                        width: 150,
+                                      ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -244,32 +580,18 @@ class RotationGestureWidget extends StatelessWidget {
     return IgnorePointer(
       ignoring: ignoreGestures,
       child: Container(
+        height: screenHeight(context),
         width: screenWidth(context),
-        child: Row(
+        child: Column(
           children: [
+            // This avoids overlap of the below gesture detector (for the main map)
+            // and the widgets in the header! Sometimes this creates issues!
+            SizedBox(height: 70),
             Expanded(
-              // TODO
-              // Could use gesture detector but gesture detector
-              // has a slight delay with "onPanUpdate"
-              //
-              // advantage with GestureDetector would be zoom motions!
-              //
-              // advantage with listener is that we can rotate with two fingers!
-              // with listener we can't tap on markers!
               child: GestureDetector(
                 //behavior: HitTestBehavior.opaque,
                 onScaleUpdate: onRotate,
               ),
-              // child: Listener(
-              //   onPointerMove: onRotate,
-              //   behavior: HitTestBehavior.opaque,
-              //   //behavior: HitTestBehavior.translucent,
-              //   //onPanUpdate: onRotate,
-              //   // overwrite doubleTap to claim this gesture recognizer
-              //   // and don't use google map default ones
-              //   //onDoubleTap: () => null,
-              //   // onPanUpdate: onRotate,
-              // ),
             ),
           ],
         ),
@@ -396,11 +718,11 @@ class CloudOverlay extends StatelessWidget {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Colors.white.withOpacity(0.4),
-                                Colors.white.withOpacity(0.2)
+                                Colors.white.withOpacity(0.3),
+                                Colors.white.withOpacity(0.65)
                               ],
-                              // begin: Alignment.bottomCenter,
-                              // end: Alignment.topCenter,
+                              begin: Alignment.bottomLeft,
+                              end: Alignment.topRight,
                             ),
                           ),
                         ),
@@ -463,20 +785,35 @@ class OutlineBox extends StatelessWidget {
   final String? text;
   final double? width;
   final double? height;
-  const OutlineBox({Key? key, this.width, this.height, this.text})
+  final Color? color;
+  final void Function()? onPressed;
+  const OutlineBox(
+      {Key? key,
+      this.width,
+      this.height,
+      this.text,
+      this.onPressed,
+      this.color})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[800]!, width: 2.0),
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: SizedBox.expand(
-        child: text != null ? Center(child: Text(text!)) : SizedBox.expand(),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[800]!, width: 2.0),
+          borderRadius: BorderRadius.circular(15.0),
+          color: color,
+        ),
+        child: SizedBox.expand(
+          child: text != null
+              ? Center(
+                  child: AfkCreditsText.body(text!, align: TextAlign.center))
+              : SizedBox.expand(),
+        ),
       ),
     );
   }
@@ -485,38 +822,34 @@ class OutlineBox extends StatelessWidget {
 class MainHeader extends StatelessWidget {
   final bool isShowingQuestDetails;
   final void Function()? onPressed;
+  final void Function()? onCreditsPressed;
   const MainHeader(
-      {Key? key, this.onPressed, required this.isShowingQuestDetails})
+      {Key? key,
+      this.onPressed,
+      required this.isShowingQuestDetails,
+      this.onCreditsPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    log.wtf("Rebuilding MainHeader");
     return AnimatedOpacity(
       opacity: isShowingQuestDetails ? 0 : 1,
       duration: Duration(milliseconds: 500),
       child: Container(
-        height: 60,
+        height: 70,
         //color: Colors.blue.withOpacity(0.5),
         padding: const EdgeInsets.symmetric(
             horizontal: kHorizontalPadding, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            GestureDetector(
-              child: OutlineBox(width: 80),
-              onTap: onPressed,
-            ),
+            MainAvatarView(percentage: 0.4, level: 3, onPressed: onPressed),
             Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                OutlineBox(width: 60),
-                horizontalSpaceMedium,
-                // AFKCreditsIcon(height: 40),
-                // AfkCreditsText.headingThree("40"),
-                OutlineBox(width: 60),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(right: 5.0, top: 14),
+              child:
+                  AFKCreditsDisplay(balance: 130, onPressed: onCreditsPressed),
             ),
           ],
         ),
@@ -528,6 +861,10 @@ class MainHeader extends StatelessWidget {
 class RightFloatingButtons extends StatelessWidget {
   final void Function() onZoomPressed;
   final void Function() onCompassTap;
+
+  // !!! Temporary
+  final void Function()? onChangeCharacterTap;
+
   final double bearing;
   final bool zoomedIn;
   final bool isShowingQuestDetails;
@@ -538,14 +875,25 @@ class RightFloatingButtons extends StatelessWidget {
     required this.zoomedIn,
     required this.onCompassTap,
     required this.isShowingQuestDetails,
+    this.onChangeCharacterTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        if (onChangeCharacterTap != null)
+          Align(
+            alignment: Alignment(-1, 0.65),
+            child: Container(
+              color: Colors.grey[200]!.withOpacity(0.3),
+              width: 55,
+              height: 55,
+              child: GestureDetector(onTap: onChangeCharacterTap!),
+            ),
+          ),
         Align(
-          alignment: Alignment.topRight,
+          alignment: Alignment(1, -0.75),
           child: Padding(
             padding: const EdgeInsets.only(right: 15, top: 100),
             child: AnimatedOpacity(
@@ -605,40 +953,74 @@ class RightFloatingButtons extends StatelessWidget {
 }
 
 class MainFooter extends StatelessWidget {
-  final bool isShowingQuestDetails;
   final void Function() onMiddleTap;
-  const MainFooter(
-      {Key? key,
-      required this.onMiddleTap,
-      required this.isShowingQuestDetails})
-      : super(key: key);
+  const MainFooter({
+    Key? key,
+    required this.onMiddleTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: AnimatedOpacity(
-        opacity: isShowingQuestDetails ? 0 : 1,
-        duration: Duration(milliseconds: 500),
-        child: Container(
-          height: 100,
-          //color: Colors.blue.withOpacity(0.5),
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              OutlineBox(width: 80, text: "SCREEN TIME"),
-              horizontalSpaceLarge,
-              Expanded(
-                child: GestureDetector(
-                    onTap: onMiddleTap, child: OutlineBox(text: "MENU")),
+    log.wtf("==>> Rebuild MainFooterView");
+    return ViewModelBuilder<MainFooterViewModel>.reactive(
+      viewModelBuilder: () => MainFooterViewModel(),
+      onModelReady: (model) => model.listenToLayout(),
+      builder: (context, model, child) => Align(
+        alignment: Alignment.bottomCenter,
+        child: IgnorePointer(
+          ignoring: model.isShowingQuestDetails ? true : false,
+          child: AnimatedOpacity(
+            opacity: model.isShowingQuestDetails ? 0 : 1,
+            duration: Duration(milliseconds: 500),
+            child: Container(
+              height: 100,
+              //color: Colors.blue.withOpacity(0.5),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  OutlineBox(
+                    width: 80,
+                    text: "SCREEN TIME",
+                    onPressed: model.navToCreditsScreenTimeView,
+                  ),
+                  horizontalSpaceLarge,
+                  Expanded(
+                    child: GestureDetector(
+                        onTap: onMiddleTap, child: OutlineBox(text: "MENU")),
+                  ),
+                  horizontalSpaceLarge,
+                  OutlineBox(
+                    width: 80,
+                    text: model.isShowingQuestList ? "MAP" : "QUESTS",
+                    onPressed: model.isShowingQuestList
+                        ? model.removeQuestListOverlay
+                        : model.showQuestListOverlay,
+                  ),
+                ],
               ),
-              horizontalSpaceLarge,
-              OutlineBox(width: 80, text: "LIST"),
-            ],
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class OverlayedCloseButton extends StatelessWidget {
+  const OverlayedCloseButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<QuestListOverlayViewModel>.reactive(
+      viewModelBuilder: () => QuestListOverlayViewModel(),
+      onModelReady: (model) => model.listenToLayout(),
+      builder: (context, model, child) => model.isShowingQuestList
+          ? Align(
+              alignment: Alignment(0, 0.91),
+              child: RoundCloseButton(onTap: model.removeQuestListOverlay),
+            )
+          : SizedBox(height: 0, width: 0),
     );
   }
 }

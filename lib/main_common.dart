@@ -24,6 +24,9 @@ import 'firebase_options_prod.dart' as prod;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
+    show ArCoreController;
+
 const bool USE_EMULATOR = false;
 
 void mainCommon(Flavor flavor) async {
@@ -47,7 +50,12 @@ void mainCommon(Flavor flavor) async {
         systemNavigationBarColor: kBlackHeadlineColor,
       ),
     );
-
+    if (Platform.isAndroid) {
+      print('==>> Is ARCore Available?');
+      print(await ArCoreController.checkArCoreAvailability());
+      print('\n==>> Are AR Services Installed?');
+      print(await ArCoreController.checkIsArCoreInstalled());
+    }
     setupLocator();
     setupDialogUi();
     setupSnackbarUi();

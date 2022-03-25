@@ -15,6 +15,7 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -32,6 +33,7 @@ class ActiveTreasureLocationSearchQuestViewModel
   bool isTrackingDeadTime = false;
   bool skipUpdatingQuestStatus = false;
   bool isCheckingDistance = false;
+  bool isNearGoal = false;
 
   List<TreasureSearchLocation> checkpoints = [];
   final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
@@ -57,7 +59,8 @@ class ActiveTreasureLocationSearchQuestViewModel
     setBusy(false);
   }
 
-  Future maybeStartQuest({required Quest? quest}) async {
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) async {
     if (quest != null) {
       log.i("Starting vibration search quest with name ${quest.name}");
 
@@ -89,6 +92,12 @@ class ActiveTreasureLocationSearchQuestViewModel
         return;
       }
 
+      if (onStartQuestCallback != null) {
+        onStartQuestCallback();
+      }
+      showStartSwipe = false;
+      mapViewModel.resetMapMarkers();
+      // quest started!
       // start listening to position
       await Future.wait([
         activeQuestService.listenToPosition(
@@ -106,10 +115,17 @@ class ActiveTreasureLocationSearchQuestViewModel
                   notifyListeners();
                 }
               }
+              // TODO: Should probably happen more often!
+              // this will move the map. Should happen more often than is the
+              // case for the treasure location search! Add additional filtering!?
+              setNewLatLon(lat: position.latitude, lon: position.longitude);
+              animateOnNewLocation();
             }),
         Future.delayed(Duration(seconds: 1))
       ]);
-      showStartSwipe = false;
+      snackbarService.showSnackbar(
+          title: "Quest started", message: "Check your initial distance");
+
       notifyListeners();
     } else {
       log.i("Not starting quest, quest is probably already running");
@@ -143,7 +159,11 @@ class ActiveTreasureLocationSearchQuestViewModel
       // TODO: And pass a "inProgress" status to showSuccessDialog() plus a completer!
 
       await showFoundTreasureDialog();
-      await showSuccessDialog();
+      directionStatus = DirectionStatus.nearGoal;
+      showNextARObjects();
+      notifyListeners();
+      // await showSuccessDialog();
+
     } else {
       late String? logString;
       // update UI on quest update
@@ -374,7 +394,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   bool isUpdatingPositionAllowed({required Position position}) {
     double propagatedAccuracy = getPropagatedAccuracy(newPosition: position);
-    if (propagatedAccuracy < kMinDistanceFromLastCheckInMeters * 2) {
+    if (propagatedAccuracy < kMinDistanceFromLastCheckInMeters * 3) {
       questTestingService.maybeRecordData(
         onlyIfDatabaseAlreadyCreated: true,
         pushToNotion: true,
@@ -496,7 +516,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     await dialogService.showDialog(
         title: "How it works",
         description:
-            "Start to walk and check the distance to the trophy regularly. You will see if you get closer or are further away! The trohphy is clever and sometimes moves around!!");
+            "Try to get to the treasure by checking the distance regularly. You have to walk to refresh the location checker. The trohphy is clever and sometimes moves around!!");
   }
 
   void setTrackingDeadTime(bool deadTime) {

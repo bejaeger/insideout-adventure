@@ -33,8 +33,10 @@ import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
+import 'package:afkcredits/ui/views/ar_view/ar_object_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
+import 'package:afkcredits/ui/views/credits_screen_time_view/credits_screen_time_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart';
@@ -56,6 +58,7 @@ import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_vi
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/manage_quest/manage_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
+import 'package:afkcredits/ui/views/screen_time/screen_time_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
@@ -113,6 +116,9 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: AddGiftCardsView),
     MaterialRoute(page: HistoryAndAchievementsView),
     MaterialRoute(page: PurchasedScreenTimeView),
+    MaterialRoute(page: ScreenTimeView),
+    MaterialRoute(page: ARObjectView),
+    MaterialRoute(page: CreditsScreenTimeView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -150,7 +156,12 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: MapStateService),
 
     //LazySingleton(classType: MarkersInMap),
-    LazySingleton(classType: MapViewModel),
+    // LazySingleton(classType: MapViewModel),
+    Presolve(classType: MapViewModel, presolveUsing: presolveMapViewModel),
+
+    // Just a test if this helps reducing/removing the
+    // map failures
+    // LazySingleton(classType: GoogleMapService),
 
     // Services
   ],

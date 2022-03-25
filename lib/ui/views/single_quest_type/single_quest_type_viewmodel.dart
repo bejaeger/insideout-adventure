@@ -10,7 +10,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class SingleQuestViewModel extends QuestViewModel with NavigationMixin {
+class SingleQuestViewModel extends QuestViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
 
   final log = getLogger("SingleQuestViewModel");

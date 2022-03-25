@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'achievement.dart';
@@ -34,7 +35,7 @@ class _$AchievementTearOff {
     );
   }
 
-  Achievement fromJson(Map<String, Object> json) {
+  Achievement fromJson(Map<String, Object?> json) {
     return Achievement.fromJson(json);
   }
 }
@@ -176,26 +177,21 @@ class _$_Achievement implements _Achievement {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Achievement &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.credits, credits) ||
-                const DeepCollectionEquality()
-                    .equals(other.credits, credits)) &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.completed, completed) ||
-                const DeepCollectionEquality()
-                    .equals(other.completed, completed)));
+        (other.runtimeType == runtimeType &&
+            other is _Achievement &&
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.credits, credits) &&
+            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality().equals(other.completed, completed));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(credits) ^
-      const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(completed);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(credits),
+      const DeepCollectionEquality().hash(name),
+      const DeepCollectionEquality().hash(completed));
 
   @JsonKey(ignore: true)
   @override
@@ -219,13 +215,13 @@ abstract class _Achievement implements Achievement {
       _$_Achievement.fromJson;
 
   @override
-  String get id => throw _privateConstructorUsedError;
+  String get id;
   @override
-  int get credits => throw _privateConstructorUsedError;
+  int get credits;
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
-  bool get completed => throw _privateConstructorUsedError;
+  bool get completed;
   @override
   @JsonKey(ignore: true)
   _$AchievementCopyWith<_Achievement> get copyWith =>

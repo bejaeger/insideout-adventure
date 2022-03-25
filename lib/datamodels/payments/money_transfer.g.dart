@@ -10,7 +10,7 @@ _$_MoneyTransfer _$$_MoneyTransferFromJson(Map<String, dynamic> json) =>
     _$_MoneyTransfer(
       transferDetails: TransferDetails.fromJson(
           json['transferDetails'] as Map<String, dynamic>),
-      createdAt: json['createdAt'] ?? '',
+      createdAt: json['createdAt'] ?? "",
       status: $enumDecodeNullable(_$TransferStatusEnumMap, json['status']) ??
           TransferStatus.Initialized,
       type: $enumDecodeNullable(_$TransferTypeEnumMap, json['type']) ??

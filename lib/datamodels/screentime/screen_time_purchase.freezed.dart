@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'screen_time_purchase.dart';
@@ -40,7 +41,7 @@ class _$ScreenTimePurchaseTearOff {
     );
   }
 
-  ScreenTimePurchase fromJson(Map<String, Object> json) {
+  ScreenTimePurchase fromJson(Map<String, Object?> json) {
     return ScreenTimePurchase.fromJson(json);
   }
 }
@@ -221,10 +222,10 @@ class _$_ScreenTimePurchase implements _ScreenTimePurchase {
   final String purchaseId;
   @override
   final String uid;
-  @JsonKey(defaultValue: "")
+  @JsonKey()
   @override
   final dynamic purchasedAt;
-  @JsonKey(defaultValue: "")
+  @JsonKey()
   @override
   final dynamic activatedOn;
   @override
@@ -242,36 +243,30 @@ class _$_ScreenTimePurchase implements _ScreenTimePurchase {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _ScreenTimePurchase &&
-            (identical(other.purchaseId, purchaseId) ||
-                const DeepCollectionEquality()
-                    .equals(other.purchaseId, purchaseId)) &&
-            (identical(other.uid, uid) ||
-                const DeepCollectionEquality().equals(other.uid, uid)) &&
-            (identical(other.purchasedAt, purchasedAt) ||
-                const DeepCollectionEquality()
-                    .equals(other.purchasedAt, purchasedAt)) &&
-            (identical(other.activatedOn, activatedOn) ||
-                const DeepCollectionEquality()
-                    .equals(other.activatedOn, activatedOn)) &&
-            (identical(other.hours, hours) ||
-                const DeepCollectionEquality().equals(other.hours, hours)) &&
-            (identical(other.status, status) ||
-                const DeepCollectionEquality().equals(other.status, status)) &&
-            (identical(other.amount, amount) ||
-                const DeepCollectionEquality().equals(other.amount, amount)));
+        (other.runtimeType == runtimeType &&
+            other is _ScreenTimePurchase &&
+            const DeepCollectionEquality()
+                .equals(other.purchaseId, purchaseId) &&
+            const DeepCollectionEquality().equals(other.uid, uid) &&
+            const DeepCollectionEquality()
+                .equals(other.purchasedAt, purchasedAt) &&
+            const DeepCollectionEquality()
+                .equals(other.activatedOn, activatedOn) &&
+            const DeepCollectionEquality().equals(other.hours, hours) &&
+            const DeepCollectionEquality().equals(other.status, status) &&
+            const DeepCollectionEquality().equals(other.amount, amount));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(purchaseId) ^
-      const DeepCollectionEquality().hash(uid) ^
-      const DeepCollectionEquality().hash(purchasedAt) ^
-      const DeepCollectionEquality().hash(activatedOn) ^
-      const DeepCollectionEquality().hash(hours) ^
-      const DeepCollectionEquality().hash(status) ^
-      const DeepCollectionEquality().hash(amount);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(purchaseId),
+      const DeepCollectionEquality().hash(uid),
+      const DeepCollectionEquality().hash(purchasedAt),
+      const DeepCollectionEquality().hash(activatedOn),
+      const DeepCollectionEquality().hash(hours),
+      const DeepCollectionEquality().hash(status),
+      const DeepCollectionEquality().hash(amount));
 
   @JsonKey(ignore: true)
   @override
@@ -298,19 +293,19 @@ abstract class _ScreenTimePurchase implements ScreenTimePurchase {
       _$_ScreenTimePurchase.fromJson;
 
   @override
-  String get purchaseId => throw _privateConstructorUsedError;
+  String get purchaseId;
   @override
-  String get uid => throw _privateConstructorUsedError;
+  String get uid;
   @override
-  dynamic get purchasedAt => throw _privateConstructorUsedError;
+  dynamic get purchasedAt;
   @override
-  dynamic get activatedOn => throw _privateConstructorUsedError;
+  dynamic get activatedOn;
   @override
-  num get hours => throw _privateConstructorUsedError;
+  num get hours;
   @override
-  ScreenTimeVoucherStatus get status => throw _privateConstructorUsedError;
+  ScreenTimeVoucherStatus get status;
   @override
-  double get amount => throw _privateConstructorUsedError;
+  double get amount;
   @override
   @JsonKey(ignore: true)
   _$ScreenTimePurchaseCopyWith<_ScreenTimePurchase> get copyWith =>

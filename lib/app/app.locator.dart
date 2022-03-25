@@ -1,3 +1,4 @@
+import 'package:afkcredits/services/maps/google_map_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -44,7 +45,8 @@ import '../utils/image_selector/image_selector.dart';
 
 final locator = StackedLocator.instance;
 
-void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
+Future setupLocator(
+    {String? environment, EnvironmentFilter? environmentFilter}) async {
 // Register environments
   locator.registerEnvironment(
       environment: environment, environmentFilter: environmentFilter);
@@ -82,5 +84,6 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => GamificationService());
   locator.registerLazySingleton(() => MapStateService());
-  locator.registerLazySingleton(() => MapViewModel());
+  final mapViewModel = await presolveMapViewModel();
+  locator.registerSingleton(mapViewModel);
 }

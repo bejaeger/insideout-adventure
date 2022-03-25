@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'treasure_search_location.dart';
@@ -43,7 +44,7 @@ class _$TreasureSearchLocationTearOff {
     );
   }
 
-  TreasureSearchLocation fromJson(Map<String, Object> json) {
+  TreasureSearchLocation fromJson(Map<String, Object?> json) {
     return TreasureSearchLocation.fromJson(json);
   }
 }
@@ -259,46 +260,37 @@ class _$_TreasureSearchLocation implements _TreasureSearchLocation {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _TreasureSearchLocation &&
-            (identical(other.currentLat, currentLat) ||
-                const DeepCollectionEquality()
-                    .equals(other.currentLat, currentLat)) &&
-            (identical(other.currentLon, currentLon) ||
-                const DeepCollectionEquality()
-                    .equals(other.currentLon, currentLon)) &&
-            (identical(other.currentAccuracy, currentAccuracy) ||
-                const DeepCollectionEquality()
-                    .equals(other.currentAccuracy, currentAccuracy)) &&
-            (identical(other.distanceToGoal, distanceToGoal) ||
-                const DeepCollectionEquality()
-                    .equals(other.distanceToGoal, distanceToGoal)) &&
-            (identical(other.previousLat, previousLat) ||
-                const DeepCollectionEquality()
-                    .equals(other.previousLat, previousLat)) &&
-            (identical(other.previousLon, previousLon) ||
-                const DeepCollectionEquality()
-                    .equals(other.previousLon, previousLon)) &&
-            (identical(other.previousAccuracy, previousAccuracy) ||
-                const DeepCollectionEquality()
-                    .equals(other.previousAccuracy, previousAccuracy)) &&
-            (identical(other.distanceToPreviousPosition,
-                    distanceToPreviousPosition) ||
-                const DeepCollectionEquality().equals(
-                    other.distanceToPreviousPosition,
-                    distanceToPreviousPosition)));
+        (other.runtimeType == runtimeType &&
+            other is _TreasureSearchLocation &&
+            const DeepCollectionEquality()
+                .equals(other.currentLat, currentLat) &&
+            const DeepCollectionEquality()
+                .equals(other.currentLon, currentLon) &&
+            const DeepCollectionEquality()
+                .equals(other.currentAccuracy, currentAccuracy) &&
+            const DeepCollectionEquality()
+                .equals(other.distanceToGoal, distanceToGoal) &&
+            const DeepCollectionEquality()
+                .equals(other.previousLat, previousLat) &&
+            const DeepCollectionEquality()
+                .equals(other.previousLon, previousLon) &&
+            const DeepCollectionEquality()
+                .equals(other.previousAccuracy, previousAccuracy) &&
+            const DeepCollectionEquality().equals(
+                other.distanceToPreviousPosition, distanceToPreviousPosition));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(currentLat) ^
-      const DeepCollectionEquality().hash(currentLon) ^
-      const DeepCollectionEquality().hash(currentAccuracy) ^
-      const DeepCollectionEquality().hash(distanceToGoal) ^
-      const DeepCollectionEquality().hash(previousLat) ^
-      const DeepCollectionEquality().hash(previousLon) ^
-      const DeepCollectionEquality().hash(previousAccuracy) ^
-      const DeepCollectionEquality().hash(distanceToPreviousPosition);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(currentLat),
+      const DeepCollectionEquality().hash(currentLon),
+      const DeepCollectionEquality().hash(currentAccuracy),
+      const DeepCollectionEquality().hash(distanceToGoal),
+      const DeepCollectionEquality().hash(previousLat),
+      const DeepCollectionEquality().hash(previousLon),
+      const DeepCollectionEquality().hash(previousAccuracy),
+      const DeepCollectionEquality().hash(distanceToPreviousPosition));
 
   @JsonKey(ignore: true)
   @override
@@ -327,21 +319,21 @@ abstract class _TreasureSearchLocation implements TreasureSearchLocation {
       _$_TreasureSearchLocation.fromJson;
 
   @override
-  double get currentLat => throw _privateConstructorUsedError;
+  double get currentLat;
   @override
-  double get currentLon => throw _privateConstructorUsedError;
+  double get currentLon;
   @override
-  double get currentAccuracy => throw _privateConstructorUsedError;
+  double get currentAccuracy;
   @override
-  double get distanceToGoal => throw _privateConstructorUsedError;
+  double get distanceToGoal;
   @override
-  double? get previousLat => throw _privateConstructorUsedError;
+  double? get previousLat;
   @override
-  double? get previousLon => throw _privateConstructorUsedError;
+  double? get previousLon;
   @override
-  double? get previousAccuracy => throw _privateConstructorUsedError;
+  double? get previousAccuracy;
   @override
-  double? get distanceToPreviousPosition => throw _privateConstructorUsedError;
+  double? get distanceToPreviousPosition;
   @override
   @JsonKey(ignore: true)
   _$TreasureSearchLocationCopyWith<_TreasureSearchLocation> get copyWith =>

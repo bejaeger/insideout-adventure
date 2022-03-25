@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'activated_quest.dart';
@@ -50,7 +51,7 @@ class _$ActivatedQuestTearOff {
     );
   }
 
-  ActivatedQuest fromJson(Map<String, Object> json) {
+  ActivatedQuest fromJson(Map<String, Object?> json) {
     return ActivatedQuest.fromJson(json);
   }
 }
@@ -327,7 +328,7 @@ class _$_ActivatedQuest implements _ActivatedQuest {
   final num? afkCreditsEarned;
   @override
   final int timeElapsed;
-  @JsonKey(defaultValue: "")
+  @JsonKey()
   @override // in seconds!
   final dynamic createdAt;
   @override
@@ -347,57 +348,44 @@ class _$_ActivatedQuest implements _ActivatedQuest {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _ActivatedQuest &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.quest, quest) ||
-                const DeepCollectionEquality().equals(other.quest, quest)) &&
-            (identical(other.markersCollected, markersCollected) ||
-                const DeepCollectionEquality()
-                    .equals(other.markersCollected, markersCollected)) &&
-            (identical(other.status, status) ||
-                const DeepCollectionEquality().equals(other.status, status)) &&
-            (identical(other.uids, uids) ||
-                const DeepCollectionEquality().equals(other.uids, uids)) &&
-            (identical(other.afkCreditsEarned, afkCreditsEarned) ||
-                const DeepCollectionEquality()
-                    .equals(other.afkCreditsEarned, afkCreditsEarned)) &&
-            (identical(other.timeElapsed, timeElapsed) ||
-                const DeepCollectionEquality()
-                    .equals(other.timeElapsed, timeElapsed)) &&
-            (identical(other.createdAt, createdAt) ||
-                const DeepCollectionEquality()
-                    .equals(other.createdAt, createdAt)) &&
-            (identical(other.lastCheckLat, lastCheckLat) ||
-                const DeepCollectionEquality()
-                    .equals(other.lastCheckLat, lastCheckLat)) &&
-            (identical(other.lastCheckLon, lastCheckLon) ||
-                const DeepCollectionEquality()
-                    .equals(other.lastCheckLon, lastCheckLon)) &&
-            (identical(
-                    other.currentDistanceInMeters, currentDistanceInMeters) ||
-                const DeepCollectionEquality().equals(
-                    other.currentDistanceInMeters, currentDistanceInMeters)) &&
-            (identical(other.lastDistanceInMeters, lastDistanceInMeters) ||
-                const DeepCollectionEquality()
-                    .equals(other.lastDistanceInMeters, lastDistanceInMeters)));
+        (other.runtimeType == runtimeType &&
+            other is _ActivatedQuest &&
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.quest, quest) &&
+            const DeepCollectionEquality()
+                .equals(other.markersCollected, markersCollected) &&
+            const DeepCollectionEquality().equals(other.status, status) &&
+            const DeepCollectionEquality().equals(other.uids, uids) &&
+            const DeepCollectionEquality()
+                .equals(other.afkCreditsEarned, afkCreditsEarned) &&
+            const DeepCollectionEquality()
+                .equals(other.timeElapsed, timeElapsed) &&
+            const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
+            const DeepCollectionEquality()
+                .equals(other.lastCheckLat, lastCheckLat) &&
+            const DeepCollectionEquality()
+                .equals(other.lastCheckLon, lastCheckLon) &&
+            const DeepCollectionEquality().equals(
+                other.currentDistanceInMeters, currentDistanceInMeters) &&
+            const DeepCollectionEquality()
+                .equals(other.lastDistanceInMeters, lastDistanceInMeters));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(quest) ^
-      const DeepCollectionEquality().hash(markersCollected) ^
-      const DeepCollectionEquality().hash(status) ^
-      const DeepCollectionEquality().hash(uids) ^
-      const DeepCollectionEquality().hash(afkCreditsEarned) ^
-      const DeepCollectionEquality().hash(timeElapsed) ^
-      const DeepCollectionEquality().hash(createdAt) ^
-      const DeepCollectionEquality().hash(lastCheckLat) ^
-      const DeepCollectionEquality().hash(lastCheckLon) ^
-      const DeepCollectionEquality().hash(currentDistanceInMeters) ^
-      const DeepCollectionEquality().hash(lastDistanceInMeters);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(quest),
+      const DeepCollectionEquality().hash(markersCollected),
+      const DeepCollectionEquality().hash(status),
+      const DeepCollectionEquality().hash(uids),
+      const DeepCollectionEquality().hash(afkCreditsEarned),
+      const DeepCollectionEquality().hash(timeElapsed),
+      const DeepCollectionEquality().hash(createdAt),
+      const DeepCollectionEquality().hash(lastCheckLat),
+      const DeepCollectionEquality().hash(lastCheckLon),
+      const DeepCollectionEquality().hash(currentDistanceInMeters),
+      const DeepCollectionEquality().hash(lastDistanceInMeters));
 
   @JsonKey(ignore: true)
   @override
@@ -429,29 +417,29 @@ abstract class _ActivatedQuest implements ActivatedQuest {
       _$_ActivatedQuest.fromJson;
 
   @override
-  String? get id => throw _privateConstructorUsedError;
+  String? get id;
   @override
-  Quest get quest => throw _privateConstructorUsedError;
+  Quest get quest;
   @override
-  List<bool> get markersCollected => throw _privateConstructorUsedError;
+  List<bool> get markersCollected;
   @override
-  QuestStatus get status => throw _privateConstructorUsedError;
+  QuestStatus get status;
   @override
-  List<String>? get uids => throw _privateConstructorUsedError;
+  List<String>? get uids;
   @override
-  num? get afkCreditsEarned => throw _privateConstructorUsedError;
+  num? get afkCreditsEarned;
   @override
-  int get timeElapsed => throw _privateConstructorUsedError;
+  int get timeElapsed;
   @override // in seconds!
-  dynamic get createdAt => throw _privateConstructorUsedError;
+  dynamic get createdAt;
   @override
-  double? get lastCheckLat => throw _privateConstructorUsedError;
+  double? get lastCheckLat;
   @override // For VibrationSearch quest
-  double? get lastCheckLon => throw _privateConstructorUsedError;
+  double? get lastCheckLon;
   @override // For VibrationSearch quest
-  double? get currentDistanceInMeters => throw _privateConstructorUsedError;
+  double? get currentDistanceInMeters;
   @override // For VibrationSearch quest
-  double? get lastDistanceInMeters => throw _privateConstructorUsedError;
+  double? get lastDistanceInMeters;
   @override
   @JsonKey(ignore: true)
   _$ActivatedQuestCopyWith<_ActivatedQuest> get copyWith =>

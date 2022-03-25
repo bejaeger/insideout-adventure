@@ -903,22 +903,6 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
     }
   }
 
-  // TODO: Unit test!
-  // All this is essential and should probably be unit tested
-  void popQuestDetails() async {
-    // 1. Restore camera
-    restorePreviousCameraPosition();
-    // 2. add back all quests
-    addAllQuestMarkers();
-    // 3. set bool to update views
-    layoutService.setIsShowingQuestDetails(false);
-    notifyListeners();
-    // 4. reset selected quest after delay so the fade out is smooth
-    await Future.delayed(Duration(seconds: 1));
-    activeQuestService.resetSetSelectedQuest();
-    notifyListeners();
-  }
-
   @override
   bool isQuestCompleted() {
     return activeQuestService.isAllMarkersCollected;

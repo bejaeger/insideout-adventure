@@ -51,6 +51,21 @@ extension ValueProperties on FormViewModel {
 
   bool get hasEmailOrName => this.formValueMap.containsKey(EmailOrNameValueKey);
   bool get hasPassword => this.formValueMap.containsKey(PasswordValueKey);
+
+  bool get hasEmailOrNameValidationMessage =>
+      this.fieldsValidationMessages[EmailOrNameValueKey]?.isNotEmpty ?? false;
+  bool get hasPasswordValidationMessage =>
+      this.fieldsValidationMessages[PasswordValueKey]?.isNotEmpty ?? false;
+
+  String? get emailOrNameValidationMessage =>
+      this.fieldsValidationMessages[EmailOrNameValueKey];
+  String? get passwordValidationMessage =>
+      this.fieldsValidationMessages[PasswordValueKey];
 }
 
-extension Methods on FormViewModel {}
+extension Methods on FormViewModel {
+  setEmailOrNameValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[EmailOrNameValueKey] = validationMessage;
+  setPasswordValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[PasswordValueKey] = validationMessage;
+}

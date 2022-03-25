@@ -8,15 +8,18 @@ import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
+import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 
-abstract class QuestViewModel extends BaseModel {
+abstract class QuestViewModel extends BaseModel
+    with NavigationMixin, MapStateControlMixin {
   final log = getLogger("QuestViewModel");
-  final LayoutService layoutService = locator<LayoutService>();
 
   // -----------------------------------------------
   // Setters
@@ -25,9 +28,10 @@ abstract class QuestViewModel extends BaseModel {
       locator<FlavorConfigProvider>();
   final QRCodeService qrCodeService = locator<QRCodeService>();
 
+  final MapViewModel mapViewModel = locator<MapViewModel>();
+
   // ------------------------------------------
   // Getters
-  bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
   bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
 
@@ -109,17 +113,13 @@ abstract class QuestViewModel extends BaseModel {
 
   Future onQuestInListTapped(Quest quest) async {
     if (hasActiveQuest == false) {
-      // if (questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map) {
-      //   await displayQuestBottomSheet(
-      //     quest: quest,
-      //   );
-      // } else {
-      await navigateToActiveQuestUI(quest: quest);
+      removeQuestListOverlay();
+      showQuestDetailsFromList(quest: quest);
+      //await navigateToActiveQuestUI(quest: quest);
 
       // ! This notify listeners is important as the
       // the view renders the state based on whether a quest is active or not
-      notifyListeners();
-      // }
+      //notifyListeners();
     } else {
       dialogService.showDialog(title: "You Currently Have a Running Quest !!!");
     }
@@ -184,6 +184,10 @@ abstract class QuestViewModel extends BaseModel {
       }
     }
     return false;
+  }
+
+  void showQuestDetailsFromList({required Quest quest}) {
+    mapViewModel.showQuestDetails(quest: quest);
   }
 
   void switchIsShowingQuestDetails() {

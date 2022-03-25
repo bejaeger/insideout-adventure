@@ -69,6 +69,33 @@ extension ValueProperties on FormViewModel {
   bool get hasNumber2 => this.formValueMap.containsKey(Number2ValueKey);
   bool get hasNumber3 => this.formValueMap.containsKey(Number3ValueKey);
   bool get hasNumber4 => this.formValueMap.containsKey(Number4ValueKey);
+
+  bool get hasNumber1ValidationMessage =>
+      this.fieldsValidationMessages[Number1ValueKey]?.isNotEmpty ?? false;
+  bool get hasNumber2ValidationMessage =>
+      this.fieldsValidationMessages[Number2ValueKey]?.isNotEmpty ?? false;
+  bool get hasNumber3ValidationMessage =>
+      this.fieldsValidationMessages[Number3ValueKey]?.isNotEmpty ?? false;
+  bool get hasNumber4ValidationMessage =>
+      this.fieldsValidationMessages[Number4ValueKey]?.isNotEmpty ?? false;
+
+  String? get number1ValidationMessage =>
+      this.fieldsValidationMessages[Number1ValueKey];
+  String? get number2ValidationMessage =>
+      this.fieldsValidationMessages[Number2ValueKey];
+  String? get number3ValidationMessage =>
+      this.fieldsValidationMessages[Number3ValueKey];
+  String? get number4ValidationMessage =>
+      this.fieldsValidationMessages[Number4ValueKey];
 }
 
-extension Methods on FormViewModel {}
+extension Methods on FormViewModel {
+  setNumber1ValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[Number1ValueKey] = validationMessage;
+  setNumber2ValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[Number2ValueKey] = validationMessage;
+  setNumber3ValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[Number3ValueKey] = validationMessage;
+  setNumber4ValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[Number4ValueKey] = validationMessage;
+}

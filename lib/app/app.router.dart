@@ -27,8 +27,10 @@ import '../ui/views/admin/admin_home_view.dart';
 import '../ui/views/admin/admin_user/home/home_view.dart';
 import '../ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
 import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
+import '../ui/views/ar_view/ar_object_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
+import '../ui/views/credits_screen_time_view/credits_screen_time_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
 import '../ui/views/gift_cards/gift_card_view.dart';
 import '../ui/views/history_and_achievements/history_and_achievements_view.dart';
@@ -48,6 +50,7 @@ import '../ui/views/quests_overview/create_quest/create_quest_view.dart';
 import '../ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import '../ui/views/quests_overview/manage_quest/manage_quest_view.dart';
 import '../ui/views/quests_overview/quests_overview_view.dart';
+import '../ui/views/screen_time/screen_time_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
@@ -102,6 +105,9 @@ class Routes {
   static const String historyAndAchievementsView =
       '/history-and-achievements-view';
   static const String purchasedScreenTimeView = '/purchased-screen-time-view';
+  static const String screenTimeView = '/screen-time-view';
+  static const String aRObjectView = '/a-robject-view';
+  static const String creditsScreenTimeView = '/credits-screen-time-view';
   static const all = <String>{
     sponsorHomeView,
     singleMarkerView,
@@ -140,6 +146,9 @@ class Routes {
     addGiftCardsView,
     historyAndAchievementsView,
     purchasedScreenTimeView,
+    screenTimeView,
+    aRObjectView,
+    creditsScreenTimeView,
   };
 }
 
@@ -190,6 +199,9 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.historyAndAchievementsView,
         page: HistoryAndAchievementsView),
     RouteDef(Routes.purchasedScreenTimeView, page: PurchasedScreenTimeView),
+    RouteDef(Routes.screenTimeView, page: ScreenTimeView),
+    RouteDef(Routes.aRObjectView, page: ARObjectView),
+    RouteDef(Routes.creditsScreenTimeView, page: CreditsScreenTimeView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -500,6 +512,30 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    ScreenTimeView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const ScreenTimeView(),
+        settings: data,
+      );
+    },
+    ARObjectView: (data) {
+      var args = data.getArgs<ARObjectViewArguments>(
+        orElse: () => ARObjectViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ARObjectView(
+          key: args.key,
+          isCoins: args.isCoins,
+        ),
+        settings: data,
+      );
+    },
+    CreditsScreenTimeView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const CreditsScreenTimeView(),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -651,4 +687,11 @@ class HistoryAndAchievementsViewArguments {
   final Key? key;
   final int initialIndex;
   HistoryAndAchievementsViewArguments({this.key, this.initialIndex = 0});
+}
+
+/// ARObjectView arguments holder class
+class ARObjectViewArguments {
+  final Key? key;
+  final bool isCoins;
+  ARObjectViewArguments({this.key, this.isCoins = false});
 }

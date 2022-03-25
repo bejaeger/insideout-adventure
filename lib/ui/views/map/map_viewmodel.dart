@@ -8,24 +8,28 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class MapViewModel extends QuestViewModel with MapStateControlMixin {
+class MapViewModel extends BaseModel
+    with MapStateControlMixin, NavigationMixin {
   // Viewmodel that receives callback functions to update map
   // Functions declared at the bottom of this file
-  // MapViewModel(
-  //     {required this.moveCamera,
-  //     required this.animateCamera,
-  //     required this.configureAndAddMapMarker,
-  //     required this.animateNewLatLon,
-  //     required this.resetMapMarkers});
+  MapViewModel({
+    required this.moveCamera,
+    required this.animateCamera,
+    required this.configureAndAddMapMarker,
+    required this.animateNewLatLon,
+    required this.resetMapMarkers,
+    required this.addARObjectToMap,
+  });
 
   // -----------------------------------------------
   // Services
@@ -37,10 +41,10 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
 
   // -----------------------------
   // Getters
-  Position? get userLocation => geolocationService.getUserLivePositionNullable;
   bool get isAvatarView => mapStateService.isAvatarView;
   bool get suppressOneFingerRotations =>
       mapStateService.suppressOneFingerRotations;
+  List<Quest> get nearbyQuests => questService.getNearByQuest;
 
   // -------------------------------------------------
   // State variables
@@ -49,15 +53,8 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
 
   // last element of cameraBearingZoom determines whether listener should be fired!
 
-  Future initializeMapAndMarkers(
-      {required double mapWidth,
-      required double mapHeight,
-      required double devicePixelRatio}) async {
-    await rootBundle.loadString('assets/DayStyle.json').then(
-      (string) {
-        mapStyle = string;
-      },
-    );
+  Future initializeMapAndMarkers() async {
+    mapStyle = await rootBundle.loadString('assets/DayStyle.json');
     if (hasActiveQuest) return;
     initialized = false;
     log.i("Initializing map view");
@@ -108,6 +105,9 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
     mapStateService.mapEventListener.listen(
       (MapUpdate type) {
         log.i("Received Map Update of type $type");
+        if (type == MapUpdate.forceAnimateToLocation) {
+          _animateCamera(forceUseLocation: true, force: true);
+        }
         if (type == MapUpdate.animate) {
           _animateCamera();
         } else if (type == MapUpdate.animateNewLatLon) {
@@ -117,6 +117,18 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
           _animateCamera(
               forceUseLocation: true, customLat: newLat, customLon: newLon);
           mapStateService.resetNewLatLon();
+        } else if (type == MapUpdate.restoreSnapshotByMoving) {
+          // customLat/Lon in case we were in bird's view
+          _moveCamera(
+              forceUseLocation: true, customLat: newLat, customLon: newLon);
+          mapStateService.resetNewLatLon();
+          if (userLocation != null) {
+            // needed, cause due to GoogleMap listener currentLocation
+            // is overridden. This caused an unintended camera animation to one
+            // of the AR objects after zooming out from the QuestDetailsOverlay
+            mapStateService.setCurrentatLon(
+                lat: userLocation!.latitude, lon: userLocation!.longitude);
+          }
         } else if (type == MapUpdate.addAllQuestMarkers) {
           extractStartMarkersAndAddToMap();
         } else if (type == MapUpdate.animateOnNewLocation) {
@@ -169,7 +181,7 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
 
   void _animateNewLatLon({bool? force = true}) {
     if (newLat != null && newLon != null) {
-      animateNewLatLonVM(lat: newLat!, lon: newLon!, force: force);
+      animateNewLatLon(lat: newLat!, lon: newLon!, force: force);
     }
     // reset to avoid any unnecessary state
     mapStateService.resetNewLatLon();
@@ -189,19 +201,24 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
     _animateNewLatLon(force: false);
   }
 
-  void _moveCamera(
-      {double? customBearing,
-      double? customZoom,
-      double? customTilt,
-      double? customLat,
-      double? customLon}) {
-    if (hasSelectedQuest && customLat == null && customLon == null) {
+  void _moveCamera({
+    double? customBearing,
+    double? customZoom,
+    double? customTilt,
+    double? customLat,
+    double? customLon,
+    bool? forceUseLocation,
+  }) {
+    if ((hasSelectedQuest && !hasActiveQuest) &&
+        customLat == null &&
+        customLon == null &&
+        forceUseLocation != true) {
       if (selectedQuest!.startMarker != null) {
         customLat = selectedQuest!.startMarker!.lat;
         customLon = selectedQuest!.startMarker!.lon;
       }
     }
-    moveCameraVM(
+    moveCamera(
         bearing: customBearing ?? bearing,
         zoom: customZoom ?? zoom,
         tilt: customTilt ?? tilt,
@@ -227,7 +244,7 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
         customLon = selectedQuest!.startMarker!.lon;
       }
     }
-    animateCameraVM(
+    animateCamera(
         bearing: customBearing ?? bearing,
         zoom: customZoom ?? zoom,
         tilt: customTilt ?? tilt,
@@ -246,11 +263,14 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
         forceUseLocation: forceUseLocation);
   }
 
-  void _animateCameraToAvatarView({bool? forceUseLocation}) {
+  void _animateCameraToAvatarView({bool? forceUseLocation}) async {
+    layoutService.setIsMovingCamera(true);
     takeSnapshotOfBirdViewCameraPosition();
     changeCameraTilt(90);
     changeCameraZoom(kInitialZoom);
     _animateCamera(forceUseLocation: forceUseLocation);
+    await Future.delayed(Duration(seconds: 1));
+    layoutService.setIsMovingCamera(false);
   }
 
   void changeMapZoom() {
@@ -264,39 +284,6 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
     notifyListeners();
   }
 
-  void showQuestDetails({required Quest quest}) {
-    // 1. set selected quest to show on screen
-    activeQuestService.setSelectedQuest(quest);
-    // to be able to reset camera from quest (nice UX)
-
-    // 1. set bool to show quest to change view
-    setIsShowingQuestDetails(true);
-
-    // 2. take snapshot so we can easily restore current view
-    takeSnapshotOfCameraPosition();
-
-    // 3. animate camera to quest start
-    // TODO: Maybe this needs to become more advanced
-    // TODO: for different types of quests
-    if (quest.startMarker != null) {
-      changeCameraTilt(90);
-      changeCameraZoom(kMaxZoom);
-      _animateCamera(
-          customLat: quest.startMarker!.lat,
-          customLon: quest.startMarker!.lon,
-          force: true);
-    }
-    mapStateService.setIsAvatarView(true);
-
-    // 4. show ONLY markers relevant to quest
-    if (quest.startMarker != null) {
-      resetMapMarkersVM();
-      addMarkerToMap(quest: quest, afkmarker: quest.startMarker!);
-    }
-
-    notifyListeners();
-  }
-
   void rotateToNorth() {
     if (userLocation == null) return;
     changeCameraBearing(0);
@@ -306,61 +293,105 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
 
   @override
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
-    configureAndAddMapMarkerVM(
+    configureAndAddMapMarker(
       quest: quest,
       afkmarker: afkmarker,
-      onTap: () async {
-        dynamic adminMode = false;
-        if (useSuperUserFeatures) {
-          adminMode = await showAdminDialogAndGetResponse();
-          if (adminMode == true) {
-            String qrCodeString =
-                _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
-            navigationService.navigateTo(Routes.qRCodeView,
-                arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-          }
-        }
-        if (!useSuperUserFeatures || adminMode == false) {
-          if (hasActiveQuest == false) {
-            if (afkmarker == quest.startMarker) {
-              if (!isAvatarView) {
-                final result = await displayQuestBottomSheet(
-                  quest: quest,
-                  startMarker: afkmarker,
-                );
-                if (result?.confirmed == true) {
-                  // showQuestDetails
-                  showQuestDetails(quest: quest);
-                }
-              } else {
-                // show quest directly when in avatar view
-                showQuestDetails(quest: quest);
-              }
-            } else {
-              if (quest.type != QuestType.QRCodeHike) {
-                dialogService.showDialog(
-                    title: "Checkpoint",
-                    description: "Start the quest and reach this checkpoint.");
-              } else {
-                dialogService.showDialog(
-                    title: "Marker",
-                    description: "Start the quest and collect this marker.");
-              }
-            }
-          } else {
-            // what happens when the user collects a marker
-            log.i("Quest active, handling qrCodeScanEvent");
-            if (flavorConfigProvider.allowDummyMarkerCollection) {
-              MarkerAnalysisResult markerResult =
-                  await activeQuestService.analyzeMarker(marker: afkmarker);
-              await handleMarkerAnalysisResult(markerResult);
-            }
-          }
-        }
-        log.i("adminMode = $adminMode");
-      },
+      onTap: () => onTapMarker(quest: quest, afkmarker: afkmarker),
     );
+  }
+
+  Future onTapMarker(
+      {required Quest quest, required AFKMarker afkmarker}) async {
+    dynamic adminMode = false;
+    if (useSuperUserFeatures) {
+      adminMode = await showAdminDialogAndGetResponse();
+      if (adminMode == true) {
+        String qrCodeString =
+            _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
+        navigationService.navigateTo(Routes.qRCodeView,
+            arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
+      }
+    }
+    if (!useSuperUserFeatures || adminMode == false) {
+      if (hasActiveQuest == false) {
+        if (afkmarker == quest.startMarker) {
+          dynamic result;
+          if (!isAvatarView) {
+            result = await displayQuestBottomSheet(
+              quest: quest,
+              startMarker: afkmarker,
+            );
+          }
+          if (result?.confirmed == true || isAvatarView) {
+            // showQuestDetails
+            showQuestDetails(quest: quest);
+          }
+        } else {
+          // information dialogs
+          if (quest.type != QuestType.QRCodeHike) {
+            dialogService.showDialog(
+                title: "Checkpoint",
+                description: "Start the quest and reach this checkpoint.");
+          } else {
+            dialogService.showDialog(
+                title: "Marker",
+                description: "Start the quest and collect this marker.");
+          }
+        }
+      } else {
+        // quest is active, can we collect this marker?
+        // what happens when the user collects a marker
+        log.i("Quest active, handling qrCodeScanEvent");
+        if (flavorConfigProvider.allowDummyMarkerCollection) {
+          MarkerAnalysisResult markerResult =
+              await activeQuestService.analyzeMarker(marker: afkmarker);
+          await handleMarkerAnalysisResult(markerResult);
+        }
+      }
+    }
     notifyListeners();
+  }
+
+  void showQuestDetails({required Quest quest}) {
+    if (isShowingQuestDetails) return; // we already show the quest details
+
+    // 1. set selected quest to show on screen
+    activeQuestService.setSelectedQuest(quest);
+    // to be able to reset camera from quest (nice UX)
+
+    // 2. set bool to show quest to change view
+    layoutService.setIsShowingQuestDetails(true);
+
+    // 3. take snapshot so we can easily restore current view
+    takeSnapshotOfCameraPosition();
+
+    // 4. animate camera to quest start
+    highlightQuestOnMap(quest: quest);
+
+    notifyListeners();
+  }
+
+  void highlightQuestOnMap({required Quest quest}) {
+    // TODO: Maybe this needs to become more advanced
+    // TODO: for different types of quests
+
+    // animate camera
+    if (quest.startMarker != null) {
+      changeCameraTilt(90);
+      changeCameraZoom(kMaxZoom);
+
+      _animateCamera(
+          customLat: quest.startMarker!.lat,
+          customLon: quest.startMarker!.lon,
+          force: true);
+    }
+    mapStateService.setIsAvatarView(true);
+
+    // ONLY markers relevant to quest
+    if (quest.startMarker != null) {
+      resetMapMarkers();
+      addMarkerToMap(quest: quest, afkmarker: quest.startMarker!);
+    }
   }
 
   @override
@@ -407,32 +438,6 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
     }
   }
 
-  // @override
-  // BitmapDescriptor defineMarkersColour(
-  //     {required AFKMarker afkmarker, required Quest? quest}) {
-  //   return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-  // }
-  //   if (hasActiveQuest) {
-  //     final index = activeQuest.quest.markers
-  //         .indexWhere((element) => element == afkmarker);
-  //     if (!activeQuest.markersCollected[index]) {
-  //       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-  //     } else {
-  //       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-  //     }
-  //   } else {
-  //     if (quest?.type == QuestType.QRCodeHike) {
-  //       return BitmapDescriptor.defaultMarkerWithHue(
-  //           BitmapDescriptor.hueOrange);
-  //     } else if (quest?.type == QuestType.TreasureLocationSearch) {
-  //       return BitmapDescriptor.defaultMarkerWithHue(
-  //           BitmapDescriptor.hueViolet);
-  //     } else {
-  //       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-  //     }
-  //   }
-  // }
-
   void extractStartMarkersAndAddToMap() {
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
@@ -445,6 +450,42 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
     } else {
       log.i('Markers are Empty');
     }
+    addARObjectToMap(
+        onTap: onARObjectMarkerTap,
+        lat: 49.26813866276503,
+        lon: -122.98950899176373,
+        isCoin: true);
+    addARObjectToMap(
+        onTap: onARObjectMarkerTap,
+        lat: 49.26843866276503,
+        lon: -122.99103899176373,
+        isCoin: false);
+  }
+
+  Future onARObjectMarkerTap(double lat, double lon, bool isCoin) async {
+    // TODO: These are just examples for now. Make this general
+
+    // 2. First take snapshot
+    takeSnapshotOfCameraPosition();
+
+    // 3. is showing AR View
+    layoutService.setIsShowingARView(true);
+
+    // 4. Open AR view with nice zoom in and fade out triggered
+    await openARView(lat, lon, isCoin);
+  }
+
+  Future openARView(double lat, double lon, bool isCoin) async {
+    changeCameraTilt(90);
+    changeCameraZoom(40); // ridiculous zoom (will be clipped)
+    _animateCamera(customLat: lat, customLon: lon, force: true);
+    await Future.delayed(Duration(milliseconds: 1000));
+    navToArObjectView(isCoin);
+  }
+
+  void nextCharacter() {
+    mapStateService.characterNumber = (characterNumber + 1) % 6;
+    notifyListeners();
   }
 
   @override
@@ -459,66 +500,30 @@ class MapViewModel extends QuestViewModel with MapStateControlMixin {
   ///////////////////////////////////////////////////////////////////
   // Map Callback functions
 
-  // TODO: The following boilerplate could be removed if
-  // TODO: we use the presolve function in the locator
-  // TODO: However, the presolveUsing function currently
-  // TODO: needs to be in the ViewModel which we don't want
-  // TODO: Cause of the google map dependency
-
-  // TODO: Make PR for stacked generator!
-
-  void passFunctions(
-      {required void Function({
-        required double bearing,
-        required double zoom,
-        required double tilt,
-        required double lat,
-        required double lon,
-      })
-          moveCamera,
-      required void Function(
-              {required double bearing,
-              required double zoom,
-              required double tilt,
-              required double lat,
-              required double lon,
-              bool? force})
-          animateCamera,
-      required void Function(
-              {required Quest quest,
-              required AFKMarker afkmarker,
-              required Future Function() onTap})
-          configureAndAddMapMarker,
-      required void Function(
-              {required double lat, required double lon, bool? force})
-          animateNewLatLon,
-      required void Function() resetMapMarkers}) {
-    moveCameraVM = moveCamera;
-    animateCameraVM = animateCamera;
-    configureAndAddMapMarkerVM = configureAndAddMapMarker;
-    animateNewLatLonVM = animateNewLatLon;
-    resetMapMarkersVM = resetMapMarkers;
-  }
-
-  late void Function({
+  final void Function({
     required double bearing,
     required double zoom,
     required double tilt,
     required double lat,
     required double lon,
-  }) moveCameraVM;
-  late void Function(
+  }) moveCamera;
+  final void Function(
       {required double bearing,
       required double zoom,
       required double tilt,
       required double lat,
       required double lon,
-      bool? force}) animateCameraVM;
-  late void Function(
+      bool? force}) animateCamera;
+  final void Function(
       {required Quest quest,
       required AFKMarker afkmarker,
-      required Future Function() onTap}) configureAndAddMapMarkerVM;
-  late void Function({required double lat, required double lon, bool? force})
-      animateNewLatLonVM;
-  late void Function() resetMapMarkersVM;
+      required Future Function() onTap}) configureAndAddMapMarker;
+  final void Function({required double lat, required double lon, bool? force})
+      animateNewLatLon;
+  final void Function() resetMapMarkers;
+  final void Function(
+      {required void Function(double lat, double lon, bool isCoin) onTap,
+      required double lat,
+      required double lon,
+      required bool isCoin}) addARObjectToMap;
 }

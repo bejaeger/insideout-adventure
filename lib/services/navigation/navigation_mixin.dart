@@ -5,6 +5,7 @@ import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
+import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -19,6 +20,7 @@ mixin NavigationMixin {
   final TransfersHistoryService transfersHistoryService =
       locator<TransfersHistoryService>();
   final _userService = locator<UserService>();
+  final LayoutService _layoutService = locator<LayoutService>();
 
   void navToAdminHomeView({required UserRole role}) {
     //navigationService.replaceWith(Routes.homeView);
@@ -69,6 +71,12 @@ mixin NavigationMixin {
     _navigationService.replaceWith(Routes.loginView);
   }
 
+  ////////////////////////////////////////
+  // Navigation and dialogs
+  void popView() {
+    _navigationService.back();
+  }
+
   void navToMapView({required UserRole role}) {
     _navigationService.navigateTo(
       Routes.bottomBarLayoutTemplateView,
@@ -104,6 +112,14 @@ mixin NavigationMixin {
     _navigationService.back();
   }
 
+  void navToPurchasedScreenTimeView() {
+    _navigationService.navigateTo(Routes.purchasedScreenTimeView);
+  }
+
+  void navToCreditsScreenTimeView() {
+    _navigationService.navigateTo(Routes.creditsScreenTimeView);
+  }
+
   Future logout() async {
     // TODO: Check that there is no active quest present!
     _questService.clearData();
@@ -130,5 +146,22 @@ mixin NavigationMixin {
         questType: type,
       ),
     );
+  }
+
+  void navToScreenTimeView() {
+    _navigationService.navigateTo(Routes.screenTimeView);
+  }
+
+  void showQuestListOverlay() {
+    _layoutService.setIsShowingQuestList(true);
+  }
+
+  void removeQuestListOverlay() {
+    _layoutService.setIsShowingQuestList(false);
+  }
+
+  void navToArObjectView(bool isCoins) {
+    _navigationService.navigateTo(Routes.aRObjectView,
+        arguments: ARObjectViewArguments(isCoins: isCoins));
   }
 }

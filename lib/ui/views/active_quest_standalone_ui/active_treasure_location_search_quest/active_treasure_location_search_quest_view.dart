@@ -335,56 +335,64 @@ class CurrentQuestStatusInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (activatedQuest != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: kHorizontalPadding, vertical: 10),
-            child: Text(getDirectionStatusString(directionStatus),
-                textAlign: TextAlign.center,
-                style: textTheme(context).headline3),
-          ),
+        // if (activatedQuest != null)
+        //   Padding(
+        //     padding: const EdgeInsets.symmetric(
+        //         horizontal: kHorizontalPadding, vertical: 10),
+        //     child: Text(getDirectionStatusString(directionStatus),
+        //         textAlign: TextAlign.center,
+        //         style: textTheme(context).headline3),
+        //   ),
         Container(
           width: screenWidth(context) - 2 * kHorizontalPadding,
-          padding: const EdgeInsets.all(16.0),
-          margin: const EdgeInsets.all(kHorizontalPadding),
+          alignment: Alignment.center,
+          padding:
+              const EdgeInsets.only(top: 10.0, left: 15, right: 15, bottom: 15),
+          //margin: const EdgeInsets.all(kHorizontalPadding),
           decoration: BoxDecoration(
-              color: getDirectionStatusColor(directionStatus),
-              borderRadius: BorderRadius.circular(16.0),
-              boxShadow: [
-                BoxShadow(
-                  color: kShadowColor,
-                  offset: Offset(3, 3),
-                  blurRadius: 5,
-                  spreadRadius: 1,
-                )
-              ]),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Image.asset(kTreasureMapIconPath, width: 80),
-                  Icon(Icons.arrow_forward, size: 50),
-                  Image.asset(kTreasureIconPath, width: 80),
-                ],
-              ),
-              verticalSpaceSmall,
-              isBusy
-                  ? AFKProgressIndicator()
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+            color: getDirectionStatusColor(directionStatus),
+            borderRadius: BorderRadius.circular(16.0),
+            border: Border.all(color: Colors.grey[400]!),
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: kShadowColor,
+            //     offset: Offset(3, 3),
+            //     blurRadius: 5,
+            //     spreadRadius: 1,
+            //   )
+            // ],
+          ),
+          child: directionStatus == DirectionStatus.nearGoal
+              ? AfkCreditsText.successThree(
+                  "Yeyy! Look for the H-coins nearby!",
+                  align: TextAlign.center)
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AfkCreditsText.body(
+                      "Distance to treasure",
+                    ),
+                    Row(
+                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        //Image.asset(kDrawingCompassIconPath, width: 50),
-                        Text(
-                            !isFirstDistanceCheck
-                                ? "${currentDistance.toStringAsFixed(1)} m"
-                                : "?",
-                            textAlign: TextAlign.center,
-                            style: textTheme(context).headline2),
+                        Image.asset(kTreasureMapIconPath, width: 45),
+                        horizontalSpaceSmall,
+                        Icon(Icons.arrow_forward, size: 28),
+                        horizontalSpaceSmall,
+                        Image.asset(kTreasureIconPath, width: 45),
+                        AfkCreditsText.headingThree(" :    "),
+                        horizontalSpaceSmall,
+                        isBusy
+                            ? AFKProgressIndicator(color: Colors.grey[600])
+                            : AfkCreditsText.headingThree(
+                                !isFirstDistanceCheck
+                                    ? "${currentDistance.toStringAsFixed(1)} m"
+                                    : "?",
+                              )
                       ],
                     ),
-            ],
-          ),
+                  ],
+                ),
         ),
         // Text("Aktuelle Distanz",
         //     textAlign: TextAlign.center, style: textTheme(context).headline6),
@@ -416,13 +424,13 @@ class CurrentQuestStatusInfo extends StatelessWidget {
     if (status == null) return Colors.grey[200]!;
     switch (status) {
       case DirectionStatus.closer:
-        return Colors.green;
+        return Colors.green.withOpacity(0.6);
       case DirectionStatus.further:
-        return Colors.red;
+        return Colors.red.withOpacity(0.6);
       case DirectionStatus.denied:
         return Colors.grey[200]!;
       default:
-        return Colors.grey[200]!;
+        return Colors.grey[200]!.withOpacity(0.8);
     }
   }
 }

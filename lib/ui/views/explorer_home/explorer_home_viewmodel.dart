@@ -13,6 +13,7 @@ import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
+import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
@@ -59,13 +60,31 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   bool addingPositionToNotionDB = false;
   bool pushedToNotion = false;
 
+  bool showLoadingScreen = true;
+  bool showFullLoadingScreen = true;
   final log = getLogger("ExplorerHomeViewModel");
+
+  void listenToLayout() {
+    layoutService.isShowingARViewSubject.listen((show) {
+      notifyListeners();
+    });
+  }
 
   Future initialize() async {
     setBusy(true);
     await listenToData();
     await initializeQuests();
+    listenToLayout();
     setBusy(false);
+
+    // fade loading screen out process
+    await Future.delayed(Duration(milliseconds: 500));
+    showFullLoadingScreen = false;
+    notifyListeners();
+    // ? should to be in line with the fade out time in Loading Overlay widget
+    await Future.delayed(Duration(milliseconds: 500));
+    showLoadingScreen = false;
+    notifyListeners();
   }
 
   Future listenToData() async {
@@ -111,7 +130,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   void addLocationListener() async {
     await geolocationService.listenToPosition(
-      distanceFilter: 1, // kDefaultGeolocationDistanceFilter,
+      distanceFilter: kDefaultGeolocationDistanceFilter,
       onData: (Position position) {
         setNewLatLon(lat: position.latitude, lon: position.longitude);
         animateOnNewLocation();

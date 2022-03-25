@@ -14,12 +14,7 @@ class MapStateService {
     isAvatarView = set;
   }
 
-  // whether map is focused on specific quest
-  bool isQuestDetailsView = false;
-  void setIsQuestDetailsView(bool set) {
-    isQuestDetailsView = set;
-  }
-
+  int characterNumber = 0;
   double tilt = kInitialTilt;
   double zoom = kInitialZoom;
   double get bearing => bearingSubject.value;
@@ -54,6 +49,8 @@ class MapStateService {
   }
 
   void takeSnapshotOfCameraPosition() {
+    if (previousBearing != null)
+      return; // only take snapshot when no snapshot is stored!
     previousViewWasAvatarView = isAvatarView;
     previousBearing = bearing;
     previousZoom = zoom;
@@ -66,7 +63,7 @@ class MapStateService {
     lastBirdViewZoom = zoom;
   }
 
-  void restorePreviousCameraPosition() {
+  void restorePreviousCameraPosition({bool moveInsteadOfAnimate = false}) {
     if (previousBearing != null) {
       bearingSubject.add(previousBearing!);
     }
@@ -91,7 +88,11 @@ class MapStateService {
     previousLon = null;
     previousLat = null;
     previousViewWasAvatarView = null;
-    restoreMapSnapshot();
+    if (moveInsteadOfAnimate) {
+      restoreMapSnapshotByMoving();
+    } else {
+      restoreMapSnapshot();
+    }
   }
 
   void setCurrentatLon({required double lat, required double lon}) {
@@ -109,8 +110,17 @@ class MapStateService {
     newLon = null;
   }
 
-  void animateMap() {
-    mapEventListener.add(MapUpdate.animate);
+  void resetPreviousLatLon() {
+    previousLat = null;
+    previousLon = null;
+  }
+
+  void animateMap({required bool forceUseLocation}) {
+    if (forceUseLocation) {
+      mapEventListener.add(MapUpdate.forceAnimateToLocation);
+    } else {
+      mapEventListener.add(MapUpdate.animate);
+    }
   }
 
   void animateOnNewLocation() {
@@ -119,6 +129,10 @@ class MapStateService {
 
   void restoreMapSnapshot() {
     mapEventListener.add(MapUpdate.restoreSnapshot);
+  }
+
+  void restoreMapSnapshotByMoving() {
+    mapEventListener.add(MapUpdate.restoreSnapshotByMoving);
   }
 
   void addAllQuestMarkers() {

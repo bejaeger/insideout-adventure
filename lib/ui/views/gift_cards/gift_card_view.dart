@@ -13,6 +13,8 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+// !!! DEPRECATED
+
 class GiftCardView extends StatelessWidget {
   const GiftCardView({Key? key}) : super(key: key);
 

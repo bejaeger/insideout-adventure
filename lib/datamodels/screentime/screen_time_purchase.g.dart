@@ -11,8 +11,8 @@ _$_ScreenTimePurchase _$$_ScreenTimePurchaseFromJson(
     _$_ScreenTimePurchase(
       purchaseId: json['purchaseId'] as String,
       uid: json['uid'] as String,
-      purchasedAt: json['purchasedAt'] ?? '',
-      activatedOn: json['activatedOn'] ?? '',
+      purchasedAt: json['purchasedAt'] ?? "",
+      activatedOn: json['activatedOn'] ?? "",
       hours: json['hours'] as num,
       status: $enumDecode(_$ScreenTimeVoucherStatusEnumMap, json['status']),
       amount: (json['amount'] as num).toDouble(),

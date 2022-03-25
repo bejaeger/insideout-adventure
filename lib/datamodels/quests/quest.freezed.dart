@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'quest.dart';
@@ -54,7 +55,7 @@ class _$QuestTearOff {
     );
   }
 
-  Quest fromJson(Map<String, Object> json) {
+  Quest fromJson(Map<String, Object?> json) {
     return Quest.fromJson(json);
   }
 }
@@ -390,68 +391,51 @@ class _$_Quest implements _Quest {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Quest &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.description, description) ||
-                const DeepCollectionEquality()
-                    .equals(other.description, description)) &&
-            (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)) &&
-            (identical(other.startMarker, startMarker) ||
-                const DeepCollectionEquality()
-                    .equals(other.startMarker, startMarker)) &&
-            (identical(other.finishMarker, finishMarker) ||
-                const DeepCollectionEquality()
-                    .equals(other.finishMarker, finishMarker)) &&
-            (identical(other.markers, markers) ||
-                const DeepCollectionEquality()
-                    .equals(other.markers, markers)) &&
-            (identical(other.markerNotes, markerNotes) ||
-                const DeepCollectionEquality()
-                    .equals(other.markerNotes, markerNotes)) &&
-            (identical(other.afkCredits, afkCredits) ||
-                const DeepCollectionEquality()
-                    .equals(other.afkCredits, afkCredits)) &&
-            (identical(other.networkImagePath, networkImagePath) ||
-                const DeepCollectionEquality()
-                    .equals(other.networkImagePath, networkImagePath)) &&
-            (identical(other.afkCreditsPerMarker, afkCreditsPerMarker) ||
-                const DeepCollectionEquality()
-                    .equals(other.afkCreditsPerMarker, afkCreditsPerMarker)) &&
-            (identical(
-                    other.bonusAfkCreditsOnSuccess, bonusAfkCreditsOnSuccess) ||
-                const DeepCollectionEquality().equals(
-                    other.bonusAfkCreditsOnSuccess,
-                    bonusAfkCreditsOnSuccess)) &&
-            (identical(other.distanceFromUser, distanceFromUser) ||
-                const DeepCollectionEquality()
-                    .equals(other.distanceFromUser, distanceFromUser)) &&
-            (identical(
-                    other.distanceToTravelInMeter, distanceToTravelInMeter) ||
-                const DeepCollectionEquality().equals(
-                    other.distanceToTravelInMeter, distanceToTravelInMeter)));
+        (other.runtimeType == runtimeType &&
+            other is _Quest &&
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality()
+                .equals(other.description, description) &&
+            const DeepCollectionEquality().equals(other.type, type) &&
+            const DeepCollectionEquality()
+                .equals(other.startMarker, startMarker) &&
+            const DeepCollectionEquality()
+                .equals(other.finishMarker, finishMarker) &&
+            const DeepCollectionEquality().equals(other.markers, markers) &&
+            const DeepCollectionEquality()
+                .equals(other.markerNotes, markerNotes) &&
+            const DeepCollectionEquality()
+                .equals(other.afkCredits, afkCredits) &&
+            const DeepCollectionEquality()
+                .equals(other.networkImagePath, networkImagePath) &&
+            const DeepCollectionEquality()
+                .equals(other.afkCreditsPerMarker, afkCreditsPerMarker) &&
+            const DeepCollectionEquality().equals(
+                other.bonusAfkCreditsOnSuccess, bonusAfkCreditsOnSuccess) &&
+            const DeepCollectionEquality()
+                .equals(other.distanceFromUser, distanceFromUser) &&
+            const DeepCollectionEquality().equals(
+                other.distanceToTravelInMeter, distanceToTravelInMeter));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(description) ^
-      const DeepCollectionEquality().hash(type) ^
-      const DeepCollectionEquality().hash(startMarker) ^
-      const DeepCollectionEquality().hash(finishMarker) ^
-      const DeepCollectionEquality().hash(markers) ^
-      const DeepCollectionEquality().hash(markerNotes) ^
-      const DeepCollectionEquality().hash(afkCredits) ^
-      const DeepCollectionEquality().hash(networkImagePath) ^
-      const DeepCollectionEquality().hash(afkCreditsPerMarker) ^
-      const DeepCollectionEquality().hash(bonusAfkCreditsOnSuccess) ^
-      const DeepCollectionEquality().hash(distanceFromUser) ^
-      const DeepCollectionEquality().hash(distanceToTravelInMeter);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(name),
+      const DeepCollectionEquality().hash(description),
+      const DeepCollectionEquality().hash(type),
+      const DeepCollectionEquality().hash(startMarker),
+      const DeepCollectionEquality().hash(finishMarker),
+      const DeepCollectionEquality().hash(markers),
+      const DeepCollectionEquality().hash(markerNotes),
+      const DeepCollectionEquality().hash(afkCredits),
+      const DeepCollectionEquality().hash(networkImagePath),
+      const DeepCollectionEquality().hash(afkCreditsPerMarker),
+      const DeepCollectionEquality().hash(bonusAfkCreditsOnSuccess),
+      const DeepCollectionEquality().hash(distanceFromUser),
+      const DeepCollectionEquality().hash(distanceToTravelInMeter));
 
   @JsonKey(ignore: true)
   @override
@@ -484,33 +468,33 @@ abstract class _Quest implements Quest {
   factory _Quest.fromJson(Map<String, dynamic> json) = _$_Quest.fromJson;
 
   @override
-  String get id => throw _privateConstructorUsedError;
+  String get id;
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
-  String get description => throw _privateConstructorUsedError;
+  String get description;
   @override
-  QuestType get type => throw _privateConstructorUsedError;
+  QuestType get type;
   @override
-  AFKMarker? get startMarker => throw _privateConstructorUsedError;
+  AFKMarker? get startMarker;
   @override
-  AFKMarker? get finishMarker => throw _privateConstructorUsedError;
+  AFKMarker? get finishMarker;
   @override
-  List<AFKMarker> get markers => throw _privateConstructorUsedError;
+  List<AFKMarker> get markers;
   @override
-  List<MarkerNote>? get markerNotes => throw _privateConstructorUsedError;
+  List<MarkerNote>? get markerNotes;
   @override
-  num get afkCredits => throw _privateConstructorUsedError;
+  num get afkCredits;
   @override
-  String? get networkImagePath => throw _privateConstructorUsedError;
+  String? get networkImagePath;
   @override
-  List<num>? get afkCreditsPerMarker => throw _privateConstructorUsedError;
+  List<num>? get afkCreditsPerMarker;
   @override
-  num? get bonusAfkCreditsOnSuccess => throw _privateConstructorUsedError;
+  num? get bonusAfkCreditsOnSuccess;
   @override
-  double? get distanceFromUser => throw _privateConstructorUsedError;
+  double? get distanceFromUser;
   @override
-  double? get distanceToTravelInMeter => throw _privateConstructorUsedError;
+  double? get distanceToTravelInMeter;
   @override
   @JsonKey(ignore: true)
   _$QuestCopyWith<_Quest> get copyWith => throw _privateConstructorUsedError;

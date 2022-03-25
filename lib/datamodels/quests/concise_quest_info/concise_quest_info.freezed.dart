@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'concise_quest_info.dart';
@@ -35,7 +36,7 @@ class _$ConciseFinishedQuestInfoTearOff {
     );
   }
 
-  ConciseFinishedQuestInfo fromJson(Map<String, Object> json) {
+  ConciseFinishedQuestInfo fromJson(Map<String, Object?> json) {
     return ConciseFinishedQuestInfo.fromJson(json);
   }
 }
@@ -183,26 +184,23 @@ class _$_ConciseFinishedQuestInfo implements _ConciseFinishedQuestInfo {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _ConciseFinishedQuestInfo &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)) &&
-            (identical(other.afkCredits, afkCredits) ||
-                const DeepCollectionEquality()
-                    .equals(other.afkCredits, afkCredits)) &&
-            (identical(other.afkCreditsEarned, afkCreditsEarned) ||
-                const DeepCollectionEquality()
-                    .equals(other.afkCreditsEarned, afkCreditsEarned)));
+        (other.runtimeType == runtimeType &&
+            other is _ConciseFinishedQuestInfo &&
+            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality().equals(other.type, type) &&
+            const DeepCollectionEquality()
+                .equals(other.afkCredits, afkCredits) &&
+            const DeepCollectionEquality()
+                .equals(other.afkCreditsEarned, afkCreditsEarned));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(type) ^
-      const DeepCollectionEquality().hash(afkCredits) ^
-      const DeepCollectionEquality().hash(afkCreditsEarned);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(name),
+      const DeepCollectionEquality().hash(type),
+      const DeepCollectionEquality().hash(afkCredits),
+      const DeepCollectionEquality().hash(afkCreditsEarned));
 
   @JsonKey(ignore: true)
   @override
@@ -227,13 +225,13 @@ abstract class _ConciseFinishedQuestInfo implements ConciseFinishedQuestInfo {
       _$_ConciseFinishedQuestInfo.fromJson;
 
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
-  QuestType get type => throw _privateConstructorUsedError;
+  QuestType get type;
   @override
-  num get afkCredits => throw _privateConstructorUsedError;
+  num get afkCredits;
   @override
-  num get afkCreditsEarned => throw _privateConstructorUsedError;
+  num get afkCreditsEarned;
   @override
   @JsonKey(ignore: true)
   _$ConciseFinishedQuestInfoCopyWith<_ConciseFinishedQuestInfo> get copyWith =>
