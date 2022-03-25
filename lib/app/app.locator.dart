@@ -28,6 +28,7 @@ import '../services/geolocation/geolocation_service.dart';
 import '../services/giftcard/gift_card_service.dart';
 import '../services/layout/layout_service.dart';
 import '../services/local_storage_service.dart';
+import '../services/maps/google_map_service.dart';
 import '../services/maps/map_state_service.dart';
 import '../services/markers/marker_service.dart';
 import '../services/payments/payment_service.dart';
@@ -86,4 +87,6 @@ Future setupLocator(
   locator.registerLazySingleton(() => MapStateService());
   final mapViewModel = await presolveMapViewModel();
   locator.registerSingleton(mapViewModel);
+
+  locator.registerLazySingleton(() => GoogleMapService());
 }

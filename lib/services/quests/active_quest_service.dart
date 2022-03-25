@@ -56,7 +56,7 @@ class ActiveQuestService with ReactiveServiceMixin {
     selectedQuest = quest;
   }
 
-  void resetSetSelectedQuest() {
+  void resetSelectedQuest() {
     selectedQuest = null;
   }
 

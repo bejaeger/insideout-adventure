@@ -79,8 +79,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
         viewModelBuilder: () => ExplorerHomeViewModel(),
         onModelReady: (model) => model.initialize(),
         builder: (context, model, child) {
-          log.wtf("==>> MAIN REBUILD");
-          log.wtf("==>> Rebuild ExplorerHomeView");
+          // log.wtf("==>> Rebuild ExplorerHomeView");
           return SafeArea(
             child: Scaffold(
               body: Stack(
@@ -832,7 +831,7 @@ class MainHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log.wtf("Rebuilding MainHeader");
+    //log.wtf("Rebuilding MainHeader");
     return IgnorePointer(
       ignoring: !show,
       child: AnimatedOpacity(
@@ -972,7 +971,7 @@ class MainFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log.wtf("==>> Rebuild MainFooterView");
+    // log.wtf("==>> Rebuild MainFooterView");
     return ViewModelBuilder<MainFooterViewModel>.reactive(
       viewModelBuilder: () => MainFooterViewModel(),
       onModelReady: (model) => model.listenToLayout(),

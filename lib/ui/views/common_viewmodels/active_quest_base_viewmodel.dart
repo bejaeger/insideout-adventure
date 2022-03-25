@@ -139,7 +139,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       showStartSwipe = false;
 
       // selected quest is reset...hopefully I'm not accessing it in the active quest haha :D
-      activeQuestService.resetSetSelectedQuest();
+      activeQuestService.resetSelectedQuest();
       changeCameraZoom(kInitialZoom);
       animateMap(forceUseLocation: true);
 
@@ -229,6 +229,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     await Future.delayed(Duration(seconds: 1));
 
     layoutService.setIsMovingCamera(false);
+    activeQuestService.resetSelectedQuest();
     notifyListeners();
   }
 

@@ -161,7 +161,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
 
     // Just a test if this helps reducing/removing the
     // map failures
-    // LazySingleton(classType: GoogleMapService),
+    LazySingleton(classType: GoogleMapService),
 
     // Services
   ],
