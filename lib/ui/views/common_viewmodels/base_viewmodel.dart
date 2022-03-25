@@ -138,7 +138,7 @@ class BaseModel extends BaseViewModel {
     navigationService.clearStackAndShow(Routes.loginView);
   }
 
-  setListenedToNewPosition(bool set) {
+  void setListenedToNewPosition(bool set) {
     if (useSuperUserFeatures) {
       geolocationService.setListenedToNewPosition(set);
     }

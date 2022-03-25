@@ -48,6 +48,8 @@ class MapViewModel extends BaseModel
 
   // -------------------------------------------------
   // State variables
+  StreamSubscription? _bearingListenerSubscription;
+  StreamSubscription? _mapEventListenerSubscription;
   bool initialized = false;
   String mapStyle = "";
 
@@ -97,45 +99,49 @@ class MapViewModel extends BaseModel
       await showGenericInternalErrorDialog();
     }
 
-    mapStateService.bearingSubject.listen(
-      (bearing) {
-        notifyListeners();
-      },
-    );
-    mapStateService.mapEventListener.listen(
-      (MapUpdate type) {
-        log.i("Received Map Update of type $type");
-        if (type == MapUpdate.forceAnimateToLocation) {
-          _animateCamera(forceUseLocation: true, force: true);
-        }
-        if (type == MapUpdate.animate) {
-          _animateCamera();
-        } else if (type == MapUpdate.animateNewLatLon) {
-          _animateNewLatLon();
-        } else if (type == MapUpdate.restoreSnapshot) {
-          // customLat/Lon in case we were in bird's view
-          _animateCamera(
-              forceUseLocation: true, customLat: newLat, customLon: newLon);
-          mapStateService.resetNewLatLon();
-        } else if (type == MapUpdate.restoreSnapshotByMoving) {
-          // customLat/Lon in case we were in bird's view
-          _moveCamera(
-              forceUseLocation: true, customLat: newLat, customLon: newLon);
-          mapStateService.resetNewLatLon();
-          if (userLocation != null) {
-            // needed, cause due to GoogleMap listener currentLocation
-            // is overridden. This caused an unintended camera animation to one
-            // of the AR objects after zooming out from the QuestDetailsOverlay
-            mapStateService.setCurrentatLon(
-                lat: userLocation!.latitude, lon: userLocation!.longitude);
+    if (_bearingListenerSubscription == null) {
+      _bearingListenerSubscription = mapStateService.bearingSubject.listen(
+        (bearing) {
+          notifyListeners();
+        },
+      );
+    }
+    if (_mapEventListenerSubscription == null) {
+      _mapEventListenerSubscription = mapStateService.mapEventListener.listen(
+        (MapUpdate type) {
+          log.i("Received Map Update of type $type");
+          if (type == MapUpdate.forceAnimateToLocation) {
+            _animateCamera(forceUseLocation: true, force: true);
           }
-        } else if (type == MapUpdate.addAllQuestMarkers) {
-          extractStartMarkersAndAddToMap();
-        } else if (type == MapUpdate.animateOnNewLocation) {
-          _animateOnNewLocation();
-        }
-      },
-    );
+          if (type == MapUpdate.animate) {
+            _animateCamera();
+          } else if (type == MapUpdate.animateNewLatLon) {
+            _animateNewLatLon();
+          } else if (type == MapUpdate.restoreSnapshot) {
+            // customLat/Lon in case we were in bird's view
+            _animateCamera(
+                forceUseLocation: true, customLat: newLat, customLon: newLon);
+            mapStateService.resetNewLatLon();
+          } else if (type == MapUpdate.restoreSnapshotByMoving) {
+            // customLat/Lon in case we were in bird's view
+            _moveCamera(
+                forceUseLocation: true, customLat: newLat, customLon: newLon);
+            mapStateService.resetNewLatLon();
+            if (userLocation != null) {
+              // needed, cause due to GoogleMap listener currentLocation
+              // is overridden. This caused an unintended camera animation to one
+              // of the AR objects after zooming out from the QuestDetailsOverlay
+              mapStateService.setCurrentatLon(
+                  lat: userLocation!.latitude, lon: userLocation!.longitude);
+            }
+          } else if (type == MapUpdate.addAllQuestMarkers) {
+            extractStartMarkersAndAddToMap();
+          } else if (type == MapUpdate.animateOnNewLocation) {
+            _animateOnNewLocation();
+          }
+        },
+      );
+    }
     setBusy(false);
   }
 
@@ -494,6 +500,10 @@ class MapViewModel extends BaseModel
     // cameraBearing.close();
     // cameraTilt.close();
     // TODO: implement dispose
+    _mapEventListenerSubscription?.cancel();
+    _mapEventListenerSubscription = null;
+    _bearingListenerSubscription?.cancel();
+    _bearingListenerSubscription = null;
     super.dispose();
   }
 

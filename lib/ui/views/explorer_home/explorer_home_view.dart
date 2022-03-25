@@ -91,7 +91,8 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   if (model.showLoadingScreen)
                     MapLoadingOverlay(show: model.showFullLoadingScreen),
                   MainHeader(
-                    isShowingQuestDetails: model.isShowingQuestDetails,
+                    show:
+                        (!model.isShowingQuestDetails && !model.hasActiveQuest),
                     onPressed: model.logout,
                     onCreditsPressed: model.navToCreditsScreenTimeView,
                   ),
@@ -167,11 +168,12 @@ class QuestDetailsOverlay extends StatelessWidget {
           final Quest? quest =
               model.selectedQuest ?? model.activeQuestNullable?.quest ?? null;
           return IgnorePointer(
-            // TODO: When in quest preview the pointer will not really be ignored here...
-            ignoring: !model.isShowingQuestDetails,
+            ignoring: (!model.isShowingQuestDetails && !model.hasActiveQuest),
             child: AnimatedOpacity(
               duration: Duration(milliseconds: 500),
-              opacity: model.isShowingQuestDetails ? 1 : 0.0,
+              opacity: (model.isShowingQuestDetails || model.hasActiveQuest)
+                  ? 1
+                  : 0.0,
               child: MainStack(
                 onBackPressed:
                     model.isShowingQuestDetails ? model.popQuestDetails : null,
@@ -480,6 +482,7 @@ class MainMapView extends StatelessWidget {
             zoomedIn: model.isAvatarView,
             isShowingQuestDetails: model.isShowingQuestDetails,
             onChangeCharacterTap: model.nextCharacter,
+            hasActiveQuest: model.hasActiveQuest,
           ),
 
           // RIPPLE Effect
@@ -820,38 +823,38 @@ class OutlineBox extends StatelessWidget {
 }
 
 class MainHeader extends StatelessWidget {
-  final bool isShowingQuestDetails;
+  final bool show;
   final void Function()? onPressed;
   final void Function()? onCreditsPressed;
   const MainHeader(
-      {Key? key,
-      this.onPressed,
-      required this.isShowingQuestDetails,
-      this.onCreditsPressed})
+      {Key? key, this.onPressed, required this.show, this.onCreditsPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     log.wtf("Rebuilding MainHeader");
-    return AnimatedOpacity(
-      opacity: isShowingQuestDetails ? 0 : 1,
-      duration: Duration(milliseconds: 500),
-      child: Container(
-        height: 70,
-        //color: Colors.blue.withOpacity(0.5),
-        padding: const EdgeInsets.symmetric(
-            horizontal: kHorizontalPadding, vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            MainAvatarView(percentage: 0.4, level: 3, onPressed: onPressed),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(right: 5.0, top: 14),
-              child:
-                  AFKCreditsDisplay(balance: 130, onPressed: onCreditsPressed),
-            ),
-          ],
+    return IgnorePointer(
+      ignoring: !show,
+      child: AnimatedOpacity(
+        opacity: show ? 1 : 0,
+        duration: Duration(milliseconds: 500),
+        child: Container(
+          height: 70,
+          //color: Colors.blue.withOpacity(0.5),
+          padding: const EdgeInsets.symmetric(
+              horizontal: kHorizontalPadding, vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              MainAvatarView(percentage: 0.4, level: 3, onPressed: onPressed),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(right: 5.0, top: 14),
+                child: AFKCreditsDisplay(
+                    balance: 130, onPressed: onCreditsPressed),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -867,6 +870,7 @@ class RightFloatingButtons extends StatelessWidget {
 
   final double bearing;
   final bool zoomedIn;
+  final bool hasActiveQuest;
   final bool isShowingQuestDetails;
   const RightFloatingButtons({
     Key? key,
@@ -876,6 +880,7 @@ class RightFloatingButtons extends StatelessWidget {
     required this.onCompassTap,
     required this.isShowingQuestDetails,
     this.onChangeCharacterTap,
+    this.hasActiveQuest = false,
   }) : super(key: key);
 
   @override
@@ -914,34 +919,40 @@ class RightFloatingButtons extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.bottomRight,
-          child: AnimatedOpacity(
-            duration: Duration(milliseconds: 500),
-            opacity: isShowingQuestDetails ? 0 : 1,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: 120,
-                right: 10,
-              ),
-              child: GestureDetector(
-                onTap: isShowingQuestDetails ? null : onZoomPressed,
-                child: Container(
-                  width: 55,
-                  height: 55,
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: kShadowColor,
-                            //offset: Offset(1, 1),
-                            blurRadius: 0.5,
-                            spreadRadius: 0.2)
-                      ],
-                      border: Border.all(color: Colors.grey[800]!, width: 2.0),
-                      borderRadius: BorderRadius.circular(90.0),
-                      color: Colors.white.withOpacity(1)),
-                  alignment: Alignment.center,
-                  child: zoomedIn == true
-                      ? Icon(Icons.my_location_rounded)
-                      : Icon(Icons.location_searching),
+          child: IgnorePointer(
+            ignoring: hasActiveQuest,
+            child: AnimatedOpacity(
+              duration: Duration(milliseconds: 500),
+              opacity: (isShowingQuestDetails || hasActiveQuest) ? 0 : 1,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 120,
+                  right: 10,
+                ),
+                child: GestureDetector(
+                  onTap: (isShowingQuestDetails || hasActiveQuest)
+                      ? null
+                      : onZoomPressed,
+                  child: Container(
+                    width: 55,
+                    height: 55,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: kShadowColor,
+                              //offset: Offset(1, 1),
+                              blurRadius: 0.5,
+                              spreadRadius: 0.2)
+                        ],
+                        border:
+                            Border.all(color: Colors.grey[800]!, width: 2.0),
+                        borderRadius: BorderRadius.circular(90.0),
+                        color: Colors.white.withOpacity(1)),
+                    alignment: Alignment.center,
+                    child: zoomedIn == true
+                        ? Icon(Icons.my_location_rounded)
+                        : Icon(Icons.location_searching),
+                  ),
                 ),
               ),
             ),
@@ -968,9 +979,12 @@ class MainFooter extends StatelessWidget {
       builder: (context, model, child) => Align(
         alignment: Alignment.bottomCenter,
         child: IgnorePointer(
-          ignoring: model.isShowingQuestDetails ? true : false,
+          ignoring: (model.isShowingQuestDetails || model.hasActiveQuest)
+              ? true
+              : false,
           child: AnimatedOpacity(
-            opacity: model.isShowingQuestDetails ? 0 : 1,
+            opacity:
+                (model.isShowingQuestDetails || model.hasActiveQuest) ? 0 : 1,
             duration: Duration(milliseconds: 500),
             child: Container(
               height: 100,

@@ -30,16 +30,21 @@ class GoogleMapService {
     required double lon,
   }) {
     if (_mapController == null || isAnimating) return;
-    _mapController!.moveCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          bearing: bearing,
-          target: LatLng(lat, lon),
-          zoom: zoom,
-          tilt: tilt,
+    try {
+      _mapController!.moveCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            bearing: bearing,
+            target: LatLng(lat, lon),
+            zoom: zoom,
+            tilt: tilt,
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      mapLogger.wtf("Could not move camera due to error: $e");
+      mapLogger.wtf("Skipping error");
+    }
   }
 
   static void animateCamera({
@@ -182,11 +187,17 @@ class GoogleMapService {
     if (isAnimating == true && force != true) {
       // wait for 1 second before executing animation
       await Future.delayed(Duration(seconds: 1));
+
       runAnimation(animation, force: force);
     }
     isAnimating = true;
     try {
-      animation();
+      try {
+        animation();
+      } catch (e) {
+        mapLogger.wtf("Could not animate due to error: $e");
+        mapLogger.wtf("Skipping error");
+      }
     } catch (e) {
       mapLogger.e("Error occured when animating camera!");
       isAnimating = false;

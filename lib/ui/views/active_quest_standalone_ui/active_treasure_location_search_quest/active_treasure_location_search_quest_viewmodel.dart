@@ -158,7 +158,7 @@ class ActiveTreasureLocationSearchQuestViewModel
       // TODO: Could start uploading credits already here!
       // TODO: And pass a "inProgress" status to showSuccessDialog() plus a completer!
 
-      await showFoundTreasureDialog();
+      //await showFoundTreasureDialog();
       directionStatus = DirectionStatus.nearGoal;
       showNextARObjects();
       notifyListeners();
@@ -169,18 +169,20 @@ class ActiveTreasureLocationSearchQuestViewModel
       // update UI on quest update
       if (checkpoints.elementAt(checkpoints.length - 2).distanceToGoal >
           checkpoints.last.distanceToGoal) {
-        await vibrateRightDirection();
         // directionStatus = "Getting closer!";
         directionStatus = DirectionStatus.closer;
         logString =
             "Updated: Right direction (${checkpoints.last.distanceToGoal.toStringAsFixed(2)} m left)";
+        notifyListeners();
+        await vibrateRightDirection();
       } else {
-        await vibrateWrongDirection();
         directionStatus = DirectionStatus.further;
         logString =
             "Updated: Wrong direction (${checkpoints.last.distanceToGoal.toStringAsFixed(2)} m left)";
+        notifyListeners();
+        await vibrateWrongDirection();
       }
-      notifyListeners();
+
       // TODO push quest event
       questTestingService.maybeRecordData(
         trigger: QuestDataPointTrigger.userAction,

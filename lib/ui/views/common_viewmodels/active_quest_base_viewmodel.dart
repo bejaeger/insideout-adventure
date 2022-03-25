@@ -133,18 +133,14 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
         resetSlider();
         return false;
       }
-      //layoutService.setIsShowingQuestDetails(false);
-      showStartSwipe = false;
-      // Quest is succesfully started!
+      // Quest is succesfully started so hasActiveQuest == true
 
-      // animate map to current avatar again
-      // if (userLocation != null) {
-      //   mapStateService.setNewLatLon(
-      //       lat: userLocation!.latitude, lon: userLocation!.longitude);
-      // }
+      layoutService.setIsShowingQuestDetails(false);
+      showStartSwipe = false;
 
       // selected quest is reset...hopefully I'm not accessing it in the active quest haha :D
       activeQuestService.resetSetSelectedQuest();
+      changeCameraZoom(kInitialZoom);
       animateMap(forceUseLocation: true);
 
       return true;
@@ -222,12 +218,15 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     restorePreviousCameraPosition();
     // 2. add back all quests
     addAllQuestMarkers();
+
+    // TODO: need to set it true first and then false for the explorer_home_view to react
+    // TODO: think of something smarter with these flags!
     // 3. set bool to update views
+    layoutService.setIsShowingQuestDetails(true);
     layoutService.setIsShowingQuestDetails(false);
     notifyListeners();
     // 4. reset selected quest after delay so the fade out is smooth
     await Future.delayed(Duration(seconds: 1));
-    activeQuestService.resetSetSelectedQuest();
 
     layoutService.setIsMovingCamera(false);
     notifyListeners();
