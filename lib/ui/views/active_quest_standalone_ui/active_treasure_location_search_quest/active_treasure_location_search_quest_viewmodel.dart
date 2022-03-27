@@ -108,11 +108,16 @@ class ActiveTreasureLocationSearchQuestViewModel
 
             // Maybe we should add a filterGPSData function that only
             // allows the user to check location based on certain conditions
-            viewModelCallback: (position) {
+            viewModelCallback: (position) async {
               if (allowCheckingPosition == false) {
                 if (isUpdatingPositionAllowed(position: position)) {
-                  setAllowCheckingPosition(true);
-                  notifyListeners();
+                  // ? The following two lines mean that
+                  // ? we manually check for updated positions
+                  // ? let's to it automatic for now, see below
+                  // setAllowCheckingPosition(true);
+                  // notifyListeners();
+
+                  await checkDistance();
                 }
               }
               // TODO: Should probably happen more often!
@@ -124,8 +129,9 @@ class ActiveTreasureLocationSearchQuestViewModel
         Future.delayed(Duration(seconds: 1))
       ]);
       snackbarService.showSnackbar(
-          title: "Quest started", message: "Check your initial distance");
-
+          title: "Quest started",
+          message: "Start to walk and try to get closer");
+      checkDistance();
       notifyListeners();
     } else {
       log.i("Not starting quest, quest is probably already running");
@@ -162,6 +168,10 @@ class ActiveTreasureLocationSearchQuestViewModel
       directionStatus = DirectionStatus.nearGoal;
       showNextARObjects();
       notifyListeners();
+      await vibrateRightDirection();
+      await vibrateRightDirection();
+      await vibrateRightDirection();
+      await vibrateRightDirection();
       // await showSuccessDialog();
 
     } else {
@@ -288,19 +298,20 @@ class ActiveTreasureLocationSearchQuestViewModel
   Future checkDistance() async {
     if (isFirstDistanceCheck) {
       // first time the button is hit!
+      // not sure if this is needed still
       if (hasActiveQuest) {
         setIsCheckingDistance(true);
         await Future.wait([
           setInitialDistance(quest: activeQuest.quest),
           artificialDelay(),
         ]);
-        addMarkerToMap(
-            quest: activeQuest.quest,
-            afkmarker: AFKMarker(
-                id: "checkpoint " + checkpoints.length.toString(),
-                qrCodeId: "checkpoint " + checkpoints.length.toString(),
-                lat: checkpoints.last.currentLat,
-                lon: checkpoints.last.currentLon));
+        // addMarkerToMap(
+        //     quest: activeQuest.quest,
+        //     afkmarker: AFKMarker(
+        //         id: "checkpoint " + checkpoints.length.toString(),
+        //         qrCodeId: "checkpoint " + checkpoints.length.toString(),
+        //         lat: checkpoints.last.currentLat,
+        //         lon: checkpoints.last.currentLon));
         setIsCheckingDistance(false);
         setAllowCheckingPosition(false);
         numberTimesFired++;
@@ -323,13 +334,13 @@ class ActiveTreasureLocationSearchQuestViewModel
       notifyListeners();
     } else if (results[0] is bool && results[0] == true) {
       if (results[0] is bool && results[0] == true) {
-        addMarkerToMap(
-            quest: activeQuest.quest,
-            afkmarker: AFKMarker(
-                id: "checkpoint " + checkpoints.length.toString(),
-                qrCodeId: "checkpoint " + checkpoints.length.toString(),
-                lat: checkpoints.last.currentLat,
-                lon: checkpoints.last.currentLon));
+        // addMarkerToMap(
+        //     quest: activeQuest.quest,
+        //     afkmarker: AFKMarker(
+        //         id: "checkpoint " + checkpoints.length.toString(),
+        //         qrCodeId: "checkpoint " + checkpoints.length.toString(),
+        //         lat: checkpoints.last.currentLat,
+        //         lon: checkpoints.last.currentLon));
         completeDistanceCheckAndUpdateQuestStatus();
       }
     } else {
@@ -565,7 +576,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   Future artificialDelay() async {
     notifyListeners();
-    await Future.delayed(Duration(milliseconds: 1000));
+    await Future.delayed(Duration(milliseconds: 400));
     notifyListeners();
   }
 

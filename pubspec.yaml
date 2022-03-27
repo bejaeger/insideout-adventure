@@ -106,7 +106,8 @@ dependencies:
   transparent_pointer: ^1.0.0
   afkcredits_ui: 
     path: ./afkcredits_ui/
-    
+
+  circular_menu: ^1.2.3
 
 dev_dependencies:
   flutter_test:

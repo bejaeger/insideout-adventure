@@ -42,6 +42,7 @@ import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -92,8 +93,8 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   MainHeader(
                     show:
                         (!model.isShowingQuestDetails && !model.hasActiveQuest),
-                    onPressed: model.logout,
-                    onCreditsPressed: model.navToCreditsScreenTimeView,
+                    onPressed: model.showNotImplementedSnackbar,
+                    onCreditsPressed: model.showNotImplementedSnackbar,
                   ),
                   MainFooter(onMiddleTap: () => null),
                   QuestListOverlayView(),
@@ -337,7 +338,9 @@ class TreasureLocationSearch extends StatelessWidget {
                                 onStartQuestCallback: onStartQuest),
                           ),
                         ),
-                      !model.questSuccessfullyFinished && model.hasActiveQuest
+                      !model.questSuccessfullyFinished &&
+                              model.hasActiveQuest &&
+                              5 == 4
                           ? AFKFloatingActionButton(
                               backgroundColor: model.hasActiveQuest
                                   ? Colors.orange
@@ -788,6 +791,8 @@ class OutlineBox extends StatelessWidget {
   final double? width;
   final double? height;
   final Color? color;
+  final Color? textColor;
+  final double borderWidth;
   final void Function()? onPressed;
   const OutlineBox(
       {Key? key,
@@ -795,7 +800,9 @@ class OutlineBox extends StatelessWidget {
       this.height,
       this.text,
       this.onPressed,
-      this.color})
+      this.color,
+      this.textColor,
+      this.borderWidth = 2})
       : super(key: key);
 
   @override
@@ -806,14 +813,16 @@ class OutlineBox extends StatelessWidget {
         width: width,
         height: height,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[800]!, width: 2.0),
+          border: Border.all(color: Colors.grey[800]!, width: borderWidth),
           borderRadius: BorderRadius.circular(15.0),
           color: color,
         ),
         child: SizedBox.expand(
           child: text != null
               ? Center(
-                  child: AfkCreditsText.body(text!, align: TextAlign.center))
+                  child: AfkCreditsText.body(text!,
+                      align: TextAlign.center,
+                      color: textColor ?? kBlackHeadlineColor))
               : SizedBox.expand(),
         ),
       ),
@@ -946,7 +955,7 @@ class RightFloatingButtons extends StatelessWidget {
                         border:
                             Border.all(color: Colors.grey[800]!, width: 2.0),
                         borderRadius: BorderRadius.circular(90.0),
-                        color: Colors.white.withOpacity(1)),
+                        color: Colors.white.withOpacity(0.9)),
                     alignment: Alignment.center,
                     child: zoomedIn == true
                         ? Icon(Icons.my_location_rounded)
@@ -975,8 +984,9 @@ class MainFooter extends StatelessWidget {
     return ViewModelBuilder<MainFooterViewModel>.reactive(
       viewModelBuilder: () => MainFooterViewModel(),
       onModelReady: (model) => model.listenToLayout(),
-      builder: (context, model, child) => Align(
-        alignment: Alignment.bottomCenter,
+      builder: (context, model, child) => Padding(
+        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+        //alignment: Alignment.bottomCenter,
         child: IgnorePointer(
           ignoring: (model.isShowingQuestDetails || model.hasActiveQuest)
               ? true
@@ -985,33 +995,73 @@ class MainFooter extends StatelessWidget {
             opacity:
                 (model.isShowingQuestDetails || model.hasActiveQuest) ? 0 : 1,
             duration: Duration(milliseconds: 500),
-            child: Container(
-              height: 100,
-              //color: Colors.blue.withOpacity(0.5),
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  OutlineBox(
-                    width: 80,
-                    text: "SCREEN TIME",
-                    onPressed: model.navToCreditsScreenTimeView,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                OutlineBox(
+                  width: 80,
+                  height: 60,
+                  borderWidth: 0,
+                  text: "SCREEN TIME",
+                  onPressed: model.navToCreditsScreenTimeView,
+                  color: kDarkTurquoise.withOpacity(0.8),
+                  textColor: Colors.white,
+                ),
+                IgnorePointer(child: Spacer()), //horizontalSpaceLarge,
+                Expanded(
+                  child: Container(
+                    child: CircularMenu(
+                      alignment: Alignment.bottomCenter,
+                      //backgroundWidget: OutlineBox(text: "MENU"),
+                      startingAngleInRadian: 1.3 * 3.14,
+                      endingAngleInRadian: 1.7 * 3.14,
+                      toggleButtonColor: kDarkTurquoise.withOpacity(0.8),
+                      toggleButtonMargin: 0,
+                      toggleButtonBoxShadow: [],
+                      toggleButtonSize: 35,
+                      radius: model.isSuperUser ? 120 : 80,
+                      items: [
+                        CircularMenuItem(
+                          icon: Icons.settings,
+                          color: Colors.grey[600],
+                          margin: 0,
+                          boxShadow: [],
+                          onTap: model.showNotImplementedSnackbar,
+                        ),
+                        CircularMenuItem(
+                          icon: Icons.logout,
+                          color: Colors.redAccent.shade700.withOpacity(0.9),
+                          margin: 0,
+                          boxShadow: [],
+                          onTap: model.logout,
+                          //model.logout();
+                        ),
+                        if (model.isSuperUser)
+                          CircularMenuItem(
+                            icon: Icons.person,
+                            color: Colors.orange.shade700.withOpacity(0.9),
+                            margin: 0,
+                            boxShadow: [],
+                            onTap: model.openSuperUserSettingsDialog,
+                            //model.logout();
+                          ),
+                      ],
+                    ),
                   ),
-                  horizontalSpaceLarge,
-                  Expanded(
-                    child: GestureDetector(
-                        onTap: onMiddleTap, child: OutlineBox(text: "MENU")),
-                  ),
-                  horizontalSpaceLarge,
-                  OutlineBox(
-                    width: 80,
-                    text: model.isShowingQuestList ? "MAP" : "QUESTS",
-                    onPressed: model.isShowingQuestList
-                        ? model.removeQuestListOverlay
-                        : model.showQuestListOverlay,
-                  ),
-                ],
-              ),
+                ),
+                IgnorePointer(child: Spacer()),
+//                horizontalSpaceLarge,
+                OutlineBox(
+                  width: 80,
+                  height: 60,
+                  text: "QUESTS",
+                  color: kDarkTurquoise.withOpacity(0.8),
+                  textColor: Colors.white,
+                  borderWidth: 0,
+                  onPressed: model.showQuestListOverlay,
+                ),
+              ],
             ),
           ),
         ),
