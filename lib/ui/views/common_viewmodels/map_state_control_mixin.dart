@@ -75,10 +75,6 @@ mixin MapStateControlMixin {
     mapStateService.addAllQuestMarkers();
   }
 
-  void setSuppressOneFingerRotations(bool set) {
-    mapStateService.setSuppressOneFingerRotations(set);
-  }
-
   void takeSnapshotOfCameraPosition() {
     mapStateService.takeSnapshotOfCameraPosition();
   }

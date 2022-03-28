@@ -214,6 +214,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   void popQuestDetails() async {
     layoutService.setIsMovingCamera(true);
 
+    // layoutService.setIsFadingOutQuestDetails(true);
+
     // 1. Restore camera
     restorePreviousCameraPosition();
     // 2. add back all quests
@@ -222,15 +224,15 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     // TODO: need to set it true first and then false for the explorer_home_view to react
     // TODO: think of something smarter with these flags!
     // 3. set bool to update views
-    layoutService.setIsShowingQuestDetails(true);
-    layoutService.setIsShowingQuestDetails(false);
-    notifyListeners();
+    // layoutService.setIsShowingQuestDetails(true);
+    // layoutService.setIsShowingQuestDetails(false);
+    // notifyListeners();
     // 4. reset selected quest after delay so the fade out is smooth
     await Future.delayed(Duration(seconds: 1));
 
     layoutService.setIsMovingCamera(false);
     activeQuestService.resetSelectedQuest();
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future checkAccuracy(

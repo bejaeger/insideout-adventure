@@ -49,15 +49,17 @@ class ActiveQuestService with ReactiveServiceMixin {
   // state
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
+
   bool get hasSelectedQuest => selectedQuest != null;
-  Quest? selectedQuest;
+  BehaviorSubject<Quest?> selectedQuestSubject = BehaviorSubject<Quest?>();
+  Quest? get selectedQuest => selectedQuestSubject.valueOrNull;
 
   void setSelectedQuest(Quest quest) {
-    selectedQuest = quest;
+    selectedQuestSubject.add(quest);
   }
 
   void resetSelectedQuest() {
-    selectedQuest = null;
+    selectedQuestSubject.add(null);
   }
 
   // Maybe deprecated?

@@ -24,6 +24,8 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
       _questTestingService.isAllQuestDataPointsPushed();
   int get numberPushedLocations => _questTestingService.numberPushedLocations();
   bool get isListeningToPosition => _geolocationService.isListeningToLocation;
+  bool get isListeningToMainPosition =>
+      _geolocationService.isListeningToMainLocation;
 
   bool get allowDummyMarkerCollection =>
       _flavorConfigProvider.allowDummyMarkerCollection;

@@ -1,11 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:stacked/stacked.dart';
 
-class LayoutService with ReactiveServiceMixin {
-  LayoutService() {
-    listenToReactiveValues([_isShowingQuestDetails]);
-  }
-
+class LayoutService {
   BehaviorSubject<bool> showBottomNavBarSubject =
       BehaviorSubject<bool>.seeded(false);
   bool get showBottomNavBar => showBottomNavBarSubject.value;
@@ -16,8 +12,9 @@ class LayoutService with ReactiveServiceMixin {
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingQuestList => isShowingQuestListSubject.value;
 
-  ReactiveValue<bool> _isShowingQuestDetails = ReactiveValue<bool>(false);
-  bool get isShowingQuestDetails => _isShowingQuestDetails.value;
+  BehaviorSubject<bool> isShowingQuestDetailsSubject =
+      BehaviorSubject<bool>.seeded(false);
+  bool get isShowingQuestDetails => isShowingQuestDetailsSubject.value;
 
   BehaviorSubject<bool> isShowingARViewSubject =
       BehaviorSubject<bool>.seeded(false);
@@ -37,11 +34,11 @@ class LayoutService with ReactiveServiceMixin {
   // }
 
   void switchIsShowingQuestDetails() {
-    _isShowingQuestDetails.value = !_isShowingQuestDetails.value;
+    isShowingQuestDetailsSubject.add(!isShowingQuestDetailsSubject.value);
   }
 
   void setIsShowingQuestDetails(bool set) {
-    _isShowingQuestDetails.value = set;
+    isShowingQuestDetailsSubject.add(set);
   }
 
   void setIsShowingQuestList(bool set) {

@@ -116,15 +116,24 @@ class SuperUserDialogView extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
+                              // Row(
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Text("# uploaded / available positions: "),
+                              //     Text(model.numberPushedLocations.toString() +
+                              //         " / " +
+                              //         model.allRecordedLocations.length
+                              //             .toString()),
+                              //   ],
+                              // ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("# uploaded / available positions: "),
-                                  Text(model.numberPushedLocations.toString() +
-                                      " / " +
-                                      model.allRecordedLocations.length
-                                          .toString()),
+                                  Text("is listening to main position?: "),
+                                  Text(model.isListeningToMainPosition
+                                      .toString()),
                                 ],
                               ),
                               Row(

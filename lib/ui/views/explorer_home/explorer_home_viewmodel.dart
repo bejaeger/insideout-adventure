@@ -47,6 +47,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   List<Achievement> get achievements => gamificationService.achievements;
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
 
+  // layout
+  bool get fadingOutQuestDetails => layoutService.isShowingQuestDetails;
+
   // ---------------------------------------
   // state
   late final String name;
@@ -54,7 +57,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     // have to do that otherwise we get a null error when
     // switching account to the sponsor account
     this.name = currentUser.fullName;
-    _reactToServices(reactiveServices);
+    //_reactToServices(reactiveServices);
   }
 
   bool addingPositionToNotionDB = false;
@@ -63,12 +66,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   bool showLoadingScreen = true;
   bool showFullLoadingScreen = true;
   final log = getLogger("ExplorerHomeViewModel");
-
-  void listenToLayout() {
-    layoutService.isShowingARViewSubject.listen((show) {
-      notifyListeners();
-    });
-  }
 
   Future initialize() async {
     setBusy(true);
@@ -129,7 +126,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   }
 
   void addLocationListener() async {
-    await geolocationService.listenToPosition(
+    await geolocationService.listenToPositionMain(
       distanceFilter: kDefaultGeolocationDistanceFilter,
       onData: (Position position) {
         setNewLatLon(lat: position.latitude, lon: position.longitude);
@@ -137,13 +134,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         log.v("New position event fired from location listener!");
       },
     );
-  }
-
-  void cancelLocationListener() {
-    if (useSuperUserFeatures) {
-      activeQuestService.cancelPositionListener();
-      notifyListeners();
-    }
   }
 
   Future getLocation(
@@ -278,27 +268,63 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     }
   }
 
+  // ----------------------------------------------------------------
+  // listeners for layout changes!
+
+  StreamSubscription? _isShowingARViewStream;
+  StreamSubscription? _isShowingQuestListStream;
+  StreamSubscription? _selectedQuestStream;
+
+  void listenToLayout() {
+    if (_isShowingARViewStream == null) {
+      _isShowingARViewStream =
+          layoutService.isShowingARViewSubject.listen((show) {
+        notifyListeners();
+      });
+    }
+    if (_isShowingQuestListStream == null) {
+      _isShowingQuestListStream =
+          layoutService.isShowingQuestListSubject.listen((show) {
+        notifyListeners();
+      });
+    }
+    if (_selectedQuestStream == null) {
+      _selectedQuestStream =
+          activeQuestService.selectedQuestSubject.listen((show) {
+        notifyListeners();
+      });
+    }
+  }
+
+  // @override
+  // void dispose() {
+  //   _isShowingARViewStream?.cancel();
+  //   _isShowingQuestListStream?.cancel();
+  //   _selectedQuestStream?.cancel();
+  //   super.dispose();
+  // }
+
   //------------------------------------------------------------
   // Reactive Service Mixin Functionality from stacked ReactiveViewModel!
-  late List<ReactiveServiceMixin> _reactiveServices;
-  List<ReactiveServiceMixin> get reactiveServices =>
-      [layoutService]; // _reactiveServices;
-  void _reactToServices(List<ReactiveServiceMixin> reactiveServices) {
-    _reactiveServices = reactiveServices;
-    for (var reactiveService in _reactiveServices) {
-      reactiveService.addListener(_indicateChange);
-    }
-  }
+  // late List<ReactiveServiceMixin> _reactiveServices;
+  // List<ReactiveServiceMixin> get reactiveServices =>
+  //     [layoutService]; // _reactiveServices;
+  // void _reactToServices(List<ReactiveServiceMixin> reactiveServices) {
+  //   _reactiveServices = reactiveServices;
+  //   for (var reactiveService in _reactiveServices) {
+  //     reactiveService.addListener(_indicateChange);
+  //   }
+  // }
 
-  @override
-  void dispose() {
-    for (var reactiveService in _reactiveServices) {
-      reactiveService.removeListener(_indicateChange);
-    }
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   for (var reactiveService in _reactiveServices) {
+  //     reactiveService.removeListener(_indicateChange);
+  //   }
+  //   super.dispose();
+  // }
 
-  void _indicateChange() {
-    notifyListeners();
-  }
+  // void _indicateChange() {
+  //   notifyListeners();
+  // }
 }

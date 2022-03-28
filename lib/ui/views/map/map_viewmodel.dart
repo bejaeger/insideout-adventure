@@ -42,8 +42,6 @@ class MapViewModel extends BaseModel
   // -----------------------------
   // Getters
   bool get isAvatarView => mapStateService.isAvatarView;
-  bool get suppressOneFingerRotations =>
-      mapStateService.suppressOneFingerRotations;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
 
   // -------------------------------------------------
@@ -308,6 +306,7 @@ class MapViewModel extends BaseModel
 
   Future onTapMarker(
       {required Quest quest, required AFKMarker afkmarker}) async {
+    log.wtf("START ON TAP MARKER");
     dynamic adminMode = false;
     if (useSuperUserFeatures) {
       adminMode = await showAdminDialogAndGetResponse();
@@ -329,6 +328,7 @@ class MapViewModel extends BaseModel
             );
           }
           if (result?.confirmed == true || isAvatarView) {
+            log.wtf("NOOWW");
             // showQuestDetails
             showQuestDetails(quest: quest);
           }
@@ -361,6 +361,7 @@ class MapViewModel extends BaseModel
   void showQuestDetails({required Quest quest}) {
     if (isShowingQuestDetails) return; // we already show the quest details
 
+    log.wtf("NOW TRIGGER IT");
     // 1. set selected quest to show on screen
     activeQuestService.setSelectedQuest(quest);
     // to be able to reset camera from quest (nice UX)

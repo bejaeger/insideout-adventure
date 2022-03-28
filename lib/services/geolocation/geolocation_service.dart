@@ -13,14 +13,14 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GeolocationService extends PausableService {
   final log = getLogger('GeolocationService');
-  StreamSubscription? _livePositionMainStreamSubscription;
-  bool get isListeningToMainLocation =>
-      _livePositionMainStreamSubscription != null;
+  final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
+
   // listener for active quests
   StreamSubscription? _livePositionStreamSubscription;
   bool get isListeningToLocation => _livePositionStreamSubscription != null;
-
-  final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
+  StreamSubscription? _livePositionMainStreamSubscription;
+  bool get isListeningToMainLocation =>
+      _livePositionMainStreamSubscription != null;
 
   int? get currentGPSAccuracy => _livePosition?.accuracy.round();
   String? gpsAccuracyInfo;

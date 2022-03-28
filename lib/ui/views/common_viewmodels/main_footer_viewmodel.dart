@@ -3,6 +3,9 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class MainFooterViewModel extends BaseModel with NavigationMixin {
+  // state variables
+  bool isMenuOpen = false;
+
   // TODO: Maybe make this a reactive value!
   void listenToLayout() {
     layoutService.isShowingQuestListSubject.listen((show) {

@@ -42,12 +42,6 @@ class MapStateService {
   double? newLat;
   double? newLon;
 
-  // touch events
-  bool suppressOneFingerRotations = false;
-  void setSuppressOneFingerRotations(bool set) {
-    suppressOneFingerRotations = set;
-  }
-
   void takeSnapshotOfCameraPosition() {
     if (previousBearing != null)
       return; // only take snapshot when no snapshot is stored!

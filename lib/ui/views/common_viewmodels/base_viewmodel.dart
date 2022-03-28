@@ -71,7 +71,8 @@ class BaseModel extends BaseViewModel {
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
 
   // layout
-  bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
+  bool get isShowingQuestDetails => activeQuestService.selectedQuest != null;
+
   bool get isShowingQuestList => layoutService.isShowingQuestList;
   bool get isShowingARView => layoutService.isShowingARView;
   bool get isMovingCamera => layoutService.isMovingCamera;
