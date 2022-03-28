@@ -700,7 +700,7 @@ class GoogleMapsScreen extends StatelessWidget {
               // transparent pointer needed so that rotation gesture widget
               // receives events!
               child: GoogleMap(
-                //onTap: (_) => model.notifyListeners(),
+                onTap: (_) => print("TAPPED"),
                 //mapType: MapType.hybrid,
                 initialCameraPosition: GoogleMapService.initialCameraPosition(
                     userLocation: model.userLocation),
