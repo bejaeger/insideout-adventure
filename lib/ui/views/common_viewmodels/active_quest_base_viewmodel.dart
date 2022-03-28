@@ -59,7 +59,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   // -----------------------------------------------------------
   // UI state
   bool showCollectedMarkerAnimation = false;
-  bool showStartSwipe = true;
+  // bool showStartSwipe = true;
+  bool get showStartSwipe => activeQuestService.selectedQuest != null;
 
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
@@ -135,9 +136,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       }
       // Quest is succesfully started so hasActiveQuest == true
 
-      layoutService.setIsShowingQuestDetails(false);
-      showStartSwipe = false;
-
       // selected quest is reset...hopefully I'm not accessing it in the active quest haha :D
       activeQuestService.resetSelectedQuest();
       changeCameraZoom(kInitialZoom);
@@ -212,27 +210,32 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   // TODO: Unit test!
   // All this is essential and should probably be unit tested
   void popQuestDetails() async {
+    // set flag to start fade out
+    layoutService.setIsFadingOutQuestDetails(true);
     layoutService.setIsMovingCamera(true);
 
-    // layoutService.setIsFadingOutQuestDetails(true);
-
-    // 1. Restore camera
+    // Restore camera
     restorePreviousCameraPosition();
-    // 2. add back all quests
+
+    // add back all quests
     addAllQuestMarkers();
 
-    // TODO: need to set it true first and then false for the explorer_home_view to react
-    // TODO: think of something smarter with these flags!
-    // 3. set bool to update views
-    // layoutService.setIsShowingQuestDetails(true);
-    // layoutService.setIsShowingQuestDetails(false);
-    // notifyListeners();
-    // 4. reset selected quest after delay so the fade out is smooth
+    // reset selected quest after delay so the fade out is smooth
     await Future.delayed(Duration(seconds: 1));
 
+    // reset flags
     layoutService.setIsMovingCamera(false);
+    layoutService.setIsFadingOutQuestDetails(false);
+
+    // reset selected quest -> don't show quest details anymore
     activeQuestService.resetSelectedQuest();
-    // notifyListeners();
+
+    // cancel position listener that was used for calibration
+    cancelPositionListener();
+
+    // TODO: not sure why this is done!
+    // reset distances to markers
+    geolocationService.resetStoredDistancesToMarkers();
   }
 
   Future checkAccuracy(
@@ -575,7 +578,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   @mustCallSuper
   void resetPreviousQuest() {
     questSuccessfullyFinished = false;
-    showStartSwipe = true;
     validatingMarker = false;
   }
 }

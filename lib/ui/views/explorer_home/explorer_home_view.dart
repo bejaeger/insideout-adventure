@@ -88,17 +88,21 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   if (model.showLoadingScreen)
                     MapLoadingOverlay(show: model.showFullLoadingScreen),
                   MainHeader(
-                    show:
-                        (!model.isShowingQuestDetails && !model.hasActiveQuest),
-                    onPressed: model.showNotImplementedSnackbar,
+                    show: (!model.isShowingQuestDetails &&
+                            !model.hasActiveQuest) ||
+                        model.isFadingOutQuestDetails,
+                    onPressed: model
+                        .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
                     onCreditsPressed: model.showNotImplementedSnackbar,
                   ),
                   MainFooterView(),
                   QuestListOverlayView(),
 
-                  if (model.isShowingQuestDetails)
-                    QuestDetailsOverlay(quest: model.selectedQuest!),
+                  if (model.isShowingQuestDetails || model.hasActiveQuest)
+                    QuestDetailsOverlay(
+                        startFadeOut: model.isFadingOutQuestDetails),
 
+                  // only used for quest view at the moment!
                   OverlayedCloseButton(),
 
                   if (model.isShowingARView) BlackFadeOut(),
@@ -156,8 +160,9 @@ class _BlackFadeOutState extends State<BlackFadeOut>
 }
 
 class QuestDetailsOverlay extends StatefulWidget {
-  final Quest quest;
-  const QuestDetailsOverlay({Key? key, required this.quest}) : super(key: key);
+  final bool startFadeOut;
+  const QuestDetailsOverlay({Key? key, required this.startFadeOut})
+      : super(key: key);
 
   @override
   State<QuestDetailsOverlay> createState() => _QuestDetailsOverlayState();
@@ -172,12 +177,12 @@ class _QuestDetailsOverlayState extends State<QuestDetailsOverlay>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 750),
       vsync: this,
     );
     _animation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeIn,
+      curve: Curves.easeOut,
     );
     _controller.forward();
   }
@@ -193,26 +198,19 @@ class _QuestDetailsOverlayState extends State<QuestDetailsOverlay>
     return ViewModelBuilder<ActiveMapQuestViewModel>.reactive(
       viewModelBuilder: () => ActiveMapQuestViewModel(),
       builder: (context, model, child) {
-        final Quest quest = widget.quest;
-        //model.selectedQuest ?? model.activeQuestNullable?.quest ?? null;
-        return
-
-            // IgnorePointer(
-            //   ignoring: (!model.isShowingQuestDetails && !model.hasActiveQuest),
-            //   child: AnimatedOpacity(
-            //     duration: Duration(milliseconds: 500),
-            //     opacity:
-            //         (model.isShowingQuestDetails || model.hasActiveQuest) ? 1 : 0.0,
-            //     child:
-
-            FadeTransition(
+        if (widget.startFadeOut) {
+          _controller.reverse(from: 0.5);
+        }
+        final Quest? quest =
+            model.selectedQuest ?? model.activeQuestNullable?.quest ?? null;
+        return FadeTransition(
           opacity: _animation,
           child: MainStack(
-            onBackPressed:
-                model.isShowingQuestDetails ? model.popQuestDetails : null,
+            onBackPressed: model.popQuestDetails,
             showBackButton: !model.hasActiveQuest,
             child: Stack(
               children: [
+                // color gradient
                 IgnorePointer(
                   ignoring: true,
                   child: Container(
@@ -230,6 +228,8 @@ class _QuestDetailsOverlayState extends State<QuestDetailsOverlay>
                     ),
                   ),
                 ),
+
+                // closing button
                 if (model.hasActiveQuest)
                   Align(
                     alignment: Alignment.topRight,
@@ -240,6 +240,8 @@ class _QuestDetailsOverlayState extends State<QuestDetailsOverlay>
                           onTap: model.cancelOrFinishQuest),
                     ),
                   ),
+
+                // Quest Info
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -251,15 +253,19 @@ class _QuestDetailsOverlayState extends State<QuestDetailsOverlay>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  //color: Colors.purple.withOpacity(0.2),
-                                  border: Border.all(color: Colors.grey[600]!),
-                                ),
-                                padding: const EdgeInsets.all(8.0),
-                                child: AfkCreditsText.tag(
-                                  getStringFromEnum(quest?.type),
+                              GestureDetector(
+                                onTap: model.openSuperUserSettingsDialog,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    //color: Colors.purple.withOpacity(0.2),
+                                    border:
+                                        Border.all(color: Colors.grey[600]!),
+                                  ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: AfkCreditsText.tag(
+                                    getStringFromEnum(quest?.type),
+                                  ),
                                 ),
                               ),
                             ],
@@ -351,7 +357,7 @@ class TreasureLocationSearch extends StatelessWidget {
                               leading:
                                   Icon(Icons.help, color: Colors.grey[100])),
                         ),
-                      horizontalSpaceSmall,
+                      if (!model.hasActiveQuest) horizontalSpaceSmall,
                       if (model.showStartSwipe && !model.isBusy)
                         // model.distanceToStartMarker < 0
                         //     ? AFKProgressIndicator()
@@ -367,70 +373,6 @@ class TreasureLocationSearch extends StatelessWidget {
                                 onStartQuestCallback: onStartQuest),
                           ),
                         ),
-                      !model.questSuccessfullyFinished &&
-                              model.hasActiveQuest &&
-                              5 == 4
-                          ? AFKFloatingActionButton(
-                              backgroundColor: model.hasActiveQuest
-                                  ? Colors.orange
-                                  : Colors.grey[600],
-                              width: 80,
-                              height: 80,
-                              onPressed: !activeDetector
-                                  ? (model.hasActiveQuest
-                                      ? model.showReloadingInfo
-                                      : model.showStartQuestInfo)
-                                  : model.checkDistance,
-                              icon: !model.allowCheckingPosition
-                                  ? Container(
-                                      constraints: BoxConstraints(
-                                          maxWidth: 80, maxHeight: 80),
-                                      child: Stack(
-                                        fit: StackFit.expand,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: Image.asset(kMagnetIconPath,
-                                                alignment: Alignment.center,
-                                                width: 40,
-                                                height: 80,
-                                                color: Colors.black),
-                                          ),
-                                          Align(
-                                              alignment: Alignment.center,
-                                              child: Opacity(
-                                                opacity: 0.7,
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      height: 80,
-                                                      color: Colors.grey[200],
-                                                      width: 80,
-                                                    ),
-                                                  ],
-                                                ),
-                                              )),
-                                        ],
-                                      ),
-                                    )
-                                  : Shimmer.fromColors(
-                                      baseColor: activeDetector
-                                          ? Colors.black
-                                          : Colors.grey[200]!,
-                                      highlightColor: Colors.white,
-                                      period:
-                                          const Duration(milliseconds: 1000),
-                                      enabled: activeDetector,
-                                      child: model.isCheckingDistance
-                                          ? AFKProgressIndicator(
-                                              color: Colors.white)
-                                          : Image.asset(kMagnetIconPath,
-                                              width: 40),
-                                    ),
-                            )
-                          : SizedBox(height: 0, width: 0),
                     ],
                   ),
                 ),
@@ -503,21 +445,8 @@ class MainMapView extends StatelessWidget {
           CloudOverlay(
             overlay: model.isAvatarView,
           ),
-          // RIPPLE Effect
-          if (model.hasActiveQuest)
-            Positioned(
-              //alignment: Alignment(0, 0.4),
-              bottom: 105,
-              left: 2,
-              right: 2,
-              child: IgnorePointer(
-                child: Lottie.network(
-                  'https://assets7.lottiefiles.com/packages/lf20_Ei9xER.json',
-                  height: 200,
-                  width: 200,
-                ),
-              ),
-            ),
+          // Ripple Effect
+          if (model.hasActiveQuest) MapEffects(activeQuest: model.activeQuest),
           AvatarOnMap(
               characterNumber: model.characterNumber,
               show: !((model.isShowingQuestDetails ||
@@ -541,6 +470,33 @@ class MainMapView extends StatelessWidget {
   }
 }
 
+class MapEffects extends StatelessWidget {
+  final ActivatedQuest activeQuest;
+  const MapEffects({
+    Key? key,
+    required this.activeQuest,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return activeQuest.quest.type == QuestType.TreasureLocationSearch
+        ? Positioned(
+            //alignment: Alignment(0, 0.4),
+            bottom: 105,
+            left: 2,
+            right: 2,
+            child: IgnorePointer(
+              child: Lottie.network(
+                'https://assets7.lottiefiles.com/packages/lf20_Ei9xER.json',
+                height: 200,
+                width: 200,
+              ),
+            ),
+          )
+        : SizedBox(width: 0, height: 0);
+  }
+}
+
 class FadingWidget extends StatelessWidget {
   final Widget child;
   final bool show;
@@ -550,7 +506,7 @@ class FadingWidget extends StatelessWidget {
     Key? key,
     required this.child,
     required this.show,
-    this.durationInMs = 300,
+    this.durationInMs = 400,
     this.ignorePointer,
   }) : super(key: key);
 
@@ -700,7 +656,7 @@ class GoogleMapsScreen extends StatelessWidget {
               // transparent pointer needed so that rotation gesture widget
               // receives events!
               child: GoogleMap(
-                onTap: (_) => print("TAPPED"),
+                //onTap: (_) => print("TAPPED"),
                 //mapType: MapType.hybrid,
                 initialCameraPosition: GoogleMapService.initialCameraPosition(
                     userLocation: model.userLocation),
@@ -1052,98 +1008,92 @@ class MainFooterView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
           //alignment: Alignment.bottomCenter,
-          child: IgnorePointer(
-            ignoring: (model.isShowingQuestDetails || model.hasActiveQuest)
-                ? true
-                : false,
-            child: AnimatedOpacity(
-              opacity:
-                  (model.isShowingQuestDetails || model.hasActiveQuest) ? 0 : 1,
-              duration: Duration(milliseconds: 500),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: AnimatedOpacity(
-                      duration: Duration(milliseconds: 100),
-                      opacity: model.isMenuOpen ? 0 : 1,
-                      child: OutlineBox(
-                        width: 80,
-                        height: 60,
-                        borderWidth: 0,
-                        text: "SCREEN TIME",
-                        onPressed: model.navToCreditsScreenTimeView,
-                        color: kDarkTurquoise.withOpacity(0.8),
-                        textColor: Colors.white,
-                      ),
+          child: FadingWidget(
+            show: !(model.isShowingQuestDetails || model.hasActiveQuest) ||
+                model.isFadingOutQuestDetails,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: AnimatedOpacity(
+                    duration: Duration(milliseconds: 100),
+                    opacity: model.isMenuOpen ? 0 : 1,
+                    child: OutlineBox(
+                      width: 80,
+                      height: 60,
+                      borderWidth: 0,
+                      text: "SCREEN TIME",
+                      onPressed: model.navToCreditsScreenTimeView,
+                      color: kDarkTurquoise.withOpacity(0.8),
+                      textColor: Colors.white,
                     ),
                   ),
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    width: model.isMenuOpen ? 200 : 130,
-                    curve: Curves.linear,
-                    child: CircularMenu(
-                      toggleButtonOnPressed: () {
-                        model.isMenuOpen = !model.isMenuOpen;
-                        model.notifyListeners();
-                      },
-                      alignment: Alignment.bottomCenter,
-                      //backgroundWidget: OutlineBox(text: "MENU"),
-                      startingAngleInRadian: 1.3 * 3.14,
-                      endingAngleInRadian: 1.7 * 3.14,
-                      toggleButtonColor: kDarkTurquoise.withOpacity(0.8),
-                      toggleButtonMargin: 0,
-                      toggleButtonBoxShadow: [],
-                      toggleButtonSize: 35,
-                      radius: model.isSuperUser ? 120 : 80,
-                      items: [
+                ),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  width: model.isMenuOpen ? 200 : 130,
+                  curve: Curves.linear,
+                  child: CircularMenu(
+                    toggleButtonOnPressed: () {
+                      model.isMenuOpen = !model.isMenuOpen;
+                      model.notifyListeners();
+                    },
+                    alignment: Alignment.bottomCenter,
+                    //backgroundWidget: OutlineBox(text: "MENU"),
+                    startingAngleInRadian: 1.3 * 3.14,
+                    endingAngleInRadian: 1.7 * 3.14,
+                    toggleButtonColor: kDarkTurquoise.withOpacity(0.8),
+                    toggleButtonMargin: 0,
+                    toggleButtonBoxShadow: [],
+                    toggleButtonSize: 35,
+                    radius: model.isSuperUser ? 120 : 80,
+                    items: [
+                      CircularMenuItem(
+                        icon: Icons.settings,
+                        color: Colors.grey[600],
+                        margin: 0,
+                        boxShadow: [],
+                        onTap: () {
+                          model.showNotImplementedSnackbar();
+                        },
+                      ),
+                      CircularMenuItem(
+                        icon: Icons.logout,
+                        color: Colors.redAccent.shade700.withOpacity(0.9),
+                        margin: 0,
+                        boxShadow: [],
+                        onTap: model.logout,
+                        //model.logout();
+                      ),
+                      if (model.isSuperUser)
                         CircularMenuItem(
-                          icon: Icons.settings,
-                          color: Colors.grey[600],
+                          icon: Icons.person,
+                          color: Colors.orange.shade700.withOpacity(0.9),
                           margin: 0,
                           boxShadow: [],
-                          onTap: () {
-                            model.showNotImplementedSnackbar();
-                          },
-                        ),
-                        CircularMenuItem(
-                          icon: Icons.logout,
-                          color: Colors.redAccent.shade700.withOpacity(0.9),
-                          margin: 0,
-                          boxShadow: [],
-                          onTap: model.logout,
+                          onTap: model.openSuperUserSettingsDialog,
                           //model.logout();
                         ),
-                        if (model.isSuperUser)
-                          CircularMenuItem(
-                            icon: Icons.person,
-                            color: Colors.orange.shade700.withOpacity(0.9),
-                            margin: 0,
-                            boxShadow: [],
-                            onTap: model.openSuperUserSettingsDialog,
-                            //model.logout();
-                          ),
-                      ],
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: AnimatedOpacity(
+                    duration: Duration(milliseconds: 100),
+                    opacity: model.isMenuOpen ? 0 : 1,
+                    child: OutlineBox(
+                      width: 80,
+                      height: 60,
+                      text: "QUESTS",
+                      color: kDarkTurquoise.withOpacity(0.8),
+                      textColor: Colors.white,
+                      borderWidth: 0,
+                      onPressed: model.showQuestListOverlay,
                     ),
                   ),
-                  Expanded(
-                    child: AnimatedOpacity(
-                      duration: Duration(milliseconds: 100),
-                      opacity: model.isMenuOpen ? 0 : 1,
-                      child: OutlineBox(
-                        width: 80,
-                        height: 60,
-                        text: "QUESTS",
-                        color: kDarkTurquoise.withOpacity(0.8),
-                        textColor: Colors.white,
-                        borderWidth: 0,
-                        onPressed: model.showQuestListOverlay,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

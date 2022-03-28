@@ -30,82 +30,85 @@ class QuestListOverlayView extends StatelessWidget {
         left: 0,
         right: 0,
         child: Container(
-          height: screenHeight(context),
-          width: screenWidth(context) - 10,
-          decoration: BoxDecoration(
-            color: Colors.grey[50],
-            gradient: LinearGradient(
-              colors: [kPrimaryColor.withOpacity(0.2), Colors.grey[50]!],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+          color: Colors.grey[50],
+          child: Container(
+            height: screenHeight(context),
+            width: screenWidth(context) - 10,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [kPrimaryColor.withOpacity(0.2), Colors.grey[50]!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
-          ),
-          child: ListView(
-            children: [
-              verticalSpaceMedium,
-              AfkCreditsText.headingOne(
-                "Quest List",
-                align: TextAlign.center,
-              ),
-              verticalSpaceMedium,
-              SectionHeader(title: "Near You"),
-              Container(
-                height: 220,
-                child: ListView(
-                  //itemExtent: 120,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    ...model.nearbyQuests
-                        .asMap()
-                        .map((index, quest) {
-                          return MapEntry(
-                            index,
-                            QuestInfoCard(
-                              height: 200,
-                              marginRight: 5,
-                              width: screenWidth(context, percentage: 0.8),
-                              quest: quest,
-                              subtitle: quest.description,
-                              onCardPressed: () async =>
-                                  await model.onQuestInListTapped(quest),
+            child: ListView(
+              children: [
+                verticalSpaceMedium,
+                AfkCreditsText.headingOne(
+                  "Quest List",
+                  align: TextAlign.center,
+                ),
+                verticalSpaceMedium,
+                SectionHeader(title: "Near You"),
+                Container(
+                  height: 220,
+                  child: ListView(
+                    //itemExtent: 120,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      ...model.nearbyQuests
+                          .asMap()
+                          .map((index, quest) {
+                            return MapEntry(
+                              index,
+                              QuestInfoCard(
+                                height: 200,
+                                marginRight: 5,
+                                width: screenWidth(context, percentage: 0.8),
+                                quest: quest,
+                                subtitle: quest.description,
+                                onCardPressed: () async =>
+                                    await model.onQuestInListTapped(quest),
+                              ),
+                            );
+                          })
+                          .values
+                          .toList(),
+                      verticalSpaceLarge,
+                    ],
+                  ),
+                ),
+                SectionHeader(title: "Types"),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    physics:
+                        NeverScrollableScrollPhysics(), // to disable GridView's scrolling
+                    children: [
+                      ...model.questTypes
+                          .map(
+                            (e) => AfkCreditsCategoryCard(
+                              onPressed:
+                                  model.navigateToQuestsOfSpecificTypeView,
+                              category: e,
+                              backgroundColor: getColorOfType(e),
                             ),
-                          );
-                        })
-                        .values
-                        .toList(),
-                    verticalSpaceLarge,
-                  ],
+                          )
+                          .toList(),
+                      // QuestCategoryCard(
+                      //     onPressed: model.navigateToQuestsOfSpecificTypeView,
+                      //     category: QuestType.DistanceEstimate)
+                    ],
+                  ),
                 ),
-              ),
-              SectionHeader(title: "Types"),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  physics:
-                      NeverScrollableScrollPhysics(), // to disable GridView's scrolling
-                  children: [
-                    ...model.questTypes
-                        .map(
-                          (e) => AfkCreditsCategoryCard(
-                            onPressed: model.navigateToQuestsOfSpecificTypeView,
-                            category: e,
-                            backgroundColor: getColorOfType(e),
-                          ),
-                        )
-                        .toList(),
-                    // QuestCategoryCard(
-                    //     onPressed: model.navigateToQuestsOfSpecificTypeView,
-                    //     category: QuestType.DistanceEstimate)
-                  ],
-                ),
-              ),
-              verticalSpaceMassive,
-            ],
+                verticalSpaceMassive,
+              ],
+            ),
           ),
         ),
       ),

@@ -115,7 +115,6 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
         },
       );
       //}
-      showStartSwipe = false;
       notifyListeners();
       //resetSlider();
     }
@@ -585,9 +584,6 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
 
   @override
   void resetPreviousQuest() {
-    //isInAreaOfMarker = false;
-    // markersOnMap = {};
-    // areasOnMap = {};
     validatingMarkerInArea = false;
     isAnimatingCamera = false;
     markerInArea = null;

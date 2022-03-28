@@ -12,10 +12,6 @@ class LayoutService {
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingQuestList => isShowingQuestListSubject.value;
 
-  BehaviorSubject<bool> isShowingQuestDetailsSubject =
-      BehaviorSubject<bool>.seeded(false);
-  bool get isShowingQuestDetails => isShowingQuestDetailsSubject.value;
-
   BehaviorSubject<bool> isShowingARViewSubject =
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingARView => isShowingARViewSubject.value;
@@ -24,21 +20,12 @@ class LayoutService {
       BehaviorSubject<bool>.seeded(false);
   bool get isMovingCamera => isMovingCameraSubject.value;
 
+  BehaviorSubject<bool> isFadingOutQuestDetailsSubject =
+      BehaviorSubject<bool>.seeded(false);
+  bool get isFadingOutQuestDetails => isFadingOutQuestDetailsSubject.value;
+
   void setShowBottomNavBar(bool show) {
     showBottomNavBarSubject.add(show);
-  }
-
-  // bool isShowingQuestDetails = false;
-  // void setIsShowQinguestDetails(bool showQuestDetailsIn) {
-  //   isShowingQuestDetails = showQuestDetailsIn;
-  // }
-
-  void switchIsShowingQuestDetails() {
-    isShowingQuestDetailsSubject.add(!isShowingQuestDetailsSubject.value);
-  }
-
-  void setIsShowingQuestDetails(bool set) {
-    isShowingQuestDetailsSubject.add(set);
   }
 
   void setIsShowingQuestList(bool set) {
@@ -51,5 +38,9 @@ class LayoutService {
 
   void setIsMovingCamera(bool set) {
     isMovingCameraSubject.add(set);
+  }
+
+  void setIsFadingOutQuestDetails(bool set) {
+    isFadingOutQuestDetailsSubject.add(set);
   }
 }

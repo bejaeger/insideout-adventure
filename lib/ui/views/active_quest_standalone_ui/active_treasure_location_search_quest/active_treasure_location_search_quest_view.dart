@@ -369,8 +369,15 @@ class CurrentQuestStatusInfo extends StatelessWidget {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AfkCreditsText.body(
-                      "Distance to treasure",
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        AfkCreditsText.body(
+                          "Distance to treasure",
+                        ),
+                        // AfkCreditsText.body(
+                        //     getDirectionStatusString(directionStatus)),
+                      ],
                     ),
                     Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -394,6 +401,9 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                   ],
                 ),
         ),
+        verticalSpaceTiny,
+        AfkCreditsText.headingThree(getDirectionStatusString(directionStatus),
+            align: TextAlign.center),
         // Text("Aktuelle Distanz",
         //     textAlign: TextAlign.center, style: textTheme(context).headline6),
         // Text("Last Distance",
@@ -408,7 +418,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
     if (status == null) return "Start to walk!";
     switch (status) {
       case DirectionStatus.closer:
-        return "Closer!";
+        return "Getting Closer!";
       case DirectionStatus.further:
         return "Further away!";
       case DirectionStatus.notstarted:

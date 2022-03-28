@@ -76,6 +76,7 @@ class BaseModel extends BaseViewModel {
   bool get isShowingQuestList => layoutService.isShowingQuestList;
   bool get isShowingARView => layoutService.isShowingARView;
   bool get isMovingCamera => layoutService.isMovingCamera;
+  bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
 
   // --------------------------------------------------
   bool get hasSelectedQuest => activeQuestService.hasSelectedQuest;

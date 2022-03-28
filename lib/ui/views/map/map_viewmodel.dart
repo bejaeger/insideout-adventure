@@ -359,23 +359,19 @@ class MapViewModel extends BaseModel
   void showQuestDetails({required Quest quest}) {
     if (isShowingQuestDetails) return; // we already show the quest details
 
-    // 1. set selected quest to show on screen
+    // set selected quest to show on screen
     activeQuestService.setSelectedQuest(quest);
-    // to be able to reset camera from quest (nice UX)
 
-    // 2. set bool to show quest to change view
-    layoutService.setIsShowingQuestDetails(true);
-
-    // 3. take snapshot so we can easily restore current view
+    // take snapshot so we can easily restore current view
     takeSnapshotOfCameraPosition();
 
-    // 4. animate camera to quest start
-    highlightQuestOnMap(quest: quest);
+    // animate camera to quest start
+    animateQuestToMap(quest: quest);
 
     notifyListeners();
   }
 
-  void highlightQuestOnMap({required Quest quest}) {
+  void animateQuestToMap({required Quest quest}) {
     // TODO: Maybe this needs to become more advanced
     // TODO: for different types of quests
 

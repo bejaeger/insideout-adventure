@@ -20,7 +20,8 @@ class GeolocationService extends PausableService {
   bool get isListeningToLocation => _livePositionStreamSubscription != null;
   StreamSubscription? _livePositionMainStreamSubscription;
   bool get isListeningToMainLocation =>
-      _livePositionMainStreamSubscription != null;
+      _livePositionMainStreamSubscription != null &&
+      !_livePositionMainStreamSubscription!.isPaused;
 
   int? get currentGPSAccuracy => _livePosition?.accuracy.round();
   String? gpsAccuracyInfo;
@@ -439,8 +440,13 @@ class GeolocationService extends PausableService {
   }
 
   void cancelPositionListener() {
+    log.v("Cancel Quest position listener, resuming main listener");
     _livePositionStreamSubscription?.cancel();
     _livePositionStreamSubscription = null;
+    if (_livePositionMainStreamSubscription != null &&
+        _livePositionMainStreamSubscription!.isPaused) {
+      resumeMainPositionListener();
+    }
   }
 
   void cancelMainPositionListener() {

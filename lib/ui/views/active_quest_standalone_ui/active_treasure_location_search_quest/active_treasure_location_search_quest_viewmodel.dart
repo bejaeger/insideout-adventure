@@ -88,51 +88,46 @@ class ActiveTreasureLocationSearchQuestViewModel
       result = await startQuestMain(quest: quest);
 
       if (result is bool && result == false) {
-        navigateBack();
+        log.e("Quest was not started!");
         return;
       }
 
       if (onStartQuestCallback != null) {
         onStartQuestCallback();
       }
-      showStartSwipe = false;
       mapViewModel.resetMapMarkers();
       // quest started!
       // start listening to position
-      await Future.wait([
-        activeQuestService.listenToPosition(
-            distanceFilter: kMinDistanceFromLastCheckInMeters,
-            pushToNotion: true,
-            recordPositionDataEvent: false,
-            // skipFirstStreamEvent: true,
+      activeQuestService.listenToPosition(
+          distanceFilter: kMinDistanceFromLastCheckInMeters,
+          pushToNotion: true,
+          recordPositionDataEvent: false,
+          // skipFirstStreamEvent: true,
+          // Maybe we should add a filterGPSData function that only
+          // allows the user to check location based on certain conditions
+          viewModelCallback: (position) async {
+            if (allowCheckingPosition == false) {
+              if (isUpdatingPositionAllowed(position: position)) {
+                // ? The following two lines mean that
+                // ? we manually check for updated positions
+                // ? let's to it automatic for now, see below
+                // setAllowCheckingPosition(true);
+                // notifyListeners();
 
-            // Maybe we should add a filterGPSData function that only
-            // allows the user to check location based on certain conditions
-            viewModelCallback: (position) async {
-              if (allowCheckingPosition == false) {
-                if (isUpdatingPositionAllowed(position: position)) {
-                  // ? The following two lines mean that
-                  // ? we manually check for updated positions
-                  // ? let's to it automatic for now, see below
-                  // setAllowCheckingPosition(true);
-                  // notifyListeners();
-
-                  await checkDistance();
-                }
+                await checkDistance();
               }
-              // TODO: Should probably happen more often!
-              // this will move the map. Should happen more often than is the
-              // case for the treasure location search! Add additional filtering!?
-              setNewLatLon(lat: position.latitude, lon: position.longitude);
-              animateOnNewLocation();
-            }),
-        Future.delayed(Duration(seconds: 1))
-      ]);
+            }
+            // TODO: Should probably happen more often!
+            // this will move the map. Should happen more often than is the
+            // case for the treasure location search! Add additional filtering!?
+            setNewLatLon(lat: position.latitude, lon: position.longitude);
+            animateOnNewLocation();
+          });
+
       snackbarService.showSnackbar(
           title: "Quest started",
           message: "Start to walk and try to get closer");
-      checkDistance();
-      notifyListeners();
+      await checkDistance();
     } else {
       log.i("Not starting quest, quest is probably already running");
     }
@@ -204,7 +199,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   @override
   void resetPreviousQuest() {
-    cancelQuestListener();
+    // cancelQuestListener();
     markersOnMap = {};
     checkpoints = [];
     directionStatus = DirectionStatus.notstarted;
@@ -549,11 +544,11 @@ class ActiveTreasureLocationSearchQuestViewModel
     throw UnimplementedError();
   }
 
-  void cancelQuestListener() {
-    log.i("Cancelling subscription to vibration search quest");
-    _activeVibrationQuestSubscription?.cancel();
-    _activeVibrationQuestSubscription = null;
-  }
+  // void cancelQuestListener() {
+  //   log.i("Cancelling subscription to vibration search quest");
+  //   _activeVibrationQuestSubscription?.cancel();
+  //   _activeVibrationQuestSubscription = null;
+  // }
 
   void showReloadingInfo() {
     snackbarService.showSnackbar(title: "Walk to reload", message: "...");
@@ -570,7 +565,7 @@ class ActiveTreasureLocationSearchQuestViewModel
 
   @override
   void dispose() {
-    cancelQuestListener();
+    // cancelQuestListener();
     super.dispose();
   }
 

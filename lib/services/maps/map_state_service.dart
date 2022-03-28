@@ -51,7 +51,6 @@ class MapStateService {
     previousTilt = tilt;
     previousLat = currentLat;
     previousLon = currentLon;
-    log.wtf("Took snapshot: previousLat: $previousLat");
   }
 
   void takeSnapshotOfBirdViewCameraPosition() {

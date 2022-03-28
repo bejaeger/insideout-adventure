@@ -190,14 +190,6 @@ abstract class QuestViewModel extends BaseModel
     mapViewModel.showQuestDetails(quest: quest);
   }
 
-  void switchIsShowingQuestDetails() {
-    layoutService.switchIsShowingQuestDetails();
-  }
-
-  void setIsShowingQuestDetails(bool set) {
-    layoutService.setIsShowingQuestDetails(set);
-  }
-
   int currentIndex = 0;
   void toggleIndex() {
     if (currentIndex == 0) {

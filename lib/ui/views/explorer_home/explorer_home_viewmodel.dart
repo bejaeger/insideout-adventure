@@ -47,9 +47,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   List<Achievement> get achievements => gamificationService.achievements;
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
 
-  // layout
-  bool get fadingOutQuestDetails => layoutService.isShowingQuestDetails;
-
   // ---------------------------------------
   // state
   late final String name;
@@ -274,7 +271,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   StreamSubscription? _isShowingARViewStream;
   StreamSubscription? _isShowingQuestListStream;
   StreamSubscription? _selectedQuestStream;
-
+  StreamSubscription? _isFadingOutQuestDetailsSubjectStream;
   void listenToLayout() {
     if (_isShowingARViewStream == null) {
       _isShowingARViewStream =
@@ -294,15 +291,22 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         notifyListeners();
       });
     }
+    if (_isFadingOutQuestDetailsSubjectStream == null) {
+      _isFadingOutQuestDetailsSubjectStream =
+          layoutService.isFadingOutQuestDetailsSubject.listen((show) {
+        notifyListeners();
+      });
+    }
   }
 
-  // @override
-  // void dispose() {
-  //   _isShowingARViewStream?.cancel();
-  //   _isShowingQuestListStream?.cancel();
-  //   _selectedQuestStream?.cancel();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _isShowingARViewStream?.cancel();
+    _isShowingQuestListStream?.cancel();
+    _selectedQuestStream?.cancel();
+    _isFadingOutQuestDetailsSubjectStream?.cancel();
+    super.dispose();
+  }
 
   //------------------------------------------------------------
   // Reactive Service Mixin Functionality from stacked ReactiveViewModel!
