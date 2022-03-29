@@ -19,7 +19,7 @@ import 'package:stacked_services/stacked_services.dart';
 import '../apis/cloud_functions_api.dart';
 import '../apis/direction_api.dart';
 import '../apis/firestore_api.dart';
-import '../flavor_config.dart';
+import '../app_config_provider.dart';
 import '../services/cloud_firestore_storage/cloud_storage_services.dart';
 import '../services/connectivity/connectivity_service.dart';
 import '../services/environment_services.dart';
@@ -33,6 +33,7 @@ import '../services/maps/map_state_service.dart';
 import '../services/markers/marker_service.dart';
 import '../services/payments/payment_service.dart';
 import '../services/payments/transfers_history_service.dart';
+import '../services/pedometer/pedometer_service.dart';
 import '../services/qrcodes/qrcode_service.dart';
 import '../services/quest_testing_service/quest_testing_service.dart';
 import '../services/quests/active_quest_service.dart';
@@ -68,7 +69,7 @@ Future setupLocator(
   locator.registerLazySingleton(() => FirestoreApi());
   locator.registerLazySingleton(() => CloudFunctionsApi());
   locator.registerLazySingleton(() => FirebaseAuthenticationService());
-  locator.registerLazySingleton(() => FlavorConfigProvider());
+  locator.registerLazySingleton(() => AppConfigProvider());
   locator.registerLazySingleton(() => LayoutService());
   locator.registerLazySingleton(() => LocalStorageService());
   locator.registerLazySingleton(() => FlutterSecureStorage());
@@ -85,6 +86,7 @@ Future setupLocator(
   locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => GamificationService());
   locator.registerLazySingleton(() => MapStateService());
+  locator.registerLazySingleton(() => PedometerService());
   final mapViewModel = await presolveMapViewModel();
   locator.registerSingleton(mapViewModel);
 

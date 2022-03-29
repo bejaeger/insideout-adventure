@@ -7,7 +7,7 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -36,8 +36,7 @@ class MapViewModel extends BaseModel
   final log = getLogger('MapViewModel');
   final QuestService questService = locator<QuestService>();
   final _qrCodeService = locator<QRCodeService>();
-  final FlavorConfigProvider flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
 
   // -----------------------------
   // Getters

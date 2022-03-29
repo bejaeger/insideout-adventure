@@ -46,8 +46,9 @@ mixin $LoginView on StatelessWidget {
 }
 
 extension ValueProperties on FormViewModel {
-  String? get emailOrNameValue => this.formValueMap[EmailOrNameValueKey];
-  String? get passwordValue => this.formValueMap[PasswordValueKey];
+  String? get emailOrNameValue =>
+      this.formValueMap[EmailOrNameValueKey] as String?;
+  String? get passwordValue => this.formValueMap[PasswordValueKey] as String?;
 
   bool get hasEmailOrName => this.formValueMap.containsKey(EmailOrNameValueKey);
   bool get hasPassword => this.formValueMap.containsKey(PasswordValueKey);

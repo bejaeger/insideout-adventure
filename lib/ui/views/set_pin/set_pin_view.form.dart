@@ -60,10 +60,10 @@ mixin $SetPinView on StatelessWidget {
 }
 
 extension ValueProperties on FormViewModel {
-  String? get number1Value => this.formValueMap[Number1ValueKey];
-  String? get number2Value => this.formValueMap[Number2ValueKey];
-  String? get number3Value => this.formValueMap[Number3ValueKey];
-  String? get number4Value => this.formValueMap[Number4ValueKey];
+  String? get number1Value => this.formValueMap[Number1ValueKey] as String?;
+  String? get number2Value => this.formValueMap[Number2ValueKey] as String?;
+  String? get number3Value => this.formValueMap[Number3ValueKey] as String?;
+  String? get number4Value => this.formValueMap[Number4ValueKey] as String?;
 
   bool get hasNumber1 => this.formValueMap.containsKey(Number1ValueKey);
   bool get hasNumber2 => this.formValueMap.containsKey(Number2ValueKey);

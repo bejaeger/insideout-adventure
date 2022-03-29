@@ -39,7 +39,7 @@ mixin $TransferFundsView on StatelessWidget {
 }
 
 extension ValueProperties on FormViewModel {
-  String? get amountValue => this.formValueMap[AmountValueKey];
+  String? get amountValue => this.formValueMap[AmountValueKey] as String?;
 
   bool get hasAmount => this.formValueMap.containsKey(AmountValueKey);
 

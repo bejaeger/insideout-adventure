@@ -7,7 +7,7 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -17,8 +17,7 @@ class QuestService with ReactiveServiceMixin {
   // -----------------------------------
   // services
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
-  final FlavorConfigProvider _flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final log = getLogger("QuestService");
 

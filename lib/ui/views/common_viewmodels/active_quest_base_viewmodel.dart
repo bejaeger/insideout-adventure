@@ -11,7 +11,7 @@ import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
@@ -36,8 +36,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   final MapStateService mapsService = locator<MapStateService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
-  final FlavorConfigProvider flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
   final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
 

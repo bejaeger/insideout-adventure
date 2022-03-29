@@ -8,7 +8,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
@@ -28,8 +28,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   final GiftCardService _giftCardService = locator<GiftCardService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
-  final FlavorConfigProvider flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
 
   // --------------------------------------------------
   // getters

@@ -8,7 +8,7 @@ import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_cat
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
 import 'package:afkcredits/enums/purchased_gift_card_status.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GiftCardService {

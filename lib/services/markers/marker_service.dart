@@ -1,15 +1,14 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 
 class MarkerService {
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final FlavorConfigProvider _flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
 
   final log = getLogger("MarkerService");
   final _firestoreApi = locator<FirestoreApi>();

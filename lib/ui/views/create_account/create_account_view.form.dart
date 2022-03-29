@@ -53,9 +53,9 @@ mixin $CreateAccountView on StatelessWidget {
 }
 
 extension ValueProperties on FormViewModel {
-  String? get fullNameValue => this.formValueMap[FullNameValueKey];
-  String? get emailValue => this.formValueMap[EmailValueKey];
-  String? get passwordValue => this.formValueMap[PasswordValueKey];
+  String? get fullNameValue => this.formValueMap[FullNameValueKey] as String?;
+  String? get emailValue => this.formValueMap[EmailValueKey] as String?;
+  String? get passwordValue => this.formValueMap[PasswordValueKey] as String?;
 
   bool get hasFullName => this.formValueMap.containsKey(FullNameValueKey);
   bool get hasEmail => this.formValueMap.containsKey(EmailValueKey);

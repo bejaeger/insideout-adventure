@@ -5,7 +5,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
@@ -24,8 +24,7 @@ abstract class QuestViewModel extends BaseModel
   // -----------------------------------------------
   // Setters
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final FlavorConfigProvider flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
   final QRCodeService qrCodeService = locator<QRCodeService>();
 
   final MapViewModel mapViewModel = locator<MapViewModel>();

@@ -53,9 +53,10 @@ mixin $AddGiftCardsView on StatelessWidget {
 }
 
 extension ValueProperties on FormViewModel {
-  String? get amountValue => this.formValueMap[AmountValueKey];
-  String? get descriptionValue => this.formValueMap[DescriptionValueKey];
-  String? get categoryValue => this.formValueMap[CategoryValueKey];
+  String? get amountValue => this.formValueMap[AmountValueKey] as String?;
+  String? get descriptionValue =>
+      this.formValueMap[DescriptionValueKey] as String?;
+  String? get categoryValue => this.formValueMap[CategoryValueKey] as String?;
 
   bool get hasAmount => this.formValueMap.containsKey(AmountValueKey);
   bool get hasDescription => this.formValueMap.containsKey(DescriptionValueKey);

@@ -1,4 +1,4 @@
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/main_common.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

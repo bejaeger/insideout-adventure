@@ -46,8 +46,8 @@ mixin $AddExplorerView on StatelessWidget {
 }
 
 extension ValueProperties on FormViewModel {
-  String? get nameValue => this.formValueMap[NameValueKey];
-  String? get passwordValue => this.formValueMap[PasswordValueKey];
+  String? get nameValue => this.formValueMap[NameValueKey] as String?;
+  String? get passwordValue => this.formValueMap[PasswordValueKey] as String?;
 
   bool get hasName => this.formValueMap.containsKey(NameValueKey);
   bool get hasPassword => this.formValueMap.containsKey(PasswordValueKey);

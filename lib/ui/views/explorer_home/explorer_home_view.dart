@@ -26,6 +26,7 @@ import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
+import 'package:afkcredits/ui/views/step_counter/step_counter_overlay.dart';
 import 'package:afkcredits/ui/widgets/achievement_card.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
@@ -101,6 +102,8 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   if (model.isShowingQuestDetails || model.hasActiveQuest)
                     QuestDetailsOverlay(
                         startFadeOut: model.isFadingOutQuestDetails),
+
+                  StepCounterOverlay(),
 
                   // only used for quest view at the moment!
                   OverlayedCloseButton(),

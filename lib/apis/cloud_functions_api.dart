@@ -6,7 +6,7 @@ import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -16,8 +16,7 @@ import 'package:http/http.dart' as http;
 class CloudFunctionsApi {
   final log = getLogger("CloudFunctionApi");
 
-  final FlavorConfigProvider _flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   ///////////////////////////////////////////
   /// Calling backend function to bookkeep credits
   Future bookkeepFinishedQuest({required ActivatedQuest quest}) async {

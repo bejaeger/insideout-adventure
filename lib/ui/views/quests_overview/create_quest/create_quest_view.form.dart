@@ -54,10 +54,11 @@ mixin $CreateQuestView on StatelessWidget {
 }
 
 extension ValueProperties on FormViewModel {
-  String? get nameValue => this.formValueMap[NameValueKey];
-  String? get descriptionValue => this.formValueMap[DescriptionValueKey];
+  String? get nameValue => this.formValueMap[NameValueKey] as String?;
+  String? get descriptionValue =>
+      this.formValueMap[DescriptionValueKey] as String?;
   String? get afkCreditAmountValue =>
-      this.formValueMap[AfkCreditAmountValueKey];
+      this.formValueMap[AfkCreditAmountValueKey] as String?;
 
   bool get hasName => this.formValueMap.containsKey(NameValueKey);
   bool get hasDescription => this.formValueMap.containsKey(DescriptionValueKey);
