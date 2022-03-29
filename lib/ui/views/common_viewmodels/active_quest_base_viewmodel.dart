@@ -463,7 +463,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   }
 
   void cancelPositionListener() {
-    log.i("Cancel position listener");
     geolocationService.cancelPositionListener();
     setListenedToNewPosition(false);
   }

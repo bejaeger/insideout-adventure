@@ -4,7 +4,7 @@ import 'constants/constants.dart';
 
 enum Flavor { unknown, dev, prod }
 
-class FlavorConfigProvider {
+class AppConfigProvider {
   // TODO: Add this to a specific flavor!
   // We should add a "test" flavor!
 
@@ -18,6 +18,10 @@ class FlavorConfigProvider {
 
   // dummy checks for quest completion for testing purposes
   bool dummyQuestCompletionVerification = false;
+
+// variable that is set when the app starts to check whether
+// AR functionality is available or not (defaults to false)
+  bool isARAvailable = false;
 
   Flavor flavor = Flavor.unknown;
   void configure(Flavor flavorIn) {
@@ -33,6 +37,10 @@ class FlavorConfigProvider {
       default:
         return "AFK Credits - Dev";
     }
+  }
+
+  void setIsARAvailable(bool set) {
+    isARAvailable = set;
   }
 
   String getTestUserEmail(UserRole? role) {
