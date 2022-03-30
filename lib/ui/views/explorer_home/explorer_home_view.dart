@@ -103,7 +103,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                     QuestDetailsOverlay(
                         startFadeOut: model.isFadingOutQuestDetails),
 
-                  StepCounterOverlay(),
+                  // StepCounterOverlay(),
 
                   // only used for quest view at the moment!
                   OverlayedCloseButton(),
@@ -564,7 +564,9 @@ class AvatarOnMap extends StatelessWidget {
                 : characterNumber == 2
                     ? Lottie.network(
                         // stick figure running to the right
-                        'https://s3.us-west-2.amazonaws.com/secure.notion-static.com/aa05bafe-251b-414e-80c6-a13c67abc438/lf30_editor_als8jeb9.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220328%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220328T011103Z&X-Amz-Expires=86400&X-Amz-Signature=d31cc104bb17397362cb996cd5671ce304385bbf282626b8cdf47e21d5e97e99&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22lf30_editor_als8jeb9.json%22&x-id=GetObject',
+                        // Stick figure does not work from notion as link changes
+                        'https://assets6.lottiefiles.com/private_files/lf30_afru6l2d.json',
+                        // 'https://s3.us-west-2.amazonaws.com/secure.notion-static.com/aa05bafe-251b-414e-80c6-a13c67abc438/lf30_editor_als8jeb9.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220328%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220328T011103Z&X-Amz-Expires=86400&X-Amz-Signature=d31cc104bb17397362cb996cd5671ce304385bbf282626b8cdf47e21d5e97e99&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22lf30_editor_als8jeb9.json%22&x-id=GetObject',
                         height: 150,
                         width: 150,
                       )

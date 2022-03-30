@@ -2,7 +2,6 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/services/pedometer/pedometer_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class StepCounterOverlayViewModel extends BaseModel {
   // ------------------------------------------------------
@@ -34,9 +33,12 @@ class StepCounterOverlayViewModel extends BaseModel {
         await _pedometerService.isActivityPermissionGranted();
     if (!grantedPermission) {
       await dialogService.showDialog(
-          title: "We like to use the step counter.",
-          description: "Please say yes");
-      await _pedometerService.requestActivityPermission();
+          title: "We would like to use the step counter.",
+          description: "Please say yes in the following screen");
+      final result = await _pedometerService.requestActivityPermission();
+      if (!result) {
+        return;
+      }
     }
 
     // start pedometer
@@ -66,6 +68,7 @@ class StepCounterOverlayViewModel extends BaseModel {
   void stopPedometer() {
     pedestrianStatus = "?";
     firstEvent = true;
+    initialCount = currentCount;
     _pedometerService.stopPedometer();
     snackbarService.showSnackbar(title: "Stopped pedometer", message: "");
     notifyListeners();
