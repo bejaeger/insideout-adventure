@@ -2,10 +2,10 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
-abstract class SwitchAccountsViewModel extends BaseModel {
+abstract class SwitchAccountsViewModel extends QuestViewModel {
   final log = getLogger("SwitchAccountsViewModel");
   final String? explorerUid;
 

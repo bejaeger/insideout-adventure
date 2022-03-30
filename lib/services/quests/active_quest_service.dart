@@ -49,6 +49,20 @@ class ActiveQuestService with ReactiveServiceMixin {
   // state
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
+
+  bool get hasSelectedQuest => selectedQuest != null;
+  BehaviorSubject<Quest?> selectedQuestSubject = BehaviorSubject<Quest?>();
+  Quest? get selectedQuest => selectedQuestSubject.valueOrNull;
+
+  void setSelectedQuest(Quest quest) {
+    selectedQuestSubject.add(quest);
+  }
+
+  void resetSelectedQuest() {
+    selectedQuestSubject.add(null);
+  }
+
+  // Maybe deprecated?
   Quest? currentQuest;
   String? activatedQuestTrialId;
 
@@ -148,6 +162,7 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   void cancelPositionListener() {
     _geolocationService.cancelPositionListener();
+    _geolocationService.resumeMainPositionListener();
   }
 
   void pausePositionListener() {

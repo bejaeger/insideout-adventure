@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'distance_check_status_model.dart';
@@ -135,20 +136,19 @@ class _$_DistanceCheckStatusModel implements _DistanceCheckStatusModel {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _DistanceCheckStatusModel &&
-            (identical(other.futureStatus, futureStatus) ||
-                const DeepCollectionEquality()
-                    .equals(other.futureStatus, futureStatus)) &&
-            (identical(other.distanceInMeter, distanceInMeter) ||
-                const DeepCollectionEquality()
-                    .equals(other.distanceInMeter, distanceInMeter)));
+        (other.runtimeType == runtimeType &&
+            other is _DistanceCheckStatusModel &&
+            const DeepCollectionEquality()
+                .equals(other.futureStatus, futureStatus) &&
+            const DeepCollectionEquality()
+                .equals(other.distanceInMeter, distanceInMeter));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(futureStatus) ^
-      const DeepCollectionEquality().hash(distanceInMeter);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(futureStatus),
+      const DeepCollectionEquality().hash(distanceInMeter));
 
   @JsonKey(ignore: true)
   @override
@@ -163,10 +163,9 @@ abstract class _DistanceCheckStatusModel implements DistanceCheckStatusModel {
       required double distanceInMeter}) = _$_DistanceCheckStatusModel;
 
   @override
-  Future<DistanceCheckStatus> get futureStatus =>
-      throw _privateConstructorUsedError;
+  Future<DistanceCheckStatus> get futureStatus;
   @override
-  double get distanceInMeter => throw _privateConstructorUsedError;
+  double get distanceInMeter;
   @override
   @JsonKey(ignore: true)
   _$DistanceCheckStatusModelCopyWith<_DistanceCheckStatusModel> get copyWith =>

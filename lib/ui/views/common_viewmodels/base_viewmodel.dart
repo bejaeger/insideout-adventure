@@ -23,6 +23,7 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -67,8 +68,19 @@ class BaseModel extends BaseViewModel {
       geolocationService.currentPositionDistanceFilter;
   String? get gpsAccuracyInfo => geolocationService.gpsAccuracyInfo;
   bool get listenedToNewPosition => geolocationService.listenedToNewPosition;
+  Position? get userLocation => geolocationService.getUserLivePositionNullable;
+
+  // layout
+  bool get isShowingQuestDetails => activeQuestService.selectedQuest != null;
+
+  bool get isShowingQuestList => layoutService.isShowingQuestList;
+  bool get isShowingARView => layoutService.isShowingARView;
+  bool get isMovingCamera => layoutService.isMovingCamera;
+  bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
 
   // --------------------------------------------------
+  bool get hasSelectedQuest => activeQuestService.hasSelectedQuest;
+  Quest? get selectedQuest => activeQuestService.selectedQuest;
   bool get hasActiveQuest => activeQuestService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => activeQuestService.activatedQuest!;
@@ -128,7 +140,7 @@ class BaseModel extends BaseViewModel {
     navigationService.clearStackAndShow(Routes.loginView);
   }
 
-  setListenedToNewPosition(bool set) {
+  void setListenedToNewPosition(bool set) {
     if (useSuperUserFeatures) {
       geolocationService.setListenedToNewPosition(set);
     }
@@ -197,9 +209,12 @@ class BaseModel extends BaseViewModel {
   }
 
   Future replaceWithHomeView() async {
-    await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-        arguments:
-            BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+    await navigationService.replaceWith(
+      Routes.explorerHomeView,
+    );
+    // await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+    //     arguments:
+    //         BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
   Future replaceWithMainView({required BottomNavBarIndex index}) async {
@@ -305,7 +320,7 @@ class BaseModel extends BaseViewModel {
     return false;
   }
 
-  Future displayQuestBottomSheet(
+  Future<SheetResponse?> displayQuestBottomSheet(
       {required Quest quest, AFKMarker? startMarker}) async {
     SheetResponse? sheetResponse = await bottomSheetService.showCustomSheet(
         variant: BottomSheetType.questInformation,
@@ -321,13 +336,14 @@ class BaseModel extends BaseViewModel {
             : "Go to Quest",
         secondaryButtonTitle: "Close",
         data: quest);
-    if (sheetResponse?.confirmed == true) {
-      baseModelLog
-          .i("Looking at details of quest OR starting quest immediately");
-      questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
-          ? await navigateToActiveQuestUI(quest: quest)
-          : await navigateToActiveQuestUI(quest: quest);
-    }
+    return sheetResponse;
+    // if (sheetResponse?.confirmed == true) {
+    //   baseModelLog
+    //       .i("Looking at details of quest OR starting quest immediately");
+    //   return true;
+    // questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
+    //     ? await navigateToActiveQuestUI(quest: quest)
+    //     : await navigateToActiveQuestUI(quest: quest);
   }
 
   Future navigateToActiveQuestUI({required Quest quest}) async {

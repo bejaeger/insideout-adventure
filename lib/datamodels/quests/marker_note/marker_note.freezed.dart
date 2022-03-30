@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'marker_note.dart';
@@ -34,7 +35,7 @@ class _$MarkerNoteTearOff {
     );
   }
 
-  MarkerNote fromJson(Map<String, Object> json) {
+  MarkerNote fromJson(Map<String, Object?> json) {
     return MarkerNote.fromJson(json);
   }
 }
@@ -171,26 +172,21 @@ class _$_MarkerNote implements _MarkerNote {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _MarkerNote &&
-            (identical(other.note, note) ||
-                const DeepCollectionEquality().equals(other.note, note)) &&
-            (identical(other.imagePath, imagePath) ||
-                const DeepCollectionEquality()
-                    .equals(other.imagePath, imagePath)) &&
-            (identical(other.solution, solution) ||
-                const DeepCollectionEquality()
-                    .equals(other.solution, solution)) &&
-            (identical(other.clue, clue) ||
-                const DeepCollectionEquality().equals(other.clue, clue)));
+        (other.runtimeType == runtimeType &&
+            other is _MarkerNote &&
+            const DeepCollectionEquality().equals(other.note, note) &&
+            const DeepCollectionEquality().equals(other.imagePath, imagePath) &&
+            const DeepCollectionEquality().equals(other.solution, solution) &&
+            const DeepCollectionEquality().equals(other.clue, clue));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(note) ^
-      const DeepCollectionEquality().hash(imagePath) ^
-      const DeepCollectionEquality().hash(solution) ^
-      const DeepCollectionEquality().hash(clue);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(note),
+      const DeepCollectionEquality().hash(imagePath),
+      const DeepCollectionEquality().hash(solution),
+      const DeepCollectionEquality().hash(clue));
 
   @JsonKey(ignore: true)
   @override
@@ -214,13 +210,13 @@ abstract class _MarkerNote implements MarkerNote {
       _$_MarkerNote.fromJson;
 
   @override
-  String get note => throw _privateConstructorUsedError;
+  String get note;
   @override
-  String? get imagePath => throw _privateConstructorUsedError;
+  String? get imagePath;
   @override
-  String? get solution => throw _privateConstructorUsedError;
+  String? get solution;
   @override //
-  String? get clue => throw _privateConstructorUsedError;
+  String? get clue;
   @override
   @JsonKey(ignore: true)
   _$MarkerNoteCopyWith<_MarkerNote> get copyWith =>

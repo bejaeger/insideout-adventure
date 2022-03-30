@@ -10,7 +10,7 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../../../app/app.locator.dart';
 
-class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
+class QuestsOverviewViewModel extends QuestViewModel {
   List<QuestType> get questTypes => questService.allQuestTypes;
   final logger = getLogger('ManageQuestViewModel');
   final _dialogService = locator<DialogService>();
@@ -19,7 +19,6 @@ class QuestsOverviewViewModel extends QuestViewModel with NavigationMixin {
     setBusy(true);
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
-        await getLocation(forceAwait: true, forceGettingNewPosition: false);
         await questService.loadNearbyQuests(force: true);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();

@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'user.dart';
@@ -49,7 +50,7 @@ class _$UserTearOff {
     );
   }
 
-  User fromJson(Map<String, Object> json) {
+  User fromJson(Map<String, Object?> json) {
     return User.fromJson(json);
   }
 }
@@ -292,7 +293,7 @@ class _$_User implements _User {
   final UserRole role;
   @override
   final AuthenticationMethod? authMethod;
-  @JsonKey(defaultValue: false)
+  @JsonKey()
   @override
   final bool newUser;
   @override
@@ -311,53 +312,40 @@ class _$_User implements _User {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _User &&
-            (identical(other.uid, uid) ||
-                const DeepCollectionEquality().equals(other.uid, uid)) &&
-            (identical(other.fullName, fullName) ||
-                const DeepCollectionEquality()
-                    .equals(other.fullName, fullName)) &&
-            (identical(other.email, email) ||
-                const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.sponsorIds, sponsorIds) ||
-                const DeepCollectionEquality()
-                    .equals(other.sponsorIds, sponsorIds)) &&
-            (identical(other.explorerIds, explorerIds) ||
-                const DeepCollectionEquality()
-                    .equals(other.explorerIds, explorerIds)) &&
-            (identical(other.role, role) ||
-                const DeepCollectionEquality().equals(other.role, role)) &&
-            (identical(other.authMethod, authMethod) ||
-                const DeepCollectionEquality()
-                    .equals(other.authMethod, authMethod)) &&
-            (identical(other.newUser, newUser) ||
-                const DeepCollectionEquality()
-                    .equals(other.newUser, newUser)) &&
-            (identical(other.fullNameSearch, fullNameSearch) ||
-                const DeepCollectionEquality()
-                    .equals(other.fullNameSearch, fullNameSearch)) &&
-            (identical(other.createdByUserWithId, createdByUserWithId) ||
-                const DeepCollectionEquality()
-                    .equals(other.createdByUserWithId, createdByUserWithId)) &&
-            (identical(other.password, password) ||
-                const DeepCollectionEquality()
-                    .equals(other.password, password)));
+        (other.runtimeType == runtimeType &&
+            other is _User &&
+            const DeepCollectionEquality().equals(other.uid, uid) &&
+            const DeepCollectionEquality().equals(other.fullName, fullName) &&
+            const DeepCollectionEquality().equals(other.email, email) &&
+            const DeepCollectionEquality()
+                .equals(other.sponsorIds, sponsorIds) &&
+            const DeepCollectionEquality()
+                .equals(other.explorerIds, explorerIds) &&
+            const DeepCollectionEquality().equals(other.role, role) &&
+            const DeepCollectionEquality()
+                .equals(other.authMethod, authMethod) &&
+            const DeepCollectionEquality().equals(other.newUser, newUser) &&
+            const DeepCollectionEquality()
+                .equals(other.fullNameSearch, fullNameSearch) &&
+            const DeepCollectionEquality()
+                .equals(other.createdByUserWithId, createdByUserWithId) &&
+            const DeepCollectionEquality().equals(other.password, password));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(uid) ^
-      const DeepCollectionEquality().hash(fullName) ^
-      const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(sponsorIds) ^
-      const DeepCollectionEquality().hash(explorerIds) ^
-      const DeepCollectionEquality().hash(role) ^
-      const DeepCollectionEquality().hash(authMethod) ^
-      const DeepCollectionEquality().hash(newUser) ^
-      const DeepCollectionEquality().hash(fullNameSearch) ^
-      const DeepCollectionEquality().hash(createdByUserWithId) ^
-      const DeepCollectionEquality().hash(password);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(uid),
+      const DeepCollectionEquality().hash(fullName),
+      const DeepCollectionEquality().hash(email),
+      const DeepCollectionEquality().hash(sponsorIds),
+      const DeepCollectionEquality().hash(explorerIds),
+      const DeepCollectionEquality().hash(role),
+      const DeepCollectionEquality().hash(authMethod),
+      const DeepCollectionEquality().hash(newUser),
+      const DeepCollectionEquality().hash(fullNameSearch),
+      const DeepCollectionEquality().hash(createdByUserWithId),
+      const DeepCollectionEquality().hash(password));
 
   @JsonKey(ignore: true)
   @override
@@ -388,28 +376,28 @@ abstract class _User implements User {
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
   @override
-  String get uid => throw _privateConstructorUsedError;
+  String get uid;
   @override
-  String get fullName => throw _privateConstructorUsedError;
+  String get fullName;
   @override
-  String? get email => throw _privateConstructorUsedError;
+  String? get email;
   @override
-  List<String> get sponsorIds => throw _privateConstructorUsedError;
+  List<String> get sponsorIds;
   @override
-  List<String> get explorerIds => throw _privateConstructorUsedError;
+  List<String> get explorerIds;
   @override
-  UserRole get role => throw _privateConstructorUsedError;
+  UserRole get role;
   @override
-  AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
+  AuthenticationMethod? get authMethod;
   @override
-  bool get newUser => throw _privateConstructorUsedError;
+  bool get newUser;
   @override
   @JsonKey(toJson: User._checkIfKeywordsAreSet)
-  List<String>? get fullNameSearch => throw _privateConstructorUsedError;
+  List<String>? get fullNameSearch;
   @override
-  String? get createdByUserWithId => throw _privateConstructorUsedError;
+  String? get createdByUserWithId;
   @override
-  String? get password => throw _privateConstructorUsedError;
+  String? get password;
   @override
   @JsonKey(ignore: true)
   _$UserCopyWith<_User> get copyWith => throw _privateConstructorUsedError;

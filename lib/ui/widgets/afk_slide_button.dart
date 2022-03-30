@@ -23,23 +23,26 @@ class AFKSlideButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+      padding: const EdgeInsets.symmetric(
+          horizontal:
+              0), // const EdgeInsets.symmetric(horizontal: kHorizontalPadding * 2),
       child: SlideAction(
         sliderButtonIconPadding: 12,
         sliderButtonIconSize: 22,
         // sliderButtonIcon: Icon(Icons.play_arrow, color: kPrimaryColor),
         alignment: alignment ?? Alignment.center,
-        outerColor: kPrimaryColor,
+        outerColor: kPrimaryColor.withOpacity(0.7),
         //text: "Start",
         child: canStartQuest
             ? Shimmer.fromColors(
                 baseColor: kGreyTextColor.withOpacity(0.9),
                 highlightColor: Colors.white,
                 period: const Duration(milliseconds: 1000),
-                child: Text("Start",
-                    style: textTheme(context)
-                        .headline6!
-                        .copyWith(fontSize: 22, color: kWhiteTextColor)),
+                child: AfkCreditsText.subheading("      Start"),
+                // Text("    Start",
+                //     style: textTheme(context)
+                //         .headline6!
+                //         .copyWith(fontSize: 18, color: kWhiteTextColor)),
               )
             : Text("Cannot start",
                 style: textTheme(context)
@@ -50,7 +53,7 @@ class AFKSlideButton extends StatelessWidget {
         sliderRotate: false,
         //key: _key,
         onSubmit: canStartQuest ? onSubmit : null,
-        borderRadius: 50,
+        borderRadius: 15,
         //sliderButtonIcon: Icon(Icons.play_arrow)
         // submittedIcon: Icon(Icons.railway_alert),
         // animationDuration: Duration(seconds: 1),

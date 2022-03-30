@@ -26,41 +26,43 @@ class CustomAFKButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(
-          child: SizedBox(
-            width: 150,
-            height: 40,
-            child: ElevatedButton(
-              onPressed: onSecondaryButtonTapped,
-              child: Text(
-                secundaryButtonTitle!,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14),
+        if (secundaryButtonTitle != null)
+          Expanded(
+            child: SizedBox(
+              width: 150,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: onSecondaryButtonTapped,
+                child: Text(
+                  secundaryButtonTitle!,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14),
+                ),
               ),
             ),
           ),
-        ),
         horizontalSpaceMedium,
-        Expanded(
-          child: SizedBox(
-            width: 150,
-            height: 40,
-            child: ElevatedButton(
-              onPressed: onMainButtonTapped,
-              child: busy
-                  ? AFKProgressIndicator(color: Colors.white)
-                  : Text(
-                      mainButtonTitle!,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
+        if (mainButtonTitle != null)
+          Expanded(
+            child: SizedBox(
+              width: 150,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: onMainButtonTapped,
+                child: busy
+                    ? AFKProgressIndicator(color: Colors.white)
+                    : Text(
+                        mainButtonTitle!,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                      ),
+              ),
             ),
           ),
-        ),
       ],
     );
   }

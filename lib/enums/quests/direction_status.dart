@@ -1,1 +1,1 @@
-enum DirectionStatus {unknown, notstarted, closer, further, denied}
+enum DirectionStatus { unknown, notstarted, closer, further, denied, nearGoal }

@@ -71,9 +71,12 @@ abstract class AuthenticationViewModel extends FormViewModel
         log.i("User logged in with role $role");
         // ADD logic to navigate to different views depending on user role!
         // authenticated and initialized -> go to successRoute
-
-        _navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-            arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
+        if (role == UserRole.explorer || role == UserRole.superUser) {
+          _navigationService.replaceWith(Routes.explorerHomeView);
+        } else {
+          _navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+              arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
+        }
         // if (role == UserRole.explorer) {
         //   navigationService.replaceWith(Routes.explorerHomeView);
         // } else if (role == UserRole.sponsor) {

@@ -62,12 +62,13 @@ mixin $BasicDialogContent on StatelessWidget {
 }
 
 extension ValueProperties on FormViewModel {
-  String? get nameValue => this.formValueMap[NameValueKey];
-  String? get descriptionValue => this.formValueMap[DescriptionValueKey];
+  String? get nameValue => this.formValueMap[NameValueKey] as String?;
+  String? get descriptionValue =>
+      this.formValueMap[DescriptionValueKey] as String?;
   String? get distanceFromUserValue =>
-      this.formValueMap[DistanceFromUserValueKey];
+      this.formValueMap[DistanceFromUserValueKey] as String?;
   String? get afkCreditAmountValue =>
-      this.formValueMap[AfkCreditAmountValueKey];
+      this.formValueMap[AfkCreditAmountValueKey] as String?;
 
   bool get hasName => this.formValueMap.containsKey(NameValueKey);
   bool get hasDescription => this.formValueMap.containsKey(DescriptionValueKey);
@@ -75,6 +76,37 @@ extension ValueProperties on FormViewModel {
       this.formValueMap.containsKey(DistanceFromUserValueKey);
   bool get hasAfkCreditAmount =>
       this.formValueMap.containsKey(AfkCreditAmountValueKey);
+
+  bool get hasNameValidationMessage =>
+      this.fieldsValidationMessages[NameValueKey]?.isNotEmpty ?? false;
+  bool get hasDescriptionValidationMessage =>
+      this.fieldsValidationMessages[DescriptionValueKey]?.isNotEmpty ?? false;
+  bool get hasDistanceFromUserValidationMessage =>
+      this.fieldsValidationMessages[DistanceFromUserValueKey]?.isNotEmpty ??
+      false;
+  bool get hasAfkCreditAmountValidationMessage =>
+      this.fieldsValidationMessages[AfkCreditAmountValueKey]?.isNotEmpty ??
+      false;
+
+  String? get nameValidationMessage =>
+      this.fieldsValidationMessages[NameValueKey];
+  String? get descriptionValidationMessage =>
+      this.fieldsValidationMessages[DescriptionValueKey];
+  String? get distanceFromUserValidationMessage =>
+      this.fieldsValidationMessages[DistanceFromUserValueKey];
+  String? get afkCreditAmountValidationMessage =>
+      this.fieldsValidationMessages[AfkCreditAmountValueKey];
 }
 
-extension Methods on FormViewModel {}
+extension Methods on FormViewModel {
+  setNameValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[NameValueKey] = validationMessage;
+  setDescriptionValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[DescriptionValueKey] = validationMessage;
+  setDistanceFromUserValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[DistanceFromUserValueKey] =
+          validationMessage;
+  setAfkCreditAmountValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[AfkCreditAmountValueKey] =
+          validationMessage;
+}

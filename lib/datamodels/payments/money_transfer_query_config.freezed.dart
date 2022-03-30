@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'money_transfer_query_config.dart';
@@ -37,7 +38,7 @@ class _$MoneyTransferQueryConfigTearOff {
     );
   }
 
-  MoneyTransferQueryConfig fromJson(Map<String, Object> json) {
+  MoneyTransferQueryConfig fromJson(Map<String, Object?> json) {
     return MoneyTransferQueryConfig.fromJson(json);
   }
 }
@@ -209,31 +210,26 @@ class _$_MoneyTransferQueryConfig implements _MoneyTransferQueryConfig {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _MoneyTransferQueryConfig &&
-            (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)) &&
-            (identical(other.recipientId, recipientId) ||
-                const DeepCollectionEquality()
-                    .equals(other.recipientId, recipientId)) &&
-            (identical(other.senderId, senderId) ||
-                const DeepCollectionEquality()
-                    .equals(other.senderId, senderId)) &&
-            (identical(other.maxNumberReturns, maxNumberReturns) ||
-                const DeepCollectionEquality()
-                    .equals(other.maxNumberReturns, maxNumberReturns)) &&
-            (identical(other.makeUniqueRecipient, makeUniqueRecipient) ||
-                const DeepCollectionEquality()
-                    .equals(other.makeUniqueRecipient, makeUniqueRecipient)));
+        (other.runtimeType == runtimeType &&
+            other is _MoneyTransferQueryConfig &&
+            const DeepCollectionEquality().equals(other.type, type) &&
+            const DeepCollectionEquality()
+                .equals(other.recipientId, recipientId) &&
+            const DeepCollectionEquality().equals(other.senderId, senderId) &&
+            const DeepCollectionEquality()
+                .equals(other.maxNumberReturns, maxNumberReturns) &&
+            const DeepCollectionEquality()
+                .equals(other.makeUniqueRecipient, makeUniqueRecipient));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(type) ^
-      const DeepCollectionEquality().hash(recipientId) ^
-      const DeepCollectionEquality().hash(senderId) ^
-      const DeepCollectionEquality().hash(maxNumberReturns) ^
-      const DeepCollectionEquality().hash(makeUniqueRecipient);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(type),
+      const DeepCollectionEquality().hash(recipientId),
+      const DeepCollectionEquality().hash(senderId),
+      const DeepCollectionEquality().hash(maxNumberReturns),
+      const DeepCollectionEquality().hash(makeUniqueRecipient));
 
   @JsonKey(ignore: true)
   @override
@@ -259,16 +255,16 @@ abstract class _MoneyTransferQueryConfig implements MoneyTransferQueryConfig {
       _$_MoneyTransferQueryConfig.fromJson;
 
   @override
-  TransferType? get type => throw _privateConstructorUsedError;
+  TransferType? get type;
   @override
-  String? get recipientId => throw _privateConstructorUsedError;
+  String? get recipientId;
   @override
-  String? get senderId => throw _privateConstructorUsedError;
+  String? get senderId;
   @override // Map<String, String>?
 //     isEqualToFilter, // e.g. {"moneyPoolInfo.moneyPoolId": moneyPool.moneyPoolId},
-  int? get maxNumberReturns => throw _privateConstructorUsedError;
+  int? get maxNumberReturns;
   @override
-  bool? get makeUniqueRecipient => throw _privateConstructorUsedError;
+  bool? get makeUniqueRecipient;
   @override
   @JsonKey(ignore: true)
   _$MoneyTransferQueryConfigCopyWith<_MoneyTransferQueryConfig> get copyWith =>

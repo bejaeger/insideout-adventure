@@ -19,6 +19,16 @@ const TextStyle heading3Style = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.w600,
 );
+const TextStyle alert3Style = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.w600,
+  color: Colors.red,
+);
+const TextStyle success3Style = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.w600,
+  color: Colors.green,
+);
 const TextStyle headingLogin = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w300,
@@ -53,6 +63,12 @@ const TextStyle bookStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: kcOrangeColor,
 );
+const TextStyle labelStyle =
+    TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.black87);
+
+const TextStyle tagStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.black87);
+
 // Text Variables
 const TextStyle buttonTitleTextStyle =
     TextStyle(fontWeight: FontWeight.w700, color: Colors.white);

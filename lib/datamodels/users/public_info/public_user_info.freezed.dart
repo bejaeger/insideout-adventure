@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'public_user_info.dart';
@@ -36,7 +37,7 @@ class _$PublicUserInfoTearOff {
     );
   }
 
-  PublicUserInfo fromJson(Map<String, Object> json) {
+  PublicUserInfo fromJson(Map<String, Object?> json) {
     return PublicUserInfo.fromJson(json);
   }
 }
@@ -204,29 +205,25 @@ class _$_PublicUserInfo implements _PublicUserInfo {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _PublicUserInfo &&
-            (identical(other.uid, uid) ||
-                const DeepCollectionEquality().equals(other.uid, uid)) &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.email, email) ||
-                const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.errorMessage, errorMessage) ||
-                const DeepCollectionEquality()
-                    .equals(other.errorMessage, errorMessage)) &&
-            (identical(other.isSponsored, isSponsored) ||
-                const DeepCollectionEquality()
-                    .equals(other.isSponsored, isSponsored)));
+        (other.runtimeType == runtimeType &&
+            other is _PublicUserInfo &&
+            const DeepCollectionEquality().equals(other.uid, uid) &&
+            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality().equals(other.email, email) &&
+            const DeepCollectionEquality()
+                .equals(other.errorMessage, errorMessage) &&
+            const DeepCollectionEquality()
+                .equals(other.isSponsored, isSponsored));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(uid) ^
-      const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(errorMessage) ^
-      const DeepCollectionEquality().hash(isSponsored);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(uid),
+      const DeepCollectionEquality().hash(name),
+      const DeepCollectionEquality().hash(email),
+      const DeepCollectionEquality().hash(errorMessage),
+      const DeepCollectionEquality().hash(isSponsored));
 
   @JsonKey(ignore: true)
   @override
@@ -251,15 +248,15 @@ abstract class _PublicUserInfo implements PublicUserInfo {
       _$_PublicUserInfo.fromJson;
 
   @override
-  String get uid => throw _privateConstructorUsedError;
+  String get uid;
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
-  String? get email => throw _privateConstructorUsedError;
+  String? get email;
   @override
-  String? get errorMessage => throw _privateConstructorUsedError;
+  String? get errorMessage;
   @override
-  bool? get isSponsored => throw _privateConstructorUsedError;
+  bool? get isSponsored;
   @override
   @JsonKey(ignore: true)
   _$PublicUserInfoCopyWith<_PublicUserInfo> get copyWith =>

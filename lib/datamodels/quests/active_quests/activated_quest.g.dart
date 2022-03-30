@@ -17,7 +17,7 @@ _$_ActivatedQuest _$$_ActivatedQuestFromJson(Map<String, dynamic> json) =>
       uids: (json['uids'] as List<dynamic>?)?.map((e) => e as String).toList(),
       afkCreditsEarned: json['afkCreditsEarned'] as num?,
       timeElapsed: json['timeElapsed'] as int,
-      createdAt: json['createdAt'] ?? '',
+      createdAt: json['createdAt'] ?? "",
       lastCheckLat: (json['lastCheckLat'] as num?)?.toDouble(),
       lastCheckLon: (json['lastCheckLon'] as num?)?.toDouble(),
       currentDistanceInMeters:

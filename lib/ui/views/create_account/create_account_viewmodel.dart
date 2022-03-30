@@ -12,16 +12,14 @@ import 'package:afkcredits/ui/views/create_account/create_account_view.form.dart
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import '../../../flavor_config.dart';
-// import 'package:flutter/foundation.dart' show kIsWeb;
+import '../../../app_config_provider.dart';
 
 class CreateAccountViewModel extends AuthenticationViewModel {
   final UserRole role;
   CreateAccountViewModel({required this.role}) : super(role: role);
   final log = getLogger("CreateAccountViewModel");
   final UserService _userService = locator<UserService>();
-  final FlavorConfigProvider _flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final FirebaseAuthenticationService? _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
 

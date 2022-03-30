@@ -1,7 +1,7 @@
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/cloud_firestore_storage/cloud_storage_services.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
@@ -10,10 +10,12 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
-import 'package:afkcredits/services/maps/maps_service.dart';
+import 'package:afkcredits/services/maps/google_map_service.dart';
+import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/pedometer/pedometer_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -32,8 +34,10 @@ import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
+import 'package:afkcredits/ui/views/ar_view/ar_object_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
+import 'package:afkcredits/ui/views/credits_screen_time_view/credits_screen_time_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart';
@@ -42,6 +46,7 @@ import 'package:afkcredits/ui/views/layout/custom_bottom_bar_layout_template_vie
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_overview_view.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
@@ -54,6 +59,7 @@ import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_vi
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/manage_quest/manage_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
+import 'package:afkcredits/ui/views/screen_time/screen_time_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
@@ -64,6 +70,8 @@ import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
 import 'package:afkcredits/utils/cloud_storage_result/cloud_storage_result.dart';
 import 'package:afkcredits/utils/image_selector/image_selector.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
+import 'package:pedometer/pedometer.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
@@ -110,6 +118,9 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: AddGiftCardsView),
     MaterialRoute(page: HistoryAndAchievementsView),
     MaterialRoute(page: PurchasedScreenTimeView),
+    MaterialRoute(page: ScreenTimeView),
+    MaterialRoute(page: ARObjectView),
+    MaterialRoute(page: CreditsScreenTimeView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -127,7 +138,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: CloudFunctionsApi),
     LazySingleton(classType: FirebaseAuthenticationService),
-    LazySingleton(classType: FlavorConfigProvider),
+    LazySingleton(classType: AppConfigProvider),
     LazySingleton(classType: LayoutService),
     LazySingleton(classType: LocalStorageService),
     LazySingleton(classType: FlutterSecureStorage),
@@ -144,8 +155,16 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: ScreenTimeService),
     LazySingleton(classType: QuestTestingService),
     LazySingleton(classType: GamificationService),
-    LazySingleton(classType: MapsService),
+    LazySingleton(classType: MapStateService),
+    LazySingleton(classType: PedometerService),
+
     //LazySingleton(classType: MarkersInMap),
+    // LazySingleton(classType: MapViewModel),
+    Presolve(classType: MapViewModel, presolveUsing: presolveMapViewModel),
+
+    // Just a test if this helps reducing/removing the
+    // map failures
+    LazySingleton(classType: GoogleMapService),
 
     // Services
   ],

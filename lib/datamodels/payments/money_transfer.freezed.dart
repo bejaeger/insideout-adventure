@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'money_transfer.dart';
@@ -36,7 +37,7 @@ class _$MoneyTransferTearOff {
     );
   }
 
-  MoneyTransfer fromJson(Map<String, Object> json) {
+  MoneyTransfer fromJson(Map<String, Object?> json) {
     return MoneyTransfer.fromJson(json);
   }
 }
@@ -202,13 +203,13 @@ class _$_MoneyTransfer extends _MoneyTransfer {
 
   @override
   final TransferDetails transferDetails;
-  @JsonKey(defaultValue: "")
+  @JsonKey()
   @override
   final dynamic createdAt;
-  @JsonKey(defaultValue: TransferStatus.Initialized)
+  @JsonKey()
   @override
   final TransferStatus status;
-  @JsonKey(defaultValue: TransferType.Sponsor2Explorer)
+  @JsonKey()
   @override
   final TransferType type;
   @override
@@ -223,30 +224,25 @@ class _$_MoneyTransfer extends _MoneyTransfer {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _MoneyTransfer &&
-            (identical(other.transferDetails, transferDetails) ||
-                const DeepCollectionEquality()
-                    .equals(other.transferDetails, transferDetails)) &&
-            (identical(other.createdAt, createdAt) ||
-                const DeepCollectionEquality()
-                    .equals(other.createdAt, createdAt)) &&
-            (identical(other.status, status) ||
-                const DeepCollectionEquality().equals(other.status, status)) &&
-            (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)) &&
-            (identical(other.transferId, transferId) ||
-                const DeepCollectionEquality()
-                    .equals(other.transferId, transferId)));
+        (other.runtimeType == runtimeType &&
+            other is _MoneyTransfer &&
+            const DeepCollectionEquality()
+                .equals(other.transferDetails, transferDetails) &&
+            const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
+            const DeepCollectionEquality().equals(other.status, status) &&
+            const DeepCollectionEquality().equals(other.type, type) &&
+            const DeepCollectionEquality()
+                .equals(other.transferId, transferId));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(transferDetails) ^
-      const DeepCollectionEquality().hash(createdAt) ^
-      const DeepCollectionEquality().hash(status) ^
-      const DeepCollectionEquality().hash(type) ^
-      const DeepCollectionEquality().hash(transferId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(transferDetails),
+      const DeepCollectionEquality().hash(createdAt),
+      const DeepCollectionEquality().hash(status),
+      const DeepCollectionEquality().hash(type),
+      const DeepCollectionEquality().hash(transferId));
 
   @JsonKey(ignore: true)
   @override
@@ -272,16 +268,16 @@ abstract class _MoneyTransfer extends MoneyTransfer {
       _$_MoneyTransfer.fromJson;
 
   @override
-  TransferDetails get transferDetails => throw _privateConstructorUsedError;
+  TransferDetails get transferDetails;
   @override
-  dynamic get createdAt => throw _privateConstructorUsedError;
+  dynamic get createdAt;
   @override
-  TransferStatus get status => throw _privateConstructorUsedError;
+  TransferStatus get status;
   @override
-  TransferType get type => throw _privateConstructorUsedError;
+  TransferType get type;
   @override
   @JsonKey(name: "transferId")
-  String get transferId => throw _privateConstructorUsedError;
+  String get transferId;
   @override
   @JsonKey(ignore: true)
   _$MoneyTransferCopyWith<_MoneyTransfer> get copyWith =>

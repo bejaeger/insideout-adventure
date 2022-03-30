@@ -1,3 +1,4 @@
+import 'package:afkcredits/services/maps/google_map_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -18,7 +19,7 @@ import 'package:stacked_services/stacked_services.dart';
 import '../apis/cloud_functions_api.dart';
 import '../apis/direction_api.dart';
 import '../apis/firestore_api.dart';
-import '../flavor_config.dart';
+import '../app_config_provider.dart';
 import '../services/cloud_firestore_storage/cloud_storage_services.dart';
 import '../services/connectivity/connectivity_service.dart';
 import '../services/environment_services.dart';
@@ -27,10 +28,12 @@ import '../services/geolocation/geolocation_service.dart';
 import '../services/giftcard/gift_card_service.dart';
 import '../services/layout/layout_service.dart';
 import '../services/local_storage_service.dart';
-import '../services/maps/maps_service.dart';
+import '../services/maps/google_map_service.dart';
+import '../services/maps/map_state_service.dart';
 import '../services/markers/marker_service.dart';
 import '../services/payments/payment_service.dart';
 import '../services/payments/transfers_history_service.dart';
+import '../services/pedometer/pedometer_service.dart';
 import '../services/qrcodes/qrcode_service.dart';
 import '../services/quest_testing_service/quest_testing_service.dart';
 import '../services/quests/active_quest_service.dart';
@@ -38,12 +41,14 @@ import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/screentime/screen_time_service.dart';
 import '../services/users/user_service.dart';
+import '../ui/views/map/map_viewmodel.dart';
 import '../utils/cloud_storage_result/cloud_storage_result.dart';
 import '../utils/image_selector/image_selector.dart';
 
 final locator = StackedLocator.instance;
 
-void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
+Future setupLocator(
+    {String? environment, EnvironmentFilter? environmentFilter}) async {
 // Register environments
   locator.registerEnvironment(
       environment: environment, environmentFilter: environmentFilter);
@@ -64,7 +69,7 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => FirestoreApi());
   locator.registerLazySingleton(() => CloudFunctionsApi());
   locator.registerLazySingleton(() => FirebaseAuthenticationService());
-  locator.registerLazySingleton(() => FlavorConfigProvider());
+  locator.registerLazySingleton(() => AppConfigProvider());
   locator.registerLazySingleton(() => LayoutService());
   locator.registerLazySingleton(() => LocalStorageService());
   locator.registerLazySingleton(() => FlutterSecureStorage());
@@ -80,5 +85,10 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => ScreenTimeService());
   locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => GamificationService());
-  locator.registerLazySingleton(() => MapsService());
+  locator.registerLazySingleton(() => MapStateService());
+  locator.registerLazySingleton(() => PedometerService());
+  final mapViewModel = await presolveMapViewModel();
+  locator.registerSingleton(mapViewModel);
+
+  locator.registerLazySingleton(() => GoogleMapService());
 }

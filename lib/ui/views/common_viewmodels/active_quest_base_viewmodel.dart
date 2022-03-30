@@ -11,11 +11,14 @@ import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
-import 'package:afkcredits/flavor_config.dart';
-import 'package:afkcredits/services/maps/maps_service.dart';
+import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/services/maps/map_state_service.dart';
+import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -26,15 +29,16 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-abstract class ActiveQuestBaseViewModel extends BaseModel {
+abstract class ActiveQuestBaseViewModel extends BaseModel
+    with MapStateControlMixin, NavigationMixin {
   // ---------------------------------------------------------
   // Services
-  final MapsService mapsService = locator<MapsService>();
+  final MapStateService mapsService = locator<MapStateService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
-  final FlavorConfigProvider flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
   final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
+  final MapViewModel mapViewModel = locator<MapViewModel>();
 
   final log = getLogger("ActiveQuestBaseViewModel");
 
@@ -54,7 +58,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
   // -----------------------------------------------------------
   // UI state
   bool showCollectedMarkerAnimation = false;
-  bool showStartSwipe = true;
+  // bool showStartSwipe = true;
+  bool get showStartSwipe => activeQuestService.selectedQuest != null;
 
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
@@ -66,8 +71,11 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
 
   // ------------------------------------------
   // Functions to override!
-  // TODO: Check this!
   bool isQuestCompleted();
+
+  //  {
+  //   return false;
+  // }
   // void updateMapMarkers({required AFKMarker afkmarker}) {}
 
   ///------------------------------------------------------------
@@ -125,8 +133,13 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
         resetSlider();
         return false;
       }
-      showStartSwipe = false;
-      // Quest succesfully started!
+      // Quest is succesfully started so hasActiveQuest == true
+
+      // selected quest is reset...hopefully I'm not accessing it in the active quest haha :D
+      activeQuestService.resetSelectedQuest();
+      changeCameraZoom(kInitialZoom);
+      animateMap(forceUseLocation: true);
+
       return true;
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
@@ -169,7 +182,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
         await activeQuestService.cancelIncompleteQuest();
 
         resetPreviousQuest();
-        replaceWithMainView(index: BottomNavBarIndex.quest);
+        popQuestDetails();
+        //replaceWithMainView(index: BottomNavBarIndex.quest);
         log.i("replaced view with mapView");
       }
     } else {
@@ -190,6 +204,37 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
       return true;
     }
     setBusy(false);
+  }
+
+  // TODO: Unit test!
+  // All this is essential and should probably be unit tested
+  void popQuestDetails() async {
+    // set flag to start fade out
+    layoutService.setIsFadingOutQuestDetails(true);
+    layoutService.setIsMovingCamera(true);
+
+    // Restore camera
+    restorePreviousCameraPosition();
+
+    // add back all quests
+    addAllQuestMarkers();
+
+    // reset selected quest after delay so the fade out is smooth
+    await Future.delayed(Duration(seconds: 1));
+
+    // reset flags
+    layoutService.setIsMovingCamera(false);
+    layoutService.setIsFadingOutQuestDetails(false);
+
+    // reset selected quest -> don't show quest details anymore
+    activeQuestService.resetSelectedQuest();
+
+    // cancel position listener that was used for calibration
+    cancelPositionListener();
+
+    // TODO: not sure why this is done!
+    // reset distances to markers
+    geolocationService.resetStoredDistancesToMarkers();
   }
 
   Future checkAccuracy(
@@ -215,6 +260,33 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
     } else {
       return true;
     }
+  }
+
+  void showNextARObjects() {
+    // TODO: I am not sure if this is the best possibility!
+    // But maybe it is!?
+    final AFKMarker? marker = activeQuestService.getNextMarker();
+    if (marker == null || marker.lon == null && marker.lat == null) {
+      log.wtf(
+          "There is no next marker! This should never happen, investigate!");
+      return;
+    }
+    mapViewModel.resetMapMarkers();
+    mapViewModel.addARObjectToMap(
+      lat: marker.lat!,
+      lon: marker.lon!,
+      isCoin: true,
+      onTap: (double lat, double lon, bool isCoin) async {
+        // 2. First take snapshot
+        mapViewModel.takeSnapshotOfCameraPosition();
+
+        // 3. is showing AR View
+        layoutService.setIsShowingARView(true);
+
+        // 4. Open AR view with nice zoom in and fade out triggered
+        await mapViewModel.openARView(lat, lon, isCoin);
+      },
+    );
   }
 
   void displayQrCode(AFKMarker marker) {
@@ -390,7 +462,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
   }
 
   void cancelPositionListener() {
-    log.i("Cancel position listener");
     geolocationService.cancelPositionListener();
     setListenedToNewPosition(false);
   }
@@ -505,7 +576,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel {
   @mustCallSuper
   void resetPreviousQuest() {
     questSuccessfullyFinished = false;
-    showStartSwipe = true;
     validatingMarker = false;
   }
 }

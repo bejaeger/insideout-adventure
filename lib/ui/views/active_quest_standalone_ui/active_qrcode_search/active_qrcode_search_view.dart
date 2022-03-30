@@ -687,14 +687,15 @@ class _DisplayClueState extends State<DisplayClue>
     // TODO: THIS IS REBUILDING EVERY SECOND!!!!!!!!!!!!!!!!!
     // TODO SHOULD NOT BE THE CASE!
     return Container(
-        padding: const EdgeInsets.all(20),
-        alignment: Alignment(0, -0.1),
-        child: RotationTransition(
-          turns: _animation,
-          child: Text(widget.hintString,
-              //overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: textTheme(context).headline6!.copyWith(fontSize: 30)),
-        ));
+      padding: const EdgeInsets.all(20),
+      alignment: Alignment(0, -0.1),
+      child: RotationTransition(
+        turns: _animation,
+        child: Text(widget.hintString,
+            //overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: textTheme(context).headline6!.copyWith(fontSize: 30)),
+      ),
+    );
   }
 }

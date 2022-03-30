@@ -19,7 +19,7 @@ import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
@@ -32,8 +32,7 @@ class UserService {
   final _firestoreApi = locator<FirestoreApi>();
   final FirebaseAuthenticationService _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
-  final FlavorConfigProvider _flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
   final log = getLogger('UserService');

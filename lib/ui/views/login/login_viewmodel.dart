@@ -5,7 +5,7 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/authentication_viewmodel.dart';
@@ -20,12 +20,10 @@ class LoginViewModel extends AuthenticationViewModel {
       locator<FirebaseAuthenticationService>();
   bool checkUserRole = true;
   final _navigationService = locator<NavigationService>();
-  final FlavorConfigProvider _flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final log = getLogger("LoginViewModel");
   final UserService _userService = locator<UserService>();
-  final FlavorConfigProvider flavorConfigProvider =
-      locator<FlavorConfigProvider>();
+  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
   String get getReleaseName => flavorConfigProvider.appName;
 
   dynamic userLoginTapped({required UserRole userRole}) {

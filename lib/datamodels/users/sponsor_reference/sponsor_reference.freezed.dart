@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'sponsor_reference.dart';
@@ -32,7 +33,7 @@ class _$SponsorReferenceTearOff {
     );
   }
 
-  SponsorReference fromJson(Map<String, Object> json) {
+  SponsorReference fromJson(Map<String, Object?> json) {
     return SponsorReference.fromJson(json);
   }
 }
@@ -160,23 +161,21 @@ class _$_SponsorReference implements _SponsorReference {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _SponsorReference &&
-            (identical(other.uid, uid) ||
-                const DeepCollectionEquality().equals(other.uid, uid)) &&
-            (identical(other.authMethod, authMethod) ||
-                const DeepCollectionEquality()
-                    .equals(other.authMethod, authMethod)) &&
-            (identical(other.withPasscode, withPasscode) ||
-                const DeepCollectionEquality()
-                    .equals(other.withPasscode, withPasscode)));
+        (other.runtimeType == runtimeType &&
+            other is _SponsorReference &&
+            const DeepCollectionEquality().equals(other.uid, uid) &&
+            const DeepCollectionEquality()
+                .equals(other.authMethod, authMethod) &&
+            const DeepCollectionEquality()
+                .equals(other.withPasscode, withPasscode));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(uid) ^
-      const DeepCollectionEquality().hash(authMethod) ^
-      const DeepCollectionEquality().hash(withPasscode);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(uid),
+      const DeepCollectionEquality().hash(authMethod),
+      const DeepCollectionEquality().hash(withPasscode));
 
   @JsonKey(ignore: true)
   @override
@@ -199,11 +198,11 @@ abstract class _SponsorReference implements SponsorReference {
       _$_SponsorReference.fromJson;
 
   @override
-  String get uid => throw _privateConstructorUsedError;
+  String get uid;
   @override
-  AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
+  AuthenticationMethod? get authMethod;
   @override
-  bool get withPasscode => throw _privateConstructorUsedError;
+  bool get withPasscode;
   @override
   @JsonKey(ignore: true)
   _$SponsorReferenceCopyWith<_SponsorReference> get copyWith =>

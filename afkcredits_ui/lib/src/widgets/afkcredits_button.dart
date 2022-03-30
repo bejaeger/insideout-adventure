@@ -9,6 +9,7 @@ class AfkCreditsButton extends StatelessWidget {
   final void Function()? onTap;
   final bool outline;
   final Widget? leading;
+  final Color? color;
 
   const AfkCreditsButton({
     Key? key,
@@ -17,6 +18,7 @@ class AfkCreditsButton extends StatelessWidget {
     this.busy = false,
     this.onTap,
     this.leading,
+    this.color,
   })  : outline = false,
         super(key: key);
 
@@ -24,6 +26,7 @@ class AfkCreditsButton extends StatelessWidget {
     required this.title,
     this.onTap,
     this.leading,
+    this.color,
   })  : disabled = false,
         busy = false,
         outline = true;
@@ -39,14 +42,14 @@ class AfkCreditsButton extends StatelessWidget {
         alignment: Alignment.center,
         decoration: !outline
             ? BoxDecoration(
-                color: !disabled ? kcOrangeColor : kcMediumGreyColor,
+                color: !disabled ? color ?? kcOrangeColor : kcMediumGreyColor,
                 borderRadius: BorderRadius.circular(8),
               )
             : BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: kcOrangeColor,
+                  color: color ?? kcOrangeColor,
                   width: 1,
                 )),
         child: !busy

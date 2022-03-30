@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'afk_marker.dart';
@@ -36,7 +37,7 @@ class _$AFKMarkerTearOff {
     );
   }
 
-  AFKMarker fromJson(Map<String, Object> json) {
+  AFKMarker fromJson(Map<String, Object?> json) {
     return AFKMarker.fromJson(json);
   }
 }
@@ -188,7 +189,7 @@ class _$_AFKMarker implements _AFKMarker {
   final double? lat;
   @override
   final double? lon;
-  @JsonKey(defaultValue: MarkerStatus.testing)
+  @JsonKey()
   @override
   final MarkerStatus markerStatus;
 
@@ -200,29 +201,24 @@ class _$_AFKMarker implements _AFKMarker {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _AFKMarker &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.qrCodeId, qrCodeId) ||
-                const DeepCollectionEquality()
-                    .equals(other.qrCodeId, qrCodeId)) &&
-            (identical(other.lat, lat) ||
-                const DeepCollectionEquality().equals(other.lat, lat)) &&
-            (identical(other.lon, lon) ||
-                const DeepCollectionEquality().equals(other.lon, lon)) &&
-            (identical(other.markerStatus, markerStatus) ||
-                const DeepCollectionEquality()
-                    .equals(other.markerStatus, markerStatus)));
+        (other.runtimeType == runtimeType &&
+            other is _AFKMarker &&
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.qrCodeId, qrCodeId) &&
+            const DeepCollectionEquality().equals(other.lat, lat) &&
+            const DeepCollectionEquality().equals(other.lon, lon) &&
+            const DeepCollectionEquality()
+                .equals(other.markerStatus, markerStatus));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(qrCodeId) ^
-      const DeepCollectionEquality().hash(lat) ^
-      const DeepCollectionEquality().hash(lon) ^
-      const DeepCollectionEquality().hash(markerStatus);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(qrCodeId),
+      const DeepCollectionEquality().hash(lat),
+      const DeepCollectionEquality().hash(lon),
+      const DeepCollectionEquality().hash(markerStatus));
 
   @JsonKey(ignore: true)
   @override
@@ -247,15 +243,15 @@ abstract class _AFKMarker implements AFKMarker {
       _$_AFKMarker.fromJson;
 
   @override
-  String get id => throw _privateConstructorUsedError;
+  String get id;
   @override
-  String? get qrCodeId => throw _privateConstructorUsedError;
+  String? get qrCodeId;
   @override
-  double? get lat => throw _privateConstructorUsedError;
+  double? get lat;
   @override
-  double? get lon => throw _privateConstructorUsedError;
+  double? get lon;
   @override
-  MarkerStatus get markerStatus => throw _privateConstructorUsedError;
+  MarkerStatus get markerStatus;
   @override
   @JsonKey(ignore: true)
   _$AFKMarkerCopyWith<_AFKMarker> get copyWith =>

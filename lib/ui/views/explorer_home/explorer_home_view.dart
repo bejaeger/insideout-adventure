@@ -1,24 +1,99 @@
-import 'package:afkcredits/constants/app_strings.dart';
-import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/constants/image_urls.dart';
-import 'package:afkcredits/datamodels/achievements/achievement.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
-import 'package:afkcredits/enums/stats_type.dart';
-import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/achievement_card.dart';
-import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/finished_quest_card.dart';
-import 'package:afkcredits/ui/widgets/large_button.dart';
-import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:afkcredits/ui/widgets/stats_card.dart';
-import 'package:afkcredits/utils/currency_formatting_helpers.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:afkcredits/ui/views/explorer_home/overlays/main_footer_overlay_view.dart';
+import 'package:afkcredits/ui/views/explorer_home/overlays/main_header_overlay.dart';
+import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay.dart';
+import 'package:afkcredits/ui/views/map/main_map_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_view.dart';
+import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/animations/fade_transition_animation.dart';
+import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
+import 'package:afkcredits/ui/widgets/round_close_button.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/app/app.logger.dart';
+
+final log = getLogger("REBUILD LOGGER");
+
+class ExplorerHomeView extends StatefulWidget {
+  const ExplorerHomeView({Key? key}) : super(key: key);
+
+  @override
+  State<ExplorerHomeView> createState() => _ExplorerHomeViewState();
+}
+
+class _ExplorerHomeViewState extends State<ExplorerHomeView> {
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
+        viewModelBuilder: () => ExplorerHomeViewModel(),
+        onModelReady: (model) => model.initialize(),
+        builder: (context, model, child) {
+          //log.wtf("==>> Rebuild ExplorerHomeView");
+          return SafeArea(
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  // bottom layer
+                  //if (!model.isBusy)
+                  if (!model.isBusy) MainMapView(),
+                  if (model.showLoadingScreen)
+                    MapLoadingOverlay(show: model.showFullLoadingScreen),
+
+                  MainHeader(
+                    show: (!model.isShowingQuestDetails &&
+                            !model.hasActiveQuest) ||
+                        model.isFadingOutQuestDetails,
+                    onPressed: model
+                        .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
+                    onCreditsPressed: model.showNotImplementedSnackbar,
+                  ),
+
+                  MainFooterOverlayView(),
+
+                  QuestListOverlayView(),
+
+                  if (model.isShowingQuestDetails || model.hasActiveQuest)
+                    QuestDetailsOverlayView(
+                        startFadeOut: model.isFadingOutQuestDetails),
+
+                  // StepCounterOverlay(),
+
+                  // only used for quest view at the moment!
+                  OverlayedCloseButton(),
+
+                  if (model.isShowingARView) FadeTransitionAnimation(),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+}
+
+class OverlayedCloseButton extends StatelessWidget {
+  const OverlayedCloseButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<QuestListOverlayViewModel>.reactive(
+      viewModelBuilder: () => QuestListOverlayViewModel(),
+      onModelReady: (model) => model.listenToLayout(),
+      builder: (context, model, child) => model.isShowingQuestList
+          ? Align(
+              alignment: Alignment(0, 0.91),
+              child: RoundCloseButton(onTap: model.removeQuestListOverlay),
+            )
+          : SizedBox(height: 0, width: 0),
+    );
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////
+// !!! DEPRECATED !!!!
+
+/*
 
 class ExplorerHomeView extends StatelessWidget {
   const ExplorerHomeView({Key? key}) : super(key: key);
@@ -250,3 +325,4 @@ class AchievementsGrid extends StatelessWidget {
     );
   }
 }
+*/

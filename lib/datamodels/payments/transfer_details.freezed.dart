@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'transfer_details.dart';
@@ -40,7 +41,7 @@ class _$TransferDetailsTearOff {
     );
   }
 
-  TransferDetails fromJson(Map<String, Object> json) {
+  TransferDetails fromJson(Map<String, Object?> json) {
     return TransferDetails.fromJson(json);
   }
 }
@@ -240,39 +241,31 @@ class _$_TransferDetails implements _TransferDetails {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _TransferDetails &&
-            (identical(other.recipientId, recipientId) ||
-                const DeepCollectionEquality()
-                    .equals(other.recipientId, recipientId)) &&
-            (identical(other.recipientName, recipientName) ||
-                const DeepCollectionEquality()
-                    .equals(other.recipientName, recipientName)) &&
-            (identical(other.senderId, senderId) ||
-                const DeepCollectionEquality()
-                    .equals(other.senderId, senderId)) &&
-            (identical(other.senderName, senderName) ||
-                const DeepCollectionEquality()
-                    .equals(other.senderName, senderName)) &&
-            (identical(other.amount, amount) ||
-                const DeepCollectionEquality().equals(other.amount, amount)) &&
-            (identical(other.currency, currency) ||
-                const DeepCollectionEquality()
-                    .equals(other.currency, currency)) &&
-            (identical(other.sourceType, sourceType) ||
-                const DeepCollectionEquality()
-                    .equals(other.sourceType, sourceType)));
+        (other.runtimeType == runtimeType &&
+            other is _TransferDetails &&
+            const DeepCollectionEquality()
+                .equals(other.recipientId, recipientId) &&
+            const DeepCollectionEquality()
+                .equals(other.recipientName, recipientName) &&
+            const DeepCollectionEquality().equals(other.senderId, senderId) &&
+            const DeepCollectionEquality()
+                .equals(other.senderName, senderName) &&
+            const DeepCollectionEquality().equals(other.amount, amount) &&
+            const DeepCollectionEquality().equals(other.currency, currency) &&
+            const DeepCollectionEquality()
+                .equals(other.sourceType, sourceType));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(recipientId) ^
-      const DeepCollectionEquality().hash(recipientName) ^
-      const DeepCollectionEquality().hash(senderId) ^
-      const DeepCollectionEquality().hash(senderName) ^
-      const DeepCollectionEquality().hash(amount) ^
-      const DeepCollectionEquality().hash(currency) ^
-      const DeepCollectionEquality().hash(sourceType);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(recipientId),
+      const DeepCollectionEquality().hash(recipientName),
+      const DeepCollectionEquality().hash(senderId),
+      const DeepCollectionEquality().hash(senderName),
+      const DeepCollectionEquality().hash(amount),
+      const DeepCollectionEquality().hash(currency),
+      const DeepCollectionEquality().hash(sourceType));
 
   @JsonKey(ignore: true)
   @override
@@ -299,19 +292,19 @@ abstract class _TransferDetails implements TransferDetails {
       _$_TransferDetails.fromJson;
 
   @override
-  String get recipientId => throw _privateConstructorUsedError;
+  String get recipientId;
   @override
-  String get recipientName => throw _privateConstructorUsedError;
+  String get recipientName;
   @override
-  String get senderId => throw _privateConstructorUsedError;
+  String get senderId;
   @override
-  String get senderName => throw _privateConstructorUsedError;
+  String get senderName;
   @override
-  num get amount => throw _privateConstructorUsedError;
+  num get amount;
   @override
-  String get currency => throw _privateConstructorUsedError;
+  String get currency;
   @override
-  MoneySource get sourceType => throw _privateConstructorUsedError;
+  MoneySource get sourceType;
   @override
   @JsonKey(ignore: true)
   _$TransferDetailsCopyWith<_TransferDetails> get copyWith =>

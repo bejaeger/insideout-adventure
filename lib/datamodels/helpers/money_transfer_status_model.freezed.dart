@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'money_transfer_status_model.dart';
@@ -134,19 +135,18 @@ class _$_MoneyTransferStatusModel implements _MoneyTransferStatusModel {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _MoneyTransferStatusModel &&
-            (identical(other.futureStatus, futureStatus) ||
-                const DeepCollectionEquality()
-                    .equals(other.futureStatus, futureStatus)) &&
-            (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)));
+        (other.runtimeType == runtimeType &&
+            other is _MoneyTransferStatusModel &&
+            const DeepCollectionEquality()
+                .equals(other.futureStatus, futureStatus) &&
+            const DeepCollectionEquality().equals(other.type, type));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(futureStatus) ^
-      const DeepCollectionEquality().hash(type);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(futureStatus),
+      const DeepCollectionEquality().hash(type));
 
   @JsonKey(ignore: true)
   @override
@@ -161,10 +161,9 @@ abstract class _MoneyTransferStatusModel implements MoneyTransferStatusModel {
       required TransferType type}) = _$_MoneyTransferStatusModel;
 
   @override
-  Future<TransferDialogStatus> get futureStatus =>
-      throw _privateConstructorUsedError;
+  Future<TransferDialogStatus> get futureStatus;
   @override
-  TransferType get type => throw _privateConstructorUsedError;
+  TransferType get type;
   @override
   @JsonKey(ignore: true)
   _$MoneyTransferStatusModelCopyWith<_MoneyTransferStatusModel> get copyWith =>

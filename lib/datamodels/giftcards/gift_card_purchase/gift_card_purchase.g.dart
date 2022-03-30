@@ -12,8 +12,8 @@ _$_GiftCardPurchase _$$_GiftCardPurchaseFromJson(Map<String, dynamic> json) =>
           json['giftCardCategory'] as Map<String, dynamic>),
       uid: json['uid'] as String,
       code: json['code'] as String?,
-      purchasedAt: json['purchasedAt'] ?? '',
-      transferId: json['transferId'] as String? ?? 'placeholder',
+      purchasedAt: json['purchasedAt'] ?? "",
+      transferId: json['transferId'] as String? ?? "placeholder",
       status: $enumDecodeNullable(
               _$PurchasedGiftCardStatusEnumMap, json['status']) ??
           PurchasedGiftCardStatus.initialized,

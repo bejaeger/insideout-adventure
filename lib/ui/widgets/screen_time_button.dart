@@ -12,6 +12,7 @@ class ScreenTimeButton extends StatelessWidget {
   final Color backgroundColor;
   final Color titleColor;
   final int credits;
+  final double? height;
   const ScreenTimeButton({
     Key? key,
     required this.onPressed,
@@ -21,6 +22,7 @@ class ScreenTimeButton extends StatelessWidget {
     this.titleColor = kGreyTextColor,
     this.imageUrl,
     this.imagePath,
+    this.height,
   }) : super(key: key);
 
   @override

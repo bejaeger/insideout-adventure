@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'user_statistics.dart';
@@ -44,7 +45,7 @@ class _$UserStatisticsTearOff {
     );
   }
 
-  UserStatistics fromJson(Map<String, Object> json) {
+  UserStatistics fromJson(Map<String, Object?> json) {
     return UserStatistics.fromJson(json);
   }
 }
@@ -279,51 +280,40 @@ class _$_UserStatistics implements _UserStatistics {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _UserStatistics &&
-            (identical(other.afkCreditsBalance, afkCreditsBalance) ||
-                const DeepCollectionEquality()
-                    .equals(other.afkCreditsBalance, afkCreditsBalance)) &&
-            (identical(other.afkCreditsSpent, afkCreditsSpent) ||
-                const DeepCollectionEquality()
-                    .equals(other.afkCreditsSpent, afkCreditsSpent)) &&
-            (identical(other.availableSponsoring, availableSponsoring) ||
-                const DeepCollectionEquality()
-                    .equals(other.availableSponsoring, availableSponsoring)) &&
-            (identical(other.lifetimeEarnings, lifetimeEarnings) ||
-                const DeepCollectionEquality()
-                    .equals(other.lifetimeEarnings, lifetimeEarnings)) &&
-            (identical(other.numberQuestsCompleted, numberQuestsCompleted) ||
-                const DeepCollectionEquality().equals(
-                    other.numberQuestsCompleted, numberQuestsCompleted)) &&
-            (identical(
-                    other.numberGiftCardsPurchased, numberGiftCardsPurchased) ||
-                const DeepCollectionEquality().equals(
-                    other.numberGiftCardsPurchased,
-                    numberGiftCardsPurchased)) &&
-            (identical(other.numberScreenTimeHoursPurchased,
-                    numberScreenTimeHoursPurchased) ||
-                const DeepCollectionEquality().equals(
-                    other.numberScreenTimeHoursPurchased,
-                    numberScreenTimeHoursPurchased)) &&
-            (identical(other.completedQuests, completedQuests) ||
-                const DeepCollectionEquality()
-                    .equals(other.completedQuests, completedQuests)) &&
-            (identical(other.uid, uid) ||
-                const DeepCollectionEquality().equals(other.uid, uid)));
+        (other.runtimeType == runtimeType &&
+            other is _UserStatistics &&
+            const DeepCollectionEquality()
+                .equals(other.afkCreditsBalance, afkCreditsBalance) &&
+            const DeepCollectionEquality()
+                .equals(other.afkCreditsSpent, afkCreditsSpent) &&
+            const DeepCollectionEquality()
+                .equals(other.availableSponsoring, availableSponsoring) &&
+            const DeepCollectionEquality()
+                .equals(other.lifetimeEarnings, lifetimeEarnings) &&
+            const DeepCollectionEquality()
+                .equals(other.numberQuestsCompleted, numberQuestsCompleted) &&
+            const DeepCollectionEquality().equals(
+                other.numberGiftCardsPurchased, numberGiftCardsPurchased) &&
+            const DeepCollectionEquality().equals(
+                other.numberScreenTimeHoursPurchased,
+                numberScreenTimeHoursPurchased) &&
+            const DeepCollectionEquality()
+                .equals(other.completedQuests, completedQuests) &&
+            const DeepCollectionEquality().equals(other.uid, uid));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(afkCreditsBalance) ^
-      const DeepCollectionEquality().hash(afkCreditsSpent) ^
-      const DeepCollectionEquality().hash(availableSponsoring) ^
-      const DeepCollectionEquality().hash(lifetimeEarnings) ^
-      const DeepCollectionEquality().hash(numberQuestsCompleted) ^
-      const DeepCollectionEquality().hash(numberGiftCardsPurchased) ^
-      const DeepCollectionEquality().hash(numberScreenTimeHoursPurchased) ^
-      const DeepCollectionEquality().hash(completedQuests) ^
-      const DeepCollectionEquality().hash(uid);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(afkCreditsBalance),
+      const DeepCollectionEquality().hash(afkCreditsSpent),
+      const DeepCollectionEquality().hash(availableSponsoring),
+      const DeepCollectionEquality().hash(lifetimeEarnings),
+      const DeepCollectionEquality().hash(numberQuestsCompleted),
+      const DeepCollectionEquality().hash(numberGiftCardsPurchased),
+      const DeepCollectionEquality().hash(numberScreenTimeHoursPurchased),
+      const DeepCollectionEquality().hash(completedQuests),
+      const DeepCollectionEquality().hash(uid));
 
   @JsonKey(ignore: true)
   @override
@@ -352,24 +342,23 @@ abstract class _UserStatistics implements UserStatistics {
       _$_UserStatistics.fromJson;
 
   @override
-  num get afkCreditsBalance => throw _privateConstructorUsedError;
+  num get afkCreditsBalance;
   @override // in credits
-  num get afkCreditsSpent => throw _privateConstructorUsedError;
+  num get afkCreditsSpent;
   @override // in credits
-  num get availableSponsoring => throw _privateConstructorUsedError;
+  num get availableSponsoring;
   @override // in cents!
-  num get lifetimeEarnings => throw _privateConstructorUsedError;
+  num get lifetimeEarnings;
   @override // in credits
-  int get numberQuestsCompleted => throw _privateConstructorUsedError;
+  int get numberQuestsCompleted;
   @override
-  int get numberGiftCardsPurchased => throw _privateConstructorUsedError;
+  int get numberGiftCardsPurchased;
   @override
-  num get numberScreenTimeHoursPurchased => throw _privateConstructorUsedError;
+  num get numberScreenTimeHoursPurchased;
   @override
-  List<ConciseFinishedQuestInfo> get completedQuests =>
-      throw _privateConstructorUsedError;
+  List<ConciseFinishedQuestInfo> get completedQuests;
   @override
-  String get uid => throw _privateConstructorUsedError;
+  String get uid;
   @override
   @JsonKey(ignore: true)
   _$UserStatisticsCopyWith<_UserStatistics> get copyWith =>

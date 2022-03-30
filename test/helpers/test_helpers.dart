@@ -5,7 +5,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/flavor_config.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
@@ -43,7 +43,7 @@ final mockFirebaseUser = MockFirebaseUser();
   MockSpec<CloudFunctionsApi>(returnNullOnMissingStub: true),
   MockSpec<EnvironmentService>(returnNullOnMissingStub: true),
   MockSpec<PlacesService>(returnNullOnMissingStub: true),
-  MockSpec<FlavorConfigProvider>(returnNullOnMissingStub: true),
+  MockSpec<AppConfigProvider>(returnNullOnMissingStub: true),
   MockSpec<LocalStorageService>(returnNullOnMissingStub: true),
   MockSpec<FlutterSecureStorage>(returnNullOnMissingStub: true),
   MockSpec<LayoutService>(returnNullOnMissingStub: true),
@@ -172,9 +172,9 @@ MockCloudFunctionsApi getAndRegisterCloudFunctionsApi() {
 }
 
 MockFlavorConfigProvider getAndRegisterFlavorConfigProvider() {
-  _removeRegistrationIfExists<FlavorConfigProvider>();
+  _removeRegistrationIfExists<AppConfigProvider>();
   final service = MockFlavorConfigProvider();
-  locator.registerSingleton<FlavorConfigProvider>(service);
+  locator.registerSingleton<AppConfigProvider>(service);
   return service;
 }
 
@@ -239,8 +239,6 @@ TransfersHistoryService getAndRegisterTransfersHistoryService() {
 QuestService getAndRegisterQuestService() {
   _removeRegistrationIfExists<QuestService>();
   final service = MockQuestService();
-  when(service.activatedQuestSubject).thenAnswer(
-      (_) => BehaviorSubject<ActivatedQuest?>.seeded(getTestActivatedQuest()));
   locator.registerSingleton<QuestService>(service);
   return service;
 }
@@ -249,7 +247,7 @@ GeolocationService getAndRegisterGeolocationService(
     {Position? position, bool isCloseBy = true}) {
   _removeRegistrationIfExists<GeolocationService>();
   final service = MockGeolocationService();
-  when(service.getAndSetCurrentLocation()).thenAnswer((_) async => position);
+  //when(service.getAndSetCurrentLocation()).thenAnswer((_) async => position);
   when(service.isUserCloseby(lat: anyNamed("lat"), lon: anyNamed("lon")))
       .thenAnswer((_) async => isCloseBy);
   locator.registerSingleton<GeolocationService>(service);
@@ -259,7 +257,6 @@ GeolocationService getAndRegisterGeolocationService(
 MockStopWatchService getAndRegisterStopWatchService() {
   _removeRegistrationIfExists<StopWatchService>();
   final service = MockStopWatchService();
-  when(service.getSecondTime()).thenReturn(100);
   locator.registerSingleton<StopWatchService>(service);
   return service;
 }
@@ -298,7 +295,7 @@ void unregisterServices() {
   locator.unregister<CloudFunctionsApi>();
   locator.unregister<EnvironmentService>();
   locator.unregister<PlacesService>();
-  locator.unregister<FlavorConfigProvider>();
+  locator.unregister<AppConfigProvider>();
   locator.unregister<FirebaseAuthenticationService>();
   locator.unregister<DialogService>();
   locator.unregister<BottomSheetService>();

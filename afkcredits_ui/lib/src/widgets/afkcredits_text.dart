@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class AfkCreditsText extends StatelessWidget {
   final String text;
   final TextStyle style;
-  final TextAlign alignment;
+  final TextAlign? alignment;
 
   const AfkCreditsText.headingOne(this.text,
       {TextAlign align = TextAlign.start})
@@ -18,6 +18,14 @@ class AfkCreditsText extends StatelessWidget {
   const AfkCreditsText.headingThree(this.text,
       {TextAlign align = TextAlign.start})
       : style = heading3Style,
+        alignment = align;
+  const AfkCreditsText.alertThree(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = alert3Style,
+        alignment = align;
+  const AfkCreditsText.successThree(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = success3Style,
         alignment = align;
 
   const AfkCreditsText.headingLogin(this.text,
@@ -36,12 +44,19 @@ class AfkCreditsText extends StatelessWidget {
       : style = captionStyle,
         alignment = align;
 
-  const AfkCreditsText.book(this.text, {TextAlign align = TextAlign.start})
+  const AfkCreditsText.book(this.text, {TextAlign? align})
       : style = bookStyle,
         alignment = align;
 
+  const AfkCreditsText.label(this.text, {TextAlign align = TextAlign.start})
+      : style = labelStyle,
+        alignment = align;
+  const AfkCreditsText.tag(this.text, {TextAlign align = TextAlign.start})
+      : style = tagStyle,
+        alignment = align;
+
   AfkCreditsText.body(this.text,
-      {Color color = kcMediumGreyColor, TextAlign align = TextAlign.start})
+      {Color color = kGreyTextColor, TextAlign? align})
       : style = bodyStyleSofia.copyWith(color: color),
         alignment = align;
 

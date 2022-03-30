@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'enums/connectivity_type.dart';
-import 'flavor_config.dart';
+import 'app_config_provider.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 
@@ -23,6 +23,9 @@ import 'firebase_options_dev.dart' as dev;
 import 'firebase_options_prod.dart' as prod;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
+
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
+    show ArCoreController;
 
 const bool USE_EMULATOR = false;
 
@@ -47,7 +50,6 @@ void mainCommon(Flavor flavor) async {
         systemNavigationBarColor: kBlackHeadlineColor,
       ),
     );
-
     setupLocator();
     setupDialogUi();
     setupSnackbarUi();
@@ -57,10 +59,17 @@ void mainCommon(Flavor flavor) async {
     // Logger.level = Level.verbose;
 
     // configure services that need settings dependent on flavor
-    final FlavorConfigProvider flavorConfigProvider =
-        locator<FlavorConfigProvider>();
-    flavorConfigProvider.configure(flavor);
+    final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
+    appConfigProvider.configure(flavor);
     print("==>> Running with flavor $flavor");
+
+    if (Platform.isAndroid &&
+        await ArCoreController.checkArCoreAvailability() &&
+        await ArCoreController.checkIsArCoreInstalled()) {
+      appConfigProvider.setIsARAvailable(true);
+    } else {
+      appConfigProvider.setIsARAvailable(false);
+    }
 
     runApp(MyApp());
   } catch (e) {
