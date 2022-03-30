@@ -9,9 +9,9 @@ import 'package:transparent_pointer/transparent_pointer.dart';
 // Map that shows the actual GoogleMap!
 //
 
-class GoogleMapsScreen extends StatelessWidget {
+class GoogleMapScreen extends StatelessWidget {
   final MapViewModel model;
-  const GoogleMapsScreen({
+  const GoogleMapScreen({
     Key? key,
     required this.model,
   }) : super(key: key);

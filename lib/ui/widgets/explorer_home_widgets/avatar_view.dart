@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 // TODO: Add real user information to this widget
 
-class MainAvatarView extends StatelessWidget {
+class AvatarView extends StatelessWidget {
   // current level of avatar
   final int level;
 
@@ -15,7 +15,7 @@ class MainAvatarView extends StatelessWidget {
   // callback function to execute when avatar is pressed
   final void Function()? onPressed;
 
-  const MainAvatarView(
+  const AvatarView(
       {Key? key, required this.level, required this.percentage, this.onPressed})
       : super(key: key);
 

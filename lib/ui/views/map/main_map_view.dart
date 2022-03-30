@@ -2,7 +2,7 @@
 // that has the viewmodel attached that takes care
 // of all map functionality
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
+import 'package:afkcredits/ui/views/explorer_home/overlays/right_floating_buttons_overlay.dart';
 import 'package:afkcredits/ui/views/map/avatar_on_map.dart';
 import 'package:afkcredits/ui/views/map/google_map_screen.dart';
 import 'package:afkcredits/ui/views/map/map_gestures_widget.dart';

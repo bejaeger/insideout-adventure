@@ -11,16 +11,17 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class QuestDetailsOverlay extends StatefulWidget {
+class QuestDetailsOverlayView extends StatefulWidget {
   final bool startFadeOut;
-  const QuestDetailsOverlay({Key? key, required this.startFadeOut})
+  const QuestDetailsOverlayView({Key? key, required this.startFadeOut})
       : super(key: key);
 
   @override
-  State<QuestDetailsOverlay> createState() => _QuestDetailsOverlayState();
+  State<QuestDetailsOverlayView> createState() =>
+      _QuestDetailsOverlayViewState();
 }
 
-class _QuestDetailsOverlayState extends State<QuestDetailsOverlay>
+class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
   // ..repeat(reverse: true);
