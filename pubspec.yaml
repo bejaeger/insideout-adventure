@@ -105,6 +105,7 @@ dependencies:
   map_picker: ^0.0.3
   image_picker: ^0.8.4+4
   progress_indicator_button: ^0.0.3
+  awesome_notifications: ^0.6.21
   transparent_pointer: ^1.0.0
   afkcredits_ui: 
     path: ./afkcredits_ui/
