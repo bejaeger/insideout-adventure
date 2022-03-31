@@ -8,6 +8,7 @@ import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +19,6 @@ import 'enums/connectivity_type.dart';
 import 'app_config_provider.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
-
 import 'firebase_options_dev.dart' as dev;
 //import 'firebase_options_prod.dart' as prod;
 
@@ -31,6 +31,17 @@ const bool USE_EMULATOR = false;
 
 void mainCommon(Flavor flavor) async {
   try {
+    //Notificaitons Package
+    AwesomeNotifications()
+        .initialize('resource://drawable/res_icon_notification.png', [
+      NotificationChannel(
+          channelKey: "base_channel",
+          channelName: 'afk notifications',
+          channelDescription: 'channelDescription',
+          defaultColor: Colors.teal,
+          importance: NotificationImportance.High,
+          channelShowBadge: true),
+    ]);
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
