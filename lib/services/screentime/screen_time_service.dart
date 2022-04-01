@@ -5,12 +5,72 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
 import 'package:afkcredits/enums/screen_time_voucher_status.dart';
+import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 
 class ScreenTimeService {
+  // ----------------------------
+  // services
+  final log = getLogger('ScreenTimeService');
+  final UserService _userService = locator<UserService>();
+  final StopWatchService _stopWatchService = locator<StopWatchService>();
+  // -----------------------------
+  // Return values and state
+  int get totalAvailableScreenTime => convertCreditsToScreenTime(
+      credits: _userService.currentUserStats.afkCreditsBalance);
+
+  DateTime? screenTimeStartTime;
+  bool get hasActiveScreenTime => screenTimeStartTime != null;
+  int? screenTimeLeft;
+  // int get screenTimeLeft =>
+  //     hasActiveScreenTime ? getScreenTimeLeftInMinutes() : -1;
+
+  // ---------------------------------
+  // Functions
+
+  // Function to convert screen time into credits
+  // Might need to be more sophisticated!
+  int convertCreditsToScreenTime({required num credits}) {
+    double screenTimeFactor = 1;
+    return (credits * screenTimeFactor).toInt();
+  }
+
+  // Function to convert screen time into credits
+  // Might need to be more sophisticated!
+  void startScreenTime(
+      {required int minutes, required void Function(int) callback}) {
+    screenTimeStartTime = DateTime.now();
+    screenTimeLeft = minutes * 60; // getScreenTimeLeftInMinutes();
+    // Need to start a timer here
+    // that counts down the screen time
+    _stopWatchService.listenToSecondTime(callback: (int tick) {
+      screenTimeLeft = minutes * 60 - tick;
+      // screenTimeLeft = getScreenTimeLeftInMinutes();
+      callback(tick);
+    });
+  }
+
+  void stopScreenTime() {
+    // TODO: Deduct AFK Credits
+    screenTimeStartTime = null;
+    screenTimeLeft = null;
+    _stopWatchService.resetTimer();
+  }
+
+  // --------------------------
+  // helpers
+  int getScreenTimeLeftInMinutes() {
+    return DateTime.now().difference(screenTimeStartTime!).inMinutes;
+  }
+
+  ///////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////
+  // !!! BELOW IS DEPRECATED CODE!
+
   final _firestoreApi = locator<FirestoreApi>();
   final CloudFunctionsApi _cloudFunctionsApi = locator<CloudFunctionsApi>();
-  final log = getLogger('ScreenTimeService');
-
   StreamSubscription? _purchasedScreenTimesStreamSubscription;
   List<ScreenTimePurchase> purchasedScreenTimeVouchers = [];
 

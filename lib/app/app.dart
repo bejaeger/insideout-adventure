@@ -30,6 +30,7 @@ import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_sea
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
@@ -37,7 +38,6 @@ import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_mar
 import 'package:afkcredits/ui/views/ar_view/ar_object_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
-import 'package:afkcredits/ui/views/credits_screen_time_view/credits_screen_time_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart';
@@ -61,6 +61,7 @@ import 'package:afkcredits/ui/views/quests_overview/manage_quest/manage_quest_vi
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/screen_time/screen_time_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
+import 'package:afkcredits/ui/views/select_screen_time_view/select_screen_time_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
 import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
@@ -120,7 +121,8 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: PurchasedScreenTimeView),
     MaterialRoute(page: ScreenTimeView),
     MaterialRoute(page: ARObjectView),
-    MaterialRoute(page: CreditsScreenTimeView),
+    MaterialRoute(page: SelectScreenTimeView),
+    MaterialRoute(page: ActiveScreenTimeView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

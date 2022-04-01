@@ -5,10 +5,15 @@ import 'package:flutter/material.dart';
 
 class MainHeader extends StatelessWidget {
   final bool show;
+  final num balance;
   final void Function()? onPressed;
   final void Function()? onCreditsPressed;
   const MainHeader(
-      {Key? key, this.onPressed, required this.show, this.onCreditsPressed})
+      {Key? key,
+      this.onPressed,
+      required this.show,
+      required this.balance,
+      this.onCreditsPressed})
       : super(key: key);
 
   @override
@@ -32,7 +37,7 @@ class MainHeader extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 5.0, top: 14),
                 child: AFKCreditsDisplay(
-                    balance: 130, onPressed: onCreditsPressed),
+                    balance: balance, onPressed: onCreditsPressed),
               ),
             ],
           ),
