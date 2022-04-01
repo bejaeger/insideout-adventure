@@ -814,6 +814,18 @@ class FirestoreApi {
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
   }
+
+  // !!! HIGHLY CRITICAL This is a cheat feautre for the super user
+// !!! REMOVE IN PRODUCTION
+  Future addAfkCreditsCheat(
+      {required String uid,
+      required UserStatistics currentStats,
+      num deltaCredits = 50}) async {
+    await getUserSummaryStatisticsDocument(uid: uid).update(currentStats
+        .copyWith(
+            afkCreditsBalance: currentStats.afkCreditsBalance + deltaCredits)
+        .toJson());
+  }
 }
 
 /////////////////////////////////////////////////////////

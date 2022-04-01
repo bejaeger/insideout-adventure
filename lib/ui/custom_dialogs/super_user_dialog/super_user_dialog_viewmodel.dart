@@ -1,3 +1,4 @@
+import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/app_config_provider.dart';
@@ -10,6 +11,7 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
       locator<QuestTestingService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
+  final _firestoreApi = locator<FirestoreApi>();
 
   // getters
   bool get isRecordingLocationData =>
@@ -65,6 +67,27 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
 
   void setDummyQuestCompletionVerification(bool b) {
     _flavorConfigProvider.dummyQuestCompletionVerification = b;
+    notifyListeners();
+  }
+
+  bool isCheating = false;
+  void addAfkCreditsCheat() async {
+    isCheating = true;
+    notifyListeners();
+    await _firestoreApi.addAfkCreditsCheat(
+        uid: currentUser.uid, currentStats: currentUserStats);
+    isCheating = false;
+    notifyListeners();
+  }
+
+  void removeAfkCreditsCheat() async {
+    isCheating = true;
+    notifyListeners();
+    await _firestoreApi.addAfkCreditsCheat(
+        uid: currentUser.uid,
+        currentStats: currentUserStats,
+        deltaCredits: -50);
+    isCheating = false;
     notifyListeners();
   }
 

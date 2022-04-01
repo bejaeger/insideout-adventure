@@ -87,13 +87,6 @@ class BaseModel extends BaseViewModel {
   ActivatedQuest get previouslyFinishedQuest =>
       activeQuestService.previouslyFinishedQuest!;
   ActivatedQuest? get activeQuestNullable => activeQuestService.activatedQuest;
-  String? seconds;
-  String? hours;
-  String? minutes;
-
-  String get getActiveHours => hours!;
-  String get getActiveMinutes => minutes!;
-  String? get getActiveSeconds => seconds!;
 
   String get getHourMinuteSecondsTime =>
       _stopWatchService.secondsToHourMinuteSecondTime(activeQuest.timeElapsed);

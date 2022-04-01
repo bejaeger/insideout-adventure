@@ -19,6 +19,8 @@ import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
+// !!! DEPRECATED !!!
+
 class ScreenTimeViewModel extends BaseModel with NavigationMixin {
   // ------------------------------------------------
   // Services
