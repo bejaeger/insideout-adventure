@@ -40,7 +40,8 @@ void mainCommon(Flavor flavor) async {
           channelDescription: 'channelDescription',
           defaultColor: Colors.teal,
           importance: NotificationImportance.High,
-          channelShowBadge: true),
+          channelShowBadge: true,
+          locked: true),
     ]);
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations(

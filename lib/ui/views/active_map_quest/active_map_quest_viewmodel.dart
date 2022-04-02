@@ -16,6 +16,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../notification/notifications.dart';
+
 class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
   /// If user enters an area, the following AFKMarker will be set that corresponds to the marker.
@@ -102,6 +104,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
       }
       // quest started
       //if (quest.type != QuestType.GPSAreaHike) {
+      Notifications().unlockedAchievement(message: "Actived Map Quest!!");
       activeQuestService.listenToPosition(
         distanceFilter: kDistanceFilterHikeQuest,
         pushToNotion: true,
@@ -114,6 +117,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
               position: userLivePosition);
         },
       );
+
       //}
       notifyListeners();
       //resetSlider();
