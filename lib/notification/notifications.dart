@@ -12,4 +12,23 @@ class Notifications {
           body: message),
     );
   }
+
+  Future<void> dismissNotificationsByChannelKey(String channelKey) async {
+    await AwesomeNotifications().dismissNotificationsByChannelKey(channelKey);
+  }
+
+  // ON BADGE METHODS, NULL CHANNEL SETS THE GLOBAL COUNTER
+
+  Future<int> getBadgeIndicator() async {
+    int amount = await AwesomeNotifications().getGlobalBadgeCounter();
+    return amount;
+  }
+
+  Future<void> setBadgeIndicator(int amount) async {
+    await AwesomeNotifications().setGlobalBadgeCounter(amount - 1);
+  }
+
+  Future<int> incrementBadgeIndicator() async {
+    return await AwesomeNotifications().incrementGlobalBadgeCounter();
+  }
 }

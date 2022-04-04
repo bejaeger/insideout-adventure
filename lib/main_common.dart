@@ -32,17 +32,19 @@ const bool USE_EMULATOR = false;
 void mainCommon(Flavor flavor) async {
   try {
     //Notificaitons Package
-    AwesomeNotifications()
-        .initialize('resource://drawable/res_icon_notification.png', [
-      NotificationChannel(
-          channelKey: "base_channel",
-          channelName: 'afk notifications',
-          channelDescription: 'channelDescription',
-          defaultColor: Colors.teal,
-          importance: NotificationImportance.High,
-          channelShowBadge: true,
-          locked: true),
-    ]);
+    AwesomeNotifications().initialize(
+      'resource://drawable/res_icon_notification.png',
+      [
+        NotificationChannel(
+            channelKey: "base_channel",
+            channelName: 'afk notifications',
+            channelDescription: 'channelDescription',
+            defaultColor: Colors.teal,
+            importance: NotificationImportance.High,
+            channelShowBadge: true,
+            locked: false),
+      ],
+    );
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

@@ -117,7 +117,7 @@ mixin NavigationMixin {
   }
 
   void navToCreditsScreenTimeView() {
-    _navigationService.navigateTo(Routes.creditsScreenTimeView);
+    _navigationService.navigateTo(Routes.selectScreenTimeView);
   }
 
   Future logout() async {

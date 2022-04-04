@@ -39,14 +39,15 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   if (model.showLoadingScreen)
                     MapLoadingOverlay(show: model.showFullLoadingScreen),
 
-                  MainHeader(
-                    show: (!model.isShowingQuestDetails &&
-                            !model.hasActiveQuest) ||
-                        model.isFadingOutQuestDetails,
-                    onPressed: model
-                        .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
-                    onCreditsPressed: model.showNotImplementedSnackbar,
-                  ),
+                  if (!model.isBusy)
+                    MainHeader(
+                        show: (!model.isShowingQuestDetails &&
+                                !model.hasActiveQuest) ||
+                            model.isFadingOutQuestDetails,
+                        onPressed: model
+                            .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
+                        onCreditsPressed: model.showNotImplementedSnackbar,
+                        balance: model.currentUserStats.afkCreditsBalance),
 
                   MainFooterOverlayView(),
 
