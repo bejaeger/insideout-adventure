@@ -17,7 +17,7 @@ class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
   final EnvironmentService _environmentService = locator<EnvironmentService>();
   //final _markersService = locator<MarkerService>();
 
-  dynamic position;
+  //dynamic position;
 
   final log = getLogger("StartUpViewModel");
 

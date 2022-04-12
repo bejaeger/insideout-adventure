@@ -205,6 +205,14 @@ class QuestService with ReactiveServiceMixin {
     //This is to make suret that the document has the same id as the quest.
   }
 
+  Future<bool> createAFKQuest({required AFKQuest afkQuest}) async {
+    //TODO: Refactor this code.
+    if (afkQuest.id!.isNotEmpty) {
+      return await _firestoreApi.createAFKQuest(afkQuest: afkQuest);
+    }
+    return false;
+  }
+
   // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> downloadNearbyQuests() async {
     return await _firestoreApi.downloadNearbyQuests();

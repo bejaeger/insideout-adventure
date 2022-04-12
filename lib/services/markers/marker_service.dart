@@ -4,7 +4,6 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/services/users/user_service.dart';
 
 class MarkerService {
   final GeolocationService _geolocationService = locator<GeolocationService>();
@@ -38,6 +37,12 @@ class MarkerService {
 
   Future<void> addMarkers({required AFKMarker markers}) async {
     await _firestoreApi.addMarkers(markers: markers);
+  }
+
+  Future<void> addAFKMarkersPositions(
+      {required AfkMarkersPositions afkMarkersPositions}) async {
+    await _firestoreApi.addAFKMarkersPositions(
+        afkMarkersPositions: afkMarkersPositions);
   }
 
   //Get User Favourite Places
