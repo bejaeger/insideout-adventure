@@ -12,13 +12,10 @@ class StepCounterOverlayViewModel extends BaseModel {
   // ------------------------------------------
   // getters
   bool get isCounting => _pedometerService.isCounting;
+  String get count => _pedometerService.currentCount.toString();
 
   // --------------------------------
   // state
-  int initialCount = 0;
-  int currentCount = 0;
-  String get count => (currentCount - initialCount).toString();
-
   String pedestrianStatus = "?";
 
   // flag that will be set to false after the first step count has been emitted
@@ -45,12 +42,10 @@ class StepCounterOverlayViewModel extends BaseModel {
     final result = _pedometerService.startPedometer(onStatusListen: (status) {
       pedestrianStatus = status.status;
       notifyListeners();
-    }, onStepCountListen: (count) {
+    }, onStepCountListen: (_) {
       if (firstEvent == true) {
-        initialCount = count.steps;
         firstEvent = false;
       }
-      currentCount = count.steps;
       log.v("New step count event!");
       notifyListeners();
     });
@@ -68,7 +63,6 @@ class StepCounterOverlayViewModel extends BaseModel {
   void stopPedometer() {
     pedestrianStatus = "?";
     firstEvent = true;
-    initialCount = currentCount;
     _pedometerService.stopPedometer();
     snackbarService.showSnackbar(title: "Stopped pedometer", message: "");
     notifyListeners();

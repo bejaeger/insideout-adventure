@@ -9,6 +9,12 @@ class PedometerService {
   StreamSubscription? _stepCountStreamSubscription;
   final log = getLogger("PedometerService");
   bool get isCounting => _stepCountStreamSubscription != null;
+
+  int initialCount = 0;
+  int liveCount = 0;
+  int get currentCount => liveCount - initialCount + presetCount;
+
+  int presetCount = 0;
   // String _status = '?';
   // String _steps = '?';
 
@@ -56,6 +62,19 @@ class PedometerService {
     _pedestrianStatusStreamSubscription = null;
     _stepCountStreamSubscription?.cancel();
     _stepCountStreamSubscription = null;
+    initialCount = 0;
+    liveCount = 0;
+    presetCount = 0;
+  }
+
+  void pausePedometer() {
+    _pedestrianStatusStreamSubscription?.pause();
+    _stepCountStreamSubscription?.pause();
+  }
+
+  void resumePedometer() {
+    _pedestrianStatusStreamSubscription?.pause();
+    _stepCountStreamSubscription?.pause();
   }
 
   // Activity permission checker

@@ -103,7 +103,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                     QuestDetailsOverlay(
                         startFadeOut: model.isFadingOutQuestDetails),
 
-                  // StepCounterOverlay(),
+                  StepCounterOverlay(),
 
                   // only used for quest view at the moment!
                   OverlayedCloseButton(),
