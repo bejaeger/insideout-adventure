@@ -52,7 +52,11 @@ abstract class AFKMarks extends FormViewModel {
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
       position: pos,
       onTap: () {
-        removeMarker(marker: Marker(markerId: MarkerId(markerId)));
+        removeMarker(
+          marker: Marker(
+            markerId: MarkerId(markerId),
+          ),
+        );
       },
     );
   }

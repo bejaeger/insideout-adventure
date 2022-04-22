@@ -10,6 +10,8 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+// !!! DEPRECATED !!!
+
 class ScreenTimeView extends StatelessWidget {
   const ScreenTimeView({Key? key}) : super(key: key);
 
@@ -25,7 +27,7 @@ class ScreenTimeView extends StatelessWidget {
             //crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               verticalSpaceMedium,
-              AfkCreditsText.headingOne("GET SCREEN TIME"),
+              AfkCreditsText.headingOne("Screen Time"),
               verticalSpaceLarge,
               Wrap(
                 children: [

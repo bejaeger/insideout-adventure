@@ -13,7 +13,6 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../../app_config_provider.dart';
-// import 'package:flutter/foundation.dart' show kIsWeb;
 
 class CreateAccountViewModel extends AuthenticationViewModel {
   final UserRole role;

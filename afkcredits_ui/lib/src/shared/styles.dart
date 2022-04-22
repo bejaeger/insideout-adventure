@@ -44,8 +44,8 @@ const TextStyle bodyStyle = TextStyle(
   fontWeight: FontWeight.w400,
 );
 const TextStyle bodyStyleSofia = TextStyle(
-    fontFamily: "Sofia",
-    fontWeight: FontWeight.w500,
+    //fontFamily: "Sofia",
+    //fontWeight: FontWeight.w500,
     fontSize: 16.0,
     color: Colors.black26);
 const TextStyle subheadingStyle = TextStyle(
@@ -68,6 +68,9 @@ const TextStyle labelStyle =
 
 const TextStyle tagStyle =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.black87);
+
+const TextStyle buttonStyle =
+    TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white);
 
 // Text Variables
 const TextStyle buttonTitleTextStyle =

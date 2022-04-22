@@ -81,7 +81,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   }
 
   Future listenToData() async {
-    setBusy(true);
     Completer completer = Completer<void>();
     Completer completerTwo = Completer<void>();
     Completer completerThree = Completer<void>();

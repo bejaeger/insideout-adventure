@@ -135,7 +135,7 @@ class FirestoreApi {
       );
     }
     try {
-      return User.fromJson(userData.data()!);
+      return User.fromJson(userData.data()! as Map<String, dynamic>);
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to get user',
@@ -155,7 +155,7 @@ class FirestoreApi {
         return null;
       }
       final userData = userDoc.data();
-      return UserAdmin.fromJson(userData!);
+      return UserAdmin.fromJson(userData! as Map<String, dynamic>);
     } else {
       throw FirestoreApiException(message: 'You have passed an empty Id');
     }
@@ -208,7 +208,8 @@ class FirestoreApi {
     if (_markers.docs.isNotEmpty) {
       try {
         return _markers.docs
-            .map((docs) => AFKMarker.fromJson(docs.data()))
+            .map((docs) =>
+                AFKMarker.fromJson(docs.data() as Map<String, dynamic>))
             .toList();
       } catch (e) {
         throw FirestoreApiException(
@@ -231,7 +232,7 @@ class FirestoreApi {
       }
       if (doc.docs.length == 1) {
         log.v("Found user with name $name, returning user object");
-        return User.fromJson(doc.docs.first.data());
+        return User.fromJson(doc.docs.first.data() as Map<String, dynamic>);
       } else {
         log.v("No user found with name $name");
         return null;
@@ -255,7 +256,7 @@ class FirestoreApi {
       } else {
         log.i("Reading document: ${docRef.data()}");
         final UserStatistics userStats =
-            UserStatistics.fromJson(docRef.data()!);
+            UserStatistics.fromJson(docRef.data()! as Map<String, dynamic>);
         return userStats;
       }
     } catch (e) {
@@ -278,7 +279,7 @@ class FirestoreApi {
             devDetails:
                 "Something must have failed before when creating user account with id $uid. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
       }
-      return UserStatistics.fromJson(event.data()!);
+      return UserStatistics.fromJson(event.data()! as Map<String, dynamic>);
     });
   }
 
@@ -315,7 +316,7 @@ class FirestoreApi {
     try {
       firestoreInstance.runTransaction((transaction) async {
         final doc = await usersCollection.doc(uid).get();
-        User otherUser = User.fromJson(doc.data()!);
+        User otherUser = User.fromJson(doc.data()! as Map<String, dynamic>);
         List<String> newSponsorIds = [];
         newSponsorIds.addAll(otherUser.explorerIds);
         if (newSponsorIds.contains(sponsorId)) {
@@ -349,7 +350,7 @@ class FirestoreApi {
             devDetails:
                 "Something must have failed before when creating user account. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
       }
-      return User.fromJson(event.data()!);
+      return User.fromJson(event.data()! as Map<String, dynamic>);
     });
   }
 
@@ -359,8 +360,9 @@ class FirestoreApi {
       final returnStream = usersCollection
           .where("sponsorIds", arrayContains: uid)
           .snapshots()
-          .map((event) =>
-              event.docs.map((doc) => User.fromJson(doc.data())).toList());
+          .map((event) => event.docs
+              .map((doc) => User.fromJson(doc.data() as Map<String, dynamic>))
+              .toList());
       return returnStream;
     } catch (e) {
       throw FirestoreApiException(
@@ -410,7 +412,8 @@ class FirestoreApi {
             (event) => event.docs.map(
               (doc) {
                 //log.v("Data to read into MoneyTransfer document ${doc.data()}");
-                return MoneyTransfer.fromJson(doc.data());
+                return MoneyTransfer.fromJson(
+                    doc.data() as Map<String, dynamic>);
               },
             ).toList(),
           );
@@ -499,7 +502,7 @@ class FirestoreApi {
       return quests.docs
           .map(
             (docs) => Quest.fromJson(
-              docs.data(),
+              docs.data() as Map<String, dynamic>,
             ),
           )
           .toList();
@@ -568,11 +571,12 @@ class FirestoreApi {
     //     .where((element) => element.startMarker.id == startMarkerId)
     //     .toList();
     QuerySnapshot snapshot = await questsCollection
-        .where(startMarkerId, isEqualTo: startMarkerId)
+        .where(startMarkerId!, isEqualTo: startMarkerId)
         .get();
     try {
-      List<Quest> quests =
-          snapshot.docs.map((e) => Quest.fromJson(e.data())).toList();
+      List<Quest> quests = snapshot.docs
+          .map((e) => Quest.fromJson(e.data() as Map<String, dynamic>))
+          .toList();
       return quests;
     } catch (e) {
       throw FirestoreApiException(
@@ -593,7 +597,8 @@ class FirestoreApi {
               isEqualTo: describeEnum(QuestStatus.success.toString()))
           .snapshots()
           .map((event) => event.docs
-              .map((doc) => ActivatedQuest.fromJson(doc.data()))
+              .map((doc) =>
+                  ActivatedQuest.fromJson(doc.data() as Map<String, dynamic>))
               .toList());
       return returnStream;
     } catch (e) {
@@ -641,7 +646,8 @@ class FirestoreApi {
       if (giftCards.docs.isNotEmpty) {
         log.v('This is our List of Gift Cards: $giftCards in our Database');
         return giftCards.docs
-            .map((docs) => GiftCardCategory.fromJson(docs.data()))
+            .map((docs) =>
+                GiftCardCategory.fromJson(docs.data() as Map<String, dynamic>))
             .toList();
       } else {
         log.wtf('You are Providing me Empty Document $giftCards' +
@@ -666,7 +672,7 @@ class FirestoreApi {
         return prePurchasedGiftCards.docs
             .map(
               (docs) => PrePurchasedGiftCard.fromJson(
-                docs.data(),
+                docs.data() as Map<String, dynamic>,
               ),
             )
             .toList();
@@ -697,7 +703,8 @@ class FirestoreApi {
       if (giftCards.docs.isNotEmpty) {
         log.v('This is our List of Gift Cards: $giftCards in our Database');
         return giftCards.docs
-            .map((docs) => GiftCardCategory.fromJson(docs.data()))
+            .map((docs) =>
+                GiftCardCategory.fromJson(docs.data() as Map<String, dynamic>))
             .toList();
       } else {
         log.wtf('You are Providing me Empty Document $giftCards' +
@@ -720,7 +727,8 @@ class FirestoreApi {
           .orderBy("purchasedAt", descending: true)
           .snapshots()
           .map((event) => event.docs
-              .map((doc) => GiftCardPurchase.fromJson(doc.data()))
+              .map((doc) =>
+                  GiftCardPurchase.fromJson(doc.data() as Map<String, dynamic>))
               .toList());
       return returnStream;
     } catch (e) {
@@ -737,7 +745,8 @@ class FirestoreApi {
           .orderBy("purchasedAt", descending: true)
           .snapshots()
           .map((event) => event.docs
-              .map((doc) => ScreenTimePurchase.fromJson(doc.data()))
+              .map((doc) => ScreenTimePurchase.fromJson(
+                  doc.data() as Map<String, dynamic>))
               .toList());
       return returnStream;
     } catch (e) {
@@ -813,6 +822,18 @@ class FirestoreApi {
 
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
+  }
+
+  // !!! HIGHLY CRITICAL This is a cheat feautre for the super user
+// !!! REMOVE IN PRODUCTION
+  Future addAfkCreditsCheat(
+      {required String uid,
+      required UserStatistics currentStats,
+      num deltaCredits = 50}) async {
+    await getUserSummaryStatisticsDocument(uid: uid).update(currentStats
+        .copyWith(
+            afkCreditsBalance: currentStats.afkCreditsBalance + deltaCredits)
+        .toJson());
   }
 }
 

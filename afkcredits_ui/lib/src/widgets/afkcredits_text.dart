@@ -54,6 +54,9 @@ class AfkCreditsText extends StatelessWidget {
   const AfkCreditsText.tag(this.text, {TextAlign align = TextAlign.start})
       : style = tagStyle,
         alignment = align;
+  const AfkCreditsText.button(this.text, {TextAlign? align})
+      : style = buttonStyle,
+        alignment = align;
 
   AfkCreditsText.body(this.text,
       {Color color = kGreyTextColor, TextAlign? align})

@@ -228,6 +228,26 @@ class SuperUserDialogView extends StatelessWidget {
                             value: model.dummyQuestCompletionVerification,
                             onChanged: (bool value) => model
                                 .setDummyQuestCompletionVerification(value)),
+                        Row(
+                          children: [
+                            Text("Add AFK Credits Cheat"),
+                            IconButton(
+                              onPressed: model.addAfkCreditsCheat,
+                              icon: Icon(Icons.add, size: 30),
+                            ),
+                            if (model.isCheating) AFKProgressIndicator(),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text("Remove AFK Credits Cheat"),
+                            IconButton(
+                              onPressed: model.removeAfkCreditsCheat,
+                              icon: Icon(Icons.remove, size: 30),
+                            ),
+                            if (model.isCheating) AFKProgressIndicator(),
+                          ],
+                        ),
                         verticalSpaceMedium,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,

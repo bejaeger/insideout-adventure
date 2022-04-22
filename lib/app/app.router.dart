@@ -22,6 +22,7 @@ import '../ui/views/active_map_quest/active_map_quest_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
+import '../ui/views/active_screen_time/active_screen_time_view.dart';
 import '../ui/views/add_explorer/add_explorer_view.dart';
 import '../ui/views/admin/admin_home_view.dart';
 import '../ui/views/admin/admin_user/home/home_view.dart';
@@ -30,7 +31,6 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
 import '../ui/views/ar_view/ar_object_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
-import '../ui/views/credits_screen_time_view/credits_screen_time_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
 import '../ui/views/gift_cards/gift_card_view.dart';
 import '../ui/views/history_and_achievements/history_and_achievements_view.dart';
@@ -52,6 +52,7 @@ import '../ui/views/quests_overview/manage_quest/manage_quest_view.dart';
 import '../ui/views/quests_overview/quests_overview_view.dart';
 import '../ui/views/screen_time/screen_time_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
+import '../ui/views/select_screen_time_view/select_screen_time_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
 import '../ui/views/sponsor_home/sponsor_home_view.dart';
@@ -107,7 +108,8 @@ class Routes {
   static const String purchasedScreenTimeView = '/purchased-screen-time-view';
   static const String screenTimeView = '/screen-time-view';
   static const String aRObjectView = '/a-robject-view';
-  static const String creditsScreenTimeView = '/credits-screen-time-view';
+  static const String selectScreenTimeView = '/select-screen-time-view';
+  static const String activeScreenTimeView = '/active-screen-time-view';
   static const all = <String>{
     sponsorHomeView,
     singleMarkerView,
@@ -148,7 +150,8 @@ class Routes {
     purchasedScreenTimeView,
     screenTimeView,
     aRObjectView,
-    creditsScreenTimeView,
+    selectScreenTimeView,
+    activeScreenTimeView,
   };
 }
 
@@ -201,7 +204,8 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.purchasedScreenTimeView, page: PurchasedScreenTimeView),
     RouteDef(Routes.screenTimeView, page: ScreenTimeView),
     RouteDef(Routes.aRObjectView, page: ARObjectView),
-    RouteDef(Routes.creditsScreenTimeView, page: CreditsScreenTimeView),
+    RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
+    RouteDef(Routes.activeScreenTimeView, page: ActiveScreenTimeView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -530,9 +534,19 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    CreditsScreenTimeView: (data) {
+    SelectScreenTimeView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const CreditsScreenTimeView(),
+        builder: (context) => const SelectScreenTimeView(),
+        settings: data,
+      );
+    },
+    ActiveScreenTimeView: (data) {
+      var args = data.getArgs<ActiveScreenTimeViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ActiveScreenTimeView(
+          key: args.key,
+          minutes: args.minutes,
+        ),
         settings: data,
       );
     },
@@ -694,4 +708,11 @@ class ARObjectViewArguments {
   final Key? key;
   final bool isCoins;
   ARObjectViewArguments({this.key, this.isCoins = false});
+}
+
+/// ActiveScreenTimeView arguments holder class
+class ActiveScreenTimeViewArguments {
+  final Key? key;
+  final int minutes;
+  ActiveScreenTimeViewArguments({this.key, required this.minutes});
 }

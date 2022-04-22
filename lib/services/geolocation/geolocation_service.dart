@@ -153,9 +153,8 @@ class GeolocationService extends PausableService {
       if (isListeningToLocation == true) {
         log.v('Quest Geolocation listener resumed');
         resumePositionListener();
-      }
-      if (isListeningToMainLocation == true) {
-        log.v('Main Geolocation listener resumed');
+      } else {
+        // resume main position listener
         resumeMainPositionListener();
       }
       super.resume();
