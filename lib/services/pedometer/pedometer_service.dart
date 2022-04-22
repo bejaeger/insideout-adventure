@@ -58,6 +58,8 @@ class PedometerService {
     _stepCountStreamSubscription = null;
   }
 
+  // ??? Could add the following to a permission_service
+
   // Activity permission checker
 
   Future<bool> isActivityPermissionGranted() async {

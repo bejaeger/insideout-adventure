@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -15,8 +16,8 @@ class AvatarOnMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       //alignment: Alignment(0, 0.4),
-      bottom: 185,
-      left: 2,
+      bottom: characterNumber == 5 ? 145 : 185,
+      left: characterNumber == 5 ? 60 : 2,
       right: 2,
       child: FadingWidget(
         show: show,
@@ -61,12 +62,14 @@ class AvatarOnMap extends StatelessWidget {
                                 height: 165,
                                 width: 165,
                               )
-                            : Lottie.network(
-                                // weird figure walking to the right
-                                'https://raw.githubusercontent.com/xvrh/lottie-flutter/master/example/assets/lottiefiles/walking.json',
-                                height: 150,
-                                width: 150,
-                              ),
+                            : Lottie.asset(kLottieTestV1),
+
+        // Lottie.network(
+        //     // weird figure walking to the right
+        //     //'https://raw.githubusercontent.com/xvrh/lottie-flutter/master/example/assets/lottiefiles/walking.json',
+        //     height: 200,
+        //     width: 180,
+        //   ),
       ),
     );
   }
