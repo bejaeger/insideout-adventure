@@ -7,6 +7,8 @@ const GoogleMapsEnvKeyIOS = 'GOOGLE_MAPS_API_KEY_IOS';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
+const kLocalStoragePedometerCount = "PedometerCount";
+const kLocalStoragePedometerStatus = "PedometerStatus";
 
 final appName = 'AFK Credits';
 
