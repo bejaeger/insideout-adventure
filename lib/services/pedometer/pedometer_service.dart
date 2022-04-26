@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/services/common_services/pausable_service.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -13,6 +16,7 @@ class PedometerService extends PausableService {
   // services
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
+  final GeolocationService _geolocationService = locator<GeolocationService>();
   final log = getLogger("PedometerService");
 
   // member variables
@@ -28,6 +32,10 @@ class PedometerService extends PausableService {
   // state
   int initialCount = 0;
   int liveCount = 0;
+
+  // queue holding previous positions -> FIFO
+  Position? previousLocation;
+  bool lastLocationCheated = false;
 
   final BehaviorSubject countSubject = BehaviorSubject<int>.seeded(0);
   final BehaviorSubject statusSubject = BehaviorSubject<String>.seeded("");
@@ -61,7 +69,10 @@ class PedometerService extends PausableService {
           firstEvent = false;
         }
         liveCount = count.steps;
-        countSubject.add(liveCount - initialCount);
+        final realCount = liveCount - initialCount;
+        countSubject.add(realCount);
+
+        checkForCheater(realCount);
         log.v("Updated step counter");
       });
     }
@@ -69,17 +80,10 @@ class PedometerService extends PausableService {
 
   Future startPedometer({bool requestPermission = false}) async {
     try {
-      // TODO:
-      // Anti-cheat feature!
-
-      // Idea:
-      // 1. store location at start of pedometer
-      // 2. At step 50: check location again and calculate distance
-      // 3. If distance < threshold: WARNING
-      //   (Of course the person could have walked in a circle, but this is hopefully negligible)
-      //   (Can also check the speed of the second location)
-      // 4. Show and increment a warning and repeat:
-      // 5. If second warning is there reset step count
+      if (servicePaused == null) {
+        // that means if app has just started!
+        await stopPedometer();
+      }
 
       if (requestPermission) {
         final grantedPermission = await requestActivityPermission();
@@ -94,14 +98,15 @@ class PedometerService extends PausableService {
     }
   }
 
-  void stopPedometer() {
+  Future stopPedometer() async {
     cancelSubscriptions();
     initialCount = 0;
     liveCount = 0;
     firstEvent = true;
     countSubject.add(0);
+    statusSubject.add("");
     // set flag to true that pedometer is active.
-    _localStorageService.deleteFromDisk(key: kLocalStoragePedometerCount);
+    await _localStorageService.deleteFromDisk(key: kLocalStoragePedometerCount);
   }
 
   void cancelSubscriptions() {
@@ -111,6 +116,54 @@ class PedometerService extends PausableService {
     _stepCountStreamSubscription = null;
   }
 
+  Future<void> checkForCheater(int count) async {
+    // TODO:
+    // Anti-cheat feature!
+
+    // Idea:
+    // 1. store location after each 50 steps
+    // 2. At step 50: check location again and calculate distance
+    // 3. If distance < threshold: WARNING
+    //   (Of course the person could have walked in a circle, but this is hopefully negligible)
+    //   (Can also check the speed of the second location)
+    // 4. Show and increment a warning and repeat:
+    // 5. If second warning is there reset step count
+
+    if ((count + 1) % (kStepFrequencyAntiCheat + 1) == 0) {
+      log.v("Checking cheat feature");
+      // plus one to avoid first count!
+      Position newLocation =
+          await _geolocationService.getAndSetCurrentLocation();
+      double deltaPos = _geolocationService.distanceBetween(
+          lat1: newLocation.latitude,
+          lon1: newLocation.longitude,
+          lat2: previousLocation?.latitude,
+          lon2: previousLocation?.longitude);
+      bool thisLocationCheated = false;
+      if (deltaPos < kMinDistanceAntiCheat) {
+        thisLocationCheated = true;
+        if (count > (kStepFrequencyAntiCheat + 1)) {
+          // surpassed first cheater check successfully!
+          if (lastLocationCheated) {
+            log.wtf("CHEATER EXPOSED!");
+            countSubject.add(-1);
+            initialCount = initialCount + kStepFrequencyAntiCheat;
+            countSubject.add(count - kStepFrequencyAntiCheat);
+          }
+        } else {
+          log.wtf("CHEATER EXPOSED!");
+          countSubject.add(-1);
+          initialCount = initialCount + kStepFrequencyAntiCheat;
+          countSubject.add(count - kStepFrequencyAntiCheat);
+        }
+      }
+      lastLocationCheated = thisLocationCheated;
+      previousLocation = newLocation;
+    }
+  }
+
+  ///////////////////////////////////////////
+  // lifecycle functionality
   @override
   Future pause() async {
     if (_stepCountStreamSubscription != null) {
@@ -147,6 +200,9 @@ class PedometerService extends PausableService {
       countSubject.add(liveCount - initialCount);
       super.resume();
       log.v("Pedometer service resumed");
+    } else {
+      stopPedometer();
+      log.v("Pedometer service resetted");
     }
   }
 

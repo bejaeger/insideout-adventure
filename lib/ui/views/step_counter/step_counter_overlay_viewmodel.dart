@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/services/pedometer/pedometer_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -15,13 +16,12 @@ class StepCounterOverlayViewModel extends BaseModel {
   // getters
   bool get isCounting => _pedometerService.isCounting;
   String get count => _pedometerService.currentCount.toString();
+  String get pedestrianStatus => _pedometerService.statusSubject.value;
 
   // --------------------------------
   // state
-  String pedestrianStatus = "?";
 
   // flag that will be set to false after the first step count has been emitted
-  bool firstEvent = true;
   StreamSubscription? _countSubscription;
   StreamSubscription? _statusSubscription;
 
@@ -32,7 +32,13 @@ class StepCounterOverlayViewModel extends BaseModel {
     // ??? As in some cases might figher notifyListeners() twice!
 
     if (_countSubscription == null) {
-      _countSubscription = _pedometerService.countSubject.listen((_) {
+      _countSubscription = _pedometerService.countSubject.listen((count) {
+        if (count == -1) {
+          dialogService.showDialog(
+              title: "YOU CHEATED!",
+              description:
+                  "Your last $kStepFrequencyAntiCheat steps were deducted because you did not move.");
+        }
         notifyListeners();
       });
     }
@@ -73,8 +79,6 @@ class StepCounterOverlayViewModel extends BaseModel {
   }
 
   void stopPedometer() {
-    pedestrianStatus = "?";
-    firstEvent = true;
     _pedometerService.stopPedometer();
     snackbarService.showSnackbar(title: "Stopped pedometer", message: "");
     notifyListeners();

@@ -134,3 +134,8 @@ const double kMaxZoom = 19;
 // const double kMaxZoom = 50;
 const double kInitialZoomBirdsView = 12;
 const double kMinZoomAvatarView = 17;
+
+///////////////////////////////////////
+/// Pedometer settings
+const double kMinDistanceAntiCheat = 5;
+const int kStepFrequencyAntiCheat = 50;
