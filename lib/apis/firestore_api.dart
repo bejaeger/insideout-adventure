@@ -206,24 +206,6 @@ class FirestoreApi {
     }
   }
 
-/* // Get Places For the Quest.
-  Future<List<Places>?>? getPlaces() async {
-    final _places = await placesCollection.get();
-
-    if (_places.docs.isNotEmpty) {
-      try {
-        return _places.docs
-            .map((docs) => Places.fromJson(docs.data()))
-            .toList();
-      } catch (e) {
-        throw FirestoreApiException(
-            message: 'Failed to get the Places', devDetails: '$e');
-      }
-    } else {
-      return null;
-    }
-  } */
-
   // Get Markers For the Quest.
   // ignore: non_constant_identifier_names
   Future<List<AFKMarker>> getAllMarkers() async {
@@ -533,10 +515,31 @@ class FirestoreApi {
   Future<List<Quest>> downloadNearbyQuests() async {
     final quests = await questsCollection.get();
     if (quests.docs.isNotEmpty) {
-      log.v('Found list of quests in database');
+      log.v('Found list of quests in database {$quests}');
       return quests.docs
           .map(
             (docs) => Quest.fromJson(
+              docs.data() as Map<String, dynamic>,
+            ),
+          )
+          .toList();
+    } else {
+      log.wtf('There is no \'quests\' collection on firestore');
+      throw FirestoreApiException(
+          message: "Quest data could not be found",
+          devDetails: "Quest document is empty");
+    }
+  }
+
+  // Changed the Scope of the Method. from _pvt to public
+  Future<List<AFKQuest>> downloadNearbyAfkQuests() async {
+    // final quests = await questsCollection.get();
+    final afkQuest = await afkQuestsCollection.get();
+    if (afkQuest.docs.isNotEmpty) {
+      log.v('Found list of quests in database {$afkQuest}');
+      return afkQuest.docs
+          .map(
+            (docs) => AFKQuest.fromJson(
               docs.data() as Map<String, dynamic>,
             ),
           )

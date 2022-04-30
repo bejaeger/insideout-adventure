@@ -31,6 +31,73 @@ class Quest with _$Quest {
   factory Quest.fromJson(Map<String, dynamic> json) => _$QuestFromJson(json);
 }
 
+/* class Quest {
+  //GeoFirePoint? point;
+  String? id;
+  String? name;
+  String? description;
+  AFKMarker? startMarker;
+  AFKMarker? finishMarker;
+  List<AFKMarker>? markers;
+  num? afkCredits;
+  String? networkImagePath;
+  List<num>? afkCreditsPerMarker;
+  num? bonusAfkCreditsOnSuccess;
+  double? distanceFromUser;
+  double? distanceToTravelInMeter;
+  String? type;
+
+  Quest({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.type,
+    required this.afkCredits,
+    this.markers,
+    this.afkCreditsPerMarker,
+    this.startMarker,
+    this.finishMarker,
+    this.bonusAfkCreditsOnSuccess,
+    this.distanceFromUser,
+    this.distanceToTravelInMeter,
+    this.networkImagePath,
+  });
+
+  Quest.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    description = json['description'];
+    type = json['type'];
+    afkCredits = json['afkCredits'];
+    markers = json['markers']!;
+    afkCreditsPerMarker = json['afkCreditsPerMarker'];
+    startMarker = json['startMarker']!;
+    finishMarker = json['finishMarker']!;
+    bonusAfkCreditsOnSuccess = json['bonusAfkCreditsOnSuccess'];
+    distanceFromUser = json['distanceFromUser'];
+    distanceToTravelInMeter = json['distanceToTravelInMeter'];
+    networkImagePath = json['networkImagePath'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['type'] = this.type!;
+    data['afkCredits'] = this.afkCredits;
+    data['afkMarkersPositions'] = this.markers!.map((e) => e.toJson()).toList();
+    data['afkCreditsPerMarker'] = this.afkCreditsPerMarker;
+    data['startMarker'] = this.startMarker!.toJson();
+    data['finishAfkMarkersPositions'] = this.finishMarker!.toJson();
+    data['bonusAfkCreditsOnSuccess'] = this.bonusAfkCreditsOnSuccess;
+    data['distanceFromUser'] = this.distanceFromUser;
+    data['distanceToTravelInMeter'] = this.distanceToTravelInMeter;
+    data['networkImagePath'] = this.networkImagePath;
+    return data;
+  }
+} */
+
 class AFKQuest {
   //GeoFirePoint? point;
   String? id;

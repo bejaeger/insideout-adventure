@@ -121,6 +121,12 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  Future<List<AFKQuest>> loadNearbyAFKQuests() async {
+    // TODO: In the future retrieve only nearby quests
+    final _nearbyAfkQuests = await _firestoreApi.downloadNearbyAfkQuests();
+    return _nearbyAfkQuests;
+  }
+
   Future getQuestsOfType({required QuestType questType}) async {
     if (_nearbyQuests.isEmpty) {
       // Not very efficient to load all quests and then extract only the ones of a specific type!

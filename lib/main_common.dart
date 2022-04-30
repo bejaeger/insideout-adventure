@@ -8,7 +8,6 @@ import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'enums/connectivity_type.dart';
 import 'app_config_provider.dart';
+import 'notification/notification_controller.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options_dev.dart' as dev;
@@ -30,21 +30,23 @@ import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
 const bool USE_EMULATOR = false;
 
 void mainCommon(Flavor flavor) async {
+/*   if (rowNames != null) {
+      for (var rowName in rowNames) {
+        notificationChannels.add(NotificationChannel(
+          channelKey: rowName.scheduleId,
+          channelName: '${rowName.scheduleId} notifications',
+          channelDescription: 'Channel for ${rowName.scheduleId} notifications',
+          defaultColor: CustomColors.lightColors.secondary,
+          importance: NotificationImportance.High,
+        ));
+      }
+      AwesomeNotifications()
+          .initialize("resource://drawable/ic_launcher", notificationChannels);
+      log('Updated notification channels to ${notificationChannels.toString()}');
+    } */
   try {
-    //Notificaitons Package
-    AwesomeNotifications().initialize(
-      'resource://drawable/res_icon_notification.png',
-      [
-        NotificationChannel(
-            channelKey: "base_channel",
-            channelName: 'afk notifications',
-            channelDescription: 'channelDescription',
-            defaultColor: Colors.teal,
-            importance: NotificationImportance.High,
-            channelShowBadge: true,
-            locked: false),
-      ],
-    );
+    NotificationController().initializeLocalNotifications();
+
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -71,9 +73,6 @@ void mainCommon(Flavor flavor) async {
     setupDialogUi();
     setupSnackbarUi();
     setupBottomSheetUi();
-    // setupBottomSheetUi();
-    // setupSnackbarUi();
-    // Logger.level = Level.verbose;
 
     // configure services that need settings dependent on flavor
     final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();

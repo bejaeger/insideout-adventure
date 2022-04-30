@@ -13,6 +13,9 @@ class ActiveScreenTimeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActiveScreenTimeViewModel>.reactive(
+      /*    onModelReady: (model) {
+        model.verifyTimer();
+      }, */
       viewModelBuilder: () => ActiveScreenTimeViewModel(minutes: minutes),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
@@ -39,7 +42,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                         AfkCreditsText.headingTwo(
                           model.screenTimeLeft.toString() + " seconds",
                         )
-                      else
+                      /*                     else
                         Expanded(
                           child: AlertDialog(
                             title: const Text("Time is up"),
@@ -57,7 +60,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                               ),
                             ],
                           ),
-                        )
+                        ) */
                     ],
                   ),
                   Spacer(),

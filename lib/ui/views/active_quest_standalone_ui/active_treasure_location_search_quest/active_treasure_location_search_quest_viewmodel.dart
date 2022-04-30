@@ -60,7 +60,7 @@ class ActiveTreasureLocationSearchQuestViewModel
   Future maybeStartQuest(
       {required Quest? quest, void Function()? onStartQuestCallback}) async {
     if (quest != null) {
-      Notifications().unlockedAchievement(message: "Active Tresuare Location");
+      Notifications().createNotifications(message: "Active Tresuare Location");
       log.i("Starting vibration search quest with name ${quest.name}");
 
       final position = await _geolocationService.getUserLivePosition;

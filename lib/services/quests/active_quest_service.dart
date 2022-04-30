@@ -91,7 +91,7 @@ class ActiveQuestService with ReactiveServiceMixin {
           return "You are not nearby the marker.";
         } else
           return Notifications()
-              .unlockedAchievement(message: "Active Tresuare Location");
+              .createNotifications(message: "Active Tresuare Location");
       } catch (e) {
         log.e("Error thrown when searching for start marker: $e");
         if (e is StateError) {

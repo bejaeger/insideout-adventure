@@ -106,8 +106,13 @@ dependencies:
   map_picker: ^0.0.3
   image_picker: ^0.8.4+4
   progress_indicator_button: ^0.0.3
+  #background_fetch: ^1.1.0
   #awesome_notifications: ^0.6.21
-  awesome_notifications: ^0.7.0-beta.2
+  awesome_notifications: #^0.7.0-beta.2
+    git:
+      ref: "7530540"
+      url: https://github.com/rafaelsetragni/awesome_notifications
+  fluttertoast: ^8.0.3
 
   transparent_pointer: ^1.0.0
   afkcredits_ui: 
@@ -115,6 +120,7 @@ dependencies:
 
   circular_menu: ^1.2.3
   pedometer: ^3.0.0
+  flutter_background_service: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -162,6 +168,7 @@ flutter:
     - assets/avatars/hercules-avatar2.png    
     - assets/icons/
     - assets/icons/afk_credits.PNG
+    - assets/icons/melted-clock.png
     - assets/icons/afk_credits_small.PNG
     - assets/icons/trash_icon.svg
     - assets/icons/measure-distance.png    

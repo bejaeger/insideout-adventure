@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
@@ -12,14 +13,11 @@ import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:stacked/stacked.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel
     with MapStateControlMixin {
@@ -29,6 +27,10 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+
+  List<AFKQuest>? _afkQuest;
+
+  List<AFKQuest> get getAFKQuest => _afkQuest!;
 
   // --------------------------------------------------
   // getters
@@ -110,6 +112,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   Future initializeQuests({bool? force}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
+        _afkQuest = await questService.loadNearbyAFKQuests();
+        log.i(_afkQuest);
         await questService.loadNearbyQuests(force: true);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();

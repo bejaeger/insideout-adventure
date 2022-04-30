@@ -2,22 +2,49 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import '../../../utils/utilities/utilities.dart';
 
 class Notifications {
-  Future<void> unlockedAchievement({required String message}) async {
+  Future<void> createNotifications({required String message}) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-          id: createUniqueId(),
-          channelKey: "base_channel",
-          title:
-              '${Emojis.lock_unlocked + Emojis.game_crystal_ball} Achievement was Unlocked!',
-          body: message),
+        id: createUniqueId(),
+        channelKey: "base_channel",
+        title:
+            '${Emojis.lock_unlocked + Emojis.game_crystal_ball} Achievement was Unlocked!',
+        body: message,
+        category: NotificationCategory.Reminder,
+        //  bigPicture: kAFKCreditsLogoPath,
+      ),
     );
   }
 
-  Future<void> dismissNotificationsByChannelKey(String channelKey) async {
-    await AwesomeNotifications().dismissNotificationsByChannelKey(channelKey);
+  Future<void> createNotificationsTimesUp({required String message}) async {
+    String localTimeZone =
+        await AwesomeNotifications().getLocalTimeZoneIdentifier();
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 20, //1,
+        channelKey: "time_up_channel",
+        //notificationLayout: NotificationLayout.BigPicture,
+        category: NotificationCategory.Reminder,
+        // bigPicture: kClockMelted,
+        title: '${Emojis.time_alarm_clock} Unfortunately Your Time is Up!',
+        body: message,
+        //  bigPicture: kAFKCreditsLogoPath,
+
+        //timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
+      ),
+/*       schedule: NotificationInterval(
+        interval: 62,
+        timeZone: localTimeZone,
+        repeats: false,
+        preciseAlarm: true,
+      ), */
+    );
   }
 
-  // ON BADGE METHODS, NULL CHANNEL SETS THE GLOBAL COUNTER
+  Future<void> dismissNotificationsByChannelKey(
+      {required String channelKey}) async {
+    await AwesomeNotifications().dismissNotificationsByChannelKey(channelKey);
+  }
 
   Future<int> getBadgeIndicator() async {
     int amount = await AwesomeNotifications().getGlobalBadgeCounter();
@@ -30,5 +57,12 @@ class Notifications {
 
   Future<int> incrementBadgeIndicator() async {
     return await AwesomeNotifications().incrementGlobalBadgeCounter();
+  }
+
+  Future<void> setNotificationsValues() async {
+    final currentBadgeCounter = await getBadgeIndicator();
+
+    //Set the Global Counter to a New Value
+    setBadgeIndicator(currentBadgeCounter);
   }
 }
