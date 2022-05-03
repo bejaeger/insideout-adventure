@@ -33,11 +33,11 @@ class StepCounterOverlayViewModel extends BaseModel {
 
     if (_countSubscription == null) {
       _countSubscription = _pedometerService.countSubject.listen((count) {
-        if (count == -1) {
+        if (count == -1 || count == -2) {
           dialogService.showDialog(
               title: "YOU CHEATED!",
               description:
-                  "Your last $kStepFrequencyAntiCheat steps were deducted because you did not move.");
+                  "Your last ${kStepFrequencyAntiCheat * count.abs()} steps were deducted because you did not move.");
         }
         notifyListeners();
       });
@@ -60,9 +60,13 @@ class StepCounterOverlayViewModel extends BaseModel {
           title: "We would like to use the step counter.",
           description: "Please say yes in the following screen");
       final result = await _pedometerService.requestActivityPermission();
-      if (!result) {
-        return;
-      }
+
+      // FOR Iphone this would return so we need a better method for permission handling!
+
+      // if (!result) {
+      //   log.e("Permission to use step counter was not granted.");
+      //   return;
+      // }
     }
 
     // start pedometer

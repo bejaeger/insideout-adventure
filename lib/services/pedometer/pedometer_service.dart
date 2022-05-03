@@ -146,9 +146,9 @@ class PedometerService extends PausableService {
           // surpassed first cheater check successfully!
           if (lastLocationCheated) {
             log.wtf("CHEATER EXPOSED!");
-            countSubject.add(-1);
-            initialCount = initialCount + kStepFrequencyAntiCheat;
-            countSubject.add(count - kStepFrequencyAntiCheat);
+            countSubject.add(-2);
+            initialCount = initialCount + kStepFrequencyAntiCheat * 2;
+            countSubject.add(count - kStepFrequencyAntiCheat * 2);
           }
         } else {
           log.wtf("CHEATER EXPOSED!");

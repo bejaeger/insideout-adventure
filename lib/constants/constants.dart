@@ -137,5 +137,5 @@ const double kMinZoomAvatarView = 17;
 
 ///////////////////////////////////////
 /// Pedometer settings
-const double kMinDistanceAntiCheat = 5;
+const double kMinDistanceAntiCheat = 8;
 const int kStepFrequencyAntiCheat = 50;
