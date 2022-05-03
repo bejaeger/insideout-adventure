@@ -22,8 +22,10 @@ class ActiveScreenTimeViewModel extends BaseModel {
     Future.delayed(
       Duration(minutes: 1),
       () async {
-        await Notifications()
-            .createNotificationsTimesUp(message: "Your Time is Up");
+        /*  await Notifications()
+            .createNotificationsTimesUp(message: "Your Time is Up"); */
+        // TODO: This is where we would want to start
+        Notifications().createNotifications(message: "Your Time is Up");
 
         stopScreenTimeAfterZero();
       },
@@ -44,12 +46,6 @@ class ActiveScreenTimeViewModel extends BaseModel {
 
     notifyListeners();
   }
-
-/*   void verifyTimer() {
-    if (screenTimeLeft! == 0) {
-      Notifications().createNotificationsTimesUp(message: "Your Time is up");
-    }
-  } */
 
   // functions
   Future stopScreenTime() async {

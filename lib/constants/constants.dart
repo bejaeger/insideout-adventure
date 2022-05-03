@@ -43,7 +43,7 @@ final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
 final CollectionReference markersCollection =
     FirebaseFirestore.instance.collection("markers");
-final CollectionReference afkMarkersPositionsCollection =
+final afkMarkersPositionsCollection =
     FirebaseFirestore.instance.collection("afkMarkersPositions");
 final CollectionReference activatedQuestsCollection =
     FirebaseFirestore.instance.collection(activatedQuestsCollectionKey);

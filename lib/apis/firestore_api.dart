@@ -532,25 +532,24 @@ class FirestoreApi {
   }
 
   // Changed the Scope of the Method. from _pvt to public
-  Future<List<AFKQuest>> downloadNearbyAfkQuests() async {
-    // final quests = await questsCollection.get();
-    final afkQuest = await afkQuestsCollection.get();
-    if (afkQuest.docs.isNotEmpty) {
-      log.v('Found list of quests in database {$afkQuest}');
-      return afkQuest.docs
-          .map(
-            (docs) => AFKQuest.fromJson(
-              docs.data() as Map<String, dynamic>,
-            ),
-          )
-          .toList();
-    } else {
-      log.wtf('There is no \'quests\' collection on firestore');
+  Stream<List<AFKQuest>> downloadNearbyAfkQuests() {
+    try {
+      return afkQuestsCollection.snapshots().map(
+            (snapShot) => snapShot.docs
+                .map(
+                  (docs) =>
+                      AFKQuest.fromJson(docs.data() as Map<String, dynamic>),
+                )
+                .toList(),
+          );
+    } catch (e) {
       throw FirestoreApiException(
-          message: "Quest data could not be found",
-          devDetails: "Quest document is empty");
+          message:
+              "Unknown expection when listening to past quests the user has successfully done",
+          devDetails: '$e');
     }
   }
+  // final quests = await questsCollection.get();
 
   // Returns dummy data for now!
   Future pushFinishedQuest({required ActivatedQuest? quest}) async {

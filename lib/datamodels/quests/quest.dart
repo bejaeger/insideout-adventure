@@ -131,15 +131,22 @@ class AFKQuest {
   });
 
   AFKQuest.fromJson(Map<String, dynamic> json) {
+    final Map<String, dynamic> data = Map<String, dynamic>();
     id = json['id'];
     name = json['name'];
     description = json['description'];
     type = json['type'];
     afkCredits = json['afkCredits'];
-    afkMarkersPositions = json['afkMarkersPositions']!;
+    startAfkMarkersPositions =
+        AfkMarkersPositions.fromJson(json['startAfkMarkersPositions']!);
+    finishAfkMarkersPositions =
+        AfkMarkersPositions.fromJson(json['finishAfkMarkersPositions']!);
+    afkMarkersPositions = List<dynamic>.from(json['afkMarkersPositions'])
+        .map((i) => AfkMarkersPositions.fromJson(i))
+        .toList();
+
     afkCreditsPerMarker = json['afkCreditsPerMarker'];
-    startAfkMarkersPositions = json['startAfkMarkersPositions']!;
-    finishAfkMarkersPositions = json['finishAfkMarkersPositions']!;
+
     bonusAfkCreditsOnSuccess = json['bonusAfkCreditsOnSuccess'];
     distanceFromUser = json['distanceFromUser'];
     distanceToTravelInMeter = json['distanceToTravelInMeter'];

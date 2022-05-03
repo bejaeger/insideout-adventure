@@ -7,8 +7,7 @@ class Notifications {
       content: NotificationContent(
         id: createUniqueId(),
         channelKey: "base_channel",
-        title:
-            '${Emojis.lock_unlocked + Emojis.game_crystal_ball} Achievement was Unlocked!',
+        title: '${Emojis.time_alarm_clock + Emojis.game_crystal_ball}',
         body: message,
         category: NotificationCategory.Reminder,
         //  bigPicture: kAFKCreditsLogoPath,
@@ -32,12 +31,6 @@ class Notifications {
 
         //timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
       ),
-/*       schedule: NotificationInterval(
-        interval: 62,
-        timeZone: localTimeZone,
-        repeats: false,
-        preciseAlarm: true,
-      ), */
     );
   }
 

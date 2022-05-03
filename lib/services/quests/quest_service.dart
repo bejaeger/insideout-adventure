@@ -121,10 +121,9 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
-  Future<List<AFKQuest>> loadNearbyAFKQuests() async {
+  Stream<List<AFKQuest>> loadNearbyAFKQuests() {
     // TODO: In the future retrieve only nearby quests
-    final _nearbyAfkQuests = await _firestoreApi.downloadNearbyAfkQuests();
-    return _nearbyAfkQuests;
+    return _firestoreApi.downloadNearbyAfkQuests();
   }
 
   Future getQuestsOfType({required QuestType questType}) async {

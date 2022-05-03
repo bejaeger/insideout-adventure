@@ -5,7 +5,6 @@ import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
@@ -19,6 +18,8 @@ import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../datamodels/quests/quest.dart';
+
 class ExplorerHomeViewModel extends SwitchAccountsViewModel
     with MapStateControlMixin {
   //-------------------------------------------------------
@@ -27,6 +28,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  // Stateful Data
+  // ignore: close_sinks
 
   List<AFKQuest>? _afkQuest;
 
@@ -57,6 +60,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     this.name = currentUser.fullName;
     //_reactToServices(reactiveServices);
   }
+  // Subscription
+  StreamSubscription? afkQuestStreamSubscription;
 
   bool addingPositionToNotionDB = false;
   bool pushedToNotion = false;
@@ -73,7 +78,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     setBusy(false);
 
     // fade loading screen out process
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(
+      Duration(milliseconds: 500),
+    );
     showFullLoadingScreen = false;
     notifyListeners();
     // ? should to be in line with the fade out time in Loading Overlay widget
@@ -101,18 +108,24 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       callback: () => notifyListeners(),
     );
     addLocationListener();
-    await Future.wait([
-      completer.future,
-      completerTwo.future,
-      completerThree.future,
-      getLocation(forceAwait: true, forceGettingNewPosition: false),
-    ]);
+    await Future.wait(
+      [
+        completer.future,
+        completerTwo.future,
+        completerThree.future,
+        getLocation(forceAwait: true, forceGettingNewPosition: false),
+      ],
+    );
   }
 
   Future initializeQuests({bool? force}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
-        _afkQuest = await questService.loadNearbyAFKQuests();
+        afkQuestStreamSubscription = questService.loadNearbyAFKQuests().listen(
+          (snapShot) {
+            _afkQuest = snapShot;
+          },
+        );
         log.i(_afkQuest);
         await questService.loadNearbyQuests(force: true);
         await questService.sortNearbyQuests();
@@ -303,6 +316,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   @override
   void dispose() {
+    afkQuestStreamSubscription?.cancel();
     _isShowingARViewStream?.cancel();
     _isShowingQuestListStream?.cancel();
     _selectedQuestStream?.cancel();

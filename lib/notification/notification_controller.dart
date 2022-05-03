@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class NotificationController {
   Future<void> initializeLocalNotifications() async {
@@ -13,7 +14,7 @@ class NotificationController {
           channelName: 'afk time up notifications',
           channelDescription: 'Notify User When his/her screen time is up',
           defaultColor: Colors.teal,
-          importance: NotificationImportance.Default,
+          importance: NotificationImportance.High,
           channelShowBadge: true,
           locked: true,
         ),
@@ -54,13 +55,14 @@ class NotificationController {
     // SilentBackgroundAction runs on background thread and cannot show
     // UI/visual elements
     if (receivedAction.actionType != ActionType.SilentBackgroundAction)
-      Fluttertoast.showToast(
+      log("message");
+/*       Fluttertoast.showToast(
         msg:
             '${isSilentAction ? 'Silent action' : 'Action'} received on ${_toSimpleEnum(receivedAction.actionLifeCycle!)}',
         toastLength: Toast.LENGTH_SHORT,
         backgroundColor: isSilentAction ? Colors.blueAccent : Colors.teal,
         gravity: ToastGravity.BOTTOM,
-      );
+      ); */
   }
 
   static String _toSimpleEnum(NotificationLifeCycle lifeCycle) =>
@@ -69,34 +71,34 @@ class NotificationController {
   /// Use this method to detect every time that a new notification is displayed
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
-    Fluttertoast.showToast(
+/*     Fluttertoast.showToast(
         msg:
             'Notification displayed on ${_toSimpleEnum(receivedNotification.displayedLifeCycle!)}',
         toastLength: Toast.LENGTH_SHORT,
         backgroundColor: Colors.blue,
-        gravity: ToastGravity.BOTTOM);
+        gravity: ToastGravity.BOTTOM); */
   }
 
   /// Use this method to detect when a new notification or a schedule is created
   static Future<void> onNotificationCreatedMethod(
       ReceivedNotification receivedNotification) async {
-    Fluttertoast.showToast(
+/*     Fluttertoast.showToast(
         msg:
             'Notification created on ${_toSimpleEnum(receivedNotification.createdLifeCycle!)}',
         toastLength: Toast.LENGTH_SHORT,
         backgroundColor: Colors.green,
-        gravity: ToastGravity.BOTTOM);
+        gravity: ToastGravity.BOTTOM); */
   }
 
   /// Use this method to detect if the user dismissed a notification
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    Fluttertoast.showToast(
+/*     Fluttertoast.showToast(
         msg:
             'Notification dismissed on ${_toSimpleEnum(receivedAction.dismissedLifeCycle!)}',
         toastLength: Toast.LENGTH_SHORT,
         backgroundColor: Colors.orange,
-        gravity: ToastGravity.BOTTOM);
+        gravity: ToastGravity.BOTTOM); */
   }
 
   Future<String?> getTimeZone() async {
