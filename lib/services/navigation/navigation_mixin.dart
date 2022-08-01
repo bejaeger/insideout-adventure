@@ -77,6 +77,14 @@ mixin NavigationMixin {
     _navigationService.back();
   }
 
+  void popViewReturnNull() {
+    _navigationService.back(result: null);
+  }
+
+  void popViewReturnValue({dynamic result}) {
+    _navigationService.back(result: result);
+  }
+
   void navToMapView({required UserRole role}) {
     _navigationService.navigateTo(
       Routes.bottomBarLayoutTemplateView,
@@ -160,8 +168,8 @@ mixin NavigationMixin {
     _layoutService.setIsShowingQuestList(false);
   }
 
-  void navToArObjectView(bool isCoins) {
-    _navigationService.navigateTo(Routes.aRObjectView,
+  Future navToArObjectView(bool isCoins) async {
+    return await _navigationService.navigateTo(Routes.aRObjectView,
         arguments: ARObjectViewArguments(isCoins: isCoins));
   }
 }

@@ -107,6 +107,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     //   resetSlider();
     //   return false;
     // }
+
+    // TODO: This might be deprecated as we changed business/app model
     if (!hasEnoughSponsoring(quest: quest)) {
       return false;
     }
@@ -262,8 +264,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
   }
 
-  void showNextARObjects() {
-    // TODO: I am not sure if this is the best possibility!
+  void showNextARObjects({required Future Function() onCollected}) {
+    // TODO: I am not sure if this is the best way to implement this!
     // But maybe it is!?
     final AFKMarker? marker = activeQuestService.getNextMarker();
     if (marker == null || marker.lon == null && marker.lat == null) {
@@ -284,7 +286,14 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
         layoutService.setIsShowingARView(true);
 
         // 4. Open AR view with nice zoom in and fade out triggered
-        await mapViewModel.openARView(lat, lon, isCoin);
+        bool collected = await mapViewModel.openARView(lat, lon, isCoin);
+
+        // 5. Handle return value of AR view!
+        if (collected) {
+          await onCollected();
+        } else {
+          dialogService.showDialog(title: "COLLECT MARKER!");
+        }
       },
     );
   }
@@ -403,6 +412,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
     // cancelQuestListener();
     notifyListeners();
+    return questSuccessfullyFinished;
   }
 
   Future showFoundTreasureDialog() async {

@@ -11,9 +11,14 @@ class ARObjectViewModel extends ActiveQuestBaseViewModel
     throw UnimplementedError();
   }
 
-  void popArView() async {
+  Future handleCollectedArObjectEvent() async {
+    await showCollectedMarkerDialog();
+    popArView(result: true);
+  }
+
+  void popArView({dynamic result}) async {
     layoutService.setIsShowingARView(false);
-    popView();
+    popViewReturnValue(result: result);
     restorePreviousCameraPosition(moveInsteadOfAnimate: true);
   }
 }

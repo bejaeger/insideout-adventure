@@ -192,6 +192,20 @@ class TreasureLocationSearch extends StatelessWidget {
                   ),
                 ),
               ),
+              if (model.useSuperUserFeatures)
+                Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () {
+                      model.checkDistance();
+                    },
+                    child: Container(
+                        width: 30,
+                        height: 30,
+                        color: Colors.green,
+                        child: Icon(Icons.arrow_forward_ios)),
+                  ),
+                ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(

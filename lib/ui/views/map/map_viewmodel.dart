@@ -3,6 +3,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
@@ -104,6 +105,7 @@ class MapViewModel extends BaseModel
       );
     }
     if (_mapEventListenerSubscription == null) {
+      // update map state with...
       _mapEventListenerSubscription = mapStateService.mapEventListener.listen(
         (MapUpdate type) {
           log.i("Received Map Update of type $type");
@@ -479,7 +481,8 @@ class MapViewModel extends BaseModel
     changeCameraZoom(40); // ridiculous zoom (will be clipped)
     _animateCamera(customLat: lat, customLon: lon, force: true);
     await Future.delayed(Duration(milliseconds: 1000));
-    navToArObjectView(isCoin);
+    dynamic res = await navToArObjectView(isCoin);
+    return res is bool && res == true;
   }
 
   void nextCharacter() {
