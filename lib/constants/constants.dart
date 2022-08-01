@@ -7,6 +7,8 @@ const GoogleMapsEnvKeyIOS = 'GOOGLE_MAPS_API_KEY_IOS';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
+const kLocalStoragePedometerCount = "PedometerCount";
+const kLocalStoragePedometerStatus = "PedometerStatus";
 
 final appName = 'AFK Credits';
 
@@ -132,3 +134,8 @@ const double kMaxZoom = 19;
 // const double kMaxZoom = 50;
 const double kInitialZoomBirdsView = 12;
 const double kMinZoomAvatarView = 17;
+
+///////////////////////////////////////
+/// Pedometer settings
+const double kMinDistanceAntiCheat = 8;
+const int kStepFrequencyAntiCheat = 50;

@@ -1,5 +1,6 @@
 import 'package:afkcredits/services/common_services/pausable_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/pedometer/pedometer_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
       }
     });
     servicesToManage.add(() => locator<StopWatchService>());
+    servicesToManage.add(() => locator<PedometerService>());
   }
 
   @override

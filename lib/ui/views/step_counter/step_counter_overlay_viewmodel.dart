@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/services/pedometer/pedometer_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -12,20 +15,41 @@ class StepCounterOverlayViewModel extends BaseModel {
   // ------------------------------------------
   // getters
   bool get isCounting => _pedometerService.isCounting;
+  String get count => _pedometerService.currentCount.toString();
+  String get pedestrianStatus => _pedometerService.statusSubject.value;
 
   // --------------------------------
   // state
-  int initialCount = 0;
-  int currentCount = 0;
-  String get count => (currentCount - initialCount).toString();
-
-  String pedestrianStatus = "?";
 
   // flag that will be set to false after the first step count has been emitted
-  bool firstEvent = true;
+  StreamSubscription? _countSubscription;
+  StreamSubscription? _statusSubscription;
 
   // ---------------------------------------------------------
   // Functions
+  Future listenToData() async {
+    // ??? The following might not be ideal
+    // ??? As in some cases might figher notifyListeners() twice!
+
+    if (_countSubscription == null) {
+      _countSubscription = _pedometerService.countSubject.listen((count) {
+        if (count == -1 || count == -2) {
+          dialogService.showDialog(
+              title: "YOU CHEATED!",
+              description:
+                  "Your last ${kStepFrequencyAntiCheat * count.abs()} steps were deducted because you did not move.");
+        }
+        notifyListeners();
+      });
+    }
+    if (_statusSubscription == null) {
+      _statusSubscription = _pedometerService.statusSubject.listen((_) {
+        notifyListeners();
+      });
+    }
+
+    log.wtf("LISTEN TO STEP DATA!");
+  }
 
   Future startPedometer() async {
     // need to request permission
@@ -36,24 +60,17 @@ class StepCounterOverlayViewModel extends BaseModel {
           title: "We would like to use the step counter.",
           description: "Please say yes in the following screen");
       final result = await _pedometerService.requestActivityPermission();
-      if (!result) {
-        return;
-      }
+
+      // FOR Iphone this would return so we need a better method for permission handling!
+
+      // if (!result) {
+      //   log.e("Permission to use step counter was not granted.");
+      //   return;
+      // }
     }
 
     // start pedometer
-    final result = _pedometerService.startPedometer(onStatusListen: (status) {
-      pedestrianStatus = status.status;
-      notifyListeners();
-    }, onStepCountListen: (count) {
-      if (firstEvent == true) {
-        initialCount = count.steps;
-        firstEvent = false;
-      }
-      currentCount = count.steps;
-      log.v("New step count event!");
-      notifyListeners();
-    });
+    final result = _pedometerService.startPedometer();
     if (result is String) {
       log.e("Could not start pedometer because of error: $result");
       snackbarService.showSnackbar(
@@ -66,9 +83,6 @@ class StepCounterOverlayViewModel extends BaseModel {
   }
 
   void stopPedometer() {
-    pedestrianStatus = "?";
-    firstEvent = true;
-    initialCount = currentCount;
     _pedometerService.stopPedometer();
     snackbarService.showSnackbar(title: "Stopped pedometer", message: "");
     notifyListeners();
@@ -116,4 +130,13 @@ class StepCounterOverlayViewModel extends BaseModel {
   //     return false;
   //   }
   // }
+
+  @override
+  void dispose() {
+    _countSubscription?.cancel();
+    _countSubscription = null;
+    _statusSubscription?.cancel();
+    _statusSubscription = null;
+    super.dispose();
+  }
 }
