@@ -9,7 +9,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.da
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-class SponsorHomeViewModel extends TransferBaseViewModel {
+class ParentHomeViewModel extends TransferBaseViewModel {
   final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   final log = getLogger("SponsorHomeViewModel");
   List<User> get supportedExplorers => userService.supportedExplorersList;

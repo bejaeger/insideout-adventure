@@ -1,10 +1,12 @@
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_viewmodel.dart';
+import 'package:afkcredits/ui/views/parent_drawer_view/parent_drawer_view.dart';
+import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
@@ -13,18 +15,23 @@ import 'package:afkcredits/ui/widgets/user_list_tile.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:transparent_image/transparent_image.dart';
 
-class SponsorHomeView extends StatelessWidget {
-  const SponsorHomeView({Key? key}) : super(key: key);
+class ParentHomeView extends StatelessWidget {
+  const ParentHomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<SponsorHomeViewModel>.reactive(
-      viewModelBuilder: () => SponsorHomeViewModel(),
+    return ViewModelBuilder<ParentHomeViewModel>.reactive(
+      viewModelBuilder: () => ParentHomeViewModel(),
       onModelReady: (model) => model.listenToData(),
       fireOnModelReadyOnce: true,
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(title: "Hi Sponsor"),
+        appBar: CustomAppBar(title: "Home", drawer: true),
+        endDrawer: SizedBox(
+          width: screenWidth(context, percentage: 0.6),
+          child: const ParentDrawerView(),
+        ),
         body: RefreshIndicator(
           onRefresh: () => model.listenToData(),
           child: ListView(
@@ -32,7 +39,13 @@ class SponsorHomeView extends StatelessWidget {
             children: [
               verticalSpaceMedium,
               SectionHeader(
-                title: "Sponsored Explorers",
+                title: "History",
+                //onButtonTap: model.navigateToTransferHistoryView,
+              ),
+              RecentHistory(),
+              verticalSpaceMedium,
+              SectionHeader(
+                title: "Children",
                 onButtonTap: model.showAddExplorerBottomSheet,
                 buttonIcon: Icon(Icons.add_circle_outline_rounded,
                     color: kDarkTurquoise),
@@ -59,37 +72,117 @@ class SponsorHomeView extends StatelessWidget {
                       onAddNewExplorerPressed:
                           model.showAddExplorerBottomSheet),
                 ),
-              verticalSpaceMedium,
-              if (model.latestTransfers.length > 0)
-                SectionHeader(
-                  title: "Recent Payments",
-                  onButtonTap: model.navigateToTransferHistoryView,
-                ),
-              if (model.latestTransfers.length > 0) verticalSpaceSmall,
-              if (model.latestTransfers.length > 0)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding + 5.0),
-                  child: LatestTransfersList(
-                    transfers: model.latestTransfers,
-                    onTilePressed: model.showMoneyTransferInfoDialog,
-                  ),
-                ),
+
+              // if (model.latestTransfers.length > 0) verticalSpaceSmall,
+              // if (model.latestTransfers.length > 0)
+              //   Padding(
+              //     padding: const EdgeInsets.symmetric(
+              //         horizontal: kHorizontalPadding + 5.0),
+              //     child: LatestTransfersList(
+              //       transfers: model.latestTransfers,
+              //       onTilePressed: model.showMoneyTransferInfoDialog,
+              //     ),
+              //   ),
               // _sendMoneyButton(context, model),
-              verticalSpaceLarge,
-              Divider(),
-              verticalSpaceLarge,
-              verticalSpaceLarge,
-              ElevatedButton(
-                  // onPressed: model.navigateToExplorerHomeView,
-                  onPressed: model.logout,
-                  //child: Text("Go to explorer home/map")),
-                  child: Text("Logout  ")),
               verticalSpaceLarge,
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class RecentHistory extends StatelessWidget {
+  const RecentHistory({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          HistoryItemScreenTime(),
+          verticalSpaceTiny,
+          HistoryItemActivity(),
+        ],
+      ),
+    );
+  }
+}
+
+class HistoryItem extends StatelessWidget {
+  final List<Widget> children;
+  final Color color;
+  const HistoryItem({Key? key, required this.children, required this.color})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.0),
+        color: color,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: children),
+      ),
+    );
+  }
+}
+
+class HistoryItemScreenTime extends StatelessWidget {
+  const HistoryItemScreenTime({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return HistoryItem(color: kNiceBlue.withOpacity(0.5), children: [
+      Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: FadeInImage.memoryNetwork(
+          fadeInDuration: Duration(milliseconds: 200),
+          placeholder: kTransparentImage,
+          image: kScreenTimeImageUrl,
+        ),
+      ),
+      horizontalSpaceSmall,
+      AfkCreditsText.caption("Sven used 30 min screen time"),
+      Spacer(),
+      AfkCreditsText.caption("Aug 2")
+    ]);
+  }
+}
+
+class HistoryItemActivity extends StatelessWidget {
+  const HistoryItemActivity({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return HistoryItem(
+      color: kNiceOrange,
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: FadeInImage.memoryNetwork(
+            fadeInDuration: Duration(milliseconds: 200),
+            placeholder: kTransparentImage,
+            image: kRunningIconUrl,
+          ),
+        ),
+        horizontalSpaceSmall,
+        AfkCreditsText.caption("Kevin walked 1 hour"),
+        Spacer(),
+        AfkCreditsText.caption("Aug1"),
+      ],
     );
   }
 }

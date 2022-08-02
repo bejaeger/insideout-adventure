@@ -47,6 +47,7 @@ import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
+import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
@@ -64,7 +65,6 @@ import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/select_screen_time_view/select_screen_time_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
-import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transaction_history/transfers_history_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
@@ -82,7 +82,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
 
 @StackedApp(
   routes: [
-    MaterialRoute(page: SponsorHomeView),
+    MaterialRoute(page: ParentHomeView),
     MaterialRoute(page: SingleMarkerView),
     MaterialRoute(page: InsertPrePurchasedGiftCardView),
     MaterialRoute(page: UpdatingQuestView),

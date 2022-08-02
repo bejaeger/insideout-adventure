@@ -39,6 +39,7 @@ import '../ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_overview_view.dart';
+import '../ui/views/parent_home/parent_home_view.dart';
 import '../ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_view.dart';
 import '../ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import '../ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
@@ -55,13 +56,12 @@ import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/select_screen_time_view/select_screen_time_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_explorer/single_explorer_view.dart';
-import '../ui/views/sponsor_home/sponsor_home_view.dart';
 import '../ui/views/startup/startup_view.dart';
 import '../ui/views/transaction_history/transfers_history_view.dart';
 import '../ui/views/transfer_funds/transfer_funds_view.dart';
 
 class Routes {
-  static const String sponsorHomeView = '/sponsor-home-view';
+  static const String parentHomeView = '/parent-home-view';
   static const String singleMarkerView = '/single-marker-view';
   static const String insertPrePurchasedGiftCardView =
       '/insert-pre-purchased-gift-card-view';
@@ -111,7 +111,7 @@ class Routes {
   static const String selectScreenTimeView = '/select-screen-time-view';
   static const String activeScreenTimeView = '/active-screen-time-view';
   static const all = <String>{
-    sponsorHomeView,
+    parentHomeView,
     singleMarkerView,
     insertPrePurchasedGiftCardView,
     updatingQuestView,
@@ -159,7 +159,7 @@ class StackedRouter extends RouterBase {
   @override
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
-    RouteDef(Routes.sponsorHomeView, page: SponsorHomeView),
+    RouteDef(Routes.parentHomeView, page: ParentHomeView),
     RouteDef(Routes.singleMarkerView, page: SingleMarkerView),
     RouteDef(Routes.insertPrePurchasedGiftCardView,
         page: InsertPrePurchasedGiftCardView),
@@ -210,9 +210,9 @@ class StackedRouter extends RouterBase {
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
   final _pagesMap = <Type, StackedRouteFactory>{
-    SponsorHomeView: (data) {
+    ParentHomeView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const SponsorHomeView(),
+        builder: (context) => const ParentHomeView(),
         settings: data,
       );
     },
