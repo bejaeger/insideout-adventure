@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
@@ -292,7 +293,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
         if (collected) {
           await onCollected();
         } else {
-          dialogService.showDialog(title: "COLLECT MARKER!");
+          dialogService.showDialog(
+              title: "Collect the final Marker to get coins!");
         }
       },
     );
@@ -530,7 +532,21 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
   //------------------------------------------
   // Functions to override
-  Future showInstructions();
+  Future showInstructions(Quest quest) async {
+    if (quest.type == QuestType.TreasureLocationSearch) {
+      await dialogService.showDialog(
+          title: "How it works", description: kLocationSearchDescription);
+    } else if (quest.type == QuestType.GPSAreaHike) {
+      await dialogService.showDialog(
+          title: "How it works", description: kGPSAreaHikeDescription);
+    } else if (quest.type == QuestType.DistanceEstimate) {
+      await dialogService.showDialog(
+          title: "How it works", description: kDistanceEstimateDescription);
+    } else {
+      showGenericInternalErrorDialog();
+    }
+  }
+
   Future maybeStartQuest(
       {required Quest? quest, void Function()? onStartQuestCallback});
 

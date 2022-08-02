@@ -60,10 +60,4 @@ class ActivatedQuestPanelViewModel extends ActiveQuestBaseViewModel {
     // TODO: implement maybeStartQuest
     throw UnimplementedError();
   }
-
-  @override
-  Future showInstructions() {
-    // TODO: implement showInstructions
-    throw UnimplementedError();
-  }
 }

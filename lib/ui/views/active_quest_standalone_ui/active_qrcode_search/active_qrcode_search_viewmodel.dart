@@ -210,10 +210,4 @@ class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
     displayButtonNewClue = false;
     super.resetPreviousQuest();
   }
-
-  @override
-  Future showInstructions() {
-    // TODO: implement showInstructions
-    throw UnimplementedError();
-  }
 }

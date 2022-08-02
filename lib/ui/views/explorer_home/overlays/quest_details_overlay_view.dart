@@ -96,6 +96,12 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                     ),
                   ),
 
+                if (quest != null)
+                  InstructionsAndStartButtonsOverlay(
+                      quest: quest,
+                      onStartQuest: () => model.notifyListeners(),
+                      model: model),
+
                 // Quest Info
                 Container(
                   child: Padding(
@@ -216,8 +222,8 @@ class TreasureLocationSearch extends StatelessWidget {
                       child: Icon(Icons.arrow_forward_ios)),
                 ),
               ),
-            InstructionsAndStartButtonsOverlay(
-                quest: quest, onStartQuest: onStartQuest, model: model),
+            // InstructionsAndStartButtonsOverlay(
+            //     quest: quest, onStartQuest: onStartQuest, model: model),
           ],
         );
       },
@@ -264,8 +270,8 @@ class GPSAreaHike extends StatelessWidget {
             //           child: Icon(Icons.arrow_forward_ios)),
             //     ),
             //   ),
-            InstructionsAndStartButtonsOverlay(
-                quest: quest, onStartQuest: onStartQuest, model: model),
+            // InstructionsAndStartButtonsOverlay(
+            //     quest: quest, onStartQuest: onStartQuest, model: model),
           ],
         );
       },
@@ -290,7 +296,7 @@ class InstructionsAndStartButtonsOverlay extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(bottom: model.hasActiveQuest ? 0 : 70.0),
+        padding: EdgeInsets.only(bottom: model.hasActiveQuest ? 0 : 80.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -298,7 +304,7 @@ class InstructionsAndStartButtonsOverlay extends StatelessWidget {
             if (!model.hasActiveQuest)
               Expanded(
                 child: AfkCreditsButton(
-                    onTap: model.showInstructions,
+                    onTap: () => model.showInstructions(quest),
                     title: "Tutorial",
                     color: kPrimaryColor.withOpacity(0.7),
                     leading: Icon(Icons.help, color: Colors.grey[100])),

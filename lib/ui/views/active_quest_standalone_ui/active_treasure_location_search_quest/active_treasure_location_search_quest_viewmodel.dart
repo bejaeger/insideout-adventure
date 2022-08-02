@@ -532,14 +532,6 @@ class ActiveTreasureLocationSearchQuestViewModel
     }
   }
 
-  @override
-  Future showInstructions() async {
-    await dialogService.showDialog(
-        title: "How it works",
-        description:
-            "Try to get to the treasure by checking the distance regularly. You have to walk to refresh the location checker. The trohphy is clever and sometimes moves around!!");
-  }
-
   void setTrackingDeadTime(bool deadTime) {
     log.v("Setting quest data tracking dead time to $deadTime");
     isTrackingDeadTime = deadTime;

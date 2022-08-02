@@ -911,10 +911,4 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
     _googleMapController?.dispose();
     super.dispose();
   }
-
-  @override
-  Future showInstructions() {
-    // TODO: implement showInstructions
-    throw UnimplementedError();
-  }
 }
