@@ -10,4 +10,17 @@ class ActiveQuestDrawerViewModel extends ActiveQuestBaseViewModel {
     // TODO: implement isQuestCompleted
     throw UnimplementedError();
   }
+
+  @override
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) {
+    // TODO: implement maybeStartQuest
+    throw UnimplementedError();
+  }
+
+  @override
+  Future showInstructions() {
+    // TODO: implement showInstructions
+    throw UnimplementedError();
+  }
 }

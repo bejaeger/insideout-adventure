@@ -532,6 +532,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     }
   }
 
+  @override
   Future showInstructions() async {
     await dialogService.showDialog(
         title: "How it works",

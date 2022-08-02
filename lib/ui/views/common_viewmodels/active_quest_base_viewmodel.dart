@@ -528,6 +528,12 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     navigationService.back();
   }
 
+  //------------------------------------------
+  // Functions to override
+  Future showInstructions();
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback});
+
   //-------------------------------------------
   // Helper
 
