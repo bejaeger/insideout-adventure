@@ -74,8 +74,9 @@ abstract class AuthenticationViewModel extends FormViewModel
         if (role == UserRole.explorer || role == UserRole.superUser) {
           _navigationService.replaceWith(Routes.explorerHomeView);
         } else {
-          _navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-              arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
+          _navigationService.replaceWith(Routes.parentHomeView);
+          // _navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+          //     arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
         }
         // if (role == UserRole.explorer) {
         //   navigationService.replaceWith(Routes.explorerHomeView);

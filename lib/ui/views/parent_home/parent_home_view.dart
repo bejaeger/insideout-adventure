@@ -2,16 +2,16 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
-import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/parent_drawer_view/parent_drawer_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
+import 'package:afkcredits/ui/widgets/child_stats_card.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
+import 'package:afkcredits/ui/widgets/outline_box.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:afkcredits/ui/widgets/user_list_tile.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -26,66 +26,83 @@ class ParentHomeView extends StatelessWidget {
       viewModelBuilder: () => ParentHomeViewModel(),
       onModelReady: (model) => model.listenToData(),
       fireOnModelReadyOnce: true,
-      builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(title: "Home", drawer: true),
-        endDrawer: SizedBox(
-          width: screenWidth(context, percentage: 0.6),
-          child: const ParentDrawerView(),
-        ),
-        body: RefreshIndicator(
-          onRefresh: () => model.listenToData(),
-          child: ListView(
-            physics: ScrollPhysics(),
-            children: [
-              verticalSpaceMedium,
-              SectionHeader(
-                title: "History",
-                //onButtonTap: model.navigateToTransferHistoryView,
-              ),
-              RecentHistory(),
-              verticalSpaceMedium,
-              SectionHeader(
-                title: "Children",
-                onButtonTap: model.showAddExplorerBottomSheet,
-                buttonIcon: Icon(Icons.add_circle_outline_rounded,
-                    color: kDarkTurquoise),
-              ),
-              if (model.supportedExplorers.length == 0)
-                model.isBusy
-                    ? AFKProgressIndicator()
-                    : Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: ElevatedButton(
-                          onPressed: model.showAddExplorerBottomSheet,
-                          child: Text("Add Explorer"),
-                          //imagePath: ImagePath.peopleHoldingHands,
-                        ),
-                      ),
-              if (model.supportedExplorers.length > 0)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding),
-                  child: ExplorersList(
-                      explorersStats: model.supportedExplorerStats,
-                      explorers: model.supportedExplorers,
-                      onExplorerPressed: model.navigateToSingleExplorerView,
-                      onAddNewExplorerPressed:
-                          model.showAddExplorerBottomSheet),
+      builder: (context, model, child) => SafeArea(
+        child: Scaffold(
+          appBar: CustomAppBar(title: "Home", drawer: true),
+          endDrawer: SizedBox(
+            width: screenWidth(context, percentage: 0.6),
+            child: const ParentDrawerView(),
+          ),
+          floatingActionButton: Container(
+            width: screenWidth(context),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                //verticalSpaceSmall,
+                OutlineBox(
+                  width: screenWidth(context, percentage: 0.4),
+                  height: 60,
+                  borderWidth: 0,
+                  text: "Create Quest",
+                  onPressed: model.showNotImplementedSnackbar,
+                  color: kDarkTurquoise,
+                  textColor: Colors.white,
                 ),
-
-              // if (model.latestTransfers.length > 0) verticalSpaceSmall,
-              // if (model.latestTransfers.length > 0)
-              //   Padding(
-              //     padding: const EdgeInsets.symmetric(
-              //         horizontal: kHorizontalPadding + 5.0),
-              //     child: LatestTransfersList(
-              //       transfers: model.latestTransfers,
-              //       onTilePressed: model.showMoneyTransferInfoDialog,
-              //     ),
-              //   ),
-              // _sendMoneyButton(context, model),
-              verticalSpaceLarge,
-            ],
+                OutlineBox(
+                  width: screenWidth(context, percentage: 0.4),
+                  height: 60,
+                  borderWidth: 0,
+                  text: "Switch to Child",
+                  onPressed: model.showNotImplementedSnackbar,
+                  color: kDarkTurquoise,
+                  textColor: Colors.white,
+                ),
+                //verticalSpaceSmall,
+              ],
+            ),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          body: RefreshIndicator(
+            onRefresh: () => model.listenToData(),
+            child: ListView(
+              physics: ScrollPhysics(),
+              children: [
+                verticalSpaceMedium,
+                SectionHeader(
+                  title: "History",
+                  //onButtonTap: model.navigateToTransferHistoryView,
+                ),
+                RecentHistory(),
+                verticalSpaceMedium,
+                SectionHeader(
+                  title: "Children",
+                  onButtonTap: model.showAddExplorerBottomSheet,
+                  buttonIcon: Icon(Icons.add_circle_outline_rounded,
+                      size: 28, color: kDarkTurquoise),
+                ),
+                if (model.supportedExplorers.length == 0)
+                  model.isBusy
+                      ? AFKProgressIndicator()
+                      : Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: ElevatedButton(
+                            onPressed: model.showAddExplorerBottomSheet,
+                            child: Text("Add Explorer"),
+                            //imagePath: ImagePath.peopleHoldingHands,
+                          ),
+                        ),
+                if (model.supportedExplorers.length > 0)
+                  ChildrenStatsList(
+                    explorersStats: model.supportedExplorerStats,
+                    explorers: model.supportedExplorers,
+                    onChildCardPressed: model.navigateToSingleExplorerView,
+                    // onAddNewExplorerPressed:
+                    //     model.showAddExplorerBottomSheet
+                  ),
+                verticalSpaceMassive,
+              ],
+            ),
           ),
         ),
       ),
@@ -120,7 +137,7 @@ class HistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 70,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
         color: color,
@@ -139,6 +156,17 @@ class HistoryItemScreenTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HistoryItem(color: kNiceBlue.withOpacity(0.5), children: [
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AfkCreditsText.captionBold("Sven"),
+          AfkCreditsText.caption("Aug 2"),
+        ],
+      ),
+      horizontalSpaceMedium,
+      AfkCreditsText.body("30 min screen time"),
+      Spacer(),
       Container(
         width: 60,
         height: 60,
@@ -151,10 +179,6 @@ class HistoryItemScreenTime extends StatelessWidget {
           image: kScreenTimeImageUrl,
         ),
       ),
-      horizontalSpaceSmall,
-      AfkCreditsText.caption("Sven used 30 min screen time"),
-      Spacer(),
-      AfkCreditsText.caption("Aug 2")
     ]);
   }
 }
@@ -166,6 +190,17 @@ class HistoryItemActivity extends StatelessWidget {
     return HistoryItem(
       color: kNiceOrange,
       children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AfkCreditsText.captionBold("Kevin"),
+            AfkCreditsText.caption("Aug 1"),
+          ],
+        ),
+        horizontalSpaceMedium,
+        AfkCreditsText.body("walked 1 hour"),
+        Spacer(),
         Container(
           width: 60,
           height: 60,
@@ -178,61 +213,48 @@ class HistoryItemActivity extends StatelessWidget {
             image: kRunningIconUrl,
           ),
         ),
-        horizontalSpaceSmall,
-        AfkCreditsText.caption("Kevin walked 1 hour"),
-        Spacer(),
-        AfkCreditsText.caption("Aug1"),
       ],
     );
   }
 }
 
-class ExplorersList extends StatelessWidget {
+class ChildrenStatsList extends StatelessWidget {
   final List<User> explorers;
   final Map<String, UserStatistics>? explorersStats;
 
-  final void Function() onAddNewExplorerPressed;
-  final void Function({required String uid})? onExplorerPressed;
+  // final void Function() onAddNewExplorerPressed;
+  final void Function({required String uid}) onChildCardPressed;
 
-  const ExplorersList({
+  const ChildrenStatsList({
     Key? key,
     required this.explorers,
-    this.explorersStats,
-    required this.onAddNewExplorerPressed,
-    this.onExplorerPressed,
+    required this.explorersStats,
+    // required this.onAddNewExplorerPressed,
+    required this.onChildCardPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      //scrollDirection: Axis.horizontal,
-      physics: ScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: explorers.length,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            horizontalSpaceSmall,
-            UserListTile(
-              onTilePressed: onExplorerPressed == null
-                  ? null
-                  : (
-                      [PublicUserInfo? userInfo,
-                      UserStatistics? userStats]) async {
-                      onExplorerPressed!(uid: userInfo!.uid);
-                    },
-              // userStats: explorersStats == null || explorersStats?.length == 0
-              //     ? null
-              //     : explorersStats![explorers[index].uid],
-              userInfo: PublicUserInfo(
-                name: explorers[index].fullName,
-                email: explorers[index].email,
-                uid: explorers[index].uid,
+    return SizedBox(
+      height: 160,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: ScrollPhysics(),
+        itemCount: explorers.length,
+        itemBuilder: (context, index) {
+          return Row(
+            children: [
+              if (index == 0) SizedBox(width: 20),
+              GestureDetector(
+                onTap: () => onChildCardPressed(uid: explorers[index].uid),
+                child: ChildStatsCard(
+                    user: explorers[index], childrenStats: explorersStats),
               ),
-            ),
-          ],
-        );
-      },
+              if (index == explorers.length - 1) SizedBox(width: 20),
+            ],
+          );
+        },
+      ),
     );
   }
 }

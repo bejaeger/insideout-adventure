@@ -83,7 +83,6 @@ class ActiveTreasureLocationSearchQuestViewModel
           return false;
         }
       }
-
       dynamic result;
       result = await startQuestMain(quest: quest);
 
@@ -99,31 +98,32 @@ class ActiveTreasureLocationSearchQuestViewModel
       // quest started!
       // start listening to position
       activeQuestService.listenToPosition(
-          // distanceFilter: kMinDistanceFromLastCheckInMeters,
-          distanceFilter: 0,
-          pushToNotion: true,
-          recordPositionDataEvent: false,
-          // skipFirstStreamEvent: true,
-          // Maybe we should add a filterGPSData function that only
-          // allows the user to check location based on certain conditions
-          viewModelCallback: (position) async {
-            if (allowCheckingPosition == false) {
-              if (isUpdatingPositionAllowed(position: position)) {
-                // ? The following two lines mean that
-                // ? we manually check for updated positions
-                // ? let's to it automatic for now, see below
-                // setAllowCheckingPosition(true);
-                // notifyListeners();
+        // distanceFilter: kMinDistanceFromLastCheckInMeters,
+        distanceFilter: 0,
+        pushToNotion: true,
+        recordPositionDataEvent: false,
+        // skipFirstStreamEvent: true,
+        // Maybe we should add a filterGPSData function that only
+        // allows the user to check location based on certain conditions
+        viewModelCallback: (position) async {
+          if (allowCheckingPosition == false) {
+            if (isUpdatingPositionAllowed(position: position)) {
+              // ? The following two lines mean that
+              // ? we manually check for updated positions
+              // ? let's to it automatic for now, see below
+              // setAllowCheckingPosition(true);
+              // notifyListeners();
 
-                await checkDistance();
-              }
+              await checkDistance();
             }
-            // TODO: Should probably happen more often!
-            // this will move the map. Should happen more often than is the
-            // case for the treasure location search! Add additional filtering!?
-            setNewLatLon(lat: position.latitude, lon: position.longitude);
-            animateOnNewLocation();
-          });
+          }
+          // TODO: Should probably happen more often!
+          // this will move the map. Should happen more often than is the
+          // case for the treasure location search! Add additional filtering!?
+          setNewLatLon(lat: position.latitude, lon: position.longitude);
+          animateOnNewLocation();
+        },
+      );
 
       snackbarService.showSnackbar(
           title: "Quest started",

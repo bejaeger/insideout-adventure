@@ -19,7 +19,7 @@ const Color kTextFieldBackground = Color(0xFFEEEEEE);
 
 const Color kNiceOrange = Color(0xFFE6B97F);
 const Color kNiceLightRed = Color(0xFFDD9C8B);
-const Color kNiceBeige = Color(0xFFC1B193);
+const Color kNiceBeige = Color.fromARGB(255, 254, 233, 194);
 const Color kNiceBlue = Color(0xFF3E7FC5);
 
 const Color kBottomNavigationBarIconColor = Colors.white;

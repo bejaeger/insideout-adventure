@@ -32,6 +32,14 @@ class OutlineBox extends StatelessWidget {
           border: Border.all(color: Colors.grey[800]!, width: borderWidth),
           borderRadius: BorderRadius.circular(15.0),
           color: color,
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 2,
+              spreadRadius: 0.5,
+              color: kShadowColor,
+              offset: Offset(1, 1),
+            ),
+          ],
         ),
         child: SizedBox.expand(
           child: text != null

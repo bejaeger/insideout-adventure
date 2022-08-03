@@ -19,6 +19,10 @@ const TextStyle heading3Style = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.w600,
 );
+const TextStyle heading4Style = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w600,
+);
 const TextStyle alert3Style = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.w600,
@@ -57,6 +61,22 @@ const TextStyle captionStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w400,
 );
+const TextStyle captionStyleBold = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+);
+const TextStyle verticalStyle = TextStyle(
+  fontSize: 12,
+  height: 1.1,
+  color: Colors.orange,
+  fontWeight: FontWeight.w600,
+);
+const TextStyle vertical2Style = TextStyle(
+  fontSize: 12,
+  height: 0.95,
+  color: Colors.orange,
+  fontWeight: FontWeight.w600,
+);
 
 const TextStyle bookStyle = TextStyle(
   fontSize: 16,
@@ -64,7 +84,7 @@ const TextStyle bookStyle = TextStyle(
   color: kcOrangeColor,
 );
 const TextStyle labelStyle =
-    TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.black87);
+    TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.black87);
 
 const TextStyle tagStyle =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.black87);

@@ -10,6 +10,7 @@ import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
@@ -195,10 +196,19 @@ class BaseModel extends BaseViewModel {
   }
 
   Future clearStackAndNavigateToHomeView() async {
-    await navigationService.clearStackAndShow(
-        Routes.bottomBarLayoutTemplateView,
-        arguments:
-            BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+    if (currentUser.role == UserRole.sponsor) {
+      await navigationService.clearStackAndShow(
+        Routes.parentHomeView,
+      );
+    } else {
+      await navigationService.clearStackAndShow(
+        Routes.explorerHomeView,
+      );
+    }
+    // await navigationService.clearStackAndShow(
+    //     Routes.bottomBarLayoutTemplateView,
+    //     arguments:
+    //         BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
   Future replaceWithHomeView() async {

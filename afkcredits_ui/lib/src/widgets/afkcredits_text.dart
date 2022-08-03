@@ -19,6 +19,10 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = heading3Style,
         alignment = align;
+  const AfkCreditsText.headingFour(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = heading4Style,
+        alignment = align;
   const AfkCreditsText.alertThree(this.text,
       {TextAlign align = TextAlign.start})
       : style = alert3Style,
@@ -42,6 +46,19 @@ class AfkCreditsText extends StatelessWidget {
         alignment = align;
   const AfkCreditsText.caption(this.text, {TextAlign align = TextAlign.start})
       : style = captionStyle,
+        alignment = align;
+
+  const AfkCreditsText.captionBold(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = captionStyleBold,
+        alignment = align;
+
+  const AfkCreditsText.vertical(this.text, {TextAlign align = TextAlign.start})
+      : style = verticalStyle,
+        alignment = align;
+  const AfkCreditsText.verticalTwo(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = vertical2Style,
         alignment = align;
 
   const AfkCreditsText.book(this.text, {TextAlign? align})

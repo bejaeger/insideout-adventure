@@ -96,11 +96,11 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                     ),
                   ),
 
-                if (quest != null)
-                  InstructionsAndStartButtonsOverlay(
-                      quest: quest,
-                      onStartQuest: () => model.notifyListeners(),
-                      model: model),
+                // if (quest != null)
+                //   InstructionsAndStartButtonsOverlay(
+                //       quest: quest,
+                //       onStartQuest: () => model.notifyListeners(),
+                //       model: model),
 
                 // Quest Info
                 Container(
@@ -222,8 +222,8 @@ class TreasureLocationSearch extends StatelessWidget {
                       child: Icon(Icons.arrow_forward_ios)),
                 ),
               ),
-            // InstructionsAndStartButtonsOverlay(
-            //     quest: quest, onStartQuest: onStartQuest, model: model),
+            InstructionsAndStartButtonsOverlay(
+                quest: quest, onStartQuest: onStartQuest, model: model),
           ],
         );
       },
@@ -270,8 +270,8 @@ class GPSAreaHike extends StatelessWidget {
             //           child: Icon(Icons.arrow_forward_ios)),
             //     ),
             //   ),
-            // InstructionsAndStartButtonsOverlay(
-            //     quest: quest, onStartQuest: onStartQuest, model: model),
+            InstructionsAndStartButtonsOverlay(
+                quest: quest, onStartQuest: onStartQuest, model: model),
           ],
         );
       },

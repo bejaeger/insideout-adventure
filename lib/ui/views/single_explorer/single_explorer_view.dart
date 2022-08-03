@@ -27,7 +27,7 @@ class _SingleExplorerViewState extends State<SingleExplorerView> {
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
             appBar: AppBar(
-              title: Text("Sponsored Explorer"),
+              title: Text("Child Statistics"),
             ),
             body: RefreshIndicator(
               onRefresh: model.refresh,
