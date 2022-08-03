@@ -14,18 +14,16 @@ class SetPinViewModel extends FormViewModel {
   final log = getLogger("SetPinViewModel");
 
   Future onSubmit(String pin) async {
-
     if (_userService.currentUser.role == UserRole.sponsor) {
       log.i("Pin set to $pin. Getting final confirmation to switch accounts");
       final result = await _bottomSheetService.showBottomSheet(
-          title: "Switch To Explorer Account", cancelButtonTitle: "Cancel");
+          title: "Switch To Child Account", cancelButtonTitle: "Cancel");
       if (result?.confirmed == true) {
         _navigationService.back(result: SetPinResult.withPin(pin: pin));
       }
     } else {
       _navigationService.back(result: SetPinResult.withPin(pin: pin));
     }
-    
   }
 
   @override

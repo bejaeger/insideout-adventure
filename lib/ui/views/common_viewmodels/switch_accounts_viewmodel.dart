@@ -26,7 +26,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
     // Check if user wants to set PIN
     final result = await bottomSheetService.showBottomSheet(
-        title: "Switch to explorer account",
+        title: "Switch to child account",
         confirmButtonTitle: "Set Passcode",
         cancelButtonTitle: "Switch without Passcode");
 

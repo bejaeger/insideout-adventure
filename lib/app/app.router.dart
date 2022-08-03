@@ -6,6 +6,7 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -55,7 +56,6 @@ import '../ui/views/screen_time/screen_time_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/select_screen_time_view/select_screen_time_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
-import '../ui/views/single_explorer/single_explorer_view.dart';
 import '../ui/views/startup/startup_view.dart';
 import '../ui/views/transaction_history/transfers_history_view.dart';
 import '../ui/views/transfer_funds/transfer_funds_view.dart';
@@ -175,7 +175,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.selectRoleAfterLoginView, page: SelectRoleAfterLoginView),
     RouteDef(Routes.addExplorerView, page: AddExplorerView),
     RouteDef(Routes.searchExplorerView, page: SearchExplorerView),
-    RouteDef(Routes.singleExplorerView, page: SingleExplorerView),
+    RouteDef(Routes.singleExplorerView, page: SingleChildStatView),
     RouteDef(Routes.transferFundsView, page: TransferFundsView),
     RouteDef(Routes.transfersHistoryView, page: TransfersHistoryView),
     RouteDef(Routes.customBottomBarLayoutTemplateView,
@@ -320,10 +320,10 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    SingleExplorerView: (data) {
+    SingleChildStatView: (data) {
       var args = data.getArgs<SingleExplorerViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SingleExplorerView(
+        builder: (context) => SingleChildStatView(
           key: args.key,
           uid: args.uid,
         ),

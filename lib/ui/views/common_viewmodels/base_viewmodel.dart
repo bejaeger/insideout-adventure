@@ -200,21 +200,38 @@ class BaseModel extends BaseViewModel {
       await navigationService.clearStackAndShow(
         Routes.parentHomeView,
       );
+    } else if (currentUser.role == UserRole.adminMaster) {
+      // print("===================");
+      // print("===================");
+      // print("===================");
+      // print("===================");
+      // print("===================");
+      await navigationService.clearStackAndShow(
+          Routes.bottomBarLayoutTemplateView,
+          arguments:
+              BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
     } else {
       await navigationService.clearStackAndShow(
         Routes.explorerHomeView,
       );
     }
-    // await navigationService.clearStackAndShow(
-    //     Routes.bottomBarLayoutTemplateView,
-    //     arguments:
-    //         BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
   Future replaceWithHomeView() async {
-    await navigationService.replaceWith(
-      Routes.explorerHomeView,
-    );
+    if (currentUser.role == UserRole.sponsor) {
+      await navigationService.replaceWith(
+        Routes.parentHomeView,
+      );
+    } else if (currentUser.role == UserRole.adminMaster) {
+      await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+          arguments:
+              BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+    } else {
+      await navigationService.replaceWith(
+        Routes.explorerHomeView,
+      );
+    }
+
     // await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
     //     arguments:
     //         BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));

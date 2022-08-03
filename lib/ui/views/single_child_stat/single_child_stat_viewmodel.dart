@@ -7,16 +7,15 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 
-class SingleExplorerViewModel extends SwitchAccountsViewModel {
-
+class SingleChildStatViewModel extends SwitchAccountsViewModel {
   final String explorerUid;
-  SingleExplorerViewModel({required this.explorerUid}) : super(explorerUid: explorerUid);
+  SingleChildStatViewModel({required this.explorerUid})
+      : super(explorerUid: explorerUid);
 
-  User get explorer => userService.supportedExplorers[explorerUid]!;
-  UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
+  // User get explorer => userService.supportedExplorers[explorerUid]!;
+  // UserStatistics? get stats => userService.supportedExplorerStats[explorerUid];
 
   final log = getLogger("SingleExplorerViewModel");
-
 
   Future navigateToAddFundsView() async {
     //layoutService.setShowBottomNavBar(false);
@@ -31,7 +30,6 @@ class SingleExplorerViewModel extends SwitchAccountsViewModel {
     //layoutService.setShowBottomNavBar(true);
     notifyListeners();
   }
-
 
   Future refresh() async {
     notifyListeners();

@@ -64,7 +64,7 @@ import 'package:afkcredits/ui/views/screen_time/screen_time_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/select_screen_time_view/select_screen_time_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
-import 'package:afkcredits/ui/views/single_explorer/single_explorer_view.dart';
+import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transaction_history/transfers_history_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
@@ -97,7 +97,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: SelectRoleAfterLoginView),
     MaterialRoute(page: AddExplorerView),
     MaterialRoute(page: SearchExplorerView),
-    MaterialRoute(page: SingleExplorerView),
+    MaterialRoute(page: SingleChildStatView),
     MaterialRoute(page: TransferFundsView),
     MaterialRoute(page: TransfersHistoryView),
     MaterialRoute(page: CustomBottomBarLayoutTemplateView),

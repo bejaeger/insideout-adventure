@@ -44,7 +44,7 @@ class ParentHomeView extends StatelessWidget {
                   height: 60,
                   borderWidth: 0,
                   text: "Create Quest",
-                  onPressed: model.showNotImplementedSnackbar,
+                  onPressed: model.navToCreateQuest,
                   color: kDarkTurquoise,
                   textColor: Colors.white,
                 ),
