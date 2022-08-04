@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/parent_drawer_view/parent_drawer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/activated_quest_panel.dart';
@@ -27,7 +28,7 @@ class ParentDrawerView extends StatelessWidget {
                           Padding(
                               padding: EdgeInsets.only(
                                   top: 25, bottom: 25, right: 25, left: 70),
-                              child: AfkCreditsText.headingOne("")),
+                              child: AfkCreditsText.headingTwo("MENU")),
                         ],
                       ),
                     ),
@@ -51,8 +52,39 @@ class ParentDrawerView extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        child: SmallButton(
-                            title: "Logout", onPressed: model.logout),
+                        child: AfkCreditsButton(
+                            title: "Create Quest",
+                            onTap: model.navToCreateQuest),
+                      ),
+                    ],
+                  ),
+                ),
+                verticalSpaceMedium,
+                Divider(),
+                verticalSpaceMedium,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: Row(
+                    children: [
+                      // Expanded(
+                      //   child: SmallButton(
+                      //       title: "Logout", onPressed: model.logout),
+                      // ),
+                      Expanded(
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                              padding: const EdgeInsets.all(0.0),
+                              primary: kBlackHeadlineColor),
+                          // onPressed: model.navigateToExplorerHomeView,
+                          onPressed: model.logout,
+                          //child: Text("Go to explorer home/map")),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child:
+                                Text("Logout", style: TextStyle(fontSize: 20)),
+                          ),
+                        ),
                       ),
                     ],
                   ),

@@ -1,6 +1,9 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 
 class ActiveScreenTimeViewModel extends BaseModel {
   // -----------------------------------
@@ -10,11 +13,19 @@ class ActiveScreenTimeViewModel extends BaseModel {
   // constructor
   final int minutes;
   ActiveScreenTimeViewModel({required this.minutes}) {
+    ScreenTimeSession session = ScreenTimeSession(
+      sessionId: "",
+      uid: currentUser.uid,
+      minutes: minutes,
+      status: ScreenTimeSessionStatus.active,
+      afkCredits: double.parse(screenTimeToCredits(minutes).toString()),
+    );
+
     _screenTimeService.startScreenTime(
-        minutes: minutes, callback: listenToTick);
+        session: session, callback: listenToTick);
 
     // TODO: This is where we would want to start
-    // a permanent notification!
+    // TODO: a permanent notification!
   }
 
   // getters

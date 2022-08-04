@@ -25,7 +25,7 @@ class QuestService with ReactiveServiceMixin {
   // state
   List<ActivatedQuest> activatedQuestsHistory = [];
   StreamSubscription? _pastQuestsStreamSubscription;
-  //Turned local variable pvt
+  // Turned local variable pvt
   List<Quest> _nearbyQuests = [];
   List<Quest> get getNearByQuest => _nearbyQuests;
 
@@ -83,7 +83,7 @@ class QuestService with ReactiveServiceMixin {
       required String uid,
       void Function()? callback}) async {
     if (_pastQuestsStreamSubscription == null) {
-      bool listenedOnce = false;
+      bool listenedOnce = false; // not sure why this is needed
       _pastQuestsStreamSubscription =
           _firestoreApi.getPastQuestsStream(uid: uid).listen((snapshot) {
         listenedOnce = true;

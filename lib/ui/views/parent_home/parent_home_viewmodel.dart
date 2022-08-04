@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
@@ -11,11 +12,23 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class ParentHomeViewModel extends TransferBaseViewModel with NavigationMixin {
+  // ----------------------------------------
+  // services
   final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   final log = getLogger("SponsorHomeViewModel");
+
+  // -------------------------------------------------
+  // getters
   List<User> get supportedExplorers => userService.supportedExplorersList;
   Map<String, UserStatistics> get supportedExplorerStats =>
       userService.supportedExplorerStats;
+  Map<String, List<ActivatedQuest>> get supportedExplorerQuestsHistory =>
+      userService.supportedExplorerQuestsHistory;
+  Map<String, List<ScreenTimeSession>>
+      get supportedExplorerScreenTimeSessions =>
+          userService.supportedExplorerScreenTimeSessions;
+  List<ScreenTimeSession> get supportedExplorerScreenTimeSessionsActive =>
+      userService.supportedExplorerScreenTimeSessionsActive;
 
   // Listen to streams of latest donations and transactions to be displayed
   // instantly when pulling up bottom sheets
@@ -35,7 +48,44 @@ class ParentHomeViewModel extends TransferBaseViewModel with NavigationMixin {
     notifyListeners();
   }
 
-  /////////////////////////////////////////////////
+  // --------------------------------------------------
+  // Helper functions
+
+  List<ActivatedQuest> sortedExplorerQuestHistory() {
+    // TODO: Also add screen time into the mix!
+    List<ActivatedQuest> sortedQuests = [];
+    supportedExplorerQuestsHistory.forEach((key, quests) {
+      sortedQuests.addAll(quests);
+    });
+    sortedQuests
+        .sort((a, b) => b.createdAt.toDate().compareTo(a.createdAt.toDate()));
+    return sortedQuests;
+  }
+
+  List<ScreenTimeSession> sortedExplorerScreenTimeSessions() {
+    List<ScreenTimeSession> sortedSessions = [];
+    supportedExplorerScreenTimeSessions.forEach((key, session) {
+      sortedSessions.addAll(session);
+    });
+    //try {
+    sortedSessions
+        .sort((a, b) => b.startedAt.toDate().compareTo(a.startedAt.toDate()));
+    // } catch (e) {
+    //   log.wtf(sortedSessions[0].startedAt);
+    // }
+    return sortedSessions;
+  }
+
+  String explorerNameFromUid(String uid) {
+    for (User user in supportedExplorers) {
+      if (user.uid == uid) {
+        return user.fullName;
+      }
+    }
+    return "";
+  }
+
+  // ------------------------------------------------------
   // bottom sheets
 
   Future showAddExplorerBottomSheet() async {
@@ -54,7 +104,7 @@ class ParentHomeViewModel extends TransferBaseViewModel with NavigationMixin {
     setShowBottomNavBar(true);
   }
 
-  ///////////////////////////////////////////////////
+  // -------------------------------------------------
   // navigation
 
   void navigateToTransferHistoryView() async {
@@ -65,8 +115,8 @@ class ParentHomeViewModel extends TransferBaseViewModel with NavigationMixin {
 
   void navigateToSingleExplorerView({required String uid}) async {
     setShowBottomNavBar(false);
-    await navigationService.navigateTo(Routes.singleExplorerView,
-        arguments: SingleExplorerViewArguments(uid: uid));
+    await navigationService.navigateTo(Routes.singleChildStatView,
+        arguments: SingleChildStatViewArguments(uid: uid));
     setShowBottomNavBar(true);
   }
 }

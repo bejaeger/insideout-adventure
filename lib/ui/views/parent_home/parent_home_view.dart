@@ -2,6 +2,8 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/parent_drawer_view/parent_drawer_view.dart';
@@ -12,6 +14,7 @@ import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
 import 'package:afkcredits/ui/widgets/outline_box.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -33,47 +36,91 @@ class ParentHomeView extends StatelessWidget {
             width: screenWidth(context, percentage: 0.6),
             child: const ParentDrawerView(),
           ),
-          floatingActionButton: Container(
-            width: screenWidth(context),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                //verticalSpaceSmall,
-                OutlineBox(
-                  width: screenWidth(context, percentage: 0.4),
-                  height: 60,
-                  borderWidth: 0,
-                  text: "Create Quest",
-                  onPressed: model.navToCreateQuest,
-                  color: kDarkTurquoise,
-                  textColor: Colors.white,
-                ),
-                OutlineBox(
-                  width: screenWidth(context, percentage: 0.4),
-                  height: 60,
-                  borderWidth: 0,
-                  text: "Switch to Child",
-                  onPressed: model.showNotImplementedSnackbar,
-                  color: kDarkTurquoise,
-                  textColor: Colors.white,
-                ),
-                //verticalSpaceSmall,
-              ],
-            ),
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
+          // floatingActionButton: Container(
+          //   width: screenWidth(context),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //     children: [
+          //       //verticalSpaceSmall,
+          //       OutlineBox(
+          //         width: screenWidth(context, percentage: 0.4),
+          //         height: 60,
+          //         borderWidth: 0,
+          //         text: "Create Quest",
+          //         onPressed: model.navToCreateQuest,
+          //         color: kDarkTurquoise,
+          //         textColor: Colors.white,
+          //       ),
+          //       OutlineBox(
+          //         width: screenWidth(context, percentage: 0.4),
+          //         height: 60,
+          //         borderWidth: 0,
+          //         text: "Switch to Child",
+          //         onPressed: model.showNotImplementedSnackbar,
+          //         color: kDarkTurquoise,
+          //         textColor: Colors.white,
+          //       ),
+          //       //verticalSpaceSmall,
+          //     ],
+          //   ),
+          // ),
+          // floatingActionButtonLocation:
+          //     FloatingActionButtonLocation.centerFloat,
           body: RefreshIndicator(
             onRefresh: () => model.listenToData(),
             child: ListView(
               physics: ScrollPhysics(),
               children: [
                 verticalSpaceMedium,
+                if (model.supportedExplorerScreenTimeSessionsActive.isNotEmpty)
+                  AfkCreditsText.alertThree("Active Screen Time"),
+                if (model.supportedExplorerScreenTimeSessionsActive.isNotEmpty)
+                  AfkCreditsText.body(model.explorerNameFromUid(model
+                          .supportedExplorerScreenTimeSessionsActive[0].uid) +
+                      ", Minutes: " +
+                      model.supportedExplorerScreenTimeSessionsActive[0].minutes
+                          .toString() +
+                      ", started at: " +
+                      formatDateDetails(model
+                          .supportedExplorerScreenTimeSessionsActive[0]
+                          .startedAt
+                          .toDate())),
                 SectionHeader(
                   title: "History",
                   //onButtonTap: model.navigateToTransferHistoryView,
                 ),
-                RecentHistory(),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: model.sortedExplorerQuestHistory().length,
+                  itemBuilder: (context, index) {
+                    final ActivatedQuest data =
+                        model.sortedExplorerQuestHistory()[index];
+                    return Text(model.explorerNameFromUid(data.uids![0]) +
+                        ", " +
+                        formatDate(data.createdAt.toDate()) +
+                        ", Quest: " +
+                        data.quest.name +
+                        ", Earned: " +
+                        data.afkCreditsEarned.toString());
+                  },
+                ),
+                Divider(),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: model.sortedExplorerScreenTimeSessions().length,
+                  itemBuilder: (context, index) {
+                    final ScreenTimeSession data =
+                        model.sortedExplorerScreenTimeSessions()[index];
+                    return Text(model.explorerNameFromUid(data.uid) +
+                        ", " +
+                        formatDate(data.startedAt.toDate()) +
+                        ", Minutes: " +
+                        data.minutes.toString() +
+                        ", Spent: " +
+                        data.afkCredits.toString());
+                  },
+                ),
+                //RecentHistory(),
                 verticalSpaceMedium,
                 SectionHeader(
                   title: "Children",

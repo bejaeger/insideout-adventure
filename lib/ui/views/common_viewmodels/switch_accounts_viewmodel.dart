@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
@@ -11,6 +12,8 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
   User get explorer => userService.supportedExplorers[explorerUid]!;
   UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
+  List<ActivatedQuest> get history =>
+      userService.supportedExplorerQuestsHistory[explorerUid]!;
 
   SwitchAccountsViewModel({this.explorerUid});
 

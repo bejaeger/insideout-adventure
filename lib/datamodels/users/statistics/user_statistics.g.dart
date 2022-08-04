@@ -10,6 +10,7 @@ _$_UserStatistics _$$_UserStatisticsFromJson(Map<String, dynamic> json) =>
     _$_UserStatistics(
       afkCreditsBalance: json['afkCreditsBalance'] as num,
       afkCreditsSpent: json['afkCreditsSpent'] as num,
+      totalScreenTime: json['totalScreenTime'] as num,
       availableSponsoring: json['availableSponsoring'] as num,
       lifetimeEarnings: json['lifetimeEarnings'] as num,
       numberQuestsCompleted: json['numberQuestsCompleted'] as int,
@@ -27,6 +28,7 @@ Map<String, dynamic> _$$_UserStatisticsToJson(_$_UserStatistics instance) =>
     <String, dynamic>{
       'afkCreditsBalance': instance.afkCreditsBalance,
       'afkCreditsSpent': instance.afkCreditsSpent,
+      'totalScreenTime': instance.totalScreenTime,
       'availableSponsoring': instance.availableSponsoring,
       'lifetimeEarnings': instance.lifetimeEarnings,
       'numberQuestsCompleted': instance.numberQuestsCompleted,

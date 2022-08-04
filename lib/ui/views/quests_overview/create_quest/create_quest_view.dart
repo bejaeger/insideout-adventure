@@ -2,6 +2,7 @@
 
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +29,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
   // TODO: need to dispose this so need to have stateful function here!
   // TODO: This does not work with formView
   final controller = PageController(initialPage: 0);
-
+  bool secondPage = false;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateQuestViewModel>.reactive(
@@ -41,8 +42,12 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: true,
-          appBar: AppBar(
-            title: Text("Create Quest"),
+          appBar: CustomAppBar(
+            title: "Create Quest",
+            onBackButton: secondPage
+                ? () => controller.previousPage(
+                    duration: Duration(milliseconds: 200), curve: Curves.easeIn)
+                : model.popView,
           ),
           body: PageView(
             controller: controller,
@@ -55,6 +60,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                 afkCreditAmountController: afkCreditAmountController,
                 onNextPressed: () {
                   if (model.isValidUserInputs()) {
+                    secondPage = true;
                     controller.nextPage(
                         duration: Duration(milliseconds: 200),
                         curve: Curves.easeIn);
@@ -62,14 +68,16 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                 },
               ),
               ChooseMarkersView(
-                model: model,
-                nameController: nameController,
-                descriptionController: descriptionController,
-                afkCreditAmountController: afkCreditAmountController,
-                onBackPressed: () => controller.previousPage(
-                    duration: Duration(milliseconds: 200),
-                    curve: Curves.easeIn),
-              ),
+                  model: model,
+                  nameController: nameController,
+                  descriptionController: descriptionController,
+                  afkCreditAmountController: afkCreditAmountController,
+                  onBackPressed: () {
+                    secondPage = false;
+                    controller.previousPage(
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeIn);
+                  }),
             ],
           ),
         ),
@@ -112,7 +120,7 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
               keyboardType: TextInputType.text,
               // focusNode: nameFocusNode,
             ),
-            ErrorTextBox(message: model.nameInputValidationMessage.toString()),
+            ErrorTextBox(message: model.nameInputValidationMessage),
             verticalSpaceSmall,
             TextField(
               decoration: InputDecoration(
@@ -133,18 +141,19 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
               ],
               controller: afkCreditAmountController,
             ),
-            ErrorTextBox(
-                message: model.afkCreditsInputValidationMessage.toString()),
+            ErrorTextBox(message: model.afkCreditsInputValidationMessage),
             verticalSpaceSmall,
             DropdownButtonFormField<QuestType>(
               //key: _key,
               value: questTypeValue,
               hint: Text('Select Quest Type'),
               isExpanded: true,
-              items: QuestType.values.map(
+              items: CreateQuestType.values.map(
                 (_questType) {
                   return DropdownMenuItem(
-                    value: _questType,
+                    value: _questType == CreateQuestType.TreasureLocationSearch
+                        ? QuestType.TreasureLocationSearch
+                        : QuestType.GPSAreaHike,
                     child: model.isLoading == false
                         ? Text(
                             _questType.toString().split('.').elementAt(1),
@@ -160,10 +169,8 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
                 model.setQuestType(questType: questType!);
               },
             ),
-            ErrorTextBox(
-                message: model.questTypeInputValidationMessage.toString()),
-            ErrorTextBox(
-                message: model.afkMarkersInputValidationMessage.toString()),
+            ErrorTextBox(message: model.questTypeInputValidationMessage),
+            //ErrorTextBox(message: model.afkMarkersInputValidationMessage),
             verticalSpaceSmall,
             Spacer(),
             Padding(
@@ -171,7 +178,7 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
               child: CustomAFKButton(
                 busy: model.isLoading,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainButtonTitle: 'Next',
+                mainButtonTitle: 'Next \u2192',
                 secundaryButtonTitle: 'Cancel',
                 onSecondaryButtonTapped: () {
                   {
@@ -274,7 +281,8 @@ class ChooseMarkersView extends StatelessWidget with $CreateQuestView {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding:
+                  const EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
               child: CustomAFKButton(
                 busy: model.isLoading,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

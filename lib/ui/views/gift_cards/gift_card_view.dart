@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_view.dart';
 import 'package:afkcredits/ui/views/gift_cards/components/gift_cards_section.dart';
 import 'package:afkcredits/ui/views/gift_cards/gift_card_viewmodel.dart';
@@ -83,8 +83,8 @@ class GiftCardView extends StatelessWidget {
 
 class ScreenTimeVoucherList extends StatelessWidget {
   final double? height;
-  final List<ScreenTimePurchase> screenTimeVoucherList;
-  final Future Function(ScreenTimePurchase) onPressed;
+  final List<ScreenTimeSession> screenTimeVoucherList;
+  final Future Function(ScreenTimeSession) onPressed;
   const ScreenTimeVoucherList(
       {Key? key,
       this.height,
@@ -101,8 +101,8 @@ class ScreenTimeVoucherList extends StatelessWidget {
         itemCount: screenTimeVoucherList.length,
         itemBuilder: (context, index) {
           return ScreenTimeButton(
-            title: "${screenTimeVoucherList[index].hours} hours",
-            credits: centsToAfkCredits(screenTimeVoucherList[index].amount),
+            title: "${screenTimeVoucherList[index].minutes} minutes",
+            credits: centsToAfkCredits(screenTimeVoucherList[index].afkCredits),
             backgroundColor: kDarkTurquoise,
             titleColor: kWhiteTextColor,
             imageUrl: kScreenTimeImageUrl,

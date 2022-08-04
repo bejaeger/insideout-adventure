@@ -52,6 +52,16 @@ int centsToAfkCredits(num cents) {
   return (cents * kCentsToAfkCreditsConversionFactor).round();
 }
 
+// credit and currency conversion (maybe put this in a sevice?)
+int creditsToScreenTime(num credits) {
+  return (credits * kCreditsToScreenTimeConversionFactor).round();
+}
+
+// credit and currency conversion (maybe put this in a sevice?)
+int screenTimeToCredits(int minutes) {
+  return (minutes / kCreditsToScreenTimeConversionFactor).round();
+}
+
 String formatAfkCreditsFromCents(num cents) {
   return ((cents * kCentsToAfkCreditsConversionFactor).round()).toString();
 }

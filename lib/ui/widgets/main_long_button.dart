@@ -20,7 +20,7 @@ class MainLongButton extends StatelessWidget {
         height: 50,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(45.0), color: color),
+            borderRadius: BorderRadius.circular(15.0), color: color),
         child: AfkCreditsText.button(title),
       ),
     );

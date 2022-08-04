@@ -11,7 +11,7 @@ import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart'
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
@@ -19,7 +19,7 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
-import 'package:afkcredits/enums/screen_time_voucher_status.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/utils/string_utils.dart';
@@ -595,6 +595,7 @@ class FirestoreApi {
           .orderBy("createdAt", descending: true)
           .where("status",
               isEqualTo: describeEnum(QuestStatus.success.toString()))
+          .limitToLast(20) // limit query
           .snapshots()
           .map((event) => event.docs
               .map((doc) =>
@@ -633,8 +634,70 @@ class FirestoreApi {
     // }
   }
 
+  ///////////////////////////////////////////////////////
+  /// Screen Time functions
+  Future<String> addScreenTimeSession(
+      {required ScreenTimeSession session}) async {
+    log.i("Upload screen time session to firestore");
+    //Get the Document Created Reference
+    _documentReference = await screenTimeSessionCollection.add(
+      session.toJson(),
+    );
+    //update the newly created document reference with the Firestore Id.
+    await screenTimeSessionCollection.doc(_documentReference!.id).update({
+      'sessionId': _documentReference!.id,
+      'startedAt': FieldValue.serverTimestamp()
+    });
+    return _documentReference!.id;
+  }
+
+  Future updateScreenTimeSession({required ScreenTimeSession session}) async {
+    log.i("Upload screen time session to firestore");
+    await screenTimeSessionCollection.doc(session.sessionId).update({
+      'status': session.toJson()["status"],
+      'afkCreditsUsed': session.afkCreditsUsed,
+      'minutesUsed': session.minutesUsed,
+    });
+  }
+
+  Future cancelScreenTimeSession({required ScreenTimeSession session}) async {
+    log.i("Upload screen time session to firestore");
+    await screenTimeSessionCollection.doc(session.sessionId).update({
+      'status': session.toJson()["status"],
+      'afkCreditsUsed': session.afkCreditsUsed,
+      'minutesUsed': session.minutesUsed,
+      'endedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future deleteScreenTimeSession({required ScreenTimeSession session}) async {
+    log.i("Upload screen time session to firestore");
+    await screenTimeSessionCollection.doc(session.sessionId).delete();
+  }
+
+  Stream<List<ScreenTimeSession>> getScreenTimeSessionStream(
+      {required String uid}) {
+    try {
+      final returnStream = screenTimeSessionCollection
+          .where("uid", isEqualTo: uid)
+          .orderBy("startedAt", descending: true)
+          .limitToLast(20)
+          .snapshots()
+          .map((event) => event.docs
+              .map((doc) => ScreenTimeSession.fromJson(
+                  doc.data() as Map<String, dynamic>))
+              .toList());
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when listening to screen time sessions that are active",
+          devDetails: '$e');
+    }
+  }
+
   ////////////////////////////////////////////////////////
-  // Gift Cards functions
+  // Gift Cards functions (DEPRECATED)
   //
 
   Future<List<GiftCardCategory>> getGiftCardsForCategory(
@@ -738,14 +801,14 @@ class FirestoreApi {
     }
   }
 
-  Stream<List<ScreenTimePurchase>> getPurchasedScreenTimesStream(
+  Stream<List<ScreenTimeSession>> getPurchasedScreenTimesStream(
       {required String uid}) {
     try {
       final returnStream = getUserScreenTimeCollection(uid: uid)
           .orderBy("purchasedAt", descending: true)
           .snapshots()
           .map((event) => event.docs
-              .map((doc) => ScreenTimePurchase.fromJson(
+              .map((doc) => ScreenTimeSession.fromJson(
                   doc.data() as Map<String, dynamic>))
               .toList());
       return returnStream;
@@ -764,16 +827,16 @@ class FirestoreApi {
   }
 
   Future updateScreenTimePurchase(
-      {required ScreenTimePurchase screenTimePurchase,
-      required ScreenTimeVoucherStatus newStatus,
+      {required ScreenTimeSession screenTimePurchase,
+      required ScreenTimeSessionStatus newStatus,
       required String uid}) async {
-    late ScreenTimePurchase newScreenTimePurchase;
+    late ScreenTimeSession newScreenTimePurchase;
     newScreenTimePurchase = screenTimePurchase.copyWith(
-        activatedOn: newStatus == ScreenTimeVoucherStatus.unused
+        startedAt: newStatus == ScreenTimeSessionStatus.active
             ? ""
             : FieldValue.serverTimestamp());
     await getUserScreenTimeCollection(uid: uid)
-        .doc(newScreenTimePurchase.purchaseId)
+        .doc(newScreenTimePurchase.sessionId)
         .update(newScreenTimePurchase.toJson());
   }
 
@@ -825,11 +888,17 @@ class FirestoreApi {
   }
 
   // !!! HIGHLY CRITICAL This is a cheat feautre for the super user
-// !!! REMOVE IN PRODUCTION
+  // !!! REMOVE IN PRODUCTION
+  // !!! Also used at the moment for allowing parents to add credits to child
   Future addAfkCreditsCheat(
       {required String uid,
-      required UserStatistics currentStats,
+      required UserStatistics? currentStats,
       num deltaCredits = 50}) async {
+    if (currentStats == null) {
+      throw FirestoreApiException(
+          message: "UserStatistics object is null",
+          devDetails: "Did not parse the correct user statistics object");
+    }
     await getUserSummaryStatisticsDocument(uid: uid).update(currentStats
         .copyWith(
             afkCreditsBalance: currentStats.afkCreditsBalance + deltaCredits)

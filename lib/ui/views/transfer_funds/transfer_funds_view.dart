@@ -33,14 +33,17 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
         listenToFormUpdated(model);
       },
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(title: Text("Sponsor ${recipientInfo.name}")),
+        appBar: AppBar(title: Text("Add coins to ${recipientInfo.name}")),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
           child: ListView(
             children: [
               verticalSpaceMedium,
-              Text("Add funds to ${recipientInfo.name}"),
+              Text(
+                  "How many coins do you want to add to ${recipientInfo.name}?"),
               verticalSpaceMedium,
+              if (model.customValidationMessage != null)
+                AfkCreditsText.warn(model.customValidationMessage!),
               TextField(
                 cursorColor: kBlackHeadlineColor,
                 focusNode: amountFocusNode,
@@ -52,7 +55,9 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                     .copyWith(fontSize: 35, color: kBlackHeadlineColor),
                 autofocus: true,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.attach_money),
+                  prefixIcon: type != TransferType.Sponsor2ExplorerCredits
+                      ? Icon(Icons.attach_money)
+                      : null,
                   enabledBorder: UnderlineInputBorder(
                     borderSide:
                         BorderSide(color: kBlackHeadlineColor, width: 0.0),
@@ -63,6 +68,22 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                   ),
                 ),
               ),
+              model.screenTimeEquivalent != null
+                  ? Column(
+                      children: [
+                        Text("equivalent to"),
+                        AfkCreditsText.label(
+                            "${model.screenTimeEquivalent} min"),
+                        Text("screen time"),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Text(""),
+                        AfkCreditsText.label(""),
+                        Text(""),
+                      ],
+                    ),
               verticalSpaceMedium,
               ElevatedButton(
                   onPressed: () {

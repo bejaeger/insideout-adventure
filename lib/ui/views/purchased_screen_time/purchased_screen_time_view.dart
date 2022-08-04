@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/purchased_screen_time/purchased_screen_time_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/empty_note.dart';
@@ -42,10 +42,10 @@ class PurchasedScreenTimeView extends StatelessWidget {
 }
 
 class ScreenTimeCardsList extends StatelessWidget {
-  final List<ScreenTimePurchase> screenTimeVouchers;
-  final Future Function(ScreenTimePurchase, bool) onTap;
+  final List<ScreenTimeSession> screenTimeVouchers;
+  final Future Function(ScreenTimeSession, bool) onTap;
   final void Function() onBuyScreenTimePressed;
-  final void Function(ScreenTimePurchase) onSeeVoucherTap;
+  final void Function(ScreenTimeSession) onSeeVoucherTap;
 
   ScreenTimeCardsList(
       {Key? key,

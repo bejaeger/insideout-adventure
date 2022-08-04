@@ -17,6 +17,7 @@ final appName = 'AFK Credits';
 final String userStatisticsCollectionKey = "statistics";
 final String userFavouritePlacesCollectionKey = "FavouritePlaces";
 final String activatedQuestsCollectionKey = "activatedQuests";
+final String screenTimeSessionsCollectionKey = "screenTimeSessions";
 
 // document keys
 final String userSummaryStatisticsDocumentKey = "summaryStats";
@@ -37,6 +38,8 @@ final CollectionReference paymentsCollection =
     FirebaseFirestore.instance.collection('transfers');
 final CollectionReference questsCollection =
     FirebaseFirestore.instance.collection('quests');
+final CollectionReference screenTimeSessionCollection =
+    FirebaseFirestore.instance.collection(screenTimeSessionsCollectionKey);
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
 final CollectionReference markersCollection =

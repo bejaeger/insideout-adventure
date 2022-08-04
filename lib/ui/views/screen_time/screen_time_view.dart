@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/screen_time/screen_time_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/screen_time_button.dart';
@@ -36,9 +36,9 @@ class ScreenTimeView extends StatelessWidget {
                     width: 160,
                     child: ScreenTimeButton(
                       title:
-                          "${model.getScreenTimeCategories()[0].hours} hours",
+                          "${model.getScreenTimeCategories()[0].minutes} hours",
                       credits: centsToAfkCredits(
-                          model.getScreenTimeCategories()[0].amount),
+                          model.getScreenTimeCategories()[0].afkCredits),
                       backgroundColor: kDarkTurquoise,
                       titleColor: kWhiteTextColor,
                       imageUrl: kScreenTimeImageUrl,
@@ -51,9 +51,9 @@ class ScreenTimeView extends StatelessWidget {
                     width: 160,
                     child: ScreenTimeButton(
                       title:
-                          "${model.getScreenTimeCategories()[1].hours} hours",
+                          "${model.getScreenTimeCategories()[1].minutes} hours",
                       credits: centsToAfkCredits(
-                          model.getScreenTimeCategories()[1].amount),
+                          model.getScreenTimeCategories()[1].afkCredits),
                       backgroundColor: kDarkTurquoise,
                       titleColor: kWhiteTextColor,
                       imageUrl: kScreenTimeImageUrl,
@@ -66,9 +66,9 @@ class ScreenTimeView extends StatelessWidget {
                     width: 160,
                     child: ScreenTimeButton(
                       title:
-                          "${model.getScreenTimeCategories()[2].hours} hours",
+                          "${model.getScreenTimeCategories()[2].minutes} hours",
                       credits: centsToAfkCredits(
-                          model.getScreenTimeCategories()[2].amount),
+                          model.getScreenTimeCategories()[2].afkCredits),
                       backgroundColor: kDarkTurquoise,
                       titleColor: kWhiteTextColor,
                       imageUrl: kScreenTimeImageUrl,
@@ -81,9 +81,9 @@ class ScreenTimeView extends StatelessWidget {
                     width: 160,
                     child: ScreenTimeButton(
                       title:
-                          "${model.getScreenTimeCategories()[3].hours} hours",
+                          "${model.getScreenTimeCategories()[3].minutes} hours",
                       credits: centsToAfkCredits(
-                          model.getScreenTimeCategories()[3].amount),
+                          model.getScreenTimeCategories()[3].afkCredits),
                       backgroundColor: kDarkTurquoise,
                       titleColor: kWhiteTextColor,
                       imageUrl: kScreenTimeImageUrl,

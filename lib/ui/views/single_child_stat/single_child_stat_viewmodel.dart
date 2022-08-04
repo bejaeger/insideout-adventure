@@ -1,9 +1,6 @@
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
-import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
-import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 
@@ -21,7 +18,7 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     //layoutService.setShowBottomNavBar(false);
     await navigationService.navigateTo(Routes.transferFundsView,
         arguments: TransferFundsViewArguments(
-            type: TransferType.Sponsor2Explorer,
+            type: TransferType.Sponsor2ExplorerCredits,
             senderInfo: PublicUserInfo(
                 name: currentUser.fullName, uid: currentUser.uid),
             recipientInfo:

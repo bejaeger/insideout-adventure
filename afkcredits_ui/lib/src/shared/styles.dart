@@ -28,6 +28,11 @@ const TextStyle alert3Style = TextStyle(
   fontWeight: FontWeight.w600,
   color: Colors.red,
 );
+const TextStyle warnStyle = TextStyle(
+  // fontSize: 24,
+  fontWeight: FontWeight.w600,
+  color: Colors.red,
+);
 const TextStyle success3Style = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.w600,
@@ -110,7 +115,6 @@ const TextStyle kcTextProfileBody = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 16.0);
 // colors
-const Color kcPrimaryColor = Color(0xff22A45D);
 
 const TextStyle kcBottomNav =
     TextStyle(fontFamily: "Sofia", letterSpacing: 0.5);

@@ -25,10 +25,14 @@ class CreditsAmount extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(kAFKCreditsLogoPath, color: color, height: 30),
+          Image.asset(kAFKCreditsLogoPath, color: color, height: height),
           horizontalSpaceTiny,
-          AfkCreditsText.headingThree(
-              amountString ?? amount.toStringAsFixed(0)),
+          if (height > 20)
+            AfkCreditsText.headingThree(
+                amountString ?? amount.toStringAsFixed(0)),
+          if (height <= 20)
+            AfkCreditsText.headingFour(
+                amountString ?? amount.toStringAsFixed(0)),
           // Text(
           //   amountString ?? amount.toStringAsFixed(0),
           //   style: textTheme(context).bodyText2!.copyWith(

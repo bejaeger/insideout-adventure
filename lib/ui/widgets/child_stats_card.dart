@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
+import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +31,8 @@ class ChildStatsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AfkCreditsText.headingFour(user.fullName),
+              if (stats != null)
+                CreditsAmount(amount: stats.afkCreditsBalance, height: 18),
               verticalSpaceSmall,
               stats == null
                   ? AFKProgressIndicator()
@@ -37,9 +40,7 @@ class ChildStatsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AfkCreditsText.body("# quests compl.: " +
-                            stats.completedQuests.length.toString()),
-                        AfkCreditsText.body(
-                            "# credits: " + stats.afkCreditsBalance.toString()),
+                            stats.numberQuestsCompleted.toString()),
                         AfkCreditsText.body(
                             "screen time: " + stats.afkCreditsSpent.toString()),
                       ],

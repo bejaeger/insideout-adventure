@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
-import 'package:afkcredits/enums/screen_time_voucher_status.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -12,9 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ScreenTimeVoucher extends StatefulWidget {
-  final ScreenTimePurchase screenTimeVoucher;
-  final Future Function(ScreenTimePurchase, bool) onTap;
-  final void Function(ScreenTimePurchase) onSeeVoucherTap;
+  final ScreenTimeSession screenTimeVoucher;
+  final Future Function(ScreenTimeSession, bool) onTap;
+  final void Function(ScreenTimeSession) onSeeVoucherTap;
 
   const ScreenTimeVoucher(
       {Key? key,
@@ -68,23 +68,23 @@ class _ScreenTimeVoucherState extends State<ScreenTimeVoucher> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenTimeVoucherStatus status = widget.screenTimeVoucher.status;
+    ScreenTimeSessionStatus status = widget.screenTimeVoucher.status;
     bool isUsed =
-        widget.screenTimeVoucher.status == ScreenTimeVoucherStatus.used;
-    if (!(widget.screenTimeVoucher.activatedOn is String)) {
+        widget.screenTimeVoucher.status == ScreenTimeSessionStatus.completed;
+    if (!(widget.screenTimeVoucher.startedAt is String)) {
       if (!isActive) {
-        isActive = DateTime.now().difference(
-                    widget.screenTimeVoucher.activatedOn.toDate()) >=
+        isActive = DateTime.now()
+                    .difference(widget.screenTimeVoucher.startedAt.toDate()) >=
                 Duration(seconds: 5) &&
             DateTime.now()
-                    .difference(widget.screenTimeVoucher.activatedOn.toDate()) <
+                    .difference(widget.screenTimeVoucher.startedAt.toDate()) <
                 Duration(
-                    hours: widget.screenTimeVoucher.hours.toInt(),
-                    minutes: widget.screenTimeVoucher.hours < 1 ? 30 : 0) &&
+                    hours: widget.screenTimeVoucher.minutes.toInt(),
+                    minutes: widget.screenTimeVoucher.minutes < 60 ? 30 : 0) &&
             showDeactivate == false;
       }
       isActivating = DateTime.now()
-                  .difference(widget.screenTimeVoucher.activatedOn.toDate()) <=
+                  .difference(widget.screenTimeVoucher.startedAt.toDate()) <=
               Duration(seconds: 5) ||
           showDeactivate == true;
     }
@@ -150,13 +150,13 @@ class _ScreenTimeVoucherState extends State<ScreenTimeVoucher> {
                           children: [
                             Text("Voucher for"),
                             Text(
-                                widget.screenTimeVoucher.hours <= 1
-                                    ? widget.screenTimeVoucher.hours
+                                widget.screenTimeVoucher.minutes <= 60
+                                    ? widget.screenTimeVoucher.minutes
                                             .toString() +
-                                        " hour"
-                                    : widget.screenTimeVoucher.hours
+                                        " minutes"
+                                    : widget.screenTimeVoucher.minutes
                                             .toString() +
-                                        " hours",
+                                        " minutes",
                                 style: textTheme(context).headline3!.copyWith(
                                     color: kBlackHeadlineColor, fontSize: 32)),
                             Text("screen time"),
@@ -167,7 +167,7 @@ class _ScreenTimeVoucherState extends State<ScreenTimeVoucher> {
                   ],
                 ),
                 verticalSpaceTiny,
-                status == ScreenTimeVoucherStatus.unused || isBusy
+                status == ScreenTimeSessionStatus.active || isBusy
                     ? isBusy
                         ? AFKProgressIndicator(
                             //color: Colors.white,
@@ -194,16 +194,16 @@ class _ScreenTimeVoucherState extends State<ScreenTimeVoucher> {
                           verticalSpaceSmall,
                           if (isActive ||
                               (showDeactivate == false &&
-                                  status == ScreenTimeVoucherStatus.used))
+                                  status == ScreenTimeSessionStatus.active))
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text("Activated on " +
                                     formatDateDetailsType2(widget
                                             .screenTimeVoucher
-                                            .activatedOn is String
+                                            .startedAt is String
                                         ? DateTime.now()
-                                        : widget.screenTimeVoucher.activatedOn
+                                        : widget.screenTimeVoucher.startedAt
                                             ?.toDate())),
                               ],
                             ),

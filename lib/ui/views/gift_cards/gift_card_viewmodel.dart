@@ -8,7 +8,7 @@ import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_cat
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase_success_result/gift_card_purchase_success_result.dart';
 import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
-import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/money_transfer_dialog_status.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
@@ -33,7 +33,7 @@ class GiftCardViewModel extends BaseModel {
     return _giftCardService.getGiftCards(categoryName: categoryName);
   }
 
-  List<ScreenTimePurchase> getScreenTimeCategories() {
+  List<ScreenTimeSession> getScreenTimeCategories() {
     return getDummyScreenTimes(uid: currentUser.uid);
   }
 
@@ -100,7 +100,7 @@ class GiftCardViewModel extends BaseModel {
     }
   }
 
-  Future handleScreenTimePurchase(ScreenTimePurchase screenTimePurchase) async {
+  Future handleScreenTimePurchase(ScreenTimeSession screenTimePurchase) async {
     DialogResponse? dialogResponse = await _dialogService.showCustomDialog(
         variant: DialogType.PurchaseScreenTime,
         data: screenTimePurchase,
@@ -110,7 +110,7 @@ class GiftCardViewModel extends BaseModel {
 
     if (dialogResponse?.confirmed == true) {
       // Make quick check if available AFK Credits are enough
-      if (!hasEnoughBalance(screenTimePurchase.amount)) {
+      if (!hasEnoughBalance(screenTimePurchase.afkCredits)) {
         await _dialogService.showDialog(
             title: "You don't have enough AFK Credits",
             description: "Continue earning ;)");
@@ -120,8 +120,8 @@ class GiftCardViewModel extends BaseModel {
       // Ask for another final confirmation
       SheetResponse? finalConfirmation =
           await _showFinalConfirmationBottomSheetScreenTime(
-              afkCredits: centsToAfkCredits(screenTimePurchase.amount),
-              screenTime: screenTimePurchase.hours);
+              afkCredits: centsToAfkCredits(screenTimePurchase.afkCredits),
+              screenTime: screenTimePurchase.minutes);
 
       if (finalConfirmation?.confirmed == false) {
         await _showAndAwaitSnackbar("You can come back any time :)");
@@ -189,7 +189,7 @@ class GiftCardViewModel extends BaseModel {
 
   Future _processScreenTimePayment(
       Completer<TransferDialogStatus> purchaseCompleter,
-      ScreenTimePurchase screenTimePurchase) async {
+      ScreenTimeSession screenTimePurchase) async {
     // FOR now, implemented dummy payment processing here
     try {
       await _screenTimeService.purchaseScreenTime(

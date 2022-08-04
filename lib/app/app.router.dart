@@ -6,7 +6,6 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -56,6 +55,7 @@ import '../ui/views/screen_time/screen_time_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/select_screen_time_view/select_screen_time_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
+import '../ui/views/single_child_stat/single_child_stat_view.dart';
 import '../ui/views/startup/startup_view.dart';
 import '../ui/views/transaction_history/transfers_history_view.dart';
 import '../ui/views/transfer_funds/transfer_funds_view.dart';
@@ -79,7 +79,7 @@ class Routes {
       '/select-role-after-login-view';
   static const String addExplorerView = '/add-explorer-view';
   static const String searchExplorerView = '/search-explorer-view';
-  static const String singleExplorerView = '/single-explorer-view';
+  static const String singleChildStatView = '/single-child-stat-view';
   static const String transferFundsView = '/transfer-funds-view';
   static const String transfersHistoryView = '/transfers-history-view';
   static const String customBottomBarLayoutTemplateView =
@@ -126,7 +126,7 @@ class Routes {
     selectRoleAfterLoginView,
     addExplorerView,
     searchExplorerView,
-    singleExplorerView,
+    singleChildStatView,
     transferFundsView,
     transfersHistoryView,
     customBottomBarLayoutTemplateView,
@@ -175,7 +175,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.selectRoleAfterLoginView, page: SelectRoleAfterLoginView),
     RouteDef(Routes.addExplorerView, page: AddExplorerView),
     RouteDef(Routes.searchExplorerView, page: SearchExplorerView),
-    RouteDef(Routes.singleExplorerView, page: SingleChildStatView),
+    RouteDef(Routes.singleChildStatView, page: SingleChildStatView),
     RouteDef(Routes.transferFundsView, page: TransferFundsView),
     RouteDef(Routes.transfersHistoryView, page: TransfersHistoryView),
     RouteDef(Routes.customBottomBarLayoutTemplateView,
@@ -321,7 +321,7 @@ class StackedRouter extends RouterBase {
       );
     },
     SingleChildStatView: (data) {
-      var args = data.getArgs<SingleExplorerViewArguments>(nullOk: false);
+      var args = data.getArgs<SingleChildStatViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => SingleChildStatView(
           key: args.key,
@@ -595,11 +595,11 @@ class SearchExplorerViewArguments {
   SearchExplorerViewArguments({this.key});
 }
 
-/// SingleExplorerView arguments holder class
-class SingleExplorerViewArguments {
+/// SingleChildStatView arguments holder class
+class SingleChildStatViewArguments {
   final Key? key;
   final String uid;
-  SingleExplorerViewArguments({this.key, required this.uid});
+  SingleChildStatViewArguments({this.key, required this.uid});
 }
 
 /// TransferFundsView arguments holder class
