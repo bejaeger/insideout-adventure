@@ -7,7 +7,6 @@ import 'package:afkcredits/services/maps/google_map_service.dart';
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:places_service/places_service.dart';
@@ -17,7 +16,6 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../apis/cloud_functions_api.dart';
-import '../apis/direction_api.dart';
 import '../apis/firestore_api.dart';
 import '../app_config_provider.dart';
 import '../services/cloud_firestore_storage/cloud_storage_services.dart';
@@ -80,7 +78,6 @@ Future setupLocator(
   locator.registerLazySingleton(() => StopWatchService());
   locator.registerLazySingleton(() => QRCodeService());
   locator.registerLazySingleton(() => MarkerService());
-  locator.registerLazySingleton(() => DirectionsAPI());
   locator.registerLazySingleton(() => GiftCardService());
   locator.registerLazySingleton(() => ScreenTimeService());
   locator.registerLazySingleton(() => QuestTestingService());

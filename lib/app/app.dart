@@ -1,5 +1,4 @@
 import 'package:afkcredits/apis/cloud_functions_api.dart';
-import 'package:afkcredits/apis/direction_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/cloud_firestore_storage/cloud_storage_services.dart';
@@ -25,11 +24,8 @@ import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
@@ -154,7 +150,6 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: StopWatchService),
     LazySingleton(classType: QRCodeService),
     LazySingleton(classType: MarkerService),
-    LazySingleton(classType: DirectionsAPI),
     LazySingleton(classType: GiftCardService),
     LazySingleton(classType: ScreenTimeService),
     LazySingleton(classType: QuestTestingService),
