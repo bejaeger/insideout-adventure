@@ -76,6 +76,23 @@ class ParentHomeViewModel extends TransferBaseViewModel with NavigationMixin {
     return sortedSessions;
   }
 
+  Map<String, int> totalExplorerScreenTimeLastDays({int days = 7}) {
+    Map<String, int> screenTime = {};
+    supportedExplorerScreenTimeSessions.forEach((key, session) {
+      session.forEach((element) {
+        if (DateTime.now().difference(element.startedAt.toDate()).inDays < 7) {
+          if (screenTime.containsKey(element.uid)) {
+            screenTime[element.uid] =
+                screenTime[element.uid]! + element.minutes;
+          } else {
+            screenTime[element.uid] = 0;
+          }
+        }
+      });
+    });
+    return screenTime;
+  }
+
   String explorerNameFromUid(String uid) {
     for (User user in supportedExplorers) {
       if (user.uid == uid) {

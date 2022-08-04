@@ -73,7 +73,7 @@ class UserService {
   // quest history is added to user service (NOT IDEAL!)
   Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
 
-  // quest history is added to user service (NOT IDEAL!)
+  // quest history is added to user service (NOT IDEAL! cause we have a quest service)
   Map<String, List<ScreenTimeSession>> supportedExplorerScreenTimeSessions = {};
   List<ScreenTimeSession> supportedExplorerScreenTimeSessionsActive = [];
 

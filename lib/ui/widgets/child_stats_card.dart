@@ -9,8 +9,12 @@ import 'package:flutter/material.dart';
 class ChildStatsCard extends StatelessWidget {
   final Map<String, UserStatistics>? childrenStats;
   final User user;
+  final int? screenTimeLastWeek;
   const ChildStatsCard(
-      {Key? key, required this.childrenStats, required this.user})
+      {Key? key,
+      required this.childrenStats,
+      required this.user,
+      required this.screenTimeLastWeek})
       : super(key: key);
 
   @override
@@ -39,6 +43,10 @@ class ChildStatsCard extends StatelessWidget {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (screenTimeLastWeek != null)
+                          AfkCreditsText.body("last week screen time: " +
+                              screenTimeLastWeek.toString() +
+                              " min"),
                         AfkCreditsText.body("# quests compl.: " +
                             stats.numberQuestsCompleted.toString()),
                         AfkCreditsText.body(

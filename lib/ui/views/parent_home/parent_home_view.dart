@@ -141,6 +141,7 @@ class ParentHomeView extends StatelessWidget {
                         ),
                 if (model.supportedExplorers.length > 0)
                   ChildrenStatsList(
+                    screenTimeLastWeek: model.totalExplorerScreenTimeLastDays(),
                     explorersStats: model.supportedExplorerStats,
                     explorers: model.supportedExplorers,
                     onChildCardPressed: model.navigateToSingleExplorerView,
@@ -268,12 +269,13 @@ class HistoryItemActivity extends StatelessWidget {
 class ChildrenStatsList extends StatelessWidget {
   final List<User> explorers;
   final Map<String, UserStatistics>? explorersStats;
-
+  final Map<String, int> screenTimeLastWeek;
   // final void Function() onAddNewExplorerPressed;
   final void Function({required String uid}) onChildCardPressed;
 
   const ChildrenStatsList({
     Key? key,
+    required this.screenTimeLastWeek,
     required this.explorers,
     required this.explorersStats,
     // required this.onAddNewExplorerPressed,
@@ -283,7 +285,7 @@ class ChildrenStatsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 160,
+      height: 180,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: ScrollPhysics(),
@@ -295,7 +297,10 @@ class ChildrenStatsList extends StatelessWidget {
               GestureDetector(
                 onTap: () => onChildCardPressed(uid: explorers[index].uid),
                 child: ChildStatsCard(
-                    user: explorers[index], childrenStats: explorersStats),
+                    screenTimeLastWeek:
+                        screenTimeLastWeek[explorers[index].uid],
+                    user: explorers[index],
+                    childrenStats: explorersStats),
               ),
               if (index == explorers.length - 1) SizedBox(width: 20),
             ],
