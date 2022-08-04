@@ -7,14 +7,11 @@ import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
-import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
-import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
-import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -146,10 +143,6 @@ class _BottomBarLayoutTemplateViewState
           ParentHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
-          if (widget.questViewIndex == QuestViewType.singlequest)
-            SingleQuestTypeView(
-              questType: widget.questType,
-            ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
         ];
       case UserRole.explorer:
@@ -157,33 +150,19 @@ class _BottomBarLayoutTemplateViewState
           ExplorerHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
-          if (widget.questViewIndex == QuestViewType.singlequest)
-            SingleQuestTypeView(
-              questType: widget.questType,
-            ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
-          GiftCardView(),
         ];
       case UserRole.superUser:
         return [
           ExplorerHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
-          if (widget.questViewIndex == QuestViewType.singlequest)
-            SingleQuestTypeView(
-              questType: widget.questType,
-            ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
-          GiftCardView(),
         ];
       default:
         return [
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
-          if (widget.questViewIndex == QuestViewType.singlequest)
-            SingleQuestTypeView(
-              questType: widget.questType,
-            ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
           // ManageQuestView(),
 /*
@@ -196,7 +175,7 @@ class _BottomBarLayoutTemplateViewState
               questType: widget.questType,
             ), */
 
-          ManageGiftCardstView(),
+          //ManageGiftCardstView(),
           //AddGiftCardsView(),
           AddMarkersView(),
         ];

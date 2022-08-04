@@ -8,6 +8,7 @@ import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_l
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
+import 'package:afkcredits/ui/widgets/treasure_location_search_widgets.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';

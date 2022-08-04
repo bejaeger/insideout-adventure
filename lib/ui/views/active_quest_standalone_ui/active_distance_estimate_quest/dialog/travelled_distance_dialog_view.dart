@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+// ! NOT USED ATM
+
 class TravelledDistanceDialogView extends StatelessWidget {
   final DialogRequest request;
   final Function(DialogResponse) completer;

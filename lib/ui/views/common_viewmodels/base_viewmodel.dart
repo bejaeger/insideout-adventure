@@ -13,9 +13,7 @@ import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -41,11 +39,8 @@ class BaseModel extends BaseViewModel {
   final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
   final DialogService dialogService = locator<DialogService>();
   final BottomSheetService bottomSheetService = locator<BottomSheetService>();
-  final TransfersHistoryService transfersHistoryService =
-      locator<TransfersHistoryService>();
   final LayoutService layoutService = locator<LayoutService>();
   final StopWatchService _stopWatchService = locator<StopWatchService>();
-  final GiftCardService _giftCardService = locator<GiftCardService>();
   final GeolocationService geolocationService = locator<GeolocationService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
@@ -102,8 +97,6 @@ class BaseModel extends BaseViewModel {
   Future clearServiceData({bool logOutFromFirebase = true}) async {
     questService.clearData();
     activeQuestService.clearData();
-    _giftCardService.clearData();
-    transfersHistoryService.clearData();
     geolocationService.clearData();
     _questTestingService.maybeReset();
     gamificationService.clearData();
@@ -364,27 +357,6 @@ class BaseModel extends BaseViewModel {
     // questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
     //     ? await navigateToActiveQuestUI(quest: quest)
     //     : await navigateToActiveQuestUI(quest: quest);
-  }
-
-  Future navigateToActiveQuestUI({required Quest quest}) async {
-    baseModelLog.i("Navigating to view with currently active quest");
-    if (quest.type == QuestType.TreasureLocationSearch) {
-      await navigationService.navigateTo(
-          Routes.activeTreasureLocationSearchQuestView,
-          arguments:
-              ActiveTreasureLocationSearchQuestViewArguments(quest: quest));
-    } else if (quest.type == QuestType.DistanceEstimate) {
-      await navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
-          arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
-    } else if (quest.type == QuestType.QRCodeHunt ||
-        quest.type == QuestType.GPSAreaHunt) {
-      await navigationService.navigateTo(Routes.activeQrCodeSearchView,
-          arguments: ActiveQrCodeSearchViewArguments(quest: quest));
-    } else if (quest.type == QuestType.QRCodeHike ||
-        quest.type == QuestType.GPSAreaHike) {
-      await navigationService.navigateTo(Routes.activeMapQuestView,
-          arguments: ActiveMapQuestViewArguments(quest: quest));
-    }
   }
 
   Future openSuperUserSettingsDialog() async {

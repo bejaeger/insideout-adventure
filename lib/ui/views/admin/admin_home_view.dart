@@ -3,35 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 
-/*  class AdminHomeView extends StatelessWidget {
-  const AdminHomeView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder<AdminHomeViewModel>.reactive(
-      onModelReady: (model) => model.listenToData(),
-      fireOnModelReadyOnce: true,
-      viewModelBuilder: () => AdminHomeViewModel(),
-      builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: Text("Admin Home View"),
-        ),
-        body: ListView(
-          children: [
-            verticalSpaceMedium,
-            ElevatedButton(
-              // onPressed: model.navigateToExplorerHomeView,
-              onPressed: model.logout,
-              //child: Text("Go to explorer home/map")),
-              child: Text("Logout  "),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}  */
-
 class AdminHomeView extends StatefulWidget {
   const AdminHomeView({Key? key}) : super(key: key);
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../afkcredits_ui.dart';
 
 class AfkCreditsCategoryCard extends StatelessWidget {
-  final void Function(QuestType) onPressed;
+  final void Function() onPressed;
   final QuestType category;
   final Color? backgroundColor;
   const AfkCreditsCategoryCard({
@@ -15,7 +15,7 @@ class AfkCreditsCategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onPressed(category),
+      onTap: () => onPressed(),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(

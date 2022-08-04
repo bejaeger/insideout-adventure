@@ -30,10 +30,6 @@ class QuestsOverviewViewModel extends QuestViewModel {
     setBusy(false);
   }
 
-  void navigateToQuestsOfSpecificTypeView(QuestType type) {
-    navToSingleQuestTypeView(questType: type);
-  }
-
   void navigateToQuestViews({required int index}) {
     switch (index) {
       case 0:

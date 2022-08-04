@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
-import 'package:afkcredits/ui/views/select_screen_time_view/select_screen_time_viewmodel.dart';
+import 'package:afkcredits/ui/views/screen_time/select_screen_time_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/main_long_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';

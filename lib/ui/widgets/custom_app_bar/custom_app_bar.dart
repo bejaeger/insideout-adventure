@@ -1,7 +1,6 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/activated_quest_panel_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/custom_app_bar/activated_quest_panel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -35,14 +34,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ActivatedQuestPanelViewModel>.reactive(
-      viewModelBuilder: () => ActivatedQuestPanelViewModel(),
+    return ViewModelBuilder<BaseModel>.reactive(
+      viewModelBuilder: () => BaseModel(),
       builder: (context, model, child) => PreferredSize(
         preferredSize:
             Size(screenWidth(context), height + kActiveQuestPanelMaxHeight),
         child: Stack(
           children: <Widget>[
-            if (!showRedLiveButton) ActivatedQuestPanel(heightAppBar: height),
             Container(
               alignment: Alignment.center,
               //clipBehavior: Clip.none,

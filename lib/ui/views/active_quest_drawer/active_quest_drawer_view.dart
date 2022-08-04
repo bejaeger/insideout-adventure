@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/custom_app_bar/activated_quest_panel.dart';
+import 'package:afkcredits/ui/widgets/small_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';

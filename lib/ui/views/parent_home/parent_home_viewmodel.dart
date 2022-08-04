@@ -37,10 +37,6 @@ class ParentHomeViewModel extends TransferBaseViewModel with NavigationMixin {
     Completer completerTwo = Completer<void>();
     userService.setupUserDataListeners(
         completer: completerOne, callback: () => super.notifyListeners());
-    transfersHistoryService.addTransferDataListener(
-        config: queryConfig,
-        completer: completerTwo,
-        callback: () => super.notifyListeners());
     await runBusyFuture(Future.wait([
       completerOne.future,
       completerTwo.future,
@@ -123,12 +119,6 @@ class ParentHomeViewModel extends TransferBaseViewModel with NavigationMixin {
 
   // -------------------------------------------------
   // navigation
-
-  void navigateToTransferHistoryView() async {
-    setShowBottomNavBar(false);
-    await navigationService.navigateTo(Routes.transfersHistoryView);
-    setShowBottomNavBar(true);
-  }
 
   void navigateToSingleExplorerView({required String uid}) async {
     setShowBottomNavBar(false);

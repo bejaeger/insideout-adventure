@@ -48,3 +48,8 @@ String formatDateDetailsType2(DateTime timestamp) {
 String formatDateDetails(DateTime timestamp) {
   return DateFormat.yMd().add_jm().format(timestamp);
 }
+
+String removeLastCharacters(String string, {int removeNumber = 1}) {
+  String returnValue = string.substring(0, string.length - removeNumber);
+  return returnValue;
+}

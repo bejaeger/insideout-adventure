@@ -4,9 +4,7 @@ import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -16,9 +14,6 @@ mixin NavigationMixin {
   final _navigationService = locator<NavigationService>();
   final _questService = locator<QuestService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final GiftCardService _giftCardService = locator<GiftCardService>();
-  final TransfersHistoryService transfersHistoryService =
-      locator<TransfersHistoryService>();
   final _userService = locator<UserService>();
   final LayoutService _layoutService = locator<LayoutService>();
 
@@ -106,40 +101,16 @@ mixin NavigationMixin {
     //});
   }
 
-  void navToAddGiftCard() {
-    _navigationService.navigateTo(Routes.addGiftCardsView);
-    //});
-  }
-
-  void navToInsertGiftCard() {
-    _navigationService.navigateTo(Routes.insertPrePurchasedGiftCardView);
-    //});
-  }
-
   void navBackToPreviousView() {
     _navigationService.back();
-  }
-
-  void navToPurchasedScreenTimeView() {
-    _navigationService.navigateTo(Routes.purchasedScreenTimeView);
-  }
-
-  void navToCreditsScreenTimeView() {
-    _navigationService.navigateTo(Routes.selectScreenTimeView);
   }
 
   Future logout() async {
     // TODO: Check that there is no active quest present!
     _questService.clearData();
     _geolocationService.clearData();
-    _giftCardService.clearData();
     await _userService.handleLogoutEvent(logOutFromFirebase: true);
-    transfersHistoryService.clearData();
     _navigationService.clearStackAndShow(Routes.loginView);
-  }
-
-  void navigateToManageGiftCard() {
-    _navigationService.clearStackAndShow(Routes.manageGiftCardstView);
   }
 
   void navToQuestsOfSpecificTypeView(
@@ -156,10 +127,6 @@ mixin NavigationMixin {
     );
   }
 
-  void navToScreenTimeView() {
-    _navigationService.navigateTo(Routes.screenTimeView);
-  }
-
   void showQuestListOverlay() {
     _layoutService.setIsShowingQuestList(true);
   }
@@ -173,8 +140,7 @@ mixin NavigationMixin {
         arguments: ARObjectViewArguments(isCoins: isCoins));
   }
 
-  void navToSingleQuestTypeView({required QuestType questType}) {
-    _navigationService.navigateTo(Routes.singleQuestTypeView,
-        arguments: SingleQuestTypeViewArguments(questType: questType));
+  Future navToCreditsScreenTimeView() async {
+    await _navigationService.navigateTo(Routes.selectScreenTimeView);
   }
 }

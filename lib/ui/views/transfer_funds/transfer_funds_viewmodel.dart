@@ -18,7 +18,6 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
-import 'package:afkcredits/services/payments/payment_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:stacked/stacked.dart';
@@ -31,7 +30,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
   final UserService _userService = locator<UserService>();
   final DialogService? _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
-  final PaymentService _paymentService = locator<PaymentService>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
 
   User get currentUser => _userService.currentUser;
@@ -180,7 +178,11 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     try {
       final MoneyTransfer data = prepareTransferData(type: type);
       if (data.type != TransferType.Sponsor2ExplorerCredits) {
-        await _paymentService.processTransfer(moneyTransfer: data);
+        throw MoneyTransferException(
+            message: "Type of transfer not supported at the moment!",
+            devDetails:
+                "This is from a previous version of the app. Just kept it for lookup");
+        //await _paymentService.processTransfer(moneyTransfer: data);
       } else {
         await Future.delayed(Duration(milliseconds: 300)); // artificial delay
         // TODO: Improve backend here!

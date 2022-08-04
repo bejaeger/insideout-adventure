@@ -99,7 +99,7 @@ class QuestLists extends StatelessWidget {
                   ...model.questTypes
                       .map(
                         (e) => AfkCreditsCategoryCard(
-                          onPressed: model.navigateToQuestsOfSpecificTypeView,
+                          onPressed: model.showNotImplementedSnackbar,
                           category: e,
                           backgroundColor: getColorOfType(e),
                         ),

@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/afk_credit_and_currency_system.dart';
 import 'package:afkcredits/utils/other_helpers.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:intl/intl.dart';
 
 final log = getLogger("Currency Formatting Helper Functions");

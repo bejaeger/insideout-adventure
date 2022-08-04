@@ -93,47 +93,6 @@ class DrawerWidgetView extends StatelessWidget {
                 //  ],
                 //),
                 verticalSpaceMedium,
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          // onPressed: model.navigateToExplorerHomeView,
-                          onPressed: model.navigateToGiftCardsView,
-                          //child: Text("Go to explorer home/map")),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text("Gift Cards",
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                verticalSpaceMedium,
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          // onPressed: model.navigateToExplorerHomeView,
-                          onPressed: model.navigateToScreenTimeView,
-                          //child: Text("Go to explorer home/map")),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text("Screen Time",
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 if (model.currentUser.createdByUserWithId != null)
                   Padding(
                     padding: const EdgeInsets.all(kHorizontalPadding),
