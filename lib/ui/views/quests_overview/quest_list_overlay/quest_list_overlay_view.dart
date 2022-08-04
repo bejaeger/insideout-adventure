@@ -33,7 +33,7 @@ class QuestListOverlayView extends StatelessWidget {
           color: Colors.grey[50],
           child: Container(
             height: screenHeight(context),
-            width: screenWidth(context) - 10,
+            width: screenWidth(context),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [kPrimaryColor.withOpacity(0.2), Colors.grey[50]!],
@@ -41,6 +41,7 @@ class QuestListOverlayView extends StatelessWidget {
                 end: Alignment.bottomRight,
               ),
             ),
+            //padding: const EdgeInsets.all(20.0),
             child: ListView(
               children: [
                 verticalSpaceMedium,
@@ -50,62 +51,60 @@ class QuestListOverlayView extends StatelessWidget {
                 ),
                 verticalSpaceMedium,
                 SectionHeader(title: "Near You"),
-                Container(
-                  height: 220,
-                  child: ListView(
-                    //itemExtent: 120,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ...model.nearbyQuests
-                          .asMap()
-                          .map((index, quest) {
-                            return MapEntry(
-                              index,
-                              QuestInfoCard(
-                                height: 200,
-                                marginRight: 5,
-                                width: screenWidth(context, percentage: 0.8),
-                                quest: quest,
-                                subtitle: quest.description,
-                                onCardPressed: () async =>
-                                    await model.onQuestInListTapped(quest),
-                              ),
-                            );
-                          })
-                          .values
-                          .toList(),
-                      verticalSpaceLarge,
-                    ],
-                  ),
-                ),
-                SectionHeader(title: "Types"),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    physics:
-                        NeverScrollableScrollPhysics(), // to disable GridView's scrolling
-                    children: [
-                      ...model.questTypes
-                          .map(
-                            (e) => AfkCreditsCategoryCard(
-                              onPressed:
-                                  model.navigateToQuestsOfSpecificTypeView,
-                              category: e,
-                              backgroundColor: getColorOfType(e),
+                ListView(
+                  physics: ScrollPhysics(),
+                  //itemExtent: 120,
+                  shrinkWrap: true,
+                  //scrollDirection: Axis.vertical,
+                  children: [
+                    ...model.nearbyQuests
+                        .asMap()
+                        .map((index, quest) {
+                          return MapEntry(
+                            index,
+                            QuestInfoCard(
+                              height: 180,
+                              marginRight: kHorizontalPadding,
+                              width: screenWidth(context, percentage: 0.8),
+                              quest: quest,
+                              subtitle: quest.description,
+                              onCardPressed: () async =>
+                                  await model.onQuestInListTapped(quest),
                             ),
-                          )
-                          .toList(),
-                      // QuestCategoryCard(
-                      //     onPressed: model.navigateToQuestsOfSpecificTypeView,
-                      //     category: QuestType.DistanceEstimate)
-                    ],
-                  ),
+                          );
+                        })
+                        .values
+                        .toList(),
+                    //verticalSpaceLarge,
+                  ],
                 ),
+                // SectionHeader(title: "Types"),
+                // Container(
+                //   padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+                //   child: GridView.count(
+                //     shrinkWrap: true,
+                //     crossAxisCount: 2,
+                //     crossAxisSpacing: 10,
+                //     mainAxisSpacing: 10,
+                //     physics:
+                //         NeverScrollableScrollPhysics(), // to disable GridView's scrolling
+                //     children: [
+                //       ...model.questTypes
+                //           .map(
+                //             (e) => AfkCreditsCategoryCard(
+                //               onPressed:
+                //                   model.navigateToQuestsOfSpecificTypeView,
+                //               category: e,
+                //               backgroundColor: getColorOfType(e),
+                //             ),
+                //           )
+                //           .toList(),
+                //       // QuestCategoryCard(
+                //       //     onPressed: model.navigateToQuestsOfSpecificTypeView,
+                //       //     category: QuestType.DistanceEstimate)
+                //     ],
+                //   ),
+                // ),
                 verticalSpaceMassive,
               ],
             ),

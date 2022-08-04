@@ -229,6 +229,12 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     layoutService.setIsMovingCamera(false);
     layoutService.setIsFadingOutQuestDetails(false);
 
+    // maybe show quest list again (don't do that it's weird)
+    if (navigatedFromQuestList) {
+      //showQuestListOverlay();
+      changeNavigatedFromQuestList(false);
+    }
+
     // reset selected quest -> don't show quest details anymore
     activeQuestService.resetSelectedQuest();
 

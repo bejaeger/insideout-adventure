@@ -31,19 +31,7 @@ class QuestsOverviewViewModel extends QuestViewModel {
   }
 
   void navigateToQuestsOfSpecificTypeView(QuestType type) {
-    // Use the below to have the nav bottom bar visible!
-    // navToQuestsOfSpecificTypeView(role: currentUser.role, type: type);
-    navigationService.navigateTo(
-      Routes.bottomBarLayoutTemplateView,
-      arguments: BottomBarLayoutTemplateViewArguments(
-        userRole: currentUser.role,
-        initialBottomNavBarIndex: currentUser.role == UserRole.adminMaster
-            ? BottomNavBarIndex.home
-            : BottomNavBarIndex.quest,
-        questViewIndex: QuestViewType.singlequest,
-        questType: type,
-      ),
-    );
+    navToSingleQuestTypeView(questType: type);
   }
 
   void navigateToQuestViews({required int index}) {

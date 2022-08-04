@@ -56,6 +56,7 @@ import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/select_screen_time_view/select_screen_time_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_child_stat/single_child_stat_view.dart';
+import '../ui/views/single_quest_type/single_quest_type_view.dart';
 import '../ui/views/startup/startup_view.dart';
 import '../ui/views/transaction_history/transfers_history_view.dart';
 import '../ui/views/transfer_funds/transfer_funds_view.dart';
@@ -110,6 +111,7 @@ class Routes {
   static const String aRObjectView = '/a-robject-view';
   static const String selectScreenTimeView = '/select-screen-time-view';
   static const String activeScreenTimeView = '/active-screen-time-view';
+  static const String singleQuestTypeView = '/single-quest-type-view';
   static const all = <String>{
     parentHomeView,
     singleMarkerView,
@@ -152,6 +154,7 @@ class Routes {
     aRObjectView,
     selectScreenTimeView,
     activeScreenTimeView,
+    singleQuestTypeView,
   };
 }
 
@@ -206,6 +209,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.aRObjectView, page: ARObjectView),
     RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
     RouteDef(Routes.activeScreenTimeView, page: ActiveScreenTimeView),
+    RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -550,6 +554,18 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    SingleQuestTypeView: (data) {
+      var args = data.getArgs<SingleQuestTypeViewArguments>(
+        orElse: () => SingleQuestTypeViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SingleQuestTypeView(
+          key: args.key,
+          questType: args.questType,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -715,4 +731,11 @@ class ActiveScreenTimeViewArguments {
   final Key? key;
   final int minutes;
   ActiveScreenTimeViewArguments({this.key, required this.minutes});
+}
+
+/// SingleQuestTypeView arguments holder class
+class SingleQuestTypeViewArguments {
+  final Key? key;
+  final QuestType? questType;
+  SingleQuestTypeViewArguments({this.key, this.questType});
 }

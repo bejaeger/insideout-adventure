@@ -22,7 +22,7 @@ mixin MapStateControlMixin {
   double? get lastBirdViewZoom => mapStateService.lastBirdViewZoom;
   bool get isAvatarView => mapStateService.isAvatarView;
   int get characterNumber => mapStateService.characterNumber;
-
+  bool get navigatedFromQuestList => mapStateService.navigatedFromQuestList;
   // bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
   // -------------------------------------
   // functions
@@ -36,6 +36,10 @@ mixin MapStateControlMixin {
 
   void changeCameraBearing(double bearingIn) {
     mapStateService.bearingSubject.add(bearingIn);
+  }
+
+  void changeNavigatedFromQuestList(bool set) {
+    mapStateService.navigatedFromQuestList = set;
   }
 
   void setCameraSettings({double? bearing, double? zoom, double? tilt}) {

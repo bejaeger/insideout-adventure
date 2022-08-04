@@ -172,4 +172,9 @@ mixin NavigationMixin {
     return await _navigationService.navigateTo(Routes.aRObjectView,
         arguments: ARObjectViewArguments(isCoins: isCoins));
   }
+
+  void navToSingleQuestTypeView({required QuestType questType}) {
+    _navigationService.navigateTo(Routes.singleQuestTypeView,
+        arguments: SingleQuestTypeViewArguments(questType: questType));
+  }
 }

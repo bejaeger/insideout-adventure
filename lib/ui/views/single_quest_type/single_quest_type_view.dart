@@ -11,10 +11,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
 
 class SingleQuestTypeView extends StatelessWidget {
-  final Quest? quest;
   final QuestType? questType;
-  const SingleQuestTypeView({Key? key, required this.quest, this.questType})
-      : super(key: key);
+  const SingleQuestTypeView({Key? key, this.questType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,124 +24,127 @@ class SingleQuestTypeView extends StatelessWidget {
         });
       },
       builder: (context, model, child) {
-        return (quest == null && questType == null)
-            ? Container(
-                child: Text(
-                    "ERROR! This should never happen. You navigated to a single quest view without providing a quest category. Hopefully you are not a user of the app but a developer. Otherwise please help us and let the developers know immediately"),
-              )
-            : Scaffold(
-                appBar: CustomAppBar(
-                  title: getStringForCategory(questType),
-                  onBackButton: model.navigateBack,
-                ),
-                body:
-                    // Add the list of quests here!
-                    // Use QuestInfoCard
-                    GestureDetector(
-                  child: ListView(
-                    //itemExtent: 120,
-                    children: [
-                      // TODO: provide this list sorted w.r.t. user distance!
-                      ...model.currentQuests
-                          .asMap()
-                          .map((index, quest) {
-                            return MapEntry(
-                              index,
-                              UserRole.explorer == model.currentUser.role ||
-                                      UserRole.sponsor ==
-                                          model.currentUser.role ||
-                                      UserRole.superUser ==
-                                          model.currentUser.role
-                                  ? QuestInfoCard(
-                                      height: 200,
-                                      marginRight: kHorizontalPadding,
-                                      marginTop: 20,
-                                      quest: quest,
-                                      subtitle: quest.description,
-                                      onCardPressed: () async => await model
-                                          .onQuestInListTapped(quest),
-                                    )
-                                  : Dismissible(
-                                      confirmDismiss:
-                                          (DismissDirection direction) async {
-                                        return await showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: const Text("Confirm"),
-                                              content: const Text(
-                                                  "Are you sure you wish to delete this item?"),
-                                              actions: <Widget>[
-                                                ElevatedButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(true),
-                                                  child: const Text("DELETE"),
-                                                ),
-                                                ElevatedButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(false),
-                                                  child: const Text("CANCEL"),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      key: UniqueKey(),
-                                      direction: DismissDirection.endToStart,
-                                      background: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: SvgPicture.asset(
-                                              "assets/icons/trash_icon.svg"),
-                                        ),
-                                      ),
-                                      child: QuestInfoCard(
+        return SafeArea(
+          child: (questType == null)
+              ? Container(
+                  child: Text(
+                      "ERROR! This should never happen. You navigated to a single quest view without providing a quest category. Hopefully you are not a user of the app but a developer. Otherwise please help us and let the developers know immediately"),
+                )
+              : Scaffold(
+                  appBar: CustomAppBar(
+                    title: getStringForCategory(questType),
+                    onBackButton: model.navigateBack,
+                  ),
+                  body:
+                      // Add the list of quests here!
+                      // Use QuestInfoCard
+                      GestureDetector(
+                    child: ListView(
+                      //itemExtent: 120,
+                      children: [
+                        // TODO: provide this list sorted w.r.t. user distance!
+                        ...model.currentQuests
+                            .asMap()
+                            .map((index, quest) {
+                              return MapEntry(
+                                index,
+                                UserRole.explorer == model.currentUser.role ||
+                                        UserRole.sponsor ==
+                                            model.currentUser.role ||
+                                        UserRole.superUser ==
+                                            model.currentUser.role
+                                    ? QuestInfoCard(
                                         height: 200,
                                         marginRight: kHorizontalPadding,
                                         marginTop: 20,
                                         quest: quest,
                                         subtitle: quest.description,
-                                        onCardPressed: () async {
-                                          //EditQuestView(completer: (DialogResponse<dynamic> ) {  },);
-                                          //Call The Dismissible Widget.
-                                          model.setQuestToUpdate(quest: quest);
-                                          model.navToUpdatingQuestView();
-                                          /*   await model.showConfirmationDialog(
-                                                quest: quest); */
+                                        onCardPressed: () async => await model
+                                            .onQuestInListTapped(quest),
+                                      )
+                                    : Dismissible(
+                                        confirmDismiss:
+                                            (DismissDirection direction) async {
+                                          return await showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: const Text("Confirm"),
+                                                content: const Text(
+                                                    "Are you sure you wish to delete this item?"),
+                                                actions: <Widget>[
+                                                  ElevatedButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(true),
+                                                    child: const Text("DELETE"),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(false),
+                                                    child: const Text("CANCEL"),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
                                         },
-                                        /*     onCardPressed: () async =>
+                                        key: UniqueKey(),
+                                        direction: DismissDirection.endToStart,
+                                        background: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: SvgPicture.asset(
+                                                "assets/icons/trash_icon.svg"),
+                                          ),
+                                        ),
+                                        child: QuestInfoCard(
+                                          height: 200,
+                                          marginRight: kHorizontalPadding,
+                                          marginTop: 20,
+                                          quest: quest,
+                                          subtitle: quest.description,
+                                          onCardPressed: () async {
+                                            //EditQuestView(completer: (DialogResponse<dynamic> ) {  },);
+                                            //Call The Dismissible Widget.
+                                            model.setQuestToUpdate(
+                                                quest: quest);
+                                            model.navToUpdatingQuestView();
+                                            /*   await model.showConfirmationDialog(
+                                                quest: quest); */
+                                          },
+                                          /*     onCardPressed: () async =>
                                         await model.onQuestInListTapped(quest), */
+                                        ),
+                                        onDismissed: (direction) {
+                                          model.removeQuest(quest: quest);
+                                        },
                                       ),
-                                      onDismissed: (direction) {
-                                        model.removeQuest(quest: quest);
-                                      },
-                                    ),
-                            );
-                          })
-                          .values
-                          .toList(),
-                      verticalSpaceLarge,
-                    ],
+                              );
+                            })
+                            .values
+                            .toList(),
+                        verticalSpaceLarge,
+                      ],
+                    ),
+                    onTap: () {
+                      print('Am Being Pressed ');
+                    },
                   ),
-                  onTap: () {
-                    print('Am Being Pressed ');
-                  },
+                  // questType == QuestType.DistanceEstimate
+                  //     ? DistanceEstimateCard(
+                  //         onPressed: () =>
+                  //             model.startMinigameQuest(questType!))
+                  //     : questType == QuestType.VibrationSearch
+                  //         ? VibrationSearchCard(
+                  //             onPressed: () =>
+                  //                 model.startMinigameQuest(questType!))
+                  //         : null,
                 ),
-                // questType == QuestType.DistanceEstimate
-                //     ? DistanceEstimateCard(
-                //         onPressed: () =>
-                //             model.startMinigameQuest(questType!))
-                //     : questType == QuestType.VibrationSearch
-                //         ? VibrationSearchCard(
-                //             onPressed: () =>
-                //                 model.startMinigameQuest(questType!))
-                //         : null,
-              );
+        );
       },
     );
   }

@@ -113,6 +113,7 @@ abstract class QuestViewModel extends BaseModel
   Future onQuestInListTapped(Quest quest) async {
     if (hasActiveQuest == false) {
       removeQuestListOverlay();
+      changeNavigatedFromQuestList(true);
       showQuestDetailsFromList(quest: quest);
       //await navigateToActiveQuestUI(quest: quest);
 
@@ -120,7 +121,7 @@ abstract class QuestViewModel extends BaseModel
       // the view renders the state based on whether a quest is active or not
       //notifyListeners();
     } else {
-      dialogService.showDialog(title: "You Currently Have a Running Quest !!!");
+      dialogService.showDialog(title: "You currently have a running quest!");
     }
   }
 

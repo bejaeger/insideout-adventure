@@ -148,7 +148,6 @@ class _BottomBarLayoutTemplateViewState
             QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
             SingleQuestTypeView(
-              quest: widget.quest,
               questType: widget.questType,
             ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
@@ -160,7 +159,6 @@ class _BottomBarLayoutTemplateViewState
             QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
             SingleQuestTypeView(
-              quest: widget.quest,
               questType: widget.questType,
             ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
@@ -173,7 +171,6 @@ class _BottomBarLayoutTemplateViewState
             QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
             SingleQuestTypeView(
-              quest: widget.quest,
               questType: widget.questType,
             ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
@@ -185,7 +182,6 @@ class _BottomBarLayoutTemplateViewState
             QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
             SingleQuestTypeView(
-              quest: widget.quest,
               questType: widget.questType,
             ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),

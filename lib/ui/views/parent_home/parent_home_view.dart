@@ -33,7 +33,7 @@ class ParentHomeView extends StatelessWidget {
         child: Scaffold(
           appBar: CustomAppBar(title: "Home", drawer: true),
           endDrawer: SizedBox(
-            width: screenWidth(context, percentage: 0.6),
+            width: screenWidth(context, percentage: 0.75),
             child: const ParentDrawerView(),
           ),
           // floatingActionButton: Container(

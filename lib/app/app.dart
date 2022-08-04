@@ -65,6 +65,7 @@ import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/select_screen_time_view/select_screen_time_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart';
+import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transaction_history/transfers_history_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
@@ -123,6 +124,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: ARObjectView),
     MaterialRoute(page: SelectScreenTimeView),
     MaterialRoute(page: ActiveScreenTimeView),
+    MaterialRoute(page: SingleQuestTypeView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
