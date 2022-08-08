@@ -125,7 +125,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     result = await _createQuest() ?? false;
     if (result) {
       resetMarkersValues();
-      _navigationService.back();
+      replaceWithSponsorHomeView();
     }
     return result;
   }

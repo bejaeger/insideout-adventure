@@ -14,6 +14,7 @@ import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
+import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -31,7 +32,7 @@ import 'package:afkcredits/app/app.logger.dart';
 // put everything here that needs to be available throughout the
 // entire App
 
-class BaseModel extends BaseViewModel {
+class BaseModel extends BaseViewModel with NavigationMixin {
   final NavigationService navigationService = locator<NavigationService>();
   final UserService userService = locator<UserService>();
   final SnackbarService snackbarService = locator<SnackbarService>();
@@ -70,7 +71,7 @@ class BaseModel extends BaseViewModel {
   bool get isShowingQuestDetails => activeQuestService.selectedQuest != null;
 
   bool get isShowingQuestList => layoutService.isShowingQuestList;
-  bool get isShowingARView => layoutService.isShowingARView;
+  bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
 
@@ -212,17 +213,13 @@ class BaseModel extends BaseViewModel {
 
   Future replaceWithHomeView() async {
     if (currentUser.role == UserRole.sponsor) {
-      await navigationService.replaceWith(
-        Routes.parentHomeView,
-      );
+      replaceWithSponsorHomeView();
     } else if (currentUser.role == UserRole.adminMaster) {
       await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
           arguments:
               BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
     } else {
-      await navigationService.replaceWith(
-        Routes.explorerHomeView,
-      );
+      replaceWithExplorerHomeView();
     }
 
     // await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,

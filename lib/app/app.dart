@@ -18,6 +18,7 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
@@ -47,6 +48,7 @@ import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart';
+import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -92,10 +94,11 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: ARObjectView),
     MaterialRoute(page: ActiveScreenTimeView),
     MaterialRoute(page: SelectScreenTimeView),
+    MaterialRoute(page: ActiveMapQuestView),
+    MaterialRoute(page: SingleQuestTypeView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
-
     LazySingleton(classType: DialogService),
     LazySingleton(classType: ConnectivityService),
     LazySingleton(classType: SnackbarService),

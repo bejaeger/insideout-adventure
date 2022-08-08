@@ -3,7 +3,6 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
@@ -16,11 +15,9 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class MapViewModel extends BaseModel
-    with MapStateControlMixin, NavigationMixin {
+class MapViewModel extends BaseModel with MapStateControlMixin {
   // Viewmodel that receives callback functions to update map
   // Functions declared at the bottom of this file
   MapViewModel({
@@ -296,16 +293,15 @@ class MapViewModel extends BaseModel
     _animateCamera();
   }
 
-  @override
   void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
     configureAndAddMapMarker(
       quest: quest,
       afkmarker: afkmarker,
-      onTap: () => onTapMarker(quest: quest, afkmarker: afkmarker),
+      onTap: () => onMarkerTap(quest: quest, afkmarker: afkmarker),
     );
   }
 
-  Future onTapMarker(
+  Future onMarkerTap(
       {required Quest quest, required AFKMarker afkmarker}) async {
     dynamic adminMode = false;
     if (useSuperUserFeatures) {
@@ -329,7 +325,12 @@ class MapViewModel extends BaseModel
           }
           if (result?.confirmed == true || isAvatarView) {
             // showQuestDetails
-            showQuestDetails(quest: quest);
+            if (quest.type == QuestType.GPSAreaHike ||
+                quest.type == QuestType.GPSAreaHunt) {
+              onGPSAreaQuestMarkerTap(afkmarker.lat, afkmarker.lon, quest);
+            } else {
+              animateToQuestDetails(quest: quest);
+            }
           }
         } else {
           // information dialogs
@@ -357,7 +358,7 @@ class MapViewModel extends BaseModel
     notifyListeners();
   }
 
-  void showQuestDetails({required Quest quest}) {
+  void animateToQuestDetails({required Quest quest}) {
     if (isShowingQuestDetails) return; // we already show the quest details
 
     // set selected quest to show on screen
@@ -463,26 +464,48 @@ class MapViewModel extends BaseModel
         isCoin: false);
   }
 
-  Future onARObjectMarkerTap(double lat, double lon, bool isCoin) async {
-    // TODO: These are just examples for now. Make this general
-
-    // 2. First take snapshot
+  Future openNewViewSettings(double? lat, double? lon) async {
+    // 1. First take snapshot
     takeSnapshotOfCameraPosition();
 
-    // 3. is showing AR View
-    layoutService.setIsShowingARView(true);
+    // 2. set is fading out to show black fade out when AR marker is tapped
+    layoutService.setIsFadingOutOverlay(true);
 
-    // 4. Open AR view with nice zoom in and fade out triggered
-    await openARView(lat, lon, isCoin);
+    changeCameraTilt(90);
+    changeCameraZoom(40); // ridiculous zoom (will be clipped)
+    if (lat != null && lon != null) {
+      _animateCamera(customLat: lat, customLon: lon, force: true);
+    }
+    await Future.delayed(Duration(milliseconds: 1000));
+  }
+
+  Future onARObjectMarkerTap(double lat, double lon, bool isCoin) async {
+    await openNewViewSettings(lat, lon);
+    // open AR view
+    return await openARView(lat, lon, isCoin);
   }
 
   Future openARView(double lat, double lon, bool isCoin) async {
-    changeCameraTilt(90);
-    changeCameraZoom(40); // ridiculous zoom (will be clipped)
-    _animateCamera(customLat: lat, customLon: lon, force: true);
-    await Future.delayed(Duration(milliseconds: 1000));
     dynamic res = await navToArObjectView(isCoin);
     return res is bool && res == true;
+  }
+
+  Future onGPSAreaQuestMarkerTap(double? lat, double? lon, Quest quest) async {
+    // set selected quest to show on screen
+    await openNewViewSettings(lat, lon);
+    // open standalone quest view
+    await openStandaloneQuestUIView(quest);
+
+    // ! Not sure if this misses something important! For now
+    // ! it's okay
+    // set selected quest only after navigation!
+    //activeQuestService.setSelectedQuest(quest);
+  }
+
+  Future openStandaloneQuestUIView(Quest quest) async {
+    // TODO: Take care about res value
+    await navigateToGPSAreaQuest(quest);
+    //return res is bool && res == true;
   }
 
   void nextCharacter() {

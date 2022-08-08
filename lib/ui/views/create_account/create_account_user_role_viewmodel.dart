@@ -2,7 +2,7 @@ import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
-class SelectUserRoleViewModel extends BaseModel with NavigationMixin {
+class SelectUserRoleViewModel extends BaseModel {
   //final NavigationService _navigationService = locator<NavigationService>();
 
   void navigateToExplorerCreateAccount() {

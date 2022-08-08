@@ -598,7 +598,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
       try {
         _googleMapController = controller;
         // await Future.delayed(Duration(milliseconds: 50));
-        // controller.setMapStyle(mapStyle);
+        controller.setMapStyle(mapStyle);
         // for camera position
 
         //Add Starter Marker
@@ -617,7 +617,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
     } else {
       _googleMapController = controller;
       // await Future.delayed(Duration(milliseconds: 50));
-      // controller.setMapStyle(mapStyle);
+      controller.setMapStyle(mapStyle);
       if (currentQuest != null) {
         // animate camera to markers
         animateCameraToQuestMarkers(controller);

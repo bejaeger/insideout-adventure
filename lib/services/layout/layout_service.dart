@@ -12,9 +12,9 @@ class LayoutService {
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingQuestList => isShowingQuestListSubject.value;
 
-  BehaviorSubject<bool> isShowingARViewSubject =
+  BehaviorSubject<bool> isFadingOutOverlaySubject =
       BehaviorSubject<bool>.seeded(false);
-  bool get isShowingARView => isShowingARViewSubject.value;
+  bool get isFadingOutOverlay => isFadingOutOverlaySubject.value;
 
   BehaviorSubject<bool> isMovingCameraSubject =
       BehaviorSubject<bool>.seeded(false);
@@ -32,8 +32,8 @@ class LayoutService {
     isShowingQuestListSubject.add(set);
   }
 
-  void setIsShowingARView(bool set) {
-    isShowingARViewSubject.add(set);
+  void setIsFadingOutOverlay(bool set) {
+    isFadingOutOverlaySubject.add(set);
   }
 
   void setIsMovingCamera(bool set) {

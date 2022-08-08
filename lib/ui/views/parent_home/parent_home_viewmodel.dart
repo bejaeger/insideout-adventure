@@ -11,7 +11,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.da
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-class ParentHomeViewModel extends TransferBaseViewModel with NavigationMixin {
+class ParentHomeViewModel extends TransferBaseViewModel {
   // ----------------------------------------
   // services
   final BottomSheetService _bottomSheetService = locator<BottomSheetService>();

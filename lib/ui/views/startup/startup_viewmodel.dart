@@ -11,7 +11,7 @@ import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 import 'package:places_service/places_service.dart';
 
-class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
+class StartUpViewModel extends TransferBaseViewModel {
   final PlacesService _placesService = locator<PlacesService>();
   //final _geolocationService = locator<GeolocationService>();
   final EnvironmentService _environmentService = locator<EnvironmentService>();

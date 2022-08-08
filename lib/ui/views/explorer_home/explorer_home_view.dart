@@ -73,7 +73,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   // only used for quest view at the moment!
                   OverlayedCloseButton(),
 
-                  if (model.isShowingARView) FadeTransitionAnimation(),
+                  if (model.isFadingOutOverlay) FadeTransitionAnimation(),
                 ],
               ),
             ),

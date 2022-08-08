@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -66,6 +67,18 @@ mixin NavigationMixin {
     _navigationService.replaceWith(Routes.loginView);
   }
 
+  void replaceWithExplorerHomeView() {
+    _navigationService.replaceWith(
+      Routes.explorerHomeView,
+    );
+  }
+
+  void replaceWithSponsorHomeView() {
+    _navigationService.replaceWith(
+      Routes.parentHomeView,
+    );
+  }
+
   ////////////////////////////////////////
   // Navigation and dialogs
   void popView() {
@@ -73,6 +86,7 @@ mixin NavigationMixin {
   }
 
   void popViewReturnNull() {
+    print("-============================0000");
     _navigationService.back(result: null);
   }
 
@@ -142,5 +156,12 @@ mixin NavigationMixin {
 
   Future navToCreditsScreenTimeView() async {
     await _navigationService.navigateTo(Routes.selectScreenTimeView);
+  }
+
+  Future navigateToGPSAreaQuest(Quest quest) async {
+    // TODO: Make sure we treat return value reasonably
+    await _navigationService.navigateTo(Routes.activeMapQuestView,
+        arguments: ActiveMapQuestViewArguments(quest: quest));
+    return true;
   }
 }

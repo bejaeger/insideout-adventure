@@ -12,6 +12,7 @@ import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -39,6 +40,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final QuestService questService = locator<QuestService>();
+  final MapStateService mapStateService = locator<MapStateService>();
 
   // members
   BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
@@ -162,7 +164,6 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   void cancelPositionListener() {
     _geolocationService.cancelPositionListener();
-    _geolocationService.resumeMainPositionListener();
   }
 
   void pausePositionListener() {
@@ -171,6 +172,18 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   void resumePositionListener() {
     _geolocationService.resumePositionListener();
+  }
+
+  void addMainLocationListener() async {
+    await _geolocationService.listenToPositionMain(
+      distanceFilter: kDefaultGeolocationDistanceFilter,
+      onData: (Position position) {
+        mapStateService.setNewLatLon(
+            lat: position.latitude, lon: position.longitude);
+        mapStateService.animateOnNewLocation();
+        log.v("New position event fired from location listener!");
+      },
+    );
   }
 
   int get getNumberMarkersCollected => activatedQuest == null
@@ -712,6 +725,7 @@ class ActiveQuestService with ReactiveServiceMixin {
     _stopWatchService.resetTimer();
     // cancelLocationListener();
     cancelPositionListener();
+    addMainLocationListener();
     _questTestingService.maybeReset();
     resetTimeElapsed();
     removeActivatedQuest();

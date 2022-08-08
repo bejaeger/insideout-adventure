@@ -18,6 +18,7 @@ import '../enums/bottom_nav_bar_index.dart';
 import '../enums/quest_view_index.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
+import '../ui/views/active_map_quest/active_map_quest_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
@@ -47,6 +48,7 @@ import '../ui/views/screen_time/select_screen_time_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
 import '../ui/views/single_child_stat/single_child_stat_view.dart';
+import '../ui/views/single_quest_type/single_quest_type_view.dart';
 import '../ui/views/startup/startup_view.dart';
 import '../ui/views/transfer_funds/transfer_funds_view.dart';
 
@@ -88,6 +90,8 @@ class Routes {
   static const String aRObjectView = '/a-robject-view';
   static const String activeScreenTimeView = '/active-screen-time-view';
   static const String selectScreenTimeView = '/select-screen-time-view';
+  static const String activeMapQuestView = '/active-map-quest-view';
+  static const String singleQuestTypeView = '/single-quest-type-view';
   static const all = <String>{
     parentHomeView,
     singleMarkerView,
@@ -120,6 +124,8 @@ class Routes {
     aRObjectView,
     activeScreenTimeView,
     selectScreenTimeView,
+    activeMapQuestView,
+    singleQuestTypeView,
   };
 }
 
@@ -162,6 +168,8 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.aRObjectView, page: ARObjectView),
     RouteDef(Routes.activeScreenTimeView, page: ActiveScreenTimeView),
     RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
+    RouteDef(Routes.activeMapQuestView, page: ActiveMapQuestView),
+    RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -431,6 +439,27 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    ActiveMapQuestView: (data) {
+      var args = data.getArgs<ActiveMapQuestViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ActiveMapQuestView(
+          key: args.key,
+          quest: args.quest,
+        ),
+        settings: data,
+      );
+    },
+    SingleQuestTypeView: (data) {
+      var args = data.getArgs<SingleQuestTypeViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SingleQuestTypeView(
+          key: args.key,
+          quest: args.quest,
+          questType: args.questType,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -569,4 +598,19 @@ class ActiveScreenTimeViewArguments {
   final Key? key;
   final int minutes;
   ActiveScreenTimeViewArguments({this.key, required this.minutes});
+}
+
+/// ActiveMapQuestView arguments holder class
+class ActiveMapQuestViewArguments {
+  final Key? key;
+  final Quest quest;
+  ActiveMapQuestViewArguments({this.key, required this.quest});
+}
+
+/// SingleQuestTypeView arguments holder class
+class SingleQuestTypeViewArguments {
+  final Key? key;
+  final Quest? quest;
+  final QuestType? questType;
+  SingleQuestTypeViewArguments({this.key, required this.quest, this.questType});
 }

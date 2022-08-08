@@ -12,6 +12,7 @@ import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
+import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -165,19 +166,17 @@ class _BottomBarLayoutTemplateViewState
             QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
           // ManageQuestView(),
-/*
-          if (widget.questViewIndex == QuestViewType.questlist)
-            QuestsOverviewView(),
-
+          // if (widget.questViewIndex == QuestViewType.questlist)
+          //   QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
             SingleQuestTypeView(
               quest: widget.quest,
               questType: widget.questType,
-            ), */
-
+            ),
+          //if (widget.questViewIndex != QuestViewType.singlequest)
+          AddMarkersView(),
           //ManageGiftCardstView(),
           //AddGiftCardsView(),
-          AddMarkersView(),
         ];
     }
   }
@@ -264,11 +263,11 @@ class _BottomBarLayoutTemplateViewState
             inactiveIcon: Icon(Icons.mark_chat_read),
             title: ("Add Markers"),
           ), */
-          AFKNavBarItem(
-            icon: Icon(Icons.shop),
-            inactiveIcon: Icon(Icons.shop_outlined),
-            title: "Rewards",
-          ),
+          // AFKNavBarItem(
+          //   icon: Icon(Icons.shop),
+          //   inactiveIcon: Icon(Icons.shop_outlined),
+          //   title: "Rewards",
+          // ),
           AFKNavBarItem(
             icon: Icon(Icons.mark_as_unread_sharp),
             inactiveIcon: Icon(Icons.markunread_sharp),

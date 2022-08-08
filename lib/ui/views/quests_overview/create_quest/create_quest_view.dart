@@ -153,7 +153,9 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
                   return DropdownMenuItem(
                     value: _questType == CreateQuestType.TreasureLocationSearch
                         ? QuestType.TreasureLocationSearch
-                        : QuestType.GPSAreaHike,
+                        : _questType == CreateQuestType.GPSAreaHike
+                            ? QuestType.GPSAreaHike
+                            : QuestType.GPSAreaHunt,
                     child: model.isLoading == false
                         ? Text(
                             _questType.toString().split('.').elementAt(1),

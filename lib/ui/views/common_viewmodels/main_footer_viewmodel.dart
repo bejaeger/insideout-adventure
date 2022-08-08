@@ -2,7 +2,7 @@ import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
-class MainFooterViewModel extends BaseModel with NavigationMixin {
+class MainFooterViewModel extends BaseModel {
   // state variables
   bool isMenuOpen = false;
 
