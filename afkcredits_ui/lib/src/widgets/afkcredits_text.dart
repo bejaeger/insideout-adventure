@@ -23,6 +23,10 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = heading4Style,
         alignment = align;
+  const AfkCreditsText.headingLight(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = headingLightStyle,
+        alignment = align;
   const AfkCreditsText.warn(this.text, {TextAlign align = TextAlign.start})
       : style = warnStyle,
         alignment = align;

@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 class CreditsAmount extends StatelessWidget {
   final num amount;
   final String? amountString;
-
+  final TextStyle? style;
   final Color color;
   final double height;
   const CreditsAmount(
@@ -14,6 +14,7 @@ class CreditsAmount extends StatelessWidget {
       required this.amount,
       this.color = kPrimaryColor,
       this.height = 25,
+      this.style,
       this.amountString})
       : super(key: key);
 
@@ -27,10 +28,12 @@ class CreditsAmount extends StatelessWidget {
         children: [
           Image.asset(kAFKCreditsLogoPath, color: color, height: height),
           horizontalSpaceTiny,
-          if (height > 20)
+          if (style != null)
+            Text(amountString ?? amount.toStringAsFixed(0), style: style),
+          if (height > 20 && style == null)
             AfkCreditsText.headingThree(
                 amountString ?? amount.toStringAsFixed(0)),
-          if (height <= 20)
+          if (height <= 20 && style == null)
             AfkCreditsText.headingFour(
                 amountString ?? amount.toStringAsFixed(0)),
           // Text(

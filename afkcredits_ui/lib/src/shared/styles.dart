@@ -13,6 +13,7 @@ const TextStyle heading1Style = TextStyle(
 const TextStyle heading2Style = TextStyle(
   fontSize: 28,
   fontWeight: FontWeight.w600,
+  //overflow: TextOverflow.ellipsis,
 );
 
 const TextStyle heading3Style = TextStyle(
@@ -20,9 +21,15 @@ const TextStyle heading3Style = TextStyle(
   fontWeight: FontWeight.w600,
 );
 const TextStyle heading4Style = TextStyle(
-  fontSize: 20,
+  fontSize: 18,
   fontWeight: FontWeight.w600,
 );
+const TextStyle headingLightStyle = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.w400,
+  color: Color.fromARGB(255, 117, 117, 117),
+);
+
 const TextStyle alert3Style = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.w600,
@@ -74,13 +81,13 @@ const TextStyle verticalStyle = TextStyle(
   fontSize: 12,
   height: 1.1,
   color: Colors.orange,
-  fontWeight: FontWeight.w600,
+  fontWeight: FontWeight.w800,
 );
 const TextStyle vertical2Style = TextStyle(
   fontSize: 12,
   height: 0.95,
   color: Colors.orange,
-  fontWeight: FontWeight.w600,
+  fontWeight: FontWeight.w800,
 );
 
 const TextStyle bookStyle = TextStyle(

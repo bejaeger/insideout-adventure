@@ -558,14 +558,14 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
   //------------------------------------------
   // Functions to override
-  Future showInstructions(Quest quest) async {
-    if (quest.type == QuestType.TreasureLocationSearch) {
+  Future showInstructions(QuestType type) async {
+    if (type == QuestType.TreasureLocationSearch) {
       await dialogService.showDialog(
           title: "How it works", description: kLocationSearchDescription);
-    } else if (quest.type == QuestType.GPSAreaHike) {
+    } else if (type == QuestType.GPSAreaHike) {
       await dialogService.showDialog(
           title: "How it works", description: kGPSAreaHikeDescription);
-    } else if (quest.type == QuestType.DistanceEstimate) {
+    } else if (type == QuestType.DistanceEstimate) {
       await dialogService.showDialog(
           title: "How it works", description: kDistanceEstimateDescription);
     } else {

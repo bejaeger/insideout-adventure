@@ -8,6 +8,12 @@ const Color kcRedColor = Color(0xfff44336);
 const Color kcOrangeColor = Color(0xffff9800);
 const Color kGreyTextColor = Color(0xFF424242);
 
+const Color kcScreenTimeBlueOpaque = Color.fromARGB(100, 148, 184, 219);
+const Color kcActivityColorOpaque = Color.fromARGB(100, 82, 183, 128);
+
+const Color kcScreenTimeBlue = Color.fromARGB(255, 112, 167, 221);
+const Color kcActivityColor = Color.fromARGB(255, 67, 183, 119);
+
 class ColorSettings extends MyColors {
   static const Color primaryColor = MyColors.primaryRed2;
   static const Color primaryColorLight = MyColors.lightRed2;

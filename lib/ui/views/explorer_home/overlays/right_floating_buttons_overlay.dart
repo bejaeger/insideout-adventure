@@ -40,7 +40,7 @@ class RightFloatingButtons extends StatelessWidget {
             ),
           ),
         Align(
-          alignment: Alignment(1, -0.5),
+          alignment: Alignment(1, -0.35),
           child: Padding(
             padding: const EdgeInsets.only(right: 15),
             child: AnimatedOpacity(

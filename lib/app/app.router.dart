@@ -18,7 +18,6 @@ import '../enums/bottom_nav_bar_index.dart';
 import '../enums/quest_view_index.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
-import '../ui/views/active_map_quest/active_map_quest_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
@@ -32,6 +31,7 @@ import '../ui/views/ar_view/ar_object_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
+import '../ui/views/hike_quest/hike_quest_view.dart';
 import '../ui/views/history_and_achievements/history_and_achievements_view.dart';
 import '../ui/views/layout/bottom_bar_layout_view.dart';
 import '../ui/views/login/login_view.dart';
@@ -168,7 +168,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.aRObjectView, page: ARObjectView),
     RouteDef(Routes.activeScreenTimeView, page: ActiveScreenTimeView),
     RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
-    RouteDef(Routes.activeMapQuestView, page: ActiveMapQuestView),
+    RouteDef(Routes.activeMapQuestView, page: HikeQuestView),
     RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
   ];
   @override
@@ -439,10 +439,10 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    ActiveMapQuestView: (data) {
+    HikeQuestView: (data) {
       var args = data.getArgs<ActiveMapQuestViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ActiveMapQuestView(
+        builder: (context) => HikeQuestView(
           key: args.key,
           quest: args.quest,
         ),

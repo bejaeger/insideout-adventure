@@ -79,16 +79,16 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: kDarkTurquoise,
-                                  child: Text(
-                                      getInitialsFromName(
-                                          model.explorer.fullName),
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 26)),
-                                ),
-                                horizontalSpaceMedium,
+                                // CircleAvatar(
+                                //   radius: 25,
+                                //   backgroundColor: kDarkTurquoise,
+                                //   child: Text(
+                                //       getInitialsFromName(
+                                //           model.explorer.fullName),
+                                //       style: TextStyle(
+                                //           color: Colors.white, fontSize: 26)),
+                                // ),
+                                // horizontalSpaceMedium,
                                 Text(model.explorer.fullName,
                                     style: textTheme(context).headline4),
                               ],

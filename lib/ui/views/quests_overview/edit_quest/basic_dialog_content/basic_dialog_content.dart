@@ -96,12 +96,9 @@ class BasicDialogContent extends StatelessWidget with $BasicDialogContent {
                     ElevatedButton(
                       onPressed: () async {
                         await model.updateQuestData(
-                          quest: Quest(
-                            id: quest!.id,
+                          quest: quest!.copyWith(
                             name: nameController.text.toString(),
                             description: descriptionController.text.toString(),
-                            type: quest!.type,
-                            markers: quest!.markers,
                             afkCredits:
                                 num.parse(afkCreditAmountController.text),
                           ),

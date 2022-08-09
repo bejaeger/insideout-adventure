@@ -178,6 +178,10 @@ flutter:
     - assets/icons/location-icon.ico
     - assets/icons/cardinal-point.png  
     - assets/lottie/lottietest.json  
+    - assets/icons/walk.png
+    - assets/icons/run.png
+    - assets/icons/person.png
+    - assets/icons/computer.png
 
   # To add assets to your application, add an assets section, like this:
   #assets:

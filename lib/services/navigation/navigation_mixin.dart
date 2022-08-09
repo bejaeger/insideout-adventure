@@ -86,7 +86,6 @@ mixin NavigationMixin {
   }
 
   void popViewReturnNull() {
-    print("-============================0000");
     _navigationService.back(result: null);
   }
 

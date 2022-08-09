@@ -2,10 +2,8 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_type.dart';
-import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
+import 'package:afkcredits/ui/views/hike_quest/hike_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
@@ -17,15 +15,15 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 
-class ActiveMapQuestView extends StatefulWidget {
+class HikeQuestView extends StatefulWidget {
   final Quest quest;
-  const ActiveMapQuestView({Key? key, required this.quest}) : super(key: key);
+  const HikeQuestView({Key? key, required this.quest}) : super(key: key);
 
   @override
-  State<ActiveMapQuestView> createState() => _ActiveMapQuestViewState();
+  State<HikeQuestView> createState() => _HikeQuestViewState();
 }
 
-class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
+class _HikeQuestViewState extends State<HikeQuestView>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
@@ -51,8 +49,8 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ActiveMapQuestViewModel>.reactive(
-      viewModelBuilder: () => ActiveMapQuestViewModel(),
+    return ViewModelBuilder<HikeQuestViewModel>.reactive(
+      viewModelBuilder: () => HikeQuestViewModel(),
       onModelReady: (model) {
         model.initialize(quest: widget.quest);
         return;

@@ -49,7 +49,7 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                 showRedLiveButton: true,
                 onAppBarButtonPressed: model.hasActiveQuest
                     ? null
-                    : () => model.showInstructions(quest),
+                    : () => model.showInstructions(quest.type),
                 appBarButtonIcon: Icons.help,
               ),
               endDrawer: SizedBox(

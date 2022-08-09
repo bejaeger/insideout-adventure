@@ -45,6 +45,18 @@ String formatDateDetailsType2(DateTime timestamp) {
   return DateFormat.yMMMEd().add_jm().format(timestamp);
 }
 
+String formatDateDetailsType3(DateTime timestamp) {
+  return DateFormat.MMMEd().add_jm().format(timestamp);
+}
+
+String formatDateDetailsType4(DateTime timestamp) {
+  return DateFormat.MMMd().add_jm().format(timestamp);
+}
+
+String formatDateDetailsType5(DateTime timestamp) {
+  return DateFormat.MMMEd().format(timestamp);
+}
+
 String formatDateDetails(DateTime timestamp) {
   return DateFormat.yMd().add_jm().format(timestamp);
 }

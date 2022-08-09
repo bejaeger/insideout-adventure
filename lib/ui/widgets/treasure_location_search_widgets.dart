@@ -44,7 +44,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
           //margin: const EdgeInsets.all(kHorizontalPadding),
           decoration: BoxDecoration(
             color: getDirectionStatusColor(directionStatus),
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(20.0),
             border: Border.all(color: Colors.grey[400]!),
             // boxShadow: [
             //   BoxShadow(
@@ -57,7 +57,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
           ),
           child: directionStatus == DirectionStatus.nearGoal
               ? AfkCreditsText.successThree(
-                  "Yeyy! Catch the H-coins on the map nearby!!",
+                  "Yippieh! Catch the coins on the map nearby!!",
                   align: TextAlign.center)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +65,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AfkCreditsText.body(
+                        AfkCreditsText.headingFour(
                           "Distance to treasure",
                         ),
                         // AfkCreditsText.body(
@@ -127,9 +127,9 @@ class CurrentQuestStatusInfo extends StatelessWidget {
     if (status == null) return Colors.grey[200]!;
     switch (status) {
       case DirectionStatus.closer:
-        return Colors.green.withOpacity(0.6);
+        return Colors.green.withOpacity(0.8);
       case DirectionStatus.further:
-        return Colors.red.withOpacity(0.6);
+        return Colors.red.withOpacity(0.8);
       case DirectionStatus.denied:
         return Colors.grey[200]!;
       default:

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/image_urls.dart';
 import 'package:afkcredits/constants/layout.dart';
@@ -11,8 +13,8 @@ import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/child_stats_card.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/history_tile.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
-import 'package:afkcredits/ui/widgets/outline_box.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -69,59 +71,66 @@ class ParentHomeView extends StatelessWidget {
           body: RefreshIndicator(
             onRefresh: () => model.listenToData(),
             child: ListView(
-              physics: ScrollPhysics(),
+              //physics: ScrollPhysics(),
               children: [
-                verticalSpaceMedium,
-                if (model.supportedExplorerScreenTimeSessionsActive.isNotEmpty)
+                verticalSpaceSmall,
+                if (model.childScreenTimeSessionsActive.isNotEmpty)
                   AfkCreditsText.alertThree("Active Screen Time"),
-                if (model.supportedExplorerScreenTimeSessionsActive.isNotEmpty)
-                  AfkCreditsText.body(model.explorerNameFromUid(model
-                          .supportedExplorerScreenTimeSessionsActive[0].uid) +
+                if (model.childScreenTimeSessionsActive.isNotEmpty)
+                  AfkCreditsText.body(model.explorerNameFromUid(
+                          model.childScreenTimeSessionsActive[0].uid) +
                       ", Minutes: " +
-                      model.supportedExplorerScreenTimeSessionsActive[0].minutes
+                      model.childScreenTimeSessionsActive[0].minutes
                           .toString() +
                       ", started at: " +
                       formatDateDetails(model
-                          .supportedExplorerScreenTimeSessionsActive[0]
-                          .startedAt
+                          .childScreenTimeSessionsActive[0].startedAt
                           .toDate())),
                 SectionHeader(
                   title: "History",
                   //onButtonTap: model.navigateToTransferHistoryView,
                 ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: model.sortedExplorerQuestHistory().length,
-                  itemBuilder: (context, index) {
-                    final ActivatedQuest data =
-                        model.sortedExplorerQuestHistory()[index];
-                    return Text(model.explorerNameFromUid(data.uids![0]) +
-                        ", " +
-                        formatDate(data.createdAt.toDate()) +
-                        ", Quest: " +
-                        data.quest.name +
-                        ", Earned: " +
-                        data.afkCreditsEarned.toString());
-                  },
-                ),
-                Divider(),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: model.sortedExplorerScreenTimeSessions().length,
-                  itemBuilder: (context, index) {
-                    final ScreenTimeSession data =
-                        model.sortedExplorerScreenTimeSessions()[index];
-                    return Text(model.explorerNameFromUid(data.uid) +
-                        ", " +
-                        formatDate(data.startedAt.toDate()) +
-                        ", Minutes: " +
-                        data.minutes.toString() +
-                        ", Spent: " +
-                        data.afkCredits.toString());
-                  },
+                Container(
+                  //height: screenHeight(context, percentage: 0.5),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    itemCount: min(model.sortedHistory().length, 5),
+                    itemBuilder: (context, index) {
+                      dynamic data = model.sortedHistory()[index];
+                      if (data is ActivatedQuest) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15.0, vertical: 4.0),
+                          child: HistoryTile(
+                            screenTime: false,
+                            date: data.createdAt.toDate(),
+                            name: model.explorerNameFromUid(data.uids![0]),
+                            credits: data.afkCreditsEarned,
+                            //minutes: data.afkCreditsEarned,
+                            minutes: (data.timeElapsed / 60).round(),
+                            questType: data.quest.type,
+                          ),
+                        );
+                      } else {
+                        // ScreenTimeSession
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15.0, vertical: 4.0),
+                          child: HistoryTile(
+                            screenTime: true,
+                            date: data.startedAt.toDate(),
+                            name: model.explorerNameFromUid(data.uid),
+                            credits: data.afkCredits,
+                            minutes: data.minutes,
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
                 //RecentHistory(),
-                verticalSpaceMedium,
+                verticalSpaceSmall,
                 SectionHeader(
                   title: "Children",
                   onButtonTap: model.showAddExplorerBottomSheet,
@@ -141,14 +150,17 @@ class ParentHomeView extends StatelessWidget {
                         ),
                 if (model.supportedExplorers.length > 0)
                   ChildrenStatsList(
-                    screenTimeLastWeek: model.totalExplorerScreenTimeLastDays(),
-                    explorersStats: model.supportedExplorerStats,
+                    screenTimeLastWeek: model.totalChildScreenTimeLastDays(),
+                    activityTimeLastWeek: model.totalChildActivityLastDays(),
+                    screenTimeTrend: model.totalChildScreenTimeTrend(),
+                    activityTimeTrend: model.totalChildActivityTrend(),
+                    explorersStats: model.childStats,
                     explorers: model.supportedExplorers,
                     onChildCardPressed: model.navigateToSingleExplorerView,
                     // onAddNewExplorerPressed:
                     //     model.showAddExplorerBottomSheet
                   ),
-                verticalSpaceMassive,
+                //verticalSpaceMassive,
               ],
             ),
           ),
@@ -158,124 +170,22 @@ class ParentHomeView extends StatelessWidget {
   }
 }
 
-class RecentHistory extends StatelessWidget {
-  const RecentHistory({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          HistoryItemScreenTime(),
-          verticalSpaceTiny,
-          HistoryItemActivity(),
-        ],
-      ),
-    );
-  }
-}
-
-class HistoryItem extends StatelessWidget {
-  final List<Widget> children;
-  final Color color;
-  const HistoryItem({Key? key, required this.children, required this.color})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 70,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15.0),
-        color: color,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.start, children: children),
-      ),
-    );
-  }
-}
-
-class HistoryItemScreenTime extends StatelessWidget {
-  const HistoryItemScreenTime({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return HistoryItem(color: kNiceBlue.withOpacity(0.5), children: [
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AfkCreditsText.captionBold("Sven"),
-          AfkCreditsText.caption("Aug 2"),
-        ],
-      ),
-      horizontalSpaceMedium,
-      AfkCreditsText.body("30 min screen time"),
-      Spacer(),
-      Container(
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: FadeInImage.memoryNetwork(
-          fadeInDuration: Duration(milliseconds: 200),
-          placeholder: kTransparentImage,
-          image: kScreenTimeImageUrl,
-        ),
-      ),
-    ]);
-  }
-}
-
-class HistoryItemActivity extends StatelessWidget {
-  const HistoryItemActivity({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return HistoryItem(
-      color: kNiceOrange,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AfkCreditsText.captionBold("Kevin"),
-            AfkCreditsText.caption("Aug 1"),
-          ],
-        ),
-        horizontalSpaceMedium,
-        AfkCreditsText.body("walked 1 hour"),
-        Spacer(),
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: FadeInImage.memoryNetwork(
-            fadeInDuration: Duration(milliseconds: 200),
-            placeholder: kTransparentImage,
-            image: kRunningIconUrl,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class ChildrenStatsList extends StatelessWidget {
   final List<User> explorers;
   final Map<String, UserStatistics>? explorersStats;
   final Map<String, int> screenTimeLastWeek;
+  final Map<String, int> activityTimeLastWeek;
+  final Map<String, int> screenTimeTrend;
+  final Map<String, int> activityTimeTrend;
   // final void Function() onAddNewExplorerPressed;
   final void Function({required String uid}) onChildCardPressed;
 
   const ChildrenStatsList({
     Key? key,
     required this.screenTimeLastWeek,
+    required this.activityTimeLastWeek,
+    required this.screenTimeTrend,
+    required this.activityTimeTrend,
     required this.explorers,
     required this.explorersStats,
     // required this.onAddNewExplorerPressed,
@@ -299,6 +209,10 @@ class ChildrenStatsList extends StatelessWidget {
                 child: ChildStatsCard(
                     screenTimeLastWeek:
                         screenTimeLastWeek[explorers[index].uid],
+                    activityTimeLastWeek:
+                        activityTimeLastWeek[explorers[index].uid],
+                    screenTimeTrend: screenTimeTrend[explorers[index].uid],
+                    activityTimeTrend: activityTimeTrend[explorers[index].uid],
                     user: explorers[index],
                     childrenStats: explorersStats),
               ),

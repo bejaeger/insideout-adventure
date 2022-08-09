@@ -56,6 +56,8 @@ class ActiveQuestService with ReactiveServiceMixin {
   BehaviorSubject<Quest?> selectedQuestSubject = BehaviorSubject<Quest?>();
   Quest? get selectedQuest => selectedQuestSubject.valueOrNull;
 
+  DateTime? _questStartTime;
+
   void setSelectedQuest(Quest quest) {
     selectedQuestSubject.add(quest);
   }
@@ -134,6 +136,8 @@ class ActiveQuestService with ReactiveServiceMixin {
         trigger: QuestDataPointTrigger.userAction,
         userEventDescription: "quest started",
         pushToNotion: true);
+
+    _questStartTime = DateTime.now();
     return true;
   }
 
@@ -263,7 +267,14 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   Future uploadAndCleanUpFinishedQuest() async {
     // At this point the quest has successfully finished!
-    await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
+    if (_questStartTime != null) {
+      await _firestoreApi.pushFinishedQuest(
+          quest: activatedQuest!.copyWith(
+              timeElapsed:
+                  DateTime.now().difference(_questStartTime!).inSeconds));
+    } else {
+      await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
+    }
     // keep copy of finished quest to show in success dialog view
     previouslyFinishedQuest = activatedQuest;
     disposeActivatedQuest();
@@ -729,6 +740,7 @@ class ActiveQuestService with ReactiveServiceMixin {
     _questTestingService.maybeReset();
     resetTimeElapsed();
     removeActivatedQuest();
+    _questStartTime = null;
   }
 
   ActivatedQuest _getActivatedQuest(

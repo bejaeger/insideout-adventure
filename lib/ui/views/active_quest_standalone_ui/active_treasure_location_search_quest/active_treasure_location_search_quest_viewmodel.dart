@@ -98,8 +98,8 @@ class ActiveTreasureLocationSearchQuestViewModel
       // quest started!
       // start listening to position
       activeQuestService.listenToPosition(
-        // distanceFilter: kMinDistanceFromLastCheckInMeters,
-        distanceFilter: 0,
+        distanceFilter: kMinDistanceFromLastCheckInMeters,
+        //distanceFilter: 0,
         pushToNotion: true,
         recordPositionDataEvent: false,
         // skipFirstStreamEvent: true,
@@ -183,7 +183,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     } else {
       late String? logString;
       // update UI on quest update
-      if (checkpoints.elementAt(checkpoints.length - 2).distanceToGoal >
+      if (checkpoints.elementAt(max(checkpoints.length - 2, 0)).distanceToGoal >
           checkpoints.last.distanceToGoal) {
         // directionStatus = "Getting closer!";
         directionStatus = DirectionStatus.closer;

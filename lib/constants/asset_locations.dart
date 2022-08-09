@@ -17,6 +17,11 @@ const String kCreatGiftCardMoney = "assets/icons/money.png";
 const String kPinInAreaIcon = "assets/icons/location-icon.ico";
 const String kCompassIcon = "assets/icons/cardinal-point.png";
 
+const String kWalkingIcon = "assets/icons/walk.png";
+const String kActivityIcon = "assets/icons/run.png";
+const String kScreenTimeIcon = "assets/icons/person.png";
+const String kScreenTimeIcon2 = "assets/icons/computer.png";
+
 // avatars
 const String kHerculesAvatar2 = "assets/avatars/hercules-avatar2.png";
 const String kHerculesAvatar = "assets/avatars/hercules-avatar.png";

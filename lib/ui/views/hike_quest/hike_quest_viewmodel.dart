@@ -16,7 +16,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
+class HikeQuestViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
   /// If user enters an area, the following AFKMarker will be set that corresponds to the marker.
   /// If the user walks outside the area (geofence) (+ some extra buffer zone)
@@ -568,7 +568,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
       final results = await Future.wait(
         [
           handleSuccessfullyFinishedQuest(showDialogs: false),
-          Future.delayed(Duration(milliseconds: 3500))
+          Future.delayed(Duration(milliseconds: 2500))
         ],
       );
       collectCreditsStatus = results[0];
