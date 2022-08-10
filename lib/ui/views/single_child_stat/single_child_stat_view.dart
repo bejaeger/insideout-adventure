@@ -1,15 +1,11 @@
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
-import 'package:afkcredits/ui/widgets/large_button.dart';
+import 'package:afkcredits/ui/widgets/history_tile.dart';
 import 'package:afkcredits/ui/widgets/outline_box.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:afkcredits/ui/widgets/simple_statistics_display.dart';
-import 'package:afkcredits/ui/widgets/stats_card.dart';
-import 'package:afkcredits/utils/currency_formatting_helpers.dart';
-import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -100,25 +96,28 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      AfkCreditsText.body("QUESTS"),
+                                      AfkCreditsText.body("QUESTS COMPLETED"),
                                       AfkCreditsText.label(model
                                           .stats.numberQuestsCompleted
                                           .toString()),
                                     ],
                                   ),
                                 ),
+                                // Expanded(
+                                //   child: Column(
+                                //     children: [
+                                //       AfkCreditsText.body("SCREEN TIME"),
+                                //       AfkCreditsText.label("unknown"),
+                                //     ],
+                                //   ),
+                                // ),
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      AfkCreditsText.body("SCREEN TIME"),
-                                      AfkCreditsText.label("180 min"),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      AfkCreditsText.body("COINS"),
+                                      AfkCreditsText.body("CREDITS"),
+                                      // CreditsAmount(
+                                      //     amount: model.stats.afkCreditsBalance,
+                                      //     height: 22)
                                       AfkCreditsText.label(model
                                           .stats.afkCreditsBalance
                                           .toString()),
@@ -127,10 +126,49 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                 ),
                               ],
                             ),
-                            verticalSpaceMedium,
+                            verticalSpaceSmall,
+                            Divider(),
+                            verticalSpaceSmall,
                             SectionHeader(
                               title: "Trends from last week",
                               horizontalPadding: 0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    AfkCreditsText.body("ACTIVITY"),
+                                    Text(model.totalChildActivityLastDays
+                                            .toString() +
+                                        " min"),
+                                    Text(
+                                        ((model.totalChildActivityTrend ?? 0) >=
+                                                    0
+                                                ? "+"
+                                                : "") +
+                                            model.totalChildActivityTrend
+                                                .toString() +
+                                            " min"),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    AfkCreditsText.body("SCREEN TIME"),
+                                    Text(model.totalChildScreenTimeLastDays
+                                            .toString() +
+                                        " min"),
+                                    Text(((model.totalChildScreenTimeTrend ??
+                                                    0) >=
+                                                0
+                                            ? "+"
+                                            : "") +
+                                        model.totalChildScreenTimeTrend
+                                            .toString() +
+                                        " min"),
+                                  ],
+                                ),
+                              ],
                             ),
                             verticalSpaceMedium,
                             SectionHeader(
@@ -139,24 +177,44 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                             ),
                             ListView.builder(
                               shrinkWrap: true,
-                              itemCount: model.history.length,
+                              physics: ScrollPhysics(),
+                              itemCount: model.sortedHistory.length,
                               itemBuilder: (context, index) {
-                                final data = model.history[index];
-                                return Text(formatDate(
-                                        data.createdAt.toDate()) +
-                                    ", Quest: " +
-                                    data.quest.type.toString().split(".")[1] +
-                                    ", Name: " +
-                                    data.quest.name +
-                                    ", Earned: " +
-                                    data.afkCreditsEarned.toString() +
-                                    ", Activity: " +
-                                    creditsToScreenTime(data.afkCreditsEarned!)
-                                        .toString() +
-                                    " min");
+                                final data = model.sortedHistory[index];
+                                if (data is ActivatedQuest) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 0.0, vertical: 4.0),
+                                    child: HistoryTile(
+                                      showCredits: true,
+                                      screenTime: false,
+                                      date: data.createdAt.toDate(),
+                                      name: model
+                                          .explorerNameFromUid(data.uids![0]),
+                                      credits: data.afkCreditsEarned,
+                                      //minutes: data.afkCreditsEarned,
+                                      minutes: (data.timeElapsed / 60).round(),
+                                      questType: data.quest.type,
+                                    ),
+                                  );
+                                } else {
+                                  // ScreenTimeSession
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 0.0, vertical: 4.0),
+                                    child: HistoryTile(
+                                      showCredits: true,
+                                      screenTime: true,
+                                      date: data.startedAt.toDate(),
+                                      name: model.explorerNameFromUid(data.uid),
+                                      credits: data.afkCredits,
+                                      minutes: data.minutes,
+                                    ),
+                                  );
+                                }
                               },
                             ),
-                            verticalSpaceMedium,
+                            verticalSpaceMassive,
                             // SectionHeader(title: "Stats"),
                             // model.isBusy
                             //     ? AFKProgressIndicator()

@@ -626,6 +626,152 @@ class UserService {
     sponsorReference = null;
   }
 
+  /////////////////////////////////////////////
+  /// Functions used in parents area for displaying child statistics
+  ///
+  List<ActivatedQuest> sortedChildQuestHistory({String? uid}) {
+    // TODO: Also add screen time into the mix!
+    List<ActivatedQuest> sortedQuests = [];
+    if (uid == null) {
+      supportedExplorerQuestsHistory.forEach((key, quests) {
+        sortedQuests.addAll(quests);
+      });
+    } else {
+      if (supportedExplorerQuestsHistory.containsKey(uid)) {
+        sortedQuests = supportedExplorerQuestsHistory[uid]!;
+      }
+    }
+    sortedQuests
+        .sort((a, b) => b.createdAt.toDate().compareTo(a.createdAt.toDate()));
+    return sortedQuests;
+  }
+
+  List<ScreenTimeSession> sortedChildScreenTimeSessions({String? uid}) {
+    List<ScreenTimeSession> sortedSessions = [];
+    if (uid == null) {
+      supportedExplorerScreenTimeSessions.forEach((key, quests) {
+        sortedSessions.addAll(quests);
+      });
+    } else {
+      if (supportedExplorerQuestsHistory.containsKey(uid)) {
+        sortedSessions = supportedExplorerScreenTimeSessions[uid]!;
+      }
+    }
+    sortedSessions
+        .sort((a, b) => b.startedAt.toDate().compareTo(a.startedAt.toDate()));
+    return sortedSessions;
+  }
+
+  List<dynamic> sortedHistory({String? uid}) {
+    List<dynamic> list = [];
+    if (uid == null) {
+      list = [...sortedChildScreenTimeSessions(), ...sortedChildQuestHistory()];
+    } else {
+      if (supportedExplorerScreenTimeSessions.containsKey(uid)) {
+        list = list + sortedChildScreenTimeSessions(uid: uid);
+      }
+      if (supportedExplorerQuestsHistory.containsKey(uid)) {
+        list = list + sortedChildQuestHistory(uid: uid);
+      }
+    }
+    list.sort((a, b) {
+      DateTime? date1;
+      DateTime? date2;
+      if (a is ActivatedQuest)
+        date1 = a.createdAt.toDate();
+      else
+        date1 = a.startedAt.toDate();
+      if (b is ActivatedQuest)
+        date2 = b.createdAt.toDate();
+      else
+        date2 = b.startedAt.toDate();
+      return date2!.compareTo(date1!);
+    });
+    return list;
+  }
+
+  Map<String, int> totalChildScreenTimeLastDays(
+      {int deltaDays = 7, int daysAgo = 0, String? uid}) {
+    Map<String, int> screenTime = {};
+
+    supportedExplorerScreenTimeSessions.forEach((key, session) {
+      session.forEach((element) {
+        if (DateTime.now().difference(element.startedAt.toDate()).inDays >=
+                daysAgo &&
+            DateTime.now().difference(element.startedAt.toDate()).inDays <
+                daysAgo + deltaDays &&
+            (uid == null || uid == key)) {
+          if (screenTime.containsKey(element.uid)) {
+            screenTime[element.uid] =
+                screenTime[element.uid]! + element.minutes;
+          } else {
+            screenTime[element.uid] = element.minutes;
+          }
+        }
+      });
+    });
+
+    return screenTime;
+  }
+
+  Map<String, int> totalChildActivityLastDays(
+      {int deltaDays = 7, int daysAgo = 0, String? uid}) {
+    Map<String, int> activity = {};
+    supportedExplorerQuestsHistory.forEach((key, session) {
+      session.forEach((element) {
+        if (DateTime.now().difference(element.createdAt.toDate()).inDays >=
+                daysAgo &&
+            DateTime.now().difference(element.createdAt.toDate()).inDays <
+                daysAgo + deltaDays &&
+            (uid == null || uid == key)) {
+          if (activity.containsKey(element.uids![0])) {
+            // still multiple uids supported
+            activity[element.uids![0]] = activity[element.uids![0]]! +
+                (element.timeElapsed / 60).round();
+          } else {
+            activity[element.uids![0]] = (element.timeElapsed / 60).round();
+          }
+        }
+      });
+    });
+    return activity;
+  }
+
+  Map<String, int> totalChildScreenTimeTrend(
+      {int deltaDays = 7, int daysAgo = 7, String? uid}) {
+    Map<String, int> lastWeek = totalChildScreenTimeLastDays(
+        deltaDays: deltaDays, daysAgo: 0, uid: uid);
+    Map<String, int> previousWeek = totalChildScreenTimeLastDays(
+        deltaDays: deltaDays, daysAgo: 7, uid: uid);
+    Map<String, int> delta = {};
+    for (String k in lastWeek.keys) {
+      delta[k] = (lastWeek[k] ?? 0) - (previousWeek[k] ?? 0);
+    }
+    return delta;
+  }
+
+  Map<String, int> totalChildActivityTrend(
+      {int deltaDays = 7, int daysAgo = 7, String? uid}) {
+    Map<String, int> lastWeek =
+        totalChildActivityLastDays(deltaDays: deltaDays, daysAgo: 0, uid: uid);
+    Map<String, int> previousWeek =
+        totalChildActivityLastDays(deltaDays: deltaDays, daysAgo: 7, uid: uid);
+    Map<String, int> delta = {};
+    for (String k in lastWeek.keys) {
+      delta[k] = (lastWeek[k] ?? 0) - (previousWeek[k] ?? 0);
+    }
+    return delta;
+  }
+
+  String explorerNameFromUid(String uid) {
+    for (User user in supportedExplorersList) {
+      if (user.uid == uid) {
+        return user.fullName;
+      }
+    }
+    return "";
+  }
+
   //////////////////////////////////////////
   /// Some smaller helper functions
   bool isSponsored({required String uid}) {

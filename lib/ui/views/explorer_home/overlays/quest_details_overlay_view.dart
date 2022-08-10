@@ -1,16 +1,13 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/active_quest_overlays/gps_area_hike/gps_area_hike_viewmodel.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/hike_quest/hike_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/treasure_location_search_widgets.dart';
-import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -116,20 +113,31 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                onTap: model.openSuperUserSettingsDialog,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    //color: Colors.purple.withOpacity(0.2),
-                                    border:
-                                        Border.all(color: Colors.grey[600]!),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  GestureDetector(
+                                    onTap: model.openSuperUserSettingsDialog,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        //color: Colors.purple.withOpacity(0.2),
+                                        border: Border.all(
+                                            color: Colors.grey[600]!),
+                                      ),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: AfkCreditsText.tag(
+                                        getShortQuestType(quest?.type),
+                                      ),
+                                    ),
                                   ),
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: AfkCreditsText.tag(
-                                    getShortQuestType(quest?.type),
+                                  horizontalSpaceSmall,
+                                  CreditsAmount(
+                                    amount: quest?.afkCredits ?? -1,
+                                    height: 20,
                                   ),
-                                ),
+                                ],
                               ),
                               if (quest != null)
                                 Padding(
@@ -142,20 +150,12 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                                       //title: "Tutorial",
                                       //color: kPrimaryColor.withOpacity(0.7),
                                       child: Icon(Icons.help,
-                                          color: Colors.black, size: 28)),
+                                          color: Colors.black, size: 24)),
                                 ),
                             ],
                           ),
                           verticalSpaceTiny,
-                          Row(
-                            children: [
-                              Expanded(
-                                child: AfkCreditsText.headingThree(
-                                    quest?.name ?? "QUEST"),
-                              ),
-                              CreditsAmount(amount: quest?.afkCredits ?? -1),
-                            ],
-                          ),
+                          AfkCreditsText.headingThree(quest?.name ?? "QUEST"),
                           verticalSpaceSmall,
                           if (quest != null)
                             if (quest.type == QuestType.TreasureLocationSearch)

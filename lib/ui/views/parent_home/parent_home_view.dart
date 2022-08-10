@@ -1,11 +1,8 @@
 import 'dart:math';
 
 import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/constants/image_urls.dart';
-import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/parent_drawer_view/parent_drawer_view.dart';
@@ -20,7 +17,6 @@ import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class ParentHomeView extends StatelessWidget {
   const ParentHomeView({Key? key}) : super(key: key);
@@ -95,9 +91,9 @@ class ParentHomeView extends StatelessWidget {
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: ScrollPhysics(),
-                    itemCount: min(model.sortedHistory().length, 5),
+                    itemCount: min(model.sortedHistory.length, 5),
                     itemBuilder: (context, index) {
-                      dynamic data = model.sortedHistory()[index];
+                      dynamic data = model.sortedHistory[index];
                       if (data is ActivatedQuest) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
@@ -150,10 +146,10 @@ class ParentHomeView extends StatelessWidget {
                         ),
                 if (model.supportedExplorers.length > 0)
                   ChildrenStatsList(
-                    screenTimeLastWeek: model.totalChildScreenTimeLastDays(),
-                    activityTimeLastWeek: model.totalChildActivityLastDays(),
-                    screenTimeTrend: model.totalChildScreenTimeTrend(),
-                    activityTimeTrend: model.totalChildActivityTrend(),
+                    screenTimeLastWeek: model.totalChildScreenTimeLastDays,
+                    activityTimeLastWeek: model.totalChildActivityLastDays,
+                    screenTimeTrend: model.totalChildScreenTimeTrend,
+                    activityTimeTrend: model.totalChildActivityTrend,
                     explorersStats: model.childStats,
                     explorers: model.supportedExplorers,
                     onChildCardPressed: model.navigateToSingleExplorerView,

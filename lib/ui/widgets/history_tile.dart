@@ -13,6 +13,7 @@ class HistoryTile extends StatelessWidget {
   final QuestType? questType;
   final DateTime date;
   final num? credits;
+  final bool showCredits;
   const HistoryTile(
       {Key? key,
       required this.name,
@@ -20,7 +21,8 @@ class HistoryTile extends StatelessWidget {
       required this.credits,
       this.minutes,
       this.screenTime = true,
-      this.questType})
+      this.questType,
+      this.showCredits = false})
       : super(key: key);
 
   @override
@@ -89,12 +91,13 @@ class HistoryTile extends StatelessWidget {
                               minutes!.round().toString()),
                           SizedBox(width: 1),
                           AfkCreditsText.caption("min"),
-
-                          horizontalSpaceTiny,
+                          SizedBox(width: 2.0),
                           AfkCreditsText.headingFour("-"),
-                          horizontalSpaceTiny,
-                          AfkCreditsText.headingFour(
-                              getShortQuestType(questType!)),
+                          SizedBox(width: 2.0),
+                          Expanded(
+                            child: AfkCreditsText.headingFour(
+                                getShortQuestType(questType!)),
+                          ),
                         ],
                       )
 
@@ -109,12 +112,13 @@ class HistoryTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AfkCreditsText.caption(formatDateDetailsType5(date)),
-              // SizedBox(height: 3),
-              // CreditsAmount(
-              //     color: Colors.grey[800]!,
-              //     amount: credits ?? -1,
-              //     height: 16,
-              //     style: TextStyle(fontSize: 16)),
+              if (showCredits) SizedBox(height: 3),
+              if (showCredits)
+                CreditsAmount(
+                    color: Colors.grey[800]!,
+                    amount: credits ?? -1,
+                    height: 16,
+                    style: TextStyle(fontSize: 16)),
             ],
           ),
         ],

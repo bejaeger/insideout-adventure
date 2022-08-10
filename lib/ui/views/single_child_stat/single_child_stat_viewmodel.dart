@@ -12,6 +12,21 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
   // User get explorer => userService.supportedExplorers[explorerUid]!;
   // UserStatistics? get stats => userService.supportedExplorerStats[explorerUid];
 
+  List<dynamic> get sortedHistory =>
+      userService.sortedHistory(uid: explorerUid);
+  int? get totalChildScreenTimeLastDays =>
+      userService.totalChildScreenTimeLastDays(uid: explorerUid)[explorerUid];
+  int? get totalChildActivityLastDays =>
+      userService.totalChildActivityLastDays(uid: explorerUid)[explorerUid];
+  int? get totalChildScreenTimeTrend =>
+      userService.totalChildScreenTimeTrend(uid: explorerUid)[explorerUid];
+  int? get totalChildActivityTrend =>
+      userService.totalChildActivityTrend(uid: explorerUid)[explorerUid];
+
+  String explorerNameFromUid(String uid) {
+    return userService.explorerNameFromUid(uid);
+  }
+
   final log = getLogger("SingleExplorerViewModel");
 
   Future navigateToAddFundsView() async {
