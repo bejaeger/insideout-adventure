@@ -318,7 +318,7 @@ class FirestoreApi {
         final doc = await usersCollection.doc(uid).get();
         User otherUser = User.fromJson(doc.data()! as Map<String, dynamic>);
         List<String> newSponsorIds = [];
-        newSponsorIds.addAll(otherUser.explorerIds);
+        newSponsorIds.addAll(otherUser.sponsorIds);
         if (newSponsorIds.contains(sponsorId)) {
           log.w(
               "Sponsor Id already added! Nothing is really brokwn but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a sponsor. Then this issue can't appear");
@@ -333,6 +333,32 @@ class FirestoreApi {
       throw FirestoreApiException(
           message:
               "Unknown expection when trying to add sponsor Id to users sponsor Ids",
+          devDetails: '$e');
+    }
+  }
+
+  Future removeSponsorIdFromUser(
+      {required String uid, required String sponsorId}) async {
+    try {
+      firestoreInstance.runTransaction((transaction) async {
+        final doc = await usersCollection.doc(uid).get();
+        User otherUser = User.fromJson(doc.data()! as Map<String, dynamic>);
+        List<String> newSponsorIds = [];
+        newSponsorIds.addAll(otherUser.sponsorIds);
+        if (!newSponsorIds.contains(sponsorId)) {
+          log.w(
+              "Sponsor Id not included! Nothing is really broken but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a sponsor. Then this issue can't appear");
+          return;
+        }
+        newSponsorIds.remove(sponsorId);
+        await usersCollection.doc(uid).set(
+            otherUser.copyWith(sponsorIds: newSponsorIds).toJson(),
+            SetOptions(merge: true));
+      });
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when trying to remove sponsor Id from users sponsor Ids",
           devDetails: '$e');
     }
   }
@@ -436,12 +462,13 @@ class FirestoreApi {
   }
 
   // Returns dummy data for now!
-  Future<List<Quest>> getNearbyQuests({bool? pushDummyQuests}) async {
+  Future<List<Quest>> getNearbyQuests(
+      {required List<String> sponsorIds, bool? pushDummyQuests}) async {
     if (pushDummyQuests == true) {
       late List<Quest> questsOnFirestore;
       try {
         log.i("Downloading quests now");
-        questsOnFirestore = await downloadNearbyQuests();
+        questsOnFirestore = await downloadNearbyQuests(sponsorIds: sponsorIds);
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
@@ -459,7 +486,7 @@ class FirestoreApi {
       );
       return quests;
     } else {
-      return await downloadNearbyQuests();
+      return await downloadNearbyQuests(sponsorIds: sponsorIds);
     }
   }
 
@@ -495,11 +522,14 @@ class FirestoreApi {
 
   // TODO: Only dowload nearby quests in the future
   // Changed the Scope of the Method. from _pvt to public
-  Future<List<Quest>> downloadNearbyQuests() async {
-    final quests = await questsCollection.get();
+  Future<List<Quest>> downloadNearbyQuests(
+      {required List<String> sponsorIds}) async {
+    // only gets quests NOT created by a standard parent
+    final quests =
+        await questsCollection.where("createdBy", isNull: true).get();
+    List<Quest> returnQuests = [];
     if (quests.docs.isNotEmpty) {
-      log.v('Found list of quests in database');
-      return quests.docs
+      returnQuests = quests.docs
           .map(
             (docs) => Quest.fromJson(
               docs.data() as Map<String, dynamic>,
@@ -512,6 +542,25 @@ class FirestoreApi {
           message: "Quest data could not be found",
           devDetails: "Quest document is empty");
     }
+    for (String id in sponsorIds) {
+      QuerySnapshot q =
+          await questsCollection.where("createdBy", isEqualTo: id).get();
+      if (q.docs.isNotEmpty) {
+        returnQuests.addAll(q.docs
+            .map(
+              (docs) => Quest.fromJson(
+                docs.data() as Map<String, dynamic>,
+              ),
+            )
+            .toList());
+      } else {
+        log.wtf('There is no \'quests\' collection on firestore');
+        throw FirestoreApiException(
+            message: "Quest data could not be found",
+            devDetails: "Quest document is empty");
+      }
+    }
+    return returnQuests;
   }
 
   // Returns dummy data for now!

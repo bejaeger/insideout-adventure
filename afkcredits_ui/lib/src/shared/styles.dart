@@ -81,7 +81,7 @@ const TextStyle captionStyleBold = TextStyle(
 const TextStyle verticalStyle = TextStyle(
   fontSize: 12,
   height: 1.1,
-  color: Colors.orange,
+  color: kcInfoGraphicOrange,
   fontWeight: FontWeight.w800,
 );
 const TextStyle vertical2Style = TextStyle(

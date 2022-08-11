@@ -154,8 +154,12 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                                 ),
                             ],
                           ),
-                          verticalSpaceTiny,
-                          AfkCreditsText.headingThree(quest?.name ?? "QUEST"),
+                          verticalSpaceSmall,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: AfkCreditsText.headingThree(
+                                quest?.name ?? "QUEST"),
+                          ),
                           verticalSpaceSmall,
                           if (quest != null)
                             if (quest.type == QuestType.TreasureLocationSearch)

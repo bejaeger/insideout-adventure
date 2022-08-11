@@ -32,7 +32,7 @@ class AddMarkersViewModel extends AFKMarks with NavigationMixin {
 
   Future<void> setQuestList() async {
     setBusy(true);
-    _getListOfQuest = await _questService.downloadNearbyQuests();
+    _getListOfQuest = await _questService.loadNearbyQuests(sponsorIds: []);
     addStartMarkers(quest: _getListOfQuest!);
     setBusy(false);
     notifyListeners();

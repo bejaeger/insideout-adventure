@@ -110,23 +110,17 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
-  Future loadNearbyQuests({bool force = false}) async {
+  Future loadNearbyQuests(
+      {required List<String> sponsorIds, bool force = false}) async {
     if (_nearbyQuests.isEmpty || force) {
       // TODO: In the future retrieve only nearby quests
       _nearbyQuests = await _firestoreApi.getNearbyQuests(
-          pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests);
+          pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
+          sponsorIds: sponsorIds);
       log.i("Found ${_nearbyQuests.length} nearby quests.");
     } else {
       log.i("Quests already loaded.");
     }
-  }
-
-  Future getQuestsOfType({required QuestType questType}) async {
-    if (_nearbyQuests.isEmpty) {
-      // Not very efficient to load all quests and then extract only the ones of a specific type!
-      await loadNearbyQuests();
-    }
-    return extractQuestsOfType(quests: _nearbyQuests, questType: questType);
   }
 
   List<Quest> extractQuestsOfType(
@@ -203,11 +197,6 @@ class QuestService with ReactiveServiceMixin {
 
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
-  }
-
-  // Changed the Scope of the Method. from _pvt to public
-  Future<List<Quest>> downloadNearbyQuests() async {
-    return await _firestoreApi.downloadNearbyQuests();
   }
 
   Future<List<Quest>> getQuestsWithStartMarkerId(

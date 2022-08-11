@@ -221,7 +221,6 @@ class ActiveQuestService with ReactiveServiceMixin {
 
     // ------------------
     // 1.
-    // TODO
     evaluateFinishedQuest();
 
     // ----------------
@@ -233,12 +232,18 @@ class ActiveQuestService with ReactiveServiceMixin {
     await uploadAndCleanUpFinishedQuest();
   }
 
-  // TODO: Calculate how many credits were
-  // earned here
   Future evaluateFinishedQuest() async {
-    pushActivatedQuest(activatedQuest!.copyWith(
-        status: QuestStatus.success,
-        afkCreditsEarned: activatedQuest!.quest.afkCredits));
+    // TODO: Possibley also calculate how many credits were earned here
+    if (_questStartTime != null) {
+      pushActivatedQuest(activatedQuest!.copyWith(
+          status: QuestStatus.success,
+          afkCreditsEarned: activatedQuest!.quest.afkCredits,
+          timeElapsed: DateTime.now().difference(_questStartTime!).inSeconds));
+    } else {
+      pushActivatedQuest(activatedQuest!.copyWith(
+          status: QuestStatus.success,
+          afkCreditsEarned: activatedQuest!.quest.afkCredits));
+    }
   }
 
   Future collectCredits() async {
@@ -267,14 +272,7 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   Future uploadAndCleanUpFinishedQuest() async {
     // At this point the quest has successfully finished!
-    if (_questStartTime != null) {
-      await _firestoreApi.pushFinishedQuest(
-          quest: activatedQuest!.copyWith(
-              timeElapsed:
-                  DateTime.now().difference(_questStartTime!).inSeconds));
-    } else {
-      await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
-    }
+    await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
     // keep copy of finished quest to show in success dialog view
     previouslyFinishedQuest = activatedQuest;
     disposeActivatedQuest();

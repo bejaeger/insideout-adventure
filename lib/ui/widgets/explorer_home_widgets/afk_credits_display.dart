@@ -21,7 +21,8 @@ class AFKCreditsDisplay extends StatelessWidget {
         children: [
           Hero(
             tag: "CREDITS",
-            child: Image.asset(kAFKCreditsLogoPath, height: 30),
+            child: Image.asset(kAFKCreditsLogoPath,
+                height: 30, color: kcPrimaryColor),
           ),
           horizontalSpaceTiny,
           AfkCreditsText.label(balance.toString()),

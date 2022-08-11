@@ -104,7 +104,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   Future initializeQuests({bool? force}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
-        await questService.loadNearbyQuests(force: true);
+        await questService.loadNearbyQuests(
+            force: true, sponsorIds: currentUser.sponsorIds);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }

@@ -90,7 +90,7 @@ class Routes {
   static const String aRObjectView = '/a-robject-view';
   static const String activeScreenTimeView = '/active-screen-time-view';
   static const String selectScreenTimeView = '/select-screen-time-view';
-  static const String activeMapQuestView = '/active-map-quest-view';
+  static const String hikeQuestView = '/hike-quest-view';
   static const String singleQuestTypeView = '/single-quest-type-view';
   static const all = <String>{
     parentHomeView,
@@ -124,7 +124,7 @@ class Routes {
     aRObjectView,
     activeScreenTimeView,
     selectScreenTimeView,
-    activeMapQuestView,
+    hikeQuestView,
     singleQuestTypeView,
   };
 }
@@ -168,7 +168,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.aRObjectView, page: ARObjectView),
     RouteDef(Routes.activeScreenTimeView, page: ActiveScreenTimeView),
     RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
-    RouteDef(Routes.activeMapQuestView, page: HikeQuestView),
+    RouteDef(Routes.hikeQuestView, page: HikeQuestView),
     RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
   ];
   @override
@@ -440,7 +440,7 @@ class StackedRouter extends RouterBase {
       );
     },
     HikeQuestView: (data) {
-      var args = data.getArgs<ActiveMapQuestViewArguments>(nullOk: false);
+      var args = data.getArgs<HikeQuestViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => HikeQuestView(
           key: args.key,
@@ -600,11 +600,11 @@ class ActiveScreenTimeViewArguments {
   ActiveScreenTimeViewArguments({this.key, required this.minutes});
 }
 
-/// ActiveMapQuestView arguments holder class
-class ActiveMapQuestViewArguments {
+/// HikeQuestView arguments holder class
+class HikeQuestViewArguments {
   final Key? key;
   final Quest quest;
-  ActiveMapQuestViewArguments({this.key, required this.quest});
+  HikeQuestViewArguments({this.key, required this.quest});
 }
 
 /// SingleQuestTypeView arguments holder class

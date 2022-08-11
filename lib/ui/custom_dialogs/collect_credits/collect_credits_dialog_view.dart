@@ -112,6 +112,7 @@ class _BasicDialogContent extends StatelessWidget {
                               padding: const EdgeInsets.all(16.0),
                               child: Image.asset(
                                 kAFKCreditsLogoPath,
+                                color: kcPrimaryColor,
                                 width: screenWidth(context, percentage: 0.4),
                               ),
                             )

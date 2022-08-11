@@ -31,16 +31,20 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
 
   Future navigateToAddFundsView() async {
     //layoutService.setShowBottomNavBar(false);
-    await navigationService.navigateTo(Routes.transferFundsView,
-        arguments: TransferFundsViewArguments(
-            type: TransferType.Sponsor2ExplorerCredits,
-            senderInfo: PublicUserInfo(
-                name: currentUser.fullName, uid: currentUser.uid),
-            recipientInfo:
-                PublicUserInfo(name: explorer.fullName, uid: explorer.uid)));
-    await Future.delayed(Duration(milliseconds: 300));
-    //layoutService.setShowBottomNavBar(true);
-    notifyListeners();
+    if (explorer != null) {
+      await navigationService.navigateTo(Routes.transferFundsView,
+          arguments: TransferFundsViewArguments(
+              type: TransferType.Sponsor2ExplorerCredits,
+              senderInfo: PublicUserInfo(
+                  name: currentUser.fullName, uid: currentUser.uid),
+              recipientInfo: PublicUserInfo(
+                  name: explorer!.fullName, uid: explorer!.uid)));
+      await Future.delayed(Duration(milliseconds: 300));
+      //layoutService.setShowBottomNavBar(true);
+      notifyListeners();
+    } else {
+      log.wtf("No explorer found!");
+    }
   }
 
   Future refresh() async {

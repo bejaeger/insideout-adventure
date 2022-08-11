@@ -159,8 +159,8 @@ mixin NavigationMixin {
 
   Future navigateToGPSAreaQuest(Quest quest) async {
     // TODO: Make sure we treat return value reasonably
-    await _navigationService.navigateTo(Routes.activeMapQuestView,
-        arguments: ActiveMapQuestViewArguments(quest: quest));
+    await _navigationService.navigateTo(Routes.hikeQuestView,
+        arguments: HikeQuestViewArguments(quest: quest));
     return true;
   }
 }

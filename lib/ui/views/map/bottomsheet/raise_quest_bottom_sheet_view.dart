@@ -1,4 +1,5 @@
 import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -54,7 +55,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      getStringForCategory(model.quest.type),
+                      getShortQuestType(model.quest.type),
                       style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -97,12 +98,8 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                   ),
                 ),
               verticalSpaceSmall,
-              Text(
+              AfkCreditsText.headingTwo(
                 request.title.toString(),
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: kBlackHeadlineColor),
               ),
               // verticalSpaceTiny,
               // Text(

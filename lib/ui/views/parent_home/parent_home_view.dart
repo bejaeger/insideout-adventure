@@ -30,10 +30,7 @@ class ParentHomeView extends StatelessWidget {
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(title: "Home", drawer: true),
-          endDrawer: SizedBox(
-            width: screenWidth(context, percentage: 0.75),
-            child: const ParentDrawerView(),
-          ),
+          endDrawer: const ParentDrawerView(),
           // floatingActionButton: Container(
           //   width: screenWidth(context),
           //   child: Row(
@@ -82,6 +79,39 @@ class ParentHomeView extends StatelessWidget {
                       formatDateDetails(model
                           .childScreenTimeSessionsActive[0].startedAt
                           .toDate())),
+
+                SectionHeader(
+                  title: "Children",
+                  onButtonTap: model.showAddExplorerBottomSheet,
+                  buttonIcon: Icon(Icons.add_circle_outline_rounded,
+                      size: 28, color: kDarkTurquoise),
+                ),
+                if (model.supportedExplorers.length == 0)
+                  model.isBusy
+                      ? AFKProgressIndicator()
+                      : Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: ElevatedButton(
+                            onPressed: model.showAddExplorerBottomSheet,
+                            child: Text("Add Explorer"),
+                            //imagePath: ImagePath.peopleHoldingHands,
+                          ),
+                        ),
+                if (model.supportedExplorers.length > 0)
+                  ChildrenStatsList(
+                    screenTimeLastWeek: model.totalChildScreenTimeLastDays,
+                    activityTimeLastWeek: model.totalChildActivityLastDays,
+                    screenTimeTrend: model.totalChildScreenTimeTrend,
+                    activityTimeTrend: model.totalChildActivityTrend,
+                    explorersStats: model.childStats,
+                    explorers: model.supportedExplorers,
+                    onChildCardPressed: model.navigateToSingleExplorerView,
+                    // onAddNewExplorerPressed:
+                    //     model.showAddExplorerBottomSheet
+                  ),
+
+                //RecentHistory(),
+                verticalSpaceSmall,
                 SectionHeader(
                   title: "History",
                   //onButtonTap: model.navigateToTransferHistoryView,
@@ -91,7 +121,7 @@ class ParentHomeView extends StatelessWidget {
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: ScrollPhysics(),
-                    itemCount: min(model.sortedHistory.length, 5),
+                    itemCount: min(model.sortedHistory.length, 10),
                     itemBuilder: (context, index) {
                       dynamic data = model.sortedHistory[index];
                       if (data is ActivatedQuest) {
@@ -125,38 +155,7 @@ class ParentHomeView extends StatelessWidget {
                     },
                   ),
                 ),
-                //RecentHistory(),
-                verticalSpaceSmall,
-                SectionHeader(
-                  title: "Children",
-                  onButtonTap: model.showAddExplorerBottomSheet,
-                  buttonIcon: Icon(Icons.add_circle_outline_rounded,
-                      size: 28, color: kDarkTurquoise),
-                ),
-                if (model.supportedExplorers.length == 0)
-                  model.isBusy
-                      ? AFKProgressIndicator()
-                      : Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: ElevatedButton(
-                            onPressed: model.showAddExplorerBottomSheet,
-                            child: Text("Add Explorer"),
-                            //imagePath: ImagePath.peopleHoldingHands,
-                          ),
-                        ),
-                if (model.supportedExplorers.length > 0)
-                  ChildrenStatsList(
-                    screenTimeLastWeek: model.totalChildScreenTimeLastDays,
-                    activityTimeLastWeek: model.totalChildActivityLastDays,
-                    screenTimeTrend: model.totalChildScreenTimeTrend,
-                    activityTimeTrend: model.totalChildActivityTrend,
-                    explorersStats: model.childStats,
-                    explorers: model.supportedExplorers,
-                    onChildCardPressed: model.navigateToSingleExplorerView,
-                    // onAddNewExplorerPressed:
-                    //     model.showAddExplorerBottomSheet
-                  ),
-                //verticalSpaceMassive,
+                verticalSpaceLarge,
               ],
             ),
           ),

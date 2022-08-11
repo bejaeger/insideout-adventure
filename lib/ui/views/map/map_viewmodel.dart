@@ -293,16 +293,25 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     _animateCamera();
   }
 
-  void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
+  void addMarkerToMap(
+      {required Quest quest,
+      required AFKMarker afkmarker,
+      bool completed = false}) {
     configureAndAddMapMarker(
       quest: quest,
       afkmarker: afkmarker,
-      onTap: () => onMarkerTap(quest: quest, afkmarker: afkmarker),
+      completed: completed,
+      onTap: () =>
+          onMarkerTap(quest: quest, afkmarker: afkmarker, completed: completed),
     );
   }
 
   Future onMarkerTap(
-      {required Quest quest, required AFKMarker afkmarker}) async {
+      {required Quest quest,
+      required AFKMarker afkmarker,
+      required bool completed}) async {
+    // --------------------------------------------
+    // Maybe use some super user features
     dynamic adminMode = false;
     if (useSuperUserFeatures) {
       adminMode = await showAdminDialogAndGetResponse();
@@ -313,6 +322,29 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
             arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
       }
     }
+
+    // ---------------------------------------------
+    // If quest is completed we need to check whether quest can be redone or not!
+    if (completed) {
+      if (quest.repeatable == 0) {
+        await dialogService.showDialog(
+            title: "Quest already completed!",
+            description: "You cannot redo this quest.",
+            buttonTitle: 'OK');
+        return;
+      } else {
+        final result = await dialogService.showDialog(
+            title: "Quest already completed, Redo?",
+            cancelTitle: "NO",
+            buttonTitle: 'YES');
+        if (!(result?.confirmed == true)) {
+          return;
+        }
+      }
+    }
+
+    // ------------------------------------------------
+    // normal function to be executed when marker is tapped
     if (!useSuperUserFeatures || adminMode == false) {
       if (hasActiveQuest == false) {
         if (afkmarker == quest.startMarker) {
@@ -446,7 +478,10 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         log.v("Add start marker of quest with name ${_q.name} to map");
         if (_q.startMarker != null) {
           AFKMarker _m = _q.startMarker!;
-          addMarkerToMap(quest: _q, afkmarker: _m);
+          addMarkerToMap(
+              quest: _q,
+              afkmarker: _m,
+              completed: currentUserStats.completedQuestIds.contains(_q.id));
         }
       }
     } else {
@@ -546,7 +581,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   final void Function(
       {required Quest quest,
       required AFKMarker afkmarker,
-      required Future Function() onTap}) configureAndAddMapMarker;
+      required Future Function() onTap,
+      bool completed}) configureAndAddMapMarker;
   final void Function({required double lat, required double lon, bool? force})
       animateNewLatLon;
   final void Function() resetMapMarkers;

@@ -9,7 +9,7 @@ class MainLongButton extends StatelessWidget {
       {Key? key,
       required this.onTap,
       required this.title,
-      this.color = Colors.purple})
+      this.color = kcPrimaryColor})
       : super(key: key);
 
   @override

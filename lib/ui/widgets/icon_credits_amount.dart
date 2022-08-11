@@ -27,7 +27,7 @@ class CreditsAmount extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(kAFKCreditsLogoPath, color: color, height: height),
-          horizontalSpaceTiny,
+          SizedBox(width: 4.0),
           if (style != null)
             Text(amountString ?? amount.toStringAsFixed(0), style: style),
           if (height > 20 && style == null)

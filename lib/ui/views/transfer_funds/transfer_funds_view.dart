@@ -33,14 +33,14 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
         listenToFormUpdated(model);
       },
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(title: Text("Add coins to ${recipientInfo.name}")),
+        appBar: AppBar(title: Text("Add credits to ${recipientInfo.name}")),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
           child: ListView(
             children: [
               verticalSpaceMedium,
               Text(
-                  "How many coins do you want to add to ${recipientInfo.name}?"),
+                  "How many credits do you want to add to ${recipientInfo.name}?"),
               verticalSpaceMedium,
               if (model.customValidationMessage != null)
                 AfkCreditsText.warn(model.customValidationMessage!),

@@ -412,6 +412,28 @@ class UserService {
     }
   }
 
+  Future removeExplorerFromSupportedExplorers({required String uid}) async {
+    try {
+      if (!currentUser.explorerIds.contains(uid)) {
+        return "Explorer not supported";
+      } else {
+        log.i("Removing explorer with id $uid from list of explorers");
+        List<String> newExplorerIds = removeFromExplorerLists(uid: uid);
+        // Ideal way would be to add a transaction here!
+        await Future.wait([
+          updateUserData(
+              user: currentUser.copyWith(explorerIds: newExplorerIds)),
+          removeSponsorIdFromOtherUser(
+              otherUsersId: uid, sponsorId: currentUser.uid),
+        ]);
+      }
+    } catch (e) {
+      log.e(
+          "Error when trying to add new explorer to list of supported explorers");
+      rethrow;
+    }
+  }
+
   //////////////////////////////////////////////////////////
   /// Listener setup
   ///
@@ -778,10 +800,15 @@ class UserService {
     return supportedExplorersList.any((element) => element.uid == uid);
   }
 
-  void removeFromExplorerLists({required String uid}) {
+  List<String> removeFromExplorerLists({required String uid}) {
     supportedExplorers.remove(uid);
     supportedExplorerStats.remove(uid);
     cancelExplorerListener(uid: uid);
+    List<String> newExplorerIds = [];
+    supportedExplorers.forEach((key, value) {
+      newExplorerIds.add(value.uid);
+    });
+    return newExplorerIds;
   }
 
   List<String> addToSupportedExplorersList({required String uid}) {
@@ -816,6 +843,12 @@ class UserService {
   Future addSponsorIdToOtherUser(
       {required String otherUsersId, required String sponsorId}) async {
     _firestoreApi.addSponsorIdToUser(uid: otherUsersId, sponsorId: sponsorId);
+  }
+
+  Future removeSponsorIdFromOtherUser(
+      {required String otherUsersId, required String sponsorId}) async {
+    _firestoreApi.removeSponsorIdFromUser(
+        uid: otherUsersId, sponsorId: sponsorId);
   }
 
   Future isUserAlreadyPresent({required name}) async {

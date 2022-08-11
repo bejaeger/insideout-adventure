@@ -3,6 +3,7 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
+import 'package:afkcredits/ui/widgets/trend_icon.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,8 @@ class ChildStatsCard extends StatelessWidget {
     }
     return Card(
       elevation: 1,
-      color: Colors.white,
+      //color: Color.fromARGB(255, 231, 234, 241),
+      color: kcOrangeColorOpaque,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.hardEdge,
       child: Container(
@@ -45,9 +47,16 @@ class ChildStatsCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AfkCreditsText.headingLight(user.fullName),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: AfkCreditsText.headingFour(user.fullName)),
+                  Icon(Icons.arrow_forward_ios, size: 20),
+                ],
+              ),
               verticalSpaceSmall,
-              AfkCreditsText.body("Last Week:"),
+              AfkCreditsText.body("Last Week"),
               stats == null
                   ? AFKProgressIndicator()
                   : Column(
@@ -64,10 +73,11 @@ class ChildStatsCard extends StatelessWidget {
                               AfkCreditsText.body(
                                   activityTimeLastWeek.toString() + " min"),
                               if (activityTimeTrend != null)
-                                AfkCreditsText.body("(" +
-                                    (activityTimeTrend! >= 0 ? "+" : "") +
-                                    activityTimeTrend.toString() +
-                                    ")"),
+                                TrendIcon(metric: activityTimeTrend!)
+                              // AfkCreditsText.body("(" +
+                              //     (activityTimeTrend! >= 0 ? "+" : "") +
+                              //     activityTimeTrend.toString() +
+                              //     ")"),
                             ],
                           ),
                         if (screenTimeLastWeek != null)
@@ -81,10 +91,8 @@ class ChildStatsCard extends StatelessWidget {
                               AfkCreditsText.body(
                                   screenTimeLastWeek.toString() + " min"),
                               if (screenTimeTrend != null)
-                                AfkCreditsText.body("(" +
-                                    (screenTimeTrend! >= 0 ? "+" : "") +
-                                    screenTimeTrend.toString() +
-                                    ")"),
+                                TrendIcon(
+                                    metric: screenTimeTrend!, screenTime: true)
                             ],
                           ),
 
@@ -100,9 +108,9 @@ class ChildStatsCard extends StatelessWidget {
                   AfkCreditsText.body("Balance: "),
                   if (stats != null)
                     CreditsAmount(
-                        amount: stats.afkCreditsBalance,
-                        height: 18,
-                        color: Colors.grey[800]!),
+                      amount: stats.afkCreditsBalance,
+                      height: 18,
+                    ),
                 ],
               ),
               // Flexible(

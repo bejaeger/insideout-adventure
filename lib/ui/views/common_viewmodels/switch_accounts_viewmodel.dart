@@ -10,7 +10,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   final log = getLogger("SwitchAccountsViewModel");
   final String? explorerUid;
 
-  User get explorer => userService.supportedExplorers[explorerUid]!;
+  User? get explorer => userService.supportedExplorers[explorerUid];
   UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
   List<ActivatedQuest> get history =>
       userService.supportedExplorerQuestsHistory[explorerUid]!;
@@ -21,7 +21,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   /// Switch from explorer back to sponsor account
   Future handleSwitchToExplorerEvent() async {
     // check if explorerUid is set:
-    if (explorerUid == null) {
+    if (explorerUid == null || explorer == null) {
       log.e("Please provide an explorerUid you want to switch to!");
       await showGenericInternalErrorDialog();
       return;
@@ -29,9 +29,9 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
     // Check if user wants to set PIN
     final result = await bottomSheetService.showBottomSheet(
-        title: "Switch to child account",
-        confirmButtonTitle: "Set Passcode",
-        cancelButtonTitle: "Switch without Passcode");
+        title: "Switch to " + explorer!.fullName + "'s account",
+        confirmButtonTitle: "With Passcode",
+        cancelButtonTitle: "Without Passcode");
 
     if (result?.confirmed == true) {
       // Set PIN

@@ -143,7 +143,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   icon: Icon(Icons.arrow_back, color: Colors.white),
                 ),
               ),
-            if (model.isSuperUser)
+            if (model.currentUserNullable != null && model.isSuperUser)
               Container(
                 height: height,
                 alignment: Alignment.topLeft,

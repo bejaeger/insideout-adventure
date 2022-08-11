@@ -14,6 +14,7 @@ class HistoryTile extends StatelessWidget {
   final DateTime date;
   final num? credits;
   final bool showCredits;
+  final bool showName;
   const HistoryTile(
       {Key? key,
       required this.name,
@@ -22,7 +23,8 @@ class HistoryTile extends StatelessWidget {
       this.minutes,
       this.screenTime = true,
       this.questType,
-      this.showCredits = false})
+      this.showCredits = false,
+      this.showName = true})
       : super(key: key);
 
   @override
@@ -50,8 +52,8 @@ class HistoryTile extends StatelessWidget {
             BoxShadow(
               color: kcLightGreyColor,
               offset: Offset(1, 1),
-              blurRadius: 0.5,
-              spreadRadius: 0.3,
+              blurRadius: 0.3,
+              spreadRadius: 0.1,
             )
           ],
           borderRadius: BorderRadius.circular(20.0)),
@@ -67,11 +69,12 @@ class HistoryTile extends StatelessWidget {
           // Name and Quest/screen time info
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment:
+                  showName ? MainAxisAlignment.start : MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AfkCreditsText.caption(name),
-                SizedBox(height: 3),
+                if (showName) AfkCreditsText.caption(name),
+                if (showName) SizedBox(height: 3),
                 screenTime
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -109,13 +112,12 @@ class HistoryTile extends StatelessWidget {
           // Date and credits info
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               AfkCreditsText.caption(formatDateDetailsType5(date)),
               if (showCredits) SizedBox(height: 3),
               if (showCredits)
                 CreditsAmount(
-                    color: Colors.grey[800]!,
                     amount: credits ?? -1,
                     height: 16,
                     style: TextStyle(fontSize: 16)),

@@ -1,3 +1,4 @@
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 // actual primary color
@@ -6,11 +7,13 @@ import 'package:flutter/material.dart';
 // const Color kPrimaryColor = Color(0xFF63B995);
 // const Color kSecondaryColor = Color(0xFF50723C);
 // current primary color before we care about UI
-const Color kPrimaryColor = Color(0xFF00baa8);
+const Color kPrimaryColor = kcInfoGraphicGreen; //kcActivityColor;
+// Color(0xFF00baa8);
+
 //const Color kPrimaryColor = Colors.green;
 
-//const Color kDarkTurquoise = Color(0xFF008979);
-const Color kDarkTurquoise = Color(0xFF00827e);
+const Color kDarkTurquoise = kcPrimaryColor;
+// Color(0xFF00827E);
 
 const Color kBlackHeadlineColor = Colors.black;
 

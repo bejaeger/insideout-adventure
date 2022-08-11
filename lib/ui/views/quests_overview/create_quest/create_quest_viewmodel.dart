@@ -1,13 +1,14 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
 import 'package:afkcredits/utils/markers/markers.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../datamodels/quests/quest.dart';
@@ -17,9 +18,9 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final _log = getLogger('CreateQuestViewModel');
   GoogleMapController? _googleMapController;
   GoogleMapController? get getGoogleMapController => _googleMapController;
-  final _navigationService = locator<NavigationService>();
   final _questService = locator<QuestService>();
   final _geoLocationService = locator<GeolocationService>();
+  final _userService = locator<UserService>();
   //CameraPosition? _initialCameraPosition;
   final _displaySnackBars = DisplaySnackBars();
   bool isLoading = false;
@@ -99,6 +100,9 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     final added = await _questService.createQuest(
       quest: Quest(
           id: questId,
+          createdBy: _userService.getUserRole == UserRole.adminMaster
+              ? null
+              : _userService.currentUser.uid,
           startMarker: getAFKMarkers.first,
           finishMarker: getAFKMarkers.last,
           name: nameValue.toString(),

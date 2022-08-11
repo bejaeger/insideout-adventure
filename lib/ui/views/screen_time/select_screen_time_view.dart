@@ -55,10 +55,14 @@ class SelectScreenTimeView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Hero(
-                        tag: "CREDITS",
-                        child: Image.asset(kAFKCreditsLogoPath, height: 30),
-                      ),
+                      // Hero(
+                      //   tag: "CREDITS",
+                      //   child: Image.asset(kAFKCreditsLogoPath,
+                      //       height: 30, color: kcPrimaryColor),
+                      // ),
+                      Image.asset(kAFKCreditsLogoPath,
+                          height: 30, color: kcPrimaryColor),
+
                       horizontalSpaceSmall,
                       AfkCreditsText.headingThree(
                           model.currentUserStats.afkCreditsBalance.toString()),
@@ -144,7 +148,7 @@ class SelectScreenTimeView extends StatelessWidget {
                   // ),
                   // verticalSpaceMedium,
                   Spacer(),
-                  MainLongButton(
+                  AfkCreditsButton(
                       onTap: model.startScreenTime,
                       title: model.screenTimePreset != -1
                           ? "Start ${model.screenTimePreset} min screen time"

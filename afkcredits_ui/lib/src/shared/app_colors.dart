@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 
-const Color kcPrimaryColor = Color(0xff22A45D);
+const Color kcPrimaryColor = kcInfoGraphicGreen; // kcActivityColor;
+// Color(0xff22A45D);
 const Color kcMediumGreyColor = Color(0xff868686);
 const Color kcLightGreyColor = Color(0xffe5e5e5);
 const Color kcVeryLightGreyColor = Color(0xfff2f2f2);
 const Color kcRedColor = Color(0xfff44336);
 const Color kcOrangeColor = Color(0xffff9800);
+const Color kcOrangeColorOpaque = Color(0xffEEEEEE);
+//  Color.fromARGB(255, 251, 238, 217);
+
+// kcInfoGraphicLightOrange;
+// Color.fromARGB(255, 251, 238, 217);
+
 const Color kGreyTextColor = Color(0xFF424242);
 
 const Color kcScreenTimeBlueOpaque = Color.fromARGB(100, 148, 184, 219);
 const Color kcActivityColorOpaque = Color.fromARGB(100, 82, 183, 128);
 
-const Color kcScreenTimeBlue = Color.fromARGB(255, 112, 167, 221);
-const Color kcActivityColor = Color.fromARGB(255, 67, 183, 119);
+const Color kcScreenTimeBlue = Color.fromARGB(255, 103, 153, 203);
+const Color kcActivityColor = kcInfoGraphicYellow; // kcInfoGraphicGreen;
+//  Color.fromARGB(255, 67, 183, 119);
+const Color kcAccentuatedGreen = Color.fromARGB(255, 67, 183, 119);
+
+const Color kcInfoGraphicOrange = Color(0xffbc6d24);
+const Color kcInfoGraphicYellow = Color(0xfff0cb2b);
+const Color kcInfoGraphicGreen = Color(0xff709775);
+const Color kcInfoGraphicBlue = Color(0xff2a3d48);
+const Color kcInfoGraphicLightOrange = Color(0xffe8e1d3);
 
 class ColorSettings extends MyColors {
   static const Color primaryColor = MyColors.primaryRed2;

@@ -54,6 +54,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   // ------------------------------------------------------
   // getters
   User get currentUser => userService.currentUser;
+  User? get currentUserNullable => userService.currentUserNullable;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
   bool get isAdminMaster => userService.isAdminMaster;

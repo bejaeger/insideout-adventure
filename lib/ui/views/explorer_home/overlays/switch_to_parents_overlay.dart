@@ -55,7 +55,7 @@ class SwitchToParentsAreaButton extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: Colors.orange),
+                            color: kcInfoGraphicOrange),
                       ),
                     ],
                   ),

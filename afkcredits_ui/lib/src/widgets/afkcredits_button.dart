@@ -55,7 +55,7 @@ class AfkCreditsButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(
                   color: color ?? kcPrimaryColor,
-                  width: 1,
+                  width: 2,
                 )),
         child: !busy
             ? Row(

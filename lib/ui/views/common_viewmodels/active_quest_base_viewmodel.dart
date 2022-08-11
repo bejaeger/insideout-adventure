@@ -138,7 +138,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       }
       // Quest is succesfully started so hasActiveQuest == true
 
-      // selected quest is reset...hopefully I'm not accessing it in the active quest haha :D
+      // selected quest is reset...hopefully I'm not accessing it in the active quest
+      // by resetting the UI will react and now knows that an active quest is present, not only a "selected" quest
       activeQuestService.resetSelectedQuest();
       changeCameraZoom(kInitialZoom);
       animateMap(forceUseLocation: true);
@@ -307,7 +308,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
           await onCollected();
         } else {
           dialogService.showDialog(
-              title: "Collect the final Marker to get coins!");
+              title: "Collect the final Marker to get credits!");
         }
       },
     );
