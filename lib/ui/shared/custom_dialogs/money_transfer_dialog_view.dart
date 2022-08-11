@@ -1,5 +1,4 @@
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:afkcredits/enums/money_transfer_dialog_status.dart';
@@ -139,7 +138,7 @@ class _BasicDialogContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(color: kPrimaryColor),
+                  CircularProgressIndicator(color: kcPrimaryColor),
                   verticalSpaceMedium,
                   Text("Processing...", style: textTheme(context).headline6),
                 ],

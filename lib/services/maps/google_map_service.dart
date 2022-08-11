@@ -138,7 +138,7 @@ class GoogleMapService {
       required double lon,
       required bool isCoin}) async {
     final coinBitmap = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(4, 4)), kAFKCreditsLogoSmallPath);
+        ImageConfiguration(size: Size(4, 4)), kAFKCreditsLogoSmallPathColored);
     final treasureBitmap = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(size: Size(4, 4)), kTreasureIconSmallPath);
     Marker marker = Marker(

@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/lifecycle_manager.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -49,8 +49,8 @@ void mainCommon(Flavor flavor) async {
     }
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: kPrimaryColor,
-        systemNavigationBarColor: kBlackHeadlineColor,
+        statusBarColor: kcPrimaryColor,
+        systemNavigationBarColor: kcBlackHeadlineColor,
       ),
     );
     setupLocator();
@@ -95,14 +95,14 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               elevatedButtonTheme:
                   ElevatedButtonThemeData(style: getRaisedButtonStyle()),
-              primaryColor: kPrimaryColor,
+              primaryColor: kcPrimaryColor,
               appBarTheme: AppBarTheme(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
                       bottom: Radius.circular(16),
                     ),
                   ),
-                  color: kPrimaryColor,
+                  color: kcPrimaryColor,
                   elevation: 5,
                   toolbarHeight: 80,
                   centerTitle: true),
@@ -147,7 +147,7 @@ ButtonStyle getRaisedButtonStyle() {
   return ElevatedButton.styleFrom(
     onPrimary: Colors.white,
     // primary: darkTurquoise,
-    primary: kPrimaryColor,
+    primary: kcPrimaryColor,
     minimumSize: Size(88, 45),
     padding: EdgeInsets.symmetric(horizontal: 16),
     shape: const RoundedRectangleBorder(

@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/verify_network_connection/verify_network_connection.dart';
@@ -44,9 +43,9 @@ class AddExplorerView extends StatelessWidget with $AddExplorerView {
                               model.setIsPwShown(!model.isPwShown);
                             },
                             icon: (model.isPwShown)
-                                ? Icon(Icons.visibility, color: kPrimaryColor)
+                                ? Icon(Icons.visibility, color: kcPrimaryColor)
                                 : Icon(Icons.visibility_off,
-                                    color: kPrimaryColor),
+                                    color: kcPrimaryColor),
                           )),
                       obscureText: (model.isPwShown) ? false : true,
                       controller: passwordController,

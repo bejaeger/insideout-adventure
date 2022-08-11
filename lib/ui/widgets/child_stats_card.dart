@@ -32,9 +32,9 @@ class ChildStatsCard extends StatelessWidget {
       stats = childrenStats![user.uid];
     }
     return Card(
-      elevation: 1,
+      elevation: 0,
       //color: Color.fromARGB(255, 231, 234, 241),
-      color: kcOrangeColorOpaque,
+      color: kcCultured.withOpacity(0.5),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.hardEdge,
       child: Container(
@@ -68,7 +68,7 @@ class ChildStatsCard extends StatelessWidget {
                               Image.asset(kActivityIcon,
                                   height: 20,
                                   width: 20,
-                                  color: kcActivityColor),
+                                  color: kcActivityIconColor),
                               SizedBox(width: 4),
                               AfkCreditsText.body(
                                   activityTimeLastWeek.toString() + " min"),

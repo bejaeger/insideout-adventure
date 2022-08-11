@@ -1,4 +1,4 @@
-import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class SmallButton extends StatelessWidget {
@@ -27,7 +27,7 @@ class SmallButton extends StatelessWidget {
                 : [],
             border: Border.all(style: BorderStyle.solid, color: Colors.white30),
             borderRadius: BorderRadius.all(Radius.circular(12.0)),
-            color: kColorActivatedQuest.withOpacity(0.5),
+            color: kcRed.withOpacity(0.5),
           ),
           padding: const EdgeInsets.all(10.0),
           child: Text(title,

@@ -1,7 +1,7 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/main_footer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits/ui/widgets/outline_box.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -38,7 +38,7 @@ class MainFooterOverlayView extends StatelessWidget {
                       borderWidth: 0,
                       text: "SCREEN TIME",
                       onPressed: model.navToCreditsScreenTimeView,
-                      color: kDarkTurquoise,
+                      color: kcPrimaryColor,
                       textColor: Colors.white,
                     ),
                   ),
@@ -56,7 +56,7 @@ class MainFooterOverlayView extends StatelessWidget {
                     //backgroundWidget: OutlineBox(text: "MENU"),
                     startingAngleInRadian: 1.3 * 3.14,
                     endingAngleInRadian: 1.7 * 3.14,
-                    toggleButtonColor: kDarkTurquoise,
+                    toggleButtonColor: kcPrimaryColor,
                     toggleButtonMargin: 0,
                     toggleButtonBoxShadow: [],
                     toggleButtonSize: 35,
@@ -99,7 +99,7 @@ class MainFooterOverlayView extends StatelessWidget {
                       width: 80,
                       height: 60,
                       text: "QUESTS",
-                      color: kDarkTurquoise,
+                      color: kcPrimaryColor,
                       textColor: Colors.white,
                       borderWidth: 0,
                       onPressed: model.showQuestListOverlay,

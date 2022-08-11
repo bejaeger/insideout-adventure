@@ -21,7 +21,7 @@ class SwitchToParentsAreaButton extends StatelessWidget {
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
-                color: kGreyTextColor.withOpacity(0.0),
+                color: kcGreyTextColor.withOpacity(0.0),
                 borderRadius: BorderRadius.circular(16.0)),
             padding: const EdgeInsets.all(8.0),
             alignment: Alignment.center,
@@ -55,7 +55,7 @@ class SwitchToParentsAreaButton extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: kcInfoGraphicOrange),
+                            color: kcOrange),
                       ),
                     ],
                   ),

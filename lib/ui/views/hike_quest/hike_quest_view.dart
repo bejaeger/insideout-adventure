@@ -1,5 +1,4 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
@@ -271,7 +270,7 @@ class _HikeQuestViewState extends State<HikeQuestView>
                                         offset: Offset(0, 0),
                                         blurRadius: 0.2,
                                         spreadRadius: 0,
-                                        color: kShadowColor.withOpacity(0.15))
+                                        color: kcShadowColor.withOpacity(0.15))
                                   ],
                                 ),
                               ),
@@ -316,7 +315,7 @@ class _HikeQuestViewState extends State<HikeQuestView>
                           ? Icon(Icons.qr_code_scanner_rounded,
                               size: 34, color: Colors.white)
                           : Image.asset(kPinInAreaIcon,
-                              color: kWhiteTextColor, height: 40))
+                              color: kcWhiteTextColor, height: 40))
                   : null,
             ),
           ),

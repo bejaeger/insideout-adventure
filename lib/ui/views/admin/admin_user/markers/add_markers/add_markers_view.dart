@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -88,7 +87,7 @@ class MarkerToAddSection extends StatelessWidget {
             "ADD A Marker",
             textAlign: TextAlign.left,
             style: textTheme(context).headline6!.copyWith(
-                color: kBlackHeadlineColor,
+                color: kcBlackHeadlineColor,
                 fontSize: 20,
                 fontWeight: FontWeight.w800),
           ),
@@ -162,7 +161,7 @@ class DisplayAllMarkersSection extends StatelessWidget {
               "Display Available Markers",
               textAlign: TextAlign.left,
               style: textTheme(context).headline6!.copyWith(
-                  color: kBlackHeadlineColor,
+                  color: kcBlackHeadlineColor,
                   fontSize: 20,
                   fontWeight: FontWeight.w800),
             ),

@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +35,7 @@ class OutlineBox extends StatelessWidget {
             BoxShadow(
               blurRadius: 2,
               spreadRadius: 0.5,
-              color: kShadowColor,
+              color: kcShadowColor,
               offset: Offset(1, 1),
             ),
           ],
@@ -46,7 +45,7 @@ class OutlineBox extends StatelessWidget {
               ? Center(
                   child: AfkCreditsText.body(text!,
                       align: TextAlign.center,
-                      color: textColor ?? kBlackHeadlineColor))
+                      color: textColor ?? kcBlackHeadlineColor))
               : SizedBox.expand(),
         ),
       ),

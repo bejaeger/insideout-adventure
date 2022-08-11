@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -56,7 +55,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
                           child: Icon(Icons.menu,
-                              color: kWhiteTextColor, size: 30),
+                              color: kcWhiteTextColor, size: 30),
                         ),
                       ),
                     ),
@@ -73,7 +72,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           overflow: TextOverflow.ellipsis,
                           style: textTheme(context)
                               .headline5!
-                              .copyWith(color: kWhiteTextColor),
+                              .copyWith(color: kcWhiteTextColor),
                         ),
                       ),
                     ),
@@ -111,18 +110,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
                           child: Icon(appBarButtonIcon,
-                              color: kWhiteTextColor, size: 35),
+                              color: kcWhiteTextColor, size: 35),
                         ),
                       ),
                     ),
                 ],
               ),
               decoration: BoxDecoration(
-                color: kPrimaryColor,
+                color: kcPrimaryColor,
                 boxShadow: [
                   BoxShadow(
                     blurRadius: 4,
-                    color: kShadowColor.withOpacity(0.15),
+                    color: kcShadowColor.withOpacity(0.15),
                     spreadRadius: 1,
                     offset: Offset(0, 2),
                   ),
@@ -208,7 +207,7 @@ class _BlinkAnimationState extends State<BlinkAnimation>
         return Container(
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: kBlackHeadlineColor)),
+                border: Border.all(color: kcBlackHeadlineColor)),
             child: Icon(Icons.circle, size: 30, color: animation.value));
       },
     );

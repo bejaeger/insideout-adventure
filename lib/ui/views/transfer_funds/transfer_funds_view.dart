@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
@@ -45,14 +44,14 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
               if (model.customValidationMessage != null)
                 AfkCreditsText.warn(model.customValidationMessage!),
               TextField(
-                cursorColor: kBlackHeadlineColor,
+                cursorColor: kcBlackHeadlineColor,
                 focusNode: amountFocusNode,
                 controller: amountController,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 style: textTheme(context)
                     .bodyText2!
-                    .copyWith(fontSize: 35, color: kBlackHeadlineColor),
+                    .copyWith(fontSize: 35, color: kcBlackHeadlineColor),
                 autofocus: true,
                 decoration: InputDecoration(
                   prefixIcon: type != TransferType.Sponsor2ExplorerCredits
@@ -60,11 +59,11 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                       : null,
                   enabledBorder: UnderlineInputBorder(
                     borderSide:
-                        BorderSide(color: kBlackHeadlineColor, width: 0.0),
+                        BorderSide(color: kcBlackHeadlineColor, width: 0.0),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                        BorderSide(color: kBlackHeadlineColor, width: 0.0),
+                        BorderSide(color: kcBlackHeadlineColor, width: 0.0),
                   ),
                 ),
               ),

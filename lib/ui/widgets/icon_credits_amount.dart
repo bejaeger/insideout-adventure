@@ -1,5 +1,4 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -12,7 +11,7 @@ class CreditsAmount extends StatelessWidget {
   const CreditsAmount(
       {Key? key,
       required this.amount,
-      this.color = kPrimaryColor,
+      this.color = kcPrimaryColor,
       this.height = 25,
       this.style,
       this.amountString})

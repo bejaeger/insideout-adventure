@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
@@ -20,15 +19,20 @@ class StartUpView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AFKCreditsIcon(height: 170),
-                    verticalSpaceSmall,
-                    Text("AFK Credits",
+                    // AFKCreditsIcon(height: 170),
+                    // verticalSpaceSmall,
+                    Text("HERCULES",
                         style: textTheme(context)
                             .headline6!
-                            .copyWith(fontSize: 36, color: kPrimaryColor)),
+                            .copyWith(fontSize: 36, color: kcOrange)),
+                    Text("WORLD",
+                        style: textTheme(context)
+                            .headline6!
+                            .copyWith(fontSize: 60, color: kcOrangeYellow)),
                     verticalSpaceMedium,
                     AFKProgressIndicator(
                       linear: false,
+                      color: kcOrange,
                     ),
                   ],
                 ),

@@ -1,6 +1,5 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +85,7 @@ class _BasicDialogContent extends StatelessWidget {
                             : "Congratulations!",
                         textAlign: TextAlign.center,
                         style: textTheme(context).headline6!.copyWith(
-                            color: kPrimaryColor,
+                            color: kcPrimaryColor,
                             fontSize: 32,
                             fontWeight: FontWeight.w800)),
                     verticalSpaceSmall,
@@ -103,7 +102,7 @@ class _BasicDialogContent extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: textTheme(context)
                             .headline4!
-                            .copyWith(color: kPrimaryColor, fontSize: 18)),
+                            .copyWith(color: kcPrimaryColor, fontSize: 18)),
                     verticalSpaceSmall,
                     AnimatedSwitcher(
                       duration: Duration(milliseconds: 1),
@@ -121,7 +120,7 @@ class _BasicDialogContent extends StatelessWidget {
                               child: Icon(
                                 Icons.check,
                                 size: 200,
-                                color: kPrimaryColor,
+                                color: kcPrimaryColor,
                               ),
                             ),
                     ),
@@ -141,7 +140,7 @@ class _BasicDialogContent extends StatelessWidget {
                             child: Text("Get Credits",
                                 style: textTheme(context)
                                     .headline6!
-                                    .copyWith(color: kWhiteTextColor)))
+                                    .copyWith(color: kcWhiteTextColor)))
                         : ElevatedButton(
                             onPressed: () =>
                                 completer(DialogResponse(confirmed: true)),
@@ -149,7 +148,7 @@ class _BasicDialogContent extends StatelessWidget {
                               "Continue",
                               style: textTheme(context)
                                   .headline6!
-                                  .copyWith(color: kWhiteTextColor),
+                                  .copyWith(color: kcWhiteTextColor),
                             ),
                           ),
                   ],
@@ -168,7 +167,7 @@ class _BasicDialogContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(color: kPrimaryColor),
+                  CircularProgressIndicator(color: kcPrimaryColor),
                   verticalSpaceMedium,
                   Text("Getting credits...",
                       style: textTheme(context).headline6),

@@ -159,7 +159,10 @@ flutter:
     - assets/avatars/hercules-avatar2.png    
     - assets/icons/
     - assets/icons/afk_credits.PNG
+    - assets/icons/afk_credits_orig.png
     - assets/icons/afk_credits_small.PNG
+    - assets/icons/afk_credits_small_orig.png
+    - assets/icons/afk_credits_small_colored.PNG
     - assets/icons/trash_icon.svg
     - assets/icons/measure-distance.png    
     - assets/icons/magnet.png

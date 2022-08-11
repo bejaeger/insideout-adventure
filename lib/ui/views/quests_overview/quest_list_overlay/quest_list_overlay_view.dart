@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
@@ -37,7 +36,7 @@ class QuestListOverlayView extends StatelessWidget {
             width: screenWidth(context),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [kPrimaryColor.withOpacity(0.2), Colors.grey[50]!],
+                colors: [kcPrimaryColor.withOpacity(0.2), Colors.grey[50]!],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

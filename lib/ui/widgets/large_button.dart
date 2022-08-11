@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -16,8 +15,8 @@ class LargeButton extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.title,
-    this.backgroundColor = kNiceOrange,
-    this.titleColor = kGreyTextColor,
+    this.backgroundColor = kcOrange,
+    this.titleColor = kcGreyTextColor,
     this.imageUrl,
     this.imagePath,
     this.fontSize = 22,
@@ -39,8 +38,9 @@ class LargeButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.0),
             color: backgroundColor,
-            border:
-                withBorder ? Border.all(width: 1, color: kDarkTurquoise) : null,
+            border: withBorder
+                ? Border.all(width: 1, color: kcPrimaryColorSecondary)
+                : null,
             // boxShadow: [
             //   BoxShadow(
             //     blurRadius: 2,

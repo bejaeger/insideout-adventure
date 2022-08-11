@@ -41,66 +41,80 @@ class HistoryTile extends StatelessWidget {
       }
     }
     return Container(
-      height: 60,
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15),
+      height: 62,
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-          //color: screenTime ? kcScreenTimeBlueOpaque : kcActivityColorOpaque,
-          border: Border.all(color: Colors.grey[400]!),
-          color: Colors.white,
-          boxShadow: const [
-            BoxShadow(
-              color: kcLightGreyColor,
-              offset: Offset(1, 1),
-              blurRadius: 0.3,
-              spreadRadius: 0.1,
-            )
-          ],
-          borderRadius: BorderRadius.circular(20.0)),
+      // decoration: BoxDecoration(
+      //     //color: screenTime ? kcScreenTimeBlueOpaque : kcActivityColorOpaque,
+      //     border: Border.all(color: Colors.grey[400]!),
+      //     color: Colors.white,
+      //     boxShadow: const [
+      //       BoxShadow(
+      //         color: kcLightGreyColor,
+      //         offset: Offset(1, 1),
+      //         blurRadius: 0.3,
+      //         spreadRadius: 0.1,
+      //       )
+      //     ],
+      //     borderRadius: BorderRadius.circular(20.0)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Large left side icon
-          Image.asset(screenTime ? kScreenTimeIcon : kActivityIcon,
-              height: 35,
-              width: 35,
-              color: screenTime ? kcScreenTimeBlue : kcActivityColor),
-          horizontalSpaceMedium,
+          Container(
+            width: 60,
+            alignment: Alignment.centerLeft,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(screenTime ? kScreenTimeIcon : kActivityIcon,
+                    height: showName ? 25 : 35,
+                    width: showName ? 25 : 35,
+                    color: screenTime ? kcScreenTimeBlue : kcActivityIconColor),
+                if (showName) SizedBox(height: 1),
+                if (showName) AfkCreditsText.captionBold(name),
+              ],
+            ),
+          ),
           // Name and Quest/screen time info
           Expanded(
             child: Column(
-              mainAxisAlignment:
-                  showName ? MainAxisAlignment.start : MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (showName) AfkCreditsText.caption(name),
-                if (showName) SizedBox(height: 3),
+                // if (showName) AfkCreditsText.caption(name),
+                // if (showName) SizedBox(height: 3),
                 screenTime
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AfkCreditsText.headingFour(minutes.toString()),
-                          SizedBox(width: 2),
-                          AfkCreditsText.caption("min"),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              AfkCreditsText.headingFour(minutes.toString()),
+                              SizedBox(width: 2),
+                              AfkCreditsText.caption("min"),
+                            ],
+                          ),
+                          AfkCreditsText.body("Screen time"),
                         ],
                       )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // questType
-                          AfkCreditsText.headingFour(
-                              minutes!.round().toString()),
-                          SizedBox(width: 1),
-                          AfkCreditsText.caption("min"),
-                          SizedBox(width: 2.0),
-                          AfkCreditsText.headingFour("-"),
-                          SizedBox(width: 2.0),
-                          Expanded(
-                            child: AfkCreditsText.headingFour(
-                                getShortQuestType(questType!)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              // questType
+                              AfkCreditsText.headingFour(
+                                  minutes!.round().toString()),
+                              SizedBox(width: 1),
+                              AfkCreditsText.caption("min"),
+                            ],
                           ),
+                          AfkCreditsText.body(getShortQuestType(questType!)),
                         ],
                       )
 
@@ -111,7 +125,9 @@ class HistoryTile extends StatelessWidget {
           horizontalSpaceRegular,
           // Date and credits info
           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: showCredits
+                ? MainAxisAlignment.start
+                : MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               AfkCreditsText.caption(formatDateDetailsType5(date)),

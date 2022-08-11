@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_view.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
@@ -33,7 +32,7 @@ class ParentDrawerView extends StatelessWidget {
           child: TextButton(
             style: TextButton.styleFrom(
                 padding: const EdgeInsets.all(0.0),
-                primary: kBlackHeadlineColor),
+                primary: kcBlackHeadlineColor),
             // onPressed: model.navigateToExplorerHomeView,
             onPressed: model.logout,
             //child: Text("Go to explorer home/map")),

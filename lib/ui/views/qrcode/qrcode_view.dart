@@ -99,7 +99,7 @@ class _ScanQRCodeState extends State<ScanQRCode> {
             key: qrKey,
             onQRViewCreated: _onQRViewCreated,
             overlay: QrScannerOverlayShape(
-                borderColor: ColorSettings.primaryColor,
+                borderColor: kcPrimaryColor,
                 borderRadius: 10,
                 borderLength: 30,
                 borderWidth: 10,

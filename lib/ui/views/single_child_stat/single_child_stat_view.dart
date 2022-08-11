@@ -1,5 +1,4 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
@@ -112,7 +111,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                 SummaryStatsDisplay(
                                     title: "Current Credits",
                                     icon: Image.asset(kAFKCreditsLogoPath,
-                                        color: kPrimaryColor, height: 16),
+                                        color: kcPrimaryColor, height: 16),
                                     stats: model.stats.afkCreditsBalance
                                         .toString()),
                               ],
@@ -157,7 +156,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                               title: "Activity Last Week",
                               horizontalPadding: 0,
                             ),
-                            verticalSpaceTiny,
+                            verticalSpaceSmall,
                             Row(
                               children: [
                                 Expanded(
@@ -167,7 +166,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                       Image.asset(kActivityIcon,
                                           height: 40,
                                           width: 40,
-                                          color: kcActivityColor),
+                                          color: kcActivityIconColor),
                                       horizontalSpaceSmall,
                                       Column(
                                         crossAxisAlignment:
@@ -245,6 +244,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                               ],
                             ),
                             verticalSpaceSmall,
+                            verticalSpaceTiny,
                             Divider(),
                             verticalSpaceTiny,
                             SectionHeader(
@@ -257,39 +257,35 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                               itemCount: model.sortedHistory.length,
                               itemBuilder: (context, index) {
                                 final data = model.sortedHistory[index];
-                                if (data is ActivatedQuest) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 0.0, vertical: 4.0),
-                                    child: HistoryTile(
-                                      showName: false,
-                                      showCredits: true,
-                                      screenTime: false,
-                                      date: data.createdAt.toDate(),
-                                      name: model
-                                          .explorerNameFromUid(data.uids![0]),
-                                      credits: data.afkCreditsEarned,
-                                      //minutes: data.afkCreditsEarned,
-                                      minutes: (data.timeElapsed / 60).round(),
-                                      questType: data.quest.type,
-                                    ),
-                                  );
-                                } else {
-                                  // ScreenTimeSession
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 0.0, vertical: 4.0),
-                                    child: HistoryTile(
-                                      showName: false,
-                                      showCredits: true,
-                                      screenTime: true,
-                                      date: data.startedAt.toDate(),
-                                      name: model.explorerNameFromUid(data.uid),
-                                      credits: data.afkCredits,
-                                      minutes: data.minutes,
-                                    ),
-                                  );
-                                }
+                                return Column(
+                                  children: [
+                                    data is ActivatedQuest
+                                        ? HistoryTile(
+                                            showName: false,
+                                            showCredits: true,
+                                            screenTime: false,
+                                            date: data.createdAt.toDate(),
+                                            name: model.explorerNameFromUid(
+                                                data.uids![0]),
+                                            credits: data.afkCreditsEarned,
+                                            //minutes: data.afkCreditsEarned,
+                                            minutes:
+                                                (data.timeElapsed / 60).round(),
+                                            questType: data.quest.type,
+                                          )
+                                        : HistoryTile(
+                                            showName: false,
+                                            showCredits: true,
+                                            screenTime: true,
+                                            date: data.startedAt.toDate(),
+                                            name: model
+                                                .explorerNameFromUid(data.uid),
+                                            credits: data.afkCredits,
+                                            minutes: data.minutes,
+                                          ),
+                                    Divider(),
+                                  ],
+                                );
                               },
                             ),
                             verticalSpaceMassive,

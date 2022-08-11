@@ -1,5 +1,4 @@
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/distance_check_status.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/dialog/travelled_distance_dialog_viewmodel.dart';
@@ -130,7 +129,7 @@ class _BasicDialogContent extends StatelessWidget {
                                 child: Text(
                                   model.mainButtonTitle ?? '',
                                   style: textTheme(context).headline6!.copyWith(
-                                      color: kWhiteTextColor,
+                                      color: kcWhiteTextColor,
                                       fontSize: 24,
                                       fontWeight: FontWeight.w800),
                                 ),
@@ -144,7 +143,7 @@ class _BasicDialogContent extends StatelessWidget {
                                 child: Text(
                                   "Go Back",
                                   style: textTheme(context).headline6!.copyWith(
-                                      color: kWhiteTextColor,
+                                      color: kcWhiteTextColor,
                                       fontSize: 24,
                                       fontWeight: FontWeight.w800),
                                 ),
@@ -190,7 +189,7 @@ class _BasicDialogContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(color: kPrimaryColor),
+                CircularProgressIndicator(color: kcPrimaryColor),
                 verticalSpaceMedium,
                 Text(
                     model.distanceCheckStatus == DistanceCheckStatus.success
@@ -213,10 +212,10 @@ class _BasicDialogContent extends StatelessWidget {
         case DistanceCheckStatus.warning:
           return Colors.amber.shade800;
         default:
-          return kPrimaryColor;
+          return kcPrimaryColor;
       }
     } else {
-      return kPrimaryColor;
+      return kcPrimaryColor;
     }
   }
 

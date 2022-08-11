@@ -41,7 +41,7 @@ class CustomAppBarSmall extends StatelessWidget {
         ),
         titleSpacing: 20,
         toolbarHeight: LayoutSettings.minAppBarHeight,
-        backgroundColor: ColorSettings.primaryColor, //Colors.white,
+        backgroundColor: kcPrimaryColor, //Colors.white,
         elevation: 2.0,
         bottom: bottom,
       ),
@@ -89,7 +89,7 @@ class CustomSliverAppBarSmall extends StatelessWidget {
                       child: rightIcon ??
                           Icon(
                             Icons.person,
-                            color: ColorSettings.whiteTextColor,
+                            color: kcWhiteTextColor,
                             size: 25,
                           ),
                     ),
@@ -100,7 +100,7 @@ class CustomSliverAppBarSmall extends StatelessWidget {
                       child: secondRightIcon ??
                           Icon(
                             Icons.person,
-                            color: ColorSettings.whiteTextColor,
+                            color: kcWhiteTextColor,
                             size: 25,
                           ),
                     ),
@@ -113,7 +113,7 @@ class CustomSliverAppBarSmall extends StatelessWidget {
       titleSpacing: 20,
       expandedHeight: LayoutSettings.minAppBarHeight * 1,
       collapsedHeight: LayoutSettings.minAppBarHeight,
-      backgroundColor: ColorSettings.primaryColor, //Colors.white,
+      backgroundColor: kcPrimaryColor, //Colors.white,
       elevation: 2.0,
       toolbarHeight: LayoutSettings.minAppBarHeight,
       pinned: pinned,

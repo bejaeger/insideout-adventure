@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -22,7 +21,7 @@ class FinishedQuestCard extends StatelessWidget {
         child: Container(
           height: 200,
           decoration: BoxDecoration(
-            color: kDarkTurquoise.withOpacity(0.2),
+            color: kcPrimaryColorSecondary.withOpacity(0.2),
             // gradient: LinearGradient(
             //   begin: Alignment.topCenter,
             //   end: Alignment.bottomCenter,
@@ -64,7 +63,7 @@ class FinishedQuestCard extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16.0)),
-                    color: kDarkTurquoise.withOpacity(0.9),
+                    color: kcPrimaryColorSecondary.withOpacity(0.9),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -77,7 +76,7 @@ class FinishedQuestCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: textTheme(context)
                             .headline6!
-                            .copyWith(fontSize: 15, color: kWhiteTextColor),
+                            .copyWith(fontSize: 15, color: kcWhiteTextColor),
                       ),
                     ),
                   ),
@@ -92,7 +91,7 @@ class FinishedQuestCard extends StatelessWidget {
                     Text(describeEnum(quest.quest.type.toString()),
                         style: textTheme(context)
                             .bodyText1!
-                            .copyWith(color: kGreyTextColor)),
+                            .copyWith(color: kcGreyTextColor)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -104,7 +103,7 @@ class FinishedQuestCard extends StatelessWidget {
                         Text(quest.afkCreditsEarned.toString(),
                             style: textTheme(context)
                                 .headline4!
-                                .copyWith(color: kPrimaryColor)),
+                                .copyWith(color: kcPrimaryColor)),
                       ],
                     ),
                   ],

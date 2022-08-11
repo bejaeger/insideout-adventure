@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -84,7 +83,7 @@ class ParentHomeView extends StatelessWidget {
                   title: "Children",
                   onButtonTap: model.showAddExplorerBottomSheet,
                   buttonIcon: Icon(Icons.add_circle_outline_rounded,
-                      size: 28, color: kDarkTurquoise),
+                      size: 28, color: kcPrimaryColorSecondary),
                 ),
                 if (model.supportedExplorers.length == 0)
                   model.isBusy
@@ -123,35 +122,35 @@ class ParentHomeView extends StatelessWidget {
                     physics: ScrollPhysics(),
                     itemCount: min(model.sortedHistory.length, 10),
                     itemBuilder: (context, index) {
-                      dynamic data = model.sortedHistory[index];
-                      if (data is ActivatedQuest) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15.0, vertical: 4.0),
-                          child: HistoryTile(
-                            screenTime: false,
-                            date: data.createdAt.toDate(),
-                            name: model.explorerNameFromUid(data.uids![0]),
-                            credits: data.afkCreditsEarned,
-                            //minutes: data.afkCreditsEarned,
-                            minutes: (data.timeElapsed / 60).round(),
-                            questType: data.quest.type,
-                          ),
-                        );
-                      } else {
-                        // ScreenTimeSession
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15.0, vertical: 4.0),
-                          child: HistoryTile(
-                            screenTime: true,
-                            date: data.startedAt.toDate(),
-                            name: model.explorerNameFromUid(data.uid),
-                            credits: data.afkCredits,
-                            minutes: data.minutes,
-                          ),
-                        );
-                      }
+                      dynamic data =
+                          model.sortedHistory[index]; // ScreenTimeSession
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 0.0),
+                        child: Column(
+                          children: [
+                            data is ActivatedQuest
+                                ? HistoryTile(
+                                    screenTime: false,
+                                    date: data.createdAt.toDate(),
+                                    name: model
+                                        .explorerNameFromUid(data.uids![0]),
+                                    credits: data.afkCreditsEarned,
+                                    //minutes: data.afkCreditsEarned,
+                                    minutes: (data.timeElapsed / 60).round(),
+                                    questType: data.quest.type,
+                                  )
+                                : HistoryTile(
+                                    screenTime: true,
+                                    date: data.startedAt.toDate(),
+                                    name: model.explorerNameFromUid(data.uid),
+                                    credits: data.afkCredits,
+                                    minutes: data.minutes,
+                                  ),
+                            Divider(),
+                          ],
+                        ),
+                      );
                     },
                   ),
                 ),

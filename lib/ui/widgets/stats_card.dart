@@ -1,5 +1,4 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/enums/stats_type.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -76,7 +75,7 @@ class StatsCard extends StatelessWidget {
                               title!,
                               style: textTheme(context).headline4!.copyWith(
                                   fontSize: 14,
-                                  color: kDarkTurquoise,
+                                  color: kcPrimaryColorSecondary,
                                   fontWeight: FontWeight.w600),
                             ),
                           ), //verticalSpaceTiny,
@@ -93,7 +92,7 @@ class StatsCard extends StatelessWidget {
                                           .headline2!
                                           .copyWith(
                                             fontSize: 20,
-                                            color: kDarkTurquoise,
+                                            color: kcPrimaryColorSecondary,
                                           ),
                                     ),
                                     Text(
@@ -102,7 +101,7 @@ class StatsCard extends StatelessWidget {
                                           .headline2!
                                           .copyWith(
                                             fontSize: 20,
-                                            color: kDarkTurquoise,
+                                            color: kcPrimaryColorSecondary,
                                           ),
                                     ),
                                     CreditsAmount(
@@ -116,7 +115,8 @@ class StatsCard extends StatelessWidget {
                                 statistic,
                                 maxLines: 1,
                                 style: textTheme(context).headline6!.copyWith(
-                                    fontSize: 32, color: kDarkTurquoise),
+                                    fontSize: 32,
+                                    color: kcPrimaryColorSecondary),
                               ),
                         if (subtitle != null)
                           Text(
@@ -140,7 +140,7 @@ class StatsCard extends StatelessWidget {
                               height: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25.0),
-                                color: kPrimaryColor,
+                                color: kcPrimaryColor,
                               ),
                               child: Text(buttonText,
                                   style: textTheme(context).headline4!.copyWith(
@@ -191,7 +191,7 @@ class AFKCreditsIcon extends StatelessWidget {
                     elevation: 0,
                     shape: BoxShape.circle,
                     child: Icon(locked ? Icons.lock : Icons.lock_open,
-                        size: 40, color: kGreyTextColor),
+                        size: 40, color: kcGreyTextColor),
                   ),
                 )
             ],

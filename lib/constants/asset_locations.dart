@@ -1,5 +1,8 @@
-const String kAFKCreditsLogoPath = "assets/icons/afk_credits.PNG";
-const String kAFKCreditsLogoSmallPath = "assets/icons/afk_credits_small.PNG";
+const String kAFKCreditsLogoPath = "assets/icons/afk_credits_orig.png";
+const String kAFKCreditsLogoSmallPath =
+    "assets/icons/afk_credits_small_orig.png";
+const String kAFKCreditsLogoSmallPathColored =
+    "assets/icons/afk_credits_small_colored.PNG";
 const String kMapPath = "assets/icons/map.png";
 const String kQrcodePath = "assets/icons/qrcode.png";
 const String kMeasureDistanceIconPath = "assets/icons/measure-distance.png";

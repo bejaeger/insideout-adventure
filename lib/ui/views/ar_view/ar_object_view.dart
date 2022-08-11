@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/layout_widgets/buttons_layouts.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/ar_view/ar_object_viewmodel.dart';
@@ -52,8 +51,17 @@ class _ARObjectViewState extends State<ARObjectView> {
             if (widget.isCoins)
               Align(
                 alignment: Alignment(0, 0.7),
-                child: AfkCreditsText.subheading(
-                    "Find coins and tap fast to collect"),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: kcCultured,
+                      borderRadius: BorderRadius.circular(20)),
+                  padding: const EdgeInsets.all(8.0),
+                  width: screenWidth(context, percentage: 0.7),
+                  child: AfkCreditsText.headingThree(
+                    "Find credits and tap fast to collect",
+                    align: TextAlign.center,
+                  ),
+                ),
               ),
             if (!widget.isCoins)
               Align(
@@ -66,7 +74,7 @@ class _ARObjectViewState extends State<ARObjectView> {
                           align: TextAlign.center,
                         )
                       : currentPlane == null
-                          ? AfkCreditsText.headingThree("Find a plane")
+                          ? AfkCreditsText.headingThree("Find a surface")
                           : AfkCreditsText.headingThree("Tap to show treasure"),
                 ),
               ),
@@ -130,21 +138,25 @@ class _ARObjectViewState extends State<ARObjectView> {
     final logoAsUint8 = logoAsBundle.buffer.asUint8List();
     final imageMaterial = ArCoreMaterial(
       textureBytes: logoAsUint8,
-      color: kPrimaryColor,
+      color: kcPrimaryColor,
     );
 
     // Cube
     final cube = ArCoreCube(
       materials: [imageMaterial],
-      size: vector.Vector3(0.04, 0.4, 0.4),
+      size: vector.Vector3(0.04, 0.6, 0.6),
     );
     await Future.delayed(Duration(milliseconds: 1400));
-    double ranX = ran.nextDouble() * 3 * (ran.nextDouble() > 0.5 ? -1 : 1);
-    double ranZ = ran.nextDouble() * 3 * (ran.nextDouble() > 0.5 ? -1 : 1);
+    double ranX =
+        (1 + ran.nextDouble() * 3) * (ran.nextDouble() > 0.5 ? -1 : 1);
+    double ranZ = -1.5 - ran.nextDouble() * 2;
     final rotatingCube = ArCoreRotatingNode(
       degreesPerSecond: 360,
       shape: cube,
-      position: position ?? vector.Vector3(ranX, -1, ranZ),
+      // position: position ?? vector.Vector3(ranX, -1, ranZ),
+      position: vector.Vector3(ranX, -1, ranZ),
+
+      // +z direction is backwards
     );
     controller.addArCoreNode(rotatingCube);
   }
@@ -155,7 +167,7 @@ class _ARObjectViewState extends State<ARObjectView> {
     final logoAsUint8 = logoAsBundle.buffer.asUint8List();
     final imageMaterial = ArCoreMaterial(
       textureBytes: logoAsUint8,
-      color: kPrimaryColor,
+      color: kcPrimaryColor,
       roughness: 0,
     );
     // Cube

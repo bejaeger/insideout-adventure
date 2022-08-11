@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +36,7 @@ class AFKFloatingActionButton extends StatelessWidget {
         // ],
       ),
       child: FloatingActionButton(
-        splashColor: kDarkTurquoise,
+        splashColor: kcPrimaryColorSecondary,
         elevation: 4,
         heroTag: null,
         backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
@@ -52,7 +51,7 @@ class AFKFloatingActionButton extends StatelessWidget {
               Text(title!,
                   style: textTheme(context)
                       .bodyText2!
-                      .copyWith(color: kWhiteTextColor, fontSize: 12))
+                      .copyWith(color: kcWhiteTextColor, fontSize: 12))
           ],
         ),
       ),

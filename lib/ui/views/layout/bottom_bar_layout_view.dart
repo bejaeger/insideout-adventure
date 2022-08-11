@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
@@ -79,7 +78,7 @@ class _BottomBarLayoutTemplateViewState
             stateManagement: true, // Default is true.
             hideNavigationBarWhenKeyboardShows:
                 true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-            backgroundColor: kPrimaryColor, // Default is Colors.white.
+            backgroundColor: kcPrimaryColor, // Default is Colors.white.
             decoration: NavBarDecoration(
               // gradient: LinearGradient(
               //     colors: [kPrimaryColor, kDarkTurquoise],
@@ -87,7 +86,7 @@ class _BottomBarLayoutTemplateViewState
               //     end: Alignment.bottomCenter),
               boxShadow: [
                 BoxShadow(
-                  color: kShadowColor,
+                  color: kcShadowColor,
                   blurRadius: 5.0, // soften the shadow
                   spreadRadius: 1, //extend the shadow
                   offset: Offset(
