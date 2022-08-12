@@ -89,6 +89,8 @@ abstract class AFKMarks extends FormViewModel {
       required LatLng position,
       required String qrdCodeId,
       required int number}) {
+    var id2 = Uuid();
+    final id = id2.v1().toString().replaceAll('-', '');
     _markersOnMap.add(
       addMarkers(markerId: markerId, pos: position, number: number),
     );

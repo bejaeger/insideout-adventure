@@ -168,7 +168,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     snackbarService.showSnackbar(
         title: "Not yet implemented.",
         message: "I know... it's sad",
-        duration: Duration(seconds: 2));
+        duration: Duration(seconds: 1));
   }
 
   Future showAdminDialogAndGetResponse() async {

@@ -23,7 +23,7 @@ class HerculesWorldLogo extends StatelessWidget {
                   fontSize: 40 * sizeScale,
                   color: kcOrange,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: 1,
+                  letterSpacing: 0.7,
                 )),
         Text("WORLD",
             style: textTheme(context).headline6!.copyWith(

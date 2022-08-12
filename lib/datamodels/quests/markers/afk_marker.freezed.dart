@@ -50,8 +50,7 @@ mixin _$AFKMarker {
   String get id => throw _privateConstructorUsedError;
   String? get qrCodeId => throw _privateConstructorUsedError;
   double? get lat => throw _privateConstructorUsedError;
-  double? get lon =>
-      throw _privateConstructorUsedError; //  GeoFirePoint? point,
+  double? get lon => throw _privateConstructorUsedError;
   MarkerStatus get markerStatus => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -191,7 +190,7 @@ class _$_AFKMarker implements _AFKMarker {
   @override
   final double? lon;
   @JsonKey()
-  @override //  GeoFirePoint? point,
+  @override
   final MarkerStatus markerStatus;
 
   @override
@@ -251,7 +250,7 @@ abstract class _AFKMarker implements AFKMarker {
   double? get lat;
   @override
   double? get lon;
-  @override //  GeoFirePoint? point,
+  @override
   MarkerStatus get markerStatus;
   @override
   @JsonKey(ignore: true)
