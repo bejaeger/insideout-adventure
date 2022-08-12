@@ -12,14 +12,13 @@ import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:stacked/stacked.dart';
+
+import '../../../datamodels/quests/quest.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel
     with MapStateControlMixin {
@@ -29,6 +28,12 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  // Stateful Data
+  // ignore: close_sinks
+
+  List<AFKQuest>? _afkQuest;
+
+  List<AFKQuest> get getAFKQuest => _afkQuest!;
 
   // --------------------------------------------------
   // getters
@@ -55,6 +60,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     this.name = currentUser.fullName;
     //_reactToServices(reactiveServices);
   }
+  // Subscription
+  StreamSubscription? afkQuestStreamSubscription;
 
   bool addingPositionToNotionDB = false;
   bool pushedToNotion = false;
@@ -71,7 +78,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     setBusy(false);
 
     // fade loading screen out process
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(
+      Duration(milliseconds: 500),
+    );
     showFullLoadingScreen = false;
     notifyListeners();
     // ? should to be in line with the fade out time in Loading Overlay widget
@@ -99,17 +108,25 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       callback: () => notifyListeners(),
     );
     addLocationListener();
-    await Future.wait([
-      completer.future,
-      completerTwo.future,
-      completerThree.future,
-      getLocation(forceAwait: true, forceGettingNewPosition: false),
-    ]);
+    await Future.wait(
+      [
+        completer.future,
+        completerTwo.future,
+        completerThree.future,
+        getLocation(forceAwait: true, forceGettingNewPosition: false),
+      ],
+    );
   }
 
   Future initializeQuests({bool? force}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
+        afkQuestStreamSubscription = questService.loadNearbyAFKQuests().listen(
+          (snapShot) {
+            _afkQuest = snapShot;
+          },
+        );
+        log.i(_afkQuest);
         await questService.loadNearbyQuests(force: true);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
@@ -299,6 +316,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   @override
   void dispose() {
+    afkQuestStreamSubscription?.cancel();
     _isShowingARViewStream?.cancel();
     _isShowingQuestListStream?.cancel();
     _selectedQuestStream?.cancel();

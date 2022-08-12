@@ -16,7 +16,6 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class MapViewModel extends BaseModel

@@ -23,6 +23,8 @@ import 'package:nanoid/nanoid.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../notification/notifications.dart';
+
 class ActiveQuestService with ReactiveServiceMixin {
   ActiveQuestService() {
     listenToReactiveValues([_timeElapsed]);
@@ -87,7 +89,9 @@ class ActiveQuestService with ReactiveServiceMixin {
         if (!closeby) {
           log.w("You are not nearby the marker, cannot start quest!");
           return "You are not nearby the marker.";
-        }
+        } else
+          return Notifications()
+              .createNotifications(message: "Active Tresuare Location");
       } catch (e) {
         log.e("Error thrown when searching for start marker: $e");
         if (e is StateError) {

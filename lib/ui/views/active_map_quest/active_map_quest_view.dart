@@ -3,7 +3,6 @@ import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
@@ -157,7 +156,8 @@ class _ActiveMapQuestViewState extends State<ActiveMapQuestView>
                                                           quest: widget.quest),
                                                   onSubmit: () =>
                                                       model.maybeStartQuest(
-                                                          quest: widget.quest))
+                                                          quest: widget.quest),
+                                                )
                                               : Container(
                                                   color: Colors.white,
                                                   child: NotCloseToQuestNote(

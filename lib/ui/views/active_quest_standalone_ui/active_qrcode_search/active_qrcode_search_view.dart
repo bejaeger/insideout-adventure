@@ -2,7 +2,6 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
@@ -96,7 +95,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
         // TODO: handle this in viewmodel
         if (!model.isNearStartMarker &&
             !model.isCalculatingDistanceToStartMarker) {
-          SchedulerBinding.instance?.addPostFrameCallback((_) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
             if (isShowClue == true) {
               Future.delayed(Duration(milliseconds: 0), () => flipCard());
             }

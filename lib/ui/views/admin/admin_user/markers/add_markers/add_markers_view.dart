@@ -182,6 +182,7 @@ class DisplayAllMarkersSection extends StatelessWidget {
                     markers: model.markers,
                     scrollGesturesEnabled: true,
                     myLocationEnabled: true,
+
                     //gestureRecognizers: Set()
                     //onTap: model.addMarkerToMap,
                   ),

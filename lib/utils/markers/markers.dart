@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -15,9 +16,11 @@ import '../../services/markers/marker_service.dart';
 
 abstract class AFKMarks extends FormViewModel {
   final logger = getLogger('AFKMarks');
+  Geoflutterfire geo = Geoflutterfire();
 
   Set<Marker> _markersOnMap = {};
   List<AFKMarker> _afkMarkers = [];
+  List<AfkMarkersPositions> _afkMarkersPosition = [];
   final _geolocationService = locator<GeolocationService>();
   final markersServices = locator<MarkerService>();
   Position? _position;
@@ -25,6 +28,7 @@ abstract class AFKMarks extends FormViewModel {
   Set<Marker> get getMarkersOnMap => _markersOnMap;
 
   List<AFKMarker> get getAFKMarkers => _afkMarkers;
+  List<AfkMarkersPositions> get getAfkMarkersPosition => _afkMarkersPosition;
 
   CameraPosition initialCameraPosition() {
     if (_position != null) {
@@ -67,15 +71,31 @@ abstract class AFKMarks extends FormViewModel {
         id: markerId, qrCodeId: qrCode, lat: pos.latitude, lon: pos.longitude);
   }
 
+  AfkMarkersPositions returnAfkPositionMarkers(
+      {required LatLng pos, required String docId}) {
+    /*    GeoPoint? point = geo.point(
+        latitude: pos.latitude, longitude: pos.longitude) as GeoPoint?; */
+    GeoFirePoint point =
+        geo.point(latitude: pos.latitude, longitude: pos.longitude);
+
+    return AfkMarkersPositions(point: point, documentId: docId);
+  }
+
   void _addMarkerOnMapAndAFKMarker(
       {required String markerId,
       required LatLng position,
       required String qrdCodeId}) {
+    var id2 = Uuid();
+    final id = id2.v1().toString().replaceAll('-', '');
+
     _markersOnMap.add(
       addMarkers(markerId: markerId, pos: position),
     );
     _afkMarkers.add(
       returnAFKMarker(pos: position, markerId: markerId, qrCode: qrdCodeId),
+    );
+    _afkMarkersPosition.add(
+      returnAfkPositionMarkers(pos: position, docId: id),
     );
   }
 
@@ -90,10 +110,24 @@ abstract class AFKMarks extends FormViewModel {
     }
   }
 
+  //add Markers to the Firebase
+  Future<void> _addAfkMarkersPositionToFirebase(
+      {required AfkMarkersPositions afkMarkersPositions}) async {
+    try {
+      await markersServices.addAFKMarkersPositions(
+          afkMarkersPositions: afkMarkersPositions);
+    } catch (e) {
+      throw FirestoreApiException(
+          message: 'Failed To Insert Places',
+          devDetails: 'Failed Caused By $e.');
+    }
+  }
+
   void resetMarkersValues() {
     //_markersOnMap = {};
     _markersOnMap.clear();
     _afkMarkers = [];
+    _afkMarkersPosition = [];
     notifyListeners();
   }
 
@@ -127,6 +161,13 @@ abstract class AFKMarks extends FormViewModel {
     String afkid = id.v1().toString().replaceAll('-', '');
     String qrCodeId = id.v1() + id.v4();
 
+    /*   GeoPoint? point = geo.point(
+        latitude: afkMarker.position.latitude,
+        longitude: afkMarker.position.longitude) as GeoPoint?; */
+    GeoFirePoint point = geo.point(
+        latitude: afkMarker.position.latitude,
+        longitude: afkMarker.position.longitude);
+
     await _addMarkersToDB(
       markers: AFKMarker(
           id: afkid,
@@ -134,6 +175,9 @@ abstract class AFKMarks extends FormViewModel {
           lat: afkMarker.position.latitude,
           lon: afkMarker.position.longitude,
           markerStatus: status),
+    );
+    await _addAfkMarkersPositionToFirebase(
+      afkMarkersPositions: AfkMarkersPositions(documentId: afkid, point: point),
     );
     resetMarkersValues();
   }

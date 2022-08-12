@@ -25,6 +25,7 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rxdart/subjects.dart';
 
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
@@ -34,6 +35,10 @@ class FirestoreApi {
   DocumentReference? _documentReference;
 
   List<GiftCardCategory> giftCartCategory = [];
+  // ignore: close_sinks
+  BehaviorSubject<double>? radius;
+  Stream<dynamic>? query;
+  StreamSubscription? subscription;
 
   Future<void> createUser(
       {required User user, required UserStatistics stats}) async {
@@ -100,6 +105,24 @@ class FirestoreApi {
       log.i("Document Reference: " + _docRef.toString());
       log.i("Marker ID: " + markers.id);
       await _docRef.set(markers.toJson());
+      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
+      log.v('Your Document Reference is: ${_docRef.toString()}');
+    } catch (e) {
+      throw FirestoreApiException(
+          message: 'Failed To Insert Places',
+          devDetails: 'Failed Caused By $e.');
+    }
+  }
+
+  //Create a List of My Favourite Places
+  Future<void> addAFKMarkersPositions(
+      {required AfkMarkersPositions afkMarkersPositions}) async {
+    try {
+      final _docRef =
+          getAFKMarkersPositionDocs(markerId: afkMarkersPositions.documentId!);
+      log.i("Document Reference: " + _docRef.toString());
+      log.i("Marker ID: " + afkMarkersPositions.documentId!);
+      await _docRef.set(afkMarkersPositions.toJson());
       log.v('Favourite Places document added to ${_docRef.path}' + '\n');
       log.v('Your Document Reference is: ${_docRef.toString()}');
     } catch (e) {
@@ -182,24 +205,6 @@ class FirestoreApi {
       return null;
     }
   }
-
-/* // Get Places For the Quest.
-  Future<List<Places>?>? getPlaces() async {
-    final _places = await placesCollection.get();
-
-    if (_places.docs.isNotEmpty) {
-      try {
-        return _places.docs
-            .map((docs) => Places.fromJson(docs.data()))
-            .toList();
-      } catch (e) {
-        throw FirestoreApiException(
-            message: 'Failed to get the Places', devDetails: '$e');
-      }
-    } else {
-      return null;
-    }
-  } */
 
   // Get Markers For the Quest.
   // ignore: non_constant_identifier_names
@@ -466,39 +471,51 @@ class FirestoreApi {
   Future _uploadQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
-    _documentReference = await questsCollection.add(
+    final _documentReference = await questsCollection.add(
       quest.toJson(),
     );
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
     await questsCollection
-        .doc(_documentReference!.id)
-        .update({'id': _documentReference!.id});
+        .doc(_documentReference.id)
+        .update({'id': _documentReference.id});
   }
 
   Future<bool> createQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
-    _documentReference = await questsCollection.add(quest.toJson());
+    final _documentReference = await questsCollection.add(quest.toJson());
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
     await questsCollection
-        .doc(_documentReference!.id)
-        .update({'id': _documentReference!.id});
-    if (_documentReference!.id.isNotEmpty) {
+        .doc(_documentReference.id)
+        .update({'id': _documentReference.id});
+    if (_documentReference.id.isNotEmpty) {
       log.i(
-          'This is the Document Id Being Created Harguilar ${_documentReference!.id}');
+          'This is the Document Id Being Created Harguilar ${_documentReference.id}');
       return true;
     }
     return false;
   }
 
-  // TODO: Only dowload nearby quests in the future
+  Future<bool> createAFKQuest({required AFKQuest afkQuest}) async {
+    final _documentReference =
+        getAFKQuestsPositionDocs(afkQuestId: afkQuest.id!);
+    if (_documentReference.id.isNotEmpty) {
+      //This is to make sure that the document has the same id as the quest.
+      log.i(
+          'This is the Document Id Being Created Harguilar ${_documentReference.path}');
+      await _documentReference.set(afkQuest.toJson());
+      return true;
+    }
+    return false;
+  }
+
   // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> downloadNearbyQuests() async {
     final quests = await questsCollection.get();
     if (quests.docs.isNotEmpty) {
-      log.v('Found list of quests in database');
+      log.v('Found list of quests in database {$quests}');
       return quests.docs
           .map(
             (docs) => Quest.fromJson(
@@ -513,6 +530,26 @@ class FirestoreApi {
           devDetails: "Quest document is empty");
     }
   }
+
+  // Changed the Scope of the Method. from _pvt to public
+  Stream<List<AFKQuest>> downloadNearbyAfkQuests() {
+    try {
+      return afkQuestsCollection.snapshots().map(
+            (snapShot) => snapShot.docs
+                .map(
+                  (docs) =>
+                      AFKQuest.fromJson(docs.data() as Map<String, dynamic>),
+                )
+                .toList(),
+          );
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when listening to past quests the user has successfully done",
+          devDetails: '$e');
+    }
+  }
+  // final quests = await questsCollection.get();
 
   // Returns dummy data for now!
   Future pushFinishedQuest({required ActivatedQuest? quest}) async {
@@ -859,6 +896,14 @@ DocumentReference getUserFavouritePlacesDocument({required String uid}) {
 
 DocumentReference getMarkersDocs({required String markerId}) {
   return markersCollection.doc(markerId);
+}
+
+DocumentReference getAFKMarkersPositionDocs({required String markerId}) {
+  return afkMarkersPositionsCollection.doc(markerId);
+}
+
+DocumentReference getAFKQuestsPositionDocs({required String afkQuestId}) {
+  return afkQuestsCollection.doc(afkQuestId);
 }
 
 CollectionReference getUserGiftCardsCollection({required String uid}) {

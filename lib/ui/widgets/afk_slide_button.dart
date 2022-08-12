@@ -1,5 +1,4 @@
 import 'package:afkcredits/constants/colors.dart';
-import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -39,10 +38,6 @@ class AFKSlideButton extends StatelessWidget {
                 highlightColor: Colors.white,
                 period: const Duration(milliseconds: 1000),
                 child: AfkCreditsText.subheading("      Start"),
-                // Text("    Start",
-                //     style: textTheme(context)
-                //         .headline6!
-                //         .copyWith(fontSize: 18, color: kWhiteTextColor)),
               )
             : Text("Cannot start",
                 style: textTheme(context)

@@ -25,11 +25,8 @@ import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
@@ -51,7 +48,6 @@ import 'package:afkcredits/ui/views/purchased_gift_cards/insert/insert_pre_purch
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
 import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
-import 'package:afkcredits/ui/views/purchased_gift_cards/purchased_gift_cards_viewmodel.dart';
 import 'package:afkcredits/ui/views/purchased_screen_time/purchased_screen_time_view.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
@@ -71,13 +67,12 @@ import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
 import 'package:afkcredits/utils/cloud_storage_result/cloud_storage_result.dart';
 import 'package:afkcredits/utils/image_selector/image_selector.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
-import 'package:pedometer/pedometer.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+import '../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
 
 @StackedApp(
@@ -140,6 +135,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: CloudFunctionsApi),
     LazySingleton(classType: FirebaseAuthenticationService),
+    LazySingleton(classType: AFKMarkersPositionService),
     LazySingleton(classType: AppConfigProvider),
     LazySingleton(classType: LayoutService),
     LazySingleton(classType: LocalStorageService),

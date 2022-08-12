@@ -256,6 +256,7 @@ class GoogleMapService {
   }
 }
 
+//Ben I just wonder why are we defining a function type ViewModel into services.
 Future<MapViewModel> presolveMapViewModel() async {
   MapViewModel _instance = MapViewModel(
     moveCamera: GoogleMapService.moveCamera,

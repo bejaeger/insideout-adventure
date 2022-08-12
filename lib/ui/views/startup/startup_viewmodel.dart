@@ -11,17 +11,21 @@ import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 import 'package:places_service/places_service.dart';
 
+import '../../../notification/notification_controller.dart';
+
 class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
   final PlacesService _placesService = locator<PlacesService>();
   //final _geolocationService = locator<GeolocationService>();
   final EnvironmentService _environmentService = locator<EnvironmentService>();
   //final _markersService = locator<MarkerService>();
 
-  dynamic position;
+  //dynamic position;
 
   final log = getLogger("StartUpViewModel");
 
   Future<void> runStartupLogic() async {
+    // Only after at least the action method is set, the notification events are delivered
+    NotificationController().initializeNotificationsEventListeners();
     await _environmentService.initialise();
     //final placesKey =  _environment.getValue(key)
     if (!kIsWeb) {

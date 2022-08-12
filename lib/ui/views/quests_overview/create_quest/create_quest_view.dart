@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable, unnecessary_statements
 
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import '../../../layout_widgets/buttons_layouts.dart';
-import '../../../widgets/error_text_box/error_text_box.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
 
@@ -112,7 +110,7 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
               keyboardType: TextInputType.text,
               // focusNode: nameFocusNode,
             ),
-            ErrorTextBox(message: model.nameInputValidationMessage.toString()),
+            //ErrorTextBox(message: model.nameInputValidationMessage.toString()),
             verticalSpaceSmall,
             TextField(
               decoration: InputDecoration(
@@ -133,8 +131,8 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
               ],
               controller: afkCreditAmountController,
             ),
-            ErrorTextBox(
-                message: model.afkCreditsInputValidationMessage.toString()),
+            /* ErrorTextBox(
+                message: model.afkCreditsInputValidationMessage.toString()), */
             verticalSpaceSmall,
             DropdownButtonFormField<QuestType>(
               //key: _key,
@@ -147,7 +145,8 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
                     value: _questType,
                     child: model.isLoading == false
                         ? Text(
-                            _questType.toString().split('.').elementAt(1),
+                            _questType.toSimpleString(),
+                            // _questType.toString().split('.').elementAt(1),
                           )
                         : Text(
                             "Select Quest Type",
@@ -160,12 +159,12 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
                 model.setQuestType(questType: questType!);
               },
             ),
-            ErrorTextBox(
+            /*            ErrorTextBox(
                 message: model.questTypeInputValidationMessage.toString()),
             ErrorTextBox(
-                message: model.afkMarkersInputValidationMessage.toString()),
-            verticalSpaceSmall,
-            Spacer(),
+                message: model.afkMarkersInputValidationMessage.toString()), */
+            verticalSpaceMedium,
+            //Spacer(),
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: CustomAFKButton(

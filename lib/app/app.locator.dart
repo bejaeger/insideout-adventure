@@ -7,9 +7,7 @@ import 'package:afkcredits/services/maps/google_map_service.dart';
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:logger/logger.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -41,7 +39,6 @@ import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/screentime/screen_time_service.dart';
 import '../services/users/user_service.dart';
-import '../ui/views/map/map_viewmodel.dart';
 import '../utils/cloud_storage_result/cloud_storage_result.dart';
 import '../utils/image_selector/image_selector.dart';
 
