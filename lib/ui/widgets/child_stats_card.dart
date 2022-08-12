@@ -38,10 +38,10 @@ class ChildStatsCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.hardEdge,
       child: Container(
+        width: screenWidth(context, percentage: 0.8),
         decoration: BoxDecoration(
             border: Border.all(color: Colors.grey[400]!),
             borderRadius: BorderRadius.circular(20.0)),
-        width: screenWidth(context, percentage: 0.45),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
@@ -52,11 +52,22 @@ class ChildStatsCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(child: AfkCreditsText.headingFour(user.fullName)),
-                  Icon(Icons.arrow_forward_ios, size: 20),
+                  Icon(Icons.arrow_forward_ios,
+                      size: 20, color: kcPrimaryColorSecondary),
+                ],
+              ),
+              Row(
+                children: [
+                  //AfkCreditsText.body("Balance: "),
+                  if (stats != null)
+                    CreditsAmount(
+                      amount: stats.afkCreditsBalance,
+                      height: 18,
+                    ),
                 ],
               ),
               verticalSpaceSmall,
-              AfkCreditsText.body("Last Week"),
+              AfkCreditsText.body("Stats Last 7 Days"),
               stats == null
                   ? AFKProgressIndicator()
                   : Column(
@@ -103,16 +114,7 @@ class ChildStatsCard extends StatelessWidget {
                       ],
                     ),
               verticalSpaceSmall,
-              Row(
-                children: [
-                  AfkCreditsText.body("Balance: "),
-                  if (stats != null)
-                    CreditsAmount(
-                      amount: stats.afkCreditsBalance,
-                      height: 18,
-                    ),
-                ],
-              ),
+
               // Flexible(
               //     //heightFactor: 0.6,
               //     child: Icon(Icons.trip_origin_sharp,

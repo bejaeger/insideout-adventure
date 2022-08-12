@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -28,44 +29,22 @@ class ParentHomeView extends StatelessWidget {
       fireOnModelReadyOnce: true,
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
-          appBar: CustomAppBar(title: "Home", drawer: true),
+          appBar: CustomAppBar(showLogo: true, title: " ", drawer: true),
           endDrawer: const ParentDrawerView(),
-          // floatingActionButton: Container(
-          //   width: screenWidth(context),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       //verticalSpaceSmall,
-          //       OutlineBox(
-          //         width: screenWidth(context, percentage: 0.4),
-          //         height: 60,
-          //         borderWidth: 0,
-          //         text: "Create Quest",
-          //         onPressed: model.navToCreateQuest,
-          //         color: kDarkTurquoise,
-          //         textColor: Colors.white,
-          //       ),
-          //       OutlineBox(
-          //         width: screenWidth(context, percentage: 0.4),
-          //         height: 60,
-          //         borderWidth: 0,
-          //         text: "Switch to Child",
-          //         onPressed: model.showNotImplementedSnackbar,
-          //         color: kDarkTurquoise,
-          //         textColor: Colors.white,
-          //       ),
-          //       //verticalSpaceSmall,
-          //     ],
-          //   ),
-          // ),
-          // floatingActionButtonLocation:
-          //     FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: BottomFloatingActionButtons(
+            titleMain: "Create Quest",
+            titleSecondary: "Quest List",
+            onTapMain: model.navToCreateQuest,
+            onTapSecondary: model.showNotImplementedSnackbar,
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           body: RefreshIndicator(
             onRefresh: () => model.listenToData(),
             child: ListView(
-              //physics: ScrollPhysics(),
+              // physics: BouncingScrollPhysics(),
               children: [
-                verticalSpaceSmall,
+                verticalSpaceMedium,
                 if (model.childScreenTimeSessionsActive.isNotEmpty)
                   AfkCreditsText.alertThree("Active Screen Time"),
                 if (model.childScreenTimeSessionsActive.isNotEmpty)
@@ -78,12 +57,13 @@ class ParentHomeView extends StatelessWidget {
                       formatDateDetails(model
                           .childScreenTimeSessionsActive[0].startedAt
                           .toDate())),
-
+                Center(child: AfkCreditsText.headingOne("Parent Area")),
+                verticalSpaceSmall,
                 SectionHeader(
                   title: "Children",
                   onButtonTap: model.showAddExplorerBottomSheet,
                   buttonIcon: Icon(Icons.add_circle_outline_rounded,
-                      size: 28, color: kcPrimaryColorSecondary),
+                      size: 28, color: kcPrimaryColor),
                 ),
                 if (model.supportedExplorers.length == 0)
                   model.isBusy
@@ -108,53 +88,62 @@ class ParentHomeView extends StatelessWidget {
                     // onAddNewExplorerPressed:
                     //     model.showAddExplorerBottomSheet
                   ),
-
-                //RecentHistory(),
                 verticalSpaceSmall,
                 SectionHeader(
-                  title: "History",
+                  title: "Children Activity",
                   //onButtonTap: model.navigateToTransferHistoryView,
                 ),
-                Container(
-                  //height: screenHeight(context, percentage: 0.5),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                    itemCount: min(model.sortedHistory.length, 10),
-                    itemBuilder: (context, index) {
-                      dynamic data =
-                          model.sortedHistory[index]; // ScreenTimeSession
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15.0, vertical: 0.0),
-                        child: Column(
-                          children: [
-                            data is ActivatedQuest
-                                ? HistoryTile(
-                                    screenTime: false,
-                                    date: data.createdAt.toDate(),
-                                    name: model
-                                        .explorerNameFromUid(data.uids![0]),
-                                    credits: data.afkCreditsEarned,
-                                    //minutes: data.afkCreditsEarned,
-                                    minutes: (data.timeElapsed / 60).round(),
-                                    questType: data.quest.type,
-                                  )
-                                : HistoryTile(
-                                    screenTime: true,
-                                    date: data.startedAt.toDate(),
-                                    name: model.explorerNameFromUid(data.uid),
-                                    credits: data.afkCredits,
-                                    minutes: data.minutes,
-                                  ),
-                            Divider(),
-                          ],
-                        ),
-                      );
-                    },
+                verticalSpaceTiny,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: kcMediumGrey.withOpacity(0.5)),
+                        borderRadius: BorderRadius.circular(20.0)),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemCount: min(model.sortedHistory.length, 3),
+                      itemBuilder: (context, index) {
+                        dynamic data =
+                            model.sortedHistory[index]; // ScreenTimeSession
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 0.0),
+                          child: Column(
+                            children: [
+                              data is ActivatedQuest
+                                  ? HistoryTile(
+                                      screenTime: false,
+                                      date: data.createdAt.toDate(),
+                                      name: model
+                                          .explorerNameFromUid(data.uids![0]),
+                                      credits: data.afkCreditsEarned,
+                                      //minutes: data.afkCreditsEarned,
+                                      minutes: (data.timeElapsed / 60).round(),
+                                      questType: data.quest.type,
+                                    )
+                                  : HistoryTile(
+                                      screenTime: true,
+                                      date: data.startedAt.toDate(),
+                                      name: model.explorerNameFromUid(data.uid),
+                                      credits: data.afkCredits,
+                                      minutes: data.minutes,
+                                    ),
+                              if (index !=
+                                  min(model.sortedHistory.length, 3) - 1)
+                                Divider(),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-                verticalSpaceLarge,
+                verticalSpaceMassive,
               ],
             ),
           ),
@@ -188,30 +177,29 @@ class ChildrenStatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: 180,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: ScrollPhysics(),
+        //shrinkWrap: true,
         itemCount: explorers.length,
         itemBuilder: (context, index) {
-          return Row(
-            children: [
-              if (index == 0) SizedBox(width: 20),
-              GestureDetector(
-                onTap: () => onChildCardPressed(uid: explorers[index].uid),
-                child: ChildStatsCard(
-                    screenTimeLastWeek:
-                        screenTimeLastWeek[explorers[index].uid],
-                    activityTimeLastWeek:
-                        activityTimeLastWeek[explorers[index].uid],
-                    screenTimeTrend: screenTimeTrend[explorers[index].uid],
-                    activityTimeTrend: activityTimeTrend[explorers[index].uid],
-                    user: explorers[index],
-                    childrenStats: explorersStats),
-              ),
-              if (index == explorers.length - 1) SizedBox(width: 20),
-            ],
+          return Padding(
+            padding: EdgeInsets.only(
+                left: (index == 0) ? 20.0 : 5.0,
+                right: (index == explorers.length - 1) ? 20.0 : 0),
+            child: GestureDetector(
+              onTap: () => onChildCardPressed(uid: explorers[index].uid),
+              child: ChildStatsCard(
+                  screenTimeLastWeek: screenTimeLastWeek[explorers[index].uid],
+                  activityTimeLastWeek:
+                      activityTimeLastWeek[explorers[index].uid],
+                  screenTimeTrend: screenTimeTrend[explorers[index].uid],
+                  activityTimeTrend: activityTimeTrend[explorers[index].uid],
+                  user: explorers[index],
+                  childrenStats: explorersStats),
+            ),
           );
         },
       ),

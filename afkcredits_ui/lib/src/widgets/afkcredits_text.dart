@@ -59,6 +59,10 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = captionStyleBold,
         alignment = align;
+  const AfkCreditsText.captionBoldLight(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = captionStyleBoldLight,
+        alignment = align;
 
   const AfkCreditsText.vertical(this.text, {TextAlign align = TextAlign.start})
       : style = verticalStyle,
@@ -75,6 +79,11 @@ class AfkCreditsText extends StatelessWidget {
   const AfkCreditsText.label(this.text, {TextAlign align = TextAlign.start})
       : style = labelStyle,
         alignment = align;
+
+  const AfkCreditsText.statsStyle(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = statsStyle,
+        alignment = align;
   const AfkCreditsText.tag(this.text, {TextAlign align = TextAlign.start})
       : style = tagStyle,
         alignment = align;
@@ -83,7 +92,7 @@ class AfkCreditsText extends StatelessWidget {
         alignment = align;
 
   AfkCreditsText.body(this.text,
-      {Color color = kGreyTextColor, TextAlign? align})
+      {Color color = kcGreyTextColor, TextAlign? align})
       : style = bodyStyleSofia.copyWith(color: color),
         alignment = align;
 

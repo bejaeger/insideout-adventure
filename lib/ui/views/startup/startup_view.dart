@@ -1,5 +1,6 @@
 import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
+import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -16,26 +17,7 @@ class StartUpView extends StatelessWidget {
       builder: (context, model, child) => model.showLoadingScreen()
           ? Scaffold(
               body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // AFKCreditsIcon(height: 170),
-                    // verticalSpaceSmall,
-                    Text("HERCULES",
-                        style: textTheme(context)
-                            .headline6!
-                            .copyWith(fontSize: 36, color: kcOrange)),
-                    Text("WORLD",
-                        style: textTheme(context)
-                            .headline6!
-                            .copyWith(fontSize: 60, color: kcOrangeYellow)),
-                    verticalSpaceMedium,
-                    AFKProgressIndicator(
-                      linear: false,
-                      color: kcOrange,
-                    ),
-                  ],
-                ),
+                child: HerculesWorldLogo(isBusy: true),
               ),
             )
           : Scaffold(

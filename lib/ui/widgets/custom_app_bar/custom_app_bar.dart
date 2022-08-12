@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -11,6 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool drawer;
   bool? alignLeft = false;
   final bool showRedLiveButton;
+  final bool showLogo;
   final Widget? widget;
   final void Function()? onBackButton;
   final void Function()? onAppBarButtonPressed;
@@ -26,7 +28,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.widget,
       this.appBarButtonIcon = Icons.help,
       this.showRedLiveButton = false,
-      this.onAppBarButtonPressed})
+      this.onAppBarButtonPressed,
+      this.showLogo = false})
       : super(key: key);
 
   double get getHeight => height;
@@ -59,12 +62,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ),
                     ),
+                  if (showLogo)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: kHorizontalPadding),
+                        child: HerculesWorldLogo(sizeScale: 0.4),
+                      ),
+                    ),
                   Align(
                     alignment: alignLeft == true
                         ? Alignment.centerLeft
                         : Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      padding: EdgeInsets.symmetric(horizontal: 50),
                       child: FittedBox(
                         child: Text(
                           title,

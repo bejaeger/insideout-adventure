@@ -39,6 +39,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     if (nameValue?.isEmpty ?? true) {
       setValidationMessage('You Must Give a Value into this field');
     }
+    resetValidationMessages();
   }
 
   Future<void> currentUserPosition() async {
@@ -67,16 +68,16 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       }
     }
     if (nameValue == null) {
-      nameInputValidationMessage = 'Choose Quest name';
+      nameInputValidationMessage = 'Please choose a valid quest name';
       isValid = false;
     }
     if (_questType == null) {
-      questTypeInputValidationMessage = "Choose a quest type";
+      questTypeInputValidationMessage = "Please choose a valid quest type";
       isValid = false;
     }
     if (!isValid) {
       _log.e("Input not valid");
-      displayEmptyTextsSnackBar();
+      //displayEmptyTextsSnackBar();
       notifyListeners();
     }
     return isValid;

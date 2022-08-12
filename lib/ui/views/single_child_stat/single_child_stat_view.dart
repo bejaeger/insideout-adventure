@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
+import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
 import 'package:afkcredits/ui/views/single_child_stat/drawer/single_child_drawer_view.dart';
 import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
@@ -31,43 +32,20 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
-            title: "Child Statistics",
+            title: model.explorer != null
+                ? model.explorer!.fullName + '\'s Stats'
+                : "Child Statistics",
             onBackButton: model.popView,
             drawer: true,
           ),
           endDrawer: SingleChildDrawerView(explorer: model.explorer),
-          // floatingActionButton: Container(
-          //   width: screenWidth(context),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       //verticalSpaceSmall,
-          //       OutlineBox(
-          //         width: screenWidth(context, percentage: 0.4),
-          //         height: 60,
-          //         borderWidth: 0,
-          //         text: "Add Screen Time Credits",
-          //         onPressed: model.navigateToAddFundsView,
-          //         color: kDarkTurquoise,
-          //         textColor: Colors.white,
-          //       ),
-          //       if (!model.isBusy &&
-          //           model.explorer?.createdByUserWithId != null)
-          //         OutlineBox(
-          //           width: screenWidth(context, percentage: 0.4),
-          //           height: 60,
-          //           borderWidth: 0,
-          //           text: "Switch to Child",
-          //           onPressed: model.handleSwitchToExplorerEvent,
-          //           color: kDarkTurquoise,
-          //           textColor: Colors.white,
-          //         ),
-          //       //verticalSpaceSmall,
-          //     ],
-          //   ),
-          // ),
-          // floatingActionButtonLocation:
-          //     FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: BottomFloatingActionButtons(
+              // titleMain: "Add Credits",
+              // onTapMain: model.navigateToAddFundsView,
+              titleMain: "Switch Account",
+              onTapMain: model.handleSwitchToExplorerEvent),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           body: RefreshIndicator(
             onRefresh: model.refresh,
             child: model.isBusy
@@ -81,79 +59,42 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                // CircleAvatar(
-                                //   radius: 25,
-                                //   backgroundColor: kDarkTurquoise,
-                                //   child: Text(
-                                //       getInitialsFromName(
-                                //           model.explorer.fullName),
-                                //       style: TextStyle(
-                                //           color: Colors.white, fontSize: 26)),
-                                // ),
-                                // horizontalSpaceMedium,
-                                if (model.explorer != null)
-                                  AfkCreditsText.headingThree(
-                                      model.explorer!.fullName),
-                              ],
-                            ),
                             verticalSpaceSmall,
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SummaryStatsDisplay(
-                                    title: "Quests Completed",
-                                    stats: model.stats.numberQuestsCompleted
-                                        .toString()),
-                                horizontalSpaceMedium,
-                                SummaryStatsDisplay(
-                                    title: "Current Credits",
+                                    title: "Current credits",
                                     icon: Image.asset(kAFKCreditsLogoPath,
-                                        color: kcPrimaryColor, height: 16),
+                                        color: kcPrimaryColor, height: 22),
                                     stats: model.stats.afkCreditsBalance
                                         .toString()),
-                              ],
-                            ),
-                            verticalSpaceSmall,
-                            Divider(),
-                            verticalSpaceSmall,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                //verticalSpaceSmall,
-                                Expanded(
-                                  child: AfkCreditsButton(
-                                      title: "Add Credits",
-                                      onTap: model.navigateToAddFundsView),
+                                horizontalSpaceSmall,
+                                Icon(
+                                  Icons.arrow_forward,
+                                  size: 30,
                                 ),
-                                horizontalSpaceMedium,
-                                // OutlineBox(
-                                //   width: screenWidth(context, percentage: 0.4),
-                                //   height: 60,
-                                //   borderWidth: 0,
-                                //   text: "Add Screen Time Credits",
-                                //   onPressed: model.navigateToAddFundsView,
-                                //   color: kDarkTurquoise,
-                                //   textColor: Colors.white,
-                                // ),
-                                if (!model.isBusy &&
-                                    model.explorer?.createdByUserWithId != null)
-                                  Expanded(
-                                    child: AfkCreditsButton.outline(
-                                      title: "Switch Accounts",
-                                      onTap: model.handleSwitchToExplorerEvent,
-                                    ),
-                                    //verticalSpaceSmall,
-                                  ),
+                                horizontalSpaceSmall,
+                                SummaryStatsDisplay(
+                                    title: "Equiv. screen time",
+                                    icon: Icon(Icons.schedule,
+                                        color: kcScreenTimeBlue),
+                                    unit: "min",
+                                    stats: model.stats.afkCreditsBalance
+                                        .toString()),
+                                horizontalSpaceSmall,
                               ],
                             ),
-                            verticalSpaceSmall,
-                            Divider(),
-                            verticalSpaceTiny,
+                            Align(
+                              child: AfkCreditsButton.text(
+                                title: "Add Screen Time Credits",
+                                onTap: model.navigateToAddFundsView,
+                              ),
+                            ),
+                            verticalSpaceMedium,
                             SectionHeader(
-                              title: "Activity Last Week",
+                              title: "Stats Last 7 Days",
                               horizontalPadding: 0,
                             ),
                             verticalSpaceSmall,
@@ -174,7 +115,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                         children: [
                                           Row(
                                             children: [
-                                              AfkCreditsText.label(model
+                                              AfkCreditsText.statsStyle(model
                                                       .totalChildActivityLastDays
                                                       .toString() +
                                                   " min"),
@@ -214,7 +155,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                         children: [
                                           Row(
                                             children: [
-                                              AfkCreditsText.label(model
+                                              AfkCreditsText.statsStyle(model
                                                       .totalChildScreenTimeLastDays
                                                       .toString() +
                                                   " min"),
@@ -243,50 +184,62 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                 ),
                               ],
                             ),
+                            verticalSpaceMedium,
                             verticalSpaceSmall,
-                            verticalSpaceTiny,
-                            Divider(),
-                            verticalSpaceTiny,
                             SectionHeader(
                               title: "History",
                               horizontalPadding: 0,
                             ),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: ScrollPhysics(),
-                              itemCount: model.sortedHistory.length,
-                              itemBuilder: (context, index) {
-                                final data = model.sortedHistory[index];
-                                return Column(
-                                  children: [
-                                    data is ActivatedQuest
-                                        ? HistoryTile(
-                                            showName: false,
-                                            showCredits: true,
-                                            screenTime: false,
-                                            date: data.createdAt.toDate(),
-                                            name: model.explorerNameFromUid(
-                                                data.uids![0]),
-                                            credits: data.afkCreditsEarned,
-                                            //minutes: data.afkCreditsEarned,
-                                            minutes:
-                                                (data.timeElapsed / 60).round(),
-                                            questType: data.quest.type,
-                                          )
-                                        : HistoryTile(
-                                            showName: false,
-                                            showCredits: true,
-                                            screenTime: true,
-                                            date: data.startedAt.toDate(),
-                                            name: model
-                                                .explorerNameFromUid(data.uid),
-                                            credits: data.afkCredits,
-                                            minutes: data.minutes,
-                                          ),
-                                    Divider(),
-                                  ],
-                                );
-                              },
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: kcMediumGrey.withOpacity(0.5)),
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: ScrollPhysics(),
+                                  itemCount: model.sortedHistory.length,
+                                  itemBuilder: (context, index) {
+                                    final data = model.sortedHistory[index];
+                                    return Column(
+                                      children: [
+                                        data is ActivatedQuest
+                                            ? HistoryTile(
+                                                showName: false,
+                                                showCredits: true,
+                                                screenTime: false,
+                                                date: data.createdAt.toDate(),
+                                                name: model.explorerNameFromUid(
+                                                    data.uids![0]),
+                                                credits: data.afkCreditsEarned,
+                                                //minutes: data.afkCreditsEarned,
+                                                minutes: (data.timeElapsed / 60)
+                                                    .round(),
+                                                questType: data.quest.type,
+                                              )
+                                            : HistoryTile(
+                                                showName: false,
+                                                showCredits: true,
+                                                screenTime: true,
+                                                date: data.startedAt.toDate(),
+                                                name: model.explorerNameFromUid(
+                                                    data.uid),
+                                                credits: data.afkCredits,
+                                                minutes: data.minutes,
+                                              ),
+                                        if (index !=
+                                            model.sortedHistory.length - 1)
+                                          Divider(),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
                             verticalSpaceMassive,
                             // SectionHeader(title: "Stats"),

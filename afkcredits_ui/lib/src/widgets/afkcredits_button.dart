@@ -11,6 +11,7 @@ class AfkCreditsButton extends StatelessWidget {
   final void Function()? onTap;
   final bool outline;
   final bool enabled;
+  final bool textButton;
   final Widget? leading;
   final Color? color;
 
@@ -20,6 +21,7 @@ class AfkCreditsButton extends StatelessWidget {
     this.disabled = false,
     this.enabled = true,
     this.busy = false,
+    this.textButton = false,
     this.onTap,
     this.leading,
     this.color,
@@ -34,7 +36,19 @@ class AfkCreditsButton extends StatelessWidget {
     this.enabled = false,
   })  : disabled = false,
         busy = false,
+        textButton = false,
         outline = true;
+
+  const AfkCreditsButton.text({
+    required this.title,
+    this.onTap,
+    this.leading,
+    this.color,
+    this.enabled = false,
+  })  : disabled = false,
+        busy = false,
+        outline = true,
+        textButton = true;
 
   @override
   Widget build(BuildContext context) {
@@ -45,18 +59,20 @@ class AfkCreditsButton extends StatelessWidget {
         width: double.infinity,
         height: 48,
         alignment: Alignment.center,
-        decoration: (!outline || enabled)
-            ? BoxDecoration(
-                color: !disabled ? color ?? kcPrimaryColor : kcMediumGreyColor,
-                borderRadius: BorderRadius.circular(15),
-              )
-            : BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: color ?? kcPrimaryColor,
-                  width: 2,
-                )),
+        decoration: textButton
+            ? null
+            : (!outline || enabled)
+                ? BoxDecoration(
+                    color: !disabled ? color ?? kcPrimaryColor : kcMediumGrey,
+                    borderRadius: BorderRadius.circular(20),
+                  )
+                : BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: color ?? kcPrimaryColor,
+                      width: 2,
+                    )),
         child: !busy
             ? Row(
                 mainAxisSize: MainAxisSize.min,
@@ -66,7 +82,7 @@ class AfkCreditsButton extends StatelessWidget {
                   Text(
                     title,
                     style: bodyStyle.copyWith(
-                      fontWeight: (!outline || enabled)
+                      fontWeight: (!outline || enabled || textButton)
                           ? FontWeight.bold
                           : FontWeight.w400,
                       color: (!outline || enabled)

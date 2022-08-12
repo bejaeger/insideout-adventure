@@ -41,7 +41,7 @@ class AfkCreditsCategoryCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Icon(getIconForCategory(category),
-                    size: 60, color: kGreyTextColor.withOpacity(0.9)),
+                    size: 60, color: kcGreyTextColor.withOpacity(0.9)),
               ),
               const Spacer(),
               Text(

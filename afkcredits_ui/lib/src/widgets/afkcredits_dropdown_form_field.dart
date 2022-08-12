@@ -2,32 +2,34 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AfkCreditsInputField extends StatelessWidget {
-  final TextEditingController controller;
+class AfkCreditsDropdownFormField<T> extends StatelessWidget {
+  final bool isLoading;
+  final T? value;
   final String placeholder;
   final Widget? leading;
   final Widget? trailing;
-  final bool password;
   final String? errorText;
-  final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final List<DropdownMenuItem<T>> items;
   final void Function()? trailingTapped;
+  final void Function(T?)? onChanged;
 
   final circularBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(8),
   );
 
-  AfkCreditsInputField({
+  AfkCreditsDropdownFormField({
     Key? key,
-    required this.controller,
+    required this.items,
+    this.value,
     this.placeholder = '',
     this.leading,
     this.trailing,
     this.trailingTapped,
-    this.password = false,
     this.errorText,
-    this.keyboardType = TextInputType.text,
     this.inputFormatters,
+    this.isLoading = true,
+    required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -37,14 +39,9 @@ class AfkCreditsInputField extends StatelessWidget {
       ///
       /// We can also avoid this by changing the [primarySwatch] in MaterialApp
       data: ThemeData(primaryColor: kcPrimaryColor),
-      child: TextField(
-        controller: controller,
-        style: const TextStyle(height: 1),
-        obscureText: password,
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatters,
+      child: DropdownButtonFormField<T>(
+        //key: _key,
         decoration: InputDecoration(
-          hintText: placeholder,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           filled: true,
@@ -70,6 +67,33 @@ class AfkCreditsInputField extends StatelessWidget {
             borderSide: const BorderSide(color: kcLightGrey),
           ),
         ),
+        value: value,
+        hint: Text(placeholder),
+        isExpanded: true,
+        items: items,
+        // items: CreateQuestType.values.map(
+        //   (_questType) {
+        //     return DropdownMenuItem(
+        //       value: _questType == CreateQuestType.TreasureLocationSearch
+        //           ? QuestType.TreasureLocationSearch
+        //           : _questType == CreateQuestType.GPSAreaHike
+        //               ? QuestType.GPSAreaHike
+        //               : QuestType.GPSAreaHunt,
+        //       child: model.isLoading == false
+        //           ? Text(
+        //               _questType.toString().split('.').elementAt(1),
+        //             )
+        //           : Text(
+        //               "Select Quest Type",
+        //             ),
+        //     );
+        //   },
+        // ).toList(),
+        onChanged: onChanged,
+        // (QuestType? questType) {
+        //   questTypeValue = questType;
+        //   model.setQuestType(questType: questType!);
+        // },
       ),
     );
   }

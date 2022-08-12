@@ -13,19 +13,20 @@ class ParentDrawerView extends StatelessWidget {
     return ViewModelBuilder<CommonDrawerViewModel>.reactive(
       viewModelBuilder: () => CommonDrawerViewModel(),
       builder: (context, model, child) => CommonDrawerView(children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-          child: Row(
-            children: [
-              Expanded(
-                child: AfkCreditsButton(
-                    title: "Create Quest", onTap: model.navToCreateQuest),
-              ),
-            ],
-          ),
-        ),
-        verticalSpaceMedium,
-        Divider(),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+        //   child: Row(
+        //     children: [
+        //       Expanded(
+        //         child: AfkCreditsButton(
+        //             title: "List of Quests",
+        //             onTap: model.showNotImplementedSnackbar),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        // verticalSpaceMedium,
+        // Divider(),
         verticalSpaceMedium,
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
