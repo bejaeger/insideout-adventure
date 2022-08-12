@@ -10,7 +10,7 @@ class NotificationController {
       'resource://drawable/res_icon_notification',
       [
         NotificationChannel(
-          channelKey: " time_up_channel",
+          channelKey: "time_up_channel",
           channelName: 'afk time up notifications',
           channelDescription: 'Notify User When his/her screen time is up',
           defaultColor: Colors.teal,

@@ -28,8 +28,10 @@ class Notifications {
         title: '${Emojis.time_alarm_clock} Unfortunately Your Time is Up!',
         body: message,
         //  bigPicture: kAFKCreditsLogoPath,
-
-        //timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
+      ),
+      schedule: NotificationInterval(
+        interval: 5,
+        timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
       ),
     );
   }

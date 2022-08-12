@@ -1,6 +1,6 @@
 import 'package:afkcredits/enums/marker_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:geopoint/geopoint.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 
 part 'afk_marker.freezed.dart';
 part 'afk_marker.g.dart';
@@ -21,8 +21,8 @@ class AFKMarker with _$AFKMarker {
 
 class AfkMarkersPositions {
   String? documentId;
-  //GeoFirePoint? point;
-  GeoPoint? point;
+  GeoFirePoint? point;
+  // GeoPoint? point;
 
   AfkMarkersPositions({required this.documentId, required this.point});
 
@@ -40,8 +40,7 @@ class AfkMarkersPositions {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['documentId'] = this.documentId;
-    // data['point'] = this.point!.data;
-    data['point'] = this.point!;
+    data['point'] = this.point!.data;
     return data;
   }
 }

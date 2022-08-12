@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
-
-import '../../constants/constants.dart';
 
 class AFKMarkersPositionService {
   Geoflutterfire geo = Geoflutterfire();
@@ -21,7 +20,7 @@ class AFKMarkersPositionService {
     var pos = await Location.instance.getLocation();
 
     // Make a referece to firestore
-    final ref = afkMarkersPositionsCollection;
+    final ref = FirebaseFirestore.instance.collection('afkMarkersPositions');
     GeoFirePoint center =
         geo.point(latitude: pos.latitude!, longitude: pos.longitude!);
 

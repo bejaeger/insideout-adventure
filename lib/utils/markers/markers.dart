@@ -2,7 +2,6 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geopoint/geopoint.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:uuid/uuid.dart';
@@ -74,10 +73,10 @@ abstract class AFKMarks extends FormViewModel {
 
   AfkMarkersPositions returnAfkPositionMarkers(
       {required LatLng pos, required String docId}) {
-    GeoPoint? point = geo.point(
-        latitude: pos.latitude, longitude: pos.longitude) as GeoPoint?;
-    /*  GeoFirePoint point =
-        geo.point(latitude: pos.latitude, longitude: pos.longitude); */
+    /*    GeoPoint? point = geo.point(
+        latitude: pos.latitude, longitude: pos.longitude) as GeoPoint?; */
+    GeoFirePoint point =
+        geo.point(latitude: pos.latitude, longitude: pos.longitude);
 
     return AfkMarkersPositions(point: point, documentId: docId);
   }
@@ -162,12 +161,12 @@ abstract class AFKMarks extends FormViewModel {
     String afkid = id.v1().toString().replaceAll('-', '');
     String qrCodeId = id.v1() + id.v4();
 
-    GeoPoint? point = geo.point(
+    /*   GeoPoint? point = geo.point(
         latitude: afkMarker.position.latitude,
-        longitude: afkMarker.position.longitude) as GeoPoint?;
-/*     GeoFirePoint point = geo.point(
+        longitude: afkMarker.position.longitude) as GeoPoint?; */
+    GeoFirePoint point = geo.point(
         latitude: afkMarker.position.latitude,
-        longitude: afkMarker.position.longitude); */
+        longitude: afkMarker.position.longitude);
 
     await _addMarkersToDB(
       markers: AFKMarker(

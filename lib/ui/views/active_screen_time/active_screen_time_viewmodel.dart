@@ -19,17 +19,11 @@ class ActiveScreenTimeViewModel extends BaseModel {
     // TODO: This is where we would want to start
     Notifications().createNotifications(message: "Active Screen Time");
 
-    Future.delayed(
-      Duration(minutes: 1),
-      () async {
-        /*  await Notifications()
-            .createNotificationsTimesUp(message: "Your Time is Up"); */
-        // TODO: This is where we would want to start
-        Notifications().createNotifications(message: "Your Time is Up");
+    Notifications().createNotificationsTimesUp(message: "Your Time is Up");
+    // TODO: This is where we would want to start
+    // Notifications().createNotifications(message: "Your Time is Up");
 
-        stopScreenTimeAfterZero();
-      },
-    );
+    stopScreenTimeAfterZero();
   }
 
   // getters
