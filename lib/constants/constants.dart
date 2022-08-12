@@ -40,10 +40,14 @@ final CollectionReference questsCollection =
     FirebaseFirestore.instance.collection('quests');
 final CollectionReference screenTimeSessionCollection =
     FirebaseFirestore.instance.collection(screenTimeSessionsCollectionKey);
+final CollectionReference afkQuestsCollection =
+    FirebaseFirestore.instance.collection('afkQuests');
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
 final CollectionReference markersCollection =
     FirebaseFirestore.instance.collection("markers");
+final afkMarkersPositionsCollection =
+    FirebaseFirestore.instance.collection("afkMarkersPositions");
 final CollectionReference activatedQuestsCollection =
     FirebaseFirestore.instance.collection(activatedQuestsCollectionKey);
 const int kMaxDistanceFromMarkerInMeterQrCodeHunt = 200;

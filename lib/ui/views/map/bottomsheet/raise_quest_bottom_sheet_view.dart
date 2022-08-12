@@ -1,5 +1,4 @@
 import 'package:afkcredits/data/app_strings.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';

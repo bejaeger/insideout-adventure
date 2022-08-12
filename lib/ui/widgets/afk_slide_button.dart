@@ -38,10 +38,6 @@ class AFKSlideButton extends StatelessWidget {
                 highlightColor: Colors.white,
                 period: const Duration(milliseconds: 1000),
                 child: AfkCreditsText.subheading("      Start"),
-                // Text("    Start",
-                //     style: textTheme(context)
-                //         .headline6!
-                //         .copyWith(fontSize: 18, color: kWhiteTextColor)),
               )
             : Text("Cannot start",
                 style: textTheme(context)

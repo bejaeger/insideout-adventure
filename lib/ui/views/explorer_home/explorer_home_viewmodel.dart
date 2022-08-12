@@ -18,6 +18,8 @@ import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../datamodels/quests/quest.dart';
+
 class ExplorerHomeViewModel extends SwitchAccountsViewModel
     with MapStateControlMixin {
   //-------------------------------------------------------
@@ -25,6 +27,12 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  // Stateful Data
+  // ignore: close_sinks
+
+  List<AFKQuest>? _afkQuest;
+
+  List<AFKQuest> get getAFKQuest => _afkQuest!;
 
   // --------------------------------------------------
   // getters
@@ -65,7 +73,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     setBusy(false);
 
     // fade loading screen out process
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(
+      Duration(milliseconds: 500),
+    );
     showFullLoadingScreen = false;
     notifyListeners();
     // ? should to be in line with the fade out time in Loading Overlay widget

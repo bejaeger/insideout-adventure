@@ -18,6 +18,7 @@ import 'package:stacked_services/stacked_services.dart';
 import '../apis/cloud_functions_api.dart';
 import '../apis/firestore_api.dart';
 import '../app_config_provider.dart';
+import '../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 import '../services/connectivity/connectivity_service.dart';
 import '../services/environment_services.dart';
 import '../services/gamification/gamification_service.dart';
@@ -58,6 +59,7 @@ Future setupLocator(
   locator.registerLazySingleton(() => FirestoreApi());
   locator.registerLazySingleton(() => CloudFunctionsApi());
   locator.registerLazySingleton(() => FirebaseAuthenticationService());
+  locator.registerLazySingleton(() => AFKMarkersPositionService());
   locator.registerLazySingleton(() => AppConfigProvider());
   locator.registerLazySingleton(() => LayoutService());
   locator.registerLazySingleton(() => LocalStorageService());

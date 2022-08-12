@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'package:afkcredits/notification/notification_controller.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -7,7 +8,6 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/environment_services.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 import 'package:places_service/places_service.dart';
 
@@ -17,11 +17,13 @@ class StartUpViewModel extends TransferBaseViewModel {
   final EnvironmentService _environmentService = locator<EnvironmentService>();
   //final _markersService = locator<MarkerService>();
 
-  dynamic position;
+  //dynamic position;
 
   final log = getLogger("StartUpViewModel");
 
   Future<void> runStartupLogic() async {
+    // Only after at least the action method is set, the notification events are delivered
+    NotificationController().initializeNotificationsEventListeners();
     await _environmentService.initialise();
     //final placesKey =  _environment.getValue(key)
     if (!kIsWeb) {

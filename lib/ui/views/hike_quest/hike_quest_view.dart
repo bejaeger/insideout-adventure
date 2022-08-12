@@ -157,7 +157,8 @@ class _HikeQuestViewState extends State<HikeQuestView>
                                                           quest: widget.quest),
                                                   onSubmit: () =>
                                                       model.maybeStartQuest(
-                                                          quest: widget.quest))
+                                                          quest: widget.quest),
+                                                )
                                               : Container(
                                                   color: Colors.white,
                                                   child: NotCloseToQuestNote(

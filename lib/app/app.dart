@@ -52,13 +52,12 @@ import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dar
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
-import 'package:pedometer/pedometer.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+import '../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
 
 @StackedApp(
@@ -110,6 +109,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: CloudFunctionsApi),
     LazySingleton(classType: FirebaseAuthenticationService),
+    LazySingleton(classType: AFKMarkersPositionService),
     LazySingleton(classType: AppConfigProvider),
     LazySingleton(classType: LayoutService),
     LazySingleton(classType: LocalStorageService),

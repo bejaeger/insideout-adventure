@@ -13,6 +13,9 @@ class ActiveScreenTimeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActiveScreenTimeViewModel>.reactive(
+      /*    onModelReady: (model) {
+        model.verifyTimer();
+      }, */
       viewModelBuilder: () => ActiveScreenTimeViewModel(minutes: minutes),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
@@ -35,8 +38,29 @@ class ActiveScreenTimeView extends StatelessWidget {
                       Lottie.network(
                           'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
                           height: 45),
-                      AfkCreditsText.headingTwo(
-                          model.screenTimeLeft.toString() + " seconds"),
+                      if (model.screenTimeLeft! > 0)
+                        AfkCreditsText.headingTwo(
+                          model.screenTimeLeft.toString() + " seconds",
+                        )
+                      /*                     else
+                        Expanded(
+                          child: AlertDialog(
+                            title: const Text("Time is up"),
+                            content: const Text(
+                                "You Managed to Finish Your screen time"),
+                            actions: <Widget>[
+                              // CupertinoDialogAction(child: child)
+                              ElevatedButton(
+                                onPressed: () {
+                                  model.stopScreenTimeAfterZero();
+                                  //model.stopScreenTime();
+                                  //Navigator.of(context).pop();
+                                },
+                                child: const Text("ok"),
+                              ),
+                            ],
+                          ),
+                        ) */
                     ],
                   ),
                   Spacer(),

@@ -1,3 +1,9 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
@@ -11,10 +17,12 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../../app/app.locator.dart';
+import '../../../notification/notifications.dart';
+import '../../../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 
 class HikeQuestViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
@@ -36,8 +44,11 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   bool isAnimatingCamera = false;
   bool validatingMarkerInArea = false;
 
+  final afkMarkersPositionsServices = locator<AFKMarkersPositionService>();
+
   // set of markers and areas on map
   Set<Marker> markersOnMap = {};
+  Set<Marker> markersOnMapTesting = {};
   Set<Circle> areasOnMap = {};
 
   // -------------------------------------------------
@@ -103,6 +114,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       }
       // quest started
       //if (quest.type != QuestType.GPSAreaHike) {
+      Notifications().createNotifications(message: "Actived Map Quest!!");
       activeQuestService.listenToPosition(
         distanceFilter: kDistanceFilterHikeQuest,
         pushToNotion: true,
@@ -115,6 +127,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
               position: userLivePosition);
         },
       );
+
       //}
       notifyListeners();
       //resetSlider();
@@ -596,6 +609,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     if (hasActiveQuest) {
       setBusy(true);
       try {
+        afkMarkersPositionsServices.startQuery(updateMarkers: _updateMarkers);
         _googleMapController = controller;
         // await Future.delayed(Duration(milliseconds: 50));
         controller.setMapStyle(mapStyle);
@@ -910,5 +924,36 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     resetPreviousQuest();
     _googleMapController?.dispose();
     super.dispose();
+  }
+  /////// New Code **************
+
+  void _updateMarkers(List<DocumentSnapshot> documentList) {
+    log.i("Harguilar Look at the list Below");
+    print(documentList);
+    //mapController.clearMarkers();
+    documentList.forEach((DocumentSnapshot document) {
+      if (document.exists) {
+        AfkMarkersPositions _afkMarkersPosition = AfkMarkersPositions.fromJson(
+            document.data() as Map<String, dynamic>);
+        /*  String? id = document.data()['documentId'].toString();
+        GeoPoint pos = document.data()['position']['geopoint'];
+        /*    GeoPoint pos = document.data['position']['geopoint'];
+      double distance = document.data['distance']; */ */
+
+        markersOnMapTesting.add(
+          Marker(
+            markerId: MarkerId(_afkMarkersPosition.documentId.toString()),
+            position: LatLng(_afkMarkersPosition.point!.latitude,
+                _afkMarkersPosition.point!.longitude),
+            icon: BitmapDescriptor.defaultMarker,
+            infoWindow: InfoWindow(
+              title: 'Magic Marker',
+            ),
+          ),
+        );
+      }
+
+      // mapController.addMarker(marker);
+    });
   }
 }

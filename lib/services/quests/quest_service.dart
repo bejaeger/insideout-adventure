@@ -123,6 +123,11 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  Stream<List<AFKQuest>> loadNearbyAFKQuests() {
+    // TODO: In the future retrieve only nearby quests
+    return _firestoreApi.downloadNearbyAfkQuests();
+  }
+
   List<Quest> extractQuestsOfType(
       {required List<Quest> quests, required QuestType questType}) {
     List<Quest> returnQuests = [];
@@ -197,6 +202,14 @@ class QuestService with ReactiveServiceMixin {
 
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
+  }
+
+  Future<bool> createAFKQuest({required AFKQuest afkQuest}) async {
+    //TODO: Refactor this code.
+    if (afkQuest.id!.isNotEmpty) {
+      return await _firestoreApi.createAFKQuest(afkQuest: afkQuest);
+    }
+    return false;
   }
 
   Future<List<Quest>> getQuestsWithStartMarkerId(

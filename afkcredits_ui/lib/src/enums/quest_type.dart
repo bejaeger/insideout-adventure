@@ -21,3 +21,9 @@ enum CreateQuestType {
   // DistanceEstimate,
   TreasureLocationSearch,
 }
+
+extension SerializableEnum on Enum {
+  String toSimpleString() {
+    return toString().split('.').last;
+  }
+}

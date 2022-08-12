@@ -147,13 +147,24 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
           markers: getAFKMarkers,
           afkCredits: afkCreditAmount),
     );
+
+    final afkQuestAdded = await _questService.createAFKQuest(
+      afkQuest: AFKQuest(
+          id: questId,
+          name: nameValue.toString(),
+          description: descriptionValue.toString(),
+          type: _questType!.toSimpleString(),
+          //type: _questType.toString().split('.').elementAt(1),
+          afkCredits: afkCreditAmount,
+          afkMarkersPositions: getAfkMarkersPosition,
+          startAfkMarkersPositions: getAfkMarkersPosition.first,
+          finishAfkMarkersPositions: getAfkMarkersPosition.last),
+    );
     isLoading = false;
     notifyListeners();
-    if (added) {
+    if (added || afkQuestAdded) {
       _log.i("Quest added successfully!");
       _displaySnackBars.snackBarCreatedQuest();
-      // not 100% sure why the delay is needed here
-      await Future.delayed(Duration(seconds: 2));
       return true;
     }
 
@@ -202,7 +213,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     super.dispose();
   }
 
-  void setQuestType({required QuestType questType}) {
-    _questType = questType;
+  void setQuestType({required QuestType? questType}) {
+    _questType = questType!;
   }
 }

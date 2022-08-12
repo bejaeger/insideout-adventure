@@ -2,6 +2,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/main_footer_viewmodel.dart
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits/ui/widgets/outline_box.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -16,7 +17,40 @@ class MainFooterOverlayView extends StatelessWidget {
     // log.wtf("==>> Rebuild MainFooterView");
     return ViewModelBuilder<MainFooterViewModel>.reactive(
       viewModelBuilder: () => MainFooterViewModel(),
-      onModelReady: (model) => model.listenToLayout(),
+      //onModelReady: (model) => model.listenToLayout(),
+      onModelReady: (model) {
+        AwesomeNotifications().isNotificationAllowed().then(
+          (isAllowed) {
+            if (!isAllowed) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Allow Notications'),
+                  content: const Text("We want to send you some Notifications"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Don\'t Allow'),
+                    ),
+                    Spacer(),
+                    TextButton(
+                      onPressed: () => AwesomeNotifications()
+                          .requestPermissionToSendNotifications()
+                          .then(
+                            (_) => Navigator.pop(context),
+                          ),
+                      child: const Text('Allow'),
+                    )
+                  ],
+                ),
+              );
+            }
+          },
+        );
+        return model.listenToLayout();
+      },
       builder: (context, model, child) => Container(
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
