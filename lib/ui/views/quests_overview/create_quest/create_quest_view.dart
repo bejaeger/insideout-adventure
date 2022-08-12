@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable, unnecessary_statements
 
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/enums/quest_type.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
-import '../../../layout_widgets/buttons_layouts.dart';
-import '../../../widgets/error_text_box/error_text_box.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
 
@@ -33,7 +31,6 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
   // TODO: need to dispose this so need to have stateful function here!
   // TODO: This does not work with formView
   final controller = PageController(initialPage: 0);
-  bool secondPage = false;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateQuestViewModel>.reactive(
@@ -44,51 +41,26 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
         viewModelBuilder: () => CreateQuestViewModel(),
         // onModelReady: (model) => listenToFormUpdated(model),
         builder: (context, model, child) {
+          print("===================================");
+          print(model.pageIndex);
           return SafeArea(
             child: Scaffold(
               //resizeToAvoidBottomInset: true,
               resizeToAvoidBottomInset: false,
               appBar: CustomAppBar(
                 title: "Create Quest",
-                onBackButton: secondPage
-                    ? () {
-                        controller.previousPage(
-                            duration: Duration(milliseconds: 200),
-                            curve: Curves.easeIn);
-                        secondPage = false;
-                        model.notifyListeners();
-                      }
-                    : model.popView,
+                onBackButton: () => model.onBackButton(controller),
               ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: BottomFloatingActionButtons(
                 swapButtons: true,
-                onTapSecondary: secondPage
-                    ? model.getAFKMarkers.length < 2
-                        ? null
-                        : () async {
-                            final result = await model.clearFieldsAndNavigate();
-                            //Clear Controllers
-                            if (result) {
-                              nameController.clear();
-                              afkCreditAmountController.clear();
-                              descriptionController.clear();
-                            }
-                          }
-                    : () {
-                        if (model.isValidUserInputs()) {
-                          secondPage = true;
-                          controller.nextPage(
-                              duration: Duration(milliseconds: 200),
-                              curve: Curves.easeIn);
-                          model.notifyListeners();
-                        }
-                      },
-                titleSecondary: secondPage ? "Create Quest" : "Next \u2192",
-                onTapMain: secondPage
+                onTapSecondary: () => model.onNextButton(controller),
+                titleSecondary:
+                    model.pageIndex == 1 ? "Create Quest" : "Next \u2192",
+                onTapMain: model.pageIndex == 1
                     ? () {
-                        secondPage = false;
+                        model.pageIndex = model.pageIndex - 1;
                         controller.previousPage(
                             duration: Duration(milliseconds: 200),
                             curve: Curves.easeIn);
@@ -100,7 +72,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                           model.navBackToPreviousView();
                         }
                       },
-                titleMain: secondPage ? "Back" : "Cancel",
+                titleMain: model.pageIndex == 1 ? "Back" : "Cancel",
               ),
               body: PageView(
                 controller: controller,
@@ -116,6 +88,10 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                     model: model,
                     nameController: nameController,
                     descriptionController: descriptionController,
+                    afkCreditAmountController: afkCreditAmountController,
+                  ),
+                  CreditsSelection(
+                    model: model,
                     afkCreditAmountController: afkCreditAmountController,
                   ),
                 ],
@@ -180,7 +156,14 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
                             : QuestType.GPSAreaHunt,
                     child: model.isLoading == false
                         ? Text(
-                            _questType.toString().split('.').elementAt(1),
+                            getShortQuestType(
+                              _questType ==
+                                      CreateQuestType.TreasureLocationSearch
+                                  ? QuestType.TreasureLocationSearch
+                                  : _questType == CreateQuestType.GPSAreaHike
+                                      ? QuestType.GPSAreaHike
+                                      : QuestType.GPSAreaHunt,
+                            ),
                           )
                         : Text(
                             "Select Quest Type",
@@ -197,6 +180,43 @@ class QuestCardList extends StatelessWidget with $CreateQuestView {
               errorText: model.questTypeInputValidationMessage,
             ),
             verticalSpaceLarge,
+            AfkCreditsInputField(
+              placeholder: 'Credit amount',
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              ],
+              controller: afkCreditAmountController,
+              errorText: model.afkCreditsInputValidationMessage,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CreditsSelection extends StatelessWidget with $CreateQuestView {
+  final CreateQuestViewModel model;
+  final TextEditingController afkCreditAmountController;
+  QuestType? questTypeValue;
+
+  CreditsSelection({
+    required this.model,
+    required this.afkCreditAmountController,
+  });
+  @override
+  Widget build(BuildContext context) {
+    bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+        height: screenHeight(context) - 120,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            verticalSpaceMedium,
             AfkCreditsInputField(
               placeholder: 'Credit amount',
               keyboardType: TextInputType.number,
@@ -231,80 +251,48 @@ class ChooseMarkersView extends StatelessWidget with $CreateQuestView {
       height: screenHeight(context),
       child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 80),
-            child: GoogleMap(
-              // zoomControlsEnabled: true,
-              //mapType: MapType.hybrid,
-              initialCameraPosition: model.initialCameraPosition(),
-              //Place Markers in the Map
-              markers: model.getMarkersOnMap,
-              //callback that’s called when the map is ready to us.
-              onMapCreated: model.onMapCreated,
-              onTap: model.displayMarkersOnMap,
+          GoogleMap(
+            // zoomControlsEnabled: true,
+            //mapType: MapType.hybrid,
+            initialCameraPosition: model.initialCameraPosition(),
+            //Place Markers in the Map
+            markers: model.getMarkersOnMap,
+            //callback that’s called when the map is ready to us.
+            onMapCreated: model.onMapCreated,
+            onTap: model.displayMarkersOnMap,
 
-              // scrollGesturesEnabled: true,
-              myLocationEnabled: true,
-              // gestureRecognizers: Set()
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 80),
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                      Colors.grey[50]!.withOpacity(0.0),
-                      Colors.grey[50]!
-                    ])),
-              ),
-            ),
+            // scrollGesturesEnabled: true,
+            myLocationEnabled: true,
+            zoomControlsEnabled: false,
+            // gestureRecognizers: Set()
           ),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 10.0),
               child: Container(
                 alignment: Alignment.center,
-                height: 80,
+                height: 60,
+                padding: const EdgeInsets.all(10.0),
                 width: screenWidth(context, percentage: 0.9),
                 decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(15.0)),
-                child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Text("Choose at least two markers",
-                        textAlign: TextAlign.center,
-                        style: textTheme(context).headline6)),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
-              child: CustomAFKButton(
-                busy: model.isLoading,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainButtonTitle: 'Create Quest',
-                secundaryButtonTitle: 'Back',
-                onMainButtonTapped: model.getAFKMarkers.length < 2
-                    ? null
-                    : () async {
-                        final result = await model.clearFieldsAndNavigate();
-                        //Clear Controllers
-                        if (result) {
-                          nameController.clear();
-                          afkCreditAmountController.clear();
-                          descriptionController.clear();
-                        }
-                      },
+                  color: kcLightCyan,
+                  borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: [
+                    BoxShadow(
+                        color: kcShadowColor,
+                        blurRadius: 0.3,
+                        spreadRadius: 0.5)
+                  ],
+                ),
+                child: AfkCreditsText.headingFour(
+                  model.getAFKMarkers.length == 0
+                      ? "1. Tap on the map to choose the start of the quest"
+                      : model.getAFKMarkers.length == 1
+                          ? "2. Choose at least one more marker"
+                          : "3. Press 'Create Quest' when you are done",
+                  align: TextAlign.center,
+                ),
               ),
             ),
           ),

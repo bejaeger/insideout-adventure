@@ -144,7 +144,7 @@ class AddMarkersViewModel extends AFKMarks with NavigationMixin {
 
   void addMarkerToMap(LatLng position) {
     setBusy(true);
-    addMarkerOnMap(pos: position);
+    addMarkerOnMap(pos: position, number: getAFKMarkers.length);
     setBusy(false);
     notifyListeners();
   }

@@ -8,6 +8,7 @@ import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_cont
 import 'package:afkcredits/utils/markers/markers.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -23,6 +24,8 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final _userService = locator<UserService>();
   //CameraPosition? _initialCameraPosition;
   final _displaySnackBars = DisplaySnackBars();
+
+  int pageIndex = 0;
   bool isLoading = false;
   bool result = false;
   QuestType? _questType;
@@ -40,6 +43,38 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       setValidationMessage('You Must Give a Value into this field');
     }
     resetValidationMessages();
+  }
+
+  Future onBackButton(PageController controller) async {
+    if (pageIndex > 0) {
+      controller.previousPage(
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+      pageIndex = pageIndex - 1;
+      notifyListeners();
+    } else {
+      popView();
+    }
+  }
+
+  // ----------------------------------------------
+  // Back or next navigations
+  Future onNextButton(PageController controller) async {
+    if (pageIndex == 0) {
+      // VALIDATE INPUTS
+      if (isValidUserInputs()) {
+        controller.nextPage(
+            duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+        pageIndex = pageIndex + 1;
+        notifyListeners();
+      }
+    } else if (pageIndex == 1) {
+      // CREATE QUEST
+      if (getAFKMarkers.length < 2) {
+        return null;
+      } else {
+        await clearFieldsAndNavigate();
+      }
+    }
   }
 
   Future<void> currentUserPosition() async {
@@ -137,7 +172,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
 
   void displayMarkersOnMap(LatLng pos) {
     setBusy(true);
-    addMarkerOnMap(pos: pos);
+    addMarkerOnMap(pos: pos, number: getAFKMarkers.length);
     setBusy(false);
     notifyListeners();
   }

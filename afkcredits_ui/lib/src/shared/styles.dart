@@ -19,10 +19,7 @@ const TextStyle heading2Style = TextStyle(
 const TextStyle heading3Style =
     TextStyle(fontSize: 24, fontWeight: FontWeight.w600);
 const TextStyle heading4Style = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-    overflow: TextOverflow.ellipsis,
-    color: kcPrimaryColorSecondary);
+    fontSize: 18, fontWeight: FontWeight.w600, color: kcPrimaryColorSecondary);
 const TextStyle headingLightStyle = TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w400,
