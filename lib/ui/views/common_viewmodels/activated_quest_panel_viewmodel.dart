@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
@@ -50,6 +51,19 @@ class ActivatedQuestPanelViewModel extends ActiveQuestBaseViewModel {
   @override
   bool isQuestCompleted() {
     // TODO: implement isQuestCompleted
+    throw UnimplementedError();
+  }
+
+  @override
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) {
+    // TODO: implement maybeStartQuest
+    throw UnimplementedError();
+  }
+
+  @override
+  Future showInstructions() {
+    // TODO: implement showInstructions
     throw UnimplementedError();
   }
 }

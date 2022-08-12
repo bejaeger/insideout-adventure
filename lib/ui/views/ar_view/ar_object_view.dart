@@ -33,13 +33,13 @@ class _ARObjectViewState extends State<ARObjectView> {
     return ViewModelBuilder<ARObjectViewModel>.reactive(
       viewModelBuilder: () => ARObjectViewModel(),
       builder: (context, model, _) => MainPage(
-        onBackPressed: model.popArView,
+        onBackPressed: () => model.popArView(result: false),
         child: Stack(
           children: [
             ArCoreView(
               onArCoreViewCreated: (ArCoreController controller) =>
                   _onArCoreViewCreated(
-                      controller, model.showCollectedMarkerDialog),
+                      controller, model.handleCollectedArObjectEvent),
 
               enableTapRecognizer: true,
 
@@ -77,7 +77,7 @@ class _ARObjectViewState extends State<ARObjectView> {
   }
 
   void _onArCoreViewCreated(ArCoreController controller,
-      Future Function() showCollectedMarkerDialog) {
+      Future Function() handleCollectedArObjectEvent) {
     arCoreController = controller;
     if (!widget.isCoins)
       arCoreController.onPlaneDetected = (ArCorePlane plane) async {
@@ -108,7 +108,7 @@ class _ARObjectViewState extends State<ARObjectView> {
       if (objectHits.containsKey(nodeString)) {
         objectHits[nodeString] = objectHits[nodeString]! + 1;
         if (objectHits[nodeString]! > 40) {
-          await showCollectedMarkerDialog();
+          await handleCollectedArObjectEvent();
           controller.removeNode(nodeName: nodeString);
         }
       } else {

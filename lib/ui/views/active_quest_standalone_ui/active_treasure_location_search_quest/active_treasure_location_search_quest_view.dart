@@ -18,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
+// !!! VERY LIKELY DEPRECATED
+
 class ActiveTreasureLocationSearchQuestView extends StatefulWidget {
   final Quest quest;
   const ActiveTreasureLocationSearchQuestView({
@@ -313,6 +315,7 @@ class _ActiveTreasureLocationSearchQuestViewState
   }
 }
 
+// ! USED IN TreasureLocationSearch
 class CurrentQuestStatusInfo extends StatelessWidget {
   final DirectionStatus? directionStatus;
   final double currentDistance;

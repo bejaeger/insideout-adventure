@@ -63,7 +63,7 @@ class AppConfigProvider {
     } else if (role == UserRole.admin) {
       return "admin@gmail.com";
     } else if (role == UserRole.superUser) {
-      return "superUser@gmail.com";
+      return "superuser@gmail.com";
     } else {
       return "";
     }

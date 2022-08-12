@@ -2,6 +2,7 @@ import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
@@ -123,6 +124,19 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   @override
   bool isQuestCompleted() {
     // TODO: implement isQuestCompleted
+    throw UnimplementedError();
+  }
+
+  @override
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) {
+    // TODO: implement maybeStartQuest
+    throw UnimplementedError();
+  }
+
+  @override
+  Future showInstructions() {
+    // TODO: implement showInstructions
     throw UnimplementedError();
   }
 }

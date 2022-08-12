@@ -8,6 +8,8 @@ import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
+// ! Likely DEPRECATED
+
 //class ActiveQrCodeSearchViewModel extends ActiveQuestBaseViewModel {
 class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
@@ -207,5 +209,11 @@ class ActiveQrCodeSearchViewModel extends ActiveMapQuestViewModel {
     displayClue = true;
     displayButtonNewClue = false;
     super.resetPreviousQuest();
+  }
+
+  @override
+  Future showInstructions() {
+    // TODO: implement showInstructions
+    throw UnimplementedError();
   }
 }

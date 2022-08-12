@@ -101,7 +101,8 @@ class ActiveTreasureLocationSearchQuestViewModel
       // quest started!
       // start listening to position
       activeQuestService.listenToPosition(
-          distanceFilter: kMinDistanceFromLastCheckInMeters,
+          // distanceFilter: kMinDistanceFromLastCheckInMeters,
+          distanceFilter: 0,
           pushToNotion: true,
           recordPositionDataEvent: false,
           // skipFirstStreamEvent: true,
@@ -163,14 +164,24 @@ class ActiveTreasureLocationSearchQuestViewModel
 
       //await showFoundTreasureDialog();
       directionStatus = DirectionStatus.nearGoal;
-      showNextARObjects();
+      showNextARObjects(
+
+          // Need to wrap up quest here!
+          onCollected: () async {
+        bool questSuccessfullyFinished = await showSuccessDialog();
+
+        // reset map markers
+        // the following goes via singleton
+        mapViewModel.resetMapMarkers();
+
+        // this goes via mixin. Could technically be the same procedure! Not clear what is better!
+        addAllQuestMarkers();
+      });
       notifyListeners();
       await vibrateRightDirection();
       await vibrateRightDirection();
       await vibrateRightDirection();
       await vibrateRightDirection();
-      // await showSuccessDialog();
-
     } else {
       late String? logString;
       // update UI on quest update
@@ -402,6 +413,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     }
   }
 
+  // Return true of gps accuracy is reasonable, false otherwise
   bool isUpdatingPositionAllowed({required Position position}) {
     double propagatedAccuracy = getPropagatedAccuracy(newPosition: position);
     if (propagatedAccuracy < kMinDistanceFromLastCheckInMeters * 3) {
@@ -522,6 +534,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     }
   }
 
+  @override
   Future showInstructions() async {
     await dialogService.showDialog(
         title: "How it works",

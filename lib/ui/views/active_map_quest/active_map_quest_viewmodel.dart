@@ -103,7 +103,8 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
     // notifyListeners();
   }
 
-  Future maybeStartQuest({required Quest? quest}) async {
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) async {
     if (quest != null && !hasActiveQuest) {
       final result =
           await startQuestMain(quest: quest, countStartMarkerAsCollected: true);
@@ -924,6 +925,7 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
     _googleMapController?.dispose();
     super.dispose();
   }
+
   /////// New Code **************
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {

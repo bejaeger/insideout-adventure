@@ -62,6 +62,7 @@ class GeolocationService extends PausableService {
     bool skipFirstStreamEvent = false,
   }) async {
     Completer<void> completer = Completer();
+    log.wtf("JUST PRINT SOMETHING: $distanceFilter");
     if (_livePositionStreamSubscription == null) {
       currentPositionDistanceFilter = distanceFilter.round();
       pauseMainPositionListener();
@@ -72,6 +73,7 @@ class GeolocationService extends PausableService {
               distanceFilter: distanceFilter.round())
           .listen(
         (position) {
+          log.wtf("JUST PRINT SOMETHING: $distanceFilter");
           printPositionInfo(position);
           _livePosition = position;
           setGPSAccuracyInfo(position.accuracy);

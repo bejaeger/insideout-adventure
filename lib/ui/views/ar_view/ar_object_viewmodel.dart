@@ -1,3 +1,4 @@
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
@@ -11,9 +12,27 @@ class ARObjectViewModel extends ActiveQuestBaseViewModel
     throw UnimplementedError();
   }
 
-  void popArView() async {
+  Future handleCollectedArObjectEvent() async {
+    await showCollectedMarkerDialog();
+    popArView(result: true);
+  }
+
+  void popArView({dynamic result}) async {
     layoutService.setIsShowingARView(false);
-    popView();
+    popViewReturnValue(result: result);
     restorePreviousCameraPosition(moveInsteadOfAnimate: true);
+  }
+
+  @override
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) {
+    // TODO: implement maybeStartQuest
+    throw UnimplementedError();
+  }
+
+  @override
+  Future showInstructions() {
+    // TODO: implement showInstructions
+    throw UnimplementedError();
   }
 }

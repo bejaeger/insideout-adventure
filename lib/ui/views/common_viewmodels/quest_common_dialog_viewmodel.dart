@@ -56,4 +56,17 @@ class QuestCommonDialogViewModel extends ActiveQuestBaseViewModel {
   void loadQuestMarkers() {
     // TODO: implement loadQuestMarkers
   }
+
+  @override
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) {
+    // TODO: implement maybeStartQuest
+    throw UnimplementedError();
+  }
+
+  @override
+  Future showInstructions() {
+    // TODO: implement showInstructions
+    throw UnimplementedError();
+  }
 }

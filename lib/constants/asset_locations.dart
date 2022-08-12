@@ -35,3 +35,5 @@ const List<String> assetsQuestImages = [
   kCreateQuest,
   kCreateQuest, */
 ];
+
+const String kLottieTestV1 = "assets/lottie/lottietest.json";
