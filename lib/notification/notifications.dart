@@ -9,7 +9,9 @@ class Notifications {
         channelKey: "base_channel",
         title: '${Emojis.time_alarm_clock + Emojis.game_crystal_ball}',
         body: message,
-        category: NotificationCategory.Reminder,
+        locked: true,
+        autoDismissible: false,
+        //category: NotificationCategory.,
         //  bigPicture: kAFKCreditsLogoPath,
       ),
     );

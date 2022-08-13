@@ -30,9 +30,9 @@ class ActiveScreenTimeViewModel extends BaseModel {
     // TODO: This is where we would want to start
     Notifications().createNotifications(message: "Active Screen Time");
 
-    Notifications().createNotificationsTimesUp(message: "Your Time is Up");
-
-    stopScreenTimeAfterZero();
+    // TODO: Schedule a notification.
+    // Notifications().createNotificationsTimesUp(message: "Your Time is Up");
+    // stopScreenTimeAfterZero();
   }
 
   // getters

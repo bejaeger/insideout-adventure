@@ -726,15 +726,15 @@ class FirestoreApi {
       {required ScreenTimeSession session}) async {
     log.i("Upload screen time session to firestore");
     //Get the Document Created Reference
-    _documentReference = await screenTimeSessionCollection.add(
-      session.toJson(),
-    );
+    final _documentReference = screenTimeSessionCollection.doc();
+    _documentReference.set(session
+        .copyWith(
+          sessionId: _documentReference.id,
+          startedAt: FieldValue.serverTimestamp(),
+        )
+        .toJson());
     //update the newly created document reference with the Firestore Id.
-    await screenTimeSessionCollection.doc(_documentReference!.id).update({
-      'sessionId': _documentReference!.id,
-      'startedAt': FieldValue.serverTimestamp()
-    });
-    return _documentReference!.id;
+    return _documentReference.id;
   }
 
   Future updateScreenTimeSession({required ScreenTimeSession session}) async {

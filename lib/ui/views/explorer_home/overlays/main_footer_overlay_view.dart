@@ -19,6 +19,7 @@ class MainFooterOverlayView extends StatelessWidget {
       viewModelBuilder: () => MainFooterViewModel(),
       //onModelReady: (model) => model.listenToLayout(),
       onModelReady: (model) {
+        // TODO: Move to viewmodel
         AwesomeNotifications().isNotificationAllowed().then(
           (isAllowed) {
             if (!isAllowed) {
@@ -26,7 +27,8 @@ class MainFooterOverlayView extends StatelessWidget {
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('Allow Notications'),
-                  content: const Text("We want to send you some Notifications"),
+                  content:
+                      const Text("We would like to send you notifications"),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -49,6 +51,7 @@ class MainFooterOverlayView extends StatelessWidget {
             }
           },
         );
+
         return model.listenToLayout();
       },
       builder: (context, model, child) => Container(

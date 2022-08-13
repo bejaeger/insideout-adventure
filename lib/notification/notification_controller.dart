@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
@@ -7,13 +8,13 @@ class NotificationController {
   Future<void> initializeLocalNotifications() async {
     //Notificaitons Package
     await AwesomeNotifications().initialize(
-      'resource://drawable/res_icon_notification',
+      'resource://drawable/res_notification_icon',
       [
         NotificationChannel(
           channelKey: "time_up_channel",
           channelName: 'afk time up notifications',
           channelDescription: 'Notify User When his/her screen time is up',
-          defaultColor: Colors.teal,
+          defaultColor: kcPrimaryColor,
           importance: NotificationImportance.High,
           channelShowBadge: true,
           locked: true,
@@ -22,7 +23,7 @@ class NotificationController {
           channelKey: "base_channel",
           channelName: 'afk notifications',
           channelDescription: 'channelDescription',
-          defaultColor: Colors.teal,
+          defaultColor: kcPrimaryColor,
           importance: NotificationImportance.High,
           channelShowBadge: true,
           locked: true,
