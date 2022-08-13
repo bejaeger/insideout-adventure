@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'enums/connectivity_type.dart';
 import 'app_config_provider.dart';
-import 'notification/notification_controller.dart';
+import 'notifications/notification_controller.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options_dev.dart' as dev;
@@ -30,23 +30,7 @@ import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
 const bool USE_EMULATOR = false;
 
 void mainCommon(Flavor flavor) async {
-/*   if (rowNames != null) {
-      for (var rowName in rowNames) {
-        notificationChannels.add(NotificationChannel(
-          channelKey: rowName.scheduleId,
-          channelName: '${rowName.scheduleId} notifications',
-          channelDescription: 'Channel for ${rowName.scheduleId} notifications',
-          defaultColor: CustomColors.lightColors.secondary,
-          importance: NotificationImportance.High,
-        ));
-      }
-      AwesomeNotifications()
-          .initialize("resource://drawable/ic_launcher", notificationChannels);
-      log('Updated notification channels to ${notificationChannels.toString()}');
-    } */
   try {
-    NotificationController().initializeLocalNotifications();
-
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -69,10 +53,14 @@ void mainCommon(Flavor flavor) async {
         systemNavigationBarColor: kcBlackHeadlineColor,
       ),
     );
+
     setupLocator();
     setupDialogUi();
     setupSnackbarUi();
     setupBottomSheetUi();
+
+    // initialize notifications
+    NotificationController().initializeLocalNotifications();
 
     // configure services that need settings dependent on flavor
     final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();

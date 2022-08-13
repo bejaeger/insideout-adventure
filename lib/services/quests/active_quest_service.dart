@@ -11,6 +11,7 @@ import 'package:afkcredits/enums/marker_collection_failure_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
+import 'package:afkcredits/notifications/notifications.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -23,8 +24,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:stacked/stacked.dart';
-
-import '../../notification/notifications.dart';
 
 class ActiveQuestService with ReactiveServiceMixin {
   ActiveQuestService() {
@@ -93,9 +92,9 @@ class ActiveQuestService with ReactiveServiceMixin {
         if (!closeby) {
           log.w("You are not nearby the marker, cannot start quest!");
           return "You are not nearby the marker.";
-        } else
-          return Notifications()
-              .createNotifications(message: "Active Tresuare Location");
+        }
+        // return Notifications().createPermanentNotification(
+        //     title: "Search quest ongoing", message: "Collect all markers");
       } catch (e) {
         log.e("Error thrown when searching for start marker: $e");
         if (e is StateError) {

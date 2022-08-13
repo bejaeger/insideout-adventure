@@ -757,7 +757,7 @@ class FirestoreApi {
   }
 
   Future deleteScreenTimeSession({required ScreenTimeSession session}) async {
-    log.i("Upload screen time session to firestore");
+    log.i("Delete screen time session to firestore");
     await screenTimeSessionCollection.doc(session.sessionId).delete();
   }
 
@@ -976,19 +976,11 @@ class FirestoreApi {
   // !!! HIGHLY CRITICAL This is a cheat feautre for the super user
   // !!! REMOVE IN PRODUCTION
   // !!! Also used at the moment for allowing parents to add credits to child
-  Future addAfkCreditsCheat(
-      {required String uid,
-      required UserStatistics? currentStats,
-      num deltaCredits = 50}) async {
-    if (currentStats == null) {
-      throw FirestoreApiException(
-          message: "UserStatistics object is null",
-          devDetails: "Did not parse the correct user statistics object");
-    }
-    await getUserSummaryStatisticsDocument(uid: uid).update(currentStats
-        .copyWith(
-            afkCreditsBalance: currentStats.afkCreditsBalance + deltaCredits)
-        .toJson());
+  Future changeAfkCreditsBalanceCheat(
+      {required String uid, num deltaCredits = 50}) async {
+    await getUserSummaryStatisticsDocument(uid: uid).update({
+      "afkCreditsBalance": FieldValue.increment(deltaCredits),
+    });
   }
 }
 

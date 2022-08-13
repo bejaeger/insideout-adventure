@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:afkcredits/notifications/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -21,7 +22,6 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:geolocator/geolocator.dart';
 
 import '../../../app/app.locator.dart';
-import '../../../notification/notifications.dart';
 import '../../../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 
 class HikeQuestViewModel extends ActiveQuestBaseViewModel
@@ -114,7 +114,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       }
       // quest started
       //if (quest.type != QuestType.GPSAreaHike) {
-      Notifications().createNotifications(message: "Actived Map Quest!!");
+      // Notifications().createPermanentNotification(
+      //     title: "Hike quest ongoing", message: "Collect all markers.");
       activeQuestService.listenToPosition(
         distanceFilter: kDistanceFilterHikeQuest,
         pushToNotion: true,

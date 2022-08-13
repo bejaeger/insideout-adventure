@@ -53,14 +53,7 @@ class SelectScreenTimeViewModel extends BaseModel {
 
     // 2. Show prompt for parents to confirm (we omit this for now!)
 
-    // 3. Navigate to Active Screen Time Screen
-
-    // 4. Show PERMANENT notification!
-    // - When user (parent) goes to different apps, he should be able to
-    // see the time still left in the notification
-    // - By tapping the notification he should be navigated to the active screen time screen,
-
-    // 5. Final confirmation
+    // 3. Final confirmation
     dynamic result = await dialogService.showDialog(
         buttonTitle: "YES",
         cancelTitle: "NO",
@@ -68,10 +61,16 @@ class SelectScreenTimeViewModel extends BaseModel {
         description:
             "Do you want to start $screenTimePreset min screen time?"); //, mainButtonTitle: "CANCEL", )
 
-    // 6. Start screen time
+    // 4. Navigate to Active Screen Time Screen
+    // 5. Start screen time
+    // Also handles PERMANENT notifications and schedules notifications!
+    // - When user (parent) goes to different apps, he should be able to
+    // see the time still left in the notification
+    // - By tapping the notification he should be navigated to the active screen time screen,
     if (result == null || result?.confirmed == true) {
       navigationService.navigateTo(Routes.activeScreenTimeView,
-          arguments: ActiveScreenTimeViewArguments(minutes: screenTimePreset));
+          arguments: ActiveScreenTimeViewArguments(
+              minutes: useSuperUserFeatures ? 1 : screenTimePreset));
     }
   }
 }

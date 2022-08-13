@@ -1,5 +1,7 @@
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/main_long_button.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -26,23 +28,30 @@ class ActiveScreenTimeView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Align(
-                      alignment: Alignment.center,
-                      child: AfkCreditsText.headingOne("Active Screen Time")),
-                  verticalSpaceMassive,
-                  AfkCreditsText.subheading("Time left"),
-                  verticalSpaceTiny,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.network(
-                          'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
-                          height: 45),
-                      if (model.screenTimeLeft! > 0)
-                        AfkCreditsText.headingTwo(
-                          model.screenTimeLeft.toString() + " seconds",
-                        )
-                      /*                     else
+                  // Display the following when screen time is still active!
+                  if (model.currentScreenTimeSession?.status ==
+                      ScreenTimeSessionStatus.active)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Align(
+                            alignment: Alignment.center,
+                            child: AfkCreditsText.headingOne(
+                                "Active Screen Time")),
+                        verticalSpaceMassive,
+                        AfkCreditsText.subheading("Time left"),
+                        verticalSpaceTiny,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Lottie.network(
+                                'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
+                                height: 45),
+                            if (model.screenTimeLeft! > 0)
+                              AfkCreditsText.headingTwo(
+                                secondsToMinuteSecondTime(model.screenTimeLeft),
+                              )
+                            /*                     else
                         Expanded(
                           child: AlertDialog(
                             title: const Text("Time is up"),
@@ -61,17 +70,49 @@ class ActiveScreenTimeView extends StatelessWidget {
                             ],
                           ),
                         ) */
-                    ],
-                  ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  // Display the following when screen time is over!
+                  if (model.currentScreenTimeSession?.status ==
+                      ScreenTimeSessionStatus.completed)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Align(
+                            alignment: Alignment.center,
+                            child:
+                                AfkCreditsText.headingOne("Screen Time Over")),
+                        verticalSpaceMassive,
+                        AfkCreditsText.subheading("Time used"),
+                        AfkCreditsText.body(secondsToMinuteSecondTime(
+                            model.currentScreenTimeSession!.minutesUsed! * 60)),
+                        verticalSpaceSmall,
+                        AfkCreditsText.subheading("Credits used"),
+                        AfkCreditsText.body(model
+                            .currentScreenTimeSession!.afkCreditsUsed
+                            .toString())
+                      ],
+                    ),
                   Spacer(),
                   Lottie.network(
                       'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
                       height: 200),
                   Spacer(),
                   MainLongButton(
-                      onTap: model.stopScreenTime,
-                      title: "Stop screen time",
-                      color: Colors.red),
+                      onTap: model.currentScreenTimeSession?.status ==
+                              ScreenTimeSessionStatus.completed
+                          ? model.replaceWithHomeView
+                          : model.stopScreenTime,
+                      title: model.currentScreenTimeSession?.status ==
+                              ScreenTimeSessionStatus.completed
+                          ? "Go Back"
+                          : "Stop screen time",
+                      color: model.currentScreenTimeSession?.status ==
+                              ScreenTimeSessionStatus.completed
+                          ? kcPrimaryColor
+                          : kcRed),
                 ],
               ),
             ),

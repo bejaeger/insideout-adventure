@@ -10,14 +10,13 @@ import 'package:afkcredits/datamodels/quests/treasure_search/treasure_search_loc
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
+import 'package:afkcredits/notifications/notifications.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../../../notification/notifications.dart';
 
 // Singleton ViewModel!
 
@@ -60,7 +59,6 @@ class ActiveTreasureLocationSearchQuestViewModel
   Future maybeStartQuest(
       {required Quest? quest, void Function()? onStartQuestCallback}) async {
     if (quest != null) {
-      Notifications().createNotifications(message: "Active Tresuare Location");
       log.i("Starting vibration search quest with name ${quest.name}");
 
       final position = await _geolocationService.getUserLivePosition;
@@ -99,6 +97,9 @@ class ActiveTreasureLocationSearchQuestViewModel
       mapViewModel.resetMapMarkers();
       // quest started!
       // start listening to position
+      Notifications().createPermanentNotification(
+          title: "Search quest ongoing", message: "Walk and find the credits.");
+
       activeQuestService.listenToPosition(
         distanceFilter: kMinDistanceFromLastCheckInMeters,
         //distanceFilter: 0,

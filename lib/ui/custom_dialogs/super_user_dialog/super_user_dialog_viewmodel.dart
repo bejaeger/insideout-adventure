@@ -75,8 +75,7 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   void addAfkCreditsCheat() async {
     isCheating = true;
     notifyListeners();
-    await _firestoreApi.addAfkCreditsCheat(
-        uid: currentUser.uid, currentStats: currentUserStats);
+    await _firestoreApi.changeAfkCreditsBalanceCheat(uid: currentUser.uid);
     isCheating = false;
     notifyListeners();
   }
@@ -84,10 +83,8 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   void removeAfkCreditsCheat() async {
     isCheating = true;
     notifyListeners();
-    await _firestoreApi.addAfkCreditsCheat(
-        uid: currentUser.uid,
-        currentStats: currentUserStats,
-        deltaCredits: -50);
+    await _firestoreApi.changeAfkCreditsBalanceCheat(
+        uid: currentUser.uid, deltaCredits: -50);
     isCheating = false;
     notifyListeners();
   }

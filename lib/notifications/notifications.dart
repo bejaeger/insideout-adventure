@@ -1,41 +1,54 @@
+import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import '../../../utils/utilities/utilities.dart';
+import 'package:afkcredits/app/app.logger.dart';
 
 class Notifications {
-  Future<void> createNotifications({required String message}) async {
+  final log = getLogger("Notifications");
+
+  Future<void> createPermanentNotification(
+      {required String title, required String message}) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: createUniqueId(),
-        channelKey: "base_channel",
-        title: '${Emojis.time_alarm_clock + Emojis.game_crystal_ball}',
+        channelKey: kPermanentNotificationKey,
+        title: '${Emojis.time_alarm_clock} ' + title,
         body: message,
         locked: true,
         autoDismissible: false,
-        //category: NotificationCategory.,
-        //  bigPicture: kAFKCreditsLogoPath,
       ),
     );
   }
 
-  Future<void> createNotificationsTimesUp({required String message}) async {
-    String localTimeZone =
-        await AwesomeNotifications().getLocalTimeZoneIdentifier();
+  Future<void> createScheduledNotification(
+      {required String title,
+      required String message,
+      required DateTime date}) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: 20, //1,
-        channelKey: "time_up_channel",
-        //notificationLayout: NotificationLayout.BigPicture,
-        category: NotificationCategory.Reminder,
-        // bigPicture: kClockMelted,
-        title: '${Emojis.time_alarm_clock} Unfortunately Your Time is Up!',
+        id: createUniqueId(),
+        channelKey: kScheduledNotificationChannelKey,
+        title: "\u26A0 " + title,
         body: message,
-        //  bigPicture: kAFKCreditsLogoPath,
+        category: NotificationCategory.Alarm,
+        locked: false,
       ),
-      schedule: NotificationInterval(
-        interval: 5,
-        timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
+      schedule: NotificationCalendar.fromDate(
+        date: date,
+        preciseAlarm: true,
       ),
     );
+  }
+
+  Future<void> dismissPermanentNotifications() async {
+    await AwesomeNotifications()
+        .dismissNotificationsByChannelKey(kPermanentNotificationKey);
+  }
+
+  Future<void> dismissScheduledNotifications() async {
+    await AwesomeNotifications()
+        .dismissNotificationsByChannelKey(kScheduledNotificationChannelKey);
   }
 
   Future<void> dismissNotificationsByChannelKey(
@@ -58,7 +71,6 @@ class Notifications {
 
   Future<void> setNotificationsValues() async {
     final currentBadgeCounter = await getBadgeIndicator();
-
     //Set the Global Counter to a New Value
     setBadgeIndicator(currentBadgeCounter);
   }

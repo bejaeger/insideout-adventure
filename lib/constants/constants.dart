@@ -7,7 +7,6 @@ const GoogleMapsEnvKeyIOS = 'GOOGLE_MAPS_API_KEY_IOS';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
-
 final appName = 'AFK Credits';
 
 /////////////////////////////////////////////////
@@ -139,3 +138,13 @@ const double kMaxZoom = 19;
 // const double kMaxZoom = 50;
 const double kInitialZoomBirdsView = 12;
 const double kMinZoomAvatarView = 17;
+
+////////////////////////////////////
+/// notification keys and settings
+///
+const String kDefaultNotificationIconPath =
+    "resource://drawable/res_notification_icon";
+const String kPermanentNotificationKey = "permanent_notification";
+const String kPermanentNotificationName = "Permanent notifications";
+const String kScheduledNotificationChannelKey = "scheduled_notification";
+const String kScheduledNotificationChannelName = "Scheduled notifications";

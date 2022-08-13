@@ -1,28 +1,34 @@
 import 'dart:developer';
 
+import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
 class NotificationController {
+  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
+
   Future<void> initializeLocalNotifications() async {
     //Notificaitons Package
     await AwesomeNotifications().initialize(
-      'resource://drawable/res_notification_icon',
+      kDefaultNotificationIconPath,
       [
         NotificationChannel(
-          channelKey: "time_up_channel",
-          channelName: 'afk time up notifications',
-          channelDescription: 'Notify User When his/her screen time is up',
+          channelKey: kScheduledNotificationChannelKey,
+          channelName: kScheduledNotificationChannelName,
+          channelDescription:
+              'Scheduled notification when screen time is expired.',
           defaultColor: kcPrimaryColor,
           importance: NotificationImportance.High,
           channelShowBadge: true,
-          locked: true,
         ),
         NotificationChannel(
-          channelKey: "base_channel",
-          channelName: 'afk notifications',
-          channelDescription: 'channelDescription',
+          channelKey: kPermanentNotificationKey,
+          channelName: kPermanentNotificationName,
+          channelDescription:
+              'Basic notifications for ongoing screen time and quests.',
           defaultColor: kcPrimaryColor,
           importance: NotificationImportance.High,
           channelShowBadge: true,
@@ -34,16 +40,27 @@ class NotificationController {
   }
 
   Future<void> initializeNotificationsEventListeners() async {
-    // Only after at least the action method is set, the notification events are delivered
-    AwesomeNotifications().setListeners(
-        onActionReceivedMethod: NotificationController.onActionReceivedMethod,
-        onNotificationCreatedMethod:
-            NotificationController.onNotificationCreatedMethod,
-        onNotificationDisplayedMethod:
-            NotificationController.onNotificationDisplayedMethod,
-        onDismissActionReceivedMethod:
-            NotificationController.onDismissActionReceivedMethod);
+    AwesomeNotifications().displayedStream.listen((notification) async {
+      // if a scheduled notification is shown, we can remove the permanent notifications!
+      if (notification.channelKey == kScheduledNotificationChannelKey) {
+        AwesomeNotifications()
+            .dismissNotificationsByChannelKey(kPermanentNotificationKey);
+        await Future.delayed(Duration(milliseconds: 500));
+        _screenTimeService.handleScreenTimeOverEvent();
+      }
+    });
   }
+
+  // this code is needed for new version of awesome notifications
+  // Only after at least the action method is set, the notification events are delivered
+  // AwesomeNotifications().setListeners(
+  //     onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+  //     onNotificationCreatedMethod:
+  //         NotificationController.onNotificationCreatedMethod,
+  //     onNotificationDisplayedMethod:
+  //         NotificationController.onNotificationDisplayedMethod,
+  //     onDismissActionReceivedMethod:
+  //         NotificationController.onDismissActionReceivedMethod);
 
   /// Use this method to detect when the user taps on a notification or action button
   static Future<void> onActionReceivedMethod(
@@ -51,12 +68,13 @@ class NotificationController {
     // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
 
-    bool isSilentAction = receivedAction.actionType == ActionType.SilentAction;
+    print("==>> on action received method");
+    // bool isSilentAction = receivedAction.actionType == ActionType.SilentAction;
 
     // SilentBackgroundAction runs on background thread and cannot show
     // UI/visual elements
-    if (receivedAction.actionType != ActionType.SilentBackgroundAction)
-      log("message");
+    // if (receivedAction.actionType != ActionType.SilentBackgroundAction)
+    //   log("message");
 /*       Fluttertoast.showToast(
         msg:
             '${isSilentAction ? 'Silent action' : 'Action'} received on ${_toSimpleEnum(receivedAction.actionLifeCycle!)}',
@@ -72,6 +90,7 @@ class NotificationController {
   /// Use this method to detect every time that a new notification is displayed
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
+    print("==>> onNotificationDisplayedMethod");
 /*     Fluttertoast.showToast(
         msg:
             'Notification displayed on ${_toSimpleEnum(receivedNotification.displayedLifeCycle!)}',
@@ -83,6 +102,8 @@ class NotificationController {
   /// Use this method to detect when a new notification or a schedule is created
   static Future<void> onNotificationCreatedMethod(
       ReceivedNotification receivedNotification) async {
+    print("==>> onNotificationCreatedMethod");
+
 /*     Fluttertoast.showToast(
         msg:
             'Notification created on ${_toSimpleEnum(receivedNotification.createdLifeCycle!)}',
@@ -94,6 +115,8 @@ class NotificationController {
   /// Use this method to detect if the user dismissed a notification
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
+    print("==>> onDismissActionReceivedMethod");
+
 /*     Fluttertoast.showToast(
         msg:
             'Notification dismissed on ${_toSimpleEnum(receivedAction.dismissedLifeCycle!)}',

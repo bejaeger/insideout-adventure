@@ -1,5 +1,5 @@
 import 'dart:io' show Platform;
-import 'package:afkcredits/notification/notification_controller.dart';
+import 'package:afkcredits/notifications/notification_controller.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';

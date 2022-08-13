@@ -24,7 +24,7 @@ class ScreenTimeService {
   ScreenTimeSession? get currentSession => _currentSession;
   DateTime? screenTimeStartTime;
   bool get hasActiveScreenTime => screenTimeStartTime != null;
-  int? screenTimeLeft;
+  int? screenTimeLeftInSeconds;
   // int get screenTimeLeft =>
   //     hasActiveScreenTime ? getScreenTimeLeftInMinutes() : -1;
 
@@ -42,19 +42,30 @@ class ScreenTimeService {
   // Might need to be more sophisticated!
   void startScreenTime(
       {required ScreenTimeSession session,
-      required void Function(int) callback}) async {
+      required void Function() callback}) async {
+    _currentSession = session;
     screenTimeStartTime = DateTime.now();
-    screenTimeLeft = session.minutes * 60; // getScreenTimeLeftInMinutes();
+    screenTimeLeftInSeconds =
+        session.minutes * 60; // getScreenTimeLeftInMinutes();
     //screenTimeLeft = 45; // getScreenTimeLeftInMinutes();
+
+    // TODO: We should try to make this more robust in case the app is killed in between!
+
     // Need to start a timer here
     // that counts down the screen time
     _stopWatchService.listenToSecondTime(callback: (int tick) {
-      screenTimeLeft = session.minutes * 60 - tick;
+      screenTimeLeftInSeconds = session.minutes * 60 - tick;
       //screenTimeLeft = 45 - tick;
       // screenTimeLeft = getScreenTimeLeftInMinutes();
-      callback(tick);
+
+      // Screen time expired normally!
+      if (screenTimeLeftInSeconds == 0) {
+        handleScreenTimeOverEvent();
+        callback();
+      }
+      callback();
     });
-    _currentSession = session;
+
     String id =
         await _firestoreApi.addScreenTimeSession(session: _currentSession!);
     _currentSession = _currentSession!.copyWith(sessionId: id);
@@ -64,7 +75,27 @@ class ScreenTimeService {
     // ! There should never be a residual document with status active!
   }
 
+  void handleScreenTimeOverEvent() {
+    // check if this function was already called
+    if (_currentSession == null ||
+        _currentSession?.status == ScreenTimeSessionStatus.completed) return;
+
+    // else finish screen time session
+    _currentSession = _currentSession!.copyWith(
+      status: ScreenTimeSessionStatus.completed,
+      minutesUsed: _currentSession!.minutes,
+      afkCreditsUsed: _currentSession!.afkCredits,
+    );
+    _firestoreApi.updateScreenTimeSession(session: _currentSession!);
+    _firestoreApi.changeAfkCreditsBalanceCheat(
+      deltaCredits: -_currentSession!.afkCredits,
+      uid: _currentSession!.uid,
+    );
+    _stopWatchService.resetTimer();
+  }
+
   void stopScreenTime() {
+    // ! IMPORTANT !
     // TODO: Deduct AFK Credits
 
     if (_currentSession != null) {
@@ -90,7 +121,7 @@ class ScreenTimeService {
     }
 
     screenTimeStartTime = null;
-    screenTimeLeft = null;
+    screenTimeLeftInSeconds = null;
     _currentSession = null;
     _stopWatchService.resetTimer();
   }

@@ -28,28 +28,28 @@ class SelectScreenTimeView extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: AfkCreditsText.headingOne("Screen time")),
                   verticalSpaceMedium,
-                  Container(
-                    height: 100,
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      border: Border.all(),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        AfkCreditsText.subheading("8:08 PM"),
-                        verticalSpaceTiny,
-                        Expanded(
-                          child: AfkCreditsText.body(
-                              "10 min screen time cost 10 credits at this time."),
-                        ),
-                      ],
-                    ),
-                  ),
-                  verticalSpaceMedium,
+                  // Container(
+                  //   height: 100,
+                  //   padding: const EdgeInsets.all(15.0),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(15.0),
+                  //     border: Border.all(),
+                  //   ),
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.start,
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     mainAxisSize: MainAxisSize.max,
+                  //     children: [
+                  //       AfkCreditsText.subheading("8:08 PM"),
+                  //       verticalSpaceTiny,
+                  //       Expanded(
+                  //         child: AfkCreditsText.body(
+                  //             "10 min screen time cost 10 credits at this time."),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  verticalSpaceSmall,
                   AfkCreditsText.subheading("Total available"),
                   verticalSpaceSmall,
                   Row(
@@ -64,8 +64,9 @@ class SelectScreenTimeView extends StatelessWidget {
                           height: 30, color: kcPrimaryColor),
 
                       horizontalSpaceSmall,
-                      AfkCreditsText.headingThree(
-                          model.currentUserStats.afkCreditsBalance.toString()),
+                      AfkCreditsText.headingThree(model
+                          .currentUserStats.afkCreditsBalance
+                          .toStringAsFixed(0)),
                       horizontalSpaceSmall,
                       Icon(Icons.arrow_right_alt_rounded, size: 25),
                       verticalSpaceMedium,
@@ -78,11 +79,11 @@ class SelectScreenTimeView extends StatelessWidget {
                     ],
                   ),
                   //Icon(Icons.arrow_downward_rounded, size: 40),
-                  verticalSpaceSmall,
+                  verticalSpaceLarge,
                   Lottie.network(
                       'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
-                      height: 120),
-                  verticalSpaceMedium,
+                      height: 160),
+                  verticalSpaceLarge,
                   Column(
                     children: [
                       Row(

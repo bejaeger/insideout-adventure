@@ -25,7 +25,7 @@ class AFKCreditsDisplay extends StatelessWidget {
                 height: 30, color: kcPrimaryColor),
           ),
           horizontalSpaceTiny,
-          AfkCreditsText.label(balance.toString()),
+          AfkCreditsText.label(balance.toStringAsFixed(0)),
         ],
       ),
     );

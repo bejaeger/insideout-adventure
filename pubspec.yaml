@@ -108,11 +108,12 @@ dependencies:
   progress_indicator_button: ^0.0.3
   #background_fetch: ^1.1.0
   #awesome_notifications: ^0.6.21
-  awesome_notifications: #^0.7.0-beta.2
-    git:
-      #ref: "8d0bc27"
-      ref: "a850f27"
-      url: https://github.com/rafaelsetragni/awesome_notifications
+  awesome_notifications: ^0.6.21
+  # awesome_notifications: #^0.7.0-beta.2
+  #   git:
+  #     #ref: "8d0bc27"
+  #     ref: "a850f27"
+  #     url: https://github.com/rafaelsetragni/awesome_notifications
   fluttertoast: ^8.0.3
 
   transparent_pointer: ^1.0.0
