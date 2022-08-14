@@ -153,8 +153,15 @@ mixin NavigationMixin {
         arguments: ARObjectViewArguments(isCoins: isCoins));
   }
 
-  Future navToCreditsScreenTimeView() async {
+  Future navToSelectScreenTimeView() async {
     await _navigationService.navigateTo(Routes.selectScreenTimeView);
+  }
+
+  Future navToActiveScreenTimeView(
+      {required int minutes, String? sessionId}) async {
+    await _navigationService.navigateTo(Routes.activeScreenTimeView,
+        arguments: ActiveScreenTimeViewArguments(
+            minutes: minutes, screenTimeSessionId: sessionId));
   }
 
   Future navigateToGPSAreaQuest(Quest quest) async {

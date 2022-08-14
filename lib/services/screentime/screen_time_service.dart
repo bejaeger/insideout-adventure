@@ -3,8 +3,10 @@ import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
+import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 
@@ -14,6 +16,8 @@ class ScreenTimeService {
   final log = getLogger('ScreenTimeService');
   final UserService _userService = locator<UserService>();
   final StopWatchService _stopWatchService = locator<StopWatchService>();
+  final LocalStorageService _localStorageService =
+      locator<LocalStorageService>();
 
   // -----------------------------
   // Return values and state
@@ -45,19 +49,12 @@ class ScreenTimeService {
       required void Function() callback}) async {
     _currentSession = session;
     screenTimeStartTime = DateTime.now();
-    screenTimeLeftInSeconds =
-        session.minutes * 60; // getScreenTimeLeftInMinutes();
-    //screenTimeLeft = 45; // getScreenTimeLeftInMinutes();
-
-    // TODO: We should try to make this more robust in case the app is killed in between!
+    screenTimeLeftInSeconds = session.minutes * 60;
 
     // Need to start a timer here
     // that counts down the screen time
     _stopWatchService.listenToSecondTime(callback: (int tick) {
       screenTimeLeftInSeconds = session.minutes * 60 - tick;
-      //screenTimeLeft = 45 - tick;
-      // screenTimeLeft = getScreenTimeLeftInMinutes();
-
       // Screen time expired normally!
       if (screenTimeLeftInSeconds == 0) {
         handleScreenTimeOverEvent();
@@ -65,17 +62,38 @@ class ScreenTimeService {
       }
       callback();
     });
-
     String id =
         await _firestoreApi.addScreenTimeSession(session: _currentSession!);
+    await _localStorageService.saveToDisk(
+        key: kLocalStorageScreenTimeSessionKey, value: id);
     _currentSession = _currentSession!.copyWith(sessionId: id);
-
-    // TODO: Need to schedule a 'complete-screen-time-session' function that executes once screen time is over!
-    // TODO: Either via notifications or via firestore / cloud functions scheduler!
-    // ! There should never be a residual document with status active!
   }
 
-  void handleScreenTimeOverEvent() {
+  // Function to convert screen time into credits
+  // Might need to be more sophisticated!
+  void continueScreenTime(
+      {required ScreenTimeSession session,
+      required void Function() callback}) async {
+    _currentSession = session;
+    screenTimeStartTime = session.startedAt.toDate();
+    screenTimeLeftInSeconds = session.minutes * 60 -
+        DateTime.now().difference(screenTimeStartTime!).inSeconds;
+    // Need to start a timer here
+    // that counts down the screen time
+    _stopWatchService.listenToSecondTime(callback: (int tick) {
+      screenTimeLeftInSeconds = session.minutes * 60 -
+          DateTime.now().difference(screenTimeStartTime!).inSeconds -
+          tick;
+      // Screen time expired normally!
+      if (screenTimeLeftInSeconds == 0) {
+        handleScreenTimeOverEvent();
+        callback();
+      }
+      callback();
+    });
+  }
+
+  Future handleScreenTimeOverEvent() async {
     // check if this function was already called
     if (_currentSession == null ||
         _currentSession?.status == ScreenTimeSessionStatus.completed) return;
@@ -92,6 +110,8 @@ class ScreenTimeService {
       uid: _currentSession!.uid,
     );
     _stopWatchService.resetTimer();
+    await _localStorageService.deleteFromDisk(
+        key: kLocalStorageScreenTimeSessionKey);
   }
 
   void stopScreenTime() {
@@ -124,6 +144,14 @@ class ScreenTimeService {
     screenTimeLeftInSeconds = null;
     _currentSession = null;
     _stopWatchService.resetTimer();
+    _localStorageService.deleteFromDisk(key: kLocalStorageScreenTimeSessionKey);
+  }
+
+  Future loadActiveScreenTimeSession({required String sessionId}) async {
+    final ScreenTimeSession session =
+        await _firestoreApi.getScreenTimeSession(sessionId: sessionId);
+    _currentSession = session;
+    return session;
   }
 
   // --------------------------

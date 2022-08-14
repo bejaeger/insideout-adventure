@@ -429,6 +429,7 @@ class StackedRouter extends RouterBase {
         builder: (context) => ActiveScreenTimeView(
           key: args.key,
           minutes: args.minutes,
+          screenTimeSessionId: args.screenTimeSessionId,
         ),
         settings: data,
       );
@@ -597,7 +598,9 @@ class ARObjectViewArguments {
 class ActiveScreenTimeViewArguments {
   final Key? key;
   final int minutes;
-  ActiveScreenTimeViewArguments({this.key, required this.minutes});
+  final String? screenTimeSessionId;
+  ActiveScreenTimeViewArguments(
+      {this.key, required this.minutes, this.screenTimeSessionId});
 }
 
 /// HikeQuestView arguments holder class

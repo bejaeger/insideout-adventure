@@ -69,7 +69,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                     icon: Image.asset(kAFKCreditsLogoPath,
                                         color: kcPrimaryColor, height: 22),
                                     stats: model.stats.afkCreditsBalance
-                                        .toString()),
+                                        .toStringAsFixed(0)),
                                 horizontalSpaceSmall,
                                 Icon(
                                   Icons.arrow_forward,
@@ -82,7 +82,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                         color: kcScreenTimeBlue),
                                     unit: "min",
                                     stats: model.stats.afkCreditsBalance
-                                        .toString()),
+                                        .toStringAsFixed(0)),
                                 horizontalSpaceSmall,
                               ],
                             ),

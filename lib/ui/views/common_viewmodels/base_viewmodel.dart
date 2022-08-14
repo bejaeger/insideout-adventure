@@ -222,10 +222,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     } else {
       replaceWithExplorerHomeView();
     }
-
-    // await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-    //     arguments:
-    //         BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
   }
 
   Future replaceWithMainView({required BottomNavBarIndex index}) async {

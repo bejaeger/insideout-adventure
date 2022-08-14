@@ -1,3 +1,4 @@
+import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
@@ -12,6 +13,7 @@ class ActiveScreenTimeViewModel extends BaseModel {
   // -----------------------------------
   // services
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
+  final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final log = getLogger('ActiveScreenTimeViewModel');
 
   // -----------------------------------
@@ -23,34 +25,71 @@ class ActiveScreenTimeViewModel extends BaseModel {
       _screenTimeService.currentSession;
 
   // constructor
+  // used to start screen time
   final int minutes;
-  ActiveScreenTimeViewModel({required this.minutes}) {
-    ScreenTimeSession session = ScreenTimeSession(
-      sessionId: "",
-      uid: currentUser.uid,
-      minutes: minutes,
-      status: ScreenTimeSessionStatus.active,
-      afkCredits: double.parse(screenTimeToCredits(minutes).toString()),
-    );
+  // used if previous screen time session was found
+  final String? screenTimeSessionId;
+  ActiveScreenTimeViewModel({required this.minutes, this.screenTimeSessionId});
 
-    DateTime endDate = DateTime.now().add(Duration(minutes: minutes));
+  Future initialize() async {
+    if (screenTimeSessionId != null) {
+      // previous screen time session found on disk
+      setBusy(true);
 
-    // start screen time session
-    _screenTimeService.startScreenTime(
-        session: session, callback: listenToTick);
+      // TODO: Streamline this and put business logic in service ?
+      // TODO: -> maybe all in one function?
 
-    // create permanent notification
-    Notifications().createPermanentNotification(
-        title: "Screen time until " + formatDateToShowTime(endDate),
-        message: currentUser.fullName + " is using screen time");
-    Notifications().createScheduledNotification(
-        title: "Screen time is over!",
-        message: currentUser.fullName + "'s screen time expired.",
-        date: endDate);
+      // load screen time from firestore
+      final ScreenTimeSession session = await _screenTimeService
+          .loadActiveScreenTimeSession(sessionId: screenTimeSessionId!);
 
-    // TODO: Schedule a notification.
-    // Notifications().createNotificationsTimesUp(message: "Your Time is Up");
-    // stopScreenTimeAfterZero();
+      // check status
+      // -> if completed:
+      if (session.status == ScreenTimeSessionStatus.completed) {
+        _screenTimeService.handleScreenTimeOverEvent();
+      } else {
+        // -> if not completed
+        // --> check if time is UP already?
+        if (DateTime.now().difference(session.startedAt.toDate()).inMinutes >
+            session.minutes) {
+          await _screenTimeService.handleScreenTimeOverEvent();
+        } else {
+          // --> if NOT: create session with remaining minutes!
+          _screenTimeService.continueScreenTime(
+              session: session, callback: listenToTick);
+        }
+      }
+
+      setBusy(false);
+    } else {
+      // start a screen time session
+      ScreenTimeSession session = ScreenTimeSession(
+        sessionId: "",
+        uid: currentUser.uid,
+        minutes: minutes,
+        status: ScreenTimeSessionStatus.active,
+        afkCredits: double.parse(screenTimeToCredits(minutes).toString()),
+      );
+
+      DateTime endDate = DateTime.now().add(Duration(minutes: minutes));
+
+      // start screen time session
+      _screenTimeService.startScreenTime(
+          session: session, callback: listenToTick);
+
+      // create permanent notification
+      Notifications().createPermanentNotification(
+          title: "Screen time until " + formatDateToShowTime(endDate),
+          message: currentUser.fullName + " is using screen time");
+      Notifications().createScheduledNotification(
+          title: "Screen time is over!",
+          message: currentUser.fullName + "'s screen time expired.",
+          date: endDate);
+
+      // TODO: Schedule a notification.
+      // Notifications().createNotificationsTimesUp(message: "Your Time is Up");
+      // stopScreenTimeAfterZero();
+    }
   }
 
   // Future<void> stopScreenTimeAfterZero() async {
@@ -82,7 +121,7 @@ class ActiveScreenTimeViewModel extends BaseModel {
       await Notifications().dismissPermanentNotifications();
       await Notifications().dismissScheduledNotifications();
       _screenTimeService.stopScreenTime();
-      navigationService.back();
+      replaceWithHomeView();
       snackbarService.showSnackbar(
         title: "Cancelled screentime",
         message: "",

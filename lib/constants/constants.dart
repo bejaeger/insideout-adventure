@@ -7,6 +7,8 @@ const GoogleMapsEnvKeyIOS = 'GOOGLE_MAPS_API_KEY_IOS';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
+const kLocalStorageSponsorReferenceKey = "PARENT_ID";
+const kLocalStorageScreenTimeSessionKey = "SCREEN_TIME_SESSION";
 final appName = 'AFK Credits';
 
 /////////////////////////////////////////////////

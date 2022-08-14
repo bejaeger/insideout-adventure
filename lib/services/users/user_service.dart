@@ -116,6 +116,15 @@ class UserService {
             key: kLocalStorageUidKey, value: userAccount.uid);
         await _localStorageService.saveRoleToDisk(
             key: kLocalStorageRoleKey, value: role);
+
+        String? id = await _localStorageService.getFromDisk(
+            key: kLocalStorageSponsorReferenceKey);
+        String? pin = await _localStorageService.getFromDisk(
+            key: kLocalStorageSponsorPinKey);
+        if (id != null) {
+          sponsorReference =
+              SponsorReference(uid: id, withPasscode: pin != null);
+        }
       }
     } else {
       log.e("User account with id $actualUid does not exist! Can't sync user");
@@ -639,12 +648,18 @@ class UserService {
       await _localStorageService.saveToDisk(
           key: kLocalStorageSponsorPinKey, value: hashPassword(pin));
     }
+    await _localStorageService.saveToDisk(
+        key: kLocalStorageSponsorReferenceKey, value: uid);
+    log.wtf("PIN => $pin");
     sponsorReference = SponsorReference(
         uid: uid, authMethod: authMethod, withPasscode: pin != null);
   }
 
   Future clearSponsorReference() async {
+    log.v("Clearing sponsor reference from local disk");
     await _localStorageService.deleteFromDisk(key: kLocalStorageSponsorPinKey);
+    await _localStorageService.deleteFromDisk(
+        key: kLocalStorageSponsorReferenceKey);
     sponsorReference = null;
   }
 

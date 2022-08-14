@@ -74,7 +74,7 @@ class MainFooterOverlayView extends StatelessWidget {
                       height: 60,
                       borderWidth: 0,
                       text: "SCREEN TIME",
-                      onPressed: model.navToCreditsScreenTimeView,
+                      onPressed: model.navToSelectScreenTimeView,
                       color: kcPrimaryColor,
                       textColor: Colors.white,
                     ),

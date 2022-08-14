@@ -68,9 +68,8 @@ class SelectScreenTimeViewModel extends BaseModel {
     // see the time still left in the notification
     // - By tapping the notification he should be navigated to the active screen time screen,
     if (result == null || result?.confirmed == true) {
-      navigationService.navigateTo(Routes.activeScreenTimeView,
-          arguments: ActiveScreenTimeViewArguments(
-              minutes: useSuperUserFeatures ? 1 : screenTimePreset));
+      navToActiveScreenTimeView(
+          minutes: useSuperUserFeatures ? 1 : screenTimePreset);
     }
   }
 }

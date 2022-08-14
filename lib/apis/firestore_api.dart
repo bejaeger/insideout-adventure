@@ -724,7 +724,7 @@ class FirestoreApi {
   /// Screen Time functions
   Future<String> addScreenTimeSession(
       {required ScreenTimeSession session}) async {
-    log.i("Upload screen time session to firestore");
+    log.i("Add screen time session to firestore");
     //Get the Document Created Reference
     final _documentReference = screenTimeSessionCollection.doc();
     _documentReference.set(session
@@ -738,7 +738,7 @@ class FirestoreApi {
   }
 
   Future updateScreenTimeSession({required ScreenTimeSession session}) async {
-    log.i("Upload screen time session to firestore");
+    log.i("Update screen time session to firestore");
     await screenTimeSessionCollection.doc(session.sessionId).update({
       'status': session.toJson()["status"],
       'afkCreditsUsed': session.afkCreditsUsed,
@@ -747,7 +747,7 @@ class FirestoreApi {
   }
 
   Future cancelScreenTimeSession({required ScreenTimeSession session}) async {
-    log.i("Upload screen time session to firestore");
+    log.i("cancel screen time session on firestore");
     await screenTimeSessionCollection.doc(session.sessionId).update({
       'status': session.toJson()["status"],
       'afkCreditsUsed': session.afkCreditsUsed,
@@ -759,6 +759,31 @@ class FirestoreApi {
   Future deleteScreenTimeSession({required ScreenTimeSession session}) async {
     log.i("Delete screen time session to firestore");
     await screenTimeSessionCollection.doc(session.sessionId).delete();
+  }
+
+  Future getScreenTimeSession({required String sessionId}) async {
+    log.i("get screen time session from firestore");
+    //Get the Document Created Reference
+    final sessionDoc = await screenTimeSessionCollection.doc(sessionId).get();
+    if (sessionDoc.exists) {
+      try {
+        return ScreenTimeSession.fromJson(
+            sessionDoc.data() as Map<String, dynamic>);
+      } catch (error) {
+        log.wtf('Failed to get screentime session with id $sessionId');
+        throw FirestoreApiException(
+          message: 'Failed to get screentime session with id $sessionId',
+          devDetails: '$error',
+        );
+      }
+    } else {
+      log.wtf("Screen time session with id $sessionId does not exist");
+      throw FirestoreApiException(
+        message: "Screen time session with id $sessionId does not exist",
+        devDetails:
+            "Some inconsistency with saving out the session id to local storage",
+      );
+    }
   }
 
   Stream<List<ScreenTimeSession>> getScreenTimeSessionStream(

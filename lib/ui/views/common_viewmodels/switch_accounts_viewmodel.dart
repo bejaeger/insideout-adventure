@@ -152,6 +152,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     }
     // navigate to screen
     await clearStackAndNavigateToHomeView();
+    userService.clearSponsorReference();
     setBusy(false);
   }
 }
