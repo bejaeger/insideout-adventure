@@ -44,6 +44,7 @@ void mainCommon(Flavor flavor) async {
               ? dev.DefaultFirebaseOptions.currentPlatform
               : prod.DefaultFirebaseOptions.currentPlatform); */
     }
+
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();
     }
@@ -58,7 +59,6 @@ void mainCommon(Flavor flavor) async {
     setupDialogUi();
     setupSnackbarUi();
     setupBottomSheetUi();
-
     // initialize notifications
     NotificationController().initializeLocalNotifications();
 
@@ -67,7 +67,8 @@ void mainCommon(Flavor flavor) async {
     appConfigProvider.configure(flavor);
     print("==>> Running with flavor $flavor");
 
-    if (Platform.isAndroid &&
+    if (!kIsWeb &&
+        Platform.isAndroid &&
         await ArCoreController.checkArCoreAvailability() &&
         await ArCoreController.checkIsArCoreInstalled()) {
       appConfigProvider.setIsARAvailable(true);

@@ -886,7 +886,9 @@ class UserService {
   }
 
   // clear all data when user logs out!
-  Future handleLogoutEvent({bool logOutFromFirebase = true}) async {
+  Future handleLogoutEvent(
+      {bool logOutFromFirebase = true,
+      bool doNotClearSponsorReference = false}) async {
     if (!kIsWeb) {
       // remove uid from local storage
       await _localStorageService.deleteFromDisk(key: kLocalStorageUidKey);
@@ -915,6 +917,9 @@ class UserService {
 
     supportedExplorers = {};
     supportedExplorerStats = {};
+
+    // remove sponsor reference
+    if (!doNotClearSponsorReference) clearSponsorReference();
 
     // actually log out from firebase
     if (logOutFromFirebase) {

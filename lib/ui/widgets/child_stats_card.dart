@@ -67,7 +67,7 @@ class ChildStatsCard extends StatelessWidget {
                 ],
               ),
               verticalSpaceSmall,
-              AfkCreditsText.body("Stats Last 7 Days"),
+              AfkCreditsText.body("Stats last 7 days"),
               stats == null
                   ? AFKProgressIndicator()
                   : Column(

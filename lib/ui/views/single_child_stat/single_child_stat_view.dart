@@ -86,15 +86,28 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                 horizontalSpaceSmall,
                               ],
                             ),
-                            Align(
-                              child: AfkCreditsButton.text(
-                                title: "Add Screen Time Credits",
-                                onTap: model.navigateToAddFundsView,
-                              ),
+                            verticalSpaceSmall,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                  child: AfkCreditsButton.outline(
+                                    title: "Add credits",
+                                    onTap: model.navigateToAddFundsView,
+                                  ),
+                                ),
+                                horizontalSpaceMedium,
+                                Expanded(
+                                  child: AfkCreditsButton.outline(
+                                    title: "Start screen time",
+                                    onTap: model.showNotImplementedSnackbar,
+                                  ),
+                                ),
+                              ],
                             ),
                             verticalSpaceMedium,
                             SectionHeader(
-                              title: "Stats Last 7 Days",
+                              title: "Stats last 7 days",
                               horizontalPadding: 0,
                             ),
                             verticalSpaceSmall,

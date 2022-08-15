@@ -486,6 +486,7 @@ class GeolocationService extends PausableService {
     distanceToStartMarker = -1;
     distanceToLastCheckedMarker = -1;
     cancelPositionListener();
+    cancelMainPositionListener();
   }
 
   Future getLastKnownAndCurrentPosition(

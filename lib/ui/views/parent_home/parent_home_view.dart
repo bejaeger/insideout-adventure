@@ -32,6 +32,7 @@ class ParentHomeView extends StatelessWidget {
           appBar: CustomAppBar(showLogo: true, title: " ", drawer: true),
           endDrawer: const ParentDrawerView(),
           floatingActionButton: BottomFloatingActionButtons(
+            swapButtons: true,
             titleMain: "Create Quest",
             titleSecondary: "Quest List",
             onTapMain: model.navToCreateQuest,

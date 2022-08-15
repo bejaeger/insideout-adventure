@@ -46,24 +46,21 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
         // Store PIN in local storage!
         // And keep reference to currently logged in user!
         // We don't even need google auth!
-        await userService.saveSponsorReference(
-            uid: currentUser.uid,
-            pin: pinResult.pin,
-            authMethod: currentUser.authMethod);
-        await switchToExplorerAccount();
+        await switchToExplorerAccount(pin: pinResult.pin);
       }
     }
     if (result?.confirmed == false) {
-      await userService.saveSponsorReference(
-          uid: currentUser.uid, authMethod: currentUser.authMethod);
       await switchToExplorerAccount();
     }
   }
 
-  Future switchToExplorerAccount() async {
+  Future switchToExplorerAccount({String? pin}) async {
     setBusy(true);
+    await userService.saveSponsorReference(
+        uid: currentUser.uid, authMethod: currentUser.authMethod, pin: pin);
     // Clear all service data but keep logged in with firebase!
-    await clearServiceData(logOutFromFirebase: false);
+    await clearServiceData(
+        logOutFromFirebase: false, doNotClearSponsorReference: true);
 
     try {
       log.i("Syncing explorer account");

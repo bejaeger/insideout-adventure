@@ -67,6 +67,7 @@ class HistoryTile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                if (!showName) SizedBox(height: 4),
                 Image.asset(screenTime ? kScreenTimeIcon : kActivityIcon,
                     height: showName ? 25 : 30,
                     width: showName ? 25 : 30,
@@ -88,7 +89,7 @@ class HistoryTile extends StatelessWidget {
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AfkCreditsText.caption("Screen time"),
+                          SizedBox(height: 5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -98,17 +99,17 @@ class HistoryTile extends StatelessWidget {
                               AfkCreditsText.caption("min"),
                             ],
                           ),
+                          AfkCreditsText.caption("Screen time"),
                         ],
                       )
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AfkCreditsText.caption(
-                              "Activity: " + getShortQuestType(questType!)),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
+                              SizedBox(height: 5),
                               // questType
                               AfkCreditsText.headingFour(
                                   minutes!.round().toString()),
@@ -116,6 +117,8 @@ class HistoryTile extends StatelessWidget {
                               AfkCreditsText.caption("min"),
                             ],
                           ),
+                          AfkCreditsText.caption(
+                              "Activity: " + getShortQuestType(questType!)),
                         ],
                       )
 
@@ -129,13 +132,14 @@ class HistoryTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              AfkCreditsText.caption(formatDateDetailsType5(date)),
-              if (showCredits) SizedBox(height: 3),
+              SizedBox(height: 5),
               if (showCredits)
                 CreditsAmount(
                     amount: credits ?? -1,
                     height: 16,
                     style: TextStyle(fontSize: 16)),
+              if (showCredits) SizedBox(height: 3),
+              AfkCreditsText.caption(formatDateDetailsType5(date)),
             ],
           ),
         ],

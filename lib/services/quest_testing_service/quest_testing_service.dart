@@ -301,7 +301,7 @@ class QuestTestingService {
     // notion.databases.create(database)
 
     if (deviceInfoString == null) {
-      if (Platform.isAndroid) {
+      if (!kIsWeb && Platform.isAndroid) {
         // Android-specific code
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
         log.v('Running on ${androidInfo.model}'); // e.g. "Moto G (4)"
@@ -310,7 +310,7 @@ class QuestTestingService {
             androidInfo.model +
             ", systemVersion: " +
             androidInfo.version.release;
-      } else if (Platform.isIOS) {
+      } else if (!kIsWeb && Platform.isIOS) {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
         log.v('Running on ${iosInfo.utsname.machine}'); // e.g. "iPod7,1"
         machineName = iosInfo.utsname.machine;

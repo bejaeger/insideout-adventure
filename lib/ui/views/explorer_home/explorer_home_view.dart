@@ -39,6 +39,15 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   // bottom layer
                   //if (!model.isBusy)
                   if (!model.isBusy) MainMapView(),
+
+                  if (model.currentUser.createdByUserWithId != null)
+                    SwitchToParentsAreaButton(
+                      onTap: model.handleSwitchToSponsorEvent,
+                      show: !(model.isShowingQuestDetails ||
+                              model.hasActiveQuest) ||
+                          model.isFadingOutQuestDetails,
+                    ),
+
                   if (model.showLoadingScreen)
                     MapLoadingOverlay(show: model.showFullLoadingScreen),
 
@@ -52,15 +61,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                         onCreditsPressed: model.showNotImplementedSnackbar,
                         balance: model.currentUserStats.afkCreditsBalance),
 
-                  if (model.currentUser.createdByUserWithId != null)
-                    SwitchToParentsAreaButton(
-                      onTap: model.handleSwitchToSponsorEvent,
-                      show: !(model.isShowingQuestDetails ||
-                              model.hasActiveQuest) ||
-                          model.isFadingOutQuestDetails,
-                    ),
-
-                  MainFooterOverlayView(),
+                  if (!model.isBusy) MainFooterOverlayView(),
 
                   QuestListOverlayView(),
 
@@ -99,8 +100,6 @@ class OverlayedCloseButton extends StatelessWidget {
     );
   }
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 // !!! DEPRECATED !!!!

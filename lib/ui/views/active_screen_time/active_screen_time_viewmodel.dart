@@ -118,13 +118,26 @@ class ActiveScreenTimeViewModel extends BaseModel {
     }
     if (result == null || result?.confirmed == true) {
       await Notifications().setNotificationsValues();
+      final res = await _screenTimeService.stopScreenTime();
+      if (res is String) {
+        log.wtf("Screen time couldn't be stopped, error: $res");
+      }
       await Notifications().dismissPermanentNotifications();
       await Notifications().dismissScheduledNotifications();
-      _screenTimeService.stopScreenTime();
+      String snackBarTitle = "";
+      String snackBarMsg = "";
+      if (res == true) {
+        snackBarTitle = "Cancelled screentime. ";
+        snackBarMsg = "No credits are deducted";
+      }
+      if (res == false) {
+        snackBarTitle = "Stopped screentime";
+        snackBarMsg = "Credits are deducted accordingly";
+      }
       replaceWithHomeView();
       snackbarService.showSnackbar(
-        title: "Cancelled screentime",
-        message: "",
+        title: snackBarTitle,
+        message: snackBarMsg,
         duration: Duration(seconds: 1),
       );
     }

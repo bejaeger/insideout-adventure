@@ -21,6 +21,7 @@ import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
@@ -48,6 +49,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   final QRCodeService qrCodeService = locator<QRCodeService>();
   final GamificationService gamificationService =
       locator<GamificationService>();
+  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
   final baseModelLog = getLogger("BaseModel");
 
@@ -96,13 +98,18 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
 
-  Future clearServiceData({bool logOutFromFirebase = true}) async {
+  Future clearServiceData(
+      {bool logOutFromFirebase = true,
+      bool doNotClearSponsorReference = false}) async {
     questService.clearData();
     activeQuestService.clearData();
     geolocationService.clearData();
+    // screenTimeService.clearData();
     _questTestingService.maybeReset();
     gamificationService.clearData();
-    await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
+    await userService.handleLogoutEvent(
+        logOutFromFirebase: logOutFromFirebase,
+        doNotClearSponsorReference: doNotClearSponsorReference);
   }
 
   void unregisterViewModels() {
