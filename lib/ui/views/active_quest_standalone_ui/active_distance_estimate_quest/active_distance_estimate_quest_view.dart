@@ -1,5 +1,4 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
@@ -49,7 +48,7 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                 showRedLiveButton: true,
                 onAppBarButtonPressed: model.hasActiveQuest
                     ? null
-                    : () => model.showInstructions(),
+                    : () => model.showInstructions(quest.type),
                 appBarButtonIcon: Icons.help,
               ),
               endDrawer: SizedBox(
@@ -160,7 +159,7 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                                   blurRadius: 1,
                                   spreadRadius: 0.1,
                                   offset: Offset(1, 1),
-                                  color: kShadowColor)
+                                  color: kcShadowColor)
                             ],
                           ),
                           child: FadeInImage.memoryNetwork(
@@ -176,7 +175,7 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                                 " Meters",
                             textAlign: TextAlign.center,
                             style: textTheme(context).headline5!.copyWith(
-                                color: kDarkTurquoise,
+                                color: kcPrimaryColorSecondary,
                                 fontWeight: FontWeight.w600)),
                       verticalSpaceMedium,
                       model.questSuccessfullyFinished
@@ -192,7 +191,8 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                                     child: Text("More Quests",
                                         style: textTheme(context)
                                             .headline6!
-                                            .copyWith(color: kWhiteTextColor))),
+                                            .copyWith(
+                                                color: kcWhiteTextColor))),
                               ],
                             )
                           : SizedBox(

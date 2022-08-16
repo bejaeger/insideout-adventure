@@ -19,6 +19,17 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = heading3Style,
         alignment = align;
+  const AfkCreditsText.headingFour(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = heading4Style,
+        alignment = align;
+  const AfkCreditsText.headingLight(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = headingLightStyle,
+        alignment = align;
+  const AfkCreditsText.warn(this.text, {TextAlign align = TextAlign.start})
+      : style = warnStyle,
+        alignment = align;
   const AfkCreditsText.alertThree(this.text,
       {TextAlign align = TextAlign.start})
       : style = alert3Style,
@@ -44,12 +55,34 @@ class AfkCreditsText extends StatelessWidget {
       : style = captionStyle,
         alignment = align;
 
+  const AfkCreditsText.captionBold(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = captionStyleBold,
+        alignment = align;
+  const AfkCreditsText.captionBoldLight(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = captionStyleBoldLight,
+        alignment = align;
+
+  const AfkCreditsText.vertical(this.text, {TextAlign align = TextAlign.start})
+      : style = verticalStyle,
+        alignment = align;
+  const AfkCreditsText.verticalTwo(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = vertical2Style,
+        alignment = align;
+
   const AfkCreditsText.book(this.text, {TextAlign? align})
       : style = bookStyle,
         alignment = align;
 
   const AfkCreditsText.label(this.text, {TextAlign align = TextAlign.start})
       : style = labelStyle,
+        alignment = align;
+
+  const AfkCreditsText.statsStyle(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = statsStyle,
         alignment = align;
   const AfkCreditsText.tag(this.text, {TextAlign align = TextAlign.start})
       : style = tagStyle,
@@ -59,7 +92,7 @@ class AfkCreditsText extends StatelessWidget {
         alignment = align;
 
   AfkCreditsText.body(this.text,
-      {Color color = kGreyTextColor, TextAlign? align})
+      {Color color = kcGreyTextColor, TextAlign? align})
       : style = bodyStyleSofia.copyWith(color: color),
         alignment = align;
 

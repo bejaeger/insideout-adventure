@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +33,7 @@ class EmptyNote extends StatelessWidget {
               child: Text(buttonTitle ?? "More Quests",
                   style: textTheme(context)
                       .headline6!
-                      .copyWith(color: kWhiteTextColor)),
+                      .copyWith(color: kcWhiteTextColor)),
             )),
       ],
     );

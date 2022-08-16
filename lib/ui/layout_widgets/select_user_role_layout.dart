@@ -1,3 +1,4 @@
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -9,9 +10,6 @@ class SelectUserRoleLayout extends StatelessWidget {
   final void Function()? onAdminMasterPressed;
   final void Function()? onAdminPressed;
 
-  final String? explorerButtonTitle;
-  final String? sponsorButtonTitle;
-  final String? adminMasterButtonTitle;
   final bool isBusy;
 
   const SelectUserRoleLayout(
@@ -19,12 +17,9 @@ class SelectUserRoleLayout extends StatelessWidget {
       required this.onBackPressed,
       required this.onExplorerPressed,
       required this.onSponsorPressed,
-      this.explorerButtonTitle = "CREATE EXPLORER ACCOUNT",
-      this.sponsorButtonTitle = "CREATE SPONSOR ACCOUNT",
-      this.adminMasterButtonTitle = "CREATE ADMIN MASTER ACCOUNT",
       this.isBusy = false,
       this.onSuperUserPressed,
-      required this.onAdminMasterPressed,
+      this.onAdminMasterPressed,
       this.onAdminPressed})
       : super(key: key);
 
@@ -45,83 +40,25 @@ class SelectUserRoleLayout extends StatelessWidget {
               ),
               onPressed: onBackPressed,
             ),
-            Text(
+            AfkCreditsText.headingOne(
               "Select your account type",
-              style: textTheme(context).headline4,
             ),
             verticalSpaceLarge,
-            Text(
-              "Are You An Explorer?",
-              style: textTheme(context).headline6,
-            ),
-
             verticalSpaceSmall,
-            ElevatedButton(
-              onPressed: onExplorerPressed,
-              child: Text("Create Explorer Account"),
+            AfkCreditsButton(
+              onTap: onExplorerPressed,
+              title: "I am a child",
+              height: 80,
+              disabled: true,
             ),
             verticalSpaceLarge,
-            Text(
-              "Are You A Sponsor?",
-              style: textTheme(context).headline6,
-            ),
-
-            verticalSpaceSmall,
-            ElevatedButton(
-              onPressed: onSponsorPressed,
-              child: Text("Create Sponsor Account"),
+            AfkCreditsButton(
+              onTap: onSponsorPressed,
+              title: "I am a parent",
+              height: 80,
             ),
             verticalSpaceLarge,
-            Text(
-              "Are You An Admin Master ?",
-              style: textTheme(context).headline6,
-            ),
-            verticalSpaceSmall,
-            ElevatedButton(
-              onPressed: onAdminMasterPressed,
-              child: Text("Create Admin Master Account"),
-            ),
-
-            verticalSpaceLarge,
-            // -------------------------------------
-            // For Development ONLY!
-            if (onSuperUserPressed != null && onAdminMasterPressed != null)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("For Development"),
-                  Text("------------------------------>>"),
-                  verticalSpaceSmall,
-                  Text(
-                    "Are You A Super User?",
-                    style: textTheme(context).headline6,
-                  ),
-                  verticalSpaceSmall,
-                  ElevatedButton(
-                      onPressed: onSuperUserPressed,
-                      child: Text("Create A Super User Account")),
-                  verticalSpaceSmall,
-                  Text(
-                    "Are You A Admin?",
-                    style: textTheme(context).headline6,
-                  ),
-                  verticalSpaceSmall,
-                  ElevatedButton(
-                      onPressed: onAdminPressed,
-                      child: Text("Create An Admin Account")),
-                  verticalSpaceSmall,
-                  Text(
-                    "Are You A Master Admin?",
-                    style: textTheme(context).headline6,
-                  ),
-                  verticalSpaceSmall,
-                  ElevatedButton(
-                      onPressed: onAdminMasterPressed,
-                      child: Text("Create A Master Admin Account")),
-                  verticalSpaceSmall,
-                ],
-              ),
-            if (isBusy) CircularProgressIndicator(),
+            if (isBusy) AFKProgressIndicator(),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
+import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -36,41 +37,52 @@ class LoginView extends StatelessWidget with $LoginView {
           onDummyLoginAdminMasterTapped:
               model.userLoginTapped(userRole: UserRole.adminMaster),
           //model.saveAdminData,
-          onMainButtonTapped: () => model
-              .saveData(AuthenticationMethod.EmailOrSponsorCreatedExplorer),
+          onMainButtonTapped: model.userLoginTapped(),
           validationMessage: model.validationMessage,
-          title: AfkCreditsText.headingOne(
-            'Welcome to AFK Credits',
-            align: TextAlign.center,
+          // title: AfkCreditsText.headingOne(
+          //   'Welcome to',
+          //   align: TextAlign.left,
+          // ),
+          logo: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HerculesWorldLogo(),
+            ],
           ),
-          subtitle:
-              AfkCreditsText.subheading('real-world quests, in-game rewards'),
+          subtitle: Row(
+            children: [
+              horizontalSpaceTiny,
+              AfkCreditsText.body('Earn your screen time'),
+            ],
+          ),
           mainButtonTitle: 'SIGN IN',
           form: Column(
             children: [
+              verticalSpaceMedium,
               AfkCreditsInputField(
                 controller: emailOrNameController,
-                leading: Icon(Icons.email),
-                //  placeholder: "Email",
+                // leading: Icon(Icons.email),
+                placeholder: "Email or name",
                 trailing: Icon(Icons.close),
                 trailingTapped: () => emailOrNameController.clear(),
+                errorText: model.emailOrNameInputValidationMessage,
                 //leading: Text('Email'),
               ),
               verticalSpaceRegular,
-
               /*        TextField(
                 decoration:
                     InputDecoration(labelText: 'Email or explorer name'),
                 controller: emailOrNameController,
               ), */
               AfkCreditsInputField(
-                leading: Icon(Icons.lock),
+                //leading: Icon(Icons.lock),
                 controller: passwordController,
-                // placeholder: "Password",
+                placeholder: "Password",
                 //leading: Text('Password'),
-                password: true,
+                obscureText: true,
                 trailing: Icon(Icons.close),
                 trailingTapped: () => passwordController.clear(),
+                errorText: model.passwordInputValidationMessage,
               ),
               /*         TextField(
                 decoration: InputDecoration(
@@ -91,7 +103,7 @@ class LoginView extends StatelessWidget with $LoginView {
             ],
           ),
           releaseName: model.getReleaseName,
-          onForgotPassword: () {},
+          onForgotPassword: model.showNotImplementedSnackbar,
           onGoogleButtonTapped: () =>
               model.saveData(AuthenticationMethod.google),
           // onFacebookButtonTapped: () =>

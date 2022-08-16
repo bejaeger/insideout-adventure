@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -96,7 +95,7 @@ class GoogleMapLayout extends StatelessWidget {
                 height: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: kPrimaryColor,
+                  color: kcPrimaryColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: busy
@@ -127,7 +126,7 @@ class GoogleMapLayout extends StatelessWidget {
                           height: 40,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: kPrimaryColor,
+                            color: kcPrimaryColor,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: busy
@@ -154,7 +153,7 @@ class GoogleMapLayout extends StatelessWidget {
                           height: 40,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: kPrimaryColor,
+                            color: kcPrimaryColor,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: busy
@@ -183,7 +182,7 @@ class GoogleMapLayout extends StatelessWidget {
                     height: 40,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: kPrimaryColor,
+                      color: kcPrimaryColor,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: busy
@@ -212,7 +211,7 @@ class GoogleMapLayout extends StatelessWidget {
                     Text(
                       'Create an account',
                       style: TextStyle(
-                        color: kPrimaryColor,
+                        color: kcPrimaryColor,
                         fontSize: 25,
                       ),
                     )

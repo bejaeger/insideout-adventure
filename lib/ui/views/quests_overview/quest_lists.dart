@@ -81,35 +81,37 @@ class QuestLists extends StatelessWidget {
                   ),
           ),
           verticalSpaceSmall,
-          if (model.currentUser.role != UserRole.adminMaster)
-            SectionHeader(title: "Types"),
+          // if (model.currentUser.role != UserRole.adminMaster)
+          //   SectionHeader(title: "Types"),
           if (model.currentUser.role == UserRole.adminMaster)
             SectionHeader(title: "Edit or Delete "),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-            child: GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              physics:
-                  NeverScrollableScrollPhysics(), // to disable GridView's scrolling
-              children: [
-                ...model.questTypes
-                    .map(
-                      (e) => AfkCreditsCategoryCard(
-                        onPressed: model.navigateToQuestsOfSpecificTypeView,
-                        category: e,
-                        backgroundColor: getColorOfType(e),
-                      ),
-                    )
-                    .toList(),
-                // QuestCategoryCard(
-                //     onPressed: model.navigateToQuestsOfSpecificTypeView,
-                //     category: QuestType.DistanceEstimate)
-              ],
+          if (model.currentUser.role == UserRole.adminMaster)
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+              child: GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                physics:
+                    NeverScrollableScrollPhysics(), // to disable GridView's scrolling
+                children: [
+                  ...model.questTypes
+                      .map(
+                        (e) => AfkCreditsCategoryCard(
+                          onPressed: () =>
+                              model.navigateToQuestsOfSpecificTypeView(e),
+                          category: e,
+                          backgroundColor: getColorOfType(e),
+                        ),
+                      )
+                      .toList(),
+                  // QuestCategoryCard(
+                  //     onPressed: model.navigateToQuestsOfSpecificTypeView,
+                  //     category: QuestType.DistanceEstimate)
+                ],
+              ),
             ),
-          ),
           verticalSpaceMassive,
         ],
       ),

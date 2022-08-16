@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as m;
 
@@ -40,9 +40,9 @@ class RightFloatingButtons extends StatelessWidget {
             ),
           ),
         Align(
-          alignment: Alignment(1, -0.75),
+          alignment: Alignment(1, -0.35),
           child: Padding(
-            padding: const EdgeInsets.only(right: 15, top: 100),
+            padding: const EdgeInsets.only(right: 15),
             child: AnimatedOpacity(
               opacity: (bearing > 5 || bearing < -5) ? 1 : 1,
               duration: Duration(milliseconds: 500),
@@ -81,7 +81,7 @@ class RightFloatingButtons extends StatelessWidget {
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                              color: kShadowColor,
+                              color: kcShadowColor,
                               //offset: Offset(1, 1),
                               blurRadius: 0.5,
                               spreadRadius: 0.2)

@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
@@ -33,36 +32,57 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
         listenToFormUpdated(model);
       },
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(title: Text("Sponsor ${recipientInfo.name}")),
+        appBar: AppBar(title: Text("Add credits to ${recipientInfo.name}")),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
           child: ListView(
             children: [
               verticalSpaceMedium,
-              Text("Add funds to ${recipientInfo.name}"),
+              Text(
+                  "How many credits do you want to add to ${recipientInfo.name}?"),
               verticalSpaceMedium,
+              if (model.customValidationMessage != null)
+                AfkCreditsText.warn(model.customValidationMessage!),
               TextField(
-                cursorColor: kBlackHeadlineColor,
+                cursorColor: kcBlackHeadlineColor,
                 focusNode: amountFocusNode,
                 controller: amountController,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 style: textTheme(context)
                     .bodyText2!
-                    .copyWith(fontSize: 35, color: kBlackHeadlineColor),
+                    .copyWith(fontSize: 35, color: kcBlackHeadlineColor),
                 autofocus: true,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.attach_money),
+                  prefixIcon: type != TransferType.Sponsor2ExplorerCredits
+                      ? Icon(Icons.attach_money)
+                      : null,
                   enabledBorder: UnderlineInputBorder(
                     borderSide:
-                        BorderSide(color: kBlackHeadlineColor, width: 0.0),
+                        BorderSide(color: kcBlackHeadlineColor, width: 0.0),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                        BorderSide(color: kBlackHeadlineColor, width: 0.0),
+                        BorderSide(color: kcBlackHeadlineColor, width: 0.0),
                   ),
                 ),
               ),
+              model.screenTimeEquivalent != null
+                  ? Column(
+                      children: [
+                        Text("equivalent to"),
+                        AfkCreditsText.label(
+                            "${model.screenTimeEquivalent} min"),
+                        Text("screen time"),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Text(""),
+                        AfkCreditsText.label(""),
+                        Text(""),
+                      ],
+                    ),
               verticalSpaceMedium,
               ElevatedButton(
                   onPressed: () {

@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
@@ -30,7 +31,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 abstract class ActiveQuestBaseViewModel extends BaseModel
-    with MapStateControlMixin, NavigationMixin {
+    with MapStateControlMixin {
   // ---------------------------------------------------------
   // Services
   final MapStateService mapsService = locator<MapStateService>();
@@ -59,7 +60,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   // UI state
   bool showCollectedMarkerAnimation = false;
   // bool showStartSwipe = true;
-  bool get showStartSwipe => activeQuestService.selectedQuest != null;
+  bool get showStartSwipe => !activeQuestService.hasActiveQuest;
 
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
@@ -137,7 +138,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       }
       // Quest is succesfully started so hasActiveQuest == true
 
-      // selected quest is reset...hopefully I'm not accessing it in the active quest haha :D
+      // selected quest is reset...hopefully I'm not accessing it in the active quest
+      // by resetting the UI will react and now knows that an active quest is present, not only a "selected" quest
       activeQuestService.resetSelectedQuest();
       changeCameraZoom(kInitialZoom);
       animateMap(forceUseLocation: true);
@@ -181,10 +183,21 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
               variant: DialogType.SuperUserSettings,
               data: SuperUserDialogType.sendDiagnostics);
         }
+        // TODO: temporary thing
+        bool standaloneUI = activeQuest.quest.type == QuestType.GPSAreaHike ||
+            activeQuest.quest.type == QuestType.GPSAreaHunt;
+
+        // will reset activeQuest
         await activeQuestService.cancelIncompleteQuest();
 
         resetPreviousQuest();
+        // TODO: Make these settings more in line!
+        if (standaloneUI) {
+          replaceWithExplorerHomeView();
+          layoutService.setIsFadingOutOverlay(false);
+        }
         popQuestDetails();
+
         //replaceWithMainView(index: BottomNavBarIndex.quest);
         log.i("replaced view with mapView");
       }
@@ -228,11 +241,18 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     layoutService.setIsMovingCamera(false);
     layoutService.setIsFadingOutQuestDetails(false);
 
+    // maybe show quest list again (don't do that cause it's a bit weird)
+    if (navigatedFromQuestList) {
+      //showQuestListOverlay();
+      changeNavigatedFromQuestList(false);
+    }
+
     // reset selected quest -> don't show quest details anymore
     activeQuestService.resetSelectedQuest();
 
     // cancel position listener that was used for calibration
     cancelPositionListener();
+    activeQuestService.addMainLocationListener();
 
     // TODO: not sure why this is done!
     // reset distances to markers
@@ -279,20 +299,16 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       lon: marker.lon!,
       isCoin: true,
       onTap: (double lat, double lon, bool isCoin) async {
-        // 2. First take snapshot
-        mapViewModel.takeSnapshotOfCameraPosition();
+        // 1. Open AR view with nice zoom in and fade out triggered
+        bool collected =
+            await mapViewModel.onARObjectMarkerTap(lat, lon, isCoin);
 
-        // 3. is showing AR View
-        layoutService.setIsShowingARView(true);
-
-        // 4. Open AR view with nice zoom in and fade out triggered
-        bool collected = await mapViewModel.openARView(lat, lon, isCoin);
-
-        // 5. Handle return value of AR view!
+        // 2. Handle return value of AR view!
         if (collected) {
           await onCollected();
         } else {
-          dialogService.showDialog(title: "COLLECT MARKER!");
+          dialogService.showDialog(
+              title: "Collect the final Marker to get credits!");
         }
       },
     );
@@ -437,10 +453,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
   }
 
-  Future showCollectedMarkerDialog() async {
-    await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
-  }
-
   void maybeSetDistanceToStartMarker({required Quest quest}) async {
     final position = await geolocationService.getUserLivePosition;
     if (position.timestamp != null) {
@@ -460,9 +472,9 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     log.i("Start position calibration listener");
     geolocationService.listenToPosition(
       distanceFilter: kDistanceFilterForCalibration,
-      viewModelCallback: (position) {
+      viewModelCallback: (position) async {
         setListenedToNewPosition(true);
-        geolocationService.setDistanceToStartMarker(
+        await geolocationService.setDistanceToStartMarker(
             lat: quest.startMarker?.lat,
             lon: quest.startMarker?.lon,
             position: position);
@@ -522,15 +534,42 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
   }
 
-  void navigateBackFromSingleQuestView() {
+  void navigateBackFromSingleQuestView({bool replaceView = false}) {
+    // set Fading Out layout to false otherwise screen is black
+    layoutService.setIsFadingOutOverlay(false);
+    // cancel Position listener
     cancelPositionListener();
+    // add main location listener
+    activeQuestService.addMainLocationListener();
+    // restore distances to markers
     geolocationService.resetStoredDistancesToMarkers();
-    navigationService.back();
+    // finally navigate back
+    if (replaceView) {
+      replaceWithHomeView();
+    } else {
+      popView();
+    }
+    // restore previous camera position. (not so important for standalone ui)
+    restorePreviousCameraPosition(moveInsteadOfAnimate: true);
   }
 
   //------------------------------------------
   // Functions to override
-  Future showInstructions();
+  Future showInstructions(QuestType type) async {
+    if (type == QuestType.TreasureLocationSearch) {
+      await dialogService.showDialog(
+          title: "How it works", description: kLocationSearchDescription);
+    } else if (type == QuestType.GPSAreaHike) {
+      await dialogService.showDialog(
+          title: "How it works", description: kGPSAreaHikeDescription);
+    } else if (type == QuestType.DistanceEstimate) {
+      await dialogService.showDialog(
+          title: "How it works", description: kDistanceEstimateDescription);
+    } else {
+      showGenericInternalErrorDialog();
+    }
+  }
+
   Future maybeStartQuest(
       {required Quest? quest, void Function()? onStartQuestCallback});
 

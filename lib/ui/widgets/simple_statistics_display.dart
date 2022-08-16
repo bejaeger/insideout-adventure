@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +42,7 @@ class SimpleStatisticsDisplay extends StatelessWidget {
                   style: textTheme(context).bodyText2!.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
-                      color: kBlackHeadlineColor),
+                      color: kcBlackHeadlineColor),
                 ),
               ],
             ),

@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/lifecycle_manager.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'enums/connectivity_type.dart';
 import 'app_config_provider.dart';
-import 'notification/notification_controller.dart';
+import 'notifications/notification_controller.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options_dev.dart' as dev;
@@ -30,23 +30,7 @@ import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
 const bool USE_EMULATOR = false;
 
 void mainCommon(Flavor flavor) async {
-/*   if (rowNames != null) {
-      for (var rowName in rowNames) {
-        notificationChannels.add(NotificationChannel(
-          channelKey: rowName.scheduleId,
-          channelName: '${rowName.scheduleId} notifications',
-          channelDescription: 'Channel for ${rowName.scheduleId} notifications',
-          defaultColor: CustomColors.lightColors.secondary,
-          importance: NotificationImportance.High,
-        ));
-      }
-      AwesomeNotifications()
-          .initialize("resource://drawable/ic_launcher", notificationChannels);
-      log('Updated notification channels to ${notificationChannels.toString()}');
-    } */
   try {
-    NotificationController().initializeLocalNotifications();
-
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -60,26 +44,31 @@ void mainCommon(Flavor flavor) async {
               ? dev.DefaultFirebaseOptions.currentPlatform
               : prod.DefaultFirebaseOptions.currentPlatform); */
     }
+
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();
     }
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: kPrimaryColor,
-        systemNavigationBarColor: kBlackHeadlineColor,
+        statusBarColor: kcPrimaryColor,
+        systemNavigationBarColor: kcBlackHeadlineColor,
       ),
     );
+
     setupLocator();
     setupDialogUi();
     setupSnackbarUi();
     setupBottomSheetUi();
+    // initialize notifications
+    NotificationController().initializeLocalNotifications();
 
     // configure services that need settings dependent on flavor
     final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
     appConfigProvider.configure(flavor);
     print("==>> Running with flavor $flavor");
 
-    if (Platform.isAndroid &&
+    if (!kIsWeb &&
+        Platform.isAndroid &&
         await ArCoreController.checkArCoreAvailability() &&
         await ArCoreController.checkIsArCoreInstalled()) {
       appConfigProvider.setIsARAvailable(true);
@@ -108,17 +97,20 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               elevatedButtonTheme:
                   ElevatedButtonThemeData(style: getRaisedButtonStyle()),
-              primaryColor: kPrimaryColor,
+              primaryColor: kcPrimaryColor,
               appBarTheme: AppBarTheme(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
                       bottom: Radius.circular(16),
                     ),
                   ),
-                  color: kPrimaryColor,
+                  color: kcPrimaryColor,
                   elevation: 5,
                   toolbarHeight: 80,
                   centerTitle: true),
+              colorScheme: ThemeData().colorScheme.copyWith(
+                    primary: kcPrimaryColor,
+                  ),
               primaryIconTheme: IconThemeData(color: Colors.white),
               primaryTextTheme: TextTheme(
                 headline6: TextStyle(
@@ -160,7 +152,7 @@ ButtonStyle getRaisedButtonStyle() {
   return ElevatedButton.styleFrom(
     onPrimary: Colors.white,
     // primary: darkTurquoise,
-    primary: kPrimaryColor,
+    primary: kcPrimaryColor,
     minimumSize: Size(88, 45),
     padding: EdgeInsets.symmetric(horizontal: 16),
     shape: const RoundedRectangleBorder(

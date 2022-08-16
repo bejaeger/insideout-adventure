@@ -240,12 +240,12 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-  Future showInstructions() async {
-    await dialogService.showDialog(
-        title: "How it works",
-        description:
-            "Start the quest and then walk ${distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance tries!");
-  }
+  // Future showInstructions() async {
+  //   await dialogService.showDialog(
+  //       title: "How it works",
+  //       description:
+  //           "Start the quest and then walk ${distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance tries!");
+  // }
 
   @override
   void resetPreviousQuest() {

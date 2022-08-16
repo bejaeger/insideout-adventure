@@ -12,13 +12,13 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
 import '../datamodels/quests/quest.dart';
+import '../datamodels/screentime/screen_time_session.dart';
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/authentication_method.dart';
 import '../enums/bottom_nav_bar_index.dart';
 import '../enums/quest_view_index.dart';
 import '../enums/transfer_type.dart';
 import '../enums/user_role.dart';
-import '../ui/views/active_map_quest/active_map_quest_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
 import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
@@ -32,39 +32,31 @@ import '../ui/views/ar_view/ar_object_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
-import '../ui/views/gift_cards/gift_card_view.dart';
+import '../ui/views/hike_quest/hike_quest_view.dart';
 import '../ui/views/history_and_achievements/history_and_achievements_view.dart';
 import '../ui/views/layout/bottom_bar_layout_view.dart';
-import '../ui/views/layout/custom_bottom_bar_layout_template_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_overview_view.dart';
-import '../ui/views/purchased_gift_cards/insert/insert_pre_purchased_gift_card_view.dart';
-import '../ui/views/purchased_gift_cards/manage_gift_cards/add_gift_cards/add_gift_cards_view.dart';
-import '../ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
-import '../ui/views/purchased_gift_cards/purchased_gift_cards_view.dart';
-import '../ui/views/purchased_screen_time/purchased_screen_time_view.dart';
+import '../ui/views/onboarding_screens/onboarding_screens_view.dart';
+import '../ui/views/parent_home/parent_home_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
 import '../ui/views/quests_overview/create_quest/create_quest_view.dart';
 import '../ui/views/quests_overview/edit_quest/edit_quest_view.dart';
 import '../ui/views/quests_overview/manage_quest/manage_quest_view.dart';
 import '../ui/views/quests_overview/quests_overview_view.dart';
-import '../ui/views/screen_time/screen_time_view.dart';
+import '../ui/views/screen_time/select_screen_time_view.dart';
 import '../ui/views/search_explorer/search_explorer_view.dart';
-import '../ui/views/select_screen_time_view/select_screen_time_view.dart';
 import '../ui/views/set_pin/set_pin_view.dart';
-import '../ui/views/single_explorer/single_explorer_view.dart';
-import '../ui/views/sponsor_home/sponsor_home_view.dart';
+import '../ui/views/single_child_stat/single_child_stat_view.dart';
+import '../ui/views/single_quest_type/single_quest_type_view.dart';
 import '../ui/views/startup/startup_view.dart';
-import '../ui/views/transaction_history/transfers_history_view.dart';
 import '../ui/views/transfer_funds/transfer_funds_view.dart';
 
 class Routes {
-  static const String sponsorHomeView = '/sponsor-home-view';
+  static const String parentHomeView = '/parent-home-view';
   static const String singleMarkerView = '/single-marker-view';
-  static const String insertPrePurchasedGiftCardView =
-      '/insert-pre-purchased-gift-card-view';
   static const String updatingQuestView = '/updating-quest-view';
   static const String explorerHomeView = '/explorer-home-view';
   static const String mapOverviewView = '/map-overview-view';
@@ -79,15 +71,10 @@ class Routes {
       '/select-role-after-login-view';
   static const String addExplorerView = '/add-explorer-view';
   static const String searchExplorerView = '/search-explorer-view';
-  static const String singleExplorerView = '/single-explorer-view';
+  static const String singleChildStatView = '/single-child-stat-view';
   static const String transferFundsView = '/transfer-funds-view';
-  static const String transfersHistoryView = '/transfers-history-view';
-  static const String customBottomBarLayoutTemplateView =
-      '/custom-bottom-bar-layout-template-view';
   static const String qRCodeView = '/q-rcode-view';
   static const String qRCodeViewExample = '/q-rcode-view-example';
-  static const String giftCardView = '/gift-card-view';
-  static const String purchasedGiftCardsView = '/purchased-gift-cards-view';
   static const String addMarkersView = '/add-markers-view';
   static const String setPinView = '/set-pin-view';
   static const String bottomBarLayoutTemplateView =
@@ -97,23 +84,20 @@ class Routes {
       '/active-distance-estimate-quest-view';
   static const String activeTreasureLocationSearchQuestView =
       '/active-treasure-location-search-quest-view';
-  static const String activeMapQuestView = '/active-map-quest-view';
   static const String createQuestView = '/create-quest-view';
   static const String manageQuestView = '/manage-quest-view';
-  static const String manageGiftCardstView = '/manage-gift-cardst-view';
   static const String questsOverviewView = '/quests-overview-view';
-  static const String addGiftCardsView = '/add-gift-cards-view';
   static const String historyAndAchievementsView =
       '/history-and-achievements-view';
-  static const String purchasedScreenTimeView = '/purchased-screen-time-view';
-  static const String screenTimeView = '/screen-time-view';
   static const String aRObjectView = '/a-robject-view';
-  static const String selectScreenTimeView = '/select-screen-time-view';
   static const String activeScreenTimeView = '/active-screen-time-view';
+  static const String selectScreenTimeView = '/select-screen-time-view';
+  static const String hikeQuestView = '/hike-quest-view';
+  static const String singleQuestTypeView = '/single-quest-type-view';
+  static const String onBoardingScreensView = '/on-boarding-screens-view';
   static const all = <String>{
-    sponsorHomeView,
+    parentHomeView,
     singleMarkerView,
-    insertPrePurchasedGiftCardView,
     updatingQuestView,
     explorerHomeView,
     mapOverviewView,
@@ -126,32 +110,26 @@ class Routes {
     selectRoleAfterLoginView,
     addExplorerView,
     searchExplorerView,
-    singleExplorerView,
+    singleChildStatView,
     transferFundsView,
-    transfersHistoryView,
-    customBottomBarLayoutTemplateView,
     qRCodeView,
     qRCodeViewExample,
-    giftCardView,
-    purchasedGiftCardsView,
     addMarkersView,
     setPinView,
     bottomBarLayoutTemplateView,
     activeQrCodeSearchView,
     activeDistanceEstimateQuestView,
     activeTreasureLocationSearchQuestView,
-    activeMapQuestView,
     createQuestView,
     manageQuestView,
-    manageGiftCardstView,
     questsOverviewView,
-    addGiftCardsView,
     historyAndAchievementsView,
-    purchasedScreenTimeView,
-    screenTimeView,
     aRObjectView,
-    selectScreenTimeView,
     activeScreenTimeView,
+    selectScreenTimeView,
+    hikeQuestView,
+    singleQuestTypeView,
+    onBoardingScreensView,
   };
 }
 
@@ -159,10 +137,8 @@ class StackedRouter extends RouterBase {
   @override
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
-    RouteDef(Routes.sponsorHomeView, page: SponsorHomeView),
+    RouteDef(Routes.parentHomeView, page: ParentHomeView),
     RouteDef(Routes.singleMarkerView, page: SingleMarkerView),
-    RouteDef(Routes.insertPrePurchasedGiftCardView,
-        page: InsertPrePurchasedGiftCardView),
     RouteDef(Routes.updatingQuestView, page: UpdatingQuestView),
     RouteDef(Routes.explorerHomeView, page: ExplorerHomeView),
     RouteDef(Routes.mapOverviewView, page: MapOverviewView),
@@ -175,15 +151,10 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.selectRoleAfterLoginView, page: SelectRoleAfterLoginView),
     RouteDef(Routes.addExplorerView, page: AddExplorerView),
     RouteDef(Routes.searchExplorerView, page: SearchExplorerView),
-    RouteDef(Routes.singleExplorerView, page: SingleExplorerView),
+    RouteDef(Routes.singleChildStatView, page: SingleChildStatView),
     RouteDef(Routes.transferFundsView, page: TransferFundsView),
-    RouteDef(Routes.transfersHistoryView, page: TransfersHistoryView),
-    RouteDef(Routes.customBottomBarLayoutTemplateView,
-        page: CustomBottomBarLayoutTemplateView),
     RouteDef(Routes.qRCodeView, page: QRCodeView),
     RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
-    RouteDef(Routes.giftCardView, page: GiftCardView),
-    RouteDef(Routes.purchasedGiftCardsView, page: PurchasedGiftCardsView),
     RouteDef(Routes.addMarkersView, page: AddMarkersView),
     RouteDef(Routes.setPinView, page: SetPinView),
     RouteDef(Routes.bottomBarLayoutTemplateView,
@@ -193,41 +164,30 @@ class StackedRouter extends RouterBase {
         page: ActiveDistanceEstimateQuestView),
     RouteDef(Routes.activeTreasureLocationSearchQuestView,
         page: ActiveTreasureLocationSearchQuestView),
-    RouteDef(Routes.activeMapQuestView, page: ActiveMapQuestView),
     RouteDef(Routes.createQuestView, page: CreateQuestView),
     RouteDef(Routes.manageQuestView, page: ManageQuestView),
-    RouteDef(Routes.manageGiftCardstView, page: ManageGiftCardstView),
     RouteDef(Routes.questsOverviewView, page: QuestsOverviewView),
-    RouteDef(Routes.addGiftCardsView, page: AddGiftCardsView),
     RouteDef(Routes.historyAndAchievementsView,
         page: HistoryAndAchievementsView),
-    RouteDef(Routes.purchasedScreenTimeView, page: PurchasedScreenTimeView),
-    RouteDef(Routes.screenTimeView, page: ScreenTimeView),
     RouteDef(Routes.aRObjectView, page: ARObjectView),
-    RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
     RouteDef(Routes.activeScreenTimeView, page: ActiveScreenTimeView),
+    RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
+    RouteDef(Routes.hikeQuestView, page: HikeQuestView),
+    RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
+    RouteDef(Routes.onBoardingScreensView, page: OnBoardingScreensView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
   final _pagesMap = <Type, StackedRouteFactory>{
-    SponsorHomeView: (data) {
+    ParentHomeView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const SponsorHomeView(),
+        builder: (context) => const ParentHomeView(),
         settings: data,
       );
     },
     SingleMarkerView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => SingleMarkerView(),
-        settings: data,
-      );
-    },
-    InsertPrePurchasedGiftCardView: (data) {
-      var args = data.getArgs<InsertPrePurchasedGiftCardViewArguments>(
-        orElse: () => InsertPrePurchasedGiftCardViewArguments(),
-      );
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => InsertPrePurchasedGiftCardView(key: args.key),
         settings: data,
       );
     },
@@ -320,10 +280,10 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    SingleExplorerView: (data) {
-      var args = data.getArgs<SingleExplorerViewArguments>(nullOk: false);
+    SingleChildStatView: (data) {
+      var args = data.getArgs<SingleChildStatViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SingleExplorerView(
+        builder: (context) => SingleChildStatView(
           key: args.key,
           uid: args.uid,
         ),
@@ -338,23 +298,6 @@ class StackedRouter extends RouterBase {
           type: args.type,
           senderInfo: args.senderInfo,
           recipientInfo: args.recipientInfo,
-        ),
-        settings: data,
-      );
-    },
-    TransfersHistoryView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const TransfersHistoryView(),
-        settings: data,
-      );
-    },
-    CustomBottomBarLayoutTemplateView: (data) {
-      var args = data.getArgs<CustomBottomBarLayoutTemplateViewArguments>(
-          nullOk: false);
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => CustomBottomBarLayoutTemplateView(
-          key: args.key,
-          childView: args.childView,
         ),
         settings: data,
       );
@@ -374,18 +317,6 @@ class StackedRouter extends RouterBase {
     QRCodeViewExample: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => QRCodeViewExample(),
-        settings: data,
-      );
-    },
-    GiftCardView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const GiftCardView(),
-        settings: data,
-      );
-    },
-    PurchasedGiftCardsView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const PurchasedGiftCardsView(),
         settings: data,
       );
     },
@@ -452,16 +383,6 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    ActiveMapQuestView: (data) {
-      var args = data.getArgs<ActiveMapQuestViewArguments>(nullOk: false);
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => ActiveMapQuestView(
-          key: args.key,
-          quest: args.quest,
-        ),
-        settings: data,
-      );
-    },
     CreateQuestView: (data) {
       var args = data.getArgs<CreateQuestViewArguments>(
         orElse: () => CreateQuestViewArguments(),
@@ -477,24 +398,9 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    ManageGiftCardstView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const ManageGiftCardstView(),
-        settings: data,
-      );
-    },
     QuestsOverviewView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const QuestsOverviewView(),
-        settings: data,
-      );
-    },
-    AddGiftCardsView: (data) {
-      var args = data.getArgs<AddGiftCardsViewArguments>(
-        orElse: () => AddGiftCardsViewArguments(),
-      );
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => AddGiftCardsView(key: args.key),
         settings: data,
       );
     },
@@ -510,18 +416,6 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    PurchasedScreenTimeView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const PurchasedScreenTimeView(),
-        settings: data,
-      );
-    },
-    ScreenTimeView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const ScreenTimeView(),
-        settings: data,
-      );
-    },
     ARObjectView: (data) {
       var args = data.getArgs<ARObjectViewArguments>(
         orElse: () => ARObjectViewArguments(),
@@ -534,19 +428,53 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    SelectScreenTimeView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const SelectScreenTimeView(),
-        settings: data,
-      );
-    },
     ActiveScreenTimeView: (data) {
       var args = data.getArgs<ActiveScreenTimeViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => ActiveScreenTimeView(
           key: args.key,
-          minutes: args.minutes,
+          session: args.session,
+          screenTimeSessionId: args.screenTimeSessionId,
         ),
+        settings: data,
+      );
+    },
+    SelectScreenTimeView: (data) {
+      var args = data.getArgs<SelectScreenTimeViewArguments>(
+        orElse: () => SelectScreenTimeViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SelectScreenTimeView(
+          key: args.key,
+          childId: args.childId,
+        ),
+        settings: data,
+      );
+    },
+    HikeQuestView: (data) {
+      var args = data.getArgs<HikeQuestViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => HikeQuestView(
+          key: args.key,
+          quest: args.quest,
+        ),
+        settings: data,
+      );
+    },
+    SingleQuestTypeView: (data) {
+      var args = data.getArgs<SingleQuestTypeViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SingleQuestTypeView(
+          key: args.key,
+          quest: args.quest,
+          questType: args.questType,
+        ),
+        settings: data,
+      );
+    },
+    OnBoardingScreensView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const OnBoardingScreensView(),
         settings: data,
       );
     },
@@ -556,12 +484,6 @@ class StackedRouter extends RouterBase {
 /// ************************************************************************
 /// Arguments holder classes
 /// *************************************************************************
-
-/// InsertPrePurchasedGiftCardView arguments holder class
-class InsertPrePurchasedGiftCardViewArguments {
-  final Key? key;
-  InsertPrePurchasedGiftCardViewArguments({this.key});
-}
 
 /// LoginView arguments holder class
 class LoginViewArguments {
@@ -595,11 +517,11 @@ class SearchExplorerViewArguments {
   SearchExplorerViewArguments({this.key});
 }
 
-/// SingleExplorerView arguments holder class
-class SingleExplorerViewArguments {
+/// SingleChildStatView arguments holder class
+class SingleChildStatViewArguments {
   final Key? key;
   final String uid;
-  SingleExplorerViewArguments({this.key, required this.uid});
+  SingleChildStatViewArguments({this.key, required this.uid});
 }
 
 /// TransferFundsView arguments holder class
@@ -613,14 +535,6 @@ class TransferFundsViewArguments {
       required this.type,
       required this.senderInfo,
       required this.recipientInfo});
-}
-
-/// CustomBottomBarLayoutTemplateView arguments holder class
-class CustomBottomBarLayoutTemplateViewArguments {
-  final Key? key;
-  final Widget childView;
-  CustomBottomBarLayoutTemplateViewArguments(
-      {this.key, required this.childView});
 }
 
 /// QRCodeView arguments holder class
@@ -677,23 +591,10 @@ class ActiveTreasureLocationSearchQuestViewArguments {
       {this.key, required this.quest});
 }
 
-/// ActiveMapQuestView arguments holder class
-class ActiveMapQuestViewArguments {
-  final Key? key;
-  final Quest quest;
-  ActiveMapQuestViewArguments({this.key, required this.quest});
-}
-
 /// CreateQuestView arguments holder class
 class CreateQuestViewArguments {
   final Key? key;
   CreateQuestViewArguments({this.key});
-}
-
-/// AddGiftCardsView arguments holder class
-class AddGiftCardsViewArguments {
-  final Key? key;
-  AddGiftCardsViewArguments({this.key});
 }
 
 /// HistoryAndAchievementsView arguments holder class
@@ -713,6 +614,30 @@ class ARObjectViewArguments {
 /// ActiveScreenTimeView arguments holder class
 class ActiveScreenTimeViewArguments {
   final Key? key;
-  final int minutes;
-  ActiveScreenTimeViewArguments({this.key, required this.minutes});
+  final ScreenTimeSession? session;
+  final String? screenTimeSessionId;
+  ActiveScreenTimeViewArguments(
+      {this.key, required this.session, this.screenTimeSessionId});
+}
+
+/// SelectScreenTimeView arguments holder class
+class SelectScreenTimeViewArguments {
+  final Key? key;
+  final String? childId;
+  SelectScreenTimeViewArguments({this.key, this.childId});
+}
+
+/// HikeQuestView arguments holder class
+class HikeQuestViewArguments {
+  final Key? key;
+  final Quest quest;
+  HikeQuestViewArguments({this.key, required this.quest});
+}
+
+/// SingleQuestTypeView arguments holder class
+class SingleQuestTypeViewArguments {
+  final Key? key;
+  final Quest? quest;
+  final QuestType? questType;
+  SingleQuestTypeViewArguments({this.key, required this.quest, this.questType});
 }

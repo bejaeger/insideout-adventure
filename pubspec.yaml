@@ -95,7 +95,7 @@ dependencies:
   persistent_bottom_nav_bar: ^4.0.2
   rxdart: ^0.27.1
   stop_watch_timer: ^1.3.1
-  # geoflutterfire: ^3.0.3
+  geoflutterfire: ^3.0.3
   location: ^4.3.0
   google_maps_flutter_web: ^0.3.2
   arcore_flutter_plugin: ^0.1.0-null-safety.3
@@ -108,11 +108,12 @@ dependencies:
   progress_indicator_button: ^0.0.3
   #background_fetch: ^1.1.0
   #awesome_notifications: ^0.6.21
-  awesome_notifications: #^0.7.0-beta.2
-    git:
-      #ref: "8d0bc27"
-      ref: "a850f27"
-      url: https://github.com/rafaelsetragni/awesome_notifications
+  awesome_notifications: ^0.6.21
+  # awesome_notifications: #^0.7.0-beta.2
+  #   git:
+  #     #ref: "8d0bc27"
+  #     ref: "a850f27"
+  #     url: https://github.com/rafaelsetragni/awesome_notifications
   fluttertoast: ^8.0.3
 
   transparent_pointer: ^1.0.0
@@ -123,6 +124,7 @@ dependencies:
   pedometer: ^3.0.0
   flutter_background_service: ^2.0.0
   geopoint: ^1.0.0
+  introduction_screen: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -172,8 +174,11 @@ flutter:
     - assets/avatars/hercules-avatar2.png    
     - assets/icons/
     - assets/icons/afk_credits.PNG
+    - assets/icons/afk_credits_orig.png
     - assets/icons/melted-clock.png
     - assets/icons/afk_credits_small.PNG
+    - assets/icons/afk_credits_small_orig.png
+    - assets/icons/afk_credits_small_colored.PNG
     - assets/icons/trash_icon.svg
     - assets/icons/measure-distance.png    
     - assets/icons/magnet.png
@@ -192,6 +197,19 @@ flutter:
     - assets/icons/location-icon.ico
     - assets/icons/cardinal-point.png  
     - assets/lottie/lottietest.json  
+    - assets/icons/walk.png
+    - assets/icons/run.png
+    - assets/icons/person.png
+    - assets/icons/computer.png
+    - assets/illustrations/activity_illustration.png
+    - assets/illustrations/anna_hercules_world.png
+    - assets/illustrations/infographic_wallet.png
+    - assets/illustrations/infographic.png
+    - assets/illustrations/parents_meditate.png
+    - assets/illustrations/screen_time.png
+    - assets/illustrations/wallet_earning.png
+    - assets/illustrations/wallet_spending.png
+    - assets/illustrations/activity_illustration_with_arrows.png
 
   # To add assets to your application, add an assets section, like this:
   #assets:

@@ -1,10 +1,10 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class AuthenticationLayout extends StatelessWidget {
   final Widget? title;
+  final Widget? logo;
   final Widget? subtitle;
   final String? mainButtonTitle;
   final Widget? form;
@@ -48,6 +48,7 @@ class AuthenticationLayout extends StatelessWidget {
     this.googleText,
     this.onDummyLoginSuperUserTapped,
     this.onDummyLoginAdminMasterTapped,
+    this.logo,
   }) : super(key: key);
 
   @override
@@ -70,7 +71,8 @@ class AuthenticationLayout extends StatelessWidget {
                 onPressed: onBackPressed,
               ),
             // Text(
-            title!,
+            if (title != null) title!,
+            if (logo != null) logo!,
             /*  style: textTheme(context).headline4,
             ), */
             verticalSpaceSmall,
@@ -114,7 +116,7 @@ class AuthenticationLayout extends StatelessWidget {
                 height: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: kPrimaryColor,
+                  color: kcPrimaryColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: busy
@@ -145,7 +147,7 @@ class AuthenticationLayout extends StatelessWidget {
                           height: 40,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: kPrimaryColor,
+                            color: kcPrimaryColor,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: busy
@@ -172,7 +174,7 @@ class AuthenticationLayout extends StatelessWidget {
                           height: 40,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: kPrimaryColor,
+                            color: kcPrimaryColor,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: busy
@@ -207,7 +209,7 @@ class AuthenticationLayout extends StatelessWidget {
                           height: 40,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: kPrimaryColor,
+                            color: kcPrimaryColor,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: busy
@@ -234,7 +236,7 @@ class AuthenticationLayout extends StatelessWidget {
                           height: 40,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: kPrimaryColor,
+                            color: kcPrimaryColor,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: busy
@@ -265,7 +267,7 @@ class AuthenticationLayout extends StatelessWidget {
                         height: 40,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: kPrimaryColor,
+                          color: kcPrimaryColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: busy
@@ -297,7 +299,7 @@ class AuthenticationLayout extends StatelessWidget {
                     Text(
                       'Create an account',
                       style: TextStyle(
-                        color: kPrimaryColor,
+                        color: kcPrimaryColor,
                         fontSize: 25,
                       ),
                     )
@@ -331,6 +333,7 @@ class AuthenticationLayout extends StatelessWidget {
             verticalSpaceLarge,
             if (releaseName != null)
               Center(child: Text("Release - " + releaseName!)),
+            verticalSpaceMedium,
           ],
         ),
       ),

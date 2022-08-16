@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase_success_result/gift_card_purchase_success_result.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
-import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
@@ -124,7 +124,7 @@ class CloudFunctionsApi {
   ///////////////////////////////////////////////
   /// Call Cloud Function
   Future purchaseScreenTime(
-      {required ScreenTimePurchase screenTimePurchase}) async {
+      {required ScreenTimeSession screenTimePurchase}) async {
     try {
       log.i("Calling restful server function bookkeepScreenTimePurchase");
       Uri url = Uri.https(

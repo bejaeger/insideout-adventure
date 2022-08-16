@@ -1,4 +1,6 @@
 import 'dart:io' show Platform;
+import 'package:afkcredits/notifications/notification_controller.dart';
+import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -7,16 +9,15 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/environment_services.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 import 'package:places_service/places_service.dart';
 
-import '../../../notification/notification_controller.dart';
-
-class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
+class StartUpViewModel extends TransferBaseViewModel {
   final PlacesService _placesService = locator<PlacesService>();
   //final _geolocationService = locator<GeolocationService>();
   final EnvironmentService _environmentService = locator<EnvironmentService>();
+  final LocalStorageService _localStorageService =
+      locator<LocalStorageService>();
   //final _markersService = locator<MarkerService>();
 
   //dynamic position;
@@ -47,16 +48,20 @@ class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
         localUserId = await userService.getLocallyLoggedInUserId();
         localUserRole = await userService.getLocallyLoggedUserRole();
       }
+
+      // TODO: Need to rethink the following logic. What if the app is closed once we are in the children area? We should go back to the children area!
+
       if (localUserId != null) {
         log.v(
             'We have a user session on local storage. Sync the user profile ...');
         await userService.syncUserAccount(
             uid: localUserId, fromLocalStorage: true);
-      }
-      if (userService.hasLoggedInUser) {
-        log.v(
-            'We have an active user session on firebase. Sync the user profile ...');
-        await userService.syncUserAccount();
+      } else {
+        if (userService.hasLoggedInUser) {
+          log.v(
+              'We have an active user session on firebase. Sync the user profile ...');
+          await userService.syncUserAccount();
+        }
       }
 
       if (userService.hasLoggedInUser || localUserId != null) {
@@ -76,10 +81,20 @@ class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
         } else {
           final currentUser = userService.currentUser;
           log.v('User sync complete. User profile: $currentUser');
-          if (localUserRole == UserRole.adminMaster) {
-            navToAdminHomeView(role: localUserRole!);
+
+          // TODO: check whether there is an active screen time and if yes navigate to it, potentially handling completion event which includes an update of the database
+          final String? id = await _localStorageService.getFromDisk(
+              key: kLocalStorageScreenTimeSessionKey);
+          if (id != null) {
+            // FOUND SCREEN TIME! Navigate to screen time view
+            log.i("Found active screen time, navigating to active view");
+            navToActiveScreenTimeView(sessionId: id);
           } else {
-            replaceWithHomeView();
+            if (localUserRole == UserRole.adminMaster) {
+              navToAdminHomeView(role: localUserRole!);
+            } else {
+              replaceWithHomeView();
+            }
           }
         }
       } else {
@@ -87,8 +102,7 @@ class StartUpViewModel extends TransferBaseViewModel with NavigationMixin {
         navigationService.replaceWith(Routes.loginView);
       }
     } catch (e) {
-      log.e(
-          "Error, possibly no network connection could not be found? Error message: $e");
+      log.e("Error, possibly no network connection? Error message: $e");
       navigationService.replaceWith(Routes.loginView);
     }
   }

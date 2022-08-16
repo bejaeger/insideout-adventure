@@ -60,7 +60,7 @@ class MainMapView extends StatelessWidget {
               characterNumber: model.characterNumber,
               show: !((model.isShowingQuestDetails ||
                       !model.isAvatarView ||
-                      model.isShowingARView ||
+                      model.isFadingOutOverlay ||
                       model.isMovingCamera) &&
                   !model.hasActiveQuest)),
           // Avatar overlaid with Lottie

@@ -1,5 +1,4 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -87,7 +86,7 @@ class ProgressBar extends StatelessWidget {
             child: Container(
               height: 8,
               decoration: BoxDecoration(
-                  color: kPrimaryColor,
+                  color: kcPrimaryColor,
                   borderRadius: BorderRadius.circular(4.0)),
               width: percentage * maxWidth,
             ),

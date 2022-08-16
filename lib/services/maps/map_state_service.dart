@@ -42,6 +42,9 @@ class MapStateService {
   double? newLat;
   double? newLon;
 
+  // navigated form quest list
+  bool navigatedFromQuestList = false;
+
   void takeSnapshotOfCameraPosition() {
     if (previousBearing != null)
       return; // only take snapshot when no snapshot is stored!

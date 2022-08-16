@@ -15,25 +15,90 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class LoginViewModel extends AuthenticationViewModel {
-  //    kIsWeb ? Routes.walletView : Routes.layoutTemplateViewMobile);
+  // ----------------------------------------
+  // services
   final FirebaseAuthenticationService? _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
+  final SnackbarService _snackbarService = locator<SnackbarService>();
   bool checkUserRole = true;
   final _navigationService = locator<NavigationService>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final log = getLogger("LoginViewModel");
   final UserService _userService = locator<UserService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+
+  // ---------------------------
+  // getters
   String get getReleaseName => flavorConfigProvider.appName;
 
-  dynamic userLoginTapped({required UserRole userRole}) {
-    if (_flavorConfigProvider.flavor == Flavor.dev) {
-      return () => saveData(AuthenticationMethod.dummy, userRole);
+  // --------------------------
+  // state
+  String? emailOrNameInputValidationMessage;
+  String? passwordInputValidationMessage;
+
+  // ------------------------------
+  // functions
+  dynamic userLoginTapped({UserRole? userRole}) {
+    if (userRole == null) {
+      return () {
+        if (!isValidUserInput()) {
+          notifyListeners();
+          return;
+        }
+        saveData(AuthenticationMethod.EmailOrSponsorCreatedExplorer);
+      };
+    } else {
+      if (_flavorConfigProvider.flavor == Flavor.dev) {
+        return () {
+          saveData(AuthenticationMethod.dummy, userRole);
+        };
+      }
+      // provide dummy login also in prod database!
+      if (_flavorConfigProvider.flavor == Flavor.prod) {
+        return () {
+          saveData(AuthenticationMethod.dummy, userRole);
+        };
+      }
     }
-    // provide dummy login also in prod database!
-    if (_flavorConfigProvider.flavor == Flavor.prod) {
-      return () => saveData(AuthenticationMethod.dummy, userRole);
+  }
+
+  bool isValidUserInput() {
+    bool returnVal = true;
+    if (emailOrNameValue == null) {
+      emailOrNameInputValidationMessage =
+          'Please provide a valid email address';
+      returnVal = false;
     }
+    if (passwordValue == null) {
+      passwordInputValidationMessage = "Please provide a password";
+      returnVal = false;
+    }
+    if (emailOrNameValue == "") {
+      emailOrNameInputValidationMessage =
+          'Please provide a valid email address';
+      returnVal = false;
+    }
+    if (passwordValue == "") {
+      passwordInputValidationMessage = "Please provide a password";
+      returnVal = false;
+    }
+    // if (emailOrNameValue != null) {
+    //   bool emailValid =
+    //       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]\.[a-zA-Z]+")
+    //           .hasMatch(emailOrNameValue!);
+    //   if (!emailValid) {
+    //     emailOrNameInputValidationMessage =
+    //         'Please provide a valid email address';
+    //     returnVal = false;
+    //   }
+    // }
+    return returnVal;
+  }
+
+  void resetValidationMessages() {
+    emailOrNameInputValidationMessage = null;
+    passwordInputValidationMessage = null;
+    notifyListeners();
   }
 
 /*   @override
@@ -78,4 +143,16 @@ class LoginViewModel extends AuthenticationViewModel {
         password: _userService
             .hashPassword(_flavorConfigProvider.getTestUserPassword()),
       );
+
+  void showNotImplementedSnackbar() {
+    _snackbarService.showSnackbar(
+        title: "Not yet implemented.",
+        message: "I know... it's sad",
+        duration: Duration(seconds: 1));
+  }
+
+  void setFormStatus() {
+    log.i('Set the form status with data: $formValueMap');
+    resetValidationMessages();
+  }
 }

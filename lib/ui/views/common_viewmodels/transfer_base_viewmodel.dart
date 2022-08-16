@@ -15,8 +15,6 @@ abstract class TransferBaseViewModel extends BaseModel {
   // Listeners for transfers
   MoneyTransferQueryConfig get queryConfig =>
       MoneyTransferQueryConfig(senderId: userService.currentUser.uid);
-  List<MoneyTransfer> get latestTransfers =>
-      transfersHistoryService.getTransfers(config: queryConfig);
 
   Future showMoneyTransferInfoDialog(MoneyTransfer transfer) async {
     final details = transfer.transferDetails;

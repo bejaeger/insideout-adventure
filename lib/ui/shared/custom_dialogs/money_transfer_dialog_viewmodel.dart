@@ -61,7 +61,7 @@ class MoneyTransferDialogViewModel extends BaseModel {
         secondaryButtonTitle = "Go Back";
       } else {
         title = "Success!!";
-        description = "You are the best!";
+        description = "Someone will be very happy!";
         mainButtonTitle = "Go Back";
       }
     } else if (status == TransferDialogStatus.giftCardPending) {

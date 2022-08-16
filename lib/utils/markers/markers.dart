@@ -49,11 +49,14 @@ abstract class AFKMarks extends FormViewModel {
     logger.i(_position);
   }
 
-  Marker addMarkers({required LatLng pos, required String markerId}) {
+  Marker addMarkers(
+      {required LatLng pos, required String markerId, required int number}) {
     return Marker(
       markerId: MarkerId(markerId),
       infoWindow: InfoWindow(title: markerId),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      icon: number == 0
+          ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
+          : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
       position: pos,
       onTap: () {
         removeMarker(
@@ -84,12 +87,12 @@ abstract class AFKMarks extends FormViewModel {
   void _addMarkerOnMapAndAFKMarker(
       {required String markerId,
       required LatLng position,
-      required String qrdCodeId}) {
+      required String qrdCodeId,
+      required int number}) {
     var id2 = Uuid();
     final id = id2.v1().toString().replaceAll('-', '');
-
     _markersOnMap.add(
-      addMarkers(markerId: markerId, pos: position),
+      addMarkers(markerId: markerId, pos: position, number: number),
     );
     _afkMarkers.add(
       returnAFKMarker(pos: position, markerId: markerId, qrCode: qrdCodeId),
@@ -137,7 +140,7 @@ abstract class AFKMarks extends FormViewModel {
     notifyListeners();
   }
 
-  void addMarkerOnMap({required LatLng pos}) {
+  void addMarkerOnMap({required LatLng pos, required int number}) {
     try {
       var id = Uuid();
       var id2 = Uuid();
@@ -145,7 +148,10 @@ abstract class AFKMarks extends FormViewModel {
       final qrdCdId = id2.v1().toString().replaceAll('-', '');
 
       _addMarkerOnMapAndAFKMarker(
-          markerId: markerId, position: pos, qrdCodeId: qrdCdId);
+          markerId: markerId,
+          position: pos,
+          qrdCodeId: qrdCdId,
+          number: number);
     } catch (error) {
       throw MapViewModelException(
           message: 'An error occured when creating the map',

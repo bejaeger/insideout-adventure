@@ -7,7 +7,9 @@ const GoogleMapsEnvKeyIOS = 'GOOGLE_MAPS_API_KEY_IOS';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
-
+const kLocalStorageSponsorReferenceKey = "PARENT_ID";
+const kLocalStorageScreenTimeSessionKey = "SCREEN_TIME_SESSION";
+const kLocalStorageSawOnBoardingKey = "SAW_ONBOARDING";
 final appName = 'AFK Credits';
 
 /////////////////////////////////////////////////
@@ -17,6 +19,7 @@ final appName = 'AFK Credits';
 final String userStatisticsCollectionKey = "statistics";
 final String userFavouritePlacesCollectionKey = "FavouritePlaces";
 final String activatedQuestsCollectionKey = "activatedQuests";
+final String screenTimeSessionsCollectionKey = "screenTimeSessions";
 
 // document keys
 final String userSummaryStatisticsDocumentKey = "summaryStats";
@@ -37,6 +40,8 @@ final CollectionReference paymentsCollection =
     FirebaseFirestore.instance.collection('transfers');
 final CollectionReference questsCollection =
     FirebaseFirestore.instance.collection('quests');
+final CollectionReference screenTimeSessionCollection =
+    FirebaseFirestore.instance.collection(screenTimeSessionsCollectionKey);
 final CollectionReference afkQuestsCollection =
     FirebaseFirestore.instance.collection('afkQuests');
 final CollectionReference globalStatsCollection =
@@ -136,3 +141,13 @@ const double kMaxZoom = 19;
 // const double kMaxZoom = 50;
 const double kInitialZoomBirdsView = 12;
 const double kMinZoomAvatarView = 17;
+
+////////////////////////////////////
+/// notification keys and settings
+///
+const String kDefaultNotificationIconPath =
+    "resource://drawable/res_notification_icon";
+const String kPermanentNotificationKey = "permanent_notification";
+const String kPermanentNotificationName = "Permanent notifications";
+const String kScheduledNotificationChannelKey = "scheduled_notification";
+const String kScheduledNotificationChannelName = "Scheduled notifications";

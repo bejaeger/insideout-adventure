@@ -13,9 +13,9 @@ class CreateAccountUserRoleView extends StatelessWidget {
       builder: (context, model, child) => SelectUserRoleLayout(
         //In Future I only see one Navigation Function with different Roles Parameters. Same UserTapToLogin
         onBackPressed: model.navigateToLoginView,
-        onExplorerPressed: model.navigateToExplorerCreateAccount,
+        onExplorerPressed: model.showNotImplementedSnackbar,
         onSponsorPressed: model.navigateToSponsorCreateAccount,
-        onAdminMasterPressed: model.navigateToAdminCreateAccount,
+        // onAdminMasterPressed: model.navigateToAdminCreateAccount,
       ),
     );
   }

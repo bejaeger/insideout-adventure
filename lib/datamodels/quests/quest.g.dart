@@ -11,6 +11,7 @@ _$_Quest _$$_QuestFromJson(Map<String, dynamic> json) => _$_Quest(
       name: json['name'] as String,
       description: json['description'] as String,
       type: $enumDecode(_$QuestTypeEnumMap, json['type']),
+      createdBy: json['createdBy'] as String?,
       startMarker: json['startMarker'] == null
           ? null
           : AFKMarker.fromJson(json['startMarker'] as Map<String, dynamic>),
@@ -32,6 +33,7 @@ _$_Quest _$$_QuestFromJson(Map<String, dynamic> json) => _$_Quest(
       distanceFromUser: (json['distanceFromUser'] as num?)?.toDouble(),
       distanceToTravelInMeter:
           (json['distanceToTravelInMeter'] as num?)?.toDouble(),
+      repeatable: json['repeatable'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_QuestToJson(_$_Quest instance) => <String, dynamic>{
@@ -39,6 +41,7 @@ Map<String, dynamic> _$$_QuestToJson(_$_Quest instance) => <String, dynamic>{
       'name': instance.name,
       'description': instance.description,
       'type': _$QuestTypeEnumMap[instance.type],
+      'createdBy': instance.createdBy,
       'startMarker': instance.startMarker?.toJson(),
       'finishMarker': instance.finishMarker?.toJson(),
       'markers': instance.markers.map((e) => e.toJson()).toList(),
@@ -49,6 +52,7 @@ Map<String, dynamic> _$$_QuestToJson(_$_Quest instance) => <String, dynamic>{
       'bonusAfkCreditsOnSuccess': instance.bonusAfkCreditsOnSuccess,
       'distanceFromUser': instance.distanceFromUser,
       'distanceToTravelInMeter': instance.distanceToTravelInMeter,
+      'repeatable': instance.repeatable,
     };
 
 const _$QuestTypeEnumMap = {

@@ -1,5 +1,4 @@
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -92,7 +91,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     "Marker collected!",
                     textAlign: TextAlign.center,
                     style: textTheme(context).headline6!.copyWith(
-                        color: kPrimaryColor,
+                        color: kcPrimaryColor,
                         fontSize: 32,
                         fontWeight: FontWeight.w800),
                   ),
@@ -107,7 +106,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                         child: Icon(
                           Icons.check,
                           size: 200,
-                          color: kPrimaryColor,
+                          color: kcPrimaryColor,
                         ),
                       ),
                     ),
@@ -123,7 +122,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                           "Continue",
                           style: textTheme(context)
                               .headline6!
-                              .copyWith(color: kWhiteTextColor),
+                              .copyWith(color: kcWhiteTextColor),
                         ),
                       ),
                     ],

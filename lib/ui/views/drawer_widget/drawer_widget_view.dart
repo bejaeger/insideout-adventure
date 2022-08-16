@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -32,7 +31,7 @@ class DrawerWidgetView extends StatelessWidget {
                             child: Text(
                               'MENU',
                               style: textTheme(context).headline6!.copyWith(
-                                    color: kDarkTurquoise,
+                                    color: kcPrimaryColorSecondary,
                                     fontSize: 30,
                                   ),
                             ),
@@ -47,7 +46,7 @@ class DrawerWidgetView extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () => Navigator.of(context).pop(),
                           child: Icon(Icons.arrow_back,
-                              color: kDarkTurquoise, size: 35),
+                              color: kcPrimaryColorSecondary, size: 35),
                         ),
                       ),
                     ),
@@ -93,47 +92,6 @@ class DrawerWidgetView extends StatelessWidget {
                 //  ],
                 //),
                 verticalSpaceMedium,
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          // onPressed: model.navigateToExplorerHomeView,
-                          onPressed: model.navigateToGiftCardsView,
-                          //child: Text("Go to explorer home/map")),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text("Gift Cards",
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                verticalSpaceMedium,
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          // onPressed: model.navigateToExplorerHomeView,
-                          onPressed: model.navigateToScreenTimeView,
-                          //child: Text("Go to explorer home/map")),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text("Screen Time",
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 if (model.currentUser.createdByUserWithId != null)
                   Padding(
                     padding: const EdgeInsets.all(kHorizontalPadding),
@@ -164,7 +122,7 @@ class DrawerWidgetView extends StatelessWidget {
                         child: TextButton(
                           style: TextButton.styleFrom(
                               padding: const EdgeInsets.all(0.0),
-                              primary: kBlackHeadlineColor),
+                              primary: kcBlackHeadlineColor),
                           // onPressed: model.navigateToExplorerHomeView,
                           onPressed: model.logout,
                           //child: Text("Go to explorer home/map")),

@@ -18,7 +18,7 @@ class AutoCompleteListItem extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           leading: const Icon(
             Icons.near_me,
-            color: kcMediumGreyColor,
+            color: kcMediumGrey,
           ),
           onTap: () => onTap(),
           title: AfkCreditsText.subheading(city),

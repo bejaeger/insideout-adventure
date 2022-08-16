@@ -1,7 +1,6 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/activated_quest_panel_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/custom_app_bar/activated_quest_panel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -13,6 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool drawer;
   bool? alignLeft = false;
   final bool showRedLiveButton;
+  final bool showLogo;
   final Widget? widget;
   final void Function()? onBackButton;
   final void Function()? onAppBarButtonPressed;
@@ -28,21 +28,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.widget,
       this.appBarButtonIcon = Icons.help,
       this.showRedLiveButton = false,
-      this.onAppBarButtonPressed})
+      this.onAppBarButtonPressed,
+      this.showLogo = false})
       : super(key: key);
 
   double get getHeight => height;
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ActivatedQuestPanelViewModel>.reactive(
-      viewModelBuilder: () => ActivatedQuestPanelViewModel(),
+    return ViewModelBuilder<BaseModel>.reactive(
+      viewModelBuilder: () => BaseModel(),
       builder: (context, model, child) => PreferredSize(
         preferredSize:
             Size(screenWidth(context), height + kActiveQuestPanelMaxHeight),
         child: Stack(
           children: <Widget>[
-            if (!showRedLiveButton) ActivatedQuestPanel(heightAppBar: height),
             Container(
               alignment: Alignment.center,
               //clipBehavior: Clip.none,
@@ -58,8 +58,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
                           child: Icon(Icons.menu,
-                              color: kWhiteTextColor, size: 30),
+                              color: kcWhiteTextColor, size: 30),
                         ),
+                      ),
+                    ),
+                  if (showLogo)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: kHorizontalPadding),
+                        child: HerculesWorldLogo(sizeScale: 0.4),
                       ),
                     ),
                   Align(
@@ -67,7 +76,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ? Alignment.centerLeft
                         : Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      padding: EdgeInsets.symmetric(horizontal: 50),
                       child: FittedBox(
                         child: Text(
                           title,
@@ -75,7 +84,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           overflow: TextOverflow.ellipsis,
                           style: textTheme(context)
                               .headline5!
-                              .copyWith(color: kWhiteTextColor),
+                              .copyWith(color: kcWhiteTextColor),
                         ),
                       ),
                     ),
@@ -113,18 +122,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
                           child: Icon(appBarButtonIcon,
-                              color: kWhiteTextColor, size: 35),
+                              color: kcWhiteTextColor, size: 35),
                         ),
                       ),
                     ),
                 ],
               ),
               decoration: BoxDecoration(
-                color: kPrimaryColor,
+                color: kcPrimaryColor,
                 boxShadow: [
                   BoxShadow(
                     blurRadius: 4,
-                    color: kShadowColor.withOpacity(0.15),
+                    color: kcShadowColor.withOpacity(0.15),
                     spreadRadius: 1,
                     offset: Offset(0, 2),
                   ),
@@ -145,7 +154,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   icon: Icon(Icons.arrow_back, color: Colors.white),
                 ),
               ),
-            if (model.isSuperUser)
+            if (model.currentUserNullable != null && model.isSuperUser)
               Container(
                 height: height,
                 alignment: Alignment.topLeft,
@@ -210,7 +219,7 @@ class _BlinkAnimationState extends State<BlinkAnimation>
         return Container(
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: kBlackHeadlineColor)),
+                border: Border.all(color: kcBlackHeadlineColor)),
             child: Icon(Icons.circle, size: 30, color: animation.value));
       },
     );

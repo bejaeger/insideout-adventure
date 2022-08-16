@@ -11,7 +11,9 @@ import 'package:afkcredits/enums/marker_collection_failure_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
+import 'package:afkcredits/notifications/notifications.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -22,8 +24,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:stacked/stacked.dart';
-
-import '../../notification/notifications.dart';
 
 class ActiveQuestService with ReactiveServiceMixin {
   ActiveQuestService() {
@@ -41,6 +41,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final QuestService questService = locator<QuestService>();
+  final MapStateService mapStateService = locator<MapStateService>();
 
   // members
   BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
@@ -55,6 +56,8 @@ class ActiveQuestService with ReactiveServiceMixin {
   bool get hasSelectedQuest => selectedQuest != null;
   BehaviorSubject<Quest?> selectedQuestSubject = BehaviorSubject<Quest?>();
   Quest? get selectedQuest => selectedQuestSubject.valueOrNull;
+
+  DateTime? _questStartTime;
 
   void setSelectedQuest(Quest quest) {
     selectedQuestSubject.add(quest);
@@ -89,9 +92,9 @@ class ActiveQuestService with ReactiveServiceMixin {
         if (!closeby) {
           log.w("You are not nearby the marker, cannot start quest!");
           return "You are not nearby the marker.";
-        } else
-          return Notifications()
-              .createNotifications(message: "Active Tresuare Location");
+        }
+        // return Notifications().createPermanentNotification(
+        //     title: "Search quest ongoing", message: "Collect all markers");
       } catch (e) {
         log.e("Error thrown when searching for start marker: $e");
         if (e is StateError) {
@@ -136,6 +139,8 @@ class ActiveQuestService with ReactiveServiceMixin {
         trigger: QuestDataPointTrigger.userAction,
         userEventDescription: "quest started",
         pushToNotion: true);
+
+    _questStartTime = DateTime.now();
     return true;
   }
 
@@ -166,7 +171,6 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   void cancelPositionListener() {
     _geolocationService.cancelPositionListener();
-    _geolocationService.resumeMainPositionListener();
   }
 
   void pausePositionListener() {
@@ -175,6 +179,18 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   void resumePositionListener() {
     _geolocationService.resumePositionListener();
+  }
+
+  void addMainLocationListener() async {
+    await _geolocationService.listenToPositionMain(
+      distanceFilter: kDefaultGeolocationDistanceFilter,
+      onData: (Position position) {
+        mapStateService.setNewLatLon(
+            lat: position.latitude, lon: position.longitude);
+        mapStateService.animateOnNewLocation();
+        log.v("New position event fired from location listener!");
+      },
+    );
   }
 
   int get getNumberMarkersCollected => activatedQuest == null
@@ -208,7 +224,6 @@ class ActiveQuestService with ReactiveServiceMixin {
 
     // ------------------
     // 1.
-    // TODO
     evaluateFinishedQuest();
 
     // ----------------
@@ -220,12 +235,18 @@ class ActiveQuestService with ReactiveServiceMixin {
     await uploadAndCleanUpFinishedQuest();
   }
 
-  // TODO: Calculate how many credits were
-  // earned here
   Future evaluateFinishedQuest() async {
-    pushActivatedQuest(activatedQuest!.copyWith(
-        status: QuestStatus.success,
-        afkCreditsEarned: activatedQuest!.quest.afkCredits));
+    // TODO: Possibley also calculate how many credits were earned here
+    if (_questStartTime != null) {
+      pushActivatedQuest(activatedQuest!.copyWith(
+          status: QuestStatus.success,
+          afkCreditsEarned: activatedQuest!.quest.afkCredits,
+          timeElapsed: DateTime.now().difference(_questStartTime!).inSeconds));
+    } else {
+      pushActivatedQuest(activatedQuest!.copyWith(
+          status: QuestStatus.success,
+          afkCreditsEarned: activatedQuest!.quest.afkCredits));
+    }
   }
 
   Future collectCredits() async {
@@ -716,9 +737,11 @@ class ActiveQuestService with ReactiveServiceMixin {
     _stopWatchService.resetTimer();
     // cancelLocationListener();
     cancelPositionListener();
+    addMainLocationListener();
     _questTestingService.maybeReset();
     resetTimeElapsed();
     removeActivatedQuest();
+    _questStartTime = null;
   }
 
   ActivatedQuest _getActivatedQuest(

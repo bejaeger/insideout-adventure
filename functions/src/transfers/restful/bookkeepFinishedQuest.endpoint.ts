@@ -29,6 +29,7 @@ export default new Post((request: Request, response: Response) => {
 
             // const quest = data["quest"];
             const afkCreditsEarned = data["afkCreditsEarned"];
+            const questId = data["quest"]["id"];
             const uids = data["uids"];
 
             // /////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@ export default new Post((request: Request, response: Response) => {
                     try {
                         await db.runTransaction(async (t: any) => {
                             await
-                                bookkeeper.updateStatsOnFinishedQuest(t, uid, afkCreditsEarned);
+                                bookkeeper.updateStatsOnFinishedQuest(t, uid, afkCreditsEarned, questId);
                         });
                     } catch (e) {
                         log(`Error: Could not add update credits after finished quest event: ${e}`);

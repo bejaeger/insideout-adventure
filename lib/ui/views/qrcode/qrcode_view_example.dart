@@ -20,7 +20,7 @@ class _QRCodeViewExampleState extends State<QRCodeViewExample> {
   @override
   void reassemble() {
     super.reassemble();
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       controller!.pauseCamera();
     }
     controller!.resumeCamera();

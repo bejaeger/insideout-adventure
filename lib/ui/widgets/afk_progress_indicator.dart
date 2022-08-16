@@ -1,4 +1,4 @@
-import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class AFKProgressIndicator extends StatelessWidget {
@@ -7,7 +7,11 @@ class AFKProgressIndicator extends StatelessWidget {
   final Color? color;
   final Alignment? alignment;
   const AFKProgressIndicator(
-      {Key? key, this.centered = true, this.linear = false, this.color, this.alignment})
+      {Key? key,
+      this.centered = true,
+      this.linear = false,
+      this.color,
+      this.alignment})
       : super(key: key);
 
   @override
@@ -15,10 +19,10 @@ class AFKProgressIndicator extends StatelessWidget {
     return linear == false
         ? Align(
             alignment: alignment ?? Alignment.center,
-            child: CircularProgressIndicator(color: color ?? kPrimaryColor),
+            child: CircularProgressIndicator(color: color ?? kcPrimaryColor),
           )
         : LinearProgressIndicator(
-            color: color ?? kPrimaryColor,
-            backgroundColor: kPrimaryColor.withOpacity(0.5));
+            color: color ?? kcPrimaryColor,
+            backgroundColor: kcPrimaryColor.withOpacity(0.5));
   }
 }

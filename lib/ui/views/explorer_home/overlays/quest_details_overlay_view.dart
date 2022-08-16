@@ -1,14 +1,13 @@
-import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
-import 'package:afkcredits/ui/views/active_map_quest/active_map_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_overlays/gps_area_hike/gps_area_hike_viewmodel.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/hike_quest/hike_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
-import 'package:afkcredits/utils/string_utils.dart';
+import 'package:afkcredits/ui/widgets/treasure_location_search_widgets.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -50,8 +49,8 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ActiveMapQuestViewModel>.reactive(
-      viewModelBuilder: () => ActiveMapQuestViewModel(),
+    return ViewModelBuilder<HikeQuestViewModel>.reactive(
+      viewModelBuilder: () => HikeQuestViewModel(),
       builder: (context, model, child) {
         if (widget.startFadeOut) {
           _controller.reverse(from: 0.5);
@@ -96,6 +95,12 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                     ),
                   ),
 
+                // if (quest != null)
+                //   InstructionsAndStartButtonsOverlay(
+                //       quest: quest,
+                //       onStartQuest: () => model.notifyListeners(),
+                //       model: model),
+
                 // Quest Info
                 Container(
                   child: Padding(
@@ -108,28 +113,54 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                onTap: model.openSuperUserSettingsDialog,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    //color: Colors.purple.withOpacity(0.2),
-                                    border:
-                                        Border.all(color: Colors.grey[600]!),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  GestureDetector(
+                                    onTap: model.openSuperUserSettingsDialog,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        //color: Colors.purple.withOpacity(0.2),
+                                        border: Border.all(
+                                            color: Colors.grey[600]!),
+                                      ),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: AfkCreditsText.tag(
+                                        getShortQuestType(quest?.type),
+                                      ),
+                                    ),
                                   ),
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: AfkCreditsText.tag(
-                                    getStringFromEnum(quest?.type),
+                                  horizontalSpaceSmall,
+                                  CreditsAmount(
+                                    amount: quest?.afkCredits ?? -1,
+                                    height: 20,
                                   ),
-                                ),
+                                ],
                               ),
+                              if (quest != null)
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: model.hasActiveQuest ? 4.0 : 0,
+                                      right: model.hasActiveQuest ? 40.0 : 0),
+                                  child: GestureDetector(
+                                      onTap: () =>
+                                          model.showInstructions(quest.type),
+                                      //title: "Tutorial",
+                                      //color: kPrimaryColor.withOpacity(0.7),
+                                      child: Icon(Icons.help,
+                                          color: Colors.black, size: 24)),
+                                ),
                             ],
                           ),
-                          verticalSpaceTiny,
-                          AfkCreditsText.headingTwo(quest?.name ?? "QUEST"),
-                          verticalSpaceTiny,
-                          CreditsAmount(amount: quest?.afkCredits ?? -1),
-                          verticalSpaceMedium,
+                          verticalSpaceSmall,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: AfkCreditsText.headingThree(
+                                quest?.name ?? "QUEST"),
+                          ),
+                          verticalSpaceSmall,
                           if (quest != null)
                             if (quest.type == QuestType.TreasureLocationSearch)
                               // TODO: Make this a specific new View for each type of quest
@@ -180,7 +211,6 @@ class TreasureLocationSearch extends StatelessWidget {
         bool activeDetector = model.hasActiveQuest &&
             !model.isCheckingDistance &&
             model.allowCheckingPosition;
-
         return Stack(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -216,7 +246,7 @@ class TreasureLocationSearch extends StatelessWidget {
                       child: Icon(Icons.arrow_forward_ios)),
                 ),
               ),
-            InstructionsAndStartButtonsOverlay(
+            StartButtonOverlay(
                 quest: quest, onStartQuest: onStartQuest, model: model),
           ],
         );
@@ -264,7 +294,7 @@ class GPSAreaHike extends StatelessWidget {
             //           child: Icon(Icons.arrow_forward_ios)),
             //     ),
             //   ),
-            InstructionsAndStartButtonsOverlay(
+            StartButtonOverlay(
                 quest: quest, onStartQuest: onStartQuest, model: model),
           ],
         );
@@ -273,12 +303,12 @@ class GPSAreaHike extends StatelessWidget {
   }
 }
 
-class InstructionsAndStartButtonsOverlay extends StatelessWidget {
+class StartButtonOverlay extends StatelessWidget {
   final Quest quest;
   final void Function() onStartQuest;
   final ActiveQuestBaseViewModel model;
 
-  const InstructionsAndStartButtonsOverlay({
+  const StartButtonOverlay({
     Key? key,
     required this.quest,
     required this.onStartQuest,
@@ -290,20 +320,20 @@ class InstructionsAndStartButtonsOverlay extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(bottom: model.hasActiveQuest ? 0 : 70.0),
+        padding: EdgeInsets.only(bottom: model.hasActiveQuest ? 0 : 80.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            if (!model.hasActiveQuest)
-              Expanded(
-                child: AfkCreditsButton(
-                    onTap: model.showInstructions,
-                    title: "Tutorial",
-                    color: kPrimaryColor.withOpacity(0.7),
-                    leading: Icon(Icons.help, color: Colors.grey[100])),
-              ),
-            if (!model.hasActiveQuest) horizontalSpaceSmall,
+            // if (!model.hasActiveQuest)
+            //   Expanded(
+            //     child: AfkCreditsButton(
+            //         onTap: () => model.showInstructions(quest.type),
+            //         title: "Tutorial",
+            //         color: kPrimaryColor.withOpacity(0.7),
+            //         leading: Icon(Icons.help, color: Colors.grey[100])),
+            //   ),
+            // if (!model.hasActiveQuest) horizontalSpaceSmall,
             if (model.showStartSwipe && !model.isBusy)
               // model.distanceToStartMarker < 0
               //     ? AFKProgressIndicator()
