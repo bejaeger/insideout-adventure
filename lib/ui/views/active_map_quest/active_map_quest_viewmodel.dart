@@ -957,4 +957,10 @@ class ActiveMapQuestViewModel extends ActiveQuestBaseViewModel
       // mapController.addMarker(marker);
     });
   }
+
+  @override
+  Future showInstructions() {
+    // TODO: implement showInstructions
+    throw UnimplementedError();
+  }
 }

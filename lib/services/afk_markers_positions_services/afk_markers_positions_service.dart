@@ -6,7 +6,7 @@ import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AFKMarkersPositionService {
-  Geoflutterfire geo = Geoflutterfire();
+  final geo = Geoflutterfire();
 
   // Stateful Data
   BehaviorSubject<double>? radius;
@@ -21,7 +21,7 @@ class AFKMarkersPositionService {
 
     // Make a referece to firestore
     final ref = FirebaseFirestore.instance.collection('afkMarkersPositions');
-    GeoFirePoint center =
+    final center =
         geo.point(latitude: pos.latitude!, longitude: pos.longitude!);
 
     // subscribe to query

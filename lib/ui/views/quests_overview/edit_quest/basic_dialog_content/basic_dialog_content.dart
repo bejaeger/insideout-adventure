@@ -38,7 +38,7 @@ class BasicDialogContent extends StatelessWidget with $BasicDialogContent {
   Widget build(BuildContext context) {
     return ViewModelBuilder<BasicQuestViewModel>.reactive(
       onModelReady: (viewModel) =>
-          SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         listenToFormUpdated(model);
       }),
       builder: (context, model, child) => Scaffold(
@@ -59,7 +59,7 @@ class BasicDialogContent extends StatelessWidget with $BasicDialogContent {
                 verticalSpaceSmall,
                 TextField(
                   decoration: InputDecoration(
-                    labelText: 'Quest Description: ',
+                    labelText: 'Quest Description:',
                   ),
                   controller: descriptionController
                     ..text = quest!.description.toString(),

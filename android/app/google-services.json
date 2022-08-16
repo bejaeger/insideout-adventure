@@ -1,0 +1,308 @@
+{
+  "project_info": {
+    "project_number": "277863819591",
+    "project_id": "afk-credits-112d2",
+    "storage_bucket": "afk-credits-112d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277863819591:android:6cba8f4f82b9d56ba2c462",
+        "android_client_info": {
+          "package_name": "afkcredits_backoffice.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRuA9szk7WCz7E2xmTGQZhbCIawuRByhg"
+        },
+        {
+          "current_key": "AIzaSyD94N8PVZhYzgMnX5Dn22V4XG_0fXXaPgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "277863819591-83ajdks4bbefcp40esre8p599kl0minr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hercules.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277863819591:android:4d797c5b66b7266aa2c462",
+        "android_client_info": {
+          "package_name": "com.afkcredits"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRuA9szk7WCz7E2xmTGQZhbCIawuRByhg"
+        },
+        {
+          "current_key": "AIzaSyD94N8PVZhYzgMnX5Dn22V4XG_0fXXaPgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "277863819591-83ajdks4bbefcp40esre8p599kl0minr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hercules.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277863819591:android:32a7705d3e777e68a2c462",
+        "android_client_info": {
+          "package_name": "com.afkcredits.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277863819591-mj1a94rtrqemr5rmdcr8q965a0948pc7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.afkcredits.dev",
+            "certificate_hash": "1296430594c3f9314622082176f929ccacd92ce1"
+          }
+        },
+        {
+          "client_id": "277863819591-nef3u41f1dgbtglesv9bad40pvph116r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.afkcredits.dev",
+            "certificate_hash": "2fe513c776c71a69a68c487bc5515ee31077d1dc"
+          }
+        },
+        {
+          "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRuA9szk7WCz7E2xmTGQZhbCIawuRByhg"
+        },
+        {
+          "current_key": "AIzaSyD94N8PVZhYzgMnX5Dn22V4XG_0fXXaPgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "277863819591-83ajdks4bbefcp40esre8p599kl0minr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hercules.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277863819591:android:334cfde415a97b9ca2c462",
+        "android_client_info": {
+          "package_name": "com.example.afkcredits.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277863819591-ggl08fr70fvfbq7oena3gc5pb32gnpu9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.afkcredits.dev",
+            "certificate_hash": "2fe513c776c71a69a68c487bc5515ee31077d1dc"
+          }
+        },
+        {
+          "client_id": "277863819591-t6anm79r0ie47svndit6mp94nbf2q8l6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.afkcredits.dev",
+            "certificate_hash": "1296430594c3f9314622082176f929ccacd92ce1"
+          }
+        },
+        {
+          "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRuA9szk7WCz7E2xmTGQZhbCIawuRByhg"
+        },
+        {
+          "current_key": "AIzaSyD94N8PVZhYzgMnX5Dn22V4XG_0fXXaPgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "277863819591-83ajdks4bbefcp40esre8p599kl0minr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hercules.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277863819591:android:15697e054b065a48a2c462",
+        "android_client_info": {
+          "package_name": "com.hercules.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277863819591-763hiuvdsmcvdevsh5fe0fgv7vdp4qg5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hercules.dev",
+            "certificate_hash": "1296430594c3f9314622082176f929ccacd92ce1"
+          }
+        },
+        {
+          "client_id": "277863819591-r4k8lc5h1uha3fcb02qjldv462tooj4p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hercules.dev",
+            "certificate_hash": "2fe513c776c71a69a68c487bc5515ee31077d1dc"
+          }
+        },
+        {
+          "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRuA9szk7WCz7E2xmTGQZhbCIawuRByhg"
+        },
+        {
+          "current_key": "AIzaSyD94N8PVZhYzgMnX5Dn22V4XG_0fXXaPgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "277863819591-83ajdks4bbefcp40esre8p599kl0minr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hercules.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277863819591:android:cdb53949899a9052a2c462",
+        "android_client_info": {
+          "package_name": "com.hercules.hercules"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277863819591-61al111n6uj8tcd84q6l594qogcldk00.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hercules.hercules",
+            "certificate_hash": "2fe513c776c71a69a68c487bc5515ee31077d1dc"
+          }
+        },
+        {
+          "client_id": "277863819591-826m58lkcb5lrtcl03kl21rk1qlgnp1d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hercules.hercules",
+            "certificate_hash": "1296430594c3f9314622082176f929ccacd92ce1"
+          }
+        },
+        {
+          "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRuA9szk7WCz7E2xmTGQZhbCIawuRByhg"
+        },
+        {
+          "current_key": "AIzaSyD94N8PVZhYzgMnX5Dn22V4XG_0fXXaPgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277863819591-idsg7c9malspeq5f8f39t58ikhg77vsh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "277863819591-83ajdks4bbefcp40esre8p599kl0minr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hercules.dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

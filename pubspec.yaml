@@ -95,7 +95,7 @@ dependencies:
   persistent_bottom_nav_bar: ^4.0.2
   rxdart: ^0.27.1
   stop_watch_timer: ^1.3.1
-  # geoflutterfire: ^3.0.3
+  geoflutterfire: ^3.0.3
   location: ^4.3.0
   google_maps_flutter_web: ^0.3.2
   arcore_flutter_plugin: ^0.1.0-null-safety.3

@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+//import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -16,7 +17,9 @@ import '../../services/markers/marker_service.dart';
 
 abstract class AFKMarks extends FormViewModel {
   final logger = getLogger('AFKMarks');
-  Geoflutterfire geo = Geoflutterfire();
+  // Geoflutterfire geo = Geoflutterfire();
+  // Init firestore and geoFlutterFire
+  final geo = Geoflutterfire();
 
   Set<Marker> _markersOnMap = {};
   List<AFKMarker> _afkMarkers = [];
@@ -73,10 +76,7 @@ abstract class AFKMarks extends FormViewModel {
 
   AfkMarkersPositions returnAfkPositionMarkers(
       {required LatLng pos, required String docId}) {
-    /*    GeoPoint? point = geo.point(
-        latitude: pos.latitude, longitude: pos.longitude) as GeoPoint?; */
-    GeoFirePoint point =
-        geo.point(latitude: pos.latitude, longitude: pos.longitude);
+    final point = geo.point(latitude: pos.latitude, longitude: pos.longitude);
 
     return AfkMarkersPositions(point: point, documentId: docId);
   }
@@ -164,7 +164,7 @@ abstract class AFKMarks extends FormViewModel {
     /*   GeoPoint? point = geo.point(
         latitude: afkMarker.position.latitude,
         longitude: afkMarker.position.longitude) as GeoPoint?; */
-    GeoFirePoint point = geo.point(
+    final point = geo.point(
         latitude: afkMarker.position.latitude,
         longitude: afkMarker.position.longitude);
 
