@@ -45,6 +45,7 @@ class GoogleMapScreen extends StatelessWidget {
                 //callback that’s called when the map is ready to use.
                 onMapCreated: (GoogleMapController controller) {
                   controller.setMapStyle(model.mapStyle);
+                  //We are calling a service Directly Into a view.
                   GoogleMapService.setMapController(controller);
                 },
                 //enable zoom gestures

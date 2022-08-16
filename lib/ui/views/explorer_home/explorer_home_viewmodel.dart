@@ -2,33 +2,37 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
-import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
+import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:stacked/stacked.dart';
+
+import '../../../datamodels/quests/quest.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel
     with MapStateControlMixin {
   //-------------------------------------------------------
   // services
-  final GiftCardService _giftCardService = locator<GiftCardService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  // Stateful Data
+  // ignore: close_sinks
+
+  List<AFKQuest>? _afkQuest;
+
+  List<AFKQuest> get getAFKQuest => _afkQuest!;
 
   // --------------------------------------------------
   // getters
@@ -41,8 +45,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       _questTestingService.allQuestDataPoints;
   List<ActivatedQuest> get activatedQuestsHistory =>
       questService.activatedQuestsHistory;
-  List<GiftCardPurchase> get purchasedGiftCards =>
-      _giftCardService.purchasedGiftCards;
   List<Achievement> get achievements => gamificationService.achievements;
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
 
@@ -71,7 +73,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     setBusy(false);
 
     // fade loading screen out process
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(
+      Duration(milliseconds: 500),
+    );
     showFullLoadingScreen = false;
     notifyListeners();
     // ? should to be in line with the fade out time in Loading Overlay widget
@@ -98,7 +102,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       uid: currentUser.uid,
       callback: () => notifyListeners(),
     );
-    addLocationListener();
+    activeQuestService.addMainLocationListener();
     await Future.wait([
       completer.future,
       completerTwo.future,
@@ -110,7 +114,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   Future initializeQuests({bool? force}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
-        await questService.loadNearbyQuests(force: true);
+        await questService.loadNearbyQuests(
+            force: true, sponsorIds: currentUser.sponsorIds);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }
@@ -118,17 +123,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       log.wtf("Error when loading quests, this should never happen. Error: $e");
       await showGenericInternalErrorDialog();
     }
-  }
-
-  void addLocationListener() async {
-    await geolocationService.listenToPositionMain(
-      distanceFilter: kDefaultGeolocationDistanceFilter,
-      onData: (Position position) {
-        setNewLatLon(lat: position.latitude, lon: position.longitude);
-        animateOnNewLocation();
-        log.v("New position event fired from location listener!");
-      },
-    );
   }
 
   Future getLocation(
@@ -266,14 +260,14 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   // ----------------------------------------------------------------
   // listeners for layout changes!
 
-  StreamSubscription? _isShowingARViewStream;
+  StreamSubscription? _isFadingOutOverlayStream;
   StreamSubscription? _isShowingQuestListStream;
   StreamSubscription? _selectedQuestStream;
   StreamSubscription? _isFadingOutQuestDetailsSubjectStream;
   void listenToLayout() {
-    if (_isShowingARViewStream == null) {
-      _isShowingARViewStream =
-          layoutService.isShowingARViewSubject.listen((show) {
+    if (_isFadingOutOverlayStream == null) {
+      _isFadingOutOverlayStream =
+          layoutService.isFadingOutOverlaySubject.listen((show) {
         notifyListeners();
       });
     }
@@ -285,7 +279,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     }
     if (_selectedQuestStream == null) {
       _selectedQuestStream =
-          activeQuestService.selectedQuestSubject.listen((show) {
+          activeQuestService.selectedQuestSubject.listen((quest) {
         notifyListeners();
       });
     }
@@ -299,7 +293,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   @override
   void dispose() {
-    _isShowingARViewStream?.cancel();
+    _isFadingOutOverlayStream?.cancel();
     _isShowingQuestListStream?.cancel();
     _selectedQuestStream?.cancel();
     _isFadingOutQuestDetailsSubjectStream?.cancel();

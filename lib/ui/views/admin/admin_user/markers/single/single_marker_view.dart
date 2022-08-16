@@ -2,7 +2,6 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
-import '../../../../../../constants/colors.dart';
 import '../../../../../../enums/marker_status.dart';
 import 'single_marker_viewmodel.dart';
 
@@ -75,7 +74,7 @@ class _SingleMarkerViewState extends State<SingleMarkerView> {
                       "Testing",
                       textAlign: TextAlign.left,
                       style: textTheme(context).headline6!.copyWith(
-                          color: kBlackHeadlineColor,
+                          color: kcBlackHeadlineColor,
                           fontSize: 15,
                           fontWeight: FontWeight.w800),
                     ),
@@ -97,7 +96,7 @@ class _SingleMarkerViewState extends State<SingleMarkerView> {
                       "Placed",
                       textAlign: TextAlign.left,
                       style: textTheme(context).headline6!.copyWith(
-                          color: kBlackHeadlineColor,
+                          color: kcBlackHeadlineColor,
                           fontSize: 15,
                           fontWeight: FontWeight.w800),
                     ),
@@ -125,8 +124,8 @@ class _SingleMarkerViewState extends State<SingleMarkerView> {
                         },
                         child: const Text("Add Markers"),
                         style: OutlinedButton.styleFrom(
-                            backgroundColor: kPrimaryColor,
-                            primary: kWhiteTextColor,
+                            backgroundColor: kcPrimaryColor,
+                            primary: kcWhiteTextColor,
                             // shape: const StadiumBorder(),
                             shadowColor: Colors.purpleAccent),
                       ),
@@ -141,8 +140,8 @@ class _SingleMarkerViewState extends State<SingleMarkerView> {
                         },
                         child: const Text("Cancel"),
                         style: OutlinedButton.styleFrom(
-                            backgroundColor: kPrimaryColor,
-                            primary: kWhiteTextColor,
+                            backgroundColor: kcPrimaryColor,
+                            primary: kcWhiteTextColor,
                             // shape: const StadiumBorder(),
                             shadowColor: Colors.purpleAccent),
                       ),

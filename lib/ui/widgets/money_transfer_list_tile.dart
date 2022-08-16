@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/string_utils.dart';
@@ -24,7 +23,7 @@ class TransferListTile extends StatelessWidget {
       this.showTopDivider = false,
       this.dense = false,
       this.onTap,
-      this.backgroundColor = kNiceBlue,
+      this.backgroundColor = kcBlue,
       this.descriptor,
       this.senderName})
       : super(key: key);

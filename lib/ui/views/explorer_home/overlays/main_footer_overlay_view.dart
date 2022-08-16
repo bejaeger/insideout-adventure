@@ -1,7 +1,8 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/main_footer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits/ui/widgets/outline_box.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -16,7 +17,43 @@ class MainFooterOverlayView extends StatelessWidget {
     // log.wtf("==>> Rebuild MainFooterView");
     return ViewModelBuilder<MainFooterViewModel>.reactive(
       viewModelBuilder: () => MainFooterViewModel(),
-      onModelReady: (model) => model.listenToLayout(),
+      //onModelReady: (model) => model.listenToLayout(),
+      onModelReady: (model) {
+        // TODO: Move to viewmodel
+        AwesomeNotifications().isNotificationAllowed().then(
+          (isAllowed) {
+            if (!isAllowed) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Allow Notications'),
+                  content:
+                      const Text("We would like to send you notifications"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Don\'t Allow'),
+                    ),
+                    Spacer(),
+                    TextButton(
+                      onPressed: () => AwesomeNotifications()
+                          .requestPermissionToSendNotifications()
+                          .then(
+                            (_) => Navigator.pop(context),
+                          ),
+                      child: const Text('Allow'),
+                    )
+                  ],
+                ),
+              );
+            }
+          },
+        );
+
+        return model.listenToLayout();
+      },
       builder: (context, model, child) => Container(
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
@@ -37,8 +74,8 @@ class MainFooterOverlayView extends StatelessWidget {
                       height: 60,
                       borderWidth: 0,
                       text: "SCREEN TIME",
-                      onPressed: model.navToCreditsScreenTimeView,
-                      color: kDarkTurquoise.withOpacity(0.8),
+                      onPressed: model.navToSelectScreenTimeView,
+                      color: kcPrimaryColor,
                       textColor: Colors.white,
                     ),
                   ),
@@ -56,7 +93,7 @@ class MainFooterOverlayView extends StatelessWidget {
                     //backgroundWidget: OutlineBox(text: "MENU"),
                     startingAngleInRadian: 1.3 * 3.14,
                     endingAngleInRadian: 1.7 * 3.14,
-                    toggleButtonColor: kDarkTurquoise.withOpacity(0.8),
+                    toggleButtonColor: kcPrimaryColor,
                     toggleButtonMargin: 0,
                     toggleButtonBoxShadow: [],
                     toggleButtonSize: 35,
@@ -99,7 +136,7 @@ class MainFooterOverlayView extends StatelessWidget {
                       width: 80,
                       height: 60,
                       text: "QUESTS",
-                      color: kDarkTurquoise.withOpacity(0.8),
+                      color: kcPrimaryColor,
                       textColor: Colors.white,
                       borderWidth: 0,
                       onPressed: model.showQuestListOverlay,

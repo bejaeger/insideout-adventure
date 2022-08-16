@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_lists.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
@@ -43,7 +42,7 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
           title: Text(
             "Quests",
             style:
-                textTheme(context).headline5!.copyWith(color: kWhiteTextColor),
+                textTheme(context).headline5!.copyWith(color: kcWhiteTextColor),
           ),
           bottom: PreferredSize(
             preferredSize:
@@ -56,7 +55,7 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
                     bottomLeft: Radius.circular(16.0),
                     bottomRight: Radius.circular(16.0),
                   ),
-                  color: kPrimaryColor,
+                  color: kcPrimaryColor,
                 ),
                 child: _tabbar),
           ),
@@ -81,12 +80,13 @@ class _QuestsOverviewViewState extends State<QuestsOverviewView>
         // isScrollable: true,
         controller: _tabController,
         unselectedLabelColor: Colors.white70,
-        labelColor: kWhiteTextColor,
+        labelColor: kcWhiteTextColor,
         indicatorSize: TabBarIndicatorSize.tab,
         indicator: BoxDecoration(
-            gradient: LinearGradient(colors: [kDarkTurquoise, kDarkTurquoise]),
+            gradient: LinearGradient(
+                colors: [kcPrimaryColorSecondary, kcPrimaryColorSecondary]),
             borderRadius: BorderRadius.circular(50),
-            color: kPrimaryColor),
+            color: kcPrimaryColor),
         tabs: [
           Tab(
             child: Align(

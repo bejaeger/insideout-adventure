@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';

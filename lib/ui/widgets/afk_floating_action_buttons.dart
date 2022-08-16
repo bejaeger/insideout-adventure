@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +42,7 @@ class AFKFloatingActionButtons extends StatelessWidget {
           title: title1,
           onPressed: onPressed1,
           icon: Shimmer.fromColors(
-              baseColor: isShimmering ? kGreyTextColor : Colors.white,
+              baseColor: isShimmering ? kcGreyTextColor : Colors.white,
               highlightColor: Colors.white,
               period: const Duration(milliseconds: 1000),
               enabled: this.isShimmering,

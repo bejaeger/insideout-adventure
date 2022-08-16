@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -32,13 +31,21 @@ class OutlineBox extends StatelessWidget {
           border: Border.all(color: Colors.grey[800]!, width: borderWidth),
           borderRadius: BorderRadius.circular(15.0),
           color: color,
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 2,
+              spreadRadius: 0.5,
+              color: kcShadowColor,
+              offset: Offset(1, 1),
+            ),
+          ],
         ),
         child: SizedBox.expand(
           child: text != null
               ? Center(
                   child: AfkCreditsText.body(text!,
                       align: TextAlign.center,
-                      color: textColor ?? kBlackHeadlineColor))
+                      color: textColor ?? kcBlackHeadlineColor))
               : SizedBox.expand(),
         ),
       ),

@@ -1,8 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/ui/views/active_quest_drawer/active_quest_drawer_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
@@ -96,7 +94,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
         // TODO: handle this in viewmodel
         if (!model.isNearStartMarker &&
             !model.isCalculatingDistanceToStartMarker) {
-          SchedulerBinding.instance?.addPostFrameCallback((_) {
+          SchedulerBinding.instance!.addPostFrameCallback((_) {
             if (isShowClue == true) {
               Future.delayed(Duration(milliseconds: 0), () => flipCard());
             }
@@ -183,7 +181,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                           : model.validatingMarkerInArea
                                               ? AFKProgressIndicator()
                                               : Image.asset(kPinInAreaIcon,
-                                                  color: kWhiteTextColor,
+                                                  color: kcWhiteTextColor,
                                                   height: 40)),
                               //yOffset: 0,
                               //isShimmering: true,
@@ -381,9 +379,10 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                                 padding:
                                                     const EdgeInsets.all(16.0),
                                                 child: Shimmer.fromColors(
-                                                  baseColor: kWhiteTextColor,
-                                                  highlightColor: kGreyTextColor
-                                                      .withOpacity(0.6),
+                                                  baseColor: kcWhiteTextColor,
+                                                  highlightColor:
+                                                      kcGreyTextColor
+                                                          .withOpacity(0.6),
                                                   period: const Duration(
                                                       milliseconds: 1000),
                                                   child: Column(
@@ -395,14 +394,14 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                                               .play_arrow_rounded,
                                                           size: 36,
                                                           color:
-                                                              kWhiteTextColor),
+                                                              kcWhiteTextColor),
                                                       Text("New Clue",
                                                           style: textTheme(
                                                                   context)
                                                               .headline6!
                                                               .copyWith(
                                                                   color:
-                                                                      kWhiteTextColor)),
+                                                                      kcWhiteTextColor)),
                                                     ],
                                                   ),
                                                 ),
@@ -505,7 +504,7 @@ class NextClueCard extends StatelessWidget {
                 BoxShadow(
                     blurRadius: 4,
                     spreadRadius: 1,
-                    color: kShadowColor,
+                    color: kcShadowColor,
                     offset: Offset(1, 1))
               ],
             )
@@ -586,7 +585,7 @@ class NextClueCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.0),
                   boxShadow: [
                     BoxShadow(
-                        blurRadius: 4, spreadRadius: 2, color: kShadowColor)
+                        blurRadius: 4, spreadRadius: 2, color: kcShadowColor)
                   ],
                 ),
                 child: Stack(

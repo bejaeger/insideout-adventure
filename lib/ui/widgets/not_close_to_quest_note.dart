@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
@@ -174,5 +175,12 @@ class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  @override
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) {
+    // TODO: implement maybeStartQuest
+    throw UnimplementedError();
   }
 }

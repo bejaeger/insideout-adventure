@@ -1,4 +1,4 @@
-import 'package:afkcredits/constants/colors.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class NavButtonWidget extends StatelessWidget {
@@ -58,7 +58,7 @@ class NavButtonWidget extends StatelessWidget {
                         title,
                         style: TextStyle(
                           fontSize: 18,
-                          color: titleColor ?? kDarkTurquoise,
+                          color: titleColor ?? kcPrimaryColorSecondary,
                           fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,

@@ -25,7 +25,7 @@ class QuestService with ReactiveServiceMixin {
   // state
   List<ActivatedQuest> activatedQuestsHistory = [];
   StreamSubscription? _pastQuestsStreamSubscription;
-  //Turned local variable pvt
+  // Turned local variable pvt
   List<Quest> _nearbyQuests = [];
   List<Quest> get getNearByQuest => _nearbyQuests;
 
@@ -83,7 +83,7 @@ class QuestService with ReactiveServiceMixin {
       required String uid,
       void Function()? callback}) async {
     if (_pastQuestsStreamSubscription == null) {
-      bool listenedOnce = false;
+      bool listenedOnce = false; // not sure why this is needed
       _pastQuestsStreamSubscription =
           _firestoreApi.getPastQuestsStream(uid: uid).listen((snapshot) {
         listenedOnce = true;
@@ -110,23 +110,22 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
-  Future loadNearbyQuests({bool force = false}) async {
+  Future loadNearbyQuests(
+      {required List<String> sponsorIds, bool force = false}) async {
     if (_nearbyQuests.isEmpty || force) {
       // TODO: In the future retrieve only nearby quests
       _nearbyQuests = await _firestoreApi.getNearbyQuests(
-          pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests);
+          pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
+          sponsorIds: sponsorIds);
       log.i("Found ${_nearbyQuests.length} nearby quests.");
     } else {
       log.i("Quests already loaded.");
     }
   }
 
-  Future getQuestsOfType({required QuestType questType}) async {
-    if (_nearbyQuests.isEmpty) {
-      // Not very efficient to load all quests and then extract only the ones of a specific type!
-      await loadNearbyQuests();
-    }
-    return extractQuestsOfType(quests: _nearbyQuests, questType: questType);
+  Stream<List<AFKQuest>> loadNearbyAFKQuests() {
+    // TODO: In the future retrieve only nearby quests
+    return _firestoreApi.downloadNearbyAfkQuests();
   }
 
   List<Quest> extractQuestsOfType(
@@ -205,9 +204,12 @@ class QuestService with ReactiveServiceMixin {
     //This is to make suret that the document has the same id as the quest.
   }
 
-  // Changed the Scope of the Method. from _pvt to public
-  Future<List<Quest>> downloadNearbyQuests() async {
-    return await _firestoreApi.downloadNearbyQuests();
+  Future<bool> createAFKQuest({required AFKQuest afkQuest}) async {
+    //TODO: Refactor this code.
+    if (afkQuest.id!.isNotEmpty) {
+      return await _firestoreApi.createAFKQuest(afkQuest: afkQuest);
+    }
+    return false;
   }
 
   Future<List<Quest>> getQuestsWithStartMarkerId(

@@ -9,14 +9,11 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/treasure_search/treasure_search_location.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
-import 'package:afkcredits/enums/quest_type.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
+import 'package:afkcredits/notifications/notifications.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
-import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -70,6 +67,9 @@ class ActiveTreasureLocationSearchQuestViewModel
           minAccuracy: kMinRequiredAccuracyLocationSearch))) {
         if (useSuperUserFeatures) {
           if (await useSuperUserFeature()) {
+            /*   Notifications()
+                .unlockedAchievement(message: "Active Tresuare Location"); */
+
             snackbarService.showSnackbar(
                 title: "Starting quest as super user",
                 message:
@@ -83,7 +83,6 @@ class ActiveTreasureLocationSearchQuestViewModel
           return false;
         }
       }
-
       dynamic result;
       result = await startQuestMain(quest: quest);
 
@@ -98,31 +97,36 @@ class ActiveTreasureLocationSearchQuestViewModel
       mapViewModel.resetMapMarkers();
       // quest started!
       // start listening to position
-      activeQuestService.listenToPosition(
-          distanceFilter: kMinDistanceFromLastCheckInMeters,
-          pushToNotion: true,
-          recordPositionDataEvent: false,
-          // skipFirstStreamEvent: true,
-          // Maybe we should add a filterGPSData function that only
-          // allows the user to check location based on certain conditions
-          viewModelCallback: (position) async {
-            if (allowCheckingPosition == false) {
-              if (isUpdatingPositionAllowed(position: position)) {
-                // ? The following two lines mean that
-                // ? we manually check for updated positions
-                // ? let's to it automatic for now, see below
-                // setAllowCheckingPosition(true);
-                // notifyListeners();
+      // Notifications().createPermanentNotification(
+      //     title: "Search quest ongoing", message: "Walk and find the credits.");
 
-                await checkDistance();
-              }
+      activeQuestService.listenToPosition(
+        distanceFilter: kMinDistanceFromLastCheckInMeters,
+        //distanceFilter: 0,
+        pushToNotion: true,
+        recordPositionDataEvent: false,
+        // skipFirstStreamEvent: true,
+        // Maybe we should add a filterGPSData function that only
+        // allows the user to check location based on certain conditions
+        viewModelCallback: (position) async {
+          if (allowCheckingPosition == false) {
+            if (isUpdatingPositionAllowed(position: position)) {
+              // ? The following two lines mean that
+              // ? we manually check for updated positions
+              // ? let's to it automatic for now, see below
+              // setAllowCheckingPosition(true);
+              // notifyListeners();
+
+              await checkDistance();
             }
-            // TODO: Should probably happen more often!
-            // this will move the map. Should happen more often than is the
-            // case for the treasure location search! Add additional filtering!?
-            setNewLatLon(lat: position.latitude, lon: position.longitude);
-            animateOnNewLocation();
-          });
+          }
+          // TODO: Should probably happen more often!
+          // this will move the map. Should happen more often than is the
+          // case for the treasure location search! Add additional filtering!?
+          setNewLatLon(lat: position.latitude, lon: position.longitude);
+          animateOnNewLocation();
+        },
+      );
 
       snackbarService.showSnackbar(
           title: "Quest started",
@@ -161,18 +165,28 @@ class ActiveTreasureLocationSearchQuestViewModel
 
       //await showFoundTreasureDialog();
       directionStatus = DirectionStatus.nearGoal;
-      showNextARObjects();
+      showNextARObjects(
+
+          // Need to wrap up quest here!
+          onCollected: () async {
+        bool questSuccessfullyFinished = await showSuccessDialog();
+
+        // reset map markers
+        // the following goes via singleton
+        mapViewModel.resetMapMarkers();
+
+        // this goes via mixin. Could technically be the same procedure! Not clear what is better!
+        addAllQuestMarkers();
+      });
       notifyListeners();
       await vibrateRightDirection();
       await vibrateRightDirection();
       await vibrateRightDirection();
       await vibrateRightDirection();
-      // await showSuccessDialog();
-
     } else {
       late String? logString;
       // update UI on quest update
-      if (checkpoints.elementAt(checkpoints.length - 2).distanceToGoal >
+      if (checkpoints.elementAt(max(checkpoints.length - 2, 0)).distanceToGoal >
           checkpoints.last.distanceToGoal) {
         // directionStatus = "Getting closer!";
         directionStatus = DirectionStatus.closer;
@@ -400,6 +414,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     }
   }
 
+  // Return true of gps accuracy is reasonable, false otherwise
   bool isUpdatingPositionAllowed({required Position position}) {
     double propagatedAccuracy = getPropagatedAccuracy(newPosition: position);
     if (propagatedAccuracy < kMinDistanceFromLastCheckInMeters * 3) {
@@ -518,13 +533,6 @@ class ActiveTreasureLocationSearchQuestViewModel
         return;
       }
     }
-  }
-
-  Future showInstructions() async {
-    await dialogService.showDialog(
-        title: "How it works",
-        description:
-            "Try to get to the treasure by checking the distance regularly. You have to walk to refresh the location checker. The trohphy is clever and sometimes moves around!!");
   }
 
   void setTrackingDeadTime(bool deadTime) {

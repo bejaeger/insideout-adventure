@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,7 @@ class SearchTextField extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: kTextFieldBackground,
+          color: kcTextFieldBackground,
         ),
         child: TextField(
           readOnly: readOnly,

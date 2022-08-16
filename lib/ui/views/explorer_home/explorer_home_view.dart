@@ -1,7 +1,9 @@
+import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/main_footer_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/main_header_overlay.dart';
-import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay.dart';
+import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay_view.dart';
+import 'package:afkcredits/ui/views/explorer_home/overlays/switch_to_parents_overlay.dart';
 import 'package:afkcredits/ui/views/map/main_map_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
@@ -9,6 +11,7 @@ import 'package:afkcredits/ui/views/step_counter/step_counter_overlay.dart';
 import 'package:afkcredits/ui/widgets/animations/fade_transition_animation.dart';
 import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -37,6 +40,15 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   // bottom layer
                   //if (!model.isBusy)
                   if (!model.isBusy) MainMapView(),
+
+                  if (model.currentUser.createdByUserWithId != null)
+                    SwitchToParentsAreaButton(
+                      onTap: model.handleSwitchToSponsorEvent,
+                      show: !(model.isShowingQuestDetails ||
+                              model.hasActiveQuest) ||
+                          model.isFadingOutQuestDetails,
+                    ),
+
                   if (model.showLoadingScreen)
                     MapLoadingOverlay(show: model.showFullLoadingScreen),
 
@@ -50,7 +62,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                         onCreditsPressed: model.showNotImplementedSnackbar,
                         balance: model.currentUserStats.afkCreditsBalance),
 
-                  MainFooterOverlayView(),
+                  if (!model.isBusy) MainFooterOverlayView(),
 
                   QuestListOverlayView(),
 
@@ -63,7 +75,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   // only used for quest view at the moment!
                   OverlayedCloseButton(),
 
-                  if (model.isShowingARView) FadeTransitionAnimation(),
+                  if (model.isFadingOutOverlay) FadeTransitionAnimation(),
                 ],
               ),
             ),
@@ -89,8 +101,6 @@ class OverlayedCloseButton extends StatelessWidget {
     );
   }
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 // !!! DEPRECATED !!!!

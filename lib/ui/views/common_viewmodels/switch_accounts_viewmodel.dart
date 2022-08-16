@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
@@ -9,8 +10,10 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   final log = getLogger("SwitchAccountsViewModel");
   final String? explorerUid;
 
-  User get explorer => userService.supportedExplorers[explorerUid]!;
+  User? get explorer => userService.supportedExplorers[explorerUid];
   UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
+  List<ActivatedQuest> get history =>
+      userService.supportedExplorerQuestsHistory[explorerUid]!;
 
   SwitchAccountsViewModel({this.explorerUid});
 
@@ -18,7 +21,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   /// Switch from explorer back to sponsor account
   Future handleSwitchToExplorerEvent() async {
     // check if explorerUid is set:
-    if (explorerUid == null) {
+    if (explorerUid == null || explorer == null) {
       log.e("Please provide an explorerUid you want to switch to!");
       await showGenericInternalErrorDialog();
       return;
@@ -26,9 +29,9 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
     // Check if user wants to set PIN
     final result = await bottomSheetService.showBottomSheet(
-        title: "Switch to explorer account",
-        confirmButtonTitle: "Set Passcode",
-        cancelButtonTitle: "Switch without Passcode");
+        title: "Switch to " + explorer!.fullName + "'s account",
+        confirmButtonTitle: "With Passcode",
+        cancelButtonTitle: "Without Passcode");
 
     if (result?.confirmed == true) {
       // Set PIN
@@ -43,24 +46,21 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
         // Store PIN in local storage!
         // And keep reference to currently logged in user!
         // We don't even need google auth!
-        await userService.saveSponsorReference(
-            uid: currentUser.uid,
-            pin: pinResult.pin,
-            authMethod: currentUser.authMethod);
-        await switchToExplorerAccount();
+        await switchToExplorerAccount(pin: pinResult.pin);
       }
     }
     if (result?.confirmed == false) {
-      await userService.saveSponsorReference(
-          uid: currentUser.uid, authMethod: currentUser.authMethod);
       await switchToExplorerAccount();
     }
   }
 
-  Future switchToExplorerAccount() async {
+  Future switchToExplorerAccount({String? pin}) async {
     setBusy(true);
+    await userService.saveSponsorReference(
+        uid: currentUser.uid, authMethod: currentUser.authMethod, pin: pin);
     // Clear all service data but keep logged in with firebase!
-    await clearServiceData(logOutFromFirebase: false);
+    await clearServiceData(
+        logOutFromFirebase: false, doNotClearSponsorReference: true);
 
     try {
       log.i("Syncing explorer account");
@@ -149,6 +149,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     }
     // navigate to screen
     await clearStackAndNavigateToHomeView();
+    userService.clearSponsorReference();
     setBusy(false);
   }
 }

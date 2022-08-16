@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +17,8 @@ class ScreenTimeButton extends StatelessWidget {
     required this.onPressed,
     required this.title,
     required this.credits,
-    this.backgroundColor = kNiceOrange,
-    this.titleColor = kGreyTextColor,
+    this.backgroundColor = kcOrange,
+    this.titleColor = kcGreyTextColor,
     this.imageUrl,
     this.imagePath,
     this.height,
@@ -114,7 +113,7 @@ class ScreenTimeButton extends StatelessWidget {
                   children: [
                     AFKCreditsIcon(height: 25),
                     Text(credits.toString(),
-                        style: TextStyle(color: kPrimaryColor)),
+                        style: TextStyle(color: kcPrimaryColor)),
                   ],
                 ),
               )

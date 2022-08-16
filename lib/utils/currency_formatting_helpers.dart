@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/afk_credit_and_currency_system.dart';
 import 'package:afkcredits/utils/other_helpers.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:intl/intl.dart';
 
 final log = getLogger("Currency Formatting Helper Functions");
@@ -50,6 +51,16 @@ bool isNonZeroDecimalCurrency() {
 // credit and currency conversion (maybe put this in a sevice?)
 int centsToAfkCredits(num cents) {
   return (cents * kCentsToAfkCreditsConversionFactor).round();
+}
+
+// credit and currency conversion (maybe put this in a sevice?)
+int creditsToScreenTime(num credits) {
+  return (credits * kCreditsToScreenTimeConversionFactor).round();
+}
+
+// credit and currency conversion (maybe put this in a sevice?)
+int screenTimeToCredits(int minutes) {
+  return (minutes / kCreditsToScreenTimeConversionFactor).round();
 }
 
 String formatAfkCreditsFromCents(num cents) {

@@ -30,7 +30,7 @@ class SearchExplorerViewModel extends SearchFunctionalityViewModel {
         log.e("$e");
       }
       await showSuccessBottomSheet();
-      navigateBack();
+      popView();
     }
   }
 
@@ -58,7 +58,7 @@ class SearchExplorerViewModel extends SearchFunctionalityViewModel {
   Future showConfirmationBottomSheet(String name) async {
     return await _bottomSheetService.showBottomSheet(
       barrierDismissible: true,
-      title: 'Do you want to add explorer $name',
+      title: 'Do you want to support user with name $name',
       confirmButtonTitle: 'Yes',
       cancelButtonTitle: 'No',
     );

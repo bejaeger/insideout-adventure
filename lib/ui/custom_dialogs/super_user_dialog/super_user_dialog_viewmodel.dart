@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
+import 'package:flutter/foundation.dart';
 
 class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   final QuestTestingService _questTestingService =
@@ -33,6 +38,7 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   bool get enableGPSVerification => _flavorConfigProvider.enableGPSVerification;
   bool get dummyQuestCompletionVerification =>
       _flavorConfigProvider.dummyQuestCompletionVerification;
+  bool get isARAvailable => _flavorConfigProvider.isARAvailable;
 
   // setters
   void setIsRecordingLocationData(bool b) {
@@ -65,6 +71,20 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
     notifyListeners();
   }
 
+  void setARFeatureEnabled(bool b) async {
+    if (b == true) {
+      if (kIsWeb ||
+          !Platform.isAndroid ||
+          !(await ArCoreController.checkArCoreAvailability()) ||
+          !(await ArCoreController.checkIsArCoreInstalled())) {
+        showNotImplementedSnackbar();
+        return;
+      }
+    }
+    _flavorConfigProvider.isARAvailable = b;
+    notifyListeners();
+  }
+
   void setDummyQuestCompletionVerification(bool b) {
     _flavorConfigProvider.dummyQuestCompletionVerification = b;
     notifyListeners();
@@ -74,8 +94,7 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   void addAfkCreditsCheat() async {
     isCheating = true;
     notifyListeners();
-    await _firestoreApi.addAfkCreditsCheat(
-        uid: currentUser.uid, currentStats: currentUserStats);
+    await _firestoreApi.changeAfkCreditsBalanceCheat(uid: currentUser.uid);
     isCheating = false;
     notifyListeners();
   }
@@ -83,10 +102,8 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   void removeAfkCreditsCheat() async {
     isCheating = true;
     notifyListeners();
-    await _firestoreApi.addAfkCreditsCheat(
-        uid: currentUser.uid,
-        currentStats: currentUserStats,
-        deltaCredits: -50);
+    await _firestoreApi.changeAfkCreditsBalanceCheat(
+        uid: currentUser.uid, deltaCredits: -50);
     isCheating = false;
     notifyListeners();
   }
@@ -123,6 +140,13 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   @override
   bool isQuestCompleted() {
     // TODO: implement isQuestCompleted
+    throw UnimplementedError();
+  }
+
+  @override
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) {
+    // TODO: implement maybeStartQuest
     throw UnimplementedError();
   }
 }

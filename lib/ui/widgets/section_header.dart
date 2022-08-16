@@ -3,7 +3,6 @@
 //
 //
 
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:flutter/material.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -44,7 +43,7 @@ class SectionHeader extends StatelessWidget {
           Text(title,
               style: textTheme(context).headline6!.copyWith(
                   fontSize: titleSize,
-                  color: kBlackHeadlineColor.withOpacity(titleOpacity))),
+                  color: kcBlackHeadlineColor.withOpacity(titleOpacity))),
           if (onButtonTap != null)
             GestureDetector(
               onTap: onButtonTap,
@@ -52,7 +51,7 @@ class SectionHeader extends StatelessWidget {
                   Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 20,
-                    color: kBlackHeadlineColor.withOpacity(titleOpacity),
+                    color: kcBlackHeadlineColor.withOpacity(titleOpacity),
                   ),
             ),
           if (otherTrailingIcon != null) otherTrailingIcon!,

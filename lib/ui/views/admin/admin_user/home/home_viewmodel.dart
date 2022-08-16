@@ -27,7 +27,8 @@ class HomeViewModel extends QuestViewModel {
 
   Future<void> setQuestList() async {
     setBusy(true);
-    _getListOfQUest = await _questService.downloadNearbyQuests();
+    _getListOfQUest = await _questService.loadNearbyQuests(
+        sponsorIds: currentUser.sponsorIds);
     setBusy(false);
     notifyListeners();
   }

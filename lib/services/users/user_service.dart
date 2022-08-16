@@ -10,18 +10,23 @@ import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
+import 'package:afkcredits/enums/quest_status.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -29,6 +34,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'afkcredits_authentication_result_service.dart'; // for the utf8.encode method
 
 class UserService {
+  // -----------------------------------
+  // services
   final _firestoreApi = locator<FirestoreApi>();
   final FirebaseAuthenticationService _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
@@ -37,6 +44,8 @@ class UserService {
       locator<LocalStorageService>();
   final log = getLogger('UserService');
 
+  // ---------------------------------------
+  // state / member variables and exposed objects
   User? _currentUser;
   UserAdmin? _currentUserAdmin;
   User? get currentUserNullable => _currentUser;
@@ -47,7 +56,6 @@ class UserService {
   StreamSubscription? _currentUserStatsStreamSubscription;
 
   UserAdmin? get getCurrentUserAdmin => _currentUserAdmin!;
-
   SponsorReference? sponsorReference;
 
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
@@ -57,13 +65,20 @@ class UserService {
   bool get isAdminMaster => currentUser.role == UserRole.adminMaster;
   bool get hasRole => currentUserNullable == null ? false : true;
 
+  // state
   // store list of supportedExplorers
   // map of list of money pools with money Pool id as key
   Map<String, User> supportedExplorers = {};
   Map<String, UserStatistics> supportedExplorerStats = {};
 
-  StreamSubscription? _explorersDataStreamSubscriptions;
+  // quest history is added to user service (NOT IDEAL!)
+  Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
 
+  // quest history is added to user service (NOT IDEAL! cause we have a quest service)
+  Map<String, List<ScreenTimeSession>> supportedExplorerScreenTimeSessions = {};
+  List<ScreenTimeSession> supportedExplorerScreenTimeSessionsActive = [];
+
+  StreamSubscription? _explorersDataStreamSubscriptions;
   List<User> get supportedExplorersList {
     List<User> list = [];
     supportedExplorers.forEach((key, value) {
@@ -73,6 +88,8 @@ class UserService {
   }
 
   Map<String, StreamSubscription?> _explorerStatsStreamSubscriptions = {};
+  Map<String, StreamSubscription?> _explorerHistoryStreamSubscriptions = {};
+  Map<String, StreamSubscription?> _explorerScreenTimeStreamSubscriptions = {};
 
   Future<void> syncUserAccount(
       {String? uid, bool fromLocalStorage = false, UserRole? role}) async {
@@ -100,6 +117,15 @@ class UserService {
             key: kLocalStorageUidKey, value: userAccount.uid);
         await _localStorageService.saveRoleToDisk(
             key: kLocalStorageRoleKey, value: role);
+
+        String? id = await _localStorageService.getFromDisk(
+            key: kLocalStorageSponsorReferenceKey);
+        String? pin = await _localStorageService.getFromDisk(
+            key: kLocalStorageSponsorPinKey);
+        if (id != null) {
+          sponsorReference =
+              SponsorReference(uid: id, withPasscode: pin != null);
+        }
       }
     } else {
       log.e("User account with id $actualUid does not exist! Can't sync user");
@@ -396,6 +422,28 @@ class UserService {
     }
   }
 
+  Future removeExplorerFromSupportedExplorers({required String uid}) async {
+    try {
+      if (!currentUser.explorerIds.contains(uid)) {
+        return "Explorer not supported";
+      } else {
+        log.i("Removing explorer with id $uid from list of explorers");
+        List<String> newExplorerIds = removeFromExplorerLists(uid: uid);
+        // Ideal way would be to add a transaction here!
+        await Future.wait([
+          updateUserData(
+              user: currentUser.copyWith(explorerIds: newExplorerIds)),
+          removeSponsorIdFromOtherUser(
+              otherUsersId: uid, sponsorId: currentUser.uid),
+        ]);
+      }
+    } catch (e) {
+      log.e(
+          "Error when trying to add new explorer to list of supported explorers");
+      rethrow;
+    }
+  }
+
   //////////////////////////////////////////////////////////
   /// Listener setup
   ///
@@ -408,7 +456,7 @@ class UserService {
   ///    -> handled with a query snapshot to look for all users that
   ///       have the currentUser's id in the sponsorIds arraay
   ///
-  /// 4. explorer statistics documents
+  /// 4. explorer statistics documents / quest history of each explorer
   ///   -> handled manually in the listener of 3. by adding and removing
   ///      listeneres to the summary stats documents whenever the explorer
   ///      changes
@@ -465,8 +513,8 @@ class UserService {
             },
           );
 
-          await addExplorerStatsListeners(
-              explorerIds: newUids, callback: callback);
+          // adds listener to stats document and quest history of each explorer
+          await addExplorerListeners(explorerIds: newUids, callback: callback);
 
           if (!completer.isCompleted) {
             completer.complete();
@@ -487,7 +535,7 @@ class UserService {
 
   // listens to the user document as well as the user stats document
   // of all explorers.
-  Future<void> addExplorerStatsListeners(
+  Future<void> addExplorerListeners(
       {required List<String> explorerIds, void Function()? callback}) async {
     Completer<void> completer = Completer();
     int i = 0;
@@ -497,6 +545,10 @@ class UserService {
     }
     explorerIds.forEach((explorerId) async {
       await addExplorerStatListener(explorerId: explorerId, callback: callback);
+      await addExplorerHistoryListener(
+          explorerId: explorerId, callback: callback);
+      await addExplorerScreenTimeListener(
+          explorerId: explorerId, callback: callback);
       i += 1;
       if (i == explorerIds.length) {
         if (!completer.isCompleted) {
@@ -530,6 +582,59 @@ class UserService {
     return completer.future;
   }
 
+  Future addExplorerHistoryListener(
+      {required String explorerId, void Function()? callback}) async {
+    Completer<void> completer = Completer();
+    if (!_explorerHistoryStreamSubscriptions.containsKey(explorerId) ||
+        _explorerHistoryStreamSubscriptions[explorerId] == null) {
+      _explorerHistoryStreamSubscriptions[explorerId] =
+          _firestoreApi.getPastQuestsStream(uid: explorerId).listen((snapshot) {
+        supportedExplorerQuestsHistory[explorerId] = snapshot
+            .where((element) => element.status == QuestStatus.success)
+            .toList();
+        if (!completer.isCompleted) {
+          completer.complete();
+        }
+        if (callback != null) {
+          callback();
+        }
+      });
+    } else {
+      log.w(
+          "Quest history stream of user with id $explorerId already listened to!");
+      completer.complete();
+    }
+    return completer.future;
+  }
+
+  Future addExplorerScreenTimeListener(
+      {required String explorerId, void Function()? callback}) async {
+    Completer<void> completer = Completer();
+    if (!_explorerScreenTimeStreamSubscriptions.containsKey(explorerId) ||
+        _explorerScreenTimeStreamSubscriptions[explorerId] == null) {
+      _explorerScreenTimeStreamSubscriptions[explorerId] = _firestoreApi
+          .getScreenTimeSessionStream(uid: explorerId)
+          .listen((snapshot) {
+        supportedExplorerScreenTimeSessions[explorerId] = snapshot;
+        supportedExplorerScreenTimeSessionsActive = snapshot
+            .where(
+                (element) => element.status == ScreenTimeSessionStatus.active)
+            .toList();
+        if (!completer.isCompleted) {
+          completer.complete();
+        }
+        if (callback != null) {
+          callback();
+        }
+      });
+    } else {
+      log.w(
+          "Screen time session stream of user with id $explorerId already listened to!");
+      completer.complete();
+    }
+    return completer.future;
+  }
+
   Future validateSponsorPin({required String pin}) async {
     final hashedPin =
         await _localStorageService.getFromDisk(key: kLocalStorageSponsorPinKey);
@@ -544,13 +649,167 @@ class UserService {
       await _localStorageService.saveToDisk(
           key: kLocalStorageSponsorPinKey, value: hashPassword(pin));
     }
+    await _localStorageService.saveToDisk(
+        key: kLocalStorageSponsorReferenceKey, value: uid);
+    log.wtf("PIN => $pin");
     sponsorReference = SponsorReference(
         uid: uid, authMethod: authMethod, withPasscode: pin != null);
   }
 
   Future clearSponsorReference() async {
+    log.v("Clearing sponsor reference from local disk");
     await _localStorageService.deleteFromDisk(key: kLocalStorageSponsorPinKey);
+    await _localStorageService.deleteFromDisk(
+        key: kLocalStorageSponsorReferenceKey);
     sponsorReference = null;
+  }
+
+  /////////////////////////////////////////////
+  /// Functions used in parents area for displaying child statistics
+  ///
+  List<ActivatedQuest> sortedChildQuestHistory({String? uid}) {
+    // TODO: Also add screen time into the mix!
+    List<ActivatedQuest> sortedQuests = [];
+    if (uid == null) {
+      supportedExplorerQuestsHistory.forEach((key, quests) {
+        sortedQuests.addAll(quests);
+      });
+    } else {
+      if (supportedExplorerQuestsHistory.containsKey(uid)) {
+        sortedQuests = supportedExplorerQuestsHistory[uid]!;
+      }
+    }
+    sortedQuests
+        .sort((a, b) => b.createdAt.toDate().compareTo(a.createdAt.toDate()));
+    return sortedQuests;
+  }
+
+  List<ScreenTimeSession> sortedChildScreenTimeSessions({String? uid}) {
+    List<ScreenTimeSession> sortedSessions = [];
+    if (uid == null) {
+      supportedExplorerScreenTimeSessions.forEach((key, quests) {
+        sortedSessions.addAll(quests);
+      });
+    } else {
+      if (supportedExplorerQuestsHistory.containsKey(uid)) {
+        sortedSessions = supportedExplorerScreenTimeSessions[uid]!;
+      }
+    }
+    sortedSessions
+        .sort((a, b) => b.startedAt.toDate().compareTo(a.startedAt.toDate()));
+    return sortedSessions;
+  }
+
+  List<dynamic> sortedHistory({String? uid}) {
+    List<dynamic> list = [];
+    if (uid == null) {
+      list = [...sortedChildScreenTimeSessions(), ...sortedChildQuestHistory()];
+    } else {
+      if (supportedExplorerScreenTimeSessions.containsKey(uid)) {
+        list = list + sortedChildScreenTimeSessions(uid: uid);
+      }
+      if (supportedExplorerQuestsHistory.containsKey(uid)) {
+        list = list + sortedChildQuestHistory(uid: uid);
+      }
+    }
+    list.sort((a, b) {
+      DateTime? date1;
+      DateTime? date2;
+      if (a is ActivatedQuest)
+        date1 = a.createdAt.toDate();
+      else
+        date1 = a.startedAt.toDate();
+      if (b is ActivatedQuest)
+        date2 = b.createdAt.toDate();
+      else
+        date2 = b.startedAt.toDate();
+      return date2!.compareTo(date1!);
+    });
+    return list;
+  }
+
+  Map<String, int> totalChildScreenTimeLastDays(
+      {int deltaDays = 7, int daysAgo = 0, String? uid}) {
+    Map<String, int> screenTime = {};
+
+    supportedExplorerScreenTimeSessions.forEach((key, session) {
+      session.forEach((element) {
+        if (element.startedAt is Timestamp) {
+          if (DateTime.now().difference(element.startedAt.toDate()).inDays >=
+                  daysAgo &&
+              DateTime.now().difference(element.startedAt.toDate()).inDays <
+                  daysAgo + deltaDays &&
+              (uid == null || uid == key)) {
+            if (screenTime.containsKey(element.uid)) {
+              screenTime[element.uid] =
+                  screenTime[element.uid]! + element.minutes;
+            } else {
+              screenTime[element.uid] = element.minutes;
+            }
+          }
+        }
+      });
+    });
+
+    return screenTime;
+  }
+
+  Map<String, int> totalChildActivityLastDays(
+      {int deltaDays = 7, int daysAgo = 0, String? uid}) {
+    Map<String, int> activity = {};
+    supportedExplorerQuestsHistory.forEach((key, session) {
+      session.forEach((element) {
+        if (DateTime.now().difference(element.createdAt.toDate()).inDays >=
+                daysAgo &&
+            DateTime.now().difference(element.createdAt.toDate()).inDays <
+                daysAgo + deltaDays &&
+            (uid == null || uid == key)) {
+          if (activity.containsKey(element.uids![0])) {
+            // still multiple uids supported
+            activity[element.uids![0]] = activity[element.uids![0]]! +
+                (element.timeElapsed / 60).round();
+          } else {
+            activity[element.uids![0]] = (element.timeElapsed / 60).round();
+          }
+        }
+      });
+    });
+    return activity;
+  }
+
+  Map<String, int> totalChildScreenTimeTrend(
+      {int deltaDays = 7, int daysAgo = 7, String? uid}) {
+    Map<String, int> lastWeek = totalChildScreenTimeLastDays(
+        deltaDays: deltaDays, daysAgo: 0, uid: uid);
+    Map<String, int> previousWeek = totalChildScreenTimeLastDays(
+        deltaDays: deltaDays, daysAgo: 7, uid: uid);
+    Map<String, int> delta = {};
+    for (String k in lastWeek.keys) {
+      delta[k] = (lastWeek[k] ?? 0) - (previousWeek[k] ?? 0);
+    }
+    return delta;
+  }
+
+  Map<String, int> totalChildActivityTrend(
+      {int deltaDays = 7, int daysAgo = 7, String? uid}) {
+    Map<String, int> lastWeek =
+        totalChildActivityLastDays(deltaDays: deltaDays, daysAgo: 0, uid: uid);
+    Map<String, int> previousWeek =
+        totalChildActivityLastDays(deltaDays: deltaDays, daysAgo: 7, uid: uid);
+    Map<String, int> delta = {};
+    for (String k in lastWeek.keys) {
+      delta[k] = (lastWeek[k] ?? 0) - (previousWeek[k] ?? 0);
+    }
+    return delta;
+  }
+
+  String explorerNameFromUid(String uid) {
+    for (User user in supportedExplorersList) {
+      if (user.uid == uid) {
+        return user.fullName;
+      }
+    }
+    return "";
   }
 
   //////////////////////////////////////////
@@ -559,10 +818,15 @@ class UserService {
     return supportedExplorersList.any((element) => element.uid == uid);
   }
 
-  void removeFromExplorerLists({required String uid}) {
+  List<String> removeFromExplorerLists({required String uid}) {
     supportedExplorers.remove(uid);
     supportedExplorerStats.remove(uid);
-    cancelExplorerStatsListener(uid: uid);
+    cancelExplorerListener(uid: uid);
+    List<String> newExplorerIds = [];
+    supportedExplorers.forEach((key, value) {
+      newExplorerIds.add(value.uid);
+    });
+    return newExplorerIds;
   }
 
   List<String> addToSupportedExplorersList({required String uid}) {
@@ -599,6 +863,12 @@ class UserService {
     _firestoreApi.addSponsorIdToUser(uid: otherUsersId, sponsorId: sponsorId);
   }
 
+  Future removeSponsorIdFromOtherUser(
+      {required String otherUsersId, required String sponsorId}) async {
+    _firestoreApi.removeSponsorIdFromUser(
+        uid: otherUsersId, sponsorId: sponsorId);
+  }
+
   Future isUserAlreadyPresent({required name}) async {
     final uid = await _firestoreApi.getUserWithName(name: name);
     return uid != null;
@@ -608,14 +878,20 @@ class UserService {
   // Clean up
 
   // pause the listener
-  void cancelExplorerStatsListener({required String uid}) {
+  void cancelExplorerListener({required String uid}) {
     log.v("Cancel transfer data listener with config: '$uid'");
     _explorerStatsStreamSubscriptions[uid]?.cancel();
     _explorerStatsStreamSubscriptions[uid] = null;
+    _explorerHistoryStreamSubscriptions[uid]?.cancel();
+    _explorerHistoryStreamSubscriptions[uid] = null;
+    _explorerScreenTimeStreamSubscriptions[uid]?.cancel();
+    _explorerScreenTimeStreamSubscriptions[uid] = null;
   }
 
   // clear all data when user logs out!
-  Future handleLogoutEvent({bool logOutFromFirebase = true}) async {
+  Future handleLogoutEvent(
+      {bool logOutFromFirebase = true,
+      bool doNotClearSponsorReference = false}) async {
     if (!kIsWeb) {
       // remove uid from local storage
       await _localStorageService.deleteFromDisk(key: kLocalStorageUidKey);
@@ -631,13 +907,22 @@ class UserService {
     _currentUserStatsStreamSubscription = null;
 
     _explorerStatsStreamSubscriptions.forEach((key, value) {
-      cancelExplorerStatsListener(uid: key);
+      cancelExplorerListener(uid: key);
+    });
+    _explorerHistoryStreamSubscriptions.forEach((key, value) {
+      cancelExplorerListener(uid: key);
+    });
+    _explorerScreenTimeStreamSubscriptions.forEach((key, value) {
+      cancelExplorerListener(uid: key);
     });
     _explorersDataStreamSubscriptions?.cancel();
     _explorersDataStreamSubscriptions = null;
 
     supportedExplorers = {};
     supportedExplorerStats = {};
+
+    // remove sponsor reference
+    if (!doNotClearSponsorReference) clearSponsorReference();
 
     // actually log out from firebase
     if (logOutFromFirebase) {

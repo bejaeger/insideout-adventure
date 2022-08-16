@@ -15,11 +15,9 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class MapViewModel extends BaseModel
-    with MapStateControlMixin, NavigationMixin {
+class MapViewModel extends BaseModel with MapStateControlMixin {
   // Viewmodel that receives callback functions to update map
   // Functions declared at the bottom of this file
   MapViewModel({
@@ -36,7 +34,7 @@ class MapViewModel extends BaseModel
   final log = getLogger('MapViewModel');
   final QuestService questService = locator<QuestService>();
   final _qrCodeService = locator<QRCodeService>();
-  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
 
   // -----------------------------
   // Getters
@@ -70,7 +68,7 @@ class MapViewModel extends BaseModel
         //   await dialogService.showDialog(
         //       title: "Sorry", description: "Map not supported on PWA version");
         // } else {
-        if (flavorConfigProvider.enableGPSVerification) {
+        if (appConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
         } else {
@@ -104,6 +102,7 @@ class MapViewModel extends BaseModel
       );
     }
     if (_mapEventListenerSubscription == null) {
+      // update map state with...
       _mapEventListenerSubscription = mapStateService.mapEventListener.listen(
         (MapUpdate type) {
           log.i("Received Map Update of type $type");
@@ -294,17 +293,25 @@ class MapViewModel extends BaseModel
     _animateCamera();
   }
 
-  @override
-  void addMarkerToMap({required Quest quest, required AFKMarker afkmarker}) {
+  void addMarkerToMap(
+      {required Quest quest,
+      required AFKMarker afkmarker,
+      bool completed = false}) {
     configureAndAddMapMarker(
       quest: quest,
       afkmarker: afkmarker,
-      onTap: () => onTapMarker(quest: quest, afkmarker: afkmarker),
+      completed: completed,
+      onTap: () =>
+          onMarkerTap(quest: quest, afkmarker: afkmarker, completed: completed),
     );
   }
 
-  Future onTapMarker(
-      {required Quest quest, required AFKMarker afkmarker}) async {
+  Future onMarkerTap(
+      {required Quest quest,
+      required AFKMarker afkmarker,
+      required bool completed}) async {
+    // --------------------------------------------
+    // Maybe use some super user features
     dynamic adminMode = false;
     if (useSuperUserFeatures) {
       adminMode = await showAdminDialogAndGetResponse();
@@ -315,6 +322,29 @@ class MapViewModel extends BaseModel
             arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
       }
     }
+
+    // ---------------------------------------------
+    // If quest is completed we need to check whether quest can be redone or not!
+    if (completed) {
+      if (quest.repeatable == 0) {
+        await dialogService.showDialog(
+            title: "Quest already completed!",
+            description: "You cannot redo this quest.",
+            buttonTitle: 'OK');
+        return;
+      } else {
+        final result = await dialogService.showDialog(
+            title: "Quest already completed, Redo?",
+            cancelTitle: "NO",
+            buttonTitle: 'YES');
+        if (!(result?.confirmed == true)) {
+          return;
+        }
+      }
+    }
+
+    // ------------------------------------------------
+    // normal function to be executed when marker is tapped
     if (!useSuperUserFeatures || adminMode == false) {
       if (hasActiveQuest == false) {
         if (afkmarker == quest.startMarker) {
@@ -327,7 +357,12 @@ class MapViewModel extends BaseModel
           }
           if (result?.confirmed == true || isAvatarView) {
             // showQuestDetails
-            showQuestDetails(quest: quest);
+            if (quest.type == QuestType.GPSAreaHike ||
+                quest.type == QuestType.GPSAreaHunt) {
+              onGPSAreaQuestMarkerTap(afkmarker.lat, afkmarker.lon, quest);
+            } else {
+              animateToQuestDetails(quest: quest);
+            }
           }
         } else {
           // information dialogs
@@ -345,7 +380,7 @@ class MapViewModel extends BaseModel
         // quest is active, can we collect this marker?
         // what happens when the user collects a marker
         log.i("Quest active, handling qrCodeScanEvent");
-        if (flavorConfigProvider.allowDummyMarkerCollection) {
+        if (appConfigProvider.allowDummyMarkerCollection) {
           MarkerAnalysisResult markerResult =
               await activeQuestService.analyzeMarker(marker: afkmarker);
           await handleMarkerAnalysisResult(markerResult);
@@ -355,7 +390,7 @@ class MapViewModel extends BaseModel
     notifyListeners();
   }
 
-  void showQuestDetails({required Quest quest}) {
+  void animateToQuestDetails({required Quest quest}) {
     if (isShowingQuestDetails) return; // we already show the quest details
 
     // set selected quest to show on screen
@@ -443,7 +478,10 @@ class MapViewModel extends BaseModel
         log.v("Add start marker of quest with name ${_q.name} to map");
         if (_q.startMarker != null) {
           AFKMarker _m = _q.startMarker!;
-          addMarkerToMap(quest: _q, afkmarker: _m);
+          addMarkerToMap(
+              quest: _q,
+              afkmarker: _m,
+              completed: currentUserStats.completedQuestIds.contains(_q.id));
         }
       }
     } else {
@@ -451,8 +489,8 @@ class MapViewModel extends BaseModel
     }
     addARObjectToMap(
         onTap: onARObjectMarkerTap,
-        lat: 49.26813866276503,
-        lon: -122.98950899176373,
+        lat: 49.269805968930406,
+        lon: -123.16189607547962,
         isCoin: true);
     addARObjectToMap(
         onTap: onARObjectMarkerTap,
@@ -461,25 +499,56 @@ class MapViewModel extends BaseModel
         isCoin: false);
   }
 
-  Future onARObjectMarkerTap(double lat, double lon, bool isCoin) async {
-    // TODO: These are just examples for now. Make this general
-
-    // 2. First take snapshot
+  Future changeSettingsForNewView(double? lat, double? lon) async {
+    // 1. First take snapshot
     takeSnapshotOfCameraPosition();
 
-    // 3. is showing AR View
-    layoutService.setIsShowingARView(true);
+    // 2. set is fading out to show black fade out when AR marker is tapped
+    layoutService.setIsFadingOutOverlay(true);
 
-    // 4. Open AR view with nice zoom in and fade out triggered
-    await openARView(lat, lon, isCoin);
+    changeCameraTilt(90);
+    changeCameraZoom(40); // ridiculous zoom (will be clipped)
+    if (lat != null && lon != null) {
+      _animateCamera(customLat: lat, customLon: lon, force: true);
+    }
+    await Future.delayed(Duration(milliseconds: 1000));
+  }
+
+  Future onARObjectMarkerTap(double lat, double lon, bool isCoin) async {
+    await changeSettingsForNewView(lat, lon);
+    if (appConfigProvider.isARAvailable) {
+      return await openARView(lat, lon, isCoin);
+    } else {
+      restorePreviousCameraPosition(moveInsteadOfAnimate: true);
+      await Future.delayed(Duration(milliseconds: 200));
+      layoutService.setIsFadingOutOverlay(false);
+      await showCollectedMarkerDialog();
+
+      return true;
+    }
   }
 
   Future openARView(double lat, double lon, bool isCoin) async {
-    changeCameraTilt(90);
-    changeCameraZoom(40); // ridiculous zoom (will be clipped)
-    _animateCamera(customLat: lat, customLon: lon, force: true);
-    await Future.delayed(Duration(milliseconds: 1000));
-    navToArObjectView(isCoin);
+    dynamic res = await navToArObjectView(isCoin);
+    return res is bool && res == true;
+  }
+
+  Future onGPSAreaQuestMarkerTap(double? lat, double? lon, Quest quest) async {
+    // set selected quest to show on screen
+    await changeSettingsForNewView(lat, lon);
+    // open standalone quest view
+    await openStandaloneQuestUIView(quest);
+
+    // ! Not sure if this misses something important! For now
+    // ! it's okay
+    // set selected quest only after navigation!
+    //activeQuestService.setSelectedQuest(quest);
+  }
+
+  Future openStandaloneQuestUIView(Quest quest) async {
+    // TODO: Take care about res value
+    await navigateToGPSAreaQuest(quest);
+    //return res is bool && res == true;
   }
 
   void nextCharacter() {
@@ -520,7 +589,8 @@ class MapViewModel extends BaseModel
   final void Function(
       {required Quest quest,
       required AFKMarker afkmarker,
-      required Future Function() onTap}) configureAndAddMapMarker;
+      required Future Function() onTap,
+      bool completed}) configureAndAddMapMarker;
   final void Function({required double lat, required double lon, bool? force})
       animateNewLatLon;
   final void Function() resetMapMarkers;

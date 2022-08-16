@@ -7,7 +7,6 @@ import 'package:afkcredits/ui/custom_dialogs/marker_collected/collected_marker_d
 import 'package:afkcredits/ui/custom_dialogs/super_user_dialog/super_user_dialog_view.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/money_transfer_dialog_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/dialog/travelled_distance_dialog_view.dart';
-import 'package:afkcredits/ui/views/gift_cards/dialog/reward_purchase_dialog_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 void setupDialogUi() {
@@ -15,12 +14,6 @@ void setupDialogUi() {
   final builders = {
     DialogType.MoneyTransfer: (context, sheetRequest, completer) =>
         MoneyTransferDialogView(request: sheetRequest, completer: completer),
-    DialogType.PurchaseGiftCard: (context, sheetRequest, completer) =>
-        RewardPurchaseDialogView(
-            request: sheetRequest, completer: completer, isScreenTime: false),
-    DialogType.PurchaseScreenTime: (context, sheetRequest, completer) =>
-        RewardPurchaseDialogView(
-            request: sheetRequest, completer: completer, isScreenTime: true),
     DialogType.CollectCredits: (context, sheetRequest, completer) =>
         CollectCreditsDialogView(request: sheetRequest, completer: completer),
     DialogType.CollectedMarker: (context, sheetRequest, completer) =>

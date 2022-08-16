@@ -1,5 +1,4 @@
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/updating_quest_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -96,12 +95,9 @@ class BasicDialogContent extends StatelessWidget with $BasicDialogContent {
                     ElevatedButton(
                       onPressed: () async {
                         await model.updateQuestData(
-                          quest: Quest(
-                            id: quest!.id,
+                          quest: quest!.copyWith(
                             name: nameController.text.toString(),
                             description: descriptionController.text.toString(),
-                            type: quest!.type,
-                            markers: quest!.markers,
                             afkCredits:
                                 num.parse(afkCreditAmountController.text),
                           ),
@@ -112,7 +108,7 @@ class BasicDialogContent extends StatelessWidget with $BasicDialogContent {
                         //request.mainButtonTitle.toString(),
                         style: textTheme(context)
                             .headline6!
-                            .copyWith(color: kBlackHeadlineColor),
+                            .copyWith(color: kcBlackHeadlineColor),
                       ),
                     ),
                     horizontalSpaceSmall,
@@ -125,7 +121,7 @@ class BasicDialogContent extends StatelessWidget with $BasicDialogContent {
                         //request.secondaryButtonTitle.toString(),
                         style: textTheme(context)
                             .headline6!
-                            .copyWith(color: kBlackHeadlineColor),
+                            .copyWith(color: kcBlackHeadlineColor),
                       ),
                     ),
                   ],

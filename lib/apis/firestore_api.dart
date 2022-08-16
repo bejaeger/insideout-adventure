@@ -11,7 +11,7 @@ import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart'
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/datamodels/screentime/screen_time_purchase.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
@@ -19,12 +19,13 @@ import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
-import 'package:afkcredits/enums/screen_time_voucher_status.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rxdart/subjects.dart';
 
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
@@ -34,6 +35,10 @@ class FirestoreApi {
   DocumentReference? _documentReference;
 
   List<GiftCardCategory> giftCartCategory = [];
+  // ignore: close_sinks
+  BehaviorSubject<double>? radius;
+  Stream<dynamic>? query;
+  StreamSubscription? subscription;
 
   Future<void> createUser(
       {required User user, required UserStatistics stats}) async {
@@ -100,6 +105,24 @@ class FirestoreApi {
       log.i("Document Reference: " + _docRef.toString());
       log.i("Marker ID: " + markers.id);
       await _docRef.set(markers.toJson());
+      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
+      log.v('Your Document Reference is: ${_docRef.toString()}');
+    } catch (e) {
+      throw FirestoreApiException(
+          message: 'Failed To Insert Places',
+          devDetails: 'Failed Caused By $e.');
+    }
+  }
+
+  //Create a List of My Favourite Places
+  Future<void> addAFKMarkersPositions(
+      {required AfkMarkersPositions afkMarkersPositions}) async {
+    try {
+      final _docRef =
+          getAFKMarkersPositionDocs(markerId: afkMarkersPositions.documentId!);
+      log.i("Document Reference: " + _docRef.toString());
+      log.i("Marker ID: " + afkMarkersPositions.documentId!);
+      await _docRef.set(afkMarkersPositions.toJson());
       log.v('Favourite Places document added to ${_docRef.path}' + '\n');
       log.v('Your Document Reference is: ${_docRef.toString()}');
     } catch (e) {
@@ -182,24 +205,6 @@ class FirestoreApi {
       return null;
     }
   }
-
-/* // Get Places For the Quest.
-  Future<List<Places>?>? getPlaces() async {
-    final _places = await placesCollection.get();
-
-    if (_places.docs.isNotEmpty) {
-      try {
-        return _places.docs
-            .map((docs) => Places.fromJson(docs.data()))
-            .toList();
-      } catch (e) {
-        throw FirestoreApiException(
-            message: 'Failed to get the Places', devDetails: '$e');
-      }
-    } else {
-      return null;
-    }
-  } */
 
   // Get Markers For the Quest.
   // ignore: non_constant_identifier_names
@@ -318,7 +323,7 @@ class FirestoreApi {
         final doc = await usersCollection.doc(uid).get();
         User otherUser = User.fromJson(doc.data()! as Map<String, dynamic>);
         List<String> newSponsorIds = [];
-        newSponsorIds.addAll(otherUser.explorerIds);
+        newSponsorIds.addAll(otherUser.sponsorIds);
         if (newSponsorIds.contains(sponsorId)) {
           log.w(
               "Sponsor Id already added! Nothing is really brokwn but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a sponsor. Then this issue can't appear");
@@ -333,6 +338,32 @@ class FirestoreApi {
       throw FirestoreApiException(
           message:
               "Unknown expection when trying to add sponsor Id to users sponsor Ids",
+          devDetails: '$e');
+    }
+  }
+
+  Future removeSponsorIdFromUser(
+      {required String uid, required String sponsorId}) async {
+    try {
+      firestoreInstance.runTransaction((transaction) async {
+        final doc = await usersCollection.doc(uid).get();
+        User otherUser = User.fromJson(doc.data()! as Map<String, dynamic>);
+        List<String> newSponsorIds = [];
+        newSponsorIds.addAll(otherUser.sponsorIds);
+        if (!newSponsorIds.contains(sponsorId)) {
+          log.w(
+              "Sponsor Id not included! Nothing is really broken but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a sponsor. Then this issue can't appear");
+          return;
+        }
+        newSponsorIds.remove(sponsorId);
+        await usersCollection.doc(uid).set(
+            otherUser.copyWith(sponsorIds: newSponsorIds).toJson(),
+            SetOptions(merge: true));
+      });
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when trying to remove sponsor Id from users sponsor Ids",
           devDetails: '$e');
     }
   }
@@ -436,12 +467,13 @@ class FirestoreApi {
   }
 
   // Returns dummy data for now!
-  Future<List<Quest>> getNearbyQuests({bool? pushDummyQuests}) async {
+  Future<List<Quest>> getNearbyQuests(
+      {required List<String> sponsorIds, bool? pushDummyQuests}) async {
     if (pushDummyQuests == true) {
       late List<Quest> questsOnFirestore;
       try {
         log.i("Downloading quests now");
-        questsOnFirestore = await downloadNearbyQuests();
+        questsOnFirestore = await downloadNearbyQuests(sponsorIds: sponsorIds);
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
@@ -459,47 +491,62 @@ class FirestoreApi {
       );
       return quests;
     } else {
-      return await downloadNearbyQuests();
+      return await downloadNearbyQuests(sponsorIds: sponsorIds);
     }
   }
 
   Future _uploadQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
-    _documentReference = await questsCollection.add(
+    final _documentReference = await questsCollection.add(
       quest.toJson(),
     );
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
     await questsCollection
-        .doc(_documentReference!.id)
-        .update({'id': _documentReference!.id});
+        .doc(_documentReference.id)
+        .update({'id': _documentReference.id});
   }
 
   Future<bool> createQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
-    _documentReference = await questsCollection.add(quest.toJson());
+    final _documentReference = await questsCollection.add(quest.toJson());
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
     await questsCollection
-        .doc(_documentReference!.id)
-        .update({'id': _documentReference!.id});
-    if (_documentReference!.id.isNotEmpty) {
+        .doc(_documentReference.id)
+        .update({'id': _documentReference.id});
+    if (_documentReference.id.isNotEmpty) {
       log.i(
-          'This is the Document Id Being Created Harguilar ${_documentReference!.id}');
+          'This is the Document Id Being Created Harguilar ${_documentReference.id}');
       return true;
     }
     return false;
   }
 
-  // TODO: Only dowload nearby quests in the future
+  Future<bool> createAFKQuest({required AFKQuest afkQuest}) async {
+    final _documentReference =
+        getAFKQuestsPositionDocs(afkQuestId: afkQuest.id!);
+    if (_documentReference.id.isNotEmpty) {
+      //This is to make sure that the document has the same id as the quest.
+      log.i(
+          'This is the Document Id Being Created Harguilar ${_documentReference.path}');
+      await _documentReference.set(afkQuest.toJson());
+      return true;
+    }
+    return false;
+  }
+
   // Changed the Scope of the Method. from _pvt to public
-  Future<List<Quest>> downloadNearbyQuests() async {
-    final quests = await questsCollection.get();
+  Future<List<Quest>> downloadNearbyQuests(
+      {required List<String> sponsorIds}) async {
+    // only gets quests NOT created by a standard parent
+    final quests =
+        await questsCollection.where("createdBy", isNull: true).get();
+    List<Quest> returnQuests = [];
     if (quests.docs.isNotEmpty) {
-      log.v('Found list of quests in database');
-      return quests.docs
+      returnQuests = quests.docs
           .map(
             (docs) => Quest.fromJson(
               docs.data() as Map<String, dynamic>,
@@ -512,7 +559,46 @@ class FirestoreApi {
           message: "Quest data could not be found",
           devDetails: "Quest document is empty");
     }
+    for (String id in sponsorIds) {
+      QuerySnapshot q =
+          await questsCollection.where("createdBy", isEqualTo: id).get();
+      if (q.docs.isNotEmpty) {
+        returnQuests.addAll(q.docs
+            .map(
+              (docs) => Quest.fromJson(
+                docs.data() as Map<String, dynamic>,
+              ),
+            )
+            .toList());
+      } else {
+        log.wtf('There is no \'quests\' collection on firestore');
+        throw FirestoreApiException(
+            message: "Quest data could not be found",
+            devDetails: "Quest document is empty");
+      }
+    }
+    return returnQuests;
   }
+
+  // Changed the Scope of the Method. from _pvt to public
+  Stream<List<AFKQuest>> downloadNearbyAfkQuests() {
+    try {
+      return afkQuestsCollection.snapshots().map(
+            (snapShot) => snapShot.docs
+                .map(
+                  (docs) =>
+                      AFKQuest.fromJson(docs.data() as Map<String, dynamic>),
+                )
+                .toList(),
+          );
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when listening to past quests the user has successfully done",
+          devDetails: '$e');
+    }
+  }
+  // final quests = await questsCollection.get();
 
   // Returns dummy data for now!
   Future pushFinishedQuest({required ActivatedQuest? quest}) async {
@@ -595,6 +681,7 @@ class FirestoreApi {
           .orderBy("createdAt", descending: true)
           .where("status",
               isEqualTo: describeEnum(QuestStatus.success.toString()))
+          .limitToLast(20) // limit query
           .snapshots()
           .map((event) => event.docs
               .map((doc) =>
@@ -633,8 +720,95 @@ class FirestoreApi {
     // }
   }
 
+  ///////////////////////////////////////////////////////
+  /// Screen Time functions
+  Future<String> addScreenTimeSession(
+      {required ScreenTimeSession session}) async {
+    log.i("Add screen time session to firestore");
+    //Get the Document Created Reference
+    final _documentReference = screenTimeSessionCollection.doc();
+    _documentReference.set(session
+        .copyWith(
+          sessionId: _documentReference.id,
+          startedAt: FieldValue.serverTimestamp(),
+        )
+        .toJson());
+    //update the newly created document reference with the Firestore Id.
+    return _documentReference.id;
+  }
+
+  Future updateScreenTimeSession({required ScreenTimeSession session}) async {
+    log.i("Update screen time session to firestore");
+    await screenTimeSessionCollection.doc(session.sessionId).update({
+      'status': session.toJson()["status"],
+      'afkCreditsUsed': session.afkCreditsUsed,
+      'minutesUsed': session.minutesUsed,
+    });
+  }
+
+  Future cancelScreenTimeSession({required ScreenTimeSession session}) async {
+    log.i("cancel screen time session on firestore");
+    await screenTimeSessionCollection.doc(session.sessionId).update({
+      'status': session.toJson()["status"],
+      'afkCreditsUsed': session.afkCreditsUsed,
+      'minutesUsed': session.minutesUsed,
+      'endedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future deleteScreenTimeSession({required ScreenTimeSession session}) async {
+    log.i("Delete screen time session to firestore");
+    await screenTimeSessionCollection.doc(session.sessionId).delete();
+  }
+
+  Future getScreenTimeSession({required String sessionId}) async {
+    log.i("get screen time session from firestore");
+    //Get the Document Created Reference
+    final sessionDoc = await screenTimeSessionCollection.doc(sessionId).get();
+    if (sessionDoc.exists) {
+      try {
+        return ScreenTimeSession.fromJson(
+            sessionDoc.data() as Map<String, dynamic>);
+      } catch (error) {
+        log.wtf('Failed to get screentime session with id $sessionId');
+        throw FirestoreApiException(
+          message: 'Failed to get screentime session with id $sessionId',
+          devDetails: '$error',
+        );
+      }
+    } else {
+      log.wtf("Screen time session with id $sessionId does not exist");
+      throw FirestoreApiException(
+        message: "Screen time session with id $sessionId does not exist",
+        devDetails:
+            "Some inconsistency with saving out the session id to local storage",
+      );
+    }
+  }
+
+  Stream<List<ScreenTimeSession>> getScreenTimeSessionStream(
+      {required String uid}) {
+    try {
+      final returnStream = screenTimeSessionCollection
+          .where("uid", isEqualTo: uid)
+          .orderBy("startedAt", descending: true)
+          .limitToLast(20)
+          .snapshots()
+          .map((event) => event.docs
+              .map((doc) => ScreenTimeSession.fromJson(
+                  doc.data() as Map<String, dynamic>))
+              .toList());
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when listening to screen time sessions that are active",
+          devDetails: '$e');
+    }
+  }
+
   ////////////////////////////////////////////////////////
-  // Gift Cards functions
+  // Gift Cards functions (DEPRECATED)
   //
 
   Future<List<GiftCardCategory>> getGiftCardsForCategory(
@@ -738,14 +912,14 @@ class FirestoreApi {
     }
   }
 
-  Stream<List<ScreenTimePurchase>> getPurchasedScreenTimesStream(
+  Stream<List<ScreenTimeSession>> getPurchasedScreenTimesStream(
       {required String uid}) {
     try {
       final returnStream = getUserScreenTimeCollection(uid: uid)
           .orderBy("purchasedAt", descending: true)
           .snapshots()
           .map((event) => event.docs
-              .map((doc) => ScreenTimePurchase.fromJson(
+              .map((doc) => ScreenTimeSession.fromJson(
                   doc.data() as Map<String, dynamic>))
               .toList());
       return returnStream;
@@ -764,16 +938,16 @@ class FirestoreApi {
   }
 
   Future updateScreenTimePurchase(
-      {required ScreenTimePurchase screenTimePurchase,
-      required ScreenTimeVoucherStatus newStatus,
+      {required ScreenTimeSession screenTimePurchase,
+      required ScreenTimeSessionStatus newStatus,
       required String uid}) async {
-    late ScreenTimePurchase newScreenTimePurchase;
+    late ScreenTimeSession newScreenTimePurchase;
     newScreenTimePurchase = screenTimePurchase.copyWith(
-        activatedOn: newStatus == ScreenTimeVoucherStatus.unused
+        startedAt: newStatus == ScreenTimeSessionStatus.active
             ? ""
             : FieldValue.serverTimestamp());
     await getUserScreenTimeCollection(uid: uid)
-        .doc(newScreenTimePurchase.purchaseId)
+        .doc(newScreenTimePurchase.sessionId)
         .update(newScreenTimePurchase.toJson());
   }
 
@@ -825,15 +999,13 @@ class FirestoreApi {
   }
 
   // !!! HIGHLY CRITICAL This is a cheat feautre for the super user
-// !!! REMOVE IN PRODUCTION
-  Future addAfkCreditsCheat(
-      {required String uid,
-      required UserStatistics currentStats,
-      num deltaCredits = 50}) async {
-    await getUserSummaryStatisticsDocument(uid: uid).update(currentStats
-        .copyWith(
-            afkCreditsBalance: currentStats.afkCreditsBalance + deltaCredits)
-        .toJson());
+  // !!! REMOVE IN PRODUCTION
+  // !!! Also used at the moment for allowing parents to add credits to child
+  Future changeAfkCreditsBalanceCheat(
+      {required String uid, num deltaCredits = 50}) async {
+    await getUserSummaryStatisticsDocument(uid: uid).update({
+      "afkCreditsBalance": FieldValue.increment(deltaCredits),
+    });
   }
 }
 
@@ -859,6 +1031,14 @@ DocumentReference getUserFavouritePlacesDocument({required String uid}) {
 
 DocumentReference getMarkersDocs({required String markerId}) {
   return markersCollection.doc(markerId);
+}
+
+DocumentReference getAFKMarkersPositionDocs({required String markerId}) {
+  return afkMarkersPositionsCollection.doc(markerId);
+}
+
+DocumentReference getAFKQuestsPositionDocs({required String afkQuestId}) {
+  return afkQuestsCollection.doc(afkQuestId);
 }
 
 CollectionReference getUserGiftCardsCollection({required String uid}) {

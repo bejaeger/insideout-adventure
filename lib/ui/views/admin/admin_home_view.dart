@@ -1,37 +1,7 @@
-import 'package:afkcredits/datamodels/directions/directions.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
-
-/*  class AdminHomeView extends StatelessWidget {
-  const AdminHomeView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder<AdminHomeViewModel>.reactive(
-      onModelReady: (model) => model.listenToData(),
-      fireOnModelReadyOnce: true,
-      viewModelBuilder: () => AdminHomeViewModel(),
-      builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: Text("Admin Home View"),
-        ),
-        body: ListView(
-          children: [
-            verticalSpaceMedium,
-            ElevatedButton(
-              // onPressed: model.navigateToExplorerHomeView,
-              onPressed: model.logout,
-              //child: Text("Go to explorer home/map")),
-              child: Text("Logout  "),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}  */
 
 class AdminHomeView extends StatefulWidget {
   const AdminHomeView({Key? key}) : super(key: key);
@@ -49,7 +19,6 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   GoogleMapController? _googleMapController;
   Marker? _origin;
   Marker? _destination;
-  Directions? _info;
 
   @override
   void dispose() {
@@ -118,43 +87,13 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               },
               onLongPress: _addMarker,
             ),
-            if (_info != null)
-              Positioned(
-                top: 20.0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 6.0,
-                    horizontal: 12.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.yellowAccent,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        offset: Offset(0, 2),
-                        blurRadius: 6.0,
-                      )
-                    ],
-                  ),
-                  child: Text(
-                    '${_info!.totalDistance}, ${_info!.totalDuration}',
-                    style: const TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
           ],
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.black,
           onPressed: () => _googleMapController!.animateCamera(
-            _info != null
-                ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
-                : CameraUpdate.newCameraPosition(_initialCameraPosition),
+            CameraUpdate.newCameraPosition(_initialCameraPosition),
           ),
           child: const Icon(Icons.center_focus_strong),
         ),
@@ -176,9 +115,6 @@ class _AdminHomeViewState extends State<AdminHomeView> {
         );
         // Reset destination
         _destination = null;
-
-        // Reset info
-        _info = null;
       });
     } else {
       // Origin is already set

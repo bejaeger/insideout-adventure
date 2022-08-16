@@ -64,12 +64,17 @@ class GeolocationService extends PausableService {
     Completer<void> completer = Completer();
     if (_livePositionStreamSubscription == null) {
       currentPositionDistanceFilter = distanceFilter.round();
-      pauseMainPositionListener();
+
+      // need to fully cancel the main listener here!
+      // otherwise stream from geolocator is not reset!
+      cancelMainPositionListener();
+
       // TODO: Provide proper error message to user in case of
       // denied permission, no access to gps, ...
+
       _livePositionStreamSubscription = Geolocator.getPositionStream(
               desiredAccuracy: LocationAccuracy.best,
-              distanceFilter: distanceFilter.round())
+              distanceFilter: currentPositionDistanceFilter)
           .listen(
         (position) {
           printPositionInfo(position);
@@ -116,7 +121,7 @@ class GeolocationService extends PausableService {
       // denied permission, no access to gps, ...
       _livePositionMainStreamSubscription = Geolocator.getPositionStream(
               desiredAccuracy: LocationAccuracy.best,
-              distanceFilter: distanceFilter.round())
+              distanceFilter: currentPositionDistanceFilter)
           .listen(
         (position) {
           printPositionInfo(position);
@@ -386,8 +391,11 @@ class GeolocationService extends PausableService {
     } else {
       positionActual = position;
     }
+    // DISTANCE TO CURRENT MARKER!
     distanceToStartMarker = Geolocator.distanceBetween(
         positionActual.latitude, positionActual.longitude, lat, lon);
+    print("========================-----------========================");
+    print("DISTANCE: $distanceToStartMarker");
     distanceToLastCheckedMarker = distanceToStartMarker;
   }
 
@@ -442,10 +450,12 @@ class GeolocationService extends PausableService {
     log.v("Cancel Quest position listener, resuming main listener");
     _livePositionStreamSubscription?.cancel();
     _livePositionStreamSubscription = null;
-    if (_livePositionMainStreamSubscription != null &&
-        _livePositionMainStreamSubscription!.isPaused) {
-      resumeMainPositionListener();
-    }
+    // don't do this implicitely here. Explicit treatment is better!
+    // if (_livePositionMainStreamSubscription != null &&
+    //     _livePositionMainStreamSubscription!.isPaused) {
+    //   // resumeMainPositionListener();
+    //   //listenToPositionMain(distanceFilter: distanceFilter);
+    // }
   }
 
   void cancelMainPositionListener() {
@@ -476,6 +486,7 @@ class GeolocationService extends PausableService {
     distanceToStartMarker = -1;
     distanceToLastCheckedMarker = -1;
     cancelPositionListener();
+    cancelMainPositionListener();
   }
 
   Future getLastKnownAndCurrentPosition(

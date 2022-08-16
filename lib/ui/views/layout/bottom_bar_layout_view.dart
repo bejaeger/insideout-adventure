@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
@@ -7,14 +6,12 @@ import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
-import 'package:afkcredits/ui/views/gift_cards/gift_card_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_overview_view.dart';
-import 'package:afkcredits/ui/views/purchased_gift_cards/manage_gift_cards/manage_gift_cards_view.dart';
+import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
-import 'package:afkcredits/ui/views/sponsor_home/sponsor_home_view.dart';
 import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +78,7 @@ class _BottomBarLayoutTemplateViewState
             stateManagement: true, // Default is true.
             hideNavigationBarWhenKeyboardShows:
                 true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-            backgroundColor: kPrimaryColor, // Default is Colors.white.
+            backgroundColor: kcPrimaryColor, // Default is Colors.white.
             decoration: NavBarDecoration(
               // gradient: LinearGradient(
               //     colors: [kPrimaryColor, kDarkTurquoise],
@@ -89,7 +86,7 @@ class _BottomBarLayoutTemplateViewState
               //     end: Alignment.bottomCenter),
               boxShadow: [
                 BoxShadow(
-                  color: kShadowColor,
+                  color: kcShadowColor,
                   blurRadius: 5.0, // soften the shadow
                   spreadRadius: 1, //extend the shadow
                   offset: Offset(
@@ -143,14 +140,9 @@ class _BottomBarLayoutTemplateViewState
     switch (userRole) {
       case UserRole.sponsor:
         return [
-          SponsorHomeView(),
+          ParentHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
-          if (widget.questViewIndex == QuestViewType.singlequest)
-            SingleQuestTypeView(
-              quest: widget.quest,
-              questType: widget.questType,
-            ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
         ];
       case UserRole.explorer:
@@ -158,51 +150,32 @@ class _BottomBarLayoutTemplateViewState
           ExplorerHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
-          if (widget.questViewIndex == QuestViewType.singlequest)
-            SingleQuestTypeView(
-              quest: widget.quest,
-              questType: widget.questType,
-            ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
-          GiftCardView(),
         ];
       case UserRole.superUser:
         return [
           ExplorerHomeView(),
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
-          if (widget.questViewIndex == QuestViewType.singlequest)
-            SingleQuestTypeView(
-              quest: widget.quest,
-              questType: widget.questType,
-            ),
           if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
-          GiftCardView(),
         ];
       default:
         return [
           if (widget.questViewIndex == QuestViewType.questlist)
             QuestsOverviewView(),
+          if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
+          // ManageQuestView(),
+          // if (widget.questViewIndex == QuestViewType.questlist)
+          //   QuestsOverviewView(),
           if (widget.questViewIndex == QuestViewType.singlequest)
             SingleQuestTypeView(
               quest: widget.quest,
               questType: widget.questType,
             ),
-          if (widget.questViewIndex == QuestViewType.map) MapOverviewView(),
-          // ManageQuestView(),
-/*
-          if (widget.questViewIndex == QuestViewType.questlist)
-            QuestsOverviewView(),
-
-          if (widget.questViewIndex == QuestViewType.singlequest)
-            SingleQuestTypeView(
-              quest: widget.quest,
-              questType: widget.questType,
-            ), */
-
-          ManageGiftCardstView(),
-          //AddGiftCardsView(),
+          //if (widget.questViewIndex != QuestViewType.singlequest)
           AddMarkersView(),
+          //ManageGiftCardstView(),
+          //AddGiftCardsView(),
         ];
     }
   }
@@ -289,11 +262,11 @@ class _BottomBarLayoutTemplateViewState
             inactiveIcon: Icon(Icons.mark_chat_read),
             title: ("Add Markers"),
           ), */
-          AFKNavBarItem(
-            icon: Icon(Icons.shop),
-            inactiveIcon: Icon(Icons.shop_outlined),
-            title: "Rewards",
-          ),
+          // AFKNavBarItem(
+          //   icon: Icon(Icons.shop),
+          //   inactiveIcon: Icon(Icons.shop_outlined),
+          //   title: "Rewards",
+          // ),
           AFKNavBarItem(
             icon: Icon(Icons.mark_as_unread_sharp),
             inactiveIcon: Icon(Icons.markunread_sharp),

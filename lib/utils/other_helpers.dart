@@ -9,8 +9,3 @@ List<List<T>> getChunksOfList<T>(List<T> list, {int size = 1}) {
   }
   return chunks;
 }
-
-String removeLastCharacters(String string, {int removeNumber = 1}) {
-  String returnValue = string.substring(0, string.length - removeNumber);
-  return returnValue;
-}

@@ -17,8 +17,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.da
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 
-abstract class QuestViewModel extends BaseModel
-    with NavigationMixin, MapStateControlMixin {
+abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
   final log = getLogger("QuestViewModel");
 
   // -----------------------------------------------
@@ -113,6 +112,7 @@ abstract class QuestViewModel extends BaseModel
   Future onQuestInListTapped(Quest quest) async {
     if (hasActiveQuest == false) {
       removeQuestListOverlay();
+      changeNavigatedFromQuestList(true);
       showQuestDetailsFromList(quest: quest);
       //await navigateToActiveQuestUI(quest: quest);
 
@@ -120,7 +120,7 @@ abstract class QuestViewModel extends BaseModel
       // the view renders the state based on whether a quest is active or not
       //notifyListeners();
     } else {
-      dialogService.showDialog(title: "You Currently Have a Running Quest !!!");
+      dialogService.showDialog(title: "You currently have a running quest!");
     }
   }
 
@@ -186,7 +186,7 @@ abstract class QuestViewModel extends BaseModel
   }
 
   void showQuestDetailsFromList({required Quest quest}) {
-    mapViewModel.showQuestDetails(quest: quest);
+    mapViewModel.animateToQuestDetails(quest: quest);
   }
 
   int currentIndex = 0;

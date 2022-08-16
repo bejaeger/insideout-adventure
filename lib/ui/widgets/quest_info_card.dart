@@ -1,11 +1,8 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
-
-import '../../utils/ui_helpers.dart';
 
 class QuestInfoCard extends StatelessWidget {
   final double height;
@@ -66,15 +63,17 @@ class QuestInfoCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       verticalSpaceTiny,
-                      Text(
-                          (0.001 * quest.distanceFromUser!).toStringAsFixed(1) +
-                              " km" +
-                              " - " +
-                              getStringForCategory(quest.type),
-                          style: textTheme(context).bodyText2!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: kDarkTurquoise,
-                              fontSize: 15)),
+                      if (quest.distanceFromUser != null)
+                        Text(
+                            (0.001 * quest.distanceFromUser!)
+                                    .toStringAsFixed(1) +
+                                " km" +
+                                " - " +
+                                getStringForCategory(quest.type),
+                            style: textTheme(context).bodyText2!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: kcPrimaryColorSecondary,
+                                fontSize: 15)),
                       verticalSpaceSmall,
                       Expanded(
                         child: Text(
@@ -101,7 +100,7 @@ class QuestInfoCard extends StatelessWidget {
                           BoxShadow(
                             blurRadius: 2,
                             spreadRadius: 0.5,
-                            color: kShadowColor,
+                            color: kcShadowColor,
                             offset: Offset(1, 1),
                           ),
                         ],
@@ -112,10 +111,10 @@ class QuestInfoCard extends StatelessWidget {
                       children: [
                         CreditsAmount(
                           amount: quest.afkCredits,
-                          color: kDarkTurquoise,
+                          color: kcPrimaryColorSecondary,
                         ),
                         Icon(Icons.arrow_forward_ios_rounded,
-                            color: kDarkTurquoise)
+                            color: kcPrimaryColorSecondary)
                       ],
                     ),
                   ),

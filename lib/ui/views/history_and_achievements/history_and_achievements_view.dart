@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -43,7 +42,7 @@ class _HistoryAndAchievementsViewState extends State<HistoryAndAchievementsView>
           title: Text(
             "Activity",
             style:
-                textTheme(context).headline5!.copyWith(color: kWhiteTextColor),
+                textTheme(context).headline5!.copyWith(color: kcWhiteTextColor),
           ),
           // backgroundColor: kPrimaryColor,
           // elevation: 0,
@@ -64,7 +63,7 @@ class _HistoryAndAchievementsViewState extends State<HistoryAndAchievementsView>
                     bottomLeft: Radius.circular(16.0),
                     bottomRight: Radius.circular(16.0),
                   ),
-                  color: kPrimaryColor,
+                  color: kcPrimaryColor,
                 ),
                 child: _tabbar),
           ),
@@ -93,12 +92,13 @@ class _HistoryAndAchievementsViewState extends State<HistoryAndAchievementsView>
         // isScrollable: true,
         controller: _tabController,
         unselectedLabelColor: Colors.white70,
-        labelColor: kWhiteTextColor,
+        labelColor: kcWhiteTextColor,
         indicatorSize: TabBarIndicatorSize.tab,
         indicator: BoxDecoration(
-            gradient: LinearGradient(colors: [kDarkTurquoise, kDarkTurquoise]),
+            gradient: LinearGradient(
+                colors: [kcPrimaryColorSecondary, kcPrimaryColorSecondary]),
             borderRadius: BorderRadius.circular(50),
-            color: kPrimaryColor),
+            color: kcPrimaryColor),
         tabs: [
           Tab(
             child: Align(

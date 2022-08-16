@@ -32,7 +32,7 @@ class AddMarkersViewModel extends AFKMarks with NavigationMixin {
 
   Future<void> setQuestList() async {
     setBusy(true);
-    _getListOfQuest = await _questService.downloadNearbyQuests();
+    _getListOfQuest = await _questService.loadNearbyQuests(sponsorIds: []);
     addStartMarkers(quest: _getListOfQuest!);
     setBusy(false);
     notifyListeners();
@@ -42,40 +42,6 @@ class AddMarkersViewModel extends AFKMarks with NavigationMixin {
     int idx = 0;
     int i = 0;
     bool found = false;
-
-/*     quest.map(
-      (questElement) => questElement.markers.forEach(
-        (afkMarkerElement) => {
-          markers.add(
-            Marker(
-              markerId: MarkerId(afkMarkerElement.id),
-              position: LatLng(afkMarkerElement.lat ?? latitude,
-                  afkMarkerElement.lon ?? longitude),
-              infoWindow: InfoWindow(snippet: questElement.name),
-              onTap: () {
-                if (afkMarkerElement.id == questElement.markers.first.id) {
-                  _dialogService.showConfirmationDialog(
-                      title: 'Marker Information',
-                      description:
-                          'This Markers is a Starter Marker ${afkMarkerElement.id}');
-                } else if (afkMarkerElement.id ==
-                    questElement.markers.last.id) {
-                  _dialogService.showConfirmationDialog(
-                      title: 'Marker Information',
-                      description:
-                          'This Markers is a Finish Marker ${afkMarkerElement.id}');
-                } else {
-                  _dialogService.showConfirmationDialog(
-                      title: 'Marker Information',
-                      description:
-                          'This Markers is in Between Marker ${afkMarkerElement.id}');
-                }
-              },
-            ),
-          ),
-        },
-      ),
-    ); */
 
     while (idx < quest.length) {
       for (AFKMarker _afkMarkers in quest[idx].markers) {
@@ -144,7 +110,7 @@ class AddMarkersViewModel extends AFKMarks with NavigationMixin {
 
   void addMarkerToMap(LatLng position) {
     setBusy(true);
-    addMarkerOnMap(pos: position);
+    addMarkerOnMap(pos: position, number: getAFKMarkers.length);
     setBusy(false);
     notifyListeners();
   }

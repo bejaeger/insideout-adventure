@@ -1,5 +1,4 @@
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -99,7 +98,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                         : "Checkpoint reached!",
                     textAlign: TextAlign.center,
                     style: textTheme(context).headline6!.copyWith(
-                        color: kPrimaryColor,
+                        color: kcPrimaryColor,
                         fontSize: 32,
                         fontWeight: FontWeight.w800),
                   ),
@@ -112,7 +111,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                             : "",
                         textAlign: TextAlign.center,
                         style: textTheme(context).headline6!.copyWith(
-                            color: kPrimaryColor,
+                            color: kcPrimaryColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w400)),
                   ),
@@ -137,7 +136,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: kShadowColor,
+                                color: kcShadowColor,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: Offset(2, 2),
@@ -148,7 +147,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                             child: Column(
                               children: [
                                 CircleAvatar(
-                                  backgroundColor: kPrimaryColor,
+                                  backgroundColor: kcPrimaryColor,
                                   child: Icon(
                                     widget.isQrCodeInArea
                                         ? Icons.qr_code_scanner
@@ -173,7 +172,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                       widget.isQrCodeInArea ? "OPEN SCANNER" : "COLLECT",
                       style: textTheme(context)
                           .headline6!
-                          .copyWith(color: kPrimaryColor),
+                          .copyWith(color: kcPrimaryColor),
                     ),
                   ),
                   verticalSpaceLarge,
@@ -188,7 +187,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                               .completer(DialogResponse(confirmed: false)),
                           child: Text(
                             "Go Back",
-                            style: TextStyle(color: kBlackHeadlineColor),
+                            style: TextStyle(color: kcBlackHeadlineColor),
                           ),
                         ),
                         if (widget.isQrCodeInArea)
@@ -196,7 +195,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                             onPressed: () => print("hi"),
                             child: Text(
                               "Show Clue",
-                              style: TextStyle(color: kBlackHeadlineColor),
+                              style: TextStyle(color: kcBlackHeadlineColor),
                             ),
                           ),
                       ],

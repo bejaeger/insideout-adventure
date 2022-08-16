@@ -85,6 +85,11 @@ class PedometerService extends PausableService {
         await stopPedometer();
       }
 
+      // Problem with the above: If screen is turned off there
+      // is currently no chance to retrieve the location!
+
+      // (ignore this for now?)
+
       if (requestPermission) {
         final grantedPermission = await requestActivityPermission();
         if (!grantedPermission) {

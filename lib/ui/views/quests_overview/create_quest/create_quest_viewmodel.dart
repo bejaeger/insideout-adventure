@@ -1,13 +1,15 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
 import 'package:afkcredits/utils/markers/markers.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../datamodels/quests/quest.dart';
@@ -17,11 +19,13 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final _log = getLogger('CreateQuestViewModel');
   GoogleMapController? _googleMapController;
   GoogleMapController? get getGoogleMapController => _googleMapController;
-  final _navigationService = locator<NavigationService>();
   final _questService = locator<QuestService>();
   final _geoLocationService = locator<GeolocationService>();
+  final _userService = locator<UserService>();
   //CameraPosition? _initialCameraPosition;
   final _displaySnackBars = DisplaySnackBars();
+
+  int pageIndex = 0;
   bool isLoading = false;
   bool result = false;
   QuestType? _questType;
@@ -37,6 +41,39 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     _log.i('Set the Form With Data: $formValueMap');
     if (nameValue?.isEmpty ?? true) {
       setValidationMessage('You Must Give a Value into this field');
+    }
+    resetValidationMessages();
+  }
+
+  Future onBackButton(PageController controller) async {
+    if (pageIndex > 0) {
+      controller.previousPage(
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+      pageIndex = pageIndex - 1;
+      notifyListeners();
+    } else {
+      popView();
+    }
+  }
+
+  // ----------------------------------------------
+  // Back or next navigations
+  Future onNextButton(PageController controller) async {
+    if (pageIndex == 0) {
+      // VALIDATE INPUTS
+      if (isValidUserInputs()) {
+        controller.nextPage(
+            duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+        pageIndex = pageIndex + 1;
+        notifyListeners();
+      }
+    } else if (pageIndex == 1) {
+      // CREATE QUEST
+      if (getAFKMarkers.length < 2) {
+        return null;
+      } else {
+        await clearFieldsAndNavigate();
+      }
     }
   }
 
@@ -66,16 +103,16 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       }
     }
     if (nameValue == null) {
-      nameInputValidationMessage = 'Choose Quest name';
+      nameInputValidationMessage = 'Please choose a valid quest name';
       isValid = false;
     }
     if (_questType == null) {
-      questTypeInputValidationMessage = "Choose a quest type";
+      questTypeInputValidationMessage = "Please choose a valid quest type";
       isValid = false;
     }
     if (!isValid) {
       _log.e("Input not valid");
-      displayEmptyTextsSnackBar();
+      //displayEmptyTextsSnackBar();
       notifyListeners();
     }
     return isValid;
@@ -99,6 +136,9 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     final added = await _questService.createQuest(
       quest: Quest(
           id: questId,
+          createdBy: _userService.getUserRole == UserRole.adminMaster
+              ? null
+              : _userService.currentUser.uid,
           startMarker: getAFKMarkers.first,
           finishMarker: getAFKMarkers.last,
           name: nameValue.toString(),
@@ -107,13 +147,24 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
           markers: getAFKMarkers,
           afkCredits: afkCreditAmount),
     );
+
+    final afkQuestAdded = await _questService.createAFKQuest(
+      afkQuest: AFKQuest(
+          id: questId,
+          name: nameValue.toString(),
+          description: descriptionValue.toString(),
+          type: _questType!.toSimpleString(),
+          //type: _questType.toString().split('.').elementAt(1),
+          afkCredits: afkCreditAmount,
+          afkMarkersPositions: getAfkMarkersPosition,
+          startAfkMarkersPositions: getAfkMarkersPosition.first,
+          finishAfkMarkersPositions: getAfkMarkersPosition.last),
+    );
     isLoading = false;
     notifyListeners();
-    if (added) {
+    if (added || afkQuestAdded) {
       _log.i("Quest added successfully!");
       _displaySnackBars.snackBarCreatedQuest();
-      // not 100% sure why the delay is needed here
-      await Future.delayed(Duration(seconds: 2));
       return true;
     }
 
@@ -125,14 +176,14 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     result = await _createQuest() ?? false;
     if (result) {
       resetMarkersValues();
-      _navigationService.back();
+      replaceWithSponsorHomeView();
     }
     return result;
   }
 
   void displayMarkersOnMap(LatLng pos) {
     setBusy(true);
-    addMarkerOnMap(pos: pos);
+    addMarkerOnMap(pos: pos, number: getAFKMarkers.length);
     setBusy(false);
     notifyListeners();
   }
@@ -162,7 +213,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     super.dispose();
   }
 
-  void setQuestType({required QuestType questType}) {
-    _questType = questType;
+  void setQuestType({required QuestType? questType}) {
+    _questType = questType!;
   }
 }

@@ -10,17 +10,18 @@ import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
+import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/payments/transfers_history_service.dart';
+import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
@@ -32,7 +33,7 @@ import 'package:afkcredits/app/app.logger.dart';
 // put everything here that needs to be available throughout the
 // entire App
 
-class BaseModel extends BaseViewModel {
+class BaseModel extends BaseViewModel with NavigationMixin {
   final NavigationService navigationService = locator<NavigationService>();
   final UserService userService = locator<UserService>();
   final SnackbarService snackbarService = locator<SnackbarService>();
@@ -40,11 +41,8 @@ class BaseModel extends BaseViewModel {
   final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
   final DialogService dialogService = locator<DialogService>();
   final BottomSheetService bottomSheetService = locator<BottomSheetService>();
-  final TransfersHistoryService transfersHistoryService =
-      locator<TransfersHistoryService>();
   final LayoutService layoutService = locator<LayoutService>();
   final StopWatchService _stopWatchService = locator<StopWatchService>();
-  final GiftCardService _giftCardService = locator<GiftCardService>();
   final GeolocationService geolocationService = locator<GeolocationService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
@@ -57,8 +55,10 @@ class BaseModel extends BaseViewModel {
   // ------------------------------------------------------
   // getters
   User get currentUser => userService.currentUser;
+  User? get currentUserNullable => userService.currentUserNullable;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
+  bool get isParentAccount => currentUser.role == UserRole.sponsor;
   bool get isAdminMaster => userService.isAdminMaster;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
@@ -74,7 +74,7 @@ class BaseModel extends BaseViewModel {
   bool get isShowingQuestDetails => activeQuestService.selectedQuest != null;
 
   bool get isShowingQuestList => layoutService.isShowingQuestList;
-  bool get isShowingARView => layoutService.isShowingARView;
+  bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
 
@@ -98,15 +98,18 @@ class BaseModel extends BaseViewModel {
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
 
-  Future clearServiceData({bool logOutFromFirebase = true}) async {
+  Future clearServiceData(
+      {bool logOutFromFirebase = true,
+      bool doNotClearSponsorReference = false}) async {
     questService.clearData();
     activeQuestService.clearData();
-    _giftCardService.clearData();
-    transfersHistoryService.clearData();
     geolocationService.clearData();
+    // screenTimeService.clearData();
     _questTestingService.maybeReset();
     gamificationService.clearData();
-    await userService.handleLogoutEvent(logOutFromFirebase: logOutFromFirebase);
+    await userService.handleLogoutEvent(
+        logOutFromFirebase: logOutFromFirebase,
+        doNotClearSponsorReference: doNotClearSponsorReference);
   }
 
   void unregisterViewModels() {
@@ -139,13 +142,6 @@ class BaseModel extends BaseViewModel {
     }
   }
 
-  Future setShowBottomNavBar(bool show) async {
-    if (show == true) {
-      await Future.delayed(Duration(milliseconds: 150));
-    }
-    //layoutService.setShowBottomNavBar(show);
-  }
-
   bool hasEnoughSponsoring({required Quest? quest}) {
     if (quest == null) {
       baseModelLog.e(
@@ -172,7 +168,7 @@ class BaseModel extends BaseViewModel {
     snackbarService.showSnackbar(
         title: "Not yet implemented.",
         message: "I know... it's sad",
-        duration: Duration(seconds: 2));
+        duration: Duration(seconds: 1));
   }
 
   Future showAdminDialogAndGetResponse() async {
@@ -195,19 +191,32 @@ class BaseModel extends BaseViewModel {
   }
 
   Future clearStackAndNavigateToHomeView() async {
-    await navigationService.clearStackAndShow(
-        Routes.bottomBarLayoutTemplateView,
-        arguments:
-            BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+    if (currentUser.role == UserRole.sponsor) {
+      await navigationService.clearStackAndShow(
+        Routes.parentHomeView,
+      );
+    } else if (currentUser.role == UserRole.adminMaster) {
+      await navigationService.clearStackAndShow(
+          Routes.bottomBarLayoutTemplateView,
+          arguments:
+              BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+    } else {
+      await navigationService.clearStackAndShow(
+        Routes.explorerHomeView,
+      );
+    }
   }
 
   Future replaceWithHomeView() async {
-    await navigationService.replaceWith(
-      Routes.explorerHomeView,
-    );
-    // await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-    //     arguments:
-    //         BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+    if (currentUser.role == UserRole.sponsor) {
+      replaceWithSponsorHomeView();
+    } else if (currentUser.role == UserRole.adminMaster) {
+      await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
+          arguments:
+              BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+    } else {
+      replaceWithExplorerHomeView();
+    }
   }
 
   Future replaceWithMainView({required BottomNavBarIndex index}) async {
@@ -339,31 +348,14 @@ class BaseModel extends BaseViewModel {
     //     : await navigateToActiveQuestUI(quest: quest);
   }
 
-  Future navigateToActiveQuestUI({required Quest quest}) async {
-    baseModelLog.i("Navigating to view with currently active quest");
-    if (quest.type == QuestType.TreasureLocationSearch) {
-      await navigationService.navigateTo(
-          Routes.activeTreasureLocationSearchQuestView,
-          arguments:
-              ActiveTreasureLocationSearchQuestViewArguments(quest: quest));
-    } else if (quest.type == QuestType.DistanceEstimate) {
-      await navigationService.navigateTo(Routes.activeDistanceEstimateQuestView,
-          arguments: ActiveDistanceEstimateQuestViewArguments(quest: quest));
-    } else if (quest.type == QuestType.QRCodeHunt ||
-        quest.type == QuestType.GPSAreaHunt) {
-      await navigationService.navigateTo(Routes.activeQrCodeSearchView,
-          arguments: ActiveQrCodeSearchViewArguments(quest: quest));
-    } else if (quest.type == QuestType.QRCodeHike ||
-        quest.type == QuestType.GPSAreaHike) {
-      await navigationService.navigateTo(Routes.activeMapQuestView,
-          arguments: ActiveMapQuestViewArguments(quest: quest));
-    }
-  }
-
   Future openSuperUserSettingsDialog() async {
     await dialogService.showCustomDialog(variant: DialogType.SuperUserSettings);
     setListenedToNewPosition(false);
     notifyListeners();
+  }
+
+  Future showCollectedMarkerDialog() async {
+    await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
   }
 
   //////////////////////////////////////////

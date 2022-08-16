@@ -7,9 +7,13 @@ const GoogleMapsEnvKeyIOS = 'GOOGLE_MAPS_API_KEY_IOS';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
+
 const kLocalStoragePedometerCount = "PedometerCount";
 const kLocalStoragePedometerStatus = "PedometerStatus";
 
+const kLocalStorageSponsorReferenceKey = "PARENT_ID";
+const kLocalStorageScreenTimeSessionKey = "SCREEN_TIME_SESSION";
+const kLocalStorageSawOnBoardingKey = "SAW_ONBOARDING";
 final appName = 'AFK Credits';
 
 /////////////////////////////////////////////////
@@ -19,6 +23,7 @@ final appName = 'AFK Credits';
 final String userStatisticsCollectionKey = "statistics";
 final String userFavouritePlacesCollectionKey = "FavouritePlaces";
 final String activatedQuestsCollectionKey = "activatedQuests";
+final String screenTimeSessionsCollectionKey = "screenTimeSessions";
 
 // document keys
 final String userSummaryStatisticsDocumentKey = "summaryStats";
@@ -39,10 +44,16 @@ final CollectionReference paymentsCollection =
     FirebaseFirestore.instance.collection('transfers');
 final CollectionReference questsCollection =
     FirebaseFirestore.instance.collection('quests');
+final CollectionReference screenTimeSessionCollection =
+    FirebaseFirestore.instance.collection(screenTimeSessionsCollectionKey);
+final CollectionReference afkQuestsCollection =
+    FirebaseFirestore.instance.collection('afkQuests');
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
 final CollectionReference markersCollection =
     FirebaseFirestore.instance.collection("markers");
+final afkMarkersPositionsCollection =
+    FirebaseFirestore.instance.collection("afkMarkersPositions");
 final CollectionReference activatedQuestsCollection =
     FirebaseFirestore.instance.collection(activatedQuestsCollectionKey);
 const int kMaxDistanceFromMarkerInMeterQrCodeHunt = 200;
@@ -139,3 +150,13 @@ const double kMinZoomAvatarView = 17;
 /// Pedometer settings
 const double kMinDistanceAntiCheat = 8;
 const int kStepFrequencyAntiCheat = 50;
+
+////////////////////////////////////
+/// notification keys and settings
+///
+const String kDefaultNotificationIconPath =
+    "resource://drawable/res_notification_icon";
+const String kPermanentNotificationKey = "permanent_notification";
+const String kPermanentNotificationName = "Permanent notifications";
+const String kScheduledNotificationChannelKey = "scheduled_notification";
+const String kScheduledNotificationChannelName = "Scheduled notifications";

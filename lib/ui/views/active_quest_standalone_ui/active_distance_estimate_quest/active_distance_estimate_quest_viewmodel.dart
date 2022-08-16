@@ -16,6 +16,8 @@ import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmode
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+// ! Likely DEPRECATED
+
 class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   // Instead of these functions here I should have override functions
   // That all work in QuestViewModel!
@@ -192,7 +194,9 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   }
 
   // 1. Start quest
-  Future maybeStartQuest({required Quest? quest}) async {
+  @override
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? onStartQuestCallback}) async {
     if (quest != null) {
       resetPreviousQuest();
       if (quest.distanceToTravelInMeter == null) {
@@ -236,12 +240,12 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-  Future showInstructions() async {
-    await dialogService.showDialog(
-        title: "How it works",
-        description:
-            "Start the quest and then walk ${distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance tries!");
-  }
+  // Future showInstructions() async {
+  //   await dialogService.showDialog(
+  //       title: "How it works",
+  //       description:
+  //           "Start the quest and then walk ${distanceToTravel.toStringAsFixed(0)} meters (air distance). If you think the distance is correct, check it. You only have $kNumberTriesToRevealDistance tries!");
+  // }
 
   @override
   void resetPreviousQuest() {

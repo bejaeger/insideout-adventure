@@ -1,12 +1,12 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/giftcard/gift_card_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/payments/transfers_history_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -16,9 +16,6 @@ mixin NavigationMixin {
   final _navigationService = locator<NavigationService>();
   final _questService = locator<QuestService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final GiftCardService _giftCardService = locator<GiftCardService>();
-  final TransfersHistoryService transfersHistoryService =
-      locator<TransfersHistoryService>();
   final _userService = locator<UserService>();
   final LayoutService _layoutService = locator<LayoutService>();
 
@@ -71,10 +68,34 @@ mixin NavigationMixin {
     _navigationService.replaceWith(Routes.loginView);
   }
 
+  void navToOnboardingScreens() {
+    _navigationService.navigateTo(Routes.onBoardingScreensView);
+  }
+
+  void replaceWithExplorerHomeView() {
+    _navigationService.replaceWith(
+      Routes.explorerHomeView,
+    );
+  }
+
+  void replaceWithSponsorHomeView() {
+    _navigationService.replaceWith(
+      Routes.parentHomeView,
+    );
+  }
+
   ////////////////////////////////////////
   // Navigation and dialogs
   void popView() {
     _navigationService.back();
+  }
+
+  void popViewReturnNull() {
+    _navigationService.back(result: null);
+  }
+
+  void popViewReturnValue({dynamic result}) {
+    _navigationService.back(result: result);
   }
 
   void navToMapView({required UserRole role}) {
@@ -98,40 +119,16 @@ mixin NavigationMixin {
     //});
   }
 
-  void navToAddGiftCard() {
-    _navigationService.navigateTo(Routes.addGiftCardsView);
-    //});
-  }
-
-  void navToInsertGiftCard() {
-    _navigationService.navigateTo(Routes.insertPrePurchasedGiftCardView);
-    //});
-  }
-
   void navBackToPreviousView() {
     _navigationService.back();
-  }
-
-  void navToPurchasedScreenTimeView() {
-    _navigationService.navigateTo(Routes.purchasedScreenTimeView);
-  }
-
-  void navToCreditsScreenTimeView() {
-    _navigationService.navigateTo(Routes.selectScreenTimeView);
   }
 
   Future logout() async {
     // TODO: Check that there is no active quest present!
     _questService.clearData();
     _geolocationService.clearData();
-    _giftCardService.clearData();
     await _userService.handleLogoutEvent(logOutFromFirebase: true);
-    transfersHistoryService.clearData();
     _navigationService.clearStackAndShow(Routes.loginView);
-  }
-
-  void navigateToManageGiftCard() {
-    _navigationService.clearStackAndShow(Routes.manageGiftCardstView);
   }
 
   void navToQuestsOfSpecificTypeView(
@@ -148,10 +145,6 @@ mixin NavigationMixin {
     );
   }
 
-  void navToScreenTimeView() {
-    _navigationService.navigateTo(Routes.screenTimeView);
-  }
-
   void showQuestListOverlay() {
     _layoutService.setIsShowingQuestList(true);
   }
@@ -160,8 +153,27 @@ mixin NavigationMixin {
     _layoutService.setIsShowingQuestList(false);
   }
 
-  void navToArObjectView(bool isCoins) {
-    _navigationService.navigateTo(Routes.aRObjectView,
+  Future navToArObjectView(bool isCoins) async {
+    return await _navigationService.navigateTo(Routes.aRObjectView,
         arguments: ARObjectViewArguments(isCoins: isCoins));
+  }
+
+  Future navToSelectScreenTimeView({String? childId}) async {
+    await _navigationService.navigateTo(Routes.selectScreenTimeView,
+        arguments: SelectScreenTimeViewArguments(childId: childId));
+  }
+
+  Future navToActiveScreenTimeView(
+      {ScreenTimeSession? session, String? sessionId}) async {
+    await _navigationService.navigateTo(Routes.activeScreenTimeView,
+        arguments: ActiveScreenTimeViewArguments(
+            session: session, screenTimeSessionId: sessionId));
+  }
+
+  Future navigateToGPSAreaQuest(Quest quest) async {
+    // TODO: Make sure we treat return value reasonably
+    await _navigationService.navigateTo(Routes.hikeQuestView,
+        arguments: HikeQuestViewArguments(quest: quest));
+    return true;
   }
 }

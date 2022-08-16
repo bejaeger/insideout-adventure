@@ -14,12 +14,13 @@ class QuestsOverviewViewModel extends QuestViewModel {
   List<QuestType> get questTypes => questService.allQuestTypes;
   final logger = getLogger('ManageQuestViewModel');
   final _dialogService = locator<DialogService>();
-
+  // !!! THE SAME FUNCTION EXISTS IN EXPLORER HOME VIEWMODEL!
   Future initializeQuests({bool? force}) async {
     setBusy(true);
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
-        await questService.loadNearbyQuests(force: true);
+        await questService.loadNearbyQuests(
+            force: true, sponsorIds: currentUser.sponsorIds);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }
@@ -27,6 +28,7 @@ class QuestsOverviewViewModel extends QuestViewModel {
       log.wtf("Error when loading quests, this should never happen. Error: $e");
       await showGenericInternalErrorDialog();
     }
+    addAllQuestMarkers();
     setBusy(false);
   }
 

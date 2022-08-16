@@ -4,8 +4,10 @@ library afkcredits_ui;
 export 'src/widgets/afkcredits_text.dart';
 export 'src/widgets/afkcredits_button.dart';
 export 'src/widgets/afkcredits_input_field.dart';
+export 'src/widgets/afkcredits_dropdown_form_field.dart';
 export 'src/widgets/autocomplete_listItem.dart';
 export 'src/widgets/afkcredits_category_card.dart';
+export 'src/widgets/bottom_floating_action_buttons.dart';
 
 // Colors Export
 export 'src/shared/app_colors.dart';

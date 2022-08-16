@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/colors.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -31,29 +30,25 @@ class AFKSlideButton extends StatelessWidget {
         sliderButtonIconSize: 22,
         // sliderButtonIcon: Icon(Icons.play_arrow, color: kPrimaryColor),
         alignment: alignment ?? Alignment.center,
-        outerColor: kPrimaryColor.withOpacity(0.7),
+        outerColor: kcPrimaryColor,
         //text: "Start",
         child: canStartQuest
             ? Shimmer.fromColors(
-                baseColor: kGreyTextColor.withOpacity(0.9),
+                baseColor: kcGreyTextColor.withOpacity(1),
                 highlightColor: Colors.white,
                 period: const Duration(milliseconds: 1000),
                 child: AfkCreditsText.subheading("      Start"),
-                // Text("    Start",
-                //     style: textTheme(context)
-                //         .headline6!
-                //         .copyWith(fontSize: 18, color: kWhiteTextColor)),
               )
             : Text("Cannot start",
                 style: textTheme(context)
                     .headline6!
-                    .copyWith(fontSize: 22, color: kWhiteTextColor)),
+                    .copyWith(fontSize: 22, color: kcWhiteTextColor)),
         height: 50,
         elevation: 1,
         sliderRotate: false,
         //key: _key,
         onSubmit: canStartQuest ? onSubmit : null,
-        borderRadius: 15,
+        borderRadius: 30,
         //sliderButtonIcon: Icon(Icons.play_arrow)
         // submittedIcon: Icon(Icons.railway_alert),
         // animationDuration: Duration(seconds: 1),

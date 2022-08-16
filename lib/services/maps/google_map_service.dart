@@ -110,7 +110,8 @@ class GoogleMapService {
   static void configureAndAddMapMarker(
       {required Quest quest,
       required AFKMarker afkmarker,
-      required Future Function() onTap}) {
+      required Future Function() onTap,
+      bool completed = false}) {
     Marker marker = Marker(
       markerId: MarkerId(afkmarker
           .id), // google maps marker id of start marker will be our quest id
@@ -120,7 +121,8 @@ class GoogleMapService {
       //  InfoWindow(
       //     title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
       // InfoWindow(snippet: quest.name),
-      icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
+      icon: defineMarkersColour(
+          quest: quest, afkmarker: afkmarker, completed: completed),
       onTap: () async {
         // needed to avoid navigating to that marker!
         dontMoveCamera();
@@ -136,9 +138,9 @@ class GoogleMapService {
       required double lon,
       required bool isCoin}) async {
     final coinBitmap = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(3, 3)), kAFKCreditsLogoSmallPath);
+        ImageConfiguration(size: Size(4, 4)), kAFKCreditsLogoSmallPath);
     final treasureBitmap = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(3, 3)), kTreasureIconSmallPath);
+        ImageConfiguration(size: Size(4, 4)), kTreasureIconSmallPath);
     Marker marker = Marker(
       markerId: MarkerId("COIN" +
           isCoin
@@ -234,7 +236,9 @@ class GoogleMapService {
   ///////////////////////////////////////////////////////////
   /// Map Style
   static BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker, required Quest? quest}) {
+      {required AFKMarker afkmarker,
+      required Quest? quest,
+      required bool completed}) {
     //   return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
     // }
     // if (hasActiveQuest) {
@@ -246,16 +250,23 @@ class GoogleMapService {
     //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
     //   }
     // } else {
-    if (quest?.type == QuestType.QRCodeHike) {
-      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
-    } else if (quest?.type == QuestType.TreasureLocationSearch) {
-      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
+    if (completed) {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
     } else {
-      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+      if (quest?.type == QuestType.QRCodeHike) {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueOrange);
+      } else if (quest?.type == QuestType.TreasureLocationSearch) {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueViolet);
+      } else {
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+      }
     }
   }
 }
 
+//Ben I just wonder why are we defining a function type ViewModel into services.
 Future<MapViewModel> presolveMapViewModel() async {
   MapViewModel _instance = MapViewModel(
     moveCamera: GoogleMapService.moveCamera,

@@ -41,7 +41,7 @@ export class AFKCreditsBookkeeper {
   }
 
   // update Statistics when a quest has been finished by user with uid uid
-  async updateStatsOnFinishedQuest(transaction: any, uid: string, afkCreditsEarned: number) {
+  async updateStatsOnFinishedQuest(transaction: any, uid: string, afkCreditsEarned: number, questId: string) {
     log("Entering updateStatsOnFinishedQuest()");
 
     // fetch documents
@@ -53,7 +53,7 @@ export class AFKCreditsBookkeeper {
     }
     const userStats = userDoc.data();
 
-    // ! This check is crucual!
+    // ! This check is crucual! (Since we changed our business model we let this pass atm!)
     if (userStats != null) {
       log('Fetched user statistics document');
       // Validate request (validate whether current amount of GW is enough)
@@ -64,6 +64,7 @@ export class AFKCreditsBookkeeper {
       throw Error("No data in summary statistics document!");
     }
 
+    userStats["completedQuestIds"].push(questId);
     const increment = admin.firestore.FieldValue.increment(afkCreditsEarned);
     const incrementNumberQuests = admin.firestore.FieldValue.increment(1);
 
@@ -81,6 +82,7 @@ export class AFKCreditsBookkeeper {
       afkCreditsBalance: increment, // increment afk credits balance
       lifetimeEarnings: increment, // increment lifetime earnings
       numberQuestsCompleted: incrementNumberQuests,  // increment number of quests completed
+      completedQuestIds: userStats["completedQuestIds"],
     });
   }
 
@@ -172,12 +174,14 @@ export class AFKCreditsBookkeeper {
   private hasEnoughBalance(currentBalance: number, amountToDeduct: number) {
     log(`amountToDeduct: ${amountToDeduct}`);
     log(`currentBalance: ${currentBalance}`);
-    return Math.abs(amountToDeduct) <= currentBalance;
+    // return Math.abs(amountToDeduct) <= currentBalance;
+    return true;
   }
 
   private hasEnoughAFKCredits(currentCreditBalance: number, amountToDeduct: number) {
     log(`amountToDeduct: ${amountToDeduct}`);
     log(`current AFK Credits Balance: ${currentCreditBalance}`);
-    return Math.abs(amountToDeduct) <= currentCreditBalance;
+    //return Math.abs(amountToDeduct) <= currentCreditBalance;
+    return true;
   }
 }
