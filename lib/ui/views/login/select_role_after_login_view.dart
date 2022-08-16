@@ -5,9 +5,9 @@ import 'package:afkcredits/ui/views/login/select_role_after_login_viewmodel.dart
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-///////////////////////////////////
-// THIS class is called
-// when the user logs in with a third party provider!
+// ----------------------------------------------------
+// ! THIS class is called
+// ! when the user logs in with a third party provider!
 
 class SelectRoleAfterLoginView extends StatelessWidget {
   final AuthenticationMethod authMethod;
@@ -21,16 +21,15 @@ class SelectRoleAfterLoginView extends StatelessWidget {
           SelectRoleAfterLoginViewModel(authMethod: authMethod),
       builder: (context, model, child) => SelectUserRoleLayout(
         onBackPressed: model.navigateToLoginView,
-        onExplorerPressed: () =>
-            model.createAccountAndNavigateToHome(role: UserRole.explorer),
+        onExplorerPressed: model.showNotImplementedSnackbar,
         onSponsorPressed: () =>
             model.createAccountAndNavigateToHome(role: UserRole.sponsor),
-        onSuperUserPressed: () =>
-            model.createAccountAndNavigateToHome(role: UserRole.superUser),
-        onAdminMasterPressed: () =>
-            model.createAccountAndNavigateToHome(role: UserRole.adminMaster),
-        onAdminPressed: () =>
-            model.createAccountAndNavigateToHome(role: UserRole.admin),
+        // onSuperUserPressed: () =>
+        //     model.createAccountAndNavigateToHome(role: UserRole.superUser),
+        // onAdminMasterPressed: () =>
+        //     model.createAccountAndNavigateToHome(role: UserRole.adminMaster),
+        // onAdminPressed: () =>
+        //     model.createAccountAndNavigateToHome(role: UserRole.admin),
         isBusy: model.isBusy,
       ),
     );

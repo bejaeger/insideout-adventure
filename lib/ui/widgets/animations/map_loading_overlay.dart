@@ -14,20 +14,21 @@ class MapLoadingOverlay extends StatelessWidget {
       opacity: show ? 1 : 0,
       duration: Duration(milliseconds: 500),
       child: Container(
-          color: Colors.grey[100],
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              HerculesWorldLogo(
-                sizeScale: 1,
-              ),
-              verticalSpaceSmall,
-              AFKProgressIndicator(
-                color: kcOrange,
-              )
-            ],
-          )),
+        color: Colors.grey[100],
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // HerculesWorldLogo(
+            //   sizeScale: 1,
+            // ),
+            // verticalSpaceSmall,
+            AFKProgressIndicator(
+              color: kcOrange,
+            )
+          ],
+        ),
+      ),
     );
   }
 }

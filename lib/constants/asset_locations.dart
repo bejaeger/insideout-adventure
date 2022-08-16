@@ -26,6 +26,24 @@ const String kActivityIcon = "assets/icons/run.png";
 const String kScreenTimeIcon = "assets/icons/person.png";
 const String kScreenTimeIcon2 = "assets/icons/computer.png";
 
+// illustrations
+const String kIllustrationActivity =
+    "assets/illustrations/activity_illustration.png";
+   const String kIllustrationActivityWithArrows =
+ "assets/illustrations/activity_illustration_with_arrows.png";
+const String kIllustrationAnnaHercules =
+    "assets/illustrations/anna_hercules_world.png";
+const String kIllustrationInfographicWallet =
+    "assets/illustrations/infographic_wallet.png";
+const String kIllustrationInfographic = "assets/illustrations/infographic.png";
+const String kIllustrationParentsMeditate =
+    "assets/illustrations/parents_meditate.png";
+const String kIllustrationScreenTime = "assets/illustrations/screen_time.png";
+const String kIllustrationWalletEarning =
+    "assets/illustrations/wallet_earning.png";
+const String kIllustrationWalletSpending =
+    "assets/illustrations/wallet_spending.png";
+
 // avatars
 const String kHerculesAvatar2 = "assets/avatars/hercules-avatar2.png";
 const String kHerculesAvatar = "assets/avatars/hercules-avatar.png";

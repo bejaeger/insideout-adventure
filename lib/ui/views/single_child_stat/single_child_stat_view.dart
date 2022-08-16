@@ -100,7 +100,9 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                 Expanded(
                                   child: AfkCreditsButton.outline(
                                     title: "Start screen time",
-                                    onTap: model.showNotImplementedSnackbar,
+                                    onTap: () =>
+                                        model.navToSelectScreenTimeView(
+                                            childId: widget.uid),
                                   ),
                                 ),
                               ],
@@ -242,8 +244,10 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                 date: data.startedAt.toDate(),
                                                 name: model.explorerNameFromUid(
                                                     data.uid),
-                                                credits: data.afkCredits,
-                                                minutes: data.minutes,
+                                                credits: data.afkCreditsUsed ??
+                                                    data.afkCredits,
+                                                minutes: data.minutesUsed ??
+                                                    data.minutes,
                                               ),
                                         if (index !=
                                             model.sortedHistory.length - 1)

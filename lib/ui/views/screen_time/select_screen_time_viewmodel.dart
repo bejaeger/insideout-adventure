@@ -1,8 +1,11 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 
 class SelectScreenTimeViewModel extends BaseModel {
   // ----------------------------------
@@ -13,15 +16,17 @@ class SelectScreenTimeViewModel extends BaseModel {
   // ------------------------------------
   // getters
   int get totalAvailableScreenTime =>
-      _screenTimeService.totalAvailableScreenTime;
-
-// ------------------------
+      _screenTimeService.getTotalAvailableScreenTime(childId: childId);
+  int get afkCreditsBalance =>
+      _screenTimeService.getAfkCreditsBalance(childId: childId).round();
+  // ------------------------
   // state
   int screenTimePreset = 15; // in minutes
 
   // ------------------
   // constructor
-  SelectScreenTimeViewModel() {
+  String? childId;
+  SelectScreenTimeViewModel({this.childId}) {
     if (screenTimePreset > totalAvailableScreenTime) {
       screenTimePreset = totalAvailableScreenTime;
     }
@@ -35,7 +40,8 @@ class SelectScreenTimeViewModel extends BaseModel {
     log.v("set screen time preset to $minutes min");
     screenTimePreset = minutes;
     if (screenTimePreset == -1) {
-      screenTimePreset = _screenTimeService.totalAvailableScreenTime;
+      screenTimePreset =
+          _screenTimeService.getTotalAvailableScreenTime(childId: childId);
     }
     notifyListeners();
   }
@@ -62,14 +68,26 @@ class SelectScreenTimeViewModel extends BaseModel {
             "Do you want to start $screenTimePreset min screen time?"); //, mainButtonTitle: "CANCEL", )
 
     // 4. Navigate to Active Screen Time Screen
-    // 5. Start screen time
-    // Also handles PERMANENT notifications and schedules notifications!
-    // - When user (parent) goes to different apps, he should be able to
-    // see the time still left in the notification
-    // - By tapping the notification he should be navigated to the active screen time screen,
+    //    which also starts screen time
     if (result == null || result?.confirmed == true) {
-      navToActiveScreenTimeView(
-          minutes: useSuperUserFeatures ? 1 : screenTimePreset);
+      if (isParentAccount && childId == null) {
+        log.wtf(
+            "childId cannot be null when accessing screen time from parent account!");
+        showGenericInternalErrorDialog();
+        popView();
+      }
+      // Create screen time session
+      ScreenTimeSession session = ScreenTimeSession(
+        sessionId: "",
+        uid: isParentAccount ? childId! : currentUser.uid,
+        minutes: useSuperUserFeatures ? 1 : screenTimePreset,
+        status: ScreenTimeSessionStatus.active,
+        afkCredits: double.parse(
+            screenTimeToCredits(useSuperUserFeatures ? 1 : screenTimePreset)
+                .toString()),
+      );
+      log.i("Navigating to active screen time view with session");
+      navToActiveScreenTimeView(session: session);
     }
   }
 }

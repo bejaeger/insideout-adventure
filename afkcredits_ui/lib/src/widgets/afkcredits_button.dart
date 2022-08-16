@@ -14,6 +14,7 @@ class AfkCreditsButton extends StatelessWidget {
   final bool textButton;
   final Widget? leading;
   final Color? color;
+  final double? height;
 
   const AfkCreditsButton({
     Key? key,
@@ -25,6 +26,7 @@ class AfkCreditsButton extends StatelessWidget {
     this.onTap,
     this.leading,
     this.color,
+    this.height,
   })  : outline = false,
         super(key: key);
 
@@ -33,6 +35,7 @@ class AfkCreditsButton extends StatelessWidget {
     this.onTap,
     this.leading,
     this.color,
+    this.height,
     this.enabled = false,
   })  : disabled = false,
         busy = false,
@@ -44,6 +47,7 @@ class AfkCreditsButton extends StatelessWidget {
     this.onTap,
     this.leading,
     this.color,
+    this.height,
     this.enabled = false,
   })  : disabled = false,
         busy = false,
@@ -57,7 +61,7 @@ class AfkCreditsButton extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: double.infinity,
-        height: 48,
+        height: height ?? 48,
         alignment: Alignment.center,
         decoration: textButton
             ? null

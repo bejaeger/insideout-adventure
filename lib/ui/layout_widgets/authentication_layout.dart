@@ -4,6 +4,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class AuthenticationLayout extends StatelessWidget {
   final Widget? title;
+  final Widget? logo;
   final Widget? subtitle;
   final String? mainButtonTitle;
   final Widget? form;
@@ -47,6 +48,7 @@ class AuthenticationLayout extends StatelessWidget {
     this.googleText,
     this.onDummyLoginSuperUserTapped,
     this.onDummyLoginAdminMasterTapped,
+    this.logo,
   }) : super(key: key);
 
   @override
@@ -69,7 +71,8 @@ class AuthenticationLayout extends StatelessWidget {
                 onPressed: onBackPressed,
               ),
             // Text(
-            title!,
+            if (title != null) title!,
+            if (logo != null) logo!,
             /*  style: textTheme(context).headline4,
             ), */
             verticalSpaceSmall,
@@ -330,6 +333,7 @@ class AuthenticationLayout extends StatelessWidget {
             verticalSpaceLarge,
             if (releaseName != null)
               Center(child: Text("Release - " + releaseName!)),
+            verticalSpaceMedium,
           ],
         ),
       ),

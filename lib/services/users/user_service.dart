@@ -26,6 +26,7 @@ import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -733,16 +734,18 @@ class UserService {
 
     supportedExplorerScreenTimeSessions.forEach((key, session) {
       session.forEach((element) {
-        if (DateTime.now().difference(element.startedAt.toDate()).inDays >=
-                daysAgo &&
-            DateTime.now().difference(element.startedAt.toDate()).inDays <
-                daysAgo + deltaDays &&
-            (uid == null || uid == key)) {
-          if (screenTime.containsKey(element.uid)) {
-            screenTime[element.uid] =
-                screenTime[element.uid]! + element.minutes;
-          } else {
-            screenTime[element.uid] = element.minutes;
+        if (element.startedAt is Timestamp) {
+          if (DateTime.now().difference(element.startedAt.toDate()).inDays >=
+                  daysAgo &&
+              DateTime.now().difference(element.startedAt.toDate()).inDays <
+                  daysAgo + deltaDays &&
+              (uid == null || uid == key)) {
+            if (screenTime.containsKey(element.uid)) {
+              screenTime[element.uid] =
+                  screenTime[element.uid]! + element.minutes;
+            } else {
+              screenTime[element.uid] = element.minutes;
+            }
           }
         }
       });

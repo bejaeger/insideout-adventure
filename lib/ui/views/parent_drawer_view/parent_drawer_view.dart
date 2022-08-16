@@ -1,3 +1,4 @@
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_view.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
@@ -13,20 +14,21 @@ class ParentDrawerView extends StatelessWidget {
     return ViewModelBuilder<CommonDrawerViewModel>.reactive(
       viewModelBuilder: () => CommonDrawerViewModel(),
       builder: (context, model, child) => CommonDrawerView(children: [
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-        //   child: Row(
-        //     children: [
-        //       Expanded(
-        //         child: AfkCreditsButton(
-        //             title: "List of Quests",
-        //             onTap: model.showNotImplementedSnackbar),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // verticalSpaceMedium,
-        // Divider(),
+        if (model.flavorConfigProvider.flavor == Flavor.dev)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+            child: Row(
+              children: [
+                Expanded(
+                  child: AfkCreditsButton(
+                      title: "Show onboarding screens",
+                      onTap: model.navToOnboardingScreens),
+                ),
+              ],
+            ),
+          ),
+        verticalSpaceMedium,
+        Divider(),
         verticalSpaceMedium,
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),

@@ -7,7 +7,7 @@ class AfkCreditsInputField extends StatelessWidget {
   final String placeholder;
   final Widget? leading;
   final Widget? trailing;
-  final bool password;
+  final bool obscureText;
   final String? errorText;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
@@ -24,7 +24,7 @@ class AfkCreditsInputField extends StatelessWidget {
     this.leading,
     this.trailing,
     this.trailingTapped,
-    this.password = false,
+    this.obscureText = false,
     this.errorText,
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
@@ -36,11 +36,13 @@ class AfkCreditsInputField extends StatelessWidget {
       /// Overriding the default blue color.
       ///
       /// We can also avoid this by changing the [primarySwatch] in MaterialApp
-      data: ThemeData(primaryColor: kcPrimaryColor),
+      data: Theme.of(context).copyWith(
+        primaryColor: kcPrimaryColor,
+      ),
       child: TextField(
         controller: controller,
         style: const TextStyle(height: 1),
-        obscureText: password,
+        obscureText: obscureText,
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
         decoration: InputDecoration(

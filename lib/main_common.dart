@@ -108,6 +108,9 @@ class MyApp extends StatelessWidget {
                   elevation: 5,
                   toolbarHeight: 80,
                   centerTitle: true),
+              colorScheme: ThemeData().colorScheme.copyWith(
+                    primary: kcPrimaryColor,
+                  ),
               primaryIconTheme: IconThemeData(color: Colors.white),
               primaryTextTheme: TextTheme(
                 headline6: TextStyle(

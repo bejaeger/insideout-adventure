@@ -12,6 +12,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
 import '../datamodels/quests/quest.dart';
+import '../datamodels/screentime/screen_time_session.dart';
 import '../datamodels/users/public_info/public_user_info.dart';
 import '../enums/authentication_method.dart';
 import '../enums/bottom_nav_bar_index.dart';
@@ -37,6 +38,7 @@ import '../ui/views/layout/bottom_bar_layout_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_overview_view.dart';
+import '../ui/views/onboarding_screens/onboarding_screens_view.dart';
 import '../ui/views/parent_home/parent_home_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
@@ -92,6 +94,7 @@ class Routes {
   static const String selectScreenTimeView = '/select-screen-time-view';
   static const String hikeQuestView = '/hike-quest-view';
   static const String singleQuestTypeView = '/single-quest-type-view';
+  static const String onBoardingScreensView = '/on-boarding-screens-view';
   static const all = <String>{
     parentHomeView,
     singleMarkerView,
@@ -126,6 +129,7 @@ class Routes {
     selectScreenTimeView,
     hikeQuestView,
     singleQuestTypeView,
+    onBoardingScreensView,
   };
 }
 
@@ -170,6 +174,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
     RouteDef(Routes.hikeQuestView, page: HikeQuestView),
     RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
+    RouteDef(Routes.onBoardingScreensView, page: OnBoardingScreensView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -428,15 +433,21 @@ class StackedRouter extends RouterBase {
       return MaterialPageRoute<dynamic>(
         builder: (context) => ActiveScreenTimeView(
           key: args.key,
-          minutes: args.minutes,
+          session: args.session,
           screenTimeSessionId: args.screenTimeSessionId,
         ),
         settings: data,
       );
     },
     SelectScreenTimeView: (data) {
+      var args = data.getArgs<SelectScreenTimeViewArguments>(
+        orElse: () => SelectScreenTimeViewArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const SelectScreenTimeView(),
+        builder: (context) => SelectScreenTimeView(
+          key: args.key,
+          childId: args.childId,
+        ),
         settings: data,
       );
     },
@@ -458,6 +469,12 @@ class StackedRouter extends RouterBase {
           quest: args.quest,
           questType: args.questType,
         ),
+        settings: data,
+      );
+    },
+    OnBoardingScreensView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const OnBoardingScreensView(),
         settings: data,
       );
     },
@@ -597,10 +614,17 @@ class ARObjectViewArguments {
 /// ActiveScreenTimeView arguments holder class
 class ActiveScreenTimeViewArguments {
   final Key? key;
-  final int minutes;
+  final ScreenTimeSession? session;
   final String? screenTimeSessionId;
   ActiveScreenTimeViewArguments(
-      {this.key, required this.minutes, this.screenTimeSessionId});
+      {this.key, required this.session, this.screenTimeSessionId});
+}
+
+/// SelectScreenTimeView arguments holder class
+class SelectScreenTimeViewArguments {
+  final Key? key;
+  final String? childId;
+  SelectScreenTimeViewArguments({this.key, this.childId});
 }
 
 /// HikeQuestView arguments holder class

@@ -22,8 +22,6 @@ class ScreenTimeService {
 
   // -----------------------------
   // Return values and state
-  int get totalAvailableScreenTime => convertCreditsToScreenTime(
-      credits: _userService.currentUserStats.afkCreditsBalance);
 
   ScreenTimeSession? _currentSession;
   ScreenTimeSession? get currentSession => _currentSession;
@@ -48,6 +46,7 @@ class ScreenTimeService {
   void startScreenTime(
       {required ScreenTimeSession session,
       required void Function() callback}) async {
+    log.i("Starting screen time session");
     _currentSession = session;
     screenTimeStartTime = DateTime.now();
     screenTimeLeftInSeconds = session.minutes * 60;
@@ -75,6 +74,7 @@ class ScreenTimeService {
   void continueScreenTime(
       {required ScreenTimeSession session,
       required void Function() callback}) async {
+    log.i("Continuing screen time session");
     _currentSession = session;
     screenTimeStartTime = session.startedAt.toDate();
     final int diff = DateTime.now().difference(screenTimeStartTime!).inSeconds;
@@ -94,6 +94,7 @@ class ScreenTimeService {
   }
 
   Future handleScreenTimeOverEvent() async {
+    log.i("Handle screen time over event");
     // check if this function was already called
     if (_currentSession == null ||
         _currentSession?.status == ScreenTimeSessionStatus.completed) return;
@@ -113,12 +114,14 @@ class ScreenTimeService {
   }
 
   Future stopScreenTime() async {
+    dynamic returnVal;
     if (_currentSession != null) {
       // check how long session went on
       // delete and don't bookkeep if less than 30 seconds!
       if (DateTime.now().difference(screenTimeStartTime!).inSeconds < 31) {
         _firestoreApi.deleteScreenTimeSession(session: _currentSession!);
-        return false;
+        resetScreenTimeSession();
+        returnVal = false;
       } else {
         // calculate difference
         int minutesUsed =
@@ -137,11 +140,40 @@ class ScreenTimeService {
           deltaCredits: -afkCreditsUsed,
           uid: _currentSession!.uid,
         );
-        return true;
+        returnVal = true;
       }
     }
     resetScreenTimeSession();
-    return "No screen time active";
+    return returnVal == null ? "No screen time active" : returnVal!;
+  }
+
+  Future continueOrBookkeepScreenTimeSessionOnStartup(
+      {required String sessionId, required Function() callback}) async {
+    // load screen time from firestore
+    ScreenTimeSession? session;
+    try {
+      session = await loadActiveScreenTimeSession(sessionId: sessionId);
+    } catch (e) {
+      log.e(
+          "Could not load active screen time from firestore although it is on disk!");
+    }
+    // check status
+    // -> if completed:
+    if (session?.status == ScreenTimeSessionStatus.completed ||
+        session == null) {
+      handleScreenTimeOverEvent();
+    } else {
+      // -> if not completed
+      // --> check if time is UP already?
+      if (DateTime.now().difference(session.startedAt.toDate()).inMinutes >
+          session.minutes) {
+        await handleScreenTimeOverEvent();
+      } else {
+        // --> if NOT: create session with remaining minutes!
+        continueScreenTime(session: session, callback: callback);
+      }
+    }
+    return session;
   }
 
   Future loadActiveScreenTimeSession({required String sessionId}) async {
@@ -166,6 +198,19 @@ class ScreenTimeService {
   // helpers
   int getScreenTimeLeftInMinutes() {
     return DateTime.now().difference(screenTimeStartTime!).inMinutes;
+  }
+
+  dynamic getAfkCreditsBalance({String? childId}) {
+    if (childId == null) {
+      return _userService.currentUserStats.afkCreditsBalance;
+    } else {
+      return _userService.supportedExplorerStats[childId]!.afkCreditsBalance;
+    }
+  }
+
+  int getTotalAvailableScreenTime({String? childId}) {
+    return convertCreditsToScreenTime(
+        credits: getAfkCreditsBalance(childId: childId));
   }
 }
   // ///////////////////////////////////////////////////////////////

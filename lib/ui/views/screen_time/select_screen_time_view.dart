@@ -9,12 +9,14 @@ import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class SelectScreenTimeView extends StatelessWidget {
-  const SelectScreenTimeView({Key? key}) : super(key: key);
+  // childId needs to be provided when accessing this view from the parents account
+  final String? childId;
+  const SelectScreenTimeView({Key? key, this.childId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SelectScreenTimeViewModel>.reactive(
-      viewModelBuilder: () => SelectScreenTimeViewModel(),
+      viewModelBuilder: () => SelectScreenTimeViewModel(childId: childId),
       builder: (context, model, child) {
         return MainPage(
           child: Container(
@@ -24,9 +26,7 @@ class SelectScreenTimeView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: AfkCreditsText.headingOne("Screen time")),
+                  AfkCreditsText.headingOne("Screen time"),
                   verticalSpaceMedium,
                   // Container(
                   //   height: 100,
@@ -62,11 +62,9 @@ class SelectScreenTimeView extends StatelessWidget {
                       // ),
                       Image.asset(kAFKCreditsLogoPath,
                           height: 30, color: kcPrimaryColor),
-
                       horizontalSpaceSmall,
-                      AfkCreditsText.headingThree(model
-                          .currentUserStats.afkCreditsBalance
-                          .toStringAsFixed(0)),
+                      AfkCreditsText.headingThree(
+                          model.afkCreditsBalance.toStringAsFixed(0)),
                       horizontalSpaceSmall,
                       Icon(Icons.arrow_right_alt_rounded, size: 25),
                       verticalSpaceMedium,

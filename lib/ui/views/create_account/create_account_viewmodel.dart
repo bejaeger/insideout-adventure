@@ -15,15 +15,70 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../../app_config_provider.dart';
 
 class CreateAccountViewModel extends AuthenticationViewModel {
-  final UserRole role;
-  CreateAccountViewModel({required this.role}) : super(role: role);
+  // -----------------------------
+  // services
   final log = getLogger("CreateAccountViewModel");
   final UserService _userService = locator<UserService>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final FirebaseAuthenticationService? _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
-
   final _navigationService = locator<NavigationService>();
+
+  // --------------------------
+  // state
+  String? emailInputValidationMessage;
+  String? passwordInputValidationMessage;
+  String? fullNameInputValidationMessage;
+
+  // ---------------------------
+  // member variables
+  final UserRole role;
+  CreateAccountViewModel({required this.role}) : super(role: role);
+
+  // -----------------------------
+  // functions
+  void Function()? onSignUpTapped() {
+    return () {
+      if (!isValidUserInput()) {
+        notifyListeners();
+        return;
+      }
+      saveData(AuthenticationMethod.email);
+    };
+  }
+
+  bool isValidUserInput() {
+    bool returnVal = true;
+    if (emailValue == null || emailValue == "") {
+      emailInputValidationMessage = 'Please provide a valid email address';
+      returnVal = false;
+    }
+    if (passwordValue == null || passwordValue == "") {
+      passwordInputValidationMessage = "Please provide a password";
+      returnVal = false;
+    }
+    if (fullNameValue == null || fullNameValue == "") {
+      fullNameInputValidationMessage = 'Please provide a valid name';
+      returnVal = false;
+    }
+    if (emailValue != null) {
+      bool emailValid =
+          RegExp(r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
+              .hasMatch(emailValue!);
+      if (!emailValid) {
+        emailInputValidationMessage = 'Please provide a valid email address';
+        returnVal = false;
+      }
+    }
+    if (passwordValue != null) {
+      if (passwordValue!.length < 4) {
+        emailInputValidationMessage =
+            'Please choose a password that is at least 4 characters long.';
+        returnVal = false;
+      }
+    }
+    return returnVal;
+  }
 
   @override
   Future<AFKCreditsAuthenticationResultService> runAuthentication(
@@ -48,4 +103,16 @@ class CreateAccountViewModel extends AuthenticationViewModel {
         password: _userService
             .hashPassword(_flavorConfigProvider.getTestUserPassword()),
       );
+
+  void resetValidationMessages() {
+    emailInputValidationMessage = null;
+    fullNameInputValidationMessage = null;
+    passwordInputValidationMessage = null;
+    notifyListeners();
+  }
+
+  void setFormStatus() {
+    log.i('Set the form status with data: $formValueMap');
+    resetValidationMessages();
+  }
 }

@@ -97,8 +97,8 @@ class ActiveTreasureLocationSearchQuestViewModel
       mapViewModel.resetMapMarkers();
       // quest started!
       // start listening to position
-      Notifications().createPermanentNotification(
-          title: "Search quest ongoing", message: "Walk and find the credits.");
+      // Notifications().createPermanentNotification(
+      //     title: "Search quest ongoing", message: "Walk and find the credits.");
 
       activeQuestService.listenToPosition(
         distanceFilter: kMinDistanceFromLastCheckInMeters,

@@ -453,10 +453,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
   }
 
-  Future showCollectedMarkerDialog() async {
-    await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
-  }
-
   void maybeSetDistanceToStartMarker({required Quest quest}) async {
     final position = await geolocationService.getUserLivePosition;
     if (position.timestamp != null) {

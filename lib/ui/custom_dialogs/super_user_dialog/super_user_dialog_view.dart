@@ -191,40 +191,53 @@ class SuperUserDialogView extends StatelessWidget {
                         ),
                         Divider(),
                         SwitchListTile(
+                            dense: true,
                             title: Text("Record quest data?"),
-                            subtitle: Text(
-                                "Data is recorded during the quest and pushed to notion."),
+                            //subtitle: Text(
+                            //    "Data is recorded during the quest and pushed to notion."),
                             value: model.isRecordingLocationData,
                             onChanged: (bool value) =>
                                 model.setIsRecordingLocationData(value)),
                         SwitchListTile(
+                            dense: true,
                             title: Text("Permanent Admin Mode?"),
-                            subtitle:
-                                Text("Always show and use admin features"),
+                            //subtitle:
+                            //    Text("Always show and use admin features"),
                             value: model.isPermanentAdminMode,
                             onChanged: (bool value) =>
                                 model.setIsPermanentAdminMode(value)),
                         SwitchListTile(
+                            dense: true,
                             title: Text("Permanent User Mode?"),
-                            subtitle: Text("App behaves as user would see it"),
+                            //subtitle: Text("App behaves as user would see it"),
                             value: model.isPermanentUserMode,
                             onChanged: (bool value) =>
                                 model.setIsPermanentUserMode(value)),
                         SwitchListTile(
-                            title: Text("Allow Dummy Marker Collection"),
-                            subtitle: Text("Collect markers on map by tapping"),
+                            dense: true,
+                            title: Text("Dummy Marker Collection"),
+                            //subtitle: Text("Collect markers on map by tapping"),
                             value: model.allowDummyMarkerCollection,
                             onChanged: (bool value) =>
                                 model.setAllowDummyMarkerCollection(value)),
                         SwitchListTile(
+                            dense: true,
+                            title: Text("AR Marker Collection"),
+                            //subtitle: Text("Complete quest on next step"),
+                            value: model.isARAvailable,
+                            onChanged: (bool value) =>
+                                model.setARFeatureEnabled(value)),
+                        SwitchListTile(
+                            dense: true,
                             title: Text("Enable GPS Verification"),
-                            subtitle: Text("Verify location on quest actions"),
+                            //subtitle: Text("Verify location on quest actions"),
                             value: model.enableGPSVerification,
                             onChanged: (bool value) =>
                                 model.setEnableGPSVerification(value)),
                         SwitchListTile(
+                            dense: true,
                             title: Text("Fake-Complete Quest"),
-                            subtitle: Text("Complete quest on next step"),
+                            //subtitle: Text("Complete quest on next step"),
                             value: model.dummyQuestCompletionVerification,
                             onChanged: (bool value) => model
                                 .setDummyQuestCompletionVerification(value)),

@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -65,6 +66,10 @@ mixin NavigationMixin {
 
   void navToLoginView() {
     _navigationService.replaceWith(Routes.loginView);
+  }
+
+  void navToOnboardingScreens() {
+    _navigationService.navigateTo(Routes.onBoardingScreensView);
   }
 
   void replaceWithExplorerHomeView() {
@@ -153,15 +158,16 @@ mixin NavigationMixin {
         arguments: ARObjectViewArguments(isCoins: isCoins));
   }
 
-  Future navToSelectScreenTimeView() async {
-    await _navigationService.navigateTo(Routes.selectScreenTimeView);
+  Future navToSelectScreenTimeView({String? childId}) async {
+    await _navigationService.navigateTo(Routes.selectScreenTimeView,
+        arguments: SelectScreenTimeViewArguments(childId: childId));
   }
 
   Future navToActiveScreenTimeView(
-      {required int minutes, String? sessionId}) async {
+      {ScreenTimeSession? session, String? sessionId}) async {
     await _navigationService.navigateTo(Routes.activeScreenTimeView,
         arguments: ActiveScreenTimeViewArguments(
-            minutes: minutes, screenTimeSessionId: sessionId));
+            session: session, screenTimeSessionId: sessionId));
   }
 
   Future navigateToGPSAreaQuest(Quest quest) async {

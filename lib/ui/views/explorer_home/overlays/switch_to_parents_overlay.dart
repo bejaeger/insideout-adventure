@@ -21,12 +21,20 @@ class SwitchToParentsAreaButton extends StatelessWidget {
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
-                color: kcGreyTextColor.withOpacity(0.0),
-                borderRadius: BorderRadius.circular(16.0)),
+                color: kcCultured,
+                borderRadius: BorderRadius.circular(16.0),
+                boxShadow: const [
+                  BoxShadow(
+                    color: kcShadowColor,
+                    offset: Offset(1, 1),
+                    blurRadius: 0.5,
+                    spreadRadius: 0.2,
+                  )
+                ]),
             padding: const EdgeInsets.all(8.0),
             alignment: Alignment.center,
             width: 50,
-            height: 100,
+            height: 95,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

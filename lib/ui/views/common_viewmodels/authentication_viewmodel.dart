@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
+import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -20,6 +22,8 @@ abstract class AuthenticationViewModel extends FormViewModel
   AuthenticationViewModel({this.role});
   final NavigationService _navigationService = locator<NavigationService>();
   final UserService _userService = locator<UserService>();
+  final LocalStorageService _localStorageService =
+      locator<LocalStorageService>();
 
   final log = getLogger("AuthenticationViewModel");
 
@@ -80,9 +84,21 @@ abstract class AuthenticationViewModel extends FormViewModel
                 arguments:
                     BottomBarLayoutTemplateViewArguments(userRole: role));
           } else {
-            await _navigationService.replaceWith(
-              Routes.parentHomeView,
-            );
+            // check if onboarding screen was already looked at
+            final onboarded = await _localStorageService.getFromDisk(
+                key: kLocalStorageSawOnBoardingKey);
+            if (onboarded == _userService.currentUser.uid) {
+              await _navigationService.replaceWith(
+                Routes.parentHomeView,
+              );
+            } else {
+              await _navigationService.replaceWith(
+                Routes.onBoardingScreensView,
+              );
+              _localStorageService.saveToDisk(
+                  key: kLocalStorageSawOnBoardingKey,
+                  value: _userService.currentUser.uid);
+            }
           }
 
           // _navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,

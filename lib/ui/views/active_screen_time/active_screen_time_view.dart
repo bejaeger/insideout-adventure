@@ -10,10 +10,10 @@ import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class ActiveScreenTimeView extends StatelessWidget {
-  final int minutes;
+  final ScreenTimeSession? session;
   final String? screenTimeSessionId;
   const ActiveScreenTimeView(
-      {Key? key, required this.minutes, this.screenTimeSessionId})
+      {Key? key, required this.session, this.screenTimeSessionId})
       : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class ActiveScreenTimeView extends StatelessWidget {
         model.initialize();
       },
       viewModelBuilder: () => ActiveScreenTimeViewModel(
-          minutes: minutes, screenTimeSessionId: screenTimeSessionId),
+          session: session, screenTimeSessionId: screenTimeSessionId),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           body: Container(
@@ -41,10 +41,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: AfkCreditsText.headingOne(
-                                      "Active Screen Time")),
+                              AfkCreditsText.headingOne("Screen Time Active"),
                               verticalSpaceMassive,
                               AfkCreditsText.subheading("Time left"),
                               verticalSpaceTiny,

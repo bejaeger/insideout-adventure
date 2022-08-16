@@ -26,22 +26,23 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
       builder: (context, model, child) => Scaffold(
         body: AuthenticationLayout(
           busy: model.isBusy,
-          onMainButtonTapped: () => model.saveData(AuthenticationMethod.email),
+          onMainButtonTapped: model.onSignUpTapped(),
           onBackPressed: model.replaceWithSelectRoleView,
           validationMessage: model.validationMessage,
           title: AfkCreditsText.headingOne('Create $roleString Account'),
-          subtitle: AfkCreditsText.subheading(
+          subtitle: AfkCreditsText.body(
               'Enter your name, email and password for sign up.'),
           mainButtonTitle: 'SIGN UP',
           form: Column(
             children: [
-              //    PratokenteText.headingLogin('Full Name: '),
+              verticalSpaceMedium,
               AfkCreditsInputField(
                 leading: Icon(Icons.person),
                 controller: fullNameController,
                 trailing: Icon(Icons.close),
                 trailingTapped: () => fullNameController.clear(),
-                //leading: Text('Email'),
+                placeholder: 'Name',
+                errorText: model.fullNameInputValidationMessage,
               ),
               verticalSpaceRegular,
               // PratokenteText.headingLogin('Email: '),
@@ -50,17 +51,19 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
                 leading: Icon(Icons.email),
                 trailing: Icon(Icons.close),
                 trailingTapped: () => emailController.clear(),
-                //leading: Text('Email'),
+                placeholder: 'Email',
+                errorText: model.emailInputValidationMessage,
               ),
               verticalSpaceRegular,
               //PratokenteText.headingLogin('Password: '),
               AfkCreditsInputField(
                 leading: Icon(Icons.lock),
                 controller: passwordController,
-                password: true,
+                obscureText: true,
                 trailing: Icon(Icons.close),
                 trailingTapped: () => passwordController.clear(),
-                //leading: Text('Email'),
+                placeholder: "Password",
+                errorText: model.passwordInputValidationMessage,
               ),
             ],
           ),

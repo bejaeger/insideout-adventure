@@ -13,7 +13,6 @@ class ActiveScreenTimeViewModel extends BaseModel {
   // -----------------------------------
   // services
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
-  final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final log = getLogger('ActiveScreenTimeViewModel');
 
   // -----------------------------------
@@ -23,73 +22,51 @@ class ActiveScreenTimeViewModel extends BaseModel {
       : -1;
   ScreenTimeSession? get currentScreenTimeSession =>
       _screenTimeService.currentSession;
-
+  String get childName =>
+      session != null ? userService.explorerNameFromUid(session!.uid) : "";
   // constructor
   // used to start screen time
-  final int minutes;
+  ScreenTimeSession? session;
   // used if previous screen time session was found
   final String? screenTimeSessionId;
-  ActiveScreenTimeViewModel({required this.minutes, this.screenTimeSessionId});
+  ActiveScreenTimeViewModel({required this.session, this.screenTimeSessionId});
 
   Future initialize() async {
+    setBusy(true);
     if (screenTimeSessionId != null) {
       // previous screen time session found on disk
-      setBusy(true);
-
-      // TODO: Streamline this and put business logic in service ?
-      // TODO: -> maybe all in one function?
-
-      // load screen time from firestore
-      final ScreenTimeSession session = await _screenTimeService
-          .loadActiveScreenTimeSession(sessionId: screenTimeSessionId!);
-
-      // check status
-      // -> if completed:
-      if (session.status == ScreenTimeSessionStatus.completed) {
-        _screenTimeService.handleScreenTimeOverEvent();
-      } else {
-        // -> if not completed
-        // --> check if time is UP already?
-        if (DateTime.now().difference(session.startedAt.toDate()).inMinutes >
-            session.minutes) {
-          await _screenTimeService.handleScreenTimeOverEvent();
-        } else {
-          // --> if NOT: create session with remaining minutes!
-          _screenTimeService.continueScreenTime(
-              session: session, callback: listenToTick);
-        }
+      // Try to continue or finish this session!
+      session =
+          await _screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
+              sessionId: screenTimeSessionId!, callback: listenToTick);
+    } else {
+      if (session == null) {
+        showGenericInternalErrorDialog();
+        popView();
+        return;
       }
 
-      setBusy(false);
-    } else {
-      // start a screen time session
-      ScreenTimeSession session = ScreenTimeSession(
-        sessionId: "",
-        uid: currentUser.uid,
-        minutes: minutes,
-        status: ScreenTimeSessionStatus.active,
-        afkCredits: double.parse(screenTimeToCredits(minutes).toString()),
-      );
-
-      DateTime endDate = DateTime.now().add(Duration(minutes: minutes));
+      // start a NEW screen time session
+      DateTime endDate =
+          DateTime.now().add(Duration(minutes: session!.minutes));
 
       // start screen time session
       _screenTimeService.startScreenTime(
-          session: session, callback: listenToTick);
+          session: session!, callback: listenToTick);
 
       // create permanent notification
       Notifications().createPermanentNotification(
           title: "Screen time until " + formatDateToShowTime(endDate),
-          message: currentUser.fullName + " is using screen time");
+          message: userService.explorerNameFromUid(session!.uid) +
+              " is using screen time");
+      // schedule notification
       Notifications().createScheduledNotification(
           title: "Screen time is over!",
-          message: currentUser.fullName + "'s screen time expired.",
+          message: userService.explorerNameFromUid(session!.uid) +
+              "'s screen time expired.",
           date: endDate);
-
-      // TODO: Schedule a notification.
-      // Notifications().createNotificationsTimesUp(message: "Your Time is Up");
-      // stopScreenTimeAfterZero();
     }
+    setBusy(false);
   }
 
   // Future<void> stopScreenTimeAfterZero() async {
@@ -118,19 +95,19 @@ class ActiveScreenTimeViewModel extends BaseModel {
     }
     if (result == null || result?.confirmed == true) {
       await Notifications().setNotificationsValues();
+      await Notifications().dismissPermanentNotifications();
+      await Notifications().dismissScheduledNotifications();
       final res = await _screenTimeService.stopScreenTime();
       if (res is String) {
         log.wtf("Screen time couldn't be stopped, error: $res");
       }
-      await Notifications().dismissPermanentNotifications();
-      await Notifications().dismissScheduledNotifications();
       String snackBarTitle = "";
       String snackBarMsg = "";
-      if (res == true) {
+      if (res == false) {
         snackBarTitle = "Cancelled screentime. ";
         snackBarMsg = "No credits are deducted";
       }
-      if (res == false) {
+      if (res == true) {
         snackBarTitle = "Stopped screentime";
         snackBarMsg = "Credits are deducted accordingly";
       }

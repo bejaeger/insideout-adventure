@@ -56,28 +56,27 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   // bottom sheets
 
   Future showAddExplorerBottomSheet() async {
-    setShowBottomNavBar(false);
-    final result = await _bottomSheetService.showBottomSheet(
-      barrierDismissible: true,
-      title: 'Create new account or search for existing child account?',
-      confirmButtonTitle: 'Create New Child Account',
-      cancelButtonTitle: 'Search',
-    );
-    if (result?.confirmed == true) {
-      await navigationService.navigateTo(Routes.addExplorerView);
-    } else if (result?.confirmed == false) {
-      await navigationService.navigateTo(Routes.searchExplorerView);
-    }
-    setShowBottomNavBar(true);
+    // ! NOT FOR MVP
+    // final result = await _bottomSheetService.showBottomSheet(
+    //   barrierDismissible: true,
+    //   title: 'Create new account or search for existing child account?',
+    //   confirmButtonTitle: 'Create New Child Account',
+    //   cancelButtonTitle: 'Search',
+    // );
+    // if (result?.confirmed == true) {
+    //   await navigationService.navigateTo(Routes.addExplorerView);
+    // } else if (result?.confirmed == false) {
+    //   await navigationService.navigateTo(Routes.searchExplorerView);
+    // }
+    // ! FOR MVP WE ONLY ALLOW CREATING CHILD ACCOUNTS
+    await navigationService.navigateTo(Routes.addExplorerView);
   }
 
   // -------------------------------------------------
   // navigation
 
   void navigateToSingleExplorerView({required String uid}) async {
-    setShowBottomNavBar(false);
     await navigationService.navigateTo(Routes.singleChildStatView,
         arguments: SingleChildStatViewArguments(uid: uid));
-    setShowBottomNavBar(true);
   }
 }

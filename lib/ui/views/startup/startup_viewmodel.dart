@@ -87,8 +87,8 @@ class StartUpViewModel extends TransferBaseViewModel {
               key: kLocalStorageScreenTimeSessionKey);
           if (id != null) {
             // FOUND SCREEN TIME! Navigate to screen time view
-            log.i("Found active screen time");
-            navToActiveScreenTimeView(minutes: 0, sessionId: id);
+            log.i("Found active screen time, navigating to active view");
+            navToActiveScreenTimeView(sessionId: id);
           } else {
             if (localUserRole == UserRole.adminMaster) {
               navToAdminHomeView(role: localUserRole!);

@@ -49,7 +49,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   final QRCodeService qrCodeService = locator<QRCodeService>();
   final GamificationService gamificationService =
       locator<GamificationService>();
-  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
   final baseModelLog = getLogger("BaseModel");
 
@@ -59,6 +58,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   User? get currentUserNullable => userService.currentUserNullable;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
+  bool get isParentAccount => currentUser.role == UserRole.sponsor;
   bool get isAdminMaster => userService.isAdminMaster;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
@@ -142,13 +142,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
-  Future setShowBottomNavBar(bool show) async {
-    if (show == true) {
-      await Future.delayed(Duration(milliseconds: 150));
-    }
-    //layoutService.setShowBottomNavBar(show);
-  }
-
   bool hasEnoughSponsoring({required Quest? quest}) {
     if (quest == null) {
       baseModelLog.e(
@@ -203,11 +196,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         Routes.parentHomeView,
       );
     } else if (currentUser.role == UserRole.adminMaster) {
-      // print("===================");
-      // print("===================");
-      // print("===================");
-      // print("===================");
-      // print("===================");
       await navigationService.clearStackAndShow(
           Routes.bottomBarLayoutTemplateView,
           arguments:
@@ -364,6 +352,10 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     await dialogService.showCustomDialog(variant: DialogType.SuperUserSettings);
     setListenedToNewPosition(false);
     notifyListeners();
+  }
+
+  Future showCollectedMarkerDialog() async {
+    await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
   }
 
   //////////////////////////////////////////

@@ -34,7 +34,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   final log = getLogger('MapViewModel');
   final QuestService questService = locator<QuestService>();
   final _qrCodeService = locator<QRCodeService>();
-  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
 
   // -----------------------------
   // Getters
@@ -68,7 +68,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         //   await dialogService.showDialog(
         //       title: "Sorry", description: "Map not supported on PWA version");
         // } else {
-        if (flavorConfigProvider.enableGPSVerification) {
+        if (appConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
         } else {
@@ -380,7 +380,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         // quest is active, can we collect this marker?
         // what happens when the user collects a marker
         log.i("Quest active, handling qrCodeScanEvent");
-        if (flavorConfigProvider.allowDummyMarkerCollection) {
+        if (appConfigProvider.allowDummyMarkerCollection) {
           MarkerAnalysisResult markerResult =
               await activeQuestService.analyzeMarker(marker: afkmarker);
           await handleMarkerAnalysisResult(markerResult);
@@ -489,8 +489,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     }
     addARObjectToMap(
         onTap: onARObjectMarkerTap,
-        lat: 49.26813866276503,
-        lon: -122.98950899176373,
+        lat: 49.269805968930406,
+        lon: -123.16189607547962,
         isCoin: true);
     addARObjectToMap(
         onTap: onARObjectMarkerTap,
@@ -499,7 +499,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         isCoin: false);
   }
 
-  Future openNewViewSettings(double? lat, double? lon) async {
+  Future changeSettingsForNewView(double? lat, double? lon) async {
     // 1. First take snapshot
     takeSnapshotOfCameraPosition();
 
@@ -515,9 +515,17 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   Future onARObjectMarkerTap(double lat, double lon, bool isCoin) async {
-    await openNewViewSettings(lat, lon);
-    // open AR view
-    return await openARView(lat, lon, isCoin);
+    await changeSettingsForNewView(lat, lon);
+    if (appConfigProvider.isARAvailable) {
+      return await openARView(lat, lon, isCoin);
+    } else {
+      restorePreviousCameraPosition(moveInsteadOfAnimate: true);
+      await Future.delayed(Duration(milliseconds: 200));
+      layoutService.setIsFadingOutOverlay(false);
+      await showCollectedMarkerDialog();
+
+      return true;
+    }
   }
 
   Future openARView(double lat, double lon, bool isCoin) async {
@@ -527,7 +535,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   Future onGPSAreaQuestMarkerTap(double? lat, double? lon, Quest quest) async {
     // set selected quest to show on screen
-    await openNewViewSettings(lat, lon);
+    await changeSettingsForNewView(lat, lon);
     // open standalone quest view
     await openStandaloneQuestUIView(quest);
 

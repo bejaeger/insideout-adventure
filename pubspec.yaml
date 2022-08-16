@@ -124,6 +124,7 @@ dependencies:
   pedometer: ^3.0.0
   flutter_background_service: ^2.0.0
   geopoint: ^1.0.0
+  introduction_screen: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -200,6 +201,15 @@ flutter:
     - assets/icons/run.png
     - assets/icons/person.png
     - assets/icons/computer.png
+    - assets/illustrations/activity_illustration.png
+    - assets/illustrations/anna_hercules_world.png
+    - assets/illustrations/infographic_wallet.png
+    - assets/illustrations/infographic.png
+    - assets/illustrations/parents_meditate.png
+    - assets/illustrations/screen_time.png
+    - assets/illustrations/wallet_earning.png
+    - assets/illustrations/wallet_spending.png
+    - assets/illustrations/activity_illustration_with_arrows.png
 
   # To add assets to your application, add an assets section, like this:
   #assets:
