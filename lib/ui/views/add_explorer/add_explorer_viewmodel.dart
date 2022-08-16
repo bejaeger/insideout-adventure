@@ -34,7 +34,7 @@ class AddExplorerViewModel extends FormViewModel {
       } else {
         // successfully added user
         await _dialogService.showDialog(
-            title: "Successfully added explorer account!");
+            title: "Successfully created child account!");
         _navigationService.back();
       }
     } else {

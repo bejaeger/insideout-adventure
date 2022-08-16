@@ -67,7 +67,12 @@ class ChildStatsCard extends StatelessWidget {
                 ],
               ),
               verticalSpaceSmall,
-              AfkCreditsText.body("Stats last 7 days"),
+              if (activityTimeLastWeek != null || screenTimeLastWeek != null)
+                AfkCreditsText.body("Stats last 7 days"),
+              if (activityTimeLastWeek == null && screenTimeLastWeek == null)
+                AfkCreditsText.body("Switch to " +
+                    user.fullName +
+                    "'s account and let your child earn credits"),
               stats == null
                   ? AFKProgressIndicator()
                   : Column(

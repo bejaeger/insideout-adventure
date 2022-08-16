@@ -22,7 +22,7 @@ class NotificationController {
               'Scheduled notification when screen time is expired.',
           defaultColor: kcPrimaryColor,
           importance: NotificationImportance.High,
-          channelShowBadge: true,
+          //channelShowBadge: true,
         ),
         NotificationChannel(
           channelKey: kPermanentNotificationKey,
@@ -31,7 +31,7 @@ class NotificationController {
               'Basic notifications for ongoing screen time and quests.',
           defaultColor: kcPrimaryColor,
           importance: NotificationImportance.High,
-          channelShowBadge: true,
+          //channelShowBadge: true,
           locked: true,
         ),
       ],

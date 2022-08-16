@@ -33,7 +33,7 @@ const Color kcYellow = Color(0xffFDE74C);
 const Color kcCyan = Color(0xff5BC0EB);
 const Color kcBlue = Color(0xFF3E7FC5);
 
-const Color kcMediumGrey = Color(0xff868686);
+const Color kcMediumGrey = Color.fromARGB(255, 121, 121, 121);
 const Color kcLightGrey = Color(0xffe5e5e5);
 const Color kcVeryLightGrey = Color(0xfff2f2f2);
 const Color kcRed = Color(0xfff44336);

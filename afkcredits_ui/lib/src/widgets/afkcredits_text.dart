@@ -15,6 +15,10 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = heading2Style,
         alignment = align;
+  const AfkCreditsText.headingTwoLight(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = heading2LightStyle,
+        alignment = align;
   const AfkCreditsText.headingThree(this.text,
       {TextAlign align = TextAlign.start})
       : style = heading3Style,

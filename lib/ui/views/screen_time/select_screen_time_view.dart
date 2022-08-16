@@ -148,10 +148,15 @@ class SelectScreenTimeView extends StatelessWidget {
                   // verticalSpaceMedium,
                   Spacer(),
                   AfkCreditsButton(
-                      onTap: model.startScreenTime,
-                      title: model.screenTimePreset != -1
-                          ? "Start ${model.screenTimePreset} min screen time"
-                          : "Start maximum screen time"),
+                      onTap: model.afkCreditsBalance == 0
+                          ? null
+                          : model.startScreenTime,
+                      disabled: model.afkCreditsBalance == 0,
+                      title: model.afkCreditsBalance == 0
+                          ? "Not enough credits"
+                          : model.screenTimePreset != -1
+                              ? "Start ${model.screenTimePreset} min screen time"
+                              : "Start maximum screen time"),
                 ],
               ),
             ),

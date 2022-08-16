@@ -23,6 +23,15 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
   int? get totalChildActivityTrend =>
       userService.totalChildActivityTrend(uid: explorerUid)[explorerUid];
 
+  String get totalChildScreenTimeLastDaysString =>
+      totalChildScreenTimeLastDays != null
+          ? totalChildScreenTimeLastDays.toString()
+          : "0";
+  String get totalChildActivityLastDaysString =>
+      totalChildActivityLastDays != null
+          ? totalChildActivityLastDays.toString()
+          : "0";
+
   String explorerNameFromUid(String uid) {
     return userService.explorerNameFromUid(uid);
   }
