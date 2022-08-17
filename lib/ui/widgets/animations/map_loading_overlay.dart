@@ -24,8 +24,8 @@ class MapLoadingOverlay extends StatelessWidget {
             // ),
             // verticalSpaceSmall,
             AFKProgressIndicator(
-              color: kcOrange,
-            )
+                //color: kcOrange,
+                )
           ],
         ),
       ),

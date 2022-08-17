@@ -53,13 +53,12 @@ class AddExplorerView extends StatelessWidget with $AddExplorerView {
                   ],
                 ),
                 verticalSpaceLarge,
-                model.isBusy
-                    ? CircularProgressIndicator()
-                    : AfkCreditsButton(
-                        // onPressed: model.navigateToExplorerHomeView,
-                        onTap: model.addExplorer,
-                        //child: Text("Go to explorer home/map")),
-                        title: "Create Account"),
+                AfkCreditsButton(
+                    busy: model.isBusy,
+                    // onPressed: model.navigateToExplorerHomeView,
+                    onTap: model.addExplorer,
+                    //child: Text("Go to explorer home/map")),
+                    title: "Create Account"),
               ],
             ),
           ),

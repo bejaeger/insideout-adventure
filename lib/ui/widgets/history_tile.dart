@@ -66,9 +66,10 @@ class HistoryTile extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (!showName) SizedBox(height: 4),
-                Image.asset(screenTime ? kScreenTimeIcon : kActivityIcon,
+                Image.asset(screenTime ? kScreenTimeIcon2 : kActivityIcon,
                     height: showName ? 25 : 30,
                     width: showName ? 25 : 30,
                     color: screenTime ? kcScreenTimeBlue : kcActivityIconColor),

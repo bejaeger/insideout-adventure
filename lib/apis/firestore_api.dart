@@ -730,7 +730,7 @@ class FirestoreApi {
     _documentReference.set(session
         .copyWith(
           sessionId: _documentReference.id,
-          startedAt: FieldValue.serverTimestamp(),
+          //startedAt: Timestamp.now(),
         )
         .toJson());
     //update the newly created document reference with the Firestore Id.

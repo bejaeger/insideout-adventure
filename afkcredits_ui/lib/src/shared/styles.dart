@@ -81,6 +81,12 @@ const TextStyle captionStyleBold = TextStyle(
   color: kcGreyTextColor,
   overflow: TextOverflow.ellipsis,
 );
+const TextStyle captionStyleBoldRed = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+  color: kcRed,
+  overflow: TextOverflow.ellipsis,
+);
 const TextStyle captionStyleBoldLight = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w600,

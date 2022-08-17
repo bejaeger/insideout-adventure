@@ -89,6 +89,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                             verticalSpaceSmall,
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
                                   child: AfkCreditsButton.outline(
@@ -98,11 +99,24 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                 ),
                                 horizontalSpaceMedium,
                                 Expanded(
-                                  child: AfkCreditsButton.outline(
-                                    title: "Start screen time",
-                                    onTap: () =>
-                                        model.navToSelectScreenTimeView(
-                                            childId: widget.uid),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      AfkCreditsButton.outline(
+                                        title: "Start screen time",
+                                        onTap: model.isScreenTimeActive
+                                            ? null
+                                            : () =>
+                                                model.navToSelectScreenTimeView(
+                                                    childId: widget.uid),
+                                        color: model.isScreenTimeActive
+                                            ? kcMediumGrey
+                                            : null,
+                                      ),
+                                      if (model.isScreenTimeActive)
+                                        AfkCreditsText.warn(
+                                            "Screen time running"),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -163,7 +177,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset(kScreenTimeIcon,
+                                      Image.asset(kScreenTimeIcon2,
                                           height: 40,
                                           width: 40,
                                           color: kcScreenTimeBlue),

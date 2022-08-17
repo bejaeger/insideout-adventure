@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -5,21 +6,24 @@ import 'package:flutter/material.dart';
 class SimpleStatisticsDisplay extends StatelessWidget {
   final String? title;
   final String statistic;
-  final bool showCreditsSymbol;
+  final bool showCreditsIcon;
+  final bool showScreenTimeIcon;
+
   final String? dollarValue;
   const SimpleStatisticsDisplay({
     Key? key,
     this.title,
     required this.statistic,
-    this.showCreditsSymbol = false,
+    this.showCreditsIcon = false,
     this.dollarValue,
+    this.showScreenTimeIcon = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: showCreditsSymbol
+      crossAxisAlignment: showCreditsIcon
           ? CrossAxisAlignment.start
           : CrossAxisAlignment.center,
       children: [
@@ -35,8 +39,16 @@ class SimpleStatisticsDisplay extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                if (showCreditsSymbol)
+                if (showCreditsIcon)
                   AFKCreditsIcon(height: 40, alignment: Alignment.centerLeft),
+                if (showScreenTimeIcon)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(kScreenTimeIcon2,
+                        height: 35,
+                        alignment: Alignment.centerLeft,
+                        color: kcScreenTimeBlue),
+                  ),
                 Text(
                   statistic,
                   style: textTheme(context).bodyText2!.copyWith(

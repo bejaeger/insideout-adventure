@@ -21,6 +21,23 @@ class Notifications {
     );
   }
 
+  // ? NOT USED AT THE MOMENT
+  Future<void> createUpdatedScreenTimeNotification(
+      {required String title, required String message}) async {
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        displayOnForeground: true, // just update the other notification
+        displayOnBackground: true,
+        id: createUniqueId(),
+        channelKey: kUpdatedScreenTimeNotificationKey,
+        title: '${Emojis.time_alarm_clock} ' + title,
+        body: message,
+        locked: true,
+        autoDismissible: false,
+      ),
+    );
+  }
+
   Future<void> createScheduledNotification(
       {required String title,
       required String message,
@@ -44,6 +61,11 @@ class Notifications {
   Future<void> dismissPermanentNotifications() async {
     await AwesomeNotifications()
         .dismissNotificationsByChannelKey(kPermanentNotificationKey);
+  }
+
+  Future<void> dismissUpdatedScreenTimeNotifications() async {
+    await AwesomeNotifications()
+        .dismissNotificationsByChannelKey(kUpdatedScreenTimeNotificationKey);
   }
 
   Future<void> dismissScheduledNotifications() async {

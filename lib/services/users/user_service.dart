@@ -679,8 +679,15 @@ class UserService {
         sortedQuests = supportedExplorerQuestsHistory[uid]!;
       }
     }
-    sortedQuests
-        .sort((a, b) => b.createdAt.toDate().compareTo(a.createdAt.toDate()));
+    sortedQuests.sort((a, b) {
+      if (b.createdAt is String) {
+        return -1;
+      }
+      if (a.createdAt is String) {
+        return -1;
+      }
+      return b.createdAt.toDate().compareTo(a.createdAt.toDate());
+    });
     return sortedQuests;
   }
 
@@ -695,8 +702,15 @@ class UserService {
         sortedSessions = supportedExplorerScreenTimeSessions[uid]!;
       }
     }
-    sortedSessions
-        .sort((a, b) => b.startedAt.toDate().compareTo(a.startedAt.toDate()));
+    sortedSessions.sort((a, b) {
+      if (b.startedAt is String) {
+        return -1;
+      }
+      if (a.startedAt is String) {
+        return -1;
+      }
+      return b.startedAt.toDate().compareTo(a.startedAt.toDate());
+    });
     return sortedSessions;
   }
 
@@ -713,16 +727,22 @@ class UserService {
       }
     }
     list.sort((a, b) {
-      DateTime? date1;
-      DateTime? date2;
+      dynamic date1;
+      dynamic date2;
       if (a is ActivatedQuest)
-        date1 = a.createdAt.toDate();
+        date1 = a.createdAt;
       else
-        date1 = a.startedAt.toDate();
+        date1 = a.startedAt;
       if (b is ActivatedQuest)
-        date2 = b.createdAt.toDate();
+        date2 = b.createdAt;
       else
-        date2 = b.startedAt.toDate();
+        date2 = b.startedAt;
+      if (date1 is String || date2 is String) {
+        return -1;
+      } else {
+        date1 = date1.toDate();
+        date2 = date2.toDate();
+      }
       return date2!.compareTo(date1!);
     });
     return list;

@@ -63,6 +63,10 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = captionStyleBold,
         alignment = align;
+  const AfkCreditsText.captionBoldRed(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = captionStyleBoldRed,
+        alignment = align;
   const AfkCreditsText.captionBoldLight(this.text,
       {TextAlign align = TextAlign.start})
       : style = captionStyleBoldLight,

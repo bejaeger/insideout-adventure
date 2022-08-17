@@ -235,7 +235,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     addAllQuestMarkers();
 
     // reset selected quest after delay so the fade out is smooth
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 800));
 
     // reset flags
     layoutService.setIsMovingCamera(false);

@@ -34,6 +34,15 @@ class NotificationController {
           //channelShowBadge: true,
           locked: true,
         ),
+        NotificationChannel(
+          channelKey: kUpdatedScreenTimeNotificationKey,
+          channelName: kUpdatedScreenTimeNotificationChannelName,
+          channelDescription: 'Basic notifications for updated screen times.',
+          defaultColor: kcPrimaryColor,
+          importance: NotificationImportance.High,
+          //channelShowBadge: true,
+          locked: true,
+        ),
       ],
       debug: true,
     );

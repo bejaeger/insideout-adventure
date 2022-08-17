@@ -23,6 +23,7 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stacked/stacked.dart';
@@ -49,6 +50,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   final QRCodeService qrCodeService = locator<QRCodeService>();
   final GamificationService gamificationService =
       locator<GamificationService>();
+  final ScreenTimeService screenTimeService = locator<ScreenTimeService>();
 
   final baseModelLog = getLogger("BaseModel");
 
@@ -97,6 +99,20 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
+  bool get isScreenTimeActive => screenTimeService.currentSession != null;
+  String? get screenTimeSessionId =>
+      screenTimeService.currentSession?.sessionId;
+  int? get screenTimeLeft => screenTimeService.screenTimeLeftInSeconds;
+  String? get screenTimeLeftString =>
+      secondsToMinuteTime(screenTimeService.screenTimeLeftInSeconds);
+
+  bool usingScreenTime({required String uid}) {
+    return screenTimeService.currentSession?.uid == uid;
+  }
+
+  void listenToScreenTime() {
+    screenTimeService.setupScreenTimeListener(callback: notifyListeners);
+  }
 
   Future clearServiceData(
       {bool logOutFromFirebase = true,

@@ -151,3 +151,7 @@ const String kPermanentNotificationKey = "permanent_notification";
 const String kPermanentNotificationName = "Permanent notifications";
 const String kScheduledNotificationChannelKey = "scheduled_notification";
 const String kScheduledNotificationChannelName = "Scheduled notifications";
+const String kUpdatedScreenTimeNotificationKey =
+    "screentime_update_notification";
+const String kUpdatedScreenTimeNotificationChannelName =
+    "Screentime notifications";

@@ -72,7 +72,8 @@ class MainFooterOverlayView extends StatelessWidget {
                     child: OutlineBox(
                       width: 80,
                       height: 60,
-                      borderWidth: 0,
+                      borderWidth: model.isScreenTimeActive ? 4 : 0,
+                      borderColor: model.isScreenTimeActive ? kcRed : null,
                       text: "SCREEN TIME",
                       onPressed: model.navToSelectScreenTimeView,
                       color: kcPrimaryColor,

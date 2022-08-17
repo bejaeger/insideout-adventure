@@ -511,7 +511,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     if (lat != null && lon != null) {
       _animateCamera(customLat: lat, customLon: lon, force: true);
     }
-    await Future.delayed(Duration(milliseconds: 1000));
+    await Future.delayed(Duration(milliseconds: 800));
   }
 
   Future onARObjectMarkerTap(double lat, double lon, bool isCoin) async {

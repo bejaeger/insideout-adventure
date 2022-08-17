@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/parent_drawer_view/parent_drawer_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
@@ -13,7 +12,6 @@ import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/history_tile.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -29,7 +27,12 @@ class ParentHomeView extends StatelessWidget {
       fireOnModelReadyOnce: true,
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
-          appBar: CustomAppBar(showLogo: true, title: " ", drawer: true),
+          appBar: CustomAppBar(
+            showLogo: true,
+            title: " ",
+            drawer: true,
+            showRedLiveButton: model.isScreenTimeActive,
+          ),
           endDrawer: const ParentDrawerView(),
           floatingActionButton: BottomFloatingActionButtons(
             swapButtons: true,
@@ -80,13 +83,8 @@ class ParentHomeView extends StatelessWidget {
                         ),
                 if (model.supportedExplorers.length > 0)
                   ChildrenStatsList(
-                    screenTimeLastWeek: model.totalChildScreenTimeLastDays,
-                    activityTimeLastWeek: model.totalChildActivityLastDays,
-                    screenTimeTrend: model.totalChildScreenTimeTrend,
-                    activityTimeTrend: model.totalChildActivityTrend,
-                    explorersStats: model.childStats,
-                    explorers: model.supportedExplorers,
-                    onChildCardPressed: model.navigateToSingleExplorerView,
+                    viewModel: model,
+                    // usingScreenTime: model.usingScreenTime(uid: model.),
                     // onAddNewExplorerPressed:
                     //     model.showAddExplorerBottomSheet
                   ),
@@ -133,7 +131,9 @@ class ParentHomeView extends StatelessWidget {
                                       )
                                     : HistoryTile(
                                         screenTime: true,
-                                        date: data.startedAt.toDate(),
+                                        date: data.startedAt is String
+                                            ? DateTime.now()
+                                            : data.startedAt.toDate(),
                                         name:
                                             model.explorerNameFromUid(data.uid),
                                         credits: data.afkCreditsUsed ??
@@ -162,25 +162,11 @@ class ParentHomeView extends StatelessWidget {
 }
 
 class ChildrenStatsList extends StatelessWidget {
-  final List<User> explorers;
-  final Map<String, UserStatistics>? explorersStats;
-  final Map<String, int> screenTimeLastWeek;
-  final Map<String, int> activityTimeLastWeek;
-  final Map<String, int> screenTimeTrend;
-  final Map<String, int> activityTimeTrend;
-  // final void Function() onAddNewExplorerPressed;
-  final void Function({required String uid}) onChildCardPressed;
+  final ParentHomeViewModel viewModel;
 
   const ChildrenStatsList({
     Key? key,
-    required this.screenTimeLastWeek,
-    required this.activityTimeLastWeek,
-    required this.screenTimeTrend,
-    required this.activityTimeTrend,
-    required this.explorers,
-    required this.explorersStats,
-    // required this.onAddNewExplorerPressed,
-    required this.onChildCardPressed,
+    required this.viewModel,
   }) : super(key: key);
 
   @override
@@ -191,22 +177,29 @@ class ChildrenStatsList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         physics: ScrollPhysics(),
         //shrinkWrap: true,
-        itemCount: explorers.length,
+        itemCount: viewModel.supportedExplorers.length,
         itemBuilder: (context, index) {
+          String uid = viewModel.supportedExplorers[index].uid;
+          User explorer = viewModel.supportedExplorers[index];
           return Padding(
             padding: EdgeInsets.only(
                 left: (index == 0) ? 20.0 : 5.0,
-                right: (index == explorers.length - 1) ? 20.0 : 0),
+                right: (index == viewModel.supportedExplorers.length - 1)
+                    ? 20.0
+                    : 0),
             child: GestureDetector(
-              onTap: () => onChildCardPressed(uid: explorers[index].uid),
+              onTap: () =>
+                  viewModel.navigateToScreenTimeOrSingleChildView(uid: uid),
               child: ChildStatsCard(
-                  screenTimeLastWeek: screenTimeLastWeek[explorers[index].uid],
+                  screenTimeLastWeek:
+                      viewModel.totalChildScreenTimeLastDays[uid],
                   activityTimeLastWeek:
-                      activityTimeLastWeek[explorers[index].uid],
-                  screenTimeTrend: screenTimeTrend[explorers[index].uid],
-                  activityTimeTrend: activityTimeTrend[explorers[index].uid],
-                  user: explorers[index],
-                  childrenStats: explorersStats),
+                      viewModel.totalChildActivityLastDays[uid],
+                  screenTimeTrend: viewModel.totalChildScreenTimeTrend[uid],
+                  activityTimeTrend: viewModel.totalChildActivityTrend[uid],
+                  user: explorer,
+                  childStats: viewModel.childStats[uid],
+                  usingScreenTime: viewModel.usingScreenTime(uid: uid)),
             ),
           );
         },
