@@ -55,6 +55,10 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = subheadingStyle,
         alignment = align;
+  const AfkCreditsText.subheadingItalic(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = subheadingStyleItalic,
+        alignment = align;
   const AfkCreditsText.caption(this.text, {TextAlign align = TextAlign.start})
       : style = captionStyle,
         alignment = align;

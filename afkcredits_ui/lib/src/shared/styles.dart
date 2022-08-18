@@ -68,6 +68,11 @@ const TextStyle subheadingStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w400,
 );
+const TextStyle subheadingStyleItalic = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w400,
+  fontStyle: FontStyle.italic,
+);
 
 const TextStyle captionStyle = TextStyle(
   fontSize: 12,

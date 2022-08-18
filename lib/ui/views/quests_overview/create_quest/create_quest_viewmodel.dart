@@ -1,5 +1,8 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/constants/app_strings.dart';
+import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
@@ -10,6 +13,7 @@ import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../datamodels/quests/quest.dart';
@@ -24,11 +28,13 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final _userService = locator<UserService>();
   //CameraPosition? _initialCameraPosition;
   final _displaySnackBars = DisplaySnackBars();
+  final SnackbarService snackbarService = locator<SnackbarService>();
+  final DialogService _dialogService = locator<DialogService>();
 
   int pageIndex = 0;
   bool isLoading = false;
   bool result = false;
-  QuestType? _questType;
+  QuestType selectedQuestType = QuestType.TreasureLocationSearch;
 
   String? afkCreditsInputValidationMessage;
   String? nameInputValidationMessage;
@@ -60,19 +66,33 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   // Back or next navigations
   Future onNextButton(PageController controller) async {
     if (pageIndex == 0) {
-      // VALIDATE INPUTS
-      if (isValidUserInputs()) {
+      // Name and description inputs
+      if (isValidUserInputs(name: true, description: true)) {
         controller.nextPage(
             duration: Duration(milliseconds: 200), curve: Curves.easeIn);
         pageIndex = pageIndex + 1;
         notifyListeners();
       }
     } else if (pageIndex == 1) {
-      // CREATE QUEST
+      // quest type selection input
+      controller.nextPage(
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+      pageIndex = pageIndex + 1;
+      notifyListeners();
+    } else if (pageIndex == 2) {
+      // quest marker selection
       if (getAFKMarkers.length < 2) {
         return null;
       } else {
-        await clearFieldsAndNavigate();
+        controller.nextPage(
+            duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+        pageIndex = pageIndex + 1;
+        notifyListeners();
+      }
+    } else if (pageIndex == 3) {
+      // number credits selection
+      if (isValidUserInputs()) {
+        await createQuestAndNavigateBack();
       }
     }
   }
@@ -84,29 +104,43 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     notifyListeners();
   }
 
-  bool isValidUserInputs() {
+  bool isValidUserInputs(
+      {bool name = false,
+      bool description = false,
+      bool type = false,
+      bool credits = false}) {
     resetValidationMessages();
     bool isValid = true;
-    if (afkCreditAmountValue == null) {
+    if (credits && afkCreditAmountValue == null) {
       afkCreditsInputValidationMessage = 'Choose AFK Credits amount';
       isValid = false;
     }
     // also check type of afkCredits input
-    try {
-      num tmpValue = num.parse(afkCreditAmountValue.toString());
-    } catch (e) {
-      if (e is FormatException) {
-        afkCreditsInputValidationMessage = "Please provide a numerical value";
-        isValid = false;
-      } else {
-        rethrow;
+    if (credits) {
+      try {
+        num tmpValue = num.parse(afkCreditAmountValue.toString());
+      } catch (e) {
+        if (e is FormatException) {
+          afkCreditsInputValidationMessage = "Please provide a numerical value";
+          isValid = false;
+        } else {
+          rethrow;
+        }
       }
     }
-    if (nameValue == null) {
+    if (name && nameValue == null) {
       nameInputValidationMessage = 'Please choose a valid quest name';
       isValid = false;
     }
-    if (_questType == null) {
+    if (name && nameValue == "") {
+      nameInputValidationMessage = 'Please choose a valid quest name';
+      isValid = false;
+    }
+    if (description && descriptionValue == null) {
+      nameInputValidationMessage = 'Please choose a valid quest description';
+      isValid = false;
+    }
+    if (type && selectedQuestType == null) {
       questTypeInputValidationMessage = "Please choose a valid quest type";
       isValid = false;
     }
@@ -126,6 +160,31 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     return true;
   }
 
+  // quest types
+  void selectQuestType({required QuestType type}) {
+    selectedQuestType = type;
+    notifyListeners();
+  }
+
+  String getQuestTypeExplanation() {
+    switch (selectedQuestType) {
+      case QuestType.DistanceEstimate:
+        return kDistanceEstimateDescription;
+      case QuestType.TreasureLocationSearch:
+        return kLocationSearchDescription;
+      case QuestType.QRCodeHunt:
+        return kGPSAreaHikeDescription;
+      case QuestType.QRCodeHike:
+        return kGPSAreaHikeDescription;
+      case QuestType.GPSAreaHike:
+        return kGPSAreaHikeDescription;
+      case QuestType.GPSAreaHunt:
+        return kGPSAreaHikeDescription;
+      default:
+        return kGPSAreaHikeDescription;
+    }
+  }
+
   Future<bool?> _createQuest() async {
     if (!isValidUserInputs()) return false;
     isLoading = true;
@@ -143,7 +202,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
           finishMarker: getAFKMarkers.last,
           name: nameValue.toString(),
           description: descriptionValue.toString(),
-          type: _questType!,
+          type: selectedQuestType,
           markers: getAFKMarkers,
           afkCredits: afkCreditAmount),
     );
@@ -153,7 +212,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
           id: questId,
           name: nameValue.toString(),
           description: descriptionValue.toString(),
-          type: _questType!.toSimpleString(),
+          type: selectedQuestType.toSimpleString(),
           //type: _questType.toString().split('.').elementAt(1),
           afkCredits: afkCreditAmount,
           afkMarkersPositions: getAfkMarkersPosition,
@@ -172,7 +231,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     return false;
   }
 
-  Future<bool> clearFieldsAndNavigate() async {
+  Future<bool> createQuestAndNavigateBack() async {
     result = await _createQuest() ?? false;
     if (result) {
       resetMarkersValues();
@@ -182,10 +241,69 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   }
 
   void displayMarkersOnMap(LatLng pos) {
-    setBusy(true);
+    if (selectedQuestType == QuestType.TreasureLocationSearch) {
+      if (getAFKMarkers.length == 2) {
+        snackbarService.showSnackbar(
+            title: "Oops...",
+            message: "Search quests only allow for two markers",
+            duration: Duration(seconds: 1));
+        return;
+      }
+    }
     addMarkerOnMap(pos: pos, number: getAFKMarkers.length);
-    setBusy(false);
     notifyListeners();
+  }
+
+  // THE FOLLOWING IS VERY IMPORTANT!
+  double getTotalDistanceOfMarkers() {
+    AFKMarker? previousMarker;
+    double totalDistanceInMeter = 0;
+    getAFKMarkers.forEach(
+      (marker) {
+        if (previousMarker != null) {
+          double distance = _geoLocationService.distanceBetween(
+              lat1: previousMarker!.lat,
+              lon1: previousMarker!.lon,
+              lat2: marker.lat,
+              lon2: marker.lon);
+          totalDistanceInMeter = totalDistanceInMeter + distance;
+        }
+        previousMarker = marker;
+      },
+    );
+    return totalDistanceInMeter;
+  }
+
+  int getExpectedDurationOfQuestInMinutes({double? distanceMarkers}) {
+    late double actualDistanceMarkers;
+    if (distanceMarkers == null) {
+      actualDistanceMarkers = getTotalDistanceOfMarkers();
+    } else {
+      actualDistanceMarkers = distanceMarkers;
+    }
+    return (actualDistanceMarkers / 1000 * 20).round();
+  }
+
+  int getRecommendedCredits({int? durationQuestInMinutes}) {
+    late int actualDuration;
+    if (durationQuestInMinutes == null) {
+      actualDuration = getExpectedDurationOfQuestInMinutes();
+    } else {
+      actualDuration = durationQuestInMinutes;
+    }
+    return (actualDuration / 2).round();
+  }
+
+  void showCreditsSuggestionDialog() {
+    double totalDistanceInMeter = getTotalDistanceOfMarkers();
+    int durationQuestInMinutes = getExpectedDurationOfQuestInMinutes(
+        distanceMarkers: totalDistanceInMeter);
+    int recommendedCredits =
+        getRecommendedCredits(durationQuestInMinutes: durationQuestInMinutes);
+    _dialogService.showDialog(
+        title: "Recommendation",
+        description:
+            "Your markers are ${totalDistanceInMeter.toStringAsFixed(1)} m apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend $recommendedCredits credits.");
   }
 
   void resetValidationMessages() {
@@ -211,9 +329,5 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   void dispose() {
     _googleMapController?.dispose();
     super.dispose();
-  }
-
-  void setQuestType({required QuestType? questType}) {
-    _questType = questType!;
   }
 }

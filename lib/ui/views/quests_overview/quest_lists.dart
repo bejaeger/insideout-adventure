@@ -98,7 +98,7 @@ class QuestLists extends StatelessWidget {
                 children: [
                   ...model.questTypes
                       .map(
-                        (e) => AfkCreditsCategoryCard(
+                        (e) => QuestTypeCard(
                           onPressed: () =>
                               model.navigateToQuestsOfSpecificTypeView(e),
                           category: e,

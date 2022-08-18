@@ -53,7 +53,7 @@ abstract class AFKMarks extends FormViewModel {
       {required LatLng pos, required String markerId, required int number}) {
     return Marker(
       markerId: MarkerId(markerId),
-      infoWindow: InfoWindow(title: markerId),
+      //infoWindow: InfoWindow(title: "Marker"),
       icon: number == 0
           ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
           : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),

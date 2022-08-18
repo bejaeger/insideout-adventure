@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../afkcredits_ui.dart';
 
-class AfkCreditsCategoryCard extends StatelessWidget {
+class QuestTypeCard extends StatelessWidget {
   final void Function() onPressed;
   final QuestType category;
   final Color? backgroundColor;
-  const AfkCreditsCategoryCard({
+  const QuestTypeCard({
     Key? key,
     required this.onPressed,
     required this.category,
-    this.backgroundColor = Colors.blue,
+    this.backgroundColor = kcScreenTimeBlue,
   }) : super(key: key);
 
   @override
@@ -20,13 +20,13 @@ class AfkCreditsCategoryCard extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           decoration: BoxDecoration(
-            color: backgroundColor,
+            color: getColorForCategory(category).withOpacity(0.9),
             borderRadius: BorderRadius.circular(24),
             boxShadow: const [
               BoxShadow(
-                blurRadius: 3,
+                blurRadius: 2,
                 spreadRadius: 1,
-                color: Colors.black26,
+                color: kcShadowColor,
                 offset: Offset(1, 1),
               )
             ],

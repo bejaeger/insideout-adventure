@@ -25,7 +25,7 @@ class QuestsCategoryList extends StatelessWidget {
             children: [
               ...model.questTypes
                   .map(
-                    (e) => AfkCreditsCategoryCard(
+                    (e) => QuestTypeCard(
                       onPressed: model.showNotImplementedSnackbar,
                       category: e,
                       backgroundColor: getColorOfType(e),

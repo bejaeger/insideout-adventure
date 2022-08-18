@@ -73,7 +73,6 @@ class _HikeQuestViewState extends State<HikeQuestView>
               appBar: CustomAppBar(
                 title: 'Hike Quest',
                 onBackButton: model.navigateBackFromSingleQuestView,
-                showRedLiveButton: true,
                 onAppBarButtonPressed: model.hasActiveQuest
                     ? null
                     : () => model.showQuestInfoDialog(quest: widget.quest),

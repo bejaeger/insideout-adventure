@@ -1,3 +1,4 @@
+import 'package:afkcredits_ui/src/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../enums/quest_type.dart';
@@ -64,21 +65,40 @@ IconData getIconForCategory(QuestType category) {
   }
 }
 
+Color getColorForCategory(QuestType category) {
+  switch (category) {
+    case QuestType.DistanceEstimate:
+      return kcScreenTimeBlue;
+    case QuestType.TreasureLocationSearch:
+      return kcBlue;
+    case QuestType.QRCodeHunt:
+      return kcOrange;
+    case QuestType.QRCodeHike:
+      return kcOrange;
+    case QuestType.GPSAreaHike:
+      return kcOrange;
+    case QuestType.GPSAreaHunt:
+      return kcOrange;
+    default:
+      return kcPrimaryColor;
+  }
+}
+
 String getStringForCategory(QuestType? category) {
   if (category == null) return "";
   switch (category) {
     case QuestType.DistanceEstimate:
       return "Estimating Distance";
     case QuestType.TreasureLocationSearch:
-      return "Treasure Search";
+      return "Search Quest";
     case QuestType.QRCodeHunt:
       return "QR Code Hunt";
     case QuestType.GPSAreaHunt:
-      return "GPS Area Hunt";
+      return "Hike";
     case QuestType.QRCodeHike:
       return "QR Code Hike";
     case QuestType.GPSAreaHike:
-      return "GPS Area Hike";
+      return "Hike";
     default:
       return "Default Quest";
   }

@@ -10,6 +10,7 @@ class AfkCreditsInputField extends StatelessWidget {
   final bool obscureText;
   final String? errorText;
   final TextInputType keyboardType;
+  final bool autofocus;
   final List<TextInputFormatter>? inputFormatters;
   final void Function()? trailingTapped;
 
@@ -17,18 +18,19 @@ class AfkCreditsInputField extends StatelessWidget {
     borderRadius: BorderRadius.circular(8),
   );
 
-  AfkCreditsInputField({
-    Key? key,
-    required this.controller,
-    this.placeholder = '',
-    this.leading,
-    this.trailing,
-    this.trailingTapped,
-    this.obscureText = false,
-    this.errorText,
-    this.keyboardType = TextInputType.text,
-    this.inputFormatters,
-  }) : super(key: key);
+  AfkCreditsInputField(
+      {Key? key,
+      required this.controller,
+      this.placeholder = '',
+      this.leading,
+      this.trailing,
+      this.trailingTapped,
+      this.obscureText = false,
+      this.errorText,
+      this.keyboardType = TextInputType.text,
+      this.inputFormatters,
+      this.autofocus = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class AfkCreditsInputField extends StatelessWidget {
         primaryColor: kcPrimaryColor,
       ),
       child: TextField(
+        autofocus: autofocus,
         controller: controller,
         style: const TextStyle(height: 1),
         obscureText: obscureText,
