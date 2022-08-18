@@ -31,14 +31,14 @@ const TextStyle headingLightStyle = TextStyle(
 );
 
 const TextStyle alert3Style = TextStyle(
-  fontSize: 24,
+  fontSize: 20,
   fontWeight: FontWeight.w600,
-  color: Colors.red,
+  color: kcPrimaryColor,
 );
 const TextStyle warnStyle = TextStyle(
   // fontSize: 24,
   fontWeight: FontWeight.w600,
-  color: Colors.red,
+  color: kcRed,
 );
 const TextStyle success3Style = TextStyle(
   fontSize: 24,

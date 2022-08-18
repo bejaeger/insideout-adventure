@@ -13,6 +13,7 @@ class AfkCreditsInputField extends StatelessWidget {
   final bool autofocus;
   final List<TextInputFormatter>? inputFormatters;
   final void Function()? trailingTapped;
+  final TextStyle? style;
 
   final circularBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(8),
@@ -29,7 +30,8 @@ class AfkCreditsInputField extends StatelessWidget {
       this.errorText,
       this.keyboardType = TextInputType.text,
       this.inputFormatters,
-      this.autofocus = false})
+      this.autofocus = false,
+      this.style})
       : super(key: key);
 
   @override
@@ -44,7 +46,7 @@ class AfkCreditsInputField extends StatelessWidget {
       child: TextField(
         autofocus: autofocus,
         controller: controller,
-        style: const TextStyle(height: 1),
+        style: style ?? const TextStyle(height: 1),
         obscureText: obscureText,
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,

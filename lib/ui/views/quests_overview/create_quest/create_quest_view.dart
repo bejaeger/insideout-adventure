@@ -3,6 +3,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -36,83 +37,90 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateQuestViewModel>.reactive(
-        onModelReady: (model) {
-          if (model.getCurrentPostion == null) model.setPosition();
-          listenToFormUpdated(model);
-        },
-        viewModelBuilder: () => CreateQuestViewModel(),
-        // onModelReady: (model) => listenToFormUpdated(model),
-        builder: (context, model, child) {
-          print("===================================");
-          print(model.pageIndex);
-          return SafeArea(
-            child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              //resizeToAvoidBottomInset: false,
-              appBar: CustomAppBar(
-                title: "Create Quest",
-                onBackButton: () => model.onBackButton(controller),
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: BottomFloatingActionButtons(
-                swapButtons: true,
-                onTapSecondary: model.pageIndex == 2
-                    ? model.getAFKMarkers.length < 2
-                        ? null
-                        : () {
-                            if (model.pageIndex == 0)
-                              FocusScope.of(context).unfocus();
-                            model.onNextButton(controller);
-                          }
-                    : () {
-                        if (model.pageIndex == 0)
-                          FocusScope.of(context).unfocus();
-                        model.onNextButton(controller);
-                      },
-                titleSecondary:
-                    model.pageIndex < 3 ? "Next \u2192" : "Create Quest",
-                onTapMain: () => model.onBackButton(controller),
-                // model.pageIndex == 1
-                //     ? () {
-                //         model.pageIndex = model.pageIndex - 1;
-                //         controller.previousPage(
-                //             duration: Duration(milliseconds: 200),
-                //             curve: Curves.easeIn);
-                //         model.notifyListeners();
-                //       }
-                //     : () {
-                //         {
-                //           model.resetMarkersValues();
-                //           model.navBackToPreviousView();
-                //         }
-                //       },
-                titleMain: model.pageIndex >= 1 ? "\u2190 Back" : "Cancel",
-              ),
-              body: PageView(
-                controller: controller,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  NameSelection(
-                    model: model,
-                    nameController: nameController,
-                    descriptionController: descriptionController,
-                  ),
-                  QuestTypeSelection(
-                    model: model,
-                  ),
-                  QuestMarkersSelection(
-                    model: model,
-                  ),
-                  CreditsSelection(
-                    model: model,
-                    afkCreditAmountController: afkCreditAmountController,
-                  ),
-                ],
-              ),
+      onModelReady: (model) {
+        if (model.getCurrentPostion == null) model.setPosition();
+        listenToFormUpdated(model);
+      },
+      viewModelBuilder: () => CreateQuestViewModel(),
+      // onModelReady: (model) => listenToFormUpdated(model),
+      builder: (context, model, child) {
+        return SafeArea(
+          child: Scaffold(
+            //resizeToAvoidBottomInset: true,
+            // resizeToAvoidBottomInset: false,
+            appBar: CustomAppBar(
+              title: "Create Quest",
+              onBackButton: () => model.onBackButton(controller),
             ),
-          );
-        });
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: BottomFloatingActionButtons(
+              swapButtons: true,
+              onTapSecondary: model.pageIndex == 2
+                  ? model.getAFKMarkers.length < 2
+                      ? null
+                      : () {
+                          if (model.pageIndex == 0) {
+                            FocusScope.of(context).unfocus();
+                          }
+                          model.onNextButton(controller);
+                        }
+                  : () {
+                      if (model.pageIndex == 0) {
+                        FocusScope.of(context).unfocus();
+                      }
+                      model.onNextButton(controller);
+                    },
+              titleSecondary:
+                  model.pageIndex < 3 ? "Next \u2192" : "Create Quest",
+              busySecondary: model.isLoading,
+              onTapMain: model.pageIndex == 3
+                  ? () {
+                      FocusScope.of(context).unfocus();
+                      model.onBackButton(controller);
+                    }
+                  : () => model.onBackButton(controller),
+              // model.pageIndex == 1
+              //     ? () {
+              //         model.pageIndex = model.pageIndex - 1;
+              //         controller.previousPage(
+              //             duration: Duration(milliseconds: 200),
+              //             curve: Curves.easeIn);
+              //         model.notifyListeners();
+              //       }
+              //     : () {
+              //         {
+              //           model.resetMarkersValues();
+              //           model.navBackToPreviousView();
+              //         }
+              //       },
+              titleMain: model.pageIndex >= 1 ? "\u2190 Back" : "Cancel",
+            ),
+            body: PageView(
+              controller: controller,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                NameSelection(
+                  model: model,
+                  nameController: nameController,
+                  descriptionController: descriptionController,
+                ),
+                QuestTypeSelection(
+                  model: model,
+                ),
+                QuestMarkersSelection(
+                  model: model,
+                ),
+                CreditsSelection(
+                  model: model,
+                  afkCreditAmountController: afkCreditAmountController,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -306,13 +314,13 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
             //callback that’s called when the map is ready to us.
             onMapCreated: model.onMapCreated,
             onTap: model.displayMarkersOnMap,
-
             // scrollGesturesEnabled: true,
             myLocationEnabled: true,
             zoomControlsEnabled: false,
             // gestureRecognizers: Set()
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding:
@@ -344,26 +352,37 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
                         model.getAFKMarkers.length == 0
                             ? "Tap on the map to choose the start of the quest"
                             : model.getAFKMarkers.length == 1
-                                ? "Choose at least one more marker"
-                                : "Tap 'Next' when you are done",
+                                ? model.selectedQuestType ==
+                                        QuestType.TreasureLocationSearch
+                                    ? "Choose the target marker of the search quest"
+                                    : "Choose at least one more marker"
+                                : model.selectedQuestType ==
+                                        QuestType.TreasureLocationSearch
+                                    ? "Tap 'Next'"
+                                    : "Tap 'Next' when you are done",
                         align: TextAlign.left,
                       ),
-                      if (model.getAFKMarkers.length >= 1) verticalSpaceMedium,
+                      if (model.getAFKMarkers.length >= 1) verticalSpaceSmall,
                       if (model.getAFKMarkers.length >= 1)
                         AfkCreditsText.body(
                             "Tip: You can remove markers by tapping on them"),
-                      if (model.getAFKMarkers.length == 2 &&
-                          model.selectedQuestType ==
-                              QuestType.TreasureLocationSearch)
-                        verticalSpaceMedium,
-                      if (model.getAFKMarkers.length == 2 &&
-                          model.selectedQuestType ==
-                              QuestType.TreasureLocationSearch)
-                        if (model.getAFKMarkers.length >= 1)
-                          AfkCreditsText.body(
-                              "Info: Search quests only have a start and a finish marker"),
                     ],
                   ),
+                ),
+              ),
+              verticalSpaceSmall,
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 2.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: AfkCreditsText.alertThree(
+                      "Total distance: ${model.getTotalDistanceOfMarkers().toStringAsFixed(0)} m"),
                 ),
               ),
             ],
@@ -400,7 +419,7 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
             Row(
               children: [
                 AfkCreditsText.body(
-                    "We recommend ${model.getRecommendedCredits()} credits"),
+                    "We recommend giving ${model.getRecommendedCredits()} credits"),
                 horizontalSpaceTiny,
                 IconButton(
                     padding: const EdgeInsets.all(0.0),
@@ -410,19 +429,26 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
               ],
             ),
             verticalSpaceMedium,
-            AfkCreditsInputField(
-              leading: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Image.asset(kAFKCreditsLogoPath, height: 10),
-              ),
-              autofocus: afkCreditAmountController.text == "" ? true : false,
-              placeholder: 'Credit amount',
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              ],
-              controller: afkCreditAmountController,
-              errorText: model.afkCreditsInputValidationMessage,
+            Container(
+              width: 140,
+              child: model.isLoading
+                  ? SizedBox(height: 0, width: 0)
+                  : AfkCreditsInputField(
+                      style: heading3Style,
+                      leading: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Image.asset(kAFKCreditsLogoPath, height: 10),
+                      ),
+                      autofocus:
+                          afkCreditAmountController.text == "" ? true : false,
+                      //placeholder: 'Amount',
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
+                      controller: afkCreditAmountController,
+                      errorText: model.afkCreditsInputValidationMessage,
+                    ),
             ),
             verticalSpaceMassive,
           ],

@@ -7,6 +7,8 @@ class BottomFloatingActionButtons extends StatelessWidget {
   final void Function() onTapMain;
   final void Function()? onTapSecondary;
   final bool swapButtons;
+  final bool busySecondary;
+  final bool busyMain;
   const BottomFloatingActionButtons({
     Key? key,
     required this.titleMain,
@@ -14,6 +16,8 @@ class BottomFloatingActionButtons extends StatelessWidget {
     required this.onTapMain,
     this.onTapSecondary,
     this.swapButtons = false,
+    this.busySecondary = false,
+    this.busyMain = false,
   }) : super(key: key);
 
   @override
@@ -40,6 +44,7 @@ class BottomFloatingActionButtons extends StatelessWidget {
                 : AfkCreditsButton(
                     title: titleMain,
                     onTap: onTapMain,
+                    busy: busyMain,
                   ),
           ),
           if (titleSecondary != null) horizontalSpaceMedium,
@@ -50,6 +55,7 @@ class BottomFloatingActionButtons extends StatelessWidget {
                       title: titleSecondary!,
                       onTap: onTapSecondary,
                       disabled: onTapSecondary == null,
+                      busy: busySecondary,
                     )
                   : AfkCreditsButton.outline(
                       title: titleSecondary!,

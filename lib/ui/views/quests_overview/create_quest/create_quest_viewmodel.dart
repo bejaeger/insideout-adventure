@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/app_strings.dart';
+import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -8,6 +9,7 @@ import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/markers/markers.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -84,14 +86,17 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       if (getAFKMarkers.length < 2) {
         return null;
       } else {
-        controller.nextPage(
+        isLoading = true;
+        notifyListeners();
+        await controller.nextPage(
             duration: Duration(milliseconds: 200), curve: Curves.easeIn);
         pageIndex = pageIndex + 1;
+        isLoading = false;
         notifyListeners();
       }
     } else if (pageIndex == 3) {
       // number credits selection
-      if (isValidUserInputs()) {
+      if (isValidUserInputs(credits: true)) {
         await createQuestAndNavigateBack();
       }
     }
@@ -186,7 +191,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   }
 
   Future<bool?> _createQuest() async {
-    if (!isValidUserInputs()) return false;
+    if (!isValidUserInputs(credits: true)) return false;
     isLoading = true;
     notifyListeners();
     num afkCreditAmount = num.parse(afkCreditAmountValue.toString());
@@ -281,7 +286,10 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     } else {
       actualDistanceMarkers = distanceMarkers;
     }
-    return (actualDistanceMarkers / 1000 * 20).round();
+    return (actualDistanceMarkers *
+            HerculesWorldCreditSystem
+                .kDistanceInMeterToActivityMinuteConversion)
+        .round();
   }
 
   int getRecommendedCredits({int? durationQuestInMinutes}) {
@@ -291,7 +299,9 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     } else {
       actualDuration = durationQuestInMinutes;
     }
-    return (actualDuration / 2).round();
+    return (actualDuration *
+            HerculesWorldCreditSystem.kMinuteActivityToCreditsConversion)
+        .round();
   }
 
   void showCreditsSuggestionDialog() {
@@ -303,7 +313,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     _dialogService.showDialog(
         title: "Recommendation",
         description:
-            "Your markers are ${totalDistanceInMeter.toStringAsFixed(1)} m apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend $recommendedCredits credits.");
+            "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${creditsToScreenTime(recommendedCredits)} min screen time.");
   }
 
   void resetValidationMessages() {
