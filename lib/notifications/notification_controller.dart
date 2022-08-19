@@ -58,6 +58,20 @@ class NotificationController {
         _screenTimeService.handleScreenTimeOverEvent();
       }
     });
+
+    AwesomeNotifications().actionStream.listen((notification) async {
+      // if a scheduled notification is shown, we can remove the permanent notifications!
+
+      print("==>> LISTEN TO ACTION STREAM");
+      if (notification.channelKey == kScheduledNotificationChannelKey) {
+        print("==>> button key pressed");
+        print("==>> NOW WE CAN DO SOME NAVIGATION");
+        // AwesomeNotifications()
+        //     .dismissNotificationsByChannelKey(kPermanentNotificationKey);
+        // await Future.delayed(Duration(milliseconds: 500));
+        // _screenTimeService.handleScreenTimeOverEvent();
+      }
+    });
   }
 
   // this code is needed for new version of awesome notifications

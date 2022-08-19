@@ -33,6 +33,7 @@ class Notifications {
         title: '${Emojis.time_alarm_clock} ' + title,
         body: message,
         locked: true,
+        category: NotificationCategory.StopWatch,
         autoDismissible: false,
       ),
     );
@@ -43,19 +44,22 @@ class Notifications {
       required String message,
       required DateTime date}) async {
     await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: createUniqueId(),
-        channelKey: kScheduledNotificationChannelKey,
-        title: "\u26A0 " + title,
-        body: message,
-        category: NotificationCategory.Alarm,
-        locked: false,
-      ),
-      schedule: NotificationCalendar.fromDate(
-        date: date,
-        preciseAlarm: true,
-      ),
-    );
+        content: NotificationContent(
+          id: createUniqueId(),
+          channelKey: kScheduledNotificationChannelKey,
+          title: "\u26A0 " + title,
+          body: message,
+          category: NotificationCategory.Alarm,
+          locked: false,
+        ),
+        schedule: NotificationCalendar.fromDate(
+          date: date,
+          preciseAlarm: true,
+        ),
+        actionButtons: [
+          NotificationActionButton(
+              key: kScheduledNotificationActionKey, label: "OK")
+        ]);
   }
 
   Future<void> dismissPermanentNotifications() async {

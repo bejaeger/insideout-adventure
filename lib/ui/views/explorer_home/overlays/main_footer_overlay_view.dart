@@ -19,7 +19,8 @@ class MainFooterOverlayView extends StatelessWidget {
       viewModelBuilder: () => MainFooterViewModel(),
       //onModelReady: (model) => model.listenToLayout(),
       onModelReady: (model) {
-        // TODO: Move to viewmodel
+        // TODO: Move somewhere else!
+        // TODO: Needs to go into onboarding!
         AwesomeNotifications().isNotificationAllowed().then(
           (isAllowed) {
             if (!isAllowed) {
@@ -36,7 +37,7 @@ class MainFooterOverlayView extends StatelessWidget {
                       },
                       child: const Text('Don\'t Allow'),
                     ),
-                    Spacer(),
+                    verticalSpaceMedium,
                     TextButton(
                       onPressed: () => AwesomeNotifications()
                           .requestPermissionToSendNotifications()
@@ -44,7 +45,7 @@ class MainFooterOverlayView extends StatelessWidget {
                             (_) => Navigator.pop(context),
                           ),
                       child: const Text('Allow'),
-                    )
+                    ),
                   ],
                 ),
               );

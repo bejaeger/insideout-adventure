@@ -22,7 +22,7 @@ class SelectScreenTimeView extends StatelessWidget {
           child: Container(
             child: Padding(
               padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 40, bottom: 90),
+                  left: 20, right: 20, top: 40, bottom: 120),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -77,11 +77,11 @@ class SelectScreenTimeView extends StatelessWidget {
                     ],
                   ),
                   //Icon(Icons.arrow_downward_rounded, size: 40),
-                  verticalSpaceLarge,
+                  verticalSpaceMedium,
                   Lottie.network(
                       'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
                       height: 160),
-                  verticalSpaceLarge,
+                  verticalSpaceMedium,
                   Column(
                     children: [
                       Row(
