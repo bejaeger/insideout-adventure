@@ -155,3 +155,7 @@ const String kUpdatedScreenTimeNotificationKey =
     "screentime_update_notification";
 const String kUpdatedScreenTimeNotificationChannelName =
     "Screentime notifications";
+
+////////////////////////////////////////
+/// Gamification system
+const double kTotalCreditsEarnedToLevelConversion = 1 / 20;

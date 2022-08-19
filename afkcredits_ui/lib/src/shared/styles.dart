@@ -78,7 +78,7 @@ const TextStyle captionStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w400,
   color: kcGreyTextColor,
-  overflow: TextOverflow.ellipsis,
+  //overflow: TextOverflow.ellipsis,
 );
 const TextStyle captionStyleBold = TextStyle(
   fontSize: 12,
@@ -120,6 +120,8 @@ const TextStyle labelStyle =
 
 const TextStyle statsStyle = TextStyle(
     fontSize: 20, fontWeight: FontWeight.w600, color: kcGreyTextColorSoft);
+const TextStyle statsStyleBlack =
+    TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black87);
 
 const TextStyle tagStyle =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.black87);

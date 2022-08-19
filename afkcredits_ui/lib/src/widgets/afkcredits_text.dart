@@ -96,6 +96,10 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = statsStyle,
         alignment = align;
+  const AfkCreditsText.statsStyleBlack(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = statsStyleBlack,
+        alignment = align;
   const AfkCreditsText.tag(this.text, {TextAlign align = TextAlign.start})
       : style = tagStyle,
         alignment = align;
@@ -108,6 +112,11 @@ class AfkCreditsText extends StatelessWidget {
       : style = bodyStyleSofia.copyWith(color: color),
         alignment = align;
 
+  AfkCreditsText.bodyItalic(this.text,
+      {Color color = kcGreyTextColor, TextAlign? align})
+      : style =
+            bodyStyleSofia.copyWith(color: color, fontStyle: FontStyle.italic),
+        alignment = align;
   @override
   Widget build(BuildContext context) {
     return Text(

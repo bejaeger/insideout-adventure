@@ -1,12 +1,27 @@
+import 'dart:async';
+
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 // TODO: Clean up QuestsOverviewViewModel
 class QuestListOverlayViewModel extends QuestsOverviewViewModel {
+  StreamSubscription? subscription;
+
   void listenToLayout() {
-    layoutService.isShowingQuestListSubject.listen((show) {
-      notifyListeners();
-    });
+    if (subscription == null) {
+      subscription = layoutService.isShowingQuestListSubject.listen((show) {
+        notifyListeners();
+      });
+    } else {
+      log.wtf("isShowingQuestListSubject already listened to");
+    }
+  }
+
+  @override
+  void dispose() {
+    subscription?.cancel();
+    subscription = null;
+    super.dispose();
   }
 
   // TODO: Still explore whether this approach is better

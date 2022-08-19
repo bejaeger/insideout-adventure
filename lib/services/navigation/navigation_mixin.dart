@@ -151,8 +151,28 @@ mixin NavigationMixin {
     _layoutService.setIsShowingQuestList(true);
   }
 
+  void showExplorerAccountOverlay() {
+    _layoutService.setIsShowingExplorerAccount(true);
+  }
+
   void removeQuestListOverlay() {
     _layoutService.setIsShowingQuestList(false);
+  }
+
+  void removeExplorerAccountOverlay() {
+    _layoutService.setIsShowingExplorerAccount(false);
+  }
+
+  void maybeRemoveQuestListOverlay() {
+    if (_layoutService.isShowingQuestList) {
+      _layoutService.setIsShowingQuestList(false);
+    }
+  }
+
+  void maybeRemoveExplorerAccountOverlay() {
+    if (_layoutService.isShowingExplorerAccount) {
+      _layoutService.setIsShowingExplorerAccount(false);
+    }
   }
 
   void navToSingleChildView({required String uid}) async {

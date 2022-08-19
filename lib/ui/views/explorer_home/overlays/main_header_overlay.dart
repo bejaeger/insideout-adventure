@@ -1,19 +1,26 @@
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/widgets/explorer_home_widgets/afk_credits_display.dart';
 import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_view.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class MainHeader extends StatelessWidget {
   final bool show;
   final num balance;
-  final void Function()? onPressed;
+  final int currentLevel;
+  final double percentageOfNextLevel;
+  final void Function()? onDevFeaturePressed;
+  final void Function()? onAvatarPressed;
   final void Function()? onCreditsPressed;
   const MainHeader(
       {Key? key,
-      this.onPressed,
+      this.onDevFeaturePressed,
+      required this.onAvatarPressed,
       required this.show,
       required this.balance,
-      this.onCreditsPressed})
+      this.onCreditsPressed,
+      required this.currentLevel,
+      required this.percentageOfNextLevel})
       : super(key: key);
 
   @override
@@ -32,7 +39,27 @@ class MainHeader extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              AvatarView(percentage: 0.4, level: 3, onPressed: onPressed),
+              AvatarView(
+                  percentage: percentageOfNextLevel,
+                  level: currentLevel,
+                  onPressed: onAvatarPressed),
+              //Spacer(),
+              horizontalSpaceSmall,
+              Opacity(
+                opacity: 0.1,
+                child: GestureDetector(
+                  onTap: onDevFeaturePressed,
+                  child: Container(
+                      alignment: Alignment.center,
+                      width: 80,
+                      height: 80,
+                      color: kcCultured,
+                      child: AfkCreditsText.captionBold(
+                        "Dev Feature",
+                        align: TextAlign.center,
+                      )),
+                ),
+              ),
               Spacer(),
               Padding(
                 padding: const EdgeInsets.only(right: 5.0, top: 14),

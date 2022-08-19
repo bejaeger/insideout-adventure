@@ -1,4 +1,5 @@
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/ui/views/explorer_account/explorer_account_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/main_footer_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/main_header_overlay.dart';
@@ -31,51 +32,64 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
         viewModelBuilder: () => ExplorerHomeViewModel(),
         onModelReady: (model) => model.initialize(),
         builder: (context, model, child) {
-          //log.wtf("==>> Rebuild ExplorerHomeView");
-          return SafeArea(
-            child: Scaffold(
-              body: Stack(
-                children: [
-                  // bottom layer
-                  //if (!model.isBusy)
-                  if (!model.isBusy) MainMapView(),
+          log.wtf("==>> Rebuild ExplorerHomeView");
+          return WillPopScope(
+            onWillPop: () async {
+              model.maybeRemoveExplorerAccountOverlay();
+              model.maybeRemoveQuestListOverlay();
+              return false;
+            },
+            child: SafeArea(
+              child: Scaffold(
+                body: Stack(
+                  children: [
+                    // bottom layer
+                    //if (!model.isBusy)
+                    if (!model.isBusy) MainMapView(),
 
-                  if (model.currentUser.createdByUserWithId != null)
-                    SwitchToParentsAreaButton(
-                      onTap: model.handleSwitchToSponsorEvent,
-                      show: !(model.isShowingQuestDetails ||
-                              model.hasActiveQuest) ||
-                          model.isFadingOutQuestDetails,
-                    ),
-
-                  if (model.showLoadingScreen)
-                    MapLoadingOverlay(show: model.showFullLoadingScreen),
-
-                  if (!model.isBusy)
-                    MainHeader(
-                        show: (!model.isShowingQuestDetails &&
-                                !model.hasActiveQuest) ||
+                    if (model.currentUser.createdByUserWithId != null)
+                      SwitchToParentsAreaButton(
+                        onTap: model.handleSwitchToSponsorEvent,
+                        show: !(model.isShowingQuestDetails ||
+                                model.hasActiveQuest) ||
                             model.isFadingOutQuestDetails,
-                        onPressed: model
-                            .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
-                        onCreditsPressed: model.showNotImplementedSnackbar,
-                        balance: model.currentUserStats.afkCreditsBalance),
+                      ),
 
-                  if (!model.isBusy) MainFooterOverlayView(),
+                    if (model.showLoadingScreen)
+                      MapLoadingOverlay(show: model.showFullLoadingScreen),
 
-                  QuestListOverlayView(),
+                    // TODO: Can also make MainHeader a view!
+                    if (!model.isBusy)
+                      MainHeader(
+                          percentageOfNextLevel: model.percentageOfNextLevel,
+                          currentLevel: model.currentLevel,
+                          onAvatarPressed: model.showExplorerAccountOverlay,
+                          show: (!model.isShowingQuestDetails &&
+                                  !model.hasActiveQuest) ||
+                              model.isFadingOutQuestDetails,
+                          onDevFeaturePressed: model
+                              .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
+                          onCreditsPressed: model.showNotImplementedSnackbar,
+                          balance: model.currentUserStats.afkCreditsBalance),
 
-                  if (model.isShowingQuestDetails || model.hasActiveQuest)
-                    QuestDetailsOverlayView(
-                        startFadeOut: model.isFadingOutQuestDetails),
+                    if (!model.isBusy) MainFooterOverlayView(),
 
-                  // StepCounterOverlay(),
+                    if (!model.isBusy) ExplorerAccountView(),
 
-                  // only used for quest view at the moment!
-                  OverlayedCloseButton(),
+                    QuestListOverlayView(),
 
-                  if (model.isFadingOutOverlay) FadeTransitionAnimation(),
-                ],
+                    if (model.isShowingQuestDetails || model.hasActiveQuest)
+                      QuestDetailsOverlayView(
+                          startFadeOut: model.isFadingOutQuestDetails),
+
+                    // StepCounterOverlay(),
+
+                    // only used for quest view at the moment!
+                    OverlayedCloseButton(),
+
+                    if (model.isFadingOutOverlay) FadeTransitionAnimation(),
+                  ],
+                ),
               ),
             ),
           );

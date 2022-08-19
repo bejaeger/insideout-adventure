@@ -74,11 +74,18 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   // layout
   bool get isShowingQuestDetails => activeQuestService.selectedQuest != null;
-
   bool get isShowingQuestList => layoutService.isShowingQuestList;
+  bool get isShowingExplorerAccount => layoutService.isShowingExplorerAccount;
   bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
+
+  // gamification system
+  int get currentLevel => gamificationService.getCurrentLevel();
+  int get creditsToNextLevel => gamificationService.getCreditsToNextLevel();
+  double get percentageOfNextLevel =>
+      gamificationService.getPercentageOfNextLevel();
+  String get currentLevelName => gamificationService.getCurrentLevelName();
 
   // --------------------------------------------------
   bool get hasSelectedQuest => activeQuestService.hasSelectedQuest;

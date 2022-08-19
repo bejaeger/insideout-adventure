@@ -1,18 +1,66 @@
 import 'dart:async';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 
 class GamificationService {
+  // ---------------------------------------
+  // services
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
+  final UserService _userService = locator<UserService>();
 
   final log = getLogger("GamificationService");
 
+  // ----------------------------------
+  // state
   List<Achievement> achievements = [];
   StreamSubscription? _achievementsStreamSubscription;
 
-  ////////////////////////////////////////////
+  // -------------------------------------------------------
+  // Simple functions of level system
+  int getCurrentLevel() {
+    // every 20 points will let you reach another level
+    return (_userService.currentUserStats.lifetimeEarnings *
+                kTotalCreditsEarnedToLevelConversion +
+            1)
+        .truncate();
+  }
+
+  int getCreditsFromPreviousLevel() {
+    return (_userService.currentUserStats.lifetimeEarnings %
+            (1 / kTotalCreditsEarnedToLevelConversion))
+        .round();
+  }
+
+  int getCreditsToNextLevel() {
+    return (1 / kTotalCreditsEarnedToLevelConversion).round() -
+        getCreditsFromPreviousLevel();
+  }
+
+  double getPercentageOfNextLevel() {
+    return getCreditsFromPreviousLevel() * kTotalCreditsEarnedToLevelConversion;
+  }
+
+  String getCurrentLevelName() {
+    List<String> levelNames = [
+      "Newbie",
+      "Beginner",
+      "Athlete",
+      "Beast",
+      "Arnold Schwarzenegger",
+    ];
+    if (getCurrentLevel() < levelNames.length) {
+      return levelNames[
+          getCurrentLevel() - 1]; // minus one because level starts at 1
+    } else {
+      return levelNames.last;
+    }
+  }
+
+  //---------------------------------------------------
   /// History of quests
   // adds listener to money pools the user is contributing to
   // allows to wait for the first emission of the stream via the completer

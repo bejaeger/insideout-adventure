@@ -71,7 +71,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     await initializeQuests();
     listenToLayout();
     setBusy(false);
-
     // fade loading screen out process
     await Future.delayed(
       Duration(milliseconds: 500),

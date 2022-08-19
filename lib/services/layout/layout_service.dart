@@ -12,6 +12,10 @@ class LayoutService {
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingQuestList => isShowingQuestListSubject.value;
 
+  BehaviorSubject<bool> isShowingExplorerAccountSubject =
+      BehaviorSubject<bool>.seeded(false);
+  bool get isShowingExplorerAccount => isShowingExplorerAccountSubject.value;
+
   BehaviorSubject<bool> isFadingOutOverlaySubject =
       BehaviorSubject<bool>.seeded(false);
   bool get isFadingOutOverlay => isFadingOutOverlaySubject.value;
@@ -30,6 +34,10 @@ class LayoutService {
 
   void setIsShowingQuestList(bool set) {
     isShowingQuestListSubject.add(set);
+  }
+
+  void setIsShowingExplorerAccount(bool set) {
+    isShowingExplorerAccountSubject.add(set);
   }
 
   void setIsFadingOutOverlay(bool set) {

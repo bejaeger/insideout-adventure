@@ -21,12 +21,16 @@ class SummaryStatsDisplay extends StatelessWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             if (icon != null) icon!,
             if (icon != null) SizedBox(width: 2),
             AfkCreditsText.statsStyle(stats),
             if (unit != null) SizedBox(width: 2),
-            if (unit != null) AfkCreditsText.statsStyle(unit!)
+            if (unit != null)
+              AfkCreditsText.caption(
+                unit!,
+              )
           ],
         ),
         if (title != null) AfkCreditsText.caption(title!),
