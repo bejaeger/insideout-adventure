@@ -94,7 +94,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
         // TODO: handle this in viewmodel
         if (!model.isNearStartMarker &&
             !model.isCalculatingDistanceToStartMarker) {
-          SchedulerBinding.instance!.addPostFrameCallback((_) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
             if (isShowClue == true) {
               Future.delayed(Duration(milliseconds: 0), () => flipCard());
             }

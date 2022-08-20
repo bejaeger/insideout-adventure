@@ -37,7 +37,7 @@ class BasicDialogContent extends StatelessWidget with $BasicDialogContent {
   Widget build(BuildContext context) {
     return ViewModelBuilder<BasicQuestViewModel>.reactive(
       onModelReady: (viewModel) =>
-          SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         listenToFormUpdated(model);
       }),
       builder: (context, model, child) => Scaffold(

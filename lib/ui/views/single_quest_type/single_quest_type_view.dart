@@ -21,7 +21,7 @@ class SingleQuestTypeView extends StatelessWidget {
     return ViewModelBuilder<SingleQuestViewModel>.reactive(
       viewModelBuilder: () => SingleQuestViewModel(questType: questType!),
       onModelReady: (model) {
-        SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
           model.notifyListeners();
         });
       },
