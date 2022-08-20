@@ -108,3 +108,6 @@ lib/firebase_options_prod.dart
 # since no unit tests are used atm we can remove that from git
 lib/test/
 test/
+
+ios/Podfile.lock
+ios/Runner.xcodeproj/project.pbxproj
