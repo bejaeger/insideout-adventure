@@ -1,7 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/main_long_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -28,27 +27,6 @@ class SelectScreenTimeView extends StatelessWidget {
                 children: [
                   AfkCreditsText.headingOne("Screen time"),
                   verticalSpaceMedium,
-                  // Container(
-                  //   height: 100,
-                  //   padding: const EdgeInsets.all(15.0),
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(15.0),
-                  //     border: Border.all(),
-                  //   ),
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     mainAxisSize: MainAxisSize.max,
-                  //     children: [
-                  //       AfkCreditsText.subheading("8:08 PM"),
-                  //       verticalSpaceTiny,
-                  //       Expanded(
-                  //         child: AfkCreditsText.body(
-                  //             "10 min screen time cost 10 credits at this time."),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   verticalSpaceSmall,
                   AfkCreditsText.subheading("Total available"),
                   verticalSpaceSmall,

@@ -20,47 +20,45 @@ class AddExplorerView extends StatelessWidget with $AddExplorerView {
     return ViewModelBuilder<AddExplorerViewModel>.reactive(
       viewModelBuilder: () => AddExplorerViewModel(),
       onModelReady: (model) => listenToFormUpdated(model),
-      builder: (context, model, child) => VerifyNetworkConnection(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text("Create Child Account"),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-            child: ListView(
-              children: [
-                Column(
-                  children: [
-                    verticalSpaceLarge,
-                    AfkCreditsInputField(
-                      placeholder: 'Name',
-                      controller: nameController,
+      builder: (context, model, child) => Scaffold(
+        appBar: AppBar(
+          title: Text("Create Child Account"),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+          child: ListView(
+            children: [
+              Column(
+                children: [
+                  verticalSpaceLarge,
+                  AfkCreditsInputField(
+                    placeholder: 'Name',
+                    controller: nameController,
+                  ),
+                  verticalSpaceMedium,
+                  AfkCreditsInputField(
+                    placeholder: 'Password',
+                    obscureText: (model.isPwShown) ? false : true,
+                    controller: passwordController,
+                    trailing: IconButton(
+                      onPressed: () {
+                        model.setIsPwShown(!model.isPwShown);
+                      },
+                      icon: (model.isPwShown)
+                          ? Icon(Icons.visibility, color: kcPrimaryColor)
+                          : Icon(Icons.visibility_off, color: kcPrimaryColor),
                     ),
-                    verticalSpaceMedium,
-                    AfkCreditsInputField(
-                      placeholder: 'Password',
-                      obscureText: (model.isPwShown) ? false : true,
-                      controller: passwordController,
-                      trailing: IconButton(
-                        onPressed: () {
-                          model.setIsPwShown(!model.isPwShown);
-                        },
-                        icon: (model.isPwShown)
-                            ? Icon(Icons.visibility, color: kcPrimaryColor)
-                            : Icon(Icons.visibility_off, color: kcPrimaryColor),
-                      ),
-                    ),
-                  ],
-                ),
-                verticalSpaceLarge,
-                AfkCreditsButton(
-                    busy: model.isBusy,
-                    // onPressed: model.navigateToExplorerHomeView,
-                    onTap: model.addExplorer,
-                    //child: Text("Go to explorer home/map")),
-                    title: "Create Account"),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              verticalSpaceLarge,
+              AfkCreditsButton(
+                  busy: model.isBusy,
+                  // onPressed: model.navigateToExplorerHomeView,
+                  onTap: model.addExplorer,
+                  //child: Text("Go to explorer home/map")),
+                  title: "Create Account"),
+            ],
           ),
         ),
       ),
