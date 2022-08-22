@@ -19,7 +19,7 @@ Map<String, dynamic> _$$_ConciseFinishedQuestInfoToJson(
         _$_ConciseFinishedQuestInfo instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'type': _$QuestTypeEnumMap[instance.type],
+      'type': _$QuestTypeEnumMap[instance.type]!,
       'afkCredits': instance.afkCredits,
       'afkCreditsEarned': instance.afkCreditsEarned,
     };

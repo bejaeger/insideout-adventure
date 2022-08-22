@@ -25,7 +25,7 @@ Map<String, dynamic> _$$_TransferDetailsToJson(_$_TransferDetails instance) =>
       'senderName': instance.senderName,
       'amount': instance.amount,
       'currency': instance.currency,
-      'sourceType': _$MoneySourceEnumMap[instance.sourceType],
+      'sourceType': _$MoneySourceEnumMap[instance.sourceType]!,
     };
 
 const _$MoneySourceEnumMap = {

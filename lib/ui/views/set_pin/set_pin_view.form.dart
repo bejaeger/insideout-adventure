@@ -4,7 +4,7 @@
 // StackedFormGenerator
 // **************************************************************************
 
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs,  constant_identifier_names, non_constant_identifier_names,unnecessary_this
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -14,15 +14,48 @@ const String Number2ValueKey = 'number2';
 const String Number3ValueKey = 'number3';
 const String Number4ValueKey = 'number4';
 
+final Map<String, TextEditingController> _SetPinViewTextEditingControllers = {};
+
+final Map<String, FocusNode> _SetPinViewFocusNodes = {};
+
+final Map<String, String? Function(String?)?> _SetPinViewTextValidations = {
+  Number1ValueKey: null,
+  Number2ValueKey: null,
+  Number3ValueKey: null,
+  Number4ValueKey: null,
+};
+
 mixin $SetPinView on StatelessWidget {
-  final TextEditingController number1Controller = TextEditingController();
-  final TextEditingController number2Controller = TextEditingController();
-  final TextEditingController number3Controller = TextEditingController();
-  final TextEditingController number4Controller = TextEditingController();
-  final FocusNode number1FocusNode = FocusNode();
-  final FocusNode number2FocusNode = FocusNode();
-  final FocusNode number3FocusNode = FocusNode();
-  final FocusNode number4FocusNode = FocusNode();
+  TextEditingController get number1Controller =>
+      _getFormTextEditingController(Number1ValueKey);
+  TextEditingController get number2Controller =>
+      _getFormTextEditingController(Number2ValueKey);
+  TextEditingController get number3Controller =>
+      _getFormTextEditingController(Number3ValueKey);
+  TextEditingController get number4Controller =>
+      _getFormTextEditingController(Number4ValueKey);
+  FocusNode get number1FocusNode => _getFormFocusNode(Number1ValueKey);
+  FocusNode get number2FocusNode => _getFormFocusNode(Number2ValueKey);
+  FocusNode get number3FocusNode => _getFormFocusNode(Number3ValueKey);
+  FocusNode get number4FocusNode => _getFormFocusNode(Number4ValueKey);
+
+  TextEditingController _getFormTextEditingController(String key,
+      {String? initialValue}) {
+    if (_SetPinViewTextEditingControllers.containsKey(key)) {
+      return _SetPinViewTextEditingControllers[key]!;
+    }
+    _SetPinViewTextEditingControllers[key] =
+        TextEditingController(text: initialValue);
+    return _SetPinViewTextEditingControllers[key]!;
+  }
+
+  FocusNode _getFormFocusNode(String key) {
+    if (_SetPinViewFocusNodes.containsKey(key)) {
+      return _SetPinViewFocusNodes[key]!;
+    }
+    _SetPinViewFocusNodes[key] = FocusNode();
+    return _SetPinViewFocusNodes[key]!;
+  }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
@@ -33,33 +66,65 @@ mixin $SetPinView on StatelessWidget {
     number4Controller.addListener(() => _updateFormData(model));
   }
 
+  final bool _autoTextFieldValidation = true;
+  bool validateFormFields(FormViewModel model) {
+    _updateFormData(model, forceValidate: true);
+    return model.isFormValid;
+  }
+
   /// Updates the formData on the FormViewModel
-  void _updateFormData(FormViewModel model) => model.setData(
-        model.formValueMap
-          ..addAll({
-            Number1ValueKey: number1Controller.text,
-            Number2ValueKey: number2Controller.text,
-            Number3ValueKey: number3Controller.text,
-            Number4ValueKey: number4Controller.text,
-          }),
-      );
+  void _updateFormData(FormViewModel model, {bool forceValidate = false}) {
+    model.setData(
+      model.formValueMap
+        ..addAll({
+          Number1ValueKey: number1Controller.text,
+          Number2ValueKey: number2Controller.text,
+          Number3ValueKey: number3Controller.text,
+          Number4ValueKey: number4Controller.text,
+        }),
+    );
+    if (_autoTextFieldValidation || forceValidate) {
+      _updateValidationData(model);
+    }
+  }
+
+  /// Updates the fieldsValidationMessages on the FormViewModel
+  void _updateValidationData(FormViewModel model) =>
+      model.setValidationMessages({
+        Number1ValueKey: _getValidationMessage(Number1ValueKey),
+        Number2ValueKey: _getValidationMessage(Number2ValueKey),
+        Number3ValueKey: _getValidationMessage(Number3ValueKey),
+        Number4ValueKey: _getValidationMessage(Number4ValueKey),
+      });
+
+  /// Returns the validation message for the given key
+  String? _getValidationMessage(String key) {
+    final validatorForKey = _SetPinViewTextValidations[key];
+    if (validatorForKey == null) return null;
+    String? validationMessageForKey =
+        validatorForKey(_SetPinViewTextEditingControllers[key]!.text);
+    return validationMessageForKey;
+  }
 
   /// Calls dispose on all the generated controllers and focus nodes
   void disposeForm() {
     // The dispose function for a TextEditingController sets all listeners to null
 
-    number1Controller.dispose();
-    number1FocusNode.dispose();
-    number2Controller.dispose();
-    number2FocusNode.dispose();
-    number3Controller.dispose();
-    number3FocusNode.dispose();
-    number4Controller.dispose();
-    number4FocusNode.dispose();
+    for (var controller in _SetPinViewTextEditingControllers.values) {
+      controller.dispose();
+    }
+    for (var focusNode in _SetPinViewFocusNodes.values) {
+      focusNode.dispose();
+    }
+
+    _SetPinViewTextEditingControllers.clear();
+    _SetPinViewFocusNodes.clear();
   }
 }
 
 extension ValueProperties on FormViewModel {
+  bool get isFormValid =>
+      this.fieldsValidationMessages.values.every((element) => element == null);
   String? get number1Value => this.formValueMap[Number1ValueKey] as String?;
   String? get number2Value => this.formValueMap[Number2ValueKey] as String?;
   String? get number3Value => this.formValueMap[Number3ValueKey] as String?;

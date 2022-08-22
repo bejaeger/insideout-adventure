@@ -12,51 +12,11 @@ part of 'user.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 User _$UserFromJson(Map<String, dynamic> json) {
   return _User.fromJson(json);
 }
-
-/// @nodoc
-class _$UserTearOff {
-  const _$UserTearOff();
-
-  _User call(
-      {required String uid,
-      required String fullName,
-      String? email,
-      required List<String> sponsorIds,
-      required List<String> explorerIds,
-      required UserRole role,
-      AuthenticationMethod? authMethod,
-      bool newUser = false,
-      @JsonKey(toJson: User._checkIfKeywordsAreSet)
-          List<String>? fullNameSearch,
-      String? createdByUserWithId,
-      String? password}) {
-    return _User(
-      uid: uid,
-      fullName: fullName,
-      email: email,
-      sponsorIds: sponsorIds,
-      explorerIds: explorerIds,
-      role: role,
-      authMethod: authMethod,
-      newUser: newUser,
-      fullNameSearch: fullNameSearch,
-      createdByUserWithId: createdByUserWithId,
-      password: password,
-    );
-  }
-
-  User fromJson(Map<String, Object?> json) {
-    return User.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $User = _$UserTearOff();
 
 /// @nodoc
 mixin _$User {
@@ -169,9 +129,9 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
-  factory _$UserCopyWith(_User value, $Res Function(_User) then) =
-      __$UserCopyWithImpl<$Res>;
+abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
+  factory _$$_UserCopyWith(_$_User value, $Res Function(_$_User) then) =
+      __$$_UserCopyWithImpl<$Res>;
   @override
   $Res call(
       {String uid,
@@ -189,13 +149,13 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
-    implements _$UserCopyWith<$Res> {
-  __$UserCopyWithImpl(_User _value, $Res Function(_User) _then)
-      : super(_value, (v) => _then(v as _User));
+class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
+    implements _$$_UserCopyWith<$Res> {
+  __$$_UserCopyWithImpl(_$_User _value, $Res Function(_$_User) _then)
+      : super(_value, (v) => _then(v as _$_User));
 
   @override
-  _User get _value => super._value as _User;
+  _$_User get _value => super._value as _$_User;
 
   @override
   $Res call({
@@ -211,7 +171,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? createdByUserWithId = freezed,
     Object? password = freezed,
   }) {
-    return _then(_User(
+    return _then(_$_User(
       uid: uid == freezed
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
@@ -225,11 +185,11 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
       sponsorIds: sponsorIds == freezed
-          ? _value.sponsorIds
+          ? _value._sponsorIds
           : sponsorIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
       explorerIds: explorerIds == freezed
-          ? _value.explorerIds
+          ? _value._explorerIds
           : explorerIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
       role: role == freezed
@@ -245,7 +205,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           : newUser // ignore: cast_nullable_to_non_nullable
               as bool,
       fullNameSearch: fullNameSearch == freezed
-          ? _value.fullNameSearch
+          ? _value._fullNameSearch
           : fullNameSearch // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       createdByUserWithId: createdByUserWithId == freezed
@@ -268,14 +228,18 @@ class _$_User implements _User {
       {required this.uid,
       required this.fullName,
       this.email,
-      required this.sponsorIds,
-      required this.explorerIds,
+      required final List<String> sponsorIds,
+      required final List<String> explorerIds,
       required this.role,
       this.authMethod,
       this.newUser = false,
-      @JsonKey(toJson: User._checkIfKeywordsAreSet) this.fullNameSearch,
+      @JsonKey(toJson: User._checkIfKeywordsAreSet)
+          final List<String>? fullNameSearch,
       this.createdByUserWithId,
-      this.password});
+      this.password})
+      : _sponsorIds = sponsorIds,
+        _explorerIds = explorerIds,
+        _fullNameSearch = fullNameSearch;
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
@@ -285,20 +249,37 @@ class _$_User implements _User {
   final String fullName;
   @override
   final String? email;
+  final List<String> _sponsorIds;
   @override
-  final List<String> sponsorIds;
+  List<String> get sponsorIds {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_sponsorIds);
+  }
+
+  final List<String> _explorerIds;
   @override
-  final List<String> explorerIds;
+  List<String> get explorerIds {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_explorerIds);
+  }
+
   @override
   final UserRole role;
   @override
   final AuthenticationMethod? authMethod;
-  @JsonKey()
   @override
+  @JsonKey()
   final bool newUser;
+  final List<String>? _fullNameSearch;
   @override
   @JsonKey(toJson: User._checkIfKeywordsAreSet)
-  final List<String>? fullNameSearch;
+  List<String>? get fullNameSearch {
+    final value = _fullNameSearch;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final String? createdByUserWithId;
   @override
@@ -313,65 +294,68 @@ class _$_User implements _User {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _User &&
+            other is _$_User &&
             const DeepCollectionEquality().equals(other.uid, uid) &&
             const DeepCollectionEquality().equals(other.fullName, fullName) &&
             const DeepCollectionEquality().equals(other.email, email) &&
             const DeepCollectionEquality()
-                .equals(other.sponsorIds, sponsorIds) &&
+                .equals(other._sponsorIds, _sponsorIds) &&
             const DeepCollectionEquality()
-                .equals(other.explorerIds, explorerIds) &&
+                .equals(other._explorerIds, _explorerIds) &&
             const DeepCollectionEquality().equals(other.role, role) &&
             const DeepCollectionEquality()
                 .equals(other.authMethod, authMethod) &&
             const DeepCollectionEquality().equals(other.newUser, newUser) &&
             const DeepCollectionEquality()
-                .equals(other.fullNameSearch, fullNameSearch) &&
+                .equals(other._fullNameSearch, _fullNameSearch) &&
             const DeepCollectionEquality()
                 .equals(other.createdByUserWithId, createdByUserWithId) &&
             const DeepCollectionEquality().equals(other.password, password));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(uid),
       const DeepCollectionEquality().hash(fullName),
       const DeepCollectionEquality().hash(email),
-      const DeepCollectionEquality().hash(sponsorIds),
-      const DeepCollectionEquality().hash(explorerIds),
+      const DeepCollectionEquality().hash(_sponsorIds),
+      const DeepCollectionEquality().hash(_explorerIds),
       const DeepCollectionEquality().hash(role),
       const DeepCollectionEquality().hash(authMethod),
       const DeepCollectionEquality().hash(newUser),
-      const DeepCollectionEquality().hash(fullNameSearch),
+      const DeepCollectionEquality().hash(_fullNameSearch),
       const DeepCollectionEquality().hash(createdByUserWithId),
       const DeepCollectionEquality().hash(password));
 
   @JsonKey(ignore: true)
   @override
-  _$UserCopyWith<_User> get copyWith =>
-      __$UserCopyWithImpl<_User>(this, _$identity);
+  _$$_UserCopyWith<_$_User> get copyWith =>
+      __$$_UserCopyWithImpl<_$_User>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UserToJson(this);
+    return _$$_UserToJson(
+      this,
+    );
   }
 }
 
 abstract class _User implements User {
   factory _User(
-      {required String uid,
-      required String fullName,
-      String? email,
-      required List<String> sponsorIds,
-      required List<String> explorerIds,
-      required UserRole role,
-      AuthenticationMethod? authMethod,
-      bool newUser,
+      {required final String uid,
+      required final String fullName,
+      final String? email,
+      required final List<String> sponsorIds,
+      required final List<String> explorerIds,
+      required final UserRole role,
+      final AuthenticationMethod? authMethod,
+      final bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
-          List<String>? fullNameSearch,
-      String? createdByUserWithId,
-      String? password}) = _$_User;
+          final List<String>? fullNameSearch,
+      final String? createdByUserWithId,
+      final String? password}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -400,5 +384,5 @@ abstract class _User implements User {
   String? get password;
   @override
   @JsonKey(ignore: true)
-  _$UserCopyWith<_User> get copyWith => throw _privateConstructorUsedError;
+  _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;
 }

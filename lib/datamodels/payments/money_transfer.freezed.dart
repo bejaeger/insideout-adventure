@@ -12,38 +12,11 @@ part of 'money_transfer.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 MoneyTransfer _$MoneyTransferFromJson(Map<String, dynamic> json) {
   return _MoneyTransfer.fromJson(json);
 }
-
-/// @nodoc
-class _$MoneyTransferTearOff {
-  const _$MoneyTransferTearOff();
-
-  _MoneyTransfer call(
-      {required TransferDetails transferDetails,
-      dynamic createdAt = "",
-      TransferStatus status = TransferStatus.Initialized,
-      TransferType type = TransferType.Sponsor2Explorer,
-      @JsonKey(name: "transferId") String transferId = "placeholder"}) {
-    return _MoneyTransfer(
-      transferDetails: transferDetails,
-      createdAt: createdAt,
-      status: status,
-      type: type,
-      transferId: transferId,
-    );
-  }
-
-  MoneyTransfer fromJson(Map<String, Object?> json) {
-    return MoneyTransfer.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $MoneyTransfer = _$MoneyTransferTearOff();
 
 /// @nodoc
 mixin _$MoneyTransfer {
@@ -125,11 +98,11 @@ class _$MoneyTransferCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$MoneyTransferCopyWith<$Res>
+abstract class _$$_MoneyTransferCopyWith<$Res>
     implements $MoneyTransferCopyWith<$Res> {
-  factory _$MoneyTransferCopyWith(
-          _MoneyTransfer value, $Res Function(_MoneyTransfer) then) =
-      __$MoneyTransferCopyWithImpl<$Res>;
+  factory _$$_MoneyTransferCopyWith(
+          _$_MoneyTransfer value, $Res Function(_$_MoneyTransfer) then) =
+      __$$_MoneyTransferCopyWithImpl<$Res>;
   @override
   $Res call(
       {TransferDetails transferDetails,
@@ -143,15 +116,15 @@ abstract class _$MoneyTransferCopyWith<$Res>
 }
 
 /// @nodoc
-class __$MoneyTransferCopyWithImpl<$Res>
+class __$$_MoneyTransferCopyWithImpl<$Res>
     extends _$MoneyTransferCopyWithImpl<$Res>
-    implements _$MoneyTransferCopyWith<$Res> {
-  __$MoneyTransferCopyWithImpl(
-      _MoneyTransfer _value, $Res Function(_MoneyTransfer) _then)
-      : super(_value, (v) => _then(v as _MoneyTransfer));
+    implements _$$_MoneyTransferCopyWith<$Res> {
+  __$$_MoneyTransferCopyWithImpl(
+      _$_MoneyTransfer _value, $Res Function(_$_MoneyTransfer) _then)
+      : super(_value, (v) => _then(v as _$_MoneyTransfer));
 
   @override
-  _MoneyTransfer get _value => super._value as _MoneyTransfer;
+  _$_MoneyTransfer get _value => super._value as _$_MoneyTransfer;
 
   @override
   $Res call({
@@ -161,7 +134,7 @@ class __$MoneyTransferCopyWithImpl<$Res>
     Object? type = freezed,
     Object? transferId = freezed,
   }) {
-    return _then(_MoneyTransfer(
+    return _then(_$_MoneyTransfer(
       transferDetails: transferDetails == freezed
           ? _value.transferDetails
           : transferDetails // ignore: cast_nullable_to_non_nullable
@@ -203,14 +176,14 @@ class _$_MoneyTransfer extends _MoneyTransfer {
 
   @override
   final TransferDetails transferDetails;
-  @JsonKey()
   @override
+  @JsonKey()
   final dynamic createdAt;
-  @JsonKey()
   @override
+  @JsonKey()
   final TransferStatus status;
-  @JsonKey()
   @override
+  @JsonKey()
   final TransferType type;
   @override
   @JsonKey(name: "transferId")
@@ -225,7 +198,7 @@ class _$_MoneyTransfer extends _MoneyTransfer {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _MoneyTransfer &&
+            other is _$_MoneyTransfer &&
             const DeepCollectionEquality()
                 .equals(other.transferDetails, transferDetails) &&
             const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
@@ -235,6 +208,7 @@ class _$_MoneyTransfer extends _MoneyTransfer {
                 .equals(other.transferId, transferId));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -246,22 +220,24 @@ class _$_MoneyTransfer extends _MoneyTransfer {
 
   @JsonKey(ignore: true)
   @override
-  _$MoneyTransferCopyWith<_MoneyTransfer> get copyWith =>
-      __$MoneyTransferCopyWithImpl<_MoneyTransfer>(this, _$identity);
+  _$$_MoneyTransferCopyWith<_$_MoneyTransfer> get copyWith =>
+      __$$_MoneyTransferCopyWithImpl<_$_MoneyTransfer>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MoneyTransferToJson(this);
+    return _$$_MoneyTransferToJson(
+      this,
+    );
   }
 }
 
 abstract class _MoneyTransfer extends MoneyTransfer {
   const factory _MoneyTransfer(
-      {required TransferDetails transferDetails,
-      dynamic createdAt,
-      TransferStatus status,
-      TransferType type,
-      @JsonKey(name: "transferId") String transferId}) = _$_MoneyTransfer;
+      {required final TransferDetails transferDetails,
+      final dynamic createdAt,
+      final TransferStatus status,
+      final TransferType type,
+      @JsonKey(name: "transferId") final String transferId}) = _$_MoneyTransfer;
   const _MoneyTransfer._() : super._();
 
   factory _MoneyTransfer.fromJson(Map<String, dynamic> json) =
@@ -280,6 +256,6 @@ abstract class _MoneyTransfer extends MoneyTransfer {
   String get transferId;
   @override
   @JsonKey(ignore: true)
-  _$MoneyTransferCopyWith<_MoneyTransfer> get copyWith =>
+  _$$_MoneyTransferCopyWith<_$_MoneyTransfer> get copyWith =>
       throw _privateConstructorUsedError;
 }

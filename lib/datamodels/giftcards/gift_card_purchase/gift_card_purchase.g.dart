@@ -26,7 +26,7 @@ Map<String, dynamic> _$$_GiftCardPurchaseToJson(_$_GiftCardPurchase instance) =>
       'code': instance.code,
       'purchasedAt': instance.purchasedAt,
       'transferId': instance.transferId,
-      'status': _$PurchasedGiftCardStatusEnumMap[instance.status],
+      'status': _$PurchasedGiftCardStatusEnumMap[instance.status]!,
     };
 
 const _$PurchasedGiftCardStatusEnumMap = {

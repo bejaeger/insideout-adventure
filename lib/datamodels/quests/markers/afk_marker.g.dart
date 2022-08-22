@@ -22,7 +22,7 @@ Map<String, dynamic> _$$_AFKMarkerToJson(_$_AFKMarker instance) =>
       'qrCodeId': instance.qrCodeId,
       'lat': instance.lat,
       'lon': instance.lon,
-      'markerStatus': _$MarkerStatusEnumMap[instance.markerStatus],
+      'markerStatus': _$MarkerStatusEnumMap[instance.markerStatus]!,
     };
 
 const _$MarkerStatusEnumMap = {

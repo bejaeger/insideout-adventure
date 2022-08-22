@@ -4,7 +4,7 @@
 // StackedFormGenerator
 // **************************************************************************
 
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs,  constant_identifier_names, non_constant_identifier_names,unnecessary_this
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -13,13 +13,46 @@ const String FullNameValueKey = 'fullName';
 const String EmailValueKey = 'email';
 const String PasswordValueKey = 'password';
 
+final Map<String, TextEditingController>
+    _CreateAccountViewTextEditingControllers = {};
+
+final Map<String, FocusNode> _CreateAccountViewFocusNodes = {};
+
+final Map<String, String? Function(String?)?>
+    _CreateAccountViewTextValidations = {
+  FullNameValueKey: null,
+  EmailValueKey: null,
+  PasswordValueKey: null,
+};
+
 mixin $CreateAccountView on StatelessWidget {
-  final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final FocusNode fullNameFocusNode = FocusNode();
-  final FocusNode emailFocusNode = FocusNode();
-  final FocusNode passwordFocusNode = FocusNode();
+  TextEditingController get fullNameController =>
+      _getFormTextEditingController(FullNameValueKey);
+  TextEditingController get emailController =>
+      _getFormTextEditingController(EmailValueKey);
+  TextEditingController get passwordController =>
+      _getFormTextEditingController(PasswordValueKey);
+  FocusNode get fullNameFocusNode => _getFormFocusNode(FullNameValueKey);
+  FocusNode get emailFocusNode => _getFormFocusNode(EmailValueKey);
+  FocusNode get passwordFocusNode => _getFormFocusNode(PasswordValueKey);
+
+  TextEditingController _getFormTextEditingController(String key,
+      {String? initialValue}) {
+    if (_CreateAccountViewTextEditingControllers.containsKey(key)) {
+      return _CreateAccountViewTextEditingControllers[key]!;
+    }
+    _CreateAccountViewTextEditingControllers[key] =
+        TextEditingController(text: initialValue);
+    return _CreateAccountViewTextEditingControllers[key]!;
+  }
+
+  FocusNode _getFormFocusNode(String key) {
+    if (_CreateAccountViewFocusNodes.containsKey(key)) {
+      return _CreateAccountViewFocusNodes[key]!;
+    }
+    _CreateAccountViewFocusNodes[key] = FocusNode();
+    return _CreateAccountViewFocusNodes[key]!;
+  }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
@@ -29,30 +62,63 @@ mixin $CreateAccountView on StatelessWidget {
     passwordController.addListener(() => _updateFormData(model));
   }
 
+  final bool _autoTextFieldValidation = true;
+  bool validateFormFields(FormViewModel model) {
+    _updateFormData(model, forceValidate: true);
+    return model.isFormValid;
+  }
+
   /// Updates the formData on the FormViewModel
-  void _updateFormData(FormViewModel model) => model.setData(
-        model.formValueMap
-          ..addAll({
-            FullNameValueKey: fullNameController.text,
-            EmailValueKey: emailController.text,
-            PasswordValueKey: passwordController.text,
-          }),
-      );
+  void _updateFormData(FormViewModel model, {bool forceValidate = false}) {
+    model.setData(
+      model.formValueMap
+        ..addAll({
+          FullNameValueKey: fullNameController.text,
+          EmailValueKey: emailController.text,
+          PasswordValueKey: passwordController.text,
+        }),
+    );
+    if (_autoTextFieldValidation || forceValidate) {
+      _updateValidationData(model);
+    }
+  }
+
+  /// Updates the fieldsValidationMessages on the FormViewModel
+  void _updateValidationData(FormViewModel model) =>
+      model.setValidationMessages({
+        FullNameValueKey: _getValidationMessage(FullNameValueKey),
+        EmailValueKey: _getValidationMessage(EmailValueKey),
+        PasswordValueKey: _getValidationMessage(PasswordValueKey),
+      });
+
+  /// Returns the validation message for the given key
+  String? _getValidationMessage(String key) {
+    final validatorForKey = _CreateAccountViewTextValidations[key];
+    if (validatorForKey == null) return null;
+    String? validationMessageForKey =
+        validatorForKey(_CreateAccountViewTextEditingControllers[key]!.text);
+    return validationMessageForKey;
+  }
 
   /// Calls dispose on all the generated controllers and focus nodes
   void disposeForm() {
     // The dispose function for a TextEditingController sets all listeners to null
 
-    fullNameController.dispose();
-    fullNameFocusNode.dispose();
-    emailController.dispose();
-    emailFocusNode.dispose();
-    passwordController.dispose();
-    passwordFocusNode.dispose();
+    for (var controller in _CreateAccountViewTextEditingControllers.values) {
+      controller.dispose();
+    }
+    for (var focusNode in _CreateAccountViewFocusNodes.values) {
+      focusNode.dispose();
+    }
+
+    _CreateAccountViewTextEditingControllers.clear();
+    _CreateAccountViewFocusNodes.clear();
   }
 }
 
 extension ValueProperties on FormViewModel {
+  bool get isFormValid =>
+      this.fieldsValidationMessages.values.every((element) => element == null);
   String? get fullNameValue => this.formValueMap[FullNameValueKey] as String?;
   String? get emailValue => this.formValueMap[EmailValueKey] as String?;
   String? get passwordValue => this.formValueMap[PasswordValueKey] as String?;

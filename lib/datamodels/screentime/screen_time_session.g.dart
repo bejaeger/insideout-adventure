@@ -29,7 +29,7 @@ Map<String, dynamic> _$$_ScreenTimeSessionToJson(
       'minutes': instance.minutes,
       'minutesUsed': instance.minutesUsed,
       'afkCreditsUsed': instance.afkCreditsUsed,
-      'status': _$ScreenTimeSessionStatusEnumMap[instance.status],
+      'status': _$ScreenTimeSessionStatusEnumMap[instance.status]!,
       'afkCredits': instance.afkCredits,
     };
 

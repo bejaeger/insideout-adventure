@@ -12,36 +12,11 @@ part of 'pre_purchased_gift_card.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 PrePurchasedGiftCard _$PrePurchasedGiftCardFromJson(Map<String, dynamic> json) {
   return _PrePurchasedGiftCard.fromJson(json);
 }
-
-/// @nodoc
-class _$PrePurchasedGiftCardTearOff {
-  const _$PrePurchasedGiftCardTearOff();
-
-  _PrePurchasedGiftCard call(
-      {required String categoryId,
-      required String id,
-      required String giftCardCode,
-      required String categoryName}) {
-    return _PrePurchasedGiftCard(
-      categoryId: categoryId,
-      id: id,
-      giftCardCode: giftCardCode,
-      categoryName: categoryName,
-    );
-  }
-
-  PrePurchasedGiftCard fromJson(Map<String, Object?> json) {
-    return PrePurchasedGiftCard.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $PrePurchasedGiftCard = _$PrePurchasedGiftCardTearOff();
 
 /// @nodoc
 mixin _$PrePurchasedGiftCard {
@@ -106,26 +81,26 @@ class _$PrePurchasedGiftCardCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$PrePurchasedGiftCardCopyWith<$Res>
+abstract class _$$_PrePurchasedGiftCardCopyWith<$Res>
     implements $PrePurchasedGiftCardCopyWith<$Res> {
-  factory _$PrePurchasedGiftCardCopyWith(_PrePurchasedGiftCard value,
-          $Res Function(_PrePurchasedGiftCard) then) =
-      __$PrePurchasedGiftCardCopyWithImpl<$Res>;
+  factory _$$_PrePurchasedGiftCardCopyWith(_$_PrePurchasedGiftCard value,
+          $Res Function(_$_PrePurchasedGiftCard) then) =
+      __$$_PrePurchasedGiftCardCopyWithImpl<$Res>;
   @override
   $Res call(
       {String categoryId, String id, String giftCardCode, String categoryName});
 }
 
 /// @nodoc
-class __$PrePurchasedGiftCardCopyWithImpl<$Res>
+class __$$_PrePurchasedGiftCardCopyWithImpl<$Res>
     extends _$PrePurchasedGiftCardCopyWithImpl<$Res>
-    implements _$PrePurchasedGiftCardCopyWith<$Res> {
-  __$PrePurchasedGiftCardCopyWithImpl(
-      _PrePurchasedGiftCard _value, $Res Function(_PrePurchasedGiftCard) _then)
-      : super(_value, (v) => _then(v as _PrePurchasedGiftCard));
+    implements _$$_PrePurchasedGiftCardCopyWith<$Res> {
+  __$$_PrePurchasedGiftCardCopyWithImpl(_$_PrePurchasedGiftCard _value,
+      $Res Function(_$_PrePurchasedGiftCard) _then)
+      : super(_value, (v) => _then(v as _$_PrePurchasedGiftCard));
 
   @override
-  _PrePurchasedGiftCard get _value => super._value as _PrePurchasedGiftCard;
+  _$_PrePurchasedGiftCard get _value => super._value as _$_PrePurchasedGiftCard;
 
   @override
   $Res call({
@@ -134,7 +109,7 @@ class __$PrePurchasedGiftCardCopyWithImpl<$Res>
     Object? giftCardCode = freezed,
     Object? categoryName = freezed,
   }) {
-    return _then(_PrePurchasedGiftCard(
+    return _then(_$_PrePurchasedGiftCard(
       categoryId: categoryId == freezed
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
@@ -167,10 +142,12 @@ class _$_PrePurchasedGiftCard implements _PrePurchasedGiftCard {
   factory _$_PrePurchasedGiftCard.fromJson(Map<String, dynamic> json) =>
       _$$_PrePurchasedGiftCardFromJson(json);
 
-  @override /*    required String code,*/
+/*    required String code,*/
+  @override
   final String categoryId;
-  @override // required double amount,
+// required double amount,
 //String? imageUrl,
+  @override
   final String id;
   @override
   final String giftCardCode;
@@ -186,7 +163,7 @@ class _$_PrePurchasedGiftCard implements _PrePurchasedGiftCard {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _PrePurchasedGiftCard &&
+            other is _$_PrePurchasedGiftCard &&
             const DeepCollectionEquality()
                 .equals(other.categoryId, categoryId) &&
             const DeepCollectionEquality().equals(other.id, id) &&
@@ -196,6 +173,7 @@ class _$_PrePurchasedGiftCard implements _PrePurchasedGiftCard {
                 .equals(other.categoryName, categoryName));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -206,22 +184,24 @@ class _$_PrePurchasedGiftCard implements _PrePurchasedGiftCard {
 
   @JsonKey(ignore: true)
   @override
-  _$PrePurchasedGiftCardCopyWith<_PrePurchasedGiftCard> get copyWith =>
-      __$PrePurchasedGiftCardCopyWithImpl<_PrePurchasedGiftCard>(
+  _$$_PrePurchasedGiftCardCopyWith<_$_PrePurchasedGiftCard> get copyWith =>
+      __$$_PrePurchasedGiftCardCopyWithImpl<_$_PrePurchasedGiftCard>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PrePurchasedGiftCardToJson(this);
+    return _$$_PrePurchasedGiftCardToJson(
+      this,
+    );
   }
 }
 
 abstract class _PrePurchasedGiftCard implements PrePurchasedGiftCard {
   factory _PrePurchasedGiftCard(
-      {required String categoryId,
-      required String id,
-      required String giftCardCode,
-      required String categoryName}) = _$_PrePurchasedGiftCard;
+      {required final String categoryId,
+      required final String id,
+      required final String giftCardCode,
+      required final String categoryName}) = _$_PrePurchasedGiftCard;
 
   factory _PrePurchasedGiftCard.fromJson(Map<String, dynamic> json) =
       _$_PrePurchasedGiftCard.fromJson;
@@ -237,6 +217,6 @@ abstract class _PrePurchasedGiftCard implements PrePurchasedGiftCard {
   String get categoryName;
   @override
   @JsonKey(ignore: true)
-  _$PrePurchasedGiftCardCopyWith<_PrePurchasedGiftCard> get copyWith =>
+  _$$_PrePurchasedGiftCardCopyWith<_$_PrePurchasedGiftCard> get copyWith =>
       throw _privateConstructorUsedError;
 }

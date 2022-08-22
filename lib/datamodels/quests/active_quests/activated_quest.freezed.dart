@@ -12,52 +12,11 @@ part of 'activated_quest.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 ActivatedQuest _$ActivatedQuestFromJson(Map<String, dynamic> json) {
   return _ActivatedQuest.fromJson(json);
 }
-
-/// @nodoc
-class _$ActivatedQuestTearOff {
-  const _$ActivatedQuestTearOff();
-
-  _ActivatedQuest call(
-      {String? id,
-      required Quest quest,
-      required List<bool> markersCollected,
-      required QuestStatus status,
-      List<String>? uids,
-      num? afkCreditsEarned,
-      required int timeElapsed,
-      dynamic createdAt = "",
-      double? lastCheckLat,
-      double? lastCheckLon,
-      double? currentDistanceInMeters,
-      double? lastDistanceInMeters}) {
-    return _ActivatedQuest(
-      id: id,
-      quest: quest,
-      markersCollected: markersCollected,
-      status: status,
-      uids: uids,
-      afkCreditsEarned: afkCreditsEarned,
-      timeElapsed: timeElapsed,
-      createdAt: createdAt,
-      lastCheckLat: lastCheckLat,
-      lastCheckLon: lastCheckLon,
-      currentDistanceInMeters: currentDistanceInMeters,
-      lastDistanceInMeters: lastDistanceInMeters,
-    );
-  }
-
-  ActivatedQuest fromJson(Map<String, Object?> json) {
-    return ActivatedQuest.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $ActivatedQuest = _$ActivatedQuestTearOff();
 
 /// @nodoc
 mixin _$ActivatedQuest {
@@ -190,11 +149,11 @@ class _$ActivatedQuestCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$ActivatedQuestCopyWith<$Res>
+abstract class _$$_ActivatedQuestCopyWith<$Res>
     implements $ActivatedQuestCopyWith<$Res> {
-  factory _$ActivatedQuestCopyWith(
-          _ActivatedQuest value, $Res Function(_ActivatedQuest) then) =
-      __$ActivatedQuestCopyWithImpl<$Res>;
+  factory _$$_ActivatedQuestCopyWith(
+          _$_ActivatedQuest value, $Res Function(_$_ActivatedQuest) then) =
+      __$$_ActivatedQuestCopyWithImpl<$Res>;
   @override
   $Res call(
       {String? id,
@@ -215,15 +174,15 @@ abstract class _$ActivatedQuestCopyWith<$Res>
 }
 
 /// @nodoc
-class __$ActivatedQuestCopyWithImpl<$Res>
+class __$$_ActivatedQuestCopyWithImpl<$Res>
     extends _$ActivatedQuestCopyWithImpl<$Res>
-    implements _$ActivatedQuestCopyWith<$Res> {
-  __$ActivatedQuestCopyWithImpl(
-      _ActivatedQuest _value, $Res Function(_ActivatedQuest) _then)
-      : super(_value, (v) => _then(v as _ActivatedQuest));
+    implements _$$_ActivatedQuestCopyWith<$Res> {
+  __$$_ActivatedQuestCopyWithImpl(
+      _$_ActivatedQuest _value, $Res Function(_$_ActivatedQuest) _then)
+      : super(_value, (v) => _then(v as _$_ActivatedQuest));
 
   @override
-  _ActivatedQuest get _value => super._value as _ActivatedQuest;
+  _$_ActivatedQuest get _value => super._value as _$_ActivatedQuest;
 
   @override
   $Res call({
@@ -240,7 +199,7 @@ class __$ActivatedQuestCopyWithImpl<$Res>
     Object? currentDistanceInMeters = freezed,
     Object? lastDistanceInMeters = freezed,
   }) {
-    return _then(_ActivatedQuest(
+    return _then(_$_ActivatedQuest(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -250,7 +209,7 @@ class __$ActivatedQuestCopyWithImpl<$Res>
           : quest // ignore: cast_nullable_to_non_nullable
               as Quest,
       markersCollected: markersCollected == freezed
-          ? _value.markersCollected
+          ? _value._markersCollected
           : markersCollected // ignore: cast_nullable_to_non_nullable
               as List<bool>,
       status: status == freezed
@@ -258,7 +217,7 @@ class __$ActivatedQuestCopyWithImpl<$Res>
           : status // ignore: cast_nullable_to_non_nullable
               as QuestStatus,
       uids: uids == freezed
-          ? _value.uids
+          ? _value._uids
           : uids // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       afkCreditsEarned: afkCreditsEarned == freezed
@@ -300,16 +259,18 @@ class _$_ActivatedQuest implements _ActivatedQuest {
   _$_ActivatedQuest(
       {this.id,
       required this.quest,
-      required this.markersCollected,
+      required final List<bool> markersCollected,
       required this.status,
-      this.uids,
+      final List<String>? uids,
       this.afkCreditsEarned,
       required this.timeElapsed,
       this.createdAt = "",
       this.lastCheckLat,
       this.lastCheckLon,
       this.currentDistanceInMeters,
-      this.lastDistanceInMeters});
+      this.lastDistanceInMeters})
+      : _markersCollected = markersCollected,
+        _uids = uids;
 
   factory _$_ActivatedQuest.fromJson(Map<String, dynamic> json) =>
       _$$_ActivatedQuestFromJson(json);
@@ -318,26 +279,42 @@ class _$_ActivatedQuest implements _ActivatedQuest {
   final String? id;
   @override
   final Quest quest;
+  final List<bool> _markersCollected;
   @override
-  final List<bool> markersCollected;
+  List<bool> get markersCollected {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_markersCollected);
+  }
+
   @override
   final QuestStatus status;
+  final List<String>? _uids;
   @override
-  final List<String>? uids;
+  List<String>? get uids {
+    final value = _uids;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final num? afkCreditsEarned;
   @override
   final int timeElapsed;
+// in seconds!
+  @override
   @JsonKey()
-  @override // in seconds!
   final dynamic createdAt;
   @override
   final double? lastCheckLat;
-  @override // For VibrationSearch quest
+// For VibrationSearch quest
+  @override
   final double? lastCheckLon;
-  @override // For VibrationSearch quest
+// For VibrationSearch quest
+  @override
   final double? currentDistanceInMeters;
-  @override // For VibrationSearch quest
+// For VibrationSearch quest
+  @override
   final double? lastDistanceInMeters;
 
   @override
@@ -349,13 +326,13 @@ class _$_ActivatedQuest implements _ActivatedQuest {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _ActivatedQuest &&
+            other is _$_ActivatedQuest &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.quest, quest) &&
             const DeepCollectionEquality()
-                .equals(other.markersCollected, markersCollected) &&
+                .equals(other._markersCollected, _markersCollected) &&
             const DeepCollectionEquality().equals(other.status, status) &&
-            const DeepCollectionEquality().equals(other.uids, uids) &&
+            const DeepCollectionEquality().equals(other._uids, _uids) &&
             const DeepCollectionEquality()
                 .equals(other.afkCreditsEarned, afkCreditsEarned) &&
             const DeepCollectionEquality()
@@ -371,14 +348,15 @@ class _$_ActivatedQuest implements _ActivatedQuest {
                 .equals(other.lastDistanceInMeters, lastDistanceInMeters));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(quest),
-      const DeepCollectionEquality().hash(markersCollected),
+      const DeepCollectionEquality().hash(_markersCollected),
       const DeepCollectionEquality().hash(status),
-      const DeepCollectionEquality().hash(uids),
+      const DeepCollectionEquality().hash(_uids),
       const DeepCollectionEquality().hash(afkCreditsEarned),
       const DeepCollectionEquality().hash(timeElapsed),
       const DeepCollectionEquality().hash(createdAt),
@@ -389,29 +367,31 @@ class _$_ActivatedQuest implements _ActivatedQuest {
 
   @JsonKey(ignore: true)
   @override
-  _$ActivatedQuestCopyWith<_ActivatedQuest> get copyWith =>
-      __$ActivatedQuestCopyWithImpl<_ActivatedQuest>(this, _$identity);
+  _$$_ActivatedQuestCopyWith<_$_ActivatedQuest> get copyWith =>
+      __$$_ActivatedQuestCopyWithImpl<_$_ActivatedQuest>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ActivatedQuestToJson(this);
+    return _$$_ActivatedQuestToJson(
+      this,
+    );
   }
 }
 
 abstract class _ActivatedQuest implements ActivatedQuest {
   factory _ActivatedQuest(
-      {String? id,
-      required Quest quest,
-      required List<bool> markersCollected,
-      required QuestStatus status,
-      List<String>? uids,
-      num? afkCreditsEarned,
-      required int timeElapsed,
-      dynamic createdAt,
-      double? lastCheckLat,
-      double? lastCheckLon,
-      double? currentDistanceInMeters,
-      double? lastDistanceInMeters}) = _$_ActivatedQuest;
+      {final String? id,
+      required final Quest quest,
+      required final List<bool> markersCollected,
+      required final QuestStatus status,
+      final List<String>? uids,
+      final num? afkCreditsEarned,
+      required final int timeElapsed,
+      final dynamic createdAt,
+      final double? lastCheckLat,
+      final double? lastCheckLon,
+      final double? currentDistanceInMeters,
+      final double? lastDistanceInMeters}) = _$_ActivatedQuest;
 
   factory _ActivatedQuest.fromJson(Map<String, dynamic> json) =
       _$_ActivatedQuest.fromJson;
@@ -442,6 +422,6 @@ abstract class _ActivatedQuest implements ActivatedQuest {
   double? get lastDistanceInMeters;
   @override
   @JsonKey(ignore: true)
-  _$ActivatedQuestCopyWith<_ActivatedQuest> get copyWith =>
+  _$$_ActivatedQuestCopyWith<_$_ActivatedQuest> get copyWith =>
       throw _privateConstructorUsedError;
 }
