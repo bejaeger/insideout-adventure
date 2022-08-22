@@ -12,39 +12,12 @@ part of 'money_transfer_query_config.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 MoneyTransferQueryConfig _$MoneyTransferQueryConfigFromJson(
     Map<String, dynamic> json) {
   return _MoneyTransferQueryConfig.fromJson(json);
 }
-
-/// @nodoc
-class _$MoneyTransferQueryConfigTearOff {
-  const _$MoneyTransferQueryConfigTearOff();
-
-  _MoneyTransferQueryConfig call(
-      {TransferType? type,
-      String? recipientId,
-      String? senderId,
-      int? maxNumberReturns,
-      bool? makeUniqueRecipient}) {
-    return _MoneyTransferQueryConfig(
-      type: type,
-      recipientId: recipientId,
-      senderId: senderId,
-      maxNumberReturns: maxNumberReturns,
-      makeUniqueRecipient: makeUniqueRecipient,
-    );
-  }
-
-  MoneyTransferQueryConfig fromJson(Map<String, Object?> json) {
-    return MoneyTransferQueryConfig.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $MoneyTransferQueryConfig = _$MoneyTransferQueryConfigTearOff();
 
 /// @nodoc
 mixin _$MoneyTransferQueryConfig {
@@ -118,11 +91,12 @@ class _$MoneyTransferQueryConfigCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$MoneyTransferQueryConfigCopyWith<$Res>
+abstract class _$$_MoneyTransferQueryConfigCopyWith<$Res>
     implements $MoneyTransferQueryConfigCopyWith<$Res> {
-  factory _$MoneyTransferQueryConfigCopyWith(_MoneyTransferQueryConfig value,
-          $Res Function(_MoneyTransferQueryConfig) then) =
-      __$MoneyTransferQueryConfigCopyWithImpl<$Res>;
+  factory _$$_MoneyTransferQueryConfigCopyWith(
+          _$_MoneyTransferQueryConfig value,
+          $Res Function(_$_MoneyTransferQueryConfig) then) =
+      __$$_MoneyTransferQueryConfigCopyWithImpl<$Res>;
   @override
   $Res call(
       {TransferType? type,
@@ -133,16 +107,16 @@ abstract class _$MoneyTransferQueryConfigCopyWith<$Res>
 }
 
 /// @nodoc
-class __$MoneyTransferQueryConfigCopyWithImpl<$Res>
+class __$$_MoneyTransferQueryConfigCopyWithImpl<$Res>
     extends _$MoneyTransferQueryConfigCopyWithImpl<$Res>
-    implements _$MoneyTransferQueryConfigCopyWith<$Res> {
-  __$MoneyTransferQueryConfigCopyWithImpl(_MoneyTransferQueryConfig _value,
-      $Res Function(_MoneyTransferQueryConfig) _then)
-      : super(_value, (v) => _then(v as _MoneyTransferQueryConfig));
+    implements _$$_MoneyTransferQueryConfigCopyWith<$Res> {
+  __$$_MoneyTransferQueryConfigCopyWithImpl(_$_MoneyTransferQueryConfig _value,
+      $Res Function(_$_MoneyTransferQueryConfig) _then)
+      : super(_value, (v) => _then(v as _$_MoneyTransferQueryConfig));
 
   @override
-  _MoneyTransferQueryConfig get _value =>
-      super._value as _MoneyTransferQueryConfig;
+  _$_MoneyTransferQueryConfig get _value =>
+      super._value as _$_MoneyTransferQueryConfig;
 
   @override
   $Res call({
@@ -152,7 +126,7 @@ class __$MoneyTransferQueryConfigCopyWithImpl<$Res>
     Object? maxNumberReturns = freezed,
     Object? makeUniqueRecipient = freezed,
   }) {
-    return _then(_MoneyTransferQueryConfig(
+    return _then(_$_MoneyTransferQueryConfig(
       type: type == freezed
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -196,8 +170,9 @@ class _$_MoneyTransferQueryConfig implements _MoneyTransferQueryConfig {
   final String? recipientId;
   @override
   final String? senderId;
-  @override // Map<String, String>?
+// Map<String, String>?
 //     isEqualToFilter, // e.g. {"moneyPoolInfo.moneyPoolId": moneyPool.moneyPoolId},
+  @override
   final int? maxNumberReturns;
   @override
   final bool? makeUniqueRecipient;
@@ -211,7 +186,7 @@ class _$_MoneyTransferQueryConfig implements _MoneyTransferQueryConfig {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _MoneyTransferQueryConfig &&
+            other is _$_MoneyTransferQueryConfig &&
             const DeepCollectionEquality().equals(other.type, type) &&
             const DeepCollectionEquality()
                 .equals(other.recipientId, recipientId) &&
@@ -222,6 +197,7 @@ class _$_MoneyTransferQueryConfig implements _MoneyTransferQueryConfig {
                 .equals(other.makeUniqueRecipient, makeUniqueRecipient));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -233,23 +209,25 @@ class _$_MoneyTransferQueryConfig implements _MoneyTransferQueryConfig {
 
   @JsonKey(ignore: true)
   @override
-  _$MoneyTransferQueryConfigCopyWith<_MoneyTransferQueryConfig> get copyWith =>
-      __$MoneyTransferQueryConfigCopyWithImpl<_MoneyTransferQueryConfig>(
-          this, _$identity);
+  _$$_MoneyTransferQueryConfigCopyWith<_$_MoneyTransferQueryConfig>
+      get copyWith => __$$_MoneyTransferQueryConfigCopyWithImpl<
+          _$_MoneyTransferQueryConfig>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MoneyTransferQueryConfigToJson(this);
+    return _$$_MoneyTransferQueryConfigToJson(
+      this,
+    );
   }
 }
 
 abstract class _MoneyTransferQueryConfig implements MoneyTransferQueryConfig {
   const factory _MoneyTransferQueryConfig(
-      {TransferType? type,
-      String? recipientId,
-      String? senderId,
-      int? maxNumberReturns,
-      bool? makeUniqueRecipient}) = _$_MoneyTransferQueryConfig;
+      {final TransferType? type,
+      final String? recipientId,
+      final String? senderId,
+      final int? maxNumberReturns,
+      final bool? makeUniqueRecipient}) = _$_MoneyTransferQueryConfig;
 
   factory _MoneyTransferQueryConfig.fromJson(Map<String, dynamic> json) =
       _$_MoneyTransferQueryConfig.fromJson;
@@ -267,6 +245,6 @@ abstract class _MoneyTransferQueryConfig implements MoneyTransferQueryConfig {
   bool? get makeUniqueRecipient;
   @override
   @JsonKey(ignore: true)
-  _$MoneyTransferQueryConfigCopyWith<_MoneyTransferQueryConfig> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_MoneyTransferQueryConfigCopyWith<_$_MoneyTransferQueryConfig>
+      get copyWith => throw _privateConstructorUsedError;
 }

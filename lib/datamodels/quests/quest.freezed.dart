@@ -12,60 +12,11 @@ part of 'quest.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 Quest _$QuestFromJson(Map<String, dynamic> json) {
   return _Quest.fromJson(json);
 }
-
-/// @nodoc
-class _$QuestTearOff {
-  const _$QuestTearOff();
-
-  _Quest call(
-      {required String id,
-      required String name,
-      required String description,
-      required QuestType type,
-      String? createdBy,
-      AFKMarker? startMarker,
-      AFKMarker? finishMarker,
-      required List<AFKMarker> markers,
-      List<MarkerNote>? markerNotes,
-      required num afkCredits,
-      String? networkImagePath,
-      List<num>? afkCreditsPerMarker,
-      num? bonusAfkCreditsOnSuccess,
-      double? distanceFromUser,
-      double? distanceToTravelInMeter,
-      int repeatable = 0}) {
-    return _Quest(
-      id: id,
-      name: name,
-      description: description,
-      type: type,
-      createdBy: createdBy,
-      startMarker: startMarker,
-      finishMarker: finishMarker,
-      markers: markers,
-      markerNotes: markerNotes,
-      afkCredits: afkCredits,
-      networkImagePath: networkImagePath,
-      afkCreditsPerMarker: afkCreditsPerMarker,
-      bonusAfkCreditsOnSuccess: bonusAfkCreditsOnSuccess,
-      distanceFromUser: distanceFromUser,
-      distanceToTravelInMeter: distanceToTravelInMeter,
-      repeatable: repeatable,
-    );
-  }
-
-  Quest fromJson(Map<String, Object?> json) {
-    return Quest.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $Quest = _$QuestTearOff();
 
 /// @nodoc
 mixin _$Quest {
@@ -237,9 +188,9 @@ class _$QuestCopyWithImpl<$Res> implements $QuestCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$QuestCopyWith<$Res> implements $QuestCopyWith<$Res> {
-  factory _$QuestCopyWith(_Quest value, $Res Function(_Quest) then) =
-      __$QuestCopyWithImpl<$Res>;
+abstract class _$$_QuestCopyWith<$Res> implements $QuestCopyWith<$Res> {
+  factory _$$_QuestCopyWith(_$_Quest value, $Res Function(_$_Quest) then) =
+      __$$_QuestCopyWithImpl<$Res>;
   @override
   $Res call(
       {String id,
@@ -266,13 +217,13 @@ abstract class _$QuestCopyWith<$Res> implements $QuestCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
-    implements _$QuestCopyWith<$Res> {
-  __$QuestCopyWithImpl(_Quest _value, $Res Function(_Quest) _then)
-      : super(_value, (v) => _then(v as _Quest));
+class __$$_QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
+    implements _$$_QuestCopyWith<$Res> {
+  __$$_QuestCopyWithImpl(_$_Quest _value, $Res Function(_$_Quest) _then)
+      : super(_value, (v) => _then(v as _$_Quest));
 
   @override
-  _Quest get _value => super._value as _Quest;
+  _$_Quest get _value => super._value as _$_Quest;
 
   @override
   $Res call({
@@ -293,7 +244,7 @@ class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
     Object? distanceToTravelInMeter = freezed,
     Object? repeatable = freezed,
   }) {
-    return _then(_Quest(
+    return _then(_$_Quest(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -323,11 +274,11 @@ class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
           : finishMarker // ignore: cast_nullable_to_non_nullable
               as AFKMarker?,
       markers: markers == freezed
-          ? _value.markers
+          ? _value._markers
           : markers // ignore: cast_nullable_to_non_nullable
               as List<AFKMarker>,
       markerNotes: markerNotes == freezed
-          ? _value.markerNotes
+          ? _value._markerNotes
           : markerNotes // ignore: cast_nullable_to_non_nullable
               as List<MarkerNote>?,
       afkCredits: afkCredits == freezed
@@ -339,7 +290,7 @@ class __$QuestCopyWithImpl<$Res> extends _$QuestCopyWithImpl<$Res>
           : networkImagePath // ignore: cast_nullable_to_non_nullable
               as String?,
       afkCreditsPerMarker: afkCreditsPerMarker == freezed
-          ? _value.afkCreditsPerMarker
+          ? _value._afkCreditsPerMarker
           : afkCreditsPerMarker // ignore: cast_nullable_to_non_nullable
               as List<num>?,
       bonusAfkCreditsOnSuccess: bonusAfkCreditsOnSuccess == freezed
@@ -374,15 +325,18 @@ class _$_Quest implements _Quest {
       this.createdBy,
       this.startMarker,
       this.finishMarker,
-      required this.markers,
-      this.markerNotes,
+      required final List<AFKMarker> markers,
+      final List<MarkerNote>? markerNotes,
       required this.afkCredits,
       this.networkImagePath,
-      this.afkCreditsPerMarker,
+      final List<num>? afkCreditsPerMarker,
       this.bonusAfkCreditsOnSuccess,
       this.distanceFromUser,
       this.distanceToTravelInMeter,
-      this.repeatable = 0});
+      this.repeatable = 0})
+      : _markers = markers,
+        _markerNotes = markerNotes,
+        _afkCreditsPerMarker = afkCreditsPerMarker;
 
   factory _$_Quest.fromJson(Map<String, dynamic> json) =>
       _$$_QuestFromJson(json);
@@ -401,24 +355,44 @@ class _$_Quest implements _Quest {
   final AFKMarker? startMarker;
   @override
   final AFKMarker? finishMarker;
+  final List<AFKMarker> _markers;
   @override
-  final List<AFKMarker> markers;
+  List<AFKMarker> get markers {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_markers);
+  }
+
+  final List<MarkerNote>? _markerNotes;
   @override
-  final List<MarkerNote>? markerNotes;
+  List<MarkerNote>? get markerNotes {
+    final value = _markerNotes;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final num afkCredits;
   @override
   final String? networkImagePath;
+  final List<num>? _afkCreditsPerMarker;
   @override
-  final List<num>? afkCreditsPerMarker;
+  List<num>? get afkCreditsPerMarker {
+    final value = _afkCreditsPerMarker;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final num? bonusAfkCreditsOnSuccess;
   @override
   final double? distanceFromUser;
   @override
   final double? distanceToTravelInMeter;
+// for distance estimate
+  @override
   @JsonKey()
-  @override // for distance estimate
   final int repeatable;
 
   @override
@@ -430,7 +404,7 @@ class _$_Quest implements _Quest {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Quest &&
+            other is _$_Quest &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality()
@@ -441,15 +415,15 @@ class _$_Quest implements _Quest {
                 .equals(other.startMarker, startMarker) &&
             const DeepCollectionEquality()
                 .equals(other.finishMarker, finishMarker) &&
-            const DeepCollectionEquality().equals(other.markers, markers) &&
+            const DeepCollectionEquality().equals(other._markers, _markers) &&
             const DeepCollectionEquality()
-                .equals(other.markerNotes, markerNotes) &&
+                .equals(other._markerNotes, _markerNotes) &&
             const DeepCollectionEquality()
                 .equals(other.afkCredits, afkCredits) &&
             const DeepCollectionEquality()
                 .equals(other.networkImagePath, networkImagePath) &&
             const DeepCollectionEquality()
-                .equals(other.afkCreditsPerMarker, afkCreditsPerMarker) &&
+                .equals(other._afkCreditsPerMarker, _afkCreditsPerMarker) &&
             const DeepCollectionEquality().equals(
                 other.bonusAfkCreditsOnSuccess, bonusAfkCreditsOnSuccess) &&
             const DeepCollectionEquality()
@@ -460,6 +434,7 @@ class _$_Quest implements _Quest {
                 .equals(other.repeatable, repeatable));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -470,11 +445,11 @@ class _$_Quest implements _Quest {
       const DeepCollectionEquality().hash(createdBy),
       const DeepCollectionEquality().hash(startMarker),
       const DeepCollectionEquality().hash(finishMarker),
-      const DeepCollectionEquality().hash(markers),
-      const DeepCollectionEquality().hash(markerNotes),
+      const DeepCollectionEquality().hash(_markers),
+      const DeepCollectionEquality().hash(_markerNotes),
       const DeepCollectionEquality().hash(afkCredits),
       const DeepCollectionEquality().hash(networkImagePath),
-      const DeepCollectionEquality().hash(afkCreditsPerMarker),
+      const DeepCollectionEquality().hash(_afkCreditsPerMarker),
       const DeepCollectionEquality().hash(bonusAfkCreditsOnSuccess),
       const DeepCollectionEquality().hash(distanceFromUser),
       const DeepCollectionEquality().hash(distanceToTravelInMeter),
@@ -482,33 +457,35 @@ class _$_Quest implements _Quest {
 
   @JsonKey(ignore: true)
   @override
-  _$QuestCopyWith<_Quest> get copyWith =>
-      __$QuestCopyWithImpl<_Quest>(this, _$identity);
+  _$$_QuestCopyWith<_$_Quest> get copyWith =>
+      __$$_QuestCopyWithImpl<_$_Quest>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_QuestToJson(this);
+    return _$$_QuestToJson(
+      this,
+    );
   }
 }
 
 abstract class _Quest implements Quest {
   factory _Quest(
-      {required String id,
-      required String name,
-      required String description,
-      required QuestType type,
-      String? createdBy,
-      AFKMarker? startMarker,
-      AFKMarker? finishMarker,
-      required List<AFKMarker> markers,
-      List<MarkerNote>? markerNotes,
-      required num afkCredits,
-      String? networkImagePath,
-      List<num>? afkCreditsPerMarker,
-      num? bonusAfkCreditsOnSuccess,
-      double? distanceFromUser,
-      double? distanceToTravelInMeter,
-      int repeatable}) = _$_Quest;
+      {required final String id,
+      required final String name,
+      required final String description,
+      required final QuestType type,
+      final String? createdBy,
+      final AFKMarker? startMarker,
+      final AFKMarker? finishMarker,
+      required final List<AFKMarker> markers,
+      final List<MarkerNote>? markerNotes,
+      required final num afkCredits,
+      final String? networkImagePath,
+      final List<num>? afkCreditsPerMarker,
+      final num? bonusAfkCreditsOnSuccess,
+      final double? distanceFromUser,
+      final double? distanceToTravelInMeter,
+      final int repeatable}) = _$_Quest;
 
   factory _Quest.fromJson(Map<String, dynamic> json) = _$_Quest.fromJson;
 
@@ -546,5 +523,6 @@ abstract class _Quest implements Quest {
   int get repeatable;
   @override
   @JsonKey(ignore: true)
-  _$QuestCopyWith<_Quest> get copyWith => throw _privateConstructorUsedError;
+  _$$_QuestCopyWith<_$_Quest> get copyWith =>
+      throw _privateConstructorUsedError;
 }

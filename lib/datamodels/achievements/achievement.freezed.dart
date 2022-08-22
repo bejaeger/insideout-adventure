@@ -12,36 +12,11 @@ part of 'achievement.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 Achievement _$AchievementFromJson(Map<String, dynamic> json) {
   return _Achievement.fromJson(json);
 }
-
-/// @nodoc
-class _$AchievementTearOff {
-  const _$AchievementTearOff();
-
-  _Achievement call(
-      {required String id,
-      required int credits,
-      required String name,
-      required bool completed}) {
-    return _Achievement(
-      id: id,
-      credits: credits,
-      name: name,
-      completed: completed,
-    );
-  }
-
-  Achievement fromJson(Map<String, Object?> json) {
-    return Achievement.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $Achievement = _$AchievementTearOff();
 
 /// @nodoc
 mixin _$Achievement {
@@ -101,24 +76,24 @@ class _$AchievementCopyWithImpl<$Res> implements $AchievementCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$AchievementCopyWith<$Res>
+abstract class _$$_AchievementCopyWith<$Res>
     implements $AchievementCopyWith<$Res> {
-  factory _$AchievementCopyWith(
-          _Achievement value, $Res Function(_Achievement) then) =
-      __$AchievementCopyWithImpl<$Res>;
+  factory _$$_AchievementCopyWith(
+          _$_Achievement value, $Res Function(_$_Achievement) then) =
+      __$$_AchievementCopyWithImpl<$Res>;
   @override
   $Res call({String id, int credits, String name, bool completed});
 }
 
 /// @nodoc
-class __$AchievementCopyWithImpl<$Res> extends _$AchievementCopyWithImpl<$Res>
-    implements _$AchievementCopyWith<$Res> {
-  __$AchievementCopyWithImpl(
-      _Achievement _value, $Res Function(_Achievement) _then)
-      : super(_value, (v) => _then(v as _Achievement));
+class __$$_AchievementCopyWithImpl<$Res> extends _$AchievementCopyWithImpl<$Res>
+    implements _$$_AchievementCopyWith<$Res> {
+  __$$_AchievementCopyWithImpl(
+      _$_Achievement _value, $Res Function(_$_Achievement) _then)
+      : super(_value, (v) => _then(v as _$_Achievement));
 
   @override
-  _Achievement get _value => super._value as _Achievement;
+  _$_Achievement get _value => super._value as _$_Achievement;
 
   @override
   $Res call({
@@ -127,7 +102,7 @@ class __$AchievementCopyWithImpl<$Res> extends _$AchievementCopyWithImpl<$Res>
     Object? name = freezed,
     Object? completed = freezed,
   }) {
-    return _then(_Achievement(
+    return _then(_$_Achievement(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -178,13 +153,14 @@ class _$_Achievement implements _Achievement {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Achievement &&
+            other is _$_Achievement &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.credits, credits) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.completed, completed));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -195,21 +171,23 @@ class _$_Achievement implements _Achievement {
 
   @JsonKey(ignore: true)
   @override
-  _$AchievementCopyWith<_Achievement> get copyWith =>
-      __$AchievementCopyWithImpl<_Achievement>(this, _$identity);
+  _$$_AchievementCopyWith<_$_Achievement> get copyWith =>
+      __$$_AchievementCopyWithImpl<_$_Achievement>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AchievementToJson(this);
+    return _$$_AchievementToJson(
+      this,
+    );
   }
 }
 
 abstract class _Achievement implements Achievement {
   factory _Achievement(
-      {required String id,
-      required int credits,
-      required String name,
-      required bool completed}) = _$_Achievement;
+      {required final String id,
+      required final int credits,
+      required final String name,
+      required final bool completed}) = _$_Achievement;
 
   factory _Achievement.fromJson(Map<String, dynamic> json) =
       _$_Achievement.fromJson;
@@ -224,6 +202,6 @@ abstract class _Achievement implements Achievement {
   bool get completed;
   @override
   @JsonKey(ignore: true)
-  _$AchievementCopyWith<_Achievement> get copyWith =>
+  _$$_AchievementCopyWith<_$_Achievement> get copyWith =>
       throw _privateConstructorUsedError;
 }

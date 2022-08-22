@@ -12,38 +12,11 @@ part of 'public_user_info.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 PublicUserInfo _$PublicUserInfoFromJson(Map<String, dynamic> json) {
   return _PublicUserInfo.fromJson(json);
 }
-
-/// @nodoc
-class _$PublicUserInfoTearOff {
-  const _$PublicUserInfoTearOff();
-
-  _PublicUserInfo call(
-      {required String uid,
-      required String name,
-      String? email,
-      String? errorMessage,
-      bool? isSponsored}) {
-    return _PublicUserInfo(
-      uid: uid,
-      name: name,
-      email: email,
-      errorMessage: errorMessage,
-      isSponsored: isSponsored,
-    );
-  }
-
-  PublicUserInfo fromJson(Map<String, Object?> json) {
-    return PublicUserInfo.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $PublicUserInfo = _$PublicUserInfoTearOff();
 
 /// @nodoc
 mixin _$PublicUserInfo {
@@ -115,11 +88,11 @@ class _$PublicUserInfoCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$PublicUserInfoCopyWith<$Res>
+abstract class _$$_PublicUserInfoCopyWith<$Res>
     implements $PublicUserInfoCopyWith<$Res> {
-  factory _$PublicUserInfoCopyWith(
-          _PublicUserInfo value, $Res Function(_PublicUserInfo) then) =
-      __$PublicUserInfoCopyWithImpl<$Res>;
+  factory _$$_PublicUserInfoCopyWith(
+          _$_PublicUserInfo value, $Res Function(_$_PublicUserInfo) then) =
+      __$$_PublicUserInfoCopyWithImpl<$Res>;
   @override
   $Res call(
       {String uid,
@@ -130,15 +103,15 @@ abstract class _$PublicUserInfoCopyWith<$Res>
 }
 
 /// @nodoc
-class __$PublicUserInfoCopyWithImpl<$Res>
+class __$$_PublicUserInfoCopyWithImpl<$Res>
     extends _$PublicUserInfoCopyWithImpl<$Res>
-    implements _$PublicUserInfoCopyWith<$Res> {
-  __$PublicUserInfoCopyWithImpl(
-      _PublicUserInfo _value, $Res Function(_PublicUserInfo) _then)
-      : super(_value, (v) => _then(v as _PublicUserInfo));
+    implements _$$_PublicUserInfoCopyWith<$Res> {
+  __$$_PublicUserInfoCopyWithImpl(
+      _$_PublicUserInfo _value, $Res Function(_$_PublicUserInfo) _then)
+      : super(_value, (v) => _then(v as _$_PublicUserInfo));
 
   @override
-  _PublicUserInfo get _value => super._value as _PublicUserInfo;
+  _$_PublicUserInfo get _value => super._value as _$_PublicUserInfo;
 
   @override
   $Res call({
@@ -148,7 +121,7 @@ class __$PublicUserInfoCopyWithImpl<$Res>
     Object? errorMessage = freezed,
     Object? isSponsored = freezed,
   }) {
-    return _then(_PublicUserInfo(
+    return _then(_$_PublicUserInfo(
       uid: uid == freezed
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
@@ -206,7 +179,7 @@ class _$_PublicUserInfo implements _PublicUserInfo {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _PublicUserInfo &&
+            other is _$_PublicUserInfo &&
             const DeepCollectionEquality().equals(other.uid, uid) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.email, email) &&
@@ -216,6 +189,7 @@ class _$_PublicUserInfo implements _PublicUserInfo {
                 .equals(other.isSponsored, isSponsored));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -227,22 +201,24 @@ class _$_PublicUserInfo implements _PublicUserInfo {
 
   @JsonKey(ignore: true)
   @override
-  _$PublicUserInfoCopyWith<_PublicUserInfo> get copyWith =>
-      __$PublicUserInfoCopyWithImpl<_PublicUserInfo>(this, _$identity);
+  _$$_PublicUserInfoCopyWith<_$_PublicUserInfo> get copyWith =>
+      __$$_PublicUserInfoCopyWithImpl<_$_PublicUserInfo>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PublicUserInfoToJson(this);
+    return _$$_PublicUserInfoToJson(
+      this,
+    );
   }
 }
 
 abstract class _PublicUserInfo implements PublicUserInfo {
   factory _PublicUserInfo(
-      {required String uid,
-      required String name,
-      String? email,
-      String? errorMessage,
-      bool? isSponsored}) = _$_PublicUserInfo;
+      {required final String uid,
+      required final String name,
+      final String? email,
+      final String? errorMessage,
+      final bool? isSponsored}) = _$_PublicUserInfo;
 
   factory _PublicUserInfo.fromJson(Map<String, dynamic> json) =
       _$_PublicUserInfo.fromJson;
@@ -259,6 +235,6 @@ abstract class _PublicUserInfo implements PublicUserInfo {
   bool? get isSponsored;
   @override
   @JsonKey(ignore: true)
-  _$PublicUserInfoCopyWith<_PublicUserInfo> get copyWith =>
+  _$$_PublicUserInfoCopyWith<_$_PublicUserInfo> get copyWith =>
       throw _privateConstructorUsedError;
 }

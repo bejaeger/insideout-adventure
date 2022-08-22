@@ -8,9 +8,11 @@ import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -44,6 +46,7 @@ void mainCommon(Flavor flavor) async {
               ? dev.DefaultFirebaseOptions.currentPlatform
               : prod.DefaultFirebaseOptions.currentPlatform); */
     }
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();
@@ -67,14 +70,14 @@ void mainCommon(Flavor flavor) async {
     appConfigProvider.configure(flavor);
     print("==>> Running with flavor $flavor");
 
-    if (!kIsWeb &&
-        Platform.isAndroid &&
-        await ArCoreController.checkArCoreAvailability() &&
-        await ArCoreController.checkIsArCoreInstalled()) {
-      appConfigProvider.setIsARAvailable(true);
-    } else {
-      appConfigProvider.setIsARAvailable(false);
-    }
+    // if (!kIsWeb &&
+    //     Platform.isAndroid &&
+    //     await ArCoreController.checkArCoreAvailability() &&
+    //     await ArCoreController.checkIsArCoreInstalled()) {
+    //   appConfigProvider.setIsARAvailable(true);
+    // } else {
+    appConfigProvider.setIsARAvailable(false);
+    // }
 
     runApp(MyApp());
   } catch (e) {
@@ -134,6 +137,14 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+// Declared as global, outside of any class
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+
+  // Use this method to automatically convert the push data, in case you gonna use our data standard
+  AwesomeNotifications().createNotificationFromJsonData(message.data);
 }
 
 Future _connectToFirebaseEmulator() async {

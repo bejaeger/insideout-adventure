@@ -12,46 +12,11 @@ part of 'screen_time_session.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 ScreenTimeSession _$ScreenTimeSessionFromJson(Map<String, dynamic> json) {
   return _ScreenTimeSession.fromJson(json);
 }
-
-/// @nodoc
-class _$ScreenTimeSessionTearOff {
-  const _$ScreenTimeSessionTearOff();
-
-  _ScreenTimeSession call(
-      {required String sessionId,
-      required String uid,
-      dynamic startedAt = "",
-      dynamic endedAt = "",
-      required int minutes,
-      int? minutesUsed,
-      num? afkCreditsUsed,
-      required ScreenTimeSessionStatus status,
-      required double afkCredits}) {
-    return _ScreenTimeSession(
-      sessionId: sessionId,
-      uid: uid,
-      startedAt: startedAt,
-      endedAt: endedAt,
-      minutes: minutes,
-      minutesUsed: minutesUsed,
-      afkCreditsUsed: afkCreditsUsed,
-      status: status,
-      afkCredits: afkCredits,
-    );
-  }
-
-  ScreenTimeSession fromJson(Map<String, Object?> json) {
-    return ScreenTimeSession.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $ScreenTimeSession = _$ScreenTimeSessionTearOff();
 
 /// @nodoc
 mixin _$ScreenTimeSession {
@@ -151,11 +116,11 @@ class _$ScreenTimeSessionCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$ScreenTimeSessionCopyWith<$Res>
+abstract class _$$_ScreenTimeSessionCopyWith<$Res>
     implements $ScreenTimeSessionCopyWith<$Res> {
-  factory _$ScreenTimeSessionCopyWith(
-          _ScreenTimeSession value, $Res Function(_ScreenTimeSession) then) =
-      __$ScreenTimeSessionCopyWithImpl<$Res>;
+  factory _$$_ScreenTimeSessionCopyWith(_$_ScreenTimeSession value,
+          $Res Function(_$_ScreenTimeSession) then) =
+      __$$_ScreenTimeSessionCopyWithImpl<$Res>;
   @override
   $Res call(
       {String sessionId,
@@ -170,15 +135,15 @@ abstract class _$ScreenTimeSessionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$ScreenTimeSessionCopyWithImpl<$Res>
+class __$$_ScreenTimeSessionCopyWithImpl<$Res>
     extends _$ScreenTimeSessionCopyWithImpl<$Res>
-    implements _$ScreenTimeSessionCopyWith<$Res> {
-  __$ScreenTimeSessionCopyWithImpl(
-      _ScreenTimeSession _value, $Res Function(_ScreenTimeSession) _then)
-      : super(_value, (v) => _then(v as _ScreenTimeSession));
+    implements _$$_ScreenTimeSessionCopyWith<$Res> {
+  __$$_ScreenTimeSessionCopyWithImpl(
+      _$_ScreenTimeSession _value, $Res Function(_$_ScreenTimeSession) _then)
+      : super(_value, (v) => _then(v as _$_ScreenTimeSession));
 
   @override
-  _ScreenTimeSession get _value => super._value as _ScreenTimeSession;
+  _$_ScreenTimeSession get _value => super._value as _$_ScreenTimeSession;
 
   @override
   $Res call({
@@ -192,7 +157,7 @@ class __$ScreenTimeSessionCopyWithImpl<$Res>
     Object? status = freezed,
     Object? afkCredits = freezed,
   }) {
-    return _then(_ScreenTimeSession(
+    return _then(_$_ScreenTimeSession(
       sessionId: sessionId == freezed
           ? _value.sessionId
           : sessionId // ignore: cast_nullable_to_non_nullable
@@ -254,11 +219,11 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
   final String sessionId;
   @override
   final String uid;
-  @JsonKey()
   @override
+  @JsonKey()
   final dynamic startedAt;
-  @JsonKey()
   @override
+  @JsonKey()
   final dynamic endedAt;
   @override
   final int minutes;
@@ -280,7 +245,7 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _ScreenTimeSession &&
+            other is _$_ScreenTimeSession &&
             const DeepCollectionEquality().equals(other.sessionId, sessionId) &&
             const DeepCollectionEquality().equals(other.uid, uid) &&
             const DeepCollectionEquality().equals(other.startedAt, startedAt) &&
@@ -295,6 +260,7 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
                 .equals(other.afkCredits, afkCredits));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -310,26 +276,29 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
 
   @JsonKey(ignore: true)
   @override
-  _$ScreenTimeSessionCopyWith<_ScreenTimeSession> get copyWith =>
-      __$ScreenTimeSessionCopyWithImpl<_ScreenTimeSession>(this, _$identity);
+  _$$_ScreenTimeSessionCopyWith<_$_ScreenTimeSession> get copyWith =>
+      __$$_ScreenTimeSessionCopyWithImpl<_$_ScreenTimeSession>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ScreenTimeSessionToJson(this);
+    return _$$_ScreenTimeSessionToJson(
+      this,
+    );
   }
 }
 
 abstract class _ScreenTimeSession implements ScreenTimeSession {
   factory _ScreenTimeSession(
-      {required String sessionId,
-      required String uid,
-      dynamic startedAt,
-      dynamic endedAt,
-      required int minutes,
-      int? minutesUsed,
-      num? afkCreditsUsed,
-      required ScreenTimeSessionStatus status,
-      required double afkCredits}) = _$_ScreenTimeSession;
+      {required final String sessionId,
+      required final String uid,
+      final dynamic startedAt,
+      final dynamic endedAt,
+      required final int minutes,
+      final int? minutesUsed,
+      final num? afkCreditsUsed,
+      required final ScreenTimeSessionStatus status,
+      required final double afkCredits}) = _$_ScreenTimeSession;
 
   factory _ScreenTimeSession.fromJson(Map<String, dynamic> json) =
       _$_ScreenTimeSession.fromJson;
@@ -354,6 +323,6 @@ abstract class _ScreenTimeSession implements ScreenTimeSession {
   double get afkCredits;
   @override
   @JsonKey(ignore: true)
-  _$ScreenTimeSessionCopyWith<_ScreenTimeSession> get copyWith =>
+  _$$_ScreenTimeSessionCopyWith<_$_ScreenTimeSession> get copyWith =>
       throw _privateConstructorUsedError;
 }

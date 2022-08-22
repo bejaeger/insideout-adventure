@@ -12,40 +12,11 @@ part of 'gift_card_purchase.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 GiftCardPurchase _$GiftCardPurchaseFromJson(Map<String, dynamic> json) {
   return _GiftCardPurchase.fromJson(json);
 }
-
-/// @nodoc
-class _$GiftCardPurchaseTearOff {
-  const _$GiftCardPurchaseTearOff();
-
-  _GiftCardPurchase call(
-      {required GiftCardCategory giftCardCategory,
-      required String uid,
-      String? code,
-      dynamic purchasedAt = "",
-      String transferId = "placeholder",
-      PurchasedGiftCardStatus status = PurchasedGiftCardStatus.initialized}) {
-    return _GiftCardPurchase(
-      giftCardCategory: giftCardCategory,
-      uid: uid,
-      code: code,
-      purchasedAt: purchasedAt,
-      transferId: transferId,
-      status: status,
-    );
-  }
-
-  GiftCardPurchase fromJson(Map<String, Object?> json) {
-    return GiftCardPurchase.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $GiftCardPurchase = _$GiftCardPurchaseTearOff();
 
 /// @nodoc
 mixin _$GiftCardPurchase {
@@ -133,11 +104,11 @@ class _$GiftCardPurchaseCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$GiftCardPurchaseCopyWith<$Res>
+abstract class _$$_GiftCardPurchaseCopyWith<$Res>
     implements $GiftCardPurchaseCopyWith<$Res> {
-  factory _$GiftCardPurchaseCopyWith(
-          _GiftCardPurchase value, $Res Function(_GiftCardPurchase) then) =
-      __$GiftCardPurchaseCopyWithImpl<$Res>;
+  factory _$$_GiftCardPurchaseCopyWith(
+          _$_GiftCardPurchase value, $Res Function(_$_GiftCardPurchase) then) =
+      __$$_GiftCardPurchaseCopyWithImpl<$Res>;
   @override
   $Res call(
       {GiftCardCategory giftCardCategory,
@@ -152,15 +123,15 @@ abstract class _$GiftCardPurchaseCopyWith<$Res>
 }
 
 /// @nodoc
-class __$GiftCardPurchaseCopyWithImpl<$Res>
+class __$$_GiftCardPurchaseCopyWithImpl<$Res>
     extends _$GiftCardPurchaseCopyWithImpl<$Res>
-    implements _$GiftCardPurchaseCopyWith<$Res> {
-  __$GiftCardPurchaseCopyWithImpl(
-      _GiftCardPurchase _value, $Res Function(_GiftCardPurchase) _then)
-      : super(_value, (v) => _then(v as _GiftCardPurchase));
+    implements _$$_GiftCardPurchaseCopyWith<$Res> {
+  __$$_GiftCardPurchaseCopyWithImpl(
+      _$_GiftCardPurchase _value, $Res Function(_$_GiftCardPurchase) _then)
+      : super(_value, (v) => _then(v as _$_GiftCardPurchase));
 
   @override
-  _GiftCardPurchase get _value => super._value as _GiftCardPurchase;
+  _$_GiftCardPurchase get _value => super._value as _$_GiftCardPurchase;
 
   @override
   $Res call({
@@ -171,7 +142,7 @@ class __$GiftCardPurchaseCopyWithImpl<$Res>
     Object? transferId = freezed,
     Object? status = freezed,
   }) {
-    return _then(_GiftCardPurchase(
+    return _then(_$_GiftCardPurchase(
       giftCardCategory: giftCardCategory == freezed
           ? _value.giftCardCategory
           : giftCardCategory // ignore: cast_nullable_to_non_nullable
@@ -221,14 +192,14 @@ class _$_GiftCardPurchase implements _GiftCardPurchase {
   final String uid;
   @override
   final String? code;
-  @JsonKey()
   @override
+  @JsonKey()
   final dynamic purchasedAt;
-  @JsonKey()
   @override
+  @JsonKey()
   final String transferId;
-  @JsonKey()
   @override
+  @JsonKey()
   final PurchasedGiftCardStatus status;
 
   @override
@@ -240,7 +211,7 @@ class _$_GiftCardPurchase implements _GiftCardPurchase {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _GiftCardPurchase &&
+            other is _$_GiftCardPurchase &&
             const DeepCollectionEquality()
                 .equals(other.giftCardCategory, giftCardCategory) &&
             const DeepCollectionEquality().equals(other.uid, uid) &&
@@ -252,6 +223,7 @@ class _$_GiftCardPurchase implements _GiftCardPurchase {
             const DeepCollectionEquality().equals(other.status, status));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -264,23 +236,25 @@ class _$_GiftCardPurchase implements _GiftCardPurchase {
 
   @JsonKey(ignore: true)
   @override
-  _$GiftCardPurchaseCopyWith<_GiftCardPurchase> get copyWith =>
-      __$GiftCardPurchaseCopyWithImpl<_GiftCardPurchase>(this, _$identity);
+  _$$_GiftCardPurchaseCopyWith<_$_GiftCardPurchase> get copyWith =>
+      __$$_GiftCardPurchaseCopyWithImpl<_$_GiftCardPurchase>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_GiftCardPurchaseToJson(this);
+    return _$$_GiftCardPurchaseToJson(
+      this,
+    );
   }
 }
 
 abstract class _GiftCardPurchase implements GiftCardPurchase {
   const factory _GiftCardPurchase(
-      {required GiftCardCategory giftCardCategory,
-      required String uid,
-      String? code,
-      dynamic purchasedAt,
-      String transferId,
-      PurchasedGiftCardStatus status}) = _$_GiftCardPurchase;
+      {required final GiftCardCategory giftCardCategory,
+      required final String uid,
+      final String? code,
+      final dynamic purchasedAt,
+      final String transferId,
+      final PurchasedGiftCardStatus status}) = _$_GiftCardPurchase;
 
   factory _GiftCardPurchase.fromJson(Map<String, dynamic> json) =
       _$_GiftCardPurchase.fromJson;
@@ -299,6 +273,6 @@ abstract class _GiftCardPurchase implements GiftCardPurchase {
   PurchasedGiftCardStatus get status;
   @override
   @JsonKey(ignore: true)
-  _$GiftCardPurchaseCopyWith<_GiftCardPurchase> get copyWith =>
+  _$$_GiftCardPurchaseCopyWith<_$_GiftCardPurchase> get copyWith =>
       throw _privateConstructorUsedError;
 }

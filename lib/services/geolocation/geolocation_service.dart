@@ -73,8 +73,9 @@ class GeolocationService extends PausableService {
       // denied permission, no access to gps, ...
 
       _livePositionStreamSubscription = Geolocator.getPositionStream(
-              desiredAccuracy: LocationAccuracy.best,
-              distanceFilter: currentPositionDistanceFilter)
+              locationSettings: LocationSettings(
+                  accuracy: LocationAccuracy.best,
+                  distanceFilter: currentPositionDistanceFilter))
           .listen(
         (position) {
           printPositionInfo(position);
@@ -120,8 +121,9 @@ class GeolocationService extends PausableService {
       // TODO: Provide proper error message to user in case of
       // denied permission, no access to gps, ...
       _livePositionMainStreamSubscription = Geolocator.getPositionStream(
-              desiredAccuracy: LocationAccuracy.best,
-              distanceFilter: currentPositionDistanceFilter)
+              locationSettings: LocationSettings(
+                  accuracy: LocationAccuracy.best,
+                  distanceFilter: currentPositionDistanceFilter))
           .listen(
         (position) {
           printPositionInfo(position);

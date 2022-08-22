@@ -12,24 +12,7 @@ part of 'distance_check_status_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$DistanceCheckStatusModelTearOff {
-  const _$DistanceCheckStatusModelTearOff();
-
-  _DistanceCheckStatusModel call(
-      {required Future<DistanceCheckStatus> futureStatus,
-      required double distanceInMeter}) {
-    return _DistanceCheckStatusModel(
-      futureStatus: futureStatus,
-      distanceInMeter: distanceInMeter,
-    );
-  }
-}
-
-/// @nodoc
-const $DistanceCheckStatusModel = _$DistanceCheckStatusModelTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$DistanceCheckStatusModel {
@@ -78,33 +61,34 @@ class _$DistanceCheckStatusModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$DistanceCheckStatusModelCopyWith<$Res>
+abstract class _$$_DistanceCheckStatusModelCopyWith<$Res>
     implements $DistanceCheckStatusModelCopyWith<$Res> {
-  factory _$DistanceCheckStatusModelCopyWith(_DistanceCheckStatusModel value,
-          $Res Function(_DistanceCheckStatusModel) then) =
-      __$DistanceCheckStatusModelCopyWithImpl<$Res>;
+  factory _$$_DistanceCheckStatusModelCopyWith(
+          _$_DistanceCheckStatusModel value,
+          $Res Function(_$_DistanceCheckStatusModel) then) =
+      __$$_DistanceCheckStatusModelCopyWithImpl<$Res>;
   @override
   $Res call({Future<DistanceCheckStatus> futureStatus, double distanceInMeter});
 }
 
 /// @nodoc
-class __$DistanceCheckStatusModelCopyWithImpl<$Res>
+class __$$_DistanceCheckStatusModelCopyWithImpl<$Res>
     extends _$DistanceCheckStatusModelCopyWithImpl<$Res>
-    implements _$DistanceCheckStatusModelCopyWith<$Res> {
-  __$DistanceCheckStatusModelCopyWithImpl(_DistanceCheckStatusModel _value,
-      $Res Function(_DistanceCheckStatusModel) _then)
-      : super(_value, (v) => _then(v as _DistanceCheckStatusModel));
+    implements _$$_DistanceCheckStatusModelCopyWith<$Res> {
+  __$$_DistanceCheckStatusModelCopyWithImpl(_$_DistanceCheckStatusModel _value,
+      $Res Function(_$_DistanceCheckStatusModel) _then)
+      : super(_value, (v) => _then(v as _$_DistanceCheckStatusModel));
 
   @override
-  _DistanceCheckStatusModel get _value =>
-      super._value as _DistanceCheckStatusModel;
+  _$_DistanceCheckStatusModel get _value =>
+      super._value as _$_DistanceCheckStatusModel;
 
   @override
   $Res call({
     Object? futureStatus = freezed,
     Object? distanceInMeter = freezed,
   }) {
-    return _then(_DistanceCheckStatusModel(
+    return _then(_$_DistanceCheckStatusModel(
       futureStatus: futureStatus == freezed
           ? _value.futureStatus
           : futureStatus // ignore: cast_nullable_to_non_nullable
@@ -137,7 +121,7 @@ class _$_DistanceCheckStatusModel implements _DistanceCheckStatusModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _DistanceCheckStatusModel &&
+            other is _$_DistanceCheckStatusModel &&
             const DeepCollectionEquality()
                 .equals(other.futureStatus, futureStatus) &&
             const DeepCollectionEquality()
@@ -152,15 +136,15 @@ class _$_DistanceCheckStatusModel implements _DistanceCheckStatusModel {
 
   @JsonKey(ignore: true)
   @override
-  _$DistanceCheckStatusModelCopyWith<_DistanceCheckStatusModel> get copyWith =>
-      __$DistanceCheckStatusModelCopyWithImpl<_DistanceCheckStatusModel>(
-          this, _$identity);
+  _$$_DistanceCheckStatusModelCopyWith<_$_DistanceCheckStatusModel>
+      get copyWith => __$$_DistanceCheckStatusModelCopyWithImpl<
+          _$_DistanceCheckStatusModel>(this, _$identity);
 }
 
 abstract class _DistanceCheckStatusModel implements DistanceCheckStatusModel {
   factory _DistanceCheckStatusModel(
-      {required Future<DistanceCheckStatus> futureStatus,
-      required double distanceInMeter}) = _$_DistanceCheckStatusModel;
+      {required final Future<DistanceCheckStatus> futureStatus,
+      required final double distanceInMeter}) = _$_DistanceCheckStatusModel;
 
   @override
   Future<DistanceCheckStatus> get futureStatus;
@@ -168,6 +152,6 @@ abstract class _DistanceCheckStatusModel implements DistanceCheckStatusModel {
   double get distanceInMeter;
   @override
   @JsonKey(ignore: true)
-  _$DistanceCheckStatusModelCopyWith<_DistanceCheckStatusModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_DistanceCheckStatusModelCopyWith<_$_DistanceCheckStatusModel>
+      get copyWith => throw _privateConstructorUsedError;
 }

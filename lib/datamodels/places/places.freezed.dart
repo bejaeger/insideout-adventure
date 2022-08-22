@@ -12,40 +12,11 @@ part of 'places.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 Places _$PlacesFromJson(Map<String, dynamic> json) {
   return _Places.fromJson(json);
 }
-
-/// @nodoc
-class _$PlacesTearOff {
-  const _$PlacesTearOff();
-
-  _Places call(
-      {required String id,
-      String? name,
-      double? lat,
-      double? lon,
-      String? image,
-      String? questId}) {
-    return _Places(
-      id: id,
-      name: name,
-      lat: lat,
-      lon: lon,
-      image: image,
-      questId: questId,
-    );
-  }
-
-  Places fromJson(Map<String, Object?> json) {
-    return Places.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $Places = _$PlacesTearOff();
 
 /// @nodoc
 mixin _$Places {
@@ -121,9 +92,9 @@ class _$PlacesCopyWithImpl<$Res> implements $PlacesCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$PlacesCopyWith<$Res> implements $PlacesCopyWith<$Res> {
-  factory _$PlacesCopyWith(_Places value, $Res Function(_Places) then) =
-      __$PlacesCopyWithImpl<$Res>;
+abstract class _$$_PlacesCopyWith<$Res> implements $PlacesCopyWith<$Res> {
+  factory _$$_PlacesCopyWith(_$_Places value, $Res Function(_$_Places) then) =
+      __$$_PlacesCopyWithImpl<$Res>;
   @override
   $Res call(
       {String id,
@@ -135,13 +106,13 @@ abstract class _$PlacesCopyWith<$Res> implements $PlacesCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$PlacesCopyWithImpl<$Res> extends _$PlacesCopyWithImpl<$Res>
-    implements _$PlacesCopyWith<$Res> {
-  __$PlacesCopyWithImpl(_Places _value, $Res Function(_Places) _then)
-      : super(_value, (v) => _then(v as _Places));
+class __$$_PlacesCopyWithImpl<$Res> extends _$PlacesCopyWithImpl<$Res>
+    implements _$$_PlacesCopyWith<$Res> {
+  __$$_PlacesCopyWithImpl(_$_Places _value, $Res Function(_$_Places) _then)
+      : super(_value, (v) => _then(v as _$_Places));
 
   @override
-  _Places get _value => super._value as _Places;
+  _$_Places get _value => super._value as _$_Places;
 
   @override
   $Res call({
@@ -152,7 +123,7 @@ class __$PlacesCopyWithImpl<$Res> extends _$PlacesCopyWithImpl<$Res>
     Object? image = freezed,
     Object? questId = freezed,
   }) {
-    return _then(_Places(
+    return _then(_$_Places(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -217,7 +188,7 @@ class _$_Places implements _Places {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Places &&
+            other is _$_Places &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.lat, lat) &&
@@ -226,6 +197,7 @@ class _$_Places implements _Places {
             const DeepCollectionEquality().equals(other.questId, questId));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -238,23 +210,25 @@ class _$_Places implements _Places {
 
   @JsonKey(ignore: true)
   @override
-  _$PlacesCopyWith<_Places> get copyWith =>
-      __$PlacesCopyWithImpl<_Places>(this, _$identity);
+  _$$_PlacesCopyWith<_$_Places> get copyWith =>
+      __$$_PlacesCopyWithImpl<_$_Places>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PlacesToJson(this);
+    return _$$_PlacesToJson(
+      this,
+    );
   }
 }
 
 abstract class _Places implements Places {
   factory _Places(
-      {required String id,
-      String? name,
-      double? lat,
-      double? lon,
-      String? image,
-      String? questId}) = _$_Places;
+      {required final String id,
+      final String? name,
+      final double? lat,
+      final double? lon,
+      final String? image,
+      final String? questId}) = _$_Places;
 
   factory _Places.fromJson(Map<String, dynamic> json) = _$_Places.fromJson;
 
@@ -272,5 +246,6 @@ abstract class _Places implements Places {
   String? get questId;
   @override
   @JsonKey(ignore: true)
-  _$PlacesCopyWith<_Places> get copyWith => throw _privateConstructorUsedError;
+  _$$_PlacesCopyWith<_$_Places> get copyWith =>
+      throw _privateConstructorUsedError;
 }

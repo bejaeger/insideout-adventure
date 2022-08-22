@@ -30,7 +30,7 @@ Map<String, dynamic> _$$_ActivatedQuestToJson(_$_ActivatedQuest instance) =>
       'id': instance.id,
       'quest': instance.quest.toJson(),
       'markersCollected': instance.markersCollected,
-      'status': _$QuestStatusEnumMap[instance.status],
+      'status': _$QuestStatusEnumMap[instance.status]!,
       'uids': instance.uids,
       'afkCreditsEarned': instance.afkCreditsEarned,
       'timeElapsed': instance.timeElapsed,

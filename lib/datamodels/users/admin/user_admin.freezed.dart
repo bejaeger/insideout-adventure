@@ -12,38 +12,11 @@ part of 'user_admin.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 UserAdmin _$UserAdminFromJson(Map<String, dynamic> json) {
   return _UserAdmin.fromJson(json);
 }
-
-/// @nodoc
-class _$UserAdminTearOff {
-  const _$UserAdminTearOff();
-
-  _UserAdmin call(
-      {required String id,
-      String? name,
-      String? email,
-      String? password,
-      UserRole? role}) {
-    return _UserAdmin(
-      id: id,
-      name: name,
-      email: email,
-      password: password,
-      role: role,
-    );
-  }
-
-  UserAdmin fromJson(Map<String, Object?> json) {
-    return UserAdmin.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $UserAdmin = _$UserAdminTearOff();
 
 /// @nodoc
 mixin _$UserAdmin {
@@ -113,10 +86,10 @@ class _$UserAdminCopyWithImpl<$Res> implements $UserAdminCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$UserAdminCopyWith<$Res> implements $UserAdminCopyWith<$Res> {
-  factory _$UserAdminCopyWith(
-          _UserAdmin value, $Res Function(_UserAdmin) then) =
-      __$UserAdminCopyWithImpl<$Res>;
+abstract class _$$_UserAdminCopyWith<$Res> implements $UserAdminCopyWith<$Res> {
+  factory _$$_UserAdminCopyWith(
+          _$_UserAdmin value, $Res Function(_$_UserAdmin) then) =
+      __$$_UserAdminCopyWithImpl<$Res>;
   @override
   $Res call(
       {String id,
@@ -127,13 +100,14 @@ abstract class _$UserAdminCopyWith<$Res> implements $UserAdminCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$UserAdminCopyWithImpl<$Res> extends _$UserAdminCopyWithImpl<$Res>
-    implements _$UserAdminCopyWith<$Res> {
-  __$UserAdminCopyWithImpl(_UserAdmin _value, $Res Function(_UserAdmin) _then)
-      : super(_value, (v) => _then(v as _UserAdmin));
+class __$$_UserAdminCopyWithImpl<$Res> extends _$UserAdminCopyWithImpl<$Res>
+    implements _$$_UserAdminCopyWith<$Res> {
+  __$$_UserAdminCopyWithImpl(
+      _$_UserAdmin _value, $Res Function(_$_UserAdmin) _then)
+      : super(_value, (v) => _then(v as _$_UserAdmin));
 
   @override
-  _UserAdmin get _value => super._value as _UserAdmin;
+  _$_UserAdmin get _value => super._value as _$_UserAdmin;
 
   @override
   $Res call({
@@ -143,7 +117,7 @@ class __$UserAdminCopyWithImpl<$Res> extends _$UserAdminCopyWithImpl<$Res>
     Object? password = freezed,
     Object? role = freezed,
   }) {
-    return _then(_UserAdmin(
+    return _then(_$_UserAdmin(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -197,7 +171,7 @@ class _$_UserAdmin implements _UserAdmin {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _UserAdmin &&
+            other is _$_UserAdmin &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.email, email) &&
@@ -205,6 +179,7 @@ class _$_UserAdmin implements _UserAdmin {
             const DeepCollectionEquality().equals(other.role, role));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -216,22 +191,24 @@ class _$_UserAdmin implements _UserAdmin {
 
   @JsonKey(ignore: true)
   @override
-  _$UserAdminCopyWith<_UserAdmin> get copyWith =>
-      __$UserAdminCopyWithImpl<_UserAdmin>(this, _$identity);
+  _$$_UserAdminCopyWith<_$_UserAdmin> get copyWith =>
+      __$$_UserAdminCopyWithImpl<_$_UserAdmin>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UserAdminToJson(this);
+    return _$$_UserAdminToJson(
+      this,
+    );
   }
 }
 
 abstract class _UserAdmin implements UserAdmin {
   factory _UserAdmin(
-      {required String id,
-      String? name,
-      String? email,
-      String? password,
-      UserRole? role}) = _$_UserAdmin;
+      {required final String id,
+      final String? name,
+      final String? email,
+      final String? password,
+      final UserRole? role}) = _$_UserAdmin;
 
   factory _UserAdmin.fromJson(Map<String, dynamic> json) =
       _$_UserAdmin.fromJson;
@@ -248,6 +225,6 @@ abstract class _UserAdmin implements UserAdmin {
   UserRole? get role;
   @override
   @JsonKey(ignore: true)
-  _$UserAdminCopyWith<_UserAdmin> get copyWith =>
+  _$$_UserAdminCopyWith<_$_UserAdmin> get copyWith =>
       throw _privateConstructorUsedError;
 }

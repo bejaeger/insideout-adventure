@@ -40,7 +40,7 @@ Map<String, dynamic> _$$_QuestToJson(_$_Quest instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'description': instance.description,
-      'type': _$QuestTypeEnumMap[instance.type],
+      'type': _$QuestTypeEnumMap[instance.type]!,
       'createdBy': instance.createdBy,
       'startMarker': instance.startMarker?.toJson(),
       'finishMarker': instance.finishMarker?.toJson(),
