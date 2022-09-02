@@ -23,7 +23,7 @@ class BottomFloatingActionButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
+      decoration: const BoxDecoration(color: Colors.white, boxShadow: [
         BoxShadow(
             offset: Offset(0, -1),
             blurRadius: 0.1,

@@ -34,6 +34,7 @@ class AddExplorerView extends StatelessWidget with $AddExplorerView {
                   AfkCreditsInputField(
                     placeholder: 'Name',
                     controller: nameController,
+                    autofocus: true,
                   ),
                   verticalSpaceMedium,
                   AfkCreditsInputField(

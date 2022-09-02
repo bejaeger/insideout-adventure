@@ -88,69 +88,96 @@ class ParentHomeView extends StatelessWidget {
                     // onAddNewExplorerPressed:
                     //     model.showAddExplorerBottomSheet
                   ),
-                verticalSpaceSmall,
-                if (model.sortedHistory.length != 0)
-                  SectionHeader(
-                    title: "Children Activity",
-                    //onButtonTap: model.navigateToTransferHistoryView,
+                verticalSpaceMedium,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: Divider(),
+                ),
+                verticalSpaceMedium,
+                AfkCreditsText.headingFour(
+                  "How can we improve?",
+                  align: TextAlign.center,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding * 1.2),
+                  child: AfkCreditsText.body(
+                    "Let's achieve a healthier screen time balance together",
+                    align: TextAlign.center,
                   ),
-                if (model.sortedHistory.length != 0) verticalSpaceTiny,
-                if (model.sortedHistory.length != 0)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: kHorizontalPadding),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: kcMediumGrey.withOpacity(0.5)),
-                          borderRadius: BorderRadius.circular(20.0)),
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: ScrollPhysics(),
-                        itemCount: min(model.sortedHistory.length, 3),
-                        itemBuilder: (context, index) {
-                          dynamic data =
-                              model.sortedHistory[index]; // ScreenTimeSession
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 0.0),
-                            child: Column(
-                              children: [
-                                data is ActivatedQuest
-                                    ? HistoryTile(
-                                        screenTime: false,
-                                        date: data.createdAt.toDate(),
-                                        name: model
-                                            .explorerNameFromUid(data.uids![0]),
-                                        credits: data.afkCreditsEarned,
-                                        //minutes: data.afkCreditsEarned,
-                                        minutes:
-                                            (data.timeElapsed / 60).round(),
-                                        questType: data.quest.type,
-                                      )
-                                    : HistoryTile(
-                                        screenTime: true,
-                                        date: data.startedAt is String
-                                            ? DateTime.now()
-                                            : data.startedAt.toDate(),
-                                        name:
-                                            model.explorerNameFromUid(data.uid),
-                                        credits: data.afkCreditsUsed ??
-                                            data.afkCredits,
-                                        minutes:
-                                            data.minutesUsed ?? data.minutes,
-                                      ),
-                                if (index !=
-                                    min(model.sortedHistory.length, 3) - 1)
-                                  Divider(),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                ),
+                //verticalSpaceSmall,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding),
+                  child: AfkCreditsButton.text(
+                    title: "Provide Feedback",
+                    onTap: model.showNotImplementedSnackbar,
                   ),
+                ),
+                // if (model.sortedHistory.length != 0)
+                //   SectionHeader(
+                //     title: "Children Activity",
+                //     //onButtonTap: model.navigateToTransferHistoryView,
+                //   ),
+                // if (model.sortedHistory.length != 0) verticalSpaceTiny,
+                // if (model.sortedHistory.length != 0)
+                //   Padding(
+                //     padding: const EdgeInsets.symmetric(
+                //         horizontal: kHorizontalPadding),
+                //     child: Container(
+                //       decoration: BoxDecoration(
+                //           border:
+                //               Border.all(color: kcMediumGrey.withOpacity(0.5)),
+                //           borderRadius: BorderRadius.circular(20.0)),
+                //       padding: const EdgeInsets.symmetric(vertical: 10.0),
+                //       child: ListView.builder(
+                //         shrinkWrap: true,
+                //         physics: ScrollPhysics(),
+                //         itemCount: min(model.sortedHistory.length, 3),
+                //         itemBuilder: (context, index) {
+                //           dynamic data =
+                //               model.sortedHistory[index]; // ScreenTimeSession
+                //           return Padding(
+                //             padding: const EdgeInsets.symmetric(
+                //                 horizontal: 10.0, vertical: 0.0),
+                //             child: Column(
+                //               children: [
+                //                 data is ActivatedQuest
+                //                     ? HistoryTile(
+                //                         screenTime: false,
+                //                         date: data.createdAt.toDate(),
+                //                         name: model
+                //                             .explorerNameFromUid(data.uids![0]),
+                //                         credits: data.afkCreditsEarned,
+                //                         //minutes: data.afkCreditsEarned,
+                //                         minutes:
+                //                             (data.timeElapsed / 60).round(),
+                //                         questType: data.quest.type,
+                //                       )
+                //                     : HistoryTile(
+                //                         screenTime: true,
+                //                         date: data.startedAt is String
+                //                             ? DateTime.now()
+                //                             : data.startedAt.toDate(),
+                //                         name:
+                //                             model.explorerNameFromUid(data.uid),
+                //                         credits: data.afkCreditsUsed ??
+                //                             data.afkCredits,
+                //                         minutes:
+                //                             data.minutesUsed ?? data.minutes,
+                //                       ),
+                //                 if (index !=
+                //                     min(model.sortedHistory.length, 3) - 1)
+                //                   Divider(),
+                //               ],
+                //             ),
+                //           );
+                //         },
+                //       ),
+                //     ),
+                //   ),
                 verticalSpaceMassive,
               ],
             ),

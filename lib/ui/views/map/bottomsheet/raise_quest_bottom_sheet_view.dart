@@ -37,15 +37,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: SizedBox(
-                  width: 40,
-                  child: Divider(
-                    thickness: 4,
-                    color: Colors.grey[400],
-                  ),
-                ),
-              ),
+              Center(child: GrabberLine()),
               verticalSpaceTiny,
               verticalSpaceSmall,
               Row(

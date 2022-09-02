@@ -31,103 +31,112 @@ class ExplorerAccountView extends StatelessWidget {
               width: screenWidth(context),
               child: GestureDetector(
                 onTap: model.removeExplorerAccountOverlay,
+                onVerticalDragStart: (_) =>
+                    model.removeExplorerAccountOverlay(),
               ),
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 12.0, right: 12.0, top: offset),
-              child: Container(
-                padding: const EdgeInsets.only(
-                    left: 20.0, right: 20.0, top: 20.0, bottom: 5.0),
-                height: height,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        //colors: [Colors.white, kcPrimaryColor],
-                        colors: [Colors.white, kcYellow],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        stops: [0.2, 1]),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 0.5,
-                        spreadRadius: 0.6,
-                        //offset: Offset(1, 1),
-                        color: kcShadowColor,
-                      )
-                    ],
-                    //color: kcCultured,
-                    borderRadius: BorderRadius.circular(20.0)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AfkCreditsText.headingThree(model.currentUser.fullName),
-                    AfkCreditsText.body(
-                        "Level ${model.currentLevel}: ${model.currentLevelName}"),
-                    verticalSpaceSmall,
-                    Align(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ProgressBar(
-                            widthProgressBar: screenWidth(context) - 160,
-                            percentage: model.percentageOfNextLevel,
-                            height: 20,
-                            //currentLevel: "3",
-                            nextLevel:
-                                "Level " + (model.currentLevel + 1).toString(),
-                          ),
-                          verticalSpaceSmall,
-                          AfkCreditsText.bodyItalic(
-                              "Earn ${model.creditsToNextLevel} more credits to get to the next level"),
-                        ],
+            GestureDetector(
+              onTap: () => null,
+              onVerticalDragStart: (_) => model.removeExplorerAccountOverlay(),
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 12.0, right: 12.0, top: offset),
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      left: 20.0, right: 20.0, top: 20.0, bottom: 5.0),
+                  height: height,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          //colors: [Colors.white, kcPrimaryColor],
+                          colors: [Colors.white, kcYellow],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          stops: [0.2, 1]),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 0.5,
+                          spreadRadius: 0.6,
+                          //offset: Offset(1, 1),
+                          color: kcShadowColor,
+                        )
+                      ],
+                      //color: kcCultured,
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AfkCreditsText.headingThree(model.currentUser.fullName),
+                      SizedBox(height: 2),
+                      AfkCreditsText.body(
+                          "Level ${model.currentLevel}: ${model.currentLevelName}"),
+                      verticalSpaceSmall,
+                      Align(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ProgressBar(
+                              widthProgressBar: screenWidth(context) - 160,
+                              percentage: model.percentageOfNextLevel,
+                              height: 20,
+                              //currentLevel: "3",
+                              nextLevel: "Level " +
+                                  (model.currentLevel + 1).toString(),
+                            ),
+                            verticalSpaceSmall,
+                            AfkCreditsText.body(
+                                "Earn ${model.creditsToNextLevel} more credits to get to the next level"),
+                          ],
+                        ),
                       ),
-                    ),
-                    verticalSpaceSmall,
-                    Divider(),
-                    verticalSpaceSmall,
-                    AfkCreditsText.headingFour("Stats"),
-                    verticalSpaceSmall,
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: SummaryStatsDisplay(
-                            stats: model.currentUserStats.lifetimeEarnings
-                                .toString(),
-                            title: "Total collected",
-                            icon: Image.asset(
-                              kAFKCreditsLogoPath,
-                              color: kcPrimaryColor,
-                              width: 20,
+                      verticalSpaceSmall,
+                      Divider(),
+                      verticalSpaceSmall,
+                      AfkCreditsText.headingFour("Stats"),
+                      verticalSpaceSmall,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: SummaryStatsDisplay(
+                              stats: model.currentUserStats.lifetimeEarnings
+                                  .toString(),
+                              title: "Total collected",
+                              icon: Image.asset(
+                                kAFKCreditsLogoPath,
+                                color: kcPrimaryColor,
+                                width: 20,
+                              ),
                             ),
                           ),
-                        ),
-                        horizontalSpaceSmall,
-                        Expanded(
-                          child: SummaryStatsDisplay(
-                            stats: model.currentUserStats.totalScreenTime
-                                .toString(),
-                            title: "Total screen time",
-                            unit: "min",
+                          horizontalSpaceSmall,
+                          Expanded(
+                            child: SummaryStatsDisplay(
+                              stats: model.currentUserStats.totalScreenTime
+                                  .toString(),
+                              title: "Total screen time",
+                              unit: "min",
+                            ),
                           ),
-                        ),
-                        horizontalSpaceSmall,
-                        Expanded(
-                          child: SummaryStatsDisplay(
-                            stats: model.currentUserStats.numberQuestsCompleted
-                                .toString(),
-                            title: "Completed quests",
+                          horizontalSpaceSmall,
+                          Expanded(
+                            child: SummaryStatsDisplay(
+                              stats: model
+                                  .currentUserStats.numberQuestsCompleted
+                                  .toString(),
+                              title: "Completed quests",
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    AfkCreditsButton.text(
-                      title: "Back",
-                      onTap: model.removeExplorerAccountOverlay,
-                    ),
-                  ],
+                        ],
+                      ),
+                      Spacer(),
+                      Center(child: GrabberLine()),
+                      // AfkCreditsButton.text(
+                      //   title: "Back",
+                      //   onTap: model.removeExplorerAccountOverlay,
+                      // ),
+                    ],
+                  ),
                 ),
               ),
             ),

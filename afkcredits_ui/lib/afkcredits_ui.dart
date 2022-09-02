@@ -9,6 +9,7 @@ export 'src/widgets/autocomplete_listItem.dart';
 export 'src/widgets/afkcredits_category_card.dart';
 export 'src/widgets/bottom_floating_action_buttons.dart';
 export 'src/shared/styles.dart';
+export 'src/widgets/grabber_line.dart';
 
 // Colors Export
 export 'src/shared/app_colors.dart';

@@ -21,7 +21,7 @@ class SelectScreenTimeView extends StatelessWidget {
           child: Container(
             child: Padding(
               padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 40, bottom: 120),
+                  left: 20, right: 20, top: 40, bottom: 100),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

@@ -26,8 +26,8 @@ import 'firebase_options_dev.dart' as dev;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
-    show ArCoreController;
+// import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
+//     show ArCoreController;
 
 const bool USE_EMULATOR = false;
 

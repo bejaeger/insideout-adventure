@@ -53,7 +53,6 @@ import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dar
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -104,7 +103,6 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: ConnectivityService),
     LazySingleton(classType: SnackbarService),
     LazySingleton(classType: BottomSheetService),
-    LazySingleton(classType: PlacesService),
     LazySingleton(classType: GeolocationService),
     LazySingleton(classType: EnvironmentService),
     LazySingleton(classType: UserService),
