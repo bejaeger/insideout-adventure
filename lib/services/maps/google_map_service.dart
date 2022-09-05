@@ -77,7 +77,7 @@ class GoogleMapService {
     if (_mapController == null) return;
     if (isAnimating && force != true) return;
     await runAnimation(
-      () => _mapController!.animateCamera(
+      () async => await _mapController!.animateCamera(
         CameraUpdate.newLatLng(
           LatLng(lat, lon),
         ),
@@ -197,7 +197,7 @@ class GoogleMapService {
 
   // Ensures that animation is not interrupted e.g. when clicking "Zoom In"
   // and at the same time the location listener wants to update the position
-  static Future runAnimation(void Function() animation, {bool? force}) async {
+  static Future runAnimation(Future Function() animation, {bool? force}) async {
     if (isAnimating == true && force != true) {
       // wait for 1 second before executing animation
       await Future.delayed(Duration(seconds: 1));
@@ -207,7 +207,8 @@ class GoogleMapService {
     isAnimating = true;
     try {
       try {
-        animation();
+        // Need to await, otherwise animation errors are not caught!
+        await animation();
       } catch (e) {
         mapLogger.wtf("Could not animate due to error: $e");
         mapLogger.wtf("Skipping error");

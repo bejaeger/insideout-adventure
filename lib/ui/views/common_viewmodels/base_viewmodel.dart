@@ -128,7 +128,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     questService.clearData();
     activeQuestService.clearData();
     geolocationService.clearData();
-    // screenTimeService.clearData();
+    screenTimeService.clearData();
     _questTestingService.maybeReset();
     gamificationService.clearData();
     await userService.handleLogoutEvent(

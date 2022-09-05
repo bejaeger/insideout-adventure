@@ -50,7 +50,8 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
 
                     if (model.currentUser.createdByUserWithId != null)
                       SwitchToParentsAreaButton(
-                        onTap: model.handleSwitchToSponsorEvent,
+                        onTap: () async =>
+                            await model.handleSwitchToSponsorEvent(),
                         show: !(model.isShowingQuestDetails ||
                                 model.hasActiveQuest) ||
                             model.isFadingOutQuestDetails,

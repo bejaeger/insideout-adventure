@@ -451,7 +451,7 @@ class GeolocationService extends PausableService {
   }
 
   void cancelPositionListener() {
-    log.v("Cancel Quest position listener, resuming main listener");
+    log.v("Cancel Quest position listener");
     _livePositionStreamSubscription?.cancel();
     _livePositionStreamSubscription = null;
     // don't do this implicitely here. Explicit treatment is better!
@@ -463,6 +463,7 @@ class GeolocationService extends PausableService {
   }
 
   void cancelMainPositionListener() {
+    log.v("Cancel Main position listener");
     _livePositionMainStreamSubscription?.cancel();
     _livePositionMainStreamSubscription = null;
   }
