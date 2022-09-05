@@ -37,7 +37,7 @@ class QuestInfoCard extends StatelessWidget {
             right: marginRight ?? 0,
             top: marginTop ?? 0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(35.0),
+          borderRadius: BorderRadius.circular(20.0),
         ),
         elevation: 5,
         child: Container(
@@ -79,7 +79,7 @@ class QuestInfoCard extends StatelessWidget {
                         child: Text(
                           quest.name,
                           style: textTheme(context).headline6!.copyWith(
-                              fontSize: 24, fontWeight: FontWeight.w600),
+                              fontSize: 20, fontWeight: FontWeight.w600),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -91,7 +91,7 @@ class QuestInfoCard extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: FractionallySizedBox(
-                  heightFactor: 0.3,
+                  heightFactor: 0.25,
                   child: Container(
                     // height: 60,
                     padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -108,10 +108,13 @@ class QuestInfoCard extends StatelessWidget {
                         color: Colors.grey[200]),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CreditsAmount(
                           amount: quest.afkCredits,
-                          color: kcPrimaryColorSecondary,
+                          color: kcPrimaryColor,
+                          textColor: kcPrimaryColor,
+                          height: 20,
                         ),
                         Icon(Icons.arrow_forward_ios_rounded,
                             color: kcPrimaryColorSecondary)

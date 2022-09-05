@@ -76,6 +76,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   bool get isShowingQuestDetails => activeQuestService.selectedQuest != null;
   bool get isShowingQuestList => layoutService.isShowingQuestList;
   bool get isShowingExplorerAccount => layoutService.isShowingExplorerAccount;
+  bool get isShowingCreditsOverlay => layoutService.isShowingCreditsOverlay;
   bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;

@@ -49,9 +49,7 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
 
   bool maybeFlipCardToMap() {
     return flipCard(
-        animateCamera: () =>
-            animateCameraToQuestMarkers(getGoogleMapController),
-        flipToMap: true);
+        animateCamera: animateCameraToQuestMarkers, flipToMap: true);
   }
 
   bool maybeFlipCardToClue() {
@@ -161,7 +159,7 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
             if (maybeFlipCardToMap()) {
               await Future.delayed(Duration(milliseconds: 500));
             } else {
-              animateCameraToQuestMarkers(getGoogleMapController);
+              animateCameraToQuestMarkers();
             }
             isAnimatingCamera = true;
             await Future.delayed(Duration(milliseconds: 1000));

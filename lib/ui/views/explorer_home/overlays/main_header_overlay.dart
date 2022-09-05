@@ -61,10 +61,12 @@ class MainHeader extends StatelessWidget {
                 ),
               ),
               Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(right: 5.0, top: 14),
-                child: AFKCreditsDisplay(
-                    balance: balance, onPressed: onCreditsPressed),
+              GestureDetector(
+                onTap: onCreditsPressed,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 5.0, top: 14),
+                  child: AFKCreditsDisplay(balance: balance),
+                ),
               ),
             ],
           ),

@@ -16,7 +16,7 @@ class LargeButton extends StatelessWidget {
     required this.onPressed,
     required this.title,
     this.backgroundColor = kcOrange,
-    this.titleColor = kcGreyTextColor,
+    this.titleColor = kcBlackHeadlineColor,
     this.imageUrl,
     this.imagePath,
     this.fontSize = 22,
@@ -77,7 +77,7 @@ class LargeButton extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
                       image: DecorationImage(
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.contain,
                         image: AssetImage(
                           imagePath!,
                         ),

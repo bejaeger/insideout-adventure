@@ -570,7 +570,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   Future handleQuestCompletedEvent({required AFKMarker afkmarker}) async {
     //checkQuestAndFinishWhenCompleted();
     updateMapDisplay(afkmarker: afkmarker);
-    await animateCameraToQuestMarkers(getGoogleMapController);
+    await animateCameraToQuestMarkers();
     setBusy(true);
     questFinished = true;
     activeQuestService.setSuccessAsQuestStatus();
@@ -602,7 +602,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     validatingMarkerInArea = false;
     isAnimatingCamera = false;
     markerInArea = null;
-    questCenteredOnMap = true;
+    activeQuestService.questCenteredOnMap = true;
     super.resetPreviousQuest();
   }
 
@@ -635,7 +635,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       controller.setMapStyle(mapStyle);
       if (currentQuest != null) {
         // animate camera to markers
-        animateCameraToQuestMarkers(controller);
+        animateCameraToQuestMarkers();
         if (currentQuest!.type == QuestType.QRCodeHike) {
           showInfoWindowOfNextMarker(quest: currentQuest!);
         }
@@ -671,62 +671,62 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     }
   }
 
-  Future animateCameraToQuestMarkers(GoogleMapController? controller,
-      {int delay = 200}) async {
-    if (controller == null && getGoogleMapController == null) {
-      log.wtf(
-          "Cannot animate camera because no google maps controller present");
-      return;
-    }
-    List<LatLng> latLngListToAnimate = activeQuestService
-        .markersToShowOnMap(questIn: currentQuest)
-        .map((m) => LatLng(m.lat!, m.lon!))
-        .toList();
-    if ((hasActiveQuest == false || latLngListToAnimate.length == 1) &&
-            currentQuest?.type == QuestType.QRCodeHunt ||
-        currentQuest?.type == QuestType.GPSAreaHunt) {
-      latLngListToAnimate.add(geolocationService.getUserLatLng);
-    }
+  // Future animateCameraToQuestMarkers(GoogleMapController? controller,
+  //     {int delay = 200}) async {
+  //   if (controller == null && getGoogleMapController == null) {
+  //     log.wtf(
+  //         "Cannot animate camera because no google maps controller present");
+  //     return;
+  //   }
+  //   List<LatLng> latLngListToAnimate = activeQuestService
+  //       .markersToShowOnMap(questIn: currentQuest)
+  //       .map((m) => LatLng(m.lat!, m.lon!))
+  //       .toList();
+  //   if ((hasActiveQuest == false || latLngListToAnimate.length == 1) &&
+  //           currentQuest?.type == QuestType.QRCodeHunt ||
+  //       currentQuest?.type == QuestType.GPSAreaHunt) {
+  //     latLngListToAnimate.add(geolocationService.getUserLatLng);
+  //   }
 
-    // add ghost latLong positions (in-place) to avoid  zooming
-    // too far if only two positions very close by are shown!
-    potentiallyAddGhostLatLng(latLngList: latLngListToAnimate);
+  //   // add ghost latLong positions (in-place) to avoid  zooming
+  //   // too far if only two positions very close by are shown!
+  //   potentiallyAddGhostLatLng(latLngList: latLngListToAnimate);
 
-    Future.delayed(
-      Duration(milliseconds: delay),
-      () => animateCameraToBetweenCoordinates(
-        controller: controller ?? getGoogleMapController!,
-        latLngList: latLngListToAnimate,
-      ),
-    );
-  }
+  //   Future.delayed(
+  //     Duration(milliseconds: delay),
+  //     () => animateCameraToBetweenCoordinates(
+  //       controller: controller ?? getGoogleMapController!,
+  //       latLngList: latLngListToAnimate,
+  //     ),
+  //   );
+  // }
 
-  Future animateCameraToBetweenCoordinates(
-      {required GoogleMapController controller,
-      required List<LatLng> latLngList,
-      double padding = 100}) async {
-    await controller.animateCamera(
-      CameraUpdate.newLatLngBounds(
-          mapsService.boundsFromLatLngList(latLngList: latLngList), padding),
-    );
-  }
+  // Future animateCameraToBetweenCoordinates(
+  //     {required GoogleMapController controller,
+  //     required List<LatLng> latLngList,
+  //     double padding = 100}) async {
+  //   await controller.animateCamera(
+  //     CameraUpdate.newLatLngBounds(
+  //         mapsService.boundsFromLatLngList(latLngList: latLngList), padding),
+  //   );
+  // }
 
-  void potentiallyAddGhostLatLng({required List<LatLng> latLngList}) {
-    if (latLngList.length == 2) {
-      if (geolocationService.distanceBetween(
-              lat1: latLngList[0].latitude,
-              lon1: latLngList[0].longitude,
-              lat2: latLngList[1].latitude,
-              lon2: latLngList[1].longitude) <
-          150) {
-        // add ghost latLng positions for padding of camera!
-        latLngList.add(geolocationService.getLatLngShiftedLon(
-            latLng: latLngList[0], offset: 80));
-        latLngList.add(geolocationService.getLatLngShiftedLon(
-            latLng: latLngList[0], offset: -80));
-      }
-    }
-  }
+  // void potentiallyAddGhostLatLng({required List<LatLng> latLngList}) {
+  //   if (latLngList.length == 2) {
+  //     if (geolocationService.distanceBetween(
+  //             lat1: latLngList[0].latitude,
+  //             lon1: latLngList[0].longitude,
+  //             lat2: latLngList[1].latitude,
+  //             lon2: latLngList[1].longitude) <
+  //         150) {
+  //       // add ghost latLng positions for padding of camera!
+  //       latLngList.add(geolocationService.getLatLngShiftedLon(
+  //           latLng: latLngList[0], offset: 80));
+  //       latLngList.add(geolocationService.getLatLngShiftedLon(
+  //           latLng: latLngList[0], offset: -80));
+  //     }
+  //   }
+  // }
 
   void updateMapMarkers({required AFKMarker afkmarker}) {
     markersOnMap = markersOnMap
@@ -812,12 +812,10 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
           await Future.delayed(Duration(milliseconds: 1200));
         }
       }
-      await animateCameraToBetweenCoordinates(
-        controller: getGoogleMapController!,
+      await mapViewModel.animateCameraToBetweenCoordinates(
         latLngList: [
-          //LatLng(pos.latitude, pos.longitude),
-          LatLng(previousMarker.lat!, previousMarker.lon!),
-          LatLng(nextMarker.lat!, nextMarker.lon!),
+          [previousMarker.lat!, previousMarker.lon!],
+          [nextMarker.lat!, nextMarker.lon!],
         ],
       );
     }
@@ -869,20 +867,20 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     notifyListeners();
   }
 
-  Future animateToUserPosition(GoogleMapController? controller) async {
-    if (controller == null) return;
-    await controller.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: LatLng(
-                geolocationService.getUserLivePositionNullable!.latitude,
-                geolocationService.getUserLivePositionNullable!.longitude),
-            zoom: await controller.getZoomLevel()),
-      ),
-    );
-    questCenteredOnMap = false;
-    notifyListeners();
-  }
+  // Future animateToUserPosition(GoogleMapController? controller) async {
+  //   if (controller == null) return;
+  //   await controller.animateCamera(
+  //     CameraUpdate.newCameraPosition(
+  //       CameraPosition(
+  //           target: LatLng(
+  //               geolocationService.getUserLivePositionNullable!.latitude,
+  //               geolocationService.getUserLivePositionNullable!.longitude),
+  //           zoom: await controller.getZoomLevel()),
+  //     ),
+  //   );
+  //   questCenteredOnMap = false;
+  //   notifyListeners();
+  // }
 
   BitmapDescriptor defineMarkersColour(
       {required AFKMarker afkmarker,

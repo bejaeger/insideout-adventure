@@ -7,11 +7,13 @@ class CreditsAmount extends StatelessWidget {
   final String? amountString;
   final TextStyle? style;
   final Color color;
+  final Color textColor;
   final double height;
   const CreditsAmount(
       {Key? key,
       required this.amount,
       this.color = kcPrimaryColor,
+      this.textColor = kcBlackHeadlineColor,
       this.height = 25,
       this.style,
       this.amountString})
@@ -29,12 +31,12 @@ class CreditsAmount extends StatelessWidget {
           SizedBox(width: 4.0),
           if (style != null)
             Text(amountString ?? amount.toStringAsFixed(0), style: style),
-          if (height > 20 && style == null)
-            AfkCreditsText.headingThree(
-                amountString ?? amount.toStringAsFixed(0)),
-          if (height <= 20 && style == null)
-            AfkCreditsText.headingFour(
-                amountString ?? amount.toStringAsFixed(0)),
+          if (style == null)
+            AfkCreditsText(
+              text: amountString ?? amount.toStringAsFixed(0),
+              style: heading3Style.copyWith(
+                  color: textColor, fontSize: height * 1.05),
+            ),
           // Text(
           //   amountString ?? amount.toStringAsFixed(0),
           //   style: textTheme(context).bodyText2!.copyWith(

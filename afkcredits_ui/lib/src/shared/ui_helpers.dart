@@ -1,4 +1,5 @@
 import 'package:afkcredits_ui/src/shared/app_colors.dart';
+import 'package:afkcredits_ui/src/shared/layout.dart';
 import 'package:flutter/material.dart';
 
 import '../enums/quest_type.dart';
@@ -116,4 +117,14 @@ Color getColorOfType(QuestType type) {
   } else {
     return Colors.cyan;
   }
+}
+
+Widget aboveBottomBackButton({required Widget child}) {
+  return Align(
+    alignment: Alignment.bottomCenter,
+    child: Padding(
+      padding: const EdgeInsets.only(bottom: kBottomBackButtonPadding),
+      child: child,
+    ),
+  );
 }

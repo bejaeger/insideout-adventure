@@ -4,15 +4,20 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class GrabberLine extends StatelessWidget {
-  const GrabberLine({Key? key}) : super(key: key);
+  final void Function(DragStartDetails)? onVerticalDrag;
+
+  const GrabberLine({Key? key, this.onVerticalDrag}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-      width: 30,
-      child: Divider(
-        thickness: 3,
-        color: kcMediumGrey,
+    return GestureDetector(
+      onVerticalDragStart: onVerticalDrag,
+      child: const SizedBox(
+        width: 30,
+        child: Divider(
+          thickness: 3,
+          color: kcMediumGrey,
+        ),
       ),
     );
   }

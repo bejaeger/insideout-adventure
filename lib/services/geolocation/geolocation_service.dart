@@ -33,6 +33,8 @@ class GeolocationService extends PausableService {
       await getAndSetCurrentLocation(forceGettingNewPosition: false);
   LatLng get getUserLatLng =>
       LatLng(_livePosition!.latitude, _livePosition!.longitude);
+  List<double> get getUserLatLngInList =>
+      [_livePosition!.latitude, _livePosition!.longitude];
 
   Position? get getUserLivePositionNullable => _livePosition;
 
@@ -550,6 +552,19 @@ class GeolocationService extends PausableService {
     // final double newLat = latLng.latitude + dLat * 180/math.pi;
     final double newLon = latLng.longitude + dLon * 180 / math.pi;
     return LatLng(latLng.latitude, newLon);
+  }
+
+  List<double> getLatLngShiftedLonInList(
+      {required List<double> latLng, double offset = 100}) {
+    //Earth’s radius, sphere
+    double R = 6378137;
+    //Coordinate offsets in radians
+    // final double dLat = offset/R;
+    final double dLon = offset / (R * math.cos(math.pi * latLng[0] / 180));
+    //OffsetPosition, decimal degrees
+    // final double newLat = latLng.latitude + dLat * 180/math.pi;
+    final double newLon = latLng[1] + dLon * 180 / math.pi;
+    return [latLng[0], newLon];
   }
 
   Future<Position?> setCurrentUserPosition() async {

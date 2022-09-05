@@ -65,7 +65,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
 
-  bool questCenteredOnMap = true;
+  bool get questCenteredOnMap => activeQuestService.questCenteredOnMap;
 
   // TODO: maybe deprecated
   String lastActivatedQuestInfoText = "Active Quest";
@@ -131,8 +131,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       // this will also change the MapViewModel to show the ActiveQuestView
       if (isQuestStarted is String) {
         await dialogService.showDialog(
-            title: "Sorry could not start the quest",
-            description: isQuestStarted);
+            title: "You cannot start the quest", description: isQuestStarted);
         resetSlider();
         return false;
       }
@@ -314,6 +313,88 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     );
   }
 
+  Future animateCameraToStartMarker({int? delay}) async {
+    double? lat = activeQuestService.selectedQuest?.startMarker?.lat;
+    double? lon = activeQuestService.selectedQuest?.startMarker?.lon;
+    if (lat != null && lon != null) {
+      Future.delayed(
+        Duration(milliseconds: delay ?? 0),
+        () async => await mapViewModel.animateNewLatLon(
+            lat: lat, lon: lon, force: true),
+      );
+    } else {
+      log.e("Could not animate camera to start marker.");
+    }
+  }
+
+  // navigate camera to show currently visible quest markers
+  Future animateCameraToQuestMarkers({int delay = 0}) async {
+    if (activeQuestService.selectedQuest?.type ==
+        QuestType.TreasureLocationSearch) {
+      animateCameraToStartMarker(delay: delay);
+      return;
+    }
+
+    List<List<double>> latLngListToAnimate = activeQuestService
+        .markersToShowOnMap(questIn: currentQuest)
+        .map((m) => [m.lat!, m.lon!])
+        .toList();
+    if ((hasActiveQuest == false || latLngListToAnimate.length == 1) &&
+            currentQuest?.type == QuestType.QRCodeHunt ||
+        currentQuest?.type == QuestType.GPSAreaHike ||
+        currentQuest?.type == QuestType.GPSAreaHunt) {
+      latLngListToAnimate.add(geolocationService.getUserLatLngInList);
+    }
+
+    // add ghost latLong positions (in-place) to avoid  zooming
+    // too far if only two positions very close by are shown!
+    potentiallyAddGhostLatLng(latLngList: latLngListToAnimate);
+
+    Future.delayed(
+      Duration(milliseconds: delay),
+      () => mapViewModel.animateCameraToBetweenCoordinates(
+          latLngList: latLngListToAnimate),
+    );
+  }
+
+  // if only two locations are shown we want to provide more padding on the
+  // screen and therefore add ghost markers!
+  void potentiallyAddGhostLatLng({required List<List<double>> latLngList}) {
+    if (latLngList.length == 2) {
+      if (geolocationService.distanceBetween(
+              lat1: latLngList[0][0],
+              lon1: latLngList[0][1],
+              lat2: latLngList[1][0],
+              lon2: latLngList[1][1]) <
+          150) {
+        // add ghost latLng positions for padding of camera!
+        latLngList.add(geolocationService.getLatLngShiftedLonInList(
+            latLng: latLngList[0], offset: 80));
+        latLngList.add(geolocationService.getLatLngShiftedLonInList(
+            latLng: latLngList[0], offset: -80));
+      }
+    }
+  }
+
+  // animate to user position
+  Future animateCameraToUserPosition() async {
+    await mapViewModel.animateNewLatLon(
+        lat: geolocationService.getUserLivePositionNullable!.latitude,
+        lon: geolocationService.getUserLivePositionNullable!.longitude,
+        force: true);
+    //   CameraUpdate.newCameraPosition(
+    //     CameraPosition(
+    //         target: LatLng(
+    //             geolocationService.getUserLivePositionNullable!.latitude,
+    //             geolocationService.getUserLivePositionNullable!.longitude),
+    //         zoom: await controller.getZoomLevel()),
+    //   ),
+    // );
+    activeQuestService.questCenteredOnMap = false;
+    notifyListeners();
+  }
+
+  // show Qr Code instead of animating to marker
   void displayQrCode(AFKMarker marker) {
     String qrCodeString =
         qrCodeService.getQrCodeStringFromMarker(marker: marker);

@@ -10,6 +10,7 @@ import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
@@ -119,8 +120,16 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         questService.extractAllQuestTypes();
       }
     } catch (e) {
-      log.wtf("Error when loading quests, this should never happen. Error: $e");
-      await showGenericInternalErrorDialog();
+      log.wtf(
+          "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
+      if (e is QuestServiceException) {
+        await dialogService.showDialog(
+            title: "Oops...", description: e.message);
+      } else {
+        log.wtf(
+            "Error when loading quests, this should never happen. Error: $e");
+        await showGenericInternalErrorDialog();
+      }
     }
   }
 

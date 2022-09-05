@@ -21,7 +21,10 @@ class SelectScreenTimeView extends StatelessWidget {
           child: Container(
             child: Padding(
               padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 40, bottom: 100),
+                  left: 20,
+                  right: 20,
+                  top: 40,
+                  bottom: kBottomBackButtonPadding + 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -44,22 +47,23 @@ class SelectScreenTimeView extends StatelessWidget {
                       AfkCreditsText.headingThree(
                           model.afkCreditsBalance.toStringAsFixed(0)),
                       horizontalSpaceSmall,
-                      Icon(Icons.arrow_right_alt_rounded, size: 25),
-                      verticalSpaceMedium,
+                      Icon(Icons.arrow_forward, size: 25),
                       horizontalSpaceTiny,
-                      Lottie.network(
-                          'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
-                          height: 40),
+                      Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
+                      horizontalSpaceTiny,
+                      // Lottie.network(
+                      //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
+                      //     height: 40),
                       AfkCreditsText.headingThree(
                           model.totalAvailableScreenTime.toString() + " min"),
                     ],
                   ),
                   //Icon(Icons.arrow_downward_rounded, size: 40),
-                  verticalSpaceMedium,
+                  Spacer(),
                   Lottie.network(
                       'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
                       height: 160),
-                  verticalSpaceMedium,
+                  Spacer(),
                   Column(
                     children: [
                       Row(
@@ -72,7 +76,7 @@ class SelectScreenTimeView extends StatelessWidget {
                                   ? () => model.selectScreenTime(minutes: 15)
                                   : null,
                               color: model.totalAvailableScreenTime > 15
-                                  ? null
+                                  ? kcScreenTimeBlue
                                   : Colors.grey[500],
                             ),
                           ),
@@ -85,7 +89,7 @@ class SelectScreenTimeView extends StatelessWidget {
                                   ? () => model.selectScreenTime(minutes: 30)
                                   : null,
                               color: model.totalAvailableScreenTime > 30
-                                  ? null
+                                  ? kcScreenTimeBlue
                                   : Colors.grey[500],
                             ),
                           ),
@@ -102,7 +106,7 @@ class SelectScreenTimeView extends StatelessWidget {
                                   ? () => model.selectScreenTime(minutes: 60)
                                   : null,
                               color: model.totalAvailableScreenTime > 60
-                                  ? null
+                                  ? kcScreenTimeBlue
                                   : Colors.grey[500],
                             ),
                           ),
@@ -113,6 +117,7 @@ class SelectScreenTimeView extends StatelessWidget {
                                   model.totalAvailableScreenTime,
                               title: "Maximum",
                               onTap: () => model.selectScreenTime(minutes: -1),
+                              color: kcScreenTimeBlue,
                             ),
                           ),
                         ],
@@ -130,6 +135,7 @@ class SelectScreenTimeView extends StatelessWidget {
                           ? null
                           : model.startScreenTime,
                       disabled: model.afkCreditsBalance == 0,
+                      color: kcScreenTimeBlue,
                       title: model.afkCreditsBalance == 0
                           ? "Not enough credits"
                           : model.screenTimePreset != -1

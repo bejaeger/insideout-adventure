@@ -554,10 +554,7 @@ class FirestoreApi {
           )
           .toList();
     } else {
-      log.wtf('There is no \'quests\' collection on firestore');
-      throw FirestoreApiException(
-          message: "Quest data could not be found",
-          devDetails: "Quest document is empty");
+      log.wtf('There is no public \'quests\' collection on firestore');
     }
     for (String id in sponsorIds) {
       QuerySnapshot q =
@@ -572,10 +569,12 @@ class FirestoreApi {
             .toList());
       } else {
         log.wtf('There is no \'quests\' collection on firestore');
-        throw FirestoreApiException(
-            message: "Quest data could not be found",
-            devDetails: "Quest document is empty");
       }
+    }
+    if (returnQuests.length == 0) {
+      throw FirestoreApiException(
+          message: "No quests could be found. Ask your parents to create one.",
+          devDetails: "Quest document is empty");
     }
     return returnQuests;
   }

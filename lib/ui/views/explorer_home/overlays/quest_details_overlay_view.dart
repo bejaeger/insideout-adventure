@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
@@ -7,6 +8,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmode
 import 'package:afkcredits/ui/views/hike_quest/hike_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
+import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/ui/widgets/treasure_location_search_widgets.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -132,11 +134,11 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                                       ),
                                     ),
                                   ),
-                                  horizontalSpaceSmall,
-                                  CreditsAmount(
-                                    amount: quest?.afkCredits ?? -1,
-                                    height: 20,
-                                  ),
+                                  // horizontalSpaceSmall,
+                                  // CreditsAmount(
+                                  //   amount: quest?.afkCredits ?? -1,
+                                  //   height: 20,
+                                  // ),
                                 ],
                               ),
                               if (quest != null)
@@ -157,8 +159,20 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                           verticalSpaceSmall,
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),
-                            child: AfkCreditsText.headingThree(
-                                quest?.name ?? "QUEST"),
+                            child: Row(
+                              children: [
+                                CreditsAmount(
+                                  amount: quest?.afkCredits ?? -1,
+                                  height: 24,
+                                  textColor: kcPrimaryColor,
+                                ),
+                                horizontalSpaceSmall,
+                                AfkCreditsText.headingThree("-"),
+                                horizontalSpaceSmall,
+                                AfkCreditsText.headingThree(
+                                    quest?.name ?? "QUEST"),
+                              ],
+                            ),
                           ),
                           verticalSpaceSmall,
                           if (quest != null)
@@ -246,8 +260,17 @@ class TreasureLocationSearch extends StatelessWidget {
                       child: Icon(Icons.arrow_forward_ios)),
                 ),
               ),
-            StartButtonOverlay(
-                quest: quest, onStartQuest: onStartQuest, model: model),
+            model.isNearStartMarker
+                ? StartButtonOverlay(
+                    quest: quest, onStartQuest: onStartQuest, model: model)
+                : aboveBottomBackButton(
+                    child: NotCloseToQuestNote(
+                      animateCameraToQuestMarkers:
+                          model.animateCameraToQuestMarkers,
+                      animateCameraToUserPosition:
+                          model.animateCameraToUserPosition,
+                    ),
+                  ),
           ],
         );
       },

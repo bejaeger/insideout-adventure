@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -42,37 +43,45 @@ class OnBoardingScreensView extends StatelessWidget {
           body: IntroductionScreen(
             pages: [
               PageViewModel(
-                title: "Incentivize your children to be active",
+                title: "Prototype Version",
                 body:
-                    "Hercules World introduces a fair system to let your child earn and manage their own screen time responsibly.",
+                    "Thank you for testing our prototype, we hope you will enjoy it. The following gives you information about the app.",
+                image: HerculesWorldLogo(),
+                // _buildImage(kAFKCreditsLogoPath, 150),
+                decoration: pageDecoration,
+              ),
+              PageViewModel(
+                title: "Incentivize a healthy screen time balance",
+                body:
+                    "Children can earn Hercules Credits through outdoor activities and can redeem these credits to unlock screen time.",
                 image: _buildImage(kIllustrationInfographic, 500),
                 decoration: pageDecoration,
               ),
               PageViewModel(
                 title: "Create a child's account",
                 body:
-                    "Create a child's account and monitor the account's activities",
+                    "You can monitor your child’s activity from this parent account and switch to the child’s account to allow them to earn and redeem credits.",
                 image: _buildImage(kIllustrationAnnaHercules, 280),
                 decoration: pageDecoration,
               ),
               PageViewModel(
-                title: "Your child can earn screen time credits",
+                title: "Let your child earn credits",
                 body:
-                    "Use this or another phone to let your child earn credits by completing outdoor quests",
-                image: _buildImage(kIllustrationActivityWithArrows, 500),
+                    "Your child can earn Hercules Credits through gps-based outdoor games. You are also able to create these games in your preferred locations or manually add credits to the child’s account.",
+                image: _buildImage(kIllustrationActivity, 250),
                 decoration: pageDecoration,
                 //reverse: true,
               ),
               PageViewModel(
-                title: "Your child can activate a screen time timer",
-                body: "Your child can responsibly manage screen time",
+                title: "Let your child use screen time",
+                body:
+                    "Your child can spend Hercules Credits for screen time, may it be for streaming, gaming, or anything else your child enjoys. We will start a timer and notify you when the screen time is over.",
                 image: _buildImage(kIllustrationScreenTime, 240),
                 decoration: pageDecoration,
               ),
               PageViewModel(
-                title: "Create peace of mind",
-                body:
-                    "You will be notified when your child's screen time expires",
+                title: "Let’s develop a healthier screen time balance ",
+                body: "",
                 image: _buildImage(kIllustrationParentsMeditate, 190),
                 decoration: pageDecoration,
                 footer: AfkCreditsButton(

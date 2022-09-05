@@ -1,4 +1,5 @@
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/main_footer_overlay_view.dart';
@@ -69,12 +70,14 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                               model.isFadingOutQuestDetails,
                           onDevFeaturePressed: model
                               .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
-                          onCreditsPressed: model.showNotImplementedSnackbar,
+                          onCreditsPressed: model.showCreditsOverlay,
                           balance: model.currentUserStats.afkCreditsBalance),
 
                     if (!model.isBusy) MainFooterOverlayView(),
 
                     if (!model.isBusy) ExplorerAccountView(),
+
+                    if (!model.isBusy) CreditsOverlayView(),
 
                     QuestListOverlayView(),
 
@@ -106,8 +109,9 @@ class OverlayedCloseButton extends StatelessWidget {
       viewModelBuilder: () => QuestListOverlayViewModel(),
       onModelReady: (model) => model.listenToLayout(),
       builder: (context, model, child) => model.isShowingQuestList
-          ? Align(
-              alignment: Alignment(0, 0.91),
+          ? Container(
+              alignment: Alignment.bottomCenter,
+              padding: const EdgeInsets.only(bottom: 20),
               child: RoundCloseButton(onTap: model.removeQuestListOverlay),
             )
           : SizedBox(height: 0, width: 0),

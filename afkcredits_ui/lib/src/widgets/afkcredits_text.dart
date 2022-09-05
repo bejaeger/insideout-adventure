@@ -7,6 +7,8 @@ class AfkCreditsText extends StatelessWidget {
   final TextStyle style;
   final TextAlign? alignment;
 
+  AfkCreditsText({required this.text, required this.style, this.alignment});
+
   const AfkCreditsText.headingOne(this.text,
       {TextAlign align = TextAlign.start})
       : style = heading1Style,

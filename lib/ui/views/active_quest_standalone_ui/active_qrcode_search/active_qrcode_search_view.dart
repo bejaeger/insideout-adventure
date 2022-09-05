@@ -133,9 +133,9 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                           child: Align(
                             child: AFKFloatingActionButton(
                               onPressed: () => flipCard(
-                                  animateCamera: () =>
-                                      model.animateCameraToQuestMarkers(
-                                          model.getGoogleMapController)),
+                                animateCamera:
+                                    model.animateCameraToQuestMarkers,
+                              ),
                               backgroundColor: Colors.orange[300],
                               icon: Column(
                                 children: [

@@ -103,7 +103,7 @@ class ParentHomeView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: kHorizontalPadding * 1.2),
                   child: AfkCreditsText.body(
-                    "Let's achieve a healthier screen time balance together",
+                    "Let's work together",
                     align: TextAlign.center,
                   ),
                 ),

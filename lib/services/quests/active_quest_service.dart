@@ -57,6 +57,8 @@ class ActiveQuestService with ReactiveServiceMixin {
   BehaviorSubject<Quest?> selectedQuestSubject = BehaviorSubject<Quest?>();
   Quest? get selectedQuest => selectedQuestSubject.valueOrNull;
 
+  bool questCenteredOnMap = false;
+
   DateTime? _questStartTime;
 
   void setSelectedQuest(Quest quest) {
@@ -91,7 +93,7 @@ class ActiveQuestService with ReactiveServiceMixin {
             await _markerService.isUserCloseby(marker: fullMarker);
         if (!closeby) {
           log.w("You are not nearby the marker, cannot start quest!");
-          return "You are not nearby the marker.";
+          return "Get closer to the start first.";
         }
         // return Notifications().createPermanentNotification(
         //     title: "Search quest ongoing", message: "Collect all markers");

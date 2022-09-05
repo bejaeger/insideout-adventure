@@ -25,7 +25,7 @@ class SummaryStatsDisplay extends StatelessWidget {
           children: [
             if (icon != null) icon!,
             if (icon != null) SizedBox(width: 2),
-            AfkCreditsText.statsStyle(stats),
+            AfkCreditsText.statsStyleBlack(stats),
             if (unit != null) SizedBox(width: 2),
             if (unit != null)
               AfkCreditsText.caption(
@@ -33,6 +33,7 @@ class SummaryStatsDisplay extends StatelessWidget {
               )
           ],
         ),
+        if (title != null) SizedBox(height: 2),
         if (title != null) AfkCreditsText.caption(title!),
       ],
     );

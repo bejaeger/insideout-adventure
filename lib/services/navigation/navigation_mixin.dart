@@ -155,8 +155,16 @@ mixin NavigationMixin {
     _layoutService.setIsShowingExplorerAccount(true);
   }
 
+  void showCreditsOverlay() {
+    _layoutService.setIsShowingCreditsOverlay(true);
+  }
+
   void removeQuestListOverlay() {
     _layoutService.setIsShowingQuestList(false);
+  }
+
+  void removeCreditsOverlay() {
+    _layoutService.setIsShowingCreditsOverlay(false);
   }
 
   void removeExplorerAccountOverlay() {

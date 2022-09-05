@@ -8,10 +8,9 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
+import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -27,12 +26,13 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     required this.animateNewLatLon,
     required this.resetMapMarkers,
     required this.addARObjectToMap,
+    required this.animateCameraToBetweenCoordinates,
   });
 
   // -----------------------------------------------
   // Services
   final log = getLogger('MapViewModel');
-  final QuestService questService = locator<QuestService>();
+  final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
   final _qrCodeService = locator<QRCodeService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
 
@@ -177,7 +177,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     changeCameraBearing(bearing + deltaBearing * 0.4);
     changeCameraZoom(
         (zoom + (scale - 1) * 0.08).clamp(kMinZoomAvatarView, kMaxZoom));
-    _moveCamera();
+    _moveCamera(questCenteredOnMap: activeQuestService.questCenteredOnMap);
     previousRotation = rotation;
   }
 
@@ -203,18 +203,19 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     _animateNewLatLon(force: false);
   }
 
-  void _moveCamera({
-    double? customBearing,
-    double? customZoom,
-    double? customTilt,
-    double? customLat,
-    double? customLon,
-    bool? forceUseLocation,
-  }) {
+  void _moveCamera(
+      {double? customBearing,
+      double? customZoom,
+      double? customTilt,
+      double? customLat,
+      double? customLon,
+      bool? forceUseLocation,
+      bool? questCenteredOnMap}) {
     if ((hasSelectedQuest && !hasActiveQuest) &&
         customLat == null &&
         customLon == null &&
-        forceUseLocation != true) {
+        forceUseLocation != true &&
+        questCenteredOnMap == true) {
       if (selectedQuest!.startMarker != null) {
         customLat = selectedQuest!.startMarker!.lat;
         customLon = selectedQuest!.startMarker!.lon;
@@ -591,8 +592,11 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       required AFKMarker afkmarker,
       required Future Function() onTap,
       bool completed}) configureAndAddMapMarker;
-  final void Function({required double lat, required double lon, bool? force})
+  final Future Function({required double lat, required double lon, bool? force})
       animateNewLatLon;
+  final Future Function(
+      {required List<List<double>> latLngList,
+      double? padding}) animateCameraToBetweenCoordinates;
   final void Function() resetMapMarkers;
   final void Function(
       {required void Function(double lat, double lon, bool isCoin) onTap,

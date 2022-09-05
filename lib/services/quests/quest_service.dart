@@ -8,6 +8,8 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/exceptions/firestore_api_exception.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -114,9 +116,18 @@ class QuestService with ReactiveServiceMixin {
       {required List<String> sponsorIds, bool force = false}) async {
     if (_nearbyQuests.isEmpty || force) {
       // TODO: In the future retrieve only nearby quests
-      _nearbyQuests = await _firestoreApi.getNearbyQuests(
-          pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
-          sponsorIds: sponsorIds);
+      try {
+        _nearbyQuests = await _firestoreApi.getNearbyQuests(
+            pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
+            sponsorIds: sponsorIds);
+      } catch (e) {
+        if (e is FirestoreApiException) {
+          throw QuestServiceException(
+              message: e.message, devDetails: e.devDetails);
+        } else {
+          rethrow;
+        }
+      }
       log.i("Found ${_nearbyQuests.length} nearby quests.");
     } else {
       log.i("Quests already loaded.");

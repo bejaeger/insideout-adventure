@@ -54,8 +54,9 @@ class GoogleMapService {
     required double lat,
     required double lon,
     bool? force,
-  }) {
+  }) async {
     if (_mapController == null) return;
+    // tilt = tilt ?? await _mapController!.bea;
     CameraPosition position = CameraPosition(
       bearing: bearing,
       target: LatLng(lat, lon),
@@ -71,17 +72,28 @@ class GoogleMapService {
     );
   }
 
-  static void animateNewLatLon(
-      {required double lat, required double lon, bool? force}) {
+  static Future animateNewLatLon(
+      {required double lat, required double lon, bool? force}) async {
     if (_mapController == null) return;
     if (isAnimating && force != true) return;
-    runAnimation(
+    await runAnimation(
       () => _mapController!.animateCamera(
         CameraUpdate.newLatLng(
           LatLng(lat, lon),
         ),
       ),
       force: force,
+    );
+  }
+
+  static Future animateCameraToBetweenCoordinates(
+      {required List<List<double>> latLngList, double? padding = 100}) async {
+    if (_mapController == null) return;
+    runAnimation(
+      () => _mapController!.animateCamera(
+        CameraUpdate.newLatLngBounds(
+            boundsFromLatLngList(latLngList: latLngList), padding ?? 0),
+      ),
     );
   }
 
@@ -185,7 +197,7 @@ class GoogleMapService {
 
   // Ensures that animation is not interrupted e.g. when clicking "Zoom In"
   // and at the same time the location listener wants to update the position
-  static runAnimation(void Function() animation, {bool? force}) async {
+  static Future runAnimation(void Function() animation, {bool? force}) async {
     if (isAnimating == true && force != true) {
       // wait for 1 second before executing animation
       await Future.delayed(Duration(seconds: 1));
@@ -207,30 +219,6 @@ class GoogleMapService {
     }
     await Future.delayed(Duration(seconds: 1));
     isAnimating = false;
-  }
-
-  ///////////////////////////////////////////////////////////////////
-  /// Geocooardinates manipulations
-  ///
-  static LatLngBounds boundsFromLatLngList({required List<LatLng> latLngList}) {
-    if (latLngList.length == 0) {
-      mapLogger.e("Can't created LatLngBounds from empty list!");
-      throw Exception("Can't created LatLngBounds from empty list!");
-    }
-    double? x0, x1, y0, y1;
-    for (LatLng latLng in latLngList) {
-      if (x0 == null) {
-        x0 = x1 = latLng.latitude;
-        y0 = y1 = latLng.longitude;
-      } else {
-        if (latLng.latitude > x1!) x1 = latLng.latitude;
-        if (latLng.latitude < x0) x0 = latLng.latitude;
-        if (latLng.longitude > y1!) y1 = latLng.longitude;
-        if (latLng.longitude < y0!) y0 = latLng.longitude;
-      }
-    }
-    return LatLngBounds(
-        northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
   }
 
   ///////////////////////////////////////////////////////////
@@ -264,17 +252,44 @@ class GoogleMapService {
       }
     }
   }
+
+  // -----------------------------------------------------------
+  // HELPER FUNCTIONS
+
+  // From list of [double, double] make LatLngBounds out of it!
+  static LatLngBounds boundsFromLatLngList(
+      {required List<List<double>> latLngList}) {
+    if (latLngList.length == 0) {
+      mapLogger.e("Can't create LatLngBounds from empty list!");
+      throw Exception("Can't create LatLngBounds from empty list!");
+    }
+    double? x0, x1, y0, y1;
+    for (List<double> latLng in latLngList) {
+      if (x0 == null) {
+        x0 = x1 = latLng[0];
+        y0 = y1 = latLng[1];
+      } else {
+        if (latLng[0] > x1!) x1 = latLng[0];
+        if (latLng[0] < x0) x0 = latLng[0];
+        if (latLng[1] > y1!) y1 = latLng[1];
+        if (latLng[1] < y0!) y0 = latLng[1];
+      }
+    }
+    return LatLngBounds(
+        northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
+  }
 }
 
 //Ben I just wonder why are we defining a function type ViewModel into services.
 Future<MapViewModel> presolveMapViewModel() async {
   MapViewModel _instance = MapViewModel(
-    moveCamera: GoogleMapService.moveCamera,
-    animateCamera: GoogleMapService.animateCamera,
-    configureAndAddMapMarker: GoogleMapService.configureAndAddMapMarker,
-    animateNewLatLon: GoogleMapService.animateNewLatLon,
-    resetMapMarkers: GoogleMapService.resetMapMarkers,
-    addARObjectToMap: GoogleMapService.addARObjectToMap,
-  );
+      moveCamera: GoogleMapService.moveCamera,
+      animateCamera: GoogleMapService.animateCamera,
+      configureAndAddMapMarker: GoogleMapService.configureAndAddMapMarker,
+      animateNewLatLon: GoogleMapService.animateNewLatLon,
+      resetMapMarkers: GoogleMapService.resetMapMarkers,
+      addARObjectToMap: GoogleMapService.addARObjectToMap,
+      animateCameraToBetweenCoordinates:
+          GoogleMapService.animateCameraToBetweenCoordinates);
   return Future.value(_instance);
 }

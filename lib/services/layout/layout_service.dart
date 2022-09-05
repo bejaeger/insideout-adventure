@@ -16,6 +16,10 @@ class LayoutService {
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingExplorerAccount => isShowingExplorerAccountSubject.value;
 
+  BehaviorSubject<bool> isShowingCreditsOverlaySubject =
+      BehaviorSubject<bool>.seeded(false);
+  bool get isShowingCreditsOverlay => isShowingCreditsOverlaySubject.value;
+
   BehaviorSubject<bool> isFadingOutOverlaySubject =
       BehaviorSubject<bool>.seeded(false);
   bool get isFadingOutOverlay => isFadingOutOverlaySubject.value;
@@ -38,6 +42,10 @@ class LayoutService {
 
   void setIsShowingExplorerAccount(bool set) {
     isShowingExplorerAccountSubject.add(set);
+  }
+
+  void setIsShowingCreditsOverlay(bool set) {
+    isShowingCreditsOverlaySubject.add(set);
   }
 
   void setIsFadingOutOverlay(bool set) {

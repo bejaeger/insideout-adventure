@@ -19,3 +19,6 @@ export 'src/shared/ui_helpers.dart';
 
 // enums
 export 'src/enums/quest_type.dart';
+
+// constants
+export 'src/shared/layout.dart';

@@ -164,16 +164,13 @@ class _HikeQuestViewState extends State<HikeQuestView>
                                                       questType:
                                                           widget.quest.type,
                                                       animateCameraToUserPosition:
-                                                          () => model
-                                                              .animateToUserPosition(
-                                                                  model
-                                                                      .getGoogleMapController),
+                                                          model
+                                                              .animateCameraToUserPosition,
                                                       animateCameraToQuestMarkers:
                                                           () {
-                                                        model.animateCameraToQuestMarkers(
-                                                            model
-                                                                .getGoogleMapController,
-                                                            delay: 0);
+                                                        model
+                                                            .animateCameraToQuestMarkers(
+                                                                delay: 0);
                                                       }),
                                                 ),
                                         ),

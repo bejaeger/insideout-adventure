@@ -40,8 +40,9 @@ class MainStack extends StatelessWidget {
         children: [
           child,
           if (showBackButton)
-            Align(
-              alignment: Alignment(0, 0.91),
+            Container(
+              alignment: Alignment.bottomCenter,
+              padding: const EdgeInsets.only(bottom: 20),
               child: RoundCloseButton(
                   onTap:
                       onBackPressed != null ? onBackPressed! : model.popView),
