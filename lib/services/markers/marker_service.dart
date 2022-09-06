@@ -39,11 +39,11 @@ class MarkerService {
     await _firestoreApi.addMarkers(markers: markers);
   }
 
-  Future<void> addAFKMarkersPositions(
+/*   Future<void> addAFKMarkersPositions(
       {required AfkMarkersPositions afkMarkersPositions}) async {
     await _firestoreApi.addAFKMarkersPositions(
         afkMarkersPositions: afkMarkersPositions);
-  }
+  } */
 
   //Get User Favourite Places
   Future<List<AFKMarker>> getQuestMarkers() async {

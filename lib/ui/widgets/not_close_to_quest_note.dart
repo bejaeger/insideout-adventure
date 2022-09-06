@@ -14,17 +14,17 @@ class NotCloseToQuestNote extends StatelessWidget {
   final void Function()? animateCameraToUserPosition;
   final void Function()? animateCameraToQuestMarkers;
 
-  final QuestType? questType;
+  final String? questType;
   const NotCloseToQuestNote(
       {Key? key,
       this.animateCameraToUserPosition,
       this.animateCameraToQuestMarkers,
       this.questType})
       : super(key: key);
-
-  String _getInfoString(QuestType? questType) {
-    if (questType == QuestType.GPSAreaHike ||
-        questType == QuestType.QRCodeHike) {
+  // Changed The QuestType parameter to String.
+  String _getInfoString(String? questType) {
+    if (questType == QuestType.GPSAreaHike.toSimpleString() ||
+        questType == QuestType.QRCodeHike.toSimpleString()) {
       return "Go to the green marker to start the quest.";
     } else {
       return "Go to the start of the quest.";
@@ -53,7 +53,7 @@ class NotCloseToQuestNote extends StatelessWidget {
                   // width: screenWidth(context, percentage: 0.5),
                   child: Text(
                       "You are ${(model.distanceFromQuest * 0.001).toStringAsFixed(1)} km away from the quest. " +
-                          _getInfoString(questType),
+                          _getInfoString(questType.toString()),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       style: textTheme(context)

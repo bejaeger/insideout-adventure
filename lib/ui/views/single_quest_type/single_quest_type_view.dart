@@ -33,7 +33,7 @@ class SingleQuestTypeView extends StatelessWidget {
               )
             : Scaffold(
                 appBar: CustomAppBar(
-                  title: getStringForCategory(questType),
+                  title: getStringForCategory(questType as String),
                   onBackButton: model.navigateBack,
                 ),
                 body:

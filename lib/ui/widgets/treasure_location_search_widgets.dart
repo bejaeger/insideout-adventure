@@ -28,14 +28,6 @@ class CurrentQuestStatusInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // if (activatedQuest != null)
-        //   Padding(
-        //     padding: const EdgeInsets.symmetric(
-        //         horizontal: kHorizontalPadding, vertical: 10),
-        //     child: Text(getDirectionStatusString(directionStatus),
-        //         textAlign: TextAlign.center,
-        //         style: textTheme(context).headline3),
-        //   ),
         Container(
           width: screenWidth(context) - 2 * kHorizontalPadding,
           alignment: Alignment.center,
@@ -46,14 +38,6 @@ class CurrentQuestStatusInfo extends StatelessWidget {
             color: getDirectionStatusColor(directionStatus),
             borderRadius: BorderRadius.circular(20.0),
             border: Border.all(color: Colors.grey[400]!),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: kShadowColor,
-            //     offset: Offset(3, 3),
-            //     blurRadius: 5,
-            //     spreadRadius: 1,
-            //   )
-            // ],
           ),
           child: directionStatus == DirectionStatus.nearGoal
               ? AfkCreditsText.successThree(

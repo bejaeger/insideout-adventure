@@ -71,7 +71,7 @@ class FinishedQuestCard extends StatelessWidget {
                     child: SizedBox(
                       width: screenWidth(context, percentage: 0.8),
                       child: Text(
-                        quest.quest.name,
+                        quest.quest.name!,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: textTheme(context)

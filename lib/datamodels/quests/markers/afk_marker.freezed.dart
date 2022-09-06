@@ -25,6 +25,7 @@ mixin _$AFKMarker {
   double? get lat => throw _privateConstructorUsedError;
   double? get lon => throw _privateConstructorUsedError;
   MarkerStatus get markerStatus => throw _privateConstructorUsedError;
+  int get repeatable => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +42,8 @@ abstract class $AFKMarkerCopyWith<$Res> {
       String? qrCodeId,
       double? lat,
       double? lon,
-      MarkerStatus markerStatus});
+      MarkerStatus markerStatus,
+      int repeatable});
 }
 
 /// @nodoc
@@ -59,6 +61,7 @@ class _$AFKMarkerCopyWithImpl<$Res> implements $AFKMarkerCopyWith<$Res> {
     Object? lat = freezed,
     Object? lon = freezed,
     Object? markerStatus = freezed,
+    Object? repeatable = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -81,6 +84,10 @@ class _$AFKMarkerCopyWithImpl<$Res> implements $AFKMarkerCopyWith<$Res> {
           ? _value.markerStatus
           : markerStatus // ignore: cast_nullable_to_non_nullable
               as MarkerStatus,
+      repeatable: repeatable == freezed
+          ? _value.repeatable
+          : repeatable // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -96,7 +103,8 @@ abstract class _$$_AFKMarkerCopyWith<$Res> implements $AFKMarkerCopyWith<$Res> {
       String? qrCodeId,
       double? lat,
       double? lon,
-      MarkerStatus markerStatus});
+      MarkerStatus markerStatus,
+      int repeatable});
 }
 
 /// @nodoc
@@ -116,6 +124,7 @@ class __$$_AFKMarkerCopyWithImpl<$Res> extends _$AFKMarkerCopyWithImpl<$Res>
     Object? lat = freezed,
     Object? lon = freezed,
     Object? markerStatus = freezed,
+    Object? repeatable = freezed,
   }) {
     return _then(_$_AFKMarker(
       id: id == freezed
@@ -138,6 +147,10 @@ class __$$_AFKMarkerCopyWithImpl<$Res> extends _$AFKMarkerCopyWithImpl<$Res>
           ? _value.markerStatus
           : markerStatus // ignore: cast_nullable_to_non_nullable
               as MarkerStatus,
+      repeatable: repeatable == freezed
+          ? _value.repeatable
+          : repeatable // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -150,7 +163,8 @@ class _$_AFKMarker implements _AFKMarker {
       this.qrCodeId,
       this.lat,
       this.lon,
-      this.markerStatus = MarkerStatus.testing});
+      this.markerStatus = MarkerStatus.testing,
+      this.repeatable = 0});
 
   factory _$_AFKMarker.fromJson(Map<String, dynamic> json) =>
       _$$_AFKMarkerFromJson(json);
@@ -166,10 +180,13 @@ class _$_AFKMarker implements _AFKMarker {
   @override
   @JsonKey()
   final MarkerStatus markerStatus;
+  @override
+  @JsonKey()
+  final int repeatable;
 
   @override
   String toString() {
-    return 'AFKMarker(id: $id, qrCodeId: $qrCodeId, lat: $lat, lon: $lon, markerStatus: $markerStatus)';
+    return 'AFKMarker(id: $id, qrCodeId: $qrCodeId, lat: $lat, lon: $lon, markerStatus: $markerStatus, repeatable: $repeatable)';
   }
 
   @override
@@ -182,7 +199,9 @@ class _$_AFKMarker implements _AFKMarker {
             const DeepCollectionEquality().equals(other.lat, lat) &&
             const DeepCollectionEquality().equals(other.lon, lon) &&
             const DeepCollectionEquality()
-                .equals(other.markerStatus, markerStatus));
+                .equals(other.markerStatus, markerStatus) &&
+            const DeepCollectionEquality()
+                .equals(other.repeatable, repeatable));
   }
 
   @JsonKey(ignore: true)
@@ -193,7 +212,8 @@ class _$_AFKMarker implements _AFKMarker {
       const DeepCollectionEquality().hash(qrCodeId),
       const DeepCollectionEquality().hash(lat),
       const DeepCollectionEquality().hash(lon),
-      const DeepCollectionEquality().hash(markerStatus));
+      const DeepCollectionEquality().hash(markerStatus),
+      const DeepCollectionEquality().hash(repeatable));
 
   @JsonKey(ignore: true)
   @override
@@ -214,7 +234,8 @@ abstract class _AFKMarker implements AFKMarker {
       final String? qrCodeId,
       final double? lat,
       final double? lon,
-      final MarkerStatus markerStatus}) = _$_AFKMarker;
+      final MarkerStatus markerStatus,
+      final int repeatable}) = _$_AFKMarker;
 
   factory _AFKMarker.fromJson(Map<String, dynamic> json) =
       _$_AFKMarker.fromJson;
@@ -229,6 +250,8 @@ abstract class _AFKMarker implements AFKMarker {
   double? get lon;
   @override
   MarkerStatus get markerStatus;
+  @override
+  int get repeatable;
   @override
   @JsonKey(ignore: true)
   _$$_AFKMarkerCopyWith<_$_AFKMarker> get copyWith =>

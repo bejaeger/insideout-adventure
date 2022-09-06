@@ -46,7 +46,7 @@ Size screenSize(BuildContext context) => MediaQuery.of(context).size;
 
 isDesktop(BuildContext context) => MediaQuery.of(context).size.width > 600;
 TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
-
+/*
 IconData getIconForCategory(QuestType category) {
   switch (category) {
     case QuestType.DistanceEstimate:
@@ -63,7 +63,24 @@ IconData getIconForCategory(QuestType category) {
       return Icons.map;
   }
 }
+*/
+IconData getIconForCategory(String? category) {
+  if (category == QuestType.DistanceEstimate.toSimpleString()) {
+    return Icons.arrow_right_alt;
+  } else if (category == QuestType.TreasureLocationSearch.toSimpleString()) {
+    return Icons.location_on;
+  } else if (category == QuestType.QRCodeHunt.toSimpleString()) {
+    return Icons.pets;
+  } else if (category == QuestType.QRCodeHike.toSimpleString()) {
+    return Icons.nature_people;
+  } else if (category == QuestType.GPSAreaHike.toSimpleString()) {
+    return Icons.explore;
+  } else {
+    return Icons.map;
+  }
+}
 
+/* //Changed The Parameter from QuestType to String
 String getStringForCategory(QuestType? category) {
   if (category == null) return "";
   switch (category) {
@@ -82,16 +99,35 @@ String getStringForCategory(QuestType? category) {
     default:
       return "Default Quest";
   }
+} */
+
+String getStringForCategory(String? category) {
+  if (category == null) return "";
+  if (category == QuestType.DistanceEstimate.toSimpleString()) {
+    return "Estimating Distance";
+  } else if (category == QuestType.TreasureLocationSearch.toSimpleString()) {
+    return "Treasure Search";
+  } else if (category == QuestType.QRCodeHunt.toSimpleString()) {
+    return "QR Code Hunt";
+  } else if (category == QuestType.GPSAreaHunt.toSimpleString()) {
+    return "GPS Area Hunt";
+  } else if (category == QuestType.QRCodeHike.toSimpleString()) {
+    return "QR Code Hike";
+  } else if (category == QuestType.GPSAreaHike.toSimpleString()) {
+    return "GPS Area Hike";
+  } else {
+    return "Default Quest";
+  }
 }
 
-Color getColorOfType(QuestType type) {
-  if (type == QuestType.TreasureLocationSearch) {
+Color getColorOfType(String type) {
+  if (type == QuestType.TreasureLocationSearch.toSimpleString()) {
     return Colors.orange;
-  } else if (type == QuestType.QRCodeHike) {
+  } else if (type == QuestType.QRCodeHike.toSimpleString()) {
     return Colors.red;
-  } else if (type == QuestType.GPSAreaHike) {
+  } else if (type == QuestType.GPSAreaHike.toSimpleString()) {
     return Colors.green;
-  } else if (type == QuestType.DistanceEstimate) {
+  } else if (type == QuestType.DistanceEstimate.toSimpleString()) {
     return Colors.blue;
   } else {
     return Colors.cyan;

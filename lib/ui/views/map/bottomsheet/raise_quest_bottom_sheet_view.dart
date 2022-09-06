@@ -53,7 +53,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      getShortQuestType(model.quest.type),
+                      getShortQuestType(model.quest.type as QuestType),
                       style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -62,14 +62,15 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                     ),
                   ),
                   horizontalSpaceSmall,
-                  CreditsAmount(amount: model.quest.afkCredits),
+                  CreditsAmount(amount: model.quest.afkCredits!),
                 ],
               ),
               verticalSpaceSmall,
-              if (model.quest.type != QuestType.TreasureLocationSearch &&
-                  model.quest.type != QuestType.QRCodeHunt &&
-                  model.quest.type != QuestType.GPSAreaHike &&
-                  model.quest.type != QuestType.GPSAreaHunt &&
+              if (model.quest.type !=
+                      QuestType.TreasureLocationSearch.toSimpleString() &&
+                  model.quest.type != QuestType.QRCodeHunt.toSimpleString() &&
+                  model.quest.type != QuestType.GPSAreaHike.toSimpleString() &&
+                  model.quest.type != QuestType.GPSAreaHunt.toSimpleString() &&
                   model.quest.startMarker != null)
                 Expanded(
                   flex: 8,

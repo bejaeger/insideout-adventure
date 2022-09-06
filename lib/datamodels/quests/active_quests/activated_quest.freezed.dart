@@ -60,8 +60,6 @@ abstract class $ActivatedQuestCopyWith<$Res> {
       double? lastCheckLon,
       double? currentDistanceInMeters,
       double? lastDistanceInMeters});
-
-  $QuestCopyWith<$Res> get quest;
 }
 
 /// @nodoc
@@ -139,13 +137,6 @@ class _$ActivatedQuestCopyWithImpl<$Res>
               as double?,
     ));
   }
-
-  @override
-  $QuestCopyWith<$Res> get quest {
-    return $QuestCopyWith<$Res>(_value.quest, (value) {
-      return _then(_value.copyWith(quest: value));
-    });
-  }
 }
 
 /// @nodoc
@@ -168,9 +159,6 @@ abstract class _$$_ActivatedQuestCopyWith<$Res>
       double? lastCheckLon,
       double? currentDistanceInMeters,
       double? lastDistanceInMeters});
-
-  @override
-  $QuestCopyWith<$Res> get quest;
 }
 
 /// @nodoc

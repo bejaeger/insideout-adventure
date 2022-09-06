@@ -1,5 +1,6 @@
 enum AuthExceptions {
   invalidEmail('Invalid Email'),
+  emailRequired('Email Required'),
   invalidName('Invalid Name'),
   emptyName('Name Should not be Empty'),
   emalAlreadyInUse('Eamil already in use'),

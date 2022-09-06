@@ -28,7 +28,7 @@ class QuestsCategoryList extends StatelessWidget {
                     (e) => AfkCreditsCategoryCard(
                       onPressed: model.showNotImplementedSnackbar,
                       category: e,
-                      backgroundColor: getColorOfType(e),
+                      backgroundColor: getColorOfType(e.toSimpleString()),
                     ),
                   )
                   .toList(),

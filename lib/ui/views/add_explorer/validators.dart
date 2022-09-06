@@ -21,4 +21,12 @@ class FormValidators {
     }
     return null;
   }
+
+  static String? emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      const exception = AuthExceptions.emailRequired;
+      return exception.message;
+    }
+    return null;
+  }
 }

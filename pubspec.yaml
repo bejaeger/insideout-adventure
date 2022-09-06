@@ -136,6 +136,7 @@ dependencies:
   very_good_analysis: ^3.0.1
   introduction_screen: ^3.0.1
   dotenv: ^4.0.1
+  geo_firestore_flutter: ^0.1.5
   # Harguilar Ended Here 
 
 

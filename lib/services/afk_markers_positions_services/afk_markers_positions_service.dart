@@ -10,6 +10,10 @@ class AFKMarkersPositionService {
 
   // Stateful Data
   BehaviorSubject<double>? radius;
+  // ignore: close_sinks
+  BehaviorSubject<double> radiusQuery = BehaviorSubject();
+
+  // This is the Stream for the query of the data store.
   Stream<dynamic>? query;
 
   // Subscription
@@ -17,7 +21,7 @@ class AFKMarkersPositionService {
 
   void startQuery({required updateMarkers}) async {
     // Get users location
-    var pos = await Location.instance.getLocation();
+    final pos = await Location.instance.getLocation();
 
     // Make a referece to firestore
     final ref = FirebaseFirestore.instance.collection('afkMarkersPositions');
@@ -25,9 +29,11 @@ class AFKMarkersPositionService {
         geo.point(latitude: pos.latitude!, longitude: pos.longitude!);
 
     // subscribe to query
-    subscription = radius!.switchMap((rad) {
-      return geo.collection(collectionRef: ref).within(
-          center: center, radius: rad, field: 'position', strictMode: true);
-    }).listen(updateMarkers);
+    subscription = radius!.switchMap(
+      (rad) {
+        return geo.collection(collectionRef: ref).within(
+            center: center, radius: rad, field: 'position', strictMode: true);
+      },
+    ).listen(updateMarkers);
   }
 }
