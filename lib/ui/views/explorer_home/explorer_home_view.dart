@@ -33,7 +33,12 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
         viewModelBuilder: () => ExplorerHomeViewModel(),
         onModelReady: (model) => model.initialize(),
         builder: (context, model, child) {
-          log.wtf("==>> Rebuild ExplorerHomeView");
+          bool showMainWidgets =
+              (!(model.isShowingQuestDetails || model.hasActiveQuest) ||
+                      model.isFadingOutQuestDetails) &&
+                  (model.previouslyFinishedQuest == null);
+
+          //log.wtf("==>> Rebuild ExplorerHomeView");
           return WillPopScope(
             onWillPop: () async {
               model.maybeRemoveExplorerAccountOverlay();
@@ -52,9 +57,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                       SwitchToParentsAreaButton(
                         onTap: () async =>
                             await model.handleSwitchToSponsorEvent(),
-                        show: !(model.isShowingQuestDetails ||
-                                model.hasActiveQuest) ||
-                            model.isFadingOutQuestDetails,
+                        show: showMainWidgets,
                       ),
 
                     if (model.showLoadingScreen)
@@ -66,15 +69,16 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                           percentageOfNextLevel: model.percentageOfNextLevel,
                           currentLevel: model.currentLevel,
                           onAvatarPressed: model.showExplorerAccountOverlay,
-                          show: (!model.isShowingQuestDetails &&
-                                  !model.hasActiveQuest) ||
-                              model.isFadingOutQuestDetails,
+                          show: showMainWidgets,
                           onDevFeaturePressed: model
                               .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
                           onCreditsPressed: model.showCreditsOverlay,
                           balance: model.currentUserStats.afkCreditsBalance),
 
-                    if (!model.isBusy) MainFooterOverlayView(),
+                    if (!model.isBusy)
+                      MainFooterOverlayView(
+                        show: showMainWidgets,
+                      ),
 
                     if (!model.isBusy) ExplorerAccountView(),
 

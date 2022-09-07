@@ -30,7 +30,6 @@ import 'package:afkcredits/ui/views/ar_view/ar_object_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
-import 'package:afkcredits/ui/views/hike_quest/hike_quest_view.dart';
 import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
@@ -93,7 +92,6 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: ARObjectView),
     MaterialRoute(page: ActiveScreenTimeView),
     MaterialRoute(page: SelectScreenTimeView),
-    MaterialRoute(page: HikeQuestView),
     MaterialRoute(page: SingleQuestTypeView),
     MaterialRoute(page: OnBoardingScreensView),
   ],

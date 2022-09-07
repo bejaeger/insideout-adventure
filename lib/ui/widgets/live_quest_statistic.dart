@@ -21,15 +21,9 @@ class _LiveQuestStatisticState extends State<LiveQuestStatistic> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          widget.statistic,
-          style: textTheme(context).bodyText2!.copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: kcBlackHeadlineColor),
-        ),
+        AfkCreditsText.headingTwo(widget.statistic),
         verticalSpaceTiny,
-        Text(widget.title),
+        AfkCreditsText.caption(widget.title),
       ],
     );
   }

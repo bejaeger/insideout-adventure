@@ -58,11 +58,12 @@ class MainMapView extends StatelessWidget {
           if (model.hasActiveQuest) MapEffects(activeQuest: model.activeQuest),
           AvatarOnMap(
               characterNumber: model.characterNumber,
-              show: !((model.isShowingQuestDetails ||
-                      !model.isAvatarView ||
-                      model.isFadingOutOverlay ||
-                      model.isMovingCamera) &&
-                  !model.hasActiveQuest)),
+              show: (!((model.isShowingQuestDetails ||
+                          !model.isAvatarView ||
+                          model.isFadingOutOverlay ||
+                          model.isMovingCamera) &&
+                      !model.hasActiveQuest)) &&
+                  model.isAvatarView),
           // Avatar overlaid with Lottie
           RightFloatingButtons(
             onCompassTap: model.rotateToNorth,

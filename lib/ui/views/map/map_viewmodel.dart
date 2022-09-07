@@ -23,10 +23,17 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     required this.moveCamera,
     required this.animateCamera,
     required this.configureAndAddMapMarker,
+    required this.configureAndAddMapArea,
     required this.animateNewLatLon,
+    required this.animateNewLatLonZoomDelta,
     required this.resetMapMarkers,
+    required this.resetMapAreas,
     required this.addARObjectToMap,
     required this.animateCameraToBetweenCoordinates,
+    required this.fakeAnimate,
+    required this.updateMapMarkers,
+    required this.updateMapAreas,
+    required this.showMarkerInfoWindow,
   });
 
   // -----------------------------------------------
@@ -297,20 +304,53 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   void addMarkerToMap(
       {required Quest quest,
       required AFKMarker afkmarker,
+      Future Function()? onMarkerTapCustom,
+      Future Function(MarkerAnalysisResult)? handleMarkerAnalysisResultCustom,
+      bool isStartMarker = false,
       bool completed = false}) {
     configureAndAddMapMarker(
       quest: quest,
       afkmarker: afkmarker,
       completed: completed,
-      onTap: () =>
-          onMarkerTap(quest: quest, afkmarker: afkmarker, completed: completed),
+      isStartMarker: isStartMarker,
+      onTap: onMarkerTapCustom != null
+          ? () => onMarkerTapCustom()
+          : () => onMarkerTap(
+                quest: quest,
+                afkmarker: afkmarker,
+                completed: completed,
+                handleMarkerAnalysisResultCustom:
+                    handleMarkerAnalysisResultCustom,
+              ),
+    );
+  }
+
+  void addAreaToMap({
+    required Quest quest,
+    required AFKMarker afkmarker,
+    Future Function()? onAreaTapCustom,
+    bool isStartArea = false,
+  }) {
+    configureAndAddMapArea(
+      quest: quest,
+      afkmarker: afkmarker,
+      collected: activeQuestService.isMarkerCollected(marker: afkmarker),
+      isStartArea: isStartArea,
+      onTap: onAreaTapCustom != null
+          ? () => onAreaTapCustom()
+          : () => onAreaTap(
+                quest: quest,
+                afkmarker: afkmarker,
+              ),
     );
   }
 
   Future onMarkerTap(
       {required Quest quest,
       required AFKMarker afkmarker,
-      required bool completed}) async {
+      required bool completed,
+      Future Function(MarkerAnalysisResult)?
+          handleMarkerAnalysisResultCustom}) async {
     // --------------------------------------------
     // Maybe use some super user features
     dynamic adminMode = false;
@@ -350,7 +390,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       if (hasActiveQuest == false) {
         if (afkmarker == quest.startMarker) {
           dynamic result;
-          if (!isAvatarView) {
+          if (!isAvatarView && selectedQuest == null) {
             result = await displayQuestBottomSheet(
               quest: quest,
               startMarker: afkmarker,
@@ -358,11 +398,25 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
           }
           if (result?.confirmed == true || isAvatarView) {
             // showQuestDetails
-            if (quest.type == QuestType.GPSAreaHike ||
-                quest.type == QuestType.GPSAreaHunt) {
-              onGPSAreaQuestMarkerTap(afkmarker.lat, afkmarker.lon, quest);
+            animateToQuestDetails(quest: quest);
+          }
+
+          if (selectedQuest != null && quest.type == QuestType.GPSAreaHike ||
+              quest.type == QuestType.GPSAreaHunt) {
+            // needed to avoid navigating to that marker!
+
+            // When quest is running
+            if (!useSuperUserFeatures ||
+                adminMode == false) if (hasActiveQuest) {
+              await dialogService.showDialog(
+                  title: "You started here",
+                  description: "This was the beginning");
             } else {
-              animateToQuestDetails(quest: quest);
+              if (!isAvatarView) {
+                await dialogService.showDialog(
+                    title: "The Start",
+                    description: "Move to this location and start the quest.");
+              }
             }
           }
         } else {
@@ -384,13 +438,43 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         if (appConfigProvider.allowDummyMarkerCollection) {
           MarkerAnalysisResult markerResult =
               await activeQuestService.analyzeMarker(marker: afkmarker);
-          await handleMarkerAnalysisResult(markerResult);
+          if (handleMarkerAnalysisResultCustom != null) {
+            await handleMarkerAnalysisResultCustom(markerResult);
+          } else {
+            await handleMarkerAnalysisResult(markerResult);
+          }
         }
       }
     }
     notifyListeners();
   }
 
+  Future onAreaTap({required Quest quest, required AFKMarker afkmarker}) async {
+    // event triggered when user taps marker
+    dynamic adminMode = false;
+    if (useSuperUserFeatures) {
+      adminMode = await showAdminDialogAndGetResponse();
+      if (adminMode == true) {
+        String qrCodeString =
+            qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
+        navigationService.navigateTo(Routes.qRCodeView,
+            arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
+      }
+    }
+
+    if (!useSuperUserFeatures || adminMode == false) {
+      if (afkmarker == quest.startMarker) {
+        await dialogService.showDialog(
+            title: "The Start",
+            description: "Move to this location and start the quest.");
+      } else {
+        await dialogService.showDialog(
+            title: "Walk to this area to collect the checkpoint");
+      }
+    }
+  }
+
+  // TODO: This needs to become more advanced!
   void animateToQuestDetails({required Quest quest}) {
     if (isShowingQuestDetails) return; // we already show the quest details
 
@@ -407,28 +491,95 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   void animateQuestToMap({required Quest quest}) {
-    // TODO: Maybe this needs to become more advanced
-    // TODO: for different types of quests
+    // ----------------------------------
+    // -->> START TreasureLocationSearch Quest Section
+    if (quest.type == QuestType.TreasureLocationSearch) {
+      // animate camera
+      if (quest.startMarker != null) {
+        changeCameraTilt(90);
+        changeCameraZoom(kMaxZoom);
+        _animateCamera(
+            customLat: quest.startMarker!.lat,
+            customLon: quest.startMarker!.lon,
+            force: true);
+      }
+      mapStateService.setIsAvatarView(true);
 
-    // animate camera
-    if (quest.startMarker != null) {
-      changeCameraTilt(90);
-      changeCameraZoom(kMaxZoom);
+      // ONLY markers relevant to quest
+      if (quest.startMarker != null) {
+        resetMapMarkers();
+        addMarkerToMap(quest: quest, afkmarker: quest.startMarker!);
+      }
+      // ----------------------------------
+      // <<-- END TreasureLocationSearch Quest Section
 
-      _animateCamera(
-          customLat: quest.startMarker!.lat,
-          customLon: quest.startMarker!.lon,
-          force: true);
-    }
-    mapStateService.setIsAvatarView(true);
+      // ----------------------------------
+      // -->> START Hike Quest Section
+    } else if (quest.type == QuestType.GPSAreaHike ||
+        quest.type == QuestType.GPSAreaHike) {
+      // ? Map animation is triggered in initializer of gps_area_hike_viewmodel.dart (overlay viewmodel)
+      // ? Should I do it here instead?
+      // ONLY markers relevant to quest
 
-    // ONLY markers relevant to quest
-    if (quest.startMarker != null) {
-      resetMapMarkers();
-      addMarkerToMap(quest: quest, afkmarker: quest.startMarker!);
+      // ? Also markers are added in initializer of gps_area_hike_viewmodel.dart
+      // if (quest.startMarker != null) {
+      //   resetMapMarkers();
+      //   // add start marker & area
+      //   addMarkerToMap(
+      //       quest: quest, afkmarker: quest.startMarker!, isStartMarker: true);
+      //   addAreaToMap(
+      //       quest: quest, afkmarker: quest.startMarker!, isStartArea: true);
+      //   // add other potential markers and areas
+      //   addMarkers(quest: quest);
+      //   addAreas(quest: quest);
+      // }
+      // <<-- END Hike Quest
+      // ---------------------------------------------
     }
   }
 
+  void addMarkers(
+      {required Quest quest,
+      Future Function(MarkerAnalysisResult)?
+          handleMarkerAnalysisResultCustom}) {
+    for (AFKMarker _m
+        in activeQuestService.markersToShowOnMap(questIn: quest)) {
+      if (_m != quest.startMarker) {
+        addMarkerToMap(
+            quest: quest,
+            afkmarker: _m,
+            handleMarkerAnalysisResultCustom: handleMarkerAnalysisResultCustom);
+      }
+    }
+  }
+
+  void addAreas({required Quest quest}) {
+    for (AFKMarker _m
+        in activeQuestService.markersToShowOnMap(questIn: quest)) {
+      // don't add area if it's the start marker because that is handled separately
+      if (_m != quest.startMarker) {
+        addAreaToMap(quest: quest, afkmarker: _m);
+      }
+    }
+  }
+
+  void showMarkerInfoWindowNow({required String? markerId}) {
+    showMarkerInfoWindow(markerId: markerId);
+    notifyListeners();
+  }
+
+  void updateMapDisplay({required AFKMarker afkmarker}) {
+    updateMapAreas(afkmarker: afkmarker);
+    updateMapMarkers(
+        afkmarker: afkmarker,
+        collected: activeQuest.markersCollected[activeQuest.quest.markers
+            .indexWhere((element) => element == afkmarker)]);
+    notifyListeners();
+  }
+
+  // TODO: This should be specified via the specific quest viewmodels!
+  // TODO: At the moment only done for gps_area_hike.
+  // TODO: Might also only be needed to activate cheat feature!
   @override
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
     log.i("Handling marker analysis result");
@@ -473,6 +624,12 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     }
   }
 
+  void resetAllMapMarkersAndAreas() {
+    resetMapMarkers();
+    resetMapAreas();
+    extractStartMarkersAndAddToMap();
+  }
+
   void extractStartMarkersAndAddToMap() {
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
@@ -482,6 +639,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
           addMarkerToMap(
               quest: _q,
               afkmarker: _m,
+              isStartMarker: _m == _q.startMarker,
               completed: currentUserStats.completedQuestIds.contains(_q.id));
         }
       }
@@ -534,24 +692,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     return res is bool && res == true;
   }
 
-  Future onGPSAreaQuestMarkerTap(double? lat, double? lon, Quest quest) async {
-    // set selected quest to show on screen
-    await changeSettingsForNewView(lat, lon);
-    // open standalone quest view
-    await openStandaloneQuestUIView(quest);
-
-    // ! Not sure if this misses something important! For now
-    // ! it's okay
-    // set selected quest only after navigation!
-    //activeQuestService.setSelectedQuest(quest);
-  }
-
-  Future openStandaloneQuestUIView(Quest quest) async {
-    // TODO: Take care about res value
-    await navigateToGPSAreaQuest(quest);
-    //return res is bool && res == true;
-  }
-
   void nextCharacter() {
     mapStateService.characterNumber = (characterNumber + 1) % 6;
     notifyListeners();
@@ -591,16 +731,34 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       {required Quest quest,
       required AFKMarker afkmarker,
       required Future Function() onTap,
+      bool isStartMarker,
       bool completed}) configureAndAddMapMarker;
+  final void Function(
+      {required Quest quest,
+      required AFKMarker afkmarker,
+      required Future Function() onTap,
+      bool isStartArea,
+      bool collected}) configureAndAddMapArea;
   final Future Function({required double lat, required double lon, bool? force})
       animateNewLatLon;
   final Future Function(
       {required List<List<double>> latLngList,
       double? padding}) animateCameraToBetweenCoordinates;
+  final void Function() fakeAnimate;
   final void Function() resetMapMarkers;
+  final void Function() resetMapAreas;
   final void Function(
       {required void Function(double lat, double lon, bool isCoin) onTap,
       required double lat,
       required double lon,
       required bool isCoin}) addARObjectToMap;
+  final void Function({required AFKMarker afkmarker, required bool collected})
+      updateMapMarkers;
+  final void Function({required AFKMarker afkmarker}) updateMapAreas;
+  final Future Function(
+      {required double lat,
+      required double lon,
+      required double deltaZoom,
+      bool? force}) animateNewLatLonZoomDelta;
+  final void Function({required String? markerId}) showMarkerInfoWindow;
 }

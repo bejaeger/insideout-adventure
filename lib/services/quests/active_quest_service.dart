@@ -65,6 +65,15 @@ class ActiveQuestService with ReactiveServiceMixin {
     selectedQuestSubject.add(quest);
   }
 
+  void resetSelectedAndMaybePreviouslyFinishedQuest() {
+    resetSelectedQuest();
+    resetPreviouslyFinishedQuest();
+  }
+
+  void resetPreviouslyFinishedQuest() {
+    previouslyFinishedQuest = null;
+  }
+
   void resetSelectedQuest() {
     selectedQuestSubject.add(null);
   }
@@ -107,7 +116,11 @@ class ActiveQuestService with ReactiveServiceMixin {
     }
 
     if (countStartMarkerAsCollected) {
-      tmpActivatedQuest.markersCollected[0] = true;
+      List<bool> tmpMarkersCollectedList =
+          List.from(tmpActivatedQuest.markersCollected);
+      tmpMarkersCollectedList[0] = true;
+      tmpActivatedQuest =
+          tmpActivatedQuest.copyWith(markersCollected: tmpMarkersCollectedList);
     }
 
     // ! quest activated!
@@ -479,7 +492,8 @@ class ActiveQuestService with ReactiveServiceMixin {
             "Marker is not available in currently active quest. Before this function is called, this should have been already checked, please check your code!");
         return;
       }
-      List<bool> markersCollectedNew = activatedQuest!.markersCollected;
+      List<bool> markersCollectedNew =
+          List.from(activatedQuest!.markersCollected);
       if (markersCollectedNew[index]) {
         log.wtf(
             "Marker already collected. Before this function is called, this should have been already checked, please check your code!");

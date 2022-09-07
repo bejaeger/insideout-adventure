@@ -145,7 +145,7 @@ class _BasicDialogContent extends StatelessWidget {
                             onPressed: () =>
                                 completer(DialogResponse(confirmed: true)),
                             child: Text(
-                              "Continue",
+                              "Ok",
                               style: textTheme(context)
                                   .headline6!
                                   .copyWith(color: kcWhiteTextColor),

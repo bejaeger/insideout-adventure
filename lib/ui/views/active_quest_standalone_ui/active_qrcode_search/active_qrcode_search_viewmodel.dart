@@ -165,10 +165,10 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
             await Future.delayed(Duration(milliseconds: 1000));
           }
 
-          if (currentQuest!.type == QuestType.QRCodeHunt) {
-            addMarkerToMap(quest: activeQuest.quest, afkmarker: result.marker!);
-          }
-          addAreaToMap(quest: activeQuest.quest, afkmarker: result.marker!);
+          // if (currentQuest!.type == QuestType.QRCodeHunt) {
+          //   addMarkerToMap(quest: activeQuest.quest, afkmarker: result.marker!);
+          // }
+          // addAreaToMap(quest: activeQuest.quest, afkmarker: result.marker!);
 
           if (currentQuest!.type == QuestType.GPSAreaHunt) {
             notifyListeners();

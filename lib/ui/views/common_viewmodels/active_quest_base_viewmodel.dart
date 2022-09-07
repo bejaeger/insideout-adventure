@@ -113,6 +113,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     if (!hasEnoughSponsoring(quest: quest)) {
       return false;
     }
+
     try {
       // if (quest.type == QuestType.VibrationSearch && startFromMap) {
       //   await navigateToVibrationSearchView();
@@ -135,14 +136,18 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
         resetSlider();
         return false;
       }
+
       // Quest is succesfully started so hasActiveQuest == true
 
       // selected quest is reset...hopefully I'm not accessing it in the active quest
       // by resetting the UI will react and now knows that an active quest is present, not only a "selected" quest
       activeQuestService.resetSelectedQuest();
-      changeCameraZoom(kInitialZoom);
-      animateMap(forceUseLocation: true);
 
+      // ? needed for TreasureLocationSearch
+      if (currentQuest?.type == QuestType.TreasureLocationSearch) {
+        changeCameraZoom(kInitialZoom);
+        animateMap(forceUseLocation: true);
+      }
       return true;
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
@@ -230,8 +235,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     // Restore camera
     restorePreviousCameraPosition();
 
-    // add back all quests
-    addAllQuestMarkers();
+    // reset/add back all quests
+    mapViewModel.resetAllMapMarkersAndAreas();
 
     // reset selected quest after delay so the fade out is smooth
     await Future.delayed(Duration(milliseconds: 800));
@@ -247,7 +252,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
 
     // reset selected quest -> don't show quest details anymore
-    activeQuestService.resetSelectedQuest();
+    // reset previouslyFinishedQuest
+    activeQuestService.resetSelectedAndMaybePreviouslyFinishedQuest();
 
     // cancel position listener that was used for calibration
     cancelPositionListener();
@@ -329,20 +335,19 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
   // navigate camera to show currently visible quest markers
   Future animateCameraToQuestMarkers({int delay = 0}) async {
-    if (activeQuestService.selectedQuest?.type ==
-        QuestType.TreasureLocationSearch) {
+    if (selectedQuest?.type == QuestType.TreasureLocationSearch) {
       animateCameraToStartMarker(delay: delay);
       return;
     }
 
     List<List<double>> latLngListToAnimate = activeQuestService
-        .markersToShowOnMap(questIn: currentQuest)
+        .markersToShowOnMap(questIn: selectedQuest)
         .map((m) => [m.lat!, m.lon!])
         .toList();
     if ((hasActiveQuest == false || latLngListToAnimate.length == 1) &&
-            currentQuest?.type == QuestType.QRCodeHunt ||
-        currentQuest?.type == QuestType.GPSAreaHike ||
-        currentQuest?.type == QuestType.GPSAreaHunt) {
+            selectedQuest?.type == QuestType.QRCodeHunt ||
+        selectedQuest?.type == QuestType.GPSAreaHike ||
+        selectedQuest?.type == QuestType.GPSAreaHunt) {
       latLngListToAnimate.add(geolocationService.getUserLatLngInList);
     }
 
@@ -503,6 +508,10 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       },
     );
     if (result?.confirmed == true) {
+      // TODO: This is the moment where we should show a summary statistic!
+
+      // TODO: Then we should set previouslyFinishedQuest to null!
+
       // this means everything went fine!
       // Show statistics display
       questSuccessfullyFinished = true;

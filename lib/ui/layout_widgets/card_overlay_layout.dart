@@ -44,11 +44,12 @@ class CardOverlayLayout extends StatelessWidget {
                 //height: height,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
-                        //colors: [Colors.white, kcPrimaryColor],
-                        colors: [color1, color2],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        stops: [0.2, 1]),
+                      //colors: [Colors.white, kcPrimaryColor],
+                      colors: [color1, color2],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      stops: [0.2, 1],
+                    ),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 0.5,
@@ -64,7 +65,7 @@ class CardOverlayLayout extends StatelessWidget {
                     children: [
                       child,
                       //Spacer(),
-                      verticalSpaceLarge,
+                      verticalSpaceMedium,
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: GrabberLine(),

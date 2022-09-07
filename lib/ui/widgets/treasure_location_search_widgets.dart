@@ -46,6 +46,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
             color: getDirectionStatusColor(directionStatus),
             borderRadius: BorderRadius.circular(20.0),
             border: Border.all(color: Colors.grey[400]!),
+
             // boxShadow: [
             //   BoxShadow(
             //     color: kShadowColor,

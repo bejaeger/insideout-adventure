@@ -73,7 +73,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
 
   // layout
-  bool get isShowingQuestDetails => activeQuestService.selectedQuest != null;
+  bool get isShowingQuestDetails =>
+      (activeQuestService.selectedQuest != null) ||
+      activeQuestService.previouslyFinishedQuest != null;
   bool get isShowingQuestList => layoutService.isShowingQuestList;
   bool get isShowingExplorerAccount => layoutService.isShowingExplorerAccount;
   bool get isShowingCreditsOverlay => layoutService.isShowingCreditsOverlay;
@@ -94,8 +96,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   bool get hasActiveQuest => activeQuestService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => activeQuestService.activatedQuest!;
-  ActivatedQuest get previouslyFinishedQuest =>
-      activeQuestService.previouslyFinishedQuest!;
+  ActivatedQuest? get previouslyFinishedQuest =>
+      activeQuestService.previouslyFinishedQuest;
   ActivatedQuest? get activeQuestNullable => activeQuestService.activatedQuest;
 
   String get getHourMinuteSecondsTime =>

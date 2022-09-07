@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class MainFooterOverlayView extends StatelessWidget {
+  final bool show;
   const MainFooterOverlayView({
     Key? key,
+    required this.show,
   }) : super(key: key);
 
   @override
@@ -60,8 +62,7 @@ class MainFooterOverlayView extends StatelessWidget {
           padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
           //alignment: Alignment.bottomCenter,
           child: FadingWidget(
-            show: !(model.isShowingQuestDetails || model.hasActiveQuest) ||
-                model.isFadingOutQuestDetails,
+            show: show,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.end,

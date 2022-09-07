@@ -6,9 +6,12 @@ import 'package:afkcredits/ui/views/active_quest_overlays/gps_area_hike/gps_area
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/hike_quest/hike_quest_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
+import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
+import 'package:afkcredits/ui/widgets/quest_success_card.dart';
 import 'package:afkcredits/ui/widgets/treasure_location_search_widgets.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -57,8 +60,10 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
         if (widget.startFadeOut) {
           _controller.reverse(from: 0.5);
         }
-        final Quest? quest =
-            model.selectedQuest ?? model.activeQuestNullable?.quest ?? null;
+        final Quest? quest = model.selectedQuest ??
+            model.activeQuestNullable?.quest ??
+            model.previouslyFinishedQuest?.quest ??
+            null;
         return FadeTransition(
           opacity: _animation,
           child: MainStack(
@@ -222,30 +227,37 @@ class TreasureLocationSearch extends StatelessWidget {
       viewModelBuilder: () => ActiveTreasureLocationSearchQuestViewModel(),
       onModelReady: (model) => model.initialize(quest: quest),
       builder: (context, model, child) {
-        bool activeDetector = model.hasActiveQuest &&
-            !model.isCheckingDistance &&
-            model.allowCheckingPosition;
+        // bool activeDetector = model.hasActiveQuest &&
+        //     !model.isCheckingDistance &&
+        //     model.allowCheckingPosition;
         return Stack(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IgnorePointer(
-              child: Align(
+            if (model.previouslyFinishedQuest != null)
+              Align(
                 alignment: Alignment.topCenter,
-                child: CurrentQuestStatusInfo(
-                  // isBusy: false,
-                  // isFirstDistanceCheck: true,
-                  // currentDistance: 100,
-                  // previousDistance: 110,
-                  // directionStatus: DirectionStatus.unknown,
-                  isBusy: model.isCheckingDistance,
-                  isFirstDistanceCheck: model.isFirstDistanceCheck,
-                  currentDistance: model.currentDistanceInMeters,
-                  previousDistance: model.previousDistanceInMeters,
-                  activatedQuest: model.activeQuestNullable,
-                  directionStatus: model.directionStatus,
+                child:
+                    QuestSuccessCard(onContinuePressed: model.popQuestDetails),
+              ),
+            if (model.previouslyFinishedQuest == null)
+              IgnorePointer(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: CurrentQuestStatusInfo(
+                    // isBusy: false,
+                    // isFirstDistanceCheck: true,
+                    // currentDistance: 100,
+                    // previousDistance: 110,
+                    // directionStatus: DirectionStatus.unknown,
+                    isBusy: model.isCheckingDistance,
+                    isFirstDistanceCheck: model.isFirstDistanceCheck,
+                    currentDistance: model.currentDistanceInMeters,
+                    previousDistance: model.previousDistanceInMeters,
+                    activatedQuest: model.activeQuestNullable,
+                    directionStatus: model.directionStatus,
+                  ),
                 ),
               ),
-            ),
             if (model.useSuperUserFeatures)
               Align(
                 alignment: Alignment.topRight,
@@ -261,8 +273,10 @@ class TreasureLocationSearch extends StatelessWidget {
                 ),
               ),
             model.isNearStartMarker
-                ? StartButtonOverlay(
-                    quest: quest, onStartQuest: onStartQuest, model: model)
+                ? model.previouslyFinishedQuest == null
+                    ? StartButtonOverlay(
+                        quest: quest, onStartQuest: onStartQuest, model: model)
+                    : SizedBox(height: 0, width: 0)
                 : aboveBottomBackButton(
                     child: NotCloseToQuestNote(
                       animateCameraToQuestMarkers:
@@ -279,7 +293,7 @@ class TreasureLocationSearch extends StatelessWidget {
 }
 
 // TODO: I can make that more general for the different types of quests!
-class GPSAreaHike extends StatelessWidget {
+class GPSAreaHike extends StatefulWidget {
   final Quest quest;
   final void Function() onStartQuest;
   const GPSAreaHike({
@@ -289,20 +303,121 @@ class GPSAreaHike extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<GPSAreaHike> createState() => _GPSAreaHikeState();
+}
+
+class _GPSAreaHikeState extends State<GPSAreaHike>
+    with TickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.fastLinearToSlowEaseIn,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<GPSAreaHikeViewModel>.reactive(
-      viewModelBuilder: () => GPSAreaHikeViewModel(),
-      onModelReady: (model) => model.initialize(quest: quest),
+      viewModelBuilder: () => GPSAreaHikeViewModel(quest: widget.quest),
+      onModelReady: (model) => model.initialize(quest: widget.quest),
       builder: (context, model, child) {
+        if (model.showCollectedMarkerAnimation) {
+          _controller.reset();
+          _controller.forward();
+          model.showCollectedMarkerAnimation = false;
+        }
+        print("========================================");
+        print(model.previouslyFinishedQuest);
         return Stack(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            if (model.isAnimatingCamera)
+              Padding(
+                padding: const EdgeInsets.only(top: 90),
+                child: AFKProgressIndicator(
+                  alignment: Alignment.topCenter,
+                ),
+              ),
+
+            if (model.previouslyFinishedQuest != null)
+              Align(
+                alignment: Alignment.topCenter,
+                child:
+                    QuestSuccessCard(onContinuePressed: model.popQuestDetails),
+              ),
+
             IgnorePointer(
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Container(width: 200, height: 50),
               ),
             ),
+            IgnorePointer(
+              ignoring: !model.hasActiveQuest,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: AnimatedOpacity(
+                  opacity: model.hasActiveQuest ? 1 : 0,
+                  duration: Duration(seconds: 1),
+                  child: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: kcGreenWhiter,
+                      borderRadius: BorderRadius.circular(20.0),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 0.3,
+                          spreadRadius: 0.4,
+                          offset: Offset(1, 1),
+                          color: kcShadowColor,
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            LiveQuestStatistic(
+                              title: "Duration",
+                              statistic: model.hasActiveQuest
+                                  ? model.timeElapsed
+                                  : "0",
+                            ),
+                            ScaleTransition(
+                              scale: _animation,
+                              child: LiveQuestStatistic(
+                                title: "Markers collected",
+                                statistic: model.hasActiveQuest
+                                    ? model.getNumberMarkersCollectedString()
+                                    : "0",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
             // if (model.useSuperUserFeatures)
             //   Align(
             //     alignment: Alignment.topRight,
@@ -317,8 +432,23 @@ class GPSAreaHike extends StatelessWidget {
             //           child: Icon(Icons.arrow_forward_ios)),
             //     ),
             //   ),
-            StartButtonOverlay(
-                quest: quest, onStartQuest: onStartQuest, model: model),
+            model.isNearStartMarker
+                ? model.previouslyFinishedQuest == null
+                    ? StartButtonOverlay(
+                        quest: widget.quest,
+                        onStartQuest: widget.onStartQuest,
+                        model: model)
+                    : SizedBox(height: 0, width: 0)
+                : aboveBottomBackButton(
+                    child: NotCloseToQuestNote(
+                      animateCameraToQuestMarkers:
+                          model.animateCameraToQuestMarkers,
+                      animateCameraToUserPosition:
+                          model.animateCameraToUserPosition,
+                    ),
+                  ),
+            // StartButtonOverlay(
+            //     quest: quest, onStartQuest: onStartQuest, model: model),
           ],
         );
       },
@@ -343,7 +473,10 @@ class StartButtonOverlay extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(bottom: model.hasActiveQuest ? 0 : 80.0),
+        padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: model.hasActiveQuest ? 0 : kBottomBackButtonPadding),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,

@@ -25,7 +25,7 @@ class MapStateService {
   double? previousBearing;
   double? previousZoom;
   double? previousTilt;
-  bool? previousViewWasAvatarView;
+  bool? previousIsAvatarView;
   double? previousLat;
   double? previousLon;
 
@@ -47,7 +47,7 @@ class MapStateService {
   void takeSnapshotOfCameraPosition() {
     if (previousBearing != null)
       return; // only take snapshot when no snapshot is stored!
-    previousViewWasAvatarView = isAvatarView;
+    previousIsAvatarView = isAvatarView;
     previousBearing = bearing;
     previousZoom = zoom;
     previousTilt = tilt;
@@ -69,8 +69,8 @@ class MapStateService {
     if (previousTilt != null) {
       tilt = previousTilt!;
     }
-    if (previousViewWasAvatarView == false) {
-      isAvatarView = false;
+    if (previousIsAvatarView != null) {
+      isAvatarView = previousIsAvatarView!;
     }
     if (previousLat != null) {
       newLat = previousLat;
@@ -83,7 +83,7 @@ class MapStateService {
     previousTilt = null;
     previousLon = null;
     previousLat = null;
-    previousViewWasAvatarView = null;
+    previousIsAvatarView = null;
     if (moveInsteadOfAnimate) {
       restoreMapSnapshotByMoving();
     } else {

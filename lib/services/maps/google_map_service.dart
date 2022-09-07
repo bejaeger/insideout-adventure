@@ -15,6 +15,7 @@ class GoogleMapService {
 
   static final mapLogger = getLogger("MapControllerService");
   static Set<Marker> markersOnMap = {};
+  static Set<Circle> circlesOnMap = {};
 
   static bool isAnimating = false;
 
@@ -86,6 +87,22 @@ class GoogleMapService {
     );
   }
 
+  static Future animateNewLatLonZoomDelta(
+      {required double lat,
+      required double lon,
+      required double deltaZoom,
+      bool? force}) async {
+    if (_mapController == null) return;
+    if (isAnimating && force != true) return;
+    double zoom = await _mapController!.getZoomLevel();
+    await runAnimation(
+      () async => await _mapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(LatLng(lat, lon), zoom + deltaZoom),
+      ),
+      force: force,
+    );
+  }
+
   static Future animateCameraToBetweenCoordinates(
       {required List<List<double>> latLngList, double? padding = 100}) async {
     if (_mapController == null) return;
@@ -94,6 +111,13 @@ class GoogleMapService {
         CameraUpdate.newLatLngBounds(
             boundsFromLatLngList(latLngList: latLngList), padding ?? 0),
       ),
+    );
+  }
+
+  static void fakeAnimate() async {
+    if (_mapController == null) return;
+    runAnimation(
+      () async => dontMoveCamera(),
     );
   }
 
@@ -123,18 +147,21 @@ class GoogleMapService {
       {required Quest quest,
       required AFKMarker afkmarker,
       required Future Function() onTap,
+      bool isStartMarker = false,
       bool completed = false}) {
     Marker marker = Marker(
       markerId: MarkerId(afkmarker
           .id), // google maps marker id of start marker will be our quest id
       position: LatLng(afkmarker.lat!, afkmarker.lon!),
-
-      //infoWindow:
-      //  InfoWindow(
-      //     title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
-      // InfoWindow(snippet: quest.name),
+      // infoWindow: isStartMarker
+      //     ? InfoWindow(
+      //         title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE")
+      //     : InfoWindow.noText,
       icon: defineMarkersColour(
-          quest: quest, afkmarker: afkmarker, completed: completed),
+          quest: quest,
+          afkmarker: afkmarker,
+          completed: completed,
+          isStartMarker: isStartMarker),
       onTap: () async {
         // needed to avoid navigating to that marker!
         dontMoveCamera();
@@ -142,6 +169,39 @@ class GoogleMapService {
       },
     );
     markersOnMap.add(marker);
+  }
+
+  // configures map marker
+  static void configureAndAddMapArea(
+      {required Quest quest,
+      required AFKMarker afkmarker,
+      required Future Function() onTap,
+      bool isStartArea = false,
+      bool collected = false}) {
+    Color? color;
+    if (isStartArea) {
+      color = Colors.orange;
+    } else if (collected) {
+      color = Colors.green;
+    } else {
+      color = Colors.red;
+    }
+    Circle circle = Circle(
+      circleId: CircleId(afkmarker
+          .id), // google maps marker id of start marker will be our quest id
+      center: LatLng(afkmarker.lat!, afkmarker.lon!),
+      fillColor: color.withOpacity(0.5),
+      strokeColor: color.withOpacity(0.6),
+      strokeWidth: 2,
+      radius: kMaxDistanceFromMarkerInMeter.toDouble(),
+      consumeTapEvents: true,
+      onTap: () async {
+        // needed to avoid navigating to that marker!
+        dontMoveCamera();
+        await onTap();
+      },
+    );
+    circlesOnMap.add(circle);
   }
 
   static void addARObjectToMap(
@@ -190,6 +250,10 @@ class GoogleMapService {
     markersOnMap = {};
   }
 
+  static void resetMapAreas() {
+    circlesOnMap = {};
+  }
+
   static void dontMoveCamera() async {
     if (_mapController == null) return;
     _mapController!.moveCamera(CameraUpdate.scrollBy(0, 0));
@@ -224,32 +288,28 @@ class GoogleMapService {
 
   ///////////////////////////////////////////////////////////
   /// Map Style
-  static BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker,
-      required Quest? quest,
-      required bool completed}) {
-    //   return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-    // }
-    // if (hasActiveQuest) {
-    //   final index = activeQuest.quest.markers
-    //       .indexWhere((element) => element == afkmarker);
-    //   if (!activeQuest.markersCollected[index]) {
-    //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-    //   } else {
-    //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-    //   }
-    // } else {
+  static BitmapDescriptor defineMarkersColour({
+    required AFKMarker afkmarker,
+    required Quest? quest,
+    required bool completed,
+    required bool isStartMarker,
+  }) {
     if (completed) {
       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
     } else {
       if (quest?.type == QuestType.QRCodeHike) {
-        return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueOrange);
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
       } else if (quest?.type == QuestType.TreasureLocationSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueViolet);
       } else {
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+        // GPS Hikes
+        if (isStartMarker) {
+          return BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueOrange);
+        } else {
+          return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+        }
       }
     }
   }
@@ -279,6 +339,45 @@ class GoogleMapService {
     return LatLngBounds(
         northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
   }
+
+  // update color of marker on map
+  static void updateMapMarkers(
+      {required AFKMarker afkmarker, required bool collected}) {
+    markersOnMap = markersOnMap
+        .map((item) => item.markerId == MarkerId(afkmarker.id)
+            ? item.copyWith(
+                iconParam: defineMarkersColour(
+                    afkmarker: afkmarker,
+                    quest: null,
+                    completed: collected,
+                    isStartMarker: false),
+                infoWindowParam: InfoWindow(title: "ALREADY COLLECTED"))
+            : item)
+        .toSet();
+  }
+
+  // update color of area on map
+  static void updateMapAreas({required AFKMarker afkmarker}) {
+    circlesOnMap = circlesOnMap
+        .map((item) => item.circleId == CircleId(afkmarker.id)
+            ? item.copyWith(
+                fillColorParam: Colors.green.withOpacity(0.5),
+                strokeColorParam: Colors.green.withOpacity(0.6),
+              )
+            : item)
+        .toSet();
+  }
+
+  static void showMarkerInfoWindow({required String? markerId}) async {
+    if (_mapController == null || markerId == null) return;
+    MarkerId markerIdConverted = MarkerId(markerId);
+    try {
+      await _mapController!.showMarkerInfoWindow(markerIdConverted);
+    } catch (e) {
+      mapLogger.e(
+          "Could not show info window, maybe no info window was specified. Error: $e");
+    }
+  }
 }
 
 //Ben I just wonder why are we defining a function type ViewModel into services.
@@ -287,10 +386,18 @@ Future<MapViewModel> presolveMapViewModel() async {
       moveCamera: GoogleMapService.moveCamera,
       animateCamera: GoogleMapService.animateCamera,
       configureAndAddMapMarker: GoogleMapService.configureAndAddMapMarker,
+      configureAndAddMapArea: GoogleMapService.configureAndAddMapArea,
       animateNewLatLon: GoogleMapService.animateNewLatLon,
+      animateNewLatLonZoomDelta: GoogleMapService.animateNewLatLonZoomDelta,
       resetMapMarkers: GoogleMapService.resetMapMarkers,
+      resetMapAreas: GoogleMapService.resetMapAreas,
       addARObjectToMap: GoogleMapService.addARObjectToMap,
+      fakeAnimate: GoogleMapService.fakeAnimate,
+      updateMapMarkers: GoogleMapService.updateMapMarkers,
+      updateMapAreas: GoogleMapService.updateMapAreas,
+      showMarkerInfoWindow: GoogleMapService.showMarkerInfoWindow,
       animateCameraToBetweenCoordinates:
           GoogleMapService.animateCameraToBetweenCoordinates);
+
   return Future.value(_instance);
 }

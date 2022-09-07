@@ -42,6 +42,7 @@ class GoogleMapScreen extends StatelessWidget {
                     userLocation: model.userLocation),
                 //Place Markers in the Map
                 markers: GoogleMapService.markersOnMap,
+                circles: GoogleMapService.circlesOnMap,
                 //callback that’s called when the map is ready to use.
                 onMapCreated: (GoogleMapController controller) {
                   controller.setMapStyle(model.mapStyle);

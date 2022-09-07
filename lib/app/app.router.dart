@@ -33,7 +33,6 @@ import '../ui/views/ar_view/ar_object_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
-import '../ui/views/hike_quest/hike_quest_view.dart';
 import '../ui/views/history_and_achievements/history_and_achievements_view.dart';
 import '../ui/views/layout/bottom_bar_layout_view.dart';
 import '../ui/views/login/login_view.dart';
@@ -93,7 +92,6 @@ class Routes {
   static const String aRObjectView = '/a-robject-view';
   static const String activeScreenTimeView = '/active-screen-time-view';
   static const String selectScreenTimeView = '/select-screen-time-view';
-  static const String hikeQuestView = '/hike-quest-view';
   static const String singleQuestTypeView = '/single-quest-type-view';
   static const String onBoardingScreensView = '/on-boarding-screens-view';
   static const all = <String>{
@@ -128,7 +126,6 @@ class Routes {
     aRObjectView,
     activeScreenTimeView,
     selectScreenTimeView,
-    hikeQuestView,
     singleQuestTypeView,
     onBoardingScreensView,
   };
@@ -173,7 +170,6 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.aRObjectView, page: ARObjectView),
     RouteDef(Routes.activeScreenTimeView, page: ActiveScreenTimeView),
     RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
-    RouteDef(Routes.hikeQuestView, page: HikeQuestView),
     RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
     RouteDef(Routes.onBoardingScreensView, page: OnBoardingScreensView),
   ];
@@ -452,16 +448,6 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    HikeQuestView: (data) {
-      var args = data.getArgs<HikeQuestViewArguments>(nullOk: false);
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => HikeQuestView(
-          key: args.key,
-          quest: args.quest,
-        ),
-        settings: data,
-      );
-    },
     SingleQuestTypeView: (data) {
       var args = data.getArgs<SingleQuestTypeViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
@@ -626,13 +612,6 @@ class SelectScreenTimeViewArguments {
   final Key? key;
   final String? childId;
   SelectScreenTimeViewArguments({this.key, this.childId});
-}
-
-/// HikeQuestView arguments holder class
-class HikeQuestViewArguments {
-  final Key? key;
-  final Quest quest;
-  HikeQuestViewArguments({this.key, required this.quest});
 }
 
 /// SingleQuestTypeView arguments holder class
@@ -1210,25 +1189,6 @@ extension NavigatorStateExtension on NavigationService {
     return navigateTo(
       Routes.selectScreenTimeView,
       arguments: SelectScreenTimeViewArguments(key: key, childId: childId),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
-  }
-
-  Future<dynamic> navigateToHikeQuestView({
-    Key? key,
-    required Quest quest,
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
-  }) async {
-    return navigateTo(
-      Routes.hikeQuestView,
-      arguments: HikeQuestViewArguments(key: key, quest: quest),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

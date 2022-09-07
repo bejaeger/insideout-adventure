@@ -20,8 +20,13 @@ const Color kcShadowColor = Colors.black12;
 // all colors
 // @see https://coolors.co/fb6107-243e36-709775-5bc0eb-fde74c
 const Color kcGreen = Color(0xff709775);
+const Color kcGreenWhite = Color.fromARGB(255, 147, 176, 152);
+const Color kcGreenWhiter = Color.fromARGB(255, 197, 228, 202);
+
 const Color kcGreenDark = Color(0xff243E36);
 const Color kcAccentuatedGreen = Color.fromARGB(255, 67, 183, 119);
+Color kcPrimaryColorOpaque =
+    HSLColor.fromColor(kcPrimaryColor).withSaturation(0.7).toColor();
 const Color kcOrange = Color(0xfffb6107);
 Color kcOrangeOpaque =
     HSLColor.fromColor(kcOrange).withSaturation(0.7).toColor();

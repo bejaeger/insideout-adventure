@@ -220,11 +220,4 @@ mixin NavigationMixin {
                   _screenTimeService.currentSession?.sessionId));
     }
   }
-
-  Future navigateToGPSAreaQuest(Quest quest) async {
-    // TODO: Make sure we treat return value reasonably
-    await _navigationService.navigateTo(Routes.hikeQuestView,
-        arguments: HikeQuestViewArguments(quest: quest));
-    return true;
-  }
 }

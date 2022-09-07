@@ -54,6 +54,14 @@ class NotCloseToQuestNote extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: kcCultured,
                   borderRadius: BorderRadius.circular(16.0),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 0.4,
+                      spreadRadius: 0.5,
+                      offset: Offset(1, 1),
+                      color: kcShadowColor,
+                    )
+                  ],
                 ),
                 padding: const EdgeInsets.all(8.0),
                 child: AfkCreditsText.warn(
