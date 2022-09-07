@@ -139,7 +139,7 @@ const double kInitialTilt = 90;
 
 const double kMaxZoom = 19;
 // const double kMaxZoom = 50;
-const double kInitialZoomBirdsView = 12;
+const double kInitialZoomBirdsView = 13;
 const double kMinZoomAvatarView = 17;
 
 ////////////////////////////////////

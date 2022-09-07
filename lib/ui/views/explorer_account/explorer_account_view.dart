@@ -33,6 +33,9 @@ class ExplorerAccountView extends StatelessWidget {
               AfkCreditsText.body(
                   "Level ${model.currentLevel}: ${model.currentLevelName}"),
               verticalSpaceMedium,
+              //AfkCreditsText.headingFour("Stats"),
+              // verticalSpaceSmall,
+              // verticalSpaceTiny,
               Align(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,12 +54,9 @@ class ExplorerAccountView extends StatelessWidget {
                   ],
                 ),
               ),
-              verticalSpaceMedium,
-              Divider(),
-              verticalSpaceMedium,
-              AfkCreditsText.headingFour("Stats"),
               verticalSpaceSmall,
-              verticalSpaceTiny,
+              Divider(),
+              verticalSpaceSmall,
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -74,17 +74,17 @@ class ExplorerAccountView extends StatelessWidget {
                   horizontalSpaceSmall,
                   Expanded(
                     child: SummaryStatsDisplay(
-                      stats: model.currentUserStats.totalScreenTime.toString(),
-                      title: "Total screen time",
-                      unit: "min",
+                      stats: model.currentUserStats.numberQuestsCompleted
+                          .toString(),
+                      title: "Completed quests",
                     ),
                   ),
                   horizontalSpaceSmall,
                   Expanded(
                     child: SummaryStatsDisplay(
-                      stats: model.currentUserStats.numberQuestsCompleted
-                          .toString(),
-                      title: "Completed quests",
+                      stats: model.currentUserStats.totalScreenTime.toString(),
+                      title: "Total screen time",
+                      unit: "min",
                     ),
                   ),
                 ],

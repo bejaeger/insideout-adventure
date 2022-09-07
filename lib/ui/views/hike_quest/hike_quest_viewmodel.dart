@@ -270,6 +270,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
 
       // Move this to isQuestCompleted function and remove stuff from service!
       if (isQuestCompleted()) {
+        await showCollectedMarkerDialog();
         handleQuestCompletedEvent(afkmarker: afkmarker);
         return;
       } else {
@@ -365,28 +366,21 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
         previousMarker.lon != null) {
       await mapViewModel.animateNewLatLon(
           lat: previousMarker.lat!, lon: previousMarker.lon!);
+      await showCollectedMarkerDialog();
       await Future.delayed(Duration(milliseconds: 600));
-      triggerCollectedMarkerAnimation();
       mapViewModel.updateMapDisplay(afkmarker: previousMarker);
+      triggerCollectedMarkerAnimation();
       await Future.delayed(Duration(milliseconds: 600));
-
-      if (currentQuest?.type == QuestType.GPSAreaHike ||
-          currentQuest?.type == QuestType.GPSAreaHunt) {
-        await showCollectedMarkerDialog();
-        await Future.delayed(Duration(milliseconds: 200));
-      }
-
       await mapViewModel.animateNewLatLon(
           lat: nextMarker.lat!, lon: nextMarker.lon!);
-
       if (currentQuest?.type == QuestType.GPSAreaHike) {
-        await Future.delayed(Duration(milliseconds: 600));
+        await Future.delayed(Duration(milliseconds: 400));
         addNextArea(marker: nextMarker);
         addNextMarker(marker: nextMarker);
         showInfoWindowOfNextMarker(marker: nextMarker);
         await mapViewModel.animateNewLatLonZoomDelta(
             lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
-        await Future.delayed(Duration(milliseconds: 600));
+        await Future.delayed(Duration(milliseconds: 400));
       } else {
         if (currentQuest!.type == QuestType.QRCodeHike) {
           await Future.delayed(Duration(milliseconds: 600));
@@ -403,7 +397,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
         ],
       );
     }
-    await Future.delayed(Duration(milliseconds: 800));
+    await Future.delayed(Duration(milliseconds: 600));
     if (currentQuest?.type == QuestType.GPSAreaHike ||
         currentQuest?.type == QuestType.GPSAreaHunt) {
       await Future.delayed(Duration(milliseconds: 600));

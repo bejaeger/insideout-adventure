@@ -86,13 +86,15 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       if (getAFKMarkers.length < 2) {
         return null;
       } else {
-        isLoading = true;
-        notifyListeners();
+        // ? for some reason this caused an error in the google map library
+        // ? However, I don't know why I added this anyways!
+        // isLoading = true;
+        // notifyListeners();
         await controller.nextPage(
             duration: Duration(milliseconds: 200), curve: Curves.easeIn);
         pageIndex = pageIndex + 1;
-        isLoading = false;
-        notifyListeners();
+        // isLoading = false;
+        // notifyListeners();
       }
     } else if (pageIndex == 3) {
       // number credits selection
