@@ -38,8 +38,7 @@ final CollectionReference preGiftCardsCollection =
 
 final CollectionReference paymentsCollection =
     FirebaseFirestore.instance.collection('transfers');
-final CollectionReference questsCollection =
-    FirebaseFirestore.instance.collection('quests');
+var questsCollection = FirebaseFirestore.instance.collection('quests');
 final CollectionReference screenTimeSessionCollection =
     FirebaseFirestore.instance.collection(screenTimeSessionsCollectionKey);
 var afkQuestsCollection = FirebaseFirestore.instance.collection('afkQuests');

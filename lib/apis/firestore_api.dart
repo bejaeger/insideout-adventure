@@ -656,7 +656,7 @@ class FirestoreApi {
           latitude: pos.latitude as double, longitude: pos.longitude as double);
 
       Stream<List<DocumentSnapshot>> stream = geo
-          .collection(collectionRef: afkQuestsCollection)
+          .collection(collectionRef: questsCollection)
           .within(
               center: center!, radius: 50.0, field: field, strictMode: true);
       log.i("Data Inside The Stream");
