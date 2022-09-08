@@ -249,37 +249,19 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                       final data = model.sortedHistory[index];
                                       return Column(
                                         children: [
-                                          data is ActivatedQuest
-                                              ? HistoryTile(
-                                                  showName: false,
-                                                  showCredits: true,
-                                                  screenTime: false,
-                                                  date: data.createdAt.toDate(),
-                                                  name:
-                                                      model.explorerNameFromUid(
-                                                          data.uids![0]),
-                                                  credits:
-                                                      data.afkCreditsEarned,
-                                                  //minutes: data.afkCreditsEarned,
-                                                  minutes:
-                                                      (data.timeElapsed / 60)
-                                                          .round(),
-                                                  questType: data.quest.type,
-                                                )
-                                              : HistoryTile(
-                                                  showName: false,
-                                                  showCredits: true,
-                                                  screenTime: true,
-                                                  date: data.startedAt.toDate(),
-                                                  name:
-                                                      model.explorerNameFromUid(
-                                                          data.uid),
-                                                  credits:
-                                                      data.afkCreditsUsed ??
-                                                          data.afkCredits,
-                                                  minutes: data.minutesUsed ??
-                                                      data.minutes,
-                                                ),
+                                          HistoryTile(
+                                            showName: false,
+                                            showCredits: true,
+                                            data: data,
+                                            name: data is ActivatedQuest
+                                                ? model.explorerNameFromUid(
+                                                    data.uids![0])
+                                                : model.explorerNameFromUid(
+                                                    data.uid),
+                                            onTap: () =>
+                                                model.showHistoryItemInfoDialog(
+                                                    data),
+                                          ),
                                           if (index !=
                                               model.sortedHistory.length - 1)
                                             Divider(),

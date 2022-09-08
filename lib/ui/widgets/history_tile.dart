@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -7,143 +8,152 @@ import 'package:afkcredits_ui/src/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class HistoryTile extends StatelessWidget {
-  final bool screenTime;
   final String name;
-  final int? minutes;
-  final QuestType? questType;
-  final DateTime date;
-  final num? credits;
   final bool showCredits;
   final bool showName;
+  final dynamic data;
+  final void Function() onTap;
   const HistoryTile(
       {Key? key,
       required this.name,
-      required this.date,
-      required this.credits,
-      this.minutes,
-      this.screenTime = true,
-      this.questType,
+      required this.onTap,
       this.showCredits = false,
-      this.showName = true})
+      this.showName = true,
+      this.data})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (screenTime) {
-      if (minutes == null) {
-        throw Exception(
-            "If screen time should be displayed in history tile need to provide minute!");
-      }
-    } else {
-      if (questType == null) {
-        throw Exception(
-            "If activity should be displayed in history tile need to provide questType!");
-      }
-    }
-    return Container(
-      height: 55,
-      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
-      alignment: Alignment.center,
-      // decoration: BoxDecoration(
-      //     //color: screenTime ? kcScreenTimeBlueOpaque : kcActivityColorOpaque,
-      //     border: Border.all(color: Colors.grey[400]!),
-      //     color: Colors.white,
-      //     boxShadow: const [
-      //       BoxShadow(
-      //         color: kcLightGreyColor,
-      //         offset: Offset(1, 1),
-      //         blurRadius: 0.3,
-      //         spreadRadius: 0.1,
-      //       )
-      //     ],
-      //     borderRadius: BorderRadius.circular(20.0)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Large left side icon
-          Container(
-            width: 60,
-            alignment: Alignment.centerLeft,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!showName) SizedBox(height: 4),
-                Image.asset(screenTime ? kScreenTimeIcon2 : kActivityIcon,
-                    height: showName ? 25 : 30,
-                    width: showName ? 25 : 30,
-                    color: screenTime ? kcScreenTimeBlue : kcActivityIconColor),
-                if (showName) SizedBox(height: 1),
-                if (showName) AfkCreditsText.captionBold(name),
-              ],
+    bool screenTime = !(data is ActivatedQuest);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: Colors.transparent,
+        height: 55,
+        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
+        alignment: Alignment.center,
+        // decoration: BoxDecoration(
+        //     //color: screenTime ? kcScreenTimeBlueOpaque : kcActivityColorOpaque,
+        //     border: Border.all(color: Colors.grey[400]!),
+        //     color: Colors.white,
+        //     boxShadow: const [
+        //       BoxShadow(
+        //         color: kcLightGreyColor,
+        //         offset: Offset(1, 1),
+        //         blurRadius: 0.3,
+        //         spreadRadius: 0.1,
+        //       )
+        //     ],
+        //     borderRadius: BorderRadius.circular(20.0)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Large left side icon
+            Container(
+              width: 60,
+              alignment: Alignment.centerLeft,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!showName) SizedBox(height: 4),
+                  Image.asset(screenTime ? kScreenTimeIcon2 : kActivityIcon,
+                      height: showName ? 25 : 30,
+                      width: showName ? 25 : 30,
+                      color:
+                          screenTime ? kcScreenTimeBlue : kcActivityIconColor),
+                  if (showName) SizedBox(height: 1),
+                  if (showName) AfkCreditsText.captionBold(name),
+                ],
+              ),
             ),
-          ),
-          // Name and Quest/screen time info
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // if (showName) AfkCreditsText.caption(name),
-                // if (showName) SizedBox(height: 3),
-                screenTime
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 5),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              AfkCreditsText.headingFour(minutes.toString()),
-                              SizedBox(width: 2),
-                              AfkCreditsText.caption("min"),
-                            ],
-                          ),
-                          AfkCreditsText.caption("Screen time"),
-                        ],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              SizedBox(height: 5),
-                              // questType
-                              AfkCreditsText.headingFour(
-                                  minutes!.round().toString()),
-                              SizedBox(width: 1),
-                              AfkCreditsText.caption("min"),
-                            ],
-                          ),
-                          AfkCreditsText.caption(
-                              "Activity: " + getShortQuestType(questType!)),
-                        ],
-                      )
+            // Name and Quest/screen time info
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // if (showName) AfkCreditsText.caption(name),
+                  // if (showName) SizedBox(height: 3),
+                  screenTime
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                AfkCreditsText.headingFour(
+                                    (data.minutesUsed ?? data.minutes)
+                                        .toString()),
+                                SizedBox(width: 2),
+                                AfkCreditsText.caption("min"),
+                              ],
+                            ),
+                            AfkCreditsText.caption("Screen time"),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                SizedBox(height: 5),
+                                // questType
+                                AfkCreditsText.headingFour(
+                                    ((data.timeElapsed / 60).round())!
+                                        .round()
+                                        .toString()),
+                                SizedBox(width: 1),
+                                AfkCreditsText.caption("min"),
+                              ],
+                            ),
+                            AfkCreditsText.caption("Activity: " +
+                                getShortQuestType(data.quest.type)),
+                          ],
+                        )
 
-                // Name and date row
+                  // Name and date row
+                ],
+              ),
+            ),
+            horizontalSpaceRegular,
+            // Date and credits info
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SizedBox(height: 5),
+                if (showCredits) SizedBox(height: 3),
+                if (showCredits)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      CreditsAmount(
+                          amount: screenTime
+                              ? data.afkCreditsUsed ?? data.afkCredits
+                              : data.afkCreditsEarned,
+                          height: 16,
+                          style: bodyStyleSofia),
+                      SizedBox(width: 3),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 1.0),
+                        child: AfkCreditsText.caption(
+                            screenTime ? "Spent" : "Earned"),
+                      ),
+                    ],
+                  ),
+                if (showCredits) SizedBox(height: 3),
+                AfkCreditsText.caption(formatDateDetailsType5(screenTime
+                    ? data.startedAt.toDate()
+                    : data.createdAt.toDate())),
               ],
             ),
-          ),
-          horizontalSpaceRegular,
-          // Date and credits info
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              SizedBox(height: 5),
-              if (showCredits)
-                CreditsAmount(
-                    amount: credits ?? -1,
-                    height: 16,
-                    style: TextStyle(fontSize: 16)),
-              if (showCredits) SizedBox(height: 3),
-              AfkCreditsText.caption(formatDateDetailsType5(date)),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

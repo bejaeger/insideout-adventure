@@ -22,12 +22,16 @@ const TextStyle heading2LightStyle = TextStyle(
 );
 const TextStyle heading3Style =
     TextStyle(fontSize: 24, fontWeight: FontWeight.w600);
+const TextStyle heading3LightStyle =
+    TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: kcMediumGrey);
 const TextStyle heading4Style = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w600, color: kcPrimaryColorSecondary);
+const TextStyle heading4LightStyle =
+    TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: kcMediumGrey);
 const TextStyle headingLightStyle = TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w400,
-  color: Color.fromARGB(255, 117, 117, 117),
+  color: kcMediumGrey,
 );
 
 const TextStyle alert3Style = TextStyle(
@@ -63,7 +67,7 @@ const TextStyle bodyStyleSofia = TextStyle(
     //fontFamily: "Sofia",
     //fontWeight: FontWeight.w500,
     fontSize: 16.0,
-    color: Colors.black26);
+    color: kcGreyTextColor);
 const TextStyle subheadingStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w400,

@@ -28,6 +28,8 @@ class AppConfigProvider {
     flavor = flavorIn;
   }
 
+  String get versionName => "Alpha v1.0";
+
   String get appName {
     switch (this.flavor) {
       case Flavor.dev:

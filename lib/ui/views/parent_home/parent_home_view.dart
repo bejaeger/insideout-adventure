@@ -25,161 +25,164 @@ class ParentHomeView extends StatelessWidget {
       viewModelBuilder: () => ParentHomeViewModel(),
       onModelReady: (model) => model.listenToData(),
       fireOnModelReadyOnce: true,
-      builder: (context, model, child) => SafeArea(
-        child: Scaffold(
-          appBar: CustomAppBar(
-            showLogo: true,
-            title: " ",
-            drawer: true,
-            showRedLiveButton: model.isScreenTimeActive,
-          ),
-          endDrawer: const ParentDrawerView(),
-          floatingActionButton: BottomFloatingActionButtons(
-            swapButtons: true,
-            titleSecondary: "Create Quest",
-            titleMain: "Quest List",
-            onTapSecondary: model.navToCreateQuest,
-            onTapMain: model.showNotImplementedSnackbar,
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          body: RefreshIndicator(
-            onRefresh: () => model.listenToData(),
-            child: ListView(
-              // physics: BouncingScrollPhysics(),
-              children: [
-                verticalSpaceMedium,
-                // if (model.childScreenTimeSessionsActive.isNotEmpty)
-                //   AfkCreditsText.alertThree("Active Screen Time"),
-                // if (model.childScreenTimeSessionsActive.isNotEmpty)
-                //   AfkCreditsText.body(model.explorerNameFromUid(
-                //           model.childScreenTimeSessionsActive[0].uid) +
-                //       ", Minutes: " +
-                //       model.childScreenTimeSessionsActive[0].minutes
-                //           .toString() +
-                //       ", started at: " +
-                //       formatDateDetails(model
-                //           .childScreenTimeSessionsActive[0].startedAt
-                //           .toDate())),
-                Center(child: AfkCreditsText.headingOne("Parent Area")),
-                verticalSpaceSmall,
-                SectionHeader(
-                  title: "Children",
-                  onButtonTap: model.showAddExplorerBottomSheet,
-                  buttonIcon: Icon(Icons.add_circle_outline_rounded,
-                      size: 28, color: kcPrimaryColor),
-                ),
-                if (model.supportedExplorers.length == 0)
-                  model.isBusy
-                      ? AFKProgressIndicator()
-                      : Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: AfkCreditsButton(
-                            onTap: model.showAddExplorerBottomSheet,
-                            title: "Create Child Account",
-                            height: 80,
-                            //imagePath: ImagePath.peopleHoldingHands,
-                          ),
-                        ),
-                if (model.supportedExplorers.length > 0)
-                  ChildrenStatsList(
-                    viewModel: model,
-                    // usingScreenTime: model.usingScreenTime(uid: model.),
-                    // onAddNewExplorerPressed:
-                    //     model.showAddExplorerBottomSheet
+      builder: (context, model, child) => WillPopScope(
+        onWillPop: () async => false,
+        child: SafeArea(
+          child: Scaffold(
+            appBar: CustomAppBar(
+              showLogo: true,
+              title: " ",
+              drawer: true,
+              showRedLiveButton: model.isScreenTimeActive,
+            ),
+            endDrawer: const ParentDrawerView(),
+            floatingActionButton: BottomFloatingActionButtons(
+              swapButtons: true,
+              titleSecondary: "Create Quest",
+              titleMain: "Quest List",
+              onTapSecondary: model.navToCreateQuest,
+              onTapMain: model.showNotImplementedSnackbar,
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            body: RefreshIndicator(
+              onRefresh: () => model.listenToData(),
+              child: ListView(
+                // physics: BouncingScrollPhysics(),
+                children: [
+                  verticalSpaceMedium,
+                  // if (model.childScreenTimeSessionsActive.isNotEmpty)
+                  //   AfkCreditsText.alertThree("Active Screen Time"),
+                  // if (model.childScreenTimeSessionsActive.isNotEmpty)
+                  //   AfkCreditsText.body(model.explorerNameFromUid(
+                  //           model.childScreenTimeSessionsActive[0].uid) +
+                  //       ", Minutes: " +
+                  //       model.childScreenTimeSessionsActive[0].minutes
+                  //           .toString() +
+                  //       ", started at: " +
+                  //       formatDateDetails(model
+                  //           .childScreenTimeSessionsActive[0].startedAt
+                  //           .toDate())),
+                  Center(child: AfkCreditsText.headingOne("Parent Area")),
+                  verticalSpaceSmall,
+                  SectionHeader(
+                    title: "Children",
+                    onButtonTap: model.showAddExplorerBottomSheet,
+                    buttonIcon: Icon(Icons.add_circle_outline_rounded,
+                        size: 28, color: kcPrimaryColor),
                   ),
-                verticalSpaceMedium,
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding),
-                  child: Divider(),
-                ),
-                verticalSpaceMedium,
-                AfkCreditsText.headingFour(
-                  "How can we improve?",
-                  align: TextAlign.center,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding * 1.2),
-                  child: AfkCreditsText.body(
-                    "Let's work together",
+                  if (model.supportedExplorers.length == 0)
+                    model.isBusy
+                        ? AFKProgressIndicator()
+                        : Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: AfkCreditsButton(
+                              onTap: model.showAddExplorerBottomSheet,
+                              title: "Create Child Account",
+                              height: 80,
+                              //imagePath: ImagePath.peopleHoldingHands,
+                            ),
+                          ),
+                  if (model.supportedExplorers.length > 0)
+                    ChildrenStatsList(
+                      viewModel: model,
+                      // usingScreenTime: model.usingScreenTime(uid: model.),
+                      // onAddNewExplorerPressed:
+                      //     model.showAddExplorerBottomSheet
+                    ),
+                  verticalSpaceMedium,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: kHorizontalPadding),
+                    child: Divider(),
+                  ),
+                  verticalSpaceMedium,
+                  AfkCreditsText.headingFour(
+                    "How can we improve?",
                     align: TextAlign.center,
                   ),
-                ),
-                //verticalSpaceSmall,
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kHorizontalPadding),
-                  child: AfkCreditsButton.text(
-                    title: "Provide Feedback",
-                    onTap: model.showNotImplementedSnackbar,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: kHorizontalPadding * 1.2),
+                    child: AfkCreditsText.body(
+                      "Let's work together",
+                      align: TextAlign.center,
+                    ),
                   ),
-                ),
-                // if (model.sortedHistory.length != 0)
-                //   SectionHeader(
-                //     title: "Children Activity",
-                //     //onButtonTap: model.navigateToTransferHistoryView,
-                //   ),
-                // if (model.sortedHistory.length != 0) verticalSpaceTiny,
-                // if (model.sortedHistory.length != 0)
-                //   Padding(
-                //     padding: const EdgeInsets.symmetric(
-                //         horizontal: kHorizontalPadding),
-                //     child: Container(
-                //       decoration: BoxDecoration(
-                //           border:
-                //               Border.all(color: kcMediumGrey.withOpacity(0.5)),
-                //           borderRadius: BorderRadius.circular(20.0)),
-                //       padding: const EdgeInsets.symmetric(vertical: 10.0),
-                //       child: ListView.builder(
-                //         shrinkWrap: true,
-                //         physics: ScrollPhysics(),
-                //         itemCount: min(model.sortedHistory.length, 3),
-                //         itemBuilder: (context, index) {
-                //           dynamic data =
-                //               model.sortedHistory[index]; // ScreenTimeSession
-                //           return Padding(
-                //             padding: const EdgeInsets.symmetric(
-                //                 horizontal: 10.0, vertical: 0.0),
-                //             child: Column(
-                //               children: [
-                //                 data is ActivatedQuest
-                //                     ? HistoryTile(
-                //                         screenTime: false,
-                //                         date: data.createdAt.toDate(),
-                //                         name: model
-                //                             .explorerNameFromUid(data.uids![0]),
-                //                         credits: data.afkCreditsEarned,
-                //                         //minutes: data.afkCreditsEarned,
-                //                         minutes:
-                //                             (data.timeElapsed / 60).round(),
-                //                         questType: data.quest.type,
-                //                       )
-                //                     : HistoryTile(
-                //                         screenTime: true,
-                //                         date: data.startedAt is String
-                //                             ? DateTime.now()
-                //                             : data.startedAt.toDate(),
-                //                         name:
-                //                             model.explorerNameFromUid(data.uid),
-                //                         credits: data.afkCreditsUsed ??
-                //                             data.afkCredits,
-                //                         minutes:
-                //                             data.minutesUsed ?? data.minutes,
-                //                       ),
-                //                 if (index !=
-                //                     min(model.sortedHistory.length, 3) - 1)
-                //                   Divider(),
-                //               ],
-                //             ),
-                //           );
-                //         },
-                //       ),
-                //     ),
-                //   ),
-                verticalSpaceMassive,
-              ],
+                  //verticalSpaceSmall,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: kHorizontalPadding),
+                    child: AfkCreditsButton.text(
+                      title: "Provide Feedback",
+                      onTap: model.showNotImplementedSnackbar,
+                    ),
+                  ),
+                  // if (model.sortedHistory.length != 0)
+                  //   SectionHeader(
+                  //     title: "Children Activity",
+                  //     //onButtonTap: model.navigateToTransferHistoryView,
+                  //   ),
+                  // if (model.sortedHistory.length != 0) verticalSpaceTiny,
+                  // if (model.sortedHistory.length != 0)
+                  //   Padding(
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: kHorizontalPadding),
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //           border:
+                  //               Border.all(color: kcMediumGrey.withOpacity(0.5)),
+                  //           borderRadius: BorderRadius.circular(20.0)),
+                  //       padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  //       child: ListView.builder(
+                  //         shrinkWrap: true,
+                  //         physics: ScrollPhysics(),
+                  //         itemCount: min(model.sortedHistory.length, 3),
+                  //         itemBuilder: (context, index) {
+                  //           dynamic data =
+                  //               model.sortedHistory[index]; // ScreenTimeSession
+                  //           return Padding(
+                  //             padding: const EdgeInsets.symmetric(
+                  //                 horizontal: 10.0, vertical: 0.0),
+                  //             child: Column(
+                  //               children: [
+                  //                 data is ActivatedQuest
+                  //                     ? HistoryTile(
+                  //                         screenTime: false,
+                  //                         date: data.createdAt.toDate(),
+                  //                         name: model
+                  //                             .explorerNameFromUid(data.uids![0]),
+                  //                         credits: data.afkCreditsEarned,
+                  //                         //minutes: data.afkCreditsEarned,
+                  //                         minutes:
+                  //                             (data.timeElapsed / 60).round(),
+                  //                         questType: data.quest.type,
+                  //                       )
+                  //                     : HistoryTile(
+                  //                         screenTime: true,
+                  //                         date: data.startedAt is String
+                  //                             ? DateTime.now()
+                  //                             : data.startedAt.toDate(),
+                  //                         name:
+                  //                             model.explorerNameFromUid(data.uid),
+                  //                         credits: data.afkCreditsUsed ??
+                  //                             data.afkCredits,
+                  //                         minutes:
+                  //                             data.minutesUsed ?? data.minutes,
+                  //                       ),
+                  //                 if (index !=
+                  //                     min(model.sortedHistory.length, 3) - 1)
+                  //                   Divider(),
+                  //               ],
+                  //             ),
+                  //           );
+                  //         },
+                  //       ),
+                  //     ),
+                  //   ),
+                  verticalSpaceMassive,
+                ],
+              ),
             ),
           ),
         ),

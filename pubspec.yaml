@@ -197,6 +197,7 @@ flutter:
     - assets/icons/qrcode.png
     - assets/icons/map.png
     - assets/icons/location-icon.ico
+    - assets/icons/curve-arrow.png
     - assets/icons/cardinal-point.png  
     - assets/lottie/lottietest.json  
     - assets/icons/walk.png

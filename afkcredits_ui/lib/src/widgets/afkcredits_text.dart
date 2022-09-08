@@ -25,9 +25,17 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = heading3Style,
         alignment = align;
+  const AfkCreditsText.headingThreeLight(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = heading3LightStyle,
+        alignment = align;
   const AfkCreditsText.headingFour(this.text,
       {TextAlign align = TextAlign.start})
       : style = heading4Style,
+        alignment = align;
+  const AfkCreditsText.headingFourLight(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = heading4LightStyle,
         alignment = align;
   const AfkCreditsText.headingLight(this.text,
       {TextAlign align = TextAlign.start})
@@ -111,7 +119,7 @@ class AfkCreditsText extends StatelessWidget {
 
   AfkCreditsText.body(this.text,
       {Color color = kcGreyTextColor, TextAlign? align})
-      : style = bodyStyleSofia.copyWith(color: color),
+      : style = bodyStyleSofia,
         alignment = align;
 
   AfkCreditsText.bodyItalic(this.text,

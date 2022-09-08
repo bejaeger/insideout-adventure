@@ -20,6 +20,7 @@ const String kCreatGiftCardMoney = "assets/icons/money.png";
 const String kPinInAreaIcon = "assets/icons/location-icon.ico";
 const String kCompassIcon = "assets/icons/cardinal-point.png";
 const String kClockMelted = "assets/icons/melted-clock.png";
+const String kCurvedArrowIcon = "assets/icons/curve-arrow.png";
 
 const String kWalkingIcon = "assets/icons/walk.png";
 const String kActivityIcon = "assets/icons/run.png";
