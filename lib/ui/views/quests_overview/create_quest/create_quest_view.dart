@@ -54,48 +54,50 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
-            floatingActionButton: BottomFloatingActionButtons(
-              swapButtons: true,
-              onTapSecondary: model.pageIndex == 2
-                  ? model.getAFKMarkers.length < 2
-                      ? null
-                      : () {
-                          if (model.pageIndex == 0) {
+            floatingActionButton: model.isBusy
+                ? null
+                : BottomFloatingActionButtons(
+                    swapButtons: true,
+                    onTapSecondary: model.pageIndex == 2
+                        ? model.getAFKMarkers.length < 2
+                            ? null
+                            : () {
+                                if (model.pageIndex == 0) {
+                                  FocusScope.of(context).unfocus();
+                                }
+                                model.onNextButton(controller);
+                              }
+                        : () {
+                            if (model.pageIndex == 0) {
+                              FocusScope.of(context).unfocus();
+                            }
+                            model.onNextButton(controller);
+                          },
+                    titleSecondary:
+                        model.pageIndex < 3 ? "Next \u2192" : "Create Quest",
+                    busySecondary: model.creatingQuest,
+                    onTapMain: model.pageIndex == 3
+                        ? () {
                             FocusScope.of(context).unfocus();
+                            model.onBackButton(controller);
                           }
-                          model.onNextButton(controller);
-                        }
-                  : () {
-                      if (model.pageIndex == 0) {
-                        FocusScope.of(context).unfocus();
-                      }
-                      model.onNextButton(controller);
-                    },
-              titleSecondary:
-                  model.pageIndex < 3 ? "Next \u2192" : "Create Quest",
-              busySecondary: model.isLoading,
-              onTapMain: model.pageIndex == 3
-                  ? () {
-                      FocusScope.of(context).unfocus();
-                      model.onBackButton(controller);
-                    }
-                  : () => model.onBackButton(controller),
-              // model.pageIndex == 1
-              //     ? () {
-              //         model.pageIndex = model.pageIndex - 1;
-              //         controller.previousPage(
-              //             duration: Duration(milliseconds: 200),
-              //             curve: Curves.easeIn);
-              //         model.notifyListeners();
-              //       }
-              //     : () {
-              //         {
-              //           model.resetMarkersValues();
-              //           model.navBackToPreviousView();
-              //         }
-              //       },
-              titleMain: model.pageIndex >= 1 ? "\u2190 Back" : "Cancel",
-            ),
+                        : () => model.onBackButton(controller),
+                    // model.pageIndex == 1
+                    //     ? () {
+                    //         model.pageIndex = model.pageIndex - 1;
+                    //         controller.previousPage(
+                    //             duration: Duration(milliseconds: 200),
+                    //             curve: Curves.easeIn);
+                    //         model.notifyListeners();
+                    //       }
+                    //     : () {
+                    //         {
+                    //           model.resetMarkersValues();
+                    //           model.navBackToPreviousView();
+                    //         }
+                    //       },
+                    titleMain: model.pageIndex >= 1 ? "\u2190 Back" : "Cancel",
+                  ),
             body: PageView(
               controller: controller,
               physics: NeverScrollableScrollPhysics(),
@@ -319,74 +321,83 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
             zoomControlsEnabled: false,
             // gestureRecognizers: Set()
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 10, left: 20.0, right: 20.0),
-                child: Container(
-                  padding: const EdgeInsets.all(15.0),
-                  width: screenWidth(context, percentage: 0.95),
-                  decoration: BoxDecoration(
-                    color: kcCultured,
-                    borderRadius: BorderRadius.circular(15.0),
-                    boxShadow: [
-                      BoxShadow(
-                          color: kcShadowColor,
-                          blurRadius: 0.3,
-                          spreadRadius: 0.5)
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AfkCreditsText.label(
-                          (model.getAFKMarkers.length + 1)
-                                  .clamp(0, 3)
-                                  .toString() +
-                              ")",
-                          align: TextAlign.left),
-                      verticalSpaceTiny,
-                      AfkCreditsText.subheadingItalic(
-                        model.getAFKMarkers.length == 0
-                            ? "Tap on the map to choose the start of the quest"
-                            : model.getAFKMarkers.length == 1
-                                ? model.selectedQuestType ==
-                                        QuestType.TreasureLocationSearch
-                                    ? "Choose the target marker of the search quest"
-                                    : "Choose at least one more marker"
-                                : model.selectedQuestType ==
-                                        QuestType.TreasureLocationSearch
-                                    ? "Tap 'Next'"
-                                    : "Tap 'Next' when you are done",
-                        align: TextAlign.left,
-                      ),
-                      if (model.getAFKMarkers.length >= 1) verticalSpaceSmall,
-                      if (model.getAFKMarkers.length >= 1)
-                        AfkCreditsText.body(
-                            "Tip: You can remove markers by tapping on them"),
-                    ],
+          if (!model.isBusy)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 10, left: 20.0, right: 20.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(15.0),
+                    width: screenWidth(context, percentage: 0.95),
+                    decoration: BoxDecoration(
+                      color: kcCultured,
+                      borderRadius: BorderRadius.circular(15.0),
+                      boxShadow: [
+                        BoxShadow(
+                            color: kcShadowColor,
+                            blurRadius: 0.3,
+                            spreadRadius: 0.5)
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AfkCreditsText.label(
+                            (model.getAFKMarkers.length + 1)
+                                    .clamp(0, 3)
+                                    .toString() +
+                                ")",
+                            align: TextAlign.left),
+                        verticalSpaceTiny,
+                        AfkCreditsText.subheadingItalic(
+                          model.getAFKMarkers.length == 0
+                              ? "Tap on the map to choose the start of the quest"
+                              : model.getAFKMarkers.length == 1
+                                  ? model.selectedQuestType ==
+                                          QuestType.TreasureLocationSearch
+                                      ? "Choose the target marker of the search quest"
+                                      : "Choose at least one more marker"
+                                  : model.selectedQuestType ==
+                                          QuestType.TreasureLocationSearch
+                                      ? "Tap 'Next'"
+                                      : "Tap 'Next' when you are done",
+                          align: TextAlign.left,
+                        ),
+                        if (model.getAFKMarkers.length >= 1) verticalSpaceSmall,
+                        if (model.getAFKMarkers.length >= 1)
+                          AfkCreditsText.body(
+                              "Tip: You can remove markers by tapping on them"),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              verticalSpaceSmall,
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                child: Container(
+                verticalSpaceSmall,
+                Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 2.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15.0),
+                      horizontal: kHorizontalPadding),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 2.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: AfkCreditsText.alertThree(
+                        "Total distance: ${model.getTotalDistanceOfMarkers().toStringAsFixed(0)} m"),
                   ),
-                  child: AfkCreditsText.alertThree(
-                      "Total distance: ${model.getTotalDistanceOfMarkers().toStringAsFixed(0)} m"),
                 ),
+              ],
+            ),
+          if (model.creatingQuest)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: AFKProgressIndicator(
+                alignment: Alignment.bottomCenter,
               ),
-            ],
-          ),
+            ),
+          if (model.isBusy) AbsorbPointer(child: Container())
         ],
       ),
     );
@@ -431,7 +442,7 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
             verticalSpaceMedium,
             Container(
               width: 140,
-              child: model.isLoading
+              child: model.creatingQuest
                   ? SizedBox(height: 0, width: 0)
                   : AfkCreditsInputField(
                       style: heading3Style,

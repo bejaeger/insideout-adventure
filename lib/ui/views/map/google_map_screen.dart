@@ -26,11 +26,12 @@ class GoogleMapScreen extends StatelessWidget {
           children: [
             // This container is used to push the center of the map
             // a bit further down on the screen (similar to Pokemon Go)
-            AnimatedContainer(
-              height: model.isAvatarView == true ? 150 : 0,
-              duration: Duration(milliseconds: 500),
-              color: Colors.transparent,
-            ),
+            if (!model.isParentAccount)
+              AnimatedContainer(
+                height: model.isAvatarView == true ? 150 : 0,
+                duration: Duration(milliseconds: 500),
+                color: Colors.transparent,
+              ),
             Container(
               height: screenHeight(context),
               // transparent pointer needed so that rotation gesture widget
@@ -39,13 +40,17 @@ class GoogleMapScreen extends StatelessWidget {
                 //onTap: (_) => print("TAPPED"),
                 //mapType: MapType.hybrid,
                 initialCameraPosition: GoogleMapService.initialCameraPosition(
-                    userLocation: model.userLocation),
+                  userLocation: model.userLocation,
+                  parentAccount: model.isParentAccount,
+                ),
                 //Place Markers in the Map
                 markers: GoogleMapService.markersOnMap,
                 circles: GoogleMapService.circlesOnMap,
                 //callback that’s called when the map is ready to use.
                 onMapCreated: (GoogleMapController controller) {
-                  controller.setMapStyle(model.mapStyle);
+                  if (!model.isParentAccount) {
+                    controller.setMapStyle(model.mapStyle);
+                  }
                   //We are calling a service Directly Into a view.
                   GoogleMapService.setMapController(controller);
                 },
@@ -55,13 +60,13 @@ class GoogleMapScreen extends StatelessWidget {
                 //For showing your current location on Map with a blue dot.
                 myLocationEnabled: true,
                 //Remove the Zoom in and out button
-                zoomControlsEnabled: false,
-                tiltGesturesEnabled: false,
+                zoomControlsEnabled: model.isParentAccount ? true : false,
+                tiltGesturesEnabled: model.isParentAccount ? true : false,
                 // Button used for bringing the user location to the center of the camera view.
-                myLocationButtonEnabled: false,
+                myLocationButtonEnabled: model.isParentAccount ? true : false,
                 mapToolbarEnabled: false,
                 buildingsEnabled: false,
-                compassEnabled: false,
+                compassEnabled: model.isParentAccount ? true : false,
                 onCameraMove: (position) {
                   model.changeCameraBearing(position.bearing);
                   model.changeCameraZoom(position.zoom);

@@ -123,13 +123,14 @@ class GoogleMapService {
 
   static CameraPosition initialCameraPosition({
     required Position? userLocation,
+    bool parentAccount = false,
   }) {
     if (userLocation != null) {
       return CameraPosition(
-        bearing: kInitialBearing,
+        bearing: parentAccount ? 0 : kInitialBearing,
         target: LatLng(userLocation.latitude, userLocation.longitude),
-        zoom: kInitialZoom,
-        tilt: kInitialTilt,
+        zoom: parentAccount ? 14 : kInitialZoom,
+        tilt: parentAccount ? 0 : kInitialTilt,
       );
     } else {
       print(

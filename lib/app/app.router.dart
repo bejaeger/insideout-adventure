@@ -40,6 +40,7 @@ import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_overview_view.dart';
 import '../ui/views/onboarding_screens/onboarding_screens_view.dart';
 import '../ui/views/parent_home/parent_home_view.dart';
+import '../ui/views/parent_map/parent_map_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
 import '../ui/views/quests_overview/create_quest/create_quest_view.dart';
@@ -94,6 +95,7 @@ class Routes {
   static const String selectScreenTimeView = '/select-screen-time-view';
   static const String singleQuestTypeView = '/single-quest-type-view';
   static const String onBoardingScreensView = '/on-boarding-screens-view';
+  static const String parentMapView = '/parent-map-view';
   static const all = <String>{
     parentHomeView,
     singleMarkerView,
@@ -128,6 +130,7 @@ class Routes {
     selectScreenTimeView,
     singleQuestTypeView,
     onBoardingScreensView,
+    parentMapView,
   };
 }
 
@@ -172,6 +175,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
     RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
     RouteDef(Routes.onBoardingScreensView, page: OnBoardingScreensView),
+    RouteDef(Routes.parentMapView, page: ParentMapView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -462,6 +466,12 @@ class StackedRouter extends RouterBase {
     OnBoardingScreensView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const OnBoardingScreensView(),
+        settings: data,
+      );
+    },
+    ParentMapView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const ParentMapView(),
         settings: data,
       );
     },
@@ -1226,6 +1236,22 @@ extension NavigatorStateExtension on NavigationService {
   }) async {
     return navigateTo(
       Routes.onBoardingScreensView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToParentMapView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.parentMapView,
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

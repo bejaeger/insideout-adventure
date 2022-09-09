@@ -80,7 +80,7 @@ mixin NavigationMixin {
     );
   }
 
-  void replaceWithSponsorHomeView() {
+  void replaceWithParentHomeView() {
     _navigationService.replaceWith(
       Routes.parentHomeView,
     );
@@ -98,6 +98,10 @@ mixin NavigationMixin {
 
   void popViewReturnValue({dynamic result}) {
     _navigationService.back(result: result);
+  }
+
+  void navToParentMapView() {
+    _navigationService.navigateTo(Routes.parentMapView);
   }
 
   void navToMapView({required UserRole role}) {

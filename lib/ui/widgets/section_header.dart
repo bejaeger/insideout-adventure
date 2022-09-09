@@ -39,6 +39,7 @@ class SectionHeader extends StatelessWidget {
           vertical: verticalPadding ?? kVerticalPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(title,
               style: textTheme(context).headline6!.copyWith(

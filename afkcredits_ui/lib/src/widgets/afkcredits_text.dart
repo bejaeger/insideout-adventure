@@ -22,7 +22,7 @@ class AfkCreditsText extends StatelessWidget {
       : style = heading2LightStyle,
         alignment = align;
   const AfkCreditsText.headingThree(this.text,
-      {TextAlign align = TextAlign.start})
+      {TextAlign align = TextAlign.start, int? maxLines})
       : style = heading3Style,
         alignment = align;
   const AfkCreditsText.headingThreeLight(this.text,
@@ -119,7 +119,7 @@ class AfkCreditsText extends StatelessWidget {
 
   AfkCreditsText.body(this.text,
       {Color color = kcGreyTextColor, TextAlign? align})
-      : style = bodyStyleSofia,
+      : style = bodyStyleSofia.copyWith(color: color),
         alignment = align;
 
   AfkCreditsText.bodyItalic(this.text,
@@ -127,6 +127,7 @@ class AfkCreditsText extends StatelessWidget {
       : style =
             bodyStyleSofia.copyWith(color: color, fontStyle: FontStyle.italic),
         alignment = align;
+
   @override
   Widget build(BuildContext context) {
     return Text(

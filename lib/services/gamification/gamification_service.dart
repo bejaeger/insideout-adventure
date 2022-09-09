@@ -42,6 +42,10 @@ class GamificationService {
         getCreditsFromPreviousLevel();
   }
 
+  int getCreditsForNextLevel() {
+    return ((getCurrentLevel()) / kTotalCreditsEarnedToLevelConversion).round();
+  }
+
   double getPercentageOfNextLevel() {
     return getCreditsFromPreviousLevel() * kTotalCreditsEarnedToLevelConversion;
   }

@@ -86,6 +86,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   // gamification system
   int get currentLevel => gamificationService.getCurrentLevel();
   int get creditsToNextLevel => gamificationService.getCreditsToNextLevel();
+  int get creditsForNextLevel => gamificationService.getCreditsForNextLevel();
   double get percentageOfNextLevel =>
       gamificationService.getPercentageOfNextLevel();
   String get currentLevelName => gamificationService.getCurrentLevelName();
@@ -235,7 +236,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   Future replaceWithHomeView() async {
     if (currentUser.role == UserRole.sponsor) {
-      replaceWithSponsorHomeView();
+      replaceWithParentHomeView();
     } else if (currentUser.role == UserRole.adminMaster) {
       await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
           arguments:
@@ -360,9 +361,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         // barrierColor: Colors.black45,
         description: quest.description,
         mainButtonTitle: quest.type == QuestType.DistanceEstimate
-            ? "Go to Quest"
-            : "Go to Quest",
-        secondaryButtonTitle: "Close",
+            ? "Show quest"
+            : "Show quest",
+        secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
         data: quest);
     return sheetResponse;
     // if (sheetResponse?.confirmed == true) {

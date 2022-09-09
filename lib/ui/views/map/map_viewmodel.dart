@@ -57,8 +57,11 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   // last element of cameraBearingZoom determines whether listener should be fired!
 
+  // TODO: This function is called for the explorer!
   Future initializeMapAndMarkers() async {
-    mapStyle = await rootBundle.loadString('assets/DayStyle.json');
+    if (!isParentAccount) {
+      mapStyle = await rootBundle.loadString('assets/DayStyle.json');
+    }
     if (hasActiveQuest) return;
     initialized = false;
     log.i("Initializing map view");
@@ -263,7 +266,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         force: force);
   }
 
-  void _animateCameraToBirdsView({bool? forceUseLocation}) {
+  void animateCameraToBirdsView({bool? forceUseLocation}) {
     changeCameraTilt(0);
     changeCameraBearing(0);
     changeCameraZoom(lastBirdViewZoom ?? kInitialZoomBirdsView);
@@ -285,7 +288,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   void changeMapZoom() {
     if (isAvatarView) {
-      _animateCameraToBirdsView();
+      animateCameraToBirdsView();
       mapStateService.setIsAvatarView(false);
     } else {
       _animateCameraToAvatarView(forceUseLocation: true);
@@ -646,16 +649,18 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     } else {
       log.i('Markers are Empty');
     }
-    addARObjectToMap(
-        onTap: onARObjectMarkerTap,
-        lat: 49.269805968930406,
-        lon: -123.16189607547962,
-        isCoin: true);
-    addARObjectToMap(
-        onTap: onARObjectMarkerTap,
-        lat: 49.26843866276503,
-        lon: -122.99103899176373,
-        isCoin: false);
+    if (!isParentAccount) {
+      addARObjectToMap(
+          onTap: onARObjectMarkerTap,
+          lat: 49.269805968930406,
+          lon: -123.16189607547962,
+          isCoin: true);
+      addARObjectToMap(
+          onTap: onARObjectMarkerTap,
+          lat: 49.26843866276503,
+          lon: -122.99103899176373,
+          isCoin: false);
+    }
   }
 
   Future changeSettingsForNewView(double? lat, double? lon) async {

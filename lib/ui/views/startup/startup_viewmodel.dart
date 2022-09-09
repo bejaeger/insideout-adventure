@@ -85,9 +85,10 @@ class StartUpViewModel extends TransferBaseViewModel {
           // TODO: check whether there is an active screen time and if yes navigate to it, potentially handling completion event which includes an update of the database
           final String? id = await _localStorageService.getFromDisk(
               key: kLocalStorageScreenTimeSessionKey);
-          if (id != null && localUserRole! == UserRole.explorer) {
+          if (id != null) {
             // FOUND SCREEN TIME! Navigate to screen time view
             log.i("Found active screen time, navigating to active view");
+
             navToActiveScreenTimeView(sessionId: id);
           } else {
             if (localUserRole == UserRole.adminMaster) {

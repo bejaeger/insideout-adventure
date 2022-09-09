@@ -1,0 +1,106 @@
+import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/enums/bottom_sheet_type.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
+import 'package:stacked_services/stacked_services.dart';
+
+class ParentMapViewModel extends QuestViewModel {
+  // -----------------------------------------
+  // services
+  final MapViewModel mapViewModel = locator<MapViewModel>();
+
+  bool isDeletingQuest = false;
+  // initialize function
+  void initialize() async {
+    setBusy(true);
+    mapViewModel.resetAllMapMarkersAndAreas();
+    await getLocation(forceAwait: true, forceGettingNewPosition: false);
+    await initializeQuests(force: true);
+    setBusy(false);
+    initializeMapAndMarkers();
+  }
+
+  // ? Note: Same function exists in explorer_home_viewmodel.dart
+  Future initializeQuests({bool? force}) async {
+    try {
+      if (questService.sortedNearbyQuests == false || force == true) {
+        await questService
+            .loadNearbyQuests(force: true, sponsorIds: [currentUser.uid]);
+        await questService.sortNearbyQuests();
+        questService.extractAllQuestTypes();
+      }
+    } catch (e) {
+      log.wtf(
+          "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
+      if (e is QuestServiceException) {
+        await dialogService.showDialog(
+            title: "Oops...", description: e.message);
+      } else {
+        log.wtf(
+            "Error when loading quests, this should never happen. Error: $e");
+        await showGenericInternalErrorDialog();
+      }
+    }
+  }
+
+  void initializeMapAndMarkers() {
+    if (nearbyQuests.isNotEmpty) {
+      for (Quest _q in nearbyQuests) {
+        log.v("Add start marker of quest with name ${_q.name} to map");
+        if (_q.startMarker != null) {
+          AFKMarker _m = _q.startMarker!;
+          mapViewModel.addMarkerToMap(
+              quest: _q,
+              afkmarker: _m,
+              isStartMarker: _m == _q.startMarker,
+              onMarkerTapCustom: () => onMarkerTapParent(quest: _q),
+              completed: currentUserStats.completedQuestIds.contains(_q.id));
+        }
+      }
+    }
+  }
+
+  Future onMarkerTapParent({required Quest quest}) async {
+    SheetResponse? response = await displayQuestBottomSheet(quest: quest);
+
+    if (response?.confirmed == false) {
+      DialogResponse? response2 = await dialogService.showDialog(
+        title: "Sure?",
+        description: "Are you sure you want to delete this quest?",
+        buttonTitle: "YES",
+        cancelTitle: "NO",
+      );
+      if (response2?.confirmed == true) {
+        // Delete quest!
+        await removeQuest(quest: quest);
+        snackbarService.showSnackbar(
+            title: "Deleted quest",
+            message: "Successfully deleted quest.",
+            duration: Duration(milliseconds: 1500));
+
+        // update marker on map!
+        mapViewModel.resetAllMapMarkersAndAreas();
+        initializeMapAndMarkers();
+        notifyListeners();
+      } else {
+        await onMarkerTapParent(quest: quest);
+      }
+    }
+  }
+
+  // TODO: Function also in single_quest_type_viewmodel.dart, NEEDED there!?
+  Future<void> removeQuest({required Quest quest}) async {
+    isDeletingQuest = true;
+    notifyListeners();
+    //Remove Quest in the Firebase
+    await questService.removeQuest(quest: quest);
+    //Remove Quest In the List.
+    nearbyQuests.remove(quest);
+    isDeletingQuest = false;
+    notifyListeners();
+  }
+}

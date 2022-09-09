@@ -12,6 +12,7 @@ import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/ui/widgets/quest_success_card.dart';
+import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
 import 'package:afkcredits/ui/widgets/treasure_location_search_widgets.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -120,31 +121,9 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  GestureDetector(
-                                    onTap: model.openSuperUserSettingsDialog,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                        //color: Colors.purple.withOpacity(0.2),
-                                        border: Border.all(
-                                            color: Colors.grey[600]!),
-                                      ),
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: AfkCreditsText.tag(
-                                        getShortQuestType(quest?.type),
-                                      ),
-                                    ),
-                                  ),
-                                  // horizontalSpaceSmall,
-                                  // CreditsAmount(
-                                  //   amount: quest?.afkCredits ?? -1,
-                                  //   height: 20,
-                                  // ),
-                                ],
+                              GestureDetector(
+                                onTap: model.openSuperUserSettingsDialog,
+                                child: QuestTypeTag(quest: quest),
                               ),
                               if (quest != null)
                                 Padding(
@@ -165,6 +144,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CreditsAmount(
                                   amount: quest?.afkCredits ?? -1,
@@ -174,8 +154,12 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                                 horizontalSpaceSmall,
                                 AfkCreditsText.headingThree("-"),
                                 horizontalSpaceSmall,
-                                AfkCreditsText.headingThree(
-                                    quest?.name ?? "QUEST"),
+                                Expanded(
+                                  child: Text(quest?.name ?? "QUEST",
+                                      style: heading3Style.copyWith(
+                                          overflow: TextOverflow.ellipsis),
+                                      maxLines: 2),
+                                ),
                               ],
                             ),
                           ),

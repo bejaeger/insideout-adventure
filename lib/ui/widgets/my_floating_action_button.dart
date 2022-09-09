@@ -12,8 +12,8 @@ class AFKFloatingActionButton extends StatelessWidget {
       {Key? key,
       required this.icon,
       required this.onPressed,
-      this.height = 75,
-      this.width = 75,
+      this.height = 60,
+      this.width = 60,
       this.backgroundColor,
       this.title})
       : super(key: key);

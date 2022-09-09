@@ -1,5 +1,6 @@
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
+import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -40,21 +41,17 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
               Center(child: GrabberLine()),
               verticalSpaceTiny,
               verticalSpaceSmall,
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      getShortQuestType(model.quest.type),
-                      style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: kcPrimaryColor),
-                      // textAlign: TextAlign.left,
-                    ),
+                  QuestTypeTag(quest: model.quest),
+                  verticalSpaceTiny,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: CreditsAmount(
+                        amount: model.quest.afkCredits, height: 20),
                   ),
-                  horizontalSpaceSmall,
-                  CreditsAmount(amount: model.quest.afkCredits),
                 ],
               ),
               verticalSpaceSmall,
@@ -88,36 +85,14 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                   ),
                 ),
               verticalSpaceSmall,
-              AfkCreditsText.headingTwo(
-                request.title.toString(),
-              ),
+              Text(request.title.toString(),
+                  style:
+                      heading3Style.copyWith(overflow: TextOverflow.ellipsis),
+                  maxLines: 3),
               // verticalSpaceTiny,
-              // Text(
-              //   getStringForCategory(model.quest.type),
-              //   style: TextStyle(
-              //       fontSize: 20,
-              //       fontWeight: FontWeight.bold,
-              //       color: kPrimaryColor),
-              //   // textAlign: TextAlign.left,
-              // ),
               verticalSpaceMedium,
-              Text(
-                request.description.toString(),
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[800]),
-                // textAlign: TextAlign.left,
-              ),
+              AfkCreditsText.body(request.description.toString()),
               verticalSpaceMedium,
-              // Text(
-              //   "AFK Credits: " + model.quest.afkCredits.toString(),
-              //   style: TextStyle(
-              //       fontSize: 20,
-              //       fontWeight: FontWeight.bold,
-              //       color: kPrimaryColor),
-              //   // textAlign: TextAlign.left,
-              // ),
               if (model.checkSponsoringSentence() != null)
                 Text(
                   model.checkSponsoringSentence()!,
@@ -128,36 +103,46 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // ElevatedButton(
-                  //   onPressed: () => completer(SheetResponse(confirmed: false)),
-                  //   child: Text(
-                  //     request.secondaryButtonTitle.toString(),
-                  //     style: TextStyle(
-                  //         fontSize: 20,
-                  //         //fontWeight: FontWeight.bold,
-                  //         color: kWhiteTextColor),
-                  //   ),
-                  // ),
-                  MaterialButton(
-                    onPressed: () => completer(SheetResponse(confirmed: false)),
-                    child: Text(
-                      request.secondaryButtonTitle.toString(),
-                      style: TextStyle(
-                          fontSize: 20,
-                          //fontWeight: FontWeight.bold,
-                          color: Colors.black),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        AfkCreditsButton.outline(
+                          title: request.secondaryButtonTitle.toString(),
+                          onTap: request.data.createdBy == null
+                              ? null
+                              : () => completer(
+                                    SheetResponse(confirmed: false),
+                                  ),
+                        ),
+                        if (model.isParentAccount &&
+                            request.data.createdBy == null)
+                          AfkCreditsText.caption(
+                              "Can't delete quest because this is a public quest",
+                              align: TextAlign.center),
+                      ],
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: model.hasEnoughSponsoring(quest: model.quest)
-                        ? () => completer(SheetResponse(confirmed: true))
-                        : null,
-                    child: Text(
-                      request.mainButtonTitle.toString(),
-                      style: TextStyle(
-                          fontSize: 20,
-                          //fontWeight: FontWeight.bold,
-                          color: kcWhiteTextColor),
+                  horizontalSpaceMedium,
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        AfkCreditsButton(
+                          disabled: model.isParentAccount,
+                          title: request.mainButtonTitle.toString(),
+                          onTap: model.isParentAccount
+                              ? null
+                              : model.hasEnoughSponsoring(quest: model.quest)
+                                  ? () =>
+                                      completer(SheetResponse(confirmed: true))
+                                  : null,
+                        ),
+                        if (model.isParentAccount)
+                          AfkCreditsText.caption(
+                              "Not supported in parent account yet",
+                              align: TextAlign.center),
+                      ],
                     ),
                   ),
                 ],

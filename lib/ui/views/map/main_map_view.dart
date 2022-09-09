@@ -24,7 +24,8 @@ class MainMapView extends StatelessWidget {
       onModelReady: (model) {
         model.initializeMapAndMarkers();
       },
-      disposeViewModel: false,
+      disposeViewModel:
+          false, // ! important because we can't dispose a singleton and use it again!
       builder: (context, model, child) => Stack(
         children: [
           MapGesturesWidget(

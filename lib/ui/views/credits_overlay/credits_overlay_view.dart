@@ -46,9 +46,11 @@ class CreditsOverlayView extends StatelessWidget {
                       model.afkCreditsBalance.toStringAsFixed(0)),
                   horizontalSpaceSmall,
                   Icon(Icons.arrow_forward, size: 25),
-                  horizontalSpaceTiny,
-                  Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
-                  horizontalSpaceTiny,
+                  horizontalSpaceSmall,
+                  //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
+                  Image.asset(kScreenTimeIcon,
+                      height: 30, color: kcScreenTimeBlue),
+                  horizontalSpaceSmall,
                   // Lottie.network(
                   //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
                   //     height: 40),
@@ -57,7 +59,7 @@ class CreditsOverlayView extends StatelessWidget {
                 ],
               ),
               verticalSpaceLarge,
-              AfkCreditsText.subheading("Claim your screen time now!"),
+              AfkCreditsText.subheadingItalic("Claim your screen time now!"),
               verticalSpaceMedium,
               AfkCreditsButton(
                   height: 50,

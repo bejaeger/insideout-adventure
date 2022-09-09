@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 class BottomFloatingActionButtons extends StatelessWidget {
   final String titleMain;
+  final Widget? leadingMain;
+  final Widget? leadingSecondary;
   final String? titleSecondary;
   final void Function() onTapMain;
   final void Function()? onTapSecondary;
@@ -18,6 +20,8 @@ class BottomFloatingActionButtons extends StatelessWidget {
     this.swapButtons = false,
     this.busySecondary = false,
     this.busyMain = false,
+    this.leadingMain,
+    this.leadingSecondary,
   }) : super(key: key);
 
   @override
@@ -39,9 +43,11 @@ class BottomFloatingActionButtons extends StatelessWidget {
             child: swapButtons
                 ? AfkCreditsButton.outline(
                     title: titleMain,
+                    leading: leadingMain,
                     onTap: onTapMain,
                   )
                 : AfkCreditsButton(
+                    leading: leadingMain,
                     title: titleMain,
                     onTap: onTapMain,
                     busy: busyMain,
@@ -53,12 +59,14 @@ class BottomFloatingActionButtons extends StatelessWidget {
               child: swapButtons
                   ? AfkCreditsButton(
                       title: titleSecondary!,
+                      leading: leadingSecondary,
                       onTap: onTapSecondary,
                       disabled: onTapSecondary == null,
                       busy: busySecondary,
                     )
                   : AfkCreditsButton.outline(
                       title: titleSecondary!,
+                      leading: leadingSecondary,
                       onTap: onTapSecondary,
                     ),
             ),

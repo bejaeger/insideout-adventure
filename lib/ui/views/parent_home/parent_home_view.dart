@@ -37,11 +37,13 @@ class ParentHomeView extends StatelessWidget {
             ),
             endDrawer: const ParentDrawerView(),
             floatingActionButton: BottomFloatingActionButtons(
-              swapButtons: true,
-              titleSecondary: "Create Quest",
-              titleMain: "Quest List",
-              onTapSecondary: model.navToCreateQuest,
-              onTapMain: model.showNotImplementedSnackbar,
+              swapButtons: false,
+              titleMain: "Create Quest",
+              // leadingSecondary: Icon(Icons.add, color: Colors.white),
+              titleSecondary: "Map",
+              leadingSecondary: Icon(Icons.map, color: kcPrimaryColor),
+              onTapMain: model.navToCreateQuest,
+              onTapSecondary: model.navToParentMapView,
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
@@ -68,8 +70,15 @@ class ParentHomeView extends StatelessWidget {
                   SectionHeader(
                     title: "Children",
                     onButtonTap: model.showAddExplorerBottomSheet,
-                    buttonIcon: Icon(Icons.add_circle_outline_rounded,
-                        size: 28, color: kcPrimaryColor),
+                    buttonIcon: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 5.0),
+                      height: 30,
+                      width: 40,
+                      //color: Colors.red,
+                      child: Icon(Icons.add_circle_outline_rounded,
+                          size: 28, color: kcPrimaryColor),
+                    ),
                   ),
                   if (model.supportedExplorers.length == 0)
                     model.isBusy

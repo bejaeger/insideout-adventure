@@ -8,6 +8,7 @@ import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/markers/markers.dart';
@@ -32,9 +33,10 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final _displaySnackBars = DisplaySnackBars();
   final SnackbarService snackbarService = locator<SnackbarService>();
   final DialogService _dialogService = locator<DialogService>();
+  final MapViewModel mapViewModel = locator<MapViewModel>();
 
   int pageIndex = 0;
-  bool isLoading = false;
+  bool creatingQuest = false;
   bool result = false;
   QuestType selectedQuestType = QuestType.TreasureLocationSearch;
 
@@ -99,7 +101,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     } else if (pageIndex == 3) {
       // number credits selection
       if (isValidUserInputs(credits: true)) {
-        await createQuestAndNavigateBack();
+        await createQuestAndNavigateBack(controller: controller);
       }
     }
   }
@@ -194,7 +196,6 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
 
   Future<bool?> _createQuest() async {
     if (!isValidUserInputs(credits: true)) return false;
-    isLoading = true;
     notifyListeners();
     num afkCreditAmount = num.parse(afkCreditAmountValue.toString());
     var id = Uuid();
@@ -226,11 +227,8 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
           startAfkMarkersPositions: getAfkMarkersPosition.first,
           finishAfkMarkersPositions: getAfkMarkersPosition.last),
     );
-    isLoading = false;
-    notifyListeners();
     if (added || afkQuestAdded) {
       _log.i("Quest added successfully!");
-      _displaySnackBars.snackBarCreatedQuest();
       return true;
     }
 
@@ -238,11 +236,28 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     return false;
   }
 
-  Future<bool> createQuestAndNavigateBack() async {
+  Future<bool> createQuestAndNavigateBack(
+      {required PageController controller}) async {
+    creatingQuest = true;
     result = await _createQuest() ?? false;
     if (result) {
+      AFKMarker startMarker = getAFKMarkers.first;
       resetMarkersValues();
-      replaceWithSponsorHomeView();
+      onBackButton(controller);
+      await Future.delayed(Duration(milliseconds: 210));
+      setBusy(true);
+      await Future.delayed(Duration(milliseconds: 1000));
+      addMarkerOnMap(
+          pos: LatLng(startMarker.lat!, startMarker.lon!),
+          number: 0); // number 0 gets green marker!
+      notifyListeners();
+      await Future.delayed(Duration(milliseconds: 500));
+      creatingQuest = false;
+      notifyListeners();
+      _displaySnackBars.snackBarCreatedQuest();
+      await Future.delayed(Duration(milliseconds: 2000));
+      setBusy(false);
+      replaceWithParentHomeView();
     }
     return result;
   }
