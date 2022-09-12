@@ -35,6 +35,7 @@ pubspec.lock
 
 #Android Services 
 android/app/src/*/google-services.json
+android/app/google-services.json
 android/app/src/*/AndroidManifest.xml
 
 #Lib folder 

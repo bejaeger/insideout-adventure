@@ -3,7 +3,6 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:stacked_services/stacked_services.dart';

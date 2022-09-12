@@ -1,4 +1,3 @@
-import 'package:afkcredits/services/maps/google_map_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -8,7 +7,17 @@ import 'package:afkcredits/services/maps/google_map_service.dart';
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+<<<<<<< HEAD
 import 'package:stacked_core/stacked_core.dart';
+||||||| e7211a7
+import 'package:logger/logger.dart';
+import 'package:places_service/places_service.dart';
+import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
+=======
+import 'package:places_service/places_service.dart';
+import 'package:stacked_core/stacked_core.dart';
+>>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -36,8 +45,13 @@ import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/screentime/screen_time_service.dart';
 import '../services/users/user_service.dart';
+<<<<<<< HEAD
 import '../ui/views/map/map_viewmodel.dart';
 import '../utils/image_selector.dart';
+||||||| e7211a7
+import '../ui/views/map/map_viewmodel.dart';
+=======
+>>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
 
 final locator = StackedLocator.instance;
 

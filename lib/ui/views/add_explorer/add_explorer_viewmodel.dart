@@ -12,36 +12,40 @@ class AddExplorerViewModel extends FormViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final log = getLogger("AddExplorerViewModel");
 
-  dynamic isValidInput({required String? name, required String? password}) {
+//No Need for this since we are going to start doing realtime validation on
+//setFormStatus()
+/* 
+ dynamic isValidInput({required String? name, required String? password}) {
     log.i("Testing if user input is valid: name = $name, password = $password");
     if (name == null) return "Please provide a valid name";
     if (password == null) return "Please provide a valid password";
     if (password.length < 6)
       return "Please provide a password with at least 6 characters";
     return true;
-  }
+  }  */
 
   Future addExplorer() async {
-    final result = isValidInput(name: nameValue, password: passwordValue!);
-    if (result == true) {
-      final result = await runBusyFuture(_userService.createExplorerAccount(
-          name: nameValue!,
-          password: passwordValue!,
-          authMethod: AuthenticationMethod.EmailOrSponsorCreatedExplorer));
-      if (result is String) {
-        await _dialogService.showDialog(
-            title: "Could not create user", description: result);
-      } else {
-        // successfully added user
-        await _dialogService.showDialog(
-            title: "Successfully created child account");
-        _navigationService.back();
-      }
+    //final result = isValidInput(name: nameValue, password: passwordValue!);
+    // if (result == true) {
+    final result = await runBusyFuture(_userService.createExplorerAccount(
+        name: nameValue!,
+        password: passwordValue!,
+        authMethod: AuthenticationMethod.EmailOrSponsorCreatedExplorer));
+    if (result is String) {
+      await _dialogService.showDialog(
+          title: "Could not create user", description: result);
     } else {
+      // successfully added user
+      await _dialogService.showDialog(
+          title: "Successfully added explorer account!");
+      _navigationService.back();
+    }
+    //}
+/*     else {
       await _dialogService.showDialog(
           title: "Could not create user due to invalid input",
           description: result);
-    }
+    } */
   }
 
   bool isPwShown = false;
@@ -51,5 +55,14 @@ class AddExplorerViewModel extends FormViewModel {
   }
 
   @override
-  void setFormStatus() {}
+  void setFormStatus() {
+    log.i('Set form Status with data: $formValueMap');
+    // Set a validation message for the entire form
+    if (hasPasswordValidationMessage) {
+      setValidationMessage('Error in the form, please check again');
+    }
+    if (hasNameValidationMessage) {
+      setValidationMessage('Error in the form, please check again');
+    }
+  }
 }

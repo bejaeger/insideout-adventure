@@ -11,7 +11,6 @@ import 'package:afkcredits/enums/marker_collection_failure_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
-import 'package:afkcredits/notifications/notifications.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -96,7 +95,7 @@ class ActiveQuestService with ReactiveServiceMixin {
     // TODO: Double check this
     if (quest.type != QuestType.DistanceEstimate) {
       try {
-        AFKMarker fullMarker = tmpActivatedQuest.quest.markers
+        AFKMarker fullMarker = tmpActivatedQuest.quest.markers!
             .firstWhere((element) => element.id == quest.startMarker?.id);
         final bool closeby =
             await _markerService.isUserCloseby(marker: fullMarker);
@@ -216,7 +215,7 @@ class ActiveQuestService with ReactiveServiceMixin {
           .length;
   // TODO: unit test this?
   bool get isAllMarkersCollected =>
-      activatedQuest!.quest.markers.length == getNumberMarkersCollected;
+      activatedQuest!.quest.markers!.length == getNumberMarkersCollected;
 
   bool isFinishMarker(AFKMarker marker) {
     return activatedQuest?.quest.finishMarker == marker;
@@ -483,7 +482,7 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   void updateCollectedMarkers({required AFKMarker marker}) {
     if (activatedQuest != null) {
-      final index = activatedQuest!.quest.markers
+      final index = activatedQuest!.quest.markers!
           .indexWhere((element) => element == marker);
 
       // some error catching
@@ -514,9 +513,9 @@ class ActiveQuestService with ReactiveServiceMixin {
   List<AFKMarker> getCollectedMarkers() {
     List<AFKMarker> markers = [];
     if (hasActiveQuest) {
-      for (int i = 0; i < currentQuest!.markers.length; i++) {
+      for (int i = 0; i < currentQuest!.markers!.length; i++) {
         if (activatedQuest!.markersCollected[i] == true) {
-          markers.add(currentQuest!.markers[i]);
+          markers.add(currentQuest!.markers![i]);
         }
       }
     }
@@ -527,26 +526,28 @@ class ActiveQuestService with ReactiveServiceMixin {
     // late Quest quest;
     List<AFKMarker> markers = [];
     if (hasActiveQuest) {
-      if (activatedQuest!.quest.type == QuestType.QRCodeHike) {
-        markers = activatedQuest!.quest.markers;
+      if (activatedQuest!.quest.type == QuestType.QRCodeHike.toSimpleString()) {
+        markers = activatedQuest!.quest.markers!;
       }
-      if (activatedQuest!.quest.type == QuestType.GPSAreaHike) {
+      if (activatedQuest!.quest.type ==
+          QuestType.GPSAreaHike.toSimpleString()) {
         for (var i = 0; i < activatedQuest!.markersCollected.length; i++) {
           if (activatedQuest!.markersCollected[i]) {
-            markers.add(activatedQuest!.quest.markers[i]);
+            markers.add(activatedQuest!.quest.markers![i]);
           }
         }
         int index = activatedQuest!.markersCollected
             .lastIndexWhere((element) => element == true);
-        if (index + 1 < activatedQuest!.quest.markers.length) {
-          markers.add(activatedQuest!.quest.markers[index + 1]);
+        if (index + 1 < activatedQuest!.quest.markers!.length) {
+          markers.add(activatedQuest!.quest.markers![index + 1]);
         }
       }
-      if (activatedQuest!.quest.type == QuestType.QRCodeHunt ||
-          activatedQuest!.quest.type == QuestType.GPSAreaHunt) {
+      if (activatedQuest!.quest.type == QuestType.QRCodeHunt.toSimpleString() ||
+          activatedQuest!.quest.type ==
+              QuestType.GPSAreaHunt.toSimpleString()) {
         for (var i = 0; i < activatedQuest!.markersCollected.length; i++) {
           if (activatedQuest!.markersCollected[i]) {
-            markers.add(activatedQuest!.quest.markers[i]);
+            markers.add(activatedQuest!.quest.markers![i]);
           }
         }
       }
@@ -556,18 +557,18 @@ class ActiveQuestService with ReactiveServiceMixin {
             "Cannot retrieve markers because no quest active and no quest provided");
         return [];
       }
-      if (questIn.type == QuestType.QRCodeHike) {
-        markers = questIn.markers;
+      if (questIn.type == QuestType.QRCodeHike.toSimpleString()) {
+        markers = questIn.markers!;
       }
-      if (questIn.type == QuestType.GPSAreaHike) {
-        markers.add(questIn.markers[0]);
-        if (questIn.markers.length > 1) {
-          markers.add(questIn.markers[1]);
+      if (questIn.type == QuestType.GPSAreaHike.toSimpleString()) {
+        markers.add(questIn.markers![0]);
+        if (questIn.markers!.length > 1) {
+          markers.add(questIn.markers![1]);
         }
       }
-      if (questIn.type == QuestType.QRCodeHunt ||
-          questIn.type == QuestType.GPSAreaHunt) {
-        markers.add(questIn.markers[0]);
+      if (questIn.type == QuestType.QRCodeHunt.toSimpleString() ||
+          questIn.type == QuestType.GPSAreaHunt.toSimpleString()) {
+        markers.add(questIn.markers![0]);
       }
     }
     return markers;
@@ -575,7 +576,7 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   bool isMarkerCollected({required AFKMarker marker}) {
     if (activatedQuest != null) {
-      final index = activatedQuest!.quest.markers
+      final index = activatedQuest!.quest.markers!
           .indexWhere((element) => element == marker);
       return activatedQuest!.markersCollected[index];
     } else {
@@ -613,7 +614,7 @@ class ActiveQuestService with ReactiveServiceMixin {
 
       // Marker is in quest so let's get full marker with lat and long by reading from already downloaded
       // active quest
-      AFKMarker fullMarker = activatedQuest!.quest.markers
+      AFKMarker fullMarker = activatedQuest!.quest.markers!
           .firstWhere((element) => element.id == marker.id);
 
       // 2.
@@ -663,12 +664,12 @@ class ActiveQuestService with ReactiveServiceMixin {
       } else {
         index++;
       }
-      if (index < activatedQuest!.quest.markers.length) {
-        return activatedQuest!.quest.markers[index];
+      if (index < activatedQuest!.quest.markers!.length) {
+        return activatedQuest!.quest.markers![index];
       }
     } else {
-      if (quest != null && (1 < quest.markers.length)) {
-        return quest.markers[1];
+      if (quest != null && (1 < quest.markers!.length)) {
+        return quest.markers![1];
       }
     }
     return null;
@@ -683,12 +684,12 @@ class ActiveQuestService with ReactiveServiceMixin {
         // no marker collected yet
         index = 0;
       }
-      if (index < activatedQuest!.quest.markers.length) {
-        return activatedQuest!.quest.markers[index];
+      if (index < activatedQuest!.quest.markers!.length) {
+        return activatedQuest!.quest.markers![index];
       }
     } else {
-      if (quest != null && (0 < quest.markers.length)) {
-        return quest.markers[0];
+      if (quest != null && (0 < quest.markers!.length)) {
+        return quest.markers![0];
       }
     }
     return null;
@@ -764,7 +765,7 @@ class ActiveQuestService with ReactiveServiceMixin {
       {required Quest quest, required List<String> uids}) {
     return ActivatedQuest(
       quest: quest,
-      markersCollected: List.filled(quest.markers.length, false),
+      markersCollected: List.filled(quest.markers!.length, false),
       status: QuestStatus.active,
       timeElapsed: 0,
       uids: uids,
@@ -783,7 +784,7 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   bool isMarkerInQuest({required AFKMarker marker}) {
     if (activatedQuest != null) {
-      return activatedQuest!.quest.markers
+      return activatedQuest!.quest.markers!
           .any((element) => element.id == marker.id);
     } else {
       log.e(

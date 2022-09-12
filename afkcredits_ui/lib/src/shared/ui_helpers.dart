@@ -48,7 +48,7 @@ Size screenSize(BuildContext context) => MediaQuery.of(context).size;
 
 isDesktop(BuildContext context) => MediaQuery.of(context).size.width > 600;
 TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
-
+/*
 IconData getIconForCategory(QuestType category) {
   switch (category) {
     case QuestType.DistanceEstimate:
@@ -65,23 +65,20 @@ IconData getIconForCategory(QuestType category) {
       return Icons.map;
   }
 }
-
-Color getColorForCategory(QuestType category) {
-  switch (category) {
-    case QuestType.DistanceEstimate:
-      return kcScreenTimeBlue;
-    case QuestType.TreasureLocationSearch:
-      return kcBlue;
-    case QuestType.QRCodeHunt:
-      return kcOrange;
-    case QuestType.QRCodeHike:
-      return kcOrange;
-    case QuestType.GPSAreaHike:
-      return kcOrange;
-    case QuestType.GPSAreaHunt:
-      return kcOrange;
-    default:
-      return kcPrimaryColor;
+*/
+IconData getIconForCategory(String? category) {
+  if (category == QuestType.DistanceEstimate.toSimpleString()) {
+    return Icons.arrow_right_alt;
+  } else if (category == QuestType.TreasureLocationSearch.toSimpleString()) {
+    return Icons.location_on;
+  } else if (category == QuestType.QRCodeHunt.toSimpleString()) {
+    return Icons.pets;
+  } else if (category == QuestType.QRCodeHike.toSimpleString()) {
+    return Icons.nature_people;
+  } else if (category == QuestType.GPSAreaHike.toSimpleString()) {
+    return Icons.explore;
+  } else {
+    return Icons.map;
   }
 }
 

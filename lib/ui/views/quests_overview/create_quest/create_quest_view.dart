@@ -5,7 +5,6 @@ import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,8 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
+import '../../../../data/app_strings.dart';
+import '../../add_explorer/validators.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
 
@@ -22,9 +23,22 @@ final circularBorder = OutlineInputBorder(
 
 @FormView(
   fields: [
-    FormTextField(name: 'name'),
+    FormTextField(
+      name: 'name',
+      initialValue: "Quest Name",
+      validator: FormValidators.nameValidator,
+    ),
     FormTextField(name: 'description'),
     FormTextField(name: 'afkCreditAmount'),
+    FormDropdownField(
+      name: 'questType',
+      items: [
+        StaticDropdownItem(
+          title: 'QuestType',
+          value: 'QuestTypeDr',
+        ),
+      ],
+    )
     //FormTextField(name: 'markerNotes'),
   ],
 )

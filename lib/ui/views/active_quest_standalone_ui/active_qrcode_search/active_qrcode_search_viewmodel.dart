@@ -61,8 +61,8 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
       return hasActiveQuest
           ? (activeQuestService.getNumberMarkersCollected - 1).toString() +
               " / " +
-              (activeQuest.quest.markers.length - 1).toString()
-          : "0 / " + currentQuest!.markers.length.toString();
+              (activeQuest.quest.markers!.length - 1).toString()
+          : "0 / " + currentQuest!.markers!.length.toString();
     } else {
       return "";
     }

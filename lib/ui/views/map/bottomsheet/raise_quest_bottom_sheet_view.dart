@@ -55,36 +55,6 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                 ],
               ),
               verticalSpaceSmall,
-              if (model.quest.type != QuestType.TreasureLocationSearch &&
-                  model.quest.type != QuestType.QRCodeHunt &&
-                  model.quest.type != QuestType.GPSAreaHike &&
-                  model.quest.type != QuestType.GPSAreaHunt &&
-                  model.quest.startMarker != null)
-                Expanded(
-                  flex: 8,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.0)),
-                    clipBehavior: Clip.antiAlias,
-                    child: GoogleMap(
-                      //mapType: MapType.hybrid,
-                      initialCameraPosition: model.initialCameraPosition(),
-                      //Place Markers in the Map
-                      markers: model.getMarkers!,
-                      //callback that’s called when the map is ready to us.
-                      onMapCreated: model.onMapCreated,
-                      //For showing your current location on Map with a blue dot.
-                      myLocationEnabled: false,
-
-                      // Button used for bringing the user location to the center of the camera view.
-                      myLocationButtonEnabled: true,
-
-                      //Remove the Zoom in and out button
-                      zoomControlsEnabled: false,
-                    ),
-                  ),
-                ),
-              verticalSpaceSmall,
               Text(request.title.toString(),
                   style:
                       heading3Style.copyWith(overflow: TextOverflow.ellipsis),

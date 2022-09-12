@@ -24,7 +24,7 @@ class NotCloseToQuestNote extends StatelessWidget {
       this.horizontal,
       this.questType})
       : super(key: key);
-
+  // Changed The QuestType parameter to String.
   String _getInfoString(QuestType? questType) {
     if (questType == QuestType.GPSAreaHike ||
         questType == QuestType.QRCodeHike) {

@@ -44,7 +44,7 @@ class AddMarkersViewModel extends AFKMarks with NavigationMixin {
     bool found = false;
 
     while (idx < quest.length) {
-      for (AFKMarker _afkMarkers in quest[idx].markers) {
+      for (AFKMarker _afkMarkers in quest[idx].markers!) {
         if (_afkMarkers.id.isNotEmpty) {
           markers.add(
             Marker(

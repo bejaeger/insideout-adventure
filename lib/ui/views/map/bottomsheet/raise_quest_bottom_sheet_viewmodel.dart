@@ -34,7 +34,7 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
 
   void getQuestMarkers() {
     setBusy(true);
-    for (AFKMarker _m in quest.markers) {
+    for (AFKMarker _m in quest.markers!) {
       addMarker(afkmarker: _m);
     }
     setBusy(false);

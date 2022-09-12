@@ -27,18 +27,27 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:rxdart/subjects.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
   final firestoreInstance = FirebaseFirestore.instance;
+  GeoFirePoint? center;
   //List<UserFavPlaces>? places;
   // Create user documents
   DocumentReference? _documentReference;
+  List<Quest>? newQuestResult;
+  List<AFKQuest>? newResult;
+  double radius = 50;
+  // BehaviorSubject<double>? radius = BehaviorSubject<double>.seeded(50.0);
+  // BehaviorSubject<double>? radius;
+
+  Geoflutterfire geo = Geoflutterfire();
 
   List<GiftCardCategory> giftCartCategory = [];
   // ignore: close_sinks
-  BehaviorSubject<double>? radius;
+
   Stream<dynamic>? query;
   StreamSubscription? subscription;
 
@@ -117,7 +126,7 @@ class FirestoreApi {
   }
 
   //Create a List of My Favourite Places
-  Future<void> addAFKMarkersPositions(
+/*   Future<void> addAFKMarkersPositions(
       {required AfkMarkersPositions afkMarkersPositions}) async {
     try {
       final _docRef =
@@ -132,7 +141,7 @@ class FirestoreApi {
           message: 'Failed To Insert Places',
           devDetails: 'Failed Caused By $e.');
     }
-  }
+  } */
 
   // when explorer is added without authentication so without ID
   // we need to generate that id and add it to the datamodel.
@@ -390,13 +399,13 @@ class FirestoreApi {
   /// invitations
   Stream<List<User>> getExplorersDataStream({required String uid}) {
     try {
-      final returnStream = usersCollection
+      return usersCollection
           .where("sponsorIds", arrayContains: uid)
           .snapshots()
           .map((event) => event.docs
               .map((doc) => User.fromJson(doc.data() as Map<String, dynamic>))
               .toList());
-      return returnStream;
+      // return returnStream;
     } catch (e) {
       throw FirestoreApiException(
           message:
@@ -468,7 +477,7 @@ class FirestoreApi {
     return getDummyQuest1();
   }
 
-  // Returns dummy data for now!
+/*   // Returns dummy data for now!
   Future<List<Quest>> getNearbyQuests(
       {required List<String> sponsorIds, bool? pushDummyQuests}) async {
     if (pushDummyQuests == true) {
@@ -495,7 +504,7 @@ class FirestoreApi {
     } else {
       return await downloadNearbyQuests(sponsorIds: sponsorIds);
     }
-  }
+  }  */
 
   Future _uploadQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
@@ -540,7 +549,7 @@ class FirestoreApi {
     return false;
   }
 
-  // Changed the Scope of the Method. from _pvt to public
+/*   // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> downloadNearbyQuests(
       {required List<String> sponsorIds}) async {
     // only gets quests NOT created by a standard parent
@@ -579,19 +588,94 @@ class FirestoreApi {
           devDetails: "Quest document is empty");
     }
     return returnQuests;
+  }  */
+
+  // Changed the Scope of the Method. from _pvt to public
+  Future<List<Quest>> getNearbyQuests() async {
+    try {
+      // List<Quest> questsOnFirestore;
+
+      final quests = getDummyQuests();
+      quests.forEach(
+        (el1) {
+          // dummy quest not yet on firestore
+          // adding it
+          _uploadQuest(quest: el1);
+        },
+      );
+
+      String field = 'location';
+      final location = Location();
+
+      final pos = await location.getLocation();
+      center = geo.point(
+          latitude: pos.latitude as double, longitude: pos.longitude as double);
+
+      Stream<List<DocumentSnapshot>> stream = geo
+          .collection(collectionRef: afkQuestsCollection)
+          .within(
+              center: center!, radius: 50.0, field: field, strictMode: true);
+      log.i("Data Inside The Stream");
+      log.i(stream);
+      stream.listen(
+        (List<DocumentSnapshot> docList) {
+          if (docList.isNotEmpty) {
+            newQuestResult = docList
+                .map(
+                  (docs) => Quest.fromJson(
+                    docs.data() as Map<String, dynamic>,
+                  ),
+                )
+                .toList();
+          }
+        },
+      );
+      return newQuestResult!;
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when listening to past quests the user has successfully done",
+          devDetails: '$e');
+    }
   }
 
   // Changed the Scope of the Method. from _pvt to public
-  Stream<List<AFKQuest>> downloadNearbyAfkQuests() {
+  Future<List<AFKQuest>> downloadNearbyAfkQuests() async {
     try {
-      return afkQuestsCollection.snapshots().map(
-            (snapShot) => snapShot.docs
+      String field = 'location';
+      var location = Location();
+      // Get users location
+      /*   location.onLocationChanged.listen(
+        (currentUserLocation) {
+          center = geo.point(
+              latitude: currentUserLocation.latitude as double,
+              longitude: currentUserLocation.longitude as double);
+        },
+      ); */
+      final pos = await location.getLocation();
+      center = geo.point(
+          latitude: pos.latitude as double, longitude: pos.longitude as double);
+
+      Stream<List<DocumentSnapshot>> stream = geo
+          .collection(collectionRef: questsCollection)
+          .within(
+              center: center!, radius: 50.0, field: field, strictMode: true);
+      log.i("Data Inside The Stream");
+      log.i(stream);
+      stream.listen(
+        (List<DocumentSnapshot> docList) {
+          if (docList.isNotEmpty) {
+            newResult = docList
                 .map(
-                  (docs) =>
-                      AFKQuest.fromJson(docs.data() as Map<String, dynamic>),
+                  (docs) => AFKQuest.fromJson(
+                    docs.data() as Map<String, dynamic>,
+                  ),
                 )
-                .toList(),
-          );
+                .toList();
+          }
+        },
+      );
+      return newResult!;
     } catch (e) {
       throw FirestoreApiException(
           message:
@@ -630,25 +714,6 @@ class FirestoreApi {
     // For now we return dummy data!
     return Future.value(
         AFKMarker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.1, lon: -122));
-
-    //////////////////////////////////////////////
-    // QuerySnapshot snapshot =
-    //     await markersCollection.where(qrCodeId, isEqualTo: qrCodeId).get();
-    // if (snapshot.docs.length > 1) {
-    //   throw FirestoreApiException(
-    //       message:
-    //           "Found more than one marker with id $qrCodeId. This should never happen!",
-    //       devDetails:
-    //           "Maybe this is some inconsistency in the backend during development?");
-    // }
-    // if (snapshot.docs.length == 0) {
-    //   throw FirestoreApiException(
-    //       message: "No marker with id $qrCodeId found. Returning null",
-    //       devDetails:
-    //           "Maybe this is some inconsistency in the backend during development?");
-    // }
-    // final marker = Marker.fromJson(snapshot.docs[0].data());
-    // return marker;
   }
 
   Future<List<Quest>> downloadQuestsWithStartMarkerId(

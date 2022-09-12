@@ -14,7 +14,6 @@ import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
@@ -471,7 +470,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
   Future showQuestInfoDialog({required Quest quest}) async {
     await dialogService.showDialog(
-        title: quest.name + " - " + describeEnum(quest.type).toString(),
+        title: quest.name.toString() + "-" + quest.type.toString(),
+        //title: quest.name + " - " + describeEnum(quest.type).toString(),
         description: "Earn ${quest.afkCredits} AFK Credits by " +
             getQuestDescriptionString(quest));
   }
@@ -645,7 +645,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
   //------------------------------------------
   // Functions to override
-  Future showInstructions(QuestType type) async {
+  Future showInstructions(QuestType? type) async {
     if (type == QuestType.TreasureLocationSearch) {
       await dialogService.showDialog(
           title: "How it works", description: kLocationSearchDescription);

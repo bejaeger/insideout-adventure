@@ -40,7 +40,7 @@ class QuestTypeCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Icon(getIconForCategory(category),
+                child: Icon(getIconForCategory(category.toSimpleString()),
                     size: 60, color: kcGreyTextColor.withOpacity(0.9)),
               ),
               const Spacer(),

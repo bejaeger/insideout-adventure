@@ -49,7 +49,8 @@ class OutlineBox extends StatelessWidget {
               ? Center(
                   child: AfkCreditsText.body(text!,
                       align: TextAlign.center,
-                      color: textColor ?? kcBlackHeadlineColor))
+                      color: textColor ?? kcBlackHeadlineColor),
+                )
               : SizedBox.expand(),
         ),
       ),

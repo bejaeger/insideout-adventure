@@ -16,6 +16,7 @@ import 'package:afkcredits/utils/markers/markers.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
@@ -30,6 +31,8 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final _questService = locator<QuestService>();
   final _geoLocationService = locator<GeolocationService>();
   final _userService = locator<UserService>();
+  Geoflutterfire geo = Geoflutterfire();
+
   //CameraPosition? _initialCameraPosition;
   final _displaySnackBars = DisplaySnackBars();
   final SnackbarService snackbarService = locator<SnackbarService>();
@@ -210,32 +213,39 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     final questId = id.v1().toString().replaceAll('-', '');
     final added = await _questService.createQuest(
       quest: Quest(
-          id: questId,
-          createdBy: _userService.getUserRole == UserRole.adminMaster
-              ? null
-              : _userService.currentUser.uid,
-          startMarker: getAFKMarkers.first,
-          finishMarker: getAFKMarkers.last,
-          name: nameValue.toString(),
-          description: descriptionValue.toString(),
-          type: selectedQuestType,
-          markers: getAFKMarkers,
-          afkCredits: afkCreditAmount),
+        id: questId,
+        createdBy: _userService.getUserRole == UserRole.adminMaster
+            ? null
+            : _userService.currentUser.uid,
+        startMarker: getAFKMarkers.first,
+        location: geo.point(
+            latitude: getAFKMarkers.first.lat!,
+            longitude: getAFKMarkers.first.lon!),
+        finishMarker: getAFKMarkers.last,
+        name: nameValue.toString(),
+        description: descriptionValue.toString(),
+        type: selectedQuestType,
+        markers: getAFKMarkers,
+        afkCredits: afkCreditAmount,
+      ),
     );
-
-    final afkQuestAdded = await _questService.createAFKQuest(
-      afkQuest: AFKQuest(
-          id: questId,
-          name: nameValue.toString(),
-          description: descriptionValue.toString(),
-          type: selectedQuestType.toSimpleString(),
-          //type: _questType.toString().split('.').elementAt(1),
-          afkCredits: afkCreditAmount,
-          afkMarkersPositions: getAfkMarkersPosition,
-          startAfkMarkersPositions: getAfkMarkersPosition.first,
-          finishAfkMarkersPositions: getAfkMarkersPosition.last),
-    );
-    if (added || afkQuestAdded) {
+    // final afkQuestAdded = await _questService.createAFKQuest(
+    //   afkQuest: AFKQuest(
+    //     id: questId,
+    //     name: nameValue.toString(),
+    //     description: descriptionValue.toString(),
+    //     type: _questType!.toSimpleString(),
+    //     //type: _questType.toString().split('.').elementAt(1),
+    //     afkCredits: afkCreditAmount,
+    //     startMarker: getAFKMarkers.first,
+    //     finishMarker: getAFKMarkers.last,
+    //     markers: getAFKMarkers,
+    //     location: geo.point(
+    //         latitude: getAFKMarkers.first.lat!,
+    //         longitude: getAFKMarkers.first.lon!),
+    //   ),
+    // );
+    if (added) {
       _log.i("Quest added successfully!");
       return true;
     }

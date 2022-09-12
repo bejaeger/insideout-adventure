@@ -124,9 +124,64 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+<<<<<<< HEAD
                               GestureDetector(
                                 onTap: model.openSuperUserSettingsDialog,
                                 child: QuestTypeTag(quest: quest),
+||||||| e7211a7
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  GestureDetector(
+                                    onTap: model.openSuperUserSettingsDialog,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        //color: Colors.purple.withOpacity(0.2),
+                                        border: Border.all(
+                                            color: Colors.grey[600]!),
+                                      ),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: AfkCreditsText.tag(
+                                        getShortQuestType(quest?.type),
+                                      ),
+                                    ),
+                                  ),
+                                  horizontalSpaceSmall,
+                                  CreditsAmount(
+                                    amount: quest?.afkCredits ?? -1,
+                                    height: 20,
+                                  ),
+                                ],
+=======
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  GestureDetector(
+                                    onTap: model.openSuperUserSettingsDialog,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        //color: Colors.purple.withOpacity(0.2),
+                                        border: Border.all(
+                                            color: Colors.grey[600]!),
+                                      ),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: AfkCreditsText.tag(
+                                        getShortQuestType(
+                                            quest!.type! as QuestType),
+                                      ),
+                                    ),
+                                  ),
+                                  horizontalSpaceSmall,
+                                  CreditsAmount(
+                                    amount: quest.afkCredits ?? -1,
+                                    height: 20,
+                                  ),
+                                ],
+>>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
                               ),
                               if (quest != null)
                                 Padding(
@@ -149,6 +204,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                           verticalSpaceSmall,
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),
+<<<<<<< HEAD
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -168,6 +224,13 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                                 ),
                               ],
                             ),
+||||||| e7211a7
+                            child: AfkCreditsText.headingThree(
+                                quest?.name ?? "QUEST"),
+=======
+                            child: AfkCreditsText.headingThree(
+                                quest.name ?? "QUEST"),
+>>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
                           ),
                           verticalSpaceSmall,
                           if (quest != null)

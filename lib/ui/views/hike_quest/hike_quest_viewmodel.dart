@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'package:afkcredits/notifications/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
@@ -13,7 +10,6 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
-import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
@@ -22,6 +18,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:geolocator/geolocator.dart';
 
 import '../../../app/app.locator.dart';
+import '../../../exceptions/mapviewmodel_expection.dart';
 import '../../../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 
 class HikeQuestViewModel extends ActiveQuestBaseViewModel
@@ -58,6 +55,66 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     notifyListeners();
   }
 
+<<<<<<< HEAD
+||||||| e7211a7
+  void addStartMarkers({required Quest quest}) {
+    for (AFKMarker _m in quest.markers) {
+      addMarkerToMap(quest: quest, afkmarker: _m);
+    }
+    // notifyListeners();
+  }
+
+  void addMarkers({required Quest quest}) {
+    for (AFKMarker _m
+        in activeQuestService.markersToShowOnMap(questIn: quest)) {
+      if (_m != quest.startMarker) {
+        addMarkerToMap(quest: quest, afkmarker: _m);
+      }
+    }
+    // notifyListeners();
+  }
+
+  void addAreas({required Quest quest}) {
+    for (AFKMarker _m
+        in activeQuestService.markersToShowOnMap(questIn: quest)) {
+      // don't add area if it's the start marker because that is handled separately
+      if (_m != quest.startMarker) {
+        addAreaToMap(quest: quest, afkmarker: _m);
+      }
+    }
+    // notifyListeners();
+  }
+
+=======
+  void addStartMarkers({required Quest quest}) {
+    for (AFKMarker _m in quest.markers!) {
+      addMarkerToMap(quest: quest, afkmarker: _m);
+    }
+    // notifyListeners();
+  }
+
+  void addMarkers({required Quest quest}) {
+    for (AFKMarker _m
+        in activeQuestService.markersToShowOnMap(questIn: quest)) {
+      if (_m != quest.startMarker) {
+        addMarkerToMap(quest: quest, afkmarker: _m);
+      }
+    }
+    // notifyListeners();
+  }
+
+  void addAreas({required Quest quest}) {
+    for (AFKMarker _m
+        in activeQuestService.markersToShowOnMap(questIn: quest)) {
+      // don't add area if it's the start marker because that is handled separately
+      if (_m != quest.startMarker) {
+        addAreaToMap(quest: quest, afkmarker: _m);
+      }
+    }
+    // notifyListeners();
+  }
+
+>>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
   Future maybeStartQuest(
       {required Quest? quest, void Function()? onStartQuestCallback}) async {
     if (quest != null && !hasActiveQuest) {
@@ -201,6 +258,32 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     return await handleMarkerAnalysisResult(markerResult);
   }
 
+<<<<<<< HEAD
+||||||| e7211a7
+  // TODO: check if this is necessary
+  void loadQuestMarkers() {
+    log.i("Getting quest markers");
+    setBusy(true);
+    for (AFKMarker _m in activeQuest.quest.markers) {
+      addMarkerToMap(quest: activeQuest.quest, afkmarker: _m);
+    }
+    log.v('These Are the values of the current Markers $markersOnMap');
+    setBusy(false);
+  }
+
+=======
+  // TODO: check if this is necessary
+  void loadQuestMarkers() {
+    log.i("Getting quest markers");
+    setBusy(true);
+    for (AFKMarker _m in activeQuest.quest.markers!) {
+      addMarkerToMap(quest: activeQuest.quest, afkmarker: _m);
+    }
+    log.v('These Are the values of the current Markers $markersOnMap');
+    setBusy(false);
+  }
+
+>>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
   String getNumberMarkersCollectedString() {
     if (activeQuestService.hasActiveQuest) {
       // minus one because start marker is counted as collected from the start!
@@ -324,12 +407,90 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     super.resetPreviousQuest();
   }
 
+<<<<<<< HEAD
+||||||| e7211a7
+  void onMapCreated(GoogleMapController controller) async {
+    if (hasActiveQuest) {
+      setBusy(true);
+      try {
+        afkMarkersPositionsServices.startQuery(updateMarkers: _updateMarkers);
+        _googleMapController = controller;
+        // await Future.delayed(Duration(milliseconds: 50));
+        controller.setMapStyle(mapStyle);
+        // for camera position
+
+        //Add Starter Marker
+        // loadQuestMarkers();
+
+        log.v("Animating camera to quest markers");
+      } catch (error) {
+        throw MapViewModelException(
+            message: 'An error occured when creating the map',
+            devDetails: "Error message from Map View Model $error ",
+            prettyDetails:
+                "An internal error occured on our side, sorry, please try again later.");
+      }
+      setBusy(false);
+      notifyListeners();
+    } else {
+      _googleMapController = controller;
+      // await Future.delayed(Duration(milliseconds: 50));
+      controller.setMapStyle(mapStyle);
+      if (currentQuest != null) {
+        // animate camera to markers
+        animateCameraToQuestMarkers(controller);
+        if (currentQuest!.type == QuestType.QRCodeHike) {
+          showInfoWindowOfNextMarker(quest: currentQuest!);
+        }
+      }
+    }
+  }
+
+=======
+  void onMapCreated(GoogleMapController controller) async {
+    if (hasActiveQuest) {
+      setBusy(true);
+      try {
+        //afkMarkersPositionsServices.startQuery(updateMarkers: _updateMarkers);
+        _googleMapController = controller;
+        // await Future.delayed(Duration(milliseconds: 50));
+        controller.setMapStyle(mapStyle);
+        // for camera position
+
+        //Add Starter Marker
+        // loadQuestMarkers();
+
+        log.v("Animating camera to quest markers");
+      } catch (error) {
+        throw MapViewModelException(
+            message: 'An error occured when creating the map',
+            devDetails: "Error message from Map View Model $error ",
+            prettyDetails:
+                "An internal error occured on our side, sorry, please try again later.");
+      }
+      setBusy(false);
+      notifyListeners();
+    } else {
+      _googleMapController = controller;
+      // await Future.delayed(Duration(milliseconds: 50));
+      controller.setMapStyle(mapStyle);
+      if (currentQuest != null) {
+        // animate camera to markers
+        animateCameraToQuestMarkers(controller);
+        if (currentQuest!.type == QuestType.QRCodeHike) {
+          showInfoWindowOfNextMarker(quest: currentQuest!);
+        }
+      }
+    }
+  }
+
+>>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
   void showInfoWindowOfNextMarker({Quest? quest, AFKMarker? marker}) async {
     if (quest == null && marker == null) return;
     late MarkerId markerId;
     if (quest != null) {
-      if (quest.markers.length > 1) {
-        markerId = MarkerId(quest.markers[1].id);
+      if (quest.markers!.length > 1) {
+        markerId = MarkerId(quest.markers![1].id);
       }
     }
     if (marker != null) {
@@ -472,7 +633,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       required Quest? quest,
       bool isFinishMarker = false}) {
     if (hasActiveQuest) {
-      final index = activeQuest.quest.markers
+      final index = activeQuest.quest.markers!
           .indexWhere((element) => element == afkmarker);
       if (!activeQuest.markersCollected[index]) {
         if (!isFinishMarker) {
@@ -511,4 +672,67 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
   /////// New Code **************
 
+<<<<<<< HEAD
+||||||| e7211a7
+  void _updateMarkers(List<DocumentSnapshot> documentList) {
+    log.i("Harguilar Look at the list Below");
+    print(documentList);
+    //mapController.clearMarkers();
+    documentList.forEach((DocumentSnapshot document) {
+      if (document.exists) {
+        AfkMarkersPositions _afkMarkersPosition = AfkMarkersPositions.fromJson(
+            document.data() as Map<String, dynamic>);
+        /*  String? id = document.data()['documentId'].toString();
+        GeoPoint pos = document.data()['position']['geopoint'];
+        /*    GeoPoint pos = document.data['position']['geopoint'];
+      double distance = document.data['distance']; */ */
+
+        markersOnMapTesting.add(
+          Marker(
+            markerId: MarkerId(_afkMarkersPosition.documentId.toString()),
+            position: LatLng(_afkMarkersPosition.point!.latitude,
+                _afkMarkersPosition.point!.longitude),
+            icon: BitmapDescriptor.defaultMarker,
+            infoWindow: InfoWindow(
+              title: 'Magic Marker',
+            ),
+          ),
+        );
+      }
+
+      // mapController.addMarker(marker);
+    });
+  }
+=======
+/*   void _updateMarkers(List<DocumentSnapshot> documentList) {
+    log.i("Harguilar Look at the list Below");
+    print(documentList);
+    //mapController.clearMarkers();
+    documentList.forEach(
+      (DocumentSnapshot document) {
+        if (document.exists) {
+          AfkMarkersPositions _afkMarkersPosition =
+              AfkMarkersPositions.fromJson(
+                  document.data() as Map<String, dynamic>);
+
+          markersOnMapTesting.add(
+            Marker(
+              markerId: MarkerId(
+                _afkMarkersPosition.documentId.toString(),
+              ),
+              position: LatLng(_afkMarkersPosition.point!.latitude,
+                  _afkMarkersPosition.point!.longitude),
+              icon: BitmapDescriptor.defaultMarker,
+              infoWindow: InfoWindow(
+                title: 'Magic Marker',
+              ),
+            ),
+          );
+        }
+
+        // mapController.addMarker(marker);
+      },
+    );
+  } */
+>>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
 }

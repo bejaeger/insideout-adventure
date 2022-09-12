@@ -8,10 +8,16 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.form.dart';
 
-@FormView(fields: [
-  FormTextField(name: 'name'),
-  FormTextField(name: 'password'),
-])
+import 'validators.dart';
+
+@FormView(
+  fields: [
+    FormTextField(name: 'name', validator: FormValidators.nameValidator),
+    FormTextField(
+        name: 'password', validator: FormValidators.passwordValidator),
+  ],
+  autoTextFieldValidation: false,
+)
 class AddExplorerView extends StatelessWidget with $AddExplorerView {
   AddExplorerView({Key? key}) : super(key: key);
 

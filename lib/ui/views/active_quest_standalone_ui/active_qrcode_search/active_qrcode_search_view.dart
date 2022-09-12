@@ -451,7 +451,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                           child: ListView(
                                             shrinkWrap: true,
                                             children: [
-                                              ...widget.quest.markers
+                                              ...widget.quest.markers!
                                                   .map(
                                                     (e) => TextButton(
                                                       onPressed: () => model
