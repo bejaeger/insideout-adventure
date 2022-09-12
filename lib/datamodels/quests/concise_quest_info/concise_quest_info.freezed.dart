@@ -12,37 +12,12 @@ part of 'concise_quest_info.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 ConciseFinishedQuestInfo _$ConciseFinishedQuestInfoFromJson(
     Map<String, dynamic> json) {
   return _ConciseFinishedQuestInfo.fromJson(json);
 }
-
-/// @nodoc
-class _$ConciseFinishedQuestInfoTearOff {
-  const _$ConciseFinishedQuestInfoTearOff();
-
-  _ConciseFinishedQuestInfo call(
-      {required String name,
-      required QuestType type,
-      required num afkCredits,
-      required num afkCreditsEarned}) {
-    return _ConciseFinishedQuestInfo(
-      name: name,
-      type: type,
-      afkCredits: afkCredits,
-      afkCreditsEarned: afkCreditsEarned,
-    );
-  }
-
-  ConciseFinishedQuestInfo fromJson(Map<String, Object?> json) {
-    return ConciseFinishedQuestInfo.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $ConciseFinishedQuestInfo = _$ConciseFinishedQuestInfoTearOff();
 
 /// @nodoc
 mixin _$ConciseFinishedQuestInfo {
@@ -104,27 +79,28 @@ class _$ConciseFinishedQuestInfoCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$ConciseFinishedQuestInfoCopyWith<$Res>
+abstract class _$$_ConciseFinishedQuestInfoCopyWith<$Res>
     implements $ConciseFinishedQuestInfoCopyWith<$Res> {
-  factory _$ConciseFinishedQuestInfoCopyWith(_ConciseFinishedQuestInfo value,
-          $Res Function(_ConciseFinishedQuestInfo) then) =
-      __$ConciseFinishedQuestInfoCopyWithImpl<$Res>;
+  factory _$$_ConciseFinishedQuestInfoCopyWith(
+          _$_ConciseFinishedQuestInfo value,
+          $Res Function(_$_ConciseFinishedQuestInfo) then) =
+      __$$_ConciseFinishedQuestInfoCopyWithImpl<$Res>;
   @override
   $Res call(
       {String name, QuestType type, num afkCredits, num afkCreditsEarned});
 }
 
 /// @nodoc
-class __$ConciseFinishedQuestInfoCopyWithImpl<$Res>
+class __$$_ConciseFinishedQuestInfoCopyWithImpl<$Res>
     extends _$ConciseFinishedQuestInfoCopyWithImpl<$Res>
-    implements _$ConciseFinishedQuestInfoCopyWith<$Res> {
-  __$ConciseFinishedQuestInfoCopyWithImpl(_ConciseFinishedQuestInfo _value,
-      $Res Function(_ConciseFinishedQuestInfo) _then)
-      : super(_value, (v) => _then(v as _ConciseFinishedQuestInfo));
+    implements _$$_ConciseFinishedQuestInfoCopyWith<$Res> {
+  __$$_ConciseFinishedQuestInfoCopyWithImpl(_$_ConciseFinishedQuestInfo _value,
+      $Res Function(_$_ConciseFinishedQuestInfo) _then)
+      : super(_value, (v) => _then(v as _$_ConciseFinishedQuestInfo));
 
   @override
-  _ConciseFinishedQuestInfo get _value =>
-      super._value as _ConciseFinishedQuestInfo;
+  _$_ConciseFinishedQuestInfo get _value =>
+      super._value as _$_ConciseFinishedQuestInfo;
 
   @override
   $Res call({
@@ -133,7 +109,7 @@ class __$ConciseFinishedQuestInfoCopyWithImpl<$Res>
     Object? afkCredits = freezed,
     Object? afkCreditsEarned = freezed,
   }) {
-    return _then(_ConciseFinishedQuestInfo(
+    return _then(_$_ConciseFinishedQuestInfo(
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -185,7 +161,7 @@ class _$_ConciseFinishedQuestInfo implements _ConciseFinishedQuestInfo {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _ConciseFinishedQuestInfo &&
+            other is _$_ConciseFinishedQuestInfo &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.type, type) &&
             const DeepCollectionEquality()
@@ -194,6 +170,7 @@ class _$_ConciseFinishedQuestInfo implements _ConciseFinishedQuestInfo {
                 .equals(other.afkCreditsEarned, afkCreditsEarned));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -204,22 +181,24 @@ class _$_ConciseFinishedQuestInfo implements _ConciseFinishedQuestInfo {
 
   @JsonKey(ignore: true)
   @override
-  _$ConciseFinishedQuestInfoCopyWith<_ConciseFinishedQuestInfo> get copyWith =>
-      __$ConciseFinishedQuestInfoCopyWithImpl<_ConciseFinishedQuestInfo>(
-          this, _$identity);
+  _$$_ConciseFinishedQuestInfoCopyWith<_$_ConciseFinishedQuestInfo>
+      get copyWith => __$$_ConciseFinishedQuestInfoCopyWithImpl<
+          _$_ConciseFinishedQuestInfo>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ConciseFinishedQuestInfoToJson(this);
+    return _$$_ConciseFinishedQuestInfoToJson(
+      this,
+    );
   }
 }
 
 abstract class _ConciseFinishedQuestInfo implements ConciseFinishedQuestInfo {
   factory _ConciseFinishedQuestInfo(
-      {required String name,
-      required QuestType type,
-      required num afkCredits,
-      required num afkCreditsEarned}) = _$_ConciseFinishedQuestInfo;
+      {required final String name,
+      required final QuestType type,
+      required final num afkCredits,
+      required final num afkCreditsEarned}) = _$_ConciseFinishedQuestInfo;
 
   factory _ConciseFinishedQuestInfo.fromJson(Map<String, dynamic> json) =
       _$_ConciseFinishedQuestInfo.fromJson;
@@ -234,6 +213,6 @@ abstract class _ConciseFinishedQuestInfo implements ConciseFinishedQuestInfo {
   num get afkCreditsEarned;
   @override
   @JsonKey(ignore: true)
-  _$ConciseFinishedQuestInfoCopyWith<_ConciseFinishedQuestInfo> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_ConciseFinishedQuestInfoCopyWith<_$_ConciseFinishedQuestInfo>
+      get copyWith => throw _privateConstructorUsedError;
 }

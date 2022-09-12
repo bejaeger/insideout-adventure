@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'package:afkcredits/notifications/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
@@ -13,7 +10,6 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
-import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
@@ -22,6 +18,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:geolocator/geolocator.dart';
 
 import '../../../app/app.locator.dart';
+import '../../../exceptions/mapviewmodel_expection.dart';
 import '../../../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 
 class HikeQuestViewModel extends ActiveQuestBaseViewModel
@@ -76,7 +73,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
 
   void addStartMarkers({required Quest quest}) {
-    for (AFKMarker _m in quest.markers) {
+    for (AFKMarker _m in quest.markers!) {
       addMarkerToMap(quest: quest, afkmarker: _m);
     }
     // notifyListeners();
@@ -250,7 +247,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   void loadQuestMarkers() {
     log.i("Getting quest markers");
     setBusy(true);
-    for (AFKMarker _m in activeQuest.quest.markers) {
+    for (AFKMarker _m in activeQuest.quest.markers!) {
       addMarkerToMap(quest: activeQuest.quest, afkmarker: _m);
     }
     log.v('These Are the values of the current Markers $markersOnMap');
@@ -610,7 +607,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     if (hasActiveQuest) {
       setBusy(true);
       try {
-        afkMarkersPositionsServices.startQuery(updateMarkers: _updateMarkers);
+        //afkMarkersPositionsServices.startQuery(updateMarkers: _updateMarkers);
         _googleMapController = controller;
         // await Future.delayed(Duration(milliseconds: 50));
         controller.setMapStyle(mapStyle);
@@ -647,8 +644,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     if (quest == null && marker == null) return;
     late MarkerId markerId;
     if (quest != null) {
-      if (quest.markers.length > 1) {
-        markerId = MarkerId(quest.markers[1].id);
+      if (quest.markers!.length > 1) {
+        markerId = MarkerId(quest.markers![1].id);
       }
     }
     if (marker != null) {
@@ -889,7 +886,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       required Quest? quest,
       bool isFinishMarker = false}) {
     if (hasActiveQuest) {
-      final index = activeQuest.quest.markers
+      final index = activeQuest.quest.markers!
           .indexWhere((element) => element == afkmarker);
       if (!activeQuest.markersCollected[index]) {
         if (!isFinishMarker) {
@@ -928,33 +925,34 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
   /////// New Code **************
 
-  void _updateMarkers(List<DocumentSnapshot> documentList) {
+/*   void _updateMarkers(List<DocumentSnapshot> documentList) {
     log.i("Harguilar Look at the list Below");
     print(documentList);
     //mapController.clearMarkers();
-    documentList.forEach((DocumentSnapshot document) {
-      if (document.exists) {
-        AfkMarkersPositions _afkMarkersPosition = AfkMarkersPositions.fromJson(
-            document.data() as Map<String, dynamic>);
-        /*  String? id = document.data()['documentId'].toString();
-        GeoPoint pos = document.data()['position']['geopoint'];
-        /*    GeoPoint pos = document.data['position']['geopoint'];
-      double distance = document.data['distance']; */ */
+    documentList.forEach(
+      (DocumentSnapshot document) {
+        if (document.exists) {
+          AfkMarkersPositions _afkMarkersPosition =
+              AfkMarkersPositions.fromJson(
+                  document.data() as Map<String, dynamic>);
 
-        markersOnMapTesting.add(
-          Marker(
-            markerId: MarkerId(_afkMarkersPosition.documentId.toString()),
-            position: LatLng(_afkMarkersPosition.point!.latitude,
-                _afkMarkersPosition.point!.longitude),
-            icon: BitmapDescriptor.defaultMarker,
-            infoWindow: InfoWindow(
-              title: 'Magic Marker',
+          markersOnMapTesting.add(
+            Marker(
+              markerId: MarkerId(
+                _afkMarkersPosition.documentId.toString(),
+              ),
+              position: LatLng(_afkMarkersPosition.point!.latitude,
+                  _afkMarkersPosition.point!.longitude),
+              icon: BitmapDescriptor.defaultMarker,
+              infoWindow: InfoWindow(
+                title: 'Magic Marker',
+              ),
             ),
-          ),
-        );
-      }
+          );
+        }
 
-      // mapController.addMarker(marker);
-    });
-  }
+        // mapController.addMarker(marker);
+      },
+    );
+  } */
 }

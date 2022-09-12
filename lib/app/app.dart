@@ -111,6 +111,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: CloudFunctionsApi),
     LazySingleton(classType: FirebaseAuthenticationService),
+    LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: AFKMarkersPositionService),
     LazySingleton(classType: AppConfigProvider),
     LazySingleton(classType: LayoutService),

@@ -12,38 +12,11 @@ part of 'user_fav_places.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 UserFavPlaces _$UserFavPlacesFromJson(Map<String, dynamic> json) {
   return _UserFavPlaces.fromJson(json);
 }
-
-/// @nodoc
-class _$UserFavPlacesTearOff {
-  const _$UserFavPlacesTearOff();
-
-  _UserFavPlaces call(
-      {required String id,
-      String? name,
-      double? lat,
-      double? lon,
-      String? image}) {
-    return _UserFavPlaces(
-      id: id,
-      name: name,
-      lat: lat,
-      lon: lon,
-      image: image,
-    );
-  }
-
-  UserFavPlaces fromJson(Map<String, Object?> json) {
-    return UserFavPlaces.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $UserFavPlaces = _$UserFavPlacesTearOff();
 
 /// @nodoc
 mixin _$UserFavPlaces {
@@ -110,25 +83,25 @@ class _$UserFavPlacesCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$UserFavPlacesCopyWith<$Res>
+abstract class _$$_UserFavPlacesCopyWith<$Res>
     implements $UserFavPlacesCopyWith<$Res> {
-  factory _$UserFavPlacesCopyWith(
-          _UserFavPlaces value, $Res Function(_UserFavPlaces) then) =
-      __$UserFavPlacesCopyWithImpl<$Res>;
+  factory _$$_UserFavPlacesCopyWith(
+          _$_UserFavPlaces value, $Res Function(_$_UserFavPlaces) then) =
+      __$$_UserFavPlacesCopyWithImpl<$Res>;
   @override
   $Res call({String id, String? name, double? lat, double? lon, String? image});
 }
 
 /// @nodoc
-class __$UserFavPlacesCopyWithImpl<$Res>
+class __$$_UserFavPlacesCopyWithImpl<$Res>
     extends _$UserFavPlacesCopyWithImpl<$Res>
-    implements _$UserFavPlacesCopyWith<$Res> {
-  __$UserFavPlacesCopyWithImpl(
-      _UserFavPlaces _value, $Res Function(_UserFavPlaces) _then)
-      : super(_value, (v) => _then(v as _UserFavPlaces));
+    implements _$$_UserFavPlacesCopyWith<$Res> {
+  __$$_UserFavPlacesCopyWithImpl(
+      _$_UserFavPlaces _value, $Res Function(_$_UserFavPlaces) _then)
+      : super(_value, (v) => _then(v as _$_UserFavPlaces));
 
   @override
-  _UserFavPlaces get _value => super._value as _UserFavPlaces;
+  _$_UserFavPlaces get _value => super._value as _$_UserFavPlaces;
 
   @override
   $Res call({
@@ -138,7 +111,7 @@ class __$UserFavPlacesCopyWithImpl<$Res>
     Object? lon = freezed,
     Object? image = freezed,
   }) {
-    return _then(_UserFavPlaces(
+    return _then(_$_UserFavPlaces(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -192,7 +165,7 @@ class _$_UserFavPlaces implements _UserFavPlaces {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _UserFavPlaces &&
+            other is _$_UserFavPlaces &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.lat, lat) &&
@@ -200,6 +173,7 @@ class _$_UserFavPlaces implements _UserFavPlaces {
             const DeepCollectionEquality().equals(other.image, image));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -211,22 +185,24 @@ class _$_UserFavPlaces implements _UserFavPlaces {
 
   @JsonKey(ignore: true)
   @override
-  _$UserFavPlacesCopyWith<_UserFavPlaces> get copyWith =>
-      __$UserFavPlacesCopyWithImpl<_UserFavPlaces>(this, _$identity);
+  _$$_UserFavPlacesCopyWith<_$_UserFavPlaces> get copyWith =>
+      __$$_UserFavPlacesCopyWithImpl<_$_UserFavPlaces>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UserFavPlacesToJson(this);
+    return _$$_UserFavPlacesToJson(
+      this,
+    );
   }
 }
 
 abstract class _UserFavPlaces implements UserFavPlaces {
   factory _UserFavPlaces(
-      {required String id,
-      String? name,
-      double? lat,
-      double? lon,
-      String? image}) = _$_UserFavPlaces;
+      {required final String id,
+      final String? name,
+      final double? lat,
+      final double? lon,
+      final String? image}) = _$_UserFavPlaces;
 
   factory _UserFavPlaces.fromJson(Map<String, dynamic> json) =
       _$_UserFavPlaces.fromJson;
@@ -243,6 +219,6 @@ abstract class _UserFavPlaces implements UserFavPlaces {
   String? get image;
   @override
   @JsonKey(ignore: true)
-  _$UserFavPlacesCopyWith<_UserFavPlaces> get copyWith =>
+  _$$_UserFavPlacesCopyWith<_$_UserFavPlaces> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -8,10 +8,16 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.form.dart';
 
-@FormView(fields: [
-  FormTextField(name: 'name'),
-  FormTextField(name: 'password'),
-])
+import 'validators.dart';
+
+@FormView(
+  fields: [
+    FormTextField(name: 'name', validator: FormValidators.nameValidator),
+    FormTextField(
+        name: 'password', validator: FormValidators.passwordValidator),
+  ],
+  autoTextFieldValidation: false,
+)
 class AddExplorerView extends StatelessWidget with $AddExplorerView {
   AddExplorerView({Key? key}) : super(key: key);
 
@@ -36,6 +42,11 @@ class AddExplorerView extends StatelessWidget with $AddExplorerView {
                       placeholder: 'Name',
                       controller: nameController,
                     ),
+                    if (model.hasNameValidationMessage)
+                      Text(
+                        model.nameValidationMessage!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
                     verticalSpaceMedium,
                     AfkCreditsInputField(
                       placeholder: 'Password',
@@ -50,6 +61,11 @@ class AddExplorerView extends StatelessWidget with $AddExplorerView {
                             : Icon(Icons.visibility_off, color: kcPrimaryColor),
                       ),
                     ),
+                    if (model.hasPasswordValidationMessage)
+                      Text(
+                        model.passwordValidationMessage!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
                   ],
                 ),
                 verticalSpaceLarge,

@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable, unnecessary_statements
 
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
+import '../../../../data/app_strings.dart';
+import '../../add_explorer/validators.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
 
@@ -18,9 +19,22 @@ final circularBorder = OutlineInputBorder(
 
 @FormView(
   fields: [
-    FormTextField(name: 'name'),
+    FormTextField(
+      name: 'name',
+      initialValue: "Quest Name",
+      validator: FormValidators.nameValidator,
+    ),
     FormTextField(name: 'description'),
     FormTextField(name: 'afkCreditAmount'),
+    FormDropdownField(
+      name: 'questType',
+      items: [
+        StaticDropdownItem(
+          title: 'QuestType',
+          value: 'QuestTypeDr',
+        ),
+      ],
+    )
     //FormTextField(name: 'markerNotes'),
   ],
 )
@@ -34,71 +48,74 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateQuestViewModel>.reactive(
-        onModelReady: (model) {
-          if (model.getCurrentPostion == null) model.setPosition();
-          listenToFormUpdated(model);
-        },
-        viewModelBuilder: () => CreateQuestViewModel(),
-        // onModelReady: (model) => listenToFormUpdated(model),
-        builder: (context, model, child) {
-          print("===================================");
-          print(model.pageIndex);
-          return SafeArea(
-            child: Scaffold(
-              //resizeToAvoidBottomInset: true,
-              resizeToAvoidBottomInset: false,
-              appBar: CustomAppBar(
-                title: "Create Quest",
-                onBackButton: () => model.onBackButton(controller),
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: BottomFloatingActionButtons(
-                swapButtons: true,
-                onTapSecondary: () => model.onNextButton(controller),
-                titleSecondary:
-                    model.pageIndex == 1 ? "Create Quest" : "Next \u2192",
-                onTapMain: model.pageIndex == 1
-                    ? () {
-                        model.pageIndex = model.pageIndex - 1;
-                        controller.previousPage(
-                            duration: Duration(milliseconds: 200),
-                            curve: Curves.easeIn);
-                        model.notifyListeners();
-                      }
-                    : () {
-                        {
-                          model.resetMarkersValues();
-                          model.navBackToPreviousView();
-                        }
-                      },
-                titleMain: model.pageIndex == 1 ? "Back" : "Cancel",
-              ),
-              body: PageView(
-                controller: controller,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  QuestCardList(
-                    model: model,
-                    nameController: nameController,
-                    descriptionController: descriptionController,
-                    afkCreditAmountController: afkCreditAmountController,
-                  ),
-                  ChooseMarkersView(
-                    model: model,
-                    nameController: nameController,
-                    descriptionController: descriptionController,
-                    afkCreditAmountController: afkCreditAmountController,
-                  ),
-                  CreditsSelection(
-                    model: model,
-                    afkCreditAmountController: afkCreditAmountController,
-                  ),
-                ],
-              ),
+      onModelReady: (model) {
+        model.getCurrentPostion ?? model.setPosition();
+        //if (model.getCurrentPostion == null) model.setPosition();
+        listenToFormUpdated(model);
+      },
+      viewModelBuilder: () => CreateQuestViewModel(),
+      onDispose: (model) => disposeForm(),
+      // onModelReady: (model) => listenToFormUpdated(model),
+      builder: (context, model, child) {
+        print("===================================");
+        print(model.pageIndex);
+        return SafeArea(
+          child: Scaffold(
+            //resizeToAvoidBottomInset: true,
+            resizeToAvoidBottomInset: false,
+            appBar: CustomAppBar(
+              title: "Create Quest",
+              onBackButton: () => model.onBackButton(controller),
             ),
-          );
-        });
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: BottomFloatingActionButtons(
+              swapButtons: true,
+              onTapSecondary: () => model.onNextButton(controller),
+              titleSecondary:
+                  model.pageIndex == 1 ? "Create Quest" : "Next \u2192",
+              onTapMain: model.pageIndex == 1
+                  ? () {
+                      model.pageIndex = model.pageIndex - 1;
+                      controller.previousPage(
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.easeIn);
+                      model.notifyListeners();
+                    }
+                  : () {
+                      {
+                        model.resetMarkersValues();
+                        model.navBackToPreviousView();
+                      }
+                    },
+              titleMain: model.pageIndex == 1 ? "Back" : "Cancel",
+            ),
+            body: PageView(
+              controller: controller,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                QuestCardList(
+                  model: model,
+                  nameController: nameController,
+                  descriptionController: descriptionController,
+                  afkCreditAmountController: afkCreditAmountController,
+                ),
+                ChooseMarkersView(
+                  model: model,
+                  nameController: nameController,
+                  descriptionController: descriptionController,
+                  afkCreditAmountController: afkCreditAmountController,
+                ),
+                CreditsSelection(
+                  model: model,
+                  afkCreditAmountController: afkCreditAmountController,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 

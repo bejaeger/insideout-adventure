@@ -128,13 +128,14 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                                       ),
                                       padding: const EdgeInsets.all(8.0),
                                       child: AfkCreditsText.tag(
-                                        getShortQuestType(quest?.type),
+                                        getShortQuestType(
+                                            quest!.type! as QuestType),
                                       ),
                                     ),
                                   ),
                                   horizontalSpaceSmall,
                                   CreditsAmount(
-                                    amount: quest?.afkCredits ?? -1,
+                                    amount: quest.afkCredits ?? -1,
                                     height: 20,
                                   ),
                                 ],
@@ -158,7 +159,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),
                             child: AfkCreditsText.headingThree(
-                                quest?.name ?? "QUEST"),
+                                quest.name ?? "QUEST"),
                           ),
                           verticalSpaceSmall,
                           if (quest != null)

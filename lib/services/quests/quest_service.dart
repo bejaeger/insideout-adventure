@@ -33,16 +33,17 @@ class QuestService with ReactiveServiceMixin {
   Quest? get getQuestToUpdate => _questToUpdate;
 
   bool sortedNearbyQuests = false;
+  // List<String> allQuestTypes = [];
   List<QuestType> allQuestTypes = [];
 
   void setQuestToUpdate({required Quest quest}) {
-    if (quest.id.isNotEmpty) {
+    if (quest.id!.isNotEmpty) {
       _questToUpdate = quest;
     }
   }
 
   Future<void> updateQuestData({required Quest quest}) async {
-    if (quest.id.isNotEmpty) {
+    if (quest.id!.isNotEmpty) {
       await _firestoreApi.updateQuestData(quest: quest);
     } else {
       log.wtf('You cannot provide me, an Empty Quest ID: ${quest.id}');
@@ -114,18 +115,19 @@ class QuestService with ReactiveServiceMixin {
       {required List<String> sponsorIds, bool force = false}) async {
     if (_nearbyQuests.isEmpty || force) {
       // TODO: In the future retrieve only nearby quests
-      _nearbyQuests = await _firestoreApi.getNearbyQuests(
+      _nearbyQuests = await _firestoreApi.getNearbyQuests();
+      /*  _nearbyQuests = await _firestoreApi.getNearbyQuests(
           pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
-          sponsorIds: sponsorIds);
+          sponsorIds: sponsorIds); */
       log.i("Found ${_nearbyQuests.length} nearby quests.");
     } else {
       log.i("Quests already loaded.");
     }
   }
 
-  Stream<List<AFKQuest>> loadNearbyAFKQuests() {
+  Future<List<AFKQuest>> loadNearbyAFKQuests() async {
     // TODO: In the future retrieve only nearby quests
-    return _firestoreApi.downloadNearbyAfkQuests();
+    return await _firestoreApi.downloadNearbyAfkQuests();
   }
 
   List<Quest> extractQuestsOfType(
@@ -147,7 +149,7 @@ class QuestService with ReactiveServiceMixin {
     if (_nearbyQuests.isNotEmpty) {
       for (Quest _q in _nearbyQuests) {
         if (!allQuestTypes.any((element) => element == _q.type)) {
-          allQuestTypes.add(_q.type);
+          allQuestTypes.add(_q.type as QuestType);
         }
       }
     } else {
@@ -195,7 +197,7 @@ class QuestService with ReactiveServiceMixin {
 
   Future<bool> createQuest({required Quest quest}) async {
     //TODO: Refactor this code.
-    if (quest.id.isNotEmpty) {
+    if (quest.id!.isNotEmpty) {
       return await _firestoreApi.createQuest(quest: quest);
     }
     return false;

@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List<Quest> getDummyQuests() {
@@ -19,15 +20,17 @@ List<Quest> getDummyQuests() {
     // seeparkSpielplatz(),
     // getDummyVibrationSearchQuestHeuweiler(),
     // getQrCodeHuntJaeger(),
-    // getQrCodeHuntJaeger2(),
+    getQrCodeHuntJaeger2(),
     // streeth11th2ndVibration(),
     // getDummyVibrationSearchQuestFreiburg(),
+    getDummyQuest1(),
+    getDummyVibrationSearchQuest(),
     getDistanceEstimate200(),
     getDistanceEstimate500(),
     getDistanceEstimate1000(),
     // getDistanceEstimate2000(),
-    // getDummyQuest1(),
-    // getDummyQuest3(),
+    //getDummyQuest1(),
+    getDummyQuest3(),
     // getDummyQuest5(),
     // getDummyQuest6(),
   ];
@@ -66,6 +69,7 @@ List<ScreenTimeSession> getDummyScreenTimes({required String uid}) {
 
 // burnaby quest
 Quest getDummyQuest1() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "D1qn76RJwqDlcbtcKaLm",
     name: "Grouse Grind",
@@ -77,66 +81,91 @@ Quest getDummyQuest1() {
       getDummyMarker3(),
       getDummyMarker4()
     ],
-    type: QuestType.QRCodeHike,
+    type: QuestType.QRCodeHike.toSimpleString(),
     startMarker: getDummyMarker1(),
     finishMarker: getDummyMarker2(),
+    location: geo.point(
+      latitude: 49.32738998905981,
+      longitude: -123.05923572987633,
+    ),
   );
 }
 
 // Distance Estimate
 Quest getDistanceEstimate200() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "sANrbvqSYZJX8IS1CCKL",
     name: "Distance Estimate 200m",
     description: "Estimate 200m",
     afkCredits: 20,
     markers: [],
-    type: QuestType.DistanceEstimate,
+    type: QuestType.DistanceEstimate.toSimpleString(),
     distanceToTravelInMeter: 200,
+    location: geo.point(
+      latitude: 49.32738998905994,
+      longitude: -123.05923572987650,
+    ),
   );
 }
 
 // Distance Estimate
 Quest getDistanceEstimate500() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "E46GBs5XcGwGHeSmCMSh",
     name: "Distance Estimate 500m",
     description: "Estimate 500m",
     afkCredits: 20,
     markers: [],
-    type: QuestType.DistanceEstimate,
+    type: QuestType.DistanceEstimate.toSimpleString(),
     distanceToTravelInMeter: 500,
+    location: geo.point(
+      latitude: 49.32738998905999,
+      longitude: -123.05923572987680,
+    ),
   );
 }
 
 // Distance Estimate
 Quest getDistanceEstimate1000() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "Sg9NFY1sReWmiL2t1Ks9",
     name: "Distance Estimate 1km",
     description: "Estimate 1km",
     afkCredits: 20,
     markers: [],
-    type: QuestType.DistanceEstimate,
+    type: QuestType.DistanceEstimate.toSimpleString(),
     distanceToTravelInMeter: 1000,
+    location: geo.point(
+      latitude: 49.32738998905336,
+      longitude: -123.05923572987790,
+    ),
   );
 }
 
 // Distance Estimate
 Quest getDistanceEstimate2000() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "kFMNafSAwBJA8DKLX275",
     name: "Distance Estimate 2km",
     description: "Estimate 2km",
     afkCredits: 999999999,
     markers: [],
-    type: QuestType.DistanceEstimate,
+    type: QuestType.DistanceEstimate.toSimpleString(),
     distanceToTravelInMeter: 2000,
+    location: geo.point(
+      latitude: 49.32738998905336,
+      longitude: -123.05923572987790,
+    ),
   );
 }
 
 // burnaby quest
 Quest getDummyVibrationSearchQuest() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "VibrationSearch",
     name: "Woodway Vibrations",
@@ -146,13 +175,19 @@ Quest getDummyVibrationSearchQuest() {
       woodwayInFrontMarker(),
       myRoomParkSiteMarker(),
     ],
-    type: QuestType.TreasureLocationSearch,
+    type: QuestType.TreasureLocationSearch.toSimpleString(),
     startMarker: woodwayInFrontMarker(),
     finishMarker: myRoomParkSiteMarker(),
+    location: geo.point(
+      latitude: 49.2673185626,
+      longitude: -122.9901804,
+    ),
   );
 }
 
 Quest getDummyVibrationSearchQuestFreiburg() {
+  Geoflutterfire geo = Geoflutterfire();
+
   return Quest(
     id: "BYC9JvJaz64vMmyuV2Cc",
     name: "Freiburg Location Search",
@@ -162,55 +197,77 @@ Quest getDummyVibrationSearchQuestFreiburg() {
       freiburg1(),
       freiburg2(),
     ],
-    type: QuestType.TreasureLocationSearch,
+    type: QuestType.TreasureLocationSearch.toSimpleString(),
     startMarker: freiburg1(),
     finishMarker: freiburg2(),
+    location: geo.point(
+      latitude: 48.01397259778941,
+      longitude: 7.854593947833285,
+    ),
   );
 }
 
 // burnaby quest
 Quest streeth11th2ndVibration() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
       id: "aeyLAC1r0OsnA0IBj6uT",
       name: "10th Street Fun!",
       description: "Find the AFK Credits",
       afkCredits: 10,
       markers: [street11th2nd(), street11th2ndEnd()],
-      type: QuestType.TreasureLocationSearch,
+      type: QuestType.TreasureLocationSearch.toSimpleString(),
       startMarker: street11th2nd(),
-      finishMarker: street11th2ndEnd());
+      finishMarker: street11th2ndEnd(),
+      location: geo.point(
+        latitude: 49.22308671447031,
+        longitude: -122.92246584976317,
+      ));
 }
 
 // burnaby quest
 Quest heidachTrohpy() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
-      id: "JxoJaX3QNKHmE8pTwIWl",
-      name: "Finde den Schatz im Heidach",
-      description:
-          "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
-      afkCredits: 30,
-      markers: [heidach1(), heidach2()],
-      type: QuestType.TreasureLocationSearch,
-      startMarker: heidach1(),
-      finishMarker: heidach2());
+    id: "JxoJaX3QNKHmE8pTwIWl",
+    name: "Finde den Schatz im Heidach",
+    description:
+        "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
+    afkCredits: 30,
+    markers: [heidach1(), heidach2()],
+    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    startMarker: heidach1(),
+    finishMarker: heidach2(),
+    location: geo.point(
+      latitude: 48.06808982011085,
+      longitude: 7.905153161233762,
+    ),
+  );
 }
 
 // burnaby quest
 Quest heidachTrohpy2() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
-      id: "CIwxujQ9zSyu2ZFlvv7h",
-      name: "Finde den Heidach 2 Schatz",
-      description:
-          "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
-      afkCredits: 50,
-      markers: [heidach3(), heidach4()],
-      type: QuestType.TreasureLocationSearch,
-      startMarker: heidach3(),
-      finishMarker: heidach4());
+    id: "CIwxujQ9zSyu2ZFlvv7h",
+    name: "Finde den Heidach 2 Schatz",
+    description:
+        "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
+    afkCredits: 50,
+    markers: [heidach3(), heidach4()],
+    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    startMarker: heidach3(),
+    finishMarker: heidach4(),
+    location: geo.point(
+      latitude: 48.068605211860955,
+      longitude: 7.904684129866282,
+    ),
+  );
 }
 
 // Angola quest
 Quest getDummyQuest2() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "QuestId02",
     name: "Angola Adventure",
@@ -223,14 +280,19 @@ Quest getDummyQuest2() {
       getDummyMarker8(),
       getDummyMarker9()
     ],
-    type: QuestType.QRCodeHike,
+    type: QuestType.QRCodeHike.toSimpleString(),
     startMarker: getDummyMarker5(),
     finishMarker: getDummyMarker9(),
+    location: geo.point(
+      latitude: -8.816743732957665,
+      longitude: 13.241324424548074,
+    ),
   );
 }
 
 // Angola quest
 Quest getDummyQuest3() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "tagiVjLVAUr8r3fPMqba",
     name: "Fun at Brentwood",
@@ -245,14 +307,19 @@ Quest getDummyQuest3() {
       woodwayMarker5(),
       woodwayMarker6(),
     ],
-    type: QuestType.QRCodeHike,
+    type: QuestType.QRCodeHike.toSimpleString(),
     startMarker: woodwayMarker1(),
     finishMarker: woodwayMarker6(),
+    location: geo.point(
+      latitude: 49.267442,
+      longitude: -122.990101,
+    ),
   );
 }
 
 // Angola quest
 Quest getDummyQuest4() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "QuestId04",
     name: "Woodway Adventures",
@@ -264,13 +331,18 @@ Quest getDummyQuest4() {
       intimateWoodwayMarker3(),
       intimateWoodwayMarker4(),
     ],
-    type: QuestType.QRCodeHike,
+    type: QuestType.QRCodeHike.toSimpleString(),
     startMarker: intimateWoodwayMarker1(),
     finishMarker: intimateWoodwayMarker4(),
+    location: geo.point(
+      latitude: 49.266586,
+      longitude: -122.990129,
+    ),
   );
 }
 
 Quest getQrCodeHuntJaeger() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "aHynXLPBE68rxe3Y083L",
     name: "Versteckter Schatz bei Jägers!",
@@ -293,13 +365,18 @@ Quest getQrCodeHuntJaeger() {
       starenweg3(),
     ],
     // TODO: QRCodeHuntIndoor
-    type: QuestType.QRCodeHunt,
+    type: QuestType.QRCodeHunt.toSimpleString(),
     startMarker: starenweg1(),
     finishMarker: starenweg3(),
+    location: geo.point(
+      latitude: -8.816743732957665,
+      longitude: 13.241324424548074,
+    ),
   );
 }
 
 Quest getQrCodeHuntJaeger2() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "aHynXLPBE68rxe3Y083Lblubb",
     name: "Second treasure hunt",
@@ -316,9 +393,13 @@ Quest getQrCodeHuntJaeger2() {
       starenweg1(),
     ],
     // TODO: QRCodeHuntIndoor
-    type: QuestType.GPSAreaHunt,
+    type: QuestType.GPSAreaHunt.toSimpleString(),
     startMarker: heidach2(),
     finishMarker: starenweg1(),
+    location: geo.point(
+      latitude: 48.06701330843975,
+      longitude: 7.903736956224777,
+    ),
   );
 }
 
@@ -342,6 +423,7 @@ Quest getQrCodeHuntJaeger2() {
 
 // Angola quest
 Quest getDummyQuest5() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "LSwSs2c6ZtVKk23qyWxD",
     name: "Party at Mine!",
@@ -350,13 +432,16 @@ Quest getDummyQuest5() {
     markers: [
       myRoomMarker(),
     ],
-    type: QuestType.QRCodeHike,
+    type: QuestType.QRCodeHike.toSimpleString(),
     startMarker: myRoomMarker(),
     finishMarker: myRoomMarker(),
+    location: geo.point(latitude: 49.267408282, longitude: -122.9905778),
   );
 }
 
 Quest getDummyQuest6() {
+  Geoflutterfire geo = Geoflutterfire();
+
   return Quest(
     id: "nJiVPrgw2jcGrxoABCBW",
     name: "Starenweg Hike!",
@@ -367,13 +452,18 @@ Quest getDummyQuest6() {
       heidach2(),
       heidach4(),
     ],
-    type: QuestType.QRCodeHike,
+    type: QuestType.QRCodeHike.toSimpleString(),
     startMarker: starenweg4(),
     finishMarker: heidach4(),
+    location: geo.point(
+      latitude: 48.06831568327273,
+      longitude: 7.904892787613575,
+    ),
   );
 }
 
 Quest starenWegNoListener() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
     id: "nJiVPrgw2jcGrxoABCBW",
     name: "Starenweg Hike No Listener!",
@@ -384,13 +474,19 @@ Quest starenWegNoListener() {
       heidach2(),
       starenweg4(),
     ],
-    type: QuestType.GPSAreaHike,
+    type: QuestType.GPSAreaHike.toSimpleString(),
     startMarker: heidach4(),
     finishMarker: starenweg4(),
+    location: geo.point(
+      latitude: 48.06814470824551,
+      longitude: 7.906736569916654,
+    ),
   );
 }
 
 Quest getZaehringenHike() {
+  Geoflutterfire geo = Geoflutterfire();
+
   return Quest(
     id: "unknown",
     name: "Zähringen GPS Area Hike!",
@@ -401,9 +497,13 @@ Quest getZaehringenHike() {
       freiburg2(),
       freiburg3(),
     ],
-    type: QuestType.GPSAreaHike,
+    type: QuestType.GPSAreaHike.toSimpleString(),
     startMarker: freiburg1(),
     finishMarker: freiburg3(),
+    location: geo.point(
+      latitude: 48.01397259778941,
+      longitude: 7.854593947833285,
+    ),
   );
 }
 
@@ -822,18 +922,25 @@ AFKMarker belekLocSearch() {
 
 // burnaby quest
 Quest getDummyVibrationSearchQuestHeuweiler() {
+  Geoflutterfire geo = Geoflutterfire();
+
   return Quest(
-      id: "860CQjbdDk0Pggj3NgBv",
-      name: "Heuweiler Trophy Search!",
-      description: "Find the Trophy Hidden in Heuweiler Best Town!",
-      afkCredits: 30,
-      markers: [
-        belekLocSearch1(),
-        belekLocSearch(),
-      ],
-      type: QuestType.TreasureLocationSearch,
-      startMarker: belekLocSearch1(),
-      finishMarker: belekLocSearch());
+    id: "860CQjbdDk0Pggj3NgBv",
+    name: "Heuweiler Trophy Search!",
+    description: "Find the Trophy Hidden in Heuweiler Best Town!",
+    afkCredits: 30,
+    markers: [
+      belekLocSearch1(),
+      belekLocSearch(),
+    ],
+    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    startMarker: belekLocSearch1(),
+    finishMarker: belekLocSearch(),
+    location: geo.point(
+      latitude: 48.050260829411386,
+      longitude: 7.9010928692091635,
+    ),
+  );
 }
 
 AFKMarker heidach1() {
@@ -910,40 +1017,60 @@ AFKMarker heidach4() {
 }
 
 Quest commercialTrophy() {
+  Geoflutterfire geo = Geoflutterfire();
   return Quest(
-      id: "Yz4HrA4AKxI2mHYmi4lt",
-      name: "Find the biggest secret of commercial drive!",
-      description:
-          "Learn how to enjoy life by finding the treasure at commercial drive",
-      afkCredits: 30,
-      markers: [commercial1(), commercial2()],
-      type: QuestType.TreasureLocationSearch,
-      startMarker: commercial1(),
-      finishMarker: commercial2());
+    id: "Yz4HrA4AKxI2mHYmi4lt",
+    name: "Find the biggest secret of commercial drive!",
+    description:
+        "Learn how to enjoy life by finding the treasure at commercial drive",
+    afkCredits: 30,
+    markers: [commercial1(), commercial2()],
+    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    startMarker: commercial1(),
+    finishMarker: commercial2(),
+    location: geo.point(
+      latitude: 49.273658969631974,
+      longitude: -123.0705730554199,
+    ),
+  );
 }
 
 Quest seeparkSpielplatz() {
+  Geoflutterfire geo = Geoflutterfire();
+
   return Quest(
-      id: "Unknown",
-      name: "Finde den Spielplatz!",
-      description: "Im Seepark",
-      afkCredits: 50,
-      markers: [seepark1(), seepark2()],
-      type: QuestType.TreasureLocationSearch,
-      startMarker: seepark1(),
-      finishMarker: seepark2());
+    id: "Unknown",
+    name: "Finde den Spielplatz!",
+    description: "Im Seepark",
+    afkCredits: 50,
+    markers: [seepark1(), seepark2()],
+    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    startMarker: seepark1(),
+    finishMarker: seepark2(),
+    location: geo.point(
+      latitude: 48.012339128991236,
+      longitude: 7.823210791204063,
+    ),
+  );
 }
 
 Quest manu() {
+  Geoflutterfire geo = Geoflutterfire();
+
   return Quest(
-      id: "Unknown",
-      name: "Finde Manu!",
-      description: "Im Seepark",
-      afkCredits: 50,
-      markers: [manu1(), manu2()],
-      type: QuestType.TreasureLocationSearch,
-      startMarker: manu1(),
-      finishMarker: manu2());
+    id: "Unknown",
+    name: "Finde Manu!",
+    description: "Im Seepark",
+    afkCredits: 50,
+    markers: [manu1(), manu2()],
+    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    startMarker: manu1(),
+    finishMarker: manu2(),
+    location: geo.point(
+      latitude: 48.01085711811334,
+      longitude: 7.809597253462515,
+    ),
+  );
 }
 
 AFKMarker commercial1() {

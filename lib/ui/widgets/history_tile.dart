@@ -3,14 +3,14 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:afkcredits_ui/src/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class HistoryTile extends StatelessWidget {
   final bool screenTime;
   final String name;
   final int? minutes;
-  final QuestType? questType;
+  //final QuestType? questType;
+  final String? questType;
   final DateTime date;
   final num? credits;
   final bool showCredits;
@@ -118,7 +118,9 @@ class HistoryTile extends StatelessWidget {
                             ],
                           ),
                           AfkCreditsText.caption(
-                              "Activity: " + getShortQuestType(questType!)),
+                            "Activity: " +
+                                getShortQuestType(questType as QuestType),
+                          ),
                         ],
                       )
 

@@ -1,6 +1,5 @@
 import 'package:afkcredits/enums/marker_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 
 part 'afk_marker.freezed.dart';
 part 'afk_marker.g.dart';
@@ -13,13 +12,14 @@ class AFKMarker with _$AFKMarker {
     double? lat,
     double? lon,
     @Default(MarkerStatus.testing) MarkerStatus markerStatus,
+    @Default(0) int repeatable,
   }) = _AFKMarker;
 
   factory AFKMarker.fromJson(Map<String, dynamic> json) =>
       _$AFKMarkerFromJson(json);
 }
 
-class AfkMarkersPositions {
+/* class AfkMarkersPositions {
   String? documentId;
   GeoFirePoint? point;
   // GeoPoint? point;
@@ -43,4 +43,4 @@ class AfkMarkersPositions {
     data['point'] = this.point!.data;
     return data;
   }
-}
+} */

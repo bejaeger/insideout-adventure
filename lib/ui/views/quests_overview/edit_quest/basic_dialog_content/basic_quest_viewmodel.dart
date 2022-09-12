@@ -34,7 +34,7 @@ class BasicQuestViewModel extends FormViewModel with NavigationMixin {
     //TODO: DO the Provisioning regarding empty data with.
     await _questService.updateQuestData(quest: quest);
     //_log.i("This is the Actual Quest: " + nameValue.toString());
-    _log.i("This is the Actual Quest: " + quest.id);
+    _log.i("This is the Actual Quest: " + quest.id!);
     displaySnackBars.snackBarUpdateQuest(quest: quest);
     // await Future.delayed(const Duration(seconds: 11), () {
     //   this.navToAddGiftCard();

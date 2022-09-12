@@ -12,24 +12,7 @@ part of 'money_transfer_status_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$MoneyTransferStatusModelTearOff {
-  const _$MoneyTransferStatusModelTearOff();
-
-  _MoneyTransferStatusModel call(
-      {required Future<TransferDialogStatus> futureStatus,
-      required TransferType type}) {
-    return _MoneyTransferStatusModel(
-      futureStatus: futureStatus,
-      type: type,
-    );
-  }
-}
-
-/// @nodoc
-const $MoneyTransferStatusModel = _$MoneyTransferStatusModelTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$MoneyTransferStatusModel {
@@ -78,33 +61,34 @@ class _$MoneyTransferStatusModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$MoneyTransferStatusModelCopyWith<$Res>
+abstract class _$$_MoneyTransferStatusModelCopyWith<$Res>
     implements $MoneyTransferStatusModelCopyWith<$Res> {
-  factory _$MoneyTransferStatusModelCopyWith(_MoneyTransferStatusModel value,
-          $Res Function(_MoneyTransferStatusModel) then) =
-      __$MoneyTransferStatusModelCopyWithImpl<$Res>;
+  factory _$$_MoneyTransferStatusModelCopyWith(
+          _$_MoneyTransferStatusModel value,
+          $Res Function(_$_MoneyTransferStatusModel) then) =
+      __$$_MoneyTransferStatusModelCopyWithImpl<$Res>;
   @override
   $Res call({Future<TransferDialogStatus> futureStatus, TransferType type});
 }
 
 /// @nodoc
-class __$MoneyTransferStatusModelCopyWithImpl<$Res>
+class __$$_MoneyTransferStatusModelCopyWithImpl<$Res>
     extends _$MoneyTransferStatusModelCopyWithImpl<$Res>
-    implements _$MoneyTransferStatusModelCopyWith<$Res> {
-  __$MoneyTransferStatusModelCopyWithImpl(_MoneyTransferStatusModel _value,
-      $Res Function(_MoneyTransferStatusModel) _then)
-      : super(_value, (v) => _then(v as _MoneyTransferStatusModel));
+    implements _$$_MoneyTransferStatusModelCopyWith<$Res> {
+  __$$_MoneyTransferStatusModelCopyWithImpl(_$_MoneyTransferStatusModel _value,
+      $Res Function(_$_MoneyTransferStatusModel) _then)
+      : super(_value, (v) => _then(v as _$_MoneyTransferStatusModel));
 
   @override
-  _MoneyTransferStatusModel get _value =>
-      super._value as _MoneyTransferStatusModel;
+  _$_MoneyTransferStatusModel get _value =>
+      super._value as _$_MoneyTransferStatusModel;
 
   @override
   $Res call({
     Object? futureStatus = freezed,
     Object? type = freezed,
   }) {
-    return _then(_MoneyTransferStatusModel(
+    return _then(_$_MoneyTransferStatusModel(
       futureStatus: futureStatus == freezed
           ? _value.futureStatus
           : futureStatus // ignore: cast_nullable_to_non_nullable
@@ -136,7 +120,7 @@ class _$_MoneyTransferStatusModel implements _MoneyTransferStatusModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _MoneyTransferStatusModel &&
+            other is _$_MoneyTransferStatusModel &&
             const DeepCollectionEquality()
                 .equals(other.futureStatus, futureStatus) &&
             const DeepCollectionEquality().equals(other.type, type));
@@ -150,15 +134,15 @@ class _$_MoneyTransferStatusModel implements _MoneyTransferStatusModel {
 
   @JsonKey(ignore: true)
   @override
-  _$MoneyTransferStatusModelCopyWith<_MoneyTransferStatusModel> get copyWith =>
-      __$MoneyTransferStatusModelCopyWithImpl<_MoneyTransferStatusModel>(
-          this, _$identity);
+  _$$_MoneyTransferStatusModelCopyWith<_$_MoneyTransferStatusModel>
+      get copyWith => __$$_MoneyTransferStatusModelCopyWithImpl<
+          _$_MoneyTransferStatusModel>(this, _$identity);
 }
 
 abstract class _MoneyTransferStatusModel implements MoneyTransferStatusModel {
   factory _MoneyTransferStatusModel(
-      {required Future<TransferDialogStatus> futureStatus,
-      required TransferType type}) = _$_MoneyTransferStatusModel;
+      {required final Future<TransferDialogStatus> futureStatus,
+      required final TransferType type}) = _$_MoneyTransferStatusModel;
 
   @override
   Future<TransferDialogStatus> get futureStatus;
@@ -166,6 +150,6 @@ abstract class _MoneyTransferStatusModel implements MoneyTransferStatusModel {
   TransferType get type;
   @override
   @JsonKey(ignore: true)
-  _$MoneyTransferStatusModelCopyWith<_MoneyTransferStatusModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_MoneyTransferStatusModelCopyWith<_$_MoneyTransferStatusModel>
+      get copyWith => throw _privateConstructorUsedError;
 }

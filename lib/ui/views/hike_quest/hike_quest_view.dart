@@ -162,20 +162,21 @@ class _HikeQuestViewState extends State<HikeQuestView>
                                               : Container(
                                                   color: Colors.white,
                                                   child: NotCloseToQuestNote(
-                                                      questType:
-                                                          widget.quest.type,
-                                                      animateCameraToUserPosition:
-                                                          () => model
-                                                              .animateToUserPosition(
-                                                                  model
-                                                                      .getGoogleMapController),
-                                                      animateCameraToQuestMarkers:
-                                                          () {
-                                                        model.animateCameraToQuestMarkers(
-                                                            model
-                                                                .getGoogleMapController,
-                                                            delay: 0);
-                                                      }),
+                                                    questType:
+                                                        widget.quest.type,
+                                                    animateCameraToUserPosition:
+                                                        () => model
+                                                            .animateToUserPosition(
+                                                                model
+                                                                    .getGoogleMapController),
+                                                    animateCameraToQuestMarkers:
+                                                        () {
+                                                      model.animateCameraToQuestMarkers(
+                                                          model
+                                                              .getGoogleMapController,
+                                                          delay: 0);
+                                                    },
+                                                  ),
                                                 ),
                                         ),
                                         IgnorePointer(

@@ -12,36 +12,11 @@ part of 'marker_note.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 MarkerNote _$MarkerNoteFromJson(Map<String, dynamic> json) {
   return _MarkerNote.fromJson(json);
 }
-
-/// @nodoc
-class _$MarkerNoteTearOff {
-  const _$MarkerNoteTearOff();
-
-  _MarkerNote call(
-      {required String note,
-      String? imagePath,
-      String? solution,
-      String? clue}) {
-    return _MarkerNote(
-      note: note,
-      imagePath: imagePath,
-      solution: solution,
-      clue: clue,
-    );
-  }
-
-  MarkerNote fromJson(Map<String, Object?> json) {
-    return MarkerNote.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $MarkerNote = _$MarkerNoteTearOff();
 
 /// @nodoc
 mixin _$MarkerNote {
@@ -101,23 +76,24 @@ class _$MarkerNoteCopyWithImpl<$Res> implements $MarkerNoteCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$MarkerNoteCopyWith<$Res> implements $MarkerNoteCopyWith<$Res> {
-  factory _$MarkerNoteCopyWith(
-          _MarkerNote value, $Res Function(_MarkerNote) then) =
-      __$MarkerNoteCopyWithImpl<$Res>;
+abstract class _$$_MarkerNoteCopyWith<$Res>
+    implements $MarkerNoteCopyWith<$Res> {
+  factory _$$_MarkerNoteCopyWith(
+          _$_MarkerNote value, $Res Function(_$_MarkerNote) then) =
+      __$$_MarkerNoteCopyWithImpl<$Res>;
   @override
   $Res call({String note, String? imagePath, String? solution, String? clue});
 }
 
 /// @nodoc
-class __$MarkerNoteCopyWithImpl<$Res> extends _$MarkerNoteCopyWithImpl<$Res>
-    implements _$MarkerNoteCopyWith<$Res> {
-  __$MarkerNoteCopyWithImpl(
-      _MarkerNote _value, $Res Function(_MarkerNote) _then)
-      : super(_value, (v) => _then(v as _MarkerNote));
+class __$$_MarkerNoteCopyWithImpl<$Res> extends _$MarkerNoteCopyWithImpl<$Res>
+    implements _$$_MarkerNoteCopyWith<$Res> {
+  __$$_MarkerNoteCopyWithImpl(
+      _$_MarkerNote _value, $Res Function(_$_MarkerNote) _then)
+      : super(_value, (v) => _then(v as _$_MarkerNote));
 
   @override
-  _MarkerNote get _value => super._value as _MarkerNote;
+  _$_MarkerNote get _value => super._value as _$_MarkerNote;
 
   @override
   $Res call({
@@ -126,7 +102,7 @@ class __$MarkerNoteCopyWithImpl<$Res> extends _$MarkerNoteCopyWithImpl<$Res>
     Object? solution = freezed,
     Object? clue = freezed,
   }) {
-    return _then(_MarkerNote(
+    return _then(_$_MarkerNote(
       note: note == freezed
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
@@ -161,7 +137,8 @@ class _$_MarkerNote implements _MarkerNote {
   final String? imagePath;
   @override
   final String? solution;
-  @override //
+//
+  @override
   final String? clue;
 
   @override
@@ -173,13 +150,14 @@ class _$_MarkerNote implements _MarkerNote {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _MarkerNote &&
+            other is _$_MarkerNote &&
             const DeepCollectionEquality().equals(other.note, note) &&
             const DeepCollectionEquality().equals(other.imagePath, imagePath) &&
             const DeepCollectionEquality().equals(other.solution, solution) &&
             const DeepCollectionEquality().equals(other.clue, clue));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -190,21 +168,23 @@ class _$_MarkerNote implements _MarkerNote {
 
   @JsonKey(ignore: true)
   @override
-  _$MarkerNoteCopyWith<_MarkerNote> get copyWith =>
-      __$MarkerNoteCopyWithImpl<_MarkerNote>(this, _$identity);
+  _$$_MarkerNoteCopyWith<_$_MarkerNote> get copyWith =>
+      __$$_MarkerNoteCopyWithImpl<_$_MarkerNote>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MarkerNoteToJson(this);
+    return _$$_MarkerNoteToJson(
+      this,
+    );
   }
 }
 
 abstract class _MarkerNote implements MarkerNote {
   factory _MarkerNote(
-      {required String note,
-      String? imagePath,
-      String? solution,
-      String? clue}) = _$_MarkerNote;
+      {required final String note,
+      final String? imagePath,
+      final String? solution,
+      final String? clue}) = _$_MarkerNote;
 
   factory _MarkerNote.fromJson(Map<String, dynamic> json) =
       _$_MarkerNote.fromJson;
@@ -219,6 +199,6 @@ abstract class _MarkerNote implements MarkerNote {
   String? get clue;
   @override
   @JsonKey(ignore: true)
-  _$MarkerNoteCopyWith<_MarkerNote> get copyWith =>
+  _$$_MarkerNoteCopyWith<_$_MarkerNote> get copyWith =>
       throw _privateConstructorUsedError;
 }

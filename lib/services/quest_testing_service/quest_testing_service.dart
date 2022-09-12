@@ -144,7 +144,7 @@ class QuestTestingService {
       _questName = activatedQuest.quest.name;
     }
     if (activatedQuest != null) {
-      _questCategory = describeEnum(activatedQuest.quest.type).toString();
+      _questCategory = describeEnum(activatedQuest.quest.type!).toString();
     }
     if (user != null) {
       _currentUserName = user.fullName;

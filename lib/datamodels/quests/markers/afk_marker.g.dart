@@ -14,6 +14,7 @@ _$_AFKMarker _$$_AFKMarkerFromJson(Map<String, dynamic> json) => _$_AFKMarker(
       markerStatus:
           $enumDecodeNullable(_$MarkerStatusEnumMap, json['markerStatus']) ??
               MarkerStatus.testing,
+      repeatable: json['repeatable'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_AFKMarkerToJson(_$_AFKMarker instance) =>
@@ -22,7 +23,8 @@ Map<String, dynamic> _$$_AFKMarkerToJson(_$_AFKMarker instance) =>
       'qrCodeId': instance.qrCodeId,
       'lat': instance.lat,
       'lon': instance.lon,
-      'markerStatus': _$MarkerStatusEnumMap[instance.markerStatus],
+      'markerStatus': _$MarkerStatusEnumMap[instance.markerStatus]!,
+      'repeatable': instance.repeatable,
     };
 
 const _$MarkerStatusEnumMap = {

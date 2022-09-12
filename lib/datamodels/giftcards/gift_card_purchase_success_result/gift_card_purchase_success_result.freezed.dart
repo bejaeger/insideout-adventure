@@ -12,32 +12,12 @@ part of 'gift_card_purchase_success_result.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 GiftCardPurchaseSuccessResult _$GiftCardPurchaseSuccessResultFromJson(
     Map<String, dynamic> json) {
   return _GiftCardPurchaseSuccessResult.fromJson(json);
 }
-
-/// @nodoc
-class _$GiftCardPurchaseSuccessResultTearOff {
-  const _$GiftCardPurchaseSuccessResultTearOff();
-
-  _GiftCardPurchaseSuccessResult call(
-      {required String transferId, required bool needToProvideGiftCard}) {
-    return _GiftCardPurchaseSuccessResult(
-      transferId: transferId,
-      needToProvideGiftCard: needToProvideGiftCard,
-    );
-  }
-
-  GiftCardPurchaseSuccessResult fromJson(Map<String, Object?> json) {
-    return GiftCardPurchaseSuccessResult.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $GiftCardPurchaseSuccessResult = _$GiftCardPurchaseSuccessResultTearOff();
 
 /// @nodoc
 mixin _$GiftCardPurchaseSuccessResult {
@@ -87,35 +67,35 @@ class _$GiftCardPurchaseSuccessResultCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$GiftCardPurchaseSuccessResultCopyWith<$Res>
+abstract class _$$_GiftCardPurchaseSuccessResultCopyWith<$Res>
     implements $GiftCardPurchaseSuccessResultCopyWith<$Res> {
-  factory _$GiftCardPurchaseSuccessResultCopyWith(
-          _GiftCardPurchaseSuccessResult value,
-          $Res Function(_GiftCardPurchaseSuccessResult) then) =
-      __$GiftCardPurchaseSuccessResultCopyWithImpl<$Res>;
+  factory _$$_GiftCardPurchaseSuccessResultCopyWith(
+          _$_GiftCardPurchaseSuccessResult value,
+          $Res Function(_$_GiftCardPurchaseSuccessResult) then) =
+      __$$_GiftCardPurchaseSuccessResultCopyWithImpl<$Res>;
   @override
   $Res call({String transferId, bool needToProvideGiftCard});
 }
 
 /// @nodoc
-class __$GiftCardPurchaseSuccessResultCopyWithImpl<$Res>
+class __$$_GiftCardPurchaseSuccessResultCopyWithImpl<$Res>
     extends _$GiftCardPurchaseSuccessResultCopyWithImpl<$Res>
-    implements _$GiftCardPurchaseSuccessResultCopyWith<$Res> {
-  __$GiftCardPurchaseSuccessResultCopyWithImpl(
-      _GiftCardPurchaseSuccessResult _value,
-      $Res Function(_GiftCardPurchaseSuccessResult) _then)
-      : super(_value, (v) => _then(v as _GiftCardPurchaseSuccessResult));
+    implements _$$_GiftCardPurchaseSuccessResultCopyWith<$Res> {
+  __$$_GiftCardPurchaseSuccessResultCopyWithImpl(
+      _$_GiftCardPurchaseSuccessResult _value,
+      $Res Function(_$_GiftCardPurchaseSuccessResult) _then)
+      : super(_value, (v) => _then(v as _$_GiftCardPurchaseSuccessResult));
 
   @override
-  _GiftCardPurchaseSuccessResult get _value =>
-      super._value as _GiftCardPurchaseSuccessResult;
+  _$_GiftCardPurchaseSuccessResult get _value =>
+      super._value as _$_GiftCardPurchaseSuccessResult;
 
   @override
   $Res call({
     Object? transferId = freezed,
     Object? needToProvideGiftCard = freezed,
   }) {
-    return _then(_GiftCardPurchaseSuccessResult(
+    return _then(_$_GiftCardPurchaseSuccessResult(
       transferId: transferId == freezed
           ? _value.transferId
           : transferId // ignore: cast_nullable_to_non_nullable
@@ -153,13 +133,14 @@ class _$_GiftCardPurchaseSuccessResult
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _GiftCardPurchaseSuccessResult &&
+            other is _$_GiftCardPurchaseSuccessResult &&
             const DeepCollectionEquality()
                 .equals(other.transferId, transferId) &&
             const DeepCollectionEquality()
                 .equals(other.needToProvideGiftCard, needToProvideGiftCard));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -168,21 +149,24 @@ class _$_GiftCardPurchaseSuccessResult
 
   @JsonKey(ignore: true)
   @override
-  _$GiftCardPurchaseSuccessResultCopyWith<_GiftCardPurchaseSuccessResult>
-      get copyWith => __$GiftCardPurchaseSuccessResultCopyWithImpl<
-          _GiftCardPurchaseSuccessResult>(this, _$identity);
+  _$$_GiftCardPurchaseSuccessResultCopyWith<_$_GiftCardPurchaseSuccessResult>
+      get copyWith => __$$_GiftCardPurchaseSuccessResultCopyWithImpl<
+          _$_GiftCardPurchaseSuccessResult>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_GiftCardPurchaseSuccessResultToJson(this);
+    return _$$_GiftCardPurchaseSuccessResultToJson(
+      this,
+    );
   }
 }
 
 abstract class _GiftCardPurchaseSuccessResult
     implements GiftCardPurchaseSuccessResult {
   factory _GiftCardPurchaseSuccessResult(
-      {required String transferId,
-      required bool needToProvideGiftCard}) = _$_GiftCardPurchaseSuccessResult;
+          {required final String transferId,
+          required final bool needToProvideGiftCard}) =
+      _$_GiftCardPurchaseSuccessResult;
 
   factory _GiftCardPurchaseSuccessResult.fromJson(Map<String, dynamic> json) =
       _$_GiftCardPurchaseSuccessResult.fromJson;
@@ -193,6 +177,6 @@ abstract class _GiftCardPurchaseSuccessResult
   bool get needToProvideGiftCard;
   @override
   @JsonKey(ignore: true)
-  _$GiftCardPurchaseSuccessResultCopyWith<_GiftCardPurchaseSuccessResult>
+  _$$_GiftCardPurchaseSuccessResultCopyWith<_$_GiftCardPurchaseSuccessResult>
       get copyWith => throw _privateConstructorUsedError;
 }

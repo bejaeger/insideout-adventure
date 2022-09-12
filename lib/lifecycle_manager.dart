@@ -28,7 +28,7 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     servicesToManage.add(() {
       if (!_questTestingService.isRecordingLocationData) {
         return locator<GeolocationService>();
@@ -42,7 +42,7 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   @override
   void dispose() {
     super.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override

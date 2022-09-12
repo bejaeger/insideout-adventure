@@ -10,7 +10,7 @@ const String WarningNotNearbyMarker =
 
 const String WarningScannedMarkerAlreadyCollected =
     "Your scanned marker has already been collected.";
-
+//Changed the Parameter from QuestType To String?
 String getShortQuestType(QuestType? type) {
   if (type == null) return "Unknown";
   if (type == QuestType.GPSAreaHike) {

@@ -7,8 +7,6 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
@@ -86,7 +84,7 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
     }
   }
 
-  Future getDistancesToStartOfQuests() async {
+/*   Future getDistancesToStartOfQuests() async {
     if (nearbyQuests.isNotEmpty) {
       log.i("Check distances for current quest list");
 
@@ -107,7 +105,7 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
     }
     log.i("Notify listeners");
     notifyListeners();
-  }
+  } */
 
   Future onQuestInListTapped(Quest quest) async {
     if (hasActiveQuest == false) {

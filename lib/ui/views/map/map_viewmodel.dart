@@ -8,7 +8,6 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
@@ -357,8 +356,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
           }
           if (result?.confirmed == true || isAvatarView) {
             // showQuestDetails
-            if (quest.type == QuestType.GPSAreaHike ||
-                quest.type == QuestType.GPSAreaHunt) {
+            if (quest.type == QuestType.GPSAreaHike.toSimpleString() ||
+                quest.type == QuestType.GPSAreaHunt.toSimpleString()) {
               onGPSAreaQuestMarkerTap(afkmarker.lat, afkmarker.lon, quest);
             } else {
               animateToQuestDetails(quest: quest);
@@ -366,7 +365,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
           }
         } else {
           // information dialogs
-          if (quest.type != QuestType.QRCodeHike) {
+          if (quest.type != QuestType.QRCodeHike.toSimpleString()) {
             dialogService.showDialog(
                 title: "Checkpoint",
                 description: "Start the quest and reach this checkpoint.");

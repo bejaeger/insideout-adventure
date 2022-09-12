@@ -467,12 +467,14 @@ class UserService {
     if (_currentUserStreamSubscription == null) {
       Stream<User> userStream =
           _firestoreApi.getUserStream(uid: currentUser.uid);
-      _currentUserStreamSubscription = userStream.listen((user) async {
-        _currentUser = user;
-        if (callback != null) {
-          callback();
-        }
-      });
+      _currentUserStreamSubscription = userStream.listen(
+        (user) async {
+          _currentUser = user;
+          if (callback != null) {
+            callback();
+          }
+        },
+      );
     } else {
       log.w("Already listening to current User document");
     }

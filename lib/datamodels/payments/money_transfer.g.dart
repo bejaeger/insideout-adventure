@@ -22,8 +22,8 @@ Map<String, dynamic> _$$_MoneyTransferToJson(_$_MoneyTransfer instance) =>
     <String, dynamic>{
       'transferDetails': instance.transferDetails.toJson(),
       'createdAt': instance.createdAt,
-      'status': _$TransferStatusEnumMap[instance.status],
-      'type': _$TransferTypeEnumMap[instance.type],
+      'status': _$TransferStatusEnumMap[instance.status]!,
+      'type': _$TransferTypeEnumMap[instance.type]!,
       'transferId': instance.transferId,
     };
 

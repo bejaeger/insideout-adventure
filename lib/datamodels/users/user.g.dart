@@ -33,7 +33,7 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'email': instance.email,
       'sponsorIds': instance.sponsorIds,
       'explorerIds': instance.explorerIds,
-      'role': _$UserRoleEnumMap[instance.role],
+      'role': _$UserRoleEnumMap[instance.role]!,
       'authMethod': _$AuthenticationMethodEnumMap[instance.authMethod],
       'newUser': instance.newUser,
       'fullNameSearch': User._checkIfKeywordsAreSet(instance.fullNameSearch),

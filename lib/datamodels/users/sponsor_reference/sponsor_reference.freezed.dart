@@ -12,34 +12,11 @@ part of 'sponsor_reference.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 SponsorReference _$SponsorReferenceFromJson(Map<String, dynamic> json) {
   return _SponsorReference.fromJson(json);
 }
-
-/// @nodoc
-class _$SponsorReferenceTearOff {
-  const _$SponsorReferenceTearOff();
-
-  _SponsorReference call(
-      {required String uid,
-      AuthenticationMethod? authMethod,
-      required bool withPasscode}) {
-    return _SponsorReference(
-      uid: uid,
-      authMethod: authMethod,
-      withPasscode: withPasscode,
-    );
-  }
-
-  SponsorReference fromJson(Map<String, Object?> json) {
-    return SponsorReference.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $SponsorReference = _$SponsorReferenceTearOff();
 
 /// @nodoc
 mixin _$SponsorReference {
@@ -94,25 +71,25 @@ class _$SponsorReferenceCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$SponsorReferenceCopyWith<$Res>
+abstract class _$$_SponsorReferenceCopyWith<$Res>
     implements $SponsorReferenceCopyWith<$Res> {
-  factory _$SponsorReferenceCopyWith(
-          _SponsorReference value, $Res Function(_SponsorReference) then) =
-      __$SponsorReferenceCopyWithImpl<$Res>;
+  factory _$$_SponsorReferenceCopyWith(
+          _$_SponsorReference value, $Res Function(_$_SponsorReference) then) =
+      __$$_SponsorReferenceCopyWithImpl<$Res>;
   @override
   $Res call({String uid, AuthenticationMethod? authMethod, bool withPasscode});
 }
 
 /// @nodoc
-class __$SponsorReferenceCopyWithImpl<$Res>
+class __$$_SponsorReferenceCopyWithImpl<$Res>
     extends _$SponsorReferenceCopyWithImpl<$Res>
-    implements _$SponsorReferenceCopyWith<$Res> {
-  __$SponsorReferenceCopyWithImpl(
-      _SponsorReference _value, $Res Function(_SponsorReference) _then)
-      : super(_value, (v) => _then(v as _SponsorReference));
+    implements _$$_SponsorReferenceCopyWith<$Res> {
+  __$$_SponsorReferenceCopyWithImpl(
+      _$_SponsorReference _value, $Res Function(_$_SponsorReference) _then)
+      : super(_value, (v) => _then(v as _$_SponsorReference));
 
   @override
-  _SponsorReference get _value => super._value as _SponsorReference;
+  _$_SponsorReference get _value => super._value as _$_SponsorReference;
 
   @override
   $Res call({
@@ -120,7 +97,7 @@ class __$SponsorReferenceCopyWithImpl<$Res>
     Object? authMethod = freezed,
     Object? withPasscode = freezed,
   }) {
-    return _then(_SponsorReference(
+    return _then(_$_SponsorReference(
       uid: uid == freezed
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
@@ -162,7 +139,7 @@ class _$_SponsorReference implements _SponsorReference {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _SponsorReference &&
+            other is _$_SponsorReference &&
             const DeepCollectionEquality().equals(other.uid, uid) &&
             const DeepCollectionEquality()
                 .equals(other.authMethod, authMethod) &&
@@ -170,6 +147,7 @@ class _$_SponsorReference implements _SponsorReference {
                 .equals(other.withPasscode, withPasscode));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -179,20 +157,22 @@ class _$_SponsorReference implements _SponsorReference {
 
   @JsonKey(ignore: true)
   @override
-  _$SponsorReferenceCopyWith<_SponsorReference> get copyWith =>
-      __$SponsorReferenceCopyWithImpl<_SponsorReference>(this, _$identity);
+  _$$_SponsorReferenceCopyWith<_$_SponsorReference> get copyWith =>
+      __$$_SponsorReferenceCopyWithImpl<_$_SponsorReference>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_SponsorReferenceToJson(this);
+    return _$$_SponsorReferenceToJson(
+      this,
+    );
   }
 }
 
 abstract class _SponsorReference implements SponsorReference {
   factory _SponsorReference(
-      {required String uid,
-      AuthenticationMethod? authMethod,
-      required bool withPasscode}) = _$_SponsorReference;
+      {required final String uid,
+      final AuthenticationMethod? authMethod,
+      required final bool withPasscode}) = _$_SponsorReference;
 
   factory _SponsorReference.fromJson(Map<String, dynamic> json) =
       _$_SponsorReference.fromJson;
@@ -205,6 +185,6 @@ abstract class _SponsorReference implements SponsorReference {
   bool get withPasscode;
   @override
   @JsonKey(ignore: true)
-  _$SponsorReferenceCopyWith<_SponsorReference> get copyWith =>
+  _$$_SponsorReferenceCopyWith<_$_SponsorReference> get copyWith =>
       throw _privateConstructorUsedError;
 }

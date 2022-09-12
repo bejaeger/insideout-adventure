@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
@@ -40,15 +38,19 @@ class NotificationController {
   }
 
   Future<void> initializeNotificationsEventListeners() async {
-    AwesomeNotifications().displayedStream.listen((notification) async {
-      // if a scheduled notification is shown, we can remove the permanent notifications!
-      if (notification.channelKey == kScheduledNotificationChannelKey) {
-        AwesomeNotifications()
-            .dismissNotificationsByChannelKey(kPermanentNotificationKey);
-        await Future.delayed(Duration(milliseconds: 500));
-        _screenTimeService.handleScreenTimeOverEvent();
-      }
-    });
+/*     AwesomeNotifications().displayedStream.listen(
+      (notification) async {
+        // if a scheduled notification is shown, we can remove the permanent notifications!
+        if (notification.channelKey == kScheduledNotificationChannelKey) {
+          AwesomeNotifications()
+              .dismissNotificationsByChannelKey(kPermanentNotificationKey);
+          await Future.delayed(
+            Duration(milliseconds: 500),
+          );
+          _screenTimeService.handleScreenTimeOverEvent();
+        }
+      },
+    ); */
   }
 
   // this code is needed for new version of awesome notifications
