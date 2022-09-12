@@ -3,6 +3,7 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
@@ -64,6 +65,20 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
                 data.startedAt.toDate().add(Duration(minutes: data.minutes))),
       );
     }
+  }
+
+  void showExplainCreditConversionDialog() async {
+    await dialogService.showCustomDialog(
+      variant: DialogType.CreditConversionInfo,
+      barrierDismissible: true,
+    );
+  }
+
+  void showChildStatDetailsDialog() async {
+    await dialogService.showCustomDialog(
+        variant: DialogType.ChildStatCard,
+        data: stats,
+        barrierDismissible: true);
   }
 
   Future navigateToAddFundsView() async {

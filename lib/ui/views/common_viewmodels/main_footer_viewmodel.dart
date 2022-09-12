@@ -13,6 +13,17 @@ class MainFooterViewModel extends BaseModel {
     });
   }
 
+  void handleLogoutEvent() async {
+    final result = await dialogService.showDialog(
+        title: "Sure",
+        description: "Are you sure you want to logout?",
+        buttonTitle: "YES",
+        cancelTitle: "NO");
+    if (result?.confirmed == true) {
+      logout();
+    }
+  }
+
   // //------------------------------------------------------------
   // // Reactive Service Mixin Functionality from stacked ReactiveViewModel!
   // late List<ReactiveServiceMixin> _reactiveServices;

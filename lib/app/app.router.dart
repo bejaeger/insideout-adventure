@@ -33,6 +33,7 @@ import '../ui/views/ar_view/ar_object_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
+import '../ui/views/feedback_view/feedback_view.dart';
 import '../ui/views/history_and_achievements/history_and_achievements_view.dart';
 import '../ui/views/layout/bottom_bar_layout_view.dart';
 import '../ui/views/login/login_view.dart';
@@ -96,6 +97,7 @@ class Routes {
   static const String singleQuestTypeView = '/single-quest-type-view';
   static const String onBoardingScreensView = '/on-boarding-screens-view';
   static const String parentMapView = '/parent-map-view';
+  static const String feedbackView = '/feedback-view';
   static const all = <String>{
     parentHomeView,
     singleMarkerView,
@@ -131,6 +133,7 @@ class Routes {
     singleQuestTypeView,
     onBoardingScreensView,
     parentMapView,
+    feedbackView,
   };
 }
 
@@ -176,6 +179,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
     RouteDef(Routes.onBoardingScreensView, page: OnBoardingScreensView),
     RouteDef(Routes.parentMapView, page: ParentMapView),
+    RouteDef(Routes.feedbackView, page: FeedbackView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -475,6 +479,15 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    FeedbackView: (data) {
+      var args = data.getArgs<FeedbackViewArguments>(
+        orElse: () => FeedbackViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => FeedbackView(key: args.key),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -630,6 +643,12 @@ class SingleQuestTypeViewArguments {
   final Quest? quest;
   final QuestType? questType;
   SingleQuestTypeViewArguments({this.key, required this.quest, this.questType});
+}
+
+/// FeedbackView arguments holder class
+class FeedbackViewArguments {
+  final Key? key;
+  FeedbackViewArguments({this.key});
 }
 
 /// ************************************************************************
@@ -1252,6 +1271,24 @@ extension NavigatorStateExtension on NavigationService {
   }) async {
     return navigateTo(
       Routes.parentMapView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToFeedbackView({
+    Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.feedbackView,
+      arguments: FeedbackViewArguments(key: key),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

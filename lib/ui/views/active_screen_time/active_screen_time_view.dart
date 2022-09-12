@@ -52,14 +52,12 @@ class ActiveScreenTimeView extends StatelessWidget {
                               ScreenTimeSessionStatus.active)
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    AfkCreditsText.headingOne(""),
-                                    AfkCreditsText.headingTwo(
-                                        "Active Screen Time"),
                                     GestureDetector(
                                       onTap: () {
                                         if (model.justStartedScreenTime) {
@@ -68,18 +66,30 @@ class ActiveScreenTimeView extends StatelessWidget {
                                         }
                                         model.popView();
                                       },
-                                      child: Icon(Icons.keyboard_arrow_down,
-                                          size: 30),
-                                    )
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(Icons.close, size: 30),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: AfkCreditsText.headingTwo(
+                                          "Active Screen Time"),
+                                    ),
                                   ],
                                 ),
-                                AfkCreditsText.body(model.childName == ""
-                                    ? model.currentUser.role == UserRole.sponsor
-                                        ? ""
-                                        : "You are using screen time"
-                                    : model.childName +
-                                        " is using screen time"),
                                 verticalSpaceLarge,
+                                Center(
+                                  child: AfkCreditsText.subheadingItalic(
+                                      model.childName == ""
+                                          ? model.currentUser.role ==
+                                                  UserRole.sponsor
+                                              ? ""
+                                              : "Woop woop, enjoy time on the screen!"
+                                          : model.childName +
+                                              " is using screen time",
+                                      align: TextAlign.center),
+                                ),
+                                verticalSpaceSmall,
                                 // if (model.currentUser.createdByUserWithId !=
                                 //     null)
                                 //   SwitchToParentsAreaButton(
@@ -89,8 +99,11 @@ class ActiveScreenTimeView extends StatelessWidget {
                                 //         model.isFadingOutQuestDetails,
                                 //   ),
                                 verticalSpaceMedium,
-                                AfkCreditsText.subheading(
-                                  "Time left",
+                                Align(
+                                  child: AfkCreditsText.subheading(
+                                    "Time left",
+                                    //align: TextAlign.center,
+                                  ),
                                 ),
                                 verticalSpaceTiny,
                                 Row(

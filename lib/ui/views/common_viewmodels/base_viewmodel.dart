@@ -83,8 +83,13 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
 
+  // -----------------------------------------------
   // gamification system
-  int get currentLevel => gamificationService.getCurrentLevel();
+  int currentLevel({num? lifetimeEarnings}) {
+    return gamificationService.getCurrentLevel(
+        lifetimeEarnings: lifetimeEarnings);
+  }
+
   int get creditsToNextLevel => gamificationService.getCreditsToNextLevel();
   int get creditsForNextLevel => gamificationService.getCreditsForNextLevel();
   double get percentageOfNextLevel =>

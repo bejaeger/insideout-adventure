@@ -4,6 +4,7 @@ import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
@@ -44,11 +45,18 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   String? nameInputValidationMessage;
   String? questTypeInputValidationMessage;
   String? afkMarkersInputValidationMessage;
+  num? screenTimeEquivalent;
 
   List<String>? markerIds = [];
   @override
   void setFormStatus() {
     _log.i('Set the Form With Data: $formValueMap');
+    if (afkCreditAmountValue != null && afkCreditAmountValue != "") {
+      if (isValidUserInputs(credits: true)) {
+        num tmpamount = int.parse(afkCreditAmountValue!);
+        screenTimeEquivalent = creditsToScreenTime(tmpamount);
+      }
+    }
     if (nameValue?.isEmpty ?? true) {
       setValidationMessage('You Must Give a Value into this field');
     }
@@ -248,8 +256,10 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       setBusy(true);
       await Future.delayed(Duration(milliseconds: 1000));
       addMarkerOnMap(
-          pos: LatLng(startMarker.lat!, startMarker.lon!),
-          number: 0); // number 0 gets green marker!
+        pos: LatLng(startMarker.lat!, startMarker.lon!),
+        number: 0,
+        questType: selectedQuestType,
+      ); // number 0 gets green marker!
       notifyListeners();
       await Future.delayed(Duration(milliseconds: 500));
       creatingQuest = false;
@@ -321,16 +331,24 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
         .round();
   }
 
-  void showCreditsSuggestionDialog() {
+  void showCreditsSuggestionDialog() async {
     double totalDistanceInMeter = getTotalDistanceOfMarkers();
     int durationQuestInMinutes = getExpectedDurationOfQuestInMinutes(
         distanceMarkers: totalDistanceInMeter);
     int recommendedCredits =
         getRecommendedCredits(durationQuestInMinutes: durationQuestInMinutes);
-    _dialogService.showDialog(
+    final response = await _dialogService.showDialog(
         title: "Recommendation",
         description:
-            "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${creditsToScreenTime(recommendedCredits)} min screen time.");
+            "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${creditsToScreenTime(recommendedCredits)} min screen time.",
+        cancelTitle: "Learn more",
+        cancelTitleColor: kcOrange);
+    if (response?.confirmed == false) {
+      await _dialogService.showCustomDialog(
+        variant: DialogType.CreditConversionInfo,
+        barrierDismissible: true,
+      );
+    }
   }
 
   void resetValidationMessages() {

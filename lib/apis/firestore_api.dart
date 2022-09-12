@@ -3,6 +3,8 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
+import 'package:afkcredits/datamodels/feedback/feedback.dart';
+import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
@@ -806,6 +808,46 @@ class FirestoreApi {
     }
   }
 
+  ///////////////////////////////////////////////
+  /// Feedback
+  ///
+  Future uploadFeedback(
+      {required Feedback feedback, String? feedbackDocumentKey}) async {
+    log.i("Uploading feedback document");
+    DocumentReference ref =
+        createFeedbackDocument(feedbackDocumentKey: feedbackDocumentKey);
+    await ref.set(feedback.toJson());
+  }
+
+  Future<FeedbackCampaignInfo> getFeedbackCampaignInfo() async {
+    final feedback =
+        await feedbackCollection.doc(feedbackCampaignInfoDocumentKey).get();
+    if (feedback.exists) {
+      try {
+        return FeedbackCampaignInfo.fromJson(
+            feedback.data() as Map<String, dynamic>);
+      } catch (error) {
+        log.wtf(
+            'Failed to get feedback campaign info doc. Probably the document first needs to be created.');
+        throw FirestoreApiException(
+          message: 'Failed to get feedback campaign info doc',
+          devDetails:
+              'Probably the document first needs to be created. Error: $error',
+        );
+      }
+    } else {
+      log.wtf("Failed to get feedback info doc. Creating it now!");
+      DocumentReference ref =
+          feedbackCollection.doc(feedbackCampaignInfoDocumentKey);
+      FeedbackCampaignInfo returnVal = FeedbackCampaignInfo(
+          currentCampaign: generalFeedbackDocumentKey,
+          questions: [],
+          surveyUrl: "");
+      await ref.set(returnVal.toJson());
+      return returnVal;
+    }
+  }
+
   ////////////////////////////////////////////////////////
   // Gift Cards functions (DEPRECATED)
   //
@@ -1006,12 +1048,33 @@ class FirestoreApi {
       "afkCreditsBalance": FieldValue.increment(deltaCredits),
     });
   }
+
+  Future changeTotalScreenTime(
+      {required String uid, required num deltaScreenTime}) async {
+    await getUserSummaryStatisticsDocument(uid: uid).update({
+      "totalScreenTime": FieldValue.increment(deltaScreenTime),
+    });
+  }
 }
 
 /////////////////////////////////////////////////////////
 // Collection's getter
 DocumentReference getUserStatisticsCollection({required String uid}) {
   return usersCollection.doc(uid).collection(userStatisticsCollectionKey).doc();
+}
+
+DocumentReference createFeedbackDocument({String? feedbackDocumentKey}) {
+  if (feedbackDocumentKey == null) {
+    return feedbackCollection
+        .doc(generalFeedbackDocumentKey)
+        .collection(feedbackCollectionKey)
+        .doc();
+  } else {
+    return feedbackCollection
+        .doc(feedbackDocumentKey)
+        .collection(feedbackCollectionKey)
+        .doc();
+  }
 }
 
 DocumentReference getUserSummaryStatisticsDocument({required String uid}) {

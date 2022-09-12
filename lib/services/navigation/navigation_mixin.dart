@@ -74,6 +74,10 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.onBoardingScreensView);
   }
 
+  void navToFeedbackView() {
+    _navigationService.navigateTo(Routes.feedbackView);
+  }
+
   void replaceWithExplorerHomeView() {
     _navigationService.replaceWith(
       Routes.explorerHomeView,

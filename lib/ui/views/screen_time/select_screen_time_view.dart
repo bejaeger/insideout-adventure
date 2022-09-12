@@ -18,6 +18,7 @@ class SelectScreenTimeView extends StatelessWidget {
       viewModelBuilder: () => SelectScreenTimeViewModel(childId: childId),
       builder: (context, model, child) {
         return MainPage(
+          showBackButton: !model.isParentAccount,
           child: Container(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -26,9 +27,29 @@ class SelectScreenTimeView extends StatelessWidget {
                   top: 40,
                   bottom: kBottomBackButtonPadding + 20),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AfkCreditsText.headingOne("Screen time"),
+                  // AfkCreditsText.headingOne("Screen time"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (model.isParentAccount)
+                        GestureDetector(
+                          onTap: () {
+                            model.popView();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(Icons.close, size: 30),
+                          ),
+                        ),
+                      Expanded(
+                        child: AfkCreditsText.headingTwo("Select screen time",
+                            align: TextAlign.center),
+                      ),
+                    ],
+                  ),
+
                   verticalSpaceMedium,
                   verticalSpaceSmall,
                   AfkCreditsText.subheading("Total available"),
@@ -48,9 +69,11 @@ class SelectScreenTimeView extends StatelessWidget {
                           model.afkCreditsBalance.toStringAsFixed(0)),
                       horizontalSpaceSmall,
                       Icon(Icons.arrow_forward, size: 25),
-                      horizontalSpaceTiny,
-                      Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
-                      horizontalSpaceTiny,
+                      horizontalSpaceSmall,
+                      //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
+                      Image.asset(kScreenTimeIcon,
+                          height: 30, color: kcScreenTimeBlue),
+                      horizontalSpaceSmall,
                       // Lottie.network(
                       //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
                       //     height: 40),

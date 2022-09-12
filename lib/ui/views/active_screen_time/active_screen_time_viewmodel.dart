@@ -123,7 +123,7 @@ class ActiveScreenTimeViewModel extends BaseModel {
       snackbarService.showSnackbar(
         title: snackBarTitle,
         message: snackBarMsg,
-        duration: Duration(seconds: 1),
+        duration: Duration(seconds: 2),
       );
     }
   }

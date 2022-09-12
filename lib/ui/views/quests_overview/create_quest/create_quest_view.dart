@@ -6,6 +6,7 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
+import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -435,32 +436,52 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                 IconButton(
                     padding: const EdgeInsets.all(0.0),
                     alignment: Alignment.centerLeft,
+                    color: kcPrimaryColor,
                     onPressed: model.showCreditsSuggestionDialog,
                     icon: Icon(Icons.info_outline)),
               ],
             ),
             verticalSpaceMedium,
-            Container(
-              width: 140,
-              child: model.creatingQuest
-                  ? SizedBox(height: 0, width: 0)
-                  : AfkCreditsInputField(
-                      style: heading3Style,
-                      leading: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Image.asset(kAFKCreditsLogoPath, height: 10),
+            model.creatingQuest
+                ? SizedBox(height: 0, width: 0)
+                : Row(
+                    children: [
+                      Container(
+                        width: screenWidth(context, percentage: 0.35),
+                        child: AfkCreditsInputField(
+                          //focusNode: amountFocusNode,
+                          controller: afkCreditAmountController,
+                          style: heading3Style,
+                          leading: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Image.asset(kAFKCreditsLogoPath, height: 10),
+                          ),
+                          autofocus: true,
+                          //placeholder: 'Amount',
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          errorText: model.afkCreditsInputValidationMessage,
+                        ),
                       ),
-                      autofocus:
-                          afkCreditAmountController.text == "" ? true : false,
-                      //placeholder: 'Amount',
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      ],
-                      controller: afkCreditAmountController,
-                      errorText: model.afkCreditsInputValidationMessage,
-                    ),
-            ),
+                      //Container(color: Colors.red),
+                      horizontalSpaceSmall,
+                      Icon(Icons.arrow_right_alt, size: 26),
+                      horizontalSpaceSmall,
+                      Expanded(
+                        child: SummaryStatsDisplay(
+                          title: "Equiv. screen time",
+                          icon: Image.asset(kScreenTimeIcon,
+                              height: 26, color: kcScreenTimeBlue),
+                          unit: "min",
+                          stats: model.screenTimeEquivalent == null
+                              ? "0"
+                              : model.screenTimeEquivalent!.toStringAsFixed(0),
+                        ),
+                      ),
+                    ],
+                  ),
             verticalSpaceMassive,
           ],
         ),

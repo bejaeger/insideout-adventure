@@ -1,9 +1,12 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
@@ -38,58 +41,56 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
           child: ListView(
             children: [
               verticalSpaceMedium,
-              Text(
+              AfkCreditsText.subheadingItalic(
                   "How many credits do you want to add to ${recipientInfo.name}?"),
               verticalSpaceMedium,
-              if (model.customValidationMessage != null)
-                AfkCreditsText.warn(model.customValidationMessage!),
-              TextField(
-                cursorColor: kcBlackHeadlineColor,
-                focusNode: amountFocusNode,
-                controller: amountController,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                style: textTheme(context)
-                    .bodyText2!
-                    .copyWith(fontSize: 35, color: kcBlackHeadlineColor),
-                autofocus: true,
-                decoration: InputDecoration(
-                  prefixIcon: type != TransferType.Sponsor2ExplorerCredits
-                      ? Icon(Icons.attach_money)
-                      : null,
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: kcBlackHeadlineColor, width: 0.0),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: kcBlackHeadlineColor, width: 0.0),
-                  ),
-                ),
-              ),
-              model.screenTimeEquivalent != null
-                  ? Column(
-                      children: [
-                        Text("equivalent to"),
-                        AfkCreditsText.label(
-                            "${model.screenTimeEquivalent} min"),
-                        Text("screen time"),
+              Row(
+                children: [
+                  Container(
+                    width: screenWidth(context, percentage: 0.35),
+                    child: AfkCreditsInputField(
+                      //focusNode: amountFocusNode,
+                      controller: amountController,
+                      style: heading3Style,
+                      leading: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Image.asset(kAFKCreditsLogoPath, height: 10),
+                      ),
+                      autofocus: true,
+                      //placeholder: 'Amount',
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       ],
-                    )
-                  : Column(
-                      children: [
-                        Text(""),
-                        AfkCreditsText.label(""),
-                        Text(""),
-                      ],
+                      errorText: model.customValidationMessage,
                     ),
+                  ),
+                  //Container(color: Colors.red),
+                  horizontalSpaceSmall,
+                  Icon(Icons.arrow_right_alt, size: 26),
+                  horizontalSpaceSmall,
+                  Expanded(
+                    child: SummaryStatsDisplay(
+                      title: "Equiv. screen time",
+                      icon: Image.asset(kScreenTimeIcon,
+                          height: 26, color: kcScreenTimeBlue),
+                      unit: "min",
+                      stats: model.screenTimeEquivalent == null
+                          ? "0"
+                          : model.screenTimeEquivalent!.toStringAsFixed(0),
+                    ),
+                  ),
+                ],
+              ),
               verticalSpaceMedium,
-              ElevatedButton(
-                  onPressed: () {
-                    amountFocusNode.unfocus();
-                    model.showBottomSheetAndProcessPayment();
-                  },
-                  child: Text("Checkout")),
+              AfkCreditsButton(
+                leading: Icon(Icons.add, color: Colors.white),
+                title: "Add Credits",
+                onTap: () {
+                  amountFocusNode.unfocus();
+                  model.showBottomSheetAndProcessPayment();
+                },
+              ),
             ],
           ),
         ),

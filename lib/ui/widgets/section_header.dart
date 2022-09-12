@@ -10,7 +10,6 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 class SectionHeader extends StatelessWidget {
   final void Function()? onButtonTap;
   final String title;
-  final String textButtonText;
   final Widget? otherTrailingIcon;
   final double titleSize;
   final double? horizontalPadding;
@@ -22,7 +21,6 @@ class SectionHeader extends StatelessWidget {
       {Key? key,
       required this.title,
       this.onButtonTap,
-      this.textButtonText = "SEE ALL",
       this.otherTrailingIcon,
       this.titleSize = 20,
       this.horizontalPadding,
@@ -33,31 +31,41 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: horizontalPadding ?? kHorizontalPadding,
-          vertical: verticalPadding ?? kVerticalPadding),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(title,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding ?? kHorizontalPadding,
+              vertical: verticalPadding ?? kVerticalPadding),
+          child: Text(title,
               style: textTheme(context).headline6!.copyWith(
                   fontSize: titleSize,
                   color: kcBlackHeadlineColor.withOpacity(titleOpacity))),
-          if (onButtonTap != null)
-            GestureDetector(
+        ),
+        if (onButtonTap != null)
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: ((horizontalPadding ?? kHorizontalPadding) - 8.0)
+                    .clamp(0, 10000),
+                vertical: ((verticalPadding ?? kVerticalPadding) - 8.0)
+                    .clamp(0, 10000)),
+            child: GestureDetector(
               onTap: onButtonTap,
-              child: buttonIcon ??
-                  Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 20,
-                    color: kcBlackHeadlineColor.withOpacity(titleOpacity),
-                  ),
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                child: buttonIcon ??
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 20,
+                      color: kcBlackHeadlineColor.withOpacity(titleOpacity),
+                    ),
+              ),
             ),
-          if (otherTrailingIcon != null) otherTrailingIcon!,
-        ],
-      ),
+          ),
+        if (otherTrailingIcon != null) otherTrailingIcon!,
+      ],
     );
   }
 }

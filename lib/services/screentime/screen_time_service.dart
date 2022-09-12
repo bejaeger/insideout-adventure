@@ -185,6 +185,10 @@ class ScreenTimeService {
           deltaCredits: -afkCreditsUsed,
           uid: _currentSession!.uid,
         );
+        _firestoreApi.changeTotalScreenTime(
+          deltaScreenTime: minutesUsed,
+          uid: _currentSession!.uid,
+        );
         returnVal = true;
       }
     }

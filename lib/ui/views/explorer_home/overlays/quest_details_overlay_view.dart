@@ -96,9 +96,12 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                   Align(
                     alignment: Alignment.topRight,
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: GestureDetector(
-                          child: Icon(Icons.close),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(Icons.close, size: 30),
+                          ),
                           onTap: model.cancelOrFinishQuest),
                     ),
                   ),
@@ -112,7 +115,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                 // Quest Info
                 Container(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(12.0),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Column(
@@ -129,14 +132,17 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                                 Padding(
                                   padding: EdgeInsets.only(
                                       bottom: model.hasActiveQuest ? 4.0 : 0,
-                                      right: model.hasActiveQuest ? 40.0 : 0),
+                                      right: model.hasActiveQuest ? 45.0 : 0),
                                   child: GestureDetector(
                                       onTap: () =>
                                           model.showInstructions(quest.type),
                                       //title: "Tutorial",
                                       //color: kPrimaryColor.withOpacity(0.7),
-                                      child: Icon(Icons.help,
-                                          color: Colors.black, size: 24)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(Icons.help_outline,
+                                            color: Colors.black, size: 30),
+                                      )),
                                 ),
                             ],
                           ),

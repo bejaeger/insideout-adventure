@@ -14,6 +14,7 @@ class AfkCreditsInputField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final void Function()? trailingTapped;
   final TextStyle? style;
+  final int maxLines;
 
   final circularBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(8),
@@ -31,6 +32,7 @@ class AfkCreditsInputField extends StatelessWidget {
       this.keyboardType = TextInputType.text,
       this.inputFormatters,
       this.autofocus = false,
+      this.maxLines = 1,
       this.style})
       : super(key: key);
 
@@ -50,6 +52,7 @@ class AfkCreditsInputField extends StatelessWidget {
         obscureText: obscureText,
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
+        maxLines: maxLines,
         decoration: InputDecoration(
           hintText: placeholder,
           contentPadding:

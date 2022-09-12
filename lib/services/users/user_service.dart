@@ -761,10 +761,11 @@ class UserService {
                   daysAgo + deltaDays &&
               (uid == null || uid == key)) {
             if (screenTime.containsKey(element.uid)) {
-              screenTime[element.uid] =
-                  screenTime[element.uid]! + element.minutes;
+              screenTime[element.uid] = screenTime[element.uid]! +
+                  (element.minutesUsed ?? element.minutes);
             } else {
-              screenTime[element.uid] = element.minutes;
+              screenTime[element.uid] =
+                  (element.minutesUsed ?? element.minutes);
             }
           }
         }

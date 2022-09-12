@@ -25,10 +25,15 @@ final String screenTimeSessionsCollectionKey = "screenTimeSessions";
 final String userSummaryStatisticsDocumentKey = "summaryStats";
 final String purchasedGiftCardsCollectionKey = "giftcards";
 final String purchasedScreenTimeCollectionKey = "screentime";
+final String feedbackCampaignInfoDocumentKey = "campaignInfo";
+final String generalFeedbackDocumentKey = "generalFeedback";
+final String feedbackCollectionKey = "feedback";
 
 // collection references
 final CollectionReference usersCollection =
     FirebaseFirestore.instance.collection('users');
+final CollectionReference feedbackCollection =
+    FirebaseFirestore.instance.collection('feedback');
 // collection references
 final CollectionReference giftCardsCollection =
     FirebaseFirestore.instance.collection('giftCardCategories');
@@ -77,6 +82,17 @@ const List<String> questType = [
   "TreasureLocationSearch",
   "TreasureLocationSearchAutomatic"
 ];
+
+//////////////////////////////////////////////
+// for notion api
+const String kDevNotionFeedbackToken =
+    "secret_JyfVJ2khuaLre3df4tAjlPy3I8k01vDc4uWQ5BAPLKK";
+const String kProdNotionFeedbackToken =
+    "secret_ibRlTwcBglfbKJGgvl36iZg0hmH5IX07jxr5otF8sgh";
+// @see: https://www.notion.so/fdd1923780ed460c8c213670bd45404e?v=29c5ff15ff424a0ebede114ebaaf3e5c
+const String kDevNotionFeedbackDatabaseId = "fdd1923780ed460c8c213670bd45404e";
+// @see: https://www.notion.so/a24ab0b6691c4b71a3b836fb6f63935b?v=e696cc5722674485800a0deaeaf14f21
+const String kProdNotionFeedbackDatabaseId = "a24ab0b6691c4b71a3b836fb6f63935b";
 
 //////////////////////////////////////////////////////////
 /// Quest settings!

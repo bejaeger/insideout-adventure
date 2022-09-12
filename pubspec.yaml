@@ -25,15 +25,15 @@ dependencies:
     sdk: flutter
 
   firebase_core: ^1.0.2
-  firebase_storage: ^10.1.0
   firebase_messaging: ^12.0.3  
   #cloud_firestore: ^1.0.7
   cloud_firestore: ^3.1.6 
   cloud_functions: ^3.1.1
+  firebase_storage: ^10.3.8
   connectivity_plus: ^2.0.2
   nanoid: ^1.0.0
   map_launcher: ^2.1.2
-
+  url_launcher: ^6.1.5
   # Firebase Authentications
   firebase_auth: ^3.2.0
   google_sign_in: ^5.2.1

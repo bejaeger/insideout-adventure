@@ -38,7 +38,7 @@ class ParentHomeView extends StatelessWidget {
             endDrawer: const ParentDrawerView(),
             floatingActionButton: BottomFloatingActionButtons(
               swapButtons: false,
-              titleMain: "Create Quest",
+              titleMain: "Create quest",
               // leadingSecondary: Icon(Icons.add, color: Colors.white),
               titleSecondary: "Map",
               leadingSecondary: Icon(Icons.map, color: kcPrimaryColor),
@@ -119,12 +119,16 @@ class ParentHomeView extends StatelessWidget {
                     ),
                   ),
                   //verticalSpaceSmall,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: kHorizontalPadding),
-                    child: AfkCreditsButton.text(
-                      title: "Provide Feedback",
-                      onTap: model.showNotImplementedSnackbar,
+                  GestureDetector(
+                    onTap: model.navToFeedbackView,
+                    child: Container(
+                      color: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: kHorizontalPadding),
+                      child: AfkCreditsButton.text(
+                        title: "Provide Feedback",
+                        onTap: null,
+                      ),
                     ),
                   ),
                   // if (model.sortedHistory.length != 0)

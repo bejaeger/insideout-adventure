@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -50,13 +51,24 @@ abstract class AFKMarks extends FormViewModel {
   }
 
   Marker addMarkers(
-      {required LatLng pos, required String markerId, required int number}) {
+      {required LatLng pos,
+      required String markerId,
+      required int number,
+      QuestType? questType}) {
     return Marker(
       markerId: MarkerId(markerId),
       //infoWindow: InfoWindow(title: "Marker"),
       icon: number == 0
           ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
-          : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          : (questType == QuestType.GPSAreaHike ||
+                  questType == QuestType.GPSAreaHunt)
+              ? BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueOrange)
+              : questType == QuestType.TreasureLocationSearch
+                  ? BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueViolet)
+                  : BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueBlue),
       position: pos,
       onTap: () {
         removeMarker(
@@ -88,11 +100,16 @@ abstract class AFKMarks extends FormViewModel {
       {required String markerId,
       required LatLng position,
       required String qrdCodeId,
-      required int number}) {
+      required int number,
+      QuestType? questType}) {
     var id2 = Uuid();
     final id = id2.v1().toString().replaceAll('-', '');
     _markersOnMap.add(
-      addMarkers(markerId: markerId, pos: position, number: number),
+      addMarkers(
+          markerId: markerId,
+          pos: position,
+          number: number,
+          questType: questType),
     );
     _afkMarkers.add(
       returnAFKMarker(pos: position, markerId: markerId, qrCode: qrdCodeId),
@@ -140,7 +157,8 @@ abstract class AFKMarks extends FormViewModel {
     notifyListeners();
   }
 
-  void addMarkerOnMap({required LatLng pos, required int number}) {
+  void addMarkerOnMap(
+      {required LatLng pos, required int number, QuestType? questType}) {
     try {
       var id = Uuid();
       var id2 = Uuid();
@@ -151,7 +169,8 @@ abstract class AFKMarks extends FormViewModel {
           markerId: markerId,
           position: pos,
           qrdCodeId: qrdCdId,
-          number: number);
+          number: number,
+          questType: questType);
     } catch (error) {
       throw MapViewModelException(
           message: 'An error occured when creating the map',

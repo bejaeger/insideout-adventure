@@ -1,8 +1,10 @@
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_service.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
+import 'package:afkcredits/services/feedback_service/feedback_service.dart';
 import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
@@ -10,6 +12,7 @@ import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/maps/google_map_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
+import 'package:afkcredits/apis/notion_api.dart';
 import 'package:afkcredits/services/pedometer/pedometer_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
@@ -30,6 +33,7 @@ import 'package:afkcredits/ui/views/ar_view/ar_object_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
+import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart';
 import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
@@ -52,6 +56,7 @@ import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dar
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
+import 'package:afkcredits/utils/image_selector.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
@@ -96,6 +101,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: SingleQuestTypeView),
     MaterialRoute(page: OnBoardingScreensView),
     MaterialRoute(page: ParentMapView),
+    MaterialRoute(page: FeedbackView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -125,6 +131,10 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: GamificationService),
     LazySingleton(classType: MapStateService),
     LazySingleton(classType: PedometerService),
+    LazySingleton(classType: CloudStorageService),
+    LazySingleton(classType: ImageSelector),
+    LazySingleton(classType: NotionApi),
+    LazySingleton(classType: FeedbackService),
 
     //LazySingleton(classType: MarkersInMap),
     // LazySingleton(classType: MapViewModel),

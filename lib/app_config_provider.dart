@@ -128,4 +128,26 @@ class AppConfigProvider {
         return URIPATHPREPENDDEV;
     }
   }
+
+  String get notionFeedbackToken {
+    switch (this.flavor) {
+      case Flavor.dev:
+        return kDevNotionFeedbackToken;
+      case Flavor.prod:
+        return kProdNotionFeedbackToken;
+      default:
+        return kDevNotionFeedbackToken;
+    }
+  }
+
+  String get notionFeedbackDatabaseId {
+    switch (this.flavor) {
+      case Flavor.dev:
+        return kDevNotionFeedbackDatabaseId;
+      case Flavor.prod:
+        return kProdNotionFeedbackDatabaseId;
+      default:
+        return kDevNotionFeedbackDatabaseId;
+    }
+  }
 }

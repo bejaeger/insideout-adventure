@@ -32,15 +32,67 @@ class ExplorerAccountView extends StatelessWidget {
               AfkCreditsText.headingThree(model.currentUser.fullName),
               SizedBox(height: 2),
               AfkCreditsText.body(
-                  "Level ${model.currentLevel}: ${model.currentLevelName}"),
+                  "Level ${model.currentLevel()}: ${model.currentLevelName}"),
               verticalSpaceMedium,
               //AfkCreditsText.headingFour("Stats"),
               // verticalSpaceSmall,
               // verticalSpaceTiny,
+              Container(
+                constraints:
+                    BoxConstraints(maxWidth: screenWidth(context) - 80),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        horizontalSpaceTiny,
+                        SummaryStatsDisplay(
+                          icon: Image.asset(kAFKCreditsLogoSmallPathColored,
+                              color: kcPrimaryColor, height: 25),
+                          stats: model.currentUserStats.lifetimeEarnings
+                              .toString(),
+                          title: "Total collected",
+                        ),
+
+                        // horizontalSpaceLarge,
+                        // horizontalSpaceLarge,
+                        // horizontalSpaceMedium,
+                        // horizontalSpaceSmall,
+                      ],
+                    ),
+                    Spacer(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SummaryStatsDisplay(
+                            icon: Image.asset(kAFKCreditsLogoSmallPathColored,
+                                color: kcPrimaryColor.withOpacity(0.7),
+                                height: 25),
+                            stats: model.creditsForNextLevel.toString(),
+                            statsStyle: statsStyle,
+                            title: "Next level",
+                            titleStyle: captionStyle.copyWith(
+                                color: kcGreyTextColor.withOpacity(0.7))),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              verticalSpaceTiny,
               Align(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    ProgressBar(
+                      widthProgressBar: screenWidth(context) - 80,
+                      percentage: model.percentageOfNextLevel,
+                      height: 25,
+                      //currentLevel: "3",
+                      //nextLevel: "Level " + (model.currentLevel + 1).toString(),
+                    ),
+                    verticalSpaceSmall,
                     Row(
                       children: [
                         AfkCreditsText.subheadingItalic("Earn",
@@ -53,61 +105,20 @@ class ExplorerAccountView extends StatelessWidget {
                             height: 18.0,
                           ),
                         ),
+                        AfkCreditsText.statsStyleBlack(
+                            "${model.creditsToNextLevel} ",
+                            align: TextAlign.left),
                         AfkCreditsText.subheadingItalic(
-                            "${model.creditsToNextLevel} to reach the next level!",
+                            "to reach the next level!",
                             align: TextAlign.left),
                       ],
                     ),
-                    verticalSpaceSmall,
-                    ProgressBar(
-                      widthProgressBar: screenWidth(context) - 80,
-                      percentage: model.percentageOfNextLevel,
-                      height: 25,
-                      //currentLevel: "3",
-                      //nextLevel: "Level " + (model.currentLevel + 1).toString(),
-                    ),
                     verticalSpaceTiny,
-                    Container(
-                      constraints:
-                          BoxConstraints(maxWidth: screenWidth(context) - 80),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(kAFKCreditsLogoSmallPathColored,
-                              color: kcPrimaryColor, height: 25),
-                          horizontalSpaceSmall,
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              horizontalSpaceTiny,
-                              AfkCreditsText.statsStyleBlack(model
-                                  .currentUserStats.lifetimeEarnings
-                                  .toString()),
-                              AfkCreditsText.caption("Total collected"),
-
-                              // horizontalSpaceLarge,
-                              // horizontalSpaceLarge,
-                              // horizontalSpaceMedium,
-                              // horizontalSpaceSmall,
-                            ],
-                          ),
-                          Spacer(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              AfkCreditsText.statsStyle(
-                                  model.creditsForNextLevel.toString()),
-                              AfkCreditsText.caption("Next level"),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
               verticalSpaceMedium,
+              verticalSpaceSmall,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -123,32 +134,23 @@ class ExplorerAccountView extends StatelessWidget {
                   //   ),
                   // ),
                   // horizontalSpaceSmall,
-                  Row(
-                    children: [
-                      Image.asset(kActivityIcon,
-                          color: kcActivityIconColor, height: 25),
-                      horizontalSpaceSmall,
-                      SummaryStatsDisplay(
-                        stats: model.currentUserStats.numberQuestsCompleted
-                            .toString(),
-                        title: "Completed quests",
-                      ),
-                    ],
+                  horizontalSpaceSmall,
+                  SummaryStatsDisplay(
+                    icon: Image.asset(kActivityIcon,
+                        color: kcActivityIconColor, height: 25),
+                    stats:
+                        model.currentUserStats.numberQuestsCompleted.toString(),
+                    title: "Completed quests",
                   ),
                   horizontalSpaceSmall,
                   verticalSpaceMedium,
-                  Row(
-                    children: [
-                      Image.asset(kScreenTimeIcon,
-                          color: kcScreenTimeBlue, height: 25),
-                      horizontalSpaceSmall,
-                      SummaryStatsDisplay(
-                        stats:
-                            model.currentUserStats.totalScreenTime.toString(),
-                        title: "Total screen time",
-                        unit: "min",
-                      ),
-                    ],
+                  horizontalSpaceSmall,
+                  SummaryStatsDisplay(
+                    icon: Image.asset(kScreenTimeIcon,
+                        color: kcScreenTimeBlue, height: 25),
+                    stats: model.currentUserStats.totalScreenTime.toString(),
+                    title: "Total screen time",
+                    unit: "min",
                   ),
                 ],
               ),

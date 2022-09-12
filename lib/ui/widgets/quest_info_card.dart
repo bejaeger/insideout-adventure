@@ -39,7 +39,7 @@ class QuestInfoCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        elevation: 5,
+        elevation: 1,
         child: Container(
           height: height,
           width: width,

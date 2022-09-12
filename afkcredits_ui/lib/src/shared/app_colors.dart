@@ -30,6 +30,7 @@ Color kcPrimaryColorOpaque =
 const Color kcOrange = Color(0xfffb6107);
 Color kcOrangeOpaque =
     HSLColor.fromColor(kcOrange).withSaturation(0.7).toColor();
+const Color kcOrangeWhite = Color.fromARGB(255, 255, 216, 191);
 const Color kcOrangeYellow = Color(0xffF5BB00);
 // const Color kcOrange = Color(0xffbc6d24);
 // const Color kcOrange = Color(0xffff9800);

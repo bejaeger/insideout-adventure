@@ -67,7 +67,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                     if (!model.isBusy)
                       MainHeader(
                           percentageOfNextLevel: model.percentageOfNextLevel,
-                          currentLevel: model.currentLevel,
+                          currentLevel: model.currentLevel(),
                           onAvatarPressed: model.showExplorerAccountOverlay,
                           show: showMainWidgets,
                           onDevFeaturePressed: model

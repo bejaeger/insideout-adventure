@@ -15,6 +15,8 @@ class AfkCreditsButton extends StatelessWidget {
   final Widget? leading;
   final Color? color;
   final double? height;
+  final Border? border;
+  final List<BoxShadow>? boxShadow;
 
   const AfkCreditsButton({
     Key? key,
@@ -27,6 +29,8 @@ class AfkCreditsButton extends StatelessWidget {
     this.leading,
     this.color,
     this.height,
+    this.border,
+    this.boxShadow,
   })  : outline = false,
         super(key: key);
 
@@ -36,8 +40,10 @@ class AfkCreditsButton extends StatelessWidget {
     this.leading,
     this.color,
     this.height,
+    this.border,
     this.enabled = false,
   })  : disabled = false,
+        boxShadow = null,
         busy = false,
         textButton = false,
         outline = true;
@@ -51,8 +57,10 @@ class AfkCreditsButton extends StatelessWidget {
     this.enabled = false,
   })  : disabled = false,
         busy = false,
+        boxShadow = null,
         outline = true,
-        textButton = true;
+        textButton = true,
+        border = null;
 
   @override
   Widget build(BuildContext context) {
@@ -69,32 +77,36 @@ class AfkCreditsButton extends StatelessWidget {
                 ? BoxDecoration(
                     color: !disabled ? color ?? kcPrimaryColor : kcMediumGrey,
                     borderRadius: BorderRadius.circular(20),
-                  )
+                    border: border,
+                    boxShadow: boxShadow)
                 : BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: color ?? kcPrimaryColor,
-                      width: 2,
-                    )),
+                    border: border ??
+                        Border.all(
+                          color: color ?? kcPrimaryColor,
+                          width: 2,
+                        ),
+                  ),
         child: !busy
             ? Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (leading != null) leading!,
-                  if (leading != null) horizontalSpaceSmall,
-                  if (leading != null) const SizedBox(width: 5),
-                  Text(
-                    title,
-                    style: bodyStyle.copyWith(
-                      fontWeight: (!outline || enabled || textButton)
-                          ? FontWeight.bold
-                          : FontWeight.w400,
-                      color: (!outline || enabled)
-                          ? Colors.white
-                          : color ?? kcPrimaryColor,
+                  if (leading != null && title != "") horizontalSpaceSmall,
+                  if (leading != null && title != "") const SizedBox(width: 5),
+                  if (title != "")
+                    Text(
+                      title,
+                      style: bodyStyle.copyWith(
+                        fontWeight: (!outline || enabled || textButton)
+                            ? FontWeight.bold
+                            : FontWeight.w400,
+                        color: (!outline || enabled)
+                            ? Colors.white
+                            : color ?? kcPrimaryColor,
+                      ),
                     ),
-                  ),
                 ],
               )
             : const CircularProgressIndicator(

@@ -23,12 +23,18 @@ class GamificationService {
 
   // -------------------------------------------------------
   // Simple functions of level system
-  int getCurrentLevel() {
-    // every 20 points will let you reach another level
-    return (_userService.currentUserStats.lifetimeEarnings *
-                kTotalCreditsEarnedToLevelConversion +
-            1)
-        .truncate();
+  // if lifetimeEarnings are provided there is need to check user stats document!
+  int getCurrentLevel({num? lifetimeEarnings}) {
+    if (lifetimeEarnings != null) {
+      return (lifetimeEarnings * kTotalCreditsEarnedToLevelConversion + 1)
+          .truncate();
+    } else {
+      // every 20 points will let you reach another level
+      return (_userService.currentUserStats.lifetimeEarnings *
+                  kTotalCreditsEarnedToLevelConversion +
+              1)
+          .truncate();
+    }
   }
 
   int getCreditsFromPreviousLevel() {

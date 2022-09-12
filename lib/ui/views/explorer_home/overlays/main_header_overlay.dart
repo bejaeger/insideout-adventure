@@ -32,17 +32,22 @@ class MainHeader extends StatelessWidget {
         opacity: show ? 1 : 0,
         duration: Duration(milliseconds: 500),
         child: Container(
-          height: 70,
+          height: 75,
           //color: Colors.blue.withOpacity(0.5),
           padding: const EdgeInsets.symmetric(
               horizontal: kHorizontalPadding, vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              AvatarView(
-                  percentage: percentageOfNextLevel,
-                  level: currentLevel,
-                  onPressed: onAvatarPressed),
+              Padding(
+                //color: Colors.red,
+                padding:
+                    const EdgeInsets.only(right: 5.0, bottom: 5.0, left: 5.0),
+                child: AvatarView(
+                    percentage: percentageOfNextLevel,
+                    level: currentLevel,
+                    onPressed: onAvatarPressed),
+              ),
               //Spacer(),
               horizontalSpaceSmall,
               Opacity(
@@ -64,7 +69,9 @@ class MainHeader extends StatelessWidget {
               GestureDetector(
                 onTap: onCreditsPressed,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 5.0, top: 14),
+                  padding: const EdgeInsets.only(
+                      right: 5.0, top: 14, bottom: 5.0, left: 8.0),
+                  //color: Colors.red,
                   child: AFKCreditsDisplay(balance: balance),
                 ),
               ),

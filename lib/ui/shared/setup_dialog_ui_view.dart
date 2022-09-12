@@ -1,6 +1,8 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
+import 'package:afkcredits/ui/custom_dialogs/child_stat_card/child_total_stats_card_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_view.dart';
+import 'package:afkcredits/ui/custom_dialogs/credit_conversion_info_dialog.dart/credit_conversion_info_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/found_treasure/found_treasure_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/in_area_alert/in_area_alert_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/marker_collected/collected_marker_dialog.dart';
@@ -31,6 +33,10 @@ void setupDialogUi() {
     DialogType.CheckpointInArea: (context, sheetRequest, completer) =>
         InAreaAlertDialogView(
             request: sheetRequest, completer: completer, isQrCodeInArea: false),
+    DialogType.ChildStatCard: (context, sheetRequest, completer) =>
+        ChildTotalStatsCardDialog(request: sheetRequest, completer: completer),
+    DialogType.CreditConversionInfo: (context, sheetRequest, completer) =>
+        CreditConversionInfoDialog(request: sheetRequest, completer: completer),
     /*    DialogType.EditQuestInformation: (context, sheetRequest, completer) =>
         EditQuestView(request: sheetRequest, completer: completer), */
     // DialogType.Onboarding: (context, sheetRequest, completer) =>
