@@ -6,9 +6,12 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
+import 'package:afkcredits/notifications/notifications.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/utils/string_utils.dart';
+import 'package:rxdart/subjects.dart';
 
 class ScreenTimeService {
   // ----------------------------
@@ -28,8 +31,15 @@ class ScreenTimeService {
   DateTime? screenTimeStartTime;
   bool get hasActiveScreenTime => screenTimeStartTime != null;
   int? screenTimeLeftInSeconds;
+  bool justStartedListeningToScreenTime = false;
   // int get screenTimeLeft =>
   //     hasActiveScreenTime ? getScreenTimeLeftInMinutes() : -1;
+  BehaviorSubject<int> screenTimeLeftInSecondsSubject =
+      BehaviorSubject<int>.seeded(0);
+  int get screenTimeLeftInSecondsListener =>
+      screenTimeLeftInSecondsSubject.value;
+  StreamSubscription? _screenTimeLeftInSecondsSubjectSubscription;
+  int previousDiff = 0;
 
   // ---------------------------------
   // Functions
@@ -41,20 +51,32 @@ class ScreenTimeService {
     return (credits * screenTimeFactor).toInt();
   }
 
+  void setupScreenTimeListener({required void Function() callback}) {
+    if (_screenTimeLeftInSecondsSubjectSubscription == null) {
+      _screenTimeLeftInSecondsSubjectSubscription =
+          screenTimeLeftInSecondsSubject.listen((_) => callback());
+    }
+  }
+
   // Function to convert screen time into credits
   // Might need to be more sophisticated!
-  void startScreenTime(
+  Future startScreenTime(
       {required ScreenTimeSession session,
       required void Function() callback}) async {
     log.i("Starting screen time session");
     _currentSession = session;
-    screenTimeStartTime = DateTime.now();
+    screenTimeStartTime = session.startedAt.toDate();
     screenTimeLeftInSeconds = session.minutes * 60;
 
     // Need to start a timer here
     // that counts down the screen time
     _stopWatchService.listenToSecondTime(callback: (int tick) {
       screenTimeLeftInSeconds = session.minutes * 60 - tick;
+
+      if ((screenTimeLeftInSeconds!).round() % 60 == 0) {
+        screenTimeLeftInSecondsSubject.add(screenTimeLeftInSeconds!);
+      }
+
       // Screen time expired normally!
       if (screenTimeLeftInSeconds == 0) {
         handleScreenTimeOverEvent();
@@ -71,19 +93,41 @@ class ScreenTimeService {
 
   // Function to convert screen time into credits
   // Might need to be more sophisticated!
-  void continueScreenTime(
+  Future continueScreenTime(
       {required ScreenTimeSession session,
       required void Function() callback}) async {
     log.i("Continuing screen time session");
-    _currentSession = session;
-    screenTimeStartTime = session.startedAt.toDate();
-    final int diff = DateTime.now().difference(screenTimeStartTime!).inSeconds;
-    screenTimeLeftInSeconds = session.minutes * 60 - diff;
 
     // Need to start a timer here
     // that counts down the screen time
+    // Only listen again and subtract difference if timer is
+    // not already running!
+
+    if (!_stopWatchService.isRunning) {
+      screenTimeStartTime = session.startedAt.toDate();
+      previousDiff = DateTime.now().difference(screenTimeStartTime!).inSeconds;
+      log.i("Seconds that were already used: $previousDiff");
+      justStartedListeningToScreenTime = true;
+    } else {
+      screenTimeLeftInSeconds =
+          session.minutes * 60 - previousDiff - _stopWatchService.getSecondTime;
+    }
     _stopWatchService.listenToSecondTime(callback: (int tick) {
-      screenTimeLeftInSeconds = session.minutes * 60 - diff - tick;
+      screenTimeLeftInSeconds = session.minutes * 60 - previousDiff - tick;
+
+      if ((screenTimeLeftInSeconds!).round() % 60 == 0) {
+        screenTimeLeftInSecondsSubject.add(screenTimeLeftInSeconds!);
+        // Notifications().dismissPermanentNotifications();
+        // Notifications().dismissUpdatedScreenTimeNotifications();
+        // Notifications().createUpdatedScreenTimeNotification(
+        //     title: "Screen time left " +
+        //         secondsToMinuteTime(screenTimeLeftInSeconds) +
+        //         "in",
+        //     message: _userService.explorerNameFromUid(session.uid) +
+        //         " is using screen time until " +
+        //         formatDateToShowTime(
+        //             DateTime.now().add(Duration(minutes: session.minutes))));
+      }
       // Screen time expired normally!
       if (screenTimeLeftInSeconds == 0) {
         handleScreenTimeOverEvent();
@@ -125,7 +169,8 @@ class ScreenTimeService {
       } else {
         // calculate difference
         int minutesUsed =
-            DateTime.now().difference(screenTimeStartTime!).inMinutes;
+            (DateTime.now().difference(screenTimeStartTime!).inSeconds / 60)
+                .round();
         int secondsUsed =
             DateTime.now().difference(screenTimeStartTime!).inSeconds;
         double fraction = secondsUsed / (_currentSession!.minutes * 60);
@@ -140,6 +185,10 @@ class ScreenTimeService {
           deltaCredits: -afkCreditsUsed,
           uid: _currentSession!.uid,
         );
+        _firestoreApi.changeTotalScreenTime(
+          deltaScreenTime: minutesUsed,
+          uid: _currentSession!.uid,
+        );
         returnVal = true;
       }
     }
@@ -150,6 +199,7 @@ class ScreenTimeService {
   Future continueOrBookkeepScreenTimeSessionOnStartup(
       {required String sessionId, required Function() callback}) async {
     // load screen time from firestore
+    justStartedListeningToScreenTime = false;
     ScreenTimeSession? session;
     try {
       session = await loadActiveScreenTimeSession(sessionId: sessionId);
@@ -170,13 +220,19 @@ class ScreenTimeService {
         await handleScreenTimeOverEvent();
       } else {
         // --> if NOT: create session with remaining minutes!
-        continueScreenTime(session: session, callback: callback);
+        await continueScreenTime(session: session, callback: callback);
       }
     }
     return session;
   }
 
   Future loadActiveScreenTimeSession({required String sessionId}) async {
+    if (_currentSession != null) {
+      // there is already a screen time session in memory!
+      // Take that and no need to download anything
+      // This, e.g., happens when the user navigates through the app and comes back to the active screen time screen
+      return _currentSession;
+    }
     final ScreenTimeSession session =
         await _firestoreApi.getScreenTimeSession(sessionId: sessionId);
     _currentSession = session;
@@ -190,6 +246,9 @@ class ScreenTimeService {
     screenTimeStartTime = null;
     screenTimeLeftInSeconds = null;
     _currentSession = null;
+    _screenTimeLeftInSecondsSubjectSubscription?.cancel();
+    _screenTimeLeftInSecondsSubjectSubscription = null;
+    previousDiff = 0;
   }
 
   void clearData() async {}

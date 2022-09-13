@@ -6,6 +6,7 @@ import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SelectScreenTimeViewModel extends BaseModel {
   // ----------------------------------
@@ -82,6 +83,7 @@ class SelectScreenTimeViewModel extends BaseModel {
         uid: isParentAccount ? childId! : currentUser.uid,
         minutes: useSuperUserFeatures ? 1 : screenTimePreset,
         status: ScreenTimeSessionStatus.active,
+        startedAt: Timestamp.now(),
         afkCredits: double.parse(
             screenTimeToCredits(useSuperUserFeatures ? 1 : screenTimePreset)
                 .toString()),

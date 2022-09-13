@@ -12,11 +12,11 @@ class TrendIcon extends StatelessWidget {
     return metric == null
         ? SizedBox(height: 0, width: 0)
         : metric! > 0
-            ? Icon(Icons.arrow_upward,
+            ? Icon(Icons.north_east,
                 color: screenTime ? kcRed : kcAccentuatedGreen)
             : metric == 0
                 ? SizedBox(height: 0, width: 0)
-                : Icon(Icons.arrow_downward,
+                : Icon(Icons.south_east,
                     color: screenTime ? kcAccentuatedGreen : kcRed);
   }
 }

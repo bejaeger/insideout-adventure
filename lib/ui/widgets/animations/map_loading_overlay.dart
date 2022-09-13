@@ -23,9 +23,10 @@ class MapLoadingOverlay extends StatelessWidget {
             //   sizeScale: 1,
             // ),
             // verticalSpaceSmall,
-            AFKProgressIndicator(
-              color: kcOrange,
-            )
+            AfkCreditsText.subheading("Loading Map..."),
+            // AFKProgressIndicator(
+            //     //color: kcOrange,
+            //     )
           ],
         ),
       ),

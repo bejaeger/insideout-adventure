@@ -25,10 +25,18 @@ final String screenTimeSessionsCollectionKey = "screenTimeSessions";
 final String userSummaryStatisticsDocumentKey = "summaryStats";
 final String purchasedGiftCardsCollectionKey = "giftcards";
 final String purchasedScreenTimeCollectionKey = "screentime";
+final String feedbackCampaignInfoDocumentKey = "campaignInfo";
+final String generalFeedbackDocumentKey = "generalFeedback";
+final String feedbackCollectionKey = "feedback";
+
+// properties
+final String kQuestGeoPointPropertyName = "location";
 
 // collection references
 final CollectionReference usersCollection =
     FirebaseFirestore.instance.collection('users');
+final CollectionReference feedbackCollection =
+    FirebaseFirestore.instance.collection('feedback');
 // collection references
 final CollectionReference giftCardsCollection =
     FirebaseFirestore.instance.collection('giftCardCategories');
@@ -41,7 +49,6 @@ final CollectionReference paymentsCollection =
 var questsCollection = FirebaseFirestore.instance.collection('quests');
 final CollectionReference screenTimeSessionCollection =
     FirebaseFirestore.instance.collection(screenTimeSessionsCollectionKey);
-var afkQuestsCollection = FirebaseFirestore.instance.collection('afkQuests');
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
 final CollectionReference markersCollection =
@@ -75,6 +82,17 @@ const List<String> questType = [
   "TreasureLocationSearch",
   "TreasureLocationSearchAutomatic"
 ];
+
+//////////////////////////////////////////////
+// for notion api
+const String kDevNotionFeedbackToken =
+    "secret_JyfVJ2khuaLre3df4tAjlPy3I8k01vDc4uWQ5BAPLKK";
+const String kProdNotionFeedbackToken =
+    "secret_ibRlTwcBglfbKJGgvl36iZg0hmH5IX07jxr5otF8sgh";
+// @see: https://www.notion.so/fdd1923780ed460c8c213670bd45404e?v=29c5ff15ff424a0ebede114ebaaf3e5c
+const String kDevNotionFeedbackDatabaseId = "fdd1923780ed460c8c213670bd45404e";
+// @see: https://www.notion.so/a24ab0b6691c4b71a3b836fb6f63935b?v=e696cc5722674485800a0deaeaf14f21
+const String kProdNotionFeedbackDatabaseId = "a24ab0b6691c4b71a3b836fb6f63935b";
 
 //////////////////////////////////////////////////////////
 /// Quest settings!
@@ -129,6 +147,8 @@ const int kDistanceFilterForCalibration = 5;
 
 const int kDefaultGeolocationDistanceFilter = 10;
 
+const double kDefaultQuestDownloadRadiusInKm = 10;
+
 /////////////////////////////////////
 // Google Maps View Settings
 const double kInitialZoom = 17.8;
@@ -137,7 +157,7 @@ const double kInitialTilt = 90;
 
 const double kMaxZoom = 19;
 // const double kMaxZoom = 50;
-const double kInitialZoomBirdsView = 12;
+const double kInitialZoomBirdsView = 13;
 const double kMinZoomAvatarView = 17;
 
 ////////////////////////////////////
@@ -149,3 +169,12 @@ const String kPermanentNotificationKey = "permanent_notification";
 const String kPermanentNotificationName = "Permanent notifications";
 const String kScheduledNotificationChannelKey = "scheduled_notification";
 const String kScheduledNotificationChannelName = "Scheduled notifications";
+const String kScheduledNotificationActionKey = "action_key";
+const String kUpdatedScreenTimeNotificationKey =
+    "screentime_update_notification";
+const String kUpdatedScreenTimeNotificationChannelName =
+    "Screentime notifications";
+
+////////////////////////////////////////
+/// Gamification system
+const double kTotalCreditsEarnedToLevelConversion = 1 / 20;

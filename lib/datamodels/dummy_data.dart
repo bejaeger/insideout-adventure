@@ -81,7 +81,7 @@ Quest getDummyQuest1() {
       getDummyMarker3(),
       getDummyMarker4()
     ],
-    type: QuestType.QRCodeHike.toSimpleString(),
+    type: QuestType.QRCodeHike,
     startMarker: getDummyMarker1(),
     finishMarker: getDummyMarker2(),
     location: geo.point(
@@ -100,7 +100,7 @@ Quest getDistanceEstimate200() {
     description: "Estimate 200m",
     afkCredits: 20,
     markers: [],
-    type: QuestType.DistanceEstimate.toSimpleString(),
+    type: QuestType.DistanceEstimate,
     distanceToTravelInMeter: 200,
     location: geo.point(
       latitude: 49.32738998905994,
@@ -118,7 +118,7 @@ Quest getDistanceEstimate500() {
     description: "Estimate 500m",
     afkCredits: 20,
     markers: [],
-    type: QuestType.DistanceEstimate.toSimpleString(),
+    type: QuestType.DistanceEstimate,
     distanceToTravelInMeter: 500,
     location: geo.point(
       latitude: 49.32738998905999,
@@ -136,7 +136,7 @@ Quest getDistanceEstimate1000() {
     description: "Estimate 1km",
     afkCredits: 20,
     markers: [],
-    type: QuestType.DistanceEstimate.toSimpleString(),
+    type: QuestType.DistanceEstimate,
     distanceToTravelInMeter: 1000,
     location: geo.point(
       latitude: 49.32738998905336,
@@ -154,7 +154,7 @@ Quest getDistanceEstimate2000() {
     description: "Estimate 2km",
     afkCredits: 999999999,
     markers: [],
-    type: QuestType.DistanceEstimate.toSimpleString(),
+    type: QuestType.DistanceEstimate,
     distanceToTravelInMeter: 2000,
     location: geo.point(
       latitude: 49.32738998905336,
@@ -175,7 +175,7 @@ Quest getDummyVibrationSearchQuest() {
       woodwayInFrontMarker(),
       myRoomParkSiteMarker(),
     ],
-    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    type: QuestType.TreasureLocationSearch,
     startMarker: woodwayInFrontMarker(),
     finishMarker: myRoomParkSiteMarker(),
     location: geo.point(
@@ -197,7 +197,7 @@ Quest getDummyVibrationSearchQuestFreiburg() {
       freiburg1(),
       freiburg2(),
     ],
-    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    type: QuestType.TreasureLocationSearch,
     startMarker: freiburg1(),
     finishMarker: freiburg2(),
     location: geo.point(
@@ -211,18 +211,19 @@ Quest getDummyVibrationSearchQuestFreiburg() {
 Quest streeth11th2ndVibration() {
   Geoflutterfire geo = Geoflutterfire();
   return Quest(
-      id: "aeyLAC1r0OsnA0IBj6uT",
-      name: "10th Street Fun!",
-      description: "Find the AFK Credits",
-      afkCredits: 10,
-      markers: [street11th2nd(), street11th2ndEnd()],
-      type: QuestType.TreasureLocationSearch.toSimpleString(),
-      startMarker: street11th2nd(),
-      finishMarker: street11th2ndEnd(),
-      location: geo.point(
-        latitude: 49.22308671447031,
-        longitude: -122.92246584976317,
-      ));
+    id: "aeyLAC1r0OsnA0IBj6uT",
+    name: "10th Street Fun!",
+    description: "Find the AFK Credits",
+    afkCredits: 10,
+    markers: [street11th2nd(), street11th2ndEnd()],
+    type: QuestType.TreasureLocationSearch,
+    startMarker: street11th2nd(),
+    finishMarker: street11th2ndEnd(),
+    location: geo.point(
+      latitude: 49.22308671447031,
+      longitude: -122.92246584976317,
+    ),
+  );
 }
 
 // burnaby quest
@@ -235,7 +236,7 @@ Quest heidachTrohpy() {
         "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
     afkCredits: 30,
     markers: [heidach1(), heidach2()],
-    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    type: QuestType.TreasureLocationSearch,
     startMarker: heidach1(),
     finishMarker: heidach2(),
     location: geo.point(
@@ -255,7 +256,7 @@ Quest heidachTrohpy2() {
         "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
     afkCredits: 50,
     markers: [heidach3(), heidach4()],
-    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    type: QuestType.TreasureLocationSearch,
     startMarker: heidach3(),
     finishMarker: heidach4(),
     location: geo.point(
@@ -280,7 +281,7 @@ Quest getDummyQuest2() {
       getDummyMarker8(),
       getDummyMarker9()
     ],
-    type: QuestType.QRCodeHike.toSimpleString(),
+    type: QuestType.QRCodeHike,
     startMarker: getDummyMarker5(),
     finishMarker: getDummyMarker9(),
     location: geo.point(
@@ -307,7 +308,7 @@ Quest getDummyQuest3() {
       woodwayMarker5(),
       woodwayMarker6(),
     ],
-    type: QuestType.QRCodeHike.toSimpleString(),
+    type: QuestType.QRCodeHike,
     startMarker: woodwayMarker1(),
     finishMarker: woodwayMarker6(),
     location: geo.point(
@@ -331,7 +332,7 @@ Quest getDummyQuest4() {
       intimateWoodwayMarker3(),
       intimateWoodwayMarker4(),
     ],
-    type: QuestType.QRCodeHike.toSimpleString(),
+    type: QuestType.QRCodeHike,
     startMarker: intimateWoodwayMarker1(),
     finishMarker: intimateWoodwayMarker4(),
     location: geo.point(
@@ -365,7 +366,7 @@ Quest getQrCodeHuntJaeger() {
       starenweg3(),
     ],
     // TODO: QRCodeHuntIndoor
-    type: QuestType.QRCodeHunt.toSimpleString(),
+    type: QuestType.QRCodeHunt,
     startMarker: starenweg1(),
     finishMarker: starenweg3(),
     location: geo.point(
@@ -393,7 +394,7 @@ Quest getQrCodeHuntJaeger2() {
       starenweg1(),
     ],
     // TODO: QRCodeHuntIndoor
-    type: QuestType.GPSAreaHunt.toSimpleString(),
+    type: QuestType.GPSAreaHunt,
     startMarker: heidach2(),
     finishMarker: starenweg1(),
     location: geo.point(
@@ -432,7 +433,7 @@ Quest getDummyQuest5() {
     markers: [
       myRoomMarker(),
     ],
-    type: QuestType.QRCodeHike.toSimpleString(),
+    type: QuestType.QRCodeHike,
     startMarker: myRoomMarker(),
     finishMarker: myRoomMarker(),
     location: geo.point(latitude: 49.267408282, longitude: -122.9905778),
@@ -452,7 +453,7 @@ Quest getDummyQuest6() {
       heidach2(),
       heidach4(),
     ],
-    type: QuestType.QRCodeHike.toSimpleString(),
+    type: QuestType.QRCodeHike,
     startMarker: starenweg4(),
     finishMarker: heidach4(),
     location: geo.point(
@@ -474,7 +475,7 @@ Quest starenWegNoListener() {
       heidach2(),
       starenweg4(),
     ],
-    type: QuestType.GPSAreaHike.toSimpleString(),
+    type: QuestType.GPSAreaHike,
     startMarker: heidach4(),
     finishMarker: starenweg4(),
     location: geo.point(
@@ -497,7 +498,7 @@ Quest getZaehringenHike() {
       freiburg2(),
       freiburg3(),
     ],
-    type: QuestType.GPSAreaHike.toSimpleString(),
+    type: QuestType.GPSAreaHike,
     startMarker: freiburg1(),
     finishMarker: freiburg3(),
     location: geo.point(
@@ -933,7 +934,7 @@ Quest getDummyVibrationSearchQuestHeuweiler() {
       belekLocSearch1(),
       belekLocSearch(),
     ],
-    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    type: QuestType.TreasureLocationSearch,
     startMarker: belekLocSearch1(),
     finishMarker: belekLocSearch(),
     location: geo.point(
@@ -1025,7 +1026,7 @@ Quest commercialTrophy() {
         "Learn how to enjoy life by finding the treasure at commercial drive",
     afkCredits: 30,
     markers: [commercial1(), commercial2()],
-    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    type: QuestType.TreasureLocationSearch,
     startMarker: commercial1(),
     finishMarker: commercial2(),
     location: geo.point(
@@ -1044,7 +1045,7 @@ Quest seeparkSpielplatz() {
     description: "Im Seepark",
     afkCredits: 50,
     markers: [seepark1(), seepark2()],
-    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    type: QuestType.TreasureLocationSearch,
     startMarker: seepark1(),
     finishMarker: seepark2(),
     location: geo.point(
@@ -1063,7 +1064,7 @@ Quest manu() {
     description: "Im Seepark",
     afkCredits: 50,
     markers: [manu1(), manu2()],
-    type: QuestType.TreasureLocationSearch.toSimpleString(),
+    type: QuestType.TreasureLocationSearch,
     startMarker: manu1(),
     finishMarker: manu2(),
     location: geo.point(

@@ -14,6 +14,10 @@ class ParentDrawerView extends StatelessWidget {
     return ViewModelBuilder<CommonDrawerViewModel>.reactive(
       viewModelBuilder: () => CommonDrawerViewModel(),
       builder: (context, model, child) => CommonDrawerView(children: [
+        // if (model.isAnyoneUsingScreenTime)
+        //   AfkCreditsButton(
+        //       title: "Screen time session",
+        //       onTap: model.navToActiveScreenTimeView),
         if (model.flavorConfigProvider.flavor == Flavor.dev)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
@@ -21,7 +25,7 @@ class ParentDrawerView extends StatelessWidget {
               children: [
                 Expanded(
                   child: AfkCreditsButton(
-                      title: "Show onboarding screens",
+                      title: "Show Introduction",
                       onTap: model.navToOnboardingScreens),
                 ),
               ],

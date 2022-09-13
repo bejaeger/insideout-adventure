@@ -8,16 +8,18 @@ import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 mixin NavigationMixin {
-  final _navigationService = locator<NavigationService>();
-  final _questService = locator<QuestService>();
+  final NavigationService _navigationService = locator<NavigationService>();
+  final QuestService _questService = locator<QuestService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   final LayoutService _layoutService = locator<LayoutService>();
+  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
   void navToAdminHomeView({required UserRole role}) {
     //navigationService.replaceWith(Routes.homeView);
@@ -72,13 +74,17 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.onBoardingScreensView);
   }
 
+  void navToFeedbackView() {
+    _navigationService.navigateTo(Routes.feedbackView);
+  }
+
   void replaceWithExplorerHomeView() {
     _navigationService.replaceWith(
       Routes.explorerHomeView,
     );
   }
 
-  void replaceWithSponsorHomeView() {
+  void replaceWithParentHomeView() {
     _navigationService.replaceWith(
       Routes.parentHomeView,
     );
@@ -96,6 +102,10 @@ mixin NavigationMixin {
 
   void popViewReturnValue({dynamic result}) {
     _navigationService.back(result: result);
+  }
+
+  void navToParentMapView() {
+    _navigationService.navigateTo(Routes.parentMapView);
   }
 
   void navToMapView({required UserRole role}) {
@@ -149,8 +159,41 @@ mixin NavigationMixin {
     _layoutService.setIsShowingQuestList(true);
   }
 
+  void showExplorerAccountOverlay() {
+    _layoutService.setIsShowingExplorerAccount(true);
+  }
+
+  void showCreditsOverlay() {
+    _layoutService.setIsShowingCreditsOverlay(true);
+  }
+
   void removeQuestListOverlay() {
     _layoutService.setIsShowingQuestList(false);
+  }
+
+  void removeCreditsOverlay() {
+    _layoutService.setIsShowingCreditsOverlay(false);
+  }
+
+  void removeExplorerAccountOverlay() {
+    _layoutService.setIsShowingExplorerAccount(false);
+  }
+
+  void maybeRemoveQuestListOverlay() {
+    if (_layoutService.isShowingQuestList) {
+      _layoutService.setIsShowingQuestList(false);
+    }
+  }
+
+  void maybeRemoveExplorerAccountOverlay() {
+    if (_layoutService.isShowingExplorerAccount) {
+      _layoutService.setIsShowingExplorerAccount(false);
+    }
+  }
+
+  void navToSingleChildView({required String uid}) async {
+    await _navigationService.navigateTo(Routes.singleChildStatView,
+        arguments: SingleChildStatViewArguments(uid: uid));
   }
 
   Future navToArObjectView(bool isCoins) async {
@@ -159,21 +202,30 @@ mixin NavigationMixin {
   }
 
   Future navToSelectScreenTimeView({String? childId}) async {
-    await _navigationService.navigateTo(Routes.selectScreenTimeView,
-        arguments: SelectScreenTimeViewArguments(childId: childId));
+    if (_screenTimeService.currentSession?.sessionId == null) {
+      await _navigationService.navigateTo(Routes.selectScreenTimeView,
+          arguments: SelectScreenTimeViewArguments(childId: childId));
+    } else {
+      // if there is a screen time currently active, directly navigate to it
+      navToActiveScreenTimeView(
+          sessionId: _screenTimeService.currentSession?.sessionId);
+    }
   }
 
   Future navToActiveScreenTimeView(
       {ScreenTimeSession? session, String? sessionId}) async {
-    await _navigationService.navigateTo(Routes.activeScreenTimeView,
-        arguments: ActiveScreenTimeViewArguments(
-            session: session, screenTimeSessionId: sessionId));
-  }
-
-  Future navigateToGPSAreaQuest(Quest quest) async {
-    // TODO: Make sure we treat return value reasonably
-    await _navigationService.navigateTo(Routes.hikeQuestView,
-        arguments: HikeQuestViewArguments(quest: quest));
-    return true;
+    // no screen time currently live
+    if (_screenTimeService.currentSession?.sessionId == null) {
+      await _navigationService.navigateTo(Routes.activeScreenTimeView,
+          arguments: ActiveScreenTimeViewArguments(
+              session: session, screenTimeSessionId: sessionId));
+    } else {
+      // if there is a screen time currently active, directly navigate to it
+      await _navigationService.navigateTo(Routes.activeScreenTimeView,
+          arguments: ActiveScreenTimeViewArguments(
+              session: session,
+              screenTimeSessionId:
+                  _screenTimeService.currentSession?.sessionId));
+    }
   }
 }

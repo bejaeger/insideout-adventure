@@ -8,7 +8,6 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
-import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 import 'package:flutter/foundation.dart';
 
 class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
@@ -73,13 +72,15 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
 
   void setARFeatureEnabled(bool b) async {
     if (b == true) {
-      if (kIsWeb ||
-          !Platform.isAndroid ||
-          !(await ArCoreController.checkArCoreAvailability()) ||
-          !(await ArCoreController.checkIsArCoreInstalled())) {
-        showNotImplementedSnackbar();
-        return;
-      }
+      // TODO: Add check for AR feature
+      // if (kIsWeb ||
+      //     !Platform.isAndroid ||
+      //     !(await ArCoreController.checkArCoreAvailability()) ||
+      //     !(await ArCoreController.checkIsArCoreInstalled())) {
+      //   showNotImplementedSnackbar();
+      //   return;
+      // }
+      return;
     }
     _flavorConfigProvider.isARAvailable = b;
     notifyListeners();

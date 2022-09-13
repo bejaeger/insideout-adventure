@@ -304,7 +304,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
         barrierDismissible: true,
         title: 'Confirmation',
         description:
-            "Are you sure you would like to send $amount coins to ${recipientInfo.name}?",
+            "Are you sure you would like to send $amount credits to ${recipientInfo.name}?",
         confirmButtonTitle: 'YES',
         cancelButtonTitle: 'NO',
       );

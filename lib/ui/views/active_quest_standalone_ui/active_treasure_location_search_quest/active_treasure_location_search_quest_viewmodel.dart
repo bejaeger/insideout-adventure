@@ -22,9 +22,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ActiveTreasureLocationSearchQuestViewModel
     extends ActiveQuestBaseViewModel {
+  // ----------------------------------
+  // services
   final GeolocationService _geolocationService = locator<GeolocationService>();
+  final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
 
+  // ------------------------------------------
+  // getters
   int? get currentGPSAccuracy => _geolocationService.currentGPSAccuracy;
+
+  // ----------------
+  // state
+
   StreamSubscription? _activeVibrationQuestSubscription;
   DirectionStatus directionStatus = DirectionStatus.notstarted;
   bool isTrackingDeadTime = false;
@@ -33,13 +42,12 @@ class ActiveTreasureLocationSearchQuestViewModel
   bool isNearGoal = false;
 
   List<TreasureSearchLocation> checkpoints = [];
-  final log = getLogger("ActiveTreasureLocationSearchQuestViewModel");
 
   double currentDistanceInMeters = -1;
   double previousDistanceInMeters = -1;
   int numberTimesFired = 0;
-  bool get isFirstDistanceCheck => numberTimesFired == 0;
   bool allowCheckingPosition = true;
+  bool get isFirstDistanceCheck => numberTimesFired == 0;
 
   // markers on map
   Set<Marker> markersOnMap = {};
@@ -176,6 +184,7 @@ class ActiveTreasureLocationSearchQuestViewModel
         mapViewModel.resetMapMarkers();
 
         // this goes via mixin. Could technically be the same procedure! Not clear what is better!
+        mapViewModel.addAllQuestMarkers();
         addAllQuestMarkers();
       });
       notifyListeners();

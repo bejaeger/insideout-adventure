@@ -133,9 +133,9 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                           child: Align(
                             child: AFKFloatingActionButton(
                               onPressed: () => flipCard(
-                                  animateCamera: () =>
-                                      model.animateCameraToQuestMarkers(
-                                          model.getGoogleMapController)),
+                                animateCamera:
+                                    model.animateCameraToQuestMarkers,
+                              ),
                               backgroundColor: Colors.orange[300],
                               icon: Column(
                                 children: [
@@ -451,7 +451,7 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                           child: ListView(
                                             shrinkWrap: true,
                                             children: [
-                                              ...widget.quest.markers!
+                                              ...widget.quest.markers
                                                   .map(
                                                     (e) => TextButton(
                                                       onPressed: () => model
@@ -590,25 +590,26 @@ class NextClueCard extends StatelessWidget {
                 ),
                 child: Stack(
                   children: [
-                    GoogleMap(
-                      //mapType: MapType.hybrid,
-                      initialCameraPosition: model.initialCameraPosition(),
-                      //Place Markers in the Map
-                      markers: model.markersOnMap,
-                      circles: model.areasOnMap,
-                      //callback that’s called when the map is ready to us.
-                      onMapCreated: model.onMapCreated,
-                      //For showing your current location on Map with a blue dot.
-                      myLocationEnabled: true,
-                      // Button used for bringing the user location to the center of the camera view.
-                      myLocationButtonEnabled: false,
-                      //Remove the Zoom in and out button
-                      zoomControlsEnabled: false,
-                      //onTap: model.handleTap(),
-                      //Enable Traffic Mode.
-                      //trafficEnabled: true,
-                      mapToolbarEnabled: false,
-                    ),
+                    Container(),
+                    // GoogleMap(
+                    //   //mapType: MapType.hybrid,
+                    //   initialCameraPosition: model.initialCameraPosition(),
+                    //   //Place Markers in the Map
+                    //   markers: model.markersOnMap,
+                    //   circles: model.areasOnMap,
+                    //   //callback that’s called when the map is ready to us.
+                    //   onMapCreated: model.onMapCreated,
+                    //   //For showing your current location on Map with a blue dot.
+                    //   myLocationEnabled: true,
+                    //   // Button used for bringing the user location to the center of the camera view.
+                    //   myLocationButtonEnabled: false,
+                    //   //Remove the Zoom in and out button
+                    //   zoomControlsEnabled: false,
+                    //   //onTap: model.handleTap(),
+                    //   //Enable Traffic Mode.
+                    //   //trafficEnabled: true,
+                    //   mapToolbarEnabled: false,
+                    // ),
                     Align(
                       alignment: Alignment.topCenter,
                       child: Padding(

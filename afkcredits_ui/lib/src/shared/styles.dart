@@ -15,26 +15,34 @@ const TextStyle heading2Style = TextStyle(
   fontWeight: FontWeight.w600,
   //overflow: TextOverflow.ellipsis,
 );
-
+const TextStyle heading2LightStyle = TextStyle(
+  fontSize: 28,
+  fontWeight: FontWeight.w600,
+  color: kcMediumGrey,
+);
 const TextStyle heading3Style =
     TextStyle(fontSize: 24, fontWeight: FontWeight.w600);
+const TextStyle heading3LightStyle =
+    TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: kcMediumGrey);
 const TextStyle heading4Style = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w600, color: kcPrimaryColorSecondary);
+const TextStyle heading4LightStyle =
+    TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: kcMediumGrey);
 const TextStyle headingLightStyle = TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w400,
-  color: Color.fromARGB(255, 117, 117, 117),
+  color: kcMediumGrey,
 );
 
 const TextStyle alert3Style = TextStyle(
-  fontSize: 24,
+  fontSize: 20,
   fontWeight: FontWeight.w600,
-  color: Colors.red,
+  color: kcPrimaryColor,
 );
 const TextStyle warnStyle = TextStyle(
   // fontSize: 24,
   fontWeight: FontWeight.w600,
-  color: Colors.red,
+  color: kcRed,
 );
 const TextStyle success3Style = TextStyle(
   fontSize: 24,
@@ -59,22 +67,33 @@ const TextStyle bodyStyleSofia = TextStyle(
     //fontFamily: "Sofia",
     //fontWeight: FontWeight.w500,
     fontSize: 16.0,
-    color: Colors.black26);
+    color: kcGreyTextColor);
 const TextStyle subheadingStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w400,
+);
+const TextStyle subheadingStyleItalic = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w400,
+  fontStyle: FontStyle.italic,
 );
 
 const TextStyle captionStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w400,
   color: kcGreyTextColor,
-  overflow: TextOverflow.ellipsis,
+  //overflow: TextOverflow.ellipsis,
 );
 const TextStyle captionStyleBold = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w600,
   color: kcGreyTextColor,
+  overflow: TextOverflow.ellipsis,
+);
+const TextStyle captionStyleBoldRed = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+  color: kcRed,
   overflow: TextOverflow.ellipsis,
 );
 const TextStyle captionStyleBoldLight = TextStyle(
@@ -105,6 +124,8 @@ const TextStyle labelStyle =
 
 const TextStyle statsStyle = TextStyle(
     fontSize: 20, fontWeight: FontWeight.w600, color: kcGreyTextColorSoft);
+const TextStyle statsStyleBlack =
+    TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black87);
 
 const TextStyle tagStyle =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.black87);

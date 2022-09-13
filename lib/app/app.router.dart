@@ -33,7 +33,7 @@ import '../ui/views/ar_view/ar_object_view.dart';
 import '../ui/views/create_account/create_account_user_role_view.dart';
 import '../ui/views/create_account/create_account_view.dart';
 import '../ui/views/explorer_home/explorer_home_view.dart';
-import '../ui/views/hike_quest/hike_quest_view.dart';
+import '../ui/views/feedback_view/feedback_view.dart';
 import '../ui/views/history_and_achievements/history_and_achievements_view.dart';
 import '../ui/views/layout/bottom_bar_layout_view.dart';
 import '../ui/views/login/login_view.dart';
@@ -41,6 +41,7 @@ import '../ui/views/login/select_role_after_login_view.dart';
 import '../ui/views/map/map_overview_view.dart';
 import '../ui/views/onboarding_screens/onboarding_screens_view.dart';
 import '../ui/views/parent_home/parent_home_view.dart';
+import '../ui/views/parent_map/parent_map_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
 import '../ui/views/quests_overview/create_quest/create_quest_view.dart';
@@ -93,9 +94,10 @@ class Routes {
   static const String aRObjectView = '/a-robject-view';
   static const String activeScreenTimeView = '/active-screen-time-view';
   static const String selectScreenTimeView = '/select-screen-time-view';
-  static const String hikeQuestView = '/hike-quest-view';
   static const String singleQuestTypeView = '/single-quest-type-view';
   static const String onBoardingScreensView = '/on-boarding-screens-view';
+  static const String parentMapView = '/parent-map-view';
+  static const String feedbackView = '/feedback-view';
   static const all = <String>{
     parentHomeView,
     singleMarkerView,
@@ -128,9 +130,10 @@ class Routes {
     aRObjectView,
     activeScreenTimeView,
     selectScreenTimeView,
-    hikeQuestView,
     singleQuestTypeView,
     onBoardingScreensView,
+    parentMapView,
+    feedbackView,
   };
 }
 
@@ -173,9 +176,10 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.aRObjectView, page: ARObjectView),
     RouteDef(Routes.activeScreenTimeView, page: ActiveScreenTimeView),
     RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
-    RouteDef(Routes.hikeQuestView, page: HikeQuestView),
     RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
     RouteDef(Routes.onBoardingScreensView, page: OnBoardingScreensView),
+    RouteDef(Routes.parentMapView, page: ParentMapView),
+    RouteDef(Routes.feedbackView, page: FeedbackView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -452,16 +456,6 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    HikeQuestView: (data) {
-      var args = data.getArgs<HikeQuestViewArguments>(nullOk: false);
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => HikeQuestView(
-          key: args.key,
-          quest: args.quest,
-        ),
-        settings: data,
-      );
-    },
     SingleQuestTypeView: (data) {
       var args = data.getArgs<SingleQuestTypeViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
@@ -476,6 +470,21 @@ class StackedRouter extends RouterBase {
     OnBoardingScreensView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const OnBoardingScreensView(),
+        settings: data,
+      );
+    },
+    ParentMapView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const ParentMapView(),
+        settings: data,
+      );
+    },
+    FeedbackView: (data) {
+      var args = data.getArgs<FeedbackViewArguments>(
+        orElse: () => FeedbackViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => FeedbackView(key: args.key),
         settings: data,
       );
     },
@@ -628,19 +637,18 @@ class SelectScreenTimeViewArguments {
   SelectScreenTimeViewArguments({this.key, this.childId});
 }
 
-/// HikeQuestView arguments holder class
-class HikeQuestViewArguments {
-  final Key? key;
-  final Quest quest;
-  HikeQuestViewArguments({this.key, required this.quest});
-}
-
 /// SingleQuestTypeView arguments holder class
 class SingleQuestTypeViewArguments {
   final Key? key;
   final Quest? quest;
   final QuestType? questType;
   SingleQuestTypeViewArguments({this.key, required this.quest, this.questType});
+}
+
+/// FeedbackView arguments holder class
+class FeedbackViewArguments {
+  final Key? key;
+  FeedbackViewArguments({this.key});
 }
 
 /// ************************************************************************
@@ -1217,25 +1225,6 @@ extension NavigatorStateExtension on NavigationService {
     );
   }
 
-  Future<dynamic> navigateToHikeQuestView({
-    Key? key,
-    required Quest quest,
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
-  }) async {
-    return navigateTo(
-      Routes.hikeQuestView,
-      arguments: HikeQuestViewArguments(key: key, quest: quest),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
-  }
-
   Future<dynamic> navigateToSingleQuestTypeView({
     Key? key,
     required Quest? quest,
@@ -1266,6 +1255,40 @@ extension NavigatorStateExtension on NavigationService {
   }) async {
     return navigateTo(
       Routes.onBoardingScreensView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToParentMapView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.parentMapView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToFeedbackView({
+    Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.feedbackView,
+      arguments: FeedbackViewArguments(key: key),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

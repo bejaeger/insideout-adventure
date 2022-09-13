@@ -1,0 +1,28 @@
+import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:flutter/material.dart';
+
+class QuestTypeTag extends StatelessWidget {
+  const QuestTypeTag({
+    Key? key,
+    required this.quest,
+  }) : super(key: key);
+
+  final Quest? quest;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.0),
+        //color: Colors.purple.withOpacity(0.2),
+        border: Border.all(color: Colors.grey[600]!),
+      ),
+      padding: const EdgeInsets.all(8.0),
+      child: AfkCreditsText.tag(
+        getShortQuestType(quest?.type),
+      ),
+    );
+  }
+}

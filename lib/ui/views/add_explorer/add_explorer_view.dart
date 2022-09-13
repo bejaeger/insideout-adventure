@@ -26,58 +26,46 @@ class AddExplorerView extends StatelessWidget with $AddExplorerView {
     return ViewModelBuilder<AddExplorerViewModel>.reactive(
       viewModelBuilder: () => AddExplorerViewModel(),
       onModelReady: (model) => listenToFormUpdated(model),
-      builder: (context, model, child) => VerifyNetworkConnection(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text("Create Child Account"),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-            child: ListView(
-              children: [
-                Column(
-                  children: [
-                    verticalSpaceLarge,
-                    AfkCreditsInputField(
-                      placeholder: 'Name',
-                      controller: nameController,
+      builder: (context, model, child) => Scaffold(
+        appBar: AppBar(
+          title: Text("Create Child Account"),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+          child: ListView(
+            children: [
+              Column(
+                children: [
+                  verticalSpaceLarge,
+                  AfkCreditsInputField(
+                    placeholder: 'Name',
+                    controller: nameController,
+                    autofocus: true,
+                  ),
+                  verticalSpaceMedium,
+                  AfkCreditsInputField(
+                    placeholder: 'Password',
+                    obscureText: (model.isPwShown) ? false : true,
+                    controller: passwordController,
+                    trailing: IconButton(
+                      onPressed: () {
+                        model.setIsPwShown(!model.isPwShown);
+                      },
+                      icon: (model.isPwShown)
+                          ? Icon(Icons.visibility, color: kcPrimaryColor)
+                          : Icon(Icons.visibility_off, color: kcPrimaryColor),
                     ),
-                    if (model.hasNameValidationMessage)
-                      Text(
-                        model.nameValidationMessage!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    verticalSpaceMedium,
-                    AfkCreditsInputField(
-                      placeholder: 'Password',
-                      obscureText: (model.isPwShown) ? false : true,
-                      controller: passwordController,
-                      trailing: IconButton(
-                        onPressed: () {
-                          model.setIsPwShown(!model.isPwShown);
-                        },
-                        icon: (model.isPwShown)
-                            ? Icon(Icons.visibility, color: kcPrimaryColor)
-                            : Icon(Icons.visibility_off, color: kcPrimaryColor),
-                      ),
-                    ),
-                    if (model.hasPasswordValidationMessage)
-                      Text(
-                        model.passwordValidationMessage!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                  ],
-                ),
-                verticalSpaceLarge,
-                model.isBusy
-                    ? CircularProgressIndicator()
-                    : AfkCreditsButton(
-                        // onPressed: model.navigateToExplorerHomeView,
-                        onTap: model.addExplorer,
-                        //child: Text("Go to explorer home/map")),
-                        title: "Create Account"),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              verticalSpaceLarge,
+              AfkCreditsButton(
+                  busy: model.isBusy,
+                  // onPressed: model.navigateToExplorerHomeView,
+                  onTap: model.addExplorer,
+                  //child: Text("Go to explorer home/map")),
+                  title: "Create Account"),
+            ],
           ),
         ),
       ),

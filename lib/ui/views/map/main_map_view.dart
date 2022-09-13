@@ -9,13 +9,15 @@ import 'package:afkcredits/ui/views/map/map_gestures_widget.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/overlays/cloud_overlay.dart';
 import 'package:afkcredits/ui/widgets/animations/map_animations.dart';
+import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class MainMapView extends StatelessWidget {
+  final void Function()? callback;
   //with MapControllerMixin {
-  const MainMapView({Key? key}) : super(key: key);
+  const MainMapView({Key? key, this.callback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,8 @@ class MainMapView extends StatelessWidget {
       onModelReady: (model) {
         model.initializeMapAndMarkers();
       },
-      disposeViewModel: false,
+      disposeViewModel:
+          false, // ! important because we can't dispose a singleton and use it again!
       builder: (context, model, child) => Stack(
         children: [
           MapGesturesWidget(
@@ -50,6 +53,7 @@ class MainMapView extends StatelessWidget {
           ),
           GoogleMapScreen(
             model: model,
+            callback: callback,
           ),
           CloudOverlay(
             overlay: model.isAvatarView,
@@ -58,11 +62,12 @@ class MainMapView extends StatelessWidget {
           if (model.hasActiveQuest) MapEffects(activeQuest: model.activeQuest),
           AvatarOnMap(
               characterNumber: model.characterNumber,
-              show: !((model.isShowingQuestDetails ||
-                      !model.isAvatarView ||
-                      model.isFadingOutOverlay ||
-                      model.isMovingCamera) &&
-                  !model.hasActiveQuest)),
+              show: (!((model.isShowingQuestDetails ||
+                          !model.isAvatarView ||
+                          model.isFadingOutOverlay ||
+                          model.isMovingCamera) &&
+                      !model.hasActiveQuest)) &&
+                  model.isAvatarView),
           // Avatar overlaid with Lottie
           RightFloatingButtons(
             onCompassTap: model.rotateToNorth,

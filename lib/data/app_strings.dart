@@ -10,17 +10,24 @@ const String WarningNotNearbyMarker =
 
 const String WarningScannedMarkerAlreadyCollected =
     "Your scanned marker has already been collected.";
-//Changed the Parameter from QuestType To String?
-String getShortQuestType(QuestType? type) {
-  if (type == null) return "Unknown";
+
+const String WarningNoQuestsDownloaded = "No quests found in the area.";
+
+String getShortQuestType(QuestType? type, {bool noCaps = false}) {
+  String returnVal = "Unknown";
+  if (type == null) return returnVal;
   if (type == QuestType.GPSAreaHike) {
-    return "Hike";
+    returnVal = "Hike";
   }
   if (type == QuestType.GPSAreaHunt) {
-    return "Hike";
+    returnVal = "Hike";
   }
   if (type == QuestType.TreasureLocationSearch) {
-    return "Search Quest";
+    returnVal = "Search Quest";
   }
-  return "Unknown";
+  if (noCaps) {
+    return returnVal.toLowerCase();
+  } else {
+    return returnVal;
+  }
 }

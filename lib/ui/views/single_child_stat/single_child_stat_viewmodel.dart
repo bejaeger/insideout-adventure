@@ -1,17 +1,25 @@
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 
 class SingleChildStatViewModel extends SwitchAccountsViewModel {
   final String explorerUid;
   SingleChildStatViewModel({required this.explorerUid})
       : super(explorerUid: explorerUid);
 
-  // User get explorer => userService.supportedExplorers[explorerUid]!;
-  // UserStatistics? get stats => userService.supportedExplorerStats[explorerUid];
+  // --------------------------------
+  // services
+  final log = getLogger("SingleExplorerViewModel");
 
+  // ---------------------------------
+  // getters
   List<dynamic> get sortedHistory =>
       userService.sortedHistory(uid: explorerUid);
   int? get totalChildScreenTimeLastDays =>
@@ -22,12 +30,56 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
       userService.totalChildScreenTimeTrend(uid: explorerUid)[explorerUid];
   int? get totalChildActivityTrend =>
       userService.totalChildActivityTrend(uid: explorerUid)[explorerUid];
+  String get totalChildScreenTimeLastDaysString =>
+      totalChildScreenTimeLastDays != null
+          ? totalChildScreenTimeLastDays.toString()
+          : "0";
+  String get totalChildActivityLastDaysString =>
+      totalChildActivityLastDays != null
+          ? totalChildActivityLastDays.toString()
+          : "0";
 
+  // --------------------------------------
+  // functions
   String explorerNameFromUid(String uid) {
     return userService.explorerNameFromUid(uid);
   }
 
-  final log = getLogger("SingleExplorerViewModel");
+  // ---------------------------------
+  // helpers
+  void showHistoryItemInfoDialog(dynamic data) async {
+    if (data is ActivatedQuest) {
+      await dialogService.showDialog(
+        title: "Finished: " + data.quest.name,
+        description:
+            "Successfully finished ${getShortQuestType(data.quest.type, noCaps: true)} and earned ${data.afkCreditsEarned} credits on " +
+                formatDateDetailsType2(data.createdAt.toDate()),
+      );
+    } else if (data is ScreenTimeSession) {
+      await dialogService.showDialog(
+        title: "Used ${data.minutes} min screen time",
+        description: "Used screen time from " +
+            formatDateDetailsType3(data.startedAt.toDate()) +
+            " until " +
+            formatDateDetailsType3(
+                data.startedAt.toDate().add(Duration(minutes: data.minutes))),
+      );
+    }
+  }
+
+  void showExplainCreditConversionDialog() async {
+    await dialogService.showCustomDialog(
+      variant: DialogType.CreditConversionInfo,
+      barrierDismissible: true,
+    );
+  }
+
+  void showChildStatDetailsDialog() async {
+    await dialogService.showCustomDialog(
+        variant: DialogType.ChildStatCard,
+        data: stats,
+        barrierDismissible: true);
+  }
 
   Future navigateToAddFundsView() async {
     //layoutService.setShowBottomNavBar(false);

@@ -10,10 +10,8 @@ import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
-import 'package:places_service/places_service.dart';
 
 class StartUpViewModel extends TransferBaseViewModel {
-  final PlacesService _placesService = locator<PlacesService>();
   //final _geolocationService = locator<GeolocationService>();
   final EnvironmentService _environmentService = locator<EnvironmentService>();
   final LocalStorageService _localStorageService =
@@ -28,17 +26,19 @@ class StartUpViewModel extends TransferBaseViewModel {
     // Only after at least the action method is set, the notification events are delivered
     NotificationController().initializeNotificationsEventListeners();
     await _environmentService.initialise();
+
+    // TODO: Likely deprecated
     //final placesKey =  _environment.getValue(key)
-    if (!kIsWeb) {
-      // Platform call causes crash when running on web (22.02.22)
-      if (Platform.isIOS) {
-        _placesService.initialize(
-            apiKey: _environmentService.getValue(GoogleMapsEnvKeyIOS));
-      } else if (Platform.isAndroid) {
-        _placesService.initialize(
-            apiKey: _environmentService.getValue(GoogleMapsEnvKey));
-      }
-    }
+    // if (!kIsWeb) {
+    //   // Platform call causes crash when running on web (22.02.22)
+    //   if (Platform.isIOS) {
+    //     _placesService.initialize(
+    //         apiKey: _environmentService.getValue(GoogleMapsEnvKeyIOS));
+    //   } else if (Platform.isAndroid) {
+    //     _placesService.initialize(
+    //         apiKey: _environmentService.getValue(GoogleMapsEnvKey));
+    //   }
+    // }
     // TODO: Check for network connection!
 
     try {
@@ -88,6 +88,7 @@ class StartUpViewModel extends TransferBaseViewModel {
           if (id != null) {
             // FOUND SCREEN TIME! Navigate to screen time view
             log.i("Found active screen time, navigating to active view");
+
             navToActiveScreenTimeView(sessionId: id);
           } else {
             if (localUserRole == UserRole.adminMaster) {

@@ -20,17 +20,19 @@ const String kCreatGiftCardMoney = "assets/icons/money.png";
 const String kPinInAreaIcon = "assets/icons/location-icon.ico";
 const String kCompassIcon = "assets/icons/cardinal-point.png";
 const String kClockMelted = "assets/icons/melted-clock.png";
+const String kCurvedArrowIcon = "assets/icons/curve-arrow.png";
 
 const String kWalkingIcon = "assets/icons/walk.png";
 const String kActivityIcon = "assets/icons/run.png";
-const String kScreenTimeIcon = "assets/icons/person.png";
-const String kScreenTimeIcon2 = "assets/icons/computer.png";
+
+const String kScreenTimeIcon = "assets/icons/computer.png";
+const String kScreenTimeIcon2 = "assets/icons/person.png";
 
 // illustrations
 const String kIllustrationActivity =
     "assets/illustrations/activity_illustration.png";
-   const String kIllustrationActivityWithArrows =
- "assets/illustrations/activity_illustration_with_arrows.png";
+const String kIllustrationActivityWithArrows =
+    "assets/illustrations/activity_illustration_with_arrows.png";
 const String kIllustrationAnnaHercules =
     "assets/illustrations/anna_hercules_world.png";
 const String kIllustrationInfographicWallet =

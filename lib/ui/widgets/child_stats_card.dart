@@ -8,29 +8,27 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class ChildStatsCard extends StatelessWidget {
-  final Map<String, UserStatistics>? childrenStats;
+  final UserStatistics? childStats;
   final User user;
   final int? screenTimeLastWeek;
   final int? activityTimeLastWeek;
   final int? screenTimeTrend;
   final int? activityTimeTrend;
+  final bool usingScreenTime;
 
   const ChildStatsCard(
       {Key? key,
-      required this.childrenStats,
+      required this.childStats,
       required this.user,
       required this.screenTimeLastWeek,
       required this.activityTimeLastWeek,
+      this.usingScreenTime = false,
       this.screenTimeTrend,
       this.activityTimeTrend})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    UserStatistics? stats;
-    if (childrenStats != null) {
-      stats = childrenStats![user.uid];
-    }
     return Card(
       elevation: 0,
       //color: Color.fromARGB(255, 231, 234, 241),
@@ -40,10 +38,13 @@ class ChildStatsCard extends StatelessWidget {
       child: Container(
         width: screenWidth(context, percentage: 0.8),
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[400]!),
+            border: Border.all(
+                color: usingScreenTime ? kcRed : Colors.grey[400]!,
+                width: usingScreenTime ? 2.0 : 1.0),
             borderRadius: BorderRadius.circular(20.0)),
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.only(
+              top: 15.0, left: 15.0, right: 15.0, bottom: 5.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,16 +60,21 @@ class ChildStatsCard extends StatelessWidget {
               Row(
                 children: [
                   //AfkCreditsText.body("Balance: "),
-                  if (stats != null)
+                  if (childStats != null)
                     CreditsAmount(
-                      amount: stats.afkCreditsBalance,
+                      amount: childStats!.afkCreditsBalance,
                       height: 18,
                     ),
                 ],
               ),
               verticalSpaceSmall,
-              AfkCreditsText.body("Stats last 7 days"),
-              stats == null
+              if (activityTimeLastWeek != null || screenTimeLastWeek != null)
+                AfkCreditsText.body("Stats last 7 days"),
+              if (activityTimeLastWeek == null && screenTimeLastWeek == null)
+                AfkCreditsText.body("Switch to " +
+                    user.fullName +
+                    "'s account and let your child earn credits"),
+              childStats == null
                   ? AFKProgressIndicator()
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,9 +100,9 @@ class ChildStatsCard extends StatelessWidget {
                         if (screenTimeLastWeek != null)
                           Row(
                             children: [
-                              Image.asset(kScreenTimeIcon,
-                                  height: 20,
-                                  width: 20,
+                              Image.asset(kScreenTimeIcon2,
+                                  height: 18,
+                                  width: 18,
                                   color: kcScreenTimeBlue),
                               SizedBox(width: 4),
                               AfkCreditsText.body(
@@ -106,20 +112,23 @@ class ChildStatsCard extends StatelessWidget {
                                     metric: screenTimeTrend!, screenTime: true)
                             ],
                           ),
-
                         // AfkCreditsText.body("# quests compl.: " +
                         //     stats.numberQuestsCompleted.toString()),
                         // AfkCreditsText.body(
                         //     "screen time: " + stats.afkCreditsSpent.toString()),
                       ],
                     ),
-              verticalSpaceSmall,
 
               // Flexible(
               //     //heightFactor: 0.6,
               //     child: Icon(Icons.trip_origin_sharp,
               //         size: 50, color: Colors.orange.shade400)),
               // verticalSpaceSmall,
+              Spacer(),
+              if (usingScreenTime)
+                Align(
+                    alignment: Alignment.bottomRight,
+                    child: AfkCreditsText.warn("Using screen time")),
             ],
           ),
         ),

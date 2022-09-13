@@ -7,9 +7,9 @@ class DisplaySnackBars {
 
   void snackBarCreatedQuest(/* {required dynamic quest} */) {
     _snackBarService.showSnackbar(
-      message: "Quest Created ",
-      title: 'Quest Created Successfully',
-      // duration: Duration(seconds: 10),
+      message: "Check out the new quest on the map",
+      title: 'New quest created',
+      duration: Duration(seconds: 2),
       onTap: (_) {
         print('snackbar tapped');
       },

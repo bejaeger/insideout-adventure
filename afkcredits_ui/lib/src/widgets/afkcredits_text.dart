@@ -7,6 +7,8 @@ class AfkCreditsText extends StatelessWidget {
   final TextStyle style;
   final TextAlign? alignment;
 
+  AfkCreditsText({required this.text, required this.style, this.alignment});
+
   const AfkCreditsText.headingOne(this.text,
       {TextAlign align = TextAlign.start})
       : style = heading1Style,
@@ -15,13 +17,25 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = heading2Style,
         alignment = align;
-  const AfkCreditsText.headingThree(this.text,
+  const AfkCreditsText.headingTwoLight(this.text,
       {TextAlign align = TextAlign.start})
+      : style = heading2LightStyle,
+        alignment = align;
+  const AfkCreditsText.headingThree(this.text,
+      {TextAlign align = TextAlign.start, int? maxLines})
       : style = heading3Style,
+        alignment = align;
+  const AfkCreditsText.headingThreeLight(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = heading3LightStyle,
         alignment = align;
   const AfkCreditsText.headingFour(this.text,
       {TextAlign align = TextAlign.start})
       : style = heading4Style,
+        alignment = align;
+  const AfkCreditsText.headingFourLight(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = heading4LightStyle,
         alignment = align;
   const AfkCreditsText.headingLight(this.text,
       {TextAlign align = TextAlign.start})
@@ -51,6 +65,10 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = subheadingStyle,
         alignment = align;
+  const AfkCreditsText.subheadingItalic(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = subheadingStyleItalic,
+        alignment = align;
   const AfkCreditsText.caption(this.text, {TextAlign align = TextAlign.start})
       : style = captionStyle,
         alignment = align;
@@ -58,6 +76,10 @@ class AfkCreditsText extends StatelessWidget {
   const AfkCreditsText.captionBold(this.text,
       {TextAlign align = TextAlign.start})
       : style = captionStyleBold,
+        alignment = align;
+  const AfkCreditsText.captionBoldRed(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = captionStyleBoldRed,
         alignment = align;
   const AfkCreditsText.captionBoldLight(this.text,
       {TextAlign align = TextAlign.start})
@@ -84,6 +106,10 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = statsStyle,
         alignment = align;
+  const AfkCreditsText.statsStyleBlack(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = statsStyleBlack,
+        alignment = align;
   const AfkCreditsText.tag(this.text, {TextAlign align = TextAlign.start})
       : style = tagStyle,
         alignment = align;
@@ -94,6 +120,12 @@ class AfkCreditsText extends StatelessWidget {
   AfkCreditsText.body(this.text,
       {Color color = kcGreyTextColor, TextAlign? align})
       : style = bodyStyleSofia.copyWith(color: color),
+        alignment = align;
+
+  AfkCreditsText.bodyItalic(this.text,
+      {Color color = kcGreyTextColor, TextAlign? align})
+      : style =
+            bodyStyleSofia.copyWith(color: color, fontStyle: FontStyle.italic),
         alignment = align;
 
   @override

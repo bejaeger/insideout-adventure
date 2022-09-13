@@ -1,6 +1,5 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/enums/map_updates.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:rxdart/rxdart.dart';
@@ -26,7 +25,7 @@ class MapStateService {
   double? previousBearing;
   double? previousZoom;
   double? previousTilt;
-  bool? previousViewWasAvatarView;
+  bool? previousIsAvatarView;
   double? previousLat;
   double? previousLon;
 
@@ -48,7 +47,7 @@ class MapStateService {
   void takeSnapshotOfCameraPosition() {
     if (previousBearing != null)
       return; // only take snapshot when no snapshot is stored!
-    previousViewWasAvatarView = isAvatarView;
+    previousIsAvatarView = isAvatarView;
     previousBearing = bearing;
     previousZoom = zoom;
     previousTilt = tilt;
@@ -70,8 +69,8 @@ class MapStateService {
     if (previousTilt != null) {
       tilt = previousTilt!;
     }
-    if (previousViewWasAvatarView == false) {
-      isAvatarView = false;
+    if (previousIsAvatarView != null) {
+      isAvatarView = previousIsAvatarView!;
     }
     if (previousLat != null) {
       newLat = previousLat;
@@ -84,7 +83,7 @@ class MapStateService {
     previousTilt = null;
     previousLon = null;
     previousLat = null;
-    previousViewWasAvatarView = null;
+    previousIsAvatarView = null;
     if (moveInsteadOfAnimate) {
       restoreMapSnapshotByMoving();
     } else {
@@ -148,29 +147,6 @@ class MapStateService {
       destination: Coords(lat, lon),
       //title: "AFK Credits Quest",
     );
-  }
-
-  // TODO:
-  // DEPRECATE THE FOLLOWING (needs google map dependency!)
-  LatLngBounds boundsFromLatLngList({required List<LatLng> latLngList}) {
-    if (latLngList.length == 0) {
-      log.e("Can't created LatLngBounds from empty list!");
-      throw Exception("Can't created LatLngBounds from empty list!");
-    }
-    double? x0, x1, y0, y1;
-    for (LatLng latLng in latLngList) {
-      if (x0 == null) {
-        x0 = x1 = latLng.latitude;
-        y0 = y1 = latLng.longitude;
-      } else {
-        if (latLng.latitude > x1!) x1 = latLng.latitude;
-        if (latLng.latitude < x0) x0 = latLng.latitude;
-        if (latLng.longitude > y1!) y1 = latLng.longitude;
-        if (latLng.longitude < y0!) y0 = latLng.longitude;
-      }
-    }
-    return LatLngBounds(
-        northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
   }
 
   ////////////////////////////////////////////////////////

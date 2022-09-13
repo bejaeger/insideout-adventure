@@ -1,3 +1,4 @@
+import 'package:afkcredits/services/maps/google_map_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -7,17 +8,19 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:places_service/places_service.dart';
 import 'package:stacked_core/stacked_core.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../apis/cloud_functions_api.dart';
 import '../apis/firestore_api.dart';
+import '../apis/notion_api.dart';
 import '../app_config_provider.dart';
 import '../services/afk_markers_positions_services/afk_markers_positions_service.dart';
+import '../services/cloud_storage_service.dart/cloud_storage_service.dart';
 import '../services/connectivity/connectivity_service.dart';
 import '../services/environment_services.dart';
+import '../services/feedback_service/feedback_service.dart';
 import '../services/gamification/gamification_service.dart';
 import '../services/geolocation/geolocation_service.dart';
 import '../services/layout/layout_service.dart';
@@ -33,6 +36,8 @@ import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/screentime/screen_time_service.dart';
 import '../services/users/user_service.dart';
+import '../ui/views/map/map_viewmodel.dart';
+import '../utils/image_selector.dart';
 
 final locator = StackedLocator.instance;
 
@@ -48,7 +53,6 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => BottomSheetService());
-  locator.registerLazySingleton(() => PlacesService());
   locator.registerLazySingleton(() => GeolocationService());
   locator.registerLazySingleton(() => EnvironmentService());
   locator.registerLazySingleton(() => UserService());
@@ -65,11 +69,15 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => StopWatchService());
   locator.registerLazySingleton(() => QRCodeService());
   locator.registerLazySingleton(() => MarkerService());
-  locator.registerLazySingleton(() => ScreenTimeService());
   locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => GamificationService());
   locator.registerLazySingleton(() => MapStateService());
   locator.registerLazySingleton(() => PedometerService());
+  locator.registerLazySingleton(() => CloudStorageService());
+  locator.registerLazySingleton(() => ImageSelector());
+  locator.registerLazySingleton(() => NotionApi());
+  locator.registerLazySingleton(() => FeedbackService());
+  locator.registerLazySingleton(() => ScreenTimeService());
   final mapViewModel = await presolveMapViewModel();
   locator.registerSingleton(mapViewModel);
 

@@ -21,29 +21,55 @@ class Notifications {
     );
   }
 
+  // ? NOT USED AT THE MOMENT
+  Future<void> createUpdatedScreenTimeNotification(
+      {required String title, required String message}) async {
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        displayOnForeground: true, // just update the other notification
+        displayOnBackground: true,
+        id: createUniqueId(),
+        channelKey: kUpdatedScreenTimeNotificationKey,
+        title: '${Emojis.time_alarm_clock} ' + title,
+        body: message,
+        locked: true,
+        category: NotificationCategory.StopWatch,
+        autoDismissible: false,
+      ),
+    );
+  }
+
   Future<void> createScheduledNotification(
       {required String title,
       required String message,
       required DateTime date}) async {
     await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: createUniqueId(),
-        channelKey: kScheduledNotificationChannelKey,
-        title: "\u26A0 " + title,
-        body: message,
-        category: NotificationCategory.Alarm,
-        locked: false,
-      ),
-      schedule: NotificationCalendar.fromDate(
-        date: date,
-        preciseAlarm: true,
-      ),
-    );
+        content: NotificationContent(
+          id: createUniqueId(),
+          channelKey: kScheduledNotificationChannelKey,
+          title: "\u26A0 " + title,
+          body: message,
+          category: NotificationCategory.Alarm,
+          locked: false,
+        ),
+        schedule: NotificationCalendar.fromDate(
+          date: date,
+          preciseAlarm: true,
+        ),
+        actionButtons: [
+          NotificationActionButton(
+              key: kScheduledNotificationActionKey, label: "OK")
+        ]);
   }
 
   Future<void> dismissPermanentNotifications() async {
     await AwesomeNotifications()
         .dismissNotificationsByChannelKey(kPermanentNotificationKey);
+  }
+
+  Future<void> dismissUpdatedScreenTimeNotifications() async {
+    await AwesomeNotifications()
+        .dismissNotificationsByChannelKey(kUpdatedScreenTimeNotificationKey);
   }
 
   Future<void> dismissScheduledNotifications() async {

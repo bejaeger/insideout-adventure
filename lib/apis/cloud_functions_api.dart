@@ -31,8 +31,14 @@ class CloudFunctionsApi {
           _flavorConfigProvider.authority,
           p.join(_flavorConfigProvider.uripathprepend,
               "transfers-api/bookkeepfinishedquest"));
+      var modQuestJson = quest.toJson();
+      // ! WORKAROUND
+      // ! necessary otherwise json.encode will fail!
+      // ! This means we cannot use geoflutterfire for past quests!
+      // ! This should be okay for now
+      modQuestJson['quest']['location'] = null;
       http.Response? response = await http.post(url,
-          body: json.encode(quest.toJson()),
+          body: json.encode(modQuestJson),
           headers: {"Accept": "application/json"});
       log.i("posted http request");
       dynamic result = json.decode(response.body);

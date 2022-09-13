@@ -37,9 +37,9 @@ class QuestInfoCard extends StatelessWidget {
             right: marginRight ?? 0,
             top: marginTop ?? 0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(35.0),
+          borderRadius: BorderRadius.circular(20.0),
         ),
-        elevation: 5,
+        elevation: 1,
         child: Container(
           height: height,
           width: width,
@@ -49,9 +49,9 @@ class QuestInfoCard extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Icon(getIconForCategory(quest.type!),
+                  child: Icon(getIconForCategory(quest.type),
                       size: 80,
-                      color: getColorOfType(quest.type!).withOpacity(0.25)),
+                      color: getColorOfType(quest.type).withOpacity(0.25)),
                 ),
               ),
               FractionallySizedBox(
@@ -77,9 +77,9 @@ class QuestInfoCard extends StatelessWidget {
                       verticalSpaceSmall,
                       Expanded(
                         child: Text(
-                          quest.name!,
+                          quest.name,
                           style: textTheme(context).headline6!.copyWith(
-                              fontSize: 24, fontWeight: FontWeight.w600),
+                              fontSize: 20, fontWeight: FontWeight.w600),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -91,7 +91,7 @@ class QuestInfoCard extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: FractionallySizedBox(
-                  heightFactor: 0.3,
+                  heightFactor: 0.25,
                   child: Container(
                     // height: 60,
                     padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -108,10 +108,13 @@ class QuestInfoCard extends StatelessWidget {
                         color: Colors.grey[200]),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CreditsAmount(
-                          amount: quest.afkCredits!,
-                          color: kcPrimaryColorSecondary,
+                          amount: quest.afkCredits,
+                          color: kcPrimaryColor,
+                          textColor: kcPrimaryColor,
+                          height: 20,
                         ),
                         Icon(Icons.arrow_forward_ios_rounded,
                             color: kcPrimaryColorSecondary)

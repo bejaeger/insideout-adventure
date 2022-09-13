@@ -24,12 +24,19 @@ class ActiveScreenTimeViewModel extends BaseModel {
       _screenTimeService.currentSession;
   String get childName =>
       session != null ? userService.explorerNameFromUid(session!.uid) : "";
+
+  // ---------------------------
   // constructor
   // used to start screen time
   ScreenTimeSession? session;
   // used if previous screen time session was found
   final String? screenTimeSessionId;
   ActiveScreenTimeViewModel({required this.session, this.screenTimeSessionId});
+
+  // ------------------------------
+  // state
+  bool get justStartedScreenTime =>
+      screenTimeService.justStartedListeningToScreenTime;
 
   Future initialize() async {
     setBusy(true);
@@ -51,8 +58,9 @@ class ActiveScreenTimeViewModel extends BaseModel {
           DateTime.now().add(Duration(minutes: session!.minutes));
 
       // start screen time session
-      _screenTimeService.startScreenTime(
+      await _screenTimeService.startScreenTime(
           session: session!, callback: listenToTick);
+      screenTimeService.justStartedListeningToScreenTime = true;
 
       // create permanent notification
       Notifications().createPermanentNotification(
@@ -115,7 +123,7 @@ class ActiveScreenTimeViewModel extends BaseModel {
       snackbarService.showSnackbar(
         title: snackBarTitle,
         message: snackBarMsg,
-        duration: Duration(seconds: 1),
+        duration: Duration(seconds: 2),
       );
     }
   }

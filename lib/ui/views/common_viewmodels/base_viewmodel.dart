@@ -20,7 +20,9 @@ import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stacked/stacked.dart';
@@ -47,6 +49,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   final QRCodeService qrCodeService = locator<QRCodeService>();
   final GamificationService gamificationService =
       locator<GamificationService>();
+  final ScreenTimeService screenTimeService = locator<ScreenTimeService>();
 
   final baseModelLog = getLogger("BaseModel");
 
@@ -69,12 +72,28 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
 
   // layout
-  bool get isShowingQuestDetails => activeQuestService.selectedQuest != null;
-
+  bool get isShowingQuestDetails =>
+      (activeQuestService.selectedQuest != null) ||
+      activeQuestService.previouslyFinishedQuest != null;
   bool get isShowingQuestList => layoutService.isShowingQuestList;
+  bool get isShowingExplorerAccount => layoutService.isShowingExplorerAccount;
+  bool get isShowingCreditsOverlay => layoutService.isShowingCreditsOverlay;
   bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
+
+  // -----------------------------------------------
+  // gamification system
+  int currentLevel({num? lifetimeEarnings}) {
+    return gamificationService.getCurrentLevel(
+        lifetimeEarnings: lifetimeEarnings);
+  }
+
+  int get creditsToNextLevel => gamificationService.getCreditsToNextLevel();
+  int get creditsForNextLevel => gamificationService.getCreditsForNextLevel();
+  double get percentageOfNextLevel =>
+      gamificationService.getPercentageOfNextLevel();
+  String get currentLevelName => gamificationService.getCurrentLevelName();
 
   // --------------------------------------------------
   bool get hasSelectedQuest => activeQuestService.hasSelectedQuest;
@@ -82,8 +101,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   bool get hasActiveQuest => activeQuestService.hasActiveQuest;
   // only access this
   ActivatedQuest get activeQuest => activeQuestService.activatedQuest!;
-  ActivatedQuest get previouslyFinishedQuest =>
-      activeQuestService.previouslyFinishedQuest!;
+  ActivatedQuest? get previouslyFinishedQuest =>
+      activeQuestService.previouslyFinishedQuest;
   ActivatedQuest? get activeQuestNullable => activeQuestService.activatedQuest;
 
   String get getHourMinuteSecondsTime =>
@@ -95,6 +114,20 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
+  bool get isScreenTimeActive => screenTimeService.currentSession != null;
+  String? get screenTimeSessionId =>
+      screenTimeService.currentSession?.sessionId;
+  int? get screenTimeLeft => screenTimeService.screenTimeLeftInSeconds;
+  String? get screenTimeLeftString =>
+      secondsToMinuteTime(screenTimeService.screenTimeLeftInSeconds);
+
+  bool usingScreenTime({required String uid}) {
+    return screenTimeService.currentSession?.uid == uid;
+  }
+
+  void listenToScreenTime() {
+    screenTimeService.setupScreenTimeListener(callback: notifyListeners);
+  }
 
   Future clearServiceData(
       {bool logOutFromFirebase = true,
@@ -102,7 +135,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     questService.clearData();
     activeQuestService.clearData();
     geolocationService.clearData();
-    // screenTimeService.clearData();
+    screenTimeService.clearData();
     _questTestingService.maybeReset();
     gamificationService.clearData();
     await userService.handleLogoutEvent(
@@ -207,7 +240,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   Future replaceWithHomeView() async {
     if (currentUser.role == UserRole.sponsor) {
-      replaceWithSponsorHomeView();
+      replaceWithParentHomeView();
     } else if (currentUser.role == UserRole.adminMaster) {
       await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
           arguments:
@@ -332,9 +365,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         // barrierColor: Colors.black45,
         description: quest.description,
         mainButtonTitle: quest.type == QuestType.DistanceEstimate
-            ? "Go to Quest"
-            : "Go to Quest",
-        secondaryButtonTitle: "Close",
+            ? "Show quest"
+            : "Show quest",
+        secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
         data: quest);
     return sheetResponse;
     // if (sheetResponse?.confirmed == true) {

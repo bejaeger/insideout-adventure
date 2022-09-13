@@ -1,3 +1,5 @@
+import 'package:afkcredits_ui/src/shared/app_colors.dart';
+import 'package:afkcredits_ui/src/shared/layout.dart';
 import 'package:flutter/material.dart';
 
 import '../enums/quest_type.dart';
@@ -64,72 +66,62 @@ IconData getIconForCategory(QuestType category) {
   }
 }
 */
-IconData getIconForCategory(String? category) {
-  if (category == QuestType.DistanceEstimate.toSimpleString()) {
+IconData getIconForCategory(QuestType category) {
+  if (category == QuestType.DistanceEstimate) {
     return Icons.arrow_right_alt;
-  } else if (category == QuestType.TreasureLocationSearch.toSimpleString()) {
+  } else if (category == QuestType.TreasureLocationSearch) {
     return Icons.location_on;
-  } else if (category == QuestType.QRCodeHunt.toSimpleString()) {
+  } else if (category == QuestType.QRCodeHunt) {
     return Icons.pets;
-  } else if (category == QuestType.QRCodeHike.toSimpleString()) {
+  } else if (category == QuestType.QRCodeHike) {
     return Icons.nature_people;
-  } else if (category == QuestType.GPSAreaHike.toSimpleString()) {
+  } else if (category == QuestType.GPSAreaHike) {
     return Icons.explore;
   } else {
     return Icons.map;
   }
 }
 
-/* //Changed The Parameter from QuestType to String
 String getStringForCategory(QuestType? category) {
   if (category == null) return "";
   switch (category) {
     case QuestType.DistanceEstimate:
       return "Estimating Distance";
     case QuestType.TreasureLocationSearch:
-      return "Treasure Search";
+      return "Search Quest";
     case QuestType.QRCodeHunt:
       return "QR Code Hunt";
     case QuestType.GPSAreaHunt:
-      return "GPS Area Hunt";
+      return "Hike";
     case QuestType.QRCodeHike:
       return "QR Code Hike";
     case QuestType.GPSAreaHike:
-      return "GPS Area Hike";
+      return "Hike";
     default:
       return "Default Quest";
   }
-} */
-
-String getStringForCategory(String? category) {
-  if (category == null) return "";
-  if (category == QuestType.DistanceEstimate.toSimpleString()) {
-    return "Estimating Distance";
-  } else if (category == QuestType.TreasureLocationSearch.toSimpleString()) {
-    return "Treasure Search";
-  } else if (category == QuestType.QRCodeHunt.toSimpleString()) {
-    return "QR Code Hunt";
-  } else if (category == QuestType.GPSAreaHunt.toSimpleString()) {
-    return "GPS Area Hunt";
-  } else if (category == QuestType.QRCodeHike.toSimpleString()) {
-    return "QR Code Hike";
-  } else if (category == QuestType.GPSAreaHike.toSimpleString()) {
-    return "GPS Area Hike";
-  } else {
-    return "Default Quest";
-  }
 }
 
-Color getColorOfType(String type) {
-  if (type == QuestType.TreasureLocationSearch.toSimpleString()) {
+Color getColorOfType(QuestType type) {
+  if (type == QuestType.TreasureLocationSearch) {
     return Colors.orange;
-  } else if (type == QuestType.QRCodeHike.toSimpleString()) {
+  } else if (type == QuestType.QRCodeHike) {
     return Colors.red;
-  } else if (type == QuestType.GPSAreaHike.toSimpleString()) {
+  } else if (type == QuestType.GPSAreaHike) {
     return Colors.green;
-  } else if (type == QuestType.DistanceEstimate.toSimpleString()) {
+  } else if (type == QuestType.DistanceEstimate) {
     return Colors.blue;
   } else {
     return Colors.cyan;
   }
+}
+
+Widget aboveBottomBackButton({required Widget child}) {
+  return Align(
+    alignment: Alignment.bottomCenter,
+    child: Padding(
+      padding: const EdgeInsets.only(bottom: kBottomBackButtonPadding),
+      child: child,
+    ),
+  );
 }

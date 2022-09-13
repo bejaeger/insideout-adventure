@@ -13,4 +13,6 @@ enum DialogType {
   CheckpointInArea,
   QrCodeInArea,
   PurchaseScreenTime,
+  ChildStatCard,
+  CreditConversionInfo
 }

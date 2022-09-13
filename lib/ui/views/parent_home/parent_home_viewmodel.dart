@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class ParentHomeViewModel extends TransferBaseViewModel {
   // ----------------------------------------
   // services
-  final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
+
   final log = getLogger("SponsorHomeViewModel");
 
   // -------------------------------------------------
@@ -33,6 +33,7 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   Map<String, int> get totalChildActivityTrend =>
       userService.totalChildActivityTrend();
 
+  //  ---------------------------------
   String explorerNameFromUid(String uid) {
     return userService.explorerNameFromUid(uid);
   }
@@ -43,12 +44,17 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   Future listenToData() async {
     Completer completerOne = Completer<void>();
     //Completer completerTwo = Completer<void>();
+
     userService.setupUserDataListeners(
-        completer: completerOne, callback: () => super.notifyListeners());
-    await runBusyFuture(Future.wait([
-      completerOne.future,
-      //completerTwo.future,
-    ]));
+        completer: completerOne, callback: () => notifyListeners());
+    await runBusyFuture(
+      Future.wait(
+        [
+          completerOne.future,
+          //completerTwo.future,
+        ],
+      ),
+    );
     notifyListeners();
   }
 
@@ -72,11 +78,13 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     await navigationService.navigateTo(Routes.addExplorerView);
   }
 
-  // -------------------------------------------------
+  // ----------------------------
   // navigation
-
-  void navigateToSingleExplorerView({required String uid}) async {
-    await navigationService.navigateTo(Routes.singleChildStatView,
-        arguments: SingleChildStatViewArguments(uid: uid));
+  void navigateToScreenTimeOrSingleChildView({required String uid}) async {
+    if (usingScreenTime(uid: uid)) {
+      navToActiveScreenTimeView(sessionId: screenTimeSessionId);
+    } else {
+      navToSingleChildView(uid: uid);
+    }
   }
 }

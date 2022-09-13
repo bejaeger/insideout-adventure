@@ -33,6 +33,8 @@ class GeolocationService extends PausableService {
       await getAndSetCurrentLocation(forceGettingNewPosition: false);
   LatLng get getUserLatLng =>
       LatLng(_livePosition!.latitude, _livePosition!.longitude);
+  List<double> get getUserLatLngInList =>
+      [_livePosition!.latitude, _livePosition!.longitude];
 
   Position? get getUserLivePositionNullable => _livePosition;
 
@@ -73,8 +75,9 @@ class GeolocationService extends PausableService {
       // denied permission, no access to gps, ...
 
       _livePositionStreamSubscription = Geolocator.getPositionStream(
-              locationSettings: const LocationSettings(
-                  accuracy: LocationAccuracy.best, distanceFilter: 0))
+              locationSettings: LocationSettings(
+                  accuracy: LocationAccuracy.best,
+                  distanceFilter: currentPositionDistanceFilter))
           .listen(
         (position) {
           printPositionInfo(position);
@@ -119,9 +122,10 @@ class GeolocationService extends PausableService {
       currentPositionDistanceFilter = distanceFilter.round();
       // TODO: Provide proper error message to user in case of
       // denied permission, no access to gps, ...
-      _livePositionStreamSubscription = Geolocator.getPositionStream(
-              locationSettings: const LocationSettings(
-                  accuracy: LocationAccuracy.best, distanceFilter: 0))
+      _livePositionMainStreamSubscription = Geolocator.getPositionStream(
+              locationSettings: LocationSettings(
+                  accuracy: LocationAccuracy.best,
+                  distanceFilter: currentPositionDistanceFilter))
           .listen(
         (position) {
           printPositionInfo(position);
@@ -447,7 +451,7 @@ class GeolocationService extends PausableService {
   }
 
   void cancelPositionListener() {
-    log.v("Cancel Quest position listener, resuming main listener");
+    log.v("Cancel Quest position listener");
     _livePositionStreamSubscription?.cancel();
     _livePositionStreamSubscription = null;
     // don't do this implicitely here. Explicit treatment is better!
@@ -459,6 +463,7 @@ class GeolocationService extends PausableService {
   }
 
   void cancelMainPositionListener() {
+    log.v("Cancel Main position listener");
     _livePositionMainStreamSubscription?.cancel();
     _livePositionMainStreamSubscription = null;
   }
@@ -548,6 +553,19 @@ class GeolocationService extends PausableService {
     // final double newLat = latLng.latitude + dLat * 180/math.pi;
     final double newLon = latLng.longitude + dLon * 180 / math.pi;
     return LatLng(latLng.latitude, newLon);
+  }
+
+  List<double> getLatLngShiftedLonInList(
+      {required List<double> latLng, double offset = 100}) {
+    //Earth’s radius, sphere
+    double R = 6378137;
+    //Coordinate offsets in radians
+    // final double dLat = offset/R;
+    final double dLon = offset / (R * math.cos(math.pi * latLng[0] / 180));
+    //OffsetPosition, decimal degrees
+    // final double newLat = latLng.latitude + dLat * 180/math.pi;
+    final double newLon = latLng[1] + dLon * 180 / math.pi;
+    return [latLng[0], newLon];
   }
 
   Future<Position?> setCurrentUserPosition() async {

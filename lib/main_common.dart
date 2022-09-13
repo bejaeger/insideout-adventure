@@ -8,9 +8,11 @@ import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -20,12 +22,13 @@ import 'notifications/notification_controller.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options_dev.dart' as dev;
+
 //import 'firebase_options_prod.dart' as prod;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
-    show ArCoreController;
+// import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
+//     show ArCoreController;
 
 const bool USE_EMULATOR = false;
 
@@ -61,20 +64,21 @@ void mainCommon(Flavor flavor) async {
     setupBottomSheetUi();
     // initialize notifications
     NotificationController().initializeLocalNotifications();
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // configure services that need settings dependent on flavor
     final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
     appConfigProvider.configure(flavor);
     print("==>> Running with flavor $flavor");
 
-    if (!kIsWeb &&
-        Platform.isAndroid &&
-        await ArCoreController.checkArCoreAvailability() &&
-        await ArCoreController.checkIsArCoreInstalled()) {
-      appConfigProvider.setIsARAvailable(true);
-    } else {
-      appConfigProvider.setIsARAvailable(false);
-    }
+    // if (!kIsWeb &&
+    //     Platform.isAndroid &&
+    //     await ArCoreController.checkArCoreAvailability() &&
+    //     await ArCoreController.checkIsArCoreInstalled()) {
+    //   appConfigProvider.setIsARAvailable(true);
+    // } else {
+    appConfigProvider.setIsARAvailable(false);
+    // }
 
     runApp(MyApp());
   } catch (e) {
@@ -134,6 +138,14 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+// Declared as global, outside of any class
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+
+  // Use this method to automatically convert the push data, in case you gonna use our data standard
+  AwesomeNotifications().createNotificationFromJsonData(message.data);
 }
 
 Future _connectToFirebaseEmulator() async {

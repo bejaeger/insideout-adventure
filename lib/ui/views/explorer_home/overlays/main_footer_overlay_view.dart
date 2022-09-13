@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/main_footer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits/ui/widgets/outline_box.dart';
@@ -8,8 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class MainFooterOverlayView extends StatelessWidget {
+  final bool show;
   const MainFooterOverlayView({
     Key? key,
+    required this.show,
   }) : super(key: key);
 
   @override
@@ -19,7 +22,8 @@ class MainFooterOverlayView extends StatelessWidget {
       viewModelBuilder: () => MainFooterViewModel(),
       //onModelReady: (model) => model.listenToLayout(),
       onModelReady: (model) {
-        // TODO: Move to viewmodel
+        // TODO: Move somewhere else!
+        // TODO: Needs to go into onboarding!
         AwesomeNotifications().isNotificationAllowed().then(
           (isAllowed) {
             if (!isAllowed) {
@@ -36,7 +40,7 @@ class MainFooterOverlayView extends StatelessWidget {
                       },
                       child: const Text('Don\'t Allow'),
                     ),
-                    Spacer(),
+                    verticalSpaceMedium,
                     TextButton(
                       onPressed: () => AwesomeNotifications()
                           .requestPermissionToSendNotifications()
@@ -44,7 +48,7 @@ class MainFooterOverlayView extends StatelessWidget {
                             (_) => Navigator.pop(context),
                           ),
                       child: const Text('Allow'),
-                    )
+                    ),
                   ],
                 ),
               );
@@ -55,99 +59,142 @@ class MainFooterOverlayView extends StatelessWidget {
         return model.listenToLayout();
       },
       builder: (context, model, child) => Container(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
-          //alignment: Alignment.bottomCenter,
-          child: FadingWidget(
-            show: !(model.isShowingQuestDetails || model.hasActiveQuest) ||
-                model.isFadingOutQuestDetails,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: 100),
-                    opacity: model.isMenuOpen ? 0 : 1,
-                    child: OutlineBox(
-                      width: 80,
-                      height: 60,
-                      borderWidth: 0,
-                      text: "SCREEN TIME",
-                      onPressed: model.navToSelectScreenTimeView,
-                      color: kcPrimaryColor,
-                      textColor: Colors.white,
+        child: FadingWidget(
+          show: show,
+          child: Stack(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15, bottom: 20),
+                      child: AnimatedOpacity(
+                          duration: Duration(milliseconds: 100),
+                          opacity: model.isMenuOpen ? 0 : 1,
+                          child: AfkCreditsButton(
+                            title: "",
+                            border: model.isScreenTimeActive
+                                ? Border.all(
+                                    color: Colors.red,
+                                    width: 4,
+                                  )
+                                : null,
+                            color: kcScreenTimeBlue,
+                            onTap: model.navToSelectScreenTimeView,
+                            height: 60,
+                            boxShadow: model.isScreenTimeActive
+                                ? null
+                                : mainFooterBoxShadow(),
+                            leading: Image.asset(
+                              kScreenTimeIcon,
+                              color: kcVeryLightGrey,
+                              height: 35,
+                            ),
+                          )),
                     ),
                   ),
-                ),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  width: model.isMenuOpen ? 200 : 130,
-                  curve: Curves.linear,
-                  child: CircularMenu(
-                    toggleButtonOnPressed: () {
-                      model.isMenuOpen = !model.isMenuOpen;
-                      model.notifyListeners();
-                    },
-                    alignment: Alignment.bottomCenter,
-                    //backgroundWidget: OutlineBox(text: "MENU"),
-                    startingAngleInRadian: 1.3 * 3.14,
-                    endingAngleInRadian: 1.7 * 3.14,
-                    toggleButtonColor: kcPrimaryColor,
-                    toggleButtonMargin: 0,
-                    toggleButtonBoxShadow: [],
-                    toggleButtonSize: 35,
-                    radius: model.isSuperUser ? 120 : 80,
-                    items: [
-                      CircularMenuItem(
-                        icon: Icons.settings,
-                        color: Colors.grey[600],
-                        margin: 0,
-                        boxShadow: [],
-                        onTap: () {
-                          model.showNotImplementedSnackbar();
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 250),
+                    width: model.isMenuOpen ? screenWidth(context) : 130,
+                    curve: Curves.linear,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: CircularMenu(
+                        toggleButtonOnPressed: () {
+                          model.isMenuOpen = !model.isMenuOpen;
+                          model.notifyListeners();
                         },
+                        toggleButtonBoxShadow: mainFooterBoxShadow(),
+                        alignment: Alignment.bottomCenter,
+                        // backgroundWidget: model.isMenuOpen
+                        //     ? Expanded(
+                        //         child: GestureDetector(
+                        //           onTap: () {
+                        //             model.isMenuOpen = !model.isMenuOpen;
+                        //             model.notifyListeners();
+                        //           },
+                        //           child: Container(
+                        //             color: Colors.black12,
+                        //           ),
+                        //         ),
+                        //       )
+                        //     : null,
+                        startingAngleInRadian: 1.3 * 3.14,
+                        endingAngleInRadian: 1.7 * 3.14,
+                        toggleButtonColor: kcCultured,
+                        toggleButtonIconColor: kcMediumGrey,
+                        toggleButtonMargin: 0,
+                        toggleButtonSize: 35,
+                        radius: model.isSuperUser ? 120 : 80,
+                        items: [
+                          CircularMenuItem(
+                            icon: Icons.settings,
+                            color: Colors.grey[600],
+                            margin: 0,
+                            boxShadow: [],
+                            onTap: () {
+                              model.showNotImplementedSnackbar();
+                            },
+                          ),
+                          CircularMenuItem(
+                            icon: Icons.logout,
+                            color: Colors.redAccent.shade700.withOpacity(0.9),
+                            margin: 0,
+                            boxShadow: [],
+                            onTap: model.handleLogoutEvent,
+                            //model.logout();
+                          ),
+                          if (model.isSuperUser)
+                            CircularMenuItem(
+                              icon: Icons.person,
+                              color: Colors.orange.shade700.withOpacity(0.9),
+                              margin: 0,
+                              boxShadow: [],
+                              onTap: model.openSuperUserSettingsDialog,
+                              //model.logout();
+                            ),
+                        ],
                       ),
-                      CircularMenuItem(
-                        icon: Icons.logout,
-                        color: Colors.redAccent.shade700.withOpacity(0.9),
-                        margin: 0,
-                        boxShadow: [],
-                        onTap: model.logout,
-                        //model.logout();
-                      ),
-                      if (model.isSuperUser)
-                        CircularMenuItem(
-                          icon: Icons.person,
-                          color: Colors.orange.shade700.withOpacity(0.9),
-                          margin: 0,
-                          boxShadow: [],
-                          onTap: model.openSuperUserSettingsDialog,
-                          //model.logout();
-                        ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: 100),
-                    opacity: model.isMenuOpen ? 0 : 1,
-                    child: OutlineBox(
-                      width: 80,
-                      height: 60,
-                      text: "QUESTS",
-                      color: kcPrimaryColor,
-                      textColor: Colors.white,
-                      borderWidth: 0,
-                      onPressed: model.showQuestListOverlay,
                     ),
                   ),
-                ),
-              ],
-            ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 15, bottom: 20),
+                      child: AnimatedOpacity(
+                          duration: Duration(milliseconds: 100),
+                          opacity: model.isMenuOpen ? 0 : 1,
+                          child: AfkCreditsButton(
+                              title: "",
+                              color: kcOrange,
+                              onTap: model.showQuestListOverlay,
+                              height: 60,
+                              leading: Image.asset(
+                                kActivityIcon,
+                                color: kcVeryLightGrey,
+                                height: 35,
+                              ),
+                              boxShadow: mainFooterBoxShadow())),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
+  }
+
+  List<BoxShadow> mainFooterBoxShadow() {
+    return [
+      BoxShadow(
+        offset: Offset(1, 1),
+        spreadRadius: 0.5,
+        blurRadius: 0.3,
+        color: kcShadowColor,
+      ),
+    ];
   }
 }

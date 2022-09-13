@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
+import 'package:afkcredits/datamodels/feedback/feedback.dart';
+import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
 import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
@@ -36,8 +39,6 @@ class FirestoreApi {
   // Create user documents
   DocumentReference? _documentReference;
   List<Quest>? newQuestResult;
-  List<AFKQuest>? newResult;
-  double radius = 50;
   // BehaviorSubject<double>? radius = BehaviorSubject<double>.seeded(50.0);
   // BehaviorSubject<double>? radius;
 
@@ -48,6 +49,9 @@ class FirestoreApi {
 
   Stream<dynamic>? query;
   StreamSubscription? subscription;
+
+  StreamSubscription? publicQuestsStreamSubscription;
+  Map<String, StreamSubscription?> parentQuestsStreamSubscriptions = {};
 
   Future<void> createUser(
       {required User user, required UserStatistics stats}) async {
@@ -475,35 +479,6 @@ class FirestoreApi {
     return getDummyQuest1();
   }
 
-/*   // Returns dummy data for now!
-  Future<List<Quest>> getNearbyQuests(
-      {required List<String> sponsorIds, bool? pushDummyQuests}) async {
-    if (pushDummyQuests == true) {
-      late List<Quest> questsOnFirestore;
-      try {
-        log.i("Downloading quests now");
-        questsOnFirestore = await downloadNearbyQuests(sponsorIds: sponsorIds);
-      } catch (e) {
-        log.w(
-            "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
-        questsOnFirestore = [];
-      }
-      final quests = getDummyQuests();
-      quests.forEach(
-        (el1) {
-          if (!questsOnFirestore.any((el2) => el2.name == el1.name)) {
-            // dummy quest not yet on firestore
-            // adding it
-            _uploadQuest(quest: el1);
-          }
-        },
-      );
-      return quests;
-    } else {
-      return await downloadNearbyQuests(sponsorIds: sponsorIds);
-    }
-  }  */
-
   Future _uploadQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
@@ -534,155 +509,145 @@ class FirestoreApi {
     return false;
   }
 
-  Future<bool> createAFKQuest({required AFKQuest afkQuest}) async {
-    final _documentReference =
-        getAFKQuestsPositionDocs(afkQuestId: afkQuest.id!);
-    if (_documentReference.id.isNotEmpty) {
-      //This is to make sure that the document has the same id as the quest.
-      log.i(
-          'This is the Document Id Being Created Harguilar ${_documentReference.path}');
-      await _documentReference.set(afkQuest.toJson());
-      return true;
-    }
-    return false;
-  }
-
-/*   // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> downloadNearbyQuests(
-      {required List<String> sponsorIds}) async {
-    // only gets quests NOT created by a standard parent
-    final quests =
-        await questsCollection.where("createdBy", isNull: true).get();
+      {required List<String> sponsorIds,
+      required double lat,
+      required double lon,
+      required double radius}) async {
     List<Quest> returnQuests = [];
-    if (quests.docs.isNotEmpty) {
-      returnQuests = quests.docs
-          .map(
-            (docs) => Quest.fromJson(
-              docs.data() as Map<String, dynamic>,
-            ),
-          )
-          .toList();
-    } else {
-      log.wtf('There is no \'quests\' collection on firestore');
-      throw FirestoreApiException(
-          message: "Quest data could not be found",
-          devDetails: "Quest document is empty");
-    }
-    for (String id in sponsorIds) {
-      QuerySnapshot q =
-          await questsCollection.where("createdBy", isEqualTo: id).get();
-      if (q.docs.isNotEmpty) {
-        returnQuests.addAll(q.docs
-            .map(
-              (docs) => Quest.fromJson(
-                docs.data() as Map<String, dynamic>,
-              ),
-            )
-            .toList());
-      } else {
-        log.wtf('There is no \'quests\' collection on firestore');
-        throw FirestoreApiException(
-            message: "Quest data could not be found",
-            devDetails: "Quest document is empty");
+    Completer<void> completer1 = Completer();
+    Completer<void> completer2 = Completer();
+    try {
+      final center = geo.point(latitude: lat, longitude: lon);
+
+      // only gets quests NOT created by a standard parent
+      final questsRef = questsCollection.where("createdBy", isNull: true);
+      Stream<List<DocumentSnapshot>> publicQuestsStream = geo
+          .collection(collectionRef: questsRef)
+          .within(
+              center: center,
+              radius: radius,
+              field: kQuestGeoPointPropertyName,
+              strictMode: true);
+
+      // cancel previous stream subscription
+      publicQuestsStreamSubscription?.cancel();
+      publicQuestsStreamSubscription = null;
+      publicQuestsStreamSubscription = publicQuestsStream.listen(
+        (List<DocumentSnapshot> docList) {
+          if (docList.isNotEmpty) {
+            try {
+              returnQuests = docList
+                  .map(
+                    (docs) => Quest.fromJson(
+                      docs.data() as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList();
+            } catch (e) {
+              log.e("Error loading quest datamodel from firestore: $e");
+              rethrow;
+            }
+          } else {
+            log.w('There is no public \'quests\' collection on firestore.');
+          }
+          completer1.complete();
+        },
+      );
+
+      if (sponsorIds.length == 0) {
+        completer2.complete();
       }
+      int counter = 0;
+      for (String id in sponsorIds) {
+        counter = counter + 1;
+        final qref = questsCollection.where("createdBy", isEqualTo: id);
+        Stream<List<DocumentSnapshot>> parentQuestsStream = geo
+            .collection(collectionRef: qref)
+            .within(
+                center: center,
+                radius: radius,
+                field: kQuestGeoPointPropertyName,
+                strictMode: true);
+        parentQuestsStreamSubscriptions[id]?.cancel();
+        parentQuestsStreamSubscriptions[id] = null;
+        parentQuestsStreamSubscriptions[id] = parentQuestsStream.listen(
+          (List<DocumentSnapshot> docList) {
+            if (docList.isNotEmpty) {
+              try {
+                returnQuests.addAll(docList
+                    .map(
+                      (docs) => Quest.fromJson(
+                        docs.data() as Map<String, dynamic>,
+                      ),
+                    )
+                    .toList());
+              } catch (e) {
+                log.e("Error loading quest datamodel from firestore: $e");
+                rethrow;
+              }
+            } else {
+              log.w(
+                  'There is no \'quests\' collection from parents on firestore');
+            }
+            if (counter == sponsorIds.length) {
+              completer2.complete();
+            }
+          },
+        );
+      }
+    } catch (e) {
+      log.wtf("Error downloading quests: $e");
+      throw FirestoreApiException(
+          message: "Unknown expection when downloading to quests",
+          devDetails: '$e');
+    }
+    await Future.wait([completer1.future, completer2.future]);
+    if (returnQuests.length == 0) {
+      throw FirestoreApiException(
+        message: WarningNoQuestsDownloaded,
+        devDetails: WarningNoQuestsDownloaded,
+        prettyDetails:
+            "No quests could be found in the area. Ask your parents to create one.",
+      );
     }
     return returnQuests;
-  }  */
+  }
 
   // Changed the Scope of the Method. from _pvt to public
-  Future<List<Quest>> getNearbyQuests() async {
-    try {
-      // List<Quest> questsOnFirestore;
-
+  Future<List<Quest>> getNearbyQuests(
+      {required List<String> sponsorIds,
+      required double lat,
+      required double lon,
+      required double radius,
+      bool? pushDummyQuests}) async {
+    if (pushDummyQuests == true) {
+      late List<Quest> questsOnFirestore;
+      try {
+        log.i("Downloading quests now");
+        questsOnFirestore = await downloadNearbyQuests(
+            sponsorIds: sponsorIds, lat: lat, lon: lon, radius: radius);
+      } catch (e) {
+        log.w(
+            "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
+        questsOnFirestore = [];
+      }
       final quests = getDummyQuests();
       quests.forEach(
         (el1) {
-          // dummy quest not yet on firestore
-          // adding it
-          _uploadQuest(quest: el1);
-        },
-      );
-
-      String field = 'location';
-      final location = Location();
-
-      final pos = await location.getLocation();
-      center = geo.point(
-          latitude: pos.latitude as double, longitude: pos.longitude as double);
-
-      Stream<List<DocumentSnapshot>> stream = geo
-          .collection(collectionRef: afkQuestsCollection)
-          .within(
-              center: center!, radius: 50.0, field: field, strictMode: true);
-      log.i("Data Inside The Stream");
-      log.i(stream);
-      stream.listen(
-        (List<DocumentSnapshot> docList) {
-          if (docList.isNotEmpty) {
-            newQuestResult = docList
-                .map(
-                  (docs) => Quest.fromJson(
-                    docs.data() as Map<String, dynamic>,
-                  ),
-                )
-                .toList();
+          if (!questsOnFirestore.any((el2) => el2.name == el1.name)) {
+            // dummy quest not yet on firestore
+            // adding it
+            _uploadQuest(quest: el1);
           }
         },
       );
-      return newQuestResult!;
-    } catch (e) {
-      throw FirestoreApiException(
-          message:
-              "Unknown expection when listening to past quests the user has successfully done",
-          devDetails: '$e');
+      return quests;
+    } else {
+      return await downloadNearbyQuests(
+          sponsorIds: sponsorIds, lat: lat, lon: lon, radius: radius);
     }
   }
-
-  // Changed the Scope of the Method. from _pvt to public
-  Future<List<AFKQuest>> downloadNearbyAfkQuests() async {
-    try {
-      String field = 'location';
-      var location = Location();
-      // Get users location
-      /*   location.onLocationChanged.listen(
-        (currentUserLocation) {
-          center = geo.point(
-              latitude: currentUserLocation.latitude as double,
-              longitude: currentUserLocation.longitude as double);
-        },
-      ); */
-      final pos = await location.getLocation();
-      center = geo.point(
-          latitude: pos.latitude as double, longitude: pos.longitude as double);
-
-      Stream<List<DocumentSnapshot>> stream = geo
-          .collection(collectionRef: questsCollection)
-          .within(
-              center: center!, radius: 50.0, field: field, strictMode: true);
-      log.i("Data Inside The Stream");
-      log.i(stream);
-      stream.listen(
-        (List<DocumentSnapshot> docList) {
-          if (docList.isNotEmpty) {
-            newResult = docList
-                .map(
-                  (docs) => AFKQuest.fromJson(
-                    docs.data() as Map<String, dynamic>,
-                  ),
-                )
-                .toList();
-          }
-        },
-      );
-      return newResult!;
-    } catch (e) {
-      throw FirestoreApiException(
-          message:
-              "Unknown expection when listening to past quests the user has successfully done",
-          devDetails: '$e');
-    }
-  }
-  // final quests = await questsCollection.get();
 
   // Returns dummy data for now!
   Future pushFinishedQuest({required ActivatedQuest? quest}) async {
@@ -795,7 +760,7 @@ class FirestoreApi {
     _documentReference.set(session
         .copyWith(
           sessionId: _documentReference.id,
-          startedAt: FieldValue.serverTimestamp(),
+          //startedAt: Timestamp.now(),
         )
         .toJson());
     //update the newly created document reference with the Firestore Id.
@@ -869,6 +834,46 @@ class FirestoreApi {
           message:
               "Unknown expection when listening to screen time sessions that are active",
           devDetails: '$e');
+    }
+  }
+
+  ///////////////////////////////////////////////
+  /// Feedback
+  ///
+  Future uploadFeedback(
+      {required Feedback feedback, String? feedbackDocumentKey}) async {
+    log.i("Uploading feedback document");
+    DocumentReference ref =
+        createFeedbackDocument(feedbackDocumentKey: feedbackDocumentKey);
+    await ref.set(feedback.toJson());
+  }
+
+  Future<FeedbackCampaignInfo> getFeedbackCampaignInfo() async {
+    final feedback =
+        await feedbackCollection.doc(feedbackCampaignInfoDocumentKey).get();
+    if (feedback.exists) {
+      try {
+        return FeedbackCampaignInfo.fromJson(
+            feedback.data() as Map<String, dynamic>);
+      } catch (error) {
+        log.wtf(
+            'Failed to get feedback campaign info doc. Probably the document first needs to be created.');
+        throw FirestoreApiException(
+          message: 'Failed to get feedback campaign info doc',
+          devDetails:
+              'Probably the document first needs to be created. Error: $error',
+        );
+      }
+    } else {
+      log.wtf("Failed to get feedback info doc. Creating it now!");
+      DocumentReference ref =
+          feedbackCollection.doc(feedbackCampaignInfoDocumentKey);
+      FeedbackCampaignInfo returnVal = FeedbackCampaignInfo(
+          currentCampaign: generalFeedbackDocumentKey,
+          questions: [],
+          surveyUrl: "");
+      await ref.set(returnVal.toJson());
+      return returnVal;
     }
   }
 
@@ -1072,12 +1077,33 @@ class FirestoreApi {
       "afkCreditsBalance": FieldValue.increment(deltaCredits),
     });
   }
+
+  Future changeTotalScreenTime(
+      {required String uid, required num deltaScreenTime}) async {
+    await getUserSummaryStatisticsDocument(uid: uid).update({
+      "totalScreenTime": FieldValue.increment(deltaScreenTime),
+    });
+  }
 }
 
 /////////////////////////////////////////////////////////
 // Collection's getter
 DocumentReference getUserStatisticsCollection({required String uid}) {
   return usersCollection.doc(uid).collection(userStatisticsCollectionKey).doc();
+}
+
+DocumentReference createFeedbackDocument({String? feedbackDocumentKey}) {
+  if (feedbackDocumentKey == null) {
+    return feedbackCollection
+        .doc(generalFeedbackDocumentKey)
+        .collection(feedbackCollectionKey)
+        .doc();
+  } else {
+    return feedbackCollection
+        .doc(feedbackDocumentKey)
+        .collection(feedbackCollectionKey)
+        .doc();
+  }
 }
 
 DocumentReference getUserSummaryStatisticsDocument({required String uid}) {
@@ -1100,10 +1126,6 @@ DocumentReference getMarkersDocs({required String markerId}) {
 
 DocumentReference getAFKMarkersPositionDocs({required String markerId}) {
   return afkMarkersPositionsCollection.doc(markerId);
-}
-
-DocumentReference getAFKQuestsPositionDocs({required String afkQuestId}) {
-  return afkQuestsCollection.doc(afkQuestId);
 }
 
 CollectionReference getUserGiftCardsCollection({required String uid}) {

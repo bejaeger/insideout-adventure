@@ -64,7 +64,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
 
-  bool questCenteredOnMap = true;
+  bool get questCenteredOnMap => activeQuestService.questCenteredOnMap;
 
   // TODO: maybe deprecated
   String lastActivatedQuestInfoText = "Active Quest";
@@ -112,6 +112,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     if (!hasEnoughSponsoring(quest: quest)) {
       return false;
     }
+
     try {
       // if (quest.type == QuestType.VibrationSearch && startFromMap) {
       //   await navigateToVibrationSearchView();
@@ -130,19 +131,22 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       // this will also change the MapViewModel to show the ActiveQuestView
       if (isQuestStarted is String) {
         await dialogService.showDialog(
-            title: "Sorry could not start the quest",
-            description: isQuestStarted);
+            title: "You cannot start the quest", description: isQuestStarted);
         resetSlider();
         return false;
       }
+
       // Quest is succesfully started so hasActiveQuest == true
 
       // selected quest is reset...hopefully I'm not accessing it in the active quest
       // by resetting the UI will react and now knows that an active quest is present, not only a "selected" quest
       activeQuestService.resetSelectedQuest();
-      changeCameraZoom(kInitialZoom);
-      animateMap(forceUseLocation: true);
 
+      // ? needed for TreasureLocationSearch
+      if (currentQuest?.type == QuestType.TreasureLocationSearch) {
+        changeCameraZoom(kInitialZoom);
+        animateMap(forceUseLocation: true);
+      }
       return true;
     } catch (e) {
       log.e("Could not start quest, error thrown: $e");
@@ -230,11 +234,11 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     // Restore camera
     restorePreviousCameraPosition();
 
-    // add back all quests
-    addAllQuestMarkers();
+    // reset/add back all quests
+    mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
 
     // reset selected quest after delay so the fade out is smooth
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 800));
 
     // reset flags
     layoutService.setIsMovingCamera(false);
@@ -247,7 +251,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
 
     // reset selected quest -> don't show quest details anymore
-    activeQuestService.resetSelectedQuest();
+    // reset previouslyFinishedQuest
+    activeQuestService.resetSelectedAndMaybePreviouslyFinishedQuest();
 
     // cancel position listener that was used for calibration
     cancelPositionListener();
@@ -313,6 +318,87 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     );
   }
 
+  Future animateCameraToStartMarker({int? delay}) async {
+    double? lat = activeQuestService.selectedQuest?.startMarker?.lat;
+    double? lon = activeQuestService.selectedQuest?.startMarker?.lon;
+    if (lat != null && lon != null) {
+      Future.delayed(
+        Duration(milliseconds: delay ?? 0),
+        () async => await mapViewModel.animateNewLatLon(
+            lat: lat, lon: lon, force: true),
+      );
+    } else {
+      log.e("Could not animate camera to start marker.");
+    }
+  }
+
+  // navigate camera to show currently visible quest markers
+  Future animateCameraToQuestMarkers({int delay = 0}) async {
+    if (selectedQuest?.type == QuestType.TreasureLocationSearch) {
+      animateCameraToStartMarker(delay: delay);
+      return;
+    }
+
+    List<List<double>> latLngListToAnimate = activeQuestService
+        .markersToShowOnMap(questIn: selectedQuest)
+        .map((m) => [m.lat!, m.lon!])
+        .toList();
+    if ((hasActiveQuest == false || latLngListToAnimate.length == 1) &&
+            selectedQuest?.type == QuestType.QRCodeHunt ||
+        selectedQuest?.type == QuestType.GPSAreaHike ||
+        selectedQuest?.type == QuestType.GPSAreaHunt) {
+      latLngListToAnimate.add(geolocationService.getUserLatLngInList);
+    }
+
+    // add ghost latLong positions (in-place) to avoid  zooming
+    // too far if only two positions very close by are shown!
+    potentiallyAddGhostLatLng(latLngList: latLngListToAnimate);
+
+    Future.delayed(
+      Duration(milliseconds: delay),
+      () => mapViewModel.animateCameraToBetweenCoordinates(
+          latLngList: latLngListToAnimate),
+    );
+  }
+
+  // if only two locations are shown we want to provide more padding on the
+  // screen and therefore add ghost markers!
+  void potentiallyAddGhostLatLng({required List<List<double>> latLngList}) {
+    if (latLngList.length == 2) {
+      if (geolocationService.distanceBetween(
+              lat1: latLngList[0][0],
+              lon1: latLngList[0][1],
+              lat2: latLngList[1][0],
+              lon2: latLngList[1][1]) <
+          150) {
+        // add ghost latLng positions for padding of camera!
+        latLngList.add(geolocationService.getLatLngShiftedLonInList(
+            latLng: latLngList[0], offset: 80));
+        latLngList.add(geolocationService.getLatLngShiftedLonInList(
+            latLng: latLngList[0], offset: -80));
+      }
+    }
+  }
+
+  // animate to user position
+  Future animateCameraToUserPosition() async {
+    await mapViewModel.animateNewLatLon(
+        lat: geolocationService.getUserLivePositionNullable!.latitude,
+        lon: geolocationService.getUserLivePositionNullable!.longitude,
+        force: true);
+    //   CameraUpdate.newCameraPosition(
+    //     CameraPosition(
+    //         target: LatLng(
+    //             geolocationService.getUserLivePositionNullable!.latitude,
+    //             geolocationService.getUserLivePositionNullable!.longitude),
+    //         zoom: await controller.getZoomLevel()),
+    //   ),
+    // );
+    activeQuestService.questCenteredOnMap = false;
+    notifyListeners();
+  }
+
+  // show Qr Code instead of animating to marker
   void displayQrCode(AFKMarker marker) {
     String qrCodeString =
         qrCodeService.getQrCodeStringFromMarker(marker: marker);
@@ -422,6 +508,10 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       },
     );
     if (result?.confirmed == true) {
+      // TODO: This is the moment where we should show a summary statistic!
+
+      // TODO: Then we should set previouslyFinishedQuest to null!
+
       // this means everything went fine!
       // Show statistics display
       questSuccessfullyFinished = true;
@@ -555,15 +645,14 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
   //------------------------------------------
   // Functions to override
-  // Changed the Parameter from QuestType To String
-  Future showInstructions(String? type) async {
-    if (type == QuestType.TreasureLocationSearch.toSimpleString()) {
+  Future showInstructions(QuestType? type) async {
+    if (type == QuestType.TreasureLocationSearch) {
       await dialogService.showDialog(
           title: "How it works", description: kLocationSearchDescription);
-    } else if (type == QuestType.GPSAreaHike.toSimpleString()) {
+    } else if (type == QuestType.GPSAreaHike) {
       await dialogService.showDialog(
           title: "How it works", description: kGPSAreaHikeDescription);
-    } else if (type == QuestType.DistanceEstimate.toSimpleString()) {
+    } else if (type == QuestType.DistanceEstimate) {
       await dialogService.showDialog(
           title: "How it works", description: kDistanceEstimateDescription);
     } else {

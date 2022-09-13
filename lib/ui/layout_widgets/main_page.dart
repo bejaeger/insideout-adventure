@@ -6,15 +6,24 @@ import 'package:stacked/stacked.dart';
 
 class MainPage extends StatelessWidget {
   final void Function()? onBackPressed;
+  final bool showBackButton;
   final Widget child;
-  const MainPage({Key? key, this.onBackPressed, required this.child})
+  const MainPage(
+      {Key? key,
+      this.onBackPressed,
+      required this.child,
+      this.showBackButton = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: MainStack(child: child, onBackPressed: onBackPressed),
+        body: MainStack(
+          child: child,
+          onBackPressed: onBackPressed,
+          showBackButton: showBackButton,
+        ),
       ),
     );
   }
@@ -40,8 +49,9 @@ class MainStack extends StatelessWidget {
         children: [
           child,
           if (showBackButton)
-            Align(
-              alignment: Alignment(0, 0.91),
+            Container(
+              alignment: Alignment.bottomCenter,
+              padding: const EdgeInsets.only(bottom: 20),
               child: RoundCloseButton(
                   onTap:
                       onBackPressed != null ? onBackPressed! : model.popView),

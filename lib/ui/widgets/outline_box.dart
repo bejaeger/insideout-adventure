@@ -7,6 +7,8 @@ class OutlineBox extends StatelessWidget {
   final double? height;
   final Color? color;
   final Color? textColor;
+  final Color? borderColor;
+
   final double borderWidth;
   final void Function()? onPressed;
   const OutlineBox(
@@ -17,6 +19,7 @@ class OutlineBox extends StatelessWidget {
       this.onPressed,
       this.color,
       this.textColor,
+      this.borderColor,
       this.borderWidth = 2})
       : super(key: key);
 
@@ -28,7 +31,8 @@ class OutlineBox extends StatelessWidget {
         width: width,
         height: height,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[800]!, width: borderWidth),
+          border: Border.all(
+              color: borderColor ?? Colors.grey[800]!, width: borderWidth),
           borderRadius: BorderRadius.circular(15.0),
           color: color,
           boxShadow: const [

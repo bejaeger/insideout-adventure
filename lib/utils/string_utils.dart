@@ -89,15 +89,25 @@ String secondsToHourMinuteSecondTime(int? value) {
 
 // Helper functions
 String secondsToMinuteSecondTime(int? value) {
-  if (value == null) return "00:00:00";
+  if (value == null) return "0m 0s";
   int m = ((value)) ~/ 60;
   int s = value - (m * 60);
 
   String minuteLeft =
-      m.toString().length < 2 ? "0" + m.toString() : m.toString();
+      m.toStringAsFixed(1).length < 2 ? "0" + m.toString() : m.toString();
   String secondsLeft =
-      s.toString().length < 2 ? "0" + s.toString() : s.toString();
+      s.toStringAsFixed(1).length < 2 ? "0" + s.toString() : s.toString();
   String result =
       (minuteLeft == "00" ? "" : (minuteLeft + "m")) + " " + secondsLeft + "s";
+  return result;
+}
+
+String secondsToMinuteTime(int? value) {
+  if (value == null) return "0m";
+  int m = ((value) / 60).round();
+
+  String minuteLeft =
+      m.toStringAsFixed(1).length < 2 ? "0" + m.toString() : m.toString();
+  String result = (minuteLeft == "00" ? "" : (minuteLeft + "m"));
   return result;
 }

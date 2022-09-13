@@ -43,11 +43,12 @@ dependencies:
   firebase_core: ^1.20.0
   cloud_firestore: ^3.4.1
   firebase_storage: ^10.3.3
+  firebase_messaging: ^13.0.1
   cloud_functions: ^3.3.3
   connectivity_plus: ^2.3.6
   nanoid: ^1.0.0
-  map_launcher: ^2.2.3
-
+  map_launcher: ^2.1.2
+  url_launcher: ^6.1.5
   # Firebase Authentications
   firebase_auth: ^3.5.1
   google_sign_in: ^5.4.0
@@ -57,7 +58,7 @@ dependencies:
 
   flip_card: ^0.6.0
 
-  geolocator: ^8.2.1
+  geolocator: ^9.0.0
 
   permission_handler: ^10.0.0
   currency_text_input_formatter: ^2.1.7
@@ -79,8 +80,6 @@ dependencies:
   freezed_annotation: ^2.1.0
   json_annotation: ^4.6.0
   flutter_launcher_icons: ^0.9.3
-  places_service: ^0.1.2
-  # Harguilar Started HEre authors:
   notion_api: ^1.2.0
   device_info: ^2.0.3
 
@@ -98,8 +97,8 @@ dependencies:
   stop_watch_timer: ^1.3.1
   geoflutterfire: ^3.0.3
   location: ^4.3.0
-  google_maps_flutter_web: ^0.4.0
-  arcore_flutter_plugin: ^0.1.0-null-safety.3
+  google_maps_flutter_web: ^0.4.0+2  
+  ar_flutter_plugin: ^0.7.1
   flutter_vibrate: ^1.3.0
   slidable_button: ^2.0.0+1
   slide_to_act: ^2.0.1
@@ -107,7 +106,8 @@ dependencies:
   map_picker: ^0.0.3
   image_picker: ^0.8.4+4
   progress_indicator_button: ^0.0.3
-  get: ^4.6.5
+  get: 4.6.5
+  #get: ^4.6.5
   #background_fetch: ^1.1.0
   #awesome_notifications: ^0.6.21
   awesome_notifications: #^0.7.0-beta.2
@@ -120,7 +120,7 @@ dependencies:
   transparent_pointer: ^1.0.0
   afkcredits_ui: 
     path: ./afkcredits_ui/
-  provider: ^6.0.3
+
   circular_menu: ^2.0.1
   pedometer: ^3.0.0
   flutter_background_service: ^2.0.0
@@ -143,6 +143,15 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  # auto_route_generator:
+  stacked_generator: ^0.7.15
+  freezed: ^2.1.0+1
+  json_serializable: ^6.1.5
+  flutter_dotenv: ^5.0.2
+  rounded_loading_button: ^2.0.8
+  dependency_validator: ^3.0.0
+
+  flutter_archive: ^5.0.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -199,6 +208,7 @@ flutter:
     - assets/icons/qrcode.png
     - assets/icons/map.png
     - assets/icons/location-icon.ico
+    - assets/icons/curve-arrow.png
     - assets/icons/cardinal-point.png  
     - assets/lottie/lottietest.json  
     - assets/icons/walk.png

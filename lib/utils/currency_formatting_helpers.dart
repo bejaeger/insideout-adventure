@@ -1,5 +1,5 @@
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/constants/afk_credit_and_currency_system.dart';
+import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/utils/other_helpers.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:intl/intl.dart';
@@ -55,12 +55,16 @@ int centsToAfkCredits(num cents) {
 
 // credit and currency conversion (maybe put this in a sevice?)
 int creditsToScreenTime(num credits) {
-  return (credits * kCreditsToScreenTimeConversionFactor).round();
+  return (credits *
+          HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor)
+      .round();
 }
 
 // credit and currency conversion (maybe put this in a sevice?)
 int screenTimeToCredits(int minutes) {
-  return (minutes / kCreditsToScreenTimeConversionFactor).round();
+  return (minutes /
+          HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor)
+      .round();
 }
 
 String formatAfkCreditsFromCents(num cents) {

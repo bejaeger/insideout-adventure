@@ -28,6 +28,8 @@ class AppConfigProvider {
     flavor = flavorIn;
   }
 
+  String get versionName => "Alpha v1.0";
+
   String get appName {
     switch (this.flavor) {
       case Flavor.dev:
@@ -124,6 +126,28 @@ class AppConfigProvider {
         return URIPATHPREPENDPROD;
       default:
         return URIPATHPREPENDDEV;
+    }
+  }
+
+  String get notionFeedbackToken {
+    switch (this.flavor) {
+      case Flavor.dev:
+        return kDevNotionFeedbackToken;
+      case Flavor.prod:
+        return kProdNotionFeedbackToken;
+      default:
+        return kDevNotionFeedbackToken;
+    }
+  }
+
+  String get notionFeedbackDatabaseId {
+    switch (this.flavor) {
+      case Flavor.dev:
+        return kDevNotionFeedbackDatabaseId;
+      case Flavor.prod:
+        return kProdNotionFeedbackDatabaseId;
+      default:
+        return kDevNotionFeedbackDatabaseId;
     }
   }
 }

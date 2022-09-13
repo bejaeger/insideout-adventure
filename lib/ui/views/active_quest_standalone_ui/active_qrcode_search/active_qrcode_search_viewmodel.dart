@@ -49,9 +49,7 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
 
   bool maybeFlipCardToMap() {
     return flipCard(
-        animateCamera: () =>
-            animateCameraToQuestMarkers(getGoogleMapController),
-        flipToMap: true);
+        animateCamera: animateCameraToQuestMarkers, flipToMap: true);
   }
 
   bool maybeFlipCardToClue() {
@@ -63,8 +61,8 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
       return hasActiveQuest
           ? (activeQuestService.getNumberMarkersCollected - 1).toString() +
               " / " +
-              (activeQuest.quest.markers!.length - 1).toString()
-          : "0 / " + currentQuest!.markers!.length.toString();
+              (activeQuest.quest.markers.length - 1).toString()
+          : "0 / " + currentQuest!.markers.length.toString();
     } else {
       return "";
     }
@@ -161,16 +159,16 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
             if (maybeFlipCardToMap()) {
               await Future.delayed(Duration(milliseconds: 500));
             } else {
-              animateCameraToQuestMarkers(getGoogleMapController);
+              animateCameraToQuestMarkers();
             }
             isAnimatingCamera = true;
             await Future.delayed(Duration(milliseconds: 1000));
           }
 
-          if (currentQuest!.type == QuestType.QRCodeHunt) {
-            addMarkerToMap(quest: activeQuest.quest, afkmarker: result.marker!);
-          }
-          addAreaToMap(quest: activeQuest.quest, afkmarker: result.marker!);
+          // if (currentQuest!.type == QuestType.QRCodeHunt) {
+          //   addMarkerToMap(quest: activeQuest.quest, afkmarker: result.marker!);
+          // }
+          // addAreaToMap(quest: activeQuest.quest, afkmarker: result.marker!);
 
           if (currentQuest!.type == QuestType.GPSAreaHunt) {
             notifyListeners();

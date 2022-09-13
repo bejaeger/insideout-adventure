@@ -4,12 +4,14 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
@@ -28,15 +30,14 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   // Stateful Data
   // ignore: close_sinks
 
-  List<AFKQuest>? _afkQuest;
-
-  List<AFKQuest> get getAFKQuest => _afkQuest!;
-
   // --------------------------------------------------
   // getters
   bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
-  String get liveDistance => geolocationService.getLiveDistancesToGoal();
+  String get liveDistance => geolocationService
+      .getLiveDistancesToGoal(); // ----------------------------------
+  bool get showReloadQuestButton => questService.showReloadQuestButton;
+  bool get isReloadingQuests => questService.isReloadingQuests;
   String get lastKnownDistance =>
       geolocationService.getLastKnownDistancesToGoal();
   List<QuestDataPoint> get allPositions =>
@@ -69,7 +70,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     await initializeQuests();
     listenToLayout();
     setBusy(false);
-
     // fade loading screen out process
     await Future.delayed(
       Duration(milliseconds: 500),
@@ -109,18 +109,44 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     ]);
   }
 
-  Future initializeQuests({bool? force}) async {
+  Future initializeQuests({bool? force, double? lat, double? lon}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
         await questService.loadNearbyQuests(
-            force: true, sponsorIds: currentUser.sponsorIds);
+            force: true,
+            sponsorIds: currentUser.sponsorIds,
+            lat: lat,
+            lon: lon);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }
     } catch (e) {
-      log.wtf("Error when loading quests, this should never happen. Error: $e");
-      await showGenericInternalErrorDialog();
+      log.wtf(
+          "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
+      if (e is QuestServiceException) {
+        await dialogService.showDialog(
+            title: "Oops...", description: e.prettyDetails ?? e.message);
+      } else {
+        log.wtf(
+            "Error when loading quests, this should never happen. Error: $e");
+        await showGenericInternalErrorDialog();
+      }
     }
+  }
+
+  Future loadNewQuests() async {
+    log.i("Loading new quests");
+    questService.isReloadingQuests = true;
+    notifyListeners();
+    await initializeQuests(
+        force: true,
+        lat: mapStateService.currentLat,
+        lon: mapStateService.currentLon);
+    questService.showReloadQuestButton = false;
+    questService.isReloadingQuests = false;
+    mapViewModel.resetMapMarkers();
+    mapViewModel.extractStartMarkersAndAddToMap();
+    notifyListeners();
   }
 
   Future getLocation(

@@ -20,7 +20,7 @@ class NotificationController {
               'Scheduled notification when screen time is expired.',
           defaultColor: kcPrimaryColor,
           importance: NotificationImportance.High,
-          channelShowBadge: true,
+          //channelShowBadge: true,
         ),
         NotificationChannel(
           channelKey: kPermanentNotificationKey,
@@ -29,7 +29,16 @@ class NotificationController {
               'Basic notifications for ongoing screen time and quests.',
           defaultColor: kcPrimaryColor,
           importance: NotificationImportance.High,
-          channelShowBadge: true,
+          //channelShowBadge: true,
+          locked: true,
+        ),
+        NotificationChannel(
+          channelKey: kUpdatedScreenTimeNotificationKey,
+          channelName: kUpdatedScreenTimeNotificationChannelName,
+          channelDescription: 'Basic notifications for updated screen times.',
+          defaultColor: kcPrimaryColor,
+          importance: NotificationImportance.High,
+          //channelShowBadge: true,
           locked: true,
         ),
       ],
@@ -38,19 +47,29 @@ class NotificationController {
   }
 
   Future<void> initializeNotificationsEventListeners() async {
-/*     AwesomeNotifications().displayedStream.listen(
-      (notification) async {
-        // if a scheduled notification is shown, we can remove the permanent notifications!
-        if (notification.channelKey == kScheduledNotificationChannelKey) {
-          AwesomeNotifications()
-              .dismissNotificationsByChannelKey(kPermanentNotificationKey);
-          await Future.delayed(
-            Duration(milliseconds: 500),
-          );
-          _screenTimeService.handleScreenTimeOverEvent();
-        }
-      },
-    ); */
+    // AwesomeNotifications().displayedStream.listen((notification) async {
+    //   // if a scheduled notification is shown, we can remove the permanent notifications!
+    //   if (notification.channelKey == kScheduledNotificationChannelKey) {
+    //     AwesomeNotifications()
+    //         .dismissNotificationsByChannelKey(kPermanentNotificationKey);
+    //     await Future.delayed(Duration(milliseconds: 500));
+    //     _screenTimeService.handleScreenTimeOverEvent();
+    //   }
+    // });
+
+    // AwesomeNotifications().actionStream.listen((notification) async {
+    //   // if a scheduled notification is shown, we can remove the permanent notifications!
+
+    //   print("==>> LISTEN TO ACTION STREAM");
+    //   if (notification.channelKey == kScheduledNotificationChannelKey) {
+    //     print("==>> button key pressed");
+    //     print("==>> NOW WE CAN DO SOME NAVIGATION");
+    //     // AwesomeNotifications()
+    //     //     .dismissNotificationsByChannelKey(kPermanentNotificationKey);
+    //     // await Future.delayed(Duration(milliseconds: 500));
+    //     // _screenTimeService.handleScreenTimeOverEvent();
+    //   }
+    // });
   }
 
   // this code is needed for new version of awesome notifications

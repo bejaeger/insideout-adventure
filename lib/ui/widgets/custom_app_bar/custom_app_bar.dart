@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
@@ -38,6 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<BaseModel>.reactive(
       viewModelBuilder: () => BaseModel(),
+      onModelReady: (model) => model.listenToScreenTime(),
       builder: (context, model, child) => PreferredSize(
         preferredSize:
             Size(screenWidth(context), height + kActiveQuestPanelMaxHeight),
@@ -101,14 +103,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   if (showRedLiveButton)
                     Align(
                       alignment: Alignment.centerRight,
-                      child: AnimatedOpacity(
-                        opacity: model.hasActiveQuest ? 1 : 0,
-                        duration: Duration(seconds: 1),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 60.0),
                         child: GestureDetector(
-                          onTap: () => Scaffold.of(context).openEndDrawer(),
+                          onTap: model.navToActiveScreenTimeView,
+                          //() => Scaffold.of(context).openEndDrawer(),
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
-                            child: BlinkAnimation(),
+                            child: BlinkingScreenTimeAnimation(
+                              screenTimeLeft: model.screenTimeLeftString!,
+                            ),
                           ),
                         ),
                       ),
@@ -189,12 +193,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       Size.fromHeight(height + kActiveQuestPanelMaxHeight);
 }
 
-class BlinkAnimation extends StatefulWidget {
+class BlinkingScreenTimeAnimation extends StatefulWidget {
+  final String screenTimeLeft;
+
+  BlinkingScreenTimeAnimation({Key? key, required this.screenTimeLeft})
+      : super(key: key);
   @override
-  _BlinkAnimationState createState() => _BlinkAnimationState();
+  _BlinkingScreenTimeAnimationState createState() =>
+      _BlinkingScreenTimeAnimationState();
 }
 
-class _BlinkAnimationState extends State<BlinkAnimation>
+class _BlinkingScreenTimeAnimationState
+    extends State<BlinkingScreenTimeAnimation>
     with SingleTickerProviderStateMixin {
   late Animation<Color?> animation;
   late AnimationController controller;
@@ -207,7 +217,10 @@ class _BlinkAnimationState extends State<BlinkAnimation>
     final CurvedAnimation curve =
         CurvedAnimation(parent: controller, curve: Curves.linear);
     animation =
-        ColorTween(begin: Colors.red, end: Colors.red.shade900).animate(curve);
+        ColorTween(begin: kcRed, end: kcRed.withOpacity(0.2)).animate(curve);
+    // animation = ColorTween(
+    //         begin: kcScreenTimeBlue, end: kcScreenTimeBlue.withOpacity(0.2))
+    //     .animate(curve);
     controller.repeat();
   }
 
@@ -217,10 +230,28 @@ class _BlinkAnimationState extends State<BlinkAnimation>
       animation: animation,
       builder: (BuildContext context, Widget? child) {
         return Container(
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: kcBlackHeadlineColor)),
-            child: Icon(Icons.circle, size: 30, color: animation.value));
+          width: 75,
+          height: 40,
+          decoration: BoxDecoration(
+              //shape: BoxShape.ell,
+              color: kcCultured,
+              borderRadius: BorderRadius.circular(20)
+              //border: Border.all(color: kcBlackHeadlineColor),
+              ),
+          //child: Icon(Icons.circle, size: 30, color: animation.value),
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(kScreenTimeIcon2,
+                    width: 20, color: animation.value),
+                horizontalSpaceTiny,
+                AfkCreditsText.captionBoldRed(widget.screenTimeLeft)
+              ],
+            ),
+          ),
+        );
       },
     );
   }
