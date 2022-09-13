@@ -14,6 +14,7 @@ import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/apis/notion_api.dart';
 import 'package:afkcredits/services/pedometer/pedometer_service.dart';
+import 'package:afkcredits/services/permission_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -137,6 +138,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: NotionApi),
     LazySingleton(classType: FeedbackService),
     LazySingleton(classType: ScreenTimeService),
+    LazySingleton(classType: PermissionService),
 
     //LazySingleton(classType: MarkersInMap),
     // LazySingleton(classType: MapViewModel),

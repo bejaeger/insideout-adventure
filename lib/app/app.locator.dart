@@ -29,6 +29,7 @@ import '../services/maps/google_map_service.dart';
 import '../services/maps/map_state_service.dart';
 import '../services/markers/marker_service.dart';
 import '../services/pedometer/pedometer_service.dart';
+import '../services/permission_service.dart';
 import '../services/qrcodes/qrcode_service.dart';
 import '../services/quest_testing_service/quest_testing_service.dart';
 import '../services/quests/active_quest_service.dart';
@@ -78,6 +79,7 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => NotionApi());
   locator.registerLazySingleton(() => FeedbackService());
   locator.registerLazySingleton(() => ScreenTimeService());
+  locator.registerLazySingleton(() => PermissionService());
   final mapViewModel = await presolveMapViewModel();
   locator.registerSingleton(mapViewModel);
 
