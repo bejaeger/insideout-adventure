@@ -12,16 +12,13 @@ import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 
 class StartUpViewModel extends TransferBaseViewModel {
-  //final _geolocationService = locator<GeolocationService>();
+  // ------------------------------------------------------------
   final EnvironmentService _environmentService = locator<EnvironmentService>();
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
-  //final _markersService = locator<MarkerService>();
-
-  //dynamic position;
-
   final log = getLogger("StartUpViewModel");
 
+  // --------------------------------------------------------
   Future<void> runStartupLogic() async {
     // Only after at least the action method is set, the notification events are delivered
     NotificationController().initializeNotificationsEventListeners();
@@ -81,6 +78,9 @@ class StartUpViewModel extends TransferBaseViewModel {
         } else {
           final currentUser = userService.currentUser;
           log.v('User sync complete. User profile: $currentUser');
+
+          // ? Check if all permissions are given
+          await navigationService.navigateTo(Routes.permissionsView);
 
           // TODO: check whether there is an active screen time and if yes navigate to it, potentially handling completion event which includes an update of the database
           final String? id = await _localStorageService.getFromDisk(

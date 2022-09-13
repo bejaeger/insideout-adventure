@@ -43,6 +43,7 @@ import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
 import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart';
+import 'package:afkcredits/ui/views/permissions/permissions_view.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
@@ -102,6 +103,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: OnBoardingScreensView),
     MaterialRoute(page: ParentMapView),
     MaterialRoute(page: FeedbackView),
+    MaterialRoute(page: PermissionsView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

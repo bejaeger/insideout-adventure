@@ -238,7 +238,11 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
-  Future replaceWithHomeView() async {
+  Future replaceWithHomeView({bool showPermissionView = false}) async {
+    // ? Request for all necessary permissions
+    if (showPermissionView) {
+      await navigationService.navigateTo(Routes.permissionsView);
+    }
     if (currentUser.role == UserRole.sponsor) {
       replaceWithParentHomeView();
     } else if (currentUser.role == UserRole.adminMaster) {

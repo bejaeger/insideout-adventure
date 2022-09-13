@@ -47,6 +47,8 @@ class NotificationController {
   }
 
   Future<void> initializeNotificationsEventListeners() async {
+    // AwesomeNotifications().getAppLifeCycle().
+    // AwesomeNotifications.setListeners()
     // AwesomeNotifications().displayedStream.listen((notification) async {
     //   // if a scheduled notification is shown, we can remove the permanent notifications!
     //   if (notification.channelKey == kScheduledNotificationChannelKey) {

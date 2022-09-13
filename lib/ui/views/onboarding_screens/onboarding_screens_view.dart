@@ -189,7 +189,8 @@ class OnBoardingScreensView extends StatelessWidget {
                 footer: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: AfkCreditsButton(
-                    onTap: model.replaceWithHomeView,
+                    onTap: () =>
+                        model.replaceWithHomeView(showPermissionView: true),
                     title: "Start Now",
                   ),
                 ),
