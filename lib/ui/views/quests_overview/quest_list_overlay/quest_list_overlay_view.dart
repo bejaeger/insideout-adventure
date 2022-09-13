@@ -42,7 +42,7 @@ class QuestListOverlayView extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                     //colors: [Colors.white, kcPrimaryColor],
-                    colors: [Colors.white, kcYellow],
+                    colors: [Colors.white, kcPrimaryColor],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     stops: [0.2, 1]),

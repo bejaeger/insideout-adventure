@@ -11,6 +11,8 @@ const String WarningNotNearbyMarker =
 const String WarningScannedMarkerAlreadyCollected =
     "Your scanned marker has already been collected.";
 
+const String WarningNoQuestsDownloaded = "No quests found in the area.";
+
 String getShortQuestType(QuestType? type, {bool noCaps = false}) {
   String returnVal = "Unknown";
   if (type == null) return returnVal;

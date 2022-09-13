@@ -147,6 +147,8 @@ const int kDistanceFilterForCalibration = 5;
 
 const int kDefaultGeolocationDistanceFilter = 10;
 
+const double kDefaultQuestDownloadRadiusInKm = 10;
+
 /////////////////////////////////////
 // Google Maps View Settings
 const double kInitialZoom = 17.8;

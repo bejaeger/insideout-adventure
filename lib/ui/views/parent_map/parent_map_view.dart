@@ -6,6 +6,8 @@ import 'package:afkcredits/ui/widgets/afk_floating_action_buttons.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
+import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -25,9 +27,9 @@ class ParentMapView extends StatelessWidget {
               title: "Quests",
               onBackButton: model.popView,
             ),
-            floatingActionButton: AFKFloatingActionButtons(
-              icon1: Icon(Icons.add, size: 30),
-              onPressed1: model.navToCreateQuest,
+            floatingActionButton: AFKFloatingActionButton(
+              icon: Icon(Icons.add, size: 32, color: Colors.white),
+              onPressed: model.navToCreateQuest,
             ),
             body: Stack(
               children: [
@@ -37,7 +39,13 @@ class ParentMapView extends StatelessWidget {
                     ? MapLoadingOverlay(show: true)
                     : GoogleMapScreen(
                         model: locator<MapViewModel>(),
+                        callback: () => model.notifyListeners(),
                       ),
+                ReloadQuestsButton(
+                  show: model.showReloadQuestButton,
+                  onPressed: model.loadNewQuests,
+                  isBusy: model.isReloadingQuests,
+                ),
                 if (model.isDeletingQuest)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),

@@ -10,6 +10,7 @@ import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_lis
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/animations/fade_transition_animation.dart';
 import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
+import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -49,7 +50,15 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                 children: [
                   // bottom layer
                   //if (!model.isBusy)
-                  if (!model.isBusy) MainMapView(),
+                  if (!model.isBusy)
+                    MainMapView(callback: () => model.notifyListeners()),
+
+                  if (!model.isAvatarView)
+                    ReloadQuestsButton(
+                      show: model.showReloadQuestButton,
+                      onPressed: model.loadNewQuests,
+                      isBusy: model.isReloadingQuests,
+                    ),
 
                   if (model.currentUser.createdByUserWithId != null)
                     SwitchToParentsAreaButton(

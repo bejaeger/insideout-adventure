@@ -9,7 +9,7 @@ const String kLifetimeEarningsDescription = "Lifetime earnings";
 const String kNumberCompletedQuestsDescription = "Completed quests";
 
 const String kLocationSearchDescription =
-    "Try to find to the treasure by walking and monitoring your distance regularly. Watch out! The trohphy is clever and sometimes moves around!";
+    "Find the treasure by walking. Your distance will update regularly and you will know when you get closer or further away. Watch out! The treasure is clever and sometimes moves around!";
 const String kGPSAreaHikeDescription =
     "Walk to all locations visible on the map and collect the checkpoints to finish.";
 const String kDistanceEstimateDescription =

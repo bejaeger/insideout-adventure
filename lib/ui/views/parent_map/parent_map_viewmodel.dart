@@ -1,4 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
@@ -13,7 +15,16 @@ class ParentMapViewModel extends QuestViewModel {
   // services
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
+  // ----------------------------------
+  // getters
+  bool get showReloadQuestButton => questService.showReloadQuestButton;
+  bool get isReloadingQuests => questService.isReloadingQuests;
+
+  // ---------------------------------------
+  // state
   bool isDeletingQuest = false;
+
+  // ---------------------------------
   // initialize function
   void initialize() async {
     setBusy(true);
@@ -21,24 +32,29 @@ class ParentMapViewModel extends QuestViewModel {
     await getLocation(forceAwait: true, forceGettingNewPosition: false);
     await initializeQuests(force: true);
     setBusy(false);
-    initializeMapAndMarkers();
+    addMarkers();
   }
 
   // ? Note: Same function exists in explorer_home_viewmodel.dart
-  Future initializeQuests({bool? force}) async {
+  Future initializeQuests({bool? force, double? lat, double? lon}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
-        await questService
-            .loadNearbyQuests(force: true, sponsorIds: [currentUser.uid]);
+        await questService.loadNearbyQuests(
+            force: true, sponsorIds: [currentUser.uid], lat: lat, lon: lon);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }
     } catch (e) {
-      log.wtf(
+      log.e(
           "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
       if (e is QuestServiceException) {
-        await dialogService.showDialog(
-            title: "Oops...", description: e.message);
+        if (e.message == WarningNoQuestsDownloaded) {
+          await dialogService.showDialog(
+              title: "Oops...", description: e.message);
+        } else {
+          await dialogService.showDialog(
+              title: "Oops...", description: e.prettyDetails);
+        }
       } else {
         log.wtf(
             "Error when loading quests, this should never happen. Error: $e");
@@ -47,7 +63,7 @@ class ParentMapViewModel extends QuestViewModel {
     }
   }
 
-  void initializeMapAndMarkers() {
+  void addMarkers() {
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
         log.v("Add start marker of quest with name ${_q.name} to map");
@@ -84,7 +100,7 @@ class ParentMapViewModel extends QuestViewModel {
 
         // update marker on map!
         mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
-        initializeMapAndMarkers();
+        addMarkers();
         notifyListeners();
       } else {
         await onMarkerTapParent(quest: quest);
@@ -101,6 +117,20 @@ class ParentMapViewModel extends QuestViewModel {
     //Remove Quest In the List.
     nearbyQuests.remove(quest);
     isDeletingQuest = false;
+    notifyListeners();
+  }
+
+  Future loadNewQuests() async {
+    log.i("Loading new quests");
+    questService.isReloadingQuests = true;
+    notifyListeners();
+    await initializeQuests(
+        force: true,
+        lat: mapStateService.currentLat,
+        lon: mapStateService.currentLon);
+    questService.showReloadQuestButton = false;
+    questService.isReloadingQuests = false;
+    addMarkers();
     notifyListeners();
   }
 }

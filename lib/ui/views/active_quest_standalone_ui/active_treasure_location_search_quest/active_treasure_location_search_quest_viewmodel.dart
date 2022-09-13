@@ -184,6 +184,7 @@ class ActiveTreasureLocationSearchQuestViewModel
         mapViewModel.resetMapMarkers();
 
         // this goes via mixin. Could technically be the same procedure! Not clear what is better!
+        mapViewModel.addAllQuestMarkers();
         addAllQuestMarkers();
       });
       notifyListeners();

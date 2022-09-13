@@ -3,11 +3,13 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -54,7 +56,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   StreamSubscription? _mapEventListenerSubscription;
   bool initialized = false;
   String mapStyle = "";
-
+  bool get showReloadQuestButton => questService.showReloadQuestButton;
+  bool get isReloadingQuests => questService.isReloadingQuests;
   // last element of cameraBearingZoom determines whether listener should be fired!
 
   // TODO: This function is called for the explorer!
@@ -302,6 +305,37 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     changeCameraBearing(0);
     // _moveCamera();
     _animateCamera();
+  }
+
+  // Function called by explorer account!
+  void extractStartMarkersAndAddToMap() {
+    if (nearbyQuests.isNotEmpty) {
+      for (Quest _q in nearbyQuests) {
+        log.v("Add start marker of quest with name ${_q.name} to map");
+        if (_q.startMarker != null) {
+          AFKMarker _m = _q.startMarker!;
+          addMarkerToMap(
+              quest: _q,
+              afkmarker: _m,
+              isStartMarker: _m == _q.startMarker,
+              completed: currentUserStats.completedQuestIds.contains(_q.id));
+        }
+      }
+    } else {
+      log.i('Markers are Empty');
+    }
+    if (!isParentAccount) {
+      addARObjectToMap(
+          onTap: onARObjectMarkerTap,
+          lat: 49.269805968930406,
+          lon: -123.16189607547962,
+          isCoin: true);
+      // addARObjectToMap(
+      //     onTap: onARObjectMarkerTap,
+      //     lat: 49.26843866276503,
+      //     lon: -122.99103899176373,
+      //     isCoin: false);
+    }
   }
 
   void addMarkerToMap(
@@ -580,6 +614,33 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     notifyListeners();
   }
 
+  void checkForNewQuests({void Function()? callback}) {
+    // check distance between currentLat and currentLon of map and
+    // lat and lon where quests were previously downloaded
+    // TODO: Maybe put in quest_service
+    double distance = geolocationService.distanceBetween(
+        lat1: mapStateService.currentLat,
+        lon1: mapStateService.currentLon,
+        lat2: questService.latAtLatestQuestDownload,
+        lon2: questService.lonAtLatestQuestDownload);
+    if (distance / 1000 > kDefaultQuestDownloadRadiusInKm) {
+      if (!showReloadQuestButton) {
+        log.v("Moved camera far enough to promt loading new quests");
+      }
+      // show button to download new quests within a radius of new lat lon!
+      questService.showReloadQuestButton = true;
+    } else {
+      if (showReloadQuestButton) {
+        log.v("Moved camera back so don't show promt to load new quests");
+      }
+      questService.showReloadQuestButton = false;
+    }
+    notifyListeners();
+    if (callback != null) {
+      callback();
+    }
+  }
+
   // TODO: This should be specified via the specific quest viewmodels!
   // TODO: At the moment only done for gps_area_hike.
   // TODO: Might also only be needed to activate cheat feature!
@@ -636,36 +697,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   void resetAllMapMarkersAndAreas() {
     resetMapMarkers();
     resetMapAreas();
-  }
-
-  void extractStartMarkersAndAddToMap() {
-    if (nearbyQuests.isNotEmpty) {
-      for (Quest _q in nearbyQuests) {
-        log.v("Add start marker of quest with name ${_q.name} to map");
-        if (_q.startMarker != null) {
-          AFKMarker _m = _q.startMarker!;
-          addMarkerToMap(
-              quest: _q,
-              afkmarker: _m,
-              isStartMarker: _m == _q.startMarker,
-              completed: currentUserStats.completedQuestIds.contains(_q.id));
-        }
-      }
-    } else {
-      log.i('Markers are Empty');
-    }
-    if (!isParentAccount) {
-      addARObjectToMap(
-          onTap: onARObjectMarkerTap,
-          lat: 49.269805968930406,
-          lon: -123.16189607547962,
-          isCoin: true);
-      addARObjectToMap(
-          onTap: onARObjectMarkerTap,
-          lat: 49.26843866276503,
-          lon: -122.99103899176373,
-          isCoin: false);
-    }
   }
 
   Future changeSettingsForNewView(double? lat, double? lon) async {

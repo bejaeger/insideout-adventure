@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
@@ -604,8 +605,11 @@ class FirestoreApi {
     await Future.wait([completer1.future, completer2.future]);
     if (returnQuests.length == 0) {
       throw FirestoreApiException(
-          message: "No quests could be found. Ask your parents to create one.",
-          devDetails: "Quest document is empty");
+        message: WarningNoQuestsDownloaded,
+        devDetails: WarningNoQuestsDownloaded,
+        prettyDetails:
+            "No quests could be found in the area. Ask your parents to create one.",
+      );
     }
     return returnQuests;
   }

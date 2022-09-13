@@ -56,6 +56,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                         //     getDirectionStatusString(directionStatus)),
                       ],
                     ),
+                    verticalSpaceTiny,
                     Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -63,7 +64,8 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                         horizontalSpaceSmall,
                         Icon(Icons.arrow_forward, size: 28),
                         horizontalSpaceSmall,
-                        Image.asset(kTreasureIconPath, width: 45),
+                        Image.asset(kAFKCreditsLogoPath,
+                            width: 45, color: kcPrimaryColor),
                         AfkCreditsText.headingThree(" :    "),
                         horizontalSpaceSmall,
                         isBusy
