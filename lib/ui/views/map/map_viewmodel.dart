@@ -627,10 +627,15 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     }
   }
 
-  void resetAllMapMarkersAndAreas() {
+  void resetAndAddBackAllMapMarkersAndAreas() {
     resetMapMarkers();
     resetMapAreas();
     extractStartMarkersAndAddToMap();
+  }
+
+  void resetAllMapMarkersAndAreas() {
+    resetMapMarkers();
+    resetMapAreas();
   }
 
   void extractStartMarkersAndAddToMap() {

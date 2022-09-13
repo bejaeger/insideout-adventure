@@ -83,7 +83,7 @@ class ParentMapViewModel extends QuestViewModel {
             duration: Duration(milliseconds: 1500));
 
         // update marker on map!
-        mapViewModel.resetAllMapMarkersAndAreas();
+        mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
         initializeMapAndMarkers();
         notifyListeners();
       } else {

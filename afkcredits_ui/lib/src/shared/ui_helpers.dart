@@ -66,16 +66,16 @@ IconData getIconForCategory(QuestType category) {
   }
 }
 */
-IconData getIconForCategory(String? category) {
-  if (category == QuestType.DistanceEstimate.toSimpleString()) {
+IconData getIconForCategory(QuestType category) {
+  if (category == QuestType.DistanceEstimate) {
     return Icons.arrow_right_alt;
-  } else if (category == QuestType.TreasureLocationSearch.toSimpleString()) {
+  } else if (category == QuestType.TreasureLocationSearch) {
     return Icons.location_on;
-  } else if (category == QuestType.QRCodeHunt.toSimpleString()) {
+  } else if (category == QuestType.QRCodeHunt) {
     return Icons.pets;
-  } else if (category == QuestType.QRCodeHike.toSimpleString()) {
+  } else if (category == QuestType.QRCodeHike) {
     return Icons.nature_people;
-  } else if (category == QuestType.GPSAreaHike.toSimpleString()) {
+  } else if (category == QuestType.GPSAreaHike) {
     return Icons.explore;
   } else {
     return Icons.map;

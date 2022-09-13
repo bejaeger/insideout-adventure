@@ -20,7 +20,7 @@ class QuestTypeCard extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           decoration: BoxDecoration(
-            color: getColorForCategory(category).withOpacity(0.9),
+            color: getColorOfType(category).withOpacity(0.9),
             borderRadius: BorderRadius.circular(24),
             boxShadow: const [
               BoxShadow(
@@ -40,7 +40,7 @@ class QuestTypeCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Icon(getIconForCategory(category.toSimpleString()),
+                child: Icon(getIconForCategory(category),
                     size: 60, color: kcGreyTextColor.withOpacity(0.9)),
               ),
               const Spacer(),

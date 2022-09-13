@@ -115,7 +115,6 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: CloudFunctionsApi),
     LazySingleton(classType: FirebaseAuthenticationService),
-    LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: AFKMarkersPositionService),
     LazySingleton(classType: AppConfigProvider),
     LazySingleton(classType: LayoutService),
@@ -127,7 +126,6 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: StopWatchService),
     LazySingleton(classType: QRCodeService),
     LazySingleton(classType: MarkerService),
-    LazySingleton(classType: ScreenTimeService),
     LazySingleton(classType: QuestTestingService),
     LazySingleton(classType: GamificationService),
     LazySingleton(classType: MapStateService),
@@ -136,6 +134,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: ImageSelector),
     LazySingleton(classType: NotionApi),
     LazySingleton(classType: FeedbackService),
+    LazySingleton(classType: ScreenTimeService),
 
     //LazySingleton(classType: MarkersInMap),
     // LazySingleton(classType: MapViewModel),

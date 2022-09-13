@@ -31,57 +31,7 @@ final Map<String, String? Function(String?)?> _CreateQuestViewTextValidations =
   AfkCreditAmountValueKey: null,
 };
 
-final Map<String, TextEditingController>
-    _CreateQuestViewTextEditingControllers = {};
-
-final Map<String, FocusNode> _CreateQuestViewFocusNodes = {};
-
-final Map<String, String? Function(String?)?> _CreateQuestViewTextValidations =
-    {
-  NameValueKey: null,
-  DescriptionValueKey: null,
-  AfkCreditAmountValueKey: null,
-};
-
 mixin $CreateQuestView on StatelessWidget {
-<<<<<<< HEAD
-  TextEditingController get nameController =>
-      _getFormTextEditingController(NameValueKey);
-  TextEditingController get descriptionController =>
-      _getFormTextEditingController(DescriptionValueKey);
-  TextEditingController get afkCreditAmountController =>
-      _getFormTextEditingController(AfkCreditAmountValueKey);
-  FocusNode get nameFocusNode => _getFormFocusNode(NameValueKey);
-  FocusNode get descriptionFocusNode => _getFormFocusNode(DescriptionValueKey);
-  FocusNode get afkCreditAmountFocusNode =>
-      _getFormFocusNode(AfkCreditAmountValueKey);
-
-  TextEditingController _getFormTextEditingController(String key,
-      {String? initialValue}) {
-    if (_CreateQuestViewTextEditingControllers.containsKey(key)) {
-      return _CreateQuestViewTextEditingControllers[key]!;
-    }
-    _CreateQuestViewTextEditingControllers[key] =
-        TextEditingController(text: initialValue);
-    return _CreateQuestViewTextEditingControllers[key]!;
-  }
-
-  FocusNode _getFormFocusNode(String key) {
-    if (_CreateQuestViewFocusNodes.containsKey(key)) {
-      return _CreateQuestViewFocusNodes[key]!;
-    }
-    _CreateQuestViewFocusNodes[key] = FocusNode();
-    return _CreateQuestViewFocusNodes[key]!;
-  }
-||||||| e7211a7
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController afkCreditAmountController =
-      TextEditingController();
-  final FocusNode nameFocusNode = FocusNode();
-  final FocusNode descriptionFocusNode = FocusNode();
-  final FocusNode afkCreditAmountFocusNode = FocusNode();
-=======
   TextEditingController get nameController =>
       _getFormTextEditingController(NameValueKey, initialValue: 'Quest Name');
   TextEditingController get descriptionController =>
@@ -110,7 +60,6 @@ mixin $CreateQuestView on StatelessWidget {
     _CreateQuestViewFocusNodes[key] = FocusNode();
     return _CreateQuestViewFocusNodes[key]!;
   }
->>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
 
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values

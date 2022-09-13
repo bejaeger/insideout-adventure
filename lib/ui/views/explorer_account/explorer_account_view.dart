@@ -25,137 +25,145 @@ class ExplorerAccountView extends StatelessWidget {
         right: 0,
         child: CardOverlayLayout(
           onBack: model.removeExplorerAccountOverlay,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AfkCreditsText.headingThree(model.currentUser.fullName),
-              SizedBox(height: 2),
-              AfkCreditsText.body(
-                  "Level ${model.currentLevel()}: ${model.currentLevelName}"),
-              verticalSpaceMedium,
-              //AfkCreditsText.headingFour("Stats"),
-              // verticalSpaceSmall,
-              // verticalSpaceTiny,
-              Container(
-                constraints:
-                    BoxConstraints(maxWidth: screenWidth(context) - 80),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        horizontalSpaceTiny,
-                        SummaryStatsDisplay(
-                          icon: Image.asset(kAFKCreditsLogoSmallPathColored,
-                              color: kcPrimaryColor, height: 25),
-                          stats: model.currentUserStats.lifetimeEarnings
-                              .toString(),
-                          title: "Total collected",
-                        ),
-
-                        // horizontalSpaceLarge,
-                        // horizontalSpaceLarge,
-                        // horizontalSpaceMedium,
-                        // horizontalSpaceSmall,
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SummaryStatsDisplay(
-                            icon: Image.asset(kAFKCreditsLogoSmallPathColored,
-                                color: kcPrimaryColor.withOpacity(0.7),
-                                height: 25),
-                            stats: model.creditsForNextLevel.toString(),
-                            statsStyle: statsStyle,
-                            title: "Next level",
-                            titleStyle: captionStyle.copyWith(
-                                color: kcGreyTextColor.withOpacity(0.7))),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              verticalSpaceTiny,
-              Align(
-                child: Column(
+          child: model.currentUserNullable == null
+              ? SizedBox(height: 0, width: 0)
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ProgressBar(
-                      widthProgressBar: screenWidth(context) - 80,
-                      percentage: model.percentageOfNextLevel,
-                      height: 25,
-                      //currentLevel: "3",
-                      //nextLevel: "Level " + (model.currentLevel + 1).toString(),
-                    ),
-                    verticalSpaceSmall,
-                    Row(
-                      children: [
-                        AfkCreditsText.subheadingItalic("Earn",
-                            align: TextAlign.left),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 6.0, right: 2.0),
-                          child: Image.asset(
-                            kAFKCreditsLogoPath,
-                            color: kcPrimaryColor,
-                            height: 18.0,
+                    AfkCreditsText.headingThree(
+                        model.currentUserNullable?.fullName ?? ""),
+                    SizedBox(height: 2),
+                    AfkCreditsText.body(
+                        "Level ${model.currentLevel()}: ${model.currentLevelName}"),
+                    verticalSpaceMedium,
+                    //AfkCreditsText.headingFour("Stats"),
+                    // verticalSpaceSmall,
+                    // verticalSpaceTiny,
+                    Container(
+                      constraints:
+                          BoxConstraints(maxWidth: screenWidth(context) - 80),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              horizontalSpaceTiny,
+                              SummaryStatsDisplay(
+                                icon: Image.asset(
+                                    kAFKCreditsLogoSmallPathColored,
+                                    color: kcPrimaryColor,
+                                    height: 25),
+                                stats: model.currentUserStats.lifetimeEarnings
+                                    .toString(),
+                                title: "Total collected",
+                              ),
+
+                              // horizontalSpaceLarge,
+                              // horizontalSpaceLarge,
+                              // horizontalSpaceMedium,
+                              // horizontalSpaceSmall,
+                            ],
                           ),
-                        ),
-                        AfkCreditsText.statsStyleBlack(
-                            "${model.creditsToNextLevel} ",
-                            align: TextAlign.left),
-                        AfkCreditsText.subheadingItalic(
-                            "to reach the next level!",
-                            align: TextAlign.left),
-                      ],
+                          Spacer(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              SummaryStatsDisplay(
+                                  icon: Image.asset(
+                                      kAFKCreditsLogoSmallPathColored,
+                                      color: kcPrimaryColor.withOpacity(0.7),
+                                      height: 25),
+                                  stats: model.creditsForNextLevel.toString(),
+                                  statsStyle: statsStyle,
+                                  title: "Next level",
+                                  titleStyle: captionStyle.copyWith(
+                                      color: kcGreyTextColor.withOpacity(0.7))),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                     verticalSpaceTiny,
+                    Align(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ProgressBar(
+                            widthProgressBar: screenWidth(context) - 80,
+                            percentage: model.percentageOfNextLevel,
+                            height: 25,
+                            //currentLevel: "3",
+                            //nextLevel: "Level " + (model.currentLevel + 1).toString(),
+                          ),
+                          verticalSpaceSmall,
+                          Row(
+                            children: [
+                              AfkCreditsText.subheadingItalic("Earn",
+                                  align: TextAlign.left),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 6.0, right: 2.0),
+                                child: Image.asset(
+                                  kAFKCreditsLogoPath,
+                                  color: kcPrimaryColor,
+                                  height: 18.0,
+                                ),
+                              ),
+                              AfkCreditsText.statsStyleBlack(
+                                  "${model.creditsToNextLevel} ",
+                                  align: TextAlign.left),
+                              AfkCreditsText.subheadingItalic(
+                                  "to reach the next level!",
+                                  align: TextAlign.left),
+                            ],
+                          ),
+                          verticalSpaceTiny,
+                        ],
+                      ),
+                    ),
+                    verticalSpaceMedium,
+                    verticalSpaceSmall,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Expanded(
+                        //   child: SummaryStatsDisplay(
+                        //     stats: model.currentUserStats.lifetimeEarnings.toString(),
+                        //     title: "Total collected",
+                        //     icon: Image.asset(
+                        //       kAFKCreditsLogoPath,
+                        //       color: kcPrimaryColor,
+                        //       width: 20,
+                        //     ),
+                        //   ),
+                        // ),
+                        // horizontalSpaceSmall,
+                        horizontalSpaceSmall,
+                        SummaryStatsDisplay(
+                          icon: Image.asset(kActivityIcon,
+                              color: kcActivityIconColor, height: 25),
+                          stats: model.currentUserStats.numberQuestsCompleted
+                              .toString(),
+                          title: "Completed quests",
+                        ),
+                        horizontalSpaceSmall,
+                        verticalSpaceMedium,
+                        horizontalSpaceSmall,
+                        SummaryStatsDisplay(
+                          icon: Image.asset(kScreenTimeIcon,
+                              color: kcScreenTimeBlue, height: 25),
+                          stats:
+                              model.currentUserStats.totalScreenTime.toString(),
+                          title: "Total screen time",
+                          unit: "min",
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ),
-              verticalSpaceMedium,
-              verticalSpaceSmall,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Expanded(
-                  //   child: SummaryStatsDisplay(
-                  //     stats: model.currentUserStats.lifetimeEarnings.toString(),
-                  //     title: "Total collected",
-                  //     icon: Image.asset(
-                  //       kAFKCreditsLogoPath,
-                  //       color: kcPrimaryColor,
-                  //       width: 20,
-                  //     ),
-                  //   ),
-                  // ),
-                  // horizontalSpaceSmall,
-                  horizontalSpaceSmall,
-                  SummaryStatsDisplay(
-                    icon: Image.asset(kActivityIcon,
-                        color: kcActivityIconColor, height: 25),
-                    stats:
-                        model.currentUserStats.numberQuestsCompleted.toString(),
-                    title: "Completed quests",
-                  ),
-                  horizontalSpaceSmall,
-                  verticalSpaceMedium,
-                  horizontalSpaceSmall,
-                  SummaryStatsDisplay(
-                    icon: Image.asset(kScreenTimeIcon,
-                        color: kcScreenTimeBlue, height: 25),
-                    stats: model.currentUserStats.totalScreenTime.toString(),
-                    title: "Total screen time",
-                    unit: "min",
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );

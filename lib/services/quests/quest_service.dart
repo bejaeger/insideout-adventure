@@ -13,6 +13,7 @@ import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:stacked/stacked.dart';
 
 class QuestService with ReactiveServiceMixin {
@@ -39,13 +40,13 @@ class QuestService with ReactiveServiceMixin {
   List<QuestType> allQuestTypes = [];
 
   void setQuestToUpdate({required Quest quest}) {
-    if (quest.id!.isNotEmpty) {
+    if (quest.id.isNotEmpty) {
       _questToUpdate = quest;
     }
   }
 
   Future<void> updateQuestData({required Quest quest}) async {
-    if (quest.id!.isNotEmpty) {
+    if (quest.id.isNotEmpty) {
       await _firestoreApi.updateQuestData(quest: quest);
     } else {
       log.wtf('You cannot provide me, an Empty Quest ID: ${quest.id}');
@@ -114,14 +115,24 @@ class QuestService with ReactiveServiceMixin {
   }
 
   Future loadNearbyQuests(
-      {required List<String> sponsorIds, bool force = false}) async {
+      {required List<String> sponsorIds,
+      bool force = false,
+      double? lat,
+      double? lon}) async {
     if (_nearbyQuests.isEmpty || force) {
       // TODO: In the future retrieve only nearby quests
       try {
-        // _nearbyQuests = await _firestoreApi.getNearbyQuests(
-        //     pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
-        //     sponsorIds: sponsorIds);
-        _nearbyQuests = await _firestoreApi.getNearbyQuests();
+        Position? position;
+        if (lat == null || lon == null) {
+          position = await _geolocationService
+              .getAndSetCurrentLocation(); // this call is supposed to be fast and just return the previously known position
+        }
+        _nearbyQuests = await _firestoreApi.getNearbyQuests(
+            lat: lat ?? position!.latitude,
+            lon: lon ?? position!.longitude,
+            radius: 50.0,
+            pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
+            sponsorIds: sponsorIds);
       } catch (e) {
         if (e is FirestoreApiException) {
           throw QuestServiceException(
@@ -134,11 +145,6 @@ class QuestService with ReactiveServiceMixin {
     } else {
       log.i("Quests already loaded.");
     }
-  }
-
-  Future<List<AFKQuest>> loadNearbyAFKQuests() async {
-    // TODO: In the future retrieve only nearby quests
-    return await _firestoreApi.downloadNearbyAfkQuests();
   }
 
   List<Quest> extractQuestsOfType(
@@ -208,21 +214,13 @@ class QuestService with ReactiveServiceMixin {
 
   Future<bool> createQuest({required Quest quest}) async {
     //TODO: Refactor this code.
-    if (quest.id!.isNotEmpty) {
+    if (quest.id.isNotEmpty) {
       return await _firestoreApi.createQuest(quest: quest);
     }
     return false;
 
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
-  }
-
-  Future<bool> createAFKQuest({required AFKQuest afkQuest}) async {
-    //TODO: Refactor this code.
-    if (afkQuest.id!.isNotEmpty) {
-      return await _firestoreApi.createAFKQuest(afkQuest: afkQuest);
-    }
-    return false;
   }
 
   Future<List<Quest>> getQuestsWithStartMarkerId(

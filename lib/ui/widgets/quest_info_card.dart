@@ -49,9 +49,9 @@ class QuestInfoCard extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Icon(getIconForCategory(quest.type!),
+                  child: Icon(getIconForCategory(quest.type),
                       size: 80,
-                      color: getColorOfType(quest.type!).withOpacity(0.25)),
+                      color: getColorOfType(quest.type).withOpacity(0.25)),
                 ),
               ),
               FractionallySizedBox(
@@ -77,7 +77,7 @@ class QuestInfoCard extends StatelessWidget {
                       verticalSpaceSmall,
                       Expanded(
                         child: Text(
-                          quest.name!,
+                          quest.name,
                           style: textTheme(context).headline6!.copyWith(
                               fontSize: 20, fontWeight: FontWeight.w600),
                           maxLines: 2,

@@ -52,6 +52,7 @@ class UserService {
   User get currentUser => _currentUser!;
   UserStatistics? _currentUserStats;
   UserStatistics get currentUserStats => _currentUserStats!;
+  UserStatistics? get currentUserStatsNullable => _currentUserStats;
   StreamSubscription? _currentUserStreamSubscription;
   StreamSubscription? _currentUserStatsStreamSubscription;
 

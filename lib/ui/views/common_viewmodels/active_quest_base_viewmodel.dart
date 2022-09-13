@@ -235,7 +235,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     restorePreviousCameraPosition();
 
     // reset/add back all quests
-    mapViewModel.resetAllMapMarkersAndAreas();
+    mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
 
     // reset selected quest after delay so the fade out is smooth
     await Future.delayed(Duration(milliseconds: 800));

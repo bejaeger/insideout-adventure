@@ -110,7 +110,6 @@ class Quest {
         type: type ?? this.type,
       );
   Quest.fromJson(Map<String, dynamic> json) {
-    final Map<String, dynamic> data = Map<String, dynamic>();
     id = json['id'];
     name = json['name'];
     description = json['description'];
@@ -122,15 +121,20 @@ class Quest {
     markers = List<dynamic>.from(json['markers'])
         .map((i) => AFKMarker.fromJson(i))
         .toList();
-    markerNotes = List<dynamic>.from(json['markerNotes'])
-        .map((i) => MarkerNote.fromJson(i))
-        .toList();
+    markerNotes = json['markerNotes'] != null
+        ? List<dynamic>.from(json['markerNotes'])
+            .map((i) => MarkerNote.fromJson(i))
+            .toList()
+        : null;
     afkCreditsPerMarker = json['afkCreditsPerMarker'];
     bonusAfkCreditsOnSuccess = json['bonusAfkCreditsOnSuccess'];
     distanceFromUser = json['distanceFromUser'];
     distanceToTravelInMeter = json['distanceToTravelInMeter'];
     networkImagePath = json['networkImagePath'];
-    location = json['location']!['geopoint'];
+    location = json['location'] != null
+        ? GeoFirePoint(json['location']!['geopoint'].latitude,
+            json['location']!['geopoint'].longitude)
+        : null; // need to convert geopoint to GeoFirePoint
   }
 
   Map<String, dynamic> toJson() {
@@ -139,10 +143,12 @@ class Quest {
     data['name'] = this.name;
     data['description'] = this.description;
     data['type'] = this.type.toSimpleString();
-    // data['createdBy'] = this.createdBy!;
+    data['createdBy'] = this.createdBy;
     data['afkCredits'] = this.afkCredits;
     data['markers'] = this.markers.map((e) => e.toJson()).toList();
-    data['markerNotes'] = this.markerNotes!.map((e) => e.toJson()).toList();
+    data['markerNotes'] = this.markerNotes != null
+        ? this.markerNotes!.map((e) => e.toJson()).toList()
+        : null;
     data['afkCreditsPerMarker'] = this.afkCreditsPerMarker;
     data['startMarker'] = this.startMarker!.toJson();
     data['finishMarker'] = this.finishMarker!.toJson();
@@ -150,7 +156,9 @@ class Quest {
     data['distanceFromUser'] = this.distanceFromUser;
     data['distanceToTravelInMeter'] = this.distanceToTravelInMeter;
     data['networkImagePath'] = this.networkImagePath;
-    data['location'] = this.location!.data;
+    data['location'] = this.location != null
+        ? this.location!.data
+        : null; // will convert GeoFirePoint to GeoPoint for firebase!
     return data;
   }
 }
@@ -158,82 +166,4 @@ class Quest {
 QuestType questTypeFromString(String value) {
   return QuestType.values.firstWhere(
       (e) => e.toString().split('.')[1].toUpperCase() == value.toUpperCase());
-}
-
-class AFKQuest {
-  String? id;
-  String? name;
-  String? description;
-  String? createdBy;
-  GeoFirePoint? location;
-  AFKMarker? startMarker;
-  AFKMarker? finishMarker;
-  List<AFKMarker>? markers;
-
-  num? afkCredits;
-  String? networkImagePath;
-  List<num>? afkCreditsPerMarker;
-  num? bonusAfkCreditsOnSuccess;
-  double? distanceFromUser;
-  double? distanceToTravelInMeter;
-  String? type;
-
-  AFKQuest({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.type,
-    required this.afkCredits,
-    required this.startMarker,
-    required this.finishMarker,
-    required this.markers,
-    required this.location,
-    this.createdBy,
-    this.afkCreditsPerMarker,
-    this.bonusAfkCreditsOnSuccess,
-    this.distanceFromUser,
-    this.distanceToTravelInMeter,
-    this.networkImagePath,
-  });
-
-  AFKQuest.fromJson(Map<String, dynamic> json) {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    id = json['id'];
-    name = json['name'];
-    description = json['description'];
-    type = json['type'];
-    createdBy = json['createdBy'];
-    afkCredits = json['afkCredits'];
-    startMarker = AFKMarker.fromJson(json['startMarker']!);
-    finishMarker = AFKMarker.fromJson(json['finishMarker']!);
-    markers = List<dynamic>.from(json['markers'])
-        .map((i) => AFKMarker.fromJson(i))
-        .toList();
-    afkCreditsPerMarker = json['afkCreditsPerMarker'];
-    bonusAfkCreditsOnSuccess = json['bonusAfkCreditsOnSuccess'];
-    distanceFromUser = json['distanceFromUser'];
-    distanceToTravelInMeter = json['distanceToTravelInMeter'];
-    networkImagePath = json['networkImagePath'];
-    location = json['location']!['geopoint'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['type'] = this.type!;
-    data['createdBy'] = this.createdBy!;
-    data['afkCredits'] = this.afkCredits;
-    data['markers'] = this.markers!.map((e) => e.toJson()).toList();
-    data['afkCreditsPerMarker'] = this.afkCreditsPerMarker;
-    data['startMarker'] = this.startMarker!.toJson();
-    data['finishMarker'] = this.finishMarker!.toJson();
-    data['bonusAfkCreditsOnSuccess'] = this.bonusAfkCreditsOnSuccess;
-    data['distanceFromUser'] = this.distanceFromUser;
-    data['distanceToTravelInMeter'] = this.distanceToTravelInMeter;
-    data['networkImagePath'] = this.networkImagePath;
-    data['location'] = this.location!.data as GeoFirePoint;
-    return data;
-  }
 }

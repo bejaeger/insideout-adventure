@@ -29,10 +29,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   // Stateful Data
   // ignore: close_sinks
 
-  List<AFKQuest>? _afkQuest;
-
-  List<AFKQuest> get getAFKQuest => _afkQuest!;
-
   // --------------------------------------------------
   // getters
   bool get isListeningToLocation => geolocationService.isListeningToLocation;

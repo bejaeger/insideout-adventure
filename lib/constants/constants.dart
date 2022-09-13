@@ -29,6 +29,9 @@ final String feedbackCampaignInfoDocumentKey = "campaignInfo";
 final String generalFeedbackDocumentKey = "generalFeedback";
 final String feedbackCollectionKey = "feedback";
 
+// properties
+final String kQuestGeoPointPropertyName = "location";
+
 // collection references
 final CollectionReference usersCollection =
     FirebaseFirestore.instance.collection('users');
@@ -46,7 +49,6 @@ final CollectionReference paymentsCollection =
 var questsCollection = FirebaseFirestore.instance.collection('quests');
 final CollectionReference screenTimeSessionCollection =
     FirebaseFirestore.instance.collection(screenTimeSessionsCollectionKey);
-var afkQuestsCollection = FirebaseFirestore.instance.collection('afkQuests');
 final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
 final CollectionReference markersCollection =

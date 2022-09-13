@@ -230,26 +230,12 @@ class _$_AFKMarker implements _AFKMarker {
 
 abstract class _AFKMarker implements AFKMarker {
   factory _AFKMarker(
-<<<<<<< HEAD
-      {required final String id,
-      final String? qrCodeId,
-      final double? lat,
-      final double? lon,
-      final MarkerStatus markerStatus}) = _$_AFKMarker;
-||||||| e7211a7
-      {required String id,
-      String? qrCodeId,
-      double? lat,
-      double? lon,
-      MarkerStatus markerStatus}) = _$_AFKMarker;
-=======
       {required final String id,
       final String? qrCodeId,
       final double? lat,
       final double? lon,
       final MarkerStatus markerStatus,
       final int repeatable}) = _$_AFKMarker;
->>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
 
   factory _AFKMarker.fromJson(Map<String, dynamic> json) =
       _$_AFKMarker.fromJson;

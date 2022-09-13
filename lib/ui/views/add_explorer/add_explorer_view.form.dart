@@ -13,20 +13,6 @@ import 'package:stacked/stacked.dart';
 const String NameValueKey = 'name';
 const String PasswordValueKey = 'password';
 
-<<<<<<< HEAD
-final Map<String, TextEditingController>
-    _AddExplorerViewTextEditingControllers = {};
-
-final Map<String, FocusNode> _AddExplorerViewFocusNodes = {};
-
-final Map<String, String? Function(String?)?> _AddExplorerViewTextValidations =
-    {
-  NameValueKey: null,
-  PasswordValueKey: null,
-};
-
-||||||| e7211a7
-=======
 final Map<String, TextEditingController>
     _AddExplorerViewTextEditingControllers = {};
 
@@ -38,7 +24,6 @@ final Map<String, String? Function(String?)?> _AddExplorerViewTextValidations =
   PasswordValueKey: FormValidators.passwordValidator,
 };
 
->>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
 mixin $AddExplorerView on StatelessWidget {
   TextEditingController get nameController =>
       _getFormTextEditingController(NameValueKey);
@@ -72,22 +57,12 @@ mixin $AddExplorerView on StatelessWidget {
     passwordController.addListener(() => _updateFormData(model));
   }
 
-<<<<<<< HEAD
-  final bool _autoTextFieldValidation = true;
-  bool validateFormFields(FormViewModel model) {
-    _updateFormData(model, forceValidate: true);
-    return model.isFormValid;
-  }
-
-||||||| e7211a7
-=======
   final bool _autoTextFieldValidation = false;
   bool validateFormFields(FormViewModel model) {
     _updateFormData(model, forceValidate: true);
     return model.isFormValid;
   }
 
->>>>>>> 552acd115d7c66eb8ba497849fafb16394bb79da
   /// Updates the formData on the FormViewModel
   void _updateFormData(FormViewModel model, {bool forceValidate = false}) {
     model.setData(

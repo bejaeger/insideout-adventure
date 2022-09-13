@@ -102,7 +102,7 @@ class QuestLists extends StatelessWidget {
                           onPressed: () =>
                               model.navigateToQuestsOfSpecificTypeView(e),
                           category: e,
-                          backgroundColor: getColorOfType(e.toSimpleString()),
+                          backgroundColor: getColorOfType(e),
                         ),
                       )
                       .toList(),

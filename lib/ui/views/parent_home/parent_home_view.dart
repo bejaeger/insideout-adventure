@@ -110,14 +110,14 @@ class ParentHomeView extends StatelessWidget {
                     "How can we improve?",
                     align: TextAlign.center,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: kHorizontalPadding * 1.2),
-                    child: AfkCreditsText.body(
-                      "Let's work together",
-                      align: TextAlign.center,
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(
+                  //       horizontal: kHorizontalPadding * 1.2),
+                  //   child: AfkCreditsText.body(
+                  //     "Let's work together",
+                  //     align: TextAlign.center,
+                  //   ),
+                  // ),
                   //verticalSpaceSmall,
                   GestureDetector(
                     onTap: model.navToFeedbackView,

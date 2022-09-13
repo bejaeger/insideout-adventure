@@ -229,22 +229,6 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
         afkCredits: afkCreditAmount,
       ),
     );
-    // final afkQuestAdded = await _questService.createAFKQuest(
-    //   afkQuest: AFKQuest(
-    //     id: questId,
-    //     name: nameValue.toString(),
-    //     description: descriptionValue.toString(),
-    //     type: _questType!.toSimpleString(),
-    //     //type: _questType.toString().split('.').elementAt(1),
-    //     afkCredits: afkCreditAmount,
-    //     startMarker: getAFKMarkers.first,
-    //     finishMarker: getAFKMarkers.last,
-    //     markers: getAFKMarkers,
-    //     location: geo.point(
-    //         latitude: getAFKMarkers.first.lat!,
-    //         longitude: getAFKMarkers.first.lon!),
-    //   ),
-    // );
     if (added) {
       _log.i("Quest added successfully!");
       return true;
@@ -264,7 +248,13 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       onBackButton(controller);
       await Future.delayed(Duration(milliseconds: 210));
       setBusy(true);
-      await Future.delayed(Duration(milliseconds: 1000));
+      if (getGoogleMapController != null) {
+        getGoogleMapController!.animateCamera(
+            CameraUpdate.newLatLng(LatLng(startMarker.lat!, startMarker.lon!)));
+      }
+      //   await mapViewModel.animateNewLatLon(
+      // lat: startMarker.lat!, lon: startMarker.lon!, force: true);
+      await Future.delayed(Duration(milliseconds: 1200));
       addMarkerOnMap(
         pos: LatLng(startMarker.lat!, startMarker.lon!),
         number: 0,

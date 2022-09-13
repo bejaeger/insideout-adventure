@@ -31,33 +31,35 @@ class CreditsOverlayView extends StatelessWidget {
               AfkCreditsText.headingThree("Available Screen Time",
                   align: TextAlign.center),
               verticalSpaceMedium,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Hero(
-                  //   tag: "CREDITS",
-                  //   child: Image.asset(kAFKCreditsLogoPath,
-                  //       height: 30, color: kcPrimaryColor),
-                  // ),
-                  Image.asset(kAFKCreditsLogoPath,
-                      height: 30, color: kcPrimaryColor),
-                  horizontalSpaceSmall,
-                  AfkCreditsText.headingThree(
-                      model.afkCreditsBalance.toStringAsFixed(0)),
-                  horizontalSpaceSmall,
-                  Icon(Icons.arrow_forward, size: 25),
-                  horizontalSpaceSmall,
-                  //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
-                  Image.asset(kScreenTimeIcon,
-                      height: 30, color: kcScreenTimeBlue),
-                  horizontalSpaceSmall,
-                  // Lottie.network(
-                  //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
-                  //     height: 40),
-                  AfkCreditsText.headingThree(
-                      model.totalAvailableScreenTime.toString() + " min"),
-                ],
-              ),
+              model.currentUserNullable == null
+                  ? SizedBox(height: 0, width: 0)
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Hero(
+                        //   tag: "CREDITS",
+                        //   child: Image.asset(kAFKCreditsLogoPath,
+                        //       height: 30, color: kcPrimaryColor),
+                        // ),
+                        Image.asset(kAFKCreditsLogoPath,
+                            height: 30, color: kcPrimaryColor),
+                        horizontalSpaceSmall,
+                        AfkCreditsText.headingThree(
+                            model.afkCreditsBalance.toStringAsFixed(0)),
+                        horizontalSpaceSmall,
+                        Icon(Icons.arrow_forward, size: 25),
+                        horizontalSpaceSmall,
+                        //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
+                        Image.asset(kScreenTimeIcon,
+                            height: 30, color: kcScreenTimeBlue),
+                        horizontalSpaceSmall,
+                        // Lottie.network(
+                        //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
+                        //     height: 40),
+                        AfkCreditsText.headingThree(
+                            model.totalAvailableScreenTime.toString() + " min"),
+                      ],
+                    ),
               verticalSpaceLarge,
               AfkCreditsText.subheadingItalic("Claim your screen time now!"),
               verticalSpaceMedium,
