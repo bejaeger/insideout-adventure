@@ -1,7 +1,5 @@
 import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
-import 'package:afkcredits/ui/widgets/stats_card.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';

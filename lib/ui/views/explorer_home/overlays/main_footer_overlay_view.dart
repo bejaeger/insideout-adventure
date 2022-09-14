@@ -24,39 +24,7 @@ class MainFooterOverlayView extends StatelessWidget {
       onModelReady: (model) {
         // TODO: Move somewhere else!
         // TODO: Needs to go into onboarding!
-        AwesomeNotifications().isNotificationAllowed().then(
-          (isAllowed) {
-            if (!isAllowed) {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Allow Notications'),
-                  content:
-                      const Text("We would like to send you notifications"),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Don\'t Allow'),
-                    ),
-                    verticalSpaceMedium,
-                    TextButton(
-                      onPressed: () => AwesomeNotifications()
-                          .requestPermissionToSendNotifications()
-                          .then(
-                            (_) => Navigator.pop(context),
-                          ),
-                      child: const Text('Allow'),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
-        );
-
-        return model.listenToLayout();
+        model.listenToLayout();
       },
       builder: (context, model, child) => Container(
         child: FadingWidget(

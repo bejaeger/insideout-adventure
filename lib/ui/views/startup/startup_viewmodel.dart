@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 import 'package:afkcredits/notifications/notification_controller.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/permission_service.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -12,16 +13,14 @@ import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 
 class StartUpViewModel extends TransferBaseViewModel {
-  //final _geolocationService = locator<GeolocationService>();
+  // ------------------------------------------------------------
   final EnvironmentService _environmentService = locator<EnvironmentService>();
+  final PermissionService _permissionService = locator<PermissionService>();
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
-  //final _markersService = locator<MarkerService>();
-
-  //dynamic position;
-
   final log = getLogger("StartUpViewModel");
 
+  // --------------------------------------------------------
   Future<void> runStartupLogic() async {
     // Only after at least the action method is set, the notification events are delivered
     NotificationController().initializeNotificationsEventListeners();
@@ -81,6 +80,11 @@ class StartUpViewModel extends TransferBaseViewModel {
         } else {
           final currentUser = userService.currentUser;
           log.v('User sync complete. User profile: $currentUser');
+
+          // ? Check if all permissions are given
+          if (!(await _permissionService.allPermissionsProvided())) {
+            await navigationService.navigateTo(Routes.permissionsView);
+          }
 
           // TODO: check whether there is an active screen time and if yes navigate to it, potentially handling completion event which includes an update of the database
           final String? id = await _localStorageService.getFromDisk(

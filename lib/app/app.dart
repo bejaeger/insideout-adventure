@@ -14,6 +14,7 @@ import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/apis/notion_api.dart';
 import 'package:afkcredits/services/pedometer/pedometer_service.dart';
+import 'package:afkcredits/services/permission_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -43,6 +44,7 @@ import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
 import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart';
+import 'package:afkcredits/ui/views/permissions/permissions_view.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
@@ -102,6 +104,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: OnBoardingScreensView),
     MaterialRoute(page: ParentMapView),
     MaterialRoute(page: FeedbackView),
+    MaterialRoute(page: PermissionsView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -135,6 +138,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: NotionApi),
     LazySingleton(classType: FeedbackService),
     LazySingleton(classType: ScreenTimeService),
+    LazySingleton(classType: PermissionService),
 
     //LazySingleton(classType: MarkersInMap),
     // LazySingleton(classType: MapViewModel),

@@ -185,13 +185,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     }
   }
 
-  Future askForLocationPermission() async {
-    final locationPermission =
-        await geolocationService.askForLocationPermission();
-    snackbarService.showSnackbar(
-        message: "Granted location: $locationPermission");
-  }
-
   void navigateToQuests() {
     // navigationService.replaceWithTransition(QuestsOverviewView(),
     //     transition: 'righttoleft', duration: Duration(seconds: 1));

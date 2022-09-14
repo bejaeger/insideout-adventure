@@ -41,7 +41,7 @@ export class EmailService {
     async notifyAFKCreditsTeamAfterGiftCardPurchase(status: string, uid: string, categoryId: string, transferId: string, code: any) {
 
         // TODO: Get current version of app somehow as senderName?
-        let senderName: string = "AFK Credits App";
+        let senderName: string = "Hercules World App";
         let message: string;
         if (status == "pending") {
             message = "NEED TO PROVIDE GIFT CARD: User with id " + uid + " purchased gift card with id " + categoryId + " in transaction with id " + transferId + ".";

@@ -42,6 +42,7 @@ import '../ui/views/map/map_overview_view.dart';
 import '../ui/views/onboarding_screens/onboarding_screens_view.dart';
 import '../ui/views/parent_home/parent_home_view.dart';
 import '../ui/views/parent_map/parent_map_view.dart';
+import '../ui/views/permissions/permissions_view.dart';
 import '../ui/views/qrcode/qrcode_view.dart';
 import '../ui/views/qrcode/qrcode_view_example.dart';
 import '../ui/views/quests_overview/create_quest/create_quest_view.dart';
@@ -98,6 +99,7 @@ class Routes {
   static const String onBoardingScreensView = '/on-boarding-screens-view';
   static const String parentMapView = '/parent-map-view';
   static const String feedbackView = '/feedback-view';
+  static const String permissionsView = '/permissions-view';
   static const all = <String>{
     parentHomeView,
     singleMarkerView,
@@ -134,6 +136,7 @@ class Routes {
     onBoardingScreensView,
     parentMapView,
     feedbackView,
+    permissionsView,
   };
 }
 
@@ -180,6 +183,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.onBoardingScreensView, page: OnBoardingScreensView),
     RouteDef(Routes.parentMapView, page: ParentMapView),
     RouteDef(Routes.feedbackView, page: FeedbackView),
+    RouteDef(Routes.permissionsView, page: PermissionsView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -485,6 +489,12 @@ class StackedRouter extends RouterBase {
       );
       return MaterialPageRoute<dynamic>(
         builder: (context) => FeedbackView(key: args.key),
+        settings: data,
+      );
+    },
+    PermissionsView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const PermissionsView(),
         settings: data,
       );
     },
@@ -1289,6 +1299,22 @@ extension NavigatorStateExtension on NavigationService {
     return navigateTo(
       Routes.feedbackView,
       arguments: FeedbackViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToPermissionsView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.permissionsView,
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

@@ -14,6 +14,7 @@ import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
+import 'package:afkcredits/services/permission_service.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -50,6 +51,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   final GamificationService gamificationService =
       locator<GamificationService>();
   final ScreenTimeService screenTimeService = locator<ScreenTimeService>();
+  final PermissionService _permissionService = locator<PermissionService>();
 
   final baseModelLog = getLogger("BaseModel");
 
@@ -238,7 +240,13 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
-  Future replaceWithHomeView() async {
+  Future replaceWithHomeView({bool showPermissionView = false}) async {
+    // ? Request for all necessary permissions
+    if (showPermissionView) {
+      if (!(await _permissionService.allPermissionsProvided())) {
+        await navigationService.navigateTo(Routes.permissionsView);
+      }
+    }
     if (currentUser.role == UserRole.sponsor) {
       replaceWithParentHomeView();
     } else if (currentUser.role == UserRole.adminMaster) {

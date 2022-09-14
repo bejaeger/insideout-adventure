@@ -110,11 +110,11 @@ dependencies:
   #get: ^4.6.5
   #background_fetch: ^1.1.0
   #awesome_notifications: ^0.6.21
-  awesome_notifications: #^0.7.0-beta.2
-    git:
-      #ref: "8d0bc27"
-      ref: "a850f27"
-      url: https://github.com/rafaelsetragni/awesome_notifications
+  awesome_notifications: ^0.7.0-beta.6+1
+    # git:
+    #   #ref: "8d0bc27"
+    #   ref: "a850f27"
+    #   url: https://github.com/rafaelsetragni/awesome_notifications
   fluttertoast: ^8.0.3
 
   transparent_pointer: ^1.0.0
@@ -167,7 +167,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/afk_credits.PNG"
+  image_path: "assets/hercules_world_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -183,6 +183,7 @@ flutter:
     - assets/map_style.txt
     - assets/DayStyle.json
     - assets/PokemonStyle.json
+    - assets/hercules_world_logo.png
     - assets/avatars/hercules-avatar.png
     - assets/avatars/hercules-avatar2.png    
     - assets/icons/

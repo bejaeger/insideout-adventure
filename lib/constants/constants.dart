@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-const String kAppName = "AFK Credits";
+const String kAppName = "Hercules World";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY';
 const GoogleMapsEnvKeyIOS = 'GOOGLE_MAPS_API_KEY_IOS';
@@ -10,7 +10,7 @@ const kLocalStorageSponsorPinKey = "pinKey";
 const kLocalStorageSponsorReferenceKey = "PARENT_ID";
 const kLocalStorageScreenTimeSessionKey = "SCREEN_TIME_SESSION";
 const kLocalStorageSawOnBoardingKey = "SAW_ONBOARDING";
-final appName = 'AFK Credits';
+final appName = 'Hercules World';
 
 /////////////////////////////////////////////////
 // Firebase collections and keys

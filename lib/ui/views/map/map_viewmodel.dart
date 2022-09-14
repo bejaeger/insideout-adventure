@@ -626,18 +626,22 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     if (distance / 1000 > kDefaultQuestDownloadRadiusInKm) {
       if (!showReloadQuestButton) {
         log.v("Moved camera far enough to promt loading new quests");
+        notifyListeners();
+        if (callback != null) {
+          callback();
+        }
       }
       // show button to download new quests within a radius of new lat lon!
       questService.showReloadQuestButton = true;
     } else {
       if (showReloadQuestButton) {
         log.v("Moved camera back so don't show promt to load new quests");
+        notifyListeners();
+        if (callback != null) {
+          callback();
+        }
       }
       questService.showReloadQuestButton = false;
-    }
-    notifyListeners();
-    if (callback != null) {
-      callback();
     }
   }
 
