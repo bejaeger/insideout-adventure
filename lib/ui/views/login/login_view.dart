@@ -52,7 +52,10 @@ class LoginView extends StatelessWidget with $LoginView {
           subtitle: Row(
             children: [
               horizontalSpaceTiny,
-              AfkCreditsText.body('Earn your screen time'),
+              Expanded(
+                child: AfkCreditsText.body(
+                    'Creating a healthy balance between activity and screen time'),
+              ),
             ],
           ),
           mainButtonTitle: 'SIGN IN',

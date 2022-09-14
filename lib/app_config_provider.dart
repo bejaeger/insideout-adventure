@@ -33,11 +33,11 @@ class AppConfigProvider {
   String get appName {
     switch (this.flavor) {
       case Flavor.dev:
-        return "AFK Credits - Dev";
+        return "Hercules World - Dev";
       case Flavor.prod:
-        return "AFK Credits - Proto v3";
+        return "Hercules World - Proto v3";
       default:
-        return "AFK Credits - Dev";
+        return "Hercules World - Dev";
     }
   }
 

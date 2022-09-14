@@ -88,7 +88,8 @@ class Notifications {
   }
 
   Future<void> setBadgeIndicator(int amount) async {
-    await AwesomeNotifications().setGlobalBadgeCounter(amount - 1);
+    await AwesomeNotifications()
+        .setGlobalBadgeCounter((amount - 1).clamp(0, 10000));
   }
 
   Future<int> incrementBadgeIndicator() async {

@@ -69,7 +69,7 @@ class BasicDialogContent extends StatelessWidget with $BasicDialogContent {
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                   ],
                   decoration: InputDecoration(
-                    labelText: 'AFk Credits Amount: ',
+                    labelText: 'Credits: ',
                   ),
                   controller: afkCreditAmountController
                     ..text = quest!.afkCredits.toString(),
