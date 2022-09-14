@@ -226,7 +226,6 @@ class QuestService with ReactiveServiceMixin {
       return await _firestoreApi.createQuest(quest: quest);
     }
     return false;
-
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
   }

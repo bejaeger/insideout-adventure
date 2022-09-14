@@ -19,7 +19,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
   ///////////////////////////////////////////////
   /// Switch from explorer back to sponsor account
-  Future handleSwitchToExplorerEvent() async {
+  Future handleSwitchToExplorerEvent({String? explorerUidInput}) async {
     if (isScreenTimeActive) {
       snackbarService.showSnackbar(
           message:
@@ -28,8 +28,15 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       return;
     }
 
+    User? tmpExplorer;
+    if (explorerUidInput != null) {
+      tmpExplorer = userService.supportedExplorers[explorerUidInput];
+    } else {
+      tmpExplorer = explorer;
+    }
+
     // check if explorerUid is set:
-    if (explorerUid == null || explorer == null) {
+    if (tmpExplorer == null) {
       log.e("Please provide an explorerUid you want to switch to!");
       await showGenericInternalErrorDialog();
       return;
@@ -37,7 +44,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
     // Check if user wants to set PIN
     final result = await bottomSheetService.showBottomSheet(
-        title: "Switch to " + explorer!.fullName + "'s account",
+        title: "Switch to " + tmpExplorer.fullName + "'s area",
         confirmButtonTitle: "Without Passcode",
         cancelButtonTitle: "With Passcode");
 
@@ -54,15 +61,16 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
         // Store PIN in local storage!
         // And keep reference to currently logged in user!
         // We don't even need google auth!
-        await switchToExplorerAccount(pin: pinResult.pin);
+        await switchToExplorerAccount(
+            pin: pinResult.pin, explorer: tmpExplorer);
       }
     }
     if (result?.confirmed == true) {
-      await switchToExplorerAccount();
+      await switchToExplorerAccount(explorer: tmpExplorer);
     }
   }
 
-  Future switchToExplorerAccount({String? pin}) async {
+  Future switchToExplorerAccount({String? pin, required User explorer}) async {
     setBusy(true);
     await userService.saveSponsorReference(
         uid: currentUser.uid, authMethod: currentUser.authMethod, pin: pin);
@@ -73,7 +81,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     try {
       log.i("Syncing explorer account");
       await userService.syncUserAccount(
-          uid: explorerUid, fromLocalStorage: true);
+          uid: explorer.uid, fromLocalStorage: true);
     } catch (e) {
       log.wtf("Error when trying to sync explorer account.");
       await dialogService.showDialog(
@@ -124,7 +132,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       } else {
         // no passcode provided.
         final confirmation = await bottomSheetService.showBottomSheet(
-            title: "Do you want to switch to the associated sponsor account?",
+            title: "Switch to parent area?",
             confirmButtonTitle: "Switch",
             cancelButtonTitle: "Cancel");
         if (confirmation?.confirmed == true) {

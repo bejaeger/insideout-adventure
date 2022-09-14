@@ -227,6 +227,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
         type: selectedQuestType,
         markers: getAFKMarkers,
         afkCredits: afkCreditAmount,
+        distanceMarkers: getTotalDistanceOfMarkers(),
       ),
     );
     if (added) {

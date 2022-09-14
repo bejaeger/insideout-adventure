@@ -25,7 +25,7 @@ class ParentDrawerView extends StatelessWidget {
               children: [
                 Expanded(
                   child: AfkCreditsButton(
-                      title: "Show Introduction",
+                      title: "Show introduction",
                       onTap: model.navToOnboardingScreens),
                 ),
               ],

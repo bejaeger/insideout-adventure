@@ -738,7 +738,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   void nextCharacter() {
-    mapStateService.characterNumber = (characterNumber + 1) % 6;
+    mapStateService.characterNumber = (characterNumber + 1) % 4;
     notifyListeners();
   }
 

@@ -36,7 +36,7 @@ class ChildStatsCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.hardEdge,
       child: Container(
-        width: screenWidth(context, percentage: 0.8),
+        width: screenWidth(context, percentage: 0.65),
         decoration: BoxDecoration(
             border: Border.all(
                 color: usingScreenTime ? kcRed : Colors.grey[400]!,
@@ -69,7 +69,7 @@ class ChildStatsCard extends StatelessWidget {
               ),
               verticalSpaceSmall,
               if (activityTimeLastWeek != null || screenTimeLastWeek != null)
-                AfkCreditsText.body("Stats last 7 days"),
+                AfkCreditsText.body("Last 7 days"),
               if (activityTimeLastWeek == null && screenTimeLastWeek == null)
                 AfkCreditsText.body("Switch to " +
                     user.fullName +

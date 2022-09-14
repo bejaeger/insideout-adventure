@@ -39,7 +39,9 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
           floatingActionButton: BottomFloatingActionButtons(
               // titleMain: "Add Credits",
               // onTapMain: model.navigateToAddFundsView,
-              titleMain: "Switch Account",
+              leadingMain:
+                  Icon(Icons.switch_account_outlined, color: Colors.white),
+              titleMain: "Switch area",
               onTapMain: model.handleSwitchToExplorerEvent),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
@@ -257,7 +259,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                             // ),
                             verticalSpaceMedium,
                             SectionHeader(
-                              title: "Stats last 7 days",
+                              title: "Last 7 days",
                               horizontalPadding: 0,
                               //onButtonTap: model.showNotImplementedSnackbar,
                               otherTrailingIcon: TextButton(

@@ -8,6 +8,10 @@ const String kQrcodePath = "assets/icons/qrcode.png";
 const String kMeasureDistanceIconPath = "assets/icons/measure-distance.png";
 const String kMagnetIconPath = "assets/icons/magnet.png";
 
+// images
+const String kCloudOverlayImagePath = "assets/images/luz-azul-cielo-azul.jpg";
+
+// icons
 const String kDrawingCompassIconPath = "assets/icons/drawing-compass.png";
 const String kTreasureIconPath = "assets/icons/treasure.png";
 const String kTreasureIconSmallPath = "assets/icons/treasure_small.png";

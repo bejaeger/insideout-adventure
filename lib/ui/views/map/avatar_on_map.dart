@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -16,53 +17,51 @@ class AvatarOnMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       //alignment: Alignment(0, 0.4),
-      bottom: characterNumber == 5 ? 145 : 185,
-      left: characterNumber == 5 ? 60 : 2,
+      bottom: characterNumber == 3
+          ? 168
+          : characterNumber == 1
+              ? 175
+              : 190,
+      left: 2,
       right: 2,
       child: FadingWidget(
         show: show,
         ignorePointer: true,
-        child: characterNumber == 0
-            ? Lottie.network(
-                // chilling dude
-                'https://assets2.lottiefiles.com/packages/lf20_0w4fvbov.json',
-                height: 150,
-                width: 150,
-              )
-            : characterNumber == 1
-                ?
-                // Left!
-                Lottie.network(
-// walking normal girl
-                    'https://assets6.lottiefiles.com/private_files/lf30_afru6l2d.json',
-                    height: 165,
-                    width: 165,
+        child: Container(
+            height: screenHeight(context, percentage: 0.22),
+            child: characterNumber == 0
+                ? Lottie.network(
+                    // chilling dude
+                    'https://assets2.lottiefiles.com/packages/lf20_0w4fvbov.json',
+                    fit: BoxFit.contain,
                   )
-                : characterNumber == 2
-                    ? Lottie.network(
-                        // stick figure running to the right
-                        // Stick figure does not work from notion as link changes
+                : characterNumber == 1
+                    ?
+                    // Left!
+                    Lottie.network(
+                        // walking normal girl
                         'https://assets6.lottiefiles.com/private_files/lf30_afru6l2d.json',
-                        // 'https://s3.us-west-2.amazonaws.com/secure.notion-static.com/aa05bafe-251b-414e-80c6-a13c67abc438/lf30_editor_als8jeb9.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220328%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220328T011103Z&X-Amz-Expires=86400&X-Amz-Signature=d31cc104bb17397362cb996cd5671ce304385bbf282626b8cdf47e21d5e97e99&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22lf30_editor_als8jeb9.json%22&x-id=GetObject',
-                        height: 150,
-                        width: 150,
+                        fit: BoxFit.contain,
                       )
-                    : characterNumber == 3
+                    : characterNumber == 2
                         ? Lottie.network(
                             // dude walking to the right
                             'https://assets3.lottiefiles.com/packages/lf20_4jip3mqj.json',
-
-                            height: 160,
-                            width: 160,
+                            fit: BoxFit.contain,
                           )
-                        : characterNumber == 4
-                            ? Lottie.network(
-                                // colored stick figure walking to the left
-                                'https://assets3.lottiefiles.com/packages/lf20_tbbtmun4.json',
-                                height: 165,
-                                width: 165,
-                              )
-                            : Lottie.asset(kLottieTestV1),
+                        : Lottie.network(
+                            // colored stick figure walking to the left
+                            'https://assets3.lottiefiles.com/packages/lf20_tbbtmun4.json',
+                            fit: BoxFit.contain,
+                          )
+            // characterNumber == 4
+            //     ? Lottie.network(
+            //         // colored stick figure walking to the left
+            //         'https://assets3.lottiefiles.com/packages/lf20_tbbtmun4.json',
+            //         fit: BoxFit.contain,
+            //       )
+            //     : Lottie.asset(kLottieTestV1),
+            ),
 
         // Lottie.network(
         //     // weird figure walking to the right

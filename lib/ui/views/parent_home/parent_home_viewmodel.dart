@@ -4,6 +4,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -76,6 +77,11 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     // }
     // ! FOR MVP WE ONLY ALLOW CREATING CHILD ACCOUNTS
     await navigationService.navigateTo(Routes.addExplorerView);
+  }
+
+  void showSwitchAreaBottomSheet() async {
+    await bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.switchArea);
   }
 
   // ----------------------------

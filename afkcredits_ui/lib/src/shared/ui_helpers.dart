@@ -102,17 +102,22 @@ String getStringForCategory(QuestType? category) {
   }
 }
 
-Color getColorOfType(QuestType type) {
-  if (type == QuestType.TreasureLocationSearch) {
-    return Colors.orange;
-  } else if (type == QuestType.QRCodeHike) {
-    return Colors.red;
-  } else if (type == QuestType.GPSAreaHike) {
-    return Colors.green;
-  } else if (type == QuestType.DistanceEstimate) {
-    return Colors.blue;
-  } else {
-    return Colors.cyan;
+Color getColorOfType(QuestType category) {
+  switch (category) {
+    case QuestType.DistanceEstimate:
+      return kcScreenTimeBlue;
+    case QuestType.TreasureLocationSearch:
+      return kcBlue;
+    case QuestType.QRCodeHunt:
+      return kcOrange;
+    case QuestType.QRCodeHike:
+      return kcOrange;
+    case QuestType.GPSAreaHike:
+      return kcOrange;
+    case QuestType.GPSAreaHunt:
+      return kcOrange;
+    default:
+      return kcPrimaryColor;
   }
 }
 

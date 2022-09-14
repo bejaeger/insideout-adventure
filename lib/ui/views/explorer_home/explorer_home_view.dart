@@ -60,7 +60,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                       isBusy: model.isReloadingQuests,
                     ),
 
-                  if (model.currentUser.createdByUserWithId != null)
+                  if (model.currentUserNullable?.createdByUserWithId != null)
                     SwitchToParentsAreaButton(
                       onTap: () async =>
                           await model.handleSwitchToSponsorEvent(),

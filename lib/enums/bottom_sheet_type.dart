@@ -1,3 +1,1 @@
-enum BottomSheetType {
-  questInformation,
-}
+enum BottomSheetType { questInformation, switchArea }

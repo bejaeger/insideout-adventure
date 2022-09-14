@@ -1,16 +1,13 @@
-import 'dart:math';
-
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/parent_drawer_view/parent_drawer_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/child_stats_card.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/history_tile.dart';
 import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
+import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -36,17 +33,29 @@ class ParentHomeView extends StatelessWidget {
               showRedLiveButton: model.isScreenTimeActive,
             ),
             endDrawer: const ParentDrawerView(),
-            floatingActionButton: BottomFloatingActionButtons(
-              swapButtons: false,
-              titleMain: "Create quest",
-              // leadingSecondary: Icon(Icons.add, color: Colors.white),
-              titleSecondary: "Map",
-              leadingSecondary: Icon(Icons.map, color: kcPrimaryColor),
-              onTapMain: model.navToCreateQuest,
-              onTapSecondary: model.navToParentMapView,
+            floatingActionButton: AFKFloatingActionButton(
+              icon: Icon(Icons.switch_account_outlined, color: Colors.white),
+              width: 140,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              title: "Kids Area",
+              onPressed: model.showSwitchAreaBottomSheet,
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
+
+            // floatingActionButton: BottomFloatingActionButtons(
+            //   swapButtons: false,
+            //   titleMain: "Quest",
+            //   leadingMain: Icon(Icons.add, color: Colors.white),
+            //   // leadingSecondary: Icon(Icons.add, color: Colors.white),
+            //   titleSecondary: "Map",
+            //   leadingSecondary: Icon(Icons.map, color: kcPrimaryColor),
+            //   onTapMain: model.navToCreateQuest,
+            //   onTapSecondary: model.navToParentMapView,
+            // ),
+            // floatingActionButtonLocation:
+            //     FloatingActionButtonLocation.centerDocked,
+
             body: RefreshIndicator(
               onRefresh: () => model.listenToData(),
               child: ListView(
@@ -100,25 +109,44 @@ class ParentHomeView extends StatelessWidget {
                       //     model.showAddExplorerBottomSheet
                     ),
                   verticalSpaceMedium,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: kHorizontalPadding),
-                    child: Divider(),
+                  Container(
+                    height: 90,
+                    color: kcVeryLightGrey,
+                    width: screenWidth(context),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 25, vertical: 0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: AfkCreditsButton(
+                              leading: Icon(Icons.add, color: Colors.white),
+                              title: "Quest",
+                              onTap: model.navToCreateQuest,
+                              height: 50),
+                        ),
+                        horizontalSpaceMedium,
+                        Expanded(
+                          child: AfkCreditsButton.outline(
+                            title: "Map",
+                            leading: Icon(Icons.map, color: kcPrimaryColor),
+                            onTap: model.navToParentMapView,
+                            height: 50,
+                          ),
+                        ),
+                        //verticalSpaceSmall,
+                      ],
+                    ),
                   ),
+                  verticalSpaceMedium,
+                  // Divider(
+                  //   indent: 20,
+                  //   endIndent: 20,
+                  // ),
                   verticalSpaceMedium,
                   AfkCreditsText.headingFour(
                     "How can we improve?",
                     align: TextAlign.center,
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(
-                  //       horizontal: kHorizontalPadding * 1.2),
-                  //   child: AfkCreditsText.body(
-                  //     "Let's work together",
-                  //     align: TextAlign.center,
-                  //   ),
-                  // ),
-                  //verticalSpaceSmall,
                   GestureDetector(
                     onTap: model.navToFeedbackView,
                     child: Container(
@@ -128,6 +156,7 @@ class ParentHomeView extends StatelessWidget {
                       child: AfkCreditsButton.text(
                         title: "Provide Feedback",
                         onTap: null,
+                        height: 35,
                       ),
                     ),
                   ),
@@ -193,6 +222,7 @@ class ParentHomeView extends StatelessWidget {
                   //       ),
                   //     ),
                   //   ),
+                  verticalSpaceMassive,
                   verticalSpaceMassive,
                 ],
               ),
