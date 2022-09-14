@@ -331,8 +331,6 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
           _controller.forward();
           model.showCollectedMarkerAnimation = false;
         }
-        print("========================================");
-        print(model.previouslyFinishedQuest);
         return Stack(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

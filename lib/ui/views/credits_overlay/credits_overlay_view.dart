@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/card_overlay_layout.dart';
 import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/credits_to_screentime_widget.dart';
 import 'package:afkcredits/ui/widgets/large_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -33,33 +34,9 @@ class CreditsOverlayView extends StatelessWidget {
               verticalSpaceMedium,
               model.currentUserNullable == null
                   ? SizedBox(height: 0, width: 0)
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Hero(
-                        //   tag: "CREDITS",
-                        //   child: Image.asset(kAFKCreditsLogoPath,
-                        //       height: 30, color: kcPrimaryColor),
-                        // ),
-                        Image.asset(kAFKCreditsLogoPath,
-                            height: 30, color: kcPrimaryColor),
-                        horizontalSpaceSmall,
-                        AfkCreditsText.headingThree(
-                            model.afkCreditsBalance.toStringAsFixed(0)),
-                        horizontalSpaceSmall,
-                        Icon(Icons.arrow_forward, size: 25),
-                        horizontalSpaceSmall,
-                        //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
-                        Image.asset(kScreenTimeIcon,
-                            height: 30, color: kcScreenTimeBlue),
-                        horizontalSpaceSmall,
-                        // Lottie.network(
-                        //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
-                        //     height: 40),
-                        AfkCreditsText.headingThree(
-                            model.totalAvailableScreenTime.toString() + " min"),
-                      ],
-                    ),
+                  : CreditsToScreenTimeWidget(
+                      credits: model.afkCreditsBalance,
+                      availableScreenTime: model.totalAvailableScreenTime),
               verticalSpaceLarge,
               AfkCreditsText.subheadingItalic("Claim your screen time now!"),
               verticalSpaceMedium,

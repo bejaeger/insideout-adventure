@@ -372,9 +372,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         // curve: Curves.linear,
         // barrierColor: Colors.black45,
         description: quest.description,
-        mainButtonTitle: quest.type == QuestType.DistanceEstimate
-            ? "Show quest"
-            : "Show quest",
+        mainButtonTitle: "Show quest",
         secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
         data: quest);
     return sheetResponse;

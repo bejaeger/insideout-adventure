@@ -526,11 +526,10 @@ class ActiveQuestService with ReactiveServiceMixin {
     // late Quest quest;
     List<AFKMarker> markers = [];
     if (hasActiveQuest) {
-      if (activatedQuest!.quest.type == QuestType.QRCodeHike.toSimpleString()) {
+      if (activatedQuest!.quest.type == QuestType.QRCodeHike) {
         markers = activatedQuest!.quest.markers;
       }
-      if (activatedQuest!.quest.type ==
-          QuestType.GPSAreaHike.toSimpleString()) {
+      if (activatedQuest!.quest.type == QuestType.GPSAreaHike) {
         for (var i = 0; i < activatedQuest!.markersCollected.length; i++) {
           if (activatedQuest!.markersCollected[i]) {
             markers.add(activatedQuest!.quest.markers[i]);
@@ -542,9 +541,8 @@ class ActiveQuestService with ReactiveServiceMixin {
           markers.add(activatedQuest!.quest.markers[index + 1]);
         }
       }
-      if (activatedQuest!.quest.type == QuestType.QRCodeHunt.toSimpleString() ||
-          activatedQuest!.quest.type ==
-              QuestType.GPSAreaHunt.toSimpleString()) {
+      if (activatedQuest!.quest.type == QuestType.QRCodeHunt ||
+          activatedQuest!.quest.type == QuestType.GPSAreaHunt) {
         for (var i = 0; i < activatedQuest!.markersCollected.length; i++) {
           if (activatedQuest!.markersCollected[i]) {
             markers.add(activatedQuest!.quest.markers[i]);
@@ -557,17 +555,17 @@ class ActiveQuestService with ReactiveServiceMixin {
             "Cannot retrieve markers because no quest active and no quest provided");
         return [];
       }
-      if (questIn.type == QuestType.QRCodeHike.toSimpleString()) {
+      if (questIn.type == QuestType.QRCodeHike) {
         markers = questIn.markers;
       }
-      if (questIn.type == QuestType.GPSAreaHike.toSimpleString()) {
+      if (questIn.type == QuestType.GPSAreaHike) {
         markers.add(questIn.markers[0]);
         if (questIn.markers.length > 1) {
           markers.add(questIn.markers[1]);
         }
       }
-      if (questIn.type == QuestType.QRCodeHunt.toSimpleString() ||
-          questIn.type == QuestType.GPSAreaHunt.toSimpleString()) {
+      if (questIn.type == QuestType.QRCodeHunt ||
+          questIn.type == QuestType.GPSAreaHunt) {
         markers.add(questIn.markers[0]);
       }
     }

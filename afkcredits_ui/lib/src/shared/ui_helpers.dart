@@ -66,16 +66,19 @@ IconData getIconForCategory(QuestType category) {
   }
 }
 */
-IconData getIconForCategory(QuestType category) {
+IconData getIconForCategory(QuestType? category) {
+  if (category == null) return Icons.location_on;
   if (category == QuestType.DistanceEstimate) {
     return Icons.arrow_right_alt;
   } else if (category == QuestType.TreasureLocationSearch) {
-    return Icons.location_on;
+    // return Icons.location_on;
+    return Icons.search;
   } else if (category == QuestType.QRCodeHunt) {
     return Icons.pets;
   } else if (category == QuestType.QRCodeHike) {
     return Icons.nature_people;
-  } else if (category == QuestType.GPSAreaHike) {
+  } else if (category == QuestType.GPSAreaHike ||
+      category == QuestType.GPSAreaHike) {
     return Icons.explore;
   } else {
     return Icons.map;
@@ -102,7 +105,8 @@ String getStringForCategory(QuestType? category) {
   }
 }
 
-Color getColorOfType(QuestType category) {
+Color getColorOfType(QuestType? category) {
+  if (category == null) return kcPrimaryColor;
   switch (category) {
     case QuestType.DistanceEstimate:
       return kcScreenTimeBlue;

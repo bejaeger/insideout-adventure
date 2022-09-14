@@ -9,11 +9,19 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
   final Quest quest;
   RaiseQuestBottomSheetViewModel({required this.quest});
 
+  // ----------------------------------------
   final log = getLogger("RaiseQuestBottomSheetViewModel");
 
+  // ---------------------------------------
+  // getters
+
+  // -------------------------------
+  // state
   Set<Marker> _markersTmp = {};
   GoogleMapController? _googleMapController;
 
+  // -------------------------------
+  // functions
   Future navigateToAcceptPaymentsView() async {
     log.i("Clicked navigating to accept payments view (not yet implemented!)");
   }
@@ -77,6 +85,13 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     } else {
       return "You don't have enough AFK Credits funds to earn ${quest.afkCredits} credits. Ask a sponsor to support you :)";
     }
+  }
+
+  void showNotImplementedInParentAccount() {
+    dialogService.showDialog(
+      title: "Not supported",
+      description: "Not supported in parent account yet",
+    );
   }
 
   @override

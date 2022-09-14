@@ -398,8 +398,6 @@ class GeolocationService extends PausableService {
     // DISTANCE TO CURRENT MARKER!
     distanceToStartMarker = Geolocator.distanceBetween(
         positionActual.latitude, positionActual.longitude, lat, lon);
-    print("========================-----------========================");
-    print("DISTANCE: $distanceToStartMarker");
     distanceToLastCheckedMarker = distanceToStartMarker;
   }
 

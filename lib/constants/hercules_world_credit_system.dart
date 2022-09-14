@@ -14,4 +14,6 @@ class HerculesWorldCreditSystem {
 
   static const double kMinuteActivityToCreditsConversion = 1 / 3;
   // 30 min activity -> 10 min screen time * (credits / screentime factor)
+
+  static const double kSimpleDistanceMarkersToDistanceWalkScaling = 1.2;
 }
