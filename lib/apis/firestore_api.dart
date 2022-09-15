@@ -28,12 +28,17 @@ import 'package:flutter/foundation.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 
+import '../app/app.locator.dart';
+import '../services/geolocation/geolocation_service.dart';
+
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
   final firestoreInstance = FirebaseFirestore.instance;
   GeoFirePoint? center;
   //List<UserFavPlaces>? places;
   // Create user documents
+
+  final _currentUserLocation = locator<GeolocationService>();
   DocumentReference? _documentReference;
   List<Quest>? newQuestResult;
   List<AFKQuest>? newResult;
@@ -606,12 +611,13 @@ class FirestoreApi {
       String field = 'location';
       final location = Location();
 
-      final pos = await location.getLocation();
-      center = geo.point(
-          latitude: pos.latitude as double, longitude: pos.longitude as double);
+      // final pos = await location.getLocation();
+      final position = await _currentUserLocation.getAndSetCurrentLocation();
+      center =
+          geo.point(latitude: position.latitude, longitude: position.longitude);
 
       Stream<List<DocumentSnapshot>> stream = geo
-          .collection(collectionRef: afkQuestsCollection)
+          .collection(collectionRef: questsCollection)
           .within(
               center: center!, radius: 50.0, field: field, strictMode: true);
       log.i("Data Inside The Stream");
