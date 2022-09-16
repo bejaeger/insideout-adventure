@@ -45,6 +45,10 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     return userService.explorerNameFromUid(uid);
   }
 
+  ScreenTimeSession? getScreenTimeSession({required String uid}) {
+    return screenTimeService.getScreenTime(uid: uid);
+  }
+
   // ---------------------------------
   // helpers
   void showHistoryItemInfoDialog(dynamic data) async {

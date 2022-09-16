@@ -11,6 +11,7 @@ import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
+import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
 import 'package:afkcredits/ui/widgets/quest_success_card.dart';
 import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
 import 'package:afkcredits/ui/widgets/treasure_location_search_widgets.dart';
@@ -125,7 +126,9 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               GestureDetector(
-                                onTap: model.openSuperUserSettingsDialog,
+                                onTap: model.isSuperUser
+                                    ? model.openSuperUserSettingsDialog
+                                    : null,
                                 child: QuestTypeTag(quest: quest),
                               ),
                               if (quest != null)
@@ -146,7 +149,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                                 ),
                             ],
                           ),
-                          verticalSpaceSmall,
+                          verticalSpaceTiny,
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),
                             child: Row(
@@ -169,6 +172,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                               ],
                             ),
                           ),
+                          //QuestSpecificationsRow(quest: quest),
                           verticalSpaceSmall,
                           if (quest != null)
                             if (quest.type == QuestType.TreasureLocationSearch)

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
@@ -492,15 +493,26 @@ class FirestoreApi {
         .update({'id': _documentReference.id});
   }
 
-  Future<bool> createQuest({required Quest quest}) async {
+  Future createQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
-    final _documentReference = await questsCollection.add(quest.toJson());
+    final _documentReference = questsCollection.doc();
+    bool timedout = false;
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
     await questsCollection
         .doc(_documentReference.id)
-        .update({'id': _documentReference.id});
+        .set(quest.copyWith(id: _documentReference.id).toJson())
+        .timeout(
+      Duration(seconds: 5),
+      onTimeout: () {
+        timedout = true;
+        log.w("Uploading quest timed out. No data connection");
+      },
+    );
+    if (timedout) {
+      return WarningFirestoreCallTimeout;
+    }
     if (_documentReference.id.isNotEmpty) {
       log.i(
           'This is the Document Id Being Created Harguilar ${_documentReference.id}');
@@ -551,12 +563,16 @@ class FirestoreApi {
           } else {
             log.w('There is no public \'quests\' collection on firestore.');
           }
-          completer1.complete();
+          if (!completer1.isCompleted) {
+            completer1.complete();
+          }
         },
       );
 
       if (sponsorIds.length == 0) {
-        completer2.complete();
+        if (!completer2.isCompleted) {
+          completer2.complete();
+        }
       }
       int counter = 0;
       for (String id in sponsorIds) {
@@ -591,7 +607,9 @@ class FirestoreApi {
                   'There is no \'quests\' collection from parents on firestore');
             }
             if (counter == sponsorIds.length) {
-              completer2.complete();
+              if (!completer2.isCompleted) {
+                completer2.complete();
+              }
             }
           },
         );
@@ -608,7 +626,7 @@ class FirestoreApi {
         message: WarningNoQuestsDownloaded,
         devDetails: WarningNoQuestsDownloaded,
         prettyDetails:
-            "No quests could be found in the area. Ask your parents to create one.",
+            "No quests could be found in this area. Ask your parents to create one.",
       );
     }
     return returnQuests;
@@ -791,7 +809,8 @@ class FirestoreApi {
     await screenTimeSessionCollection.doc(session.sessionId).delete();
   }
 
-  Future getScreenTimeSession({required String sessionId}) async {
+  Future<ScreenTimeSession?> getScreenTimeSession(
+      {required String sessionId}) async {
     log.i("get screen time session from firestore");
     //Get the Document Created Reference
     final sessionDoc = await screenTimeSessionCollection.doc(sessionId).get();
@@ -1073,9 +1092,21 @@ class FirestoreApi {
   // !!! Also used at the moment for allowing parents to add credits to child
   Future changeAfkCreditsBalanceCheat(
       {required String uid, num deltaCredits = 50}) async {
-    await getUserSummaryStatisticsDocument(uid: uid).update({
-      "afkCreditsBalance": FieldValue.increment(deltaCredits),
-    });
+    bool timedout = false;
+    await getUserSummaryStatisticsDocument(uid: uid).update(
+      {
+        "afkCreditsBalance": FieldValue.increment(deltaCredits),
+      },
+    ).timeout(
+      Duration(seconds: 5),
+      onTimeout: () {
+        timedout = true;
+        log.w("Uploading quest timed out. No data connection");
+      },
+    );
+    if (timedout) {
+      return WarningFirestoreCallTimeout;
+    }
   }
 
   Future changeTotalScreenTime(

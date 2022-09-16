@@ -1,14 +1,9 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/hercules_world_credit_system.dart';
-import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/ui/widgets/credits_to_screentime_widget.dart';
-import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
+import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
 import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
-import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'raise_quest_bottom_sheet_viewmodel.dart';
@@ -66,79 +61,38 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                       ),
                       verticalSpaceSmall,
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Image.asset(kAFKCreditsLogoPath,
                               height: 24, color: kcPrimaryColor),
-                          SizedBox(width: 2.0),
+                          SizedBox(width: 6.0),
                           AfkCreditsText.headingThree(
                             quest.afkCredits.toStringAsFixed(0),
                           ),
                           horizontalSpaceSmall,
                           AfkCreditsText.headingFour("-"),
                           horizontalSpaceSmall,
-                          Text(quest.name.toString(),
-                              style: heading3Style.copyWith(
-                                  overflow: TextOverflow.ellipsis),
-                              maxLines: 3),
+                          Expanded(
+                            child: Text(quest.name.toString(),
+                                style: heading3Style.copyWith(
+                                    overflow: TextOverflow.ellipsis),
+                                maxLines: 3),
+                          ),
                         ],
                       ),
                       verticalSpaceMedium,
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Row(
-                          children: [
-                            if (quest.distanceMarkers != null)
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  // AfkCreditsText.headingThreeLight("  -  "),
-                                  Image.asset(
-                                    kWalkingIcon,
-                                    height: 18,
-                                    //color: kcOrange,
-                                  ),
-                                  horizontalSpaceTiny,
-                                  AfkCreditsText.bodyBold(
-                                    "~" +
-                                        (HerculesWorldCreditSystem
-                                                    .kSimpleDistanceMarkersToDistanceWalkScaling *
-                                                quest.distanceMarkers!)
-                                            .toStringAsFixed(0) +
-                                        "m",
-                                    //color: kcOrange,
-                                  ),
-                                ],
-                              ),
-                            if (quest.distanceMarkers != null)
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  AfkCreditsText.headingThreeLight("  -  "),
-                                  Icon(
-                                    Icons.schedule,
-                                    size: 20,
-                                    //color: kcScreenTimeBlue,
-                                  ),
-                                  horizontalSpaceTiny,
-                                  AfkCreditsText.bodyBold(
-                                    "~" +
-                                        (HerculesWorldCreditSystem
-                                                    .kDistanceInMeterToActivityMinuteConversion *
-                                                quest.distanceMarkers!)
-                                            .toStringAsFixed(0) +
-                                        "min",
-                                    //color: kcScreenTimeBlue,
-                                  ),
-                                ],
-                              )
-                          ],
-                        ),
-                      ),
+                      QuestSpecificationsRow(quest: quest),
                     ],
                   ),
                   if (quest.description != "") verticalSpaceMedium,
                   if (quest.description != "")
-                    AfkCreditsText.body(quest.description.toString()),
+                    Text(
+                      quest.description.toString(),
+                      maxLines: 3,
+                      style: bodyStyleSofia.copyWith(
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   verticalSpaceMedium,
                   if (model.checkSponsoringSentence() != null)
                     Text(
@@ -154,14 +108,18 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            AfkCreditsButton.text(
-                              title: request.secondaryButtonTitle.toString(),
-                              onTap: quest.createdBy == null
-                                  ? null
-                                  : () => completer(
-                                        SheetResponse(confirmed: false),
-                                      ),
-                            ),
+                            if (quest.createdBy != null)
+                              AfkCreditsButton.text(
+                                leading: model.isParentAccount
+                                    ? null
+                                    : Icon(Icons.close, color: kcPrimaryColor),
+                                title: request.secondaryButtonTitle.toString(),
+                                onTap: quest.createdBy == null
+                                    ? null
+                                    : () => completer(
+                                          SheetResponse(confirmed: false),
+                                        ),
+                              ),
                             if (model.isParentAccount &&
                                 quest.createdBy == null)
                               AfkCreditsText.caption(
@@ -177,6 +135,9 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                           children: [
                             AfkCreditsButton(
                               disabled: model.isParentAccount,
+                              leading: model.isParentAccount
+                                  ? null
+                                  : Icon(Icons.play_arrow, color: Colors.white),
                               title: request.mainButtonTitle.toString(),
                               onTap: model.isParentAccount
                                   ? model.showNotImplementedInParentAccount

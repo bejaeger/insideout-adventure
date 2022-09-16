@@ -69,4 +69,20 @@ const List<String> assetsQuestImages = [
   kCreateQuest, */
 ];
 
+// ------------------------------------------
+// lottie
+// @from Smorre
 const String kLottieTestV1 = "assets/lottie/lottietest.json";
+// @see: https://assets2.lottiefiles.com/packages/lf20_0w4fvbov.json
+const String kLottieChillDude = "assets/lottie/chilldude.json";
+// @see: https://assets6.lottiefiles.com/private_files/lf30_afru6l2d.json
+const String kLottieWalkingGirl = "assets/lottie/walkinggirl.json";
+// @see: https://assets3.lottiefiles.com/packages/lf20_4jip3mqj.json
+const String kLottieWalkingBoy = "assets/lottie/walkingboy.json";
+// @see: https://assets3.lottiefiles.com/packages/lf20_tbbtmun4.json
+const String kLottieColoredSportsFigure =
+    "assets/lottie/colored-sports-figure.json";
+// @ see 'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json'
+const String kLottieBigTv = "assets/lottie/big-tv-screen-time.json";
+// @see: https://assets7.lottiefiles.com/packages/lf20_Ei9xER.json
+const String kLottieRippleEffect = "assets/lottie/ripple-effect.json";

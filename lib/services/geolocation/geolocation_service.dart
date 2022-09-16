@@ -266,7 +266,7 @@ class GeolocationService extends PausableService {
             message: 'An error occured trying to get your current geolocation',
             devDetails: "Error message from geolocation service: $error",
             prettyDetails:
-                "Geolocation could not be found. Please make sure your have location activated on your phone.");
+                "Geolocation could not be found. Please make sure you have your location service activated on your phone.");
       }
       // return _position;
     } else {

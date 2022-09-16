@@ -25,6 +25,12 @@ import '../../../../datamodels/quests/quest.dart';
 import '../../../../services/geolocation/geolocation_service.dart';
 
 class CreateQuestViewModel extends AFKMarks with NavigationMixin {
+  // member vars
+  bool fromMap;
+  CreateQuestViewModel({required this.fromMap});
+
+  // -------------------------------------------------------
+  // services
   final _log = getLogger('CreateQuestViewModel');
   GoogleMapController? _googleMapController;
   GoogleMapController? get getGoogleMapController => _googleMapController;
@@ -39,6 +45,8 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final DialogService _dialogService = locator<DialogService>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
+  // ------------------------------------------
+  // state
   int pageIndex = 0;
   bool creatingQuest = false;
   bool result = false;
@@ -230,6 +238,18 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
         distanceMarkers: getTotalDistanceOfMarkers(),
       ),
     );
+    if (added is String) {
+      // this means something went wrong or timedout when uploading the quest
+      if (added == WarningFirestoreCallTimeout) {
+        await _dialogService.showDialog(
+            title: "Unstable network connection",
+            description:
+                "Your quest was nevertheless created and will be uploaded later.");
+        return true;
+      } else {
+        return false;
+      }
+    }
     if (added) {
       _log.i("Quest added successfully!");
       return true;
@@ -258,7 +278,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       await Future.delayed(Duration(milliseconds: 1200));
       addMarkerOnMap(
         pos: LatLng(startMarker.lat!, startMarker.lon!),
-        number: 0,
+        number: 1, // needed so color is selected
         questType: selectedQuestType,
       ); // number 0 gets green marker!
       notifyListeners();
@@ -268,7 +288,11 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       _displaySnackBars.snackBarCreatedQuest();
       await Future.delayed(Duration(milliseconds: 2000));
       setBusy(false);
-      replaceWithParentHomeView();
+      if (!fromMap) {
+        replaceWithParentHomeView();
+      } else {
+        popUntilMapView();
+      }
     }
     return result;
   }
@@ -279,7 +303,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
         snackbarService.showSnackbar(
             title: "Oops...",
             message: "Search quests only allow for two markers",
-            duration: Duration(seconds: 1));
+            duration: Duration(milliseconds: 1500));
         return;
       }
     }

@@ -45,7 +45,6 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
               appBar: CustomAppBar(
                 title: "Estimating Distance",
                 onBackButton: model.navigateBackFromSingleQuestView,
-                showRedLiveButton: true,
                 onAppBarButtonPressed: model.hasActiveQuest
                     ? null
                     : () => model.showInstructions(quest.type),

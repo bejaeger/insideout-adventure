@@ -83,9 +83,8 @@ class SelectScreenTimeView extends StatelessWidget {
                   ),
                   //Icon(Icons.arrow_downward_rounded, size: 40),
                   Spacer(),
-                  Lottie.network(
-                      'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
-                      height: 160),
+                  Lottie.asset(kLottieBigTv, height: 160),
+                  //  'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
                   Spacer(),
                   Column(
                     children: [

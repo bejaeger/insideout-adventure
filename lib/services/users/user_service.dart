@@ -76,8 +76,10 @@ class UserService {
   Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
 
   // quest history is added to user service (NOT IDEAL! cause we have a quest service)
+  // map of explorerIds and screen time sessions (list with 1 entry!)
   Map<String, List<ScreenTimeSession>> supportedExplorerScreenTimeSessions = {};
-  List<ScreenTimeSession> supportedExplorerScreenTimeSessionsActive = [];
+  // map of explorerIds with screen time session
+  Map<String, ScreenTimeSession> supportedExplorerScreenTimeSessionsActive = {};
 
   StreamSubscription? _explorersDataStreamSubscriptions;
   List<User> get supportedExplorersList {
@@ -516,6 +518,7 @@ class UserService {
             },
           );
 
+          log.e("explorer with ids: $newUids");
           // adds listener to stats document and quest history of each explorer
           await addExplorerListeners(explorerIds: newUids, callback: callback);
 
@@ -619,10 +622,20 @@ class UserService {
           .getScreenTimeSessionStream(uid: explorerId)
           .listen((snapshot) {
         supportedExplorerScreenTimeSessions[explorerId] = snapshot;
-        supportedExplorerScreenTimeSessionsActive = snapshot
-            .where(
-                (element) => element.status == ScreenTimeSessionStatus.active)
-            .toList();
+
+        // potentially add to active screen time map
+        try {
+          supportedExplorerScreenTimeSessionsActive[explorerId] =
+              snapshot.firstWhere((element) =>
+                  element.status == ScreenTimeSessionStatus.active);
+        } catch (e) {
+          if (e is StateError) {
+            log.v("No active screen time for explorer with id $explorerId");
+          } else {
+            rethrow;
+          }
+        }
+
         if (!completer.isCompleted) {
           completer.complete();
         }
@@ -900,6 +913,12 @@ class UserService {
 
   ///////////////////////////////////////////////////
   // Clean up
+
+  void cancelActiveScreenTimeSession(
+      {required ScreenTimeSession? session}) async {
+    if (session == null) return;
+    supportedExplorerScreenTimeSessionsActive.remove(session.uid);
+  }
 
   // pause the listener
   void cancelExplorerListener({required String uid}) {

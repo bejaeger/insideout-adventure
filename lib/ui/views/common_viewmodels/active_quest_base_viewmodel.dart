@@ -144,7 +144,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
       // ? needed for TreasureLocationSearch
       if (currentQuest?.type == QuestType.TreasureLocationSearch) {
-        changeCameraZoom(kInitialZoom);
+        changeCameraZoom(kInitialZoomAvatarView);
         animateMap(forceUseLocation: true);
       }
       return true;

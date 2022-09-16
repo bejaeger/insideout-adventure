@@ -28,10 +28,8 @@ class SetPinView extends StatelessWidget with $SetPinView {
   double fieldWidth = 40.0;
   double fontSize = 20.0;
   bool isTextObscure = false;
-  Color cursorColor = Colors
-      .blue; // Adding a Material Color so that if the user want black, it get accepted too
-  Color boxColor = Colors.blue;
-  Color textColor = Colors.blue;
+  Color cursorColor =
+      kcPrimaryColorSecondary; // Adding a Material Color so that if the user want black, it get accepted too
 
   @override
   Widget build(BuildContext context) {
@@ -99,24 +97,20 @@ class SetPinView extends StatelessWidget with $SetPinView {
         cursorColor: cursorColor,
         maxLength: 1,
         autofocus: autofocus,
-        style: TextStyle(
-            fontWeight: FontWeight.bold,
-            //color: widget.textColor,
-            // color: Colors.black,
-            fontSize: fontSize),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
         focusNode: getFocusNodes()[i],
         obscureText: isTextObscure,
         decoration: InputDecoration(
             counterText: "",
             enabledBorder: showFieldAsBox
                 ? OutlineInputBorder(
-                    borderSide: BorderSide(width: 1.0, color: boxColor))
+                    borderSide: BorderSide(width: 1.0, color: kcPrimaryColor))
                 : null,
             focusedBorder: showFieldAsBox
                 ? OutlineInputBorder(
-                    borderSide: BorderSide(width: 2.0, color: boxColor))
+                    borderSide: BorderSide(width: 2.0, color: kcPrimaryColor))
                 : null),
-        onChanged: (String str) {
+        onChanged: (String str) async {
           print("current i = $i");
           _pin[i] = str;
           if (i + 1 != numberFields) {
@@ -140,14 +134,22 @@ class SetPinView extends StatelessWidget with $SetPinView {
             }
           }
           if (_pin.every((String digit) => digit != '')) {
+            //final res = await
             model.onSubmit(_pin.join());
+            //if (res == true) {
+            clearTextFields();
+            //}
           }
         },
-        onSubmitted: (String str) {
-          if (_pin.every((String digit) => digit != '')) {
-            model.onSubmit(_pin.join());
-          }
-        },
+        // onSubmitted: (String str) async {
+        //   print("================= HIER");
+        //   if (_pin.every((String digit) => digit != '')) {
+        //     final res = await model.onSubmit(_pin.join());
+        //     if (res == true) {
+        //       clearTextFields();
+        //     }
+        //   }
+        // },
       ),
     );
   }

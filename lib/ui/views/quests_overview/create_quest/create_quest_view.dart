@@ -44,7 +44,8 @@ final circularBorder = OutlineInputBorder(
 )
 // ignore: must_be_immutable
 class CreateQuestView extends StatelessWidget with $CreateQuestView {
-  CreateQuestView({Key? key}) : super(key: key);
+  final bool fromMap;
+  CreateQuestView({Key? key, this.fromMap = false}) : super(key: key);
 
   // TODO: need to dispose this so need to have stateful function here!
   // TODO: This does not work with formView
@@ -56,7 +57,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
         if (model.getCurrentPostion == null) model.setPosition();
         listenToFormUpdated(model);
       },
-      viewModelBuilder: () => CreateQuestViewModel(),
+      viewModelBuilder: () => CreateQuestViewModel(fromMap: fromMap),
       // onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) {
         return SafeArea(
@@ -476,7 +477,7 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                           ],
-                          errorText: model.afkCreditsInputValidationMessage,
+                          //errorText: model.afkCreditsInputValidationMessage,
                         ),
                       ),
                       //Container(color: Colors.red),
@@ -496,6 +497,10 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                       ),
                     ],
                   ),
+            if (model.afkCreditsInputValidationMessage != null)
+              Expanded(
+                  child: AfkCreditsText.warn(
+                      model.afkCreditsInputValidationMessage!)),
             verticalSpaceMassive,
           ],
         ),

@@ -15,7 +15,7 @@ class MapStateService {
 
   int characterNumber = 0;
   double tilt = kInitialTilt;
-  double zoom = kInitialZoom;
+  double zoom = kInitialZoomAvatarView;
   double get bearing => bearingSubject.value;
   final bearingSubject = BehaviorSubject<double>.seeded(kInitialBearing);
   final mapEventListener = BehaviorSubject<MapUpdate>();
@@ -53,6 +53,15 @@ class MapStateService {
     previousTilt = tilt;
     previousLat = currentLat;
     previousLon = currentLon;
+  }
+
+  void resetSnapshotOfCameraPosition() {
+    previousIsAvatarView = null;
+    previousBearing = null;
+    previousZoom = null;
+    previousTilt = null;
+    previousLat = null;
+    previousLon = null;
   }
 
   void takeSnapshotOfBirdViewCameraPosition() {

@@ -212,6 +212,12 @@ flutter:
     - assets/icons/curve-arrow.png
     - assets/icons/cardinal-point.png  
     - assets/lottie/lottietest.json  
+    - assets/lottie/ripple-effect.json  
+    - assets/lottie/chilldude.json
+    - assets/lottie/walkinggirl.json
+    - assets/lottie/walkingboy.json
+    - assets/lottie/colored-sports-figure.json
+    - assets/lottie/big-tv-screen-time.json
     - assets/icons/walk.png
     - assets/icons/run.png
     - assets/icons/person.png

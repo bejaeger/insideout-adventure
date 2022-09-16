@@ -60,7 +60,8 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                       isBusy: model.isReloadingQuests,
                     ),
 
-                  if (model.currentUserNullable?.createdByUserWithId != null)
+                  if (model.currentUserNullable?.createdByUserWithId != null &&
+                      model.userService.sponsorReference != null)
                     SwitchToParentsAreaButton(
                       onTap: () async =>
                           await model.handleSwitchToSponsorEvent(),
@@ -84,8 +85,9 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
 
                   if (!model.isBusy)
                     MainFooterOverlayView(
-                      show: showMainWidgets,
-                    ),
+                        show: showMainWidgets,
+                        isUsingScreenTime:
+                            model.currentScreenTimeSession != null),
 
                   if (!model.isBusy) ExplorerAccountView(),
 

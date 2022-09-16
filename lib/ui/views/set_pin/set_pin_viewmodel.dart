@@ -17,12 +17,16 @@ class SetPinViewModel extends FormViewModel {
     if (_userService.currentUser.role == UserRole.sponsor) {
       log.i("Pin set to $pin. Getting final confirmation to switch accounts");
       final result = await _bottomSheetService.showBottomSheet(
-          title: "Switch To Child Account", cancelButtonTitle: "Cancel");
+          title: "Switch to child area", cancelButtonTitle: "Cancel");
       if (result?.confirmed == true) {
         _navigationService.back(result: SetPinResult.withPin(pin: pin));
+        return true;
+      } else {
+        return false;
       }
     } else {
       _navigationService.back(result: SetPinResult.withPin(pin: pin));
+      return true;
     }
   }
 

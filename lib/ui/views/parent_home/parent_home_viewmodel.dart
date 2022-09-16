@@ -12,9 +12,8 @@ import 'package:afkcredits/app/app.logger.dart';
 class ParentHomeViewModel extends TransferBaseViewModel {
   // ----------------------------------------
   // services
-  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
-  final log = getLogger("SponsorHomeViewModel");
+  final log = getLogger("ParentHomeViewModel");
 
   // -------------------------------------------------
   // getters
@@ -22,6 +21,8 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   Map<String, UserStatistics> get childStats =>
       userService.supportedExplorerStats;
   List<ScreenTimeSession> get childScreenTimeSessionsActive =>
+      userService.supportedExplorerScreenTimeSessionsActive.values.toList();
+  Map<String, ScreenTimeSession> get childScreenTimeSessionsActiveMap =>
       userService.supportedExplorerScreenTimeSessionsActive;
 
   List<dynamic> get sortedHistory => userService.sortedHistory();
@@ -43,25 +44,52 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   // Listen to streams of latest donations and transactions to be displayed
   // instantly when pulling up bottom sheets
   Future listenToData() async {
+    //setBusy(true);
     Completer completerOne = Completer<void>();
-    //Completer completerTwo = Completer<void>();
-
     userService.setupUserDataListeners(
         completer: completerOne, callback: () => notifyListeners());
     await runBusyFuture(
       Future.wait(
         [
           completerOne.future,
-          //completerTwo.future,
         ],
       ),
     );
-    notifyListeners();
+    // ! This is important
+    // ! We continue listening to screen time sessions here!
+    // TODO: Should do the same on explorer account
+    log.e(
+        "Length active screen time ${userService.supportedExplorerScreenTimeSessionsActive.length}");
+    userService.supportedExplorerScreenTimeSessionsActive.forEach(
+      (key, value) {
+        // also starts listeners
+        screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
+            session: value,
+            callback: () {
+              log.i(
+                  "Listened to screen time event of user with name ${value.userName}");
+              notifyListeners();
+            });
+      },
+    );
+  }
+
+  ScreenTimeSession? getScreenTime({required String uid}) {
+    try {
+      return childScreenTimeSessionsActive
+          .firstWhere((element) => element.uid == uid);
+    } catch (e) {
+      if (e is StateError) // thrown when no element was found
+      {
+        return null;
+      } else {
+        rethrow;
+      }
+    }
   }
 
   // ------------------------------------------------------
   // bottom sheets
-
   Future showAddExplorerBottomSheet() async {
     // ! NOT FOR MVP
     // final result = await _bottomSheetService.showBottomSheet(
@@ -87,8 +115,9 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   // ----------------------------
   // navigation
   void navigateToScreenTimeOrSingleChildView({required String uid}) async {
-    if (usingScreenTime(uid: uid)) {
-      navToActiveScreenTimeView(sessionId: screenTimeSessionId);
+    final session = getScreenTime(uid: uid);
+    if (session != null) {
+      navToActiveScreenTimeView(session: session);
     } else {
       navToSingleChildView(uid: uid);
     }

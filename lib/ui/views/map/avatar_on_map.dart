@@ -30,28 +30,30 @@ class AvatarOnMap extends StatelessWidget {
         child: Container(
             height: screenHeight(context, percentage: 0.22),
             child: characterNumber == 0
-                ? Lottie.network(
-                    // chilling dude
-                    'https://assets2.lottiefiles.com/packages/lf20_0w4fvbov.json',
-                    fit: BoxFit.contain,
-                  )
+                ? Lottie.asset(kLottieChillDude, fit: BoxFit.contain)
+                // .network(
+                //     // chilling dude
+                //     'https://assets2.lottiefiles.com/packages/lf20_0w4fvbov.json',
+                //     fit: BoxFit.contain,
+                //   )
                 : characterNumber == 1
                     ?
                     // Left!
-                    Lottie.network(
-                        // walking normal girl
-                        'https://assets6.lottiefiles.com/private_files/lf30_afru6l2d.json',
+                    Lottie.asset(
+                        kLottieWalkingGirl,
                         fit: BoxFit.contain,
                       )
+                    // walking normal girl
+                    //'https://assets6.lottiefiles.com/private_files/lf30_afru6l2d.json',
+                    //fit: BoxFit.contain,
+                    //)
                     : characterNumber == 2
-                        ? Lottie.network(
-                            // dude walking to the right
-                            'https://assets3.lottiefiles.com/packages/lf20_4jip3mqj.json',
-                            fit: BoxFit.contain,
-                          )
-                        : Lottie.network(
+                        ? Lottie.asset(kLottieWalkingBoy, fit: BoxFit.contain)
+                        // dude walking to the right
+                        // 'https://assets3.lottiefiles.com/packages/lf20_4jip3mqj.json',
+                        : Lottie.asset(
                             // colored stick figure walking to the left
-                            'https://assets3.lottiefiles.com/packages/lf20_tbbtmun4.json',
+                            kLottieColoredSportsFigure,
                             fit: BoxFit.contain,
                           )
             // characterNumber == 4

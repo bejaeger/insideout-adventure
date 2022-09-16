@@ -29,7 +29,7 @@ class ParentMapView extends StatelessWidget {
             ),
             floatingActionButton: AFKFloatingActionButton(
               icon: Icon(Icons.add, size: 32, color: Colors.white),
-              onPressed: model.navToCreateQuest,
+              onPressed: () => model.navToCreateQuest(fromMap: true),
             ),
             body: Stack(
               children: [

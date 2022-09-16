@@ -49,8 +49,14 @@ class ParentMapViewModel extends QuestViewModel {
           "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
       if (e is QuestServiceException) {
         if (e.message == WarningNoQuestsDownloaded) {
-          await dialogService.showDialog(
-              title: "Oops...", description: e.message);
+          final res = await dialogService.showDialog(
+              title: "Oops...",
+              description: e.message,
+              buttonTitle: "Create quest",
+              cancelTitle: "Back");
+          if (res?.confirmed == true) {
+            navToCreateQuest(fromMap: true);
+          }
         } else {
           await dialogService.showDialog(
               title: "Oops...", description: e.prettyDetails);
@@ -73,14 +79,17 @@ class ParentMapViewModel extends QuestViewModel {
               quest: _q,
               afkmarker: _m,
               isStartMarker: _m == _q.startMarker,
-              onMarkerTapCustom: () => onMarkerTapParent(quest: _q),
+              onMarkerTapCustom: () => onMarkerTapParent(quest: _q, marker: _m),
               completed: currentUserStats.completedQuestIds.contains(_q.id));
         }
       }
     }
   }
 
-  Future onMarkerTapParent({required Quest quest}) async {
+  Future onMarkerTapParent(
+      {required Quest quest, required AFKMarker marker}) async {
+    // marker info window shows automatically. hide it when not in avatar view
+    mapViewModel.hideMarkerInfoWindowNow(markerId: marker.id);
     SheetResponse? response = await displayQuestBottomSheet(quest: quest);
 
     if (response?.confirmed == false) {
@@ -103,7 +112,7 @@ class ParentMapViewModel extends QuestViewModel {
         addMarkers();
         notifyListeners();
       } else {
-        await onMarkerTapParent(quest: quest);
+        await onMarkerTapParent(quest: quest, marker: marker);
       }
     }
   }

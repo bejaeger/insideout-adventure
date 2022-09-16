@@ -124,9 +124,14 @@ mixin NavigationMixin {
     //});
   }
 
-  void navToCreateQuest() {
-    _navigationService.navigateTo(Routes.createQuestView);
+  void navToCreateQuest({bool fromMap = false}) {
+    _navigationService.navigateTo(Routes.createQuestView,
+        arguments: CreateQuestViewArguments(fromMap: fromMap));
     //});
+  }
+
+  void popUntilMapView() {
+    _navigationService.clearTillFirstAndShow(Routes.parentMapView);
   }
 
   void navBackToPreviousView() {
@@ -201,31 +206,26 @@ mixin NavigationMixin {
         arguments: ARObjectViewArguments(isCoins: isCoins));
   }
 
-  Future navToSelectScreenTimeView({String? childId}) async {
-    if (_screenTimeService.currentSession?.sessionId == null) {
-      await _navigationService.navigateTo(Routes.selectScreenTimeView,
-          arguments: SelectScreenTimeViewArguments(childId: childId));
+  Future navToSelectScreenTimeView(
+      {String? childId, bool isParentAccount = true}) async {
+    final session = _screenTimeService.getScreenTimeSession(uid: childId);
+    if (session != null) {
+      navToActiveScreenTimeView(session: session);
     } else {
-      // if there is a screen time currently active, directly navigate to it
-      navToActiveScreenTimeView(
-          sessionId: _screenTimeService.currentSession?.sessionId);
+      await _navigationService.navigateTo(Routes.selectScreenTimeView,
+          arguments: SelectScreenTimeViewArguments(
+              childId: isParentAccount ? childId : null));
     }
   }
 
   Future navToActiveScreenTimeView(
       {ScreenTimeSession? session, String? sessionId}) async {
-    // no screen time currently live
-    if (_screenTimeService.currentSession?.sessionId == null) {
-      await _navigationService.navigateTo(Routes.activeScreenTimeView,
-          arguments: ActiveScreenTimeViewArguments(
-              session: session, screenTimeSessionId: sessionId));
-    } else {
-      // if there is a screen time currently active, directly navigate to it
-      await _navigationService.navigateTo(Routes.activeScreenTimeView,
-          arguments: ActiveScreenTimeViewArguments(
-              session: session,
-              screenTimeSessionId:
-                  _screenTimeService.currentSession?.sessionId));
-    }
+    // TODO: Handle case when more sessions are active
+    await _navigationService.navigateTo(
+      Routes.activeScreenTimeView,
+      arguments: ActiveScreenTimeViewArguments(
+        session: session,
+      ),
+    );
   }
 }

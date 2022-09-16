@@ -77,7 +77,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     // Clear all service data but keep logged in with firebase!
     await clearServiceData(
         logOutFromFirebase: false, doNotClearSponsorReference: true);
-
+    mapViewModel.clearAllMapData();
     try {
       log.i("Syncing explorer account");
       await userService.syncUserAccount(
@@ -105,7 +105,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       await dialogService.showDialog(
           title: "Error",
           description:
-              "No reference to sponsor found. Please first logout and then sign in to a sponsor account.");
+              "No parent account found. Please first logout and then sign in to a parrent account.");
       return;
     } else {
       if (userService.sponsorReference!.withPasscode) {
@@ -151,6 +151,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     log.i("Clearing all explorer data");
     //await Future.delayed(Duration(seconds: 5));
     await clearServiceData(logOutFromFirebase: false);
+    mapViewModel.clearAllMapData();
     try {
       log.i("Syncing sponsor account");
       await userService.syncUserAccount(

@@ -49,7 +49,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                   Container(
                     width: screenWidth(context, percentage: 0.35),
                     child: AfkCreditsInputField(
-                      //focusNode: amountFocusNode,
+                      focusNode: amountFocusNode,
                       controller: amountController,
                       style: heading3Style,
                       leading: Padding(
@@ -59,10 +59,11 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                       autofocus: true,
                       //placeholder: 'Amount',
                       keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      ],
-                      errorText: model.customValidationMessage,
+                      // inputFormatters: <TextInputFormatter>[
+                      //   FilteringTextInputFormatter.allow(
+                      //       RegExp(r'^[-+]?\d+(\.\d+)?$')),
+                      // ],
+                      //errorText: model.customValidationMessage,
                     ),
                   ),
                   //Container(color: Colors.red),
@@ -82,10 +83,13 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                   ),
                 ],
               ),
+              if (model.customValidationMessage != null)
+                Expanded(
+                    child: AfkCreditsText.warn(model.customValidationMessage!)),
               verticalSpaceMedium,
               AfkCreditsButton(
                 leading: Icon(Icons.add, color: Colors.white),
-                title: "Add Credits",
+                title: "Add credits",
                 onTap: () {
                   amountFocusNode.unfocus();
                   model.showBottomSheetAndProcessPayment();

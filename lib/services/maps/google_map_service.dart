@@ -129,7 +129,7 @@ class GoogleMapService {
       return CameraPosition(
         bearing: parentAccount ? 0 : kInitialBearing,
         target: LatLng(userLocation.latitude, userLocation.longitude),
-        zoom: parentAccount ? 14 : kInitialZoom,
+        zoom: parentAccount ? kInitialZoomBirdsView : kInitialZoomAvatarView,
         tilt: parentAccount ? 0 : kInitialTilt,
       );
     } else {
@@ -154,10 +154,13 @@ class GoogleMapService {
       markerId: MarkerId(afkmarker
           .id), // google maps marker id of start marker will be our quest id
       position: LatLng(afkmarker.lat!, afkmarker.lon!),
-      // infoWindow: isStartMarker
-      //     ? InfoWindow(
-      //         title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE")
-      //     : InfoWindow.noText,
+      infoWindow: // isStartMarker
+          //    ?
+          InfoWindow(
+              title: afkmarker == quest.startMarker
+                  ? "START HERE"
+                  : "NEXT CHECKPOINT"),
+      //: InfoWindow.noText,
       icon: defineMarkersColour(
           quest: quest,
           afkmarker: afkmarker,
@@ -379,6 +382,17 @@ class GoogleMapService {
           "Could not show info window, maybe no info window was specified. Error: $e");
     }
   }
+
+  static void hideMarkerInfoWindow({required String? markerId}) async {
+    if (_mapController == null || markerId == null) return;
+    MarkerId markerIdConverted = MarkerId(markerId);
+    try {
+      await _mapController!.hideMarkerInfoWindow(markerIdConverted);
+    } catch (e) {
+      mapLogger.e(
+          "Could not show info window, maybe no info window was specified. Error: $e");
+    }
+  }
 }
 
 //Ben I just wonder why are we defining a function type ViewModel into services.
@@ -397,6 +411,7 @@ Future<MapViewModel> presolveMapViewModel() async {
       updateMapMarkers: GoogleMapService.updateMapMarkers,
       updateMapAreas: GoogleMapService.updateMapAreas,
       showMarkerInfoWindow: GoogleMapService.showMarkerInfoWindow,
+      hideMarkerInfoWindow: GoogleMapService.hideMarkerInfoWindow,
       animateCameraToBetweenCoordinates:
           GoogleMapService.animateCameraToBetweenCoordinates);
 

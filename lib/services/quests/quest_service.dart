@@ -142,9 +142,12 @@ class QuestService with ReactiveServiceMixin {
             pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
             sponsorIds: sponsorIds);
       } catch (e) {
-        if (e is FirestoreApiException) {
+        if (e is FirestoreApiException &&
+            e.message == WarningNoQuestsDownloaded) {
           throw QuestServiceException(
-              message: e.message, devDetails: e.devDetails);
+              message: e.message,
+              devDetails: e.devDetails,
+              prettyDetails: e.prettyDetails);
         } else {
           rethrow;
         }
@@ -220,14 +223,11 @@ class QuestService with ReactiveServiceMixin {
     return _firestoreApi.getQuest(questId: questId);
   }
 
-  Future<bool> createQuest({required Quest quest}) async {
-    //TODO: Refactor this code.
+  Future createQuest({required Quest quest}) async {
     if (quest.id.isNotEmpty) {
       return await _firestoreApi.createQuest(quest: quest);
     }
     return false;
-    //update the newly created document reference with the Firestore Id.
-    //This is to make suret that the document has the same id as the quest.
   }
 
   Future<List<Quest>> getQuestsWithStartMarkerId(

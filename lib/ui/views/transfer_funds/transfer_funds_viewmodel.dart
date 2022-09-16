@@ -4,6 +4,7 @@ import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/transfer_details.dart';
@@ -28,7 +29,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
   final BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
   final SnackbarService? _snackbarService = locator<SnackbarService>();
   final UserService _userService = locator<UserService>();
-  final DialogService? _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
 
@@ -94,18 +95,20 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       log.w("amount not int");
       returnValue = false;
       if (!setNoMessage)
-        setCustomValidationMessage("Please enter valid amount.");
-    } else if (double.parse(amountValue!) < 0) {
-      log.w("Amount < 0");
-      returnValue = false;
-      if (!setNoMessage)
-        setCustomValidationMessage("Please enter valid amount.");
+        setCustomValidationMessage("Please enter a whole number.");
+      //}
+      // else if (double.parse(amountValue!) < 0) {
+      //   log.w("Amount < 0");
+      //   returnValue = false;
+      //   if (!setNoMessage)
+      //     setCustomValidationMessage("Please enter valid amount.");
     } else if (double.parse(amountValue!) > 1000) {
       log.w("Amount = ${double.parse(amountValue!)}  > 1000");
       returnValue = false;
       if (!setNoMessage)
         setCustomValidationMessage(
-            "Are you sure you want to top up as much as ${formatAmount(double.parse(amountValue!), userInput: true)}");
+            "You cannot top up more than 1000 credits at once");
+      // ${formatAmount(double.parse(amountValue!), userInput: true)}
     }
     return returnValue;
     ;
@@ -129,9 +132,9 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       SheetResponse? finalConfirmation =
           await _showFinalConfirmationBottomSheet(type: type);
       if (finalConfirmation?.confirmed == false) {
-        await _showAndAwaitSnackbar("You can come back any time :)");
+        // await _showAndAwaitSnackbar("You can come back any time :)");
         setBusy(false);
-        navigateBack();
+        //navigateBack();
         return;
       } else if (finalConfirmation?.confirmed == true) {
         // -----------------------------------------------------
@@ -190,9 +193,17 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
         // TODO: - notification in explorer account
         // TODO: - history visible for parent and explorer
         // TODO: - option to add description to transfer for parents
-        await _firestoreApi.changeAfkCreditsBalanceCheat(
+        final res = await _firestoreApi.changeAfkCreditsBalanceCheat(
             uid: data.transferDetails.recipientId,
             deltaCredits: data.transferDetails.amount);
+        if (res is String) {
+          if (res == WarningFirestoreCallTimeout) {
+            await _dialogService.showDialog(
+                title: "Unstable network connection",
+                description:
+                    "The credits were nevertheless added and will be synchronized across devices later.");
+          }
+        }
       }
 
       log.i("Processed transfer: $data");
@@ -282,7 +293,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       description =
           "You should not end up here, please let the developers know ;)";
     }
-    return await _dialogService!.showDialog(
+    return await _dialogService.showDialog(
       title: title,
       description: description,
       dialogPlatform: DialogPlatform.Material,
@@ -315,7 +326,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       {required Completer<TransferDialogStatus> moneyTransferCompleter,
       required TransferType type}) async {
     log.i("We are starting the dialog");
-    final dialogResult = await _dialogService!.showCustomDialog(
+    final dialogResult = await _dialogService.showCustomDialog(
       variant: DialogType.MoneyTransfer,
       data: {
         "moneyTransferStatus": MoneyTransferStatusModel(

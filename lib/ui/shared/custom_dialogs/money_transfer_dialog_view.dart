@@ -154,14 +154,14 @@ class _BasicDialogContent extends StatelessWidget {
     if (status != null) {
       switch (status) {
         case TransferDialogStatus.error:
-          return Colors.red;
+          return kcRed;
         case TransferDialogStatus.warning:
           return Colors.amber.shade800;
         default:
-          return Colors.green;
+          return kcPrimaryColor;
       }
     } else {
-      return Colors.green;
+      return kcPrimaryColor;
     }
   }
 

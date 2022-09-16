@@ -1,5 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,6 +25,7 @@ abstract class AFKMarks extends FormViewModel {
   //List<AfkMarkersPositions> _afkMarkersPosition = [];
   final _geolocationService = locator<GeolocationService>();
   final markersServices = locator<MarkerService>();
+  final QuestService questService = locator<QuestService>();
   Position? _position;
 
   Set<Marker> get getMarkersOnMap => _markersOnMap;
@@ -32,9 +35,17 @@ abstract class AFKMarks extends FormViewModel {
 
   CameraPosition initialCameraPosition() {
     if (_position != null) {
-      final CameraPosition _initialCameraPosition = CameraPosition(
-          target: LatLng(_position!.latitude, _position!.longitude), zoom: 14);
-      return _initialCameraPosition;
+      if (questService.lonAtLatestQuestDownload == null &&
+          questService.latAtLatestQuestDownload == null)
+        return CameraPosition(
+            target: LatLng(_position!.latitude, _position!.longitude),
+            zoom: kInitialZoomBirdsView);
+      else {
+        return CameraPosition(
+            target: LatLng(questService.latAtLatestQuestDownload!,
+                questService.lonAtLatestQuestDownload!),
+            zoom: kInitialZoomBirdsView);
+      }
     } else {
       return CameraPosition(
         target: getDummyCoordinates(),

@@ -117,9 +117,9 @@ Color getColorOfType(QuestType? category) {
     case QuestType.QRCodeHike:
       return kcOrange;
     case QuestType.GPSAreaHike:
-      return kcOrange;
+      return kcOrangeOpaque;
     case QuestType.GPSAreaHunt:
-      return kcOrange;
+      return kcOrangeOpaque;
     default:
       return kcPrimaryColor;
   }

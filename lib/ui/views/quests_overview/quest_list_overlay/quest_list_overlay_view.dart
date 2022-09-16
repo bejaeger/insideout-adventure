@@ -42,7 +42,7 @@ class QuestListOverlayView extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                     //colors: [Colors.white, kcPrimaryColor],
-                    colors: [Colors.white, kcPrimaryColor],
+                    colors: [kcGreenWhiter, kcPrimaryColor],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     stops: [0.2, 1]),
@@ -53,7 +53,7 @@ class QuestListOverlayView extends StatelessWidget {
                   SizedBox(height: 4),
                   GrabberLine(),
                   Padding(
-                    padding: const EdgeInsets.only(left: 20.0, top: 20),
+                    padding: const EdgeInsets.only(left: 20.0, top: 15),
                     child: AfkCreditsText.headingTwo(
                       "Quest list",
                       align: TextAlign.center,
@@ -64,7 +64,7 @@ class QuestListOverlayView extends StatelessWidget {
                       onRefresh: () async => model.initializeQuests(),
                       child: ListView(
                         children: [
-                          verticalSpaceMedium,
+                          verticalSpaceSmall,
                           SectionHeader(
                             title: "Near You",
                             onButtonTap: () =>
@@ -74,6 +74,7 @@ class QuestListOverlayView extends StatelessWidget {
                                 ? AFKProgressIndicator()
                                 : Icon(Icons.refresh_rounded),
                           ),
+                          verticalSpaceTiny,
                           ListView(
                             physics: ScrollPhysics(),
                             //itemExtent: 120,

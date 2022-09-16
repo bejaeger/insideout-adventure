@@ -3,6 +3,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
+import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -24,8 +25,15 @@ class QuestsOverviewViewModel extends QuestViewModel {
         questService.extractAllQuestTypes();
       }
     } catch (e) {
-      log.wtf("Error when loading quests, this should never happen. Error: $e");
-      await showGenericInternalErrorDialog();
+      if (e is QuestServiceException) {
+        setBusy(false);
+        await dialogService.showDialog(
+            title: "Oops...", description: e.prettyDetails);
+      } else {
+        log.wtf(
+            "An unknown error occured loading quests, this should never happen. Error: $e");
+        await showGenericInternalErrorDialog();
+      }
     }
     addAllQuestMarkers();
     setBusy(false);

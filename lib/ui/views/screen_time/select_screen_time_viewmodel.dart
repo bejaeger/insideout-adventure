@@ -81,8 +81,11 @@ class SelectScreenTimeViewModel extends BaseModel {
       ScreenTimeSession session = ScreenTimeSession(
         sessionId: "",
         uid: isParentAccount ? childId! : currentUser.uid,
+        userName: isParentAccount
+            ? userService.explorerNameFromUid(childId!)
+            : currentUser.fullName,
         minutes: useSuperUserFeatures ? 1 : screenTimePreset,
-        status: ScreenTimeSessionStatus.active,
+        status: ScreenTimeSessionStatus.notStarted,
         startedAt: Timestamp.now(),
         afkCredits: double.parse(
             screenTimeToCredits(useSuperUserFeatures ? 1 : screenTimePreset)

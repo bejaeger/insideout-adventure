@@ -1,9 +1,12 @@
 import 'package:afkcredits/constants/asset_locations.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/trend_icon.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +17,7 @@ class ChildStatsCard extends StatelessWidget {
   final int? activityTimeLastWeek;
   final int? screenTimeTrend;
   final int? activityTimeTrend;
-  final bool usingScreenTime;
+  final ScreenTimeSession? screenTimeSession;
 
   const ChildStatsCard(
       {Key? key,
@@ -22,7 +25,7 @@ class ChildStatsCard extends StatelessWidget {
       required this.user,
       required this.screenTimeLastWeek,
       required this.activityTimeLastWeek,
-      this.usingScreenTime = false,
+      this.screenTimeSession,
       this.screenTimeTrend,
       this.activityTimeTrend})
       : super(key: key);
@@ -39,8 +42,8 @@ class ChildStatsCard extends StatelessWidget {
         width: screenWidth(context, percentage: 0.65),
         decoration: BoxDecoration(
             border: Border.all(
-                color: usingScreenTime ? kcRed : Colors.grey[400]!,
-                width: usingScreenTime ? 2.0 : 1.0),
+                color: screenTimeSession != null ? kcRed : Colors.grey[400]!,
+                width: screenTimeSession != null ? 2.0 : 1.0),
             borderRadius: BorderRadius.circular(20.0)),
         child: Padding(
           padding: const EdgeInsets.only(
@@ -73,7 +76,7 @@ class ChildStatsCard extends StatelessWidget {
               if (activityTimeLastWeek == null && screenTimeLastWeek == null)
                 AfkCreditsText.body("Switch to " +
                     user.fullName +
-                    "'s account and let your child earn credits"),
+                    "'s account and allow them to earn credits"),
               childStats == null
                   ? AFKProgressIndicator()
                   : Column(
@@ -125,14 +128,29 @@ class ChildStatsCard extends StatelessWidget {
               //         size: 50, color: Colors.orange.shade400)),
               // verticalSpaceSmall,
               Spacer(),
-              if (usingScreenTime)
-                Align(
-                    alignment: Alignment.bottomRight,
-                    child: AfkCreditsText.warn("Using screen time")),
+              if (screenTimeSession != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AfkCreditsText.warn("Using screen time"),
+                    AfkCreditsText.warn("-"),
+                    AfkCreditsText.warn(secondsToMinuteTime(
+                            getTimeLeftInSeconds(session: screenTimeSession!)) +
+                        "in"),
+                  ],
+                ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+// TODO: put somewhere more central
+int getTimeLeftInSeconds({required ScreenTimeSession session}) {
+  DateTime now = DateTime.now();
+  int diff = now.difference(session.startedAt.toDate()).inSeconds;
+  int timeLeft = session.minutes * 60 - diff;
+  return timeLeft;
 }

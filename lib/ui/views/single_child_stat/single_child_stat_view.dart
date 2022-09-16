@@ -138,22 +138,32 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          AfkCreditsButton.outline(
-                                            leading: Icon(Icons.play_arrow,
-                                                color: kcPrimaryColor),
-                                            title: "Start",
-                                            onTap: model.isScreenTimeActive
-                                                ? null
-                                                : () => model
-                                                    .navToSelectScreenTimeView(
-                                                        childId: widget.uid),
-                                            color: model.isScreenTimeActive
-                                                ? kcMediumGrey
-                                                : null,
-                                          ),
-                                          if (model.isScreenTimeActive)
+                                          model.getScreenTimeSession(
+                                                      uid: widget.uid) !=
+                                                  null
+                                              ? AfkCreditsButton.outline(
+                                                  leading:
+                                                      Icon(Icons.hourglass_top_rounded,
+                                                          color: kcRed),
+                                                  title: "Show",
+                                                  onTap: () => model
+                                                      .navToSelectScreenTimeView(
+                                                          childId: widget.uid),
+                                                  color: kcRed)
+                                              : AfkCreditsButton.outline(
+                                                  leading: Icon(
+                                                      Icons.play_arrow,
+                                                      color: kcPrimaryColor),
+                                                  title: "Start",
+                                                  onTap: () => model
+                                                      .navToSelectScreenTimeView(
+                                                          childId: widget.uid),
+                                                  color: null),
+                                          if (model.getScreenTimeSession(
+                                                  uid: widget.uid) !=
+                                              null)
                                             AfkCreditsText.warn(
-                                                "Screen time running"),
+                                                "Active screen time"),
                                         ],
                                       ),
                                     ),
@@ -162,101 +172,6 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                 Spacer(),
                               ],
                             ),
-                            // Row(
-                            //   crossAxisAlignment: CrossAxisAlignment.end,
-                            //   mainAxisAlignment: MainAxisAlignment.start,
-                            //   children: [
-                            //     Spacer(),
-                            //     SummaryStatsDisplay(
-                            //       title: "Current credits",
-                            //       icon: Image.asset(kAFKCreditsLogoPath,
-                            //           color: kcPrimaryColor, height: 24),
-                            //       stats: model.stats.afkCreditsBalance
-                            //           .toStringAsFixed(0),
-                            //     ),
-                            //     //horizontalSpaceSmall,
-                            //     Spacer(),
-                            //     Column(
-                            //       mainAxisAlignment: MainAxisAlignment.start,
-                            //       children: [
-                            //         Container(
-                            //           //color: Colors.red,
-                            //           child: IconButton(
-                            //               padding: const EdgeInsets.only(
-                            //                   top: 4.0,
-                            //                   left: 8.0,
-                            //                   right: 8.0,
-                            //                   bottom: 0.0),
-                            //               visualDensity: VisualDensity.compact,
-                            //               onPressed: model
-                            //                   .showExplainCreditConversionDialog,
-                            //               icon: Icon(Icons.info_outline,
-                            //                   color: kcPrimaryColor, size: 22)),
-                            //         ),
-                            //         Icon(
-                            //           Icons.arrow_forward,
-                            //           size: 30,
-                            //         ),
-                            //       ],
-                            //     ),
-                            //     Spacer(),
-                            //     //horizontalSpaceMedium,
-                            //     SummaryStatsDisplay(
-                            //       title: "Equiv. screen time",
-                            //       icon: Image.asset(kScreenTimeIcon,
-                            //           height: 26, color: kcScreenTimeBlue),
-                            //       unit: "min",
-                            //       stats: model.stats.afkCreditsBalance
-                            //           .toStringAsFixed(0),
-                            //     ),
-                            //     Spacer(),
-                            //   ],
-                            // ),
-                            // verticalSpaceSmall,
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.start,
-                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                            //   children: [
-                            //     Spacer(),
-                            //     Container(
-                            //       width: 120,
-                            //       child: AfkCreditsButton.outline(
-                            //         leading: Icon(
-                            //           Icons.add,
-                            //           color: kcPrimaryColor,
-                            //         ),
-                            //         title: "Add",
-                            //         onTap: model.navigateToAddFundsView,
-                            //       ),
-                            //     ),
-                            //     Spacer(),
-                            //     Container(
-                            //       width: 120,
-                            //       child: Column(
-                            //         mainAxisAlignment: MainAxisAlignment.start,
-                            //         children: [
-                            //           AfkCreditsButton.outline(
-                            //             leading: Icon(Icons.play_arrow,
-                            //                 color: kcPrimaryColor),
-                            //             title: "Start",
-                            //             onTap: model.isScreenTimeActive
-                            //                 ? null
-                            //                 : () =>
-                            //                     model.navToSelectScreenTimeView(
-                            //                         childId: widget.uid),
-                            //             color: model.isScreenTimeActive
-                            //                 ? kcMediumGrey
-                            //                 : null,
-                            //           ),
-                            //           if (model.isScreenTimeActive)
-                            //             AfkCreditsText.warn(
-                            //                 "Screen time running"),
-                            //         ],
-                            //       ),
-                            //     ),
-                            //     Spacer(),
-                            //   ],
-                            // ),
                             verticalSpaceMedium,
                             SectionHeader(
                               title: "Last 7 days",

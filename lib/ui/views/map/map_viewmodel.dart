@@ -36,6 +36,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     required this.updateMapMarkers,
     required this.updateMapAreas,
     required this.showMarkerInfoWindow,
+    required this.hideMarkerInfoWindow,
   });
 
   // -----------------------------------------------
@@ -283,7 +284,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     layoutService.setIsMovingCamera(true);
     takeSnapshotOfBirdViewCameraPosition();
     changeCameraTilt(90);
-    changeCameraZoom(kInitialZoom);
+    changeCameraZoom(kInitialZoomAvatarView);
     _animateCamera(forceUseLocation: forceUseLocation);
     await Future.delayed(Duration(seconds: 1));
     layoutService.setIsMovingCamera(false);
@@ -319,6 +320,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
               afkmarker: _m,
               isStartMarker: _m == _q.startMarker,
               completed: currentUserStats.completedQuestIds.contains(_q.id));
+          hideMarkerInfoWindowNow(markerId: _m.id);
         }
       }
     } else {
@@ -428,42 +430,54 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         if (afkmarker == quest.startMarker) {
           dynamic result;
           if (!isAvatarView && selectedQuest == null) {
+            // marker info window shows automatically. hide it when not in avatar view
+            hideMarkerInfoWindowNow(markerId: afkmarker.id);
             result = await displayQuestBottomSheet(
               quest: quest,
               startMarker: afkmarker,
             );
           }
+
+          // Show dialog for information
+          // ? Needs to happen AFTER animateToQuestDetails is called
+          if (selectedQuest != null && quest.type == QuestType.GPSAreaHike ||
+              quest.type == QuestType.GPSAreaHunt) {
+            // need to avoid navigating to that marker!
+
+            // When quest is running
+            if (!useSuperUserFeatures || adminMode == false) {
+              if (hasActiveQuest) {
+                await dialogService.showDialog(
+                    title: "You started here",
+                    description: "This was the beginning");
+              } else {
+                if (!isAvatarView && isShowingQuestDetails) {
+                  await dialogService.showDialog(
+                      title: "The start",
+                      description:
+                          "Move to this location and start the quest.");
+                }
+              }
+            }
+          }
+
           if (result?.confirmed == true || isAvatarView) {
             // showQuestDetails
             animateToQuestDetails(quest: quest);
-          }
-
-          if (selectedQuest != null && quest.type == QuestType.GPSAreaHike ||
-              quest.type == QuestType.GPSAreaHunt) {
-            // needed to avoid navigating to that marker!
-
-            // When quest is running
-            if (!useSuperUserFeatures ||
-                adminMode == false) if (hasActiveQuest) {
-              await dialogService.showDialog(
-                  title: "You started here",
-                  description: "This was the beginning");
-            } else {
-              if (!isAvatarView) {
-                await dialogService.showDialog(
-                    title: "The Start",
-                    description: "Move to this location and start the quest.");
-              }
-            }
+            // Show marker info
+            showMarkerInfoWindowNow(markerId: afkmarker.id);
           }
         } else {
           // information dialogs
           if (quest.type != QuestType.QRCodeHike) {
-            dialogService.showDialog(
-                title: "Checkpoint",
-                description: "Start the quest and reach this checkpoint.");
+            showMarkerInfoWindowNow(markerId: afkmarker.id);
+            await Future.delayed(Duration(milliseconds: 1500));
+            hideMarkerInfoWindowNow(markerId: afkmarker.id);
+            // await dialogService.showDialog(
+            //     title: "Checkpoint",
+            //     description: "Start the quest and reach this checkpoint.");
           } else {
-            dialogService.showDialog(
+            await dialogService.showDialog(
                 title: "Marker",
                 description: "Start the quest and collect this marker.");
           }
@@ -502,7 +516,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     if (!useSuperUserFeatures || adminMode == false) {
       if (afkmarker == quest.startMarker) {
         await dialogService.showDialog(
-            title: "The Start",
+            title: "The start",
             description: "Move to this location and start the quest.");
       } else {
         await dialogService.showDialog(
@@ -605,6 +619,11 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     notifyListeners();
   }
 
+  void hideMarkerInfoWindowNow({required String? markerId}) {
+    hideMarkerInfoWindow(markerId: markerId);
+    notifyListeners();
+  }
+
   void updateMapDisplay({required AFKMarker afkmarker}) {
     updateMapAreas(afkmarker: afkmarker);
     updateMapMarkers(
@@ -696,6 +715,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     resetMapMarkers();
     resetMapAreas();
     extractStartMarkersAndAddToMap();
+    notifyListeners();
   }
 
   void resetAllMapMarkersAndAreas() {
@@ -723,13 +743,18 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     if (appConfigProvider.isARAvailable) {
       return await openARView(lat, lon, isCoin);
     } else {
+      await showCollectedMarkerDialog();
+      layoutService.setIsFadingOutOverlay(false);
       restorePreviousCameraPosition(moveInsteadOfAnimate: true);
       await Future.delayed(Duration(milliseconds: 200));
       layoutService.setIsFadingOutOverlay(false);
-      await showCollectedMarkerDialog();
-
       return true;
     }
+  }
+
+  void clearAllMapData() {
+    resetAllMapMarkersAndAreas();
+    resetSnapshotOfCameraPosition();
   }
 
   Future openARView(double lat, double lon, bool isCoin) async {
@@ -806,4 +831,5 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       required double deltaZoom,
       bool? force}) animateNewLatLonZoomDelta;
   final void Function({required String? markerId}) showMarkerInfoWindow;
+  final void Function({required String? markerId}) hideMarkerInfoWindow;
 }

@@ -83,6 +83,10 @@ mixin MapStateControlMixin {
     mapStateService.takeSnapshotOfCameraPosition();
   }
 
+  void resetSnapshotOfCameraPosition() {
+    mapStateService.resetSnapshotOfCameraPosition();
+  }
+
   void takeSnapshotOfBirdViewCameraPosition() {
     mapStateService.takeSnapshotOfBirdViewCameraPosition();
   }

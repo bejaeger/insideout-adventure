@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
@@ -12,7 +13,9 @@ import 'package:afkcredits/app_config_provider.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
+import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
@@ -27,6 +30,11 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  final LocalStorageService _localStorageService =
+      locator<LocalStorageService>();
+  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
+  final log = getLogger("ExplorerHomeViewModel");
+
   // Stateful Data
   // ignore: close_sinks
 
@@ -62,8 +70,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   bool showLoadingScreen = true;
   bool showFullLoadingScreen = true;
-  final log = getLogger("ExplorerHomeViewModel");
 
+  ScreenTimeSession? get currentScreenTimeSession =>
+      _screenTimeService.getScreenTime(uid: currentUser.uid);
   Future initialize() async {
     setBusy(true);
     await listenToData();
@@ -106,7 +115,24 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       completerTwo.future,
       completerThree.future,
       getLocation(forceAwait: true, forceGettingNewPosition: false),
+      checkIsUsingScreenTime(),
     ]);
+
+    // continue to listen to screen time in case one is active!
+    // so that it will be finished properly!
+    final screenTimeSession =
+        _screenTimeService.getScreenTime(uid: currentUser.uid);
+    if (currentScreenTimeSession != null) {
+      log.e("Active screen time session!");
+      screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
+        session: screenTimeSession!,
+        callback: () {
+          log.e("LISTENED TO SCREEN TIME!");
+          notifyListeners();
+        },
+      );
+    }
+    notifyListeners();
   }
 
   Future initializeQuests({bool? force, double? lat, double? lon}) async {
@@ -183,6 +209,21 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         await showGenericInternalErrorDialog();
       }
     }
+  }
+
+  Future<ScreenTimeSession?> checkIsUsingScreenTime() async {
+    final String? id = await _localStorageService.getFromDisk(
+        key: kLocalStorageScreenTimeSessionKey);
+    if (id != null) {
+      final session = await screenTimeService.checkForActiveScreenTimeSession(
+          uid: currentUser.uid, sessionId: id);
+      if (session != null) {
+        notifyListeners();
+        return session;
+      }
+    }
+    notifyListeners();
+    return null;
   }
 
   void navigateToQuests() {
