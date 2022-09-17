@@ -61,6 +61,7 @@ List<ScreenTimeSession> getDummyScreenTimes({required String uid}) {
     ScreenTimeSession(
         sessionId: "",
         uid: uid,
+        createdByUid: uid,
         userName: "DummyName",
         minutes: 30,
         status: ScreenTimeSessionStatus.active,

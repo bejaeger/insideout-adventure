@@ -72,7 +72,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   bool showFullLoadingScreen = true;
 
   ScreenTimeSession? get currentScreenTimeSession =>
-      _screenTimeService.getScreenTime(uid: currentUser.uid);
+      _screenTimeService.getActiveScreenTime(uid: currentUser.uid);
   Future initialize() async {
     setBusy(true);
     await listenToData();
@@ -99,50 +99,68 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       completer: completer,
       callback: () => notifyListeners(),
     );
-    questService.setupPastQuestsListener(
-      completer: completerTwo,
-      uid: currentUser.uid,
-      callback: () => notifyListeners(),
-    );
-    gamificationService.setupAchievementsListener(
-      completer: completerThree,
-      uid: currentUser.uid,
-      callback: () => notifyListeners(),
-    );
+
+    // not used atm!
+    // questService.setupPastQuestsListener(
+    //   completer: completerTwo,
+    //   uid: currentUser.uid,
+    //   callback: () => notifyListeners(),
+    // );
+    // not used atm!
+    // gamificationService.setupAchievementsListener(
+    //   completer: completerThree,
+    //   uid: currentUser.uid,
+    //   callback: () => notifyListeners(),
+    // );
     activeQuestService.addMainLocationListener();
-    await Future.wait([
-      completer.future,
-      completerTwo.future,
-      completerThree.future,
-      getLocation(forceAwait: true, forceGettingNewPosition: false),
-      checkIsUsingScreenTime(),
-    ]);
+    await Future.wait(
+      [
+        completer.future,
+        //completerTwo.future,
+        //completerThree.future,
+        getLocation(forceAwait: true, forceGettingNewPosition: false),
+        checkIsUsingScreenTime(),
+        // adds listener to screen time collection!
+        // needed e.g. when child creates screen time session but parent removes it
+        userService.addExplorerScreenTimeListener(
+            explorerId: currentUser.uid, callback: () => notifyListeners()),
+      ],
+    );
 
     // continue to listen to screen time in case one is active!
     // so that it will be finished properly!
-    final screenTimeSession =
-        _screenTimeService.getScreenTime(uid: currentUser.uid);
-    if (currentScreenTimeSession != null) {
-      log.e("Active screen time session!");
-      screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
-        session: screenTimeSession!,
-        callback: () {
-          log.e("LISTENED TO SCREEN TIME!");
-          notifyListeners();
-        },
-      );
-    }
-    notifyListeners();
+
+    log.i(
+        "Length active screen time ${screenTimeService.supportedExplorerScreenTimeSessionsActive.length}");
+    screenTimeService.supportedExplorerScreenTimeSessionsActive.forEach(
+      (key, value) {
+        log.e("Active screen time session!");
+        screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
+          session: value,
+          callback: () {
+            log.i(
+                "Listened to screen time event of user with name ${value.userName}");
+            notifyListeners();
+          },
+        );
+      },
+    );
   }
 
-  Future initializeQuests({bool? force, double? lat, double? lon}) async {
+  Future initializeQuests(
+      {bool? force,
+      double? lat,
+      double? lon,
+      bool loadNewQuests = false}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
         await questService.loadNearbyQuests(
-            force: true,
-            sponsorIds: currentUser.sponsorIds,
-            lat: lat,
-            lon: lon);
+          force: true,
+          sponsorIds: currentUser.sponsorIds,
+          lat: lat,
+          lon: lon,
+          addQuestsToExisting: loadNewQuests,
+        );
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }
@@ -167,10 +185,10 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     await initializeQuests(
         force: true,
         lat: mapStateService.currentLat,
-        lon: mapStateService.currentLon);
+        lon: mapStateService.currentLon,
+        loadNewQuests: true);
     questService.showReloadQuestButton = false;
     questService.isReloadingQuests = false;
-    mapViewModel.resetMapMarkers();
     mapViewModel.extractStartMarkersAndAddToMap();
     notifyListeners();
   }

@@ -24,6 +24,7 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
@@ -53,7 +54,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       locator<GamificationService>();
   final ScreenTimeService screenTimeService = locator<ScreenTimeService>();
   final PermissionService _permissionService = locator<PermissionService>();
-
   final baseModelLog = getLogger("BaseModel");
 
   // ------------------------------------------------------
@@ -118,9 +118,10 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
   bool get isScreenTimeActive =>
-      userService.supportedExplorerScreenTimeSessionsActive.length != 0;
+      screenTimeService.supportedExplorerScreenTimeSessionsActive.length != 0;
   List<ScreenTimeSession> get childScreenTimeSessionsActive =>
-      userService.supportedExplorerScreenTimeSessionsActive.values.toList();
+      screenTimeService.supportedExplorerScreenTimeSessionsActive.values
+          .toList();
 
   // ------------------------------------------
   // state

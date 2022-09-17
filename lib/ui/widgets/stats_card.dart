@@ -162,11 +162,12 @@ class AFKCreditsIcon extends StatelessWidget {
   final bool locked;
   final double? height;
   final Alignment alignment;
+  final Color? color;
   const AFKCreditsIcon({
     Key? key,
     this.locked = false,
     this.height,
-    this.alignment = Alignment.center,
+    this.alignment = Alignment.center, this.color,
   }) : super(key: key);
 
   @override
@@ -181,6 +182,7 @@ class AFKCreditsIcon extends StatelessWidget {
               Align(
                 alignment: alignment,
                 child: Image.asset(kAFKCreditsLogoPath,
+                color: color,
                     height: (height ?? 70) - 10.0),
               ),
               if (locked)

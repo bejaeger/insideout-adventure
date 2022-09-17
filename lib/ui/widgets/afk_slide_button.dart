@@ -28,7 +28,7 @@ class AFKSlideButton extends StatelessWidget {
       child: SlideAction(
         sliderButtonIconPadding: 12,
         sliderButtonIconSize: 22,
-        // sliderButtonIcon: Icon(Icons.play_arrow, color: kPrimaryColor),
+        sliderButtonIcon: Icon(Icons.play_arrow_rounded, color: kcPrimaryColor),
         alignment: alignment ?? Alignment.center,
         outerColor: kcPrimaryColor,
         //text: "Start",

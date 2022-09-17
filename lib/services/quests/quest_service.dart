@@ -124,7 +124,10 @@ class QuestService with ReactiveServiceMixin {
       {required List<String> sponsorIds,
       bool force = false,
       double? lat,
-      double? lon}) async {
+      double? lon,
+      bool addQuestsToExisting =
+          false // if true quests will be added to already downloaded ones
+      }) async {
     if (_nearbyQuests.isEmpty || force) {
       // TODO: In the future retrieve only nearby quests
       try {
@@ -135,12 +138,29 @@ class QuestService with ReactiveServiceMixin {
         }
         latAtLatestQuestDownload = lat ?? position!.latitude;
         lonAtLatestQuestDownload = lon ?? position!.longitude;
-        _nearbyQuests = await _firestoreApi.getNearbyQuests(
+
+        final newQuests = await _firestoreApi.getNearbyQuests(
             lat: latAtLatestQuestDownload!,
             lon: lonAtLatestQuestDownload!,
             radius: kDefaultQuestDownloadRadiusInKm,
             pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
             sponsorIds: sponsorIds);
+        if (addQuestsToExisting) {
+          // _nearbyQuests.addAll(newQuests);
+          // log.wtf("nearby quests length: ${_nearbyQuests.length}");
+          // // make unique
+          // _nearbyQuests = _nearbyQuests.toSet().toList();
+          // TODO: Very inefficient but does the job atm
+          newQuests.forEach(
+            (newq) {
+              if (!_nearbyQuests.any((element) => element.id == newq.id)) {
+                _nearbyQuests.add(newq);
+              }
+            },
+          );
+        } else {
+          _nearbyQuests = newQuests;
+        }
       } catch (e) {
         if (e is FirestoreApiException &&
             e.message == WarningNoQuestsDownloaded) {

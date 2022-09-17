@@ -36,8 +36,6 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
             (!(model.isShowingQuestDetails || model.hasActiveQuest) ||
                     model.isFadingOutQuestDetails) &&
                 (model.previouslyFinishedQuest == null);
-
-        //log.wtf("==>> Rebuild ExplorerHomeView");
         return WillPopScope(
           onWillPop: () async {
             model.maybeRemoveExplorerAccountOverlay();

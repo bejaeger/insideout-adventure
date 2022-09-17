@@ -41,7 +41,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
           ),
           child: directionStatus == DirectionStatus.nearGoal
               ? AfkCreditsText.successThree(
-                  "Yippieh! Catch the credits on the map nearby!!",
+                  "Yippieh! You found the treasure. Collect it by clicking on it on the map.",
                   align: TextAlign.center)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

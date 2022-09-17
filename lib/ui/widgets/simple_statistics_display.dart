@@ -28,6 +28,7 @@ class SimpleStatisticsDisplay extends StatelessWidget {
           : CrossAxisAlignment.center,
       children: [
         Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (dollarValue != null)
               Align(
@@ -40,7 +41,10 @@ class SimpleStatisticsDisplay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (showCreditsIcon)
-                  AFKCreditsIcon(height: 40, alignment: Alignment.centerLeft),
+                  AFKCreditsIcon(
+                      height: 40,
+                      alignment: Alignment.center,
+                      color: kcPrimaryColor),
                 if (showScreenTimeIcon)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -61,7 +65,7 @@ class SimpleStatisticsDisplay extends StatelessWidget {
           ],
         ),
         verticalSpaceTiny,
-        if (title != null) Text(title!),
+        if (title != null) Center(child: Text(title!)),
       ],
     );
   }

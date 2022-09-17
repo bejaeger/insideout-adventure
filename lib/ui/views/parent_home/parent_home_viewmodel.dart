@@ -21,9 +21,10 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   Map<String, UserStatistics> get childStats =>
       userService.supportedExplorerStats;
   List<ScreenTimeSession> get childScreenTimeSessionsActive =>
-      userService.supportedExplorerScreenTimeSessionsActive.values.toList();
+      screenTimeService.supportedExplorerScreenTimeSessionsActive.values
+          .toList();
   Map<String, ScreenTimeSession> get childScreenTimeSessionsActiveMap =>
-      userService.supportedExplorerScreenTimeSessionsActive;
+      screenTimeService.supportedExplorerScreenTimeSessionsActive;
 
   List<dynamic> get sortedHistory => userService.sortedHistory();
   Map<String, int> get totalChildScreenTimeLastDays =>
@@ -58,18 +59,19 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     // ! This is important
     // ! We continue listening to screen time sessions here!
     // TODO: Should do the same on explorer account
-    log.e(
-        "Length active screen time ${userService.supportedExplorerScreenTimeSessionsActive.length}");
-    userService.supportedExplorerScreenTimeSessionsActive.forEach(
+    log.i(
+        "Length active screen time ${screenTimeService.supportedExplorerScreenTimeSessionsActive.length}");
+    screenTimeService.supportedExplorerScreenTimeSessionsActive.forEach(
       (key, value) {
         // also starts listeners
         screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
-            session: value,
-            callback: () {
-              log.i(
-                  "Listened to screen time event of user with name ${value.userName}");
-              notifyListeners();
-            });
+          session: value,
+          callback: () {
+            log.i(
+                "Listened to screen time event of user with name ${value.userName}");
+            notifyListeners();
+          },
+        );
       },
     );
   }

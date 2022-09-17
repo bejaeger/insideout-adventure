@@ -133,13 +133,13 @@ class OnBoardingScreensView extends StatelessWidget {
               PageViewModel(
                 titleWidget: OnboardingTitleWidget(
                     subtitle: "Step 2",
-                    title: "Let your child earn screen time"),
+                    title: "Let your child earn screen time credits"),
                 bodyWidget: OnboardingBodyWidget(
                   icon1: OnboardingActivityConversionIcon(),
                   text1:
                       "Hercules Credits can be earned through gps-based outdoor games",
                   text2:
-                      "Parents can create these games in their preferred locations",
+                      "You as a parent can create these games in your preferred locations",
                   // text3: "Parents can manually add credits to child account",
                 ),
                 // "Your child can earn Hercules Credits through gps-based outdoor games. You are also able to create these games in your preferred locations or manually add credits to the child’s account.",

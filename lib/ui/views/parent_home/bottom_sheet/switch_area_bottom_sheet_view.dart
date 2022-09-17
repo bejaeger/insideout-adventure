@@ -46,6 +46,27 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                 ),
                 verticalSpaceSmall,
                 verticalSpaceTiny,
+                if (model.supportedExplorers.length == 0) verticalSpaceMedium,
+                if (model.supportedExplorers.length == 0)
+                  Center(
+                    child: AfkCreditsText.body(
+                      "There is no child account yet",
+                      align: TextAlign.center,
+                    ),
+                  ),
+                if (model.supportedExplorers.length == 0)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: AfkCreditsButton.text(
+                      title: "Create one",
+                      onTap: () {
+                        completer(
+                          SheetResponse(confirmed: true),
+                        );
+                        model.navToCreateChildAccount();
+                      },
+                    ),
+                  ),
                 ListView.separated(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),

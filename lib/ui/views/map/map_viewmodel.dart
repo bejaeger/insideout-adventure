@@ -755,6 +755,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   void clearAllMapData() {
     resetAllMapMarkersAndAreas();
     resetSnapshotOfCameraPosition();
+    // change avatar view back to default
+    mapStateService.setIsAvatarView(true);
   }
 
   Future openARView(double lat, double lon, bool isCoin) async {

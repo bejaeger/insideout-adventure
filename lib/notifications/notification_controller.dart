@@ -62,7 +62,6 @@ class NotificationController {
       ReceivedAction receivedAction) async {
     // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
-
     print("==>> on action received method");
     // bool isSilentAction = receivedAction.actionType == ActionType.SilentAction;
 
@@ -137,6 +136,16 @@ class NotificationController {
   Future<void> dismissScheduledNotifications() async {
     await AwesomeNotifications()
         .dismissNotificationsByChannelKey(kScheduledNotificationChannelKey);
+  }
+
+  Future<void> dismissNotifications({required int? id}) async {
+    if (id == null) return;
+    await AwesomeNotifications().dismissNotificationsByGroupKey(id.toString());
+  }
+
+  Future<void> cancelNotifications({required int? id}) async {
+    if (id == null) return;
+    await AwesomeNotifications().cancelNotificationsByGroupKey(id.toString());
   }
 
   Future<void> dismissNotificationsByChannelKey(

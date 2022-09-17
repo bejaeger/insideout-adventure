@@ -152,7 +152,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                   color: kcRed)
                                               : AfkCreditsButton.outline(
                                                   leading: Icon(
-                                                      Icons.play_arrow,
+                                                      Icons.play_arrow_rounded,
                                                       color: kcPrimaryColor),
                                                   title: "Start",
                                                   onTap: () => model

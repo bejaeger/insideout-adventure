@@ -208,7 +208,7 @@ mixin NavigationMixin {
 
   Future navToSelectScreenTimeView(
       {String? childId, bool isParentAccount = true}) async {
-    final session = _screenTimeService.getScreenTimeSession(uid: childId);
+    final session = _screenTimeService.getActiveScreenTimeSession(uid: childId);
     if (session != null) {
       navToActiveScreenTimeView(session: session);
     } else {
@@ -216,6 +216,10 @@ mixin NavigationMixin {
           arguments: SelectScreenTimeViewArguments(
               childId: isParentAccount ? childId : null));
     }
+  }
+
+  Future navToCreateChildAccount() async {
+    await _navigationService.navigateTo(Routes.addExplorerView);
   }
 
   Future navToActiveScreenTimeView(

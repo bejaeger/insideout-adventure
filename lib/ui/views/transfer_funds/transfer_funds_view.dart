@@ -90,9 +90,12 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
               AfkCreditsButton(
                 leading: Icon(Icons.add, color: Colors.white),
                 title: "Add credits",
-                onTap: () {
+                onTap: () async {
                   amountFocusNode.unfocus();
-                  model.showBottomSheetAndProcessPayment();
+                  final res = await model.showBottomSheetAndProcessPayment();
+                  if (res is bool && res == true) {
+                    amountController.clear();
+                  }
                 },
               ),
             ],

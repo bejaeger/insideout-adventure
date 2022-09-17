@@ -18,6 +18,7 @@ class ChildStatsCard extends StatelessWidget {
   final int? screenTimeTrend;
   final int? activityTimeTrend;
   final ScreenTimeSession? screenTimeSession;
+  final bool isBusy;
 
   const ChildStatsCard(
       {Key? key,
@@ -27,7 +28,8 @@ class ChildStatsCard extends StatelessWidget {
       required this.activityTimeLastWeek,
       this.screenTimeSession,
       this.screenTimeTrend,
-      this.activityTimeTrend})
+      this.activityTimeTrend,
+      this.isBusy = false})
       : super(key: key);
 
   @override
@@ -48,99 +50,107 @@ class ChildStatsCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(
               top: 15.0, left: 15.0, right: 15.0, bottom: 5.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: AfkCreditsText.headingFour(user.fullName)),
-                  Icon(Icons.arrow_forward_ios,
-                      size: 20, color: kcPrimaryColorSecondary),
-                ],
-              ),
-              Row(
-                children: [
-                  //AfkCreditsText.body("Balance: "),
-                  if (childStats != null)
-                    CreditsAmount(
-                      amount: childStats!.afkCreditsBalance,
-                      height: 18,
-                    ),
-                ],
-              ),
-              verticalSpaceSmall,
-              if (activityTimeLastWeek != null || screenTimeLastWeek != null)
-                AfkCreditsText.body("Last 7 days"),
-              if (activityTimeLastWeek == null && screenTimeLastWeek == null)
-                AfkCreditsText.body("Switch to " +
-                    user.fullName +
-                    "'s account and allow them to earn credits"),
-              childStats == null
-                  ? AFKProgressIndicator()
-                  : Column(
+          child: isBusy
+              ? AFKProgressIndicator()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (activityTimeLastWeek != null)
-                          Row(
-                            children: [
-                              Image.asset(kActivityIcon,
-                                  height: 20,
-                                  width: 20,
-                                  color: kcActivityIconColor),
-                              SizedBox(width: 4),
-                              AfkCreditsText.body(
-                                  activityTimeLastWeek.toString() + " min"),
-                              if (activityTimeTrend != null)
-                                TrendIcon(metric: activityTimeTrend!)
-                              // AfkCreditsText.body("(" +
-                              //     (activityTimeTrend! >= 0 ? "+" : "") +
-                              //     activityTimeTrend.toString() +
-                              //     ")"),
-                            ],
-                          ),
-                        if (screenTimeLastWeek != null)
-                          Row(
-                            children: [
-                              Image.asset(kScreenTimeIcon2,
-                                  height: 18,
-                                  width: 18,
-                                  color: kcScreenTimeBlue),
-                              SizedBox(width: 4),
-                              AfkCreditsText.body(
-                                  screenTimeLastWeek.toString() + " min"),
-                              if (screenTimeTrend != null)
-                                TrendIcon(
-                                    metric: screenTimeTrend!, screenTime: true)
-                            ],
-                          ),
-                        // AfkCreditsText.body("# quests compl.: " +
-                        //     stats.numberQuestsCompleted.toString()),
-                        // AfkCreditsText.body(
-                        //     "screen time: " + stats.afkCreditsSpent.toString()),
+                        Expanded(
+                            child: AfkCreditsText.headingFour(user.fullName)),
+                        Icon(Icons.arrow_forward_ios,
+                            size: 20, color: kcPrimaryColorSecondary),
                       ],
                     ),
+                    Row(
+                      children: [
+                        //AfkCreditsText.body("Balance: "),
+                        if (childStats != null)
+                          CreditsAmount(
+                            amount: childStats!.afkCreditsBalance,
+                            height: 18,
+                          ),
+                      ],
+                    ),
+                    verticalSpaceSmall,
+                    if (activityTimeLastWeek != null ||
+                        screenTimeLastWeek != null)
+                      AfkCreditsText.body("Last 7 days"),
+                    if (activityTimeLastWeek == null &&
+                        screenTimeLastWeek == null)
+                      AfkCreditsText.body("Switch to " +
+                          user.fullName +
+                          "'s account to earn screen time"),
+                    childStats == null
+                        ? AFKProgressIndicator()
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (activityTimeLastWeek != null)
+                                Row(
+                                  children: [
+                                    Image.asset(kActivityIcon,
+                                        height: 20,
+                                        width: 20,
+                                        color: kcActivityIconColor),
+                                    SizedBox(width: 4),
+                                    AfkCreditsText.body(
+                                        activityTimeLastWeek.toString() +
+                                            " min"),
+                                    if (activityTimeTrend != null)
+                                      TrendIcon(metric: activityTimeTrend!)
+                                    // AfkCreditsText.body("(" +
+                                    //     (activityTimeTrend! >= 0 ? "+" : "") +
+                                    //     activityTimeTrend.toString() +
+                                    //     ")"),
+                                  ],
+                                ),
+                              if (screenTimeLastWeek != null)
+                                Row(
+                                  children: [
+                                    Image.asset(kScreenTimeIcon2,
+                                        height: 18,
+                                        width: 18,
+                                        color: kcScreenTimeBlue),
+                                    SizedBox(width: 4),
+                                    AfkCreditsText.body(
+                                        screenTimeLastWeek.toString() + " min"),
+                                    if (screenTimeTrend != null)
+                                      TrendIcon(
+                                          metric: screenTimeTrend!,
+                                          screenTime: true)
+                                  ],
+                                ),
+                              // AfkCreditsText.body("# quests compl.: " +
+                              //     stats.numberQuestsCompleted.toString()),
+                              // AfkCreditsText.body(
+                              //     "screen time: " + stats.afkCreditsSpent.toString()),
+                            ],
+                          ),
 
-              // Flexible(
-              //     //heightFactor: 0.6,
-              //     child: Icon(Icons.trip_origin_sharp,
-              //         size: 50, color: Colors.orange.shade400)),
-              // verticalSpaceSmall,
-              Spacer(),
-              if (screenTimeSession != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AfkCreditsText.warn("Using screen time"),
-                    AfkCreditsText.warn("-"),
-                    AfkCreditsText.warn(secondsToMinuteTime(
-                            getTimeLeftInSeconds(session: screenTimeSession!)) +
-                        "in"),
+                    // Flexible(
+                    //     //heightFactor: 0.6,
+                    //     child: Icon(Icons.trip_origin_sharp,
+                    //         size: 50, color: Colors.orange.shade400)),
+                    // verticalSpaceSmall,
+                    Spacer(),
+                    if (screenTimeSession != null)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AfkCreditsText.warn("Using screen time"),
+                          AfkCreditsText.warn("-"),
+                          AfkCreditsText.warn(secondsToMinuteTime(
+                                  getTimeLeftInSeconds(
+                                      session: screenTimeSession!)) +
+                              "in"),
+                        ],
+                      ),
                   ],
                 ),
-            ],
-          ),
         ),
       ),
     );

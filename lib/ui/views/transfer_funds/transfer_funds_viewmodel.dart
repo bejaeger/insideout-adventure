@@ -69,11 +69,11 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       amount = num.parse(amountValue!);
       if (type == TransferType.Sponsor2Explorer ||
           type == TransferType.Explorer2AFK) {
-        await handleTransfer(type: type);
+        return await handleTransfer(type: type);
       }
       //await createStripePayment();
       else if (type == TransferType.Sponsor2ExplorerCredits) {
-        await handleTransfer(type: type);
+        return await handleTransfer(type: type);
       } else {
         //await createStripePayment();
         _snackbarService!.showSnackbar(
@@ -135,7 +135,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
         // await _showAndAwaitSnackbar("You can come back any time :)");
         setBusy(false);
         //navigateBack();
-        return;
+        return false;
       } else if (finalConfirmation?.confirmed == true) {
         // -----------------------------------------------------
         // We create a completer and parse it to the pop-up window.
@@ -167,8 +167,9 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
             // clear view
             clearTillFirstAndShowExplorerHomeScreen();
           }
-          return;
+          return true;
         }
+        return true;
       }
       return;
     }

@@ -108,13 +108,15 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            if (quest.createdBy != null)
+                            if (quest.createdBy != null ||
+                                !model.isParentAccount)
                               AfkCreditsButton.text(
                                 leading: model.isParentAccount
                                     ? null
                                     : Icon(Icons.close, color: kcPrimaryColor),
                                 title: request.secondaryButtonTitle.toString(),
-                                onTap: quest.createdBy == null
+                                onTap: quest.createdBy == null &&
+                                        model.isParentAccount
                                     ? null
                                     : () => completer(
                                           SheetResponse(confirmed: false),
@@ -137,7 +139,8 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                               disabled: model.isParentAccount,
                               leading: model.isParentAccount
                                   ? null
-                                  : Icon(Icons.play_arrow, color: Colors.white),
+                                  : Icon(Icons.play_arrow_rounded,
+                                      color: Colors.white),
                               title: request.mainButtonTitle.toString(),
                               onTap: model.isParentAccount
                                   ? model.showNotImplementedInParentAccount

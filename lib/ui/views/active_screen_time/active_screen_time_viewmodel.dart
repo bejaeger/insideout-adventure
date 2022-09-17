@@ -19,8 +19,8 @@ class ActiveScreenTimeViewModel extends BaseModel {
   // -----------------------------------
   // getters
   int? screenTimeLeft;
-  ScreenTimeSession? get currentScreenTimeSession =>
-      _screenTimeService.getScreenTimeSession(uid: session?.uid);
+  ScreenTimeSession? get currentScreenTimeSession => _screenTimeService
+      .getScreenTimeSession(uid: session?.uid, sessionId: session?.sessionId);
   String get childName => session != null ? session!.userName : "";
 
   // ---------------------------
@@ -43,33 +43,17 @@ class ActiveScreenTimeViewModel extends BaseModel {
       log.i("screen time session will be started");
 
       // start a NEW screen time session
-      DateTime endDate =
-          DateTime.now().add(Duration(minutes: session!.minutes));
       session = session!.copyWith(status: ScreenTimeSessionStatus.active);
-      await _screenTimeService.startScreenTime(
+
+      // updates session with new id
+      session = await _screenTimeService.startScreenTime(
           session: session!, callback: listenToTick);
       justStartedListeningToScreenTime = true;
-
-      // create notifications
-      Notifications().createPermanentNotification(
-          title: "Screen time until " + formatDateToShowTime(endDate),
-          message: session!.userName + " is using screen time");
-      // schedule notification
-      Notifications().createScheduledNotification(
-          title: "Screen time expired!",
-          message: session!.userName + "'s screen time expired.",
-          date: endDate);
     }
 
     if (session != null && session?.status == ScreenTimeSessionStatus.active) {
-      log.i("screen time session is active and will be continued");
-      // previous screen time session found on disk
-      // Try to continue or finish this session!
-
-      // Need to start a timer here
-      // that counts down the screen time
-      // Only listen again and subtract difference if timer is
-      // not already running!
+      log.i(
+          "screen time session has started or is active and will be continued");
       if (!_stopWatchService.isRunning) {
         int screenTimeLeftInSecondsPreset =
             screenTimeService.getTimeLeftInSeconds(session: session!);
@@ -81,11 +65,9 @@ class ActiveScreenTimeViewModel extends BaseModel {
         );
       }
     }
-
     if (session == null) {
       log.wtf("session is null, cannot navigate to active screen time view");
       setBusy(false);
-
       popView();
       return;
     }
@@ -118,34 +100,30 @@ class ActiveScreenTimeViewModel extends BaseModel {
               " seconds left."); //, mainButtonTitle: "CANCEL", )
     }
     if (result == null || result?.confirmed == true) {
-      await NotificationController().dismissPermanentNotifications();
-      await NotificationController().dismissScheduledNotifications();
-      final currentScreenTime =
-          screenTimeService.getScreenTime(uid: session.uid);
-      if (currentScreenTime != null) {
-        final res =
-            await _screenTimeService.stopScreenTime(session: currentScreenTime);
-        if (res is String) {
-          log.wtf("Screen time couldn't be stopped, error: $res");
-        }
-        String snackBarTitle = "";
-        String snackBarMsg = "";
-        if (res == false) {
-          snackBarTitle = "Cancelled screentime. ";
-          snackBarMsg = "No credits are deducted";
-        }
-        if (res == true) {
-          snackBarTitle = "Stopped screentime";
-          snackBarMsg = "Credits are deducted accordingly";
-        }
-        resetStopWatch();
-        replaceWithHomeView();
-        snackbarService.showSnackbar(
-          title: snackBarTitle,
-          message: snackBarMsg,
-          duration: Duration(seconds: 2),
-        );
+      // trying to deal with notifications in screen time service
+      // await NotificationController().dismissPermanentNotifications();
+      // await NotificationController().dismissScheduledNotifications();
+      final res = await _screenTimeService.stopScreenTime(session: session);
+      if (res is String) {
+        log.wtf("Screen time couldn't be stopped, error: $res");
       }
+      String snackBarTitle = "";
+      String snackBarMsg = "";
+      if (res == false) {
+        snackBarTitle = "Cancelled screentime. ";
+        snackBarMsg = "No credits are deducted";
+      }
+      if (res == true) {
+        snackBarTitle = "Stopped screentime";
+        snackBarMsg = "Credits are deducted accordingly";
+      }
+      resetStopWatch();
+      replaceWithHomeView();
+      snackbarService.showSnackbar(
+        title: snackBarTitle,
+        message: snackBarMsg,
+        duration: Duration(seconds: 2),
+      );
     }
   }
 

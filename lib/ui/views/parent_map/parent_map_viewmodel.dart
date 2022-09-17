@@ -1,11 +1,8 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -36,11 +33,19 @@ class ParentMapViewModel extends QuestViewModel {
   }
 
   // ? Note: Same function exists in explorer_home_viewmodel.dart
-  Future initializeQuests({bool? force, double? lat, double? lon}) async {
+  Future initializeQuests(
+      {bool? force,
+      double? lat,
+      double? lon,
+      bool loadNewQuests = false}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
         await questService.loadNearbyQuests(
-            force: true, sponsorIds: [currentUser.uid], lat: lat, lon: lon);
+            force: true,
+            sponsorIds: [currentUser.uid],
+            lat: lat,
+            lon: lon,
+            addQuestsToExisting: loadNewQuests);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }
@@ -136,7 +141,8 @@ class ParentMapViewModel extends QuestViewModel {
     await initializeQuests(
         force: true,
         lat: mapStateService.currentLat,
-        lon: mapStateService.currentLon);
+        lon: mapStateService.currentLon,
+        loadNewQuests: true);
     questService.showReloadQuestButton = false;
     questService.isReloadingQuests = false;
     addMarkers();

@@ -25,6 +25,7 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
@@ -42,6 +43,7 @@ class UserService {
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
+  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
   final log = getLogger('UserService');
 
   // ---------------------------------------
@@ -75,12 +77,6 @@ class UserService {
   // quest history is added to user service (NOT IDEAL!)
   Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
 
-  // quest history is added to user service (NOT IDEAL! cause we have a quest service)
-  // map of explorerIds and screen time sessions (list with 1 entry!)
-  Map<String, List<ScreenTimeSession>> supportedExplorerScreenTimeSessions = {};
-  // map of explorerIds with screen time session
-  Map<String, ScreenTimeSession> supportedExplorerScreenTimeSessionsActive = {};
-
   StreamSubscription? _explorersDataStreamSubscriptions;
   List<User> get supportedExplorersList {
     List<User> list = [];
@@ -113,6 +109,7 @@ class UserService {
       //   _currentUserAdmin = userAccount;
       // } else {
       _currentUser = userAccount;
+      _screenTimeService.setUserId(_currentUser!.uid);
       // }
       if (fromLocalStorage) {
         log.v("Save current user id to disk");
@@ -621,16 +618,61 @@ class UserService {
       _explorerScreenTimeStreamSubscriptions[explorerId] = _firestoreApi
           .getScreenTimeSessionStream(uid: explorerId)
           .listen((snapshot) {
-        supportedExplorerScreenTimeSessions[explorerId] = snapshot;
+        _screenTimeService.supportedExplorerScreenTimeSessions[explorerId] =
+            snapshot;
+
+        // Need to remove active screen time here when it
+        // is stopped on another phone!
+        List<ScreenTimeSession> completed = snapshot
+            .where((element) =>
+                element.status == ScreenTimeSessionStatus.completed)
+            .toList();
+        List<ScreenTimeSession> cancelled = snapshot
+            .where((element) =>
+                element.status == ScreenTimeSessionStatus.cancelled)
+            .toList();
+        if (completed.any((element) =>
+                element.sessionId ==
+                _screenTimeService
+                    .supportedExplorerScreenTimeSessionsActive[explorerId]
+                    ?.sessionId) ||
+            cancelled.any((element) =>
+                element.sessionId ==
+                _screenTimeService
+                    .supportedExplorerScreenTimeSessionsActive[explorerId]
+                    ?.sessionId)) {
+          // this means an active screen time session is now stopped!
+          // or was cancelled prematuraly
+          _screenTimeService.cancelActiveScreenTime(uid: explorerId);
+          log.v(
+              "Cancelling screen time event for explorer with id $explorerId");
+          if (callback != null) {
+            callback();
+          }
+        }
+        log.v("Listened to new screen time session event");
 
         // potentially add to active screen time map
+        ScreenTimeSession? prevActiveSessions = _screenTimeService
+            .supportedExplorerScreenTimeSessionsActive[explorerId];
         try {
-          supportedExplorerScreenTimeSessionsActive[explorerId] =
+          _screenTimeService
+                  .supportedExplorerScreenTimeSessionsActive[explorerId] =
               snapshot.firstWhere((element) =>
                   element.status == ScreenTimeSessionStatus.active);
         } catch (e) {
           if (e is StateError) {
             log.v("No active screen time for explorer with id $explorerId");
+            if (prevActiveSessions != null) {
+              // THIS means a screen time session was cancelled after X (30 per default) seconds and was deleted from firestore!
+              // See stopScreenTime function in screen_time_service.dart
+              _screenTimeService.cancelActiveScreenTime(uid: explorerId);
+              log.v(
+                  "Cancelling screen time event because it was deleted for explorer with id $explorerId");
+              if (callback != null) {
+                callback();
+              }
+            }
           } else {
             rethrow;
           }
@@ -649,6 +691,24 @@ class UserService {
       completer.complete();
     }
     return completer.future;
+  }
+
+  dynamic getAfkCreditsBalance({String? childId}) {
+    if (childId == null) {
+      return currentUserStats.afkCreditsBalance;
+    } else {
+      return supportedExplorerStats[childId]!.afkCreditsBalance;
+    }
+  }
+
+  int getTotalAvailableScreenTime({String? childId}) {
+    return convertCreditsToScreenTime(
+        credits: getAfkCreditsBalance(childId: childId));
+  }
+
+  int convertCreditsToScreenTime({required num credits}) {
+    double screenTimeFactor = 1;
+    return (credits * screenTimeFactor).toInt();
   }
 
   Future validateSponsorPin({required String pin}) async {
@@ -710,12 +770,14 @@ class UserService {
   List<ScreenTimeSession> sortedChildScreenTimeSessions({String? uid}) {
     List<ScreenTimeSession> sortedSessions = [];
     if (uid == null) {
-      supportedExplorerScreenTimeSessions.forEach((key, quests) {
+      _screenTimeService.supportedExplorerScreenTimeSessions
+          .forEach((key, quests) {
         sortedSessions.addAll(quests);
       });
     } else {
       if (supportedExplorerQuestsHistory.containsKey(uid)) {
-        sortedSessions = supportedExplorerScreenTimeSessions[uid]!;
+        sortedSessions =
+            _screenTimeService.supportedExplorerScreenTimeSessions[uid]!;
       }
     }
     sortedSessions.sort((a, b) {
@@ -735,7 +797,8 @@ class UserService {
     if (uid == null) {
       list = [...sortedChildScreenTimeSessions(), ...sortedChildQuestHistory()];
     } else {
-      if (supportedExplorerScreenTimeSessions.containsKey(uid)) {
+      if (_screenTimeService.supportedExplorerScreenTimeSessions
+          .containsKey(uid)) {
         list = list + sortedChildScreenTimeSessions(uid: uid);
       }
       if (supportedExplorerQuestsHistory.containsKey(uid)) {
@@ -768,7 +831,8 @@ class UserService {
       {int deltaDays = 7, int daysAgo = 0, String? uid}) {
     Map<String, int> screenTime = {};
 
-    supportedExplorerScreenTimeSessions.forEach((key, session) {
+    _screenTimeService.supportedExplorerScreenTimeSessions
+        .forEach((key, session) {
       session.forEach((element) {
         if (element.startedAt is Timestamp) {
           if (DateTime.now().difference(element.startedAt.toDate()).inDays >=
@@ -913,12 +977,6 @@ class UserService {
 
   ///////////////////////////////////////////////////
   // Clean up
-
-  void cancelActiveScreenTimeSession(
-      {required ScreenTimeSession? session}) async {
-    if (session == null) return;
-    supportedExplorerScreenTimeSessionsActive.remove(session.uid);
-  }
 
   // pause the listener
   void cancelExplorerListener({required String uid}) {

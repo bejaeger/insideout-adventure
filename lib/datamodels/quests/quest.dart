@@ -2,6 +2,7 @@
 
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'marker_note/marker_note.dart';
 /* part 'quest.freezed.dart';
@@ -109,6 +110,7 @@ class Quest {
         bonusAfkCreditsOnSuccess:
             bonusAfkCreditsOnSuccess ?? this.bonusAfkCreditsOnSuccess,
         distanceFromUser: distanceFromUser ?? this.distanceFromUser,
+
         distanceToTravelInMeter:
             distanceToTravelInMeter ?? this.distanceToTravelInMeter,
         type: type ?? this.type,
@@ -166,6 +168,40 @@ class Quest {
         ? this.location!.data
         : null; // will convert GeoFirePoint to GeoPoint for firebase!
     return data;
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is Quest &&
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality()
+                .equals(other.description, description) &&
+            const DeepCollectionEquality().equals(other.type, type) &&
+            const DeepCollectionEquality().equals(other.createdBy, createdBy) &&
+            const DeepCollectionEquality()
+                .equals(other.startMarker, startMarker) &&
+            const DeepCollectionEquality()
+                .equals(other.finishMarker, finishMarker) &&
+            const DeepCollectionEquality().equals(other.markers, markers) &&
+            const DeepCollectionEquality()
+                .equals(other.markerNotes, markerNotes) &&
+            const DeepCollectionEquality()
+                .equals(other.afkCredits, afkCredits) &&
+            const DeepCollectionEquality()
+                .equals(other.networkImagePath, networkImagePath) &&
+            const DeepCollectionEquality()
+                .equals(other.afkCreditsPerMarker, afkCreditsPerMarker) &&
+            const DeepCollectionEquality().equals(
+                other.bonusAfkCreditsOnSuccess, bonusAfkCreditsOnSuccess) &&
+            const DeepCollectionEquality()
+                .equals(other.distanceFromUser, distanceFromUser) &&
+            const DeepCollectionEquality().equals(
+                other.distanceToTravelInMeter, distanceToTravelInMeter) &&
+            const DeepCollectionEquality()
+                .equals(other.repeatable, repeatable));
   }
 }
 

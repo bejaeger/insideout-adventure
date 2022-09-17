@@ -1,4 +1,5 @@
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import '../../../utils/utilities/utilities.dart';
@@ -7,11 +8,13 @@ import 'package:afkcredits/app/app.logger.dart';
 class Notifications {
   final log = getLogger("Notifications");
 
-  Future<void> createPermanentNotification(
+  Future<int> createPermanentNotification(
       {required String title, required String message}) async {
+    int id = createUniqueId();
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: createUniqueId(),
+        id: id,
+        groupKey: id.toString(),
         channelKey: kPermanentNotificationKey,
         title: '${Emojis.time_hourglass_not_done} ' + title,
         body: message,
@@ -19,33 +22,21 @@ class Notifications {
         autoDismissible: false,
       ),
     );
+    return id;
   }
 
-  // ? NOT USED AT THE MOMENT
-  Future<void> createUpdatedScreenTimeNotification(
-      {required String title, required String message}) async {
+  Future<int> createScheduledNotification({
+    required String title,
+    required String message,
+    required DateTime date,
+    required ScreenTimeSession session,
+  }) async {
+    int id = createUniqueId();
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        displayOnForeground: true, // just update the other notification
-        displayOnBackground: true,
-        id: createUniqueId(),
-        channelKey: kUpdatedScreenTimeNotificationKey,
-        title: '${Emojis.time_hourglass_not_done} ' + title,
-        body: message,
-        locked: true,
-        category: NotificationCategory.StopWatch,
-        autoDismissible: false,
-      ),
-    );
-  }
-
-  Future<void> createScheduledNotification(
-      {required String title,
-      required String message,
-      required DateTime date}) async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: createUniqueId(),
+        payload: {"uid": session.uid, "sessionId": session.sessionId},
+        id: id,
+        groupKey: id.toString(),
         channelKey: kScheduledNotificationChannelKey,
         title: "\u26A0 " + title,
         body: message,
@@ -61,5 +52,29 @@ class Notifications {
             key: kScheduledNotificationActionKey, label: "OK")
       ],
     );
+    return id;
+  }
+
+  Future<int> createPermanentIsUsingScreenTimeNotification(
+      {required ScreenTimeSession session}) async {
+    DateTime endDate =
+        session.startedAt.toDate().add(Duration(minutes: session.minutes));
+    int id = await Notifications().createPermanentNotification(
+        title: "Screen time until " + formatDateToShowTime(endDate),
+        message: session.userName + " is using screen time");
+    return id;
+  }
+
+  Future<int> createScheduledIsUsingScreenTimeNotification(
+      {required ScreenTimeSession session}) async {
+    DateTime endDate =
+        session.startedAt.toDate().add(Duration(minutes: session.minutes));
+    int id = await Notifications().createScheduledNotification(
+      title: "Screen time expired!",
+      message: session.userName + "'s screen time expired.",
+      date: endDate,
+      session: session,
+    );
+    return id;
   }
 }

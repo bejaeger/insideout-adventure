@@ -188,6 +188,7 @@ class ChildrenStatsList extends StatelessWidget {
             child: GestureDetector(
               onTap: () => viewModel.navToSingleChildView(uid: uid),
               child: ChildStatsCard(
+                  isBusy: viewModel.isBusy,
                   screenTimeLastWeek:
                       viewModel.totalChildScreenTimeLastDays[uid],
                   activityTimeLastWeek:
