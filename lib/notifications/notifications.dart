@@ -21,6 +21,10 @@ class Notifications {
         locked: true,
         autoDismissible: false,
       ),
+      actionButtons: [
+        NotificationActionButton(
+            key: kScheduledNotificationActionKey, label: "OK")
+      ],
     );
     return id;
   }

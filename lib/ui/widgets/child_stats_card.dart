@@ -143,13 +143,13 @@ class ChildStatsCard extends StatelessWidget {
                         children: [
                           AfkCreditsText.warn("Screen time active"),
                           AfkCreditsText.warn("-"),
-                          AfkCreditsText.warn(
-                            secondsToMinuteTime(
-                              getTimeLeftInSeconds(session: screenTimeSession!),
-                            ),
-                          ),
-                          //) +
-                          //"in left"),
+                          AfkCreditsText.warn(secondsToMinuteTime(
+                                getTimeLeftInSeconds(
+                                    session: screenTimeSession!),
+                              )
+                              //) +
+                              +
+                              "in left"),
                         ],
                       ),
                   ],

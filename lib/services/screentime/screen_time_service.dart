@@ -202,10 +202,14 @@ class ScreenTimeService {
         callback();
       });
     }
-    // if (!permanentNotificationId.containsKey(session.uid)) {
-    //   permanentNotificationId[session.uid] = await Notifications()
-    //       .createPermanentIsUsingScreenTimeNotification(session: session);
-    // }
+    if (!permanentNotificationId.containsKey(session.uid)) {
+      permanentNotificationId[session.uid] = await Notifications()
+          .createPermanentIsUsingScreenTimeNotification(session: session);
+    }
+    if (!scheduledNotificationId.containsKey(session.uid)) {
+      scheduledNotificationId[session.uid] = await Notifications()
+          .createScheduledIsUsingScreenTimeNotification(session: session);
+    }
     // need to call callback here once so that UI reacts
     // on just added screenTimeActiveSubject!
     callback();
@@ -247,6 +251,7 @@ class ScreenTimeService {
 
   Future handleScreenTimeOverEvent({required ScreenTimeSession session}) async {
     log.i("Handle screen time over event");
+    session = screenTimeActiveSubject[session.uid]?.value ?? session;
     // check if this function was already called
     if (session.status == ScreenTimeSessionStatus.completed) {
       log.i("Found that session is completed already. dismiss notifications");
@@ -270,7 +275,7 @@ class ScreenTimeService {
     // this will make the view react to the finish event cause now the status is complete!
     screenTimeActiveSubject[currentSession.uid]?.add(currentSession);
     _firestoreApi.updateStatsAfterScreenTimeFinished(
-      session: session,
+      session: currentSession,
       deltaCredits: -currentSession.afkCredits,
       deltaScreenTime: currentSession.minutes,
     );
@@ -328,7 +333,7 @@ class ScreenTimeService {
       screenTimeActiveSubject[session.uid]?.add(currentSession);
       // run transaction
       _firestoreApi.updateStatsAfterScreenTimeFinished(
-        session: session,
+        session: currentSession,
         deltaCredits: -afkCreditsUsed,
         deltaScreenTime: minutesUsed,
       );

@@ -1108,6 +1108,8 @@ class FirestoreApi {
                   "Found screen time session already cancelled or completed. Return from running transaction to avoid updating stats twice!");
               return;
             } else {
+              log.w("Updating stats after screen time finished!");
+
               // now we can update the credits and the total screen time balance
               // update credits balance and total screen time
               final ref2 = getUserSummaryStatisticsDocument(uid: session.uid);
