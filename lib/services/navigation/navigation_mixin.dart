@@ -222,8 +222,7 @@ mixin NavigationMixin {
     await _navigationService.navigateTo(Routes.addExplorerView);
   }
 
-  Future navToActiveScreenTimeView(
-      {ScreenTimeSession? session, String? sessionId}) async {
+  Future navToActiveScreenTimeView({required ScreenTimeSession session}) async {
     // TODO: Handle case when more sessions are active
     await _navigationService.navigateTo(
       Routes.activeScreenTimeView,

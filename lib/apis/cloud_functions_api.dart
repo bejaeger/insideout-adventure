@@ -15,7 +15,6 @@ import 'package:http/http.dart' as http;
 
 class CloudFunctionsApi {
   final log = getLogger("CloudFunctionApi");
-
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   ///////////////////////////////////////////
   /// Calling backend function to bookkeep credits

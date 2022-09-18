@@ -17,7 +17,7 @@ class QuestListOverlayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("==>> Rebuild QuestListOverlay");
+    // print("==>> Rebuild QuestListOverlay");
     return ViewModelBuilder<QuestListOverlayViewModel>.reactive(
       viewModelBuilder: () => QuestListOverlayViewModel(),
       onModelReady: (model) => model.listenToLayout(),

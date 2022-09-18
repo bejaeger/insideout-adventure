@@ -56,24 +56,7 @@ class ParentHomeViewModel extends TransferBaseViewModel {
         ],
       ),
     );
-    // ! This is important
-    // ! We continue listening to screen time sessions here!
-    // TODO: Should do the same on explorer account
-    log.i(
-        "Length active screen time ${screenTimeService.supportedExplorerScreenTimeSessionsActive.length}");
-    screenTimeService.supportedExplorerScreenTimeSessionsActive.forEach(
-      (key, value) {
-        // also starts listeners
-        screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
-          session: value,
-          callback: () {
-            log.i(
-                "Listened to screen time event of user with name ${value.userName}");
-            notifyListeners();
-          },
-        );
-      },
-    );
+    screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
   }
 
   ScreenTimeSession? getScreenTime({required String uid}) {

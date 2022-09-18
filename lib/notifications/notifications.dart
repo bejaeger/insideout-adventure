@@ -61,7 +61,8 @@ class Notifications {
         session.startedAt.toDate().add(Duration(minutes: session.minutes));
     int id = await Notifications().createPermanentNotification(
         title: "Screen time until " + formatDateToShowTime(endDate),
-        message: session.userName + " is using screen time");
+        message:
+            session.userName + " is using ${session.minutes} min screen time");
     return id;
   }
 
@@ -71,7 +72,8 @@ class Notifications {
         session.startedAt.toDate().add(Duration(minutes: session.minutes));
     int id = await Notifications().createScheduledNotification(
       title: "Screen time expired!",
-      message: session.userName + "'s screen time expired.",
+      message:
+          session.userName + "'s ${session.minutes} min screen time expired.",
       date: endDate,
       session: session,
     );

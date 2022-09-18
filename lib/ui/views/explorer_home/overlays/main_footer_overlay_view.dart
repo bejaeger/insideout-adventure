@@ -98,7 +98,7 @@ class MainFooterOverlayView extends StatelessWidget {
                         toggleButtonIconColor: kcMediumGrey,
                         toggleButtonMargin: 0,
                         toggleButtonSize: 35,
-                        radius: model.isSuperUser ? 120 : 80,
+                        radius: model.isSuperUser ? 120 : 90,
                         items: [
                           CircularMenuItem(
                             icon: Icons.settings,

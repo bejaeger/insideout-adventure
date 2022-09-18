@@ -1,1 +1,7 @@
-enum ScreenTimeSessionStatus { notStarted, active, cancelled, completed }
+enum ScreenTimeSessionStatus {
+  notStarted,
+  active,
+  cancelled,
+  completed,
+  archived
+}

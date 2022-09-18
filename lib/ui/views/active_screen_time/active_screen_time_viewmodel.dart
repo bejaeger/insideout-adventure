@@ -2,12 +2,9 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
-import 'package:afkcredits/notifications/notification_controller.dart';
-import 'package:afkcredits/notifications/notifications.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:afkcredits/utils/string_utils.dart';
 
 class ActiveScreenTimeViewModel extends BaseModel {
   // -----------------------------------
@@ -21,6 +18,9 @@ class ActiveScreenTimeViewModel extends BaseModel {
   int? screenTimeLeft;
   ScreenTimeSession? get currentScreenTimeSession => _screenTimeService
       .getScreenTimeSession(uid: session?.uid, sessionId: session?.sessionId);
+  ScreenTimeSession? get expiredScreenTime =>
+      _screenTimeService.getExpiredScreenTimeSession(uid: session?.uid);
+
   String get childName => session != null ? session!.userName : "";
 
   // ---------------------------
@@ -28,8 +28,7 @@ class ActiveScreenTimeViewModel extends BaseModel {
   // used to start screen time
   ScreenTimeSession? session;
   // used if previous screen time session was found
-  final String? screenTimeSessionId;
-  ActiveScreenTimeViewModel({required this.session, this.screenTimeSessionId});
+  ActiveScreenTimeViewModel({required this.session});
 
   // ------------------------------
   // state
@@ -57,6 +56,9 @@ class ActiveScreenTimeViewModel extends BaseModel {
       if (!_stopWatchService.isRunning) {
         int screenTimeLeftInSecondsPreset =
             screenTimeService.getTimeLeftInSeconds(session: session!);
+        screenTimeLeft = screenTimeLeftInSecondsPreset;
+        notifyListeners();
+        // takes surprisingly long to start that listener here so update the screenTimeLeft one before!
         _stopWatchService.listenToSecondTime(
           callback: (int tick) {
             screenTimeLeft = screenTimeLeftInSecondsPreset - tick;
@@ -129,6 +131,10 @@ class ActiveScreenTimeViewModel extends BaseModel {
 
   void resetStopWatch() {
     _stopWatchService.resetTimer();
+  }
+
+  void cancelOnlyActiveScreenTimeSubjectListeners({required String uid}) {
+    screenTimeService.cancelOnlyActiveScreenTimeSubjectListeners(uid: uid);
   }
 
   void listenToTick() {

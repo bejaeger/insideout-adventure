@@ -515,7 +515,6 @@ class UserService {
             },
           );
 
-          log.e("explorer with ids: $newUids");
           // adds listener to stats document and quest history of each explorer
           await addExplorerListeners(explorerIds: newUids, callback: callback);
 
@@ -623,56 +622,62 @@ class UserService {
 
         // Need to remove active screen time here when it
         // is stopped on another phone!
-        List<ScreenTimeSession> completed = snapshot
+        List<ScreenTimeSession> completedOrCancelled = snapshot
             .where((element) =>
-                element.status == ScreenTimeSessionStatus.completed)
+                (element.status == ScreenTimeSessionStatus.completed) ||
+                (element.status == ScreenTimeSessionStatus.cancelled))
             .toList();
-        List<ScreenTimeSession> cancelled = snapshot
-            .where((element) =>
-                element.status == ScreenTimeSessionStatus.cancelled)
-            .toList();
-        if (completed.any((element) =>
-                element.sessionId ==
-                _screenTimeService
-                    .supportedExplorerScreenTimeSessionsActive[explorerId]
-                    ?.sessionId) ||
-            cancelled.any((element) =>
-                element.sessionId ==
-                _screenTimeService
-                    .supportedExplorerScreenTimeSessionsActive[explorerId]
-                    ?.sessionId)) {
-          // this means an active screen time session is now stopped!
-          // or was cancelled prematuraly
-          _screenTimeService.cancelActiveScreenTime(uid: explorerId);
+        if (completedOrCancelled.any((element) =>
+            element.sessionId ==
+            _screenTimeService
+                .supportedExplorerScreenTimeSessionsActive[explorerId]
+                ?.sessionId)) {
+          // this means an active screen time session was stopped manuarlly!
+          _screenTimeService.cancelActiveScreenTimeListeners(uid: explorerId);
           log.v(
               "Cancelling screen time event for explorer with id $explorerId");
           if (callback != null) {
             callback();
           }
         }
-        log.v("Listened to new screen time session event");
+        log.v(
+            "Listened to new screen time session event fired from firestore listener.");
 
         // potentially add to active screen time map
         ScreenTimeSession? prevActiveSessions = _screenTimeService
             .supportedExplorerScreenTimeSessionsActive[explorerId];
         try {
+          ScreenTimeSession session = snapshot.firstWhere(
+              (element) => element.status == ScreenTimeSessionStatus.active);
           _screenTimeService
-                  .supportedExplorerScreenTimeSessionsActive[explorerId] =
-              snapshot.firstWhere((element) =>
-                  element.status == ScreenTimeSessionStatus.active);
+              .supportedExplorerScreenTimeSessionsActive[explorerId] = session;
+          // there is an active session for explorer with id explorerId
+          // need to start local screen time listeners if they are not yet started!
+          _screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
+            session: session,
+            callback: () {
+              if (callback != null) {
+                callback();
+              }
+            },
+          );
         } catch (e) {
           if (e is StateError) {
             log.v("No active screen time for explorer with id $explorerId");
             if (prevActiveSessions != null) {
-              // THIS means a screen time session was cancelled after X (30 per default) seconds and was deleted from firestore!
+              // THIS means a screen time session was cancelled after X seconds (30 seconds per default) and was deleted from firestore!
               // See stopScreenTime function in screen_time_service.dart
-              _screenTimeService.cancelActiveScreenTime(uid: explorerId);
+              _screenTimeService.cancelActiveScreenTimeListeners(
+                  uid: explorerId);
               log.v(
                   "Cancelling screen time event because it was deleted for explorer with id $explorerId");
               if (callback != null) {
                 callback();
               }
             }
+            // since there is no active session we cannot forget to remove it from the state!
+            _screenTimeService.supportedExplorerScreenTimeSessionsActive
+                .remove(explorerId);
           } else {
             rethrow;
           }

@@ -78,28 +78,29 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     await listenToData();
     await initializeQuests();
     listenToLayout();
+
+    // makes sure that screen time subject is listened to in case one is active!
+    screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
+
     setBusy(false);
     // fade loading screen out process
     await Future.delayed(
       Duration(milliseconds: 500),
     );
-    showFullLoadingScreen = false;
-    notifyListeners();
-    // ? should to be in line with the fade out time in Loading Overlay widget
-    await Future.delayed(Duration(milliseconds: 500));
     showLoadingScreen = false;
     notifyListeners();
+
+    // // ? should to be in line with the fade out time in Loading Overlay widget
   }
 
   Future listenToData() async {
     Completer completer = Completer<void>();
-    Completer completerTwo = Completer<void>();
-    Completer completerThree = Completer<void>();
+    // Completer completerTwo = Completer<void>();
+    // Completer completerThree = Completer<void>();
     userService.setupUserDataListeners(
       completer: completer,
       callback: () => notifyListeners(),
     );
-
     // not used atm!
     // questService.setupPastQuestsListener(
     //   completer: completerTwo,
@@ -119,31 +120,12 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         //completerTwo.future,
         //completerThree.future,
         getLocation(forceAwait: true, forceGettingNewPosition: false),
-        checkIsUsingScreenTime(),
+        // checkIsUsingScreenTime(),
         // adds listener to screen time collection!
         // needed e.g. when child creates screen time session but parent removes it
         userService.addExplorerScreenTimeListener(
             explorerId: currentUser.uid, callback: () => notifyListeners()),
       ],
-    );
-
-    // continue to listen to screen time in case one is active!
-    // so that it will be finished properly!
-
-    log.i(
-        "Length active screen time ${screenTimeService.supportedExplorerScreenTimeSessionsActive.length}");
-    screenTimeService.supportedExplorerScreenTimeSessionsActive.forEach(
-      (key, value) {
-        log.e("Active screen time session!");
-        screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
-          session: value,
-          callback: () {
-            log.i(
-                "Listened to screen time event of user with name ${value.userName}");
-            notifyListeners();
-          },
-        );
-      },
     );
   }
 
@@ -229,20 +211,20 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     }
   }
 
-  Future<ScreenTimeSession?> checkIsUsingScreenTime() async {
-    final String? id = await _localStorageService.getFromDisk(
-        key: kLocalStorageScreenTimeSessionKey);
-    if (id != null) {
-      final session = await screenTimeService.checkForActiveScreenTimeSession(
-          uid: currentUser.uid, sessionId: id);
-      if (session != null) {
-        notifyListeners();
-        return session;
-      }
-    }
-    notifyListeners();
-    return null;
-  }
+  // Future<ScreenTimeSession?> checkIsUsingScreenTime() async {
+  //   final String? id = await _localStorageService.getFromDisk(
+  //       key: kLocalStorageScreenTimeSessionKey);
+  //   if (id != null) {
+  //     final session = await screenTimeService.checkForActiveScreenTimeSession(
+  //         uid: currentUser.uid, sessionId: id);
+  //     if (session != null) {
+  //       notifyListeners();
+  //       return session;
+  //     }
+  //   }
+  //   notifyListeners();
+  //   return null;
+  // }
 
   void navigateToQuests() {
     // navigationService.replaceWithTransition(QuestsOverviewView(),

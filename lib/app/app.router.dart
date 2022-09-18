@@ -446,7 +446,6 @@ class StackedRouter extends RouterBase {
         builder: (context) => ActiveScreenTimeView(
           key: args.key,
           session: args.session,
-          screenTimeSessionId: args.screenTimeSessionId,
         ),
         settings: data,
       );
@@ -638,10 +637,8 @@ class ARObjectViewArguments {
 /// ActiveScreenTimeView arguments holder class
 class ActiveScreenTimeViewArguments {
   final Key? key;
-  final ScreenTimeSession? session;
-  final String? screenTimeSessionId;
-  ActiveScreenTimeViewArguments(
-      {this.key, required this.session, this.screenTimeSessionId});
+  final ScreenTimeSession session;
+  ActiveScreenTimeViewArguments({this.key, required this.session});
 }
 
 /// SelectScreenTimeView arguments holder class
@@ -1202,8 +1199,7 @@ extension NavigatorStateExtension on NavigationService {
 
   Future<dynamic> navigateToActiveScreenTimeView({
     Key? key,
-    required ScreenTimeSession? session,
-    String? screenTimeSessionId,
+    required ScreenTimeSession session,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1212,8 +1208,7 @@ extension NavigatorStateExtension on NavigationService {
   }) async {
     return navigateTo(
       Routes.activeScreenTimeView,
-      arguments: ActiveScreenTimeViewArguments(
-          key: key, session: session, screenTimeSessionId: screenTimeSessionId),
+      arguments: ActiveScreenTimeViewArguments(key: key, session: session),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

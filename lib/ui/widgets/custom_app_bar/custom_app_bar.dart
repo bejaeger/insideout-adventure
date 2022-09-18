@@ -117,8 +117,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   ? null
                                   : secondsToMinuteTime(
                                       model.getMinSreenTimeLeftInSeconds(
-                                          sessions: screenTimes),
-                                    ),
+                                          sessions: screenTimes)),
                               //model.newScreenTimeLeft,
                             ),
                           ),

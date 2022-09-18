@@ -20,13 +20,13 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   ///////////////////////////////////////////////
   /// Switch from explorer back to sponsor account
   Future handleSwitchToExplorerEvent({String? explorerUidInput}) async {
-    if (isScreenTimeActive) {
-      snackbarService.showSnackbar(
-          message:
-              "You cannot change to the child's account while screen time is active",
-          title: "Sorry");
-      return;
-    }
+    // if (isScreenTimeActive) {
+    //   snackbarService.showSnackbar(
+    //       message:
+    //           "You cannot change to the child's account while screen time is active",
+    //       title: "Sorry");
+    //   return;
+    // }
 
     User? tmpExplorer;
     if (explorerUidInput != null) {

@@ -42,4 +42,5 @@ const _$ScreenTimeSessionStatusEnumMap = {
   ScreenTimeSessionStatus.active: 'active',
   ScreenTimeSessionStatus.cancelled: 'cancelled',
   ScreenTimeSessionStatus.completed: 'completed',
+  ScreenTimeSessionStatus.archived: 'archived',
 };

@@ -73,8 +73,6 @@ class ScreenTimeService {
     return timeLeft;
   }
 
-  int previousDiff = 0;
-
   // ---------------------------------
   // Functions
 
@@ -94,16 +92,19 @@ class ScreenTimeService {
   ScreenTimeSession? getScreenTimeSession(
       {required String? uid, required String? sessionId}) {
     if (uid == null || sessionId == null) return null;
-    try {
-      return supportedExplorerScreenTimeSessions[uid]
-          ?.firstWhere((session) => session.sessionId == sessionId);
-    } catch (e) {
-      if (e is StateError) {
-        log.v("No screen time with sessionId $sessionId found");
-        return null;
-      } else {
-        rethrow;
-      }
+    if (screenTimeActiveSubject[uid] != null) {
+      return screenTimeActiveSubject[uid]!.value;
+    } else {
+      return null;
+    }
+  }
+
+  ScreenTimeSession? getExpiredScreenTimeSession({required String? uid}) {
+    if (uid == null) return null;
+    if (screenTimeExpired.containsKey(uid)) {
+      return screenTimeExpired[uid];
+    } else {
+      return null;
     }
   }
 
@@ -115,7 +116,7 @@ class ScreenTimeService {
     log.i("Starting screen time session");
 
     //TEST
-    //session = session.copyWith(minutes: 1);
+    session = session.copyWith(minutes: 1);
 
     if (!screenTimeActiveSubject.containsKey(session.uid)) {
       screenTimeActiveSubject[session.uid] = BehaviorSubject.seeded(session);
@@ -123,53 +124,46 @@ class ScreenTimeService {
       screenTimeActiveSubject[session.uid]!.add(session);
     }
 
-    // start periodic function to update UI (every 60 seconds)
-    // cancels automatically.
-    // start periodic function to update UI (every 60 seconds)
-    // cancels automatically.
-    screenTimeTimer[session.uid] = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        int secondsLeft = session.minutes * 60 - timer.tick;
-        if (secondsLeft % 60 == 0) {
-          if (secondsLeft == 0) {
-            handleScreenTimeOverEvent(session: session);
-            callback();
-            timer.cancel();
-          } else {
-            log.i(
-                "Called periodic timer function and updated screen time session for user ${session.uid}");
-            // adding it to the behavior subject can be used to listen to events in the views
-            screenTimeActiveSubject[session.uid]?.add(session);
-            callback();
-          }
-        }
-      },
-    );
+    // listen to behavior subject with callback from where this function was called!
     if (!screenTimeSubjectSubscription.containsKey(session.uid) ||
         screenTimeSubjectSubscription[session.uid] == null) {
       screenTimeSubjectSubscription[session.uid] =
-          screenTimeActiveSubject[session.uid]?.listen((value) {
-        callback();
-      });
+          screenTimeActiveSubject[session.uid]?.listen(
+        (value) {
+          callback();
+        },
+      );
     }
-    // need to call callback here once so that UI reacts
-    // on just added screenTimeActiveSubject!
-    callback();
 
     // upload
     String id = await _firestoreApi.addScreenTimeSession(session: session);
-    await _localStorageService.saveToDisk(
-        key: kLocalStorageScreenTimeSessionKey, value: id);
+    // add new session to subject which includes firestore ID!
     session = session.copyWith(sessionId: id);
     screenTimeActiveSubject[session.uid]?.add(session);
 
-    log.v("Firing notifications");
+    // start periodic function to update UI (every 60 seconds)
+    // cancels automatically.
+    // start periodic function to update UI (every 60 seconds)
+    // cancels automatically.
+    screenTimeTimer[session.uid] =
+        startTimer(session: session, callback: callback, previousDiff: 0);
+
+    // TODO: maybe deprecated
+    await _localStorageService.saveToDisk(
+        key: kLocalStorageScreenTimeSessionKey, value: id);
+
+    log.v("Fire notifications");
+    // store unique ids for notifications to keep track
     permanentNotificationId[session.uid] = await Notifications()
         .createPermanentIsUsingScreenTimeNotification(session: session);
     scheduledNotificationId[session.uid] = await Notifications()
         .createScheduledIsUsingScreenTimeNotification(session: session);
 
+    // need to call callback here once so that UI reacts
+    // on just added screenTimeActiveSubject!
+    callback();
+
+    // return updated session with firestore document id
     return session;
   }
 
@@ -185,40 +179,26 @@ class ScreenTimeService {
       screenTimeActiveSubject[session.uid]!.add(session);
     }
 
+    // if there is a timer already active we don't need to listen to everything again. Return;
+    if (screenTimeTimer.containsKey(session.uid)) {
+      log.v(
+          "Already listening to screen time session in local state. Returning.");
+      return;
+    }
+
     // start periodic function to update UI (every 60 seconds)
     // cancels automatically.
     int previousDiff = DateTime.now()
         .difference(getScreenTimeStartTime(session: session))
         .inSeconds;
-    screenTimeTimer[session.uid] = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        int secondsLeft = session.minutes * 60 - timer.tick - previousDiff;
-        if (secondsLeft % 60 == 0) {
-          if (secondsLeft == 0) {
-            handleScreenTimeOverEvent(session: session);
-            callback();
-            timer.cancel();
-          } else {
-            log.i(
-                "Called periodic timer function and updated screen time session for user ${session.uid}");
-            // adding it to the behavior subject can be used to listen to events in the views
-            // screenTimeActiveSubject[session.uid]?.add(session);
-            if (!screenTimeActiveSubject.containsKey(session.uid)) {
-              screenTimeActiveSubject[session.uid] =
-                  BehaviorSubject.seeded(session);
-            } else {
-              screenTimeActiveSubject[session.uid]!.add(session);
-            }
-            callback();
-          }
-        }
-      },
-    );
+    screenTimeTimer[session.uid] = startTimer(
+        session: session, callback: callback, previousDiff: previousDiff);
+
     if (!screenTimeSubjectSubscription.containsKey(session.uid) ||
         screenTimeSubjectSubscription[session.uid] == null) {
       screenTimeSubjectSubscription[session.uid] =
           screenTimeActiveSubject[session.uid]?.listen((value) {
+        // log.v("Running callback of screenTimeActiveSubject!");
         callback();
       });
     }
@@ -229,6 +209,40 @@ class ScreenTimeService {
     // need to call callback here once so that UI reacts
     // on just added screenTimeActiveSubject!
     callback();
+  }
+
+  // previous difference of timer as offset
+  Timer startTimer(
+      {required ScreenTimeSession session,
+      required void Function() callback,
+      required int previousDiff}) {
+    return Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        int secondsLeft = session.minutes * 60 - previousDiff - timer.tick;
+        // update every minute!
+        if (secondsLeft % 60 == 0) {
+          if (secondsLeft == 0) {
+            handleScreenTimeOverEvent(
+                session: screenTimeActiveSubject[session.uid]!.value);
+            callback();
+            timer.cancel();
+          } else {
+            log.i(
+                "Called periodic timer function and updated screen time session for user ${session.userName}. Seconds left: $secondsLeft");
+            // adding it to the behavior subject can be used to listen to events in the views
+            if (!screenTimeActiveSubject.containsKey(session.uid)) {
+              screenTimeActiveSubject[session.uid] =
+                  BehaviorSubject.seeded(session);
+            } else {
+              screenTimeActiveSubject[session.uid]!.add(session);
+            }
+            // since I listen to the behavior subject no need to call the callback here
+            // callback();
+          }
+        }
+      },
+    );
   }
 
   Future handleScreenTimeOverEvent({required ScreenTimeSession session}) async {
@@ -253,17 +267,30 @@ class ScreenTimeService {
       minutesUsed: session.minutes,
       afkCreditsUsed: session.afkCredits,
     );
+    // this will make the view react to the finish event cause now the status is complete!
     screenTimeActiveSubject[currentSession.uid]?.add(currentSession);
+    _firestoreApi.updateStatsAfterScreenTimeFinished(
+      session: session,
+      deltaCredits: -currentSession.afkCredits,
+      deltaScreenTime: currentSession.minutes,
+    );
+    // This is a complicated part for the two phone scenario!
+    // How do we ensure that only one person can change the AFK balance!
 
     // CHECK whether this is the account with which the screen time
     // session was created, ONLY then write to the database!
-    if (session.createdByUid == currentUserId) {
-      _firestoreApi.updateScreenTimeSession(session: currentSession);
-      _firestoreApi.changeAfkCreditsBalanceCheat(
-        deltaCredits: -currentSession.afkCredits,
-        uid: currentSession.uid,
-      );
-    }
+    // if (session.createdByUid == currentUserId) {
+    //   _firestoreApi.updateScreenTimeSession(session: currentSession);
+    //   _firestoreApi.changeAfkCreditsBalanceCheat(
+    //     deltaCredits: -currentSession.afkCredits,
+    //     uid: currentSession.uid,
+    //   );
+    //   _firestoreApi.changeTotalScreenTime(
+    //     deltaScreenTime: currentSession.minutes,
+    //     uid: currentSession.uid,
+    //   );
+    // }
+
     resetScreenTimeSession(session: currentSession);
   }
 
@@ -299,15 +326,21 @@ class ScreenTimeService {
       );
 
       screenTimeActiveSubject[session.uid]?.add(currentSession);
-      _firestoreApi.cancelScreenTimeSession(session: currentSession);
-      _firestoreApi.changeAfkCreditsBalanceCheat(
+      // run transaction
+      _firestoreApi.updateStatsAfterScreenTimeFinished(
+        session: session,
         deltaCredits: -afkCreditsUsed,
-        uid: currentSession.uid,
-      );
-      _firestoreApi.changeTotalScreenTime(
         deltaScreenTime: minutesUsed,
-        uid: currentSession.uid,
       );
+      // _firestoreApi.cancelScreenTimeSession(session: currentSession);
+      // _firestoreApi.changeAfkCreditsBalanceCheat(
+      //   deltaCredits: -afkCreditsUsed,
+      //   uid: currentSession.uid,
+      // );
+      // _firestoreApi.changeTotalScreenTime(
+      //   deltaScreenTime: minutesUsed,
+      //   uid: currentSession.uid,
+      // );
       returnVal = true;
     }
     resetScreenTimeSession(session: session);
@@ -325,8 +358,8 @@ class ScreenTimeService {
     } else {
       // -> if not completed
       // --> check if time is UP already?
-      if (DateTime.now().difference(session.startedAt.toDate()).inMinutes >
-          session.minutes) {
+      if (DateTime.now().difference(session.startedAt.toDate()).inSeconds >=
+          session.minutes * 60) {
         await handleScreenTimeOverEvent(session: session);
       } else {
         // --> if NOT: create session with remaining minutes!
@@ -355,15 +388,17 @@ class ScreenTimeService {
   }
 
   void resetScreenTimeSession({required ScreenTimeSession session}) async {
+    // TODO: probably deprecated
     await _localStorageService.deleteFromDisk(
         key: kLocalStorageScreenTimeSessionKey);
-    cancelActiveScreenTime(uid: session.uid);
-    // cancelScreenTimeSubjectSubscription();
-    screenTimeActiveSubject[session.uid]?.close();
-    screenTimeActiveSubject.remove(session.uid);
-    previousDiff = 0;
+
+    // store in local state the session that was expired
     screenTimeExpired[session.uid] = session;
-    supportedExplorerScreenTimeSessionsActive.remove(session.uid);
+
+    // cancel all state and listeners related to screen time session
+    cancelActiveScreenTimeListeners(uid: session.uid);
+
+    // dismiss nofifications
     NotificationController()
         .dismissNotifications(id: permanentNotificationId[session.uid]);
     permanentNotificationId.remove(session.uid);
@@ -374,7 +409,31 @@ class ScreenTimeService {
     }
   }
 
-  void cancelActiveScreenTime({required String uid}) async {
+  void listenToPotentialScreenTimes({required void Function() callback}) {
+    supportedExplorerScreenTimeSessionsActive.forEach(
+      (key, session) {
+        if (!screenTimeSubjectSubscription.containsKey(session.uid) ||
+            screenTimeSubjectSubscription[session.uid] == null) {
+          screenTimeSubjectSubscription[session.uid] =
+              screenTimeActiveSubject[session.uid]?.listen(
+            (value) {
+              // log.v("Running callback of screenTimeActiveSubject!");
+              callback();
+            },
+          );
+        } else {
+          log.e("Already listening to screen time subject.");
+        }
+      },
+    );
+  }
+
+  void cancelOnlyActiveScreenTimeSubjectListeners({required String uid}) {
+    screenTimeSubjectSubscription[uid]?.cancel();
+    screenTimeSubjectSubscription[uid] = null;
+  }
+
+  void cancelActiveScreenTimeListeners({required String uid}) async {
     // Don't cancel all of it!
     // screenTimeSubjectSubscription.forEach((key, value) {
     //   value?.cancel();
@@ -384,12 +443,25 @@ class ScreenTimeService {
     screenTimeSubjectSubscription[uid] = null;
     screenTimeActiveSubject[uid]?.close();
     screenTimeActiveSubject.remove(uid);
+
+    //
     supportedExplorerScreenTimeSessionsActive.remove(uid);
+
     // also cancel timer, otherwise screen time will be pushed over and over again
     screenTimeTimer[uid]?.cancel();
+    screenTimeTimer.remove(uid);
+  }
+
+  void cancelAllActiveScreenTimes() {
+    screenTimeSubjectSubscription.forEach(
+      (key, value) {
+        cancelActiveScreenTimeListeners(uid: key);
+      },
+    );
   }
 
   void clearData() async {
+    cancelAllActiveScreenTimes();
     //cancelScreenTimeSubjectSubscription();
   }
 }
