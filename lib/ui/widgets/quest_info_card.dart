@@ -47,7 +47,7 @@ class QuestInfoCard extends StatelessWidget {
         child: Container(
           height: height,
           width: width,
-          color: getColorOfType(quest.type).withOpacity(0.15),
+          color: getColorOfType(quest.type).withOpacity(0.05),
           child: Stack(
             children: [
               Align(

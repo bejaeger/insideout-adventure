@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -29,7 +30,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   // services
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
-  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
@@ -54,6 +55,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       questService.activatedQuestsHistory;
   List<Achievement> get achievements => gamificationService.achievements;
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
+  bool get isDevFlavor => appConfigProvider.isDevFlavor;
 
   // ---------------------------------------
   // state
@@ -68,7 +70,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   bool addingPositionToNotionDB = false;
   bool pushedToNotion = false;
 
-  bool showLoadingScreen = true;
+  bool showQuestLoadingScreen = true;
   bool showFullLoadingScreen = true;
 
   ScreenTimeSession? get currentScreenTimeSession =>
@@ -76,9 +78,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   Future initialize() async {
     setBusy(true);
     await listenToData();
-    await initializeQuests();
     listenToLayout();
-
     // makes sure that screen time subject is listened to in case one is active!
     screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
 
@@ -87,10 +87,26 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     await Future.delayed(
       Duration(milliseconds: 500),
     );
-    showLoadingScreen = false;
+    final result = await initializeQuests();
+    mapViewModel.extractStartMarkersAndAddToMap();
+
+    // remove full screen loading screen
+    showFullLoadingScreen = false;
     notifyListeners();
 
-    // // ? should to be in line with the fade out time in Loading Overlay widget
+    // if no quests are found.
+    // Give some UI element that shows how many quests were found in the
+    // neighborhood
+    if (result is void Function()) {
+      await Future.delayed(Duration(milliseconds: 2000));
+      result();
+    } else {
+      snackbarService.showSnackbar(
+          title: "Found ${questService.getNearByQuest.length} quests nearby",
+          message: "Look around to play");
+    }
+    showQuestLoadingScreen = false;
+    notifyListeners();
   }
 
   Future listenToData() async {
@@ -150,8 +166,15 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       log.wtf(
           "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
       if (e is QuestServiceException) {
-        await dialogService.showDialog(
-            title: "Oops...", description: e.prettyDetails ?? e.message);
+        if (e.message == WarningNoQuestsDownloaded) {
+          return () async {
+            await dialogService.showDialog(
+                title: "No quests", description: e.prettyDetails ?? e.message);
+          };
+        } else {
+          await dialogService.showDialog(
+              title: "Oops...", description: e.prettyDetails ?? e.message);
+        }
       } else {
         log.wtf(
             "Error when loading quests, this should never happen. Error: $e");
@@ -192,7 +215,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       }
     } catch (e) {
       if (e is GeolocationServiceException) {
-        if (flavorConfigProvider.enableGPSVerification) {
+        if (appConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
         } else {

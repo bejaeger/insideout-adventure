@@ -77,17 +77,17 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                     onTapSecondary: model.pageIndex == 2
                         ? model.getAFKMarkers.length < 2
                             ? null
-                            : () {
+                            : () async {
                                 if (model.pageIndex == 0) {
                                   FocusScope.of(context).unfocus();
                                 }
-                                model.onNextButton(controller);
+                                await model.onNextButton(controller);
                               }
-                        : () {
+                        : () async {
                             if (model.pageIndex == 0) {
                               FocusScope.of(context).unfocus();
                             }
-                            model.onNextButton(controller);
+                            await model.onNextButton(controller);
                           },
                     titleSecondary:
                         model.pageIndex < 3 ? "Next \u2192" : "Create Quest",

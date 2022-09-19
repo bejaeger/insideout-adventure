@@ -142,28 +142,29 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                       uid: widget.uid) !=
                                                   null
                                               ? AfkCreditsButton.outline(
-                                                  leading:
-                                                      Icon(Icons.hourglass_top_rounded,
-                                                          color: kcRed),
+                                                  leading: Icon(
+                                                      Icons
+                                                          .hourglass_top_rounded,
+                                                      color: kcScreenTimeBlue),
                                                   title: "Show",
                                                   onTap: () => model
                                                       .navToSelectScreenTimeView(
                                                           childId: widget.uid),
-                                                  color: kcRed)
+                                                  color: kcScreenTimeBlue)
                                               : AfkCreditsButton.outline(
                                                   leading: Icon(
                                                       Icons.play_arrow_rounded,
                                                       color: kcPrimaryColor),
                                                   title: "Start",
-                                                  onTap: () => model
-                                                      .navToSelectScreenTimeView(
+                                                  onTap: () =>
+                                                      model.navToSelectScreenTimeView(
                                                           childId: widget.uid),
                                                   color: null),
                                           if (model.getScreenTimeSession(
                                                   uid: widget.uid) !=
                                               null)
-                                            AfkCreditsText.warn(
-                                                "Active screen time"),
+                                            AfkCreditsText.screenTimeWarn(
+                                                "Screen time active"),
                                         ],
                                       ),
                                     ),

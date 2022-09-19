@@ -28,14 +28,16 @@ class AppConfigProvider {
     flavor = flavorIn;
   }
 
-  String get versionName => "Alpha v1.0";
+  bool get isDevFlavor => flavor == Flavor.dev;
+
+  String get versionName => "0.1.0+1";
 
   String get appName {
     switch (this.flavor) {
       case Flavor.dev:
         return "Hercules World - Dev";
       case Flavor.prod:
-        return "Hercules World - Proto v3";
+        return "Hercules World - v0.1.0+1";
       default:
         return "Hercules World - Dev";
     }

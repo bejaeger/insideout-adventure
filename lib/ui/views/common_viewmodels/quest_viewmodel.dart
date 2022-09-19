@@ -21,14 +21,14 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
   // -----------------------------------------------
   // Setters
   final GeolocationService _geolocationService = locator<GeolocationService>();
-  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final QRCodeService qrCodeService = locator<QRCodeService>();
 
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
   // ------------------------------------------
   // Getters
-  bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
+  bool get isDevFlavor => appConfigProvider.flavor == Flavor.dev;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
 
   // -----------------------------------------
@@ -64,7 +64,7 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
         //   await dialogService.showDialog(
         //       title: "Sorry", description: "Map not supported on PWA version");
         // } else {
-        if (flavorConfigProvider.enableGPSVerification) {
+        if (appConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
         } else {

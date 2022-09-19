@@ -36,7 +36,10 @@ class ParentMapView extends StatelessWidget {
                 // bottom layer
                 //if (!model.isBusy)
                 model.isBusy
-                    ? MapLoadingOverlay(show: true)
+                    ? MapLoadingOverlay(
+                        show: true,
+                        loadingQuests: false,
+                      )
                     : GoogleMapScreen(
                         model: locator<MapViewModel>(),
                         callback: () => model.notifyListeners(),

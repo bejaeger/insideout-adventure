@@ -291,7 +291,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       if (!fromMap) {
         replaceWithParentHomeView();
       } else {
-        popUntilMapView();
+        await popUntilMapView();
       }
     }
     return result;

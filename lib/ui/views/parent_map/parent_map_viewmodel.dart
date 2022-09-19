@@ -27,9 +27,10 @@ class ParentMapViewModel extends QuestViewModel {
     setBusy(true);
     mapViewModel.resetAllMapMarkersAndAreas();
     await getLocation(forceAwait: true, forceGettingNewPosition: false);
-    await initializeQuests(force: true);
     setBusy(false);
+    await initializeQuests(force: true);
     addMarkers();
+    notifyListeners();
   }
 
   // ? Note: Same function exists in explorer_home_viewmodel.dart
@@ -54,11 +55,18 @@ class ParentMapViewModel extends QuestViewModel {
           "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
       if (e is QuestServiceException) {
         if (e.message == WarningNoQuestsDownloaded) {
+          // delay makes for some nicer UX
+          isDeletingQuest = true;
+          notifyListeners();
+          await Future.delayed(Duration(milliseconds: 1500));
+          isDeletingQuest = false;
+          notifyListeners();
           final res = await dialogService.showDialog(
               title: "Oops...",
+              barrierDismissible: true,
               description: e.message,
               buttonTitle: "Create quest",
-              cancelTitle: "Back");
+              cancelTitle: "Ok");
           if (res?.confirmed == true) {
             navToCreateQuest(fromMap: true);
           }

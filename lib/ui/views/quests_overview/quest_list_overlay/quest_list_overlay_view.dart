@@ -65,16 +65,30 @@ class QuestListOverlayView extends StatelessWidget {
                       child: ListView(
                         children: [
                           verticalSpaceSmall,
-                          SectionHeader(
-                            title: "Near You",
-                            onButtonTap: () =>
-                                model.initializeQuests(force: true),
-                            // textButtonText: "REFRESH",
-                            buttonIcon: model.isBusy
-                                ? AFKProgressIndicator()
-                                : Icon(Icons.refresh_rounded),
-                          ),
+                          if (model.nearbyQuests.length != 0)
+                            SectionHeader(
+                              title: "Near You",
+                              onButtonTap: () =>
+                                  model.initializeQuests(force: true),
+                              // textButtonText: "REFRESH",
+                              buttonIcon: model.isBusy
+                                  ? AFKProgressIndicator()
+                                  : Icon(Icons.refresh_rounded),
+                            ),
                           verticalSpaceTiny,
+                          if (model.nearbyQuests.length == 0)
+                            Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.only(top: 30),
+                              child: AfkCreditsText.headingThree(
+                                  "No quests found"),
+                            ),
+                          if (model.nearbyQuests.length == 0)
+                            Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.only(top: 15),
+                                child: AfkCreditsText.subheading(
+                                    "Ask your parents to create one")),
                           ListView(
                             physics: ScrollPhysics(),
                             //itemExtent: 120,

@@ -261,6 +261,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     // TODO: not sure why this is done!
     // reset distances to markers
     geolocationService.resetStoredDistancesToMarkers();
+    notifyListeners();
   }
 
   Future checkAccuracy(

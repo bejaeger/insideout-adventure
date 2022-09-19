@@ -28,14 +28,14 @@ class QuestsOverviewViewModel extends QuestViewModel {
       if (e is QuestServiceException) {
         setBusy(false);
         await dialogService.showDialog(
-            title: "Oops...", description: e.prettyDetails);
+            title: "No quests", description: e.prettyDetails);
       } else {
         log.wtf(
             "An unknown error occured loading quests, this should never happen. Error: $e");
         await showGenericInternalErrorDialog();
       }
     }
-    addAllQuestMarkers();
+    mapViewModel.extractStartMarkersAndAddToMap();
     setBusy(false);
   }
 

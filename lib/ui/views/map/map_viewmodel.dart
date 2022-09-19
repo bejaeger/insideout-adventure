@@ -326,7 +326,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     } else {
       log.i('Markers are Empty');
     }
-    if (!isParentAccount) {
+    if (!isParentAccount && appConfigProvider.isDevFlavor) {
       addARObjectToMap(
           onTap: onARObjectMarkerTap,
           lat: 49.269805968930406,
@@ -414,10 +414,12 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         return;
       } else {
         final result = await dialogService.showDialog(
-            title: "Quest already completed, Redo?",
+            title: "Redo quest?",
+            description: "You already completed this quest",
             cancelTitle: "NO",
             buttonTitle: 'YES');
         if (!(result?.confirmed == true)) {
+          hideMarkerInfoWindowNow(markerId: afkmarker.id);
           return;
         }
       }

@@ -18,19 +18,18 @@ class ParentDrawerView extends StatelessWidget {
         //   AfkCreditsButton(
         //       title: "Screen time session",
         //       onTap: model.navToActiveScreenTimeView),
-        if (model.flavorConfigProvider.flavor == Flavor.dev)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-            child: Row(
-              children: [
-                Expanded(
-                  child: AfkCreditsButton(
-                      title: "Show introduction",
-                      onTap: model.navToOnboardingScreens),
-                ),
-              ],
-            ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+          child: Row(
+            children: [
+              Expanded(
+                child: AfkCreditsButton(
+                    title: "Show introduction",
+                    onTap: model.navToOnboardingScreens),
+              ),
+            ],
           ),
+        ),
         verticalSpaceMedium,
         Divider(),
         verticalSpaceMedium,

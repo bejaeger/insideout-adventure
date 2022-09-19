@@ -626,7 +626,7 @@ class FirestoreApi {
         message: WarningNoQuestsDownloaded,
         devDetails: WarningNoQuestsDownloaded,
         prettyDetails:
-            "No quests could be found in this area. Ask your parents to create one.",
+            "No quests were found in this area. Ask your parents to create one.",
       );
     }
     return returnQuests;

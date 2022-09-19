@@ -66,8 +66,11 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                       show: showMainWidgets,
                     ),
 
-                  if (model.showLoadingScreen)
-                    MapLoadingOverlay(show: model.showFullLoadingScreen),
+                  //if (model.showLoadingScreen)
+                  MapLoadingOverlay(
+                    show: model.showFullLoadingScreen,
+                    loadingQuests: model.showQuestLoadingScreen,
+                  ),
 
                   // TODO: Can also make MainHeader a view!
                   if (!model.isBusy)
@@ -76,8 +79,9 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                         currentLevel: model.currentLevel(),
                         onAvatarPressed: model.showExplorerAccountOverlay,
                         show: showMainWidgets,
-                        onDevFeaturePressed: model
-                            .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
+                        onDevFeaturePressed: model.isDevFlavor
+                            ? model.openSuperUserSettingsDialog
+                            : null, // model.showNotImplementedSnackbar,
                         onCreditsPressed: model.showCreditsOverlay,
                         balance: model.currentUserStats.afkCreditsBalance),
 

@@ -130,8 +130,8 @@ mixin NavigationMixin {
     //});
   }
 
-  void popUntilMapView() {
-    _navigationService.clearTillFirstAndShow(Routes.parentMapView);
+  Future popUntilMapView() async {
+    await _navigationService.clearTillFirstAndShow(Routes.parentMapView);
   }
 
   void navBackToPreviousView() {

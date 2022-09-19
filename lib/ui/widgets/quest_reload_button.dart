@@ -35,9 +35,8 @@ class ReloadQuestsButton extends StatelessWidget {
                   left: 30.0,
                   right: 0,
                 ),
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  width: isBusy ? 100 : 190,
+                child: Container(
+                  width: 190,
                   height: 50,
                   padding: const EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
