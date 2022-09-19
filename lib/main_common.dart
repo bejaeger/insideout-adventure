@@ -65,6 +65,10 @@ void mainCommon(Flavor flavor) async {
     // initialize notifications
     NotificationController().initializeLocalNotifications();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    if (fcmToken != null) {
+      print("FCM Token: $fcmToken");
+    }
 
     // configure services that need settings dependent on flavor
     final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();

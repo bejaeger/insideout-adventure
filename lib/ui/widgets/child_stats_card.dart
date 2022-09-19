@@ -44,8 +44,10 @@ class ChildStatsCard extends StatelessWidget {
         width: screenWidth(context, percentage: 0.65),
         decoration: BoxDecoration(
             border: Border.all(
-                color: screenTimeSession != null ? kcRed : Colors.grey[400]!,
-                width: screenTimeSession != null ? 2.0 : 1.0),
+                color: screenTimeSession != null
+                    ? kcScreenTimeBlue
+                    : Colors.grey[400]!,
+                width: screenTimeSession != null ? 3.0 : 1.0),
             borderRadius: BorderRadius.circular(20.0)),
         child: Padding(
           padding: const EdgeInsets.only(
@@ -138,19 +140,21 @@ class ChildStatsCard extends StatelessWidget {
                     // verticalSpaceSmall,
                     Spacer(),
                     if (screenTimeSession != null)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AfkCreditsText.warn("Screen time active"),
-                          AfkCreditsText.warn("-"),
-                          AfkCreditsText.warn(secondsToMinuteTime(
-                                getTimeLeftInSeconds(
-                                    session: screenTimeSession!),
-                              )
-                              //) +
-                              +
-                              "in left"),
-                        ],
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AfkCreditsText.screenTimeWarn("Screen time active"),
+                            AfkCreditsText.screenTimeWarn("-"),
+                            AfkCreditsText.screenTimeWarn(secondsToMinuteTime(
+                                  getTimeLeftInSeconds(
+                                      session: screenTimeSession!),
+                                )
+                                //) +
+                                +
+                                "in left"),
+                          ],
+                        ),
                       ),
                   ],
                 ),

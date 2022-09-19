@@ -223,8 +223,9 @@ class _BlinkingScreenTimeAnimationState
         duration: const Duration(milliseconds: 1000), vsync: this);
     final CurvedAnimation curve =
         CurvedAnimation(parent: controller, curve: Curves.linear);
-    animation =
-        ColorTween(begin: kcRed, end: kcRed.withOpacity(0.2)).animate(curve);
+    animation = ColorTween(
+            begin: kcScreenTimeBlue, end: kcScreenTimeBlue.withOpacity(0.2))
+        .animate(curve);
     // animation = ColorTween(
     //         begin: kcScreenTimeBlue, end: kcScreenTimeBlue.withOpacity(0.2))
     //     .animate(curve);
@@ -255,7 +256,9 @@ class _BlinkingScreenTimeAnimationState
                     width: 20, color: animation.value),
                 if (widget.screenTimeLeft != null) horizontalSpaceTiny,
                 if (widget.screenTimeLeft != null)
-                  AfkCreditsText.captionBoldRed(widget.screenTimeLeft!)
+                  AfkCreditsText(
+                      text: widget.screenTimeLeft!,
+                      style: captionStyleBold.copyWith(color: kcScreenTimeBlue))
               ],
             ),
           ),

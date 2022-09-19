@@ -115,7 +115,7 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
       //await navigateToActiveQuestUI(quest: quest);
 
       // ! This notify listeners is important as the
-      // the view renders the state based on whether a quest is active or not
+      // ! the view renders the state based on whether a quest is active or not
       //notifyListeners();
     } else {
       dialogService.showDialog(title: "You currently have a running quest!");

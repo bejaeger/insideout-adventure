@@ -464,8 +464,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
           if (result?.confirmed == true || isAvatarView) {
             // showQuestDetails
             animateToQuestDetails(quest: quest);
-            // Show marker info
-            showMarkerInfoWindowNow(markerId: afkmarker.id);
           }
         } else {
           // information dialogs
@@ -534,6 +532,9 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
     // take snapshot so we can easily restore current view
     takeSnapshotOfCameraPosition();
+
+    // Show marker info
+    showMarkerInfoWindowNow(markerId: quest.startMarker?.id);
 
     // animate camera to quest start
     animateQuestToMap(quest: quest);

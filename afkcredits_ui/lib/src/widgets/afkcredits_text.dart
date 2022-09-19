@@ -44,6 +44,10 @@ class AfkCreditsText extends StatelessWidget {
   const AfkCreditsText.warn(this.text, {TextAlign align = TextAlign.start})
       : style = warnStyle,
         alignment = align;
+  const AfkCreditsText.screenTimeWarn(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = warnScreenTimeStyle,
+        alignment = align;
   const AfkCreditsText.alertThree(this.text,
       {TextAlign align = TextAlign.start})
       : style = alert3Style,

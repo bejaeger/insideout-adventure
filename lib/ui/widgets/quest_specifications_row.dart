@@ -8,8 +8,10 @@ class QuestSpecificationsRow extends StatelessWidget {
   const QuestSpecificationsRow({
     Key? key,
     required this.quest,
+    this.textColor,
   }) : super(key: key);
 
+  final Color? textColor;
   final Quest? quest;
 
   @override
@@ -35,6 +37,7 @@ class QuestSpecificationsRow extends StatelessWidget {
                             quest!.distanceMarkers!)
                         .toStringAsFixed(0) +
                     "m",
+                color: textColor ?? kcGreyTextColor,
                 //color: kcOrange,
               ),
             ],
@@ -43,7 +46,8 @@ class QuestSpecificationsRow extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AfkCreditsText.headingThreeLight("  -  "),
+              //AfkCreditsText.headingThreeLight("  -  "),
+              horizontalSpaceMedium,
               Icon(
                 Icons.schedule,
                 size: 20,
@@ -57,7 +61,7 @@ class QuestSpecificationsRow extends StatelessWidget {
                             quest!.distanceMarkers!)
                         .toStringAsFixed(0) +
                     "min",
-                //color: kcScreenTimeBlue,
+                color: textColor ?? kcGreyTextColor,
               ),
             ],
           )

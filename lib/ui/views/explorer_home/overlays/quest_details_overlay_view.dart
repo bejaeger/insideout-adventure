@@ -172,7 +172,11 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                               ],
                             ),
                           ),
-                          //QuestSpecificationsRow(quest: quest),
+                          verticalSpaceTiny,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: QuestSpecificationsRow(quest: quest),
+                          ),
                           verticalSpaceSmall,
                           if (quest != null)
                             if (quest.type == QuestType.TreasureLocationSearch)

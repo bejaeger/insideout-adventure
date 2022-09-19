@@ -204,7 +204,8 @@ class ActiveScreenTimeView extends StatelessWidget {
                         ],
                       ),
                     Spacer(),
-                    Lottie.asset(kLottieBigTv, height: 200),
+                    Lottie.asset(kLottieBigTv,
+                        height: screenHeight(context, percentage: 0.25)),
                     Spacer(),
                     MainLongButton(
                         onTap: model.currentScreenTimeSession?.status ==
