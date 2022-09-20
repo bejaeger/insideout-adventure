@@ -75,7 +75,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   ScreenTimeSession? get currentScreenTimeSession =>
       _screenTimeService.getActiveScreenTime(uid: currentUser.uid);
-  Future initialize() async {
+  Future initialize({bool showQuestsFoundSnackbar = false}) async {
     setBusy(true);
     await listenToData();
     listenToLayout();
@@ -101,9 +101,11 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       await Future.delayed(Duration(milliseconds: 2000));
       result();
     } else {
-      snackbarService.showSnackbar(
-          title: "Found ${questService.getNearByQuest.length} quests nearby",
-          message: "Look around to play");
+      if (showQuestsFoundSnackbar) {
+        snackbarService.showSnackbar(
+            title: "Found ${questService.getNearByQuest.length} quests nearby",
+            message: "Look around to play them");
+      }
     }
     showQuestLoadingScreen = false;
     notifyListeners();

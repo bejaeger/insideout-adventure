@@ -19,7 +19,7 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       role: $enumDecode(_$UserRoleEnumMap, json['role']),
       authMethod: $enumDecodeNullable(
           _$AuthenticationMethodEnumMap, json['authMethod']),
-      newUser: json['newUser'] as bool? ?? false,
+      newUser: json['newUser'] as bool? ?? true,
       fullNameSearch: (json['fullNameSearch'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),

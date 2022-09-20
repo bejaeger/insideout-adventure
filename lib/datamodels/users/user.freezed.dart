@@ -232,7 +232,7 @@ class _$_User implements _User {
       required final List<String> explorerIds,
       required this.role,
       this.authMethod,
-      this.newUser = false,
+      this.newUser = true,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           final List<String>? fullNameSearch,
       this.createdByUserWithId,

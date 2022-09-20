@@ -19,7 +19,9 @@ import 'package:afkcredits/app/app.logger.dart';
 final log = getLogger("REBUILD LOGGER");
 
 class ExplorerHomeView extends StatefulWidget {
-  const ExplorerHomeView({Key? key}) : super(key: key);
+  final bool showQuestsFoundSnackbar;
+  const ExplorerHomeView({Key? key, this.showQuestsFoundSnackbar = false})
+      : super(key: key);
 
   @override
   State<ExplorerHomeView> createState() => _ExplorerHomeViewState();
@@ -30,7 +32,8 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
       viewModelBuilder: () => ExplorerHomeViewModel(),
-      onModelReady: (model) => model.initialize(),
+      onModelReady: (model) => model.initialize(
+          showQuestsFoundSnackbar: widget.showQuestsFoundSnackbar),
       builder: (context, model, child) {
         bool showMainWidgets =
             (!(model.isShowingQuestDetails || model.hasActiveQuest) ||

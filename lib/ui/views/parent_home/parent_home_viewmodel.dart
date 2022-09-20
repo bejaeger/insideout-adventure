@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -92,9 +93,20 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     await navigationService.navigateTo(Routes.addExplorerView);
   }
 
+  Future setNewUserPropertyToFalse() async {
+    log.i("Setting 'new user' property to false");
+    userService.setNewUserPropertyToFalse(user: currentUser);
+  }
+
   void showSwitchAreaBottomSheet() async {
     await bottomSheetService.showCustomSheet(
         variant: BottomSheetType.switchArea);
+  }
+
+  Future showFirstLoginDialog() async {
+    await dialogService.showCustomDialog(
+      variant: DialogType.OnboardingDialog,
+    );
   }
 
   // ----------------------------

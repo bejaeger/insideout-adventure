@@ -81,9 +81,28 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
         },
       );
 
-      //}
+      // quest has started!
+      // we should have some UI animation here to
+      // make the user aware he needs to go to the next marker
+      AFKMarker? nextMarker = activeQuestService.getNextMarker();
+      mapViewModel.updateMapDisplay(afkmarker: quest.startMarker);
+      showInfoWindowOfNextMarker(marker: nextMarker);
+      snackbarService.showSnackbar(
+          title: "Started quest",
+          message: "Let's go...the first checkpoint is waiting!");
+      await Future.delayed(Duration(milliseconds: 600));
+      if (nextMarker != null && quest.startMarker != null) {
+        await mapViewModel.animateNewLatLonZoomDelta(
+            lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
+        await Future.delayed(Duration(milliseconds: 600));
+        await mapViewModel.animateCameraToBetweenCoordinates(
+          latLngList: [
+            [quest.startMarker!.lat!, quest.startMarker!.lon!],
+            [nextMarker.lat!, nextMarker.lon!],
+          ],
+        );
+      }
       notifyListeners();
-      //resetSlider();
     }
   }
 

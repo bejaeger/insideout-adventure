@@ -270,7 +270,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     return adminMode;
   }
 
-  Future clearStackAndNavigateToHomeView() async {
+  Future clearStackAndNavigateToHomeView(
+      {bool showQuestsFoundSnackbar = false}) async {
     if (currentUser.role == UserRole.sponsor) {
       await navigationService.clearStackAndShow(
         Routes.parentHomeView,
@@ -283,6 +284,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     } else {
       await navigationService.clearStackAndShow(
         Routes.explorerHomeView,
+        arguments: ExplorerHomeViewArguments(
+            showQuestsFoundSnackbar: showQuestsFoundSnackbar),
       );
     }
   }

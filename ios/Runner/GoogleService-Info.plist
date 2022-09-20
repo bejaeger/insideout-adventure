@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>73058156701-dtnpmihfkall6qi9uu32ok9hk909agoc.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.73058156701-dtnpmihfkall6qi9uu32ok9hk909agoc</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>73058156701-l7s528khru9qeti8vg7iu8d1itna9oa8.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyALanfdzCsxTQO5Pfd_xfkxdtXYvoBShhw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>73058156701</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.afkcredits.prod</string>
+	<key>PROJECT_ID</key>
+	<string>afk-credits-prod</string>
+	<key>STORAGE_BUCKET</key>
+	<string>afk-credits-prod.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:73058156701:ios:f574208bf55e794a4ed474</string>
+</dict>
+</plist>

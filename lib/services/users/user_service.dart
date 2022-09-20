@@ -924,6 +924,11 @@ class UserService {
     return supportedExplorersList.any((element) => element.uid == uid);
   }
 
+  Future setNewUserPropertyToFalse({required User user}) async {
+    User newUser = user.copyWith(newUser: false);
+    _firestoreApi.updateUserData(user: newUser);
+  }
+
   List<String> removeFromExplorerLists({required String uid}) {
     supportedExplorers.remove(uid);
     supportedExplorerStats.remove(uid);

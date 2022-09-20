@@ -12,6 +12,7 @@ import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
 
 class ParentHomeView extends StatelessWidget {
@@ -21,7 +22,17 @@ class ParentHomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ParentHomeViewModel>.reactive(
         viewModelBuilder: () => ParentHomeViewModel(),
-        onModelReady: (model) => model.listenToData(),
+        onModelReady: (model) async {
+          if (model.currentUser.newUser) {
+            model.setNewUserPropertyToFalse();
+            SchedulerBinding.instance.addPostFrameCallback(
+              (timeStamp) async {
+                await model.showFirstLoginDialog();
+              },
+            );
+          }
+          model.listenToData();
+        },
         // fireOnModelReadyOnce: true, TODO: Not sure why this was set
         builder: (context, model, child) {
           //print("==>> Rebuild parent home view");

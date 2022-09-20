@@ -65,7 +65,10 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                         Icon(Icons.arrow_forward, size: 28),
                         horizontalSpaceSmall,
                         Image.asset(kAFKCreditsLogoPath,
-                            width: 45, color: kcPrimaryColor),
+                            width: 45,
+                            color: directionStatus == DirectionStatus.closer
+                                ? Colors.white
+                                : kcPrimaryColor),
                         AfkCreditsText.headingThree(" :    "),
                         horizontalSpaceSmall,
                         isBusy

@@ -4,7 +4,7 @@
 // StackedFormGenerator
 // **************************************************************************
 
-// ignore_for_file: public_member_api_docs,  constant_identifier_names, non_constant_identifier_names,unnecessary_this
+// ignore_for_file: public_member_api_docs, constant_identifier_names, non_constant_identifier_names,unnecessary_this
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -68,8 +68,8 @@ mixin $CreateAccountView on StatelessWidget {
     return model.isFormValid;
   }
 
-  /// Updates the formData on the FormViewModel
-  void _updateFormData(FormViewModel model, {bool forceValidate = false}) {
+  /// Updates the formData on the dynamic
+  void _updateFormData(dynamic model, {bool forceValidate = false}) {
     model.setData(
       model.formValueMap
         ..addAll({
@@ -83,9 +83,8 @@ mixin $CreateAccountView on StatelessWidget {
     }
   }
 
-  /// Updates the fieldsValidationMessages on the FormViewModel
-  void _updateValidationData(FormViewModel model) =>
-      model.setValidationMessages({
+  /// Updates the fieldsValidationMessages on the dynamic
+  void _updateValidationData(dynamic model) => model.setValidationMessages({
         FullNameValueKey: _getValidationMessage(FullNameValueKey),
         EmailValueKey: _getValidationMessage(EmailValueKey),
         PasswordValueKey: _getValidationMessage(PasswordValueKey),

@@ -91,7 +91,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       return;
     }
     // navigate to screen
-    await clearStackAndNavigateToHomeView();
+    await clearStackAndNavigateToHomeView(showQuestsFoundSnackbar: true);
 
     setBusy(false);
   }

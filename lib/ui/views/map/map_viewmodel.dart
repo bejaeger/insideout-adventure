@@ -627,7 +627,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     notifyListeners();
   }
 
-  void updateMapDisplay({required AFKMarker afkmarker}) {
+  void updateMapDisplay({required AFKMarker? afkmarker}) {
+    if (afkmarker == null) return;
     updateMapAreas(afkmarker: afkmarker);
     updateMapMarkers(
         afkmarker: afkmarker,
