@@ -116,7 +116,7 @@ class ScreenTimeService {
     log.i("Starting screen time session");
 
     //TEST
-    session = session.copyWith(minutes: 1);
+    //session = session.copyWith(minutes: 1);
 
     if (!screenTimeActiveSubject.containsKey(session.uid)) {
       screenTimeActiveSubject[session.uid] = BehaviorSubject.seeded(session);
