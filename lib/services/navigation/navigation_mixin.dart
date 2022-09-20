@@ -78,10 +78,10 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.feedbackView);
   }
 
-  void replaceWithExplorerHomeView() {
-    _navigationService.replaceWith(
-      Routes.explorerHomeView,
-    );
+  void replaceWithExplorerHomeView({bool showQuestsFoundSnackbar = false}) {
+    _navigationService.replaceWith(Routes.explorerHomeView,
+        arguments: ExplorerHomeViewArguments(
+            showQuestsFoundSnackbar: showQuestsFoundSnackbar));
   }
 
   void replaceWithParentHomeView() {
