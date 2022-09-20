@@ -1,10 +1,12 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
@@ -12,7 +14,9 @@ import 'package:afkcredits/app_config_provider.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
+import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
+import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
@@ -26,7 +30,12 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   // services
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
-  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
+  final LocalStorageService _localStorageService =
+      locator<LocalStorageService>();
+  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
+  final log = getLogger("ExplorerHomeViewModel");
+
   // Stateful Data
   // ignore: close_sinks
 
@@ -46,6 +55,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       questService.activatedQuestsHistory;
   List<Achievement> get achievements => gamificationService.achievements;
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
+  bool get isDevFlavor => appConfigProvider.isDevFlavor;
 
   // ---------------------------------------
   // state
@@ -60,63 +70,97 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   bool addingPositionToNotionDB = false;
   bool pushedToNotion = false;
 
-  bool showLoadingScreen = true;
+  bool showQuestLoadingScreen = true;
   bool showFullLoadingScreen = true;
-  final log = getLogger("ExplorerHomeViewModel");
 
-  Future initialize() async {
+  ScreenTimeSession? get currentScreenTimeSession =>
+      _screenTimeService.getActiveScreenTime(uid: currentUser.uid);
+  Future initialize({bool showQuestsFoundSnackbar = false}) async {
     setBusy(true);
     await listenToData();
-    await initializeQuests();
     listenToLayout();
+    // makes sure that screen time subject is listened to in case one is active!
+    screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
+
     setBusy(false);
     // fade loading screen out process
     await Future.delayed(
       Duration(milliseconds: 500),
     );
+    final result = await initializeQuests();
+    mapViewModel.extractStartMarkersAndAddToMap();
+
+    // remove full screen loading screen
     showFullLoadingScreen = false;
     notifyListeners();
-    // ? should to be in line with the fade out time in Loading Overlay widget
-    await Future.delayed(Duration(milliseconds: 500));
-    showLoadingScreen = false;
+
+    // if no quests are found.
+    // Give some UI element that shows how many quests were found in the
+    // neighborhood
+    if (result is void Function()) {
+      await Future.delayed(Duration(milliseconds: 2000));
+      result();
+    } else {
+      if (showQuestsFoundSnackbar) {
+        snackbarService.showSnackbar(
+            title: "Found ${questService.getNearByQuest.length} quests nearby",
+            message: "Look around to play them");
+      }
+    }
+    showQuestLoadingScreen = false;
     notifyListeners();
   }
 
   Future listenToData() async {
     Completer completer = Completer<void>();
-    Completer completerTwo = Completer<void>();
-    Completer completerThree = Completer<void>();
+    // Completer completerTwo = Completer<void>();
+    // Completer completerThree = Completer<void>();
     userService.setupUserDataListeners(
       completer: completer,
       callback: () => notifyListeners(),
     );
-    questService.setupPastQuestsListener(
-      completer: completerTwo,
-      uid: currentUser.uid,
-      callback: () => notifyListeners(),
-    );
-    gamificationService.setupAchievementsListener(
-      completer: completerThree,
-      uid: currentUser.uid,
-      callback: () => notifyListeners(),
-    );
+    // not used atm!
+    // questService.setupPastQuestsListener(
+    //   completer: completerTwo,
+    //   uid: currentUser.uid,
+    //   callback: () => notifyListeners(),
+    // );
+    // not used atm!
+    // gamificationService.setupAchievementsListener(
+    //   completer: completerThree,
+    //   uid: currentUser.uid,
+    //   callback: () => notifyListeners(),
+    // );
     activeQuestService.addMainLocationListener();
-    await Future.wait([
-      completer.future,
-      completerTwo.future,
-      completerThree.future,
-      getLocation(forceAwait: true, forceGettingNewPosition: false),
-    ]);
+    await Future.wait(
+      [
+        completer.future,
+        //completerTwo.future,
+        //completerThree.future,
+        getLocation(forceAwait: true, forceGettingNewPosition: false),
+        // checkIsUsingScreenTime(),
+        // adds listener to screen time collection!
+        // needed e.g. when child creates screen time session but parent removes it
+        userService.addExplorerScreenTimeListener(
+            explorerId: currentUser.uid, callback: () => notifyListeners()),
+      ],
+    );
   }
 
-  Future initializeQuests({bool? force, double? lat, double? lon}) async {
+  Future initializeQuests(
+      {bool? force,
+      double? lat,
+      double? lon,
+      bool loadNewQuests = false}) async {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
         await questService.loadNearbyQuests(
-            force: true,
-            sponsorIds: currentUser.sponsorIds,
-            lat: lat,
-            lon: lon);
+          force: true,
+          sponsorIds: currentUser.sponsorIds,
+          lat: lat,
+          lon: lon,
+          addQuestsToExisting: loadNewQuests,
+        );
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }
@@ -124,8 +168,15 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       log.wtf(
           "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
       if (e is QuestServiceException) {
-        await dialogService.showDialog(
-            title: "Oops...", description: e.prettyDetails ?? e.message);
+        if (e.message == WarningNoQuestsDownloaded) {
+          return () async {
+            await dialogService.showDialog(
+                title: "No quests", description: e.prettyDetails ?? e.message);
+          };
+        } else {
+          await dialogService.showDialog(
+              title: "Oops...", description: e.prettyDetails ?? e.message);
+        }
       } else {
         log.wtf(
             "Error when loading quests, this should never happen. Error: $e");
@@ -141,10 +192,10 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     await initializeQuests(
         force: true,
         lat: mapStateService.currentLat,
-        lon: mapStateService.currentLon);
+        lon: mapStateService.currentLon,
+        loadNewQuests: true);
     questService.showReloadQuestButton = false;
     questService.isReloadingQuests = false;
-    mapViewModel.resetMapMarkers();
     mapViewModel.extractStartMarkersAndAddToMap();
     notifyListeners();
   }
@@ -166,7 +217,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       }
     } catch (e) {
       if (e is GeolocationServiceException) {
-        if (flavorConfigProvider.enableGPSVerification) {
+        if (appConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
         } else {
@@ -184,6 +235,21 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       }
     }
   }
+
+  // Future<ScreenTimeSession?> checkIsUsingScreenTime() async {
+  //   final String? id = await _localStorageService.getFromDisk(
+  //       key: kLocalStorageScreenTimeSessionKey);
+  //   if (id != null) {
+  //     final session = await screenTimeService.checkForActiveScreenTimeSession(
+  //         uid: currentUser.uid, sessionId: id);
+  //     if (session != null) {
+  //       notifyListeners();
+  //       return session;
+  //     }
+  //   }
+  //   notifyListeners();
+  //   return null;
+  // }
 
   void navigateToQuests() {
     // navigationService.replaceWithTransition(QuestsOverviewView(),

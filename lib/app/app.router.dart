@@ -4,102 +4,157 @@
 // StackedRouterGenerator
 // **************************************************************************
 
-// ignore_for_file: public_member_api_docs, unused_import, non_constant_identifier_names
-
-import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:flutter/foundation.dart';
+// ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:afkcredits/datamodels/quests/quest.dart' as _i45;
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart'
+    as _i47;
+import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart'
+    as _i42;
+import 'package:afkcredits/enums/authentication_method.dart' as _i40;
+import 'package:afkcredits/enums/bottom_nav_bar_index.dart' as _i44;
+import 'package:afkcredits/enums/quest_view_index.dart' as _i43;
+import 'package:afkcredits/enums/transfer_type.dart' as _i41;
+import 'package:afkcredits/enums/user_role.dart' as _i39;
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart'
+    as _i24;
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart'
+    as _i23;
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart'
+    as _i25;
+import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart'
+    as _i31;
+import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart'
+    as _i14;
+import 'package:afkcredits/ui/views/admin/admin_home_view.dart' as _i12;
+import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart'
+    as _i11;
+import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart'
+    as _i20;
+import 'package:afkcredits/ui/views/admin/admin_user/markers/single/single_marker_view.dart'
+    as _i3;
+import 'package:afkcredits/ui/views/ar_view/ar_object_view.dart' as _i30;
+import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart'
+    as _i9;
+import 'package:afkcredits/ui/views/create_account/create_account_view.dart'
+    as _i8;
+import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart'
+    as _i5;
+import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart' as _i36;
+import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart'
+    as _i29;
+import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart' as _i22;
+import 'package:afkcredits/ui/views/login/login_view.dart' as _i7;
+import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart'
+    as _i13;
+import 'package:afkcredits/ui/views/map/map_overview_view.dart' as _i6;
+import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart'
+    as _i34;
+import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart' as _i2;
+import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart' as _i35;
+import 'package:afkcredits/ui/views/permissions/permissions_view.dart' as _i37;
+import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart' as _i18;
+import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart' as _i19;
+import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart'
+    as _i26;
+import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart'
+    as _i4;
+import 'package:afkcredits/ui/views/quests_overview/manage_quest/manage_quest_view.dart'
+    as _i27;
+import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart'
+    as _i28;
+import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart'
+    as _i32;
+import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart'
+    as _i15;
+import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart' as _i21;
+import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart'
+    as _i16;
+import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart'
+    as _i33;
+import 'package:afkcredits/ui/views/startup/startup_view.dart' as _i10;
+import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart'
+    as _i17;
+import 'package:afkcredits_ui/afkcredits_ui.dart' as _i46;
+import 'package:flutter/foundation.dart' as _i38;
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
-
-import '../datamodels/quests/quest.dart';
-import '../datamodels/screentime/screen_time_session.dart';
-import '../datamodels/users/public_info/public_user_info.dart';
-import '../enums/authentication_method.dart';
-import '../enums/bottom_nav_bar_index.dart';
-import '../enums/quest_view_index.dart';
-import '../enums/transfer_type.dart';
-import '../enums/user_role.dart';
-import '../ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
-import '../ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
-import '../ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
-import '../ui/views/active_screen_time/active_screen_time_view.dart';
-import '../ui/views/add_explorer/add_explorer_view.dart';
-import '../ui/views/admin/admin_home_view.dart';
-import '../ui/views/admin/admin_user/home/home_view.dart';
-import '../ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
-import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
-import '../ui/views/ar_view/ar_object_view.dart';
-import '../ui/views/create_account/create_account_user_role_view.dart';
-import '../ui/views/create_account/create_account_view.dart';
-import '../ui/views/explorer_home/explorer_home_view.dart';
-import '../ui/views/feedback_view/feedback_view.dart';
-import '../ui/views/history_and_achievements/history_and_achievements_view.dart';
-import '../ui/views/layout/bottom_bar_layout_view.dart';
-import '../ui/views/login/login_view.dart';
-import '../ui/views/login/select_role_after_login_view.dart';
-import '../ui/views/map/map_overview_view.dart';
-import '../ui/views/onboarding_screens/onboarding_screens_view.dart';
-import '../ui/views/parent_home/parent_home_view.dart';
-import '../ui/views/parent_map/parent_map_view.dart';
-import '../ui/views/permissions/permissions_view.dart';
-import '../ui/views/qrcode/qrcode_view.dart';
-import '../ui/views/qrcode/qrcode_view_example.dart';
-import '../ui/views/quests_overview/create_quest/create_quest_view.dart';
-import '../ui/views/quests_overview/edit_quest/edit_quest_view.dart';
-import '../ui/views/quests_overview/manage_quest/manage_quest_view.dart';
-import '../ui/views/quests_overview/quests_overview_view.dart';
-import '../ui/views/screen_time/select_screen_time_view.dart';
-import '../ui/views/search_explorer/search_explorer_view.dart';
-import '../ui/views/set_pin/set_pin_view.dart';
-import '../ui/views/single_child_stat/single_child_stat_view.dart';
-import '../ui/views/single_quest_type/single_quest_type_view.dart';
-import '../ui/views/startup/startup_view.dart';
-import '../ui/views/transfer_funds/transfer_funds_view.dart';
+import 'package:stacked/stacked.dart' as _i1;
+import 'package:stacked_services/stacked_services.dart' as _i48;
 
 class Routes {
-  static const String parentHomeView = '/parent-home-view';
-  static const String singleMarkerView = '/single-marker-view';
-  static const String updatingQuestView = '/updating-quest-view';
-  static const String explorerHomeView = '/explorer-home-view';
-  static const String mapOverviewView = '/map-overview-view';
-  static const String loginView = '/login-view';
-  static const String createAccountView = '/create-account-view';
-  static const String createAccountUserRoleView =
-      '/create-account-user-role-view';
-  static const String startUpView = '/';
-  static const String homeView = '/home-view';
-  static const String adminHomeView = '/admin-home-view';
-  static const String selectRoleAfterLoginView =
-      '/select-role-after-login-view';
-  static const String addExplorerView = '/add-explorer-view';
-  static const String searchExplorerView = '/search-explorer-view';
-  static const String singleChildStatView = '/single-child-stat-view';
-  static const String transferFundsView = '/transfer-funds-view';
-  static const String qRCodeView = '/q-rcode-view';
-  static const String qRCodeViewExample = '/q-rcode-view-example';
-  static const String addMarkersView = '/add-markers-view';
-  static const String setPinView = '/set-pin-view';
-  static const String bottomBarLayoutTemplateView =
-      '/bottom-bar-layout-template-view';
-  static const String activeQrCodeSearchView = '/active-qr-code-search-view';
-  static const String activeDistanceEstimateQuestView =
+  static const parentHomeView = '/parent-home-view';
+
+  static const singleMarkerView = '/single-marker-view';
+
+  static const updatingQuestView = '/updating-quest-view';
+
+  static const explorerHomeView = '/explorer-home-view';
+
+  static const mapOverviewView = '/map-overview-view';
+
+  static const loginView = '/login-view';
+
+  static const createAccountView = '/create-account-view';
+
+  static const createAccountUserRoleView = '/create-account-user-role-view';
+
+  static const startUpView = '/';
+
+  static const homeView = '/home-view';
+
+  static const adminHomeView = '/admin-home-view';
+
+  static const selectRoleAfterLoginView = '/select-role-after-login-view';
+
+  static const addExplorerView = '/add-explorer-view';
+
+  static const searchExplorerView = '/search-explorer-view';
+
+  static const singleChildStatView = '/single-child-stat-view';
+
+  static const transferFundsView = '/transfer-funds-view';
+
+  static const qRCodeView = '/q-rcode-view';
+
+  static const qRCodeViewExample = '/q-rcode-view-example';
+
+  static const addMarkersView = '/add-markers-view';
+
+  static const setPinView = '/set-pin-view';
+
+  static const bottomBarLayoutTemplateView = '/bottom-bar-layout-template-view';
+
+  static const activeQrCodeSearchView = '/active-qr-code-search-view';
+
+  static const activeDistanceEstimateQuestView =
       '/active-distance-estimate-quest-view';
-  static const String activeTreasureLocationSearchQuestView =
+
+  static const activeTreasureLocationSearchQuestView =
       '/active-treasure-location-search-quest-view';
-  static const String createQuestView = '/create-quest-view';
-  static const String manageQuestView = '/manage-quest-view';
-  static const String questsOverviewView = '/quests-overview-view';
-  static const String historyAndAchievementsView =
-      '/history-and-achievements-view';
-  static const String aRObjectView = '/a-robject-view';
-  static const String activeScreenTimeView = '/active-screen-time-view';
-  static const String selectScreenTimeView = '/select-screen-time-view';
-  static const String singleQuestTypeView = '/single-quest-type-view';
-  static const String onBoardingScreensView = '/on-boarding-screens-view';
-  static const String parentMapView = '/parent-map-view';
-  static const String feedbackView = '/feedback-view';
-  static const String permissionsView = '/permissions-view';
+
+  static const createQuestView = '/create-quest-view';
+
+  static const manageQuestView = '/manage-quest-view';
+
+  static const questsOverviewView = '/quests-overview-view';
+
+  static const historyAndAchievementsView = '/history-and-achievements-view';
+
+  static const aRObjectView = '/a-robject-view';
+
+  static const activeScreenTimeView = '/active-screen-time-view';
+
+  static const selectScreenTimeView = '/select-screen-time-view';
+
+  static const singleQuestTypeView = '/single-quest-type-view';
+
+  static const onBoardingScreensView = '/on-boarding-screens-view';
+
+  static const parentMapView = '/parent-map-view';
+
+  static const feedbackView = '/feedback-view';
+
+  static const permissionsView = '/permissions-view';
+
   static const all = <String>{
     parentHomeView,
     singleMarkerView,
@@ -140,771 +195,898 @@ class Routes {
   };
 }
 
-class StackedRouter extends RouterBase {
-  @override
-  List<RouteDef> get routes => _routes;
-  final _routes = <RouteDef>[
-    RouteDef(Routes.parentHomeView, page: ParentHomeView),
-    RouteDef(Routes.singleMarkerView, page: SingleMarkerView),
-    RouteDef(Routes.updatingQuestView, page: UpdatingQuestView),
-    RouteDef(Routes.explorerHomeView, page: ExplorerHomeView),
-    RouteDef(Routes.mapOverviewView, page: MapOverviewView),
-    RouteDef(Routes.loginView, page: LoginView),
-    RouteDef(Routes.createAccountView, page: CreateAccountView),
-    RouteDef(Routes.createAccountUserRoleView, page: CreateAccountUserRoleView),
-    RouteDef(Routes.startUpView, page: StartUpView),
-    RouteDef(Routes.homeView, page: HomeView),
-    RouteDef(Routes.adminHomeView, page: AdminHomeView),
-    RouteDef(Routes.selectRoleAfterLoginView, page: SelectRoleAfterLoginView),
-    RouteDef(Routes.addExplorerView, page: AddExplorerView),
-    RouteDef(Routes.searchExplorerView, page: SearchExplorerView),
-    RouteDef(Routes.singleChildStatView, page: SingleChildStatView),
-    RouteDef(Routes.transferFundsView, page: TransferFundsView),
-    RouteDef(Routes.qRCodeView, page: QRCodeView),
-    RouteDef(Routes.qRCodeViewExample, page: QRCodeViewExample),
-    RouteDef(Routes.addMarkersView, page: AddMarkersView),
-    RouteDef(Routes.setPinView, page: SetPinView),
-    RouteDef(Routes.bottomBarLayoutTemplateView,
-        page: BottomBarLayoutTemplateView),
-    RouteDef(Routes.activeQrCodeSearchView, page: ActiveQrCodeSearchView),
-    RouteDef(Routes.activeDistanceEstimateQuestView,
-        page: ActiveDistanceEstimateQuestView),
-    RouteDef(Routes.activeTreasureLocationSearchQuestView,
-        page: ActiveTreasureLocationSearchQuestView),
-    RouteDef(Routes.createQuestView, page: CreateQuestView),
-    RouteDef(Routes.manageQuestView, page: ManageQuestView),
-    RouteDef(Routes.questsOverviewView, page: QuestsOverviewView),
-    RouteDef(Routes.historyAndAchievementsView,
-        page: HistoryAndAchievementsView),
-    RouteDef(Routes.aRObjectView, page: ARObjectView),
-    RouteDef(Routes.activeScreenTimeView, page: ActiveScreenTimeView),
-    RouteDef(Routes.selectScreenTimeView, page: SelectScreenTimeView),
-    RouteDef(Routes.singleQuestTypeView, page: SingleQuestTypeView),
-    RouteDef(Routes.onBoardingScreensView, page: OnBoardingScreensView),
-    RouteDef(Routes.parentMapView, page: ParentMapView),
-    RouteDef(Routes.feedbackView, page: FeedbackView),
-    RouteDef(Routes.permissionsView, page: PermissionsView),
+class StackedRouter extends _i1.RouterBase {
+  final _routes = <_i1.RouteDef>[
+    _i1.RouteDef(
+      Routes.parentHomeView,
+      page: _i2.ParentHomeView,
+    ),
+    _i1.RouteDef(
+      Routes.singleMarkerView,
+      page: _i3.SingleMarkerView,
+    ),
+    _i1.RouteDef(
+      Routes.updatingQuestView,
+      page: _i4.UpdatingQuestView,
+    ),
+    _i1.RouteDef(
+      Routes.explorerHomeView,
+      page: _i5.ExplorerHomeView,
+    ),
+    _i1.RouteDef(
+      Routes.mapOverviewView,
+      page: _i6.MapOverviewView,
+    ),
+    _i1.RouteDef(
+      Routes.loginView,
+      page: _i7.LoginView,
+    ),
+    _i1.RouteDef(
+      Routes.createAccountView,
+      page: _i8.CreateAccountView,
+    ),
+    _i1.RouteDef(
+      Routes.createAccountUserRoleView,
+      page: _i9.CreateAccountUserRoleView,
+    ),
+    _i1.RouteDef(
+      Routes.startUpView,
+      page: _i10.StartUpView,
+    ),
+    _i1.RouteDef(
+      Routes.homeView,
+      page: _i11.HomeView,
+    ),
+    _i1.RouteDef(
+      Routes.adminHomeView,
+      page: _i12.AdminHomeView,
+    ),
+    _i1.RouteDef(
+      Routes.selectRoleAfterLoginView,
+      page: _i13.SelectRoleAfterLoginView,
+    ),
+    _i1.RouteDef(
+      Routes.addExplorerView,
+      page: _i14.AddExplorerView,
+    ),
+    _i1.RouteDef(
+      Routes.searchExplorerView,
+      page: _i15.SearchExplorerView,
+    ),
+    _i1.RouteDef(
+      Routes.singleChildStatView,
+      page: _i16.SingleChildStatView,
+    ),
+    _i1.RouteDef(
+      Routes.transferFundsView,
+      page: _i17.TransferFundsView,
+    ),
+    _i1.RouteDef(
+      Routes.qRCodeView,
+      page: _i18.QRCodeView,
+    ),
+    _i1.RouteDef(
+      Routes.qRCodeViewExample,
+      page: _i19.QRCodeViewExample,
+    ),
+    _i1.RouteDef(
+      Routes.addMarkersView,
+      page: _i20.AddMarkersView,
+    ),
+    _i1.RouteDef(
+      Routes.setPinView,
+      page: _i21.SetPinView,
+    ),
+    _i1.RouteDef(
+      Routes.bottomBarLayoutTemplateView,
+      page: _i22.BottomBarLayoutTemplateView,
+    ),
+    _i1.RouteDef(
+      Routes.activeQrCodeSearchView,
+      page: _i23.ActiveQrCodeSearchView,
+    ),
+    _i1.RouteDef(
+      Routes.activeDistanceEstimateQuestView,
+      page: _i24.ActiveDistanceEstimateQuestView,
+    ),
+    _i1.RouteDef(
+      Routes.activeTreasureLocationSearchQuestView,
+      page: _i25.ActiveTreasureLocationSearchQuestView,
+    ),
+    _i1.RouteDef(
+      Routes.createQuestView,
+      page: _i26.CreateQuestView,
+    ),
+    _i1.RouteDef(
+      Routes.manageQuestView,
+      page: _i27.ManageQuestView,
+    ),
+    _i1.RouteDef(
+      Routes.questsOverviewView,
+      page: _i28.QuestsOverviewView,
+    ),
+    _i1.RouteDef(
+      Routes.historyAndAchievementsView,
+      page: _i29.HistoryAndAchievementsView,
+    ),
+    _i1.RouteDef(
+      Routes.aRObjectView,
+      page: _i30.ARObjectView,
+    ),
+    _i1.RouteDef(
+      Routes.activeScreenTimeView,
+      page: _i31.ActiveScreenTimeView,
+    ),
+    _i1.RouteDef(
+      Routes.selectScreenTimeView,
+      page: _i32.SelectScreenTimeView,
+    ),
+    _i1.RouteDef(
+      Routes.singleQuestTypeView,
+      page: _i33.SingleQuestTypeView,
+    ),
+    _i1.RouteDef(
+      Routes.onBoardingScreensView,
+      page: _i34.OnBoardingScreensView,
+    ),
+    _i1.RouteDef(
+      Routes.parentMapView,
+      page: _i35.ParentMapView,
+    ),
+    _i1.RouteDef(
+      Routes.feedbackView,
+      page: _i36.FeedbackView,
+    ),
+    _i1.RouteDef(
+      Routes.permissionsView,
+      page: _i37.PermissionsView,
+    ),
   ];
-  @override
-  Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
-  final _pagesMap = <Type, StackedRouteFactory>{
-    ParentHomeView: (data) {
+
+  final _pagesMap = <Type, _i1.StackedRouteFactory>{
+    _i2.ParentHomeView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const ParentHomeView(),
+        builder: (context) => const _i2.ParentHomeView(),
         settings: data,
       );
     },
-    SingleMarkerView: (data) {
+    _i3.SingleMarkerView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SingleMarkerView(),
+        builder: (context) => _i3.SingleMarkerView(),
         settings: data,
       );
     },
-    UpdatingQuestView: (data) {
+    _i4.UpdatingQuestView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const UpdatingQuestView(),
+        builder: (context) => const _i4.UpdatingQuestView(),
         settings: data,
       );
     },
-    ExplorerHomeView: (data) {
+    _i5.ExplorerHomeView: (data) {
+      final args = data.getArgs<ExplorerHomeViewArguments>(
+        orElse: () => const ExplorerHomeViewArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const ExplorerHomeView(),
+        builder: (context) => _i5.ExplorerHomeView(
+            key: args.key,
+            showQuestsFoundSnackbar: args.showQuestsFoundSnackbar),
         settings: data,
       );
     },
-    MapOverviewView: (data) {
+    _i6.MapOverviewView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const MapOverviewView(),
+        builder: (context) => const _i6.MapOverviewView(),
         settings: data,
       );
     },
-    LoginView: (data) {
-      var args = data.getArgs<LoginViewArguments>(
-        orElse: () => LoginViewArguments(),
+    _i7.LoginView: (data) {
+      final args = data.getArgs<LoginViewArguments>(
+        orElse: () => const LoginViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => LoginView(key: args.key),
+        builder: (context) => _i7.LoginView(key: args.key),
         settings: data,
       );
     },
-    CreateAccountView: (data) {
-      var args = data.getArgs<CreateAccountViewArguments>(nullOk: false);
+    _i8.CreateAccountView: (data) {
+      final args = data.getArgs<CreateAccountViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => CreateAccountView(
-          key: args.key,
-          role: args.role,
-        ),
+        builder: (context) =>
+            _i8.CreateAccountView(key: args.key, role: args.role),
         settings: data,
       );
     },
-    CreateAccountUserRoleView: (data) {
+    _i9.CreateAccountUserRoleView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const CreateAccountUserRoleView(),
+        builder: (context) => const _i9.CreateAccountUserRoleView(),
         settings: data,
       );
     },
-    StartUpView: (data) {
+    _i10.StartUpView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const StartUpView(),
+        builder: (context) => const _i10.StartUpView(),
         settings: data,
       );
     },
-    HomeView: (data) {
+    _i11.HomeView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const HomeView(),
+        builder: (context) => const _i11.HomeView(),
         settings: data,
       );
     },
-    AdminHomeView: (data) {
+    _i12.AdminHomeView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const AdminHomeView(),
+        builder: (context) => const _i12.AdminHomeView(),
         settings: data,
       );
     },
-    SelectRoleAfterLoginView: (data) {
-      var args = data.getArgs<SelectRoleAfterLoginViewArguments>(nullOk: false);
+    _i13.SelectRoleAfterLoginView: (data) {
+      final args =
+          data.getArgs<SelectRoleAfterLoginViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SelectRoleAfterLoginView(
-          key: args.key,
-          authMethod: args.authMethod,
-        ),
+        builder: (context) => _i13.SelectRoleAfterLoginView(
+            key: args.key, authMethod: args.authMethod),
         settings: data,
       );
     },
-    AddExplorerView: (data) {
-      var args = data.getArgs<AddExplorerViewArguments>(
-        orElse: () => AddExplorerViewArguments(),
+    _i14.AddExplorerView: (data) {
+      final args = data.getArgs<AddExplorerViewArguments>(
+        orElse: () => const AddExplorerViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => AddExplorerView(key: args.key),
+        builder: (context) => _i14.AddExplorerView(key: args.key),
         settings: data,
       );
     },
-    SearchExplorerView: (data) {
-      var args = data.getArgs<SearchExplorerViewArguments>(
-        orElse: () => SearchExplorerViewArguments(),
+    _i15.SearchExplorerView: (data) {
+      final args = data.getArgs<SearchExplorerViewArguments>(
+        orElse: () => const SearchExplorerViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SearchExplorerView(key: args.key),
+        builder: (context) => _i15.SearchExplorerView(key: args.key),
         settings: data,
       );
     },
-    SingleChildStatView: (data) {
-      var args = data.getArgs<SingleChildStatViewArguments>(nullOk: false);
+    _i16.SingleChildStatView: (data) {
+      final args = data.getArgs<SingleChildStatViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SingleChildStatView(
-          key: args.key,
-          uid: args.uid,
-        ),
+        builder: (context) =>
+            _i16.SingleChildStatView(key: args.key, uid: args.uid),
         settings: data,
       );
     },
-    TransferFundsView: (data) {
-      var args = data.getArgs<TransferFundsViewArguments>(nullOk: false);
+    _i17.TransferFundsView: (data) {
+      final args = data.getArgs<TransferFundsViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => TransferFundsView(
-          key: args.key,
-          type: args.type,
-          senderInfo: args.senderInfo,
-          recipientInfo: args.recipientInfo,
-        ),
+        builder: (context) => _i17.TransferFundsView(
+            key: args.key,
+            type: args.type,
+            senderInfo: args.senderInfo,
+            recipientInfo: args.recipientInfo),
         settings: data,
       );
     },
-    QRCodeView: (data) {
-      var args = data.getArgs<QRCodeViewArguments>(
-        orElse: () => QRCodeViewArguments(),
+    _i18.QRCodeView: (data) {
+      final args = data.getArgs<QRCodeViewArguments>(
+        orElse: () => const QRCodeViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => QRCodeView(
-          key: args.key,
-          qrCodeString: args.qrCodeString,
-        ),
+        builder: (context) =>
+            _i18.QRCodeView(key: args.key, qrCodeString: args.qrCodeString),
         settings: data,
       );
     },
-    QRCodeViewExample: (data) {
+    _i19.QRCodeViewExample: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => QRCodeViewExample(),
+        builder: (context) => _i19.QRCodeViewExample(),
         settings: data,
       );
     },
-    AddMarkersView: (data) {
+    _i20.AddMarkersView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => AddMarkersView(),
+        builder: (context) => _i20.AddMarkersView(),
         settings: data,
       );
     },
-    SetPinView: (data) {
-      var args = data.getArgs<SetPinViewArguments>(
-        orElse: () => SetPinViewArguments(),
+    _i21.SetPinView: (data) {
+      final args = data.getArgs<SetPinViewArguments>(
+        orElse: () => const SetPinViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SetPinView(key: args.key),
+        builder: (context) => _i21.SetPinView(key: args.key),
         settings: data,
       );
     },
-    BottomBarLayoutTemplateView: (data) {
-      var args =
+    _i22.BottomBarLayoutTemplateView: (data) {
+      final args =
           data.getArgs<BottomBarLayoutTemplateViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => BottomBarLayoutTemplateView(
-          key: args.key,
-          userRole: args.userRole,
-          initialBottomNavBarIndex: args.initialBottomNavBarIndex,
-          showDialog: args.showDialog,
-          questViewIndex: args.questViewIndex,
-          quest: args.quest,
-          questType: args.questType,
-        ),
+        builder: (context) => _i22.BottomBarLayoutTemplateView(
+            key: args.key,
+            userRole: args.userRole,
+            initialBottomNavBarIndex: args.initialBottomNavBarIndex,
+            showDialog: args.showDialog,
+            questViewIndex: args.questViewIndex,
+            quest: args.quest,
+            questType: args.questType),
         settings: data,
       );
     },
-    ActiveQrCodeSearchView: (data) {
-      var args = data.getArgs<ActiveQrCodeSearchViewArguments>(nullOk: false);
+    _i23.ActiveQrCodeSearchView: (data) {
+      final args = data.getArgs<ActiveQrCodeSearchViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ActiveQrCodeSearchView(
-          key: args.key,
-          quest: args.quest,
-        ),
+        builder: (context) =>
+            _i23.ActiveQrCodeSearchView(key: args.key, quest: args.quest),
         settings: data,
       );
     },
-    ActiveDistanceEstimateQuestView: (data) {
-      var args =
+    _i24.ActiveDistanceEstimateQuestView: (data) {
+      final args =
           data.getArgs<ActiveDistanceEstimateQuestViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ActiveDistanceEstimateQuestView(
-          key: args.key,
-          quest: args.quest,
-        ),
+        builder: (context) => _i24.ActiveDistanceEstimateQuestView(
+            key: args.key, quest: args.quest),
         settings: data,
       );
     },
-    ActiveTreasureLocationSearchQuestView: (data) {
-      var args = data.getArgs<ActiveTreasureLocationSearchQuestViewArguments>(
+    _i25.ActiveTreasureLocationSearchQuestView: (data) {
+      final args = data.getArgs<ActiveTreasureLocationSearchQuestViewArguments>(
           nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ActiveTreasureLocationSearchQuestView(
-          key: args.key,
-          quest: args.quest,
-        ),
+        builder: (context) => _i25.ActiveTreasureLocationSearchQuestView(
+            key: args.key, quest: args.quest),
         settings: data,
       );
     },
-    CreateQuestView: (data) {
-      var args = data.getArgs<CreateQuestViewArguments>(
-        orElse: () => CreateQuestViewArguments(),
+    _i26.CreateQuestView: (data) {
+      final args = data.getArgs<CreateQuestViewArguments>(
+        orElse: () => const CreateQuestViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => CreateQuestView(key: args.key),
+        builder: (context) =>
+            _i26.CreateQuestView(key: args.key, fromMap: args.fromMap),
         settings: data,
       );
     },
-    ManageQuestView: (data) {
+    _i27.ManageQuestView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const ManageQuestView(),
+        builder: (context) => const _i27.ManageQuestView(),
         settings: data,
       );
     },
-    QuestsOverviewView: (data) {
+    _i28.QuestsOverviewView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const QuestsOverviewView(),
+        builder: (context) => const _i28.QuestsOverviewView(),
         settings: data,
       );
     },
-    HistoryAndAchievementsView: (data) {
-      var args = data.getArgs<HistoryAndAchievementsViewArguments>(
-        orElse: () => HistoryAndAchievementsViewArguments(),
+    _i29.HistoryAndAchievementsView: (data) {
+      final args = data.getArgs<HistoryAndAchievementsViewArguments>(
+        orElse: () => const HistoryAndAchievementsViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => HistoryAndAchievementsView(
-          key: args.key,
-          initialIndex: args.initialIndex,
-        ),
+        builder: (context) => _i29.HistoryAndAchievementsView(
+            key: args.key, initialIndex: args.initialIndex),
         settings: data,
       );
     },
-    ARObjectView: (data) {
-      var args = data.getArgs<ARObjectViewArguments>(
-        orElse: () => ARObjectViewArguments(),
+    _i30.ARObjectView: (data) {
+      final args = data.getArgs<ARObjectViewArguments>(
+        orElse: () => const ARObjectViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ARObjectView(
-          key: args.key,
-          isCoins: args.isCoins,
-        ),
+        builder: (context) =>
+            _i30.ARObjectView(key: args.key, isCoins: args.isCoins),
         settings: data,
       );
     },
-    ActiveScreenTimeView: (data) {
-      var args = data.getArgs<ActiveScreenTimeViewArguments>(nullOk: false);
+    _i31.ActiveScreenTimeView: (data) {
+      final args = data.getArgs<ActiveScreenTimeViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => ActiveScreenTimeView(
-          key: args.key,
-          session: args.session,
-          screenTimeSessionId: args.screenTimeSessionId,
-        ),
+        builder: (context) =>
+            _i31.ActiveScreenTimeView(key: args.key, session: args.session),
         settings: data,
       );
     },
-    SelectScreenTimeView: (data) {
-      var args = data.getArgs<SelectScreenTimeViewArguments>(
-        orElse: () => SelectScreenTimeViewArguments(),
+    _i32.SelectScreenTimeView: (data) {
+      final args = data.getArgs<SelectScreenTimeViewArguments>(
+        orElse: () => const SelectScreenTimeViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SelectScreenTimeView(
-          key: args.key,
-          childId: args.childId,
-        ),
+        builder: (context) =>
+            _i32.SelectScreenTimeView(key: args.key, childId: args.childId),
         settings: data,
       );
     },
-    SingleQuestTypeView: (data) {
-      var args = data.getArgs<SingleQuestTypeViewArguments>(nullOk: false);
+    _i33.SingleQuestTypeView: (data) {
+      final args = data.getArgs<SingleQuestTypeViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SingleQuestTypeView(
-          key: args.key,
-          quest: args.quest,
-          questType: args.questType,
-        ),
+        builder: (context) => _i33.SingleQuestTypeView(
+            key: args.key, quest: args.quest, questType: args.questType),
         settings: data,
       );
     },
-    OnBoardingScreensView: (data) {
+    _i34.OnBoardingScreensView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const OnBoardingScreensView(),
+        builder: (context) => const _i34.OnBoardingScreensView(),
         settings: data,
       );
     },
-    ParentMapView: (data) {
+    _i35.ParentMapView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const ParentMapView(),
+        builder: (context) => const _i35.ParentMapView(),
         settings: data,
       );
     },
-    FeedbackView: (data) {
-      var args = data.getArgs<FeedbackViewArguments>(
-        orElse: () => FeedbackViewArguments(),
+    _i36.FeedbackView: (data) {
+      final args = data.getArgs<FeedbackViewArguments>(
+        orElse: () => const FeedbackViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => FeedbackView(key: args.key),
+        builder: (context) => _i36.FeedbackView(key: args.key),
         settings: data,
       );
     },
-    PermissionsView: (data) {
+    _i37.PermissionsView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const PermissionsView(),
+        builder: (context) => const _i37.PermissionsView(),
         settings: data,
       );
     },
   };
+
+  @override
+  List<_i1.RouteDef> get routes => _routes;
+  @override
+  Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-/// ************************************************************************
-/// Arguments holder classes
-/// *************************************************************************
+class ExplorerHomeViewArguments {
+  const ExplorerHomeViewArguments({
+    this.key,
+    this.showQuestsFoundSnackbar = false,
+  });
 
-/// LoginView arguments holder class
+  final _i38.Key? key;
+
+  final bool showQuestsFoundSnackbar;
+}
+
 class LoginViewArguments {
-  final Key? key;
-  LoginViewArguments({this.key});
+  const LoginViewArguments({this.key});
+
+  final _i38.Key? key;
 }
 
-/// CreateAccountView arguments holder class
 class CreateAccountViewArguments {
-  final Key? key;
-  final UserRole role;
-  CreateAccountViewArguments({this.key, required this.role});
+  const CreateAccountViewArguments({
+    this.key,
+    required this.role,
+  });
+
+  final _i38.Key? key;
+
+  final _i39.UserRole role;
 }
 
-/// SelectRoleAfterLoginView arguments holder class
 class SelectRoleAfterLoginViewArguments {
-  final Key? key;
-  final AuthenticationMethod authMethod;
-  SelectRoleAfterLoginViewArguments({this.key, required this.authMethod});
+  const SelectRoleAfterLoginViewArguments({
+    this.key,
+    required this.authMethod,
+  });
+
+  final _i38.Key? key;
+
+  final _i40.AuthenticationMethod authMethod;
 }
 
-/// AddExplorerView arguments holder class
 class AddExplorerViewArguments {
-  final Key? key;
-  AddExplorerViewArguments({this.key});
+  const AddExplorerViewArguments({this.key});
+
+  final _i38.Key? key;
 }
 
-/// SearchExplorerView arguments holder class
 class SearchExplorerViewArguments {
-  final Key? key;
-  SearchExplorerViewArguments({this.key});
+  const SearchExplorerViewArguments({this.key});
+
+  final _i38.Key? key;
 }
 
-/// SingleChildStatView arguments holder class
 class SingleChildStatViewArguments {
-  final Key? key;
+  const SingleChildStatViewArguments({
+    this.key,
+    required this.uid,
+  });
+
+  final _i38.Key? key;
+
   final String uid;
-  SingleChildStatViewArguments({this.key, required this.uid});
 }
 
-/// TransferFundsView arguments holder class
 class TransferFundsViewArguments {
-  final Key? key;
-  final TransferType type;
-  final PublicUserInfo senderInfo;
-  final PublicUserInfo recipientInfo;
-  TransferFundsViewArguments(
-      {this.key,
-      required this.type,
-      required this.senderInfo,
-      required this.recipientInfo});
+  const TransferFundsViewArguments({
+    this.key,
+    required this.type,
+    required this.senderInfo,
+    required this.recipientInfo,
+  });
+
+  final _i38.Key? key;
+
+  final _i41.TransferType type;
+
+  final _i42.PublicUserInfo senderInfo;
+
+  final _i42.PublicUserInfo recipientInfo;
 }
 
-/// QRCodeView arguments holder class
 class QRCodeViewArguments {
-  final Key? key;
+  const QRCodeViewArguments({
+    this.key,
+    this.qrCodeString,
+  });
+
+  final _i38.Key? key;
+
   final String? qrCodeString;
-  QRCodeViewArguments({this.key, this.qrCodeString});
 }
 
-/// SetPinView arguments holder class
 class SetPinViewArguments {
-  final Key? key;
-  SetPinViewArguments({this.key});
+  const SetPinViewArguments({this.key});
+
+  final _i38.Key? key;
 }
 
-/// BottomBarLayoutTemplateView arguments holder class
 class BottomBarLayoutTemplateViewArguments {
-  final Key? key;
-  final UserRole userRole;
-  final BottomNavBarIndex? initialBottomNavBarIndex;
+  const BottomBarLayoutTemplateViewArguments({
+    this.key,
+    required this.userRole,
+    this.initialBottomNavBarIndex,
+    this.showDialog = false,
+    this.questViewIndex = _i43.QuestViewType.questlist,
+    this.quest,
+    this.questType,
+  });
+
+  final _i38.Key? key;
+
+  final _i39.UserRole userRole;
+
+  final _i44.BottomNavBarIndex? initialBottomNavBarIndex;
+
   final bool showDialog;
-  final QuestViewType questViewIndex;
-  final Quest? quest;
-  final QuestType? questType;
-  BottomBarLayoutTemplateViewArguments(
-      {this.key,
-      required this.userRole,
-      this.initialBottomNavBarIndex,
-      this.showDialog = false,
-      this.questViewIndex = QuestViewType.questlist,
-      this.quest,
-      this.questType});
+
+  final _i43.QuestViewType questViewIndex;
+
+  final _i45.Quest? quest;
+
+  final _i46.QuestType? questType;
 }
 
-/// ActiveQrCodeSearchView arguments holder class
 class ActiveQrCodeSearchViewArguments {
-  final Key? key;
-  final Quest quest;
-  ActiveQrCodeSearchViewArguments({this.key, required this.quest});
+  const ActiveQrCodeSearchViewArguments({
+    this.key,
+    required this.quest,
+  });
+
+  final _i38.Key? key;
+
+  final _i45.Quest quest;
 }
 
-/// ActiveDistanceEstimateQuestView arguments holder class
 class ActiveDistanceEstimateQuestViewArguments {
-  final Key? key;
-  final Quest quest;
-  ActiveDistanceEstimateQuestViewArguments({this.key, required this.quest});
+  const ActiveDistanceEstimateQuestViewArguments({
+    this.key,
+    required this.quest,
+  });
+
+  final _i38.Key? key;
+
+  final _i45.Quest quest;
 }
 
-/// ActiveTreasureLocationSearchQuestView arguments holder class
 class ActiveTreasureLocationSearchQuestViewArguments {
-  final Key? key;
-  final Quest quest;
-  ActiveTreasureLocationSearchQuestViewArguments(
-      {this.key, required this.quest});
+  const ActiveTreasureLocationSearchQuestViewArguments({
+    this.key,
+    required this.quest,
+  });
+
+  final _i38.Key? key;
+
+  final _i45.Quest quest;
 }
 
-/// CreateQuestView arguments holder class
 class CreateQuestViewArguments {
-  final Key? key;
-  CreateQuestViewArguments({this.key});
+  const CreateQuestViewArguments({
+    this.key,
+    this.fromMap = false,
+  });
+
+  final _i38.Key? key;
+
+  final bool fromMap;
 }
 
-/// HistoryAndAchievementsView arguments holder class
 class HistoryAndAchievementsViewArguments {
-  final Key? key;
+  const HistoryAndAchievementsViewArguments({
+    this.key,
+    this.initialIndex = 0,
+  });
+
+  final _i38.Key? key;
+
   final int initialIndex;
-  HistoryAndAchievementsViewArguments({this.key, this.initialIndex = 0});
 }
 
-/// ARObjectView arguments holder class
 class ARObjectViewArguments {
-  final Key? key;
+  const ARObjectViewArguments({
+    this.key,
+    this.isCoins = false,
+  });
+
+  final _i38.Key? key;
+
   final bool isCoins;
-  ARObjectViewArguments({this.key, this.isCoins = false});
 }
 
-/// ActiveScreenTimeView arguments holder class
 class ActiveScreenTimeViewArguments {
-  final Key? key;
-  final ScreenTimeSession? session;
-  final String? screenTimeSessionId;
-  ActiveScreenTimeViewArguments(
-      {this.key, required this.session, this.screenTimeSessionId});
+  const ActiveScreenTimeViewArguments({
+    this.key,
+    required this.session,
+  });
+
+  final _i38.Key? key;
+
+  final _i47.ScreenTimeSession session;
 }
 
-/// SelectScreenTimeView arguments holder class
 class SelectScreenTimeViewArguments {
-  final Key? key;
+  const SelectScreenTimeViewArguments({
+    this.key,
+    this.childId,
+  });
+
+  final _i38.Key? key;
+
   final String? childId;
-  SelectScreenTimeViewArguments({this.key, this.childId});
 }
 
-/// SingleQuestTypeView arguments holder class
 class SingleQuestTypeViewArguments {
-  final Key? key;
-  final Quest? quest;
-  final QuestType? questType;
-  SingleQuestTypeViewArguments({this.key, required this.quest, this.questType});
+  const SingleQuestTypeViewArguments({
+    this.key,
+    required this.quest,
+    this.questType,
+  });
+
+  final _i38.Key? key;
+
+  final _i45.Quest? quest;
+
+  final _i46.QuestType? questType;
 }
 
-/// FeedbackView arguments holder class
 class FeedbackViewArguments {
-  final Key? key;
-  FeedbackViewArguments({this.key});
+  const FeedbackViewArguments({this.key});
+
+  final _i38.Key? key;
 }
 
-/// ************************************************************************
-/// Extension for strongly typed navigation
-/// *************************************************************************
-
-extension NavigatorStateExtension on NavigationService {
-  Future<dynamic> navigateToParentHomeView({
+extension NavigatorStateExtension on _i48.NavigationService {
+  Future<dynamic> navigateToParentHomeView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.parentHomeView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.parentHomeView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToSingleMarkerView({
+  Future<dynamic> navigateToSingleMarkerView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.singleMarkerView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.singleMarkerView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToUpdatingQuestView({
+  Future<dynamic> navigateToUpdatingQuestView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.updatingQuestView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.updatingQuestView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToExplorerHomeView({
+    _i38.Key? key,
+    bool showQuestsFoundSnackbar = false,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.explorerHomeView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.explorerHomeView,
+        arguments: ExplorerHomeViewArguments(
+            key: key, showQuestsFoundSnackbar: showQuestsFoundSnackbar),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToMapOverviewView({
+  Future<dynamic> navigateToMapOverviewView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.mapOverviewView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.mapOverviewView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToLoginView({
-    Key? key,
+    _i38.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.loginView,
-      arguments: LoginViewArguments(key: key),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.loginView,
+        arguments: LoginViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToCreateAccountView({
-    Key? key,
-    required UserRole role,
+    _i38.Key? key,
+    required _i39.UserRole role,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.createAccountView,
-      arguments: CreateAccountViewArguments(key: key, role: role),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.createAccountView,
+        arguments: CreateAccountViewArguments(key: key, role: role),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToCreateAccountUserRoleView({
+  Future<dynamic> navigateToCreateAccountUserRoleView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.createAccountUserRoleView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.createAccountUserRoleView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToStartUpView({
+  Future<dynamic> navigateToStartUpView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.startUpView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.startUpView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToHomeView({
+  Future<dynamic> navigateToHomeView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.homeView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.homeView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToAdminHomeView({
+  Future<dynamic> navigateToAdminHomeView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.adminHomeView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.adminHomeView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToSelectRoleAfterLoginView({
-    Key? key,
-    required AuthenticationMethod authMethod,
+    _i38.Key? key,
+    required _i40.AuthenticationMethod authMethod,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.selectRoleAfterLoginView,
-      arguments:
-          SelectRoleAfterLoginViewArguments(key: key, authMethod: authMethod),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.selectRoleAfterLoginView,
+        arguments:
+            SelectRoleAfterLoginViewArguments(key: key, authMethod: authMethod),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToAddExplorerView({
-    Key? key,
+    _i38.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.addExplorerView,
-      arguments: AddExplorerViewArguments(key: key),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.addExplorerView,
+        arguments: AddExplorerViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToSearchExplorerView({
-    Key? key,
+    _i38.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.searchExplorerView,
-      arguments: SearchExplorerViewArguments(key: key),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.searchExplorerView,
+        arguments: SearchExplorerViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToSingleChildStatView({
-    Key? key,
+    _i38.Key? key,
     required String uid,
     int? routerId,
     bool preventDuplicates = true,
@@ -912,43 +1094,39 @@ extension NavigatorStateExtension on NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.singleChildStatView,
-      arguments: SingleChildStatViewArguments(key: key, uid: uid),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.singleChildStatView,
+        arguments: SingleChildStatViewArguments(key: key, uid: uid),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToTransferFundsView({
-    Key? key,
-    required TransferType type,
-    required PublicUserInfo senderInfo,
-    required PublicUserInfo recipientInfo,
+    _i38.Key? key,
+    required _i41.TransferType type,
+    required _i42.PublicUserInfo senderInfo,
+    required _i42.PublicUserInfo recipientInfo,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.transferFundsView,
-      arguments: TransferFundsViewArguments(
-          key: key,
-          type: type,
-          senderInfo: senderInfo,
-          recipientInfo: recipientInfo),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.transferFundsView,
+        arguments: TransferFundsViewArguments(
+            key: key,
+            type: type,
+            senderInfo: senderInfo,
+            recipientInfo: recipientInfo),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToQRCodeView({
-    Key? key,
+    _i38.Key? key,
     String? qrCodeString,
     int? routerId,
     bool preventDuplicates = true,
@@ -956,208 +1134,187 @@ extension NavigatorStateExtension on NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.qRCodeView,
-      arguments: QRCodeViewArguments(key: key, qrCodeString: qrCodeString),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.qRCodeView,
+        arguments: QRCodeViewArguments(key: key, qrCodeString: qrCodeString),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToQRCodeViewExample({
+  Future<dynamic> navigateToQRCodeViewExample([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.qRCodeViewExample,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.qRCodeViewExample,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToAddMarkersView({
+  Future<dynamic> navigateToAddMarkersView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.addMarkersView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.addMarkersView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToSetPinView({
-    Key? key,
+    _i38.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.setPinView,
-      arguments: SetPinViewArguments(key: key),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.setPinView,
+        arguments: SetPinViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToBottomBarLayoutTemplateView({
-    Key? key,
-    required UserRole userRole,
-    BottomNavBarIndex? initialBottomNavBarIndex,
+    _i38.Key? key,
+    required _i39.UserRole userRole,
+    _i44.BottomNavBarIndex? initialBottomNavBarIndex,
     bool showDialog = false,
-    QuestViewType questViewIndex = QuestViewType.questlist,
-    Quest? quest,
-    QuestType? questType,
+    _i43.QuestViewType questViewIndex = _i43.QuestViewType.questlist,
+    _i45.Quest? quest,
+    _i46.QuestType? questType,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.bottomBarLayoutTemplateView,
-      arguments: BottomBarLayoutTemplateViewArguments(
-          key: key,
-          userRole: userRole,
-          initialBottomNavBarIndex: initialBottomNavBarIndex,
-          showDialog: showDialog,
-          questViewIndex: questViewIndex,
-          quest: quest,
-          questType: questType),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.bottomBarLayoutTemplateView,
+        arguments: BottomBarLayoutTemplateViewArguments(
+            key: key,
+            userRole: userRole,
+            initialBottomNavBarIndex: initialBottomNavBarIndex,
+            showDialog: showDialog,
+            questViewIndex: questViewIndex,
+            quest: quest,
+            questType: questType),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToActiveQrCodeSearchView({
-    Key? key,
-    required Quest quest,
+    _i38.Key? key,
+    required _i45.Quest quest,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.activeQrCodeSearchView,
-      arguments: ActiveQrCodeSearchViewArguments(key: key, quest: quest),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.activeQrCodeSearchView,
+        arguments: ActiveQrCodeSearchViewArguments(key: key, quest: quest),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToActiveDistanceEstimateQuestView({
-    Key? key,
-    required Quest quest,
+    _i38.Key? key,
+    required _i45.Quest quest,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.activeDistanceEstimateQuestView,
-      arguments:
-          ActiveDistanceEstimateQuestViewArguments(key: key, quest: quest),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.activeDistanceEstimateQuestView,
+        arguments:
+            ActiveDistanceEstimateQuestViewArguments(key: key, quest: quest),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToActiveTreasureLocationSearchQuestView({
-    Key? key,
-    required Quest quest,
+    _i38.Key? key,
+    required _i45.Quest quest,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.activeTreasureLocationSearchQuestView,
-      arguments: ActiveTreasureLocationSearchQuestViewArguments(
-          key: key, quest: quest),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.activeTreasureLocationSearchQuestView,
+        arguments: ActiveTreasureLocationSearchQuestViewArguments(
+            key: key, quest: quest),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToCreateQuestView({
-    Key? key,
+    _i38.Key? key,
+    bool fromMap = false,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.createQuestView,
-      arguments: CreateQuestViewArguments(key: key),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.createQuestView,
+        arguments: CreateQuestViewArguments(key: key, fromMap: fromMap),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToManageQuestView({
+  Future<dynamic> navigateToManageQuestView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.manageQuestView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.manageQuestView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToQuestsOverviewView({
+  Future<dynamic> navigateToQuestsOverviewView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.questsOverviewView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.questsOverviewView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToHistoryAndAchievementsView({
-    Key? key,
+    _i38.Key? key,
     int initialIndex = 0,
     int? routerId,
     bool preventDuplicates = true,
@@ -1165,19 +1322,17 @@ extension NavigatorStateExtension on NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.historyAndAchievementsView,
-      arguments: HistoryAndAchievementsViewArguments(
-          key: key, initialIndex: initialIndex),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.historyAndAchievementsView,
+        arguments: HistoryAndAchievementsViewArguments(
+            key: key, initialIndex: initialIndex),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToARObjectView({
-    Key? key,
+    _i38.Key? key,
     bool isCoins = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -1185,39 +1340,33 @@ extension NavigatorStateExtension on NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.aRObjectView,
-      arguments: ARObjectViewArguments(key: key, isCoins: isCoins),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.aRObjectView,
+        arguments: ARObjectViewArguments(key: key, isCoins: isCoins),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToActiveScreenTimeView({
-    Key? key,
-    required ScreenTimeSession? session,
-    String? screenTimeSessionId,
+    _i38.Key? key,
+    required _i47.ScreenTimeSession session,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.activeScreenTimeView,
-      arguments: ActiveScreenTimeViewArguments(
-          key: key, session: session, screenTimeSessionId: screenTimeSessionId),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.activeScreenTimeView,
+        arguments: ActiveScreenTimeViewArguments(key: key, session: session),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToSelectScreenTimeView({
-    Key? key,
+    _i38.Key? key,
     String? childId,
     int? routerId,
     bool preventDuplicates = true,
@@ -1225,100 +1374,88 @@ extension NavigatorStateExtension on NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.selectScreenTimeView,
-      arguments: SelectScreenTimeViewArguments(key: key, childId: childId),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.selectScreenTimeView,
+        arguments: SelectScreenTimeViewArguments(key: key, childId: childId),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToSingleQuestTypeView({
-    Key? key,
-    required Quest? quest,
-    QuestType? questType,
+    _i38.Key? key,
+    required _i45.Quest? quest,
+    _i46.QuestType? questType,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.singleQuestTypeView,
-      arguments: SingleQuestTypeViewArguments(
-          key: key, quest: quest, questType: questType),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.singleQuestTypeView,
+        arguments: SingleQuestTypeViewArguments(
+            key: key, quest: quest, questType: questType),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToOnBoardingScreensView({
+  Future<dynamic> navigateToOnBoardingScreensView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.onBoardingScreensView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.onBoardingScreensView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToParentMapView({
+  Future<dynamic> navigateToParentMapView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.parentMapView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.parentMapView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
   Future<dynamic> navigateToFeedbackView({
-    Key? key,
+    _i38.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo(
-      Routes.feedbackView,
-      arguments: FeedbackViewArguments(key: key),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+    return navigateTo<dynamic>(Routes.feedbackView,
+        arguments: FeedbackViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 
-  Future<dynamic> navigateToPermissionsView({
+  Future<dynamic> navigateToPermissionsView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
-    return navigateTo(
-      Routes.permissionsView,
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
+  ]) async {
+    return navigateTo<dynamic>(Routes.permissionsView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
   }
 }

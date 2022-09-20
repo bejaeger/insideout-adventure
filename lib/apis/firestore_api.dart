@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
@@ -492,15 +493,26 @@ class FirestoreApi {
         .update({'id': _documentReference.id});
   }
 
-  Future<bool> createQuest({required Quest quest}) async {
+  Future createQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
     //Get the Document Created Reference
-    final _documentReference = await questsCollection.add(quest.toJson());
+    final _documentReference = questsCollection.doc();
+    bool timedout = false;
     //update the newly created document reference with the Firestore Id.
     //This is to make suret that the document has the same id as the quest.
     await questsCollection
         .doc(_documentReference.id)
-        .update({'id': _documentReference.id});
+        .set(quest.copyWith(id: _documentReference.id).toJson())
+        .timeout(
+      Duration(seconds: 5),
+      onTimeout: () {
+        timedout = true;
+        log.w("Uploading quest timed out. No data connection");
+      },
+    );
+    if (timedout) {
+      return WarningFirestoreCallTimeout;
+    }
     if (_documentReference.id.isNotEmpty) {
       log.i(
           'This is the Document Id Being Created Harguilar ${_documentReference.id}');
@@ -551,12 +563,16 @@ class FirestoreApi {
           } else {
             log.w('There is no public \'quests\' collection on firestore.');
           }
-          completer1.complete();
+          if (!completer1.isCompleted) {
+            completer1.complete();
+          }
         },
       );
 
       if (sponsorIds.length == 0) {
-        completer2.complete();
+        if (!completer2.isCompleted) {
+          completer2.complete();
+        }
       }
       int counter = 0;
       for (String id in sponsorIds) {
@@ -591,7 +607,9 @@ class FirestoreApi {
                   'There is no \'quests\' collection from parents on firestore');
             }
             if (counter == sponsorIds.length) {
-              completer2.complete();
+              if (!completer2.isCompleted) {
+                completer2.complete();
+              }
             }
           },
         );
@@ -608,7 +626,7 @@ class FirestoreApi {
         message: WarningNoQuestsDownloaded,
         devDetails: WarningNoQuestsDownloaded,
         prettyDetails:
-            "No quests could be found in the area. Ask your parents to create one.",
+            "No quests were found in this area. Ask your parents to create one.",
       );
     }
     return returnQuests;
@@ -711,7 +729,7 @@ class FirestoreApi {
           .orderBy("createdAt", descending: true)
           .where("status",
               isEqualTo: describeEnum(QuestStatus.success.toString()))
-          .limitToLast(20) // limit query
+          .limit(20) // limit query
           .snapshots()
           .map((event) => event.docs
               .map((doc) =>
@@ -791,7 +809,8 @@ class FirestoreApi {
     await screenTimeSessionCollection.doc(session.sessionId).delete();
   }
 
-  Future getScreenTimeSession({required String sessionId}) async {
+  Future<ScreenTimeSession?> getScreenTimeSession(
+      {required String sessionId}) async {
     log.i("get screen time session from firestore");
     //Get the Document Created Reference
     final sessionDoc = await screenTimeSessionCollection.doc(sessionId).get();
@@ -822,7 +841,7 @@ class FirestoreApi {
       final returnStream = screenTimeSessionCollection
           .where("uid", isEqualTo: uid)
           .orderBy("startedAt", descending: true)
-          .limitToLast(20)
+          .limit(20)
           .snapshots()
           .map((event) => event.docs
               .map((doc) => ScreenTimeSession.fromJson(
@@ -1068,14 +1087,88 @@ class FirestoreApi {
     //This is to make suret that the document has the same id as the quest.
   }
 
-  // !!! HIGHLY CRITICAL This is a cheat feautre for the super user
-  // !!! REMOVE IN PRODUCTION
-  // !!! Also used at the moment for allowing parents to add credits to child
+  // ! It is important that this is a transaction.
+  // ! In case two phones are used otherwise the stats might be updated
+  // ! twice.
+  Future updateStatsAfterScreenTimeFinished(
+      {required ScreenTimeSession session,
+      required num deltaCredits,
+      required num deltaScreenTime}) async {
+    final sessionId = session.sessionId;
+    await firestoreInstance.runTransaction(
+      (transaction) async {
+        final ref = screenTimeSessionCollection.doc(sessionId);
+        final sessionDoc = await transaction.get(ref);
+        if (sessionDoc.exists) {
+          try {
+            ScreenTimeSession sessionOnServer = ScreenTimeSession.fromJson(
+                sessionDoc.data() as Map<String, dynamic>);
+            if (sessionOnServer.status != ScreenTimeSessionStatus.active) {
+              log.w(
+                  "Found screen time session already cancelled or completed. Return from running transaction to avoid updating stats twice!");
+              return;
+            } else {
+              log.w("Updating stats after screen time finished!");
+
+              // now we can update the credits and the total screen time balance
+              // update credits balance and total screen time
+              final ref2 = getUserSummaryStatisticsDocument(uid: session.uid);
+              transaction.update(
+                ref2,
+                {
+                  "afkCreditsBalance": FieldValue.increment(deltaCredits),
+                  "totalScreenTime": FieldValue.increment(deltaScreenTime),
+                },
+              );
+
+              // NOW also update screen time session:
+              final ref3 = screenTimeSessionCollection.doc(session.sessionId);
+              transaction.update(
+                ref3,
+                {
+                  'status': session.toJson()["status"],
+                  'afkCreditsUsed': session.afkCreditsUsed,
+                  'minutesUsed': session.minutesUsed,
+                },
+              );
+            }
+          } catch (error) {
+            log.wtf(
+                'Failed to update stats after screentime session was uploaded. sessionId: $sessionId');
+            throw FirestoreApiException(
+              message:
+                  'Failed to upload stats after screentime session with id $sessionId finished',
+              devDetails: '$error',
+            );
+          }
+        } else {
+          log.wtf("Screen time session with id $sessionId does not exist");
+          throw FirestoreApiException(
+            message: "Screen time session with id $sessionId does not exist",
+            devDetails: "",
+          );
+        }
+      },
+    );
+  }
+
   Future changeAfkCreditsBalanceCheat(
       {required String uid, num deltaCredits = 50}) async {
-    await getUserSummaryStatisticsDocument(uid: uid).update({
-      "afkCreditsBalance": FieldValue.increment(deltaCredits),
-    });
+    bool timedout = false;
+    await getUserSummaryStatisticsDocument(uid: uid).update(
+      {
+        "afkCreditsBalance": FieldValue.increment(deltaCredits),
+      },
+    ).timeout(
+      Duration(seconds: 5),
+      onTimeout: () {
+        timedout = true;
+        log.w("Uploading quest timed out. No data connection");
+      },
+    );
+    if (timedout) {
+      return WarningFirestoreCallTimeout;
+    }
   }
 
   Future changeTotalScreenTime(

@@ -41,7 +41,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
           ),
           child: directionStatus == DirectionStatus.nearGoal
               ? AfkCreditsText.successThree(
-                  "Yippieh! Catch the credits on the map nearby!!",
+                  "Yippieh! You found the treasure. Collect it by clicking on it on the map.",
                   align: TextAlign.center)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +65,10 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                         Icon(Icons.arrow_forward, size: 28),
                         horizontalSpaceSmall,
                         Image.asset(kAFKCreditsLogoPath,
-                            width: 45, color: kcPrimaryColor),
+                            width: 45,
+                            color: directionStatus == DirectionStatus.closer
+                                ? Colors.white
+                                : kcPrimaryColor),
                         AfkCreditsText.headingThree(" :    "),
                         horizontalSpaceSmall,
                         isBusy

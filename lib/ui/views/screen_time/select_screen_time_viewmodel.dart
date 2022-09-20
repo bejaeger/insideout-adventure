@@ -17,12 +17,12 @@ class SelectScreenTimeViewModel extends BaseModel {
   // ------------------------------------
   // getters
   int get totalAvailableScreenTime =>
-      _screenTimeService.getTotalAvailableScreenTime(childId: childId);
+      userService.getTotalAvailableScreenTime(childId: childId);
   int get afkCreditsBalance =>
-      _screenTimeService.getAfkCreditsBalance(childId: childId).round();
+      userService.getAfkCreditsBalance(childId: childId).round();
   // ------------------------
   // state
-  int screenTimePreset = 15; // in minutes
+  int screenTimePreset = 20; // in minutes
 
   // ------------------
   // constructor
@@ -42,7 +42,7 @@ class SelectScreenTimeViewModel extends BaseModel {
     screenTimePreset = minutes;
     if (screenTimePreset == -1) {
       screenTimePreset =
-          _screenTimeService.getTotalAvailableScreenTime(childId: childId);
+          userService.getTotalAvailableScreenTime(childId: childId);
     }
     notifyListeners();
   }
@@ -81,8 +81,12 @@ class SelectScreenTimeViewModel extends BaseModel {
       ScreenTimeSession session = ScreenTimeSession(
         sessionId: "",
         uid: isParentAccount ? childId! : currentUser.uid,
+        createdByUid: currentUser.uid,
+        userName: isParentAccount
+            ? userService.explorerNameFromUid(childId!)
+            : currentUser.fullName,
         minutes: useSuperUserFeatures ? 1 : screenTimePreset,
-        status: ScreenTimeSessionStatus.active,
+        status: ScreenTimeSessionStatus.notStarted,
         startedAt: Timestamp.now(),
         afkCredits: double.parse(
             screenTimeToCredits(useSuperUserFeatures ? 1 : screenTimePreset)

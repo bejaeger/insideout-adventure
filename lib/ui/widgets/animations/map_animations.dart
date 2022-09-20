@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,8 @@ class MapEffects extends StatelessWidget {
             left: 2,
             right: 2,
             child: IgnorePointer(
-              child: Lottie.network(
-                'https://assets7.lottiefiles.com/packages/lf20_Ei9xER.json',
+              child: Lottie.asset(
+                kLottieRippleEffect,
                 height: 200,
                 width: 200,
               ),

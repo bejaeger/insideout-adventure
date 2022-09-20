@@ -28,7 +28,7 @@ class User with _$User {
     required List<String> explorerIds,
     required UserRole role,
     AuthenticationMethod? authMethod,
-    @Default(false)
+    @Default(true)
         bool newUser,
     @JsonKey(
       toJson: User._checkIfKeywordsAreSet,

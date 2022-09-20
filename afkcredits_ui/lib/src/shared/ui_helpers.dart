@@ -66,16 +66,19 @@ IconData getIconForCategory(QuestType category) {
   }
 }
 */
-IconData getIconForCategory(QuestType category) {
+IconData getIconForCategory(QuestType? category) {
+  if (category == null) return Icons.location_on;
   if (category == QuestType.DistanceEstimate) {
     return Icons.arrow_right_alt;
   } else if (category == QuestType.TreasureLocationSearch) {
-    return Icons.location_on;
+    // return Icons.location_on;
+    return Icons.search;
   } else if (category == QuestType.QRCodeHunt) {
     return Icons.pets;
   } else if (category == QuestType.QRCodeHike) {
     return Icons.nature_people;
-  } else if (category == QuestType.GPSAreaHike) {
+  } else if (category == QuestType.GPSAreaHike ||
+      category == QuestType.GPSAreaHike) {
     return Icons.explore;
   } else {
     return Icons.map;
@@ -102,17 +105,23 @@ String getStringForCategory(QuestType? category) {
   }
 }
 
-Color getColorOfType(QuestType type) {
-  if (type == QuestType.TreasureLocationSearch) {
-    return Colors.orange;
-  } else if (type == QuestType.QRCodeHike) {
-    return Colors.red;
-  } else if (type == QuestType.GPSAreaHike) {
-    return Colors.green;
-  } else if (type == QuestType.DistanceEstimate) {
-    return Colors.blue;
-  } else {
-    return Colors.cyan;
+Color getColorOfType(QuestType? category) {
+  if (category == null) return kcPrimaryColor;
+  switch (category) {
+    case QuestType.DistanceEstimate:
+      return kcScreenTimeBlue;
+    case QuestType.TreasureLocationSearch:
+      return kcBlue;
+    case QuestType.QRCodeHunt:
+      return kcOrange;
+    case QuestType.QRCodeHike:
+      return kcOrange;
+    case QuestType.GPSAreaHike:
+      return kcOrangeOpaque;
+    case QuestType.GPSAreaHunt:
+      return kcOrangeOpaque;
+    default:
+      return kcPrimaryColor;
   }
 }
 

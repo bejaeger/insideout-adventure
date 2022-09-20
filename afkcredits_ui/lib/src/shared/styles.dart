@@ -44,6 +44,11 @@ const TextStyle warnStyle = TextStyle(
   fontWeight: FontWeight.w600,
   color: kcRed,
 );
+const TextStyle warnScreenTimeStyle = TextStyle(
+  // fontSize: 24,
+  fontWeight: FontWeight.w600,
+  color: kcScreenTimeBlue,
+);
 const TextStyle success3Style = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.w600,

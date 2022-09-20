@@ -30,7 +30,7 @@ class NotCloseToQuestNote extends StatelessWidget {
         questType == QuestType.QRCodeHike) {
       return "Go to the green marker to start the quest.";
     } else {
-      return "Go to the start of the quest.";
+      return "Go to the start marker.";
     }
   }
 
@@ -65,7 +65,7 @@ class NotCloseToQuestNote extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.all(8.0),
                 child: AfkCreditsText.warn(
-                  "You are ${(model.distanceFromQuest * 0.001).toStringAsFixed(1)} km away from the quest. " +
+                  "You are ${(model.distanceFromQuest * 0.001).toStringAsFixed(1)} km away. " +
                       _getInfoString(questType),
                   align: TextAlign.left,
                 ),

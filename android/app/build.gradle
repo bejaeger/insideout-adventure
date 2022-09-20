@@ -47,20 +47,20 @@ android {
     }
 
 
-            // Add flavours
+    // Add flavours
     flavorDimensions "app"
     productFlavors {
         dev {
             dimension "app"
-            applicationId "com.afkcredits.dev"
-            versionCode 1
-            versionName "pre-alpha"
+            applicationId "com.hercules.dev"
+            versionCode defaultConfig.versionCode
+            versionName defaultConfig.versionName+"-dev"
         }
         prod {
             dimension "app"
-            applicationId "com.afkcredits.prod"
-            versionCode 1
-            versionName "alpha 1.0"
+            applicationId "com.hercules.prod"
+            versionCode defaultConfig.versionCode
+            versionName defaultConfig.versionName
         }
     }
 

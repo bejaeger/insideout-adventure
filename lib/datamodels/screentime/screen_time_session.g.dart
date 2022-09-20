@@ -10,6 +10,8 @@ _$_ScreenTimeSession _$$_ScreenTimeSessionFromJson(Map<String, dynamic> json) =>
     _$_ScreenTimeSession(
       sessionId: json['sessionId'] as String,
       uid: json['uid'] as String,
+      userName: json['userName'] as String,
+      createdByUid: json['createdByUid'] as String,
       startedAt: json['startedAt'] ?? "",
       endedAt: json['endedAt'] ?? "",
       minutes: json['minutes'] as int,
@@ -24,6 +26,8 @@ Map<String, dynamic> _$$_ScreenTimeSessionToJson(
     <String, dynamic>{
       'sessionId': instance.sessionId,
       'uid': instance.uid,
+      'userName': instance.userName,
+      'createdByUid': instance.createdByUid,
       'startedAt': instance.startedAt,
       'endedAt': instance.endedAt,
       'minutes': instance.minutes,
@@ -34,7 +38,9 @@ Map<String, dynamic> _$$_ScreenTimeSessionToJson(
     };
 
 const _$ScreenTimeSessionStatusEnumMap = {
+  ScreenTimeSessionStatus.notStarted: 'notStarted',
   ScreenTimeSessionStatus.active: 'active',
   ScreenTimeSessionStatus.cancelled: 'cancelled',
   ScreenTimeSessionStatus.completed: 'completed',
+  ScreenTimeSessionStatus.archived: 'archived',
 };

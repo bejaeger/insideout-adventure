@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 0.1.0+1
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -31,20 +31,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
   
-  stacked: ^2.3.15
+  stacked: ^3.0.0
   stacked_services: ^0.9.3
-  stacked_generator: ^0.7.13
+  stacked_generator: ^0.8.0
   firebase_core: ^1.20.0
   cloud_firestore: ^3.4.1
   firebase_storage: ^10.3.3
   firebase_messaging: ^13.0.1
-  cloud_functions: ^3.3.3
   connectivity_plus: ^2.3.6
   nanoid: ^1.0.0
   map_launcher: ^2.1.2
@@ -61,8 +55,6 @@ dependencies:
   geolocator: ^9.0.0
 
   permission_handler: ^10.0.0
-  currency_text_input_formatter: ^2.1.7
-  money2: ^3.1.3
   uuid: ^3.0.6
   qr_flutter: ^4.0.0
   qr_code_scanner: ^1.0.0
@@ -71,15 +63,13 @@ dependencies:
   flutter_signin_button: ^2.0.0
   battery_plus: ^2.1.4
   open_settings: ^2.0.2
-  flutter_polyline_points: ^1.0.0
-  dio: ^4.0.6
   cached_network_image: ^3.2.1
   flutter_svg: ^1.1.1+1
-  get_it: ^7.2.0
+  #get_it: ^7.2.0
   logger:
   freezed_annotation: ^2.1.0
   json_annotation: ^4.6.0
-  flutter_launcher_icons: ^0.9.3
+  flutter_launcher_icons: ^0.10.0
   notion_api: ^1.2.0
   device_info: ^2.0.3
 
@@ -90,23 +80,19 @@ dependencies:
   #flutter_stripe: ^1.2.0
   #pay: ^1.0.1
   transparent_image: ^2.0.0
-  flutter_secure_storage: ^5.0.2
+  flutter_secure_storage: ^6.0.0
   crypto: ^3.0.1
-  persistent_bottom_nav_bar: ^4.0.2
+  persistent_bottom_nav_bar: ^5.0.2
   rxdart: ^0.27.1
-  stop_watch_timer: ^1.3.1
   geoflutterfire: ^3.0.3
   location: ^4.3.0
   google_maps_flutter_web: ^0.4.0+2  
   ar_flutter_plugin: ^0.7.1
   flutter_vibrate: ^1.3.0
-  slidable_button: ^2.0.0+1
   slide_to_act: ^2.0.1
   shimmer: ^2.0.0
-  map_picker: ^0.0.3
   image_picker: ^0.8.4+4
-  progress_indicator_button: ^0.0.3
-  get: 4.6.5
+  # get: 4.6.5
   #get: ^4.6.5
   #background_fetch: ^1.1.0
   #awesome_notifications: ^0.6.21
@@ -124,34 +110,24 @@ dependencies:
   circular_menu: ^2.0.1
   pedometer: ^3.0.0
   flutter_background_service: ^2.0.0
-  geopoint: ^1.0.0
   freezed: ^2.0.3+1
-  update: ^0.3.1
-  source_gen: ^1.2.2
+  #source_gen: ^1.2.2
   json_serializable: ^6.2.0
-  flutter_dotenv: ^5.0.2
-  rounded_loading_button: ^2.0.8
-  bloc_test: ^9.0.1
-  mocktail: ^0.3.0
-  very_good_analysis: ^3.0.1
   introduction_screen: ^3.0.1
   dotenv: ^4.0.1
-  geo_firestore_flutter: ^0.1.5
-  # Harguilar Ended Here 
-
+  
+  flutter_archive: ^5.0.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  # flutter_test:
+  #   sdk: flutter
   # auto_route_generator:
-  stacked_generator: ^0.7.15
+  stacked_generator: ^0.8.0
   freezed: ^2.1.0+1
-  json_serializable: ^6.1.5
-  flutter_dotenv: ^5.0.2
+  json_serializable: ^6.1.5  
   rounded_loading_button: ^2.0.8
-  dependency_validator: ^3.0.0
-
-  flutter_archive: ^5.0.0
+  dependency_validator: ^3.0.0  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -212,6 +188,12 @@ flutter:
     - assets/icons/curve-arrow.png
     - assets/icons/cardinal-point.png  
     - assets/lottie/lottietest.json  
+    - assets/lottie/ripple-effect.json  
+    - assets/lottie/chilldude.json
+    - assets/lottie/walkinggirl.json
+    - assets/lottie/walkingboy.json
+    - assets/lottie/colored-sports-figure.json
+    - assets/lottie/big-tv-screen-time.json
     - assets/icons/walk.png
     - assets/icons/run.png
     - assets/icons/person.png
@@ -225,6 +207,7 @@ flutter:
     - assets/illustrations/wallet_earning.png
     - assets/illustrations/wallet_spending.png
     - assets/illustrations/activity_illustration_with_arrows.png
+    - assets/images/luz-azul-cielo-azul.jpg
 
   # To add assets to your application, add an assets section, like this:
   #assets:

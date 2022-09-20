@@ -7,15 +7,12 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 class CreditsOverlayViewModel extends BaseModel {
   // -------------------------------------
   // services
-  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
   final log = getLogger("CreditsOverlayViewModel");
 
   // ------------------------------------
   // getters
-  int get totalAvailableScreenTime =>
-      _screenTimeService.getTotalAvailableScreenTime();
-  int get afkCreditsBalance =>
-      _screenTimeService.getAfkCreditsBalance().round();
+  int get totalAvailableScreenTime => userService.getTotalAvailableScreenTime();
+  int get afkCreditsBalance => userService.getAfkCreditsBalance().round();
 
   // ------------------------
   // state

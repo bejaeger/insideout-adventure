@@ -4,6 +4,8 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/enums/bottom_sheet_type.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -11,9 +13,8 @@ import 'package:afkcredits/app/app.logger.dart';
 class ParentHomeViewModel extends TransferBaseViewModel {
   // ----------------------------------------
   // services
-  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
-  final log = getLogger("SponsorHomeViewModel");
+  final log = getLogger("ParentHomeViewModel");
 
   // -------------------------------------------------
   // getters
@@ -21,7 +22,10 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   Map<String, UserStatistics> get childStats =>
       userService.supportedExplorerStats;
   List<ScreenTimeSession> get childScreenTimeSessionsActive =>
-      userService.supportedExplorerScreenTimeSessionsActive;
+      screenTimeService.supportedExplorerScreenTimeSessionsActive.values
+          .toList();
+  Map<String, ScreenTimeSession> get childScreenTimeSessionsActiveMap =>
+      screenTimeService.supportedExplorerScreenTimeSessionsActive;
 
   List<dynamic> get sortedHistory => userService.sortedHistory();
   Map<String, int> get totalChildScreenTimeLastDays =>
@@ -42,25 +46,36 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   // Listen to streams of latest donations and transactions to be displayed
   // instantly when pulling up bottom sheets
   Future listenToData() async {
+    //setBusy(true);
     Completer completerOne = Completer<void>();
-    //Completer completerTwo = Completer<void>();
-
     userService.setupUserDataListeners(
         completer: completerOne, callback: () => notifyListeners());
     await runBusyFuture(
       Future.wait(
         [
           completerOne.future,
-          //completerTwo.future,
         ],
       ),
     );
-    notifyListeners();
+    screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
+  }
+
+  ScreenTimeSession? getScreenTime({required String uid}) {
+    try {
+      return childScreenTimeSessionsActive
+          .firstWhere((element) => element.uid == uid);
+    } catch (e) {
+      if (e is StateError) // thrown when no element was found
+      {
+        return null;
+      } else {
+        rethrow;
+      }
+    }
   }
 
   // ------------------------------------------------------
   // bottom sheets
-
   Future showAddExplorerBottomSheet() async {
     // ! NOT FOR MVP
     // final result = await _bottomSheetService.showBottomSheet(
@@ -78,11 +93,28 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     await navigationService.navigateTo(Routes.addExplorerView);
   }
 
+  Future setNewUserPropertyToFalse() async {
+    log.i("Setting 'new user' property to false");
+    userService.setNewUserPropertyToFalse(user: currentUser);
+  }
+
+  void showSwitchAreaBottomSheet() async {
+    await bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.switchArea);
+  }
+
+  Future showFirstLoginDialog() async {
+    await dialogService.showCustomDialog(
+      variant: DialogType.OnboardingDialog,
+    );
+  }
+
   // ----------------------------
   // navigation
   void navigateToScreenTimeOrSingleChildView({required String uid}) async {
-    if (usingScreenTime(uid: uid)) {
-      navToActiveScreenTimeView(sessionId: screenTimeSessionId);
+    final session = getScreenTime(uid: uid);
+    if (session != null) {
+      navToActiveScreenTimeView(session: session);
     } else {
       navToSingleChildView(uid: uid);
     }

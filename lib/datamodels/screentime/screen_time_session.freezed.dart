@@ -22,6 +22,8 @@ ScreenTimeSession _$ScreenTimeSessionFromJson(Map<String, dynamic> json) {
 mixin _$ScreenTimeSession {
   String get sessionId => throw _privateConstructorUsedError;
   String get uid => throw _privateConstructorUsedError;
+  String get userName => throw _privateConstructorUsedError;
+  String get createdByUid => throw _privateConstructorUsedError;
   dynamic get startedAt => throw _privateConstructorUsedError;
   dynamic get endedAt => throw _privateConstructorUsedError;
   int get minutes => throw _privateConstructorUsedError;
@@ -44,6 +46,8 @@ abstract class $ScreenTimeSessionCopyWith<$Res> {
   $Res call(
       {String sessionId,
       String uid,
+      String userName,
+      String createdByUid,
       dynamic startedAt,
       dynamic endedAt,
       int minutes,
@@ -66,6 +70,8 @@ class _$ScreenTimeSessionCopyWithImpl<$Res>
   $Res call({
     Object? sessionId = freezed,
     Object? uid = freezed,
+    Object? userName = freezed,
+    Object? createdByUid = freezed,
     Object? startedAt = freezed,
     Object? endedAt = freezed,
     Object? minutes = freezed,
@@ -82,6 +88,14 @@ class _$ScreenTimeSessionCopyWithImpl<$Res>
       uid: uid == freezed
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
+              as String,
+      userName: userName == freezed
+          ? _value.userName
+          : userName // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdByUid: createdByUid == freezed
+          ? _value.createdByUid
+          : createdByUid // ignore: cast_nullable_to_non_nullable
               as String,
       startedAt: startedAt == freezed
           ? _value.startedAt
@@ -125,6 +139,8 @@ abstract class _$$_ScreenTimeSessionCopyWith<$Res>
   $Res call(
       {String sessionId,
       String uid,
+      String userName,
+      String createdByUid,
       dynamic startedAt,
       dynamic endedAt,
       int minutes,
@@ -149,6 +165,8 @@ class __$$_ScreenTimeSessionCopyWithImpl<$Res>
   $Res call({
     Object? sessionId = freezed,
     Object? uid = freezed,
+    Object? userName = freezed,
+    Object? createdByUid = freezed,
     Object? startedAt = freezed,
     Object? endedAt = freezed,
     Object? minutes = freezed,
@@ -165,6 +183,14 @@ class __$$_ScreenTimeSessionCopyWithImpl<$Res>
       uid: uid == freezed
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
+              as String,
+      userName: userName == freezed
+          ? _value.userName
+          : userName // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdByUid: createdByUid == freezed
+          ? _value.createdByUid
+          : createdByUid // ignore: cast_nullable_to_non_nullable
               as String,
       startedAt: startedAt == freezed
           ? _value.startedAt
@@ -204,6 +230,8 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
   _$_ScreenTimeSession(
       {required this.sessionId,
       required this.uid,
+      required this.userName,
+      required this.createdByUid,
       this.startedAt = "",
       this.endedAt = "",
       required this.minutes,
@@ -219,6 +247,10 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
   final String sessionId;
   @override
   final String uid;
+  @override
+  final String userName;
+  @override
+  final String createdByUid;
   @override
   @JsonKey()
   final dynamic startedAt;
@@ -238,7 +270,7 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
 
   @override
   String toString() {
-    return 'ScreenTimeSession(sessionId: $sessionId, uid: $uid, startedAt: $startedAt, endedAt: $endedAt, minutes: $minutes, minutesUsed: $minutesUsed, afkCreditsUsed: $afkCreditsUsed, status: $status, afkCredits: $afkCredits)';
+    return 'ScreenTimeSession(sessionId: $sessionId, uid: $uid, userName: $userName, createdByUid: $createdByUid, startedAt: $startedAt, endedAt: $endedAt, minutes: $minutes, minutesUsed: $minutesUsed, afkCreditsUsed: $afkCreditsUsed, status: $status, afkCredits: $afkCredits)';
   }
 
   @override
@@ -248,6 +280,9 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
             other is _$_ScreenTimeSession &&
             const DeepCollectionEquality().equals(other.sessionId, sessionId) &&
             const DeepCollectionEquality().equals(other.uid, uid) &&
+            const DeepCollectionEquality().equals(other.userName, userName) &&
+            const DeepCollectionEquality()
+                .equals(other.createdByUid, createdByUid) &&
             const DeepCollectionEquality().equals(other.startedAt, startedAt) &&
             const DeepCollectionEquality().equals(other.endedAt, endedAt) &&
             const DeepCollectionEquality().equals(other.minutes, minutes) &&
@@ -266,6 +301,8 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
       runtimeType,
       const DeepCollectionEquality().hash(sessionId),
       const DeepCollectionEquality().hash(uid),
+      const DeepCollectionEquality().hash(userName),
+      const DeepCollectionEquality().hash(createdByUid),
       const DeepCollectionEquality().hash(startedAt),
       const DeepCollectionEquality().hash(endedAt),
       const DeepCollectionEquality().hash(minutes),
@@ -292,6 +329,8 @@ abstract class _ScreenTimeSession implements ScreenTimeSession {
   factory _ScreenTimeSession(
       {required final String sessionId,
       required final String uid,
+      required final String userName,
+      required final String createdByUid,
       final dynamic startedAt,
       final dynamic endedAt,
       required final int minutes,
@@ -307,6 +346,10 @@ abstract class _ScreenTimeSession implements ScreenTimeSession {
   String get sessionId;
   @override
   String get uid;
+  @override
+  String get userName;
+  @override
+  String get createdByUid;
   @override
   dynamic get startedAt;
   @override

@@ -14,5 +14,6 @@ enum DialogType {
   QrCodeInArea,
   PurchaseScreenTime,
   ChildStatCard,
-  CreditConversionInfo
+  CreditConversionInfo,
+  OnboardingDialog,
 }

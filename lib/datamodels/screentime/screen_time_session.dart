@@ -9,6 +9,8 @@ class ScreenTimeSession with _$ScreenTimeSession {
   factory ScreenTimeSession({
     required String sessionId,
     required String uid,
+    required String userName,
+    required String createdByUid,
     @Default("") dynamic startedAt,
     @Default("") dynamic endedAt,
     required int minutes,

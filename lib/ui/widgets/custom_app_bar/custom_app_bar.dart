@@ -1,7 +1,9 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -12,26 +14,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool drawer;
   bool? alignLeft = false;
-  final bool showRedLiveButton;
   final bool showLogo;
   final Widget? widget;
   final void Function()? onBackButton;
   final void Function()? onAppBarButtonPressed;
+  final List<ScreenTimeSession> screenTimes;
 
   final IconData appBarButtonIcon;
-  CustomAppBar(
-      {Key? key,
-      this.height = kAppBarExtendedHeight,
-      required this.title,
-      this.alignLeft,
-      this.drawer = false,
-      this.onBackButton,
-      this.widget,
-      this.appBarButtonIcon = Icons.help,
-      this.showRedLiveButton = false,
-      this.onAppBarButtonPressed,
-      this.showLogo = false})
-      : super(key: key);
+  CustomAppBar({
+    Key? key,
+    this.height = kAppBarExtendedHeight,
+    required this.title,
+    this.alignLeft,
+    this.drawer = false,
+    this.onBackButton,
+    this.widget,
+    this.appBarButtonIcon = Icons.help,
+    this.onAppBarButtonPressed,
+    this.showLogo = false,
+    this.screenTimes = const [],
+  }) : super(key: key);
 
   double get getHeight => height;
 
@@ -39,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<BaseModel>.reactive(
       viewModelBuilder: () => BaseModel(),
-      onModelReady: (model) => model.listenToScreenTime(),
+      // onModelReady: (model) => model.listenToScreenTime(),
       builder: (context, model, child) => PreferredSize(
         preferredSize:
             Size(screenWidth(context), height + kActiveQuestPanelMaxHeight),
@@ -100,18 +102,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                   ),
-                  if (showRedLiveButton)
+                  if (screenTimes.length > 0)
                     Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 60.0),
                         child: GestureDetector(
-                          onTap: model.navToActiveScreenTimeView,
-                          //() => Scaffold.of(context).openEndDrawer(),
+                          onTap: () => model.navToActiveScreenTimeView(
+                              session: screenTimes[0]),
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
                             child: BlinkingScreenTimeAnimation(
-                              screenTimeLeft: model.screenTimeLeftString!,
+                              screenTimeLeft: screenTimes.length > 1
+                                  ? null
+                                  : secondsToMinuteTime(
+                                      model.getMinSreenTimeLeftInSeconds(
+                                          sessions: screenTimes)),
+                              //model.newScreenTimeLeft,
                             ),
                           ),
                         ),
@@ -194,7 +201,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class BlinkingScreenTimeAnimation extends StatefulWidget {
-  final String screenTimeLeft;
+  final String? screenTimeLeft;
 
   BlinkingScreenTimeAnimation({Key? key, required this.screenTimeLeft})
       : super(key: key);
@@ -216,8 +223,9 @@ class _BlinkingScreenTimeAnimationState
         duration: const Duration(milliseconds: 1000), vsync: this);
     final CurvedAnimation curve =
         CurvedAnimation(parent: controller, curve: Curves.linear);
-    animation =
-        ColorTween(begin: kcRed, end: kcRed.withOpacity(0.2)).animate(curve);
+    animation = ColorTween(
+            begin: kcScreenTimeBlue, end: kcScreenTimeBlue.withOpacity(0.2))
+        .animate(curve);
     // animation = ColorTween(
     //         begin: kcScreenTimeBlue, end: kcScreenTimeBlue.withOpacity(0.2))
     //     .animate(curve);
@@ -230,7 +238,7 @@ class _BlinkingScreenTimeAnimationState
       animation: animation,
       builder: (BuildContext context, Widget? child) {
         return Container(
-          width: 75,
+          width: widget.screenTimeLeft != null ? 75 : 55,
           height: 40,
           decoration: BoxDecoration(
               //shape: BoxShape.ell,
@@ -246,8 +254,11 @@ class _BlinkingScreenTimeAnimationState
               children: [
                 Image.asset(kScreenTimeIcon2,
                     width: 20, color: animation.value),
-                horizontalSpaceTiny,
-                AfkCreditsText.captionBoldRed(widget.screenTimeLeft)
+                if (widget.screenTimeLeft != null) horizontalSpaceTiny,
+                if (widget.screenTimeLeft != null)
+                  AfkCreditsText(
+                      text: widget.screenTimeLeft!,
+                      style: captionStyleBold.copyWith(color: kcScreenTimeBlue))
               ],
             ),
           ),

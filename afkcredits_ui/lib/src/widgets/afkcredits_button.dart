@@ -93,7 +93,7 @@ class AfkCreditsButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (leading != null) leading!,
-                  if (leading != null && title != "") horizontalSpaceSmall,
+                  if (leading != null && title != "") horizontalSpaceTiny,
                   if (leading != null && title != "") const SizedBox(width: 5),
                   if (title != "")
                     Text(

@@ -19,7 +19,9 @@ import 'package:afkcredits/app/app.logger.dart';
 final log = getLogger("REBUILD LOGGER");
 
 class ExplorerHomeView extends StatefulWidget {
-  const ExplorerHomeView({Key? key}) : super(key: key);
+  final bool showQuestsFoundSnackbar;
+  const ExplorerHomeView({Key? key, this.showQuestsFoundSnackbar = false})
+      : super(key: key);
 
   @override
   State<ExplorerHomeView> createState() => _ExplorerHomeViewState();
@@ -30,14 +32,13 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
       viewModelBuilder: () => ExplorerHomeViewModel(),
-      onModelReady: (model) => model.initialize(),
+      onModelReady: (model) => model.initialize(
+          showQuestsFoundSnackbar: widget.showQuestsFoundSnackbar),
       builder: (context, model, child) {
         bool showMainWidgets =
             (!(model.isShowingQuestDetails || model.hasActiveQuest) ||
                     model.isFadingOutQuestDetails) &&
                 (model.previouslyFinishedQuest == null);
-
-        //log.wtf("==>> Rebuild ExplorerHomeView");
         return WillPopScope(
           onWillPop: () async {
             model.maybeRemoveExplorerAccountOverlay();
@@ -60,15 +61,19 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                       isBusy: model.isReloadingQuests,
                     ),
 
-                  if (model.currentUser.createdByUserWithId != null)
+                  if (model.currentUserNullable?.createdByUserWithId != null &&
+                      model.userService.sponsorReference != null)
                     SwitchToParentsAreaButton(
                       onTap: () async =>
                           await model.handleSwitchToSponsorEvent(),
                       show: showMainWidgets,
                     ),
 
-                  if (model.showLoadingScreen)
-                    MapLoadingOverlay(show: model.showFullLoadingScreen),
+                  //if (model.showLoadingScreen)
+                  MapLoadingOverlay(
+                    show: model.showFullLoadingScreen,
+                    loadingQuests: model.showQuestLoadingScreen,
+                  ),
 
                   // TODO: Can also make MainHeader a view!
                   if (!model.isBusy)
@@ -77,15 +82,17 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                         currentLevel: model.currentLevel(),
                         onAvatarPressed: model.showExplorerAccountOverlay,
                         show: showMainWidgets,
-                        onDevFeaturePressed: model
-                            .openSuperUserSettingsDialog, // model.showNotImplementedSnackbar,
+                        onDevFeaturePressed: model.isDevFlavor
+                            ? model.openSuperUserSettingsDialog
+                            : null, // model.showNotImplementedSnackbar,
                         onCreditsPressed: model.showCreditsOverlay,
                         balance: model.currentUserStats.afkCreditsBalance),
 
                   if (!model.isBusy)
                     MainFooterOverlayView(
-                      show: showMainWidgets,
-                    ),
+                        show: showMainWidgets,
+                        isUsingScreenTime:
+                            model.currentScreenTimeSession != null),
 
                   if (!model.isBusy) ExplorerAccountView(),
 

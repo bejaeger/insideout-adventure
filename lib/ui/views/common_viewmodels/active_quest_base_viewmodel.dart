@@ -144,7 +144,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
       // ? needed for TreasureLocationSearch
       if (currentQuest?.type == QuestType.TreasureLocationSearch) {
-        changeCameraZoom(kInitialZoom);
+        changeCameraZoom(kInitialZoomAvatarView);
         animateMap(forceUseLocation: true);
       }
       return true;
@@ -237,18 +237,18 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     // reset/add back all quests
     mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
 
+    // maybe show quest list again
+    if (navigatedFromQuestList) {
+      showQuestListOverlay();
+      changeNavigatedFromQuestList(false);
+    }
+
     // reset selected quest after delay so the fade out is smooth
     await Future.delayed(Duration(milliseconds: 800));
 
     // reset flags
     layoutService.setIsMovingCamera(false);
     layoutService.setIsFadingOutQuestDetails(false);
-
-    // maybe show quest list again (don't do that cause it's a bit weird)
-    if (navigatedFromQuestList) {
-      //showQuestListOverlay();
-      changeNavigatedFromQuestList(false);
-    }
 
     // reset selected quest -> don't show quest details anymore
     // reset previouslyFinishedQuest
@@ -261,6 +261,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     // TODO: not sure why this is done!
     // reset distances to markers
     geolocationService.resetStoredDistancesToMarkers();
+    notifyListeners();
   }
 
   Future checkAccuracy(

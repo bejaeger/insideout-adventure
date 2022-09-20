@@ -8,6 +8,7 @@ import 'package:afkcredits/ui/custom_dialogs/in_area_alert/in_area_alert_dialog.
 import 'package:afkcredits/ui/custom_dialogs/marker_collected/collected_marker_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/super_user_dialog/super_user_dialog_view.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/money_transfer_dialog_view.dart';
+import 'package:afkcredits/ui/shared/custom_dialogs/onboarding_dialog.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/dialog/travelled_distance_dialog_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -37,6 +38,8 @@ void setupDialogUi() {
         ChildTotalStatsCardDialog(request: sheetRequest, completer: completer),
     DialogType.CreditConversionInfo: (context, sheetRequest, completer) =>
         CreditConversionInfoDialog(request: sheetRequest, completer: completer),
+    DialogType.OnboardingDialog: (context, sheetRequest, completer) =>
+        OnboardingDialog(request: sheetRequest, completer: completer),
     /*    DialogType.EditQuestInformation: (context, sheetRequest, completer) =>
         EditQuestView(request: sheetRequest, completer: completer), */
     // DialogType.Onboarding: (context, sheetRequest, completer) =>

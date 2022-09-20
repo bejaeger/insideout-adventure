@@ -113,7 +113,6 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
               appBar: CustomAppBar(
                 title: "Treasure Hunt",
                 onBackButton: model.navigateBackFromSingleQuestView,
-                showRedLiveButton: true,
                 onAppBarButtonPressed: model.hasActiveQuest
                     ? null
                     : () => model.showQuestInfoDialog(quest: widget.quest),

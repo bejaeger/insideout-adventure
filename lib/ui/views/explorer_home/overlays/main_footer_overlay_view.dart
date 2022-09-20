@@ -10,9 +10,11 @@ import 'package:stacked/stacked.dart';
 
 class MainFooterOverlayView extends StatelessWidget {
   final bool show;
+  final bool isUsingScreenTime;
   const MainFooterOverlayView({
     Key? key,
     required this.show,
+    this.isUsingScreenTime = false,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,6 @@ class MainFooterOverlayView extends StatelessWidget {
     // log.wtf("==>> Rebuild MainFooterView");
     return ViewModelBuilder<MainFooterViewModel>.reactive(
       viewModelBuilder: () => MainFooterViewModel(),
-      //onModelReady: (model) => model.listenToLayout(),
       onModelReady: (model) {
         // TODO: Move somewhere else!
         // TODO: Needs to go into onboarding!
@@ -43,16 +44,18 @@ class MainFooterOverlayView extends StatelessWidget {
                           opacity: model.isMenuOpen ? 0 : 1,
                           child: AfkCreditsButton(
                             title: "",
-                            border: model.isScreenTimeActive
+                            border: isUsingScreenTime
                                 ? Border.all(
                                     color: Colors.red,
                                     width: 4,
                                   )
                                 : null,
                             color: kcScreenTimeBlue,
-                            onTap: model.navToSelectScreenTimeView,
+                            onTap: () => model.navToSelectScreenTimeView(
+                                childId: model.currentUser.uid,
+                                isParentAccount: false),
                             height: 60,
-                            boxShadow: model.isScreenTimeActive
+                            boxShadow: isUsingScreenTime
                                 ? null
                                 : mainFooterBoxShadow(),
                             leading: Image.asset(
@@ -95,7 +98,7 @@ class MainFooterOverlayView extends StatelessWidget {
                         toggleButtonIconColor: kcMediumGrey,
                         toggleButtonMargin: 0,
                         toggleButtonSize: 35,
-                        radius: model.isSuperUser ? 120 : 80,
+                        radius: model.isSuperUser ? 120 : 90,
                         items: [
                           CircularMenuItem(
                             icon: Icons.settings,

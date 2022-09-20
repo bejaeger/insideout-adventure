@@ -4,7 +4,7 @@
 // StackedFormGenerator
 // **************************************************************************
 
-// ignore_for_file: public_member_api_docs,  constant_identifier_names, non_constant_identifier_names,unnecessary_this
+// ignore_for_file: public_member_api_docs, constant_identifier_names, non_constant_identifier_names,unnecessary_this
 
 import 'package:afkcredits/ui/views/add_explorer/validators.dart';
 import 'package:flutter/material.dart';
@@ -75,8 +75,8 @@ mixin $CreateQuestView on StatelessWidget {
     return model.isFormValid;
   }
 
-  /// Updates the formData on the FormViewModel
-  void _updateFormData(FormViewModel model, {bool forceValidate = false}) {
+  /// Updates the formData on the dynamic
+  void _updateFormData(dynamic model, {bool forceValidate = false}) {
     model.setData(
       model.formValueMap
         ..addAll({
@@ -90,9 +90,8 @@ mixin $CreateQuestView on StatelessWidget {
     }
   }
 
-  /// Updates the fieldsValidationMessages on the FormViewModel
-  void _updateValidationData(FormViewModel model) =>
-      model.setValidationMessages({
+  /// Updates the fieldsValidationMessages on the dynamic
+  void _updateValidationData(dynamic model) => model.setValidationMessages({
         NameValueKey: _getValidationMessage(NameValueKey),
         DescriptionValueKey: _getValidationMessage(DescriptionValueKey),
         AfkCreditAmountValueKey: _getValidationMessage(AfkCreditAmountValueKey),

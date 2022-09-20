@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -29,8 +30,9 @@ class CloudOverlay extends StatelessWidget {
                           height: 150,
                           width: screenWidth(context),
                           color: Colors.blue,
-                          child: Image.network(
-                            "https://prooptimania.s3.us-east-2.amazonaws.com/ckfinder/images/luz-azul-cielo-azul.jpg",
+                          child: Image.asset(
+                            kCloudOverlayImagePath,
+                            // "https://prooptimania.s3.us-east-2.amazonaws.com/ckfinder/images/luz-azul-cielo-azul.jpg",
                             fit: BoxFit.cover,
                             alignment: Alignment.bottomCenter,
                           ),

@@ -47,50 +47,21 @@ class NotificationController {
   }
 
   Future<void> initializeNotificationsEventListeners() async {
-    // AwesomeNotifications().getAppLifeCycle().
-    // AwesomeNotifications.setListeners()
-    // AwesomeNotifications().displayedStream.listen((notification) async {
-    //   // if a scheduled notification is shown, we can remove the permanent notifications!
-    //   if (notification.channelKey == kScheduledNotificationChannelKey) {
-    //     AwesomeNotifications()
-    //         .dismissNotificationsByChannelKey(kPermanentNotificationKey);
-    //     await Future.delayed(Duration(milliseconds: 500));
-    //     _screenTimeService.handleScreenTimeOverEvent();
-    //   }
-    // });
-
-    // AwesomeNotifications().actionStream.listen((notification) async {
-    //   // if a scheduled notification is shown, we can remove the permanent notifications!
-
-    //   print("==>> LISTEN TO ACTION STREAM");
-    //   if (notification.channelKey == kScheduledNotificationChannelKey) {
-    //     print("==>> button key pressed");
-    //     print("==>> NOW WE CAN DO SOME NAVIGATION");
-    //     // AwesomeNotifications()
-    //     //     .dismissNotificationsByChannelKey(kPermanentNotificationKey);
-    //     // await Future.delayed(Duration(milliseconds: 500));
-    //     // _screenTimeService.handleScreenTimeOverEvent();
-    //   }
-    // });
+    AwesomeNotifications().setListeners(
+        onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+        onNotificationCreatedMethod:
+            NotificationController.onNotificationCreatedMethod,
+        onNotificationDisplayedMethod:
+            NotificationController.onNotificationDisplayedMethod,
+        onDismissActionReceivedMethod:
+            NotificationController.onDismissActionReceivedMethod);
   }
-
-  // this code is needed for new version of awesome notifications
-  // Only after at least the action method is set, the notification events are delivered
-  // AwesomeNotifications().setListeners(
-  //     onActionReceivedMethod: NotificationController.onActionReceivedMethod,
-  //     onNotificationCreatedMethod:
-  //         NotificationController.onNotificationCreatedMethod,
-  //     onNotificationDisplayedMethod:
-  //         NotificationController.onNotificationDisplayedMethod,
-  //     onDismissActionReceivedMethod:
-  //         NotificationController.onDismissActionReceivedMethod);
 
   /// Use this method to detect when the user taps on a notification or action button
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
     // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
-
     print("==>> on action received method");
     // bool isSilentAction = receivedAction.actionType == ActionType.SilentAction;
 
@@ -150,5 +121,55 @@ class NotificationController {
 
   Future<String?> getTimeZone() async {
     return await AwesomeNotifications().getLocalTimeZoneIdentifier();
+  }
+
+  Future<void> dismissPermanentNotifications() async {
+    await AwesomeNotifications()
+        .dismissNotificationsByChannelKey(kPermanentNotificationKey);
+  }
+
+  Future<void> dismissUpdatedScreenTimeNotifications() async {
+    await AwesomeNotifications()
+        .dismissNotificationsByChannelKey(kUpdatedScreenTimeNotificationKey);
+  }
+
+  Future<void> dismissScheduledNotifications() async {
+    await AwesomeNotifications()
+        .dismissNotificationsByChannelKey(kScheduledNotificationChannelKey);
+  }
+
+  Future<void> dismissNotifications({required int? id}) async {
+    if (id == null) return;
+    await AwesomeNotifications().dismissNotificationsByGroupKey(id.toString());
+  }
+
+  Future<void> cancelNotifications({required int? id}) async {
+    if (id == null) return;
+    await AwesomeNotifications().cancelNotificationsByGroupKey(id.toString());
+  }
+
+  Future<void> dismissNotificationsByChannelKey(
+      {required String channelKey}) async {
+    await AwesomeNotifications().dismissNotificationsByChannelKey(channelKey);
+  }
+
+  Future<int> getBadgeIndicator() async {
+    int amount = await AwesomeNotifications().getGlobalBadgeCounter();
+    return amount;
+  }
+
+  Future<void> setBadgeIndicator(int amount) async {
+    await AwesomeNotifications()
+        .setGlobalBadgeCounter((amount - 1).clamp(0, 10000));
+  }
+
+  Future<int> incrementBadgeIndicator() async {
+    return await AwesomeNotifications().incrementGlobalBadgeCounter();
+  }
+
+  Future<void> setNotificationsValues() async {
+    final currentBadgeCounter = await getBadgeIndicator();
+    //Set the Global Counter to a New Value
+    setBadgeIndicator(currentBadgeCounter);
   }
 }

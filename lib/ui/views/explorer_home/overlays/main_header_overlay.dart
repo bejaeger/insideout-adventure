@@ -50,21 +50,22 @@ class MainHeader extends StatelessWidget {
               ),
               //Spacer(),
               horizontalSpaceSmall,
-              Opacity(
-                opacity: 0.1,
-                child: GestureDetector(
-                  onTap: onDevFeaturePressed,
-                  child: Container(
-                      alignment: Alignment.center,
-                      width: 80,
-                      height: 80,
-                      color: kcCultured,
-                      child: AfkCreditsText.captionBold(
-                        "Dev Feature",
-                        align: TextAlign.center,
-                      )),
+              if (onDevFeaturePressed != null)
+                Opacity(
+                  opacity: 0.1,
+                  child: GestureDetector(
+                    onTap: onDevFeaturePressed,
+                    child: Container(
+                        alignment: Alignment.center,
+                        width: 80,
+                        height: 80,
+                        color: kcCultured,
+                        child: AfkCreditsText.captionBold(
+                          "Dev Feature",
+                          align: TextAlign.center,
+                        )),
+                  ),
                 ),
-              ),
               Spacer(),
               GestureDetector(
                 onTap: onCreditsPressed,

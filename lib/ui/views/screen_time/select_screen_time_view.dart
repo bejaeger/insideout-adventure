@@ -20,6 +20,8 @@ class SelectScreenTimeView extends StatelessWidget {
         return MainPage(
           showBackButton: !model.isParentAccount,
           child: Container(
+            // width: 300,
+            // height: 400,
             child: Padding(
               padding: const EdgeInsets.only(
                   left: 20,
@@ -28,25 +30,27 @@ class SelectScreenTimeView extends StatelessWidget {
                   bottom: kBottomBackButtonPadding + 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // AfkCreditsText.headingOne("Screen time"),
-                  Row(
+                  if (model.isParentAccount)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: () {
+                          model.popView();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.close, size: 30),
+                        ),
+                      ),
+                    ),
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if (model.isParentAccount)
-                        GestureDetector(
-                          onTap: () {
-                            model.popView();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.close, size: 30),
-                          ),
-                        ),
-                      Expanded(
-                        child: AfkCreditsText.headingTwo("Select screen time",
-                            align: TextAlign.center),
-                      ),
+                      AfkCreditsText.headingTwo("Select screen time",
+                          align: TextAlign.center),
                     ],
                   ),
 
@@ -83,9 +87,9 @@ class SelectScreenTimeView extends StatelessWidget {
                   ),
                   //Icon(Icons.arrow_downward_rounded, size: 40),
                   Spacer(),
-                  Lottie.network(
-                      'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
-                      height: 160),
+                  Lottie.asset(kLottieBigTv,
+                      height: screenHeight(context, percentage: 0.22)),
+                  //  'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
                   Spacer(),
                   Column(
                     children: [
@@ -93,12 +97,12 @@ class SelectScreenTimeView extends StatelessWidget {
                         children: [
                           Expanded(
                             child: AfkCreditsButton.outline(
-                              enabled: model.screenTimePreset == 15,
-                              title: "15 min",
-                              onTap: model.totalAvailableScreenTime > 15
-                                  ? () => model.selectScreenTime(minutes: 15)
+                              enabled: model.screenTimePreset == 20,
+                              title: "20 min",
+                              onTap: model.totalAvailableScreenTime >= 20
+                                  ? () => model.selectScreenTime(minutes: 20)
                                   : null,
-                              color: model.totalAvailableScreenTime > 15
+                              color: model.totalAvailableScreenTime >= 20
                                   ? kcScreenTimeBlue
                                   : Colors.grey[500],
                             ),
@@ -106,12 +110,12 @@ class SelectScreenTimeView extends StatelessWidget {
                           horizontalSpaceTiny,
                           Expanded(
                             child: AfkCreditsButton.outline(
-                              enabled: model.screenTimePreset == 30,
-                              title: "30 min",
-                              onTap: model.totalAvailableScreenTime > 30
-                                  ? () => model.selectScreenTime(minutes: 30)
+                              enabled: model.screenTimePreset == 40,
+                              title: "40 min",
+                              onTap: model.totalAvailableScreenTime >= 40
+                                  ? () => model.selectScreenTime(minutes: 40)
                                   : null,
-                              color: model.totalAvailableScreenTime > 30
+                              color: model.totalAvailableScreenTime >= 40
                                   ? kcScreenTimeBlue
                                   : Colors.grey[500],
                             ),
@@ -125,10 +129,10 @@ class SelectScreenTimeView extends StatelessWidget {
                             child: AfkCreditsButton.outline(
                               enabled: model.screenTimePreset == 60,
                               title: "60 min",
-                              onTap: model.totalAvailableScreenTime > 60
+                              onTap: model.totalAvailableScreenTime >= 60
                                   ? () => model.selectScreenTime(minutes: 60)
                                   : null,
-                              color: model.totalAvailableScreenTime > 60
+                              color: model.totalAvailableScreenTime >= 60
                                   ? kcScreenTimeBlue
                                   : Colors.grey[500],
                             ),
@@ -139,7 +143,10 @@ class SelectScreenTimeView extends StatelessWidget {
                               enabled: model.screenTimePreset ==
                                   model.totalAvailableScreenTime,
                               title: "Maximum",
-                              onTap: () => model.selectScreenTime(minutes: -1),
+                              onTap: (model.screenTimePreset ==
+                                      model.totalAvailableScreenTime)
+                                  ? null
+                                  : () => model.selectScreenTime(minutes: -1),
                               color: kcScreenTimeBlue,
                             ),
                           ),
@@ -154,6 +161,8 @@ class SelectScreenTimeView extends StatelessWidget {
                   // verticalSpaceMedium,
                   Spacer(),
                   AfkCreditsButton(
+                      leading:
+                          Icon(Icons.play_arrow_rounded, color: Colors.white),
                       onTap: model.afkCreditsBalance == 0
                           ? null
                           : model.startScreenTime,

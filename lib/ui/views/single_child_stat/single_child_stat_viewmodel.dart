@@ -45,6 +45,10 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     return userService.explorerNameFromUid(uid);
   }
 
+  ScreenTimeSession? getScreenTimeSession({required String uid}) {
+    return screenTimeService.getActiveScreenTime(uid: uid);
+  }
+
   // ---------------------------------
   // helpers
   void showHistoryItemInfoDialog(dynamic data) async {
@@ -57,12 +61,13 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
       );
     } else if (data is ScreenTimeSession) {
       await dialogService.showDialog(
-        title: "Used ${data.minutes} min screen time",
+        title: "Used ${data.minutesUsed ?? data.minutes} min screen time",
         description: "Used screen time from " +
             formatDateDetailsType3(data.startedAt.toDate()) +
             " until " +
-            formatDateDetailsType3(
-                data.startedAt.toDate().add(Duration(minutes: data.minutes))),
+            formatDateDetailsType3(data.startedAt
+                .toDate()
+                .add(Duration(minutes: data.minutesUsed ?? data.minutes))),
       );
     }
   }

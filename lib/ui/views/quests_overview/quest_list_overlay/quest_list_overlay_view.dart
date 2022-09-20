@@ -17,7 +17,7 @@ class QuestListOverlayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("==>> Rebuild QuestListOverlay");
+    // print("==>> Rebuild QuestListOverlay");
     return ViewModelBuilder<QuestListOverlayViewModel>.reactive(
       viewModelBuilder: () => QuestListOverlayViewModel(),
       onModelReady: (model) => model.listenToLayout(),
@@ -42,7 +42,7 @@ class QuestListOverlayView extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                     //colors: [Colors.white, kcPrimaryColor],
-                    colors: [Colors.white, kcPrimaryColor],
+                    colors: [kcGreenWhiter, kcPrimaryColor],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     stops: [0.2, 1]),
@@ -53,7 +53,7 @@ class QuestListOverlayView extends StatelessWidget {
                   SizedBox(height: 4),
                   GrabberLine(),
                   Padding(
-                    padding: const EdgeInsets.only(left: 20.0, top: 20),
+                    padding: const EdgeInsets.only(left: 20.0, top: 15),
                     child: AfkCreditsText.headingTwo(
                       "Quest list",
                       align: TextAlign.center,
@@ -64,16 +64,31 @@ class QuestListOverlayView extends StatelessWidget {
                       onRefresh: () async => model.initializeQuests(),
                       child: ListView(
                         children: [
-                          verticalSpaceMedium,
-                          SectionHeader(
-                            title: "Near You",
-                            onButtonTap: () =>
-                                model.initializeQuests(force: true),
-                            // textButtonText: "REFRESH",
-                            buttonIcon: model.isBusy
-                                ? AFKProgressIndicator()
-                                : Icon(Icons.refresh_rounded),
-                          ),
+                          verticalSpaceSmall,
+                          if (model.nearbyQuests.length != 0)
+                            SectionHeader(
+                              title: "Near You",
+                              onButtonTap: () =>
+                                  model.initializeQuests(force: true),
+                              // textButtonText: "REFRESH",
+                              buttonIcon: model.isBusy
+                                  ? AFKProgressIndicator()
+                                  : Icon(Icons.refresh_rounded),
+                            ),
+                          verticalSpaceTiny,
+                          if (model.nearbyQuests.length == 0)
+                            Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.only(top: 30),
+                              child: AfkCreditsText.headingThree(
+                                  "No quests found"),
+                            ),
+                          if (model.nearbyQuests.length == 0)
+                            Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.only(top: 15),
+                                child: AfkCreditsText.subheading(
+                                    "Ask your parents to create one")),
                           ListView(
                             physics: ScrollPhysics(),
                             //itemExtent: 120,

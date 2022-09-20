@@ -156,7 +156,7 @@ class AuthenticationLayout extends StatelessWidget {
                                       AlwaysStoppedAnimation(Colors.white),
                                 )
                               : Text(
-                                  "LOGIN AS TEST SPONSOR",
+                                  "LOGIN AS TEST USER",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,

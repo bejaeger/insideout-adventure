@@ -60,11 +60,12 @@ class AddExplorerView extends StatelessWidget with $AddExplorerView {
               ),
               verticalSpaceLarge,
               AfkCreditsButton(
+                  leading: Icon(Icons.add_circle_outline, color: Colors.white),
                   busy: model.isBusy,
                   // onPressed: model.navigateToExplorerHomeView,
                   onTap: model.addExplorer,
                   //child: Text("Go to explorer home/map")),
-                  title: "Create Account"),
+                  title: "Create account"),
             ],
           ),
         ),

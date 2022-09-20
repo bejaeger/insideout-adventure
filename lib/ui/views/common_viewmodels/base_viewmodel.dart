@@ -4,6 +4,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
@@ -23,6 +24,7 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
@@ -52,7 +54,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       locator<GamificationService>();
   final ScreenTimeService screenTimeService = locator<ScreenTimeService>();
   final PermissionService _permissionService = locator<PermissionService>();
-
   final baseModelLog = getLogger("BaseModel");
 
   // ------------------------------------------------------
@@ -116,20 +117,66 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
-  bool get isScreenTimeActive => screenTimeService.currentSession != null;
-  String? get screenTimeSessionId =>
-      screenTimeService.currentSession?.sessionId;
-  int? get screenTimeLeft => screenTimeService.screenTimeLeftInSeconds;
-  String? get screenTimeLeftString =>
-      secondsToMinuteTime(screenTimeService.screenTimeLeftInSeconds);
+  bool get isScreenTimeActive =>
+      screenTimeService.supportedExplorerScreenTimeSessionsActive.length != 0;
+  List<ScreenTimeSession> get childScreenTimeSessionsActive =>
+      screenTimeService.supportedExplorerScreenTimeSessionsActive.values
+          .toList();
 
-  bool usingScreenTime({required String uid}) {
-    return screenTimeService.currentSession?.uid == uid;
+  // ------------------------------------------
+  // state
+
+  int getMinSreenTimeLeftInSeconds(
+      {required List<ScreenTimeSession> sessions}) {
+    DateTime now = DateTime.now();
+    int min = -1;
+    sessions.forEach(
+      (element) {
+        int diff = now.difference(element.startedAt.toDate()).inSeconds;
+        int timeLeft = element.minutes * 60 - diff;
+        if (timeLeft < min || min < 0) {
+          min = timeLeft;
+        }
+      },
+    );
+    return min;
   }
 
-  void listenToScreenTime() {
-    screenTimeService.setupScreenTimeListener(callback: notifyListeners);
+  ScreenTimeSession? getScreenTime({required String uid}) {
+    try {
+      return childScreenTimeSessionsActive
+          .firstWhere((element) => element.uid == uid);
+    } catch (e) {
+      if (e is StateError) {
+        return null;
+      } else {
+        rethrow;
+      }
+    }
   }
+
+  // screen time will be added to subject every 60 seconds.
+  // Map<String, StreamSubscription?> screenTimeSubjectSubscription = {};
+  // void listenToScreenTime() {
+  //   baseModelLog.e(
+  //       "active screen time length: ${userService.supportedExplorerScreenTimeSessionsActive.length}");
+  //   userService.supportedExplorerScreenTimeSessionsActive.forEach(
+  //     (key, element) {
+  //       if (!screenTimeSubjectSubscription.containsKey(element.uid) ||
+  //           screenTimeSubjectSubscription[element.uid] == null) {
+  //         screenTimeSubjectSubscription[element.uid] =
+  //             screenTimeService.screenTimeActiveSubject[element.uid]?.listen(
+  //           (_) {
+  //             newScreenTimeLeft = secondsToMinuteTime(
+  //                 screenTimeService.getMinSreenTimeLeftInSeconds());
+  //             baseModelLog.e("new screentime left: $newScreenTimeLeft");
+  //             notifyListeners();
+  //           },
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 
   Future clearServiceData(
       {bool logOutFromFirebase = true,
@@ -223,7 +270,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     return adminMode;
   }
 
-  Future clearStackAndNavigateToHomeView() async {
+  Future clearStackAndNavigateToHomeView(
+      {bool showQuestsFoundSnackbar = false}) async {
     if (currentUser.role == UserRole.sponsor) {
       await navigationService.clearStackAndShow(
         Routes.parentHomeView,
@@ -236,6 +284,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     } else {
       await navigationService.clearStackAndShow(
         Routes.explorerHomeView,
+        arguments: ExplorerHomeViewArguments(
+            showQuestsFoundSnackbar: showQuestsFoundSnackbar),
       );
     }
   }
@@ -372,9 +422,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         // curve: Curves.linear,
         // barrierColor: Colors.black45,
         description: quest.description,
-        mainButtonTitle: quest.type == QuestType.DistanceEstimate
-            ? "Show quest"
-            : "Show quest",
+        mainButtonTitle: isParentAccount ? "Show quest" : "Play",
         secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
         data: quest);
     return sheetResponse;
@@ -399,8 +447,17 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   //////////////////////////////////////////
   /// Clean-up
+
+  // void cancelScreenTimeLeftInSecondsSubjectListener() {
+  //   screenTimeSubjectSubscription.forEach((key, value) {
+  //     value?.cancel();
+  //     screenTimeSubjectSubscription[key] = null;
+  //   });
+  // }
+
   @override
   void dispose() {
     super.dispose();
+    //cancelScreenTimeLeftInSecondsSubjectListener();
   }
 }

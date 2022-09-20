@@ -19,7 +19,7 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
 
   @override
   Widget build(BuildContext context) {
-    String roleString = role == UserRole.sponsor ? "Sponsor" : "Explorer";
+    String roleString = role == UserRole.sponsor ? "Parent" : "Child";
     return ViewModelBuilder<CreateAccountViewModel>.reactive(
       viewModelBuilder: () => CreateAccountViewModel(role: role),
       onModelReady: (model) => listenToFormUpdated(model),

@@ -44,6 +44,10 @@ class AfkCreditsText extends StatelessWidget {
   const AfkCreditsText.warn(this.text, {TextAlign align = TextAlign.start})
       : style = warnStyle,
         alignment = align;
+  const AfkCreditsText.screenTimeWarn(this.text,
+      {TextAlign align = TextAlign.start})
+      : style = warnScreenTimeStyle,
+        alignment = align;
   const AfkCreditsText.alertThree(this.text,
       {TextAlign align = TextAlign.start})
       : style = alert3Style,
@@ -110,8 +114,9 @@ class AfkCreditsText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = statsStyleBlack,
         alignment = align;
-  const AfkCreditsText.tag(this.text, {TextAlign align = TextAlign.start})
-      : style = tagStyle,
+  AfkCreditsText.tag(this.text,
+      {TextAlign align = TextAlign.start, Color color = Colors.black87})
+      : style = tagStyle.copyWith(color: color),
         alignment = align;
   const AfkCreditsText.button(this.text, {TextAlign? align})
       : style = buttonStyle,
@@ -120,6 +125,12 @@ class AfkCreditsText extends StatelessWidget {
   AfkCreditsText.body(this.text,
       {Color color = kcGreyTextColor, TextAlign? align})
       : style = bodyStyleSofia.copyWith(color: color),
+        alignment = align;
+
+  AfkCreditsText.bodyBold(this.text,
+      {Color color = kcGreyTextColor, TextAlign? align})
+      : style =
+            bodyStyleSofia.copyWith(color: color, fontWeight: FontWeight.w600),
         alignment = align;
 
   AfkCreditsText.bodyItalic(this.text,
