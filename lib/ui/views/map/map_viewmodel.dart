@@ -50,6 +50,9 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   // Getters
   bool get isAvatarView => mapStateService.isAvatarView;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
+  bool isFingerOnScreen = false;
+  DateTime startedRotating = DateTime.now();
+  // bool isRotating = false;
 
   // -------------------------------------------------
   // State variables
@@ -59,6 +62,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   String mapStyle = "";
   bool get showReloadQuestButton => questService.showReloadQuestButton;
   bool get isReloadingQuests => questService.isReloadingQuests;
+
   // last element of cameraBearingZoom determines whether listener should be fired!
 
   // TODO: This function is called for the explorer!
@@ -108,13 +112,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       await showGenericInternalErrorDialog();
     }
 
-    if (_bearingListenerSubscription == null) {
-      _bearingListenerSubscription = mapStateService.bearingSubject.listen(
-        (bearing) {
-          notifyListeners();
-        },
-      );
-    }
     if (_mapEventListenerSubscription == null) {
       // update map state with...
       _mapEventListenerSubscription = mapStateService.mapEventListener.listen(
@@ -165,7 +162,9 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     required double rotation,
     required double screenWidth,
     required double screenHeight,
-  }) {
+  }) async {
+    setIsFingerOnScreen(true);
+    startedRotating = DateTime.now();
     bool isLeft = dxGlob < screenWidth / 2;
     bool isRight = !isLeft;
     bool isBelowAvatar = dyGlob < (screenHeight / 2 + 200);
@@ -193,6 +192,14 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         (zoom + (scale - 1) * 0.08).clamp(kMinZoomAvatarView, kMaxZoom));
     _moveCamera(questCenteredOnMap: activeQuestService.questCenteredOnMap);
     previousRotation = rotation;
+
+    // TODO: This does not really work!
+    // TODO: We want to remove the ripple effects WHILE rotating
+    // TODO: This is somehow possible!
+    await Future.delayed(Duration(milliseconds: 70));
+    if (DateTime.now().difference(startedRotating).inMilliseconds > 65) {
+      setIsFingerOnScreen(false);
+    }
   }
 
   void _animateNewLatLon({bool? force = true}) {
@@ -243,7 +250,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         lon: customLon ?? userLocation!.longitude);
   }
 
-  void _animateCamera({
+  Future _animateCamera({
     double? customBearing,
     double? customZoom,
     double? customTilt,
@@ -251,7 +258,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     double? customLon,
     bool? force = true,
     bool? forceUseLocation,
-  }) {
+  }) async {
     if (hasSelectedQuest &&
         customLat == null &&
         customLon == null &&
@@ -261,7 +268,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         customLon = selectedQuest!.startMarker!.lon;
       }
     }
-    animateCamera(
+    await animateCamera(
         bearing: customBearing ?? bearing,
         zoom: customZoom ?? zoom,
         tilt: customTilt ?? tilt,
@@ -270,33 +277,35 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         force: force);
   }
 
-  void animateCameraToBirdsView({bool? forceUseLocation}) {
+  Future animateCameraToBirdsView({bool? forceUseLocation}) async {
     changeCameraTilt(0);
     changeCameraBearing(0);
     changeCameraZoom(lastBirdViewZoom ?? kInitialZoomBirdsView);
-    _animateCamera(
+    await _animateCamera(
         customLat:
             userLocation!.latitude, // + 0.005 * zoom / kInitialZoomBirdsView,
         forceUseLocation: forceUseLocation);
+    // animations on android take 1 second
   }
 
-  void _animateCameraToAvatarView({bool? forceUseLocation}) async {
+  Future _animateCameraToAvatarView({bool? forceUseLocation}) async {
     layoutService.setIsMovingCamera(true);
     takeSnapshotOfBirdViewCameraPosition();
     changeCameraTilt(90);
     changeCameraZoom(kInitialZoomAvatarView);
-    _animateCamera(forceUseLocation: forceUseLocation);
-    await Future.delayed(Duration(seconds: 1));
+    await _animateCamera(forceUseLocation: forceUseLocation);
     layoutService.setIsMovingCamera(false);
   }
 
-  void changeMapZoom() {
+  void changeMapZoom() async {
     if (isAvatarView) {
-      animateCameraToBirdsView();
       mapStateService.setIsAvatarView(false);
+      notifyListeners();
+      await animateCameraToBirdsView();
     } else {
-      _animateCameraToAvatarView(forceUseLocation: true);
       mapStateService.setIsAvatarView(true);
+      notifyListeners();
+      await _animateCameraToAvatarView(forceUseLocation: true);
     }
     notifyListeners();
   }
@@ -544,7 +553,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     notifyListeners();
   }
 
-  void animateQuestToMap({required Quest quest}) {
+  void animateQuestToMap({required Quest quest}) async {
     // ----------------------------------
     // -->> START TreasureLocationSearch Quest Section
     if (quest.type == QuestType.TreasureLocationSearch) {
@@ -571,22 +580,32 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       // -->> START Hike Quest Section
     } else if (quest.type == QuestType.GPSAreaHike ||
         quest.type == QuestType.GPSAreaHike) {
-      // ? Map animation is triggered in initializer of gps_area_hike_viewmodel.dart (overlay viewmodel)
+      // ? Map animation is handled in initializer of gps_area_hike_viewmodel.dart (overlay viewmodel)
+      // ? Because we need quest information there
       // ? Should I do it here instead?
       // ONLY markers relevant to quest
 
-      // ? Also markers are added in initializer of gps_area_hike_viewmodel.dart
-      // if (quest.startMarker != null) {
-      //   resetMapMarkers();
-      //   // add start marker & area
-      //   addMarkerToMap(
-      //       quest: quest, afkmarker: quest.startMarker!, isStartMarker: true);
-      //   addAreaToMap(
-      //       quest: quest, afkmarker: quest.startMarker!, isStartArea: true);
-      //   // add other potential markers and areas
-      //   addMarkers(quest: quest);
-      //   addAreas(quest: quest);
-      // }
+      // with the delay it looks a bit smoother in the animation
+      await Future.delayed(Duration(milliseconds: 250));
+      mapStateService.setIsAvatarView(false);
+      if (quest.startMarker != null) {
+        resetMapMarkers();
+        // add start marker & area
+        addMarkerToMap(
+            quest: quest,
+            afkmarker: quest.startMarker!,
+            isStartMarker: true,
+            handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
+        addAreaToMap(
+            quest: quest, afkmarker: quest.startMarker!, isStartArea: true);
+        // add other potential markers and areas
+        addMarkers(
+            quest: quest,
+            handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
+        addAreas(quest: quest);
+      }
+      notifyListeners();
+
       // <<-- END Hike Quest
       // ---------------------------------------------
     }
@@ -665,6 +684,14 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         }
       }
       questService.showReloadQuestButton = false;
+    }
+  }
+
+  void setIsFingerOnScreen(bool set) async {
+    bool shouldNotifyListeners = isFingerOnScreen != set;
+    isFingerOnScreen = set;
+    if (shouldNotifyListeners) {
+      notifyListeners();
     }
   }
 
@@ -796,7 +823,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     required double lat,
     required double lon,
   }) moveCamera;
-  final void Function(
+  final Future Function(
       {required double bearing,
       required double zoom,
       required double tilt,

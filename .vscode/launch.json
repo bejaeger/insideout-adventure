@@ -55,6 +55,19 @@
       "flutterMode": "debug",
     },
     {
+      "name": "Mobile Prod Release",
+      "program": "lib/main_prod.dart",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--flavor",
+        "prod",
+        "-t",
+        "lib/main_prod.dart",
+      ],
+      "flutterMode": "release",
+    },
+    {
       "name": "Flutter Web (port 7700)",
       "request": "launch",
       "type": "dart",

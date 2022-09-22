@@ -48,7 +48,7 @@ class GoogleMapService {
     }
   }
 
-  static void animateCamera({
+  static Future animateCamera({
     required double bearing,
     required double zoom,
     required double tilt,
@@ -65,7 +65,7 @@ class GoogleMapService {
       zoom: zoom,
       tilt: tilt,
     );
-    runAnimation(
+    await runAnimation(
       () => _mapController!.animateCamera(
         CameraUpdate.newCameraPosition(position),
       ),
@@ -286,6 +286,8 @@ class GoogleMapService {
       isAnimating = false;
       rethrow;
     }
+    // 1 second is default length of animation for android.
+    // TODO: This is different for iOS
     await Future.delayed(Duration(seconds: 1));
     isAnimating = false;
   }

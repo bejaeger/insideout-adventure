@@ -1,11 +1,8 @@
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/services/maps/google_map_service.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stacked/stacked.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
 
 //
@@ -74,11 +71,15 @@ class GoogleMapScreen extends StatelessWidget {
                 buildingsEnabled: false,
                 compassEnabled: model.isParentAccount ? true : false,
                 onCameraMove: (position) {
+                  // only sets state. values are not listened to.
+                  // just to be able to go back to previous camera settings
                   model.changeCameraBearing(position.bearing);
                   model.changeCameraZoom(position.zoom);
                   model.changeCameraLatLon(
                       position.target.latitude, position.target.longitude);
-                  model.checkForNewQuests(callback: callback);
+                  if (!model.isAvatarView) {
+                    model.checkForNewQuests(callback: callback);
+                  }
                 },
               ),
             ),

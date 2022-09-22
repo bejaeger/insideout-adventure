@@ -75,6 +75,10 @@ dotenv
 **/ios/Runner/GoogleService-Info.plist
 **/ios/Runner/GoogleService-Info-2.plist
 
+# from npm
+node_modules/
+package-lock.json
+
 # Web related
 lib/generated_plugin_registrant.dart
 

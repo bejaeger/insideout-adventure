@@ -34,8 +34,8 @@ class MainHeader extends StatelessWidget {
         child: Container(
           height: 75,
           //color: Colors.blue.withOpacity(0.5),
-          padding: const EdgeInsets.symmetric(
-              horizontal: kHorizontalPadding, vertical: 10),
+          padding: const EdgeInsets.only(
+              left: kHorizontalPadding, right: 10, top: 10, bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -69,9 +69,9 @@ class MainHeader extends StatelessWidget {
               Spacer(),
               GestureDetector(
                 onTap: onCreditsPressed,
-                child: Padding(
+                child: Container(
                   padding: const EdgeInsets.only(
-                      right: 5.0, top: 14, bottom: 5.0, left: 8.0),
+                      right: 15.0, top: 14, bottom: 5.0, left: 8.0),
                   //color: Colors.red,
                   child: AFKCreditsDisplay(balance: balance),
                 ),

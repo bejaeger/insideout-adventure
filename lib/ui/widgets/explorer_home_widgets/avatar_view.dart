@@ -54,7 +54,8 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(kHerculesAvatar);
+    // return Image.asset(kHerculesAvatar);
+    return Image.asset(kLottieChillDudeHeadPng, height: 39);
   }
 }
 

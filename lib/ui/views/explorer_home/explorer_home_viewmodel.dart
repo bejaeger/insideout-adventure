@@ -82,6 +82,10 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     // makes sure that screen time subject is listened to in case one is active!
     screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
 
+    // make sure the tilt is set correctly. Might not be the case when using parent map before
+    // TODO: Might want to treat that in a cleaner way in a general reset method.
+    mapViewModel.changeCameraTilt(kInitialTilt);
+
     setBusy(false);
     // fade loading screen out process
     await Future.delayed(
@@ -102,9 +106,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       result();
     } else {
       if (showQuestsFoundSnackbar) {
-        snackbarService.showSnackbar(
-            title: "Found ${questService.getNearByQuest.length} quests nearby",
-            message: "Look around to play them");
+        // snackbarService.showSnackbar(
+        //     title: "Found ${questService.getNearByQuest.length} quests nearby",
+        //     message: "Look around to play them");
       }
     }
     showQuestLoadingScreen = false;

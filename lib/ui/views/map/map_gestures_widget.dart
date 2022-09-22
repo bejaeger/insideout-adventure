@@ -9,10 +9,12 @@ import 'package:flutter/material.dart';
 class MapGesturesWidget extends StatelessWidget {
   final ignoreGestures;
   final void Function(ScaleUpdateDetails) onRotate;
+  final void Function(TapDownDetails)? onTapDown;
   const MapGesturesWidget({
     Key? key,
     required this.ignoreGestures,
     required this.onRotate,
+    this.onTapDown,
   }) : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class MapGesturesWidget extends StatelessWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onScaleUpdate: onRotate,
+                onTapDown: onTapDown,
                 // to prevent using Google Map double tap
                 // ! Don't do it, otherwise it introduces a
                 // ! delay on map marker taps

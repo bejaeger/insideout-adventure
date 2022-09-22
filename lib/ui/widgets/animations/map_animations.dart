@@ -28,6 +28,7 @@ class MapEffects extends StatelessWidget {
                 kLottieRippleEffect,
                 height: 200,
                 width: 200,
+                frameRate: FrameRate.max,
               ),
             ),
           )
