@@ -17,7 +17,8 @@ class MapStateService {
   double tilt = kInitialTilt;
   double zoom = kInitialZoomAvatarView;
   double get bearing => bearingSubject.value;
-  final bearingSubject = BehaviorSubject<double>.seeded(kInitialBearing);
+  final BehaviorSubject<double> bearingSubject =
+      BehaviorSubject<double>.seeded(kInitialBearing);
   final mapEventListener = BehaviorSubject<MapUpdate>();
 
   // to create snapshot of previous camera position
@@ -40,6 +41,11 @@ class MapStateService {
   // if map should be moved to specific lat/lon
   double? newLat;
   double? newLon;
+
+  // if finger on screen we want to stop the lottie animations
+  bool get isFingerOnScreen => isFingerOnScreenSubject.value;
+  final BehaviorSubject<bool> isFingerOnScreenSubject =
+      BehaviorSubject<bool>.seeded(false);
 
   // navigated form quest list
   bool navigatedFromQuestList = false;
@@ -161,8 +167,12 @@ class MapStateService {
   ////////////////////////////////////////////////////////
   /// Clean up
   ///
+
+  // ! THIS IS NEVER CALLED ANYWHERE!
+  // ! SHOULD IT BE CALLED!?
   void closeListener() {
     bearingSubject.close();
+    isFingerOnScreenSubject.close();
     mapEventListener.close();
   }
 }

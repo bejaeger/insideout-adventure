@@ -50,7 +50,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   // Getters
   bool get isAvatarView => mapStateService.isAvatarView;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
-  bool isFingerOnScreen = false;
+  bool get isFingerOnScreen => mapStateService.isFingerOnScreen;
   DateTime startedRotating = DateTime.now();
   // bool isRotating = false;
 
@@ -118,15 +118,15 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         (MapUpdate type) {
           log.i("Received Map Update of type $type");
           if (type == MapUpdate.forceAnimateToLocation) {
-            _animateCamera(forceUseLocation: true, force: true);
+            animateCameraViewModel(forceUseLocation: true, force: true);
           }
           if (type == MapUpdate.animate) {
-            _animateCamera();
+            animateCameraViewModel();
           } else if (type == MapUpdate.animateNewLatLon) {
             _animateNewLatLon();
           } else if (type == MapUpdate.restoreSnapshot) {
             // customLat/Lon in case we were in bird's view
-            _animateCamera(
+            animateCameraViewModel(
                 forceUseLocation: true, customLat: newLat, customLon: newLon);
             mapStateService.resetNewLatLon();
           } else if (type == MapUpdate.restoreSnapshotByMoving) {
@@ -250,7 +250,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         lon: customLon ?? userLocation!.longitude);
   }
 
-  Future _animateCamera({
+  Future animateCameraViewModel({
     double? customBearing,
     double? customZoom,
     double? customTilt,
@@ -281,7 +281,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     changeCameraTilt(0);
     changeCameraBearing(0);
     changeCameraZoom(lastBirdViewZoom ?? kInitialZoomBirdsView);
-    await _animateCamera(
+    await animateCameraViewModel(
         customLat:
             userLocation!.latitude, // + 0.005 * zoom / kInitialZoomBirdsView,
         forceUseLocation: forceUseLocation);
@@ -293,7 +293,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     takeSnapshotOfBirdViewCameraPosition();
     changeCameraTilt(90);
     changeCameraZoom(kInitialZoomAvatarView);
-    await _animateCamera(forceUseLocation: forceUseLocation);
+    await animateCameraViewModel(forceUseLocation: forceUseLocation);
     layoutService.setIsMovingCamera(false);
   }
 
@@ -314,7 +314,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     if (userLocation == null) return;
     changeCameraBearing(0);
     // _moveCamera();
-    _animateCamera();
+    animateCameraViewModel();
   }
 
   // Function called by explorer account!
@@ -561,7 +561,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       if (quest.startMarker != null) {
         changeCameraTilt(90);
         changeCameraZoom(kMaxZoom);
-        _animateCamera(
+        animateCameraViewModel(
             customLat: quest.startMarker!.lat,
             customLon: quest.startMarker!.lon,
             force: true);
@@ -688,11 +688,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   void setIsFingerOnScreen(bool set) async {
-    bool shouldNotifyListeners = isFingerOnScreen != set;
-    isFingerOnScreen = set;
-    if (shouldNotifyListeners) {
-      notifyListeners();
-    }
+    mapStateService.isFingerOnScreenSubject.add(set);
   }
 
   // TODO: This should be specified via the specific quest viewmodels!
@@ -764,7 +760,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     changeCameraTilt(90);
     changeCameraZoom(40); // ridiculous zoom (will be clipped)
     if (lat != null && lon != null) {
-      _animateCamera(customLat: lat, customLon: lon, force: true);
+      animateCameraViewModel(customLat: lat, customLon: lon, force: true);
     }
     await Future.delayed(Duration(milliseconds: 800));
   }

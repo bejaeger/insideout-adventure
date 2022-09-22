@@ -164,7 +164,19 @@ class PermissionsViewModel extends BaseModel {
   }
 
   Future askForNotificationPermission({required Completer completer}) async {
-    AwesomeNotifications().requestPermissionToSendNotifications().then(
+    AwesomeNotifications()
+        .requestPermissionToSendNotifications(
+            // TODO: Maybe have to add CriticalAlert here
+            // permissions: const [
+            //   NotificationPermission.Badge,
+            //   NotificationPermission.Alert,
+            //   NotificationPermission.Sound,
+            //   NotificationPermission.Vibration,
+            //   NotificationPermission.Light,
+            //   NotificationPermission.CriticalAlert,
+            // ],
+            )
+        .then(
       (_) {
         popView();
         completer.complete();

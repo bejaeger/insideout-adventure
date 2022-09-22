@@ -3,7 +3,7 @@
 // of all map functionality
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/right_floating_buttons_overlay_view.dart';
-import 'package:afkcredits/ui/views/map/avatar_on_map.dart';
+import 'package:afkcredits/ui/views/map/avatar_and_effects_on_map_view.dart';
 import 'package:afkcredits/ui/views/map/google_map_screen.dart';
 import 'package:afkcredits/ui/views/map/map_gestures_widget.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
@@ -60,19 +60,13 @@ class MainMapView extends StatelessWidget {
               overlay: model.isAvatarView,
             ),
             // Ripple Effect
-            if (model.hasActiveQuest && !model.isFingerOnScreen)
-              MapEffects(activeQuest: model.activeQuest),
-            AvatarOnMap(
-                characterNumber: model.characterNumber,
-                show: (!((model.isShowingQuestDetails ||
-                            !model.isAvatarView ||
-                            model.isFadingOutOverlay ||
-                            model.isMovingCamera) &&
-                        !model.hasActiveQuest)) &&
-                    model.isAvatarView),
+            // TODO: update treatment of isFingerOnScreen
+            // if (model.hasActiveQuest && !model.isFingerOnScreen)
+            //   MapEffects(activeQuest: model.activeQuest),
+            AvatarAndEffectsOnMapView(),
             // Avatar overlaid with Lottie
             RightFloatingButtonsView(
-              onCompassTap: model.rotateToNorth,
+              // onCompassTap: model.rotateToNorth,
               onZoomPressed: model.changeMapZoom,
             ),
           ],

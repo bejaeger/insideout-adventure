@@ -1,15 +1,18 @@
 import 'dart:async';
 
+import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'dart:math' as m;
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 
 class RightFloatingButtonsOverlayViewModel extends BaseModel
     with MapStateControlMixin {
   // --------------------------------
   // services
   final log = getLogger("RightFloatingButtonsOverlayViewModel");
+  final MapViewModel mapViewModel = locator<MapViewModel>();
 
   // --------------------------------------------
   // getters
@@ -20,8 +23,8 @@ class RightFloatingButtonsOverlayViewModel extends BaseModel
 
   // ------------------------------------------
   // state
-  double prevAngle = 0;
   StreamSubscription? _bearingListenerSubscription;
+  bool prevValue = false;
 
   // ------------------------------------------
   // functions
@@ -29,17 +32,36 @@ class RightFloatingButtonsOverlayViewModel extends BaseModel
   Future initialize() async {
     // Only listening to it because of compass so that it also rotates!
     if (_bearingListenerSubscription == null) {
-      _bearingListenerSubscription = mapStateService.bearingSubject.listen(
-        (bearingIn) {
-          // only update compass when there is significant change
-          // otherwise UI is updated too often.
-          if ((bearing - prevAngle).abs() > 10) {
-            notifyListeners();
-            prevAngle = bearingIn;
+      _bearingListenerSubscription =
+          mapStateService.isFingerOnScreenSubject.listen(
+        (value) {
+          if (value != prevValue) {
+            if (!value) {
+              notifyListeners();
+            }
           }
+          prevValue = value;
         },
       );
+      // mapStateService.bearingSubject.listen(
+      //   (bearingIn) {
+      //     // only update compass when there is significant change
+      //     // otherwise UI is updated too often.
+      //     if ((bearing - prevAngle).abs() > 10) {
+      //       notifyListeners();
+      //       prevAngle = bearingIn;
+      //     }
+      //   },
+      // );
     }
+  }
+
+  void rotateToNorth() async {
+    if (userLocation == null) return;
+    changeCameraBearing(0);
+    // _moveCamera();
+    notifyListeners();
+    await mapViewModel.animateCameraViewModel();
   }
 
   @override

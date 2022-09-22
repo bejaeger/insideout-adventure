@@ -19,7 +19,8 @@ class NotificationController {
           channelDescription:
               'Scheduled notification when screen time is expired.',
           defaultColor: kcPrimaryColor,
-          importance: NotificationImportance.High,
+          // importance: NotificationImportance.High,
+          importance: NotificationImportance.Max,
           //channelShowBadge: true,
         ),
         NotificationChannel(

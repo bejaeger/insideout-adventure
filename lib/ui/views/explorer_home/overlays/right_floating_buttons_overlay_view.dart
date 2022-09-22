@@ -6,7 +6,6 @@ import 'package:stacked/stacked.dart';
 
 class RightFloatingButtonsView extends StatelessWidget {
   final void Function() onZoomPressed;
-  final void Function() onCompassTap;
 
   // !!! Temporary
   final void Function()? onChangeCharacterTap;
@@ -15,7 +14,6 @@ class RightFloatingButtonsView extends StatelessWidget {
     Key? key,
     //required this.bearing,
     required this.onZoomPressed,
-    required this.onCompassTap,
     this.onChangeCharacterTap,
   }) : super(key: key);
 
@@ -48,7 +46,7 @@ class RightFloatingButtonsView extends StatelessWidget {
                   opacity: (model.bearing > 5 || model.bearing < -5) ? 1 : 1,
                   duration: Duration(milliseconds: 500),
                   child: GestureDetector(
-                    onTap: onCompassTap,
+                    onTap: model.rotateToNorth, //onCompassTap,
                     child: Transform.rotate(
                       angle: model.angle,
                       child: Image.asset(
