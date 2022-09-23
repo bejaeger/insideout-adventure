@@ -9,11 +9,14 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
+import 'package:afkcredits/notifications/notification_controller.dart';
+import 'package:afkcredits/notifications/notifications.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
@@ -342,6 +345,43 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       snackbarService.showSnackbar(
           title: "Failure", message: "Connect to a network and try again");
     }
+  }
+  //------------------------
+  // cleanup
+
+  int? notId;
+  int? notScheduledId;
+  void createTestNotification() async {
+    notId = await Notifications().createPermanentNotification(
+      title: "SCREEN TIME STARTED",
+      message: "Hi",
+    );
+    notScheduledId = await Notifications().createScheduledNotification(
+      title: "EXPIRED",
+      message: "Hi",
+      date: DateTime.now().add(Duration(seconds: 7)),
+      session: ScreenTimeSession(
+          sessionId: "sessionId",
+          uid: "uid",
+          userName: "Bernd",
+          createdByUid: "hi",
+          minutes: 10,
+          status: ScreenTimeSessionStatus.active,
+          afkCredits: 10),
+    );
+    notifyListeners();
+  }
+
+  void dismissTestNotification() {
+    if (notId != null) {
+      NotificationController().dismissNotifications(id: notId);
+      notId = null;
+    }
+    if (notScheduledId != null) {
+      NotificationController().dismissNotifications(id: notScheduledId);
+      notScheduledId = null;
+    }
+    notifyListeners();
   }
 
   // ----------------------------------------------------------------

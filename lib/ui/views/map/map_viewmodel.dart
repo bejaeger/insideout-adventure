@@ -3,13 +3,11 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -336,10 +334,11 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       log.i('Markers are Empty');
     }
     if (!isParentAccount && appConfigProvider.isDevFlavor) {
+      // if (!isParentAccount) {
       addARObjectToMap(
           onTap: onARObjectMarkerTap,
-          lat: 49.269805968930406,
-          lon: -123.16189607547962,
+          lat: 49.27215968930406,
+          lon: -123.15749607547962,
           isCoin: true);
       // addARObjectToMap(
       //     onTap: onARObjectMarkerTap,

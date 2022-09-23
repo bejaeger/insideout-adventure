@@ -41,7 +41,7 @@ class PermissionsViewModel extends BaseModel {
 
     // - camera service
     // Not used at the moment!
-    //allGood = allGood & await handleCameraPermissions();
+    // allGood = allGood & await handleCameraPermissions();
 
     // - activity service
     // Not used at the moment!
@@ -164,25 +164,28 @@ class PermissionsViewModel extends BaseModel {
   }
 
   Future askForNotificationPermission({required Completer completer}) async {
-    AwesomeNotifications()
-        .requestPermissionToSendNotifications(
-            // TODO: Maybe have to add CriticalAlert here
-            // permissions: const [
-            //   NotificationPermission.Badge,
-            //   NotificationPermission.Alert,
-            //   NotificationPermission.Sound,
-            //   NotificationPermission.Vibration,
-            //   NotificationPermission.Light,
-            //   NotificationPermission.CriticalAlert,
-            // ],
-            )
-        .then(
+    await AwesomeNotifications().requestPermissionToSendNotifications(
+      //channelKey: kScheduledNotificationChannelKey,
+      // TODO: Maybe have to add CriticalAlert here
+      permissions: const [
+        NotificationPermission.Badge,
+        NotificationPermission.Alert,
+        NotificationPermission.Sound,
+        NotificationPermission.Vibration,
+        NotificationPermission.Light,
+        NotificationPermission.CriticalAlert,
+        NotificationPermission.PreciseAlarms,
+        NotificationPermission.OverrideDnD,
+      ],
+    ).then(
       (_) {
         popView();
         completer.complete();
         notifyListeners();
       },
     );
+    //await AwesomeNotifications().showGlobalDndOverridePage();
+    // await AwesomeNotifications().showAlarmPage();
   }
 
   Future showCameraPermissionRequestDialog() async {

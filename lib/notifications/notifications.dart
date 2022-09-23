@@ -19,6 +19,9 @@ class Notifications {
         title: '${Emojis.time_hourglass_not_done} ' + title,
         body: message,
         locked: true,
+        // notificationLayout: NotificationLayout.ProgressBar,
+        // progress: 70,
+        category: NotificationCategory.Status,
         autoDismissible: false,
       ),
       actionButtons: [
@@ -33,19 +36,34 @@ class Notifications {
     required String title,
     required String message,
     required DateTime date,
-    required ScreenTimeSession session,
+    ScreenTimeSession? session,
   }) async {
     int id = createUniqueId();
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        payload: {"uid": session.uid, "sessionId": session.sessionId},
+        payload: session == null
+            ? null
+            : {
+                "sessionId": session.sessionId,
+                "uid": session.uid,
+                "userName": session.userName,
+                "createdByUid": session.createdByUid,
+                "startedAt": "",
+                "endedAt": "",
+                "minutes": session.minutes.toStringAsFixed(0),
+                "status": "active",
+                "afkCredits": session.afkCredits.toStringAsFixed(0),
+              },
         id: id,
         groupKey: id.toString(),
         channelKey: kScheduledNotificationChannelKey,
         title: "\u26A0 " + title,
         body: message,
+        criticalAlert: true,
+        wakeUpScreen: true,
         category: NotificationCategory.Alarm,
         locked: false,
+        //fullScreenIntent: true,
       ),
       schedule: NotificationCalendar.fromDate(
         date: date,
@@ -53,7 +71,7 @@ class Notifications {
       ),
       actionButtons: [
         NotificationActionButton(
-            key: kScheduledNotificationActionKey, label: "OK")
+            key: kScheduledNotificationActionKey, label: "Show details")
       ],
     );
     return id;

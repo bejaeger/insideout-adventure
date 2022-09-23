@@ -12,6 +12,7 @@ import 'package:afkcredits/ui/widgets/animations/fade_transition_animation.dart'
 import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
 import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -110,6 +111,19 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   OverlayedCloseButton(),
 
                   if (model.isFadingOutOverlay) FadeTransitionAnimation(),
+
+                  // to test notifications during development
+                  // Align(
+                  //   alignment: Alignment.center,
+                  //   child: AfkCreditsButton(
+                  //     title: model.notId != null
+                  //         ? "Dismiss notification"
+                  //         : "Create notification",
+                  //     onTap: model.notId != null
+                  //         ? model.dismissTestNotification
+                  //         : model.createTestNotification,
+                  //   ),
+                  // )
                 ],
               ),
             ),

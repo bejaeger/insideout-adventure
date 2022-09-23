@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class NotificationController {
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
@@ -19,8 +25,10 @@ class NotificationController {
           channelDescription:
               'Scheduled notification when screen time is expired.',
           defaultColor: kcPrimaryColor,
-          // importance: NotificationImportance.High,
           importance: NotificationImportance.Max,
+          criticalAlerts: true,
+          enableVibration: true,
+          playSound: true,
           //channelShowBadge: true,
         ),
         NotificationChannel(
@@ -65,6 +73,39 @@ class NotificationController {
     WidgetsFlutterBinding.ensureInitialized();
     print("==>> on action received method");
     // bool isSilentAction = receivedAction.actionType == ActionType.SilentAction;
+
+    // if this is an expired screen time session alarm we navigate to the active screen time session
+    // to show statistics
+    if (receivedAction.payload != null) {
+      Map<String, String?> payload = receivedAction.payload!;
+      if (payload.containsKey("uid")) {
+        ScreenTimeSession? session;
+        try {
+          session = ScreenTimeSession.fromJson(
+            {
+              "sessionId": payload["sessionId"],
+              "uid": payload["uid"],
+              "userName": payload["userName"],
+              "createdByUid": payload["createdByUid"],
+              "startedAt": "",
+              "endedAt": "",
+              "minutes": int.parse(payload["minutes"]!),
+              "afkCredits": int.parse(payload["afkCredits"]!),
+              "status": "completed", // ! change that manually here
+            },
+          );
+        } catch (e) {
+          print("==>> Error when getting the screen time session: $e");
+          return;
+        }
+
+        // ? Not sure why the RemoveUntil is used here
+        StackedService.navigatorKey?.currentState
+            ?.pushNamedAndRemoveUntil(Routes.activeScreenTimeView, (route) {
+          return (route.settings.name == '/') || route.isFirst;
+        }, arguments: ActiveScreenTimeViewArguments(session: session));
+      }
+    }
 
     // SilentBackgroundAction runs on background thread and cannot show
     // UI/visual elements

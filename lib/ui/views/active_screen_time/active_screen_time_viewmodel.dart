@@ -19,7 +19,8 @@ class ActiveScreenTimeViewModel extends BaseModel {
   ScreenTimeSession? get currentScreenTimeSession => _screenTimeService
       .getScreenTimeSession(uid: session?.uid, sessionId: session?.sessionId);
   ScreenTimeSession? get expiredScreenTime =>
-      _screenTimeService.getExpiredScreenTimeSession(uid: session?.uid);
+      _screenTimeService.getExpiredScreenTimeSession(
+          uid: session?.uid, sessionId: session?.sessionId);
 
   String get childName => session != null ? session!.userName : "";
 
@@ -67,13 +68,25 @@ class ActiveScreenTimeViewModel extends BaseModel {
         );
       }
     }
-    if (session == null) {
+    bool loadedScreenTime = true;
+    // this is the case if we navigate to this view from the expired notification;
+    if (session != null &&
+        session?.status == ScreenTimeSessionStatus.completed) {
+      // this loads the screen time session into memory so it can be accessed with the getter
+      // expiredScreenTime
+      loadedScreenTime = await _screenTimeService.loadScreenTimeSession(
+          uid: session?.uid, sessionId: session?.sessionId);
+    }
+    if (session == null || loadedScreenTime == false) {
       log.wtf("session is null, cannot navigate to active screen time view");
       setBusy(false);
       popView();
       return;
     }
     setBusy(false);
+
+    // HACK! Sometimes the circular progress bar is spinning endlessly for the time. Not exactly sure why
+    Future.delayed(Duration(seconds: 2), () => notifyListeners());
   }
 
   // Future<void> stopScreenTimeAfterZero() async {

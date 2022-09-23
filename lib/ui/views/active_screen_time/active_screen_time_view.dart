@@ -32,7 +32,7 @@ class ActiveScreenTimeView extends StatelessWidget {
               // in home views!
               model.cancelOnlyActiveScreenTimeSubjectListeners(
                   uid: session.uid);
-              model.replaceWithHomeView();
+              model.clearStackAndNavigateToHomeView();
               return false;
             }
             return true;
@@ -70,7 +70,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                         model
                                             .cancelOnlyActiveScreenTimeSubjectListeners(
                                                 uid: session.uid);
-                                        model.replaceWithHomeView();
+                                        model.clearStackAndNavigateToHomeView();
                                         return;
                                       }
                                       model.popView();

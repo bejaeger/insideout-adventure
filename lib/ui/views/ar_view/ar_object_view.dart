@@ -8,11 +8,14 @@ import 'package:afkcredits/ui/views/ar_view/ar_object_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
+import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
+import 'package:ar_flutter_plugin/datatypes/node_types.dart';
 import 'package:ar_flutter_plugin/managers/ar_anchor_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_object_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
 import 'package:ar_flutter_plugin/models/ar_anchor.dart';
+import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -41,12 +44,16 @@ class _ARObjectViewState extends State<ARObjectView> {
   // For new plugin
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
+  ARAnchorManager? arAnchorManager;
   //String localObjectReference;
   ARNode? localObjectNode;
   //String webObjectReference;
   ARNode? webObjectNode;
   ARNode? fileSystemNode;
   HttpClient? httpClient;
+
+  List<ARNode> nodes = [];
+  List<ARAnchor> anchors = [];
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +63,13 @@ class _ARObjectViewState extends State<ARObjectView> {
         onBackPressed: () => model.popArView(result: false),
         child: Stack(
           children: [
-            ARView(
-              onARViewCreated: onARViewCreated,
-              //laneDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+            Container(
+              //height: screenHeight(context, percentage: 0.7),
+              child: ARView(
+                onARViewCreated: onARViewCreated,
+                planeDetectionConfig:
+                    PlaneDetectionConfig.horizontalAndVertical,
+              ),
             ),
             // ArCoreView(
             //   onArCoreViewCreated: (ArCoreController controller) =>
@@ -73,31 +84,31 @@ class _ARObjectViewState extends State<ARObjectView> {
             //   // enable for treasure mode
             //   enablePlaneRenderer: !widget.isCoins,
             // ),
-            if (widget.isCoins)
-              Align(
-                alignment: Alignment(0, 0.7),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: kcCultured,
-                      borderRadius: BorderRadius.circular(20)),
-                  padding: const EdgeInsets.all(8.0),
-                  width: screenWidth(context, percentage: 0.7),
-                  child: AfkCreditsText.headingThree(
-                    "Find credits and tap fast to collect",
-                    align: TextAlign.center,
-                  ),
-                ),
-              ),
-            if (!widget.isCoins)
-              Align(
-                alignment: Alignment(0, 0.7),
-                child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 500),
-                    child: AfkCreditsText.successThree(
-                      "Congratz! Tap to collect the treasure",
-                      align: TextAlign.center,
-                    )),
-              ),
+            // if (widget.isCoins)
+            //   Align(
+            //     alignment: Alignment(0, 0.7),
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //           color: kcCultured,
+            //           borderRadius: BorderRadius.circular(20)),
+            //       padding: const EdgeInsets.all(8.0),
+            //       width: screenWidth(context, percentage: 0.7),
+            //       child: AfkCreditsText.headingThree(
+            //         "Find credits and tap fast to collect",
+            //         align: TextAlign.center,
+            //       ),
+            //     ),
+            //   ),
+            // if (!widget.isCoins)
+            //   Align(
+            //     alignment: Alignment(0, 0.7),
+            //     child: AnimatedSwitcher(
+            //         duration: Duration(milliseconds: 500),
+            //         child: AfkCreditsText.successThree(
+            //           "Congratz! Tap to collect the treasure",
+            //           align: TextAlign.center,
+            //         )),
+            //   ),
           ],
         ),
       ),
@@ -111,47 +122,106 @@ class _ARObjectViewState extends State<ARObjectView> {
       ARLocationManager arLocationManager) {
     this.arSessionManager = arSessionManager;
     this.arObjectManager = arObjectManager;
+    this.arAnchorManager = arAnchorManager;
 
-    arSessionManager.onInitialize(
-      showFeaturePoints: false,
-      showPlanes: true,
-      customPlaneTexturePath: "Images/triangle.png",
-      showWorldOrigin: true,
-      handleTaps: false,
-    );
-    arObjectManager.onInitialize();
+    this.arSessionManager?.onInitialize(
+          showFeaturePoints: false,
+          showPlanes: true,
+          customPlaneTexturePath: "Images/triangle.png",
+          showWorldOrigin: false,
+          handlePans: true,
+          handleRotation: true,
+        );
+    this.arObjectManager?.onInitialize();
 
-    //Download model to file system
-    httpClient = new HttpClient();
-    _downloadAndUnpack(
-        url:
-            "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-        filename: "LocalDuck.glb");
-    // Alternative to use type fileSystemAppFolderGLTF2:
-    //_downloadAndUnpack(
-    //    "https://drive.google.com/uc?export=download&id=1fng7yiK0DIR0uem7XkV2nlPSGH9PysUs",
-    //    "Chicken_01.zip");
+    this.arSessionManager?.onPlaneOrPointTap = onPlaneOrPointTapped;
+    // this.arObjectManager.onPanStart = onPanStarted;
+    // this.arObjectManager.onPanChange = onPanChanged;
+    // this.arObjectManager.onPanEnd = onPanEnded;
+    // this.arObjectManager.onRotationStart = onRotationStarted;
+    // this.arObjectManager.onRotationChange = onRotationChanged;
+    // this.arObjectManager.onRotationEnd = onRotationEnded;
   }
 
-  Future<void> _downloadAndUnpack(
-      {required String url, required String filename}) async {
-    var request = await httpClient!.getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/$filename');
-    await file.writeAsBytes(bytes);
-    print("Downloading finished, path: " + '$dir/$filename');
+  // final node = ARNode(
+  //   type: NodeType.fileSystemAppFolderGLB,
+  //   uri: k3dController,
+  // );
+  // "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb");
+  // arObjectManager.addNode(node);
 
-    // To print all files in the directory: print(Directory(dir).listSync());
-    try {
-      await ZipFile.extractToDirectory(
-          zipFile: File('$dir/$filename'), destinationDir: Directory(dir));
-      print("Unzipping successful");
-    } catch (e) {
-      print("Unzipping failed: " + e.toString());
+  // rotation through ticker?
+  // @see: https://github.com/CariusLars/ar_flutter_plugin/issues/91
+//     _ticker = createTicker((elapsed) {
+//   for (var node in _currentNodes) {
+//     Matrix4 newMatrix = Matrix4.copy(node.transform);
+//     newMatrix *= Matrix4.rotationY(0.0009 * elapsed.inSeconds);
+//     node.transform = newMatrix;
+//   }
+// });
+// _ticker.start();
+
+  //Download model to file system
+  // httpClient = new HttpClient();
+  // _downloadAndUnpack(
+  //     url:
+  //         "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+  //     filename: "LocalDuck.glb");
+  // Alternative to use type fileSystemAppFolderGLTF2:
+  //_downloadAndUnpack(
+  //    "https://drive.google.com/uc?export=download&id=1fng7yiK0DIR0uem7XkV2nlPSGH9PysUs",
+  //    "Chicken_01.zip");
+
+  Future<void> onPlaneOrPointTapped(
+      List<ARHitTestResult> hitTestResults) async {
+    var singleHitTestResult = hitTestResults.firstWhere(
+        (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
+    if (singleHitTestResult != null) {
+      var newAnchor =
+          ARPlaneAnchor(transformation: singleHitTestResult.worldTransform);
+      bool? didAddAnchor = await arAnchorManager?.addAnchor(newAnchor);
+      if (didAddAnchor == true) {
+        anchors.add(newAnchor);
+        // Add note to anchor
+        var newNode = ARNode(
+            type: NodeType.webGLB,
+            uri:
+                "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+            scale: vector.Vector3(0.2, 0.2, 0.2),
+            position: vector.Vector3(0.0, 0.0, 0.0),
+            rotation: vector.Vector4(1.0, 0.0, 0.0, 0.0));
+        bool? didAddNodeToAnchor =
+            await arObjectManager?.addNode(newNode, planeAnchor: newAnchor);
+        if (didAddNodeToAnchor == true) {
+          this.nodes.add(newNode);
+        } else {
+          this.arSessionManager?.onError("Adding Node to Anchor failed");
+        }
+      } else {
+        this.arSessionManager?.onError("Adding Anchor failed");
+      }
     }
   }
+
+  // Future<void> _downloadAndUnpack(
+  //     {required String url, required String filename}) async {
+  //   var request = await httpClient!.getUrl(Uri.parse(url));
+  //   var response = await request.close();
+  //   var bytes = await consolidateHttpClientResponseBytes(response);
+  //   String dir = (await getApplicationDocumentsDirectory()).path;
+  //   File file = new File('$dir/$filename');
+  //   await file.writeAsBytes(bytes);
+  //   print("Downloading finished, path: " + '$dir/$filename');
+
+  //   // To print all files in the directory: print(Directory(dir).listSync());
+  //   try {
+  //     await ZipFile.extractToDirectory(
+  //         zipFile: File('$dir/$filename'), destinationDir: Directory(dir));
+  //     print("Unzipping successful");
+  //   } catch (e) {
+  //     print("Unzipping failed: " + e.toString());
+  //   }
+  // }
 
   // For old plugin
   // void _onArCoreViewCreated(ArCoreController controller,

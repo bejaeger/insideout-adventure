@@ -99,12 +99,31 @@ class ScreenTimeService {
     }
   }
 
-  ScreenTimeSession? getExpiredScreenTimeSession({required String? uid}) {
+  ScreenTimeSession? getExpiredScreenTimeSession(
+      {required String? uid, String? sessionId}) {
     if (uid == null) return null;
     if (screenTimeExpired.containsKey(uid)) {
       return screenTimeExpired[uid];
     } else {
       return null;
+    }
+  }
+
+  Future<bool> loadScreenTimeSession(
+      {required String? uid, String? sessionId}) async {
+    if (uid == null) return false;
+    if (screenTimeExpired.containsKey(uid)) {
+      return true;
+    } else {
+      if (sessionId != null) {
+        final session =
+            await _firestoreApi.getScreenTimeSession(sessionId: sessionId);
+        if (session != null) {
+          screenTimeExpired[uid] = session;
+          return true;
+        }
+      }
+      return false;
     }
   }
 

@@ -77,7 +77,7 @@ class GoogleMapScreen extends StatelessWidget {
                   model.changeCameraZoom(position.zoom);
                   model.changeCameraLatLon(
                       position.target.latitude, position.target.longitude);
-                  if (!model.isAvatarView) {
+                  if (!model.isAvatarView || model.isParentAccount) {
                     model.checkForNewQuests(callback: callback);
                   }
                 },

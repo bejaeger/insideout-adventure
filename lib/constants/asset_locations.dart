@@ -94,3 +94,5 @@ const String kLottieBigTv = "assets/lottie/big-tv-screen-time.json";
 
 // @see: https://assets7.lottiefiles.com/packages/lf20_Ei9xER.json
 const String kLottieRippleEffect = "assets/lottie/ripple-effect.json";
+
+const String k3dController = "assets/3d/Black_XBOX_controller.glb";
