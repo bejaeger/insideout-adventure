@@ -46,8 +46,11 @@ class SetPinView extends StatelessWidget with $SetPinView {
               children: [
                 IgnorePointer(child: generateTextFields(context, model)),
                 verticalSpaceMedium,
-                ElevatedButton(
-                    onPressed: () => clearTextFields(), child: Text("Clear"))
+                AfkCreditsButton.text(
+                  leading: Icon(Icons.clear, color: kcPrimaryColor),
+                  title: "Clear",
+                  onTap: () => clearTextFields(),
+                )
               ],
             )),
       ),

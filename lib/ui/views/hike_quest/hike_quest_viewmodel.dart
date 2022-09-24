@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:afkcredits/utils/utilities/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -94,7 +95,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       if (nextMarker != null && quest.startMarker != null) {
         await mapViewModel.animateNewLatLonZoomDelta(
             lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
-        await Future.delayed(Duration(milliseconds: 600));
+        await Future.delayed(Duration(
+            milliseconds: (600 * mapAnimationSpeedFraction()).round()));
         await mapViewModel.animateCameraToBetweenCoordinates(
           latLngList: [
             [quest.startMarker!.lat!, quest.startMarker!.lon!],
@@ -187,6 +189,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
 
   Future collectMarkerFromGPSLocation() async {
+    log.i("collectMarkerFromGPSLocation");
     if (await maybeCheatAndCollectNextMarker()) {
       return;
     }
@@ -389,14 +392,16 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       await Future.delayed(Duration(milliseconds: 600));
       await mapViewModel.animateNewLatLon(
           lat: nextMarker.lat!, lon: nextMarker.lon!);
-      if (currentQuest?.type == QuestType.GPSAreaHike) {
+      if (currentQuest?.type == QuestType.GPSAreaHike ||
+          currentQuest?.type == QuestType.GPSAreaHunt) {
         await Future.delayed(Duration(milliseconds: 400));
         addNextArea(marker: nextMarker);
         addNextMarker(marker: nextMarker);
         showInfoWindowOfNextMarker(marker: nextMarker);
         await mapViewModel.animateNewLatLonZoomDelta(
             lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
-        await Future.delayed(Duration(milliseconds: 400));
+        await Future.delayed(Duration(
+            milliseconds: (400 * mapAnimationSpeedFraction()).round()));
       } else {
         if (currentQuest!.type == QuestType.QRCodeHike) {
           await Future.delayed(Duration(milliseconds: 600));
@@ -464,7 +469,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
 
   void triggerCollectedMarkerAnimation() {
-    showCollectedMarkerAnimation = true;
+    showCollectedMarkerAnimation = true; // will be set to false again from view
     notifyListeners();
   }
 

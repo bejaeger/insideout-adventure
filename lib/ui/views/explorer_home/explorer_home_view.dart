@@ -119,7 +119,8 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   //     title: model.notId != null
                   //         ? "Dismiss notification"
                   //         : "Create notification",
-                  //     onTap: model.notId != null
+                  //     onTap:
+                  //     model.notId != null
                   //         ? model.dismissTestNotification
                   //         : model.createTestNotification,
                   //   ),

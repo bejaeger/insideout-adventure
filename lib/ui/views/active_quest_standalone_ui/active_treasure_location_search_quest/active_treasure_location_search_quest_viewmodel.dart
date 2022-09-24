@@ -174,20 +174,21 @@ class ActiveTreasureLocationSearchQuestViewModel
       //await showFoundTreasureDialog();
       directionStatus = DirectionStatus.nearGoal;
       showNextARObjects(
+        // Need to wrap up quest here!
+        onCollected: () async {
+          bool questSuccessfullyFinished = await showSuccessDialog();
 
-          // Need to wrap up quest here!
-          onCollected: () async {
-        bool questSuccessfullyFinished = await showSuccessDialog();
+          // reset map markers
+          // the following goes via singleton
+          mapViewModel.resetMapMarkers();
 
-        // reset map markers
-        // the following goes via singleton
-        mapViewModel.resetMapMarkers();
+          // this goes via mixin. Could technically be the same procedure! Not clear what is better!
+          mapViewModel.addAllQuestMarkers();
+        },
+      );
+      // this is risky I think!
+      mapViewModel.notifyListeners();
 
-        // this goes via mixin. Could technically be the same procedure! Not clear what is better!
-        mapViewModel.addAllQuestMarkers();
-        addAllQuestMarkers();
-      });
-      notifyListeners();
       await vibrateRightDirection();
       await vibrateRightDirection();
       await vibrateRightDirection();

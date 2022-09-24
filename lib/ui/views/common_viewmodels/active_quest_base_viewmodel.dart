@@ -19,6 +19,7 @@ import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
+import 'package:afkcredits/utils/utilities/utilities.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -244,7 +245,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
 
     // reset selected quest after delay so the fade out is smooth
-    await Future.delayed(Duration(milliseconds: 800));
+    await Future.delayed(
+        Duration(milliseconds: (800 * mapAnimationSpeedFraction()).round()));
 
     // reset flags
     layoutService.setIsMovingCamera(false);
@@ -317,6 +319,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
         }
       },
     );
+    notifyListeners();
   }
 
   Future animateCameraToStartMarker({int? delay}) async {

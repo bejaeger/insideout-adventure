@@ -6,22 +6,23 @@ class GPSAreaHikeViewModel extends HikeQuestViewModel {
   GPSAreaHikeViewModel({required this.quest}) {
     // animate to quest markers!
     animateCameraToQuestMarkers();
-    // mapStateService.setIsAvatarView(false);
-    // if (quest.startMarker != null) {
-    //   mapViewModel.resetMapMarkers();
-    //   // add start marker & area
-    //   mapViewModel.addMarkerToMap(
-    //       quest: quest,
-    //       afkmarker: quest.startMarker!,
-    //       isStartMarker: true,
-    //       handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
-    //   mapViewModel.addAreaToMap(
-    //       quest: quest, afkmarker: quest.startMarker!, isStartArea: true);
-    //   // add other potential markers and areas
-    //   mapViewModel.addMarkers(
-    //       quest: quest,
-    //       handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
-    //   mapViewModel.addAreas(quest: quest);
-    // }
+    mapStateService.setIsAvatarView(false);
+    if (quest.startMarker != null) {
+      mapViewModel.resetMapMarkers();
+      // add start marker & area
+      mapViewModel.addMarkerToMap(
+          quest: quest,
+          afkmarker: quest.startMarker!,
+          isStartMarker: true,
+          handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
+      mapViewModel.addAreaToMap(
+          quest: quest, afkmarker: quest.startMarker!, isStartArea: true);
+      // add other potential markers and areas
+      mapViewModel.addMarkers(
+          quest: quest,
+          handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
+      mapViewModel.addAreas(quest: quest);
+    }
+    mapViewModel.notifyListeners();
   }
 }

@@ -364,6 +364,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         await activeQuestService.analyzeMarker(marker: nextMarker);
         final result = MarkerAnalysisResult.marker(marker: nextMarker);
         await handleMarkerAnalysisResult(result);
+        baseModelLog.w("Cheated to collect this marker!");
         return true;
       }
     }

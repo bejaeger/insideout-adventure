@@ -59,7 +59,6 @@ class RightFloatingButtonsOverlayViewModel extends BaseModel
   void rotateToNorth() async {
     if (userLocation == null) return;
     changeCameraBearing(0);
-    // _moveCamera();
     notifyListeners();
     await mapViewModel.animateCameraViewModel();
   }

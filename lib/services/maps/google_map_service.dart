@@ -4,11 +4,14 @@ import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
+import 'package:afkcredits/utils/utilities/utilities.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io';
 
 class GoogleMapService {
   static GoogleMapController? _mapController;
@@ -268,7 +271,7 @@ class GoogleMapService {
   static Future runAnimation(Future Function() animation, {bool? force}) async {
     if (isAnimating == true && force != true) {
       // wait for 1 second before executing animation
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(milliseconds: mapAnimationSpeed()));
 
       runAnimation(animation, force: force);
     }
@@ -288,7 +291,7 @@ class GoogleMapService {
     }
     // 1 second is default length of animation for android.
     // TODO: This is different for iOS
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: mapAnimationSpeed()));
     isAnimating = false;
   }
 

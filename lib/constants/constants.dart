@@ -160,6 +160,12 @@ const double kMaxZoom = 19;
 const double kInitialZoomBirdsView = 14;
 const double kMinZoomAvatarView = 17;
 
+// default animation speed in ms
+const int kMapAnimationSpeedAndroid = 1000;
+const int kMapAnimationSpeedIos = 500;
+const double kMapAnimationSpeedFractionIos = 0.5;
+const double kMapAnimationSpeedFractionAndroid = 1;
+
 ////////////////////////////////////
 /// notification keys and settings
 ///

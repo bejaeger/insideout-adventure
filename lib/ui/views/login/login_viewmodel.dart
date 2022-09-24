@@ -53,15 +53,15 @@ class LoginViewModel extends AuthenticationViewModel {
           saveData(AuthenticationMethod.dummy, userRole);
         };
       }
-      // provide dummy login also in prod database!
+      // ? do not provide dummy login also in prod database!
       if (_flavorConfigProvider.flavor == Flavor.prod) {
-        if (userRole == UserRole.sponsor)
-          return () {
-            saveData(AuthenticationMethod.dummy, userRole);
-          };
-        else {
-          return null;
-        }
+        // if (userRole == UserRole.sponsor)
+        //   return () {
+        //     saveData(AuthenticationMethod.dummy, userRole);
+        //   };
+        // else {
+        return null;
+        // }
         // return () {
         //   saveData(AuthenticationMethod.dummy, userRole);
         // };

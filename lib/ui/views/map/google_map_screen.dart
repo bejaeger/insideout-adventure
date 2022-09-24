@@ -20,7 +20,6 @@ class GoogleMapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // viewmodel needed here so UI reacts!
     return TransparentPointer(
       child: Container(
         height: screenHeight(context),
@@ -31,7 +30,11 @@ class GoogleMapScreen extends StatelessWidget {
             // a bit further down on the screen (similar to Pokemon Go)
             if (!model.isParentAccount)
               AnimatedContainer(
-                height: model.isAvatarView == true ? 150 : 0,
+                // this decides on whether the avatar is on top of the blue button or not
+                // TODO: TEST for different device sizes!
+                height: model.isAvatarView == true
+                    ? screenHeight(context, percentage: 0.18)
+                    : 0,
                 duration: Duration(milliseconds: 500),
                 color: Colors.transparent,
               ),

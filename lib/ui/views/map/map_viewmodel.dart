@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -15,6 +16,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.da
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class MapViewModel extends BaseModel with MapStateControlMixin {
   // Viewmodel that receives callback functions to update map
@@ -148,6 +150,13 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       );
     }
     setBusy(false);
+    if (!kIsWeb && Platform.isIOS) {
+      // Somehow this is needed for iOS.
+      // Otherwise map won't react at first when switching from parent
+      // view to the explorer view.
+      fakeAnimate();
+      fakeAnimate();
+    }
   }
 
   double previousRotation = 0;
@@ -286,7 +295,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     // animations on android take 1 second
   }
 
-  Future _animateCameraToAvatarView({bool? forceUseLocation}) async {
+  Future animateCameraToAvatarView({bool? forceUseLocation}) async {
     layoutService.setIsMovingCamera(true);
     takeSnapshotOfBirdViewCameraPosition();
     changeCameraTilt(90);
@@ -303,7 +312,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     } else {
       mapStateService.setIsAvatarView(true);
       notifyListeners();
-      await _animateCameraToAvatarView(forceUseLocation: true);
+      await animateCameraToAvatarView(forceUseLocation: true);
     }
     notifyListeners();
   }
@@ -437,6 +446,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     // normal function to be executed when marker is tapped
     if (!useSuperUserFeatures || adminMode == false) {
       if (hasActiveQuest == false) {
+        // no quest active
         if (afkmarker == quest.startMarker) {
           dynamic result;
           if (!isAvatarView && selectedQuest == null) {
@@ -584,26 +594,30 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       // ? Should I do it here instead?
       // ONLY markers relevant to quest
 
-      // with the delay it looks a bit smoother in the animation
-      await Future.delayed(Duration(milliseconds: 250));
+      // ? Cannot do the following here because we need a custom funciton for
+      // ? handleMarkerAnalysisResult
+      // ? All handled in gps_area_hike_viewmodel.dart
+
+      // this is however still needed here. Not exactly clear why
       mapStateService.setIsAvatarView(false);
-      if (quest.startMarker != null) {
-        resetMapMarkers();
-        // add start marker & area
-        addMarkerToMap(
-            quest: quest,
-            afkmarker: quest.startMarker!,
-            isStartMarker: true,
-            handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
-        addAreaToMap(
-            quest: quest, afkmarker: quest.startMarker!, isStartArea: true);
-        // add other potential markers and areas
-        addMarkers(
-            quest: quest,
-            handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
-        addAreas(quest: quest);
-      }
-      notifyListeners();
+
+      // if (quest.startMarker != null) {
+      //   resetMapMarkers();
+      //   // add start marker & area
+      //   addMarkerToMap(
+      //       quest: quest,
+      //       afkmarker: quest.startMarker!,
+      //       isStartMarker: true,
+      //       handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
+      //   addAreaToMap(
+      //       quest: quest, afkmarker: quest.startMarker!, isStartArea: true);
+      //   // add other potential markers and areas
+      //   addMarkers(
+      //       quest: quest,
+      //       handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
+      //   addAreas(quest: quest);
+      // }
+      // notifyListeners();
 
       // <<-- END Hike Quest
       // ---------------------------------------------
