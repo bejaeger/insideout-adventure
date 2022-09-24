@@ -78,22 +78,11 @@ class NotificationController {
     // to show statistics
     if (receivedAction.payload != null) {
       Map<String, String?> payload = receivedAction.payload!;
-      if (payload.containsKey("uid")) {
+      if (payload.containsKey("uid") && payload.containsKey("sessionId")) {
         ScreenTimeSession? session;
         try {
-          session = ScreenTimeSession.fromJson(
-            {
-              "sessionId": payload["sessionId"],
-              "uid": payload["uid"],
-              "userName": payload["userName"],
-              "createdByUid": payload["createdByUid"],
-              "startedAt": "",
-              "endedAt": "",
-              "minutes": int.parse(payload["minutes"]!),
-              "afkCredits": int.parse(payload["afkCredits"]!),
-              "status": "completed", // ! change that manually here
-            },
-          );
+          payload["status"] = "completed";
+          session = getSessionFromStringMap(payload: payload);
         } catch (e) {
           print("==>> Error when getting the screen time session: $e");
           return;

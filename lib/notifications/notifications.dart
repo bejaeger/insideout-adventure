@@ -9,11 +9,15 @@ class Notifications {
   final log = getLogger("Notifications");
 
   Future<int> createPermanentNotification(
-      {required String title, required String message}) async {
+      {required String title,
+      required String message,
+      ScreenTimeSession? session}) async {
     int id = createUniqueId();
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: id,
+        payload:
+            session == null ? null : getStringMapFromSession(session: session),
         groupKey: id.toString(),
         channelKey: kPermanentNotificationKey,
         title: '${Emojis.time_hourglass_not_done} ' + title,
@@ -41,19 +45,8 @@ class Notifications {
     int id = createUniqueId();
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        payload: session == null
-            ? null
-            : {
-                "sessionId": session.sessionId,
-                "uid": session.uid,
-                "userName": session.userName,
-                "createdByUid": session.createdByUid,
-                "startedAt": "",
-                "endedAt": "",
-                "minutes": session.minutes.toStringAsFixed(0),
-                "status": "active",
-                "afkCredits": session.afkCredits.toStringAsFixed(0),
-              },
+        payload:
+            session == null ? null : getStringMapFromSession(session: session),
         id: id,
         groupKey: id.toString(),
         channelKey: kScheduledNotificationChannelKey,
@@ -82,9 +75,11 @@ class Notifications {
     DateTime endDate =
         session.startedAt.toDate().add(Duration(minutes: session.minutes));
     int id = await Notifications().createPermanentNotification(
-        title: "Screen time until " + formatDateToShowTime(endDate),
-        message:
-            session.userName + " is using ${session.minutes} min screen time");
+      title: "Screen time until " + formatDateToShowTime(endDate),
+      message:
+          session.userName + " is using ${session.minutes} min screen time",
+      session: session,
+    );
     return id;
   }
 
