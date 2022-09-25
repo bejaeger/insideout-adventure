@@ -111,7 +111,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       // ${formatAmount(double.parse(amountValue!), userInput: true)}
     }
     return returnValue;
-    ;
   }
 
   Future handleTransfer({required TransferType type}) async {

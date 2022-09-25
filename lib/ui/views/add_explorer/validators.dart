@@ -29,4 +29,23 @@ class FormValidators {
     }
     return null;
   }
+
+  static String? customScreenTimeValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      const exception = AuthExceptions.timeRequired;
+      return exception.message;
+    }
+    try {
+      int v = int.parse(value);
+    } catch (e) {
+      const exception = AuthExceptions.timeNotPosInt;
+      return exception.message;
+    }
+    if (int.parse(value) < 0) {
+      const exception = AuthExceptions.timeNotPosInt;
+      return exception.message;
+    } else {
+      return null;
+    }
+  }
 }

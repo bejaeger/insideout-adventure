@@ -78,10 +78,10 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.feedbackView);
   }
 
-  void replaceWithExplorerHomeView({bool showQuestsFoundSnackbar = false}) {
+  void replaceWithExplorerHomeView({bool showBewareDialog = false}) {
     _navigationService.replaceWith(Routes.explorerHomeView,
-        arguments: ExplorerHomeViewArguments(
-            showQuestsFoundSnackbar: showQuestsFoundSnackbar));
+        arguments:
+            ExplorerHomeViewArguments(showBewareDialog: showBewareDialog));
   }
 
   void replaceWithParentHomeView() {
@@ -198,6 +198,11 @@ mixin NavigationMixin {
 
   void navToSingleChildView({required String uid}) async {
     await _navigationService.navigateTo(Routes.singleChildStatView,
+        arguments: SingleChildStatViewArguments(uid: uid));
+  }
+
+  void replaceWithSingleChildView({required String uid}) async {
+    await _navigationService.replaceWith(Routes.singleChildStatView,
         arguments: SingleChildStatViewArguments(uid: uid));
   }
 

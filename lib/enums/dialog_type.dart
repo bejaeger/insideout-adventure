@@ -16,4 +16,6 @@ enum DialogType {
   ChildStatCard,
   CreditConversionInfo,
   OnboardingDialog,
+  BewareOfSurroundings,
+  CustomScreenTime,
 }

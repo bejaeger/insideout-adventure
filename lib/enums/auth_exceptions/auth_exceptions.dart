@@ -1,12 +1,14 @@
 enum AuthExceptions {
-  invalidEmail('Invalid Email'),
-  emailRequired('Email Required'),
-  invalidName('Invalid Name'),
-  emptyName('Name Should not be Empty'),
-  emalAlreadyInUse('Eamil already in use'),
-  weakPassword('Password too weak !! it should be at least 6 characters '),
+  invalidEmail('Invalid email'),
+  emailRequired('Email is required'),
+  invalidName('Invalid name'),
+  emptyName('Name cannot not be empty'),
+  emalAlreadyInUse('Email already in use'),
+  weakPassword('Password too weak.  It should be at least 6 characters '),
   wrongPassword('Wrong password'),
-  emptyPassword('Empty password');
+  emptyPassword('Empty password'),
+  timeRequired('No time set'),
+  timeNotPosInt('Time needs to be a positive number');
 
   const AuthExceptions(this.message);
   final String message;

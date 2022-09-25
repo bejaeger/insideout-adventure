@@ -5,6 +5,7 @@ import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/utils/string_utils.dart';
 
 class ActiveScreenTimeViewModel extends BaseModel {
   // -----------------------------------
@@ -23,6 +24,7 @@ class ActiveScreenTimeViewModel extends BaseModel {
           uid: session?.uid, sessionId: session?.sessionId);
 
   String get childName => session != null ? session!.userName : "";
+  String get childId => session != null ? session!.uid : "";
 
   // ---------------------------
   // constructor
@@ -38,6 +40,11 @@ class ActiveScreenTimeViewModel extends BaseModel {
   Future initialize() async {
     setBusy(true);
 
+    if (currentScreenTimeSession != null) {
+      session = currentScreenTimeSession;
+    }
+
+    // start screen time here
     if (session != null &&
         session?.status == ScreenTimeSessionStatus.notStarted) {
       log.i("screen time session will be started");
@@ -51,42 +58,45 @@ class ActiveScreenTimeViewModel extends BaseModel {
       justStartedListeningToScreenTime = true;
     }
 
+    // continue screen time here
     if (session != null && session?.status == ScreenTimeSessionStatus.active) {
       log.i(
           "screen time session has started or is active and will be continued");
-      if (!_stopWatchService.isRunning) {
-        int screenTimeLeftInSecondsPreset =
-            screenTimeService.getTimeLeftInSeconds(session: session!);
-        screenTimeLeft = screenTimeLeftInSecondsPreset;
-        notifyListeners();
-        // takes surprisingly long to start that listener here so update the screenTimeLeft one before!
-        _stopWatchService.listenToSecondTime(
-          callback: (int tick) {
-            screenTimeLeft = screenTimeLeftInSecondsPreset - tick;
-            notifyListeners();
-          },
-        );
-      }
+      int screenTimeLeftInSecondsPreset =
+          screenTimeService.getTimeLeftInSeconds(session: session!);
+      screenTimeLeft = screenTimeLeftInSecondsPreset;
+      notifyListeners();
+      // takes surprisingly long to start that listener here so update the screenTimeLeft one before!
+      _stopWatchService.listenToSecondTime(
+        callback: (int tick) {
+          screenTimeLeft = screenTimeLeftInSecondsPreset - tick;
+          notifyListeners();
+          log.v("Fired listener");
+        },
+      );
     }
+
+    // if screen time is over and notification is pressed
     bool loadedScreenTime = true;
     // this is the case if we navigate to this view from the expired notification;
     if (session != null &&
         session?.status == ScreenTimeSessionStatus.completed) {
       // this loads the screen time session into memory so it can be accessed with the getter
       // expiredScreenTime
-      loadedScreenTime = await _screenTimeService.loadScreenTimeSession(
+      loadedScreenTime = await _screenTimeService.loadExpiredScreenTimeSession(
           uid: session?.uid, sessionId: session?.sessionId);
+      if (loadedScreenTime) {
+        session = expiredScreenTime;
+      }
     }
+
     if (session == null || loadedScreenTime == false) {
       log.wtf("session is null, cannot navigate to active screen time view");
-      setBusy(false);
       popView();
+      // setBusy(false);
       return;
     }
     setBusy(false);
-
-    // HACK! Sometimes the circular progress bar is spinning endlessly for the time. Not exactly sure why
-    Future.delayed(Duration(seconds: 2), () => notifyListeners());
   }
 
   // Future<void> stopScreenTimeAfterZero() async {
@@ -111,8 +121,8 @@ class ActiveScreenTimeViewModel extends BaseModel {
           cancelTitle: "NO",
           title: "Cancel Active Screen Time?",
           description: "There are " +
-              screenTimeLeft.toString() +
-              " seconds left."); //, mainButtonTitle: "CANCEL", )
+              secondsToMinuteTime(screenTimeLeft) +
+              "in left."); //, mainButtonTitle: "CANCEL", )
     }
     if (result == null || result?.confirmed == true) {
       // trying to deal with notifications in screen time service
@@ -152,5 +162,13 @@ class ActiveScreenTimeViewModel extends BaseModel {
 
   void listenToTick() {
     notifyListeners();
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    // reset timer
+    log.v("Resetting stop watch timer");
+    _stopWatchService.resetTimer();
   }
 }

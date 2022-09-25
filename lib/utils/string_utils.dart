@@ -57,6 +57,10 @@ String formatDateDetailsType5(DateTime timestamp) {
   return DateFormat.MMMEd().format(timestamp);
 }
 
+String formatDateDetailsType6(DateTime timestamp) {
+  return DateFormat.jm().format(timestamp);
+}
+
 String formatDateDetails(DateTime timestamp) {
   return DateFormat.yMd().add_jm().format(timestamp);
 }

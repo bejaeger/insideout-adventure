@@ -285,14 +285,13 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       await navigationService.clearStackAndShow(
         Routes.explorerHomeView,
         arguments: ExplorerHomeViewArguments(
-            showQuestsFoundSnackbar: showQuestsFoundSnackbar),
+            showBewareDialog: showQuestsFoundSnackbar),
       );
     }
   }
 
   Future replaceWithHomeView(
-      {bool showPermissionView = false,
-      bool showQuestsFoundSnackbar = false}) async {
+      {bool showPermissionView = false, bool showBewareDialog = false}) async {
     // ? Request for all necessary permissions
     if (showPermissionView) {
       if (!(await _permissionService.allPermissionsProvided())) {
@@ -306,8 +305,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
           arguments:
               BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
     } else {
-      replaceWithExplorerHomeView(
-          showQuestsFoundSnackbar: showQuestsFoundSnackbar);
+      replaceWithExplorerHomeView(showBewareDialog: showBewareDialog);
     }
   }
 

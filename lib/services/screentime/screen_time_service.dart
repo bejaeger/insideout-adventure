@@ -8,6 +8,7 @@ import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/notifications/notification_controller.dart';
 import 'package:afkcredits/notifications/notifications.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/subjects.dart';
 
 class ScreenTimeService {
@@ -68,9 +69,13 @@ class ScreenTimeService {
 
   int getTimeLeftInSeconds({required ScreenTimeSession session}) {
     DateTime now = DateTime.now();
-    int diff = now.difference(session.startedAt.toDate()).inSeconds;
-    int timeLeft = session.minutes * 60 - diff;
-    return timeLeft;
+    if (session.startedAt is Timestamp) {
+      int diff = now.difference(session.startedAt.toDate()).inSeconds;
+      int timeLeft = session.minutes * 60 - diff;
+      return timeLeft;
+    } else {
+      return -1;
+    }
   }
 
   // ---------------------------------
@@ -109,7 +114,15 @@ class ScreenTimeService {
     }
   }
 
-  Future<bool> loadScreenTimeSession(
+  // ScreenTimeSession? getFirstExpiredScreenTimeSession() {
+  //   if (screenTimeExpired.length > 0) {
+  //     return screenTimeExpired.any;
+  //   } else {
+  //     return null;
+  //   }
+  // }
+
+  Future<bool> loadExpiredScreenTimeSession(
       {required String? uid, String? sessionId}) async {
     if (uid == null) return false;
     if (screenTimeExpired.containsKey(uid)) {
@@ -120,6 +133,24 @@ class ScreenTimeService {
             await _firestoreApi.getScreenTimeSession(sessionId: sessionId);
         if (session != null) {
           screenTimeExpired[uid] = session;
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  Future<bool> loadActiveScreenTimeSession(
+      {required String? uid, String? sessionId}) async {
+    if (uid == null) return false;
+    if (screenTimeActiveSubject.containsKey(uid)) {
+      return true;
+    } else {
+      if (sessionId != null) {
+        final session =
+            await _firestoreApi.getScreenTimeSession(sessionId: sessionId);
+        if (session != null) {
+          screenTimeActiveSubject[uid]?.add(session);
           return true;
         }
       }

@@ -368,8 +368,7 @@ class StackedRouter extends _i1.RouterBase {
       );
       return MaterialPageRoute<dynamic>(
         builder: (context) => _i5.ExplorerHomeView(
-            key: args.key,
-            showQuestsFoundSnackbar: args.showQuestsFoundSnackbar),
+            key: args.key, showBewareDialog: args.showBewareDialog),
         settings: data,
       );
     },
@@ -644,12 +643,12 @@ class StackedRouter extends _i1.RouterBase {
 class ExplorerHomeViewArguments {
   const ExplorerHomeViewArguments({
     this.key,
-    this.showQuestsFoundSnackbar = false,
+    this.showBewareDialog = false,
   });
 
   final _i38.Key? key;
 
-  final bool showQuestsFoundSnackbar;
+  final bool showBewareDialog;
 }
 
 class LoginViewArguments {
@@ -916,7 +915,7 @@ extension NavigatorStateExtension on _i48.NavigationService {
 
   Future<dynamic> navigateToExplorerHomeView({
     _i38.Key? key,
-    bool showQuestsFoundSnackbar = false,
+    bool showBewareDialog = false,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -925,7 +924,7 @@ extension NavigatorStateExtension on _i48.NavigationService {
   }) async {
     return navigateTo<dynamic>(Routes.explorerHomeView,
         arguments: ExplorerHomeViewArguments(
-            key: key, showQuestsFoundSnackbar: showQuestsFoundSnackbar),
+            key: key, showBewareDialog: showBewareDialog),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

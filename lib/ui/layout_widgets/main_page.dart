@@ -8,17 +8,20 @@ class MainPage extends StatelessWidget {
   final void Function()? onBackPressed;
   final bool showBackButton;
   final Widget child;
+  final bool? resizeToAvoidBottomInset;
   const MainPage(
       {Key? key,
       this.onBackPressed,
       required this.child,
-      this.showBackButton = true})
+      this.showBackButton = true,
+      this.resizeToAvoidBottomInset})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         body: MainStack(
           child: child,
           onBackPressed: onBackPressed,

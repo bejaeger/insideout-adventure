@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_viewmodel.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -19,15 +20,18 @@ class SelectScreenTimeView extends StatelessWidget {
       builder: (context, model, child) {
         return MainPage(
           showBackButton: !model.isParentAccount,
+          resizeToAvoidBottomInset: false,
           child: Container(
             // width: 300,
             // height: 400,
             child: Padding(
-              padding: const EdgeInsets.only(
+              padding: EdgeInsets.only(
                   left: 20,
                   right: 20,
                   top: 40,
-                  bottom: kBottomBackButtonPadding + 20),
+                  bottom: !model.isParentAccount
+                      ? (kBottomBackButtonPadding + 20)
+                      : 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 // crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,8 +60,12 @@ class SelectScreenTimeView extends StatelessWidget {
 
                   verticalSpaceMedium,
                   verticalSpaceSmall,
-                  AfkCreditsText.subheading("Total available"),
+                  Lottie.asset(kLottieBigTv,
+                      height: screenHeight(context, percentage: 0.15)),
+                  //  'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
                   verticalSpaceSmall,
+                  AfkCreditsText.body("Total available"),
+                  verticalSpaceTiny,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -67,36 +75,63 @@ class SelectScreenTimeView extends StatelessWidget {
                       //       height: 30, color: kcPrimaryColor),
                       // ),
                       Image.asset(kAFKCreditsLogoPath,
-                          height: 30, color: kcPrimaryColor),
-                      horizontalSpaceSmall,
-                      AfkCreditsText.headingThree(
+                          height: 18, color: kcPrimaryColor),
+                      horizontalSpaceTiny,
+                      AfkCreditsText.headingFourLight(
                           model.afkCreditsBalance.toStringAsFixed(0)),
                       horizontalSpaceSmall,
-                      Icon(Icons.arrow_forward, size: 25),
+                      Icon(Icons.arrow_right_alt, size: 20),
                       horizontalSpaceSmall,
                       //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
                       Image.asset(kScreenTimeIcon,
-                          height: 30, color: kcScreenTimeBlue),
-                      horizontalSpaceSmall,
+                          height: 18, color: kcScreenTimeBlue),
+                      horizontalSpaceTiny,
                       // Lottie.network(
                       //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
                       //     height: 40),
-                      AfkCreditsText.headingThree(
+                      AfkCreditsText.headingFourLight(
                           model.totalAvailableScreenTime.toString() + " min"),
                     ],
                   ),
                   //Icon(Icons.arrow_downward_rounded, size: 40),
                   Spacer(),
-                  Lottie.asset(kLottieBigTv,
-                      height: screenHeight(context, percentage: 0.22)),
-                  //  'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
-                  Spacer(),
+                  AfkCreditsText.body("Selected"),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AfkCreditsText(
+                          text: model.screenTimePreset.toString() + " min",
+                          style: heading1Style.copyWith(
+                              fontWeight: FontWeight.w800)),
+                      // Icon(Icons.arrow_forward, size: 22),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AfkCreditsText.headingFourLight("="),
+                          // //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
+                          horizontalSpaceTiny,
+                          Image.asset(kAFKCreditsLogoPath,
+                              height: 18, color: kcPrimaryColor),
+                          horizontalSpaceTiny,
+                          AfkCreditsText.headingFourLight(
+                              screenTimeToCredits(model.screenTimePreset)
+                                  .toString()),
+                        ],
+                      ),
+                      // Lottie.network(
+                      //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
+                      //     height: 40),
+                    ],
+                  ),
+                  verticalSpaceTiny,
+                  verticalSpaceSmall,
                   Column(
                     children: [
                       Row(
                         children: [
                           Expanded(
                             child: AfkCreditsButton.outline(
+                              height: 60,
                               enabled: model.screenTimePreset == 20,
                               title: "20 min",
                               onTap: model.totalAvailableScreenTime >= 20
@@ -110,6 +145,7 @@ class SelectScreenTimeView extends StatelessWidget {
                           horizontalSpaceTiny,
                           Expanded(
                             child: AfkCreditsButton.outline(
+                              height: 60,
                               enabled: model.screenTimePreset == 40,
                               title: "40 min",
                               onTap: model.totalAvailableScreenTime >= 40
@@ -120,29 +156,13 @@ class SelectScreenTimeView extends StatelessWidget {
                                   : Colors.grey[500],
                             ),
                           ),
-                        ],
-                      ),
-                      verticalSpaceTiny,
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AfkCreditsButton.outline(
-                              enabled: model.screenTimePreset == 60,
-                              title: "60 min",
-                              onTap: model.totalAvailableScreenTime >= 60
-                                  ? () => model.selectScreenTime(minutes: 60)
-                                  : null,
-                              color: model.totalAvailableScreenTime >= 60
-                                  ? kcScreenTimeBlue
-                                  : Colors.grey[500],
-                            ),
-                          ),
                           horizontalSpaceTiny,
                           Expanded(
                             child: AfkCreditsButton.outline(
+                              height: 60,
                               enabled: model.screenTimePreset ==
                                   model.totalAvailableScreenTime,
-                              title: "Maximum",
+                              title: "Max",
                               onTap: (model.screenTimePreset ==
                                       model.totalAvailableScreenTime)
                                   ? null
@@ -152,13 +172,21 @@ class SelectScreenTimeView extends StatelessWidget {
                           ),
                         ],
                       ),
+                      verticalSpaceTiny,
+                      GestureDetector(
+                        onTap: () => model.selectCustomScreenTime(),
+                        child: Container(
+                          //color: Colors.red,
+                          width: 180,
+                          child: AfkCreditsButton.text(
+                            title: "Custom",
+                            //onTap: () => model.selectCustomScreenTime(),
+                            color: kcScreenTimeBlue,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 70),
-                  //   child: Divider(thickness: 2),
-                  // ),
-                  // verticalSpaceMedium,
                   Spacer(),
                   AfkCreditsButton(
                       leading:
@@ -170,9 +198,7 @@ class SelectScreenTimeView extends StatelessWidget {
                       color: kcScreenTimeBlue,
                       title: model.afkCreditsBalance == 0
                           ? "Not enough credits"
-                          : model.screenTimePreset != -1
-                              ? "Start ${model.screenTimePreset} min screen time"
-                              : "Start maximum screen time"),
+                          : "Start screen time"),
                 ],
               ),
             ),

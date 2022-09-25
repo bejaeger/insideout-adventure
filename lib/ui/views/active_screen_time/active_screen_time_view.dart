@@ -3,7 +3,6 @@ import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits/ui/widgets/main_long_button.dart';
 import 'package:afkcredits/ui/widgets/simple_statistics_display.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -24,6 +23,11 @@ class ActiveScreenTimeView extends StatelessWidget {
       },
       viewModelBuilder: () => ActiveScreenTimeViewModel(session: session),
       builder: (context, model, child) {
+        bool showStats = model.expiredScreenTime != null &&
+            model.expiredScreenTime?.status ==
+                ScreenTimeSessionStatus.completed &&
+            model.currentScreenTimeSession?.status !=
+                ScreenTimeSessionStatus.active;
         return WillPopScope(
           onWillPop: () async {
             model.resetStopWatch();
@@ -40,6 +44,7 @@ class ActiveScreenTimeView extends StatelessWidget {
           child: SafeArea(
             child: Scaffold(
               body: Container(
+                height: screenHeight(context),
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 40, bottom: 40),
                 child: Column(
@@ -47,8 +52,10 @@ class ActiveScreenTimeView extends StatelessWidget {
                   children: [
                     if (model.currentScreenTimeSession == null &&
                         model.expiredScreenTime == null)
-                      AfkCreditsText.subheading(
-                          "Error: Sorry something went wrong when starting the screen time session. Please let the developers know via our feedback option, thank you!"),
+                      model.isBusy
+                          ? AFKProgressIndicator()
+                          : AfkCreditsText.subheading(
+                              "Error: Sorry something went wrong when starting the screen time session. Please let the developers know via our feedback option, thank you!"),
                     // Display the following when screen time is still active!
                     if (model.currentScreenTimeSession?.status ==
                         ScreenTimeSessionStatus.active)
@@ -88,7 +95,6 @@ class ActiveScreenTimeView extends StatelessWidget {
                                       child: AfkCreditsText.headingTwo(
                                           "Active screen time"),
                                     ),
-
                                     verticalSpaceMedium,
                                     Center(
                                       child: AfkCreditsText.subheadingItalic(
@@ -143,71 +149,120 @@ class ActiveScreenTimeView extends StatelessWidget {
                               ],
                             ),
                     // Display the following when screen time is over!
-                    if (model.expiredScreenTime != null &&
-                        model.currentScreenTimeSession?.status !=
-                            ScreenTimeSessionStatus.active)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  model.resetStopWatch();
-                                  model.popView();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(Icons.close_rounded, size: 30),
+                    if (showStats)
+                      model.isBusy
+                          ? AFKProgressIndicator()
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      model.resetStopWatch();
+                                      model.popView();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child:
+                                          Icon(Icons.close_rounded, size: 30),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Center(
-                                child: AfkCreditsText.headingTwo(
-                                    "Screen Time Over"),
-                              ),
-                            ],
-                          ),
-                          // Align(
-                          //     alignment: Alignment.center,
-                          //     child: AfkCreditsText.headingOne(
-                          //         "Screen Time Over")),
-                          AfkCreditsText.body(model.childName +
-                              " used all requested screen time"),
-                          verticalSpaceMassive,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SimpleStatisticsDisplay(
-                                statistic: model
-                                    .expiredScreenTime!.afkCreditsUsed
-                                    .toString(),
-                                title: "Credits used",
-                                showCreditsIcon: true,
-                              ),
-                              SimpleStatisticsDisplay(
-                                  statistic: secondsToMinuteSecondTime((model
-                                              .expiredScreenTime!.minutesUsed ??
-                                          model.expiredScreenTime!.minutes) *
-                                      60),
-                                  title: "Screen time",
-                                  showScreenTimeIcon: true),
-                            ],
-                          )
-                          // AfkCreditsText.subheading("Time used"),
-                          // AfkCreditsText.body(secondsToMinuteSecondTime(
-                          //     model.currentScreenTimeSession!
-                          //             .minutesUsed! *
-                          //         60)),
-                          // verticalSpaceSmall,
-                        ],
+                                Center(
+                                  child: AfkCreditsText.headingTwo(
+                                      "Screen Time Over"),
+                                ),
+                                //Spacer(),
+                                verticalSpaceLarge,
+                                Icon(Icons.timer_off_outlined,
+                                    size:
+                                        screenHeight(context, percentage: 0.12),
+                                    color: kcRed),
+                                verticalSpaceLarge,
+                                //Spacer(),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: AfkCreditsText.subheading(
+                                      model.childName +
+                                          "'s screen time session",
+                                      align: TextAlign.center),
+                                ),
+                                verticalSpaceMedium,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    SimpleStatisticsDisplay(
+                                        statistic: formatDateDetailsType6(model
+                                            .expiredScreenTime!.startedAt
+                                            .toDate()),
+                                        title: "Started",
+                                        showScreenTimeIcon: false),
+                                    SimpleStatisticsDisplay(
+                                      statistic: formatDateDetailsType6(model
+                                          .expiredScreenTime!.startedAt
+                                          .toDate()
+                                          .add(Duration(
+                                              minutes: (model.expiredScreenTime!
+                                                      .minutesUsed ??
+                                                  model.expiredScreenTime!
+                                                      .minutes)))),
+                                      title: "Expired",
+                                      showCreditsIcon: false,
+                                    ),
+                                  ],
+                                ),
+                                verticalSpaceMedium,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    SimpleStatisticsDisplay(
+                                        statistic: secondsToMinuteTime((model
+                                                        .expiredScreenTime!
+                                                        .minutesUsed ??
+                                                    model.expiredScreenTime!
+                                                        .minutes) *
+                                                60) +
+                                            "in",
+                                        title: "Total time",
+                                        showScreenTimeIcon: true),
+                                    SimpleStatisticsDisplay(
+                                      statistic: model
+                                          .expiredScreenTime!.afkCreditsUsed
+                                          .toString()
+                                          .split(".")
+                                          .first,
+                                      title: "Credits spent",
+                                      showCreditsIcon: true,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                    if (!showStats) Spacer(),
+                    if (!showStats)
+                      Lottie.asset(
+                        kLottieBigTv,
+                        height: screenHeight(context, percentage: 0.25),
                       ),
                     Spacer(),
-                    Lottie.asset(kLottieBigTv,
-                        height: screenHeight(context, percentage: 0.25)),
-                    Spacer(),
-                    MainLongButton(
+                    if (showStats && model.isParentAccount)
+                      AfkCreditsButton.text(
+                        title: "See ${model.childName}'s statistics",
+                        onTap: () => model.replaceWithSingleChildView(
+                            uid: model.childId),
+                      ),
+                    verticalSpaceSmall,
+                    Container(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: AfkCreditsButton(
+                        color: model.currentScreenTimeSession?.status ==
+                                ScreenTimeSessionStatus.active
+                            ? kcRed
+                            : kcPrimaryColor,
                         onTap: model.currentScreenTimeSession?.status ==
                                 ScreenTimeSessionStatus.active
                             ? () => model.stopScreenTime(session: model.session)
@@ -215,11 +270,9 @@ class ActiveScreenTimeView extends StatelessWidget {
                         title: model.currentScreenTimeSession?.status ==
                                 ScreenTimeSessionStatus.active
                             ? "Stop screen time"
-                            : "Go Back",
-                        color: model.currentScreenTimeSession?.status ==
-                                ScreenTimeSessionStatus.active
-                            ? kcRed
-                            : kcPrimaryColor),
+                            : " Back to home",
+                      ),
+                    ),
                   ],
                 ),
               ),

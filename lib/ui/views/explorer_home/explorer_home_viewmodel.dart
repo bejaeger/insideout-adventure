@@ -8,6 +8,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
@@ -78,7 +79,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   ScreenTimeSession? get currentScreenTimeSession =>
       _screenTimeService.getActiveScreenTime(uid: currentUser.uid);
-  Future initialize({bool showQuestsFoundSnackbar = false}) async {
+  Future initialize({bool showBewareDialog = false}) async {
     setBusy(true);
     await listenToData();
     listenToLayout();
@@ -108,7 +109,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       await Future.delayed(Duration(milliseconds: 2000));
       result();
     } else {
-      if (showQuestsFoundSnackbar) {
+      if (showBewareDialog) {
+        dialogService.showCustomDialog(
+            variant: DialogType.BewareOfSurroundings);
         // snackbarService.showSnackbar(
         //     title: "Found ${questService.getNearByQuest.length} quests nearby",
         //     message: "Look around to play them");

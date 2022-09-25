@@ -1,12 +1,14 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class SelectScreenTimeViewModel extends BaseModel {
   // ----------------------------------
@@ -23,6 +25,7 @@ class SelectScreenTimeViewModel extends BaseModel {
   // ------------------------
   // state
   int screenTimePreset = 20; // in minutes
+  int? screenTimePresetCustom;
 
   // ------------------
   // constructor
@@ -45,6 +48,24 @@ class SelectScreenTimeViewModel extends BaseModel {
           userService.getTotalAvailableScreenTime(childId: childId);
     }
     notifyListeners();
+  }
+
+  // preset screen time selecter / switcher
+  Future selectCustomScreenTime() async {
+    DialogResponse? response = await dialogService.showCustomDialog(
+        variant: DialogType.CustomScreenTime);
+    if (response?.confirmed == true) {
+      if (response?.data is int) {
+        screenTimePreset = response?.data;
+        screenTimePresetCustom = response?.data;
+        log.v("set screen time preset to $screenTimePreset min");
+        notifyListeners();
+      } else {
+        log.e(
+            "Error parsing minutes from custom screen time dialog to integer. Parsed minutes is not an integer");
+        await showGenericInternalErrorDialog();
+      }
+    }
   }
 
   Future startScreenTime() async {

@@ -42,23 +42,19 @@ class SimpleStatisticsDisplay extends StatelessWidget {
               children: [
                 if (showCreditsIcon)
                   AFKCreditsIcon(
-                      height: 40,
+                      height: 35,
                       alignment: Alignment.center,
                       color: kcPrimaryColor),
                 if (showScreenTimeIcon)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.asset(kScreenTimeIcon2,
-                        height: 35,
+                        height: 28,
                         alignment: Alignment.centerLeft,
                         color: kcScreenTimeBlue),
                   ),
-                Text(
+                AfkCreditsText.headingThree(
                   statistic,
-                  style: textTheme(context).bodyText2!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                      color: kcBlackHeadlineColor),
                 ),
               ],
             ),

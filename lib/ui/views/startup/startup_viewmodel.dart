@@ -97,7 +97,7 @@ class StartUpViewModel extends TransferBaseViewModel {
           if (localUserRole == UserRole.adminMaster) {
             navToAdminHomeView(role: localUserRole!);
           } else {
-            replaceWithHomeView(showQuestsFoundSnackbar: true);
+            replaceWithHomeView(showBewareDialog: true);
           }
 //          }
         }

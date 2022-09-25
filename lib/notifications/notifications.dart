@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import '../../../utils/utilities/utilities.dart';
@@ -46,7 +47,12 @@ class Notifications {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         payload:
-            session == null ? null : getStringMapFromSession(session: session),
+            // set completed here already so we can react to it in the notification received action function.
+            session == null
+                ? null
+                : getStringMapFromSession(
+                    session: session.copyWith(
+                        status: ScreenTimeSessionStatus.completed)),
         id: id,
         groupKey: id.toString(),
         channelKey: kScheduledNotificationChannelKey,

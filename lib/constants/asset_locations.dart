@@ -26,7 +26,7 @@ const String kCompassIcon = "assets/icons/cardinal-point.png";
 const String kClockMelted = "assets/icons/melted-clock.png";
 const String kCurvedArrowIcon = "assets/icons/curve-arrow.png";
 const String kHerculesWorldLogo = "assets/hercules_world_logo.png";
-
+const String kBewareOfSurroundingsIcon = "assets/icons/beware.png";
 const String kWalkingIcon = "assets/icons/walk.png";
 const String kActivityIcon = "assets/icons/run.png";
 

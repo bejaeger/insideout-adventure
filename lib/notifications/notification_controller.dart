@@ -1,19 +1,12 @@
-import 'dart:convert';
-
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits/enums/screen_time_session_status.dart';
-import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class NotificationController {
-  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
-
   Future<void> initializeLocalNotifications() async {
     //Notificaitons Package
     await AwesomeNotifications().initialize(
@@ -81,13 +74,11 @@ class NotificationController {
       if (payload.containsKey("uid") && payload.containsKey("sessionId")) {
         ScreenTimeSession? session;
         try {
-          payload["status"] = "completed";
           session = getSessionFromStringMap(payload: payload);
         } catch (e) {
           print("==>> Error when getting the screen time session: $e");
           return;
         }
-
         // ? Not sure why the RemoveUntil is used here
         StackedService.navigatorKey?.currentState
             ?.pushNamedAndRemoveUntil(Routes.activeScreenTimeView, (route) {

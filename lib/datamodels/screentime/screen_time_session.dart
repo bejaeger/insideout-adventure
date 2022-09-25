@@ -34,7 +34,7 @@ Map<String, String?> getStringMapFromSession(
     "startedAt": "",
     "endedAt": "",
     "minutes": session.minutes.toStringAsFixed(0),
-    "status": "active",
+    "status": session.status.toString().split('.').last,
     "afkCredits": session.afkCredits.toStringAsFixed(0),
   };
 }
