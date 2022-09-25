@@ -186,7 +186,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                       left: 20, right: 20),
                                   child: AfkCreditsText.subheading(
                                       model.childName +
-                                          "'s screen time session",
+                                          "'s screen time expired",
                                       align: TextAlign.center),
                                 ),
                                 verticalSpaceMedium,

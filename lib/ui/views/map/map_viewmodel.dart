@@ -129,6 +129,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
             animateCameraViewModel(
                 forceUseLocation: true, customLat: newLat, customLon: newLon);
             mapStateService.resetNewLatLon();
+          } else if (type == MapUpdate.notify) {
+            notifyListeners();
           } else if (type == MapUpdate.restoreSnapshotByMoving) {
             // customLat/Lon in case we were in bird's view
             _moveCamera(
@@ -594,12 +596,12 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       // ? Should I do it here instead?
       // ONLY markers relevant to quest
 
-      // ? Cannot do the following here because we need a custom funciton for
-      // ? handleMarkerAnalysisResult
-      // ? All handled in gps_area_hike_viewmodel.dart
-
       // this is however still needed here. Not exactly clear why
       mapStateService.setIsAvatarView(false);
+
+      // ? Cannot add the markers here because we need a custom function for
+      // ? handleMarkerAnalysisResult
+      // ? All handled in gps_area_hike_viewmodel.dart
 
       // if (quest.startMarker != null) {
       //   resetMapMarkers();

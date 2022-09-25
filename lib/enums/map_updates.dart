@@ -6,5 +6,6 @@ enum MapUpdate {
   forceAnimateToLocation,
   restoreSnapshot,
   restoreSnapshotByMoving,
-  addAllQuestMarkers
+  addAllQuestMarkers,
+  notify
 }

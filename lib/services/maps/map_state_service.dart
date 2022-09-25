@@ -134,6 +134,10 @@ class MapStateService {
     }
   }
 
+  void notify() {
+    mapEventListener.add(MapUpdate.notify);
+  }
+
   void animateOnNewLocation() {
     mapEventListener.add(MapUpdate.animateOnNewLocation);
   }
