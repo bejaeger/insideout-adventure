@@ -37,6 +37,10 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   Map<String, int> get totalChildActivityTrend =>
       userService.totalChildActivityTrend();
 
+// ------------------------------
+// state
+  bool navigatingToActiveScreenTimeView = false;
+
   //  ---------------------------------
   String explorerNameFromUid(String uid) {
     return userService.explorerNameFromUid(uid);
@@ -45,9 +49,15 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   // -------------------------------------------------
   // Listen to streams of latest donations and transactions to be displayed
   // instantly when pulling up bottom sheets
-  Future listenToData() async {
-    //setBusy(true);
+  Future listenToData({ScreenTimeSession? screenTimeSession}) async {
+    // navToActiveScreenTimeView is true when a notification is
+    // clicked!
+    if (screenTimeSession != null) {
+      navigatingToActiveScreenTimeView = true;
+    }
     Completer completerOne = Completer<void>();
+
+    // adds several listeners to user data including the data from the supported explorers
     userService.setupUserDataListeners(
         completer: completerOne, callback: () => notifyListeners());
     await runBusyFuture(
@@ -57,7 +67,31 @@ class ParentHomeViewModel extends TransferBaseViewModel {
         ],
       ),
     );
-    screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
+
+    // if screenTimeSession is null we want to navigate to that particular one!
+    // ! This is duplicated in explorer_home_viewmodel.dart
+    if (screenTimeSession != null) {
+      log.v("started with non-null ScreenTimeSession");
+      await screenTimeService.listenToPotentialScreenTimes(
+          callback: notifyListeners);
+      ScreenTimeSession? session =
+          await screenTimeService.getSpecificScreenTime(
+        uid: screenTimeSession.uid,
+        sessionId: screenTimeSession.sessionId,
+      );
+      if (session != null) {
+        await navToActiveScreenTimeView(session: session);
+      } else {
+        log.wtf(
+            "NO screen time session found. This should never be the case. ");
+      }
+      navigatingToActiveScreenTimeView = false;
+      notifyListeners();
+    } else {
+      // don't need to await for it
+      screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
+      notifyListeners();
+    }
   }
 
   ScreenTimeSession? getScreenTime({required String uid}) {

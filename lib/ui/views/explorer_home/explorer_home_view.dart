@@ -17,11 +17,15 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
+import '../../../datamodels/screentime/screen_time_session.dart';
+
 final log = getLogger("REBUILD LOGGER");
 
 class ExplorerHomeView extends StatefulWidget {
   final bool showBewareDialog;
-  const ExplorerHomeView({Key? key, this.showBewareDialog = false})
+  final ScreenTimeSession? screenTimeSession;
+  const ExplorerHomeView(
+      {Key? key, this.showBewareDialog = false, this.screenTimeSession})
       : super(key: key);
 
   @override
@@ -33,8 +37,9 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
       viewModelBuilder: () => ExplorerHomeViewModel(),
-      onModelReady: (model) =>
-          model.initialize(showBewareDialog: widget.showBewareDialog),
+      onModelReady: (model) => model.initialize(
+          showBewareDialog: widget.showBewareDialog,
+          screenTimeSession: widget.screenTimeSession),
       builder: (context, model, child) {
         bool showMainWidgets =
             (!(model.isShowingQuestDetails || model.hasActiveQuest) ||

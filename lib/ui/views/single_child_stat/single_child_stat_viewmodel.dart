@@ -46,7 +46,7 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
   }
 
   ScreenTimeSession? getScreenTimeSession({required String uid}) {
-    return screenTimeService.getActiveScreenTime(uid: uid);
+    return screenTimeService.getActiveScreenTimeInMemory(uid: uid);
   }
 
   // ---------------------------------

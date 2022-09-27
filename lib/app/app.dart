@@ -56,6 +56,7 @@ import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart';
 import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
+import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
 import 'package:afkcredits/utils/image_selector.dart';
@@ -78,6 +79,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: CreateAccountView),
     MaterialRoute(page: CreateAccountUserRoleView),
     MaterialRoute(page: StartUpView, initial: true),
+    MaterialRoute(page: StartUpScreenTimeView),
     MaterialRoute(page: HomeView),
     MaterialRoute(page: AdminHomeView),
     MaterialRoute(page: SelectRoleAfterLoginView),

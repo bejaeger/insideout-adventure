@@ -85,30 +85,35 @@ class ScreenTimeService {
     return session.startedAt.toDate();
   }
 
-  ScreenTimeSession? getActiveScreenTimeSession({required String? uid}) {
+  ScreenTimeSession? getActiveScreenTimeInMemory(
+      {required String? uid, String? sessionId}) {
     if (uid == null) return null;
-    return screenTimeActiveSubject[uid]?.value;
-  }
-
-  ScreenTimeSession? getActiveScreenTime({required String uid}) {
-    return screenTimeActiveSubject[uid]?.value;
-  }
-
-  ScreenTimeSession? getScreenTimeSession(
-      {required String? uid, required String? sessionId}) {
-    if (uid == null || sessionId == null) return null;
-    if (screenTimeActiveSubject[uid] != null) {
-      return screenTimeActiveSubject[uid]!.value;
-    } else {
-      return null;
+    final session = screenTimeActiveSubject[uid]?.value;
+    // if sessionId is set we only want to return the current object if
+    // it is the one with 'sessionId'
+    if (sessionId != null) {
+      if (sessionId == session?.sessionId) {
+        return session;
+      } else {
+        return null;
+      }
     }
+    return session;
   }
 
-  ScreenTimeSession? getExpiredScreenTimeSession(
+  ScreenTimeSession? getExpiredScreenTimeSessionInMemory(
       {required String? uid, String? sessionId}) {
     if (uid == null) return null;
     if (screenTimeExpired.containsKey(uid)) {
-      return screenTimeExpired[uid];
+      final session = screenTimeExpired[uid];
+      if (sessionId != null) {
+        if (sessionId == session?.sessionId) {
+          return session;
+        } else {
+          return null;
+        }
+      }
+      return session;
     } else {
       return null;
     }
@@ -122,6 +127,28 @@ class ScreenTimeService {
   //   }
   // }
 
+  Future<ScreenTimeSession?> loadAndGetScreenTimeSession(
+      {required String sessionId}) async {
+    final session =
+        await _firestoreApi.getScreenTimeSession(sessionId: sessionId);
+    if (session != null) {
+      if (session.status == ScreenTimeSessionStatus.completed) {
+        screenTimeExpired[session.uid] = session;
+        return session;
+      }
+      if (session.status == ScreenTimeSessionStatus.active) {
+        if (!screenTimeActiveSubject.containsKey(session.uid)) {
+          screenTimeActiveSubject[session.uid] =
+              BehaviorSubject.seeded(session);
+        } else {
+          screenTimeActiveSubject[session.uid]!.add(session);
+        }
+        return session;
+      }
+    }
+    return null;
+  }
+
   Future<bool> loadExpiredScreenTimeSession(
       {required String? uid, String? sessionId}) async {
     if (uid == null) return false;
@@ -131,7 +158,8 @@ class ScreenTimeService {
       if (sessionId != null) {
         final session =
             await _firestoreApi.getScreenTimeSession(sessionId: sessionId);
-        if (session != null) {
+        if (session != null &&
+            session.status == ScreenTimeSessionStatus.completed) {
           screenTimeExpired[uid] = session;
           return true;
         }
@@ -324,7 +352,7 @@ class ScreenTimeService {
     );
     // this will make the view react to the finish event cause now the status is complete!
     screenTimeActiveSubject[currentSession.uid]?.add(currentSession);
-    _firestoreApi.updateStatsAfterScreenTimeFinished(
+    await _firestoreApi.updateStatsAfterScreenTimeFinished(
       session: currentSession,
       deltaCredits: -currentSession.afkCredits,
       deltaScreenTime: currentSession.minutes,
@@ -374,16 +402,16 @@ class ScreenTimeService {
       double fraction = secondsUsed / (session.minutes * 60);
       num afkCreditsUsed = (fraction * session.afkCredits).round();
 
-      final currentSession = session.copyWith(
+      session = session.copyWith(
         status: ScreenTimeSessionStatus.cancelled,
         afkCreditsUsed: afkCreditsUsed,
         minutesUsed: minutesUsed,
       );
 
-      screenTimeActiveSubject[session.uid]?.add(currentSession);
+      screenTimeActiveSubject[session.uid]?.add(session);
       // run transaction
       _firestoreApi.updateStatsAfterScreenTimeFinished(
-        session: currentSession,
+        session: session,
         deltaCredits: -afkCreditsUsed,
         deltaScreenTime: minutesUsed,
       );
@@ -458,15 +486,34 @@ class ScreenTimeService {
         .dismissNotifications(id: permanentNotificationId[session.uid]);
     permanentNotificationId.remove(session.uid);
     if (session.status == ScreenTimeSessionStatus.cancelled) {
+      // ! This cannot be cancelled if screen time is started,
+      // ! App is closed
+      // ! And then screen time is stopped!
+      // ! We need to store the notification Id online!? Or at least on the device!
+      log.v("Cancelling scheduled notification");
       NotificationController()
           .cancelNotifications(id: scheduledNotificationId[session.uid]);
       scheduledNotificationId.remove(session.uid);
     }
   }
 
-  void listenToPotentialScreenTimes({required void Function() callback}) {
+  Future listenToPotentialScreenTimes(
+      {required void Function() callback}) async {
+    log.v("Start listening to the screen times in memory");
+    Completer<void> completer = Completer();
+    int l = supportedExplorerScreenTimeSessionsActive.length;
+    int counter = 0;
+
+    if (supportedExplorerScreenTimeSessionsActive.isEmpty) {
+      if (!completer.isCompleted) {
+        completer.complete();
+        return completer.future;
+      }
+    }
+
     supportedExplorerScreenTimeSessionsActive.forEach(
       (key, session) {
+        counter = counter + 1;
         if (!screenTimeSubjectSubscription.containsKey(session.uid) ||
             screenTimeSubjectSubscription[session.uid] == null) {
           screenTimeSubjectSubscription[session.uid] =
@@ -474,13 +521,39 @@ class ScreenTimeService {
             (value) {
               // log.v("Running callback of screenTimeActiveSubject!");
               callback();
+              // wait until all screen time sessions were listened to!
+              if (counter == l && !completer.isCompleted) {
+                completer.complete();
+              }
             },
           );
         } else {
           log.e("Already listening to screen time subject.");
+          if (counter == l && !completer.isCompleted) {
+            completer.complete();
+          }
         }
       },
     );
+    return completer.future;
+  }
+
+  Future<ScreenTimeSession?> getSpecificScreenTime(
+      {required String? uid, required String? sessionId}) async {
+    if (uid == null || sessionId == null) return null;
+    // get latest status of active screen time
+    ScreenTimeSession? session =
+        getActiveScreenTimeInMemory(uid: uid, sessionId: sessionId);
+    // if null see if it is an expired screen time session
+    if (session == null) {
+      session =
+          getExpiredScreenTimeSessionInMemory(uid: uid, sessionId: sessionId);
+    }
+    // no screen time in memory, need to download it from firestore
+    if (session == null) {
+      session = await loadAndGetScreenTimeSession(sessionId: sessionId);
+    }
+    return session;
   }
 
   void cancelOnlyActiveScreenTimeSubjectListeners({required String uid}) {

@@ -16,14 +16,15 @@ import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
 
 class ParentHomeView extends StatelessWidget {
-  const ParentHomeView({Key? key}) : super(key: key);
+  final ScreenTimeSession? screenTimeSession;
+  const ParentHomeView({Key? key, this.screenTimeSession}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ParentHomeViewModel>.reactive(
         viewModelBuilder: () => ParentHomeViewModel(),
         onModelReady: (model) async {
-          if (model.currentUser.newUser) {
+          if (model.currentUser.newUser && screenTimeSession == null) {
             model.setNewUserPropertyToFalse();
             SchedulerBinding.instance.addPostFrameCallback(
               (timeStamp) async {
@@ -31,7 +32,7 @@ class ParentHomeView extends StatelessWidget {
               },
             );
           }
-          model.listenToData();
+          model.listenToData(screenTimeSession: screenTimeSession);
         },
         // fireOnModelReadyOnce: true, TODO: Not sure why this was set
         builder: (context, model, child) {
@@ -47,122 +48,136 @@ class ParentHomeView extends StatelessWidget {
                   screenTimes: model.childScreenTimeSessionsActive,
                 ),
                 endDrawer: const ParentDrawerView(),
-                floatingActionButton: AFKFloatingActionButton(
-                  icon:
-                      Icon(Icons.switch_account_outlined, color: Colors.white),
-                  width: 140,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  title: "Kids area",
-                  onPressed: model.showSwitchAreaBottomSheet,
-                ),
-                body: RefreshIndicator(
-                  onRefresh: () => model.listenToData(),
-                  child: ListView(
-                    // physics: BouncingScrollPhysics(),
-                    children: [
-                      verticalSpaceMedium,
-                      // if (model.childScreenTimeSessionsActive.isNotEmpty)
-                      //   AfkCreditsText.alertThree("Active Screen Time"),
-                      // if (model.childScreenTimeSessionsActive.isNotEmpty)
-                      //   AfkCreditsText.body(model.explorerNameFromUid(
-                      //           model.childScreenTimeSessionsActive[0].uid) +
-                      //       ", Minutes: " +
-                      //       model.childScreenTimeSessionsActive[0].minutes
-                      //           .toString() +
-                      //       ", started at: " +
-                      //       formatDateDetails(model
-                      //           .childScreenTimeSessionsActive[0].startedAt
-                      //           .toDate())),
-                      Center(child: AfkCreditsText.headingOne("Parent Area")),
-                      verticalSpaceSmall,
-                      SectionHeader(
-                        title: "Children",
-                        onButtonTap: model.showAddExplorerBottomSheet,
-                        buttonIcon: Container(
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 5.0),
-                          height: 30,
-                          width: 40,
-                          //color: Colors.red,
-                          child: Icon(Icons.add_circle_outline_rounded,
-                              size: 28, color: kcPrimaryColor),
+                floatingActionButton: model.navigatingToActiveScreenTimeView
+                    ? null
+                    : AFKFloatingActionButton(
+                        icon: Icon(Icons.switch_account_outlined,
+                            color: Colors.white),
+                        width: 140,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
                         ),
+                        title: "Kids area",
+                        onPressed: model.showSwitchAreaBottomSheet,
                       ),
-                      if (model.supportedExplorers.length == 0)
-                        model.isBusy
-                            ? AFKProgressIndicator()
-                            : Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: AfkCreditsButton(
-                                  onTap: model.showAddExplorerBottomSheet,
-                                  title: "Create child account",
-                                  height: 80,
-                                  //imagePath: ImagePath.peopleHoldingHands,
+                body: model.navigatingToActiveScreenTimeView
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            AFKProgressIndicator(),
+                            verticalSpaceSmall,
+                            AfkCreditsText.body("Loading screen timer..."),
+                          ])
+                    : RefreshIndicator(
+                        onRefresh: () => model.listenToData(),
+                        child: ListView(
+                          // physics: BouncingScrollPhysics(),
+                          children: [
+                            verticalSpaceMedium,
+                            // if (model.childScreenTimeSessionsActive.isNotEmpty)
+                            //   AfkCreditsText.alertThree("Active Screen Time"),
+                            // if (model.childScreenTimeSessionsActive.isNotEmpty)
+                            //   AfkCreditsText.body(model.explorerNameFromUid(
+                            //           model.childScreenTimeSessionsActive[0].uid) +
+                            //       ", Minutes: " +
+                            //       model.childScreenTimeSessionsActive[0].minutes
+                            //           .toString() +
+                            //       ", started at: " +
+                            //       formatDateDetails(model
+                            //           .childScreenTimeSessionsActive[0].startedAt
+                            //           .toDate())),
+                            Center(
+                                child:
+                                    AfkCreditsText.headingOne("Parent Area")),
+                            verticalSpaceSmall,
+                            SectionHeader(
+                              title: "Children",
+                              onButtonTap: model.showAddExplorerBottomSheet,
+                              buttonIcon: Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 5.0),
+                                height: 30,
+                                width: 40,
+                                //color: Colors.red,
+                                child: Icon(Icons.add_circle_outline_rounded,
+                                    size: 28, color: kcPrimaryColor),
+                              ),
+                            ),
+                            if (model.supportedExplorers.length == 0)
+                              model.isBusy
+                                  ? AFKProgressIndicator()
+                                  : Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: AfkCreditsButton(
+                                        onTap: model.showAddExplorerBottomSheet,
+                                        title: "Create child account",
+                                        height: 80,
+                                        //imagePath: ImagePath.peopleHoldingHands,
+                                      ),
+                                    ),
+                            if (model.supportedExplorers.length > 0)
+                              ChildrenStatsList(
+                                viewModel: model,
+                              ),
+                            verticalSpaceMedium,
+                            Container(
+                              height: 90,
+                              color: kcVeryLightGrey,
+                              width: screenWidth(context),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: AfkCreditsButton(
+                                        leading: Icon(Icons.add,
+                                            color: Colors.white),
+                                        title: "Quest",
+                                        onTap: model.navToCreateQuest,
+                                        height: 50),
+                                  ),
+                                  horizontalSpaceMedium,
+                                  Expanded(
+                                    child: AfkCreditsButton.outline(
+                                      title: "Map",
+                                      leading: Icon(Icons.map,
+                                          color: kcPrimaryColor),
+                                      onTap: model.navToParentMapView,
+                                      height: 50,
+                                    ),
+                                  ),
+                                  //verticalSpaceSmall,
+                                ],
+                              ),
+                            ),
+                            verticalSpaceMedium,
+                            // Divider(
+                            //   indent: 20,
+                            //   endIndent: 20,
+                            // ),
+                            verticalSpaceMedium,
+                            AfkCreditsText.headingFour(
+                              "How can we improve?",
+                              align: TextAlign.center,
+                            ),
+                            GestureDetector(
+                              onTap: model.navToFeedbackView,
+                              child: Container(
+                                color: Colors.transparent,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: kHorizontalPadding),
+                                child: AfkCreditsButton.text(
+                                  title: "Provide Feedback",
+                                  onTap: null,
+                                  height: 35,
                                 ),
                               ),
-                      if (model.supportedExplorers.length > 0)
-                        ChildrenStatsList(
-                          viewModel: model,
-                        ),
-                      verticalSpaceMedium,
-                      Container(
-                        height: 90,
-                        color: kcVeryLightGrey,
-                        width: screenWidth(context),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 25, vertical: 0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: AfkCreditsButton(
-                                  leading: Icon(Icons.add, color: Colors.white),
-                                  title: "Quest",
-                                  onTap: model.navToCreateQuest,
-                                  height: 50),
                             ),
-                            horizontalSpaceMedium,
-                            Expanded(
-                              child: AfkCreditsButton.outline(
-                                title: "Map",
-                                leading: Icon(Icons.map, color: kcPrimaryColor),
-                                onTap: model.navToParentMapView,
-                                height: 50,
-                              ),
-                            ),
-                            //verticalSpaceSmall,
+                            verticalSpaceMassive,
+                            verticalSpaceMassive,
                           ],
                         ),
                       ),
-                      verticalSpaceMedium,
-                      // Divider(
-                      //   indent: 20,
-                      //   endIndent: 20,
-                      // ),
-                      verticalSpaceMedium,
-                      AfkCreditsText.headingFour(
-                        "How can we improve?",
-                        align: TextAlign.center,
-                      ),
-                      GestureDetector(
-                        onTap: model.navToFeedbackView,
-                        child: Container(
-                          color: Colors.transparent,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: kHorizontalPadding),
-                          child: AfkCreditsButton.text(
-                            title: "Provide Feedback",
-                            onTap: null,
-                            height: 35,
-                          ),
-                        ),
-                      ),
-                      verticalSpaceMassive,
-                      verticalSpaceMassive,
-                    ],
-                  ),
-                ),
               ),
             ),
           );

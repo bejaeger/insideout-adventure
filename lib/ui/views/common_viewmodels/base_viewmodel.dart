@@ -291,7 +291,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   }
 
   Future replaceWithHomeView(
-      {bool showPermissionView = false, bool showBewareDialog = false}) async {
+      {bool showPermissionView = false,
+      bool showBewareDialog = false,
+      ScreenTimeSession? screenTimeSession}) async {
     // ? Request for all necessary permissions
     if (showPermissionView) {
       if (!(await _permissionService.allPermissionsProvided())) {
@@ -299,13 +301,15 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       }
     }
     if (currentUser.role == UserRole.sponsor) {
-      replaceWithParentHomeView();
+      replaceWithParentHomeView(screenTimeSession: screenTimeSession);
     } else if (currentUser.role == UserRole.adminMaster) {
       await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
           arguments:
               BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
     } else {
-      replaceWithExplorerHomeView(showBewareDialog: showBewareDialog);
+      replaceWithExplorerHomeView(
+          showBewareDialog: showBewareDialog,
+          screenTimeSession: screenTimeSession);
     }
   }
 

@@ -78,17 +78,39 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   bool showFullLoadingScreen = true;
 
   ScreenTimeSession? get currentScreenTimeSession =>
-      _screenTimeService.getActiveScreenTime(uid: currentUser.uid);
-  Future initialize({bool showBewareDialog = false}) async {
+      _screenTimeService.getActiveScreenTimeInMemory(uid: currentUser.uid);
+  Future initialize({
+    bool showBewareDialog = false,
+    ScreenTimeSession? screenTimeSession,
+  }) async {
     setBusy(true);
     await listenToData();
     listenToLayout();
-    // makes sure that screen time subject is listened to in case one is active!
-    screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
 
     // make sure the tilt is set correctly. Might not be the case when using parent map before
     // TODO: Might want to treat that in a cleaner way in a general reset method.
     mapViewModel.changeCameraTilt(kInitialTilt);
+
+    // makes sure that screen time subject is listened to in case one is active!
+    // ! This is duplicated in parent_home_viewmodel.dart
+    if (screenTimeSession != null) {
+      await screenTimeService.listenToPotentialScreenTimes(
+          callback: notifyListeners);
+      ScreenTimeSession? session =
+          await screenTimeService.getSpecificScreenTime(
+        uid: screenTimeSession.uid,
+        sessionId: screenTimeSession.sessionId,
+      );
+      if (session != null) {
+        await navToActiveScreenTimeView(session: session);
+      } else {
+        log.wtf(
+            "NO screen time session found. This should never be the case. ");
+      }
+    } else {
+      // no need to await for it when we don't navigate to it
+      screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
+    }
 
     setBusy(false);
     // fade loading screen out process
@@ -106,7 +128,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     // Give some UI element that shows how many quests were found in the
     // neighborhood
     if (result is void Function()) {
-      await Future.delayed(Duration(milliseconds: 2000));
+      await Future.delayed(Duration(milliseconds: 1500));
       result();
     } else {
       if (showBewareDialog) {

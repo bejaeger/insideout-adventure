@@ -30,18 +30,8 @@ const bool USE_EMULATOR = false;
 
 void mainCommon(Flavor flavor) async {
   try {
-    // Firebase is initialiezd in flavor specific files
-    // WidgetsFlutterBinding.ensureInitialized();
-    // initialize firebase app via index.html
-//     if (!kIsWeb) {
-//       await Firebase.initializeApp(
-//           options: prod.DefaultFirebaseOptions.currentPlatform);
-//       //: prod.DefaultFirebaseOptions.currentPlatform);
-// /*       await Firebase.initializeApp(
-//           options: flavor == Flavor.dev
-//               ? dev.DefaultFirebaseOptions.currentPlatform
-//               : prod.DefaultFirebaseOptions.currentPlatform); */
-//     }
+    // NOTE
+    // ? Firebase is initialiezd in flavor specific files
 
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/notifications/notification_controller.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/permission_service.dart';
@@ -16,8 +17,6 @@ class StartUpViewModel extends TransferBaseViewModel {
   // ------------------------------------------------------------
   final EnvironmentService _environmentService = locator<EnvironmentService>();
   final PermissionService _permissionService = locator<PermissionService>();
-  final LocalStorageService _localStorageService =
-      locator<LocalStorageService>();
   final log = getLogger("StartUpViewModel");
 
   // --------------------------------------------------------
@@ -47,8 +46,6 @@ class StartUpViewModel extends TransferBaseViewModel {
         localUserId = await userService.getLocallyLoggedInUserId();
         localUserRole = await userService.getLocallyLoggedUserRole();
       }
-
-      // TODO: Need to rethink the following logic. What if the app is closed once we are in the children area? We should go back to the children area!
 
       if (localUserId != null) {
         log.v(
@@ -97,7 +94,7 @@ class StartUpViewModel extends TransferBaseViewModel {
           if (localUserRole == UserRole.adminMaster) {
             navToAdminHomeView(role: localUserRole!);
           } else {
-            replaceWithHomeView(showBewareDialog: true);
+            await replaceWithHomeView(showBewareDialog: true);
           }
 //          }
         }
@@ -109,6 +106,12 @@ class StartUpViewModel extends TransferBaseViewModel {
       log.e("Error, possibly no network connection? Error message: $e");
       navigationService.replaceWith(Routes.loginView);
     }
+  }
+
+  Future<void> runStartupScreenTimeLogic(
+      {required ScreenTimeSession? screenTimeSession}) async {
+    replaceWithHomeView(
+        showBewareDialog: true, screenTimeSession: screenTimeSession);
   }
 
   bool showLoadingScreen() {

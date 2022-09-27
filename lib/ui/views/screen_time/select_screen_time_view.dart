@@ -95,36 +95,6 @@ class SelectScreenTimeView extends StatelessWidget {
                   ),
                   //Icon(Icons.arrow_downward_rounded, size: 40),
                   Spacer(),
-                  AfkCreditsText.body("Selected"),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      AfkCreditsText(
-                          text: model.screenTimePreset.toString() + " min",
-                          style: heading1Style.copyWith(
-                              fontWeight: FontWeight.w800)),
-                      // Icon(Icons.arrow_forward, size: 22),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AfkCreditsText.headingFourLight("="),
-                          // //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
-                          horizontalSpaceTiny,
-                          Image.asset(kAFKCreditsLogoPath,
-                              height: 18, color: kcPrimaryColor),
-                          horizontalSpaceTiny,
-                          AfkCreditsText.headingFourLight(
-                              screenTimeToCredits(model.screenTimePreset)
-                                  .toString()),
-                        ],
-                      ),
-                      // Lottie.network(
-                      //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
-                      //     height: 40),
-                    ],
-                  ),
-                  verticalSpaceTiny,
-                  verticalSpaceSmall,
                   Column(
                     children: [
                       Row(
@@ -172,7 +142,33 @@ class SelectScreenTimeView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      verticalSpaceTiny,
+                    ],
+                  ),
+                  verticalSpaceSmall,
+                  AfkCreditsText.body("Selected"),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AfkCreditsText(
+                          text: model.screenTimePreset.toString() + " min",
+                          style: heading1Style.copyWith(
+                              fontWeight: FontWeight.w800)),
+                      // Icon(Icons.arrow_forward, size: 22),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AfkCreditsText.headingFourLight("="),
+                          // //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
+                          horizontalSpaceTiny,
+                          Image.asset(kAFKCreditsLogoPath,
+                              height: 18, color: kcPrimaryColor),
+                          horizontalSpaceTiny,
+                          AfkCreditsText.headingFourLight(
+                              screenTimeToCredits(model.screenTimePreset)
+                                  .toString()),
+                        ],
+                      ),
+                      //verticalSpaceTiny,
                       GestureDetector(
                         onTap: () => model.selectCustomScreenTime(),
                         child: Container(
@@ -185,9 +181,12 @@ class SelectScreenTimeView extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // Lottie.network(
+                      //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
+                      //     height: 40),
                     ],
                   ),
-                  Spacer(),
+                  verticalSpaceMedium,
                   AfkCreditsButton(
                       leading:
                           Icon(Icons.play_arrow_rounded, color: Colors.white),

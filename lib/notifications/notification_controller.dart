@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
@@ -80,10 +81,15 @@ class NotificationController {
           return;
         }
         // ? Not sure why the RemoveUntil is used here
+
+        print("--------------------------------------");
+        print("SESSION: $session");
         StackedService.navigatorKey?.currentState
-            ?.pushNamedAndRemoveUntil(Routes.activeScreenTimeView, (route) {
+            ?.pushNamedAndRemoveUntil(Routes.startUpScreenTimeView, (route) {
           return (route.settings.name == '/') || route.isFirst;
-        }, arguments: ActiveScreenTimeViewArguments(session: session));
+        },
+                arguments:
+                    StartUpScreenTimeViewArguments(screenTimeSession: session));
       }
     }
 

@@ -17,10 +17,10 @@ class ActiveScreenTimeViewModel extends BaseModel {
   // -----------------------------------
   // getters
   int? screenTimeLeft;
-  ScreenTimeSession? get currentScreenTimeSession => _screenTimeService
-      .getScreenTimeSession(uid: session?.uid, sessionId: session?.sessionId);
+  ScreenTimeSession? get currentScreenTimeSession =>
+      _screenTimeService.getActiveScreenTimeInMemory(uid: session?.uid);
   ScreenTimeSession? get expiredScreenTime =>
-      _screenTimeService.getExpiredScreenTimeSession(
+      _screenTimeService.getExpiredScreenTimeSessionInMemory(
           uid: session?.uid, sessionId: session?.sessionId);
 
   String get childName => session != null ? session!.userName : "";
@@ -40,10 +40,6 @@ class ActiveScreenTimeViewModel extends BaseModel {
   Future initialize() async {
     setBusy(true);
 
-    if (currentScreenTimeSession != null) {
-      session = currentScreenTimeSession;
-    }
-
     // start screen time here
     if (session != null &&
         session?.status == ScreenTimeSessionStatus.notStarted) {
@@ -62,6 +58,12 @@ class ActiveScreenTimeViewModel extends BaseModel {
     if (session != null && session?.status == ScreenTimeSessionStatus.active) {
       log.i(
           "screen time session has started or is active and will be continued");
+
+      // probs should not do that!
+      // if (currentScreenTimeSession != null) {
+      //   session = currentScreenTimeSession;
+      // }
+
       int screenTimeLeftInSecondsPreset =
           screenTimeService.getTimeLeftInSeconds(session: session!);
       screenTimeLeft = screenTimeLeftInSecondsPreset;
@@ -76,21 +78,24 @@ class ActiveScreenTimeViewModel extends BaseModel {
       );
     }
 
+    // ? The following is not needed anymore as we do it one step earlier,
+    // ? in the parent_home_viewmodel.dart and explorer_home_viewmodel.dart
     // if screen time is over and notification is pressed
-    bool loadedScreenTime = true;
+    // bool loadedScreenTime = true;
     // this is the case if we navigate to this view from the expired notification;
-    if (session != null &&
-        session?.status == ScreenTimeSessionStatus.completed) {
-      // this loads the screen time session into memory so it can be accessed with the getter
-      // expiredScreenTime
-      loadedScreenTime = await _screenTimeService.loadExpiredScreenTimeSession(
-          uid: session?.uid, sessionId: session?.sessionId);
-      if (loadedScreenTime) {
-        session = expiredScreenTime;
-      }
-    }
+    // if (session != null &&
+    //     session?.status == ScreenTimeSessionStatus.completed) {
+    // this loads the screen time session into memory so it can be accessed with the getter
+    // expiredScreenTime
+    // loadedScreenTime = await _screenTimeService.loadExpiredScreenTimeSession(
+    //     uid: session?.uid, sessionId: session?.sessionId);
+    // if (loadedScreenTime) {
+    //   session = expiredScreenTime;
+    // }
+    // }
 
-    if (session == null || loadedScreenTime == false) {
+    // if (session == null || loadedScreenTime == false) {
+    if (session == null) {
       log.wtf("session is null, cannot navigate to active screen time view");
       popView();
       // setBusy(false);
