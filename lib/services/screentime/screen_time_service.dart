@@ -6,7 +6,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/notifications/notification_controller.dart';
-import 'package:afkcredits/notifications/notifications.dart';
+import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/subjects.dart';
@@ -19,6 +19,8 @@ class ScreenTimeService {
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
+  final NotificationsService _notificationService =
+      locator<NotificationsService>();
 
   // -----------------------------
   // Return values and state
@@ -210,6 +212,7 @@ class ScreenTimeService {
         (value) {
           callback();
         },
+        onDone: () => callback(),
       );
     }
 
@@ -226,16 +229,12 @@ class ScreenTimeService {
     screenTimeTimer[session.uid] =
         startTimer(session: session, callback: callback, previousDiff: 0);
 
-    // TODO: maybe deprecated
-    await _localStorageService.saveToDisk(
-        key: kLocalStorageScreenTimeSessionKey, value: id);
-
     log.v("Fire notifications");
     // store unique ids for notifications to keep track
-    permanentNotificationId[session.uid] = await Notifications()
-        .createPermanentIsUsingScreenTimeNotification(session: session);
-    scheduledNotificationId[session.uid] = await Notifications()
-        .createScheduledIsUsingScreenTimeNotification(session: session);
+    await NotificationsService()
+        .maybeCreatePermanentIsUsingScreenTimeNotification(session: session);
+    await NotificationsService()
+        .maybeCreateScheduledIsUsingScreenTimeNotification(session: session);
 
     // need to call callback here once so that UI reacts
     // on just added screenTimeActiveSubject!
@@ -275,19 +274,21 @@ class ScreenTimeService {
     if (!screenTimeSubjectSubscription.containsKey(session.uid) ||
         screenTimeSubjectSubscription[session.uid] == null) {
       screenTimeSubjectSubscription[session.uid] =
-          screenTimeActiveSubject[session.uid]?.listen((value) {
-        // log.v("Running callback of screenTimeActiveSubject!");
-        callback();
-      });
+          screenTimeActiveSubject[session.uid]?.listen(
+        (value) {
+          // log.v("Running callback of screenTimeActiveSubject!");
+          callback();
+        },
+        onDone: () => callback(),
+      );
     }
-    if (!permanentNotificationId.containsKey(session.uid)) {
-      permanentNotificationId[session.uid] = await Notifications()
-          .createPermanentIsUsingScreenTimeNotification(session: session);
-    }
-    if (!scheduledNotificationId.containsKey(session.uid)) {
-      scheduledNotificationId[session.uid] = await Notifications()
-          .createScheduledIsUsingScreenTimeNotification(session: session);
-    }
+
+    // Maybe start notifications here.
+    // Needed for 2-phone scenario!
+    await NotificationsService()
+        .maybeCreatePermanentIsUsingScreenTimeNotification(session: session);
+    await NotificationsService()
+        .maybeCreateScheduledIsUsingScreenTimeNotification(session: session);
     // need to call callback here once so that UI reacts
     // on just added screenTimeActiveSubject!
     callback();
@@ -300,12 +301,12 @@ class ScreenTimeService {
       required int previousDiff}) {
     return Timer.periodic(
       const Duration(seconds: 1),
-      (timer) {
+      (timer) async {
         int secondsLeft = session.minutes * 60 - previousDiff - timer.tick;
         // update every minute!
         if (secondsLeft % 60 == 0) {
           if (secondsLeft == 0) {
-            handleScreenTimeOverEvent(
+            await handleScreenTimeOverEvent(
                 session: screenTimeActiveSubject[session.uid]!.value);
             callback();
             timer.cancel();
@@ -327,19 +328,19 @@ class ScreenTimeService {
     );
   }
 
-  Future handleScreenTimeOverEvent({required ScreenTimeSession session}) async {
+  Future handleScreenTimeOverEvent(
+      {required ScreenTimeSession session, void Function()? callback}) async {
     log.i("Handle screen time over event");
     session = screenTimeActiveSubject[session.uid]?.value ?? session;
     // check if this function was already called
     if (session.status == ScreenTimeSessionStatus.completed) {
       log.i("Found that session is completed already. dismiss notifications");
-      NotificationController()
-          .dismissNotifications(id: permanentNotificationId[session.uid]);
-      permanentNotificationId.remove(session.uid);
+
+      await _notificationService.dismissPermanentNotification(
+          sessionId: session.sessionId);
       if (session.status == ScreenTimeSessionStatus.cancelled) {
-        NotificationController()
-            .cancelNotifications(id: scheduledNotificationId[session.uid]);
-        scheduledNotificationId.remove(session.uid);
+        await _notificationService.cancelScheduledNotification(
+            sessionId: session.sessionId);
       }
       return;
     }
@@ -350,31 +351,25 @@ class ScreenTimeService {
       minutesUsed: session.minutes,
       afkCreditsUsed: session.afkCredits,
     );
+
     // this will make the view react to the finish event cause now the status is complete!
-    screenTimeActiveSubject[currentSession.uid]?.add(currentSession);
+    screenTimeExpired[currentSession.uid] = currentSession;
+    screenTimeActiveSubject[currentSession.uid]?.close();
+    screenTimeActiveSubject.remove(currentSession.uid);
+
+    // ? not sure if that is needed here.
+    if (callback != null) {
+      callback();
+    }
+
+    // runs a transaction
     await _firestoreApi.updateStatsAfterScreenTimeFinished(
       session: currentSession,
       deltaCredits: -currentSession.afkCredits,
       deltaScreenTime: currentSession.minutes,
     );
-    // This is a complicated part for the two phone scenario!
-    // How do we ensure that only one person can change the AFK balance!
 
-    // CHECK whether this is the account with which the screen time
-    // session was created, ONLY then write to the database!
-    // if (session.createdByUid == currentUserId) {
-    //   _firestoreApi.updateScreenTimeSession(session: currentSession);
-    //   _firestoreApi.changeAfkCreditsBalanceCheat(
-    //     deltaCredits: -currentSession.afkCredits,
-    //     uid: currentSession.uid,
-    //   );
-    //   _firestoreApi.changeTotalScreenTime(
-    //     deltaScreenTime: currentSession.minutes,
-    //     uid: currentSession.uid,
-    //   );
-    // }
-
-    resetScreenTimeSession(session: currentSession);
+    await resetScreenTimeSession(session: currentSession);
   }
 
   Future stopScreenTime({required ScreenTimeSession session}) async {
@@ -410,23 +405,14 @@ class ScreenTimeService {
 
       screenTimeActiveSubject[session.uid]?.add(session);
       // run transaction
-      _firestoreApi.updateStatsAfterScreenTimeFinished(
+      await _firestoreApi.updateStatsAfterScreenTimeFinished(
         session: session,
         deltaCredits: -afkCreditsUsed,
         deltaScreenTime: minutesUsed,
       );
-      // _firestoreApi.cancelScreenTimeSession(session: currentSession);
-      // _firestoreApi.changeAfkCreditsBalanceCheat(
-      //   deltaCredits: -afkCreditsUsed,
-      //   uid: currentSession.uid,
-      // );
-      // _firestoreApi.changeTotalScreenTime(
-      //   deltaScreenTime: minutesUsed,
-      //   uid: currentSession.uid,
-      // );
       returnVal = true;
     }
-    resetScreenTimeSession(session: session);
+    await resetScreenTimeSession(session: session);
     return returnVal;
   }
 
@@ -437,13 +423,13 @@ class ScreenTimeService {
     // check status
     // -> if completed:
     if (session.status == ScreenTimeSessionStatus.completed) {
-      handleScreenTimeOverEvent(session: session);
+      await handleScreenTimeOverEvent(session: session);
     } else {
       // -> if not completed
       // --> check if time is UP already?
       if (DateTime.now().difference(session.startedAt.toDate()).inSeconds >=
           session.minutes * 60) {
-        await handleScreenTimeOverEvent(session: session);
+        await handleScreenTimeOverEvent(session: session, callback: callback);
       } else {
         // --> if NOT: create session with remaining minutes!
         await continueScreenTime(session: session, callback: callback);
@@ -470,30 +456,21 @@ class ScreenTimeService {
     return session;
   }
 
-  void resetScreenTimeSession({required ScreenTimeSession session}) async {
-    // TODO: probably deprecated
-    await _localStorageService.deleteFromDisk(
-        key: kLocalStorageScreenTimeSessionKey);
-
+  Future resetScreenTimeSession({required ScreenTimeSession session}) async {
     // store in local state the session that was expired
     screenTimeExpired[session.uid] = session;
 
     // cancel all state and listeners related to screen time session
     cancelActiveScreenTimeListeners(uid: session.uid);
 
+    log.v("Cancelling scheduled notification");
+
     // dismiss nofifications
-    NotificationController()
-        .dismissNotifications(id: permanentNotificationId[session.uid]);
-    permanentNotificationId.remove(session.uid);
+    await _notificationService.dismissPermanentNotification(
+        sessionId: session.sessionId);
     if (session.status == ScreenTimeSessionStatus.cancelled) {
-      // ! This cannot be cancelled if screen time is started,
-      // ! App is closed
-      // ! And then screen time is stopped!
-      // ! We need to store the notification Id online!? Or at least on the device!
-      log.v("Cancelling scheduled notification");
-      NotificationController()
-          .cancelNotifications(id: scheduledNotificationId[session.uid]);
-      scheduledNotificationId.remove(session.uid);
+      await _notificationService.cancelScheduledNotification(
+          sessionId: session.sessionId);
     }
   }
 
@@ -526,6 +503,9 @@ class ScreenTimeService {
                 completer.complete();
               }
             },
+            // important since we cancel the screenTimeActiveSubject at some point.
+            // this should trigger another callback
+            onDone: () => callback(),
           );
         } else {
           log.e("Already listening to screen time subject.");

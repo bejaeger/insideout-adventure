@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
@@ -174,6 +175,9 @@ class ActiveScreenTimeViewModel extends BaseModel {
     super.dispose();
     // reset timer
     log.v("Resetting stop watch timer");
+    // this is important but will stop the active screen time listener
+    // when we navigate from outside the app inside the app when
+    // the active screen time was shown also last time
     _stopWatchService.resetTimer();
   }
 }

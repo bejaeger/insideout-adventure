@@ -80,11 +80,9 @@ class NotificationController {
           print("==>> Error when getting the screen time session: $e");
           return;
         }
-        // ? Not sure why the RemoveUntil is used here
 
-        print("--------------------------------------");
-        print("SESSION: $session");
-        StackedService.navigatorKey?.currentState
+        // ? Use remove until so that the first active screen time is reset.
+        await StackedService.navigatorKey?.currentState
             ?.pushNamedAndRemoveUntil(Routes.startUpScreenTimeView, (route) {
           return (route.settings.name == '/') || route.isFirst;
         },
@@ -164,11 +162,6 @@ class NotificationController {
   Future<void> dismissScheduledNotifications() async {
     await AwesomeNotifications()
         .dismissNotificationsByChannelKey(kScheduledNotificationChannelKey);
-  }
-
-  Future<void> dismissNotifications({required int? id}) async {
-    if (id == null) return;
-    await AwesomeNotifications().dismissNotificationsByGroupKey(id.toString());
   }
 
   Future<void> cancelNotifications({required int? id}) async {

@@ -1,6 +1,7 @@
 import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_service.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
@@ -141,6 +142,7 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     LazySingleton(classType: FeedbackService),
     LazySingleton(classType: ScreenTimeService),
     LazySingleton(classType: PermissionService),
+    LazySingleton(classType: NotificationsService),
 
     //LazySingleton(classType: MarkersInMap),
     // LazySingleton(classType: MapViewModel),

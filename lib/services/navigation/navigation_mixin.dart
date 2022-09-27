@@ -78,16 +78,18 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.feedbackView);
   }
 
-  void replaceWithExplorerHomeView(
-      {bool showBewareDialog = false, ScreenTimeSession? screenTimeSession}) {
-    _navigationService.replaceWith(Routes.explorerHomeView,
+  Future replaceWithExplorerHomeView(
+      {bool showBewareDialog = false,
+      ScreenTimeSession? screenTimeSession}) async {
+    await _navigationService.replaceWith(Routes.explorerHomeView,
         arguments: ExplorerHomeViewArguments(
             showBewareDialog: showBewareDialog,
             screenTimeSession: screenTimeSession));
   }
 
-  void replaceWithParentHomeView({ScreenTimeSession? screenTimeSession}) {
-    _navigationService.replaceWith(Routes.parentHomeView,
+  Future replaceWithParentHomeView(
+      {ScreenTimeSession? screenTimeSession}) async {
+    await _navigationService.replaceWith(Routes.parentHomeView,
         arguments:
             ParentHomeViewArguments(screenTimeSession: screenTimeSession));
   }

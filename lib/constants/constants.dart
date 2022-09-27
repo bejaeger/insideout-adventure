@@ -8,7 +8,6 @@ const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
 const kLocalStorageSponsorReferenceKey = "PARENT_ID";
-const kLocalStorageScreenTimeSessionKey = "SCREEN_TIME_SESSION";
 const kLocalStorageSawOnBoardingKey = "SAW_ONBOARDING";
 final appName = 'Hercules World';
 

@@ -19,6 +19,7 @@ import '../apis/cloud_functions_api.dart';
 import '../apis/firestore_api.dart';
 import '../apis/notion_api.dart';
 import '../app_config_provider.dart';
+import '../notifications/notifications_service.dart';
 import '../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 import '../services/cloud_storage_service.dart/cloud_storage_service.dart';
 import '../services/connectivity/connectivity_service.dart';
@@ -83,6 +84,7 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => FeedbackService());
   locator.registerLazySingleton(() => ScreenTimeService());
   locator.registerLazySingleton(() => PermissionService());
+  locator.registerLazySingleton(() => NotificationsService());
   final mapViewModel = await presolveMapViewModel();
   locator.registerSingleton(mapViewModel);
 

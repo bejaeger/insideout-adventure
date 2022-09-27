@@ -62,12 +62,10 @@ class BewareOfSurroundingsDialog extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            'I will stay aware',
-                            style: textTheme(context).bodyText2!.copyWith(
-                                fontSize: 16,
-                                color: kcPrimaryColor,
-                                fontWeight: FontWeight.w600),
+                          AfkCreditsButton(
+                            title: 'I will stay aware',
+                            width: 180,
+                            height: 45,
                           ),
                           // horizontalSpaceTiny,
                           // Padding(

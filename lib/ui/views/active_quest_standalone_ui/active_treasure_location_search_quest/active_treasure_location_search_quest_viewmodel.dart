@@ -10,7 +10,7 @@ import 'package:afkcredits/datamodels/quests/treasure_search/treasure_search_loc
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
-import 'package:afkcredits/notifications/notifications.dart';
+import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';

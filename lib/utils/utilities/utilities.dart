@@ -21,3 +21,11 @@ double mapAnimationSpeedFraction() {
       ? kMapAnimationSpeedFractionIos
       : kMapAnimationSpeedFractionAndroid;
 }
+
+String getPermanentNotificationKeyFromSessionId(String id) {
+  return "PermanentNotification" + id;
+}
+
+String getScheduledNotificationKeyFromSessionId(String id) {
+  return "ScheduledNotification" + id;
+}

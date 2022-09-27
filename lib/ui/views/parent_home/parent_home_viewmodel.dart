@@ -56,7 +56,6 @@ class ParentHomeViewModel extends TransferBaseViewModel {
       navigatingToActiveScreenTimeView = true;
     }
     Completer completerOne = Completer<void>();
-
     // adds several listeners to user data including the data from the supported explorers
     userService.setupUserDataListeners(
         completer: completerOne, callback: () => notifyListeners());

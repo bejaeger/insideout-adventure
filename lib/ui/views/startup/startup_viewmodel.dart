@@ -110,7 +110,7 @@ class StartUpViewModel extends TransferBaseViewModel {
 
   Future<void> runStartupScreenTimeLogic(
       {required ScreenTimeSession? screenTimeSession}) async {
-    replaceWithHomeView(
+    await replaceWithHomeView(
         showBewareDialog: true, screenTimeSession: screenTimeSession);
   }
 

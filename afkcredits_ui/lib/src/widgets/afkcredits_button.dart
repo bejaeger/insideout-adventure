@@ -16,6 +16,7 @@ class AfkCreditsButton extends StatelessWidget {
   final Color? color;
   final double? height;
   final Border? border;
+  final double? width;
   final List<BoxShadow>? boxShadow;
 
   const AfkCreditsButton({
@@ -31,6 +32,7 @@ class AfkCreditsButton extends StatelessWidget {
     this.height,
     this.border,
     this.boxShadow,
+    this.width,
   })  : outline = false,
         super(key: key);
 
@@ -42,6 +44,7 @@ class AfkCreditsButton extends StatelessWidget {
     this.height,
     this.border,
     this.enabled = false,
+    this.width,
   })  : disabled = false,
         boxShadow = null,
         busy = false,
@@ -54,6 +57,7 @@ class AfkCreditsButton extends StatelessWidget {
     this.leading,
     this.color,
     this.height,
+    this.width,
     this.enabled = false,
   })  : disabled = false,
         busy = false,
@@ -68,7 +72,7 @@ class AfkCreditsButton extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        width: double.infinity,
+        width: width ?? double.infinity,
         height: height ?? 48,
         alignment: Alignment.center,
         decoration: textButton

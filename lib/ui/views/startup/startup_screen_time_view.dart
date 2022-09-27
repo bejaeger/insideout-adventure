@@ -16,8 +16,8 @@ class StartUpScreenTimeView extends StatelessWidget {
     return ViewModelBuilder<StartUpViewModel>.reactive(
       onModelReady: (model) {
         SchedulerBinding.instance.addPostFrameCallback(
-          (timeStamp) {
-            model.runStartupScreenTimeLogic(
+          (timeStamp) async {
+            await model.runStartupScreenTimeLogic(
                 screenTimeSession: screenTimeSession);
           },
         );

@@ -17,7 +17,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/notifications/notification_controller.dart';
-import 'package:afkcredits/notifications/notifications.dart';
+import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
@@ -39,6 +39,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       locator<LocalStorageService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
   final log = getLogger("ExplorerHomeViewModel");
+  final NotificationsService _notificationService =
+      locator<NotificationsService>();
 
   // Stateful Data
   // ignore: close_sinks
@@ -374,14 +376,21 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   //------------------------
   // cleanup
 
-  int? notId;
-  int? notScheduledId;
+  // SOME TEST NOTIFICATIONS
   void createTestNotification() async {
-    notId = await Notifications().createPermanentNotification(
+    await _notificationService.createPermanentNotification(
       title: "SCREEN TIME STARTED",
       message: "Hi",
+      session: ScreenTimeSession(
+          sessionId: "sessionId",
+          uid: "uid",
+          userName: "Bernd",
+          createdByUid: "hi",
+          minutes: 10,
+          status: ScreenTimeSessionStatus.active,
+          afkCredits: 10),
     );
-    notScheduledId = await Notifications().createScheduledNotification(
+    await _notificationService.createScheduledNotification(
       title: "EXPIRED",
       message: "Hi",
       date: DateTime.now().add(Duration(seconds: 7)),
@@ -398,14 +407,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   }
 
   void dismissTestNotification() {
-    if (notId != null) {
-      NotificationController().dismissNotifications(id: notId);
-      notId = null;
-    }
-    if (notScheduledId != null) {
-      NotificationController().dismissNotifications(id: notScheduledId);
-      notScheduledId = null;
-    }
+    _notificationService.dismissPermanentNotification(sessionId: "sessionId");
+    _notificationService.dismissScheduledNotification(sessionId: "sessionId");
     notifyListeners();
   }
 
