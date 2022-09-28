@@ -13,6 +13,7 @@ class AfkCreditsButton extends StatelessWidget {
   final bool enabled;
   final bool textButton;
   final Widget? leading;
+  final Widget? trailing;
   final Color? color;
   final double? height;
   final Border? border;
@@ -28,6 +29,7 @@ class AfkCreditsButton extends StatelessWidget {
     this.textButton = false,
     this.onTap,
     this.leading,
+    this.trailing,
     this.color,
     this.height,
     this.border,
@@ -40,6 +42,7 @@ class AfkCreditsButton extends StatelessWidget {
     required this.title,
     this.onTap,
     this.leading,
+    this.trailing,
     this.color,
     this.height,
     this.border,
@@ -55,6 +58,7 @@ class AfkCreditsButton extends StatelessWidget {
     required this.title,
     this.onTap,
     this.leading,
+    this.trailing,
     this.color,
     this.height,
     this.width,
@@ -111,6 +115,9 @@ class AfkCreditsButton extends StatelessWidget {
                             : color ?? kcPrimaryColor,
                       ),
                     ),
+                  if (trailing != null && title != "") horizontalSpaceTiny,
+                  if (trailing != null && title != "") const SizedBox(width: 5),
+                  if (trailing != null) trailing!,
                 ],
               )
             : const CircularProgressIndicator(

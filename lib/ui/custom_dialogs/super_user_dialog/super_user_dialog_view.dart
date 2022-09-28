@@ -243,7 +243,7 @@ class SuperUserDialogView extends StatelessWidget {
                                 .setDummyQuestCompletionVerification(value)),
                         Row(
                           children: [
-                            Text("Add AFK Credits Cheat"),
+                            Text("Add credits cheat"),
                             IconButton(
                               onPressed: model.addAfkCreditsCheat,
                               icon: Icon(Icons.add, size: 30),
@@ -253,7 +253,7 @@ class SuperUserDialogView extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Text("Remove AFK Credits Cheat"),
+                            Text("Remove credits cheat"),
                             IconButton(
                               onPressed: model.removeAfkCreditsCheat,
                               icon: Icon(Icons.remove, size: 30),

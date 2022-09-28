@@ -111,7 +111,7 @@ class _ScanQRCodeState extends State<ScanQRCode> {
           alignment: Alignment(0.0, 0.7),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text("Scan an AFK Credits QR Code",
+            child: Text("Scan a Hercules credit QR Code",
                 style: textTheme(context)
                     .headline6!
                     .copyWith(color: Colors.white)),

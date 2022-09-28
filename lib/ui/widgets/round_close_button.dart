@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class RoundCloseButton extends StatelessWidget {
   final void Function()? onTap;
+  final Color? color;
   const RoundCloseButton({
     Key? key,
     required this.onTap,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -13,13 +15,18 @@ class RoundCloseButton extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.translucent,
       child: Container(
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(width: 2),
-          ),
-          child: Icon(Icons.close_outlined, size: 24)),
+        //color: Colors.green,
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(width: 2),
+              color: color,
+            ),
+            child: Icon(Icons.close_outlined, size: 24)),
+      ),
     );
   }
 }

@@ -69,7 +69,7 @@ class UserListTile extends StatelessWidget {
                       children: [
                         Text("Earned: " +
                             userStats!.afkCreditsBalance.toString() +
-                            " AFK Credits"),
+                            " Hercules credits"),
                         Text("Sponsoring: " +
                             formatAmount(userStats!.availableSponsoring)),
                       ],

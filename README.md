@@ -1,4 +1,4 @@
 # AFK Credits
 
-Welcome to the AFK Credits Project.
+Welcome to the Hercules World Project.
 

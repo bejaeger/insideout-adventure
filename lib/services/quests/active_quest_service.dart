@@ -226,6 +226,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   }
 
   Future handleSuccessfullyFinishedQuest() async {
+    log.i("Handling successfully finished quest");
     // 1. Get credits collected, time elapsed and other potential data at the end of the quest
     // 2. bookkeep credits
     // 3. clean-up old quest
@@ -264,6 +265,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   }
 
   Future collectCredits() async {
+    log.v("bookeep credits in database");
     if (activatedQuest == null) {
       log.wtf("no active quest to collect credits from");
       return;
@@ -288,6 +290,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   }
 
   Future uploadAndCleanUpFinishedQuest() async {
+    log.v("upload and clean up finished quest");
     // At this point the quest has successfully finished!
     await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
     // keep copy of finished quest to show in success dialog view

@@ -82,7 +82,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                       gradient: LinearGradient(
                         colors: [
                           Colors.white.withOpacity(0.0),
-                          Colors.white.withOpacity(0.5),
+                          Colors.white.withOpacity(0.7),
                         ],
                         stops: [0.0, 1.0],
                         begin: Alignment.bottomCenter,

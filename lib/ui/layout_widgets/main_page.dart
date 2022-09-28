@@ -7,14 +7,20 @@ import 'package:stacked/stacked.dart';
 class MainPage extends StatelessWidget {
   final void Function()? onBackPressed;
   final bool showBackButton;
+  final Color? backButtonColor;
   final Widget child;
   final bool? resizeToAvoidBottomInset;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
   const MainPage(
       {Key? key,
       this.onBackPressed,
       required this.child,
       this.showBackButton = true,
-      this.resizeToAvoidBottomInset})
+      this.resizeToAvoidBottomInset,
+      this.backButtonColor,
+      this.floatingActionButton,
+      this.floatingActionButtonLocation})
       : super(key: key);
 
   @override
@@ -22,10 +28,15 @@ class MainPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-        body: MainStack(
-          child: child,
-          onBackPressed: onBackPressed,
-          showBackButton: showBackButton,
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
+        body: Container(
+          child: MainStack(
+            child: child,
+            onBackPressed: onBackPressed,
+            showBackButton: showBackButton,
+            backButtonColor: backButtonColor,
+          ),
         ),
       ),
     );
@@ -36,12 +47,13 @@ class MainStack extends StatelessWidget {
   final Widget child;
   final void Function()? onBackPressed;
   final bool showBackButton;
-
+  final Color? backButtonColor;
   const MainStack({
     Key? key,
     required this.child,
     this.onBackPressed,
     this.showBackButton = true,
+    this.backButtonColor,
   }) : super(key: key);
 
   @override
@@ -54,8 +66,11 @@ class MainStack extends StatelessWidget {
           if (showBackButton)
             Container(
               alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.only(
+                  bottom:
+                      12), // another padding is added to increase tap size of button
               child: RoundCloseButton(
+                  color: backButtonColor,
                   onTap:
                       onBackPressed != null ? onBackPressed! : model.popView),
             ),

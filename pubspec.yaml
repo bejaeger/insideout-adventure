@@ -119,6 +119,8 @@ dependencies:
   flutter_dotenv: ^5.0.2
   flutter_svg: ^1.1.5
 
+  confetti: ^0.7.0
+
   arkit_plugin: ^1.0.5
   arcore_flutter_plugin:
      #0.1.0-null-safety.3

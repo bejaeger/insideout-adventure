@@ -18,4 +18,5 @@ enum DialogType {
   OnboardingDialog,
   BewareOfSurroundings,
   CustomScreenTime,
+  NumberQuests,
 }

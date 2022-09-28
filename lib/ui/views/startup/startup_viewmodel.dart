@@ -94,7 +94,8 @@ class StartUpViewModel extends TransferBaseViewModel {
           if (localUserRole == UserRole.adminMaster) {
             navToAdminHomeView(role: localUserRole!);
           } else {
-            await replaceWithHomeView(showBewareDialog: true);
+            await replaceWithHomeView(
+                showBewareDialog: true, showNumberQuestsDialog: true);
           }
 //          }
         }
@@ -111,7 +112,9 @@ class StartUpViewModel extends TransferBaseViewModel {
   Future<void> runStartupScreenTimeLogic(
       {required ScreenTimeSession? screenTimeSession}) async {
     await replaceWithHomeView(
-        showBewareDialog: true, screenTimeSession: screenTimeSession);
+        showBewareDialog: true,
+        screenTimeSession: screenTimeSession,
+        showNumberQuestsDialog: true);
   }
 
   bool showLoadingScreen() {

@@ -83,6 +83,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       _screenTimeService.getActiveScreenTimeInMemory(uid: currentUser.uid);
   Future initialize({
     bool showBewareDialog = false,
+    bool showNumberQuestsDialog = false,
     ScreenTimeSession? screenTimeSession,
   }) async {
     setBusy(true);
@@ -126,6 +127,10 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     showFullLoadingScreen = false;
     notifyListeners();
 
+    if (showBewareDialog) {
+      await _showBewareDialog();
+    }
+
     // if no quests are found.
     // Give some UI element that shows how many quests were found in the
     // neighborhood
@@ -133,12 +138,10 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       await Future.delayed(Duration(milliseconds: 1500));
       result();
     } else {
-      if (showBewareDialog) {
-        dialogService.showCustomDialog(
-            variant: DialogType.BewareOfSurroundings);
-        // snackbarService.showSnackbar(
-        //     title: "Found ${questService.getNearByQuest.length} quests nearby",
-        //     message: "Look around to play them");
+      // quests were found!
+      if (showNumberQuestsDialog) {
+        await _showNumberQuestsDialog(
+            numberQuests: questService.getNearByQuest.length);
       }
     }
     showQuestLoadingScreen = false;
@@ -373,6 +376,19 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
           title: "Failure", message: "Connect to a network and try again");
     }
   }
+
+  Future _showNumberQuestsDialog({required int numberQuests}) async {
+    await dialogService.showCustomDialog(
+        variant: DialogType.NumberQuests,
+        data: numberQuests,
+        barrierDismissible: true);
+  }
+
+  Future _showBewareDialog() async {
+    await dialogService.showCustomDialog(
+        variant: DialogType.BewareOfSurroundings);
+  }
+
   //------------------------
   // cleanup
 

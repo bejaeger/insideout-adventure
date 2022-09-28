@@ -392,7 +392,8 @@ class StackedRouter extends _i1.RouterBase {
         builder: (context) => _i5.ExplorerHomeView(
             key: args.key,
             showBewareDialog: args.showBewareDialog,
-            screenTimeSession: args.screenTimeSession),
+            screenTimeSession: args.screenTimeSession,
+            showNumberQuestsDialog: args.showNumberQuestsDialog),
         settings: data,
       );
     },
@@ -700,6 +701,7 @@ class ExplorerHomeViewArguments {
     this.key,
     this.showBewareDialog = false,
     this.screenTimeSession,
+    this.showNumberQuestsDialog = false,
   });
 
   final _i40.Key? key;
@@ -707,6 +709,8 @@ class ExplorerHomeViewArguments {
   final bool showBewareDialog;
 
   final _i41.ScreenTimeSession? screenTimeSession;
+
+  final bool showNumberQuestsDialog;
 }
 
 class LoginViewArguments {
@@ -1001,6 +1005,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
     _i40.Key? key,
     bool showBewareDialog = false,
     _i41.ScreenTimeSession? screenTimeSession,
+    bool showNumberQuestsDialog = false,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1011,7 +1016,8 @@ extension NavigatorStateExtension on _i50.NavigationService {
         arguments: ExplorerHomeViewArguments(
             key: key,
             showBewareDialog: showBewareDialog,
-            screenTimeSession: screenTimeSession),
+            screenTimeSession: screenTimeSession,
+            showNumberQuestsDialog: showNumberQuestsDialog),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

@@ -23,9 +23,13 @@ final log = getLogger("REBUILD LOGGER");
 
 class ExplorerHomeView extends StatefulWidget {
   final bool showBewareDialog;
+  final bool showNumberQuestsDialog;
   final ScreenTimeSession? screenTimeSession;
   const ExplorerHomeView(
-      {Key? key, this.showBewareDialog = false, this.screenTimeSession})
+      {Key? key,
+      this.showBewareDialog = false,
+      this.screenTimeSession,
+      this.showNumberQuestsDialog = false})
       : super(key: key);
 
   @override
@@ -39,6 +43,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
       viewModelBuilder: () => ExplorerHomeViewModel(),
       onModelReady: (model) => model.initialize(
           showBewareDialog: widget.showBewareDialog,
+          showNumberQuestsDialog: widget.showNumberQuestsDialog,
           screenTimeSession: widget.screenTimeSession),
       builder: (context, model, child) {
         bool showMainWidgets =
@@ -151,8 +156,11 @@ class OverlayedCloseButton extends StatelessWidget {
       builder: (context, model, child) => model.isShowingQuestList
           ? Container(
               alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.only(bottom: 20),
-              child: RoundCloseButton(onTap: model.removeQuestListOverlay),
+              padding: const EdgeInsets.only(bottom: 12),
+              child: RoundCloseButton(
+                onTap: model.removeQuestListOverlay,
+                color: kcCultured,
+              ),
             )
           : SizedBox(height: 0, width: 0),
     );

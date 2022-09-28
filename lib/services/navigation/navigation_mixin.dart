@@ -83,10 +83,12 @@ mixin NavigationMixin {
 
   Future replaceWithExplorerHomeView(
       {bool showBewareDialog = false,
+      bool showNumberQuestsDialog = false,
       ScreenTimeSession? screenTimeSession}) async {
     await _navigationService.replaceWith(Routes.explorerHomeView,
         arguments: ExplorerHomeViewArguments(
             showBewareDialog: showBewareDialog,
+            showNumberQuestsDialog: showNumberQuestsDialog,
             screenTimeSession: screenTimeSession));
   }
 

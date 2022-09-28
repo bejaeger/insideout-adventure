@@ -8,7 +8,7 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:stacked/stacked.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
 
 class ARObjectIosView extends StatefulWidget {
   final bool isCoins;
@@ -36,21 +36,23 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
       viewModelBuilder: () => ARObjectViewModel(),
       builder: (context, model, _) => MainPage(
         onBackPressed: () => model.popArView(result: false),
+        backButtonColor: kcCultured,
         child: Stack(
           children: [
             ARKitSceneView(
               onARKitViewCreated: (ARKitController controller) =>
                   _onARKitViewCreated(
                       controller, model.handleCollectedArObjectEvent),
+              enableTapRecognizer: true,
             ),
             Align(
               alignment: Alignment(0, 0.7),
               child: Container(
                 decoration: BoxDecoration(
                     color: kcCultured, borderRadius: BorderRadius.circular(20)),
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12.0),
                 width: screenWidth(context, percentage: 0.7),
-                child: AfkCreditsText.headingThree(
+                child: AfkCreditsText.headingFour(
                   "Tap on the credits to collect them",
                   align: TextAlign.center,
                 ),
@@ -68,11 +70,26 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
     this.arkitController.onNodeTap = (_) => handleCollectedArObjectEvent();
 
     final material = ARKitMaterial(
-      lightingModelName: ARKitLightingModel.lambert,
+      lightingModelName: ARKitLightingModel.constant,
       diffuse: ARKitMaterialProperty.image(kAFKCreditsLogoPath),
+      blendMode: ARKitBlendMode.alpha,
     );
-    final box =
-        ARKitBox(materials: [material], width: 0.05, height: 0.8, length: 0.8);
+    final material2 = ARKitMaterial(
+      //lightingModelName: ARKitLightingModel.blinn,
+      diffuse: ARKitMaterialProperty.color(kcCultured),
+      transparency: 0.5,
+    );
+    final box = ARKitBox(materials: [
+      material2,
+      material,
+      material2,
+      material,
+      material2,
+      material2,
+    ], width: 0.12, height: 1, length: 1, chamferRadius: 0.5);
+    final box2 = ARKitBox(materials: [
+      material2,
+    ], width: 0.11, height: 0.99, length: 0.99, chamferRadius: 0.5);
 
     // random position
     double ranX =
@@ -81,17 +98,25 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
 
     final node = ARKitNode(
       geometry: box,
-      position: Vector3(ranX, -1, ranZ),
+      position: vector.Vector3(ranX, -1, ranZ),
+      //position: vector.Vector3(0, -1, -4),
+    );
+    final node2 = ARKitNode(
+      geometry: box2,
+      position: vector.Vector3(ranX, -1, ranZ),
+      //position: vector.Vector3(0, -1, -4),
     );
 
     this.arkitController.add(node);
+    this.arkitController.add(node2);
 
     timer = Timer.periodic(
-      const Duration(milliseconds: 50),
+      const Duration(milliseconds: 25),
       (timer) {
         final rotation = node.eulerAngles;
-        rotation.x += 0.01;
+        rotation.x += 0.025;
         node.eulerAngles = rotation;
+        node2.eulerAngles = rotation;
       },
     );
   }

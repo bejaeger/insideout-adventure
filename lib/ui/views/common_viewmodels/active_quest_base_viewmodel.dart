@@ -476,7 +476,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     await dialogService.showDialog(
         title: quest.name.toString() + "-" + quest.type.toString(),
         //title: quest.name + " - " + describeEnum(quest.type).toString(),
-        description: "Earn ${quest.afkCredits} AFK Credits by " +
+        description: "Earn ${quest.afkCredits} Hercules credits by " +
             getQuestDescriptionString(quest));
   }
 
@@ -500,7 +500,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       {CollectCreditsStatus collectCreditsStatus =
           CollectCreditsStatus.todo}) async {
     activeQuestService.setSuccessAsQuestStatus();
-    log.i("SUCCESFFULLY FOUND trophy");
+    log.i("SUCCESSFULLY FOUND trophy");
 
     // Make checkout procedure same for all quest types!
     // Function in quest_viewmodel!

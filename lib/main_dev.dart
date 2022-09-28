@@ -12,6 +12,7 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     if (!kIsWeb) {
       // not in agreement with GoogleService.plist warning appears
+      // for iOS run in prod mode for now!
       await Firebase.initializeApp(
           name: Platform.isIOS ? "Dev" : null,
           options: dev.DefaultFirebaseOptions.currentPlatform);

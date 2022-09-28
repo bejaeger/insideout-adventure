@@ -69,7 +69,7 @@ class AFKFloatingActionButton extends StatelessWidget {
 
 class AFKFloatingActionButtonRectangle extends StatelessWidget {
   final Widget icon;
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final double height;
   final double width;
   final String? title;
@@ -105,7 +105,7 @@ class AFKFloatingActionButtonRectangle extends StatelessWidget {
         foregroundColor: Colors.black,
         onPressed: onPressed,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(20.0),
         ),
         child: Container(
           child: Column(
