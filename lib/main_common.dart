@@ -21,10 +21,9 @@ import 'app_config_provider.dart';
 import 'notifications/notification_controller.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
-// import 'firebase_options_dev.dart' as dev;
-
-// import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
-//     show ArCoreController;
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
+    show ArCoreController;
 
 const bool USE_EMULATOR = false;
 
@@ -63,14 +62,14 @@ void mainCommon(Flavor flavor) async {
     appConfigProvider.configure(flavor);
     print("==>> Running with flavor $flavor");
 
-    // if (!kIsWeb &&
-    //     Platform.isAndroid &&
-    //     await ArCoreController.checkArCoreAvailability() &&
-    //     await ArCoreController.checkIsArCoreInstalled()) {
-    //   appConfigProvider.setIsARAvailable(true);
-    // } else {
-    appConfigProvider.setIsARAvailable(false);
-    // }
+    if (!kIsWeb && Platform.isAndroid) {
+      // await ArCoreController.checkArCoreAvailability() &&
+      // await ArCoreController.checkIsArCoreInstalled()) {
+      appConfigProvider.setIsARAvailable(false);
+    } else {
+      // try for iOS
+      appConfigProvider.setIsARAvailable(true);
+    }
 
     runApp(MyApp());
   } catch (e) {

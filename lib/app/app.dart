@@ -31,7 +31,7 @@ import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
-import 'package:afkcredits/ui/views/ar_view/ar_object_view.dart';
+import 'package:afkcredits/ui/views/ar_view/ar_object_ios_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
@@ -68,6 +68,7 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
+import '../ui/views/ar_view/ar_object_android_view.dart';
 
 @StackedApp(
   routes: [
@@ -100,7 +101,8 @@ import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
     MaterialRoute(page: ManageQuestView),
     MaterialRoute(page: QuestsOverviewView),
     MaterialRoute(page: HistoryAndAchievementsView),
-    MaterialRoute(page: ARObjectView),
+    MaterialRoute(page: ARObjectAndroidView),
+    MaterialRoute(page: ARObjectIosView),
     MaterialRoute(page: ActiveScreenTimeView),
     MaterialRoute(page: SelectScreenTimeView),
     MaterialRoute(page: SingleQuestTypeView),

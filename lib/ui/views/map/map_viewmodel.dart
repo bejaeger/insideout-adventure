@@ -786,6 +786,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       return await openARView(lat, lon, isCoin);
     } else {
       await showCollectedMarkerDialog();
+      // TODO: setIsFadingOutOverlay set to false twice. Not exactly sure if that is intended
       layoutService.setIsFadingOutOverlay(false);
       restorePreviousCameraPosition(moveInsteadOfAnimate: true);
       await Future.delayed(Duration(milliseconds: 200));

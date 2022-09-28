@@ -186,8 +186,8 @@ class ActiveTreasureLocationSearchQuestViewModel
           mapViewModel.addAllQuestMarkers();
         },
       );
-      // this is risky I think!
-      mapViewModel.notifyListeners();
+      // notify map
+      mapsService.notify();
 
       await vibrateRightDirection();
       await vibrateRightDirection();

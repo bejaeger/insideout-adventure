@@ -36,6 +36,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.1"
+  arcore_flutter_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "2225876"
+      resolved-ref: "222587660cd22f5c60191ad2c6218041cd5f8627"
+      url: "https://github.com/bejaeger/arcore_flutter_plugin"
+    source: git
+    version: "0.1.0-null-safety.3"
   args:
     dependency: transitive
     description:
@@ -43,6 +52,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.1"
+  arkit_plugin:
+    dependency: "direct main"
+    description:
+      name: arkit_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   async:
     dependency: transitive
     description:
@@ -379,6 +395,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:

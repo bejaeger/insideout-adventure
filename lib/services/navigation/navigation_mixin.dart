@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/quest_view_index.dart';
@@ -11,7 +12,9 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 mixin NavigationMixin {
   final NavigationService _navigationService = locator<NavigationService>();
@@ -211,8 +214,14 @@ mixin NavigationMixin {
   }
 
   Future navToArObjectView(bool isCoins) async {
-    return await _navigationService.navigateTo(Routes.aRObjectView,
-        arguments: ARObjectViewArguments(isCoins: isCoins));
+    if (!kIsWeb && Platform.isAndroid) {
+      return await _navigationService.navigateTo(Routes.aRObjectAndroidView,
+          arguments: ARObjectAndroidViewArguments(isCoins: isCoins));
+    }
+    if (!kIsWeb && Platform.isIOS) {
+      return await _navigationService.navigateTo(Routes.aRObjectIosView,
+          arguments: ARObjectIosViewArguments(isCoins: isCoins));
+    }
   }
 
   Future navToSelectScreenTimeView(

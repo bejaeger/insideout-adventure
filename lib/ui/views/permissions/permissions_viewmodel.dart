@@ -41,7 +41,7 @@ class PermissionsViewModel extends BaseModel {
 
     // - camera service
     // Not used at the moment!
-    // allGood = allGood & await handleCameraPermissions();
+    allGood = allGood & await handleCameraPermissions();
 
     // - activity service
     // Not used at the moment!

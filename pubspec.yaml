@@ -119,6 +119,14 @@ dependencies:
   flutter_dotenv: ^5.0.2
   flutter_svg: ^1.1.5
 
+  arkit_plugin: ^1.0.5
+  arcore_flutter_plugin:
+     #0.1.0-null-safety.3
+    git:
+      ref: "2225876"
+      url: https://github.com/bejaeger/arcore_flutter_plugin
+
+
 dev_dependencies:
   # flutter_test:
   #   sdk: flutter

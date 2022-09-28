@@ -33,7 +33,7 @@
 		<string>_dartobservatory._tcp</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>Please allow camera access to be able to scan QR codes.</string>
+	<string>Please allow camera access to use the AR feature.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Please allow location access.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

@@ -625,6 +625,8 @@ PODS:
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - arkit_plugin (0.0.1):
+    - Flutter
   - awesome_notifications (0.0.3):
     - Flutter
   - battery_plus (1.0.0):
@@ -914,6 +916,7 @@ PODS:
 
 DEPENDENCIES:
   - ar_flutter_plugin (from `.symlinks/plugins/ar_flutter_plugin/ios`)
+  - arkit_plugin (from `.symlinks/plugins/arkit_plugin/ios`)
   - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - battery_plus (from `.symlinks/plugins/battery_plus/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -995,6 +998,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   ar_flutter_plugin:
     :path: ".symlinks/plugins/ar_flutter_plugin/ios"
+  arkit_plugin:
+    :path: ".symlinks/plugins/arkit_plugin/ios"
   awesome_notifications:
     :path: ".symlinks/plugins/awesome_notifications/ios"
   battery_plus:
@@ -1059,6 +1064,7 @@ SPEC CHECKSUMS:
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
   ar_flutter_plugin: 8e0c6026776a842d3deea2cf8da5d2a4ed8b2376
   ARCore: 3124ed997ad2554a24d5fdbeb40f76265dea8d69
+  arkit_plugin: 3e42571e8be84adabb8a178bd51c22fa981e16bd
   awesome_notifications: 04530aafec8dac4635244ed4b4072f4aea6cc938
   battery_plus: 7851ab482c336dd101ae735dc9363f01e1223c7c
   BlueCryptor: b0aee3d9b8f367b49b30de11cda90e1735571c24

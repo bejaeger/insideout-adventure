@@ -1,8 +1,8 @@
+import 'dart:io';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ARObjectViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
@@ -13,7 +13,11 @@ class ARObjectViewModel extends ActiveQuestBaseViewModel
   }
 
   Future handleCollectedArObjectEvent() async {
-    await showCollectedMarkerDialog();
+    log.i("Handling collected ar object event");
+    // showing the dialog will make the app crash in android!
+    if (!kIsWeb && Platform.isIOS) {
+      await showCollectedMarkerDialog();
+    }
     popArView(result: true);
   }
 
