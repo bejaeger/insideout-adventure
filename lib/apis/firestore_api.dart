@@ -549,13 +549,14 @@ class FirestoreApi {
         (List<DocumentSnapshot> docList) {
           if (docList.isNotEmpty) {
             try {
-              returnQuests = docList
+              List<Quest> questList = docList
                   .map(
                     (docs) => Quest.fromJson(
                       docs.data() as Map<String, dynamic>,
                     ),
                   )
                   .toList();
+              returnQuests.addAll(questList);
             } catch (e) {
               log.e("Error loading quest datamodel from firestore: $e");
               rethrow;
@@ -570,12 +571,15 @@ class FirestoreApi {
       );
 
       if (sponsorIds.length == 0) {
+        log.i(
+            "No parent associated to child, not looking for custom created quests");
         if (!completer2.isCompleted) {
           completer2.complete();
         }
       }
       int counter = 0;
       for (String id in sponsorIds) {
+        log.v("checking for quests from parent with id $id");
         counter = counter + 1;
         final qref = questsCollection.where("createdBy", isEqualTo: id);
         Stream<List<DocumentSnapshot>> parentQuestsStream = geo
@@ -591,13 +595,14 @@ class FirestoreApi {
           (List<DocumentSnapshot> docList) {
             if (docList.isNotEmpty) {
               try {
-                returnQuests.addAll(docList
+                List<Quest> questList = docList
                     .map(
                       (docs) => Quest.fromJson(
                         docs.data() as Map<String, dynamic>,
                       ),
                     )
-                    .toList());
+                    .toList();
+                returnQuests.addAll(questList);
               } catch (e) {
                 log.e("Error loading quest datamodel from firestore: $e");
                 rethrow;
@@ -608,6 +613,7 @@ class FirestoreApi {
             }
             if (counter == sponsorIds.length) {
               if (!completer2.isCompleted) {
+                log.wtf("Completing future now");
                 completer2.complete();
               }
             }
@@ -629,6 +635,7 @@ class FirestoreApi {
             "No quests were found in this area. Ask your parents to create one.",
       );
     }
+    log.i("Found ${returnQuests.length} nearby quests.");
     return returnQuests;
   }
 
@@ -686,6 +693,87 @@ class FirestoreApi {
           message: "A peculiar error occured",
           devDetails:
               "This problem is likely caused by some not well defined datamodels and their json serializability.");
+    }
+  }
+
+  Future bookkeepFinishedQuest({required ActivatedQuest quest}) async {
+    log.v("Uploading and bookkeeping finished quest");
+
+    num? afkCreditsEarned = quest.afkCreditsEarned;
+    String? questId = quest.quest.id;
+    List<String>? uids = quest.uids;
+    if (afkCreditsEarned == null) {
+      log.wtf(
+          "afkCreditsEarned field is null in ActivatedQuest. Can't upload anything");
+      return;
+    }
+    if (uids == null) {
+      log.wtf("Uids field empty in ActivatedQuest. Can't upload anything");
+      return;
+    }
+
+    for (String uid in uids) {
+      await firestoreInstance.runTransaction(
+        (transaction) async {
+          DocumentReference userDocRef =
+              getUserSummaryStatisticsDocument(uid: uid);
+          DocumentSnapshot userDoc = await transaction.get(userDocRef);
+          if (!userDoc.exists) {
+            log.wtf(
+                "Summary statistics document of user with id $uid does not exist");
+            throw FirestoreApiException(
+                message: "Unknown expection when uploading quest",
+                prettyDetails:
+                    "An error occured when uploading a quest. Please make sure you have data connection and try again later.",
+                devDetails:
+                    "Summary statistics document of user with id $uid does not exist");
+          }
+          UserStatistics userStats =
+              UserStatistics.fromJson(userDoc.data() as Map<String, dynamic>);
+
+          // values to increment and decrement
+          final incrementCredits = FieldValue.increment(afkCreditsEarned);
+          // ! This here is very important and needs to be done more properly!
+          // ! This is our business model / the conversion between dollar and credits
+          // ! availableSponsoring is given in CENTS!
+          // ? NOT so important at the moment as we changed our business model
+          final decrementSponsoring =
+              FieldValue.increment(-afkCreditsEarned * 10);
+
+          transaction.update(
+            userDocRef,
+            {
+              "availableSponsoring":
+                  decrementSponsoring, // decrement available sponsoring of explorer
+              "afkCreditsBalance":
+                  incrementCredits, // increment afk credits balance
+              "lifetimeEarnings":
+                  incrementCredits, // increment lifetime earnings
+              "numberQuestsCompleted": FieldValue.increment(
+                  1), // increment number of quests completed
+              "completedQuestIds": userStats.completedQuestIds + [questId],
+            },
+          );
+
+          try {
+            // Also upload new document to quest collection
+            final docRef = activatedQuestsCollection.doc();
+            ActivatedQuest newQuest = quest.copyWith(
+                id: docRef.id, createdAt: FieldValue.serverTimestamp());
+            transaction.set(
+              docRef,
+              newQuest.toJson(),
+            );
+          } catch (e) {
+            log.e(
+                "Something went wrong when pushing a finished quest, this is the error: $e");
+            throw FirestoreApiException(
+                message: "A peculiar error occured",
+                devDetails:
+                    "This problem is likely caused by some not well defined datamodels and their json serializability.");
+          }
+        },
+      );
     }
   }
 

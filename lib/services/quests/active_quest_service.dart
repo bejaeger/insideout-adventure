@@ -11,6 +11,7 @@ import 'package:afkcredits/enums/marker_collection_failure_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
+import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -225,7 +226,7 @@ class ActiveQuestService with ReactiveServiceMixin {
     return activatedQuest?.quest.startMarker == marker;
   }
 
-  Future handleSuccessfullyFinishedQuest() async {
+  Future handleSuccessfullyFinishedQuest({bool disposeQuest = false}) async {
     log.i("Handling successfully finished quest");
     // 1. Get credits collected, time elapsed and other potential data at the end of the quest
     // 2. bookkeep credits
@@ -243,14 +244,17 @@ class ActiveQuestService with ReactiveServiceMixin {
 
     // ----------------
     // 2.
-    await collectCredits();
+    await uploadAndBookkeepFinishedQuest();
 
     // ---------------
     // 3.
-    await uploadAndCleanUpFinishedQuest();
+    // Clean up later, after success dialog
+    if (disposeQuest) {
+      cleanUpFinishedQuest();
+    }
   }
 
-  Future evaluateFinishedQuest() async {
+  void evaluateFinishedQuest() {
     // TODO: Possibley also calculate how many credits were earned here
     if (_questStartTime != null) {
       pushActivatedQuest(activatedQuest!.copyWith(
@@ -264,16 +268,16 @@ class ActiveQuestService with ReactiveServiceMixin {
     }
   }
 
-  Future collectCredits() async {
+  Future uploadAndBookkeepFinishedQuest() async {
     log.v("bookeep credits in database");
     if (activatedQuest == null) {
       log.wtf("no active quest to collect credits from");
       return;
     }
     try {
-      await _cloudFunctionsApi.bookkeepFinishedQuest(quest: activatedQuest!);
+      await _firestoreApi.bookkeepFinishedQuest(quest: activatedQuest!);
     } catch (e) {
-      if (e is CloudFunctionsApiException) {
+      if (e is FirestoreApiException) {
         if (activatedQuest!.status != QuestStatus.success) {
           continueIncompleteQuest();
         }
@@ -289,47 +293,11 @@ class ActiveQuestService with ReactiveServiceMixin {
     }
   }
 
-  Future uploadAndCleanUpFinishedQuest() async {
+  void cleanUpFinishedQuest() {
     log.v("upload and clean up finished quest");
-    // At this point the quest has successfully finished!
-    await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
     // keep copy of finished quest to show in success dialog view
     previouslyFinishedQuest = activatedQuest;
     disposeActivatedQuest();
-  }
-
-  // Handle the scenario when a user finishes a hike
-  // First evaluate the activated quest data and return values according to that
-  Future evaluateAndFinishQuest({bool force = false}) async {
-    log.i("Evaluating quest and finishing it if finished");
-    // Fetch quest information
-    if (activatedQuest == null) {
-      log.e(
-          "No activated quest present, can't finish anything! This function should have probably never been called!");
-      return;
-    } else {
-      _stopWatchService.stopTimer();
-      trackData(_stopWatchService.getSecondTime, forceNoPush: true);
-      // updateData();
-
-      // TODO: Add evaluation (how many afk credits were earned) for all quest types
-
-      evaluateQuestAndSetStatus();
-
-      if (activatedQuest!.status == QuestStatus.incomplete && !force) {
-        log.w("Quest is incomplete. Show message to user");
-        return WarningQuestNotFinished;
-      }
-      if (activatedQuest!.status == QuestStatus.success || force) {
-        log.i(
-            "Quest successfully finished (or forcing to finish), pushing to firebase!");
-        //try {
-        // if we end up here it means the quest has finished succesfully!
-        await collectCredits();
-        // At this point the quest has successfully finished!
-        await uploadAndCleanUpFinishedQuest();
-      }
-    }
   }
 
   dynamic checkQuestStatus() {

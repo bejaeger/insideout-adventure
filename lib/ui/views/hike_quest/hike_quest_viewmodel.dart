@@ -319,7 +319,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       final results = await Future.wait(
         [
           handleSuccessfullyFinishedQuest(showDialogs: false),
-          Future.delayed(Duration(milliseconds: 2000))
+          Future.delayed(Duration(milliseconds: 2500))
         ],
       );
       collectCreditsStatus = results[0];
@@ -329,9 +329,10 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       collectCreditsStatus = CollectCreditsStatus.todo;
     }
 
-    setBusy(false);
     // quest succesfully completed
     await showSuccessDialog(collectCreditsStatus: collectCreditsStatus);
+    activeQuestService.cleanUpFinishedQuest();
+    setBusy(false);
   }
 
   @override

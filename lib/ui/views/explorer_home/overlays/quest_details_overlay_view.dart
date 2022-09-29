@@ -232,7 +232,7 @@ class TreasureLocationSearch extends StatelessWidget {
         return Stack(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (model.previouslyFinishedQuest != null)
+            if (model.previouslyFinishedQuest != null && !model.isBusy)
               Align(
                 alignment: Alignment.topCenter,
                 child:
@@ -332,8 +332,11 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<GPSAreaHikeViewModel>.reactive(
-      viewModelBuilder: () => GPSAreaHikeViewModel(quest: widget.quest),
-      onModelReady: (model) => model.initialize(quest: widget.quest),
+      viewModelBuilder: () => GPSAreaHikeViewModel(),
+      onModelReady: (model) {
+        model.addQuestMarkers(quest: widget.quest);
+        model.initialize(quest: widget.quest);
+      },
       builder: (context, model, child) {
         if (model.showCollectedMarkerAnimation) {
           _controller.reset();
@@ -351,7 +354,7 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
                 ),
               ),
 
-            if (model.previouslyFinishedQuest != null)
+            if (model.previouslyFinishedQuest != null && !model.isBusy)
               Align(
                 alignment: Alignment.topCenter,
                 child:

@@ -449,10 +449,11 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       });
     }
     if (_selectedQuestStream == null) {
-      _selectedQuestStream =
-          activeQuestService.selectedQuestSubject.listen((quest) {
-        notifyListeners();
-      });
+      _selectedQuestStream = activeQuestService.selectedQuestSubject.listen(
+        (quest) {
+          notifyListeners();
+        },
+      );
     }
     if (_isFadingOutQuestDetailsSubjectStream == null) {
       _isFadingOutQuestDetailsSubjectStream =

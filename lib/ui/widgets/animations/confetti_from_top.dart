@@ -20,7 +20,7 @@ class ConfettieFromTop extends StatelessWidget {
         ConfettiWidget(
           maxBlastForce: 10,
           minBlastForce: 1,
-          //gravity: 0.1,
+          gravity: 0.15,
           //particleDrag: 0.1,
           confettiController: _confettiController,
           blastDirection: pi / 2,
@@ -39,7 +39,7 @@ class ConfettieFromTop extends StatelessWidget {
         ConfettiWidget(
           maxBlastForce: 10,
           minBlastForce: 1,
-          //gravity: 0.1,
+          gravity: 0.15,
           //particleDrag: 0.1,
           confettiController: _confettiController,
           blastDirection: pi / 2,

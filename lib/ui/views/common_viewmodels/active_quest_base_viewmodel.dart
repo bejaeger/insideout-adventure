@@ -418,7 +418,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     if (activeQuestNullable?.status == QuestStatus.success) {
       log.i("Found that quest was successfully finished!");
       try {
-        await activeQuestService.handleSuccessfullyFinishedQuest();
+        await activeQuestService.handleSuccessfullyFinishedQuest(
+            disposeQuest: showDialogs);
         return CollectCreditsStatus.done;
       } catch (e) {
         if (e is QuestServiceException) {

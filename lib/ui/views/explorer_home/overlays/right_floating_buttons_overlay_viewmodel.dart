@@ -43,16 +43,18 @@ class RightFloatingButtonsOverlayViewModel extends BaseModel
           prevValue = value;
         },
       );
-      // mapStateService.bearingSubject.listen(
-      //   (bearingIn) {
-      //     // only update compass when there is significant change
-      //     // otherwise UI is updated too often.
-      //     if ((bearing - prevAngle).abs() > 10) {
-      //       notifyListeners();
-      //       prevAngle = bearingIn;
-      //     }
-      //   },
-      // );
+      mapStateService.bearingSubject.listen(
+        (bearingIn) {
+          // only update compass when there is significant change
+          // otherwise UI is updated too often.
+          //if ((bearing - prevAngle).abs() > 10) {
+
+          if (!isAvatarView) {
+            notifyListeners();
+          }
+          //}
+        },
+      );
     }
   }
 

@@ -546,11 +546,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   // TODO: This needs to become more advanced!
-  void animateToQuestDetails({required Quest quest}) {
+  void animateToQuestDetails({required Quest quest}) async {
     if (isShowingQuestDetails) return; // we already show the quest details
-
-    // set selected quest to show on screen
-    activeQuestService.setSelectedQuest(quest);
 
     // take snapshot so we can easily restore current view
     takeSnapshotOfCameraPosition();
@@ -559,12 +556,14 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     showMarkerInfoWindowNow(markerId: quest.startMarker?.id);
 
     // animate camera to quest start
-    animateQuestToMap(quest: quest);
+    animateMapToQuest(quest: quest);
 
-    notifyListeners();
+    // set selected quest to show on screen
+    // UI will react to this!
+    activeQuestService.setSelectedQuest(quest);
   }
 
-  void animateQuestToMap({required Quest quest}) async {
+  void animateMapToQuest({required Quest quest}) async {
     // ----------------------------------
     // -->> START TreasureLocationSearch Quest Section
     if (quest.type == QuestType.TreasureLocationSearch) {
@@ -597,7 +596,12 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       // ONLY markers relevant to quest
 
       // this is however still needed here. Not exactly clear why
+
+      // need this slight delay for better navigation
+      // risky cause when user immediately taps close we are in camera nirvana
+      await Future.delayed(Duration(milliseconds: 300));
       mapStateService.setIsAvatarView(false);
+      notifyListeners();
 
       // ? Cannot add the markers here because we need a custom function for
       // ? handleMarkerAnalysisResult
@@ -653,7 +657,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   void showMarkerInfoWindowNow({required String? markerId}) {
     showMarkerInfoWindow(markerId: markerId);
-    notifyListeners();
+    //notifyListeners();
   }
 
   void hideMarkerInfoWindowNow({required String? markerId}) {

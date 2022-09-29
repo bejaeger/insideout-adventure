@@ -13,6 +13,9 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
 
+// ! DEPRECATED
+// ! THIS ENTIRE FILE IS DEPRECATED
+
 class CloudFunctionsApi {
   final log = getLogger("CloudFunctionApi");
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();

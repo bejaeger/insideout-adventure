@@ -360,7 +360,7 @@ class GoogleMapService {
                     quest: null,
                     completed: collected,
                     isStartMarker: false),
-                infoWindowParam: InfoWindow(title: "ALREADY COLLECTED"))
+                infoWindowParam: InfoWindow(title: "COLLECTED"))
             : item)
         .toSet();
   }
