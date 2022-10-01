@@ -16,6 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   bool? alignLeft = false;
   final bool showLogo;
   final Widget? widget;
+  final Widget? dropDownButton;
   final void Function()? onBackButton;
   final void Function()? onAppBarButtonPressed;
   final List<ScreenTimeSession> screenTimes;
@@ -33,6 +34,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onAppBarButtonPressed,
     this.showLogo = false,
     this.screenTimes = const [],
+    this.dropDownButton,
   }) : super(key: key);
 
   double get getHeight => height;
@@ -65,6 +67,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               color: kcWhiteTextColor, size: 30),
                         ),
                       ),
+                    ),
+                  if (dropDownButton != null)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: //Text("HI"),
+                          Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: dropDownButton!),
                     ),
                   if (showLogo)
                     Align(

@@ -240,7 +240,7 @@ mixin NavigationMixin {
   }
 
   Future navToCreateChildAccount() async {
-    await _navigationService.navigateTo(Routes.addExplorerView);
+    await _navigationService.navigateTo(Routes.createExplorerView);
   }
 
   Future navToActiveScreenTimeView({required ScreenTimeSession session}) async {

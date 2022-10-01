@@ -117,7 +117,8 @@ class UserService {
       _screenTimeService.setUserId(_currentUser!.uid);
 
       // some user data management, mainly stored for push notifications
-      _notificationsService.updateToken(uid: _currentUser!.uid);
+      _notificationsService.updateToken(
+          uid: _currentUser!.uid, tokens: _currentUser!.tokens);
       maybeUpdateDeviceId(onlineDeviceId: _currentUser!.deviceId);
 
       // }

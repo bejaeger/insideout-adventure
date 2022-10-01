@@ -5,7 +5,10 @@ import 'package:stacked/stacked.dart';
 
 class CommonDrawerView extends StatelessWidget {
   final List<Widget> children;
-  const CommonDrawerView({Key? key, required this.children}) : super(key: key);
+  final String userName;
+  const CommonDrawerView(
+      {Key? key, required this.children, required this.userName})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,12 @@ class CommonDrawerView extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: kcPrimaryColor,
+                    ),
+                    child: AfkCreditsText.subheading(userName),
+                  ),
                   Stack(
                     children: [
                       Align(

@@ -3,16 +3,21 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
+import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 
+// extend from switch account viewmodel for switch functionality
 class SingleChildStatViewModel extends SwitchAccountsViewModel {
   final String explorerUid;
-  SingleChildStatViewModel({required this.explorerUid})
-      : super(explorerUid: explorerUid);
+  SingleChildStatViewModel({required this.explorerUid});
+
+  User? get explorer => userService.supportedExplorers[explorerUid];
+  UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
 
   // --------------------------------
   // services
@@ -47,6 +52,63 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
 
   ScreenTimeSession? getScreenTimeSession({required String uid}) {
     return screenTimeService.getActiveScreenTimeInMemory(uid: uid);
+  }
+
+  // -----------------------------
+  // remove child
+  Future removeChildFromParentAccount() async {
+    if (explorer != null) {
+      log.i("Remove user with id = ${explorer!.uid}");
+      // ! Very peculiar. Without this we get an error of
+      // !_TypeError (type '_DropdownRouteResult<MenuItem>' is not a subtype of type 'SheetResponse<dynamic>?' of 'result')
+      // ! From the navigator from the custom_drop_down_button
+      await Future.delayed(Duration(milliseconds: 10));
+      final confirmation =
+          await showConfirmationBottomSheet(explorer!.fullName);
+      log.i("WHAT IS HAPPENING");
+      if (confirmation?.confirmed == true) {
+        try {
+          setBusy(true);
+          final result = await userService.removeExplorerFromSupportedExplorers(
+              uid: explorer!.uid);
+          if (result is String) {
+            await showFailureBottomSheet(result);
+            return;
+          }
+        } catch (e) {
+          log.e("$e");
+        }
+        await showSuccessBottomSheet();
+        replaceWithHomeView();
+      }
+    } else {
+      log.wtf("Explorer is null!");
+    }
+  }
+
+  /////////////////////////////////////////////
+  /// bottom sheets
+  Future showConfirmationBottomSheet(String name) async {
+    return await bottomSheetService.showBottomSheet(
+      barrierDismissible: true,
+      title: 'Remove $name from child list?',
+      confirmButtonTitle: 'Yes',
+      cancelButtonTitle: 'No',
+    );
+  }
+
+  Future showSuccessBottomSheet() async {
+    await bottomSheetService.showBottomSheet(
+      barrierDismissible: true,
+      title: 'Successfully removed user!',
+    );
+  }
+
+  Future showFailureBottomSheet(String result) async {
+    await bottomSheetService.showBottomSheet(
+      barrierDismissible: true,
+      title: result.toString(),
+    );
   }
 
   // ---------------------------------

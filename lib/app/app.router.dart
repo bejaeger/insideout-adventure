@@ -23,8 +23,6 @@ import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_l
     as _i26;
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart'
     as _i33;
-import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart'
-    as _i15;
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart' as _i13;
 import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart'
     as _i12;
@@ -39,6 +37,8 @@ import 'package:afkcredits/ui/views/create_account/create_account_user_role_view
     as _i9;
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart'
     as _i8;
+import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart'
+    as _i15;
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart'
     as _i5;
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart' as _i38;
@@ -111,7 +111,7 @@ class Routes {
 
   static const selectRoleAfterLoginView = '/select-role-after-login-view';
 
-  static const addExplorerView = '/add-explorer-view';
+  static const createExplorerView = '/create-explorer-view';
 
   static const searchExplorerView = '/search-explorer-view';
 
@@ -177,7 +177,7 @@ class Routes {
     homeView,
     adminHomeView,
     selectRoleAfterLoginView,
-    addExplorerView,
+    createExplorerView,
     searchExplorerView,
     singleChildStatView,
     transferFundsView,
@@ -260,8 +260,8 @@ class StackedRouter extends _i1.RouterBase {
       page: _i14.SelectRoleAfterLoginView,
     ),
     _i1.RouteDef(
-      Routes.addExplorerView,
-      page: _i15.AddExplorerView,
+      Routes.createExplorerView,
+      page: _i15.CreateExplorerView,
     ),
     _i1.RouteDef(
       Routes.searchExplorerView,
@@ -463,12 +463,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i15.AddExplorerView: (data) {
-      final args = data.getArgs<AddExplorerViewArguments>(
-        orElse: () => const AddExplorerViewArguments(),
+    _i15.CreateExplorerView: (data) {
+      final args = data.getArgs<CreateExplorerViewArguments>(
+        orElse: () => const CreateExplorerViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i15.AddExplorerView(key: args.key),
+        builder: (context) => _i15.CreateExplorerView(key: args.key),
         settings: data,
       );
     },
@@ -752,8 +752,8 @@ class SelectRoleAfterLoginViewArguments {
   final _i43.AuthenticationMethod authMethod;
 }
 
-class AddExplorerViewArguments {
-  const AddExplorerViewArguments({this.key});
+class CreateExplorerViewArguments {
+  const CreateExplorerViewArguments({this.key});
 
   final _i40.Key? key;
 }
@@ -1163,7 +1163,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToAddExplorerView({
+  Future<dynamic> navigateToCreateExplorerView({
     _i40.Key? key,
     int? routerId,
     bool preventDuplicates = true,
@@ -1171,8 +1171,8 @@ extension NavigatorStateExtension on _i50.NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo<dynamic>(Routes.addExplorerView,
-        arguments: AddExplorerViewArguments(key: key),
+    return navigateTo<dynamic>(Routes.createExplorerView,
+        arguments: CreateExplorerViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

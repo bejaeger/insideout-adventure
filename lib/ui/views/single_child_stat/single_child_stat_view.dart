@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/ui/views/single_child_stat/drawer/single_child_drawer_view.dart';
+import 'package:afkcredits/ui/widgets/custom_drop_down_menu.dart';
 import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
@@ -29,13 +29,17 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
-            title: model.explorer != null
-                ? model.explorer!.fullName + '\'s Stats'
-                : "Child Statistics",
+            title: model.isBusy
+                ? "Child stats"
+                : model.explorer != null
+                    ? model.explorer!.fullName + '\'s Stats'
+                    : "Child Statistics",
             onBackButton: model.popView,
-            drawer: true,
+            dropDownButton: CustomDropDownMenu(
+                icon1: Icon(Icons.close_rounded, color: kcMediumGrey, size: 22),
+                onTap1: model.removeChildFromParentAccount,
+                text1: 'Remove child'),
           ),
-          endDrawer: SingleChildDrawerView(explorer: model.explorer),
           floatingActionButton: BottomFloatingActionButtons(
               // titleMain: "Add Credits",
               // onTapMain: model.navigateToAddFundsView,

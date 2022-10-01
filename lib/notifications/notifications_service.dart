@@ -159,7 +159,8 @@ class NotificationsService {
       {required String uid, required List<String>? tokens}) async {
     String? token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
-      if (tokens!.length > 1 || (tokens.length == 1 && tokens[0] != token)) {
+      if ((tokens != null && tokens.length > 1) ||
+          (tokens != null && tokens.length == 1 && tokens[0] != token)) {
         _firestoreApi.updateTokenForUser(uid: uid, token: token);
       }
     } else {

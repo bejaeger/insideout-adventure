@@ -1,12 +1,12 @@
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/ui/views/add_explorer/add_explorer_viewmodel.dart';
+import 'package:afkcredits/ui/views/create_explorer/create_explorer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/verify_network_connection/verify_network_connection.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:stacked/stacked_annotations.dart';
-import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.form.dart';
+import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.form.dart';
 
 import 'validators.dart';
 
@@ -18,13 +18,13 @@ import 'validators.dart';
   ],
   autoTextFieldValidation: false,
 )
-class AddExplorerView extends StatelessWidget with $AddExplorerView {
-  AddExplorerView({Key? key}) : super(key: key);
+class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
+  CreateExplorerView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AddExplorerViewModel>.reactive(
-      viewModelBuilder: () => AddExplorerViewModel(),
+    return ViewModelBuilder<CreateExplorerViewModel>.reactive(
+      viewModelBuilder: () => CreateExplorerViewModel(),
       onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(

@@ -13,7 +13,8 @@ class ParentDrawerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<CommonDrawerViewModel>.reactive(
       viewModelBuilder: () => CommonDrawerViewModel(),
-      builder: (context, model, child) => CommonDrawerView(children: [
+      builder: (context, model, child) =>
+          CommonDrawerView(userName: model.currentUser.fullName, children: [
         // if (model.isAnyoneUsingScreenTime)
         //   AfkCreditsButton(
         //       title: "Screen time session",

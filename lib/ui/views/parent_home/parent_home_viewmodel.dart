@@ -123,7 +123,7 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     //   await navigationService.navigateTo(Routes.searchExplorerView);
     // }
     // ! FOR MVP WE ONLY ALLOW CREATING CHILD ACCOUNTS
-    await navigationService.navigateTo(Routes.addExplorerView);
+    await navigationService.navigateTo(Routes.createExplorerView);
   }
 
   Future setNewUserPropertyToFalse() async {

@@ -27,7 +27,7 @@ import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_e
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_view.dart';
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart';
-import 'package:afkcredits/ui/views/add_explorer/add_explorer_view.dart';
+import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
 import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
@@ -85,7 +85,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: HomeView),
     MaterialRoute(page: AdminHomeView),
     MaterialRoute(page: SelectRoleAfterLoginView),
-    MaterialRoute(page: AddExplorerView),
+    MaterialRoute(page: CreateExplorerView),
     MaterialRoute(page: SearchExplorerView),
     MaterialRoute(page: SingleChildStatView),
     MaterialRoute(page: TransferFundsView),
