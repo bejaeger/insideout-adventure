@@ -149,23 +149,21 @@ class OnBoardingScreensView extends StatelessWidget {
               ),
               PageViewModel(
                 titleWidget: OnboardingTitleWidget(
-                    subtitle: "Step 3", title: "Activate screen time"),
+                    subtitle: "Step 3", title: "Add credits manually"),
                 bodyWidget: OnboardingBodyWidget(
                   // icon1: Image.asset(kScreenTimeIcon,
                   //     color: kcScreenTimeBlue, height: 24),
-                  icon1: OnboardingScreenTimeConversionIcon(),
+                  // icon1: OnboardingScreenTimeConversionIcon(),
                   text1:
-                      "You or your child can activate a timer by spending Hercules Credits",
-                  // icon2: Image.asset(kScreenTimeIcon2,
-                  //     color: kcScreenTimeBlue, height: 24),
+                      "Think about rewarding activities like soccer, groceries, reading, etc",
                   text2:
-                      "Let your child enjoy the fair earned time on the screen",
+                      "If you went for a Sunday walk together and forgot to use this app, you can give credits afterwards",
                   // text2:
                   //     "Your child can enjoy its fair earned screen time for streaming, gaming, or any other screen use",
-                  text3: "You will be notified once the screen time is over",
+                  // text3: "You will be notified once the screen time is over",
                 ),
                 //  "Your child can spend Hercules Credits for screen time, may it be for streaming, gaming, or anything else your child enjoys. We will start a timer and notify you when the screen time is over.",
-                image: _buildImage(kIllustrationScreenTime, 240),
+                image: _buildImage(kIllustrationActivity, 250),
                 decoration: pageDecoration,
               ),
               PageViewModel(

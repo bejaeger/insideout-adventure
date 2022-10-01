@@ -99,7 +99,7 @@ class ExplorerAccountView extends StatelessWidget {
                             //nextLevel: "Level " + (model.currentLevel + 1).toString(),
                           ),
                           verticalSpaceSmall,
-                          Row(
+                          Wrap(
                             children: [
                               AfkCreditsText.subheadingItalic("Earn",
                                   align: TextAlign.left),
@@ -115,9 +115,10 @@ class ExplorerAccountView extends StatelessWidget {
                               AfkCreditsText.statsStyleBlack(
                                   "${model.creditsToNextLevel} ",
                                   align: TextAlign.left),
-                              AfkCreditsText.subheadingItalic(
-                                  "to reach the next level!",
-                                  align: TextAlign.left),
+                              Text("to reach the next level!",
+                                  style: subheadingStyleItalic.copyWith(),
+                                  textAlign: TextAlign.left,
+                                  maxLines: 2),
                             ],
                           ),
                           verticalSpaceTiny,

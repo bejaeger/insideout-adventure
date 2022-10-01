@@ -17,7 +17,7 @@ import 'package:stacked_services/stacked_services.dart';
 class LoginViewModel extends AuthenticationViewModel {
   // ----------------------------------------
   // services
-  final FirebaseAuthenticationService? _firebaseAuthenticationService =
+  final FirebaseAuthenticationService _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
   final SnackbarService _snackbarService = locator<SnackbarService>();
   bool checkUserRole = true;
@@ -26,6 +26,7 @@ class LoginViewModel extends AuthenticationViewModel {
   final log = getLogger("LoginViewModel");
   final UserService _userService = locator<UserService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  final DialogService _dialogService = locator<DialogService>();
 
   // ---------------------------
   // getters
@@ -102,6 +103,14 @@ class LoginViewModel extends AuthenticationViewModel {
     return returnVal;
   }
 
+  bool isValidEmail() {
+    bool returnVal = true;
+    if (emailOrNameValue == "" || emailOrNameValue == null) {
+      returnVal = false;
+    }
+    return returnVal;
+  }
+
   void resetValidationMessages() {
     emailOrNameInputValidationMessage = null;
     passwordInputValidationMessage = null;
@@ -132,6 +141,39 @@ class LoginViewModel extends AuthenticationViewModel {
         role: role);
   }
 
+  Future onForgotPassword() async {
+    if (emailOrNameValue == "" || emailOrNameValue == null) {
+      await _dialogService.showDialog(
+          title: "Enter email and tap again",
+          description: "We will send you a password reset link");
+      return;
+    } else {
+      final response = await _dialogService.showDialog(
+          title: "Send email to $emailOrNameValue?",
+          description: "We will send you an email with a password reset link",
+          buttonTitle: "Send email",
+          cancelTitle: "Cancel");
+      if (response?.confirmed == true) {
+        bool res = await _firebaseAuthenticationService
+            .sendResetPasswordLink(emailOrNameValue!);
+        if (res == true) {
+          await _dialogService.showDialog(
+            title: "Check your inbox",
+            description: "We sent you a password reset link.",
+            buttonTitle: "Ok",
+          );
+        } else {
+          await _dialogService.showDialog(
+            title: "Sending email failed",
+            description:
+                "Are you sure you already registered with $emailOrNameValue?",
+            buttonTitle: "Try again",
+          );
+        }
+      }
+    }
+  }
+
   void navigateToCreateAccount() {
     _navigationService.replaceWith(Routes.createAccountUserRoleView);
   }
@@ -144,7 +186,7 @@ class LoginViewModel extends AuthenticationViewModel {
 
   @override
   Future<FirebaseAuthenticationResult> runAdminAuthResult() =>
-      _firebaseAuthenticationService!.createAccountWithEmail(
+      _firebaseAuthenticationService.createAccountWithEmail(
         email:
             _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster).trim(),
         password: _userService

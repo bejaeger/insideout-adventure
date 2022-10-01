@@ -315,6 +315,26 @@ class FirestoreApi {
     }
   }
 
+  Future<void> updateTokenForUser(
+      {required String uid, required String token}) async {
+    log.v("Updating fcm token for user with id $uid");
+    usersCollection.doc(uid).update(
+      {
+        'tokens': FieldValue.arrayUnion([token]),
+      },
+    );
+  }
+
+  Future<void> updateDeviceId(
+      {required String uid, required String deviceId}) async {
+    log.v("Updating device id for user with id $uid");
+    usersCollection.doc(uid).update(
+      {
+        'deviceId': deviceId,
+      },
+    );
+  }
+
   Future<void> updateQuestData({required Quest quest}) async {
     try {
       await questsCollection

@@ -183,3 +183,10 @@ const String kUpdatedScreenTimeNotificationChannelName =
 ////////////////////////////////////////
 /// Gamification system
 const double kTotalCreditsEarnedToLevelConversion = 1 / 20;
+
+//////////////////////////////////////
+/// Sign in
+///
+const String kAppleRedirectUri =
+    "https://afk-credits-prod.firebaseapp.com/__/auth/handler";
+const String kAppleClientId = "com.firebaseapp.hercules";

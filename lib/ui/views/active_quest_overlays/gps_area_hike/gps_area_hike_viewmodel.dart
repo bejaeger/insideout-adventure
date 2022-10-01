@@ -20,6 +20,6 @@ class GPSAreaHikeViewModel extends HikeQuestViewModel {
           handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
       mapViewModel.addAreas(quest: quest);
     }
-    //mapStateService.notify();
+    mapStateService.notify();
   }
 }

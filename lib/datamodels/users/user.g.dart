@@ -25,6 +25,9 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
           .toList(),
       createdByUserWithId: json['createdByUserWithId'] as String?,
       password: json['password'] as String?,
+      tokens:
+          (json['tokens'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      deviceId: json['deviceId'] as String?,
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
@@ -39,6 +42,8 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'fullNameSearch': User._checkIfKeywordsAreSet(instance.fullNameSearch),
       'createdByUserWithId': instance.createdByUserWithId,
       'password': instance.password,
+      'tokens': instance.tokens,
+      'deviceId': instance.deviceId,
     };
 
 const _$UserRoleEnumMap = {

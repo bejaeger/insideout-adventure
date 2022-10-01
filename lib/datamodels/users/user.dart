@@ -36,6 +36,8 @@ class User with _$User {
         List<String>? fullNameSearch,
     String? createdByUserWithId,
     String? password,
+    List<String>? tokens,
+    String? deviceId,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

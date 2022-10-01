@@ -62,7 +62,7 @@ class AuthenticationLayout extends StatelessWidget {
             if (onBackPressed != null) verticalSpaceRegular,
             if (onBackPressed != null)
               IconButton(
-                padding: EdgeInsets.zero,
+                //padding: EdgeInsets.zero,
                 alignment: Alignment.centerLeft,
                 icon: Icon(
                   Icons.arrow_back_ios,
@@ -85,21 +85,25 @@ class AuthenticationLayout extends StatelessWidget {
             ),
             verticalSpaceRegular,
             form!,
-            verticalSpaceRegular,
+            verticalSpaceSmall,
             if (onForgotPassword != null)
               Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: onForgotPassword,
-                  child: Text(
-                    'Forget Password?',
-                    style: textTheme(context).bodyText2!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                  child: Container(
+                    //color: Colors.red,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Forgot Password?',
+                      style: textTheme(context).bodyText2!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: kcBlackHeadlineColor),
+                    ),
                   ),
                 ),
               ),
-            verticalSpaceRegular,
+            verticalSpaceSmall,
             if (validationMessage != null)
               Text(
                 validationMessage!,

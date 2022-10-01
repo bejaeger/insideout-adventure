@@ -657,7 +657,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   void showMarkerInfoWindowNow({required String? markerId}) {
     showMarkerInfoWindow(markerId: markerId);
-    //notifyListeners();
+    // needed to show info window and also next marker
+    notifyListeners();
   }
 
   void hideMarkerInfoWindowNow({required String? markerId}) {

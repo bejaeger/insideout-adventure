@@ -6,6 +6,7 @@
 // - exposing stream of statistics
 
 import 'dart:async';
+import 'dart:io';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -24,10 +25,12 @@ import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -44,6 +47,8 @@ class UserService {
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
+  final NotificationsService _notificationsService =
+      locator<NotificationsService>();
   final log = getLogger('UserService');
 
   // ---------------------------------------
@@ -108,23 +113,33 @@ class UserService {
       // if (UserRole.adminMaster == role) {
       //   _currentUserAdmin = userAccount;
       // } else {
-      _currentUser = userAccount;
+      _currentUser = userAccount!;
       _screenTimeService.setUserId(_currentUser!.uid);
+
+      // some user data management, mainly stored for push notifications
+      _notificationsService.updateToken(uid: _currentUser!.uid);
+      maybeUpdateDeviceId(onlineDeviceId: _currentUser!.deviceId);
+
       // }
       if (fromLocalStorage) {
         log.v("Save current user id to disk");
         await _localStorageService.saveToDisk(
-            key: kLocalStorageUidKey, value: userAccount.uid);
+            key: kLocalStorageUidKey, value: _currentUser!.uid);
         await _localStorageService.saveRoleToDisk(
             key: kLocalStorageRoleKey, value: role);
 
+        // ? Unclear why the following is needed.
+        // Maybe if an explorer logs in himself, the sponsor reference
+        // is loaded!
         String? id = await _localStorageService.getFromDisk(
             key: kLocalStorageSponsorReferenceKey);
         String? pin = await _localStorageService.getFromDisk(
             key: kLocalStorageSponsorPinKey);
         if (id != null) {
-          sponsorReference =
-              SponsorReference(uid: id, withPasscode: pin != null);
+          sponsorReference = SponsorReference(
+            uid: id,
+            withPasscode: pin != null,
+          );
         }
       }
     } else {
@@ -288,14 +303,26 @@ class UserService {
       log.i("Login with e-mail");
       return AFKCreditsAuthenticationResultService
           .fromFirebaseAuthenticationResult(
-              firebaseAuthenticationResult: await _firebaseAuthenticationService
-                  .loginWithEmail(email: emailOrName!, password: stringPw!));
+        firebaseAuthenticationResult: await _firebaseAuthenticationService
+            .loginWithEmail(email: emailOrName!, password: stringPw!),
+      );
     } else if (method == AuthenticationMethod.google) {
       log.i("Login with google");
       return AFKCreditsAuthenticationResultService
           .fromFirebaseAuthenticationResult(
-              firebaseAuthenticationResult:
-                  await _firebaseAuthenticationService.signInWithGoogle());
+        firebaseAuthenticationResult:
+            await _firebaseAuthenticationService.signInWithGoogle(),
+      );
+    } else if (method == AuthenticationMethod.apple) {
+      log.i("Login with apple");
+      return AFKCreditsAuthenticationResultService
+          .fromFirebaseAuthenticationResult(
+        firebaseAuthenticationResult:
+            await _firebaseAuthenticationService.signInWithApple(
+          appleClientId: kAppleClientId,
+          appleRedirectUri: kAppleRedirectUri,
+        ),
+      );
     } else if (method == AuthenticationMethod.dummy) {
       return AFKCreditsAuthenticationResultService
           .fromFirebaseAuthenticationResult(
@@ -308,7 +335,7 @@ class UserService {
           "The authentication method you tried to use is not implemented yet. Use E-mail, Google, or Apple to authenticate");
       return Future.value(AFKCreditsAuthenticationResultService.error(
           errorMessage:
-              "Authentification method you try to use is not available."));
+              "The authentication method you tried to use is not available."));
     }
   }
 
@@ -384,16 +411,17 @@ class UserService {
 
     final docRef = _firestoreApi.createUserDocument();
     final newExplorer = User(
-      authMethod: authMethod,
-      fullName: name,
-      password: hashPassword(password),
-      uid: docRef.id,
-      role: UserRole.explorer,
-      sponsorIds: [currentUser.uid],
-      createdByUserWithId: currentUser.uid,
-      explorerIds: [],
-      newUser: true,
-    );
+        authMethod: authMethod,
+        fullName: name,
+        password: hashPassword(password),
+        uid: docRef.id,
+        role: UserRole.explorer,
+        sponsorIds: [currentUser.uid],
+        createdByUserWithId: currentUser.uid,
+        explorerIds: [],
+        newUser: true,
+        deviceId: currentUser.deviceId,
+        tokens: currentUser.tokens);
     await createUserAccount(user: newExplorer);
     List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
     await updateUserData(
@@ -737,7 +765,10 @@ class UserService {
         key: kLocalStorageSponsorReferenceKey, value: uid);
     log.wtf("PIN => $pin");
     sponsorReference = SponsorReference(
-        uid: uid, authMethod: authMethod, withPasscode: pin != null);
+        uid: uid,
+        authMethod: authMethod,
+        withPasscode: pin != null,
+        deviceId: currentUser.deviceId);
   }
 
   Future clearSponsorReference() async {
@@ -746,6 +777,30 @@ class UserService {
     await _localStorageService.deleteFromDisk(
         key: kLocalStorageSponsorReferenceKey);
     sponsorReference = null;
+  }
+
+  Future maybeUpdateDeviceId({required String? onlineDeviceId}) async {
+    // we update the device id in the database in case it is different
+    // We want to keep track of this to decide on which and if we should
+    // show push notifications for the screen time feature
+    String currentDeviceId = await _getDeviceId();
+    if (onlineDeviceId != currentDeviceId) {
+      _firestoreApi.updateDeviceId(
+          uid: currentUser.uid, deviceId: currentDeviceId);
+    }
+  }
+
+  Future _getDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (kIsWeb) return;
+    if (Platform.isIOS) {
+      // import 'dart:io'
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else if (Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.androidId; // unique ID on Android
+    }
   }
 
   /////////////////////////////////////////////

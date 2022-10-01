@@ -1,3 +1,4 @@
+import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
@@ -5,6 +6,7 @@ import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../../utils/utilities/utilities.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -14,6 +16,7 @@ class NotificationsService {
   final log = getLogger("NotificationsService");
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
+  final FirestoreApi _firestoreApi = locator<FirestoreApi>();
 
   Future createPermanentNotification(
       {required String title,
@@ -148,5 +151,22 @@ class NotificationsService {
       await AwesomeNotifications().cancelNotificationsByGroupKey(id);
       await _localStorageService.deleteFromDisk(key: key);
     }
+  }
+
+  // ------------------------------------------------------
+  // For push notifications
+  Future updateToken(
+      {required String uid, required List<String>? tokens}) async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      if (tokens!.length > 1 || (tokens.length == 1 && tokens[0] != token)) {
+        _firestoreApi.updateTokenForUser(uid: uid, token: token);
+      }
+    } else {
+      log.w("No fcm token could be retrieved");
+    }
+    // Any time the token refreshes, store this in the database too.
+    FirebaseMessaging.instance.onTokenRefresh.listen((String token) =>
+        _firestoreApi.updateTokenForUser(uid: uid, token: token));
   }
 }

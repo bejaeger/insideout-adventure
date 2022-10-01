@@ -19,6 +19,7 @@ class SponsorReference with _$SponsorReference {
   factory SponsorReference({
     required String uid,
     AuthenticationMethod? authMethod,
+    String? deviceId,
     required bool withPasscode,
   }) = _SponsorReference;
 
