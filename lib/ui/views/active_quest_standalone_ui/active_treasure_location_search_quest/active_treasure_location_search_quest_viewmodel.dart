@@ -18,6 +18,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../../enums/collect_credits_status.dart';
+
 // Singleton ViewModel!
 
 class ActiveTreasureLocationSearchQuestViewModel
@@ -40,6 +42,7 @@ class ActiveTreasureLocationSearchQuestViewModel
   bool skipUpdatingQuestStatus = false;
   bool isCheckingDistance = false;
   bool isNearGoal = false;
+  bool isAnimatingCamera = false;
 
   List<TreasureSearchLocation> checkpoints = [];
 
@@ -164,6 +167,9 @@ class ActiveTreasureLocationSearchQuestViewModel
   }
 
   Future completeDistanceCheckAndUpdateQuestStatus() async {
+    // TODO: We want to add some more advanced logic here!
+    // TODO: To support multiple locations for the search quest
+
     final completed = isQuestCompleted();
     if (completed) {
       // quest succesfully completed
@@ -176,13 +182,11 @@ class ActiveTreasureLocationSearchQuestViewModel
       showNextARObjects(
         // Need to wrap up quest here!
         onCollected: () async {
-          bool questSuccessfullyFinished = await showSuccessDialog();
+          await handleQuestCompletedEvent();
 
-          // reset map markers
-          // the following goes via singleton
+          // reset map markers and add all quest markers back
+          // ? (Not really sure if this is the best location to execute this code)
           mapViewModel.resetMapMarkers();
-
-          // this goes via mixin. Could technically be the same procedure! Not clear what is better!
           mapViewModel.addAllQuestMarkers();
         },
       );
@@ -219,6 +223,39 @@ class ActiveTreasureLocationSearchQuestViewModel
         pushToNotion: true,
       );
     }
+  }
+
+  Future handleQuestCompletedEvent() async {
+    // ! This is duplicated from hike_quest_viewmodel() atm!
+    // ! Could maybe put this into active_quest_base_viewmodel.dart
+    isAnimatingCamera = true;
+    setBusy(true);
+
+    // Need to set this so the functions below do the right thing
+    activeQuestService.setSuccessAsQuestStatus();
+    // for UI!
+    questFinished = true;
+
+    CollectCreditsStatus collectCreditsStatus = CollectCreditsStatus.todo;
+    try {
+      final results = await Future.wait(
+        [
+          handleSuccessfullyFinishedQuest(showDialogs: false),
+          Future.delayed(Duration(milliseconds: 2000))
+        ],
+      );
+      collectCreditsStatus = results[0];
+    } catch (e) {
+      log.e(e);
+      showGenericInternalErrorDialog();
+      collectCreditsStatus = CollectCreditsStatus.todo;
+    }
+
+    await showSuccessDialog(collectCreditsStatus: collectCreditsStatus);
+    // we need to do this because we set showDialogs == false above!
+    activeQuestService.cleanUpFinishedQuest();
+    isAnimatingCamera = false;
+    setBusy(false);
   }
 
   @override

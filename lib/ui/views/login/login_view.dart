@@ -114,7 +114,6 @@ class LoginView extends StatelessWidget with $LoginView {
               model.saveData(AuthenticationMethod.google),
           // onFacebookButtonTapped: () =>
           //     model.runAuthentication(AuthenticationMethod.facebook),
-
           onAppleButtonTapped: (!kIsWeb && Platform.isIOS)
               ? () => model.saveData(AuthenticationMethod.apple)
               : null,

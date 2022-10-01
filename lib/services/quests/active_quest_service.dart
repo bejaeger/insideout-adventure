@@ -248,7 +248,7 @@ class ActiveQuestService with ReactiveServiceMixin {
 
     // ---------------
     // 3.
-    // Clean up later, after success dialog
+    // Clean up later, after success dialog!
     if (disposeQuest) {
       cleanUpFinishedQuest();
     }

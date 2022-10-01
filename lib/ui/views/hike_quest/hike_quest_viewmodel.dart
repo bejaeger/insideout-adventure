@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'package:afkcredits/utils/utilities/utilities.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/collect_credits_status.dart';
@@ -15,11 +12,9 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:geolocator/geolocator.dart';
 
 import '../../../app/app.locator.dart';
-import '../../../exceptions/mapviewmodel_expection.dart';
 import '../../../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 
 class HikeQuestViewModel extends ActiveQuestBaseViewModel
@@ -310,6 +305,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     mapViewModel.updateMapDisplay(afkmarker: afkmarker);
     await animateCameraToQuestMarkers();
     questFinished = true;
+
+    // Need to set this so the functions below do the right thing
     activeQuestService.setSuccessAsQuestStatus();
 
     CollectCreditsStatus collectCreditsStatus = CollectCreditsStatus.todo;
@@ -331,6 +328,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
 
     // quest succesfully completed
     await showSuccessDialog(collectCreditsStatus: collectCreditsStatus);
+    // we need to do this because we set showDialogs == false above!
     activeQuestService.cleanUpFinishedQuest();
     setBusy(false);
   }

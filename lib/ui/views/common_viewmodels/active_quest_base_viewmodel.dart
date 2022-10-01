@@ -497,6 +497,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
   // ---------------------------------------------------
   // Function to call when quest was detected to be finished in individual viewmodel
+  // We can parse it a collectCreditsStatus to check whether
+  // we still need to collect the credits in the view or not!
   Future showSuccessDialog(
       {CollectCreditsStatus collectCreditsStatus =
           CollectCreditsStatus.todo}) async {

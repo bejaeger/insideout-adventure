@@ -232,13 +232,23 @@ class TreasureLocationSearch extends StatelessWidget {
         return Stack(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // ! Also in hike_quest_viewmodel.dart
+            // ! So maybe put it into active_quest_base_viewmodel.dart
+            if (model.isAnimatingCamera)
+              Padding(
+                padding: const EdgeInsets.only(top: 150),
+                child: AFKProgressIndicator(
+                  alignment: Alignment.topCenter,
+                ),
+              ),
+
             if (model.previouslyFinishedQuest != null && !model.isBusy)
               Align(
                 alignment: Alignment.topCenter,
                 child:
                     QuestSuccessCard(onContinuePressed: model.popQuestDetails),
               ),
-            if (model.previouslyFinishedQuest == null)
+            if (model.previouslyFinishedQuest == null && !model.questFinished)
               IgnorePointer(
                 child: Align(
                   alignment: Alignment.topCenter,
