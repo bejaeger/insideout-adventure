@@ -79,42 +79,34 @@ class SelectScreenTimeViewModel extends BaseModel {
       return;
     }
 
-    // 2. Show prompt for parents to confirm (we omit this for now!)
-
-    // 3. Final confirmation
-    dynamic result = await dialogService.showDialog(
-        buttonTitle: "YES",
-        cancelTitle: "NO",
-        title: "Sure?",
-        description:
-            "Do you want to start $screenTimePreset min screen time?"); //, mainButtonTitle: "CANCEL", )
-
     // 4. Navigate to Active Screen Time Screen
     //    which also starts screen time
-    if (result == null || result?.confirmed == true) {
-      if (isParentAccount && childId == null) {
-        log.wtf(
-            "childId cannot be null when accessing screen time from parent account!");
-        showGenericInternalErrorDialog();
-        popView();
-      }
-      // Create screen time session
-      ScreenTimeSession session = ScreenTimeSession(
-        sessionId: "",
-        uid: isParentAccount ? childId! : currentUser.uid,
-        createdByUid: currentUser.uid,
-        userName: isParentAccount
-            ? userService.explorerNameFromUid(childId!)
-            : currentUser.fullName,
-        minutes: useSuperUserFeatures ? 1 : screenTimePreset,
-        status: ScreenTimeSessionStatus.notStarted,
-        startedAt: Timestamp.now(),
-        afkCredits: double.parse(
-            screenTimeToCredits(useSuperUserFeatures ? 1 : screenTimePreset)
-                .toString()),
-      );
-      log.i("Navigating to active screen time view with session");
-      navToActiveScreenTimeView(session: session);
+    //    First go to view where we can cancel the timer again.
+    if (isParentAccount && childId == null) {
+      log.wtf(
+          "childId cannot be null when accessing screen time from parent account!");
+      showGenericInternalErrorDialog();
+      popView();
+      return;
     }
+    // Create screen time session
+    ScreenTimeSession session = ScreenTimeSession(
+      sessionId: "",
+      uid: isParentAccount ? childId! : currentUser.uid,
+      createdByUid: currentUser.uid,
+      userName: isParentAccount
+          ? userService.explorerNameFromUid(childId!)
+          : currentUser.fullName,
+      minutes: useSuperUserFeatures ? 1 : screenTimePreset,
+      status: ScreenTimeSessionStatus.notStarted,
+      startedAt: DateTime.now().add(Duration(
+          seconds:
+              10)), // add 10 seconds because we wait for another 10 seconds in the next view!
+      afkCredits: double.parse(
+          screenTimeToCredits(useSuperUserFeatures ? 1 : screenTimePreset)
+              .toString()),
+    );
+    log.i("Navigating to start screen time session counter");
+    navToScreenTimeCounterView(session: session);
   }
 }

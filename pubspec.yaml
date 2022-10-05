@@ -209,6 +209,8 @@ flutter:
     - assets/lottie/ripple-effect.json  
     - assets/lottie/chilldude.json
     - assets/lottie/walkinggirl.json
+    - assets/avatars/walking-girl.png
+    - assets/avatars/walking-girl-2.png
     - assets/lottie/walkingboy.json
     - assets/lottie/colored-sports-figure.json
     - assets/lottie/big-tv-screen-time.json

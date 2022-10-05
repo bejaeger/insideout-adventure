@@ -13,7 +13,6 @@ class MapStateService {
     isAvatarView = set;
   }
 
-  int characterNumber = 0;
   double tilt = kInitialTilt;
   double zoom = kInitialZoomAvatarView;
   double get bearing => bearingSubject.value;

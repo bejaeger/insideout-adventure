@@ -50,60 +50,112 @@ class SelectAvatarDialogView extends StatelessWidget {
                         'Hi ${model.currentUser.fullName}!'),
                     verticalSpaceSmall,
                     AfkCreditsText.body('Choose your favorite avatar'),
-                    verticalSpaceMedium,
+                    verticalSpaceLarge,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        SelectableBox(
-                          selected: model.selectedCharacter == 1,
-                          onTap: () => model.selectCharacter(1),
-                          child:
-                              Image.asset(kLottieChillDudeHeadPng, height: 50),
+                        Expanded(
+                          child: SelectableBox(
+                            height: 80,
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            selected: model.selectedCharacter == 1,
+                            onTap: () => model.selectCharacter(1),
+                            child: Image.asset(kLottieChillDudeHeadPng,
+                                height: 50),
+                          ),
                         ),
-                        SelectableBox(
-                          selected: model.selectedCharacter == 2,
-                          onTap: () => model.selectCharacter(2),
-                          child: Lottie.asset(
-                            kLottieWalkingGirl,
-                            height: 50,
-                            frameRate: FrameRate(10),
+                        Expanded(
+                          child: SelectableBox(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            height: 80,
+                            selected: model.selectedCharacter == 2,
+                            onTap: () => model.selectCharacter(2),
+                            child:
+                                Image.asset(kLottieWalkingGirlPng, height: 50),
                           ),
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //   children: [
+                    //     SelectableBox(
+                    //       selected: model.selectedCharacter == 3,
+                    //       onTap: () => model.selectCharacter(3),
+                    //       child: Lottie.asset(
+                    //         kLottieWalkingBoy,
+                    //         height: 50,
+                    //         frameRate: FrameRate(10),
+                    //       ),
+                    //     ),
+                    //     SelectableBox(
+                    //       selected: model.selectedCharacter == 4,
+                    //       onTap: () => model.selectCharacter(4),
+                    //       child: Lottie.asset(
+                    //         kLottieColoredSportsFigure,
+                    //         height: 50,
+                    //         frameRate: FrameRate(10),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    verticalSpaceMedium,
+                    Stack(
                       children: [
-                        SelectableBox(
-                          selected: model.selectedCharacter == 3,
-                          onTap: () => model.selectCharacter(3),
-                          child: Lottie.asset(
-                            kLottieWalkingBoy,
-                            height: 50,
-                            frameRate: FrameRate(10),
+                        Align(
+                          // top: 10,
+                          // bottom: 10,
+                          // left: 10,
+                          // right: 10,
+                          alignment: Alignment.bottomCenter,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 125),
+                              Container(
+                                height: 50,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  //shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.elliptical(50, 30),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: kcShadowColor,
+                                      spreadRadius: 0.4,
+                                      blurRadius: 2,
+                                      offset: Offset(
+                                          0, 0), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SelectableBox(
-                          selected: model.selectedCharacter == 4,
-                          onTap: () => model.selectCharacter(4),
-                          child: Lottie.asset(
-                            kLottieColoredSportsFigure,
-                            height: 50,
-                            frameRate: FrameRate(10),
+                        Container(
+                          height: 180,
+                          //height: screenHeight(context, percentage: 0.2),
+                          //color: Colors.red,
+                          alignment: Alignment.center,
+                          child: Container(
+                            //color: Colors.green,
+                            constraints: BoxConstraints(
+                                maxHeight:
+                                    model.selectedCharacter == 1 ? 150 : 180),
+                            child: Lottie.asset(
+                              model.selectedCharacter == 1
+                                  ? kLottieChillDude
+                                  : model.selectedCharacter == 2
+                                      ? kLottieWalkingGirl
+                                      : model.selectedCharacter == 3
+                                          ? kLottieWalkingBoy
+                                          : kLottieColoredSportsFigure,
+                              //height: model.selectedCharacter == 1 ? 100 : 150,
+                            ),
                           ),
                         ),
                       ],
-                    ),
-                    verticalSpaceMedium,
-                    Lottie.asset(
-                      model.selectedCharacter == 1
-                          ? kLottieChillDude
-                          : model.selectedCharacter == 2
-                              ? kLottieWalkingGirl
-                              : model.selectedCharacter == 3
-                                  ? kLottieWalkingBoy
-                                  : kLottieColoredSportsFigure,
-                      height: 120,
                     ),
                     verticalSpaceMedium,
                     TextButton(

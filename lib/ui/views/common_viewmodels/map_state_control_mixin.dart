@@ -21,7 +21,6 @@ mixin MapStateControlMixin {
   double? get newLon => mapStateService.newLon;
   double? get lastBirdViewZoom => mapStateService.lastBirdViewZoom;
   bool get isAvatarView => mapStateService.isAvatarView;
-  int get characterNumber => mapStateService.characterNumber;
   bool get navigatedFromQuestList => mapStateService.navigatedFromQuestList;
   // bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
   // -------------------------------------

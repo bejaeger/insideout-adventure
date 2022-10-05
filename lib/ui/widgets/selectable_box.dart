@@ -6,12 +6,14 @@ class SelectableBox extends StatelessWidget {
   final Widget child;
   final void Function()? onTap;
   final EdgeInsetsGeometry? padding;
+  final double? height;
   const SelectableBox({
     Key? key,
     required this.selected,
     required this.child,
     this.onTap,
     this.padding,
+    this.height,
   }) : super(key: key);
 
   @override
@@ -19,6 +21,7 @@ class SelectableBox extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: height,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           border: Border.all(

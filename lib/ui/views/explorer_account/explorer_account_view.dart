@@ -31,12 +31,73 @@ class ExplorerAccountView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AfkCreditsText.headingThree(
-                        model.currentUserNullable?.fullName ?? ""),
-                    SizedBox(height: 2),
-                    AfkCreditsText.body(
-                        "Level ${model.currentLevel()}: ${model.currentLevelName}"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: model.showAndHandleAvatarSelection,
+                          child: Stack(
+                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 75,
+                                width: 50,
+                                //color: Colors.red,
+                              ),
+                              Column(
+                                children: [
+                                  SizedBox(height: 7),
+                                  CircleAvatar(
+                                    maxRadius: 32,
+                                    backgroundColor: Colors.grey[200],
+                                    child: Image.asset(
+                                        model.avatarIdx == 1
+                                            ? kLottieChillDudeHeadPng
+                                            : kLottieWalkingGirlPng,
+                                        height: 40),
+                                  ),
+                                ],
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SizedBox(height: 51),
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 42),
+                                        Icon(
+                                          Icons.edit,
+                                          color: kcPrimaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        horizontalSpaceRegular,
+                        Expanded(
+                          child: Column(
+                            //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AfkCreditsText.headingTwo(
+                                  model.currentUserNullable?.fullName ?? ""),
+                              SizedBox(height: 2),
+                              AfkCreditsText.body(
+                                  "Level ${model.currentLevel()}: ${model.currentLevelName}"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                     verticalSpaceMedium,
+                    verticalSpaceSmall,
                     //AfkCreditsText.headingFour("Stats"),
                     // verticalSpaceSmall,
                     // verticalSpaceTiny,
@@ -101,7 +162,7 @@ class ExplorerAccountView extends StatelessWidget {
                           verticalSpaceSmall,
                           Wrap(
                             children: [
-                              AfkCreditsText.subheadingItalic("Earn",
+                              AfkCreditsText.headingFourLight("Earn",
                                   align: TextAlign.left),
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -109,14 +170,14 @@ class ExplorerAccountView extends StatelessWidget {
                                 child: Image.asset(
                                   kAFKCreditsLogoPath,
                                   color: kcPrimaryColor,
-                                  height: 18.0,
+                                  height: 20.0,
                                 ),
                               ),
-                              AfkCreditsText.statsStyleBlack(
+                              AfkCreditsText.headingFourLight(
                                   "${model.creditsToNextLevel} ",
                                   align: TextAlign.left),
                               Text("to reach the next level!",
-                                  style: subheadingStyleItalic.copyWith(),
+                                  style: heading4LightStyle.copyWith(),
                                   textAlign: TextAlign.left,
                                   maxLines: 2),
                             ],

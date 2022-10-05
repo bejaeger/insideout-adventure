@@ -46,7 +46,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
         model.initialize(
             showBewareDialog: widget.showBewareDialog,
             showNumberQuestsDialog: widget.showNumberQuestsDialog,
-            showSelectAvatarDialog: (model.currentUser.newUser || 1 > 0),
+            showSelectAvatarDialog: model.currentUser.newUser,
             screenTimeSession: widget.screenTimeSession);
       },
       builder: (context, model, child) {
@@ -93,15 +93,17 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   // TODO: Can also make MainHeader a view!
                   if (!model.isBusy)
                     MainHeader(
-                        percentageOfNextLevel: model.percentageOfNextLevel,
-                        currentLevel: model.currentLevel(),
-                        onAvatarPressed: model.showExplorerAccountOverlay,
-                        show: showMainWidgets,
-                        onDevFeaturePressed: model.isDevFlavor
-                            ? model.openSuperUserSettingsDialog
-                            : null, // model.showNotImplementedSnackbar,
-                        onCreditsPressed: model.showCreditsOverlay,
-                        balance: model.currentUserStats.afkCreditsBalance),
+                      percentageOfNextLevel: model.percentageOfNextLevel,
+                      currentLevel: model.currentLevel(),
+                      onAvatarPressed: model.showExplorerAccountOverlay,
+                      show: showMainWidgets,
+                      onDevFeaturePressed: model.isDevFlavor
+                          ? model.openSuperUserSettingsDialog
+                          : null, // model.showNotImplementedSnackbar,
+                      onCreditsPressed: model.showCreditsOverlay,
+                      balance: model.currentUserStats.afkCreditsBalance,
+                      avatarIdx: model.avatarIdx,
+                    ),
 
                   if (!model.isBusy)
                     MainFooterOverlayView(

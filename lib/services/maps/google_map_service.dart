@@ -154,11 +154,13 @@ class GoogleMapService {
     bool isStartMarker = false,
     bool completed = false,
     String? infoWindowText,
+    bool isParentAccount = false,
   }) async {
     final icon = await defineMarkersColour(
         quest: quest,
         afkmarker: afkmarker,
         completed: completed,
+        isParentAccount: isParentAccount,
         isStartMarker: isStartMarker);
     Marker marker = Marker(
       markerId: MarkerId(afkmarker
@@ -307,7 +309,18 @@ class GoogleMapService {
     required Quest? quest,
     required bool completed,
     required bool isStartMarker,
+    required bool isParentAccount,
   }) async {
+    if (isParentAccount && quest?.createdBy == null) {
+      // this means it is a public quest. Display them a bit darker on the map
+      if (quest?.type == QuestType.TreasureLocationSearch) {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueViolet + 15);
+      } else {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueOrange + 15);
+      }
+    }
     if (completed) {
       //late BitmapDescriptor icon;
       if (quest?.type == QuestType.TreasureLocationSearch) {
@@ -387,6 +400,7 @@ class GoogleMapService {
         afkmarker: afkmarker,
         quest: null,
         completed: collected,
+        isParentAccount: false,
         isStartMarker: false);
     markersOnMap = markersOnMap
         .map((item) => item.markerId == MarkerId(afkmarker.id)

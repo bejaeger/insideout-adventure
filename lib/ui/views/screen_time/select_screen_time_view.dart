@@ -73,7 +73,7 @@ class SelectScreenTimeView extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 right: 8.0, top: 8.0, bottom: 8.0),
-                            child: Icon(Icons.close, size: 30),
+                            child: Icon(Icons.arrow_back_ios, size: 26),
                           ),
                         ),
                       ),

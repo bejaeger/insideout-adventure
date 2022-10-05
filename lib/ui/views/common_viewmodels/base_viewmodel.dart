@@ -86,6 +86,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
 
+  int get avatarIdx => currentUserNullable?.avatarIdx != null
+      ? currentUserNullable!.avatarIdx!
+      : 1;
   // -----------------------------------------------
   // gamification system
   int currentLevel({num? lifetimeEarnings}) {
@@ -486,6 +489,11 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   Future setNewUserPropertyToFalse() async {
     baseModelLog.i("Setting 'new user' property to false");
     userService.setNewUserPropertyToFalse(user: currentUser);
+  }
+
+  Future setNewAvatarId(int id) async {
+    baseModelLog.i("Setting 'avatar id' to $id");
+    await userService.setNewAvatarId(id: id, user: currentUser);
   }
 
   //////////////////////////////////////////

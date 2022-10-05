@@ -5,7 +5,6 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
@@ -16,7 +15,6 @@ import 'package:afkcredits/app_config_provider.dart';
 import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
-import 'package:afkcredits/notifications/notification_controller.dart';
 import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
@@ -128,10 +126,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     notifyListeners();
 
     if (showSelectAvatarDialog) {
-      final selected = await showAvatarSelectDialog();
-      if (selected) {
-        setNewUserPropertyToFalse();
-      }
+      await showAndHandleAvatarSelection();
     }
 
     // Show beware dialog!
@@ -399,17 +394,19 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         variant: DialogType.BewareOfSurroundings);
   }
 
-  Future showAvatarSelectDialog() async {
+  Future showAndHandleAvatarSelection() async {
     final res = await dialogService.showCustomDialog(
       variant: DialogType.AvatarSelectDialog,
     );
     final characterNumber = res?.data;
-    if (characterNumber != null) {
+    if (characterNumber is int) {
       log.i("Chose character with number $characterNumber");
-      // TODO: Upload character number and select it for map!
+      await setNewAvatarId(characterNumber);
       return true;
+    } else {
+      log.e("Selected data from avatar view is not an int!");
+      return false;
     }
-    return false;
   }
 
   //------------------------

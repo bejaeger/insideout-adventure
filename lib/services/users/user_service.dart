@@ -181,16 +181,18 @@ class UserService {
       required AuthenticationMethod authMethod}) async {
     final user = _firebaseAuthenticationService.firebaseAuth.currentUser!;
     return await createUserAccount(
-        user: User(
-      authMethod: authMethod,
-      uid: user.uid,
-      role: role,
-      fullName: user.displayName ?? "",
-      email: user.email ?? "",
-      newUser: true,
-      explorerIds: [],
-      sponsorIds: [],
-    ));
+      user: User(
+        authMethod: authMethod,
+        uid: user.uid,
+        role: role,
+        fullName: user.displayName ?? "",
+        email: user.email ?? "",
+        newUser: true,
+        explorerIds: [],
+        sponsorIds: [],
+        avatarIdx: 1,
+      ),
+    );
   }
 
   // create user documents (user info, statistics) in firestore
@@ -367,16 +369,18 @@ class UserService {
       try {
         final user = result.user!;
         await createUserAccount(
-            user: User(
-          authMethod: method,
-          uid: user.uid,
-          role: role,
-          fullName: fullName ?? (user.displayName ?? ""),
-          email: user.email ?? "",
-          newUser: true,
-          explorerIds: [],
-          sponsorIds: [],
-        ));
+          user: User(
+            authMethod: method,
+            uid: user.uid,
+            role: role,
+            fullName: fullName ?? (user.displayName ?? ""),
+            email: user.email ?? "",
+            newUser: true,
+            explorerIds: [],
+            sponsorIds: [],
+            avatarIdx: 1,
+          ),
+        );
       } catch (e) {
         log.e("Error: $e");
         if (e is FirestoreApiException) {
@@ -412,17 +416,19 @@ class UserService {
 
     final docRef = _firestoreApi.createUserDocument();
     final newExplorer = User(
-        authMethod: authMethod,
-        fullName: name,
-        password: hashPassword(password),
-        uid: docRef.id,
-        role: UserRole.explorer,
-        sponsorIds: [currentUser.uid],
-        createdByUserWithId: currentUser.uid,
-        explorerIds: [],
-        newUser: true,
-        deviceId: currentUser.deviceId,
-        tokens: currentUser.tokens);
+      authMethod: authMethod,
+      fullName: name,
+      password: hashPassword(password),
+      uid: docRef.id,
+      role: UserRole.explorer,
+      sponsorIds: [currentUser.uid],
+      createdByUserWithId: currentUser.uid,
+      explorerIds: [],
+      newUser: true,
+      deviceId: currentUser.deviceId,
+      tokens: currentUser.tokens,
+      avatarIdx: 1,
+    );
     await createUserAccount(user: newExplorer);
     List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
     await updateUserData(
@@ -986,6 +992,11 @@ class UserService {
   Future setNewUserPropertyToFalse({required User user}) async {
     User newUser = user.copyWith(newUser: false);
     _firestoreApi.updateUserData(user: newUser);
+  }
+
+  Future setNewAvatarId({required int id, required User user}) async {
+    User newUser = user.copyWith(avatarIdx: id);
+    await _firestoreApi.updateUserData(user: newUser);
   }
 
   List<String> removeFromExplorerLists({required String uid}) {

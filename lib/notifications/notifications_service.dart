@@ -97,7 +97,8 @@ class NotificationsService {
       return;
     }
     DateTime endDate =
-        session.startedAt.toDate().add(Duration(minutes: session.minutes));
+        getEndDate(startedAt: session.startedAt, minutes: session.minutes);
+
     await NotificationsService().createPermanentNotification(
       title: "Screen time until " + formatDateToShowTime(endDate),
       message:
@@ -116,7 +117,7 @@ class NotificationsService {
       return;
     }
     DateTime endDate =
-        session.startedAt.toDate().add(Duration(minutes: session.minutes));
+        getEndDate(startedAt: session.startedAt, minutes: session.minutes);
     await NotificationsService().createScheduledNotification(
       title: session.userName + "'s screen time expired",
       message: session.userName +
@@ -124,6 +125,16 @@ class NotificationsService {
       date: endDate,
       session: session,
     );
+  }
+
+  DateTime getEndDate({required dynamic startedAt, required int minutes}) {
+    late DateTime endDate;
+    if (startedAt is DateTime) {
+      endDate = startedAt.add(Duration(minutes: minutes));
+    } else {
+      endDate = startedAt.toDate().add(Duration(minutes: minutes));
+    }
+    return endDate;
   }
 
   Future<void> dismissPermanentNotification({required String sessionId}) async {

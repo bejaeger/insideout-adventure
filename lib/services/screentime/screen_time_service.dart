@@ -16,8 +16,6 @@ class ScreenTimeService {
   // services
   final log = getLogger('ScreenTimeService');
   //final UserService _userService = locator<UserService>();
-  final LocalStorageService _localStorageService =
-      locator<LocalStorageService>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final NotificationsService _notificationService =
       locator<NotificationsService>();
@@ -76,7 +74,9 @@ class ScreenTimeService {
       int timeLeft = session.minutes * 60 - diff;
       return timeLeft;
     } else {
-      return -1;
+      int diff = now.difference(session.startedAt).inSeconds;
+      int timeLeft = session.minutes * 60 - diff;
+      return timeLeft;
     }
   }
 
@@ -84,7 +84,11 @@ class ScreenTimeService {
   // Functions
 
   DateTime getScreenTimeStartTime({required ScreenTimeSession session}) {
-    return session.startedAt.toDate();
+    if (session.startedAt is DateTime) {
+      return session.startedAt;
+    } else {
+      return session.startedAt.toDate();
+    }
   }
 
   ScreenTimeSession? getActiveScreenTimeInMemory(

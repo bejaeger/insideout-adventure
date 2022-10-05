@@ -9,8 +9,10 @@ import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class AvatarAndEffectsOnMapView extends StatefulWidget {
+  final int avatarIdx;
   const AvatarAndEffectsOnMapView({
     Key? key,
+    required this.avatarIdx,
   }) : super(key: key);
 
   @override
@@ -65,11 +67,9 @@ class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
               ),
             Positioned(
               //alignment: Alignment(0, 0.4),
-              bottom: model.characterNumber == 3
-                  ? 168
-                  : model.characterNumber == 1
-                      ? 175
-                      : 190,
+              bottom: widget.avatarIdx == 1
+                  ? screenHeight(context, percentage: 0.27)
+                  : screenHeight(context, percentage: 0.25),
               left: 2,
               right: 2,
               child: FadingWidget(
@@ -77,15 +77,11 @@ class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
                 ignorePointer: true,
                 child: Container(
                     height: screenHeight(context,
-                        percentage: model.characterNumber == 0 ? 0.22 : 0.22),
-                    child:
-                        // Image.asset(
-                        //   kLottieChillDudePng,
-                        // ),
-                        // characterNumber == 0
-                        //     ?
-                        Lottie.asset(
-                      kLottieChillDude,
+                        percentage: widget.avatarIdx == 1 ? 0.22 : 0.24),
+                    child: Lottie.asset(
+                      widget.avatarIdx == 1
+                          ? kLottieChillDude
+                          : kLottieWalkingGirl,
                       frameRate: FrameRate.max,
                       controller: _controller,
                       onLoaded: (composition) {

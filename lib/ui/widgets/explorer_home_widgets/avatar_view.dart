@@ -14,8 +14,15 @@ class AvatarView extends StatelessWidget {
   // callback function to execute when avatar is pressed
   final void Function()? onPressed;
 
+  // identifier of avatar
+  final int avatarIdx;
+
   const AvatarView(
-      {Key? key, required this.level, required this.percentage, this.onPressed})
+      {Key? key,
+      required this.level,
+      required this.percentage,
+      this.onPressed,
+      required this.avatarIdx})
       : super(key: key);
 
   @override
@@ -29,7 +36,9 @@ class AvatarView extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.topCenter,
-              child: Avatar(),
+              child: Avatar(
+                avatarIdx: avatarIdx,
+              ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -50,12 +59,15 @@ class AvatarView extends StatelessWidget {
 }
 
 class Avatar extends StatelessWidget {
-  const Avatar({Key? key}) : super(key: key);
+  final int avatarIdx;
+  const Avatar({Key? key, required this.avatarIdx}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // return Image.asset(kHerculesAvatar);
-    return Image.asset(kLottieChillDudeHeadPng, height: 39);
+    return Image.asset(
+        avatarIdx == 1 ? kLottieChillDudeHeadPng : kLottieWalkingGirlPng,
+        height: 39);
   }
 }
 

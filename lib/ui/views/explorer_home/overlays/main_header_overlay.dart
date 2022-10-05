@@ -12,6 +12,7 @@ class MainHeader extends StatelessWidget {
   final void Function()? onDevFeaturePressed;
   final void Function()? onAvatarPressed;
   final void Function()? onCreditsPressed;
+  final int avatarIdx;
   const MainHeader(
       {Key? key,
       this.onDevFeaturePressed,
@@ -20,7 +21,8 @@ class MainHeader extends StatelessWidget {
       required this.balance,
       this.onCreditsPressed,
       required this.currentLevel,
-      required this.percentageOfNextLevel})
+      required this.percentageOfNextLevel,
+      required this.avatarIdx})
       : super(key: key);
 
   @override
@@ -44,9 +46,11 @@ class MainHeader extends StatelessWidget {
                 padding:
                     const EdgeInsets.only(right: 5.0, bottom: 5.0, left: 5.0),
                 child: AvatarView(
-                    percentage: percentageOfNextLevel,
-                    level: currentLevel,
-                    onPressed: onAvatarPressed),
+                  percentage: percentageOfNextLevel,
+                  level: currentLevel,
+                  onPressed: onAvatarPressed,
+                  avatarIdx: avatarIdx,
+                ),
               ),
               //Spacer(),
               horizontalSpaceSmall,

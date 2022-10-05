@@ -38,6 +38,8 @@ class User with _$User {
     String? password,
     List<String>? tokens,
     String? deviceId,
+    @Default(1)
+        int? avatarIdx,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

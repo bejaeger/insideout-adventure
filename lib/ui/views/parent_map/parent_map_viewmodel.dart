@@ -93,11 +93,13 @@ class ParentMapViewModel extends QuestViewModel {
         if (_q.startMarker != null) {
           AFKMarker _m = _q.startMarker!;
           mapViewModel.addMarkerToMap(
-              quest: _q,
-              afkmarker: _m,
-              isStartMarker: _m == _q.startMarker,
-              onMarkerTapCustom: () => onMarkerTapParent(quest: _q, marker: _m),
-              completed: currentUserStats.completedQuestIds.contains(_q.id));
+            quest: _q,
+            afkmarker: _m,
+            isStartMarker: _m == _q.startMarker,
+            onMarkerTapCustom: () => onMarkerTapParent(quest: _q, marker: _m),
+            completed: false,
+            isParentAccount: true,
+          );
         }
       }
     }

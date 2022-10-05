@@ -28,6 +28,7 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       tokens:
           (json['tokens'] as List<dynamic>?)?.map((e) => e as String).toList(),
       deviceId: json['deviceId'] as String?,
+      avatarIdx: json['avatarIdx'] as int? ?? 1,
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
@@ -44,6 +45,7 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'password': instance.password,
       'tokens': instance.tokens,
       'deviceId': instance.deviceId,
+      'avatarIdx': instance.avatarIdx,
     };
 
 const _$UserRoleEnumMap = {

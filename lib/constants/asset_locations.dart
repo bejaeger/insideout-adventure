@@ -83,6 +83,8 @@ const String kLottieChillDudeHeadPng = "assets/avatars/chilldude-head.png";
 
 // @see: https://assets6.lottiefiles.com/private_files/lf30_afru6l2d.json
 const String kLottieWalkingGirl = "assets/lottie/walkinggirl.json";
+const String kLottieWalkingGirlPng = "assets/avatars/walking-girl-2.png";
+const String kLottieWalkingGirlPng2 = "assets/avatars/walking-girl.png";
 
 // @see: https://assets3.lottiefiles.com/packages/lf20_4jip3mqj.json
 const String kLottieWalkingBoy = "assets/lottie/walkingboy.json";

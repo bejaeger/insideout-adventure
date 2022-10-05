@@ -99,7 +99,7 @@ class ParentHomeView extends StatelessWidget {
                                 height: 30,
                                 width: 40,
                                 //color: Colors.red,
-                                child: Icon(Icons.add_circle_outline_rounded,
+                                child: Icon(Icons.person_add,
                                     size: 28, color: kcPrimaryColor),
                               ),
                             ),

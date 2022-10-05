@@ -1,8 +1,4 @@
 
-const fs = require("fs");
-const renderSvg = require("lottie-to-svg");
-
-
 // export lottie as svg
 // add to miro
 // copy image
@@ -10,8 +6,12 @@ const renderSvg = require("lottie-to-svg");
 // export as png
 
 
-const animationData = JSON.parse(fs.readFileSync(`assets/lottie/chilldude.json`, "utf8"));
+const fs = require("fs");
+const renderSvg = require("lottie-to-svg");
+
+
+const animationData = JSON.parse(fs.readFileSync(`assets/lottie/walkinggirl.json`, "utf8"));
 
 renderSvg(animationData).then(svg => {
-  fs.writeFileSync(`chilldude.svg`, svg, "utf8");
+  fs.writeFileSync(`walkinggirl.svg`, svg, "utf8");
 });

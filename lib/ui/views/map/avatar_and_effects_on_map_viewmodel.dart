@@ -13,7 +13,6 @@ class AvatarAndEffectsOnMapViewModel extends BaseModel {
 
   // -----------------------------------------
   // getters
-  int get characterNumber => mapStateService.characterNumber;
   bool get isAvatarView => mapStateService.isAvatarView;
 
   bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;

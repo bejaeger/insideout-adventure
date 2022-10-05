@@ -368,6 +368,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     bool isStartMarker = false,
     bool completed = false,
     String? infoWindowText,
+    bool isParentAccount = false,
   }) {
     configureAndAddMapMarker(
       quest: quest,
@@ -375,6 +376,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       completed: completed,
       isStartMarker: isStartMarker,
       infoWindowText: infoWindowText,
+      isParentAccount: isParentAccount,
       onTap: onMarkerTapCustom != null
           ? () => onMarkerTapCustom()
           : () => onMarkerTap(
@@ -871,11 +873,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     return res is bool && res == true;
   }
 
-  void nextCharacter() {
-    mapStateService.characterNumber = (characterNumber + 1) % 4;
-    notifyListeners();
-  }
-
   @override
   void dispose() {
     // cameraZoom.close();
@@ -913,6 +910,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     bool isStartMarker,
     bool completed,
     String? infoWindowText,
+    bool isParentAccount,
   }) configureAndAddMapMarker;
   final void Function(
       {required Quest quest,

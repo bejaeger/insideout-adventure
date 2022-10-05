@@ -881,10 +881,17 @@ class FirestoreApi {
       {required ScreenTimeSession session}) async {
     log.i("Add screen time session to firestore");
     //Get the Document Created Reference
+    late Timestamp validStartedAt;
+    if (session.startedAt is DateTime) {
+      validStartedAt = Timestamp.fromDate(session.startedAt);
+    } else {
+      validStartedAt = session.startedAt;
+    }
     final _documentReference = screenTimeSessionCollection.doc();
     _documentReference.set(session
         .copyWith(
           sessionId: _documentReference.id,
+          startedAt: validStartedAt,
           //startedAt: Timestamp.now(),
         )
         .toJson());
