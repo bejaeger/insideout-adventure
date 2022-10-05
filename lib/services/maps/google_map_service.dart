@@ -311,10 +311,10 @@ class GoogleMapService {
     if (completed) {
       //late BitmapDescriptor icon;
       if (quest?.type == QuestType.TreasureLocationSearch) {
-        return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueViolet - 15);
-      } else {
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+      } else {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueOrange);
       }
       //   icon = await BitmapDescriptor.fromAssetImage(
       //       ImageConfiguration(

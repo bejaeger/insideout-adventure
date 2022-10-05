@@ -126,11 +126,6 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     await navigationService.navigateTo(Routes.createExplorerView);
   }
 
-  Future setNewUserPropertyToFalse() async {
-    log.i("Setting 'new user' property to false");
-    userService.setNewUserPropertyToFalse(user: currentUser);
-  }
-
   void showSwitchAreaBottomSheet() async {
     await bottomSheetService.showCustomSheet(
         variant: BottomSheetType.switchArea);

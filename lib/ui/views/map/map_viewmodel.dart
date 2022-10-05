@@ -460,6 +460,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
             hideMarkerInfoWindowNow(markerId: afkmarker.id);
             result = await displayQuestBottomSheet(
               quest: quest,
+              completed: completed,
               startMarker: afkmarker,
             );
           }

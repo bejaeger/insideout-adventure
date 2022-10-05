@@ -19,4 +19,5 @@ enum DialogType {
   BewareOfSurroundings,
   CustomScreenTime,
   NumberQuests,
+  AvatarSelectDialog,
 }

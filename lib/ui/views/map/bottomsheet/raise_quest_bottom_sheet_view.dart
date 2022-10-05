@@ -22,9 +22,10 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<RaiseQuestBottomSheetViewModel>.reactive(
         viewModelBuilder: () =>
-            RaiseQuestBottomSheetViewModel(quest: request.data),
+            RaiseQuestBottomSheetViewModel(quest: request.data["quest"]),
         builder: (context, model, child) {
-          Quest quest = request.data;
+          Quest quest = request.data["quest"];
+          bool completed = request.data["completed"];
           return Container(
             decoration: BoxDecoration(
               color: Colors.grey[100],
@@ -80,8 +81,8 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      verticalSpaceMedium,
-                      QuestSpecificationsRow(quest: quest),
+                      if (!completed) verticalSpaceMedium,
+                      if (!completed) QuestSpecificationsRow(quest: quest),
                     ],
                   ),
                   if (quest.description != "") verticalSpaceMedium,
@@ -101,6 +102,14 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                       // textAlign: TextAlign.left,
                     ),
                   verticalSpaceSmall,
+                  if (completed)
+                    Center(
+                      child: Text(
+                        "Quest already completed",
+                        style: heading4Style,
+                      ),
+                    ),
+                  if (completed) verticalSpaceSmall,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -130,34 +139,36 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                           ],
                         ),
                       ),
-                      horizontalSpaceMedium,
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            AfkCreditsButton(
-                              //disabled: model.isParentAccount,
-                              leading: model.isParentAccount
-                                  ? null
-                                  : Icon(Icons.play_arrow_rounded,
-                                      color: Colors.white),
-                              title: request.mainButtonTitle.toString(),
-                              onTap:
-                                  // model.isParentAccount
-                                  //     ? model.showNotImplementedInParentAccount
-                                  //     :
-                                  model.hasEnoughSponsoring(quest: model.quest)
-                                      ? () => completer(
-                                          SheetResponse(confirmed: true))
-                                      : null,
-                            ),
-                            // if (model.isParentAccount)
-                            //   AfkCreditsText.caption(
-                            //       "Not supported in parent account yet",
-                            //       align: TextAlign.center),
-                          ],
+                      if (!completed) horizontalSpaceMedium,
+                      if (!completed)
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              AfkCreditsButton(
+                                //disabled: model.isParentAccount,
+                                leading: model.isParentAccount
+                                    ? null
+                                    : Icon(Icons.play_arrow_rounded,
+                                        color: Colors.white),
+                                title: request.mainButtonTitle.toString(),
+                                onTap:
+                                    // model.isParentAccount
+                                    //     ? model.showNotImplementedInParentAccount
+                                    //     :
+                                    model.hasEnoughSponsoring(
+                                            quest: model.quest)
+                                        ? () => completer(
+                                            SheetResponse(confirmed: true))
+                                        : null,
+                              ),
+                              // if (model.isParentAccount)
+                              //   AfkCreditsText.caption(
+                              //       "Not supported in parent account yet",
+                              //       align: TextAlign.center),
+                            ],
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ],

@@ -6,6 +6,7 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/ui/views/create_explorer/validators.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/selectable_box.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -219,15 +220,9 @@ class QuestTypeSelection extends StatelessWidget with $CreateQuestView {
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      decoration: model.selectedQuestType ==
-                              QuestType.TreasureLocationSearch
-                          ? BoxDecoration(
-                              border:
-                                  Border.all(width: 5, color: kcPrimaryColor),
-                              borderRadius: BorderRadius.circular(15.0),
-                            )
-                          : null,
+                    child: SelectableBox(
+                      selected: model.selectedQuestType ==
+                          QuestType.TreasureLocationSearch,
                       child: QuestTypeCard(
                         category: QuestType.TreasureLocationSearch,
                         onPressed: () => model.selectQuestType(
@@ -236,15 +231,9 @@ class QuestTypeSelection extends StatelessWidget with $CreateQuestView {
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      decoration: model.selectedQuestType ==
-                              QuestType.GPSAreaHike
-                          ? BoxDecoration(
-                              border:
-                                  Border.all(width: 5, color: kcPrimaryColor),
-                              borderRadius: BorderRadius.circular(15.0),
-                            )
-                          : null,
+                    child: SelectableBox(
+                      selected:
+                          model.selectedQuestType == QuestType.GPSAreaHike,
                       child: QuestTypeCard(
                         category: QuestType.GPSAreaHike,
                         onPressed: () =>

@@ -424,7 +424,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   }
 
   Future<SheetResponse?> displayQuestBottomSheet(
-      {required Quest quest, AFKMarker? startMarker}) async {
+      {required Quest quest,
+      AFKMarker? startMarker,
+      bool completed = false}) async {
     SheetResponse? sheetResponse = await bottomSheetService.showCustomSheet(
         variant: BottomSheetType.questInformation,
         title: quest.name,
@@ -436,7 +438,10 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         description: quest.description,
         mainButtonTitle: isParentAccount ? "Show markers" : "Play",
         secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
-        data: quest);
+        data: {
+          "quest": quest,
+          "completed": completed && !(quest.repeatable == 1)
+        });
     return sheetResponse;
     // if (sheetResponse?.confirmed == true) {
     //   baseModelLog
@@ -476,6 +481,11 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     } else {
       showGenericInternalErrorDialog();
     }
+  }
+
+  Future setNewUserPropertyToFalse() async {
+    baseModelLog.i("Setting 'new user' property to false");
+    userService.setNewUserPropertyToFalse(user: currentUser);
   }
 
   //////////////////////////////////////////

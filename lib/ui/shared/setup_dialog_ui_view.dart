@@ -12,6 +12,7 @@ import 'package:afkcredits/ui/shared/custom_dialogs/money_transfer_dialog_view.d
 import 'package:afkcredits/ui/shared/custom_dialogs/beware_of_surroundings_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/number_quests_founds_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/onboarding_dialog.dart';
+import 'package:afkcredits/ui/shared/custom_dialogs/select_avatar_dialog_view.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/dialog/travelled_distance_dialog_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -49,6 +50,8 @@ void setupDialogUi() {
         CustomScreenTimeDialogView(request: sheetRequest, completer: completer),
     DialogType.NumberQuests: (context, sheetRequest, completer) =>
         NumberQuestsFoundDialog(request: sheetRequest, completer: completer),
+    DialogType.AvatarSelectDialog: (context, sheetRequest, completer) =>
+        SelectAvatarDialogView(request: sheetRequest, completer: completer),
   };
   dialogService.registerCustomDialogBuilders(builders);
 }

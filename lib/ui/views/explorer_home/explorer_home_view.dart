@@ -14,6 +14,7 @@ import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -41,10 +42,13 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
       viewModelBuilder: () => ExplorerHomeViewModel(),
-      onModelReady: (model) => model.initialize(
-          showBewareDialog: widget.showBewareDialog,
-          showNumberQuestsDialog: widget.showNumberQuestsDialog,
-          screenTimeSession: widget.screenTimeSession),
+      onModelReady: (model) {
+        model.initialize(
+            showBewareDialog: widget.showBewareDialog,
+            showNumberQuestsDialog: widget.showNumberQuestsDialog,
+            showSelectAvatarDialog: (model.currentUser.newUser || 1 > 0),
+            screenTimeSession: widget.screenTimeSession);
+      },
       builder: (context, model, child) {
         bool showMainWidgets =
             (!(model.isShowingQuestDetails || model.hasActiveQuest) ||

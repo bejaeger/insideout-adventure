@@ -84,6 +84,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   Future initialize({
     bool showBewareDialog = false,
     bool showNumberQuestsDialog = false,
+    bool showSelectAvatarDialog = false,
     ScreenTimeSession? screenTimeSession,
   }) async {
     setBusy(true);
@@ -126,10 +127,19 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     showFullLoadingScreen = false;
     notifyListeners();
 
+    if (showSelectAvatarDialog) {
+      final selected = await showAvatarSelectDialog();
+      if (selected) {
+        setNewUserPropertyToFalse();
+      }
+    }
+
+    // Show beware dialog!
     if (showBewareDialog) {
       await _showBewareDialog();
     }
 
+    // Show quests dialog
     // if no quests are found.
     // Give some UI element that shows how many quests were found in the
     // neighborhood
@@ -143,6 +153,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
             numberQuests: questService.getNearByQuest.length);
       }
     }
+
     showQuestLoadingScreen = false;
     notifyListeners();
   }
@@ -386,6 +397,19 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   Future _showBewareDialog() async {
     await dialogService.showCustomDialog(
         variant: DialogType.BewareOfSurroundings);
+  }
+
+  Future showAvatarSelectDialog() async {
+    final res = await dialogService.showCustomDialog(
+      variant: DialogType.AvatarSelectDialog,
+    );
+    final characterNumber = res?.data;
+    if (characterNumber != null) {
+      log.i("Chose character with number $characterNumber");
+      // TODO: Upload character number and select it for map!
+      return true;
+    }
+    return false;
   }
 
   //------------------------
