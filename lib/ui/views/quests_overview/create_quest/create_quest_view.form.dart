@@ -6,6 +6,7 @@
 
 // ignore_for_file: public_member_api_docs, constant_identifier_names, non_constant_identifier_names,unnecessary_this
 
+import 'package:afkcredits/ui/views/create_explorer/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -25,7 +26,7 @@ final Map<String, FocusNode> _CreateQuestViewFocusNodes = {};
 
 final Map<String, String? Function(String?)?> _CreateQuestViewTextValidations =
     {
-  NameValueKey: null,
+  NameValueKey: FormValidators.nameValidator,
   DescriptionValueKey: null,
   AfkCreditAmountValueKey: null,
 };

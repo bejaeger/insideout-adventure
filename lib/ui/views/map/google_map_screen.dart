@@ -69,7 +69,8 @@ class GoogleMapScreen extends StatelessWidget {
                 zoomControlsEnabled: model.isParentAccount ? true : false,
                 tiltGesturesEnabled: model.isParentAccount ? true : false,
                 // Button used for bringing the user location to the center of the camera view.
-                myLocationButtonEnabled: model.isParentAccount ? true : false,
+                myLocationButtonEnabled:
+                    false, //model.isParentAccount ? true : false,
                 mapToolbarEnabled: false,
                 buildingsEnabled: false,
                 compassEnabled: model.isParentAccount ? true : false,

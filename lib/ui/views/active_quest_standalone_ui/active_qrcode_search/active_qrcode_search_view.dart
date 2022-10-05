@@ -266,8 +266,6 @@ class _ActiveQrCodeSearchViewState extends State<ActiveQrCodeSearchView>
                                                               .isNearStartMarker
                                                           ? AFKSlideButton(
                                                               //alignment: Alignment(0, 0),
-                                                              quest:
-                                                                  widget.quest,
                                                               canStartQuest: model
                                                                   .hasEnoughSponsoring(
                                                                       quest: widget

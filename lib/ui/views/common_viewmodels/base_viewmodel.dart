@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -433,7 +434,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         // curve: Curves.linear,
         // barrierColor: Colors.black45,
         description: quest.description,
-        mainButtonTitle: isParentAccount ? "Show quest" : "Play",
+        mainButtonTitle: isParentAccount ? "Show markers" : "Play",
         secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
         data: quest);
     return sheetResponse;
@@ -447,13 +448,34 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   }
 
   Future openSuperUserSettingsDialog() async {
-    await dialogService.showCustomDialog(variant: DialogType.SuperUserSettings);
-    setListenedToNewPosition(false);
-    notifyListeners();
+    if (isSuperUser) {
+      await dialogService.showCustomDialog(
+          variant: DialogType.SuperUserSettings);
+      setListenedToNewPosition(false);
+      notifyListeners();
+    }
   }
 
   Future showCollectedMarkerDialog() async {
     await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
+  }
+
+  //------------------------------------------
+  // this is supposed to show the main instructions.
+  // For now it's just a simple dialog
+  Future showInstructions(QuestType? type) async {
+    if (type == QuestType.TreasureLocationSearch) {
+      await dialogService.showDialog(
+          title: "How it works", description: kLocationSearchDescription);
+    } else if (type == QuestType.GPSAreaHike) {
+      await dialogService.showDialog(
+          title: "How it works", description: kGPSAreaHikeDescription);
+    } else if (type == QuestType.DistanceEstimate) {
+      await dialogService.showDialog(
+          title: "How it works", description: kDistanceEstimateDescription);
+    } else {
+      showGenericInternalErrorDialog();
+    }
   }
 
   //////////////////////////////////////////

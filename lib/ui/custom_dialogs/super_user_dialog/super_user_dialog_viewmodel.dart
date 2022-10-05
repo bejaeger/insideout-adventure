@@ -146,7 +146,7 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
 
   @override
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? onStartQuestCallback}) {
+      {required Quest? quest, void Function()? notifyParentCallback}) {
     // TODO: implement maybeStartQuest
     throw UnimplementedError();
   }

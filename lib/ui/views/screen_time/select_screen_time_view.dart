@@ -22,7 +22,7 @@ class SelectScreenTimeView extends StatelessWidget {
         return MainPage(
           showBackButton: !model.isParentAccount,
           resizeToAvoidBottomInset: false,
-          backButtonColor: kcCultured,
+          //backButtonColor: kcCultured,
           // floatingActionButtonLocation:
           //     FloatingActionButtonLocation.centerDocked,
           // floatingActionButton: Padding(

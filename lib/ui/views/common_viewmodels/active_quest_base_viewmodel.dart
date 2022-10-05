@@ -40,7 +40,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
   final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
-
   final log = getLogger("ActiveQuestBaseViewModel");
 
   // ----------------------------------------------------------
@@ -59,11 +58,19 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   // -----------------------------------------------------------
   // UI state
   bool showCollectedMarkerAnimation = false;
+
+  // to show progress indicator to make user aware something is happening in the background
+  bool isAnimatingCamera = false;
+
   // bool showStartSwipe = true;
   bool get showStartSwipe => !activeQuestService.hasActiveQuest;
 
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
+
+  // bool that decides which UI is shown to user in case
+  // a quest has been completed before
+  bool redoQuest = false;
 
   bool get questCenteredOnMap => activeQuestService.questCenteredOnMap;
 
@@ -225,7 +232,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     setBusy(false);
   }
 
-  // TODO: Unit test!
   // All this is essential and should probably be unit tested
   void popQuestDetails() async {
     // set flag to start fade out
@@ -233,7 +239,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     layoutService.setIsMovingCamera(true);
 
     // Restore camera
-    restorePreviousCameraPosition();
+    restorePreviousCameraPositionAndAnimate();
 
     // reset/add back all quests
     mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
@@ -356,7 +362,9 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
     // add ghost latLong positions (in-place) to avoid  zooming
     // too far if only two positions very close by are shown!
-    potentiallyAddGhostLatLng(latLngList: latLngListToAnimate);
+    // TODO: Could add more ghost markers this cause sometimes the zoom is too much
+    // TODO:  e.g. if line between markers is parallel to the north-south direction
+    mapViewModel.potentiallyAddGhostLatLng(latLngList: latLngListToAnimate);
 
     Future.delayed(
       Duration(milliseconds: delay),
@@ -365,28 +373,9 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     );
   }
 
-  // if only two locations are shown we want to provide more padding on the
-  // screen and therefore add ghost markers!
-  void potentiallyAddGhostLatLng({required List<List<double>> latLngList}) {
-    if (latLngList.length == 2) {
-      if (geolocationService.distanceBetween(
-              lat1: latLngList[0][0],
-              lon1: latLngList[0][1],
-              lat2: latLngList[1][0],
-              lon2: latLngList[1][1]) <
-          150) {
-        // add ghost latLng positions for padding of camera!
-        latLngList.add(geolocationService.getLatLngShiftedLonInList(
-            latLng: latLngList[0], offset: 80));
-        latLngList.add(geolocationService.getLatLngShiftedLonInList(
-            latLng: latLngList[0], offset: -80));
-      }
-    }
-  }
-
   // animate to user position
   Future animateCameraToUserPosition() async {
-    await mapViewModel.animateNewLatLon(
+    mapViewModel.animateNewLatLon(
         lat: geolocationService.getUserLivePositionNullable!.latitude,
         lon: geolocationService.getUserLivePositionNullable!.longitude,
         force: true);
@@ -535,6 +524,19 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     );
   }
 
+  bool showCompletedQuestNote() {
+    if (redoQuest) {
+      return false;
+    } else {
+      return currentUserStats.completedQuestIds.contains(selectedQuest?.id);
+    }
+  }
+
+  void switchRedoQuestAndRebuildUI() {
+    redoQuest = !redoQuest;
+    notifyListeners();
+  }
+
   //------------------------------------------------------------
   // Reactive Service Mixin Functionality from stacked ReactiveViewModel!
   late List<ReactiveServiceMixin> _reactiveServices;
@@ -647,28 +649,11 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       popView();
     }
     // restore previous camera position. (not so important for standalone ui)
-    restorePreviousCameraPosition(moveInsteadOfAnimate: true);
-  }
-
-  //------------------------------------------
-  // Functions to override
-  Future showInstructions(QuestType? type) async {
-    if (type == QuestType.TreasureLocationSearch) {
-      await dialogService.showDialog(
-          title: "How it works", description: kLocationSearchDescription);
-    } else if (type == QuestType.GPSAreaHike) {
-      await dialogService.showDialog(
-          title: "How it works", description: kGPSAreaHikeDescription);
-    } else if (type == QuestType.DistanceEstimate) {
-      await dialogService.showDialog(
-          title: "How it works", description: kDistanceEstimateDescription);
-    } else {
-      showGenericInternalErrorDialog();
-    }
+    restorePreviousCameraPositionAndAnimate(moveInsteadOfAnimate: true);
   }
 
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? onStartQuestCallback});
+      {required Quest? quest, void Function()? notifyParentCallback});
 
   //-------------------------------------------
   // Helper

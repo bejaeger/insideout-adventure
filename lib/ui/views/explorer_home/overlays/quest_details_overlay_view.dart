@@ -5,12 +5,17 @@ import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/active_quest_overlays/gps_area_hike/gps_area_hike_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/views/hike_quest/hike_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
+import 'package:afkcredits/ui/widgets/common_quest_details_footer.dart';
+import 'package:afkcredits/ui/widgets/common_quest_details_header.dart';
+import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
+import 'package:afkcredits/ui/widgets/quest_completed_note.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
 import 'package:afkcredits/ui/widgets/quest_success_card.dart';
 import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
@@ -56,8 +61,9 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HikeQuestViewModel>.reactive(
-      viewModelBuilder: () => HikeQuestViewModel(),
+    return ViewModelBuilder<QuestDetailsOverlayViewModel>.reactive(
+      viewModelBuilder: () => QuestDetailsOverlayViewModel(),
+      onModelReady: (model) => model.initialize(quest: null),
       builder: (context, model, child) {
         if (widget.startFadeOut) {
           _controller.reverse(from: 0.5);
@@ -73,26 +79,15 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
             showBackButton: !model.hasActiveQuest,
             child: Stack(
               children: [
-                // color gradient
-                IgnorePointer(
-                  ignoring: true,
-                  child: Container(
-                    height: 400,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white.withOpacity(0.0),
-                          Colors.white.withOpacity(0.7),
-                        ],
-                        stops: [0.0, 1.0],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                    ),
-                  ),
-                ),
+                // Quest Info on top of screen
+                CommonQuestDetailsHeader(
+                    quest: quest,
+                    hasActiveQuest: model.hasActiveQuest,
+                    showInstructionsDialog: model.showInstructions,
+                    openSuperUserSettingsDialog:
+                        model.openSuperUserSettingsDialog),
 
-                // closing button
+                // cancel button
                 if (model.hasActiveQuest)
                   Align(
                     alignment: Alignment.topRight,
@@ -107,99 +102,34 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                     ),
                   ),
 
-                // if (quest != null)
-                //   InstructionsAndStartButtonsOverlay(
-                //       quest: quest,
-                //       onStartQuest: () => model.notifyListeners(),
-                //       model: model),
-
-                // Quest Info
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: model.isSuperUser
-                                    ? model.openSuperUserSettingsDialog
-                                    : null,
-                                child: QuestTypeTag(quest: quest),
-                              ),
-                              if (quest != null)
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: model.hasActiveQuest ? 4.0 : 0,
-                                      right: model.hasActiveQuest ? 45.0 : 0),
-                                  child: GestureDetector(
-                                      onTap: () =>
-                                          model.showInstructions(quest.type),
-                                      //title: "Tutorial",
-                                      //color: kPrimaryColor.withOpacity(0.7),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Icon(Icons.help_outline,
-                                            color: Colors.black, size: 30),
-                                      )),
-                                ),
-                            ],
-                          ),
-                          verticalSpaceTiny,
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CreditsAmount(
-                                  amount: quest?.afkCredits ?? -1,
-                                  height: 24,
-                                  textColor: kcPrimaryColor,
-                                ),
-                                horizontalSpaceSmall,
-                                AfkCreditsText.headingThree("-"),
-                                horizontalSpaceSmall,
-                                Expanded(
-                                  child: Text(quest?.name ?? "QUEST",
-                                      style: heading3Style.copyWith(
-                                          overflow: TextOverflow.ellipsis),
-                                      maxLines: 2),
-                                ),
-                              ],
-                            ),
-                          ),
-                          verticalSpaceTiny,
-                          if (!model.hasActiveQuest)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: QuestSpecificationsRow(quest: quest),
-                            ),
-                          verticalSpaceSmall,
-                          if (quest != null)
-                            if (quest.type == QuestType.TreasureLocationSearch)
-                              // TODO: Make this a specific new View for each type of quest
-                              Expanded(
-                                child: TreasureLocationSearch(
-                                    onStartQuest: () => model.notifyListeners(),
-                                    quest: quest),
-                              ),
-                          if (quest != null)
-                            if (quest.type == QuestType.GPSAreaHike)
-                              // TODO: Make this a specific new View for each type of quest
-                              Expanded(
-                                child: GPSAreaHike(
-                                    onStartQuest: () => model.notifyListeners(),
-                                    quest: quest),
-                              ),
-                        ],
-                      ),
+                // Quest info on bottom of screen
+                if (quest != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                    child: CommonQuestDetailsFooter(
+                      model: model,
+                      quest: quest,
                     ),
                   ),
-                ),
+
+                // Individual widgets for different types of quest
+                // To be shown below the header once quest has started
+                if (quest != null &&
+                    quest.type == QuestType.TreasureLocationSearch)
+                  TreasureLocationSearch(
+                      showStartSlider: !model.showCompletedQuestNote() &&
+                          model.isNearStartMarker &&
+                          model.previouslyFinishedQuest == null,
+                      notifyParentCallback: model.notifyListeners,
+                      quest: quest),
+                // ? Takes same arguments as above, could be improved to have common widget
+                if (quest != null && quest.type == QuestType.GPSAreaHike)
+                  GPSAreaHike(
+                      showStartSlider: !model.showCompletedQuestNote() &&
+                          model.isNearStartMarker &&
+                          model.previouslyFinishedQuest == null,
+                      notifyParentCallback: model.notifyListeners,
+                      quest: quest),
               ],
             ),
           ),
@@ -209,14 +139,55 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
   }
 }
 
-// TODO: I can make that more general for the different types of quests!
+class SpecificQuestLayout extends StatelessWidget {
+  final List<Widget> children;
+  final bool showStartSlider;
+  final void Function() maybeStartQuest;
+  final ActiveQuestBaseViewModel model;
+
+  const SpecificQuestLayout({
+    Key? key,
+    required this.children,
+    required this.showStartSlider,
+    required this.maybeStartQuest,
+    required this.model,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          height: model.hasActiveQuest
+              ? kTopQuestDetailsHeaderPaddingActive
+              : kTopQuestDetailsHeaderPadding,
+          width: screenWidth(context),
+        ),
+        ...children,
+        Spacer(),
+        if (showStartSlider)
+          aboveBottomBackButton(
+            child: StartButtonOverlay(
+                maybeStartQuest: maybeStartQuest, model: model),
+          ),
+      ],
+    );
+  }
+}
+
+// Quest details for treasure location search!
 class TreasureLocationSearch extends StatelessWidget {
   final Quest quest;
-  final void Function() onStartQuest;
+  final bool showStartSlider;
+  final void Function() notifyParentCallback;
+  // final void Function() onStartQuest;
   const TreasureLocationSearch({
     Key? key,
     required this.quest,
-    required this.onStartQuest,
+    required this.showStartSlider,
+    required this.notifyParentCallback,
+    // required this.onStartQuest,
   }) : super(key: key);
 
   @override
@@ -224,76 +195,54 @@ class TreasureLocationSearch extends StatelessWidget {
     return ViewModelBuilder<
         ActiveTreasureLocationSearchQuestViewModel>.reactive(
       viewModelBuilder: () => ActiveTreasureLocationSearchQuestViewModel(),
-      onModelReady: (model) => model.initialize(quest: quest),
+      onModelReady: (model) => model.initialize(
+          quest: quest, notifyParentCallback: notifyParentCallback),
       builder: (context, model, child) {
         // bool activeDetector = model.hasActiveQuest &&
         //     !model.isCheckingDistance &&
         //     model.allowCheckingPosition;
-        return Stack(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return SpecificQuestLayout(
+          maybeStartQuest: () => model.maybeStartQuest(
+              quest: quest, notifyParentCallback: notifyParentCallback),
+          model: model,
+          showStartSlider: showStartSlider,
           children: [
-            // ! Also in hike_quest_viewmodel.dart
-            // ! So maybe put it into active_quest_base_viewmodel.dart
             if (model.isAnimatingCamera)
-              Padding(
-                padding: const EdgeInsets.only(top: 150),
-                child: AFKProgressIndicator(
-                  alignment: Alignment.topCenter,
-                ),
+              AFKProgressIndicator(
+                alignment: Alignment.center,
               ),
-
-            if (model.previouslyFinishedQuest != null && !model.isBusy)
-              Align(
-                alignment: Alignment.topCenter,
-                child:
-                    QuestSuccessCard(onContinuePressed: model.popQuestDetails),
+            FadingWidget(
+              ignorePointer: true,
+              show: model.previouslyFinishedQuest == null &&
+                  !model.questFinished &&
+                  model.hasActiveQuest,
+              child: CurrentQuestStatusInfo(
+                // isBusy: false,
+                // isFirstDistanceCheck: true,
+                // currentDistance: 100,
+                // previousDistance: 110,
+                // directionStatus: DirectionStatus.unknown,
+                isBusy: model.isCheckingDistance,
+                isFirstDistanceCheck: model.isFirstDistanceCheck,
+                currentDistance: model.currentDistanceInMeters,
+                previousDistance: model.previousDistanceInMeters,
+                activatedQuest: model.activeQuestNullable,
+                directionStatus: model.directionStatus,
               ),
-            if (model.previouslyFinishedQuest == null && !model.questFinished)
-              IgnorePointer(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: CurrentQuestStatusInfo(
-                    // isBusy: false,
-                    // isFirstDistanceCheck: true,
-                    // currentDistance: 100,
-                    // previousDistance: 110,
-                    // directionStatus: DirectionStatus.unknown,
-                    isBusy: model.isCheckingDistance,
-                    isFirstDistanceCheck: model.isFirstDistanceCheck,
-                    currentDistance: model.currentDistanceInMeters,
-                    previousDistance: model.previousDistanceInMeters,
-                    activatedQuest: model.activeQuestNullable,
-                    directionStatus: model.directionStatus,
-                  ),
-                ),
+            ),
+            if (model.useSuperUserFeatures &&
+                model.hasActiveQuest &&
+                !model.isAnimatingCamera)
+              GestureDetector(
+                onTap: () {
+                  model.checkDistance();
+                },
+                child: Container(
+                    width: 30,
+                    height: 30,
+                    color: Colors.green,
+                    child: Icon(Icons.arrow_forward_ios)),
               ),
-            if (model.useSuperUserFeatures)
-              Align(
-                alignment: Alignment.topRight,
-                child: GestureDetector(
-                  onTap: () {
-                    model.checkDistance();
-                  },
-                  child: Container(
-                      width: 30,
-                      height: 30,
-                      color: Colors.green,
-                      child: Icon(Icons.arrow_forward_ios)),
-                ),
-              ),
-            model.isNearStartMarker
-                ? model.previouslyFinishedQuest == null
-                    ? StartButtonOverlay(
-                        quest: quest, onStartQuest: onStartQuest, model: model)
-                    : SizedBox(height: 0, width: 0)
-                : aboveBottomBackButton(
-                    child: NotCloseToQuestNote(
-                      animateCameraToQuestMarkers:
-                          model.animateCameraToQuestMarkers,
-                      animateCameraToUserPosition:
-                          model.animateCameraToUserPosition,
-                    ),
-                  ),
           ],
         );
       },
@@ -304,11 +253,13 @@ class TreasureLocationSearch extends StatelessWidget {
 // TODO: I can make that more general for the different types of quests!
 class GPSAreaHike extends StatefulWidget {
   final Quest quest;
-  final void Function() onStartQuest;
+  final bool showStartSlider;
+  final void Function() notifyParentCallback;
   const GPSAreaHike({
     Key? key,
     required this.quest,
-    required this.onStartQuest,
+    required this.showStartSlider,
+    required this.notifyParentCallback,
   }) : super(key: key);
 
   @override
@@ -353,112 +304,69 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
           _controller.forward();
           model.showCollectedMarkerAnimation = false;
         }
-        return Stack(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return SpecificQuestLayout(
+          maybeStartQuest: () => model.maybeStartQuest(
+              quest: widget.quest,
+              notifyParentCallback: widget.notifyParentCallback),
+          model: model,
+          showStartSlider: widget.showStartSlider,
           children: [
+            // ? ACTIVE QUEST CARD
+            FadingWidget(
+              ignorePointer: true,
+              show: model.previouslyFinishedQuest == null &&
+                  !model.questFinished &&
+                  model.hasActiveQuest,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: kcGreenWhiter,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 0.3,
+                        spreadRadius: 0.4,
+                        offset: Offset(1, 1),
+                        color: kcShadowColor,
+                      )
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          LiveQuestStatistic(
+                            title: "Duration",
+                            statistic:
+                                model.hasActiveQuest ? model.timeElapsed : "0",
+                          ),
+                          ScaleTransition(
+                            scale: _animation,
+                            child: LiveQuestStatistic(
+                              title: "Markers collected",
+                              statistic: model.hasActiveQuest
+                                  ? model.getNumberMarkersCollectedString()
+                                  : "0",
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             if (model.isAnimatingCamera)
               Padding(
-                padding: const EdgeInsets.only(top: 90),
+                padding: const EdgeInsets.only(top: 20),
                 child: AFKProgressIndicator(
                   alignment: Alignment.topCenter,
                 ),
               ),
-
-            if (model.previouslyFinishedQuest != null && !model.isBusy)
-              Align(
-                alignment: Alignment.topCenter,
-                child:
-                    QuestSuccessCard(onContinuePressed: model.popQuestDetails),
-              ),
-
-            IgnorePointer(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Container(width: 200, height: 50),
-              ),
-            ),
-            IgnorePointer(
-              ignoring: !model.hasActiveQuest,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: AnimatedOpacity(
-                  opacity: model.hasActiveQuest ? 1 : 0,
-                  duration: Duration(seconds: 1),
-                  child: Container(
-                    padding: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      color: kcGreenWhiter,
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 0.3,
-                          spreadRadius: 0.4,
-                          offset: Offset(1, 1),
-                          color: kcShadowColor,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            LiveQuestStatistic(
-                              title: "Duration",
-                              statistic: model.hasActiveQuest
-                                  ? model.timeElapsed
-                                  : "0",
-                            ),
-                            ScaleTransition(
-                              scale: _animation,
-                              child: LiveQuestStatistic(
-                                title: "Markers collected",
-                                statistic: model.hasActiveQuest
-                                    ? model.getNumberMarkersCollectedString()
-                                    : "0",
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // if (model.useSuperUserFeatures)
-            //   Align(
-            //     alignment: Alignment.topRight,
-            //     child: GestureDetector(
-            //       onTap: () {
-            //         model.checkDistance();
-            //       },
-            //       child: Container(
-            //           width: 30,
-            //           height: 30,
-            //           color: Colors.green,
-            //           child: Icon(Icons.arrow_forward_ios)),
-            //     ),
-            //   ),
-            model.isNearStartMarker
-                ? model.previouslyFinishedQuest == null
-                    ? StartButtonOverlay(
-                        quest: widget.quest,
-                        onStartQuest: widget.onStartQuest,
-                        model: model)
-                    : SizedBox(height: 0, width: 0)
-                : aboveBottomBackButton(
-                    child: NotCloseToQuestNote(
-                      animateCameraToQuestMarkers:
-                          model.animateCameraToQuestMarkers,
-                      animateCameraToUserPosition:
-                          model.animateCameraToUserPosition,
-                    ),
-                  ),
-            // StartButtonOverlay(
-            //     quest: quest, onStartQuest: onStartQuest, model: model),
           ],
         );
       },
@@ -467,15 +375,13 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
 }
 
 class StartButtonOverlay extends StatelessWidget {
-  final Quest quest;
-  final void Function() onStartQuest;
   final ActiveQuestBaseViewModel model;
+  final void Function() maybeStartQuest;
 
   const StartButtonOverlay({
     Key? key,
-    required this.quest,
-    required this.onStartQuest,
     required this.model,
+    required this.maybeStartQuest,
   }) : super(key: key);
 
   @override
@@ -484,9 +390,9 @@ class StartButtonOverlay extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Padding(
         padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            bottom: model.hasActiveQuest ? 0 : kBottomBackButtonPadding),
+          left: 40,
+          right: 40,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -501,16 +407,11 @@ class StartButtonOverlay extends StatelessWidget {
             //   ),
             // if (!model.hasActiveQuest) horizontalSpaceSmall,
             if (model.showStartSwipe && !model.isBusy)
-              // model.distanceToStartMarker < 0
-              //     ? AFKProgressIndicator()
-              //     :
               Expanded(
                 child: AFKSlideButton(
                   alignment: Alignment.bottomCenter,
                   canStartQuest: true, // model.isNearStartMarker == true,
-                  quest: quest,
-                  onSubmit: () => model.maybeStartQuest(
-                      quest: quest, onStartQuestCallback: onStartQuest),
+                  onSubmit: maybeStartQuest,
                 ),
               ),
           ],

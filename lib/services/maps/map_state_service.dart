@@ -74,7 +74,21 @@ class MapStateService {
     lastBirdViewZoom = zoom;
   }
 
-  void restorePreviousCameraPosition({bool moveInsteadOfAnimate = false}) {
+  void setCameraToDefaultChildPosition() {
+    resetSnapshotOfCameraPosition();
+    tilt = kInitialTilt;
+    zoom = kInitialZoomAvatarView;
+    setIsAvatarView(true);
+  }
+
+  void setCameraToDefaultParentPosition() {
+    resetSnapshotOfCameraPosition();
+    tilt = 0;
+    zoom = kInitialZoomBirdsView;
+    setIsAvatarView(false);
+  }
+
+  void restorePreviousCameraPosition() {
     if (previousBearing != null) {
       bearingSubject.add(previousBearing!);
     }
@@ -99,6 +113,11 @@ class MapStateService {
     previousLon = null;
     previousLat = null;
     previousIsAvatarView = null;
+  }
+
+  void restorePreviousCameraPositionAndAnimate(
+      {bool moveInsteadOfAnimate = false}) {
+    restorePreviousCameraPosition();
     if (moveInsteadOfAnimate) {
       restoreMapSnapshotByMoving();
     } else {

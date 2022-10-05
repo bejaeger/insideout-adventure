@@ -1,5 +1,3 @@
-import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -11,13 +9,10 @@ class AFKSlideButton extends StatelessWidget {
   final Alignment? alignment;
   const AFKSlideButton(
       {Key? key,
-      required this.quest,
       required this.canStartQuest,
       required this.onSubmit,
       this.alignment})
       : super(key: key);
-
-  final Quest quest;
 
   @override
   Widget build(BuildContext context) {

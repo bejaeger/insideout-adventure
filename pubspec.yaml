@@ -73,6 +73,7 @@ dependencies:
   device_info: ^2.0.3
   dropdown_button2: ^1.8.2
 
+
   lottie: ^1.2.2
 
   # The following adds the Cupertino Icons font to your application.
@@ -200,6 +201,8 @@ flutter:
     - assets/icons/qrcode.png
     - assets/icons/map.png
     - assets/icons/location-icon.ico
+    - assets/icons/hike-quest-icon.png
+    - assets/icons/search-quest-icon.png
     - assets/icons/curve-arrow.png
     - assets/icons/cardinal-point.png  
     - assets/lottie/lottietest.json  

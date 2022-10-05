@@ -24,12 +24,12 @@ class ARObjectViewModel extends ActiveQuestBaseViewModel
   void popArView({dynamic result}) async {
     layoutService.setIsFadingOutOverlay(false);
     popViewReturnValue(result: result);
-    restorePreviousCameraPosition(moveInsteadOfAnimate: true);
+    restorePreviousCameraPositionAndAnimate(moveInsteadOfAnimate: true);
   }
 
   @override
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? onStartQuestCallback}) {
+      {required Quest? quest, void Function()? notifyParentCallback}) {
     // TODO: implement maybeStartQuest
     throw UnimplementedError();
   }

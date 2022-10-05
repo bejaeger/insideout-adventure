@@ -633,7 +633,6 @@ class FirestoreApi {
             }
             if (counter == sponsorIds.length) {
               if (!completer2.isCompleted) {
-                log.wtf("Completing future now");
                 completer2.complete();
               }
             }

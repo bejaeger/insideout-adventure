@@ -111,7 +111,6 @@ class ActiveDistanceEstimateQuestView extends StatelessWidget {
                                       duration: Duration(milliseconds: 50),
                                       child: AFKSlideButton(
                                           //alignment: Alignment(0, 0),
-                                          quest: quest,
                                           canStartQuest:
                                               model.hasEnoughSponsoring(
                                                   quest: quest),

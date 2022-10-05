@@ -137,7 +137,7 @@ class OnBoardingScreensView extends StatelessWidget {
                 bodyWidget: OnboardingBodyWidget(
                   icon1: OnboardingActivityConversionIcon(),
                   text1:
-                      "Hercules Credits can be earned through gps-based outdoor games",
+                      "Your child can earn Hercules Credits through gps-based outdoor games",
                   text2:
                       "You as a parent can create these games in your preferred locations",
                   // text3: "Parents can manually add credits to child account",

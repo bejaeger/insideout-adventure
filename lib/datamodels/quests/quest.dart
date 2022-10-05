@@ -52,7 +52,7 @@ class Quest {
   double? distanceFromUser;
   double? distanceToTravelInMeter;
   late QuestType type;
-  int repeatable = 1;
+  int? repeatable;
 
   Quest({
     required this.id,
@@ -72,6 +72,7 @@ class Quest {
     this.distanceFromUser,
     this.distanceToTravelInMeter,
     this.networkImagePath,
+    this.repeatable = 0,
   });
 
   Quest copyWith({
@@ -92,6 +93,7 @@ class Quest {
     double? distanceFromUser,
     double? distanceToTravelInMeter,
     QuestType? type,
+    int? repeatable,
   }) =>
       Quest(
         id: id ?? this.id,
@@ -114,6 +116,7 @@ class Quest {
         distanceToTravelInMeter:
             distanceToTravelInMeter ?? this.distanceToTravelInMeter,
         type: type ?? this.type,
+        repeatable: repeatable ?? this.repeatable,
       );
   Quest.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -142,6 +145,7 @@ class Quest {
         ? GeoFirePoint(json['location']!['geopoint'].latitude,
             json['location']!['geopoint'].longitude)
         : null; // need to convert geopoint to GeoFirePoint
+    repeatable = json['repeatable'] != null ? json['repeatable'] : 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -167,6 +171,7 @@ class Quest {
     data['location'] = this.location != null
         ? this.location!.data
         : null; // will convert GeoFirePoint to GeoPoint for firebase!
+    data['repeatable'] = this.repeatable;
     return data;
   }
 

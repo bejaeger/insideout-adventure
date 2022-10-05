@@ -196,7 +196,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   // 1. Start quest
   @override
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? onStartQuestCallback}) async {
+      {required Quest? quest, void Function()? notifyParentCallback}) async {
     if (quest != null) {
       resetPreviousQuest();
       if (quest.distanceToTravelInMeter == null) {

@@ -566,6 +566,20 @@ class GeolocationService extends PausableService {
     return [latLng[0], newLon];
   }
 
+  // TODO: Test the below
+  // List<double> getLatLngShiftedLatInList(
+  //     {required List<double> latLng, double offset = 100}) {
+  //   //Earth’s radius, sphere
+  //   double R = 6378137;
+  //   //Coordinate offsets in radians
+  //   // final double dLat = offset/R;
+  //   final double dLat = offset / (R * math.sin(math.pi * latLng[1] / 180));
+  //   //OffsetPosition, decimal degrees
+  //   // final double newLat = latLng.latitude + dLat * 180/math.pi;
+  //   final double newLat = latLng[1] + dLat * 180 / math.pi;
+  //   return [newLat, latLng[1]];
+  // }
+
   Future<Position?> setCurrentUserPosition() async {
     return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);

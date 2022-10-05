@@ -27,6 +27,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           width: screenWidth(context) - 2 * kHorizontalPadding,

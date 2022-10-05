@@ -70,8 +70,9 @@ mixin MapStateControlMixin {
     mapStateService.animateMap(forceUseLocation: forceUseLocation);
   }
 
-  void restorePreviousCameraPosition({bool moveInsteadOfAnimate = false}) {
-    mapStateService.restorePreviousCameraPosition(
+  void restorePreviousCameraPositionAndAnimate(
+      {bool moveInsteadOfAnimate = false}) {
+    mapStateService.restorePreviousCameraPositionAndAnimate(
         moveInsteadOfAnimate: moveInsteadOfAnimate);
   }
 

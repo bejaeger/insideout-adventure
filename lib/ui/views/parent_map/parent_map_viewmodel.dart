@@ -26,10 +26,14 @@ class ParentMapViewModel extends QuestViewModel {
   void initialize() async {
     setBusy(true);
     mapViewModel.resetAllMapMarkersAndAreas();
+
+    // reset camera to default position for parent
+    mapStateService.setCameraToDefaultParentPosition();
+
     await getLocation(forceAwait: true, forceGettingNewPosition: false);
     setBusy(false);
     await initializeQuests(force: true);
-    addMarkers();
+    addStartMarkers();
     notifyListeners();
   }
 
@@ -52,7 +56,7 @@ class ParentMapViewModel extends QuestViewModel {
       }
     } catch (e) {
       log.e(
-          "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
+          "Error when loading quests, this could happen when the quests collection is flawed or when no quests were found. Error: $e");
       if (e is QuestServiceException) {
         if (e.message == WarningNoQuestsDownloaded) {
           // delay makes for some nicer UX
@@ -82,7 +86,7 @@ class ParentMapViewModel extends QuestViewModel {
     }
   }
 
-  void addMarkers() {
+  void addStartMarkers() {
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
         log.v("Add start marker of quest with name ${_q.name} to map");
@@ -122,11 +126,18 @@ class ParentMapViewModel extends QuestViewModel {
 
         // update marker on map!
         mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
-        addMarkers();
+        addStartMarkers();
         notifyListeners();
       } else {
         await onMarkerTapParent(quest: quest, marker: marker);
       }
+    }
+
+    if (response?.confirmed == true) {
+      // never await the animate function! Need to call notifyListeners()
+      // and in that function await to execute the infoTextWindow command
+      mapViewModel.animateToQuestDetails(quest: quest);
+      notifyListeners();
     }
   }
 
@@ -153,7 +164,31 @@ class ParentMapViewModel extends QuestViewModel {
         loadNewQuests: true);
     questService.showReloadQuestButton = false;
     questService.isReloadingQuests = false;
-    addMarkers();
+    addStartMarkers();
+    notifyListeners();
+  }
+
+  // when quest details are shown we need to remove them again
+  // (for parent account this is easy than the corresponding function
+  // (active_quest_base_viewmodel.dart)
+  void popQuestDetails() async {
+    // Restore camera
+    // Could be handled in one function!
+    mapStateService.restorePreviousCameraPosition();
+    mapViewModel.animateCameraViewModel(
+        forceUseLocation: true,
+        customLat: mapStateService.newLat,
+        customLon: mapStateService.newLon);
+    mapStateService.resetNewLatLon();
+
+    // reset/add back all quests
+    mapViewModel.resetAllMapMarkersAndAreas();
+    addStartMarkers();
+
+    // reset selected quest -> don't show quest details anymore
+    // reset previouslyFinishedQuest
+    activeQuestService.resetSelectedAndMaybePreviouslyFinishedQuest();
+
     notifyListeners();
   }
 }

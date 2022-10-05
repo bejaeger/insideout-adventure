@@ -90,9 +90,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     await listenToData();
     listenToLayout();
 
-    // make sure the tilt is set correctly. Might not be the case when using parent map before
-    // TODO: Might want to treat that in a cleaner way in a general reset method.
-    mapViewModel.changeCameraTilt(kInitialTilt);
+    // reset camera to default position for child
+    mapStateService.setCameraToDefaultChildPosition();
 
     // makes sure that screen time subject is listened to in case one is active!
     // ! This is duplicated in parent_home_viewmodel.dart

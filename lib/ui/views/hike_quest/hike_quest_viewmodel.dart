@@ -52,7 +52,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
 
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? onStartQuestCallback}) async {
+      {required Quest? quest, void Function()? notifyParentCallback}) async {
     if (quest != null && !hasActiveQuest) {
       final result =
           await startQuestMain(quest: quest, countStartMarkerAsCollected: true);
@@ -303,6 +303,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     isAnimatingCamera = true;
     setBusy(true);
     mapViewModel.updateMapDisplay(afkmarker: afkmarker);
+    mapViewModel.hideMarkerInfoWindowNow(markerId: afkmarker.id);
     await animateCameraToQuestMarkers();
     questFinished = true;
 
@@ -330,6 +331,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     await showSuccessDialog(collectCreditsStatus: collectCreditsStatus);
     // we need to do this because we set showDialogs == false above!
     activeQuestService.cleanUpFinishedQuest();
+    isAnimatingCamera = false;
     setBusy(false);
   }
 
@@ -391,25 +393,20 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       await Future.delayed(Duration(milliseconds: 600));
       await mapViewModel.animateNewLatLon(
           lat: nextMarker.lat!, lon: nextMarker.lon!);
-      if (currentQuest?.type == QuestType.GPSAreaHike ||
-          currentQuest?.type == QuestType.GPSAreaHunt) {
-        await Future.delayed(Duration(milliseconds: 400));
-        addNextArea(marker: nextMarker);
-        addNextMarker(marker: nextMarker);
-        showInfoWindowOfNextMarker(marker: nextMarker);
-        await mapViewModel.animateNewLatLonZoomDelta(
-            lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
-        await Future.delayed(Duration(
-            milliseconds: (400 * mapAnimationSpeedFraction()).round()));
-      } else {
-        if (currentQuest!.type == QuestType.QRCodeHike) {
-          await Future.delayed(Duration(milliseconds: 600));
-          showInfoWindowOfNextMarker(marker: nextMarker);
-          await Future.delayed(Duration(milliseconds: 600));
-        } else {
-          await Future.delayed(Duration(milliseconds: 1200));
-        }
-      }
+
+      await Future.delayed(Duration(milliseconds: 400));
+      addNextArea(marker: nextMarker);
+      addNextMarker(marker: nextMarker);
+
+      await mapViewModel.animateNewLatLonZoomDelta(
+          lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
+      await Future.delayed(
+          Duration(milliseconds: (400 * mapAnimationSpeedFraction()).round()));
+
+      // ! This needs to happen after notifyListeners() is called
+      // ! and the marker is on top of the map!
+      showInfoWindowOfNextMarker(marker: nextMarker);
+
       await mapViewModel.animateCameraToBetweenCoordinates(
         latLngList: [
           [previousMarker.lat!, previousMarker.lon!],

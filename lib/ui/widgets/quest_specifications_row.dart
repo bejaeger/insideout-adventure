@@ -34,9 +34,10 @@ class QuestSpecificationsRow extends StatelessWidget {
                 "~" +
                     (HerculesWorldCreditSystem
                                 .kSimpleDistanceMarkersToDistanceWalkScaling *
-                            quest!.distanceMarkers!)
-                        .toStringAsFixed(0) +
-                    "m",
+                            quest!.distanceMarkers! *
+                            0.001)
+                        .toStringAsFixed(1) +
+                    "km",
                 color: textColor ?? kcGreyTextColor,
                 //color: kcOrange,
               ),

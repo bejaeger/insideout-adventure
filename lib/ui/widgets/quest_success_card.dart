@@ -1,11 +1,14 @@
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
 class QuestSuccessCard extends StatelessWidget {
   final void Function() onContinuePressed;
+  final ActivatedQuest? finishedQuest;
   const QuestSuccessCard({
     Key? key,
     required this.onContinuePressed,
+    this.finishedQuest,
   }) : super(key: key);
 
   @override
@@ -28,19 +31,13 @@ class QuestSuccessCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-              "You mastered this mission!", // "You are the best, you successfully finished the quest",
-              textAlign: TextAlign.center,
-              style: textTheme(context).headline5),
+          AfkCreditsText.headingFour(
+            "You mastered this mission!", // "You are the best, you successfully finished the quest",
+          ),
           verticalSpaceMedium,
-          ElevatedButton(
-            onPressed: onContinuePressed,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Continue",
-              ),
-            ),
+          AfkCreditsButton(
+            onTap: onContinuePressed,
+            title: "Continue",
           ),
         ],
       ),

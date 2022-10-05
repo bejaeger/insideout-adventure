@@ -1,4 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
+import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/ui/views/map/avatar_and_effects_on_map_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -45,7 +46,8 @@ class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
           children: [
             // ripple effect when treasure location search is active!
             if (model.activeQuestNullable?.quest.type ==
-                QuestType.TreasureLocationSearch)
+                    QuestType.TreasureLocationSearch &&
+                model.activeQuestNullable?.status != QuestStatus.success)
               Positioned(
                 //alignment: Alignment(0, 0.4),
                 bottom: 105,

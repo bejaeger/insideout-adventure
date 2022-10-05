@@ -28,9 +28,9 @@ class NotCloseToQuestNote extends StatelessWidget {
   String _getInfoString(QuestType? questType) {
     if (questType == QuestType.GPSAreaHike ||
         questType == QuestType.QRCodeHike) {
-      return "Go to the green marker to start the quest.";
+      return "Move to the green marker and start the quest.";
     } else {
-      return "Go to the start marker.";
+      return "Move to the start.";
     }
   }
 
@@ -39,102 +39,88 @@ class NotCloseToQuestNote extends StatelessWidget {
     return ViewModelBuilder<NotCloseToQuestNoteViewModel>.reactive(
       viewModelBuilder: () => NotCloseToQuestNoteViewModel(),
       builder: (context, model, child) => Container(
-        // decoration: BoxDecoration(
-        //   color: kcCultured,
-        //   borderRadius: BorderRadius.circular(16.0),
-        // ),
-        //padding: const EdgeInsets.all(8.0),
-        //color: kcCultured,
-        height: 120,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        //height: 120,
+        decoration: BoxDecoration(
+          color: kcWhiteTextColor,
+          borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(),
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 2,
+                spreadRadius: 0.5,
+                offset: Offset(1, 1),
+                color: kcShadowColor),
+          ],
+        ),
+        padding:
+            const EdgeInsets.only(top: 15, right: 15, left: 15, bottom: 10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: kcCultured,
-                  borderRadius: BorderRadius.circular(16.0),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 0.4,
-                      spreadRadius: 0.5,
-                      offset: Offset(1, 1),
-                      color: kcShadowColor,
-                    )
-                  ],
-                ),
-                padding: const EdgeInsets.all(8.0),
-                child: AfkCreditsText.warn(
-                  "You are ${(model.distanceFromQuest * 0.001).toStringAsFixed(1)} km away. " +
-                      _getInfoString(questType),
-                  align: TextAlign.left,
-                ),
-              ),
+            Text(
+              "You are too far away!",
+              style: subheadingStyle.copyWith(color: kcRed),
             ),
-            horizontalSpaceMedium,
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
+            // AfkCreditsText.subheading(
+            //   "You are too far away!",
+            //   color: kcRed,
+            //   align: TextAlign.left,
+            // ),
+            verticalSpaceTiny,
+            AfkCreditsText.body(
+              "The start is ${(model.distanceFromQuest * 0.001).toStringAsFixed(1)} km away. ",
+              //_getInfoString(questType),
+              align: TextAlign.center,
+            ),
+            verticalSpaceSmall,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 if (animateCameraToUserPosition != null &&
                     animateCameraToQuestMarkers != null)
-                  Flexible(
-                    child: ElevatedButton(
-                      onPressed: model.launchMapsForNavigation,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.open_in_new),
-                          horizontalSpaceTiny,
-                          Text("Navigate"),
-                        ],
-                      ),
+                  Expanded(
+                    child: AfkCreditsButton.outline(
+                      height: 45,
+                      onTap: model.launchMapsForNavigation,
+                      leading: Icon(Icons.open_in_new, color: kcPrimaryColor),
+                      title: "Navigate",
                     ),
                   ),
-                verticalSpaceTiny,
-                Container(
-                  width: 160,
-                  child: model.questCenteredOnMap
-                      ? ElevatedButton(
-                          onPressed: () {
+                horizontalSpaceTiny,
+                model.questCenteredOnMap
+                    ? Expanded(
+                        child: AfkCreditsButton(
+                          height: 45,
+                          onTap: () {
                             animateCameraToUserPosition!();
                             model.activeQuestService.questCenteredOnMap = false;
                             model.notifyListeners();
                             return;
                           },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.my_location),
-                              horizontalSpaceTiny,
-                              Text("Your location"),
-                            ],
+                          leading: Icon(
+                            Icons.my_location,
+                            color: Colors.white,
                           ),
-                        )
-                      : ElevatedButton(
-                          onPressed: () {
+                          title: "Your location",
+                        ),
+                      )
+                    : Expanded(
+                        child: AfkCreditsButton(
+                          height: 45,
+                          onTap: () {
                             animateCameraToQuestMarkers!();
                             model.activeQuestService.questCenteredOnMap = true;
                             model.notifyListeners();
                             return;
                           },
-                          // () async {
-                          //   await model.animateCameraToQuestMarkers(
-                          //       controller!,
-                          //       delay: 0);
-                          //   model.questCenteredOnMap = true;
-                          //   model.notifyListeners();
-                          // },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.radar),
-                              horizontalSpaceTiny,
-                              Text("Quest location"),
-                            ],
+                          leading: Icon(
+                            Icons.radar,
+                            color: Colors.white,
                           ),
+                          title: "Quest location",
                         ),
-                ),
+                      ),
               ],
             ),
           ],
@@ -153,10 +139,10 @@ class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
 
   void launchMapsForNavigation() async {
     final res = await dialogService.showDialog(
-        title: "Open other app?",
+        title: "Open navigation app?",
         description: "Use external app for navigation",
-        cancelTitle: "NO",
-        buttonTitle: "YES");
+        cancelTitle: "Cancel",
+        buttonTitle: "Open app");
     if (res?.confirmed == false) {
       return;
     }
@@ -198,7 +184,7 @@ class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
 
   @override
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? onStartQuestCallback}) {
+      {required Quest? quest, void Function()? notifyParentCallback}) {
     // TODO: implement maybeStartQuest
     throw UnimplementedError();
   }

@@ -233,6 +233,8 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
         name: nameValue.toString(),
         description: descriptionValue.toString(),
         type: selectedQuestType,
+        repeatable:
+            selectedQuestType == QuestType.TreasureLocationSearch ? 0 : 1,
         markers: getAFKMarkers,
         afkCredits: afkCreditAmount,
         distanceMarkers: getTotalDistanceOfMarkers(),

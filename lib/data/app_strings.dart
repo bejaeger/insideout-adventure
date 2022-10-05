@@ -9,7 +9,7 @@ const String WarningNotNearbyMarker =
     "You are not close to the actual marker. ";
 
 const String WarningScannedMarkerAlreadyCollected =
-    "Your scanned marker has already been collected.";
+    "Marker has already been collected.";
 
 const String WarningNoQuestsDownloaded = "No quests found in this area.";
 

@@ -154,7 +154,7 @@ const double kInitialZoomAvatarView = 17.3;
 const double kInitialBearing = 0;
 const double kInitialTilt = 90;
 
-const double kMaxZoom = 19;
+const double kMaxZoom = 18;
 // const double kMaxZoom = 50;
 const double kInitialZoomBirdsView = 14;
 const double kMinZoomAvatarView = 17;

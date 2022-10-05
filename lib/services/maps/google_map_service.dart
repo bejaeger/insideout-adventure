@@ -147,28 +147,33 @@ class GoogleMapService {
   }
 
   // configures map marker
-  static void configureAndAddMapMarker(
-      {required Quest quest,
-      required AFKMarker afkmarker,
-      required Future Function() onTap,
-      bool isStartMarker = false,
-      bool completed = false}) {
+  static void configureAndAddMapMarker({
+    required Quest quest,
+    required AFKMarker afkmarker,
+    required Future Function() onTap,
+    bool isStartMarker = false,
+    bool completed = false,
+    String? infoWindowText,
+  }) async {
+    final icon = await defineMarkersColour(
+        quest: quest,
+        afkmarker: afkmarker,
+        completed: completed,
+        isStartMarker: isStartMarker);
     Marker marker = Marker(
       markerId: MarkerId(afkmarker
           .id), // google maps marker id of start marker will be our quest id
       position: LatLng(afkmarker.lat!, afkmarker.lon!),
       infoWindow: // isStartMarker
           //    ?
-          InfoWindow(
-              title: afkmarker == quest.startMarker
-                  ? "START HERE"
-                  : "NEXT CHECKPOINT"),
+          infoWindowText != null
+              ? InfoWindow(title: infoWindowText)
+              : InfoWindow(
+                  title: afkmarker == quest.startMarker
+                      ? "START HERE"
+                      : "NEXT CHECKPOINT"),
       //: InfoWindow.noText,
-      icon: defineMarkersColour(
-          quest: quest,
-          afkmarker: afkmarker,
-          completed: completed,
-          isStartMarker: isStartMarker),
+      icon: icon,
       onTap: () async {
         // needed to avoid navigating to that marker!
         dontMoveCamera();
@@ -297,20 +302,46 @@ class GoogleMapService {
 
   ///////////////////////////////////////////////////////////
   /// Map Style
-  static BitmapDescriptor defineMarkersColour({
+  static Future<BitmapDescriptor> defineMarkersColour({
     required AFKMarker afkmarker,
     required Quest? quest,
     required bool completed,
     required bool isStartMarker,
-  }) {
+  }) async {
     if (completed) {
-      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+      //late BitmapDescriptor icon;
+      if (quest?.type == QuestType.TreasureLocationSearch) {
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueViolet - 15);
+      } else {
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+      }
+      //   icon = await BitmapDescriptor.fromAssetImage(
+      //       ImageConfiguration(
+      //           platform: Platform.isAndroid
+      //               ? TargetPlatform.android
+      //               : TargetPlatform.iOS,
+      //           size: Size(4, 4)),
+      //       kSearchQuestIcon);
+      // } else {
+      // icon = await BitmapDescriptor.fromAssetImage(
+      //     ImageConfiguration(
+      //         platform: Platform.isAndroid
+      //             ? TargetPlatform.android
+      //             : TargetPlatform.iOS,
+      //         size: Size(4, 4)),
+      //     kAFKCreditsLogoSmallPathColored);
+      // return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
     } else {
       if (quest?.type == QuestType.QRCodeHike) {
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
       } else if (quest?.type == QuestType.TreasureLocationSearch) {
-        return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueViolet);
+        if (isStartMarker) {
+          return BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueViolet);
+        } else {
+          return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+        }
       } else {
         // GPS Hikes
         if (isStartMarker) {
@@ -351,15 +382,16 @@ class GoogleMapService {
 
   // update color of marker on map
   static void updateMapMarkers(
-      {required AFKMarker afkmarker, required bool collected}) {
+      {required AFKMarker afkmarker, required bool collected}) async {
+    final icon = await defineMarkersColour(
+        afkmarker: afkmarker,
+        quest: null,
+        completed: collected,
+        isStartMarker: false);
     markersOnMap = markersOnMap
         .map((item) => item.markerId == MarkerId(afkmarker.id)
             ? item.copyWith(
-                iconParam: defineMarkersColour(
-                    afkmarker: afkmarker,
-                    quest: null,
-                    completed: collected,
-                    isStartMarker: false),
+                iconParam: icon,
                 infoWindowParam: InfoWindow(title: "COLLECTED"))
             : item)
         .toSet();
@@ -419,6 +451,5 @@ Future<MapViewModel> presolveMapViewModel() async {
       hideMarkerInfoWindow: GoogleMapService.hideMarkerInfoWindow,
       animateCameraToBetweenCoordinates:
           GoogleMapService.animateCameraToBetweenCoordinates);
-
   return Future.value(_instance);
 }

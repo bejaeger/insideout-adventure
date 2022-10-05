@@ -23,7 +23,6 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final QRCodeService qrCodeService = locator<QRCodeService>();
-
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
   // ------------------------------------------

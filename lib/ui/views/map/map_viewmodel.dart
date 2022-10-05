@@ -14,6 +14,7 @@ import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/utils/utilities/utilities.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -65,7 +66,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   // last element of cameraBearingZoom determines whether listener should be fired!
 
-  // TODO: This function is called for the explorer!
+  // TODO: This function is only called for the explorer!
   Future initializeMapAndMarkers() async {
     if (!isParentAccount) {
       mapStyle = await rootBundle.loadString('assets/DayStyle.json');
@@ -359,18 +360,21 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     }
   }
 
-  void addMarkerToMap(
-      {required Quest quest,
-      required AFKMarker afkmarker,
-      Future Function()? onMarkerTapCustom,
-      Future Function(MarkerAnalysisResult)? handleMarkerAnalysisResultCustom,
-      bool isStartMarker = false,
-      bool completed = false}) {
+  void addMarkerToMap({
+    required Quest quest,
+    required AFKMarker afkmarker,
+    Future Function()? onMarkerTapCustom,
+    Future Function(MarkerAnalysisResult)? handleMarkerAnalysisResultCustom,
+    bool isStartMarker = false,
+    bool completed = false,
+    String? infoWindowText,
+  }) {
     configureAndAddMapMarker(
       quest: quest,
       afkmarker: afkmarker,
       completed: completed,
       isStartMarker: isStartMarker,
+      infoWindowText: infoWindowText,
       onTap: onMarkerTapCustom != null
           ? () => onMarkerTapCustom()
           : () => onMarkerTap(
@@ -424,25 +428,25 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
     // ---------------------------------------------
     // If quest is completed we need to check whether quest can be redone or not!
-    if (completed) {
-      if (quest.repeatable == 0) {
-        await dialogService.showDialog(
-            title: "Quest already completed!",
-            description: "You cannot redo this quest.",
-            buttonTitle: 'OK');
-        return;
-      } else {
-        final result = await dialogService.showDialog(
-            title: "Redo quest?",
-            description: "You already completed this quest",
-            cancelTitle: "NO",
-            buttonTitle: 'YES');
-        if (!(result?.confirmed == true)) {
-          hideMarkerInfoWindowNow(markerId: afkmarker.id);
-          return;
-        }
-      }
-    }
+    // if (completed) {
+    //   if (quest.repeatable == 0) {
+    //     await dialogService.showDialog(
+    //         title: "Quest already completed!",
+    //         description: "You cannot redo this quest.",
+    //         buttonTitle: 'OK');
+    //     return;
+    //   } else {
+    //     final result = await dialogService.showDialog(
+    //         title: "Redo quest?",
+    //         description: "You already completed this quest",
+    //         cancelTitle: "NO",
+    //         buttonTitle: 'YES');
+    //     if (!(result?.confirmed == true)) {
+    //       hideMarkerInfoWindowNow(markerId: afkmarker.id);
+    //       return;
+    //     }
+    //   }
+    // }
 
     // ------------------------------------------------
     // normal function to be executed when marker is tapped
@@ -460,29 +464,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
             );
           }
 
-          // Show dialog for information
-          // ? Needs to happen AFTER animateToQuestDetails is called
-          if (selectedQuest != null && quest.type == QuestType.GPSAreaHike ||
-              quest.type == QuestType.GPSAreaHunt) {
-            // need to avoid navigating to that marker!
-
-            // When quest is running
-            if (!useSuperUserFeatures || adminMode == false) {
-              if (hasActiveQuest) {
-                await dialogService.showDialog(
-                    title: "You started here",
-                    description: "This was the beginning");
-              } else {
-                if (!isAvatarView && isShowingQuestDetails) {
-                  await dialogService.showDialog(
-                      title: "The start",
-                      description:
-                          "Move to this location and start the quest.");
-                }
-              }
-            }
-          }
-
+          // if we are in avatarView we don't show the bottom sheet and directly
+          // animate to the quest.
           if (result?.confirmed == true || isAvatarView) {
             // showQuestDetails
             animateToQuestDetails(quest: quest);
@@ -545,15 +528,15 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     }
   }
 
-  // TODO: This needs to become more advanced!
   void animateToQuestDetails({required Quest quest}) async {
-    if (isShowingQuestDetails) return; // we already show the quest details
+    if (isShowingQuestDetails) {
+      log.w(
+          "for some reason we already show the quest details. Should not happen");
+      return;
+    }
 
     // take snapshot so we can easily restore current view
     takeSnapshotOfCameraPosition();
-
-    // Show marker info
-    showMarkerInfoWindowNow(markerId: quest.startMarker?.id);
 
     // animate camera to quest start
     animateMapToQuest(quest: quest);
@@ -564,6 +547,37 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   void animateMapToQuest({required Quest quest}) async {
+    if (isParentAccount) {
+      animateMapToQuestParentAccount(quest: quest);
+    } else {
+      animateMapToQuestChildAccount(quest: quest);
+    }
+  }
+
+  // animates map so that all markers are visible and the
+  // marker info is shown so that parents can see what
+  // the quest will be like!
+  void animateMapToQuestParentAccount({required Quest quest}) async {
+    log.v("Animating map to quest markers in parent account");
+    // if (quest.type == QuestType.TreasureLocationSearch) {
+
+    // We want to navigate to the map
+    resetMapMarkers();
+    addAllMarkersNumbered(quest: quest);
+    animateCameraToBetweenQuestMarkers(quest: quest);
+    await Future.delayed(
+        Duration(milliseconds: (800 * mapAnimationSpeedFraction()).round()));
+    showMarkerInfoWindowNumbers(quest: quest);
+
+    // ! this notifyListeners does not work in parent account
+    // ! Need to call notifyListenesr in parent_map_viewmodel.dart
+    // notifyListeners();
+  }
+
+  void animateMapToQuestChildAccount({required Quest quest}) async {
+    // Show marker info
+    showMarkerInfoWindowNow(markerId: quest.startMarker?.id);
+
     // ----------------------------------
     // -->> START TreasureLocationSearch Quest Section
     if (quest.type == QuestType.TreasureLocationSearch) {
@@ -592,11 +606,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         quest.type == QuestType.GPSAreaHike) {
       // ? Map animation is handled in initializer of gps_area_hike_viewmodel.dart (overlay viewmodel)
       // ? Because we need quest information there
-      // ? Should I do it here instead?
-      // ONLY markers relevant to quest
 
       // this is however still needed here. Not exactly clear why
-
       // need this slight delay for better navigation
       // risky cause when user immediately taps close we are in camera nirvana
       await Future.delayed(Duration(milliseconds: 300));
@@ -606,24 +617,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       // ? Cannot add the markers here because we need a custom function for
       // ? handleMarkerAnalysisResult
       // ? All handled in gps_area_hike_viewmodel.dart
-
-      // if (quest.startMarker != null) {
-      //   resetMapMarkers();
-      //   // add start marker & area
-      //   addMarkerToMap(
-      //       quest: quest,
-      //       afkmarker: quest.startMarker!,
-      //       isStartMarker: true,
-      //       handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
-      //   addAreaToMap(
-      //       quest: quest, afkmarker: quest.startMarker!, isStartArea: true);
-      //   // add other potential markers and areas
-      //   addMarkers(
-      //       quest: quest,
-      //       handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
-      //   addAreas(quest: quest);
-      // }
-      // notifyListeners();
 
       // <<-- END Hike Quest
       // ---------------------------------------------
@@ -655,6 +648,35 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     }
   }
 
+  void addAllMarkersNumbered({required Quest quest}) async {
+    int counter = 0;
+    for (AFKMarker m in quest.markers) {
+      counter += 1;
+      addMarkerToMap(
+        quest: quest,
+        afkmarker: m,
+        isStartMarker: m == quest.startMarker,
+        infoWindowText: m == quest.startMarker
+            ? "Start"
+            : counter == quest.markers.length
+                ? quest.type == QuestType.TreasureLocationSearch
+                    ? "Finish, not visible to children"
+                    : "Finish"
+                : "Checkpoint $counter",
+      );
+    }
+  }
+
+  void showMarkerInfoWindowNumbers({required Quest quest}) async {
+    // Wait to first show markers on map after notifyListeners() has benn
+    // called in the relevant viewmodel (e.g. parent_home_viewmodel)
+    // show this three times...why not?
+    for (AFKMarker m in quest.markers) {
+      showMarkerInfoWindow(markerId: m.id);
+      await Future.delayed(Duration(milliseconds: 1000));
+    }
+  }
+
   void showMarkerInfoWindowNow({required String? markerId}) {
     showMarkerInfoWindow(markerId: markerId);
     // needed to show info window and also next marker
@@ -664,6 +686,42 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   void hideMarkerInfoWindowNow({required String? markerId}) {
     hideMarkerInfoWindow(markerId: markerId);
     notifyListeners();
+  }
+
+  void animateCameraToBetweenQuestMarkers({required Quest quest}) {
+    // animate camera so that markers are shown:
+    List<List<double>> latLngListToAnimate =
+        quest.markers.map((m) => [m.lat!, m.lon!]).toList();
+    // add ghost latLong positions (in-place) to avoid  zooming
+    // too far if only two positions very close by are shown!
+    // TODO: Could add more ghost markers this cause sometimes the zoom is too much
+    // TODO:  e.g. if line between markers is parallel to the north-south direction
+    potentiallyAddGhostLatLng(latLngList: latLngListToAnimate);
+
+    Future.delayed(
+      Duration(milliseconds: 0),
+      () => animateCameraToBetweenCoordinates(latLngList: latLngListToAnimate),
+    );
+  }
+
+  // if only two locations are shown we want to provide more padding on the
+  // screen and therefore add ghost markers!
+  void potentiallyAddGhostLatLng({required List<List<double>> latLngList}) {
+    if (latLngList.length == 2) {
+      if (geolocationService.distanceBetween(
+              lat1: latLngList[0][0],
+              lon1: latLngList[0][1],
+              lat2: latLngList[1][0],
+              lon2: latLngList[1][1]) <
+          150) {
+        // add ghost latLng positions for padding of camera!
+        latLngList.add(geolocationService.getLatLngShiftedLonInList(
+            latLng: latLngList[0], offset: 80));
+        latLngList.add(geolocationService.getLatLngShiftedLonInList(
+            latLng: latLngList[0], offset: -80));
+        // getLatLngShiftedLatInList
+      }
+    }
   }
 
   void updateMapDisplay({required AFKMarker? afkmarker}) {
@@ -793,7 +851,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       await showCollectedMarkerDialog();
       // TODO: setIsFadingOutOverlay set to false twice. Not exactly sure if that is intended
       layoutService.setIsFadingOutOverlay(false);
-      restorePreviousCameraPosition(moveInsteadOfAnimate: true);
+      restorePreviousCameraPositionAndAnimate(moveInsteadOfAnimate: true);
       await Future.delayed(Duration(milliseconds: 200));
       layoutService.setIsFadingOutOverlay(false);
       return true;
@@ -847,12 +905,14 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       required double lat,
       required double lon,
       bool? force}) animateCamera;
-  final void Function(
-      {required Quest quest,
-      required AFKMarker afkmarker,
-      required Future Function() onTap,
-      bool isStartMarker,
-      bool completed}) configureAndAddMapMarker;
+  final void Function({
+    required Quest quest,
+    required AFKMarker afkmarker,
+    required Future Function() onTap,
+    bool isStartMarker,
+    bool completed,
+    String? infoWindowText,
+  }) configureAndAddMapMarker;
   final void Function(
       {required Quest quest,
       required AFKMarker afkmarker,
