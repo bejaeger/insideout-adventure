@@ -51,17 +51,17 @@ class SectionHeader extends StatelessWidget {
                     .clamp(0, 10000),
                 vertical: ((verticalPadding ?? kVerticalPadding) - 8.0)
                     .clamp(0, 10000)),
-            child: GestureDetector(
-              onTap: onButtonTap,
-              child: Container(
-                padding: const EdgeInsets.all(8.0),
-                child: buttonIcon ??
-                    Icon(
+            child: IconButton(
+              onPressed: onButtonTap,
+              icon: buttonIcon ??
+                  Container(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
                       Icons.arrow_forward_ios_rounded,
                       size: 20,
                       color: kcBlackHeadlineColor.withOpacity(titleOpacity),
                     ),
-              ),
+                  ),
             ),
           ),
         if (otherTrailingIcon != null) otherTrailingIcon!,

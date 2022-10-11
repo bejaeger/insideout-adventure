@@ -145,7 +145,7 @@ class ChildStatsCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AfkCreditsText.screenTimeWarn("Screen time active"),
-                            AfkCreditsText.screenTimeWarn("-"),
+                            AfkCreditsText.screenTimeWarn(" "),
                             AfkCreditsText.screenTimeWarn(secondsToMinuteTime(
                                   getTimeLeftInSeconds(
                                       session: screenTimeSession!),

@@ -92,15 +92,15 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
 
     // ----------------------------------------------
     // prepare feedback file and upload to firestore
-    FeedbackCampaignInfo campaignInfo =
-        await _feedbackService.loadFeedbackCampaignInfo();
+
+    await _feedbackService.loadFeedbackCampaignInfo();
     String deviceInfo = await _feedbackService.getDeviceInfoString();
     Feedback feedback = Feedback(
       uid: _userService.currentUser.uid,
       userName: _userService.currentUser.fullName,
       feedback: feedbackValue!,
-      questions: campaignInfo.questions,
-      campaign: campaignInfo.currentCampaign,
+      questions: feedbackCampaignInfo?.questions ?? [""],
+      campaign: feedbackCampaignInfo?.currentCampaign ?? "",
       imageFileName: result?.imageFileName,
       imageUrl: result?.imageUrl,
       deviceInfo: deviceInfo,
@@ -110,7 +110,7 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
           feedback: feedback,
           currentFeedbackDocumentKey: generalFeedback
               ? generalFeedbackDocumentKey
-              : campaignInfo.currentCampaign);
+              : feedbackCampaignInfo?.currentCampaign);
     } catch (e) {
       log.e("Error uploading feedback. Error: $e");
       await _dialogService.showDialog(
