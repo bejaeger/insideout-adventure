@@ -3,6 +3,7 @@ import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
+import 'package:afkcredits/ui/widgets/screen_time_notifications_note.dart';
 import 'package:afkcredits/ui/widgets/simple_statistics_display.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -30,15 +31,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                 ScreenTimeSessionStatus.active;
         return WillPopScope(
           onWillPop: () async {
-            model.resetStopWatch();
-            if (model.justStartedListeningToScreenTime) {
-              // this is needed so that new state listeners are being started
-              // in home views!
-              model.cancelOnlyActiveScreenTimeSubjectListeners(
-                  uid: session.uid);
-              model.clearStackAndNavigateToHomeView();
-              return false;
-            }
+            model.resetActiveScreenTimeView(uid: session.uid);
             return true;
           },
           child: SafeArea(
@@ -67,37 +60,22 @@ class ActiveScreenTimeView extends StatelessWidget {
                               children: [
                                 Align(
                                   alignment: Alignment.centerLeft,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      model.resetStopWatch();
-                                      if (model
-                                          .justStartedListeningToScreenTime) {
-                                        // this is needed so that new state listeners are being started
-                                        // in home views!
-                                        model
-                                            .cancelOnlyActiveScreenTimeSubjectListeners(
-                                                uid: session.uid);
-                                        model.clearStackAndNavigateToHomeView();
-                                        return;
-                                      }
-                                      model.popView();
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child:
-                                          Icon(Icons.close_rounded, size: 30),
-                                    ),
+                                  child: IconButton(
+                                    onPressed: () =>
+                                        model.resetActiveScreenTimeView(
+                                            uid: session.uid),
+                                    icon: Icon(Icons.arrow_back_ios, size: 26),
                                   ),
                                 ),
                                 Column(
                                   children: [
+                                    // Center(
+                                    //   child: AfkCreditsText.headingTwo(
+                                    //       "Active screen time"),
+                                    // ),
+                                    verticalSpaceSmall,
                                     Center(
                                       child: AfkCreditsText.headingTwo(
-                                          "Active screen time"),
-                                    ),
-                                    verticalSpaceMedium,
-                                    Center(
-                                      child: AfkCreditsText.subheadingItalic(
                                           !model.isParentAccount
                                               ? "Woop woop, enjoy time on the screen!"
                                               : model.childName +
@@ -124,26 +102,46 @@ class ActiveScreenTimeView extends StatelessWidget {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
-                                        Image.asset(kScreenTimeIcon,
-                                            width: 35, color: kcScreenTimeBlue),
+                                        // Column(
+                                        //   children: [
+                                        //     Image.asset(kScreenTimeIcon,
+                                        //         width: 45,
+                                        //         color: kcScreenTimeBlue),
+                                        //   ],
+                                        // ),
                                         horizontalSpaceSmall,
                                         !(model.screenTimeLeft is int)
                                             ? AFKProgressIndicator(
                                                 color: kcScreenTimeBlue)
-                                            : AfkCreditsText.headingTwo(
+                                            : Text(
                                                 secondsToMinuteSecondTime(
                                                     model.screenTimeLeft),
-                                              )
+                                                style: heading2Style.copyWith(
+                                                    fontSize: 40)),
+                                        // AfkCreditsText.headingTwo(
+                                        //     secondsToMinuteSecondTime(
+                                        //         model.screenTimeLeft),
+                                        //   ),
                                         // : SizedBox(height: 0, width: 0)
+                                        Column(
+                                          children: [
+                                            AfkCreditsText.body(
+                                                "  / ${session.minutes} min",
+                                                color: kcBlackHeadlineColor),
+                                            SizedBox(height: 8),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                    verticalSpaceSmall,
-                                    AfkCreditsText.body("Total length"),
-                                    verticalSpaceTiny,
-                                    AfkCreditsText.bodyBold(
-                                        "${session.minutes} min",
-                                        color: kcBlackHeadlineColor),
+                                    // verticalSpaceSmall,
+                                    // AfkCreditsText.body("Total length"),
+                                    // verticalSpaceTiny,
+                                    // AfkCreditsText.bodyBold(
+                                    //     "${session.minutes} min",
+                                    //     color: kcBlackHeadlineColor),
                                   ],
                                 ),
                               ],
@@ -195,15 +193,13 @@ class ActiveScreenTimeView extends StatelessWidget {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     SimpleStatisticsDisplay(
-                                        statistic: formatDateDetailsType6(model
-                                            .expiredScreenTime!.startedAt
-                                            .toDate()),
+                                        statistic: formatDateDetailsType6(
+                                            model.getStartedAt()),
                                         title: "Started",
                                         showScreenTimeIcon: false),
                                     SimpleStatisticsDisplay(
                                       statistic: formatDateDetailsType6(model
-                                          .expiredScreenTime!.startedAt
-                                          .toDate()
+                                          .getStartedAt()
                                           .add(Duration(
                                               minutes: (model.expiredScreenTime!
                                                       .minutesUsed ??
@@ -244,10 +240,12 @@ class ActiveScreenTimeView extends StatelessWidget {
                             ),
                     if (!showStats) Spacer(),
                     if (!showStats)
-                      Lottie.asset(
-                        kLottieBigTv,
-                        height: screenHeight(context, percentage: 0.25),
-                      ),
+                      model.isParentAccount
+                          ? ScreenTimeNotificationsNote()
+                          : Lottie.asset(
+                              kLottieBigTv,
+                              height: screenHeight(context, percentage: 0.25),
+                            ),
                     Spacer(),
                     if (showStats && model.isParentAccount)
                       AfkCreditsButton.text(
@@ -266,7 +264,8 @@ class ActiveScreenTimeView extends StatelessWidget {
                         onTap: model.currentScreenTimeSession?.status ==
                                 ScreenTimeSessionStatus.active
                             ? () => model.stopScreenTime(session: model.session)
-                            : model.replaceWithHomeView,
+                            : () => model.resetActiveScreenTimeView(
+                                uid: session.uid),
                         title: model.currentScreenTimeSession?.status ==
                                 ScreenTimeSessionStatus.active
                             ? "Stop screen time"

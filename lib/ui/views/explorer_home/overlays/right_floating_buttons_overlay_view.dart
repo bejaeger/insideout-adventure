@@ -42,17 +42,13 @@ class RightFloatingButtonsView extends StatelessWidget {
                 //color: Colors.red,
                 padding: const EdgeInsets.only(
                     right: 15, bottom: 8.0, top: 8.0, left: 8.0),
-                child: AnimatedOpacity(
-                  opacity: (model.bearing > 5 || model.bearing < -5) ? 1 : 1,
-                  duration: Duration(milliseconds: 500),
-                  child: GestureDetector(
-                    onTap: model.rotateToNorth, //onCompassTap,
-                    child: Transform.rotate(
-                      angle: model.angle,
-                      child: Image.asset(
-                        kCompassIcon,
-                        height: 38,
-                      ),
+                child: GestureDetector(
+                  onTap: model.rotateToNorth, //onCompassTap,
+                  child: Transform.rotate(
+                    angle: model.angle,
+                    child: Image.asset(
+                      kCompassIcon,
+                      height: 38,
                     ),
                   ),
                 ),

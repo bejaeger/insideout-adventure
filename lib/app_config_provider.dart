@@ -19,9 +19,14 @@ class AppConfigProvider {
   // dummy checks for quest completion for testing purposes
   bool dummyQuestCompletionVerification = false;
 
-// variable that is set when the app starts to check whether
-// AR functionality is available or not (defaults to false)
+  // variable that is set when the app starts to check whether
+  // AR functionality is available or not (defaults to false)
   bool isARAvailable = false;
+  bool isUsingAR = false;
+
+  // On older phones the lottie effects lead to huge lags.
+  // This provides an option to avoid showing the lottie effects!
+  bool isShowAvatarAndMapEffects = true;
 
   Flavor flavor = Flavor.unknown;
   void configure(Flavor flavorIn) {
@@ -45,6 +50,14 @@ class AppConfigProvider {
 
   void setIsARAvailable(bool set) {
     isARAvailable = set;
+  }
+
+  void setIsUsingAR(bool set) {
+    isUsingAR = set;
+  }
+
+  void setIsShowingAvatarAndMapEffects(bool set) {
+    isShowAvatarAndMapEffects = set;
   }
 
   String getTestUserEmail(UserRole? role) {

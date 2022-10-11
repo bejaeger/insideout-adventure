@@ -21,8 +21,8 @@ class NotificationsService {
   Future createPermanentNotification(
       {required String title,
       required String message,
+      required int id,
       required ScreenTimeSession session}) async {
-    int id = createUniqueId();
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: id,
@@ -42,9 +42,6 @@ class NotificationsService {
             key: kScheduledNotificationActionKey, label: "Close")
       ],
     );
-    await _localStorageService.saveToDisk(
-        key: getPermanentNotificationKeyFromSessionId(session.sessionId),
-        value: id.toString());
   }
 
   Future createScheduledNotification({
@@ -52,15 +49,15 @@ class NotificationsService {
     required String message,
     required DateTime date,
     required ScreenTimeSession session,
+    required int id,
   }) async {
-    int id = createUniqueId();
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         payload:
             // set completed here already so we can react to it in the notification received action function.
             getStringMapFromSession(
-                session: session.copyWith(
-                    status: ScreenTimeSessionStatus.completed)),
+          session: session.copyWith(status: ScreenTimeSessionStatus.completed),
+        ),
         id: id,
         groupKey: id.toString(),
         channelKey: kScheduledNotificationChannelKey,
@@ -81,9 +78,6 @@ class NotificationsService {
             key: kScheduledNotificationActionKey, label: "Show details")
       ],
     );
-    await _localStorageService.saveToDisk(
-        key: getScheduledNotificationKeyFromSessionId(session.sessionId),
-        value: id.toString());
   }
 
   Future maybeCreatePermanentIsUsingScreenTimeNotification(
@@ -98,11 +92,15 @@ class NotificationsService {
     }
     DateTime endDate =
         getEndDate(startedAt: session.startedAt, minutes: session.minutes);
-
+    int id = createUniqueId();
+    await _localStorageService.saveToDisk(
+        key: getPermanentNotificationKeyFromSessionId(session.sessionId),
+        value: id.toString());
     await NotificationsService().createPermanentNotification(
       title: "Screen time until " + formatDateToShowTime(endDate),
       message:
           session.userName + " is using ${session.minutes} min screen time",
+      id: id,
       session: session,
     );
   }
@@ -118,11 +116,16 @@ class NotificationsService {
     }
     DateTime endDate =
         getEndDate(startedAt: session.startedAt, minutes: session.minutes);
+    int id = createUniqueId();
+    await _localStorageService.saveToDisk(
+        key: getScheduledNotificationKeyFromSessionId(session.sessionId),
+        value: id.toString());
     await NotificationsService().createScheduledNotification(
       title: session.userName + "'s screen time expired",
       message: session.userName +
-          "'s ${session.minutes} min screen time is over. ${session.userName} can collect more credits for more screen time :)",
+          "'s ${session.minutes} min screen time is over. Let your child collect more credits for more screen time :)",
       date: endDate,
+      id: id,
       session: session,
     );
   }

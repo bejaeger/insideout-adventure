@@ -67,14 +67,17 @@ void mainCommon(Flavor flavor) async {
       // await ArCoreController.checkArCoreAvailability() &&
       // await ArCoreController.checkIsArCoreInstalled()) {
       appConfigProvider.setIsARAvailable(false);
+      appConfigProvider.setIsUsingAR(false);
     } else {
       if (await ARKitPlugin.checkConfiguration(
               ARKitConfiguration.worldTracking) &&
           await ARKitPlugin.checkConfiguration(
               ARKitConfiguration.imageTracking)) {
         appConfigProvider.setIsARAvailable(true);
+        appConfigProvider.setIsUsingAR(true);
       } else {
         appConfigProvider.setIsARAvailable(false);
+        appConfigProvider.setIsUsingAR(false);
       }
     }
 

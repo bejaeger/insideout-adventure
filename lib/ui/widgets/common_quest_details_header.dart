@@ -1,3 +1,4 @@
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
@@ -10,12 +11,16 @@ class CommonQuestDetailsHeader extends StatelessWidget {
   final void Function()? openSuperUserSettingsDialog;
   final void Function(QuestType?) showInstructionsDialog;
   final Quest? quest;
+  final ActivatedQuest? finishedQuest;
+  final bool completed;
   const CommonQuestDetailsHeader({
     Key? key,
     required this.quest,
     this.hasActiveQuest = false,
     this.openSuperUserSettingsDialog,
     required this.showInstructionsDialog,
+    this.finishedQuest,
+    this.completed = false,
   }) : super(key: key);
 
   @override
@@ -62,16 +67,11 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(
                             bottom: hasActiveQuest ? 4.0 : 0,
-                            right: hasActiveQuest ? 45.0 : 0),
-                        child: GestureDetector(
-                          onTap: () => showInstructionsDialog(quest?.type),
-                          //title: "Tutorial",
-                          //color: kPrimaryColor.withOpacity(0.7),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.help_outline,
-                                color: Colors.black, size: 30),
-                          ),
+                            right: hasActiveQuest ? 50.0 : 0),
+                        child: IconButton(
+                          icon: Icon(Icons.help_outline,
+                              color: Colors.black, size: 30),
+                          onPressed: () => showInstructionsDialog(quest?.type),
                         ),
                       ),
                   ],
@@ -91,10 +91,15 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                       AfkCreditsText.headingThree("-"),
                       horizontalSpaceSmall,
                       Expanded(
-                        child: Text(quest?.name ?? "QUEST",
-                            style: heading3Style.copyWith(
-                                overflow: TextOverflow.ellipsis),
-                            maxLines: 2),
+                        child: Text(
+                          quest?.name ?? "QUEST",
+                          style: heading3Style.copyWith(
+                              // decoration: finishedQuest != null
+                              //     ? TextDecoration.lineThrough
+                              //     : null,
+                              overflow: TextOverflow.ellipsis),
+                          maxLines: 2,
+                        ),
                       ),
                     ],
                   ),
@@ -104,6 +109,17 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 4.0),
                     child: QuestSpecificationsRow(quest: quest),
+                  ),
+                if (finishedQuest != null || completed)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Completed",
+                      style: heading3Style.copyWith(
+                          color: kcPrimaryColor,
+                          overflow: TextOverflow.ellipsis),
+                      maxLines: 2,
+                    ),
                   ),
               ],
             ),

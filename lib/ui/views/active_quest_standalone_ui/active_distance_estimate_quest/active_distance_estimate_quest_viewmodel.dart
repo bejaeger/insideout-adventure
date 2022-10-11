@@ -126,7 +126,7 @@ class ActiveDistanceEstimateQuestViewModel extends ActiveQuestBaseViewModel {
   @override
   bool isQuestCompleted(
       {double distanceTravelled = 0, double distanceToTravel = 999999}) {
-    if (flavorConfigProvider.dummyQuestCompletionVerification) {
+    if (appConfigProvider.dummyQuestCompletionVerification) {
       return true;
     } else {
       return (distanceTravelled >

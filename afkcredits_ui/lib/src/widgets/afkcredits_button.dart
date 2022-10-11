@@ -106,7 +106,7 @@ class AfkCreditsButton extends StatelessWidget {
                   if (title != "")
                     Text(
                       title,
-                      style: bodyStyle.copyWith(
+                      style: bodyStyleSofia.copyWith(
                         fontWeight: (!outline || enabled || textButton)
                             ? FontWeight.bold
                             : FontWeight.w400,

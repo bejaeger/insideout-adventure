@@ -60,7 +60,7 @@ class BottomFloatingActionButtons extends StatelessWidget {
                   ? AfkCreditsButton(
                       title: titleSecondary!,
                       leading: leadingSecondary,
-                      onTap: onTapSecondary,
+                      onTap: busySecondary ? null : onTapSecondary,
                       disabled: onTapSecondary == null,
                       busy: busySecondary,
                     )

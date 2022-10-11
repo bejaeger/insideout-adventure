@@ -41,7 +41,7 @@ class PermissionsViewModel extends BaseModel {
 
     // - camera service
     // Not used at the moment!
-    allGood = allGood & await handleCameraPermissions();
+    // allGood = allGood & await handleCameraPermissions();
 
     // - activity service
     // Not used at the moment!
@@ -112,7 +112,6 @@ class PermissionsViewModel extends BaseModel {
     return true;
   }
 
-  // ? Not used at the moment
   Future handleCameraPermissions() async {
     var status = await Permission.camera.status;
     log.v("camera permissions: $status");

@@ -9,6 +9,7 @@ class FeedbackCampaignInfo with _$FeedbackCampaignInfo {
     required String currentCampaign,
     required List<String> questions,
     required String surveyUrl,
+    List<String>? takenByUserWithUids,
   }) = _FeedbackCampaignInfo;
 
   factory FeedbackCampaignInfo.fromJson(Map<String, dynamic> json) =>

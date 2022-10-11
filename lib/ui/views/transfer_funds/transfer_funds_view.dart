@@ -42,7 +42,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
             children: [
               verticalSpaceMedium,
               AfkCreditsText.subheadingItalic(
-                  "How many credits do you want to add to ${recipientInfo.name}?"),
+                  "How many credits do you want to add to ${recipientInfo.name}'s account?"),
               verticalSpaceMedium,
               Row(
                 children: [

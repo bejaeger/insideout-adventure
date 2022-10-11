@@ -4,6 +4,7 @@ import 'package:afkcredits/ui/views/map/avatar_and_effects_on_map_viewmodel.dart
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:stacked/stacked.dart';
@@ -23,26 +24,37 @@ class AvatarAndEffectsOnMapView extends StatefulWidget {
 class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
+  late final AnimationController _controllerRipple;
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    // durations will be overwritten
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _controllerRipple =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _controllerRipple.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AvatarAndEffectsOnMapViewModel>.reactive(
-      viewModelBuilder: () => AvatarAndEffectsOnMapViewModel(
-        stopAnimation: () => _controller.stop(),
-        startAnimation: () => _controller.repeat(),
-      ),
-      onModelReady: (model) => model.listenToData(),
+      viewModelBuilder: () => AvatarAndEffectsOnMapViewModel(stopAnimation: () {
+        _controller.stop();
+        _controllerRipple.stop();
+      }, startAnimation: () {
+        _controller.repeat();
+        _controllerRipple.repeat();
+      }),
+      onModelReady: (model) {
+        model.listenToData();
+      },
       builder: (context, model, child) {
         return Stack(
           children: [
@@ -58,10 +70,17 @@ class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
                 child: IgnorePointer(
                   child: Lottie.asset(
                     kLottieRippleEffect,
-                    controller: _controller,
+                    controller: _controllerRipple,
                     height: 200,
                     width: 200,
-                    frameRate: FrameRate.max,
+                    onLoaded: (composition) {
+                      // Configure the AnimationController with the duration of the
+                      // Lottie file and start the animation.
+                      _controllerRipple
+                        ..duration = composition.duration
+                        ..repeat();
+                    },
+                    //frameRate: FrameRate.max,
                   ),
                 ),
               ),
@@ -82,12 +101,11 @@ class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
                       widget.avatarIdx == 1
                           ? kLottieChillDude
                           : kLottieWalkingGirl,
-                      frameRate: FrameRate.max,
+                      //frameRate: FrameRate.max,
                       controller: _controller,
                       onLoaded: (composition) {
                         // Configure the AnimationController with the duration of the
                         // Lottie file and start the animation.
-                        // TODO: Understand this line of code
                         _controller
                           ..duration = composition.duration
                           ..repeat();

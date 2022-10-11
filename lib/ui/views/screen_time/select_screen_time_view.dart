@@ -1,11 +1,9 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 import 'package:stacked/stacked.dart';
 
@@ -60,45 +58,45 @@ class SelectScreenTimeView extends StatelessWidget {
                 height: 1000 + screenHeight(context, percentage: 0.15),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // AfkCreditsText.headingOne("Screen time"),
                     if (model.isParentAccount)
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: GestureDetector(
-                          onTap: () {
-                            model.popView();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                right: 8.0, top: 8.0, bottom: 8.0),
-                            child: Icon(Icons.arrow_back_ios, size: 26),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                            onPressed: model.popView,
+                            icon: Icon(Icons.arrow_back_ios, size: 26),
                           ),
                         ),
                       ),
+                    verticalSpaceSmall,
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AfkCreditsText.headingTwo(
                             model.isParentAccount
-                                ? "Select screen time"
+                                ? "Choose time for " +
+                                    model.userService
+                                        .explorerNameFromUid(childId!)
                                 : "Get your well-deserved screen time",
                             align: TextAlign.center),
                       ],
                     ),
                     verticalSpaceMedium,
-                    if (screenHeight(context) > 660)
-                      Center(
-                        child: Lottie.asset(kLottieBigTv,
-                            height: screenHeight(context, percentage: 0.15)),
-                      ),
+                    // if (screenHeight(context) > 660)
+                    //   Center(
+                    //     child: Lottie.asset(kLottieBigTv,
+                    //         height: screenHeight(context, percentage: 0.15)),
+                    //   ),
                     //  'https://assets8.lottiefiles.com/packages/lf20_l3jzffol.json',
-                    verticalSpaceSmall,
+                    Spacer(),
                     AfkCreditsText.body("Total available"),
                     verticalSpaceTiny,
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Hero(
                         //   tag: "CREDITS",
@@ -124,11 +122,11 @@ class SelectScreenTimeView extends StatelessWidget {
                             model.totalAvailableScreenTime.toString() + " min"),
                       ],
                     ),
+                    verticalSpaceMedium,
                     //Icon(Icons.arrow_downward_rounded, size: 40),
-                    Spacer(),
                     AfkCreditsText.body("Selected"),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       //crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AfkCreditsText(
@@ -138,6 +136,7 @@ class SelectScreenTimeView extends StatelessWidget {
                         // Icon(Icons.arrow_forward, size: 22),
                         horizontalSpaceSmall,
                         AfkCreditsText.headingFourLight("="),
+                        //Icon(Icons.arrow_right_alt, size: 20),
                         // //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
                         horizontalSpaceSmall,
                         Image.asset(kAFKCreditsLogoPath,
@@ -152,16 +151,17 @@ class SelectScreenTimeView extends StatelessWidget {
                         //     height: 40),
                       ],
                     ),
+                    Spacer(),
                     Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: Alignment.center,
                       child: GestureDetector(
                         onTap: () => model.selectCustomScreenTime(),
                         child: Container(
                           //color: Colors.red,
                           width: 180,
                           padding: const EdgeInsets.only(
-                              top: 10, bottom: 15, left: 10, right: 10),
-                          alignment: Alignment.centerLeft,
+                              top: 25, bottom: 25, left: 20, right: 20),
+                          alignment: Alignment.center,
                           child: AfkCreditsText.bodyBold(
                             "Custom",
                             //onTap: () => model.selectCustomScreenTime(),
@@ -223,6 +223,7 @@ class SelectScreenTimeView extends StatelessWidget {
                     ),
                     Spacer(),
                     AfkCreditsButton(
+                        height: 50,
                         leading:
                             Icon(Icons.play_arrow_rounded, color: Colors.white),
                         onTap: model.afkCreditsBalance == 0

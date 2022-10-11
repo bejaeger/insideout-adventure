@@ -33,8 +33,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
-  final LocalStorageService _localStorageService =
-      locator<LocalStorageService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
   final log = getLogger("ExplorerHomeViewModel");
   final NotificationsService _notificationService =
@@ -72,9 +70,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   }
 
   bool addingPositionToNotionDB = false;
-  bool pushedToNotion = false;
 
-  bool showQuestLoadingScreen = true;
+  bool showQuestLoadingScreen = false;
   bool showFullLoadingScreen = true;
 
   ScreenTimeSession? get currentScreenTimeSession =>
@@ -85,72 +82,90 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     bool showSelectAvatarDialog = false,
     ScreenTimeSession? screenTimeSession,
   }) async {
-    setBusy(true);
-    await listenToData();
-    listenToLayout();
+    try {
+      setBusy(true);
 
-    // reset camera to default position for child
-    mapStateService.setCameraToDefaultChildPosition();
+      // ? we use a singleton for this viewmodel so we need
+      // ? to reset the flags here
+      showQuestLoadingScreen = true;
+      showFullLoadingScreen = true;
 
-    // makes sure that screen time subject is listened to in case one is active!
-    // ! This is duplicated in parent_home_viewmodel.dart
-    if (screenTimeSession != null) {
-      await screenTimeService.listenToPotentialScreenTimes(
-          callback: notifyListeners);
-      ScreenTimeSession? session =
-          await screenTimeService.getSpecificScreenTime(
-        uid: screenTimeSession.uid,
-        sessionId: screenTimeSession.sessionId,
-      );
-      if (session != null) {
-        await navToActiveScreenTimeView(session: session);
+      await listenToData();
+      listenToLayout();
+
+      mapStateService.setCameraToDefaultChildPosition();
+
+      // makes sure that screen time subject is listened to in case one is active!
+      // ! This is duplicated in parent_home_viewmodel.dart
+      if (screenTimeSession != null) {
+        await screenTimeService.listenToPotentialScreenTimes(
+            callback: notifyListeners);
+        ScreenTimeSession? session =
+            await screenTimeService.getSpecificScreenTime(
+          uid: screenTimeSession.uid,
+          sessionId: screenTimeSession.sessionId,
+        );
+        if (session != null) {
+          await navToActiveScreenTimeView(session: session);
+        } else {
+          log.wtf(
+              "NO screen time session found. This should never be the case. ");
+        }
       } else {
-        log.wtf(
-            "NO screen time session found. This should never be the case. ");
+        // no need to await for it when we don't navigate to it
+        screenTimeService.listenToPotentialScreenTimes(
+            callback: notifyListeners);
       }
-    } else {
-      // no need to await for it when we don't navigate to it
-      screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
-    }
 
-    setBusy(false);
-    // fade loading screen out process
-    await Future.delayed(
-      Duration(milliseconds: 500),
-    );
-    final result = await initializeQuests();
-    mapViewModel.extractStartMarkersAndAddToMap();
+      setBusy(false);
+      // fade loading screen out process
+      await Future.delayed(
+        Duration(milliseconds: 500),
+      );
+      final result = await initializeQuests();
+      mapViewModel.extractStartMarkersAndAddToMap();
 
-    // remove full screen loading screen
-    showFullLoadingScreen = false;
-    notifyListeners();
+      // remove full screen loading screen
+      showFullLoadingScreen = false;
+      showQuestLoadingScreen = false;
+      notifyListeners();
 
-    if (showSelectAvatarDialog) {
-      await showAndHandleAvatarSelection();
-    }
-
-    // Show beware dialog!
-    if (showBewareDialog) {
-      await _showBewareDialog();
-    }
-
-    // Show quests dialog
-    // if no quests are found.
-    // Give some UI element that shows how many quests were found in the
-    // neighborhood
-    if (result is void Function()) {
-      await Future.delayed(Duration(milliseconds: 1500));
-      result();
-    } else {
-      // quests were found!
-      if (showNumberQuestsDialog) {
-        await _showNumberQuestsDialog(
-            numberQuests: questService.getNearByQuest.length);
+      if (showSelectAvatarDialog) {
+        await showAndHandleAvatarSelection();
+        setNewUserPropertyToFalse();
       }
-    }
 
-    showQuestLoadingScreen = false;
-    notifyListeners();
+      // Show beware dialog!
+      if (showBewareDialog) {
+        await _showBewareDialog();
+      }
+
+      // Show quests dialog
+      // if no quests are found.
+      // Give some UI element that shows how many quests were found in the
+      // neighborhood
+      if (result is void Function()) {
+        showQuestLoadingScreen = true;
+        notifyListeners();
+        await Future.delayed(Duration(milliseconds: 1500));
+        result();
+      } else {
+        // quests were found!
+        if (showNumberQuestsDialog) {
+          await _showNumberQuestsDialog(
+              numberQuests: questService.getNearByQuest.length);
+        }
+      }
+
+      showQuestLoadingScreen = false;
+      notifyListeners();
+    } catch (e) {
+      log.wtf("Error: $e");
+      showQuestLoadingScreen = false;
+      showFullLoadingScreen = false;
+      setBusy(false);
+      notifyListeners();
+    }
   }
 
   Future listenToData() async {
@@ -293,17 +308,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   //   return null;
   // }
 
-  void navigateToQuests() {
-    // navigationService.replaceWithTransition(QuestsOverviewView(),
-    //     transition: 'righttoleft', duration: Duration(seconds: 1));
-    navigationService.replaceWithTransition(
-        BottomBarLayoutTemplateView(
-            userRole: currentUser.role,
-            initialBottomNavBarIndex: BottomNavBarIndex.quest),
-        transition: 'righttoleft',
-        duration: Duration(milliseconds: 400));
-  }
-
   Future showToEarnExplanationDialog() async {
     dialogService.showDialog(
         title: "Sponsored Credits",
@@ -346,14 +350,11 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       snackbarService.showSnackbar(
           title: "Done",
           message: "All locations were already pushed to notion");
-      pushedToNotion = true;
       return;
     }
     bool ok = await _questTestingService.pushAllPositionsToNotion();
     showResponseInfo(ok);
-    if (ok == true) {
-      pushedToNotion = true;
-    }
+    if (ok == true) {}
     addingPositionToNotionDB = false;
     notifyListeners();
   }
@@ -417,6 +418,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     await _notificationService.createPermanentNotification(
       title: "SCREEN TIME STARTED",
       message: "Hi",
+      id: 1,
       session: ScreenTimeSession(
           sessionId: "sessionId",
           uid: "uid",
@@ -429,6 +431,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     await _notificationService.createScheduledNotification(
       title: "EXPIRED",
       message: "Hi",
+      id: 2,
       date: DateTime.now().add(Duration(seconds: 7)),
       session: ScreenTimeSession(
           sessionId: "sessionId",

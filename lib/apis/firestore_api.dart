@@ -796,6 +796,31 @@ class FirestoreApi {
     }
   }
 
+  Future<List<dynamic>?> getListOfScreenShotNames(
+      {required String questType}) async {
+    log.v("get list of screen shot names");
+    final DocumentSnapshot docSnapshot =
+        await screenShotsCollection.doc(questType).get();
+    if (docSnapshot.exists) {
+      try {
+        final data = docSnapshot.data() as Map<String, dynamic>;
+        return data["screenshotUrls"];
+      } catch (error) {
+        log.wtf(
+            'Failed to get list of screen shot names for quest Type $questType');
+        throw FirestoreApiException(
+          message:
+              'Failed to get list of screen shot names for quest Type $questType',
+          devDetails: '$error',
+        );
+      }
+    } else {
+      log.e(
+          "screenshot document with id $questType does not exist in screenshots firestore collection");
+    }
+    return null;
+  }
+
   ///////////////////////////////////////////////////
   /// Functions related to markers
   Future<AFKMarker?> getMarkerFromQrCodeId({required String qrCodeId}) async {
@@ -877,7 +902,12 @@ class FirestoreApi {
 
   ///////////////////////////////////////////////////////
   /// Screen Time functions
-  Future<String> addScreenTimeSession(
+  String getScreenTimeSessionDocId() {
+    final docRef = screenTimeSessionCollection.doc();
+    return docRef.id;
+  }
+
+  Future<void> addScreenTimeSession(
       {required ScreenTimeSession session}) async {
     log.i("Add screen time session to firestore");
     //Get the Document Created Reference
@@ -887,16 +917,14 @@ class FirestoreApi {
     } else {
       validStartedAt = session.startedAt;
     }
-    final _documentReference = screenTimeSessionCollection.doc();
-    _documentReference.set(session
-        .copyWith(
-          sessionId: _documentReference.id,
-          startedAt: validStartedAt,
-          //startedAt: Timestamp.now(),
-        )
-        .toJson());
-    //update the newly created document reference with the Firestore Id.
-    return _documentReference.id;
+    screenTimeSessionCollection.doc(session.sessionId).set(
+        session
+            .copyWith(
+              startedAt: validStartedAt,
+              //startedAt: Timestamp.now(),
+            )
+            .toJson(),
+        SetOptions(merge: true));
   }
 
   Future updateScreenTimeSession({required ScreenTimeSession session}) async {
@@ -1008,6 +1036,13 @@ class FirestoreApi {
       await ref.set(returnVal.toJson());
       return returnVal;
     }
+  }
+
+  Future updateFeedbackCampaignInfo(
+      {required FeedbackCampaignInfo feedbackCampaignInfo}) async {
+    await feedbackCollection
+        .doc(feedbackCampaignInfoDocumentKey)
+        .update(feedbackCampaignInfo.toJson());
   }
 
   ////////////////////////////////////////////////////////

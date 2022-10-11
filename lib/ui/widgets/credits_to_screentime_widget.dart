@@ -17,6 +17,7 @@ class CreditsToScreenTimeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         // Hero(
         //   tag: "CREDITS",
@@ -24,24 +25,29 @@ class CreditsToScreenTimeWidget extends StatelessWidget {
         //       height: 30, color: kcPrimaryColor),
         // ),
         Image.asset(kAFKCreditsLogoPath,
-            height: 30 * sizeScale, color: kcPrimaryColor),
+            height: 28 * sizeScale, color: kcPrimaryColor),
         SizedBox(width: 8.0 * sizeScale),
         AfkCreditsText(
             text: credits.toStringAsFixed(0),
             style: heading3Style.copyWith(fontSize: 24 * sizeScale)),
-        SizedBox(width: 10.0 * sizeScale),
+        SizedBox(width: 8.0 * sizeScale),
         Icon(Icons.arrow_forward, size: 25 * sizeScale),
-        SizedBox(width: 10.0 * sizeScale),
+        SizedBox(width: 8.0 * sizeScale),
         //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
         Image.asset(kScreenTimeIcon,
-            height: 30 * sizeScale, color: kcScreenTimeBlue),
-        SizedBox(width: 10.0 * sizeScale),
+            height: 28 * sizeScale, color: kcScreenTimeBlue),
+        SizedBox(width: 8.0 * sizeScale),
         // Lottie.network(
         //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
         //     height: 40),
         AfkCreditsText(
-            text: availableScreenTime.toString() + " min",
-            style: heading3Style.copyWith(fontSize: 24 * sizeScale)),
+          text: availableScreenTime.toString(),
+          style: heading3Style.copyWith(fontSize: 24 * sizeScale),
+        ),
+        AfkCreditsText.bodyBold(
+          " min",
+          color: kcBlackHeadlineColor,
+        ),
       ],
     );
   }

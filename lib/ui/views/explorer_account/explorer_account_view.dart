@@ -2,7 +2,6 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/card_overlay_layout.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_view.dart';
-import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';

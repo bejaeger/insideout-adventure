@@ -1,6 +1,8 @@
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/ui/widgets/credits_to_screentime_widget.dart';
 import 'package:afkcredits/ui/widgets/explorer_home_widgets/afk_credits_display.dart';
 import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_view.dart';
+import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -61,11 +63,11 @@ class MainHeader extends StatelessWidget {
                     onTap: onDevFeaturePressed,
                     child: Container(
                         alignment: Alignment.center,
-                        width: 80,
+                        width: 40,
                         height: 80,
                         color: kcCultured,
                         child: AfkCreditsText.captionBold(
-                          "Dev Feature",
+                          "Dev",
                           align: TextAlign.center,
                         )),
                   ),
@@ -77,6 +79,12 @@ class MainHeader extends StatelessWidget {
                   padding: const EdgeInsets.only(
                       right: 15.0, top: 14, bottom: 5.0, left: 8.0),
                   //color: Colors.red,
+                  // child: CreditsToScreenTimeWidget(
+                  //   credits: balance.toInt(),
+                  //   availableScreenTime: creditsToScreenTime(balance),
+                  //   sizeScale: 0.9,
+                  // ),
+
                   child: AFKCreditsDisplay(balance: balance),
                 ),
               ),

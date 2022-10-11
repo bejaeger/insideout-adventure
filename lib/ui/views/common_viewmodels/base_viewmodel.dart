@@ -290,8 +290,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       await navigationService.clearStackAndShow(
         Routes.explorerHomeView,
         arguments: ExplorerHomeViewArguments(
-            showBewareDialog: showBewareDialog,
-            showNumberQuestsDialog: showNumberQuestsDialog),
+          showBewareDialog: showBewareDialog,
+          showNumberQuestsDialog: showNumberQuestsDialog,
+        ),
       );
     }
   }
@@ -431,20 +432,22 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       AFKMarker? startMarker,
       bool completed = false}) async {
     SheetResponse? sheetResponse = await bottomSheetService.showCustomSheet(
-        variant: BottomSheetType.questInformation,
-        title: quest.name,
-        enterBottomSheetDuration: Duration(milliseconds: 300),
-        // exitBottomSheetDuration: Duration(milliseconds: 1),
-        // curve: Curves.easeInExpo,
-        // curve: Curves.linear,
-        // barrierColor: Colors.black45,
-        description: quest.description,
-        mainButtonTitle: isParentAccount ? "Show markers" : "Play",
-        secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
-        data: {
-          "quest": quest,
-          "completed": completed && !(quest.repeatable == 1)
-        });
+      variant: BottomSheetType.questInformation,
+      title: quest.name,
+      enterBottomSheetDuration: Duration(milliseconds: 300),
+      // exitBottomSheetDuration: Duration(milliseconds: 1),
+      // curve: Curves.easeInExpo,
+      // curve: Curves.linear,
+      // barrierColor: Colors.black45,
+      description: quest.description,
+      mainButtonTitle: isParentAccount ? "Show markers" : "Play",
+      secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
+      data: {
+        "quest": quest,
+        "completed":
+            completed && !(quest.repeatable == 1) && !useSuperUserFeatures
+      },
+    );
     return sheetResponse;
     // if (sheetResponse?.confirmed == true) {
     //   baseModelLog
@@ -458,7 +461,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   Future openSuperUserSettingsDialog() async {
     if (isSuperUser) {
       await dialogService.showCustomDialog(
-          variant: DialogType.SuperUserSettings);
+          barrierDismissible: true, variant: DialogType.SuperUserSettings);
       setListenedToNewPosition(false);
       notifyListeners();
     }
@@ -474,13 +477,19 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   Future showInstructions(QuestType? type) async {
     if (type == QuestType.TreasureLocationSearch) {
       await dialogService.showDialog(
-          title: "How it works", description: kLocationSearchDescription);
+          title: "How it works",
+          description: kLocationSearchDescription,
+          barrierDismissible: true);
     } else if (type == QuestType.GPSAreaHike) {
       await dialogService.showDialog(
-          title: "How it works", description: kGPSAreaHikeDescription);
+          title: "How it works",
+          description: kGPSAreaHikeDescription,
+          barrierDismissible: true);
     } else if (type == QuestType.DistanceEstimate) {
       await dialogService.showDialog(
-          title: "How it works", description: kDistanceEstimateDescription);
+          title: "How it works",
+          description: kDistanceEstimateDescription,
+          barrierDismissible: true);
     } else {
       showGenericInternalErrorDialog();
     }

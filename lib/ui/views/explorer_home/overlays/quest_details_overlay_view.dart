@@ -1,24 +1,17 @@
-import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/active_quest_overlays/gps_area_hike/gps_area_hike_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay_viewmodel.dart';
-import 'package:afkcredits/ui/views/hike_quest/hike_quest_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/common_quest_details_footer.dart';
 import 'package:afkcredits/ui/widgets/common_quest_details_header.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
-import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
-import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
-import 'package:afkcredits/ui/widgets/quest_completed_note.dart';
-import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
-import 'package:afkcredits/ui/widgets/quest_success_card.dart';
-import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
+import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/treasure_location_search_widgets.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -81,11 +74,14 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
               children: [
                 // Quest Info on top of screen
                 CommonQuestDetailsHeader(
-                    quest: quest,
-                    hasActiveQuest: model.hasActiveQuest,
-                    showInstructionsDialog: model.showInstructions,
-                    openSuperUserSettingsDialog:
-                        model.openSuperUserSettingsDialog),
+                  quest: quest,
+                  hasActiveQuest: model.hasActiveQuest,
+                  showInstructionsDialog: model.showInstructions,
+                  openSuperUserSettingsDialog:
+                      model.openSuperUserSettingsDialog,
+                  finishedQuest: model.previouslyFinishedQuest,
+                  completed: model.showCompletedQuestNote(),
+                ),
 
                 // cancel button
                 if (model.hasActiveQuest)
@@ -93,13 +89,21 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: GestureDetector(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.close, size: 30),
-                          ),
-                          onTap: model.cancelOrFinishQuest),
+                      child: IconButton(
+                        icon: Icon(Icons.close, size: 30),
+                        onPressed: model.cancelOrFinishQuest,
+                      ),
                     ),
+
+                    // child: Padding(
+                    //   padding: const EdgeInsets.all(12.0),
+                    //   child: GestureDetector(
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.all(8.0),
+                    //         child: Icon(Icons.close, size: 30),
+                    //       ),
+                    //       onTap: model.cancelOrFinishQuest),
+                    // ),
                   ),
 
                 // Quest info on bottom of screen
@@ -119,7 +123,8 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                   TreasureLocationSearch(
                       showStartSlider: !model.showCompletedQuestNote() &&
                           model.isNearStartMarker &&
-                          model.previouslyFinishedQuest == null,
+                          model.previouslyFinishedQuest == null &&
+                          !model.hasActiveQuest,
                       notifyParentCallback: model.notifyListeners,
                       quest: quest),
                 // ? Takes same arguments as above, could be improved to have common widget
@@ -127,7 +132,8 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                   GPSAreaHike(
                       showStartSlider: !model.showCompletedQuestNote() &&
                           model.isNearStartMarker &&
-                          model.previouslyFinishedQuest == null,
+                          model.previouslyFinishedQuest == null &&
+                          !model.hasActiveQuest,
                       notifyParentCallback: model.notifyListeners,
                       quest: quest),
               ],
@@ -144,6 +150,7 @@ class SpecificQuestLayout extends StatelessWidget {
   final bool showStartSlider;
   final void Function() maybeStartQuest;
   final ActiveQuestBaseViewModel model;
+  final Widget? bottomWidget;
 
   const SpecificQuestLayout({
     Key? key,
@@ -151,6 +158,7 @@ class SpecificQuestLayout extends StatelessWidget {
     required this.showStartSlider,
     required this.maybeStartQuest,
     required this.model,
+    this.bottomWidget,
   }) : super(key: key);
 
   @override
@@ -166,6 +174,7 @@ class SpecificQuestLayout extends StatelessWidget {
         ),
         ...children,
         Spacer(),
+        if (bottomWidget != null) bottomWidget!,
         if (showStartSlider)
           aboveBottomBackButton(
             child: StartButtonOverlay(
@@ -310,6 +319,22 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
               notifyParentCallback: widget.notifyParentCallback),
           model: model,
           showStartSlider: widget.showStartSlider,
+          bottomWidget: FadingWidget(
+            show: model.hasActiveQuest,
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: AFKFloatingActionButton(
+                  icon: Image.asset(kPinInAreaIcon,
+                      color: kcWhiteTextColor, height: 34),
+                  onPressed: model.manualCheckIfInAreaOfMarker,
+                  width: 65,
+                  height: 65,
+                ),
+              ),
+            ),
+          ),
           children: [
             // ? ACTIVE QUEST CARD
             FadingWidget(

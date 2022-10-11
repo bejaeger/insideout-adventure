@@ -37,15 +37,15 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   final MapStateService mapsService = locator<MapStateService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
-  final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
   final log = getLogger("ActiveQuestBaseViewModel");
 
   // ----------------------------------------------------------
   // getters
-  bool get isDevFlavor => flavorConfigProvider.flavor == Flavor.dev;
-  bool get isNearStartMarker => !flavorConfigProvider.enableGPSVerification
+  bool get isDevFlavor => appConfigProvider.flavor == Flavor.dev;
+  bool get isNearStartMarker => !appConfigProvider.enableGPSVerification
       ? true
       : (geolocationService.distanceToStartMarker > 0) &&
           (geolocationService.distanceToStartMarker <
@@ -175,6 +175,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       if (!force) {
         log.w("Quest is incomplete, show dialog");
         continueQuest = await dialogService.showConfirmationDialog(
+            barrierDismissible: true,
             title: WarningQuestNotFinished,
             cancelTitle: "CANCEL QUEST",
             confirmationTitle: "CONTINUE QUEST");
@@ -191,22 +192,15 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
             !questTestingService.isAllQuestDataPointsPushed()) {
           log.i("push to notion");
           await dialogService.showCustomDialog(
+              barrierDismissible: true,
               variant: DialogType.SuperUserSettings,
               data: SuperUserDialogType.sendDiagnostics);
         }
-        // TODO: temporary thing
-        bool standaloneUI = activeQuest.quest.type == QuestType.GPSAreaHike ||
-            activeQuest.quest.type == QuestType.GPSAreaHunt;
 
         // will reset activeQuest
         await activeQuestService.cancelIncompleteQuest();
 
         resetPreviousQuest();
-        // TODO: Make these settings more in line!
-        if (standaloneUI) {
-          replaceWithExplorerHomeView();
-          layoutService.setIsFadingOutOverlay(false);
-        }
         popQuestDetails();
 
         //replaceWithMainView(index: BottomNavBarIndex.quest);

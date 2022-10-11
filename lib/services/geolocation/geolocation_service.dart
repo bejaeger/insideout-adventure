@@ -26,6 +26,8 @@ class GeolocationService extends PausableService {
   int? get currentGPSAccuracy => _livePosition?.accuracy.round();
   String? gpsAccuracyInfo;
 
+  bool isGeolocationAvailable = false;
+
   // position with stream
   Position? _livePosition;
   Future<Position> get getUserLivePosition async =>
@@ -211,8 +213,10 @@ class GeolocationService extends PausableService {
   Future<Position> getAndSetCurrentLocation(
       {bool forceGettingNewPosition = false}) async {
     //Verify If location is available on device.
-    final checkGeolocation = await checkGeolocationAvailable();
-    if (checkGeolocation == true) {
+    if (!isGeolocationAvailable) {
+      isGeolocationAvailable = await checkGeolocationAvailable();
+    }
+    if (isGeolocationAvailable == true) {
       try {
         // if (!kIsWeb) {
         Duration? difference;
@@ -566,19 +570,18 @@ class GeolocationService extends PausableService {
     return [latLng[0], newLon];
   }
 
-  // TODO: Test the below
-  // List<double> getLatLngShiftedLatInList(
-  //     {required List<double> latLng, double offset = 100}) {
-  //   //Earth’s radius, sphere
-  //   double R = 6378137;
-  //   //Coordinate offsets in radians
-  //   // final double dLat = offset/R;
-  //   final double dLat = offset / (R * math.sin(math.pi * latLng[1] / 180));
-  //   //OffsetPosition, decimal degrees
-  //   // final double newLat = latLng.latitude + dLat * 180/math.pi;
-  //   final double newLat = latLng[1] + dLat * 180 / math.pi;
-  //   return [newLat, latLng[1]];
-  // }
+  List<double> getLatLngShiftedLatInList(
+      {required List<double> latLng, double offset = 100}) {
+    //Earth’s radius, sphere
+    double R = 6378137;
+    //Coordinate offsets in radians
+    // final double dLat = offset/R;
+    final double dLat = offset / R;
+    //OffsetPosition, decimal degrees
+    // final double newLat = latLng.latitude + dLat * 180/math.pi;
+    final double newLat = latLng[0] + dLat * 180 / math.pi;
+    return [newLat, latLng[1]];
+  }
 
   Future<Position?> setCurrentUserPosition() async {
     return await Geolocator.getCurrentPosition(

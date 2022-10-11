@@ -82,7 +82,14 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
       // }
       return;
     }
-    _flavorConfigProvider.isARAvailable = b;
+    if (b == true && isARAvailable) {
+      _flavorConfigProvider.setIsUsingAR(true);
+    } else {
+      _flavorConfigProvider.setIsUsingAR(false);
+    }
+    if (b == true && !isARAvailable) {
+      snackbarService.showSnackbar(message: "AR not supported on this device.");
+    }
     notifyListeners();
   }
 

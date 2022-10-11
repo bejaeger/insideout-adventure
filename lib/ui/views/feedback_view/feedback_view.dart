@@ -4,6 +4,7 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -56,6 +57,89 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (model.feedbackCampaignInfo?.surveyUrl != null &&
+                            model.feedbackCampaignInfo?.surveyUrl != "")
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              verticalSpaceSmall,
+                              AfkCreditsText.headingThree("Take our survey"),
+                              if (model.userHasGivenFeedback)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, bottom: 0.0),
+                                  child: AfkCreditsText.bodyItalic(
+                                    "Thank you, you already viewed the survey below.",
+                                    color: kcPrimaryColor,
+                                  ),
+                                ),
+                              if (!model.userHasGivenFeedback)
+                                // verticalSpaceSmall,
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: AfkCreditsText.bodyItalic(
+                                    "There is a new survey for you. Your feedback is very valuable",
+                                  ),
+                                ), //   ),
+                              verticalSpaceSmall,
+                              GestureDetector(
+                                onTap: () => model.launchUrlViewModel(
+                                    model.feedbackCampaignInfo!.surveyUrl),
+                                child: Badge(
+                                  showBadge: !model.userHasGivenFeedback,
+                                  position: BadgePosition.topStart(start: -5),
+                                  badgeColor: kcOrange,
+                                  child: Container(
+                                    height: 80,
+                                    padding: const EdgeInsets.all(15.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      color: kcOrangeWhite,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            spreadRadius: 0.3,
+                                            offset: Offset(1, 1),
+                                            blurRadius: 0.4,
+                                            color: kcShadowColor),
+                                      ],
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Expanded(
+                                              child: AfkCreditsText.bodyItalic(
+                                                  "Survey link"),
+                                            ),
+                                            Spacer(),
+                                            Icon(Icons.arrow_forward_ios,
+                                                color: kcMediumGrey, size: 22),
+                                          ],
+                                        ),
+                                        verticalSpaceTiny,
+                                        AfkCreditsText(
+                                            text: model.feedbackCampaignInfo!
+                                                .surveyUrl,
+                                            style: captionStyle.copyWith(
+                                                overflow:
+                                                    TextOverflow.ellipsis))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              verticalSpaceMedium,
+                            ],
+                          ),
+
                         // if (model.feedbackCampaignInfo?.questions != null &&
                         //     model.feedbackCampaignInfo!.questions.length > 0)
                         //   Column(
@@ -126,63 +210,6 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                           ),
                         ),
                         verticalSpaceMedium,
-                        if (model.feedbackCampaignInfo?.surveyUrl != null &&
-                            model.feedbackCampaignInfo?.surveyUrl != "")
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              verticalSpaceSmall,
-                              AfkCreditsText.headingThree("Take our survey"),
-                              verticalSpaceSmall,
-                              GestureDetector(
-                                onTap: () => _launchUrl(
-                                    model.feedbackCampaignInfo!.surveyUrl),
-                                child: Container(
-                                  height: 80,
-                                  padding: const EdgeInsets.all(15.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                    color: kcOrangeWhite,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          spreadRadius: 0.3,
-                                          offset: Offset(1, 1),
-                                          blurRadius: 0.4,
-                                          color: kcShadowColor),
-                                    ],
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Expanded(
-                                            child: AfkCreditsText.bodyItalic(
-                                                "Survey link"),
-                                          ),
-                                          Spacer(),
-                                          Icon(Icons.arrow_forward_ios,
-                                              color: kcMediumGrey, size: 22),
-                                        ],
-                                      ),
-                                      verticalSpaceTiny,
-                                      AfkCreditsText(
-                                          text: model
-                                              .feedbackCampaignInfo!.surveyUrl,
-                                          style: captionStyle.copyWith(
-                                              overflow: TextOverflow.ellipsis))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              verticalSpaceMedium,
-                            ],
-                          ),
                         verticalSpaceMassive,
                       ],
                     ),
@@ -191,17 +218,5 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
         ),
       ),
     );
-  }
-
-  Future<void> _launchUrl(String url) async {
-    Uri uri = Uri.parse(url);
-    // Uri uri = Uri.https(authority, path);
-    if (await canLaunchUrl(uri)) {
-      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-        throw 'Could not launch $uri';
-      }
-    } else {
-      print("=> Can't launch URL");
-    }
   }
 }

@@ -122,6 +122,7 @@ dependencies:
   flutter_svg: ^1.1.5
 
   confetti: ^0.7.0
+  badges: ^2.0.3
 
   arkit_plugin: ^1.0.5
   arcore_flutter_plugin:

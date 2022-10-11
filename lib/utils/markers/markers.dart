@@ -23,10 +23,10 @@ abstract class AFKMarks extends FormViewModel {
   Set<Marker> _markersOnMap = {};
   List<AFKMarker> _afkMarkers = [];
   //List<AfkMarkersPositions> _afkMarkersPosition = [];
-  final _geolocationService = locator<GeolocationService>();
+  final geolocationService = locator<GeolocationService>();
   final markersServices = locator<MarkerService>();
   final QuestService questService = locator<QuestService>();
-  Position? _position;
+  Position? get userLocation => geolocationService.getUserLivePositionNullable;
 
   Set<Marker> get getMarkersOnMap => _markersOnMap;
 
@@ -34,11 +34,11 @@ abstract class AFKMarks extends FormViewModel {
   // List<AfkMarkersPositions> get getAfkMarkersPosition => _afkMarkersPosition;
 
   CameraPosition initialCameraPosition() {
-    if (_position != null) {
+    if (userLocation != null) {
       if (questService.lonAtLatestQuestDownload == null &&
           questService.latAtLatestQuestDownload == null)
         return CameraPosition(
-            target: LatLng(_position!.latitude, _position!.longitude),
+            target: LatLng(userLocation!.latitude, userLocation!.longitude),
             zoom: kInitialZoomBirdsView);
       else {
         return CameraPosition(
@@ -54,10 +54,8 @@ abstract class AFKMarks extends FormViewModel {
     }
   }
 
-  Position? get getCurrentPostion => _position;
-  void setPosition() async {
-    _position = await _geolocationService.setCurrentUserPosition();
-    logger.i(_position);
+  void getLocation() async {
+    await geolocationService.getAndSetCurrentLocation();
   }
 
   Marker addMarkers(

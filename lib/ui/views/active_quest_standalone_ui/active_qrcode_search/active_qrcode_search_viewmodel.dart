@@ -104,7 +104,8 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
   // }
 
   @override
-  Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
+  Future handleMarkerAnalysisResult(MarkerAnalysisResult result,
+      {bool isShowCollectedMarkerDialog = true}) async {
     // potentially add artificial delay for UX improvement?
     // validatingMarker = true;
     // notifyListeners();
@@ -139,7 +140,7 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
         displayClue = false;
         final bool completed = isQuestCompleted();
         if (completed) {
-          await showCollectedMarkerDialog();
+          if (isShowCollectedMarkerDialog) await showCollectedMarkerDialog();
           // TODO: Show successfully finished quest!
           await showSuccessDialog();
           return;
@@ -152,7 +153,7 @@ class ActiveQrCodeSearchViewModel extends HikeQuestViewModel {
                 "collected marker " + getNumberMarkersCollectedString(),
           );
 
-          await showCollectedMarkerDialog();
+          if (isShowCollectedMarkerDialog) await showCollectedMarkerDialog();
 
           // for now do the animation only for GPS Area Hunt!
           if (currentQuest!.type == QuestType.GPSAreaHunt) {

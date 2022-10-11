@@ -91,7 +91,7 @@ class SelectScreenTimeViewModel extends BaseModel {
     }
     // Create screen time session
     ScreenTimeSession session = ScreenTimeSession(
-      sessionId: "",
+      sessionId: screenTimeService.getScreenTimeSessionDocId(),
       uid: isParentAccount ? childId! : currentUser.uid,
       createdByUid: currentUser.uid,
       userName: isParentAccount

@@ -20,4 +20,5 @@ enum DialogType {
   CustomScreenTime,
   NumberQuests,
   AvatarSelectDialog,
+  ExplorerSettings,
 }

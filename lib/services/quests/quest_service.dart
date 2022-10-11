@@ -215,13 +215,16 @@ class QuestService with ReactiveServiceMixin {
     if (_nearbyQuests.isNotEmpty) {
       log.i("Check distances for current quest list");
 
+      final position = await _geolocationService.getAndSetCurrentLocation();
+
       // need to use normal for loop to await results
       for (var i = 0; i < _nearbyQuests.length; i++) {
         if (_nearbyQuests[i].startMarker != null) {
-          double distance =
-              await _geolocationService.distanceBetweenUserAndCoordinates(
-                  lat: _nearbyQuests[i].startMarker!.lat,
-                  lon: _nearbyQuests[i].startMarker!.lon);
+          double distance = _geolocationService.distanceBetween(
+              lat1: position.latitude,
+              lon1: position.longitude,
+              lat2: _nearbyQuests[i].startMarker!.lat,
+              lon2: _nearbyQuests[i].startMarker!.lon);
           _nearbyQuests[i] =
               _nearbyQuests[i].copyWith(distanceFromUser: distance);
         } else {

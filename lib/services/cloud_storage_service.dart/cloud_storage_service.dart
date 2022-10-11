@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:afkcredits/apis/firestore_api.dart';
+import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_result.dart';
+import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -9,6 +12,11 @@ class CloudStorageService {
   // ----------------------------
   // services
   final log = getLogger("CloudStorageService");
+  final FirestoreApi _firestoreApi = locator<FirestoreApi>();
+
+  // map of quest to list of screenshots
+  Map<QuestType, List<dynamic>> exampleScreenShots = {};
+  Set<Reference> exampleScreenShotsRef = {};
 
   // ---------------------------------------
   // Functions
@@ -54,5 +62,40 @@ class CloudStorageService {
     } catch (e) {
       return e.toString();
     }
+  }
+
+  Future loadExampleScreenshots({required QuestType questType}) async {
+    try {
+      final screenshotNames = await _firestoreApi.getListOfScreenShotNames(
+          questType: questType.toSimpleString());
+      log.e("FOUND screenshot names: $screenshotNames");
+      if (screenshotNames != null) {
+        for (String url in screenshotNames) {
+          try {
+            Reference ref = FirebaseStorage.instance.refFromURL(url);
+            if (exampleScreenShotsRef.contains(ref)) {
+              continue;
+            }
+            exampleScreenShotsRef.add(ref);
+
+            final data = await ref.getData();
+            if (!exampleScreenShots.containsKey(questType)) {
+              exampleScreenShots[questType] = [data];
+            } else {
+              exampleScreenShots[questType]!.add(data);
+            }
+          } catch (e) {
+            log.e("Could not load image. Error: $e");
+            exampleScreenShots[questType] = [];
+          }
+        }
+      }
+    } catch (e) {
+      log.e("Could not load screen shot urls. Error: $e");
+      exampleScreenShots[questType] = [];
+    }
+
+    // final Reference firebaseStorageRef =
+    //     FirebaseStorage.instance.ref().child(imageFileName);
   }
 }

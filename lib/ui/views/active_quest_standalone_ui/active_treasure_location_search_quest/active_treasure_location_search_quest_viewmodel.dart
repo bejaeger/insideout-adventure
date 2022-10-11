@@ -162,7 +162,7 @@ class ActiveTreasureLocationSearchQuestViewModel
       return false;
     } else {
       // option to add dummy checks for testing purposes
-      if (flavorConfigProvider.dummyQuestCompletionVerification) {
+      if (appConfigProvider.dummyQuestCompletionVerification) {
         return true;
       } else {
         // this is the true check configured in constants.dart
@@ -231,7 +231,7 @@ class ActiveTreasureLocationSearchQuestViewModel
   }
 
   Future handleQuestCompletedEvent() async {
-    // ! This is duplicated from hike_quest_viewmodel() atm!
+    // ! This is partially duplicated from hike_quest_viewmodel() atm!
     // ! Could maybe put this into active_quest_base_viewmodel.dart
     isAnimatingCamera = true;
     setBusy(true);
@@ -240,13 +240,14 @@ class ActiveTreasureLocationSearchQuestViewModel
     activeQuestService.setSuccessAsQuestStatus();
     // for UI!
     questFinished = true;
+    notifyListeners();
 
     CollectCreditsStatus collectCreditsStatus = CollectCreditsStatus.todo;
     try {
       final results = await Future.wait(
         [
           handleSuccessfullyFinishedQuest(showDialogs: false),
-          Future.delayed(Duration(milliseconds: 2000))
+          Future.delayed(Duration(milliseconds: 1500))
         ],
       );
       collectCreditsStatus = results[0];

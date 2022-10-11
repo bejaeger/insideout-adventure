@@ -103,22 +103,23 @@ class ProgressBar extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Container(
-                alignment: Alignment.center,
-                height: height,
-                decoration: BoxDecoration(
-                  color: kcPrimaryColor,
-                  borderRadius: percentage < 0.9
-                      ? BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          bottomLeft: Radius.circular(20.0))
-                      : BorderRadius.circular(20.0),
+              alignment: Alignment.center,
+              height: height,
+              decoration: BoxDecoration(
+                color: kcPrimaryColor,
+                borderRadius: percentage < 0.9
+                    ? BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        bottomLeft: Radius.circular(20.0))
+                    : BorderRadius.circular(20.0),
 //                    borderRadius: BorderRadius.circular(20.0)
-                ),
-                width: percentage * widthProgressBar,
-                child: (height > 19 && percentage > 0.24)
-                    ? Text((percentage * 100).toStringAsFixed(0) + "%",
-                        style: TextStyle(color: kcVeryLightGrey))
-                    : null),
+              ),
+              width: percentage * widthProgressBar,
+              // child: (height > 19 && percentage > 0.24)
+              //     ? Text((percentage * 100).toStringAsFixed(0) + "%",
+              //         style: TextStyle(color: kcVeryLightGrey))
+              //     : null
+            ),
           ),
         ),
         if (nextLevel != null) horizontalSpaceSmall,

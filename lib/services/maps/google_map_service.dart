@@ -160,6 +160,7 @@ class GoogleMapService {
         quest: quest,
         afkmarker: afkmarker,
         completed: completed,
+        collected: false,
         isParentAccount: isParentAccount,
         isStartMarker: isStartMarker);
     Marker marker = Marker(
@@ -309,6 +310,7 @@ class GoogleMapService {
     required Quest? quest,
     required bool completed,
     required bool isStartMarker,
+    required bool collected,
     required bool isParentAccount,
   }) async {
     if (isParentAccount && quest?.createdBy == null) {
@@ -320,6 +322,9 @@ class GoogleMapService {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueOrange + 15);
       }
+    }
+    if (collected) {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
     }
     if (completed) {
       //late BitmapDescriptor icon;
@@ -395,11 +400,14 @@ class GoogleMapService {
 
   // update color of marker on map
   static void updateMapMarkers(
-      {required AFKMarker afkmarker, required bool collected}) async {
+      {required AFKMarker afkmarker,
+      required bool collected,
+      bool completed = false}) async {
     final icon = await defineMarkersColour(
         afkmarker: afkmarker,
         quest: null,
-        completed: collected,
+        completed: completed,
+        collected: collected,
         isParentAccount: false,
         isStartMarker: false);
     markersOnMap = markersOnMap

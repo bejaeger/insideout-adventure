@@ -12,6 +12,7 @@ import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/utils/image_selector.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'feedback_view.form.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -26,19 +27,25 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
   final FeedbackService _feedbackService = locator<FeedbackService>();
   final UserService _userService = locator<UserService>();
   final log = getLogger("FeedbackViewModel");
+
+  // ------------------------------------
+  // getters
+  FeedbackCampaignInfo? get feedbackCampaignInfo =>
+      _feedbackService.feedbackCampaignInfo;
+  bool get userHasGivenFeedback => _feedbackService.userHasGivenFeedback();
+
   // ------------------------------
   // state
   File? selectedImage;
   String? feedbackInputValidationMessage;
   bool isInitializing = true;
-  FeedbackCampaignInfo? feedbackCampaignInfo;
 
   // --------------------------------
   // functions
   void initialize() async {
     isInitializing = true;
     notifyListeners();
-    feedbackCampaignInfo = await _feedbackService.getFeedbackCampaignInfo();
+    await _feedbackService.loadFeedbackCampaignInfo();
     isInitializing = false;
     notifyListeners();
   }
@@ -86,7 +93,7 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
     // ----------------------------------------------
     // prepare feedback file and upload to firestore
     FeedbackCampaignInfo campaignInfo =
-        await _feedbackService.getFeedbackCampaignInfo();
+        await _feedbackService.loadFeedbackCampaignInfo();
     String deviceInfo = await _feedbackService.getDeviceInfoString();
     Feedback feedback = Feedback(
       uid: _userService.currentUser.uid,
@@ -118,6 +125,21 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
         message: "Thanks for helping us", title: "Successfully sent feedback");
     await Future.delayed(Duration(seconds: 2));
     selectedImage = null;
+    notifyListeners();
+  }
+
+  Future<void> launchUrlViewModel(String url) async {
+    Uri uri = Uri.parse(url);
+    // Uri uri = Uri.https(authority, path);
+    if (await canLaunchUrl(uri)) {
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        throw 'Could not launch $uri';
+      } else {
+        await _feedbackService.updateFeedbackCampaignInfo();
+      }
+    } else {
+      print("=> Can't launch URL");
+    }
     notifyListeners();
   }
 

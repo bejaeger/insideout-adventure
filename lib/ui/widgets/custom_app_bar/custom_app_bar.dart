@@ -1,10 +1,12 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -20,6 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final void Function()? onBackButton;
   final void Function()? onAppBarButtonPressed;
   final List<ScreenTimeSession> screenTimes;
+  final bool hasUserGivenFeedback;
 
   final IconData appBarButtonIcon;
   CustomAppBar({
@@ -35,6 +38,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showLogo = false,
     this.screenTimes = const [],
     this.dropDownButton,
+    this.hasUserGivenFeedback = true,
   }) : super(key: key);
 
   double get getHeight => height;
@@ -63,8 +67,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
-                          child: Icon(Icons.menu,
-                              color: kcWhiteTextColor, size: 30),
+                          child: Badge(
+                            badgeColor: kcOrange,
+                            position: BadgePosition.topEnd(end: -5, top: -3),
+                            showBadge: !hasUserGivenFeedback,
+                            child: Icon(Icons.menu,
+                                color: kcWhiteTextColor, size: 30),
+                          ),
                         ),
                       ),
                     ),
@@ -72,9 +81,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: //Text("HI"),
-                          Padding(
+                          Container(
+                              //color: Colors.red,
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
+                                  const EdgeInsets.symmetric(horizontal: 12),
                               child: dropDownButton!),
                     ),
                   if (showLogo)

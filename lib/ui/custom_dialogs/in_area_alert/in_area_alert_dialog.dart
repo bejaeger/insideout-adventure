@@ -1,6 +1,8 @@
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/ui/custom_dialogs/in_area_alert/in_area_alert_dialog_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class InAreaAlertDialogView extends StatelessWidget {
@@ -16,23 +18,30 @@ class InAreaAlertDialogView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      elevation: 5,
-      //insetPadding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      backgroundColor: Colors.white,
-      child: _BasicDialogContent(
-        request: request,
-        completer: completer,
-        isQrCodeInArea: isQrCodeInArea,
-      ),
-    );
+    return ViewModelBuilder<InAreaAlertDialogViewModel>.reactive(
+        viewModelBuilder: () => InAreaAlertDialogViewModel(),
+        builder: (context, model, child) {
+          return Dialog(
+            elevation: 5,
+            //insetPadding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0)),
+            backgroundColor: Colors.white,
+            child: _BasicDialogContent(
+              request: request,
+              model: model,
+              completer: completer,
+              isQrCodeInArea: isQrCodeInArea,
+            ),
+          );
+        });
   }
 }
 
 class _BasicDialogContent extends StatefulWidget {
   final bool isQrCodeInArea;
   final DialogRequest request;
+  final InAreaAlertDialogViewModel model;
   final Function(DialogResponse dialogResponse) completer;
 
   _BasicDialogContent({
@@ -40,6 +49,7 @@ class _BasicDialogContent extends StatefulWidget {
     required this.request,
     required this.completer,
     required this.isQrCodeInArea,
+    required this.model,
   }) : super(key: key);
 
   @override
@@ -149,8 +159,8 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                                 CircleAvatar(
                                   backgroundColor: kcPrimaryColor,
                                   child: Icon(
-                                    widget.isQrCodeInArea
-                                        ? Icons.qr_code_scanner
+                                    widget.model.isUsingAR
+                                        ? Icons.camera_alt_outlined
                                         : Icons.add_circle_outline_rounded,
                                     color: Colors.grey[50],
                                   ),
@@ -162,14 +172,16 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                       ),
                     ),
                   ),
-                  verticalSpaceTiny,
+                  verticalSpaceSmall,
 
                   ScaleTransition(
                     scale: _animation,
                     // duration: Duration(milliseconds: 500),
                     // height: height,
                     child: Text(
-                      widget.isQrCodeInArea ? "OPEN SCANNER" : "COLLECT",
+                      widget.model.isUsingAR
+                          ? "Find credits"
+                          : "Collect credits",
                       style: textTheme(context)
                           .headline6!
                           .copyWith(color: kcPrimaryColor),
@@ -182,14 +194,21 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        TextButton(
-                          onPressed: () => widget
-                              .completer(DialogResponse(confirmed: false)),
-                          child: Text(
-                            "Go Back",
-                            style: TextStyle(color: kcBlackHeadlineColor),
+                        if (widget.model.isUsingAR)
+                          TextButton(
+                            onPressed: () async {
+                              dynamic collected =
+                                  await widget.request.data["functionNoAr"]();
+                              if (collected is bool && collected == true) {
+                                widget
+                                    .completer(DialogResponse(confirmed: true));
+                              }
+                            },
+                            child: Text(
+                              "Collect immediately",
+                              style: TextStyle(color: kcBlackHeadlineColor),
+                            ),
                           ),
-                        ),
                         if (widget.isQrCodeInArea)
                           TextButton(
                             onPressed: () => print("hi"),

@@ -53,7 +53,7 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
                 padding: const EdgeInsets.all(12.0),
                 width: screenWidth(context, percentage: 0.7),
                 child: AfkCreditsText.headingFour(
-                  "Tap on the credits to collect them",
+                  "Look around and tap the credits",
                   align: TextAlign.center,
                 ),
               ),

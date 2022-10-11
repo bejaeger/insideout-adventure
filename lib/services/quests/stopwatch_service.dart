@@ -57,6 +57,11 @@ class StopWatchService extends PausableService {
     startTimer();
   }
 
+  void forceListenToSecondTime({required void Function(int) callback}) {
+    setOnChangeSecond(callback);
+    forceStartTimer();
+  }
+
   @override
   void resume() {
     if (servicePaused == true) {
@@ -123,6 +128,17 @@ class StopWatchService extends PausableService {
     }
   }
 
+  void forceStartTimer() {
+    if (isRunning) {
+      resetTimer();
+    }
+    if (!isRunning) {
+      _startTimeAbsolute = DateTime.now().millisecondsSinceEpoch;
+      _timer =
+          Timer.periodic(Duration(milliseconds: timerDuration), _increment);
+    }
+  }
+
   // value in ms
   void periodicFunction(int value) {
     final latestSecond = getRawSecond(value);
@@ -146,8 +162,6 @@ class StopWatchService extends PausableService {
   void resetTimer() {
     if (isRunning) {
       stopTimer();
-      _timer?.cancel();
-      _timer = null;
     }
     _startTimeAbsolute = 0;
     _stopTimeRelative = 0;

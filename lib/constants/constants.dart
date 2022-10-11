@@ -36,6 +36,8 @@ final CollectionReference usersCollection =
     FirebaseFirestore.instance.collection('users');
 final CollectionReference feedbackCollection =
     FirebaseFirestore.instance.collection('feedback');
+final CollectionReference screenShotsCollection =
+    FirebaseFirestore.instance.collection('screenshots');
 // collection references
 final CollectionReference giftCardsCollection =
     FirebaseFirestore.instance.collection('giftCardCategories');

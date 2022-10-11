@@ -24,7 +24,8 @@ class ARObjectViewModel extends ActiveQuestBaseViewModel
   void popArView({dynamic result}) async {
     layoutService.setIsFadingOutOverlay(false);
     popViewReturnValue(result: result);
-    restorePreviousCameraPositionAndAnimate(moveInsteadOfAnimate: true);
+    mapStateService.restoreBeforeArCameraPositionAndAnimate(
+        moveInsteadOfAnimate: true);
   }
 
   @override

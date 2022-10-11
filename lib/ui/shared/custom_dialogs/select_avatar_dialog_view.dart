@@ -110,7 +110,7 @@ class SelectAvatarDialogView extends StatelessWidget {
                           alignment: Alignment.bottomCenter,
                           child: Column(
                             children: [
-                              SizedBox(height: 125),
+                              SizedBox(height: 130),
                               Container(
                                 height: 50,
                                 width: 100,

@@ -6,6 +6,7 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
+import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -15,6 +16,7 @@ import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/markers/markers.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -44,11 +46,12 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final SnackbarService snackbarService = locator<SnackbarService>();
   final DialogService _dialogService = locator<DialogService>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
-
+  final CloudStorageService _cloudStorageService =
+      locator<CloudStorageService>();
   // ------------------------------------------
   // state
   int pageIndex = 0;
-  bool creatingQuest = false;
+  bool isLoading = false;
   bool result = false;
   QuestType selectedQuestType = QuestType.TreasureLocationSearch;
 
@@ -57,6 +60,24 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   String? questTypeInputValidationMessage;
   String? afkMarkersInputValidationMessage;
   num? screenTimeEquivalent;
+
+  // to show loading indicator when screen shots are downloaded
+  bool laodingScreenShots = false;
+
+  Map<QuestType, List<dynamic>> get exampleScreenShots =>
+      _cloudStorageService.exampleScreenShots;
+
+  List<dynamic>? get exampleScreenShotsWithType =>
+      _cloudStorageService.exampleScreenShots[selectedQuestType];
+
+  Future loadExampleScreenshots() async {
+    notifyListeners();
+    laodingScreenShots = true;
+    await _cloudStorageService.loadExampleScreenshots(
+        questType: selectedQuestType);
+    laodingScreenShots = false;
+    notifyListeners();
+  }
 
   List<String>? markerIds = [];
   @override
@@ -85,10 +106,16 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     }
   }
 
+  Future navigateToMap(PageController controller) async {
+    pageIndex = 1;
+    controller.jumpToPage(pageIndex);
+    notifyListeners();
+  }
+
   // ----------------------------------------------
   // Back or next navigations
   Future onNextButton(PageController controller) async {
-    if (pageIndex == 0) {
+    if (pageIndex == 2) {
       // Name and description inputs
       if (isValidUserInputs(name: true, description: true)) {
         controller.nextPage(
@@ -96,13 +123,20 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
         pageIndex = pageIndex + 1;
         notifyListeners();
       }
-    } else if (pageIndex == 1) {
+    } else if (pageIndex == 0) {
+      if (userLocation == null) {
+        isLoading = true;
+        notifyListeners();
+        await geolocationService.getAndSetCurrentLocation();
+        isLoading = false;
+        notifyListeners();
+      }
       // quest type selection input
       controller.nextPage(
           duration: Duration(milliseconds: 200), curve: Curves.easeIn);
       pageIndex = pageIndex + 1;
       notifyListeners();
-    } else if (pageIndex == 2) {
+    } else if (pageIndex == 1) {
       // quest marker selection
       if (getAFKMarkers.length < 2) {
         return null;
@@ -120,7 +154,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     } else if (pageIndex == 3) {
       // number credits selection
       if (isValidUserInputs(credits: true)) {
-        await createQuestAndNavigateBack(controller: controller);
+        await createQuestAndNavigateToMap(controller: controller);
       }
     }
   }
@@ -199,15 +233,15 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       case QuestType.DistanceEstimate:
         return kDistanceEstimateDescription;
       case QuestType.TreasureLocationSearch:
-        return kLocationSearchDescription;
+        return kLocationSearchDescriptionParents;
       case QuestType.QRCodeHunt:
-        return kGPSAreaHikeDescription;
+        return kGPSAreaHikeDescriptionParents;
       case QuestType.QRCodeHike:
         return kGPSAreaHikeDescription;
       case QuestType.GPSAreaHike:
-        return kGPSAreaHikeDescription;
+        return kGPSAreaHikeDescriptionParents;
       case QuestType.GPSAreaHunt:
-        return kGPSAreaHikeDescription;
+        return kGPSAreaHikeDescriptionParents;
       default:
         return kGPSAreaHikeDescription;
     }
@@ -261,14 +295,15 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     return false;
   }
 
-  Future<bool> createQuestAndNavigateBack(
+  Future<bool> createQuestAndNavigateToMap(
       {required PageController controller}) async {
-    creatingQuest = true;
+    isLoading = true;
     result = await _createQuest() ?? false;
     if (result) {
       AFKMarker startMarker = getAFKMarkers.first;
       resetMarkersValues();
-      onBackButton(controller);
+      navigateToMap(controller);
+      //onBackButton(controller);
       await Future.delayed(Duration(milliseconds: 210));
       setBusy(true);
       if (getGoogleMapController != null) {
@@ -285,7 +320,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       ); // number 0 gets green marker!
       notifyListeners();
       await Future.delayed(Duration(milliseconds: 500));
-      creatingQuest = false;
+      isLoading = false;
       notifyListeners();
       _displaySnackBars.snackBarCreatedQuest();
       await Future.delayed(Duration(milliseconds: 2000));

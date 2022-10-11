@@ -53,6 +53,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   List<Quest> get nearbyQuests => questService.getNearByQuest;
   bool get isFingerOnScreen => mapStateService.isFingerOnScreen;
   DateTime startedRotating = DateTime.now();
+  bool get showAvatarAndMapEffects =>
+      appConfigProvider.isShowAvatarAndMapEffects;
   // bool isRotating = false;
 
   // -------------------------------------------------
@@ -203,11 +205,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     _moveCamera(questCenteredOnMap: activeQuestService.questCenteredOnMap);
     previousRotation = rotation;
 
-    // TODO: This does not really work!
-    // TODO: We want to remove the ripple effects WHILE rotating
-    // TODO: This is somehow possible!
-    await Future.delayed(Duration(milliseconds: 70));
-    if (DateTime.now().difference(startedRotating).inMilliseconds > 65) {
+    await Future.delayed(Duration(milliseconds: 160));
+    if (DateTime.now().difference(startedRotating).inMilliseconds > 150) {
       setIsFingerOnScreen(false);
     }
   }
@@ -428,35 +427,17 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       }
     }
 
-    // ---------------------------------------------
-    // If quest is completed we need to check whether quest can be redone or not!
-    // if (completed) {
-    //   if (quest.repeatable == 0) {
-    //     await dialogService.showDialog(
-    //         title: "Quest already completed!",
-    //         description: "You cannot redo this quest.",
-    //         buttonTitle: 'OK');
-    //     return;
-    //   } else {
-    //     final result = await dialogService.showDialog(
-    //         title: "Redo quest?",
-    //         description: "You already completed this quest",
-    //         cancelTitle: "NO",
-    //         buttonTitle: 'YES');
-    //     if (!(result?.confirmed == true)) {
-    //       hideMarkerInfoWindowNow(markerId: afkmarker.id);
-    //       return;
-    //     }
-    //   }
-    // }
-
     // ------------------------------------------------
     // normal function to be executed when marker is tapped
     if (!useSuperUserFeatures || adminMode == false) {
       if (hasActiveQuest == false) {
-        // no quest active
+        // -->> BEGIN No active quest
+
+        // -->> BEGIN isStartMarker
         if (afkmarker == quest.startMarker) {
           dynamic result;
+
+          // When in bird view we show a bottom sheet!
           if (!isAvatarView && selectedQuest == null) {
             // marker info window shows automatically. hide it when not in avatar view
             hideMarkerInfoWindowNow(markerId: afkmarker.id);
@@ -467,15 +448,19 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
             );
           }
 
-          // if we are in avatarView we don't show the bottom sheet and directly
-          // animate to the quest.
+          // When we select the quest from the bottom sheet OR are in avatar view
+          // we smoothly animate to the quest
           if (result?.confirmed == true || isAvatarView) {
             // showQuestDetails
             animateToQuestDetails(quest: quest);
           }
+          // <<-- END isStartMarker
         } else {
+          // -->> BEGIN is quest marker
+
           // information dialogs
           if (quest.type != QuestType.QRCodeHike) {
+            // show info dialog for 1.5 seconds.
             showMarkerInfoWindowNow(markerId: afkmarker.id);
             await Future.delayed(Duration(milliseconds: 1500));
             hideMarkerInfoWindowNow(markerId: afkmarker.id);
@@ -488,9 +473,13 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
                 description: "Start the quest and collect this marker.");
           }
         }
+
+        // <<-- END No active quest
       } else {
-        // quest is active, can we collect this marker?
-        // what happens when the user collects a marker
+        // -->> BEGIN Has active quest
+
+        // ? DEVELOPMENT FEATURE ONLY!
+        // ? ALLOW testing quests by pressing on markers on map!
         log.i("Quest active, handling qrCodeScanEvent");
         if (appConfigProvider.allowDummyMarkerCollection) {
           MarkerAnalysisResult markerResult =
@@ -588,6 +577,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       if (quest.startMarker != null) {
         changeCameraTilt(90);
         changeCameraZoom(kMaxZoom);
+        mapStateService.setIsAvatarView(true);
         animateCameraViewModel(
             customLat: quest.startMarker!.lat,
             customLon: quest.startMarker!.lon,
@@ -615,6 +605,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       // risky cause when user immediately taps close we are in camera nirvana
       await Future.delayed(Duration(milliseconds: 300));
       mapStateService.setIsAvatarView(false);
+      // change tilt of camera to default in hike quest
+      changeCameraTilt(0);
       notifyListeners();
 
       // ? Cannot add the markers here because we need a custom function for
@@ -707,33 +699,67 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     );
   }
 
+  void animateCameraToBetweenCoordinatesWithPadding(
+      {required List<List<double>> latLngList}) {
+    // animate camera so that markers are shown:
+    // add ghost latLong positions (in-place) to avoid  zooming
+    // too far if only two positions very close by are shown!
+
+    log.wtf("latLngList BEFORE padding: $latLngList");
+
+    // TODO: Could add more ghost markers this cause sometimes the zoom is too much
+    // TODO:  e.g. if line between markers is parallel to the north-south direction
+    potentiallyAddGhostLatLng(latLngList: latLngList);
+    log.wtf("latLngList AFTER padding: $latLngList");
+
+    Future.delayed(
+      Duration(milliseconds: 0),
+      () => animateCameraToBetweenCoordinates(latLngList: latLngList),
+    );
+  }
+
   // if only two locations are shown we want to provide more padding on the
   // screen and therefore add ghost markers!
   void potentiallyAddGhostLatLng({required List<List<double>> latLngList}) {
-    if (latLngList.length == 2) {
-      if (geolocationService.distanceBetween(
-              lat1: latLngList[0][0],
-              lon1: latLngList[0][1],
-              lat2: latLngList[1][0],
-              lon2: latLngList[1][1]) <
-          150) {
-        // add ghost latLng positions for padding of camera!
-        latLngList.add(geolocationService.getLatLngShiftedLonInList(
-            latLng: latLngList[0], offset: 80));
-        latLngList.add(geolocationService.getLatLngShiftedLonInList(
-            latLng: latLngList[0], offset: -80));
-        // getLatLngShiftedLatInList
-      }
-    }
+    // if (latLngList.length == 2) {
+    //   if (geolocationService.distanceBetween(
+    //           lat1: latLngList[0][0],
+    //           lon1: latLngList[0][1],
+    //           lat2: latLngList[1][0],
+    //           lon2: latLngList[1][1]) <
+    //       150) {
+    //     // add ghost latLng positions for padding of camera!
+    //     latLngList.add(geolocationService.getLatLngShiftedLonInList(
+    //         latLng: latLngList[0], offset: 80));
+    //     latLngList.add(geolocationService.getLatLngShiftedLonInList(
+    //         latLng: latLngList[0], offset: -80));
+    //     // add ghost latLng positions for padding of camera!
+    //     latLngList.add(geolocationService.getLatLngShiftedLatInList(
+    //         latLng: latLngList[0], offset: 80));
+    //     latLngList.add(geolocationService.getLatLngShiftedLatInList(
+    //         latLng: latLngList[0], offset: -80));
+    //     // getLatLngShiftedLatInList
+    //   }
+    // }
+    // This just adds some padding
+    latLngList.add(geolocationService.getLatLngShiftedLatInList(
+        latLng: latLngList[0], offset: 150));
+    latLngList.add(geolocationService.getLatLngShiftedLatInList(
+        latLng: latLngList[0], offset: -150));
+    latLngList.add(geolocationService.getLatLngShiftedLonInList(
+        latLng: latLngList[0], offset: 80));
+    latLngList.add(geolocationService.getLatLngShiftedLonInList(
+        latLng: latLngList[0], offset: -80));
   }
 
   void updateMapDisplay({required AFKMarker? afkmarker}) {
     if (afkmarker == null) return;
     updateMapAreas(afkmarker: afkmarker);
     updateMapMarkers(
-        afkmarker: afkmarker,
-        collected: activeQuest.markersCollected[activeQuest.quest.markers
-            .indexWhere((element) => element == afkmarker)]);
+      afkmarker: afkmarker,
+      collected: activeQuest.markersCollected[activeQuest.quest.markers
+          .indexWhere((element) => element == afkmarker)],
+    );
     notifyListeners();
   }
 
@@ -833,7 +859,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   Future changeSettingsForNewView(double? lat, double? lon) async {
     // 1. First take snapshot
-    takeSnapshotOfCameraPosition();
+    mapStateService.takeBeforeARSnapshotOfCameraPosition();
 
     // 2. set is fading out to show black fade out when AR marker is tapped
     layoutService.setIsFadingOutOverlay(true);
@@ -847,14 +873,15 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   Future onARObjectMarkerTap(double lat, double lon, bool isCoin) async {
+    // This triggers an fade out animation and save the current camera position
     await changeSettingsForNewView(lat, lon);
+
     if (appConfigProvider.isARAvailable) {
-      return await openARView(lat, lon, isCoin);
+      return await openARView(isCoin);
     } else {
       await showCollectedMarkerDialog();
-      // TODO: setIsFadingOutOverlay set to false twice. Not exactly sure if that is intended
-      layoutService.setIsFadingOutOverlay(false);
-      restorePreviousCameraPositionAndAnimate(moveInsteadOfAnimate: true);
+      mapStateService.restoreBeforeArCameraPositionAndAnimate(
+          moveInsteadOfAnimate: true);
       await Future.delayed(Duration(milliseconds: 200));
       layoutService.setIsFadingOutOverlay(false);
       return true;
@@ -868,7 +895,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     mapStateService.setIsAvatarView(true);
   }
 
-  Future openARView(double lat, double lon, bool isCoin) async {
+  Future openARView(bool isCoin) async {
     dynamic res = await navToArObjectView(isCoin);
     return res is bool && res == true;
   }

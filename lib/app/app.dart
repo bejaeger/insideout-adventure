@@ -35,6 +35,7 @@ import 'package:afkcredits/ui/views/ar_view/ar_object_ios_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
+import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart';
 import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
@@ -44,6 +45,7 @@ import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
+import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart';
 import 'package:afkcredits/ui/views/permissions/permissions_view.dart';
 import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
@@ -145,6 +147,13 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: ScreenTimeService),
     LazySingleton(classType: PermissionService),
     LazySingleton(classType: NotificationsService),
+
+    // needed so that notifications and screen time things
+    // are properly reacted to
+    LazySingleton(classType: ParentHomeViewModel),
+
+    // TODO: this is a test
+    LazySingleton(classType: ExplorerHomeViewModel),
 
     //LazySingleton(classType: MarkersInMap),
     // LazySingleton(classType: MapViewModel),

@@ -14,7 +14,8 @@ mixin MapStateControlMixin {
 
   // ----------------------------------------
   // Getters
-  double get bearing => mapStateService.bearingSubject.value;
+  //double get bearing => mapStateService.bearingSubject.value;
+  double get bearing => mapStateService.bearing;
   double get tilt => mapStateService.tilt;
   double get zoom => mapStateService.zoom;
   double? get newLat => mapStateService.newLat;
@@ -34,7 +35,8 @@ mixin MapStateControlMixin {
   }
 
   void changeCameraBearing(double bearingIn) {
-    mapStateService.bearingSubject.add(bearingIn);
+    // mapStateService.bearingSubject.add(bearingIn);
+    mapStateService.bearing = bearingIn;
   }
 
   void changeNavigatedFromQuestList(bool set) {
@@ -43,7 +45,8 @@ mixin MapStateControlMixin {
 
   void setCameraSettings({double? bearing, double? zoom, double? tilt}) {
     if (bearing != null) {
-      mapStateService.bearingSubject.add(bearing);
+      // mapStateService.bearingSubject.add(bearing);
+      mapStateService.bearing = bearing;
     }
     if (tilt != null) {
       mapStateService.tilt = tilt;

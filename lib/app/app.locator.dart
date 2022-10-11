@@ -41,7 +41,9 @@ import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/screentime/screen_time_service.dart';
 import '../services/users/user_service.dart';
+import '../ui/views/explorer_home/explorer_home_viewmodel.dart';
 import '../ui/views/map/map_viewmodel.dart';
+import '../ui/views/parent_home/parent_home_viewmodel.dart';
 import '../utils/image_selector.dart';
 
 final locator = StackedLocator.instance;
@@ -85,6 +87,8 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => ScreenTimeService());
   locator.registerLazySingleton(() => PermissionService());
   locator.registerLazySingleton(() => NotificationsService());
+  locator.registerLazySingleton(() => ParentHomeViewModel());
+  locator.registerLazySingleton(() => ExplorerHomeViewModel());
   final mapViewModel = await presolveMapViewModel();
   locator.registerSingleton(mapViewModel);
 

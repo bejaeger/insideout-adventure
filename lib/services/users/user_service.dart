@@ -702,7 +702,8 @@ class UserService {
             if (e is StateError) {
               log.v("No active screen time for explorer with id $explorerId");
               if (prevActiveSessions != null) {
-                // THIS means a screen time session was cancelled after X seconds (30 seconds per default) and was deleted from firestore!
+                // THIS means a screen time session was cancelled prematurely after X
+                // seconds (30 seconds per default) and was deleted from firestore!
                 // See stopScreenTime function in screen_time_service.dart
                 _screenTimeService.cancelActiveScreenTimeListeners(
                     uid: explorerId);
@@ -712,7 +713,7 @@ class UserService {
                   callback();
                 }
               }
-              // since there is no active session we cannot forget to remove it from the state!
+              // since there is no active session we should not forget to remove it from the state!
               _screenTimeService.supportedExplorerScreenTimeSessionsActive
                   .remove(explorerId);
             } else {

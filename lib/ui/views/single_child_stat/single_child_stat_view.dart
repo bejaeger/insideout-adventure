@@ -36,7 +36,8 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                     : "Child Statistics",
             onBackButton: model.popView,
             dropDownButton: CustomDropDownMenu(
-                icon1: Icon(Icons.close_rounded, color: kcMediumGrey, size: 22),
+                icon1: Icon(Icons.delete_outline_rounded,
+                    color: kcMediumGrey, size: 22),
                 onTap1: model.removeChildFromParentAccount,
                 text1: 'Remove child'),
           ),
@@ -83,12 +84,12 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                     verticalSpaceTiny,
                                     Container(
                                       width: 120,
-                                      child: AfkCreditsButton.outline(
+                                      child: AfkCreditsButton(
                                         leading: Icon(
                                           Icons.add,
-                                          color: kcPrimaryColor,
+                                          color: Colors.white,
                                         ),
-                                        title: "Add",
+                                        title: "Reward",
                                         onTap: model.navigateToAddFundsView,
                                       ),
                                     ),
@@ -159,7 +160,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                   leading: Icon(
                                                       Icons.play_arrow_rounded,
                                                       color: kcPrimaryColor),
-                                                  title: "Start",
+                                                  title: "Set timer",
                                                   onTap: () =>
                                                       model.navToSelectScreenTimeView(
                                                           childId: widget.uid),
@@ -290,7 +291,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                               verticalSpaceSmall,
                             if (model.sortedHistory.length > 0)
                               SectionHeader(
-                                title: "History",
+                                title: "Recent activities",
                                 horizontalPadding: 0,
                               ),
                             if (model.sortedHistory.length > 0)
@@ -308,7 +309,8 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                   child: ListView.builder(
                                     shrinkWrap: true,
                                     physics: ScrollPhysics(),
-                                    itemCount: model.sortedHistory.length,
+                                    itemCount:
+                                        model.sortedHistory.length.clamp(0, 5),
                                     itemBuilder: (context, index) {
                                       final data = model.sortedHistory[index];
                                       return Column(

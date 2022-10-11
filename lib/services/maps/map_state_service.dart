@@ -15,9 +15,11 @@ class MapStateService {
 
   double tilt = kInitialTilt;
   double zoom = kInitialZoomAvatarView;
-  double get bearing => bearingSubject.value;
-  final BehaviorSubject<double> bearingSubject =
-      BehaviorSubject<double>.seeded(kInitialBearing);
+
+  double bearing = kInitialBearing;
+  // double get bearing => bearingSubject.value;
+  // final BehaviorSubject<double> bearingSubject =
+  //     BehaviorSubject<double>.seeded(kInitialBearing);
   final mapEventListener = BehaviorSubject<MapUpdate>();
 
   // to create snapshot of previous camera position
@@ -28,6 +30,16 @@ class MapStateService {
   bool? previousIsAvatarView;
   double? previousLat;
   double? previousLon;
+
+  // create snapshot of previous camera position
+  // before Ar view is shown or marker is collected!
+  // Needed because we have a fancy animation before this happens
+  double? beforeArBearing;
+  double? beforeArZoom;
+  double? beforeArTilt;
+  bool? beforeArIsAvatarView;
+  double? beforeArLat;
+  double? beforeArLon;
 
   // variable holding last bird view zoom to restore back to it
   double? lastBirdViewZoom;
@@ -60,6 +72,17 @@ class MapStateService {
     previousLon = currentLon;
   }
 
+  void takeBeforeARSnapshotOfCameraPosition() {
+    if (beforeArBearing != null)
+      return; // only take snapshot when no snapshot is stored!
+    beforeArIsAvatarView = isAvatarView;
+    beforeArBearing = bearing;
+    beforeArZoom = zoom;
+    beforeArTilt = tilt;
+    beforeArLat = currentLat;
+    beforeArLon = currentLon;
+  }
+
   void resetSnapshotOfCameraPosition() {
     previousIsAvatarView = null;
     previousBearing = null;
@@ -67,6 +90,15 @@ class MapStateService {
     previousTilt = null;
     previousLat = null;
     previousLon = null;
+  }
+
+  void resetBeforeArSnapshotOfCameraPosition() {
+    beforeArIsAvatarView = null;
+    beforeArBearing = null;
+    beforeArZoom = null;
+    beforeArTilt = null;
+    beforeArLat = null;
+    beforeArLon = null;
   }
 
   void takeSnapshotOfBirdViewCameraPosition() {
@@ -89,7 +121,8 @@ class MapStateService {
 
   void restorePreviousCameraPosition() {
     if (previousBearing != null) {
-      bearingSubject.add(previousBearing!);
+      // bearingSubject.add(previousBearing!);
+      bearing = previousBearing!;
     }
     if (previousZoom != null) {
       zoom = previousZoom!;
@@ -114,9 +147,47 @@ class MapStateService {
     previousIsAvatarView = null;
   }
 
+  void restoreBeforeArCameraPosition() {
+    if (beforeArBearing != null) {
+      //bearingSubject.add(beforeArBearing!);
+      bearing = beforeArBearing!;
+    }
+    if (beforeArZoom != null) {
+      zoom = beforeArZoom!;
+    }
+    if (beforeArTilt != null) {
+      tilt = beforeArTilt!;
+    }
+    if (beforeArIsAvatarView != null) {
+      isAvatarView = beforeArIsAvatarView!;
+    }
+    if (beforeArLat != null) {
+      newLat = beforeArLat;
+    }
+    if (beforeArLon != null) {
+      newLon = beforeArLon;
+    }
+    beforeArBearing = null;
+    beforeArZoom = null;
+    beforeArTilt = null;
+    beforeArLon = null;
+    beforeArLat = null;
+    beforeArIsAvatarView = null;
+  }
+
   void restorePreviousCameraPositionAndAnimate(
       {bool moveInsteadOfAnimate = false}) {
     restorePreviousCameraPosition();
+    if (moveInsteadOfAnimate) {
+      restoreMapSnapshotByMoving();
+    } else {
+      restoreMapSnapshot();
+    }
+  }
+
+  void restoreBeforeArCameraPositionAndAnimate(
+      {bool moveInsteadOfAnimate = false}) {
+    restoreBeforeArCameraPosition();
     if (moveInsteadOfAnimate) {
       restoreMapSnapshotByMoving();
     } else {
@@ -193,7 +264,7 @@ class MapStateService {
   // ! THIS IS NEVER CALLED ANYWHERE!
   // ! SHOULD IT BE CALLED!?
   void closeListener() {
-    bearingSubject.close();
+    // bearingSubject.close();
     isFingerOnScreenSubject.close();
     mapEventListener.close();
   }

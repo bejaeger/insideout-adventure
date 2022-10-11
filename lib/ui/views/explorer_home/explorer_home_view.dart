@@ -1,3 +1,4 @@
+import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
@@ -41,7 +42,10 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
+      // viewModelBuilder: () => ExplorerHomeViewModel(),
       viewModelBuilder: () => ExplorerHomeViewModel(),
+      // using singleton was kind of unstable :ooo
+      // disposeViewModel: false,
       onModelReady: (model) {
         model.initialize(
             showBewareDialog: widget.showBewareDialog,

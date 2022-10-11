@@ -44,9 +44,12 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2<MenuItem>(
-        customButton: const Icon(
-          Icons.more_vert, size: 26, color: kcWhiteTextColor,
-          //color: Colors.red,
+        customButton: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: const Icon(
+            Icons.more_vert, size: 26, color: kcWhiteTextColor,
+            //color: Colors.red,
+          ),
         ),
         dropdownElevation: 4,
         offset: const Offset(0, 0),
@@ -64,8 +67,9 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
           return;
         },
         itemHeight: 48,
+        //alignment: AlignmentDirectional.centerStart,
         itemPadding: const EdgeInsets.only(left: 16, right: 16),
-        dropdownWidth: 160,
+        dropdownWidth: 180,
         dropdownPadding: const EdgeInsets.symmetric(vertical: 6),
         dropdownDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),

@@ -26,12 +26,22 @@ class ScreenTimeSession with _$ScreenTimeSession {
 
 Map<String, String?> getStringMapFromSession(
     {required ScreenTimeSession session}) {
+  late String startedAt;
+  try {
+    startedAt = session.startedAt is DateTime
+        ? session.startedAt.toIso8601String()
+        : "";
+  } catch (e) {
+    print(
+        "==>> ERROR in getStringMapFromSession(): Could not convert startedAt object, error: $e");
+    startedAt = "";
+  }
   return {
     "sessionId": session.sessionId,
     "uid": session.uid,
     "userName": session.userName,
     "createdByUid": session.createdByUid,
-    "startedAt": "",
+    "startedAt": startedAt,
     "endedAt": "",
     "minutes": session.minutes.toStringAsFixed(0),
     "status": session.status.toString().split('.').last,
@@ -41,13 +51,21 @@ Map<String, String?> getStringMapFromSession(
 
 ScreenTimeSession getSessionFromStringMap(
     {required Map<String, String?> payload}) {
+  dynamic startedAt;
+  try {
+    startedAt = DateTime.parse(payload["startedAt"]!);
+  } catch (e) {
+    print(
+        "==>> ERROR in getSessionFromStringMap(): Could not convert startedAt object, error: $e");
+    startedAt = "";
+  }
   return ScreenTimeSession.fromJson(
     {
       "sessionId": payload["sessionId"],
       "uid": payload["uid"],
       "userName": payload["userName"],
       "createdByUid": payload["createdByUid"],
-      "startedAt": "",
+      "startedAt": startedAt,
       "endedAt": "",
       "minutes": int.parse(payload["minutes"]!),
       "afkCredits": int.parse(payload["afkCredits"]!),

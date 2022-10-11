@@ -63,7 +63,9 @@ class MainMapView extends StatelessWidget {
             // TODO: update treatment of isFingerOnScreen
             // if (model.hasActiveQuest && !model.isFingerOnScreen)
             //   MapEffects(activeQuest: model.activeQuest),
-            AvatarAndEffectsOnMapView(avatarIdx: model.avatarIdx),
+
+            if (model.showAvatarAndMapEffects)
+              AvatarAndEffectsOnMapView(avatarIdx: model.avatarIdx),
             // Avatar overlaid with Lottie
             RightFloatingButtonsView(
               // onCompassTap: model.rotateToNorth,

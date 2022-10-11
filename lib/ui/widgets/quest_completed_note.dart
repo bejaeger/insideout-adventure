@@ -33,11 +33,14 @@ class QuestCompletedNote extends StatelessWidget {
           AfkCreditsText.headingFour("Quest already completed"),
           verticalSpaceSmall,
           if (repeatable == true)
-            AfkCreditsButton.text(
-                title: "Redo quest",
-                // color: Colors.white,
-                width: 120,
-                onTap: onTap),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AfkCreditsButton(
+                  title: "Redo quest",
+                  // color: Colors.white,
+                  width: 120,
+                  onTap: onTap),
+            ),
           if (repeatable == false)
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),

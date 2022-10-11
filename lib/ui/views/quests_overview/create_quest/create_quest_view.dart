@@ -55,7 +55,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateQuestViewModel>.reactive(
       onModelReady: (model) {
-        if (model.getCurrentPostion == null) model.setPosition();
+        model.getLocation();
         listenToFormUpdated(model);
       },
       viewModelBuilder: () => CreateQuestViewModel(fromMap: fromMap),
@@ -75,7 +75,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                 ? null
                 : BottomFloatingActionButtons(
                     swapButtons: true,
-                    onTapSecondary: model.pageIndex == 2
+                    onTapSecondary: model.pageIndex == 1
                         ? model.getAFKMarkers.length < 2
                             ? null
                             : () async {
@@ -85,50 +85,36 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                                 await model.onNextButton(controller);
                               }
                         : () async {
-                            if (model.pageIndex == 0) {
+                            if (model.pageIndex == 2) {
                               FocusScope.of(context).unfocus();
                             }
                             await model.onNextButton(controller);
                           },
                     titleSecondary:
                         model.pageIndex < 3 ? "Next \u2192" : "Create Quest",
-                    busySecondary: model.creatingQuest,
-                    onTapMain: model.pageIndex == 3
-                        ? () {
+                    busySecondary: model.isLoading,
+                    onTapMain: model.pageIndex >= 2
+                        ? () async {
                             FocusScope.of(context).unfocus();
                             model.onBackButton(controller);
                           }
                         : () => model.onBackButton(controller),
-                    // model.pageIndex == 1
-                    //     ? () {
-                    //         model.pageIndex = model.pageIndex - 1;
-                    //         controller.previousPage(
-                    //             duration: Duration(milliseconds: 200),
-                    //             curve: Curves.easeIn);
-                    //         model.notifyListeners();
-                    //       }
-                    //     : () {
-                    //         {
-                    //           model.resetMarkersValues();
-                    //           model.navBackToPreviousView();
-                    //         }
-                    //       },
                     titleMain: model.pageIndex >= 1 ? "\u2190 Back" : "Cancel",
                   ),
             body: PageView(
               controller: controller,
               physics: NeverScrollableScrollPhysics(),
               children: [
-                NameSelection(
-                  model: model,
-                  nameController: nameController,
-                  descriptionController: descriptionController,
-                ),
                 QuestTypeSelection(
                   model: model,
                 ),
                 QuestMarkersSelection(
                   model: model,
+                ),
+                NameSelection(
+                  model: model,
+                  nameController: nameController,
+                  descriptionController: descriptionController,
                 ),
                 CreditsSelection(
                   model: model,
@@ -156,7 +142,6 @@ class NameSelection extends StatelessWidget with $CreateQuestView {
   @override
   Widget build(BuildContext context) {
     bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
-
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
@@ -170,9 +155,7 @@ class NameSelection extends StatelessWidget with $CreateQuestView {
             AfkCreditsText.subheadingItalic("Choose a name"),
             verticalSpaceMedium,
             AfkCreditsInputField(
-                // decoration: InputDecoration(
-                //   labelText: 'Quest Name: ',
-                // ),
+                //focusNode: nameFocusNode,
                 autofocus: nameController.text == "" ? true : false,
                 placeholder: 'Quest name',
                 controller: nameController,
@@ -204,97 +187,144 @@ class QuestTypeSelection extends StatelessWidget with $CreateQuestView {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-        height: screenHeight(context) - 120,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            verticalSpaceMedium,
-            AfkCreditsText.subheadingItalic("Choose a quest type"),
-            verticalSpaceMedium,
-            // keyboardIsOpened ? verticalSpaceMedium : verticalSpaceLarge,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          verticalSpaceMedium,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+            child: AfkCreditsText.subheadingItalic("Choose a quest type"),
+          ),
+          verticalSpaceMedium,
+          // keyboardIsOpened ? verticalSpaceMedium : verticalSpaceLarge,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+            height: 160,
+            child: Row(
+              children: [
+                Expanded(
+                  child: SelectableBox(
+                    selected: model.selectedQuestType ==
+                        QuestType.TreasureLocationSearch,
+                    child: QuestTypeCard(
+                      category: QuestType.TreasureLocationSearch,
+                      onPressed: () => model.selectQuestType(
+                          type: QuestType.TreasureLocationSearch),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SelectableBox(
+                    selected: model.selectedQuestType == QuestType.GPSAreaHike,
+                    child: QuestTypeCard(
+                      category: QuestType.GPSAreaHike,
+                      onPressed: () =>
+                          model.selectQuestType(type: QuestType.GPSAreaHike),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          verticalSpaceMedium,
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                vertical: 8.0, horizontal: kHorizontalPadding + 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AfkCreditsText.subheading(
+                  getShortQuestType(model.selectedQuestType),
+                ),
+                verticalSpaceSmall,
+                AfkCreditsText.body(model.getQuestTypeExplanation()),
+              ],
+            ),
+          ),
+          verticalSpaceMedium,
+          AfkCreditsButton.text(
+            title: "Show example screenshots",
+            onTap: model.loadExampleScreenshots,
+          ),
+          if (model.laodingScreenShots) AFKProgressIndicator(),
+          if (model.exampleScreenShots.containsKey(model.selectedQuestType))
+            if (model.exampleScreenShotsWithType == null ||
+                model.exampleScreenShotsWithType!.length == 0)
+              Padding(
+                padding: const EdgeInsets.only(
+                    bottom: 100.0, left: 20.0, right: 20.0),
+                child: AfkCreditsText.headingFour(
+                    "Sorry, there are no example screenshots available at this time.",
+                    align: TextAlign.center),
+              ),
+          if (model.exampleScreenShotsWithType != null &&
+              model.exampleScreenShotsWithType!.length > 0)
             Container(
-              height: 160,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SelectableBox(
-                      selected: model.selectedQuestType ==
-                          QuestType.TreasureLocationSearch,
-                      child: QuestTypeCard(
-                        category: QuestType.TreasureLocationSearch,
-                        onPressed: () => model.selectQuestType(
-                            type: QuestType.TreasureLocationSearch),
+              height: 380,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: kcCultured,
+              ),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: model.exampleScreenShotsWithType!.length,
+                itemBuilder: (context, idx) {
+                  return Column(
+                    children: [
+                      verticalSpaceSmall,
+                      AfkCreditsText.headingFour(idx.toString()),
+                      verticalSpaceSmall,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Image.memory(
+                            model.exampleScreenShotsWithType![idx],
+                            height: 320),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: SelectableBox(
-                      selected:
-                          model.selectedQuestType == QuestType.GPSAreaHike,
-                      child: QuestTypeCard(
-                        category: QuestType.GPSAreaHike,
-                        onPressed: () =>
-                            model.selectQuestType(type: QuestType.GPSAreaHike),
-                      ),
-                    ),
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
             ),
-            verticalSpaceMedium,
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AfkCreditsText.subheading(
-                    getShortQuestType(model.selectedQuestType),
-                  ),
-                  verticalSpaceSmall,
-                  AfkCreditsText.body(model.getQuestTypeExplanation()),
-                ],
-              ),
-            )
-
-            // AfkCreditsDropdownFormField<QuestType>(
-            //   items: CreateQuestType.values.map(
-            //     (_questType) {
-            //       return DropdownMenuItem(
-            //         value: _questType == CreateQuestType.TreasureLocationSearch
-            //             ? QuestType.TreasureLocationSearch
-            //             : _questType == CreateQuestType.GPSAreaHike
-            //                 ? QuestType.GPSAreaHike
-            //                 : QuestType.GPSAreaHunt,
-            //         child: model.isLoading == false
-            //             ? Text(
-            //                 getShortQuestType(
-            //                   _questType ==
-            //                           CreateQuestType.TreasureLocationSearch
-            //                       ? QuestType.TreasureLocationSearch
-            //                       : _questType == CreateQuestType.GPSAreaHike
-            //                           ? QuestType.GPSAreaHike
-            //                           : QuestType.GPSAreaHunt,
-            //                 ),
-            //               )
-            //             : Text(
-            //                 "Select Quest Type",
-            //               ),
-            //       );
-            //     },
-            //   ).toList(),
-            //   onChanged: (QuestType? questType) {
-            //     questTypeValue = questType;
-            //     model.setQuestType(selectedQuestType: questType!);
-            //   },
-            //   placeholder: 'Select quest type',
-            //   value: questTypeValue,
-            //   errorText: model.questTypeInputValidationMessage,
-            // ),
-          ],
-        ),
+          if (model.exampleScreenShotsWithType != null &&
+              model.exampleScreenShotsWithType!.length > 0)
+            verticalSpaceMassive,
+          // AfkCreditsDropdownFormField<QuestType>(
+          //   items: CreateQuestType.values.map(
+          //     (_questType) {
+          //       return DropdownMenuItem(
+          //         value: _questType == CreateQuestType.TreasureLocationSearch
+          //             ? QuestType.TreasureLocationSearch
+          //             : _questType == CreateQuestType.GPSAreaHike
+          //                 ? QuestType.GPSAreaHike
+          //                 : QuestType.GPSAreaHunt,
+          //         child: model.isLoading == false
+          //             ? Text(
+          //                 getShortQuestType(
+          //                   _questType ==
+          //                           CreateQuestType.TreasureLocationSearch
+          //                       ? QuestType.TreasureLocationSearch
+          //                       : _questType == CreateQuestType.GPSAreaHike
+          //                           ? QuestType.GPSAreaHike
+          //                           : QuestType.GPSAreaHunt,
+          //                 ),
+          //               )
+          //             : Text(
+          //                 "Select Quest Type",
+          //               ),
+          //       );
+          //     },
+          //   ).toList(),
+          //   onChanged: (QuestType? questType) {
+          //     questTypeValue = questType;
+          //     model.setQuestType(selectedQuestType: questType!);
+          //   },
+          //   placeholder: 'Select quest type',
+          //   value: questTypeValue,
+          //   errorText: model.questTypeInputValidationMessage,
+          // ),
+        ],
       ),
     );
   }
@@ -395,7 +425,7 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
                 ),
               ],
             ),
-          if (model.creatingQuest)
+          if (model.isLoading)
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: AFKProgressIndicator(
@@ -421,6 +451,9 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
   @override
   Widget build(BuildContext context) {
     bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
+    if (afkCreditAmountController.text == "") {
+      afkCreditAmountFocusNode.requestFocus();
+    }
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
@@ -446,14 +479,14 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
               ],
             ),
             verticalSpaceMedium,
-            model.creatingQuest
+            model.isLoading
                 ? SizedBox(height: 0, width: 0)
                 : Row(
                     children: [
                       Container(
                         width: screenWidth(context, percentage: 0.35),
                         child: AfkCreditsInputField(
-                          //focusNode: amountFocusNode,
+                          focusNode: afkCreditAmountFocusNode,
                           controller: afkCreditAmountController,
                           style: heading3Style,
                           leading: Padding(

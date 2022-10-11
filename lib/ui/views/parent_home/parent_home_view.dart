@@ -1,3 +1,4 @@
+import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
@@ -22,7 +23,10 @@ class ParentHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ParentHomeViewModel>.reactive(
-        viewModelBuilder: () => ParentHomeViewModel(),
+        // Make this a singleton because we listen to screen time changes
+        // from here!
+        viewModelBuilder: () => locator<ParentHomeViewModel>(),
+        disposeViewModel: false,
         onModelReady: (model) async {
           if (model.currentUser.newUser && screenTimeSession == null) {
             model.setNewUserPropertyToFalse();
@@ -32,11 +36,17 @@ class ParentHomeView extends StatelessWidget {
               },
             );
           }
-          model.listenToData(screenTimeSession: screenTimeSession);
+          // put in post frame callback because we use a singleton!
+          SchedulerBinding.instance.addPostFrameCallback(
+            (timeStamp) async {
+              model.listenToData(screenTimeSession: screenTimeSession);
+            },
+          );
         },
         // fireOnModelReadyOnce: true, TODO: Not sure why this was set
         builder: (context, model, child) {
-          //print("==>> Rebuild parent home view");
+          print("==>> Rebuild parent home view");
+          print(model.userHasGivenFeedback);
           return WillPopScope(
             onWillPop: () async => false,
             child: SafeArea(
@@ -46,6 +56,7 @@ class ParentHomeView extends StatelessWidget {
                   title: " ",
                   drawer: true,
                   screenTimes: model.childScreenTimeSessionsActive,
+                  hasUserGivenFeedback: model.userHasGivenFeedback,
                 ),
                 endDrawer: const ParentDrawerView(),
                 floatingActionButton: model.navigatingToActiveScreenTimeView
@@ -195,6 +206,7 @@ class ChildrenStatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //print("==>> Rebuilding children stats list");
     return Container(
       height: 180,
       child: ListView.builder(

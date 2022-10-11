@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -7,6 +9,7 @@ import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/utils/string_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ActiveScreenTimeViewModel extends BaseModel {
   // -----------------------------------
@@ -37,6 +40,7 @@ class ActiveScreenTimeViewModel extends BaseModel {
   // ------------------------------
   // state
   bool justStartedListeningToScreenTime = false;
+  Timer? _timer;
 
   Future initialize() async {
     setBusy(true);
@@ -47,9 +51,6 @@ class ActiveScreenTimeViewModel extends BaseModel {
       log.i("screen time session will be started");
 
       // start a NEW screen time session
-      session = session!.copyWith(status: ScreenTimeSessionStatus.active);
-
-      // updates session with new id
       session = await _screenTimeService.startScreenTime(
           session: session!, callback: listenToTick);
       justStartedListeningToScreenTime = true;
@@ -60,17 +61,13 @@ class ActiveScreenTimeViewModel extends BaseModel {
       log.i(
           "screen time session has started or is active and will be continued");
 
-      // probs should not do that!
-      // if (currentScreenTimeSession != null) {
-      //   session = currentScreenTimeSession;
-      // }
-
+      // ? Setup local listener for counter
       int screenTimeLeftInSecondsPreset =
           screenTimeService.getTimeLeftInSeconds(session: session!);
       screenTimeLeft = screenTimeLeftInSecondsPreset;
       notifyListeners();
-      // takes surprisingly long to start that listener here so update the screenTimeLeft one before!
-      _stopWatchService.listenToSecondTime(
+
+      _stopWatchService.forceListenToSecondTime(
         callback: (int tick) {
           screenTimeLeft = screenTimeLeftInSecondsPreset - tick;
           notifyListeners();
@@ -130,6 +127,7 @@ class ActiveScreenTimeViewModel extends BaseModel {
               secondsToMinuteTime(screenTimeLeft) +
               "in left."); //, mainButtonTitle: "CANCEL", )
     }
+    setBusy(true);
     if (result == null || result?.confirmed == true) {
       // trying to deal with notifications in screen time service
       // await NotificationController().dismissPermanentNotifications();
@@ -156,10 +154,25 @@ class ActiveScreenTimeViewModel extends BaseModel {
         duration: Duration(seconds: 2),
       );
     }
+    setBusy(false);
   }
 
+  // ---------------------------
+  // helpers
+  //
+  DateTime getStartedAt() {
+    if (expiredScreenTime!.startedAt is Timestamp) {
+      return expiredScreenTime!.startedAt.toDate();
+    } else {
+      return expiredScreenTime!.startedAt;
+    }
+  }
+
+  // ------------------------------------
+  // clean up
   void resetStopWatch() {
-    _stopWatchService.resetTimer();
+    _timer?.cancel();
+    // _stopWatchService.resetTimer();
   }
 
   void cancelOnlyActiveScreenTimeSubjectListeners({required String uid}) {
@@ -168,6 +181,17 @@ class ActiveScreenTimeViewModel extends BaseModel {
 
   void listenToTick() {
     notifyListeners();
+  }
+
+  void resetActiveScreenTimeView({required String uid}) {
+    resetStopWatch();
+    // ? just do the following all the time!
+    //if (justStartedListeningToScreenTime) {
+    // this is needed so that new state listeners are being started
+    // in home views!
+    cancelOnlyActiveScreenTimeSubjectListeners(uid: uid);
+    clearStackAndNavigateToHomeView();
+    //}
   }
 
   @override

@@ -23,6 +23,7 @@ mixin _$FeedbackCampaignInfo {
   String get currentCampaign => throw _privateConstructorUsedError;
   List<String> get questions => throw _privateConstructorUsedError;
   String get surveyUrl => throw _privateConstructorUsedError;
+  List<String>? get takenByUserWithUids => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,11 @@ abstract class $FeedbackCampaignInfoCopyWith<$Res> {
   factory $FeedbackCampaignInfoCopyWith(FeedbackCampaignInfo value,
           $Res Function(FeedbackCampaignInfo) then) =
       _$FeedbackCampaignInfoCopyWithImpl<$Res>;
-  $Res call({String currentCampaign, List<String> questions, String surveyUrl});
+  $Res call(
+      {String currentCampaign,
+      List<String> questions,
+      String surveyUrl,
+      List<String>? takenByUserWithUids});
 }
 
 /// @nodoc
@@ -52,6 +57,7 @@ class _$FeedbackCampaignInfoCopyWithImpl<$Res>
     Object? currentCampaign = freezed,
     Object? questions = freezed,
     Object? surveyUrl = freezed,
+    Object? takenByUserWithUids = freezed,
   }) {
     return _then(_value.copyWith(
       currentCampaign: currentCampaign == freezed
@@ -66,6 +72,10 @@ class _$FeedbackCampaignInfoCopyWithImpl<$Res>
           ? _value.surveyUrl
           : surveyUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      takenByUserWithUids: takenByUserWithUids == freezed
+          ? _value.takenByUserWithUids
+          : takenByUserWithUids // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -77,7 +87,11 @@ abstract class _$$_FeedbackCampaignInfoCopyWith<$Res>
           $Res Function(_$_FeedbackCampaignInfo) then) =
       __$$_FeedbackCampaignInfoCopyWithImpl<$Res>;
   @override
-  $Res call({String currentCampaign, List<String> questions, String surveyUrl});
+  $Res call(
+      {String currentCampaign,
+      List<String> questions,
+      String surveyUrl,
+      List<String>? takenByUserWithUids});
 }
 
 /// @nodoc
@@ -96,6 +110,7 @@ class __$$_FeedbackCampaignInfoCopyWithImpl<$Res>
     Object? currentCampaign = freezed,
     Object? questions = freezed,
     Object? surveyUrl = freezed,
+    Object? takenByUserWithUids = freezed,
   }) {
     return _then(_$_FeedbackCampaignInfo(
       currentCampaign: currentCampaign == freezed
@@ -110,6 +125,10 @@ class __$$_FeedbackCampaignInfoCopyWithImpl<$Res>
           ? _value.surveyUrl
           : surveyUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      takenByUserWithUids: takenByUserWithUids == freezed
+          ? _value._takenByUserWithUids
+          : takenByUserWithUids // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -120,8 +139,10 @@ class _$_FeedbackCampaignInfo implements _FeedbackCampaignInfo {
   _$_FeedbackCampaignInfo(
       {required this.currentCampaign,
       required final List<String> questions,
-      required this.surveyUrl})
-      : _questions = questions;
+      required this.surveyUrl,
+      final List<String>? takenByUserWithUids})
+      : _questions = questions,
+        _takenByUserWithUids = takenByUserWithUids;
 
   factory _$_FeedbackCampaignInfo.fromJson(Map<String, dynamic> json) =>
       _$$_FeedbackCampaignInfoFromJson(json);
@@ -137,10 +158,18 @@ class _$_FeedbackCampaignInfo implements _FeedbackCampaignInfo {
 
   @override
   final String surveyUrl;
+  final List<String>? _takenByUserWithUids;
+  @override
+  List<String>? get takenByUserWithUids {
+    final value = _takenByUserWithUids;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'FeedbackCampaignInfo(currentCampaign: $currentCampaign, questions: $questions, surveyUrl: $surveyUrl)';
+    return 'FeedbackCampaignInfo(currentCampaign: $currentCampaign, questions: $questions, surveyUrl: $surveyUrl, takenByUserWithUids: $takenByUserWithUids)';
   }
 
   @override
@@ -152,7 +181,9 @@ class _$_FeedbackCampaignInfo implements _FeedbackCampaignInfo {
                 .equals(other.currentCampaign, currentCampaign) &&
             const DeepCollectionEquality()
                 .equals(other._questions, _questions) &&
-            const DeepCollectionEquality().equals(other.surveyUrl, surveyUrl));
+            const DeepCollectionEquality().equals(other.surveyUrl, surveyUrl) &&
+            const DeepCollectionEquality()
+                .equals(other._takenByUserWithUids, _takenByUserWithUids));
   }
 
   @JsonKey(ignore: true)
@@ -161,7 +192,8 @@ class _$_FeedbackCampaignInfo implements _FeedbackCampaignInfo {
       runtimeType,
       const DeepCollectionEquality().hash(currentCampaign),
       const DeepCollectionEquality().hash(_questions),
-      const DeepCollectionEquality().hash(surveyUrl));
+      const DeepCollectionEquality().hash(surveyUrl),
+      const DeepCollectionEquality().hash(_takenByUserWithUids));
 
   @JsonKey(ignore: true)
   @override
@@ -181,7 +213,8 @@ abstract class _FeedbackCampaignInfo implements FeedbackCampaignInfo {
   factory _FeedbackCampaignInfo(
       {required final String currentCampaign,
       required final List<String> questions,
-      required final String surveyUrl}) = _$_FeedbackCampaignInfo;
+      required final String surveyUrl,
+      final List<String>? takenByUserWithUids}) = _$_FeedbackCampaignInfo;
 
   factory _FeedbackCampaignInfo.fromJson(Map<String, dynamic> json) =
       _$_FeedbackCampaignInfo.fromJson;
@@ -192,6 +225,8 @@ abstract class _FeedbackCampaignInfo implements FeedbackCampaignInfo {
   List<String> get questions;
   @override
   String get surveyUrl;
+  @override
+  List<String>? get takenByUserWithUids;
   @override
   @JsonKey(ignore: true)
   _$$_FeedbackCampaignInfoCopyWith<_$_FeedbackCampaignInfo> get copyWith =>
