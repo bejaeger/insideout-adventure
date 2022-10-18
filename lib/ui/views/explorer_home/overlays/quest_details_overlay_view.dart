@@ -94,16 +94,6 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                         onPressed: model.cancelOrFinishQuest,
                       ),
                     ),
-
-                    // child: Padding(
-                    //   padding: const EdgeInsets.all(12.0),
-                    //   child: GestureDetector(
-                    //       child: Padding(
-                    //         padding: const EdgeInsets.all(8.0),
-                    //         child: Icon(Icons.close, size: 30),
-                    //       ),
-                    //       onTap: model.cancelOrFinishQuest),
-                    // ),
                   ),
 
                 // Quest info on bottom of screen
@@ -259,7 +249,6 @@ class TreasureLocationSearch extends StatelessWidget {
   }
 }
 
-// TODO: I can make that more general for the different types of quests!
 class GPSAreaHike extends StatefulWidget {
   final Quest quest;
   final bool showStartSlider;

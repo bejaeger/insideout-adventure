@@ -80,9 +80,7 @@ abstract class AFKMarks extends FormViewModel {
       position: pos,
       onTap: () {
         removeMarker(
-          marker: Marker(
-            markerId: MarkerId(markerId),
-          ),
+          markerId: markerId,
         );
       },
     );
@@ -159,10 +157,18 @@ abstract class AFKMarks extends FormViewModel {
     notifyListeners();
   }
 
-  void removeMarker({required Marker marker}) {
-    _markersOnMap.removeWhere((element) => element.markerId == marker.markerId);
-    _afkMarkers.removeWhere((element) => element.id == marker.markerId.value);
+  void removeMarker({required String markerId}) {
+    _markersOnMap
+        .removeWhere((element) => element.markerId == MarkerId(markerId));
+    _afkMarkers.removeWhere((element) => element.id == markerId);
     notifyListeners();
+  }
+
+  void removeAllMarkers() {
+    List<AFKMarker> markers = List.from(getAFKMarkers);
+    for (AFKMarker m in markers) {
+      removeMarker(markerId: m.id);
+    }
   }
 
   void addMarkerOnMap(

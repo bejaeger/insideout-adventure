@@ -88,7 +88,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       showInfoWindowOfNextMarker(marker: nextMarker);
       snackbarService.showSnackbar(
           title: "Started quest",
-          message: "Let's go...the first checkpoint is waiting!");
+          message: "Let's go...the first checkpoint is waiting!",
+          duration: Duration(milliseconds: 1500));
       await Future.delayed(Duration(milliseconds: 600));
       if (nextMarker != null && quest.startMarker != null) {
         await mapViewModel.animateNewLatLonZoomDelta(

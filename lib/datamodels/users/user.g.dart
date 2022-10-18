@@ -17,6 +17,9 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
           .map((e) => e as String)
           .toList(),
       role: $enumDecode(_$UserRoleEnumMap, json['role']),
+      userSettings: json['userSettings'] == null
+          ? null
+          : UserSettings.fromJson(json['userSettings'] as Map<String, dynamic>),
       authMethod: $enumDecodeNullable(
           _$AuthenticationMethodEnumMap, json['authMethod']),
       newUser: json['newUser'] as bool? ?? true,
@@ -38,6 +41,7 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'sponsorIds': instance.sponsorIds,
       'explorerIds': instance.explorerIds,
       'role': _$UserRoleEnumMap[instance.role]!,
+      'userSettings': instance.userSettings?.toJson(),
       'authMethod': _$AuthenticationMethodEnumMap[instance.authMethod],
       'newUser': instance.newUser,
       'fullNameSearch': User._checkIfKeywordsAreSet(instance.fullNameSearch),

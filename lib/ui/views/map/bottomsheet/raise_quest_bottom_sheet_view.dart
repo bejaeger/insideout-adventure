@@ -101,13 +101,31 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                       style: TextStyle(color: Colors.red),
                       // textAlign: TextAlign.left,
                     ),
-                  verticalSpaceSmall,
+                  //verticalSpaceSmall,
                   if (completed)
-                    Center(
-                      child: Text(
-                        "Quest already completed",
-                        style: heading4Style,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Text(
+                            "Completed",
+                            style: heading3Style.copyWith(
+                              color: kcPrimaryColor,
+                            ),
+                          ),
+                        ),
+                        verticalSpaceSmall,
+                        SwitchListTile(
+                          value: model.userService.currentUserSettings
+                              .isShowingCompletedQuests,
+                          title: AfkCreditsText.body(
+                            "Display on map",
+                          ),
+                          onChanged: (value) =>
+                              model.setIsShowingCompletedQuests(value),
+                        ),
+                      ],
                     ),
                   if (completed) verticalSpaceSmall,
                   Row(

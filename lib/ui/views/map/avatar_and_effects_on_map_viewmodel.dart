@@ -37,7 +37,9 @@ class AvatarAndEffectsOnMapViewModel extends BaseModel {
   // -----------------------------------------
   // state
   bool prevValue = false;
+  bool isAnimating = true;
   StreamSubscription? isFingerOnScreenListener;
+  StreamSubscription? isMovingCameraSubscription;
 
   // -----------------------------------------
   // functions
@@ -49,9 +51,11 @@ class AvatarAndEffectsOnMapViewModel extends BaseModel {
             if (value) {
               log.v("STOP the lottie animation");
               stopAnimation();
+              isAnimating = false;
             } else {
               log.v("START the lottie animation");
               startAnimation();
+              isAnimating = true;
             }
             // TODO: not sure if this is needed! TEST
             notifyListeners();
@@ -63,6 +67,22 @@ class AvatarAndEffectsOnMapViewModel extends BaseModel {
       log.w(
           "isFingerOnScreen subject already listened to. Not listening again");
     }
+    if (isMovingCameraSubscription == null) {
+      isMovingCameraSubscription = layoutService.isMovingCameraSubject.listen(
+        (value) {
+          if (value) {
+            log.v("STOP the lottie animation");
+            stopAnimation();
+            isAnimating = false;
+          } else {
+            log.v("START the lottie animation");
+            startAnimation();
+            isAnimating = true;
+          }
+          notifyListeners();
+        },
+      );
+    }
   }
 
   @override
@@ -70,5 +90,7 @@ class AvatarAndEffectsOnMapViewModel extends BaseModel {
     super.dispose();
     isFingerOnScreenListener?.cancel();
     isFingerOnScreenListener = null;
+    isMovingCameraSubscription?.cancel();
+    isMovingCameraSubscription = null;
   }
 }

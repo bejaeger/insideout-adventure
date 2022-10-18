@@ -136,7 +136,6 @@ class ActiveTreasureLocationSearchQuestViewModel
               await checkDistance();
             }
           }
-          // TODO: Should probably happen more often!
           // this will move the map. Should happen more often than is the
           // case for the treasure location search! Add additional filtering!?
           setNewLatLon(lat: position.latitude, lon: position.longitude);
@@ -146,7 +145,8 @@ class ActiveTreasureLocationSearchQuestViewModel
 
       snackbarService.showSnackbar(
           title: "Quest started",
-          message: "Start to walk and try to get closer");
+          message: "Start to walk and try to get closer",
+          duration: Duration(milliseconds: 1500));
       await checkDistance();
     } else {
       log.i("Not starting quest, quest is probably already running");
@@ -234,6 +234,8 @@ class ActiveTreasureLocationSearchQuestViewModel
     // ! This is partially duplicated from hike_quest_viewmodel() atm!
     // ! Could maybe put this into active_quest_base_viewmodel.dart
     isAnimatingCamera = true;
+    // for listeners that disable lottie animation
+    layoutService.setIsMovingCamera(true);
     setBusy(true);
 
     // Need to set this so the functions below do the right thing
@@ -262,6 +264,7 @@ class ActiveTreasureLocationSearchQuestViewModel
     // we need to do this because we set showDialogs == false above!
     activeQuestService.cleanUpFinishedQuest();
     isAnimatingCamera = false;
+    layoutService.setIsMovingCamera(false);
 
     // We need to notify the parent here so that common success UI can be shown!
     if (notifyParentView != null) {

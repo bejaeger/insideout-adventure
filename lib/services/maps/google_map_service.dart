@@ -177,6 +177,9 @@ class GoogleMapService {
                       : "NEXT CHECKPOINT"),
       //: InfoWindow.noText,
       icon: icon,
+      alpha: (completed && quest.type == QuestType.TreasureLocationSearch)
+          ? 0.2
+          : 1,
       onTap: () async {
         // needed to avoid navigating to that marker!
         dontMoveCamera();
@@ -317,10 +320,10 @@ class GoogleMapService {
       // this means it is a public quest. Display them a bit darker on the map
       if (quest?.type == QuestType.TreasureLocationSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueViolet + 15);
+            BitmapDescriptor.hueViolet + 18);
       } else {
         return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueOrange + 15);
+            BitmapDescriptor.hueOrange + 18);
       }
     }
     if (collected) {
@@ -329,7 +332,16 @@ class GoogleMapService {
     if (completed) {
       //late BitmapDescriptor icon;
       if (quest?.type == QuestType.TreasureLocationSearch) {
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+        // return await BitmapDescriptor.fromAssetImage(
+        //     ImageConfiguration(
+        //         platform: Platform.isAndroid
+        //             ? TargetPlatform.android
+        //             : TargetPlatform.iOS,
+        //         size: Size(0.1, 0.1),
+        //         devicePixelRatio: 0.1),
+        //     kGreyMapMarker);
+        return BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueViolet);
       } else {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueOrange);

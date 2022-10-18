@@ -224,6 +224,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
 
   // quest types
   void selectQuestType({required QuestType type}) {
+    removeAllMarkers();
     selectedQuestType = type;
     notifyListeners();
   }
@@ -336,12 +337,30 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
 
   void displayMarkersOnMap(LatLng pos) {
     if (selectedQuestType == QuestType.TreasureLocationSearch) {
+      // At the moment we only support a start and a finish for
+      // a search quest!
       if (getAFKMarkers.length == 2) {
         snackbarService.showSnackbar(
             title: "Oops...",
-            message: "Search quests only allow for two markers",
+            message:
+                "Only two markers are supported for search quests at the moment",
             duration: Duration(milliseconds: 1500));
         return;
+      }
+      // minimum distance of start and finish
+      if (getAFKMarkers.length == 1) {
+        double distance = _geoLocationService.distanceBetween(
+            lat1: getAFKMarkers[0].lat,
+            lon1: getAFKMarkers[0].lon,
+            lat2: pos.latitude,
+            lon2: pos.longitude);
+        if (distance < 100) {
+          snackbarService.showSnackbar(
+              title: "Oops...",
+              message: "Markers need to be at least 100m away from each other.",
+              duration: Duration(milliseconds: 1500));
+          return;
+        }
       }
     }
     addMarkerOnMap(pos: pos, number: getAFKMarkers.length);

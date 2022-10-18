@@ -19,6 +19,9 @@ class ExplorerSettingsDialogViewModel extends BaseModel {
   bool get isShowAvatarAndMapEffects =>
       appConfigProvider.isShowAvatarAndMapEffects;
 
+  bool get isShowingCompletedQuests =>
+      userService.currentUserSettings.isShowingCompletedQuests;
+
   // -------------------------------------------------
   // functions
 
@@ -27,6 +30,21 @@ class ExplorerSettingsDialogViewModel extends BaseModel {
     appConfigProvider.setIsShowingAvatarAndMapEffects(b);
     notifyListeners();
     mapViewModel.notifyListeners();
+  }
+
+  // ! Duplicated in raise_quest_bottom_sheet_viewmodel.dart
+  void setIsShowingCompletedQuests(bool b) async {
+    userService.updateUserData(
+      user: currentUser.copyWith(
+        userSettings: userService.currentUserSettings
+            .copyWith(isShowingCompletedQuests: b),
+      ),
+    );
+    mapViewModel.resetMapMarkers();
+    mapViewModel.extractStartMarkersAndAddToMap();
+    await Future.delayed(Duration(milliseconds: 50));
+    mapViewModel.notifyListeners();
+    notifyListeners();
   }
 
   void setARFeatureEnabled(bool b) async {

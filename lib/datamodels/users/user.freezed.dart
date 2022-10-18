@@ -26,6 +26,7 @@ mixin _$User {
   List<String> get sponsorIds => throw _privateConstructorUsedError;
   List<String> get explorerIds => throw _privateConstructorUsedError;
   UserRole get role => throw _privateConstructorUsedError;
+  UserSettings? get userSettings => throw _privateConstructorUsedError;
   AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
   bool get newUser => throw _privateConstructorUsedError;
   @JsonKey(toJson: User._checkIfKeywordsAreSet)
@@ -52,6 +53,7 @@ abstract class $UserCopyWith<$Res> {
       List<String> sponsorIds,
       List<String> explorerIds,
       UserRole role,
+      UserSettings? userSettings,
       AuthenticationMethod? authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
@@ -61,6 +63,8 @@ abstract class $UserCopyWith<$Res> {
       List<String>? tokens,
       String? deviceId,
       int? avatarIdx});
+
+  $UserSettingsCopyWith<$Res>? get userSettings;
 }
 
 /// @nodoc
@@ -79,6 +83,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? sponsorIds = freezed,
     Object? explorerIds = freezed,
     Object? role = freezed,
+    Object? userSettings = freezed,
     Object? authMethod = freezed,
     Object? newUser = freezed,
     Object? fullNameSearch = freezed,
@@ -113,6 +118,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as UserRole,
+      userSettings: userSettings == freezed
+          ? _value.userSettings
+          : userSettings // ignore: cast_nullable_to_non_nullable
+              as UserSettings?,
       authMethod: authMethod == freezed
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
@@ -147,6 +156,17 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
               as int?,
     ));
   }
+
+  @override
+  $UserSettingsCopyWith<$Res>? get userSettings {
+    if (_value.userSettings == null) {
+      return null;
+    }
+
+    return $UserSettingsCopyWith<$Res>(_value.userSettings!, (value) {
+      return _then(_value.copyWith(userSettings: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -161,6 +181,7 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       List<String> sponsorIds,
       List<String> explorerIds,
       UserRole role,
+      UserSettings? userSettings,
       AuthenticationMethod? authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
@@ -170,6 +191,9 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       List<String>? tokens,
       String? deviceId,
       int? avatarIdx});
+
+  @override
+  $UserSettingsCopyWith<$Res>? get userSettings;
 }
 
 /// @nodoc
@@ -189,6 +213,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? sponsorIds = freezed,
     Object? explorerIds = freezed,
     Object? role = freezed,
+    Object? userSettings = freezed,
     Object? authMethod = freezed,
     Object? newUser = freezed,
     Object? fullNameSearch = freezed,
@@ -223,6 +248,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as UserRole,
+      userSettings: userSettings == freezed
+          ? _value.userSettings
+          : userSettings // ignore: cast_nullable_to_non_nullable
+              as UserSettings?,
       authMethod: authMethod == freezed
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
@@ -270,6 +299,7 @@ class _$_User implements _User {
       required final List<String> sponsorIds,
       required final List<String> explorerIds,
       required this.role,
+      this.userSettings,
       this.authMethod,
       this.newUser = true,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
@@ -309,6 +339,8 @@ class _$_User implements _User {
   @override
   final UserRole role;
   @override
+  final UserSettings? userSettings;
+  @override
   final AuthenticationMethod? authMethod;
   @override
   @JsonKey()
@@ -344,7 +376,7 @@ class _$_User implements _User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
+    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
   }
 
   @override
@@ -360,6 +392,8 @@ class _$_User implements _User {
             const DeepCollectionEquality()
                 .equals(other._explorerIds, _explorerIds) &&
             const DeepCollectionEquality().equals(other.role, role) &&
+            const DeepCollectionEquality()
+                .equals(other.userSettings, userSettings) &&
             const DeepCollectionEquality()
                 .equals(other.authMethod, authMethod) &&
             const DeepCollectionEquality().equals(other.newUser, newUser) &&
@@ -383,6 +417,7 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(_sponsorIds),
       const DeepCollectionEquality().hash(_explorerIds),
       const DeepCollectionEquality().hash(role),
+      const DeepCollectionEquality().hash(userSettings),
       const DeepCollectionEquality().hash(authMethod),
       const DeepCollectionEquality().hash(newUser),
       const DeepCollectionEquality().hash(_fullNameSearch),
@@ -413,6 +448,7 @@ abstract class _User implements User {
       required final List<String> sponsorIds,
       required final List<String> explorerIds,
       required final UserRole role,
+      final UserSettings? userSettings,
       final AuthenticationMethod? authMethod,
       final bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
@@ -437,6 +473,8 @@ abstract class _User implements User {
   List<String> get explorerIds;
   @override
   UserRole get role;
+  @override
+  UserSettings? get userSettings;
   @override
   AuthenticationMethod? get authMethod;
   @override

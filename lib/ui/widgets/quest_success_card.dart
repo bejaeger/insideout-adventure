@@ -87,7 +87,8 @@ class QuestSuccessCard extends StatelessWidget {
           verticalSpaceMedium,
           AfkCreditsButton(
             onTap: onContinuePressed,
-            title: "Continue",
+            title: "Great",
+            trailing: Icon(Icons.arrow_forward, size: 20, color: Colors.white),
           ),
         ],
       ),

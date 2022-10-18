@@ -287,6 +287,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   Future animateCameraToBirdsView({bool? forceUseLocation}) async {
+    layoutService.setIsMovingCamera(true);
     changeCameraTilt(0);
     changeCameraBearing(0);
     changeCameraZoom(lastBirdViewZoom ?? kInitialZoomBirdsView);
@@ -295,6 +296,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
             userLocation!.latitude, // + 0.005 * zoom / kInitialZoomBirdsView,
         forceUseLocation: forceUseLocation);
     // animations on android take 1 second
+    layoutService.setIsMovingCamera(false);
   }
 
   Future animateCameraToAvatarView({bool? forceUseLocation}) async {
@@ -328,16 +330,26 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   // Function called by explorer account!
   void extractStartMarkersAndAddToMap() {
+    bool showCompletedQuests =
+        userService.currentUserSettings.isShowingCompletedQuests;
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
+        bool completed = currentUserStats.completedQuestIds.contains(_q.id);
+        // bool showCompletedQuest =
+        if (completed &&
+            !showCompletedQuests &&
+            _q.type == QuestType.TreasureLocationSearch) {
+          continue;
+        }
         log.v("Add start marker of quest with name ${_q.name} to map");
         if (_q.startMarker != null) {
           AFKMarker _m = _q.startMarker!;
           addMarkerToMap(
-              quest: _q,
-              afkmarker: _m,
-              isStartMarker: _m == _q.startMarker,
-              completed: currentUserStats.completedQuestIds.contains(_q.id));
+            quest: _q,
+            afkmarker: _m,
+            isStartMarker: _m == _q.startMarker,
+            completed: completed,
+          );
           hideMarkerInfoWindowNow(markerId: _m.id);
         }
       }
@@ -530,12 +542,14 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     // take snapshot so we can easily restore current view
     takeSnapshotOfCameraPosition();
 
-    // animate camera to quest start
-    animateMapToQuest(quest: quest);
-
     // set selected quest to show on screen
     // UI will react to this!
     activeQuestService.setSelectedQuest(quest);
+    // for rotation animation in avatar view
+    activeQuestService.questCenteredOnMap = true;
+
+    // animate camera to quest start
+    animateMapToQuest(quest: quest);
   }
 
   void animateMapToQuest({required Quest quest}) async {
@@ -569,6 +583,9 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   void animateMapToQuestChildAccount({required Quest quest}) async {
     // Show marker info
     showMarkerInfoWindowNow(markerId: quest.startMarker?.id);
+
+    // some listeners will react
+    layoutService.setIsMovingCamera(true);
 
     // ----------------------------------
     // -->> START TreasureLocationSearch Quest Section
@@ -616,6 +633,10 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       // <<-- END Hike Quest
       // ---------------------------------------------
     }
+
+    // some listeners will react
+    Future.delayed(
+        Duration(seconds: 1), () => layoutService.setIsMovingCamera(false));
   }
 
   void addMarkers(

@@ -174,7 +174,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                             width: 150,
                             onTap: () => widget
                                 .completer(DialogResponse(confirmed: true)),
-                            title: "Great",
+                            title: "Continue",
                             trailing: Icon(Icons.arrow_forward,
                                 size: 20, color: Colors.white),
                           ),

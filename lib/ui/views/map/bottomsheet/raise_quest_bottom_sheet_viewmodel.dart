@@ -3,15 +3,20 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../../../app/app.locator.dart';
 
 class RaiseQuestBottomSheetViewModel extends BaseModel {
   final Quest quest;
   RaiseQuestBottomSheetViewModel({required this.quest});
 
   // ----------------------------------------
-  final log = getLogger("RaiseQuestBottomSheetViewModel");
+  // services
 
+  final log = getLogger("RaiseQuestBottomSheetViewModel");
+  final MapViewModel mapViewModel = locator<MapViewModel>();
   // ---------------------------------------
   // getters
 
@@ -85,6 +90,22 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     } else {
       return "You don't have enough AFK Credits funds to earn ${quest.afkCredits} credits. Ask a sponsor to support you :)";
     }
+  }
+
+  // ! Duplicated in explorer_settings_dialog_viewmodel.dart
+  void setIsShowingCompletedQuests(bool? b) async {
+    if (b == null) return;
+    userService.updateUserData(
+      user: currentUser.copyWith(
+        userSettings: userService.currentUserSettings
+            .copyWith(isShowingCompletedQuests: b),
+      ),
+    );
+    mapViewModel.resetMapMarkers();
+    mapViewModel.extractStartMarkersAndAddToMap();
+    await Future.delayed(Duration(milliseconds: 50));
+    mapViewModel.notifyListeners();
+    notifyListeners();
   }
 
   void showNotImplementedInParentAccount() {

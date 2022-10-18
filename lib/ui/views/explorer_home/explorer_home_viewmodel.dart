@@ -458,18 +458,22 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   StreamSubscription? _isShowingQuestListStream;
   StreamSubscription? _selectedQuestStream;
   StreamSubscription? _isFadingOutQuestDetailsSubjectStream;
-  void listenToLayout() {
+  void listenToLayout() {    
     if (_isFadingOutOverlayStream == null) {
       _isFadingOutOverlayStream =
-          layoutService.isFadingOutOverlaySubject.listen((show) {
-        notifyListeners();
-      });
-    }
+          layoutService.isFadingOutOverlaySubject.listen(
+        (show) {
+          notifyListeners();
+        },
+      );
+    }    
     if (_isShowingQuestListStream == null) {
       _isShowingQuestListStream =
-          layoutService.isShowingQuestListSubject.listen((show) {
-        notifyListeners();
-      });
+          layoutService.isShowingQuestListSubject.listen(
+        (show) {
+          notifyListeners();
+        },
+      );
     }
     if (_selectedQuestStream == null) {
       _selectedQuestStream = activeQuestService.selectedQuestSubject.listen(

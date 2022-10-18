@@ -552,7 +552,8 @@ class FirestoreApi {
     try {
       final center = geo.point(latitude: lat, longitude: lon);
 
-      // only gets quests NOT created by a standard parent
+      // only returns quests NOT created by a standard parent
+      // ? we can't query for ONLY quests that are NOT done by users, unfortunately.
       final questsRef = questsCollection.where("createdBy", isNull: true);
       Stream<List<DocumentSnapshot>> publicQuestsStream = geo
           .collection(collectionRef: questsRef)

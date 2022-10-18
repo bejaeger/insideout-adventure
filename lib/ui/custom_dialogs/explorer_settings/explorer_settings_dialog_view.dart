@@ -57,6 +57,15 @@ class ExplorerSettingsDialogView extends StatelessWidget {
                       onChanged: (bool value) =>
                           model.setIsShowAvatarAndMapEffects(value),
                     ),
+                    SwitchListTile(
+                      dense: true,
+                      title: Text("Show completed search quests"),
+                      subtitle: Text(
+                          "Clean-up your map by making completed quests invisible"),
+                      value: model.isShowingCompletedQuests,
+                      onChanged: (bool value) =>
+                          model.setIsShowingCompletedQuests(value),
+                    ),
                   ],
                 ),
               ),

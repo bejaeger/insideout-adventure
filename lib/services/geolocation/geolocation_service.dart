@@ -433,6 +433,7 @@ class GeolocationService extends PausableService {
     return distanceInMeters;
   }
 
+  // returns distance in meters between two coordinates
   double distanceBetween(
       {required double? lat1,
       required double? lon1,

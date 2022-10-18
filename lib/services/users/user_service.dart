@@ -15,6 +15,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
+import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
@@ -57,6 +58,8 @@ class UserService {
   UserAdmin? _currentUserAdmin;
   User? get currentUserNullable => _currentUser;
   User get currentUser => _currentUser!;
+  UserSettings get currentUserSettings => currentUserNullable?.userSettings ?? UserSettings();
+  
   UserStatistics? _currentUserStats;
   UserStatistics get currentUserStats => _currentUserStats!;
   UserStatistics? get currentUserStatsNullable => _currentUserStats;
@@ -110,10 +113,9 @@ class UserService {
 
     if (userAccount != null) {
       log.v('User account exists. Save as _currentUser');
-      // if (UserRole.adminMaster == role) {
-      //   _currentUserAdmin = userAccount;
-      // } else {
+
       _currentUser = userAccount!;
+      // need to add default user settings here in case it's not yet in user collection
       _screenTimeService.setUserId(_currentUser!.uid);
 
       // some user data management, mainly stored for push notifications
@@ -191,6 +193,7 @@ class UserService {
         explorerIds: [],
         sponsorIds: [],
         avatarIdx: 1,
+        userSettings: UserSettings(),
       ),
     );
   }
@@ -379,6 +382,7 @@ class UserService {
             explorerIds: [],
             sponsorIds: [],
             avatarIdx: 1,
+            userSettings: UserSettings(),
           ),
         );
       } catch (e) {
@@ -428,6 +432,7 @@ class UserService {
       deviceId: currentUser.deviceId,
       tokens: currentUser.tokens,
       avatarIdx: 1,
+      userSettings: UserSettings(),
     );
     await createUserAccount(user: newExplorer);
     List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);

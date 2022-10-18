@@ -41,8 +41,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
             border: Border.all(color: Colors.grey[400]!),
           ),
           child: directionStatus == DirectionStatus.nearGoal
-              ? AfkCreditsText.successThree(
-                  "Yippieh! You found the treasure. Collect it by clicking on it on the map.",
+              ? AfkCreditsText.successThree("Yippieh! You found the treasure.",
                   align: TextAlign.center)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,6 +107,8 @@ class CurrentQuestStatusInfo extends StatelessWidget {
         return "";
       case DirectionStatus.denied:
         return "";
+      case DirectionStatus.nearGoal:
+        return "Tap on the credits on the map";
       default:
         return "Start to walk!";
     }

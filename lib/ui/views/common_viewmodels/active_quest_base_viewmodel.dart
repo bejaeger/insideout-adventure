@@ -251,6 +251,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     // reset flags
     layoutService.setIsMovingCamera(false);
     layoutService.setIsFadingOutQuestDetails(false);
+    // for rotation camera movements in avatar view
+    activeQuestService.questCenteredOnMap = false;
 
     // reset selected quest -> don't show quest details anymore
     // reset previouslyFinishedQuest
