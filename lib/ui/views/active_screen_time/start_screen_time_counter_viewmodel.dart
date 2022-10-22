@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 

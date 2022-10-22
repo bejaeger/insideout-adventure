@@ -15,7 +15,7 @@ class ExplorerSettingsDialogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerSettingsDialogViewModel>.reactive(
-      viewModelBuilder: () => ExplorerSettingsDialogViewModel(),
+      viewModelBuilder: () => ExplorerSettingsDialogViewModel(explorerUid: ""),
       builder: (context, model, child) {
         return Dialog(
           elevation: 5,
@@ -44,7 +44,7 @@ class ExplorerSettingsDialogView extends StatelessWidget {
                       dense: true,
                       title: Text("Augmented reality"),
                       subtitle: Text("Use augmented reality for quests?"),
-                      value: model.isUsingAR,
+                      value: model.isUsingAR && model.appConfigProvider.isARAvailable,
                       onChanged: (bool value) =>
                           model.setARFeatureEnabled(value),
                     ),

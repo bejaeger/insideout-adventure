@@ -43,12 +43,13 @@ class ActiveScreenTimeView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    if (model.currentScreenTimeSession == null &&
-                        model.expiredScreenTime == null)
-                      model.isBusy
-                          ? AFKProgressIndicator()
-                          : AfkCreditsText.subheading(
-                              "Error: Sorry something went wrong when starting the screen time session. Please let the developers know via our feedback option, thank you!"),
+                    // if (model.currentScreenTimeSession == null &&
+                    //     model.expiredScreenTime == null)
+                    //   model.isBusy
+                    //       ? AFKProgressIndicator()
+                    //       : AfkCreditsText.subheading(
+                    //           "Error: Sorry something went wrong when starting the screen time session. Please let the developers know via our feedback option, thank you!"),
+                    
                     // Display the following when screen time is still active!
                     if (model.currentScreenTimeSession?.status ==
                         ScreenTimeSessionStatus.active)
@@ -254,24 +255,28 @@ class ActiveScreenTimeView extends StatelessWidget {
                             uid: model.childId),
                       ),
                     verticalSpaceSmall,
-                    Container(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: AfkCreditsButton(
-                        color: model.currentScreenTimeSession?.status ==
-                                ScreenTimeSessionStatus.active
-                            ? kcRed
-                            : kcPrimaryColor,
-                        onTap: model.currentScreenTimeSession?.status ==
-                                ScreenTimeSessionStatus.active
-                            ? () => model.stopScreenTime(session: model.session)
-                            : () => model.resetActiveScreenTimeView(
-                                uid: session.uid),
-                        title: model.currentScreenTimeSession?.status ==
-                                ScreenTimeSessionStatus.active
-                            ? "Stop screen time"
-                            : " Back to home",
+                    if (!model.currentUserSettings.ownPhone ||
+                        model.currentScreenTimeSession?.status !=
+                            ScreenTimeSessionStatus.active || model.isParentAccount)
+                      Container(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: AfkCreditsButton(
+                          color: model.currentScreenTimeSession?.status ==
+                                  ScreenTimeSessionStatus.active
+                              ? kcRed
+                              : kcPrimaryColor,
+                          onTap: model.currentScreenTimeSession?.status ==
+                                  ScreenTimeSessionStatus.active
+                              ? () =>
+                                  model.stopScreenTime(session: model.session)
+                              : () => model.resetActiveScreenTimeView(
+                                  uid: session.uid),
+                          title: model.currentScreenTimeSession?.status ==
+                                  ScreenTimeSessionStatus.active
+                              ? "Stop screen time"
+                              : " Back to home",
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),

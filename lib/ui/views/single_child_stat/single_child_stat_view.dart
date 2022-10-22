@@ -39,7 +39,12 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                 icon1: Icon(Icons.delete_outline_rounded,
                     color: kcMediumGrey, size: 22),
                 onTap1: model.removeChildFromParentAccount,
-                text1: 'Remove child'),
+                text1: 'Remove child', 
+                icon2: Icon(Icons.settings,
+                    color: kcMediumGrey, size: 22),
+                onTap2: model.showExplorerSettingsDialogDialog,
+                text2: 'Settings', 
+                ),
           ),
           floatingActionButton: BottomFloatingActionButtons(
               // titleMain: "Add Credits",

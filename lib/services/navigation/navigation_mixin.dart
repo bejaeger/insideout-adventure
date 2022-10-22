@@ -11,7 +11,6 @@ import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_view.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -268,6 +267,16 @@ mixin NavigationMixin {
     await _navigationService.navigateTo(
       Routes.startScreenTimeCounterView,
       arguments: StartScreenTimeCounterViewArguments(
+        session: session,
+      ),
+    );
+  }
+
+  Future navToScreenTimeRequestedView(
+      {required ScreenTimeSession session}) async {
+    await _navigationService.navigateTo(
+      Routes.screenTimeRequestedView,
+      arguments: ScreenTimeRequestedViewArguments(
         session: session,
       ),
     );

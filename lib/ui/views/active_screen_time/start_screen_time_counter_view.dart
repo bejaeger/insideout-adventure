@@ -1,6 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/screen_time_notifications_note.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';

@@ -13,7 +13,6 @@ import 'package:stacked_services/stacked_services.dart';
 class SelectScreenTimeViewModel extends BaseModel {
   // ----------------------------------
   // services
-  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
   final log = getLogger("SelectScreenTimeViewModel");
 
   // ------------------------------------
@@ -99,14 +98,22 @@ class SelectScreenTimeViewModel extends BaseModel {
           : currentUser.fullName,
       minutes: useSuperUserFeatures ? 1 : screenTimePreset,
       status: ScreenTimeSessionStatus.notStarted,
-      startedAt: DateTime.now().add(Duration(
-          seconds:
-              10)), // add 10 seconds because we wait for another 10 seconds in the next view!
+      startedAt: DateTime.now().add(
+        Duration(seconds: 10),
+      ), // add 10 seconds because we wait for another 10 seconds in the next view!
       afkCredits: double.parse(
           screenTimeToCredits(useSuperUserFeatures ? 1 : screenTimePreset)
               .toString()),
     );
-    log.i("Navigating to start screen time session counter");
-    navToScreenTimeCounterView(session: session);
+
+    if (isParentAccount ||
+        !userService.currentUserSettings.isAcceptScreenTimeFirst) {
+      log.i("Navigating to start screen time session counter");
+      navToScreenTimeCounterView(session: session);
+    } else {
+      session = session.copyWith(status: ScreenTimeSessionStatus.requested);
+      // if child starts screen time we first need confirmation from parents
+      navToScreenTimeRequestedView(session: session);
+    }
   }
 }

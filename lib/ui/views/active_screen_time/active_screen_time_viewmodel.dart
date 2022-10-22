@@ -4,6 +4,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
@@ -26,6 +27,7 @@ class ActiveScreenTimeViewModel extends BaseModel {
   ScreenTimeSession? get expiredScreenTime =>
       _screenTimeService.getExpiredScreenTimeSessionInMemory(
           uid: session?.uid, sessionId: session?.sessionId);
+  UserSettings get currentUserSettings => userService.currentUserSettings;
 
   String get childName => session != null ? session!.userName : "";
   String get childId => session != null ? session!.uid : "";
@@ -139,8 +141,8 @@ class ActiveScreenTimeViewModel extends BaseModel {
       String snackBarTitle = "";
       String snackBarMsg = "";
       if (res == false) {
-        snackBarTitle = "Cancelled screentime. ";
-        snackBarMsg = "No credits are deducted";
+        snackBarTitle = "Cancelled screentime ";
+        snackBarMsg = "No credits are being deducted";
       }
       if (res == true) {
         snackBarTitle = "Stopped screentime";

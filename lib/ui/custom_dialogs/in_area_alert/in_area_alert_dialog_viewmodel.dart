@@ -10,7 +10,7 @@ class InAreaAlertDialogViewModel extends BaseModel {
   // ----------------------------------------------
   // getters
   bool get isARAvailable => appConfigProvider.isARAvailable;
-  bool get isUsingAR => appConfigProvider.isUsingAR;
+  bool get isUsingAR => userService.isUsingAR;
 
   // -------------------------------------------------
   // functions

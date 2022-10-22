@@ -54,7 +54,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   bool get isFingerOnScreen => mapStateService.isFingerOnScreen;
   DateTime startedRotating = DateTime.now();
   bool get showAvatarAndMapEffects =>
-      appConfigProvider.isShowAvatarAndMapEffects;
+      userService.isShowAvatarAndMapEffects;
   // bool isRotating = false;
 
   // -------------------------------------------------
@@ -334,7 +334,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         userService.currentUserSettings.isShowingCompletedQuests;
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
-        bool completed = currentUserStats.completedQuestIds.contains(_q.id);
+        bool completed = userService.hasCompletedQuest(questId: _q.id);         
         // bool showCompletedQuest =
         if (completed &&
             !showCompletedQuests &&

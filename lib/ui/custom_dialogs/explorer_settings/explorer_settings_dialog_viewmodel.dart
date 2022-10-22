@@ -1,13 +1,13 @@
-import 'dart:io';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:arkit_plugin/arkit_plugin.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ExplorerSettingsDialogViewModel extends BaseModel {
+  final String explorerUid;
+  ExplorerSettingsDialogViewModel({required this.explorerUid});
+
   // ----------------------------------------------
   // servies
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
@@ -15,9 +15,11 @@ class ExplorerSettingsDialogViewModel extends BaseModel {
   // ----------------------------------------------
   // getters
   bool get isARAvailable => appConfigProvider.isARAvailable;
-  bool get isUsingAR => appConfigProvider.isUsingAR;
-  bool get isShowAvatarAndMapEffects =>
-      appConfigProvider.isShowAvatarAndMapEffects;
+
+  User? get explorer => userService.supportedExplorers[explorerUid];
+
+  bool get isUsingAR => userService.isUsingAR;
+  bool get isShowAvatarAndMapEffects => userService.isShowAvatarAndMapEffects;
 
   bool get isShowingCompletedQuests =>
       userService.currentUserSettings.isShowingCompletedQuests;
@@ -26,20 +28,14 @@ class ExplorerSettingsDialogViewModel extends BaseModel {
   // functions
 
   void setIsShowAvatarAndMapEffects(bool b) async {
-    print("b = $b");
-    appConfigProvider.setIsShowingAvatarAndMapEffects(b);
+    userService.setIsShowingAvatarAndMapEffects(value: b);
     notifyListeners();
     mapViewModel.notifyListeners();
   }
 
   // ! Duplicated in raise_quest_bottom_sheet_viewmodel.dart
   void setIsShowingCompletedQuests(bool b) async {
-    userService.updateUserData(
-      user: currentUser.copyWith(
-        userSettings: userService.currentUserSettings
-            .copyWith(isShowingCompletedQuests: b),
-      ),
-    );
+    userService.setIsShowingCompletedQuests(value: b);
     mapViewModel.resetMapMarkers();
     mapViewModel.extractStartMarkersAndAddToMap();
     await Future.delayed(Duration(milliseconds: 50));
@@ -49,15 +45,17 @@ class ExplorerSettingsDialogViewModel extends BaseModel {
 
   void setARFeatureEnabled(bool b) async {
     if (b == true && isARAvailable) {
-      appConfigProvider.setIsUsingAR(true);
+      userService.setIsUsingAr(value: true);
+      // appConfigProvider.setIsUsingAR(true);
     } else {
-      appConfigProvider.setIsUsingAR(false);
+      userService.setIsUsingAr(value: false);
+      // appConfigProvider.setIsUsingAR(false);
     }
     if (b == true && !isARAvailable) {
       await dialogService.showDialog(
           title: "AR feature not supported",
           description:
-              "This device does not support augmented reality, unfortunately.");
+              "We do not support augmented reality for this device, unfortunately.");
     }
     notifyListeners();
   }

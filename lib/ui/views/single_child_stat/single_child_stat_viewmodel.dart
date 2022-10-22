@@ -134,6 +134,22 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     }
   }
 
+  void showExplorerSettingsDialogDialog() async {
+    // ! Very peculiar. Without this we get an error of
+    // !_TypeError (type '_DropdownRouteResult<MenuItem>' is not a subtype of type 'SheetResponse<dynamic>?' of 'result')
+    // ! From the navigator from the custom_drop_down_button
+    await Future.delayed(Duration(milliseconds: 10));
+
+    await dialogService.showCustomDialog(
+      variant: DialogType.ExplorerSettingsForParents,
+      barrierDismissible: true,
+      data: {
+        "name": explorer?.fullName,
+        "explorerUid": explorer?.uid,
+      },
+    );
+  }
+
   void showExplainCreditConversionDialog() async {
     await dialogService.showCustomDialog(
       variant: DialogType.CreditConversionInfo,

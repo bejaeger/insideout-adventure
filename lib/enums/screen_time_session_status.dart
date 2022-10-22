@@ -3,5 +3,7 @@ enum ScreenTimeSessionStatus {
   active,
   cancelled,
   completed,
-  archived
+  archived, 
+  requested, // when child starts screen time
+  denied, // when child starts screen time
 }

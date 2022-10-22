@@ -16,15 +16,11 @@ import 'dart:async';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/notifications/notifications_service.dart';
-import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
-import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:geolocator/geolocator.dart';
-
-import '../../../datamodels/quests/quest.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel
     with MapStateControlMixin {
@@ -100,17 +96,22 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       if (screenTimeSession != null) {
         await screenTimeService.listenToPotentialScreenTimes(
             callback: notifyListeners);
-        ScreenTimeSession? session =
+
+        ScreenTimeSession? session;
+        try {
+        session  =
             await screenTimeService.getSpecificScreenTime(
           uid: screenTimeSession.uid,
           sessionId: screenTimeSession.sessionId,
         );
+        } catch(e) {
+          log.wtf(
+              "NO screen time session found. This should never be the case. Error: $e");
+
+        }
         if (session != null) {
           await navToActiveScreenTimeView(session: session);
-        } else {
-          log.wtf(
-              "NO screen time session found. This should never be the case. ");
-        }
+        } 
       } else {
         // no need to await for it when we don't navigate to it
         screenTimeService.listenToPotentialScreenTimes(
@@ -219,6 +220,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
           addQuestsToExisting: loadNewQuests,
         );
         await questService.sortNearbyQuests();
+        questService.loadNearbyQuestsTodo(completedQuestIds: currentUserStats.completedQuestIds);
         questService.extractAllQuestTypes();
       }
     } catch (e) {

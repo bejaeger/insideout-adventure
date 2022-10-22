@@ -102,7 +102,7 @@ class NotCloseToQuestNote extends StatelessWidget {
                             Icons.my_location,
                             color: Colors.white,
                           ),
-                          title: "Your location",
+                          title: "You",
                         ),
                       )
                     : Expanded(
@@ -118,7 +118,7 @@ class NotCloseToQuestNote extends StatelessWidget {
                             Icons.radar,
                             color: Colors.white,
                           ),
-                          title: "Quest location",
+                          title: "Quest",
                         ),
                       ),
               ],

@@ -16,7 +16,6 @@ import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/utils/markers/markers.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -29,7 +28,8 @@ import '../../../../services/geolocation/geolocation_service.dart';
 class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   // member vars
   bool fromMap;
-  CreateQuestViewModel({required this.fromMap});
+  void Function() disposeController;
+  CreateQuestViewModel({required this.fromMap, required this.disposeController});
 
   // -------------------------------------------------------
   // services
@@ -103,6 +103,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       notifyListeners();
     } else {
       popView();
+      disposeController();
     }
   }
 
@@ -328,8 +329,10 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
       setBusy(false);
       if (!fromMap) {
         replaceWithParentHomeView();
+        disposeController();
       } else {
         await popUntilMapView();
+        disposeController();
       }
     }
     return result;

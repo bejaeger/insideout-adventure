@@ -51,6 +51,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
   // TODO: need to dispose this so need to have stateful function here!
   // TODO: This does not work with formView
   final controller = PageController(initialPage: 0);
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateQuestViewModel>.reactive(
@@ -58,7 +59,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
         model.getLocation();
         listenToFormUpdated(model);
       },
-      viewModelBuilder: () => CreateQuestViewModel(fromMap: fromMap),
+      viewModelBuilder: () => CreateQuestViewModel(fromMap: fromMap, disposeController: () => controller.dispose()),
       // onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) {
         return SafeArea(
@@ -243,53 +244,53 @@ class QuestTypeSelection extends StatelessWidget with $CreateQuestView {
             ),
           ),
           verticalSpaceMedium,
-          AfkCreditsButton.text(
-            title: "Show example screenshots",
-            onTap: model.loadExampleScreenshots,
-          ),
-          if (model.laodingScreenShots) AFKProgressIndicator(),
-          if (model.exampleScreenShots.containsKey(model.selectedQuestType))
-            if (model.exampleScreenShotsWithType == null ||
-                model.exampleScreenShotsWithType!.length == 0)
-              Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 100.0, left: 20.0, right: 20.0),
-                child: AfkCreditsText.headingFour(
-                    "Sorry, there are no example screenshots available at this time.",
-                    align: TextAlign.center),
-              ),
-          if (model.exampleScreenShotsWithType != null &&
-              model.exampleScreenShotsWithType!.length > 0)
-            Container(
-              height: 380,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: kcCultured,
-              ),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: model.exampleScreenShotsWithType!.length,
-                itemBuilder: (context, idx) {
-                  return Column(
-                    children: [
-                      verticalSpaceSmall,
-                      AfkCreditsText.headingFour(idx.toString()),
-                      verticalSpaceSmall,
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Image.memory(
-                            model.exampleScreenShotsWithType![idx],
-                            height: 320),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          if (model.exampleScreenShotsWithType != null &&
-              model.exampleScreenShotsWithType!.length > 0)
-            verticalSpaceMassive,
+          // AfkCreditsButton.text(
+          //   title: "Show example screenshots",
+          //   onTap: model.loadExampleScreenshots,
+          // ),
+          // if (model.laodingScreenShots) AFKProgressIndicator(),
+          // if (model.exampleScreenShots.containsKey(model.selectedQuestType))
+          //   if (model.exampleScreenShotsWithType == null ||
+          //       model.exampleScreenShotsWithType!.length == 0)
+          //     Padding(
+          //       padding: const EdgeInsets.only(
+          //           bottom: 100.0, left: 20.0, right: 20.0),
+          //       child: AfkCreditsText.headingFour(
+          //           "Sorry, there are no example screenshots available at this time.",
+          //           align: TextAlign.center),
+          //     ),
+          // if (model.exampleScreenShotsWithType != null &&
+          //     model.exampleScreenShotsWithType!.length > 0)
+          //   Container(
+          //     height: 380,
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(20),
+          //       color: kcCultured,
+          //     ),
+          //     child: ListView.builder(
+          //       scrollDirection: Axis.horizontal,
+          //       shrinkWrap: true,
+          //       itemCount: model.exampleScreenShotsWithType!.length,
+          //       itemBuilder: (context, idx) {
+          //         return Column(
+          //           children: [
+          //             verticalSpaceSmall,
+          //             AfkCreditsText.headingFour(idx.toString()),
+          //             verticalSpaceSmall,
+          //             Padding(
+          //               padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          //               child: Image.memory(
+          //                   model.exampleScreenShotsWithType![idx],
+          //                   height: 320),
+          //             ),
+          //           ],
+          //         );
+          //       },
+          //     ),
+          //   ),
+          // if (model.exampleScreenShotsWithType != null &&
+          //     model.exampleScreenShotsWithType!.length > 0)
+          //   verticalSpaceMassive,
           // AfkCreditsDropdownFormField<QuestType>(
           //   items: CreateQuestType.values.map(
           //     (_questType) {

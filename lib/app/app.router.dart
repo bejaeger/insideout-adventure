@@ -5,22 +5,24 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:afkcredits/datamodels/quests/quest.dart' as _i48;
+import 'package:afkcredits/datamodels/quests/quest.dart' as _i49;
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart'
-    as _i41;
+    as _i42;
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart'
-    as _i45;
-import 'package:afkcredits/enums/authentication_method.dart' as _i43;
-import 'package:afkcredits/enums/bottom_nav_bar_index.dart' as _i47;
-import 'package:afkcredits/enums/quest_view_index.dart' as _i46;
-import 'package:afkcredits/enums/transfer_type.dart' as _i44;
-import 'package:afkcredits/enums/user_role.dart' as _i42;
+    as _i46;
+import 'package:afkcredits/enums/authentication_method.dart' as _i44;
+import 'package:afkcredits/enums/bottom_nav_bar_index.dart' as _i48;
+import 'package:afkcredits/enums/quest_view_index.dart' as _i47;
+import 'package:afkcredits/enums/transfer_type.dart' as _i45;
+import 'package:afkcredits/enums/user_role.dart' as _i43;
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart'
     as _i25;
 import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart'
     as _i24;
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart'
     as _i32;
+import 'package:afkcredits/ui/views/active_screen_time/screen_time_requested_view.dart'
+    as _i40;
 import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_view.dart'
     as _i39;
 import 'package:afkcredits/ui/views/admin/admin_home_view.dart' as _i13;
@@ -78,11 +80,11 @@ import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart'
 import 'package:afkcredits/ui/views/startup/startup_view.dart' as _i10;
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart'
     as _i18;
-import 'package:afkcredits_ui/afkcredits_ui.dart' as _i49;
-import 'package:flutter/foundation.dart' as _i40;
+import 'package:afkcredits_ui/afkcredits_ui.dart' as _i50;
+import 'package:flutter/foundation.dart' as _i41;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i50;
+import 'package:stacked_services/stacked_services.dart' as _i51;
 
 class Routes {
   static const parentHomeView = '/parent-home-view';
@@ -162,6 +164,8 @@ class Routes {
 
   static const startScreenTimeCounterView = '/start-screen-time-counter-view';
 
+  static const screenTimeRequestedView = '/screen-time-requested-view';
+
   static const all = <String>{
     parentHomeView,
     singleMarkerView,
@@ -201,6 +205,7 @@ class Routes {
     feedbackView,
     permissionsView,
     startScreenTimeCounterView,
+    screenTimeRequestedView,
   };
 }
 
@@ -357,6 +362,10 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(
       Routes.startScreenTimeCounterView,
       page: _i39.StartScreenTimeCounterView,
+    ),
+    _i1.RouteDef(
+      Routes.screenTimeRequestedView,
+      page: _i40.ScreenTimeRequestedView,
     ),
   ];
 
@@ -676,6 +685,15 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
+    _i40.ScreenTimeRequestedView: (data) {
+      final args =
+          data.getArgs<ScreenTimeRequestedViewArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) =>
+            _i40.ScreenTimeRequestedView(key: args.key, session: args.session),
+        settings: data,
+      );
+    },
   };
 
   @override
@@ -690,9 +708,9 @@ class ParentHomeViewArguments {
     this.screenTimeSession,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i41.ScreenTimeSession? screenTimeSession;
+  final _i42.ScreenTimeSession? screenTimeSession;
 }
 
 class ExplorerHomeViewArguments {
@@ -703,11 +721,11 @@ class ExplorerHomeViewArguments {
     this.showNumberQuestsDialog = false,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
   final bool showBewareDialog;
 
-  final _i41.ScreenTimeSession? screenTimeSession;
+  final _i42.ScreenTimeSession? screenTimeSession;
 
   final bool showNumberQuestsDialog;
 }
@@ -715,7 +733,7 @@ class ExplorerHomeViewArguments {
 class LoginViewArguments {
   const LoginViewArguments({this.key});
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 }
 
 class CreateAccountViewArguments {
@@ -724,9 +742,9 @@ class CreateAccountViewArguments {
     required this.role,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i42.UserRole role;
+  final _i43.UserRole role;
 }
 
 class StartUpScreenTimeViewArguments {
@@ -735,9 +753,9 @@ class StartUpScreenTimeViewArguments {
     this.screenTimeSession,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i41.ScreenTimeSession? screenTimeSession;
+  final _i42.ScreenTimeSession? screenTimeSession;
 }
 
 class SelectRoleAfterLoginViewArguments {
@@ -746,21 +764,21 @@ class SelectRoleAfterLoginViewArguments {
     required this.authMethod,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i43.AuthenticationMethod authMethod;
+  final _i44.AuthenticationMethod authMethod;
 }
 
 class CreateExplorerViewArguments {
   const CreateExplorerViewArguments({this.key});
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 }
 
 class SearchExplorerViewArguments {
   const SearchExplorerViewArguments({this.key});
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 }
 
 class SingleChildStatViewArguments {
@@ -769,7 +787,7 @@ class SingleChildStatViewArguments {
     required this.uid,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
   final String uid;
 }
@@ -782,13 +800,13 @@ class TransferFundsViewArguments {
     required this.recipientInfo,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i44.TransferType type;
+  final _i45.TransferType type;
 
-  final _i45.PublicUserInfo senderInfo;
+  final _i46.PublicUserInfo senderInfo;
 
-  final _i45.PublicUserInfo recipientInfo;
+  final _i46.PublicUserInfo recipientInfo;
 }
 
 class QRCodeViewArguments {
@@ -797,7 +815,7 @@ class QRCodeViewArguments {
     this.qrCodeString,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
   final String? qrCodeString;
 }
@@ -805,7 +823,7 @@ class QRCodeViewArguments {
 class SetPinViewArguments {
   const SetPinViewArguments({this.key});
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 }
 
 class BottomBarLayoutTemplateViewArguments {
@@ -814,24 +832,24 @@ class BottomBarLayoutTemplateViewArguments {
     required this.userRole,
     this.initialBottomNavBarIndex,
     this.showDialog = false,
-    this.questViewIndex = _i46.QuestViewType.questlist,
+    this.questViewIndex = _i47.QuestViewType.questlist,
     this.quest,
     this.questType,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i42.UserRole userRole;
+  final _i43.UserRole userRole;
 
-  final _i47.BottomNavBarIndex? initialBottomNavBarIndex;
+  final _i48.BottomNavBarIndex? initialBottomNavBarIndex;
 
   final bool showDialog;
 
-  final _i46.QuestViewType questViewIndex;
+  final _i47.QuestViewType questViewIndex;
 
-  final _i48.Quest? quest;
+  final _i49.Quest? quest;
 
-  final _i49.QuestType? questType;
+  final _i50.QuestType? questType;
 }
 
 class ActiveQrCodeSearchViewArguments {
@@ -840,9 +858,9 @@ class ActiveQrCodeSearchViewArguments {
     required this.quest,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i48.Quest quest;
+  final _i49.Quest quest;
 }
 
 class ActiveDistanceEstimateQuestViewArguments {
@@ -851,9 +869,9 @@ class ActiveDistanceEstimateQuestViewArguments {
     required this.quest,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i48.Quest quest;
+  final _i49.Quest quest;
 }
 
 class CreateQuestViewArguments {
@@ -862,7 +880,7 @@ class CreateQuestViewArguments {
     this.fromMap = false,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
   final bool fromMap;
 }
@@ -873,7 +891,7 @@ class HistoryAndAchievementsViewArguments {
     this.initialIndex = 0,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
   final int initialIndex;
 }
@@ -884,7 +902,7 @@ class ARObjectAndroidViewArguments {
     this.isCoins = false,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
   final bool isCoins;
 }
@@ -895,7 +913,7 @@ class ARObjectIosViewArguments {
     this.isCoins = false,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
   final bool isCoins;
 }
@@ -906,9 +924,9 @@ class ActiveScreenTimeViewArguments {
     required this.session,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i41.ScreenTimeSession session;
+  final _i42.ScreenTimeSession session;
 }
 
 class SelectScreenTimeViewArguments {
@@ -917,7 +935,7 @@ class SelectScreenTimeViewArguments {
     this.childId,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
   final String? childId;
 }
@@ -929,17 +947,17 @@ class SingleQuestTypeViewArguments {
     this.questType,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i48.Quest? quest;
+  final _i49.Quest? quest;
 
-  final _i49.QuestType? questType;
+  final _i50.QuestType? questType;
 }
 
 class FeedbackViewArguments {
   const FeedbackViewArguments({this.key});
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 }
 
 class StartScreenTimeCounterViewArguments {
@@ -948,15 +966,26 @@ class StartScreenTimeCounterViewArguments {
     required this.session,
   });
 
-  final _i40.Key? key;
+  final _i41.Key? key;
 
-  final _i41.ScreenTimeSession session;
+  final _i42.ScreenTimeSession session;
 }
 
-extension NavigatorStateExtension on _i50.NavigationService {
+class ScreenTimeRequestedViewArguments {
+  const ScreenTimeRequestedViewArguments({
+    this.key,
+    required this.session,
+  });
+
+  final _i41.Key? key;
+
+  final _i42.ScreenTimeSession session;
+}
+
+extension NavigatorStateExtension on _i51.NavigationService {
   Future<dynamic> navigateToParentHomeView({
-    _i40.Key? key,
-    _i41.ScreenTimeSession? screenTimeSession,
+    _i41.Key? key,
+    _i42.ScreenTimeSession? screenTimeSession,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1001,9 +1030,9 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToExplorerHomeView({
-    _i40.Key? key,
+    _i41.Key? key,
     bool showBewareDialog = false,
-    _i41.ScreenTimeSession? screenTimeSession,
+    _i42.ScreenTimeSession? screenTimeSession,
     bool showNumberQuestsDialog = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -1038,7 +1067,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToLoginView({
-    _i40.Key? key,
+    _i41.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1054,8 +1083,8 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToCreateAccountView({
-    _i40.Key? key,
-    required _i42.UserRole role,
+    _i41.Key? key,
+    required _i43.UserRole role,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1099,8 +1128,8 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToStartUpScreenTimeView({
-    _i40.Key? key,
-    _i41.ScreenTimeSession? screenTimeSession,
+    _i41.Key? key,
+    _i42.ScreenTimeSession? screenTimeSession,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1145,8 +1174,8 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToSelectRoleAfterLoginView({
-    _i40.Key? key,
-    required _i43.AuthenticationMethod authMethod,
+    _i41.Key? key,
+    required _i44.AuthenticationMethod authMethod,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1163,7 +1192,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToCreateExplorerView({
-    _i40.Key? key,
+    _i41.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1179,7 +1208,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToSearchExplorerView({
-    _i40.Key? key,
+    _i41.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1195,7 +1224,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToSingleChildStatView({
-    _i40.Key? key,
+    _i41.Key? key,
     required String uid,
     int? routerId,
     bool preventDuplicates = true,
@@ -1212,10 +1241,10 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToTransferFundsView({
-    _i40.Key? key,
-    required _i44.TransferType type,
-    required _i45.PublicUserInfo senderInfo,
-    required _i45.PublicUserInfo recipientInfo,
+    _i41.Key? key,
+    required _i45.TransferType type,
+    required _i46.PublicUserInfo senderInfo,
+    required _i46.PublicUserInfo recipientInfo,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1235,7 +1264,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToQRCodeView({
-    _i40.Key? key,
+    _i41.Key? key,
     String? qrCodeString,
     int? routerId,
     bool preventDuplicates = true,
@@ -1280,7 +1309,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToSetPinView({
-    _i40.Key? key,
+    _i41.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1296,13 +1325,13 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToBottomBarLayoutTemplateView({
-    _i40.Key? key,
-    required _i42.UserRole userRole,
-    _i47.BottomNavBarIndex? initialBottomNavBarIndex,
+    _i41.Key? key,
+    required _i43.UserRole userRole,
+    _i48.BottomNavBarIndex? initialBottomNavBarIndex,
     bool showDialog = false,
-    _i46.QuestViewType questViewIndex = _i46.QuestViewType.questlist,
-    _i48.Quest? quest,
-    _i49.QuestType? questType,
+    _i47.QuestViewType questViewIndex = _i47.QuestViewType.questlist,
+    _i49.Quest? quest,
+    _i50.QuestType? questType,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1325,8 +1354,8 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToActiveQrCodeSearchView({
-    _i40.Key? key,
-    required _i48.Quest quest,
+    _i41.Key? key,
+    required _i49.Quest quest,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1342,8 +1371,8 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToActiveDistanceEstimateQuestView({
-    _i40.Key? key,
-    required _i48.Quest quest,
+    _i41.Key? key,
+    required _i49.Quest quest,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1360,7 +1389,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToCreateQuestView({
-    _i40.Key? key,
+    _i41.Key? key,
     bool fromMap = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -1405,7 +1434,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToHistoryAndAchievementsView({
-    _i40.Key? key,
+    _i41.Key? key,
     int initialIndex = 0,
     int? routerId,
     bool preventDuplicates = true,
@@ -1423,7 +1452,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToARObjectAndroidView({
-    _i40.Key? key,
+    _i41.Key? key,
     bool isCoins = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -1440,7 +1469,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToARObjectIosView({
-    _i40.Key? key,
+    _i41.Key? key,
     bool isCoins = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -1457,8 +1486,8 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToActiveScreenTimeView({
-    _i40.Key? key,
-    required _i41.ScreenTimeSession session,
+    _i41.Key? key,
+    required _i42.ScreenTimeSession session,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1474,7 +1503,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToSelectScreenTimeView({
-    _i40.Key? key,
+    _i41.Key? key,
     String? childId,
     int? routerId,
     bool preventDuplicates = true,
@@ -1491,9 +1520,9 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToSingleQuestTypeView({
-    _i40.Key? key,
-    required _i48.Quest? quest,
-    _i49.QuestType? questType,
+    _i41.Key? key,
+    required _i49.Quest? quest,
+    _i50.QuestType? questType,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1538,7 +1567,7 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToFeedbackView({
-    _i40.Key? key,
+    _i41.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1568,8 +1597,8 @@ extension NavigatorStateExtension on _i50.NavigationService {
   }
 
   Future<dynamic> navigateToStartScreenTimeCounterView({
-    _i40.Key? key,
-    required _i41.ScreenTimeSession session,
+    _i41.Key? key,
+    required _i42.ScreenTimeSession session,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1579,6 +1608,23 @@ extension NavigatorStateExtension on _i50.NavigationService {
     return navigateTo<dynamic>(Routes.startScreenTimeCounterView,
         arguments:
             StartScreenTimeCounterViewArguments(key: key, session: session),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToScreenTimeRequestedView({
+    _i41.Key? key,
+    required _i42.ScreenTimeSession session,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.screenTimeRequestedView,
+        arguments: ScreenTimeRequestedViewArguments(key: key, session: session),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

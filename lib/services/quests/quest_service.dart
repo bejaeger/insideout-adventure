@@ -32,6 +32,8 @@ class QuestService with ReactiveServiceMixin {
   // Turned local variable pvt
   List<Quest> _nearbyQuests = [];
   List<Quest> get getNearByQuest => _nearbyQuests;
+  List<Quest> _nearbyQuestsTodo = [];
+  List<Quest> get getNearByQuestTodo => _nearbyQuestsTodo;
   double? lonAtLatestQuestDownload;
   double? latAtLatestQuestDownload;
 
@@ -240,6 +242,22 @@ class QuestService with ReactiveServiceMixin {
           "Curent quests empty, or distance check not required. Can't check distances");
     }
     log.i("Notify listeners");
+  }
+
+  void loadNearbyQuestsTodo({required List<String> completedQuestIds}) {
+    log.v("Extracting only quests that are not completed");
+    _nearbyQuestsTodo = [];
+    if (_nearbyQuests.isNotEmpty) {
+      _nearbyQuests.forEach(
+        (element) {
+          if (!completedQuestIds.contains(element.id)) {
+            if (!_nearbyQuestsTodo.any((el) => el.id == element.id)) {
+              _nearbyQuestsTodo.add(element);
+            }
+          }
+        },
+      );
+    }
   }
 
   Future getQuest({required String questId}) async {

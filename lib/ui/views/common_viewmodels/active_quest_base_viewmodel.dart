@@ -524,7 +524,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     if (redoQuest) {
       return false;
     } else {
-      return currentUserStats.completedQuestIds.contains(selectedQuest?.id);
+      return userService.hasCompletedQuest(questId: selectedQuest?.id);
     }
   }
 

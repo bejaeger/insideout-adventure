@@ -32,6 +32,10 @@ class ScreenTimeService {
   // map of explorerIds with screen time session, filled from firestore
   Map<String, ScreenTimeSession> supportedExplorerScreenTimeSessionsActive = {};
 
+  // when child asks for screen time, this map will be filled
+  Map<String, ScreenTimeSession> supportedExplorerScreenTimeSessionsRequested =
+      {};
+
   // ? State connected to local app!
   // map of uid and screen time that are over and we want to show
   // the stats
@@ -316,6 +320,10 @@ class ScreenTimeService {
         // update every minute!
         if (secondsLeft % 60 == 0) {
           if (secondsLeft == 0) {
+            if (screenTimeActiveSubject[session.uid] == null) {
+              callback();
+              timer.cancel();
+            }
             await handleScreenTimeOverEvent(
                 session: screenTimeActiveSubject[session.uid]!.value);
             callback();
@@ -544,6 +552,33 @@ class ScreenTimeService {
     }
 
     return completer.future;
+  }
+
+  // Hanlding confirmation between children and parents when child starts screen time
+
+  Future uploadScreenTimeRequest({required ScreenTimeSession session}) async {
+    await _firestoreApi.addScreenTimeSession(
+        session: session.copyWith(status: ScreenTimeSessionStatus.requested));
+  }
+
+  Future removeScreenTimeSession({required ScreenTimeSession session}) async {
+    await _firestoreApi.removeScreenTimeSessionStatus(
+        sessionId: session.sessionId);
+  }
+
+  Future acceptScreenTimeSession({required ScreenTimeSession session}) async {
+    // schedule screen time for starting
+    await _firestoreApi.updateScreenTimeSessionStatus(
+        session: session, status: ScreenTimeSessionStatus.active);
+  }
+
+  Future denyScreenTimeSession({required ScreenTimeSession session}) async {
+    await _firestoreApi.updateScreenTimeSessionStatus(
+        session: session, status: ScreenTimeSessionStatus.denied);
+  }
+
+  Stream<ScreenTimeSession> getScreenTimeStream({required String sessionId}) {
+    return _firestoreApi.getScreenTimeStream(sessionId: sessionId);
   }
 
   Future<ScreenTimeSession?> getSpecificScreenTime(

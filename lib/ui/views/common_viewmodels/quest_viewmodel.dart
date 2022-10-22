@@ -29,6 +29,7 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
   // Getters
   bool get isDevFlavor => appConfigProvider.flavor == Flavor.dev;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
+  List<Quest> get nearbyQuestsTodo => questService.getNearByQuestTodo;
 
   // -----------------------------------------
   // State

@@ -159,7 +159,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                                 CircleAvatar(
                                   backgroundColor: kcPrimaryColor,
                                   child: Icon(
-                                    widget.model.isUsingAR
+                                    widget.model.isUsingAR && widget.model.isARAvailable
                                         ? Icons.camera_alt_outlined
                                         : Icons.add_circle_outline_rounded,
                                     color: Colors.grey[50],
@@ -179,7 +179,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     // duration: Duration(milliseconds: 500),
                     // height: height,
                     child: Text(
-                      widget.model.isUsingAR
+                      widget.model.isUsingAR && widget.model.isARAvailable
                           ? "Find credits"
                           : "Collect credits",
                       style: textTheme(context)
@@ -194,7 +194,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        if (widget.model.isUsingAR)
+                        if (widget.model.isUsingAR && widget.model.isARAvailable)
                           TextButton(
                             onPressed: () async {
                               dynamic collected =

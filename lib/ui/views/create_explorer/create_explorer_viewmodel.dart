@@ -1,7 +1,9 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.form.dart';
@@ -12,25 +14,96 @@ class CreateExplorerViewModel extends FormViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final log = getLogger("AddExplorerViewModel");
 
-//No Need for this since we are going to start doing realtime validation on
-//setFormStatus()
+  // ------------------------
+  // state
+  bool isLoading = false;
+
+  void Function() disposeController;
+  CreateExplorerViewModel({required this.disposeController});
+
+  // ------------------------------------------
+  // state
+  int pageIndex = 0;
+  bool? ownPhoneSelected;
+  String? chooseValueMessage;
+  // -------------------------
+  // functions
+  Future onBackButton(PageController controller) async {
+    if (pageIndex > 0) {
+      controller.previousPage(
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+      pageIndex = pageIndex - 1;
+      notifyListeners();
+    } else {
+      popView();
+      disposeController();
+    }
+  }
+
+  Future onNextButton(PageController controller) async {
+    if (pageIndex == 0) {
+      final result = isValidInput(name: nameValue, password: passwordValue);
+      if (result == true) {
+        // quest type selection input
+        controller.nextPage(
+            duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+        pageIndex = pageIndex + 1;
+        notifyListeners();
+      }
+    } else if (pageIndex == 1) {
+      // quest marker selection
+      // ? for some reason this caused an error in the google map library
+      // ? However, I don't know why I added this anyways!
+      // isLoading = true;
+      // notifyListeners();
+      addExplorer();
+      // isLoading = false;
+      // notifyListeners();
+    }
+  }
+
+  void switchOnOwnPhoneSelected(bool set) {
+    ownPhoneSelected = set;
+    notifyListeners();
+  }
+
+  //No Need for this since we are going to start doing realtime validation on
+  //setFormStatus()
   // Still need this e.g. if the user didn't tap the password field.
   dynamic isValidInput({required String? name, required String? password}) {
     log.i("Testing if user input is valid: name = $name, password = $password");
-    if (name == null || name == "") return "Please provide a valid name";
-    if (password == null) return "Please provide a valid password";
-    if (password.length < 6)
-      return "Please provide a password with at least 6 characters";
+    if (name == null || name == "") {
+      fieldsValidationMessages[NameValueKey] = "Please provide a valid name";
+      return;
+    }
+    if (password == null) {
+      fieldsValidationMessages[PasswordValueKey] =
+          "Please provide a valid password";
+      return;
+    }
+    if (password.length < 4) {
+      fieldsValidationMessages[PasswordValueKey] =
+          "Please provide a password with at least 4 characters";
+      return;
+    }
     return true;
   }
 
   Future addExplorer() async {
+    if (ownPhoneSelected == null) {
+      chooseValueMessage = "Choose yes or no";
+      notifyListeners();
+      return;
+    }
     final result = isValidInput(name: nameValue, password: passwordValue!);
     if (result == true) {
+      // per default if child has own phone we enable verification step
+      UserSettings userSettings = UserSettings(ownPhone: ownPhoneSelected!, isAcceptScreenTimeFirst: ownPhoneSelected!);
       final result = await runBusyFuture(_userService.createExplorerAccount(
           name: nameValue!,
           password: passwordValue!,
-          authMethod: AuthenticationMethod.EmailOrSponsorCreatedExplorer));
+          authMethod: AuthenticationMethod.EmailOrSponsorCreatedExplorer,
+          userSettings: userSettings));
       if (result is String) {
         await _dialogService.showDialog(
             title: "Could not create user", description: result);
@@ -64,5 +137,10 @@ class CreateExplorerViewModel extends FormViewModel {
     if (hasNameValidationMessage) {
       setValidationMessage('Error in the form, please check again');
     }
+  }
+
+  void popView() {
+    disposeController();
+    _navigationService.back();
   }
 }

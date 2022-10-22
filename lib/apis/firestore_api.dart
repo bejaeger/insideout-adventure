@@ -315,6 +315,22 @@ class FirestoreApi {
     }
   }
 
+  Future updateUserSettings(
+      {required String uid, required String key, required dynamic value}) async {
+    try {
+      await usersCollection.doc(uid).set({
+        "userSettings": {
+          key: value,
+        },
+      }, SetOptions(merge: true));
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when updating user settings in users collection",
+          devDetails: '$e');
+    }
+  }
+
   Future<void> updateTokenForUser(
       {required String uid, required String token}) async {
     log.v("Updating fcm token for user with id $uid");
@@ -408,15 +424,17 @@ class FirestoreApi {
   }
 
   Stream<User> getUserStream({required String uid}) {
-    return usersCollection.doc(uid).snapshots().map((event) {
-      if (!event.exists || event.data() == null) {
-        throw FirestoreApiException(
-            message: "User document not valid!",
-            devDetails:
-                "Something must have failed before when creating user account. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
-      }
-      return User.fromJson(event.data()! as Map<String, dynamic>);
-    });
+    return usersCollection.doc(uid).snapshots().map(
+      (event) {
+        if (!event.exists || event.data() == null) {
+          throw FirestoreApiException(
+              message: "User document not valid!",
+              devDetails:
+                  "Something must have failed before when creating user account. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
+        }
+        return User.fromJson(event.data()! as Map<String, dynamic>);
+      },
+    );
   }
 
   /// invitations
@@ -928,13 +946,43 @@ class FirestoreApi {
         SetOptions(merge: true));
   }
 
+  Future removeScreenTimeSessionStatus({required String sessionId}) async {
+    await screenTimeSessionCollection.doc(sessionId).delete();
+  }
+
+  Stream<ScreenTimeSession> getScreenTimeStream({required String sessionId}) {
+    return screenTimeSessionCollection.doc(sessionId).snapshots().map((event) {
+      if (!event.exists || event.data() == null) {
+        throw FirestoreApiException(
+            message: "screen time session document not valid!",
+            devDetails:
+                "Something must have failed before when creating the screen time session. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
+      }
+      return ScreenTimeSession.fromJson(event.data() as Map<String, dynamic>);
+    });
+  }
+
+  Future updateScreenTimeSessionStatus(
+      {required ScreenTimeSession session,
+      required ScreenTimeSessionStatus status}) async {
+    log.i("Update screen time session to firestore");
+    session = session.copyWith(status: status);
+    await screenTimeSessionCollection.doc(session.sessionId).update(
+      {
+        'status': session.toJson()["status"],
+      },
+    );
+  }
+
   Future updateScreenTimeSession({required ScreenTimeSession session}) async {
     log.i("Update screen time session to firestore");
-    await screenTimeSessionCollection.doc(session.sessionId).update({
-      'status': session.toJson()["status"],
-      'afkCreditsUsed': session.afkCreditsUsed,
-      'minutesUsed': session.minutesUsed,
-    });
+    await screenTimeSessionCollection.doc(session.sessionId).update(
+      {
+        'status': session.toJson()["status"],
+        'afkCreditsUsed': session.afkCreditsUsed,
+        'minutesUsed': session.minutesUsed,
+      },
+    );
   }
 
   Future cancelScreenTimeSession({required ScreenTimeSession session}) async {

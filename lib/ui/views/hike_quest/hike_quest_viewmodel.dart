@@ -174,7 +174,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
               }
             } else {
               await collectMarkerFromGPSLocation(
-                  forceNoAR: !appConfigProvider.isUsingAR);
+                  forceNoAR: !(userService.isUsingAR &&
+                      appConfigProvider.isARAvailable));
             }
             activeQuestService.resumePositionListener();
           }
@@ -253,7 +254,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
 
     // marker validated. Now we can collect it.
     // Either via AR or just like that!
-    if (appConfigProvider.isUsingAR && !forceNoAR) {
+    if ((userService.isUsingAR && appConfigProvider.isARAvailable) &&
+        !forceNoAR) {
       bool collected = await mapViewModel.openARView(true);
       // 2. Handle return value of AR view!
       if (!collected) {
@@ -267,7 +269,9 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     MarkerAnalysisResult markerResult =
         await activeQuestService.analyzeMarker(marker: markerInArea);
     return await handleMarkerAnalysisResult(markerResult,
-        isShowCollectedMarkerDialog: !appConfigProvider.isUsingAR || forceNoAR);
+        isShowCollectedMarkerDialog:
+            !(userService.isUsingAR && appConfigProvider.isARAvailable) ||
+                forceNoAR);
   }
 
   String getNumberMarkersCollectedString() {

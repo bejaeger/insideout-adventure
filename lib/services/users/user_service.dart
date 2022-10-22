@@ -58,8 +58,9 @@ class UserService {
   UserAdmin? _currentUserAdmin;
   User? get currentUserNullable => _currentUser;
   User get currentUser => _currentUser!;
-  UserSettings get currentUserSettings => currentUserNullable?.userSettings ?? UserSettings();
-  
+  UserSettings get currentUserSettings =>
+      currentUserNullable?.userSettings ?? UserSettings();
+
   UserStatistics? _currentUserStats;
   UserStatistics get currentUserStats => _currentUserStats!;
   UserStatistics? get currentUserStatsNullable => _currentUserStats;
@@ -413,7 +414,8 @@ class UserService {
   Future createExplorerAccount(
       {required String name,
       required String password,
-      required AuthenticationMethod authMethod}) async {
+      required AuthenticationMethod authMethod,
+      required UserSettings userSettings}) async {
     if (await isUserAlreadyPresent(name: name)) {
       return "User with name $name already present. Please choose a different name.";
     }
@@ -432,7 +434,7 @@ class UserService {
       deviceId: currentUser.deviceId,
       tokens: currentUser.tokens,
       avatarIdx: 1,
-      userSettings: UserSettings(),
+      userSettings: userSettings,
     );
     await createUserAccount(user: newExplorer);
     List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
@@ -503,7 +505,9 @@ class UserService {
   ///
 
   void setupUserDataListeners(
-      {required Completer<void> completer, void Function()? callback}) async {
+      {required Completer<void> completer,
+      void Function()? callback,
+      void Function()? screenTimeRequestDialogCallback}) async {
     if (_currentUserStreamSubscription == null) {
       Stream<User> userStream =
           _firestoreApi.getUserStream(uid: currentUser.uid);
@@ -556,7 +560,10 @@ class UserService {
           );
 
           // adds listener to stats document and quest history of each explorer
-          await addExplorerListeners(explorerIds: newUids, callback: callback);
+          await addExplorerListeners(
+              explorerIds: newUids,
+              callback: callback,
+              screenTimeRequestDialogCallback: screenTimeRequestDialogCallback);
 
           if (!completer.isCompleted) {
             completer.complete();
@@ -578,7 +585,9 @@ class UserService {
   // listens to the user document as well as the user stats document
   // of all explorers.
   Future<void> addExplorerListeners(
-      {required List<String> explorerIds, void Function()? callback}) async {
+      {required List<String> explorerIds,
+      void Function()? callback,
+      void Function()? screenTimeRequestDialogCallback}) async {
     Completer<void> completer = Completer();
     int i = 0;
     if (explorerIds.length == 0) {
@@ -590,7 +599,9 @@ class UserService {
       await addExplorerHistoryListener(
           explorerId: explorerId, callback: callback);
       await addExplorerScreenTimeListener(
-          explorerId: explorerId, callback: callback);
+          explorerId: explorerId,
+          callback: callback,
+          screenTimeRequestDialogCallback: screenTimeRequestDialogCallback);
       i += 1;
       if (i == explorerIds.length) {
         if (!completer.isCompleted) {
@@ -650,7 +661,9 @@ class UserService {
   }
 
   Future addExplorerScreenTimeListener(
-      {required String explorerId, void Function()? callback}) async {
+      {required String explorerId,
+      void Function()? callback,
+      void Function()? screenTimeRequestDialogCallback}) async {
     Completer<void> completer = Completer();
     if (!_explorerScreenTimeStreamSubscriptions.containsKey(explorerId) ||
         _explorerScreenTimeStreamSubscriptions[explorerId] == null) {
@@ -686,6 +699,8 @@ class UserService {
           // potentially add to active screen time map
           ScreenTimeSession? prevActiveSessions = _screenTimeService
               .supportedExplorerScreenTimeSessionsActive[explorerId];
+
+          // Check for any active screen times!
           try {
             ScreenTimeSession session = snapshot.firstWhere(
                 (element) => element.status == ScreenTimeSessionStatus.active);
@@ -723,6 +738,26 @@ class UserService {
                   .remove(explorerId);
             } else {
               rethrow;
+            }
+          }
+
+          // Check for any active screen times!
+          try {
+            ScreenTimeSession session = snapshot.firstWhere((element) =>
+                element.status == ScreenTimeSessionStatus.requested);
+            // if no session is found a StateError is thrown
+            _screenTimeService
+                    .supportedExplorerScreenTimeSessionsRequested[explorerId] =
+                session;
+            if (screenTimeRequestDialogCallback != null) {
+              screenTimeRequestDialogCallback();
+            }
+          } catch (e) {
+            if (e is StateError) {
+              log.v(
+                  "No requests screen time for explorer with id $explorerId anymore");
+              _screenTimeService.supportedExplorerScreenTimeSessionsRequested
+                  .remove(explorerId);
             }
           }
 
@@ -995,6 +1030,11 @@ class UserService {
     return supportedExplorersList.any((element) => element.uid == uid);
   }
 
+  bool hasCompletedQuest({required String? questId}) {
+    if (questId == null) return false;
+    return currentUserStats.completedQuestIds.contains(questId);
+  }
+
   Future setNewUserPropertyToFalse({required User user}) async {
     User newUser = user.copyWith(newUser: false);
     _firestoreApi.updateUserData(user: newUser);
@@ -1035,6 +1075,58 @@ class UserService {
   String hashPassword(String pw) {
     final bytes1 = utf8.encode(pw); // data being hashed
     return sha1.convert(bytes1).toString();
+  }
+
+  // USER SETTINGS FUNCTIONS
+  bool get isShowingCompletedQuests =>
+      currentUserSettings.isShowingCompletedQuests;
+  Future setIsShowingCompletedQuests({required bool value}) async {
+    updateUserData(
+      user: currentUser.copyWith(
+        userSettings:
+            currentUserSettings.copyWith(isShowingCompletedQuests: value),
+      ),
+    );
+  }
+
+  bool get isUsingAR => currentUserSettings.isUsingAR;
+  Future setIsUsingAr({required bool value}) async {
+    updateUserData(
+      user: currentUser.copyWith(
+        userSettings: currentUserSettings.copyWith(isUsingAR: value),
+      ),
+    );
+  }
+
+  // On older phones the lottie effects lead to huge lags.
+  // This provides an option to avoid showing the lottie effects!
+  bool get isShowAvatarAndMapEffects =>
+      currentUserSettings.isShowAvatarAndMapEffects;
+  Future setIsShowingAvatarAndMapEffects({required bool value}) async {
+    updateUserData(
+      user: currentUser.copyWith(
+        userSettings:
+            currentUserSettings.copyWith(isShowAvatarAndMapEffects: value),
+      ),
+    );
+  }
+
+  // USED to make settings from parents account to user account
+  bool get isAcceptScreenTimeFirst =>
+      currentUserSettings.isAcceptScreenTimeFirst;
+  Future setIsAcceptScreenTimeFirst(
+      {required String uid, required bool value}) async {
+    // This is a bit critical: Check UserSettings class if the key is correct
+    await _firestoreApi.updateUserSettings(
+        uid: uid, key: "isAcceptScreenTimeFirst", value: value);
+  }
+
+  // USED to make settings from parents account to user account
+  bool get isUsingOwnPhone => currentUserSettings.ownPhone;
+  Future setIsUsingOwnPhone({required String uid, required bool value}) async {
+    // This is a bit critical: Check UserSettings class if the key is correct
+    await _firestoreApi.updateUserSettings(
+        uid: uid, key: "ownPhone", value: value);
   }
 
   //////////////////////////////////////////////////

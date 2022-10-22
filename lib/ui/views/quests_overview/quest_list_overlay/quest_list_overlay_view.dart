@@ -1,6 +1,4 @@
 import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
@@ -95,7 +93,7 @@ class QuestListOverlayView extends StatelessWidget {
                             shrinkWrap: true,
                             //scrollDirection: Axis.vertical,
                             children: [
-                              ...model.nearbyQuests
+                              ...model.nearbyQuestsTodo
                                   .asMap()
                                   .map((index, quest) {
                                     return MapEntry(

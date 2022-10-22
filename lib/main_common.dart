@@ -4,6 +4,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/lifecycle_manager.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
+import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
@@ -60,6 +61,7 @@ void mainCommon(Flavor flavor) async {
 
     // configure services that need settings dependent on flavor
     final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
+    final UserService userService = locator<UserService>();
     appConfigProvider.configure(flavor);
     print("==>> Running with flavor $flavor");
 
@@ -67,17 +69,17 @@ void mainCommon(Flavor flavor) async {
       // await ArCoreController.checkArCoreAvailability() &&
       // await ArCoreController.checkIsArCoreInstalled()) {
       appConfigProvider.setIsARAvailable(false);
-      appConfigProvider.setIsUsingAR(false);
+      // appConfigProvider.setIsUsingAR(false);
     } else {
       if (await ARKitPlugin.checkConfiguration(
               ARKitConfiguration.worldTracking) &&
           await ARKitPlugin.checkConfiguration(
               ARKitConfiguration.imageTracking)) {
         appConfigProvider.setIsARAvailable(true);
-        appConfigProvider.setIsUsingAR(true);
+        // appConfigProvider.setIsUsingAR(true);
       } else {
         appConfigProvider.setIsARAvailable(false);
-        appConfigProvider.setIsUsingAR(false);
+        // appConfigProvider.setIsUsingAR(false);
       }
     }
 

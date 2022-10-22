@@ -64,12 +64,14 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     // if (screenTimeSession != null) {
     //   navigatingToActiveScreenTimeView = true;
     // }
-
+    setBusy(true);
     Completer completerOne = Completer<void>();
 
     // adds several listeners to user data including the data from the supported explorers
     userService.setupUserDataListeners(
-        completer: completerOne, callback: () => notifyListeners());
+        completer: completerOne,
+        callback: () => notifyListeners(),
+        screenTimeRequestDialogCallback: showScreenTimeRequestDialog);
     await runBusyFuture(
       Future.wait(
         [
@@ -87,15 +89,19 @@ class ParentHomeViewModel extends TransferBaseViewModel {
       // this will handle the current screen time!
       await screenTimeService.listenToPotentialScreenTimes(
           callback: notifyListeners);
-      ScreenTimeSession? session =
-          await screenTimeService.getSpecificScreenTime(
-        uid: screenTimeSession.uid,
-        sessionId: screenTimeSession.sessionId,
-      );
+      ScreenTimeSession? session;
+      try {
+        session = await screenTimeService.getSpecificScreenTime(
+          uid: screenTimeSession.uid,
+          sessionId: screenTimeSession.sessionId,
+        );
+      } catch (e) {
+        log.wtf(
+            "NO screen time session found. This should never be the case. Error: $e");
+      }
       if (session != null) {
         await navToActiveScreenTimeView(session: session);
       } else {
-        log.wtf("NO screen time session found. This should never be the case.");
         await dialogService.showDialog(
             title: "Screen time session not found",
             description:
@@ -113,6 +119,7 @@ class ParentHomeViewModel extends TransferBaseViewModel {
       screenTimeService.listenToPotentialScreenTimes(callback: notifyListeners);
       notifyListeners();
     }
+    setBusy(false);
   }
 
   ScreenTimeSession? getScreenTime({required String uid}) {
@@ -125,6 +132,48 @@ class ParentHomeViewModel extends TransferBaseViewModel {
         return null;
       } else {
         rethrow;
+      }
+    }
+  }
+
+  Future showScreenTimeRequestDialog() async {
+    List<ScreenTimeSession> sessionsRequested = List.from(
+        screenTimeService.supportedExplorerScreenTimeSessionsRequested.values);
+    for (ScreenTimeSession session in sessionsRequested) {
+      final res = await dialogService.showDialog(
+        title: session.userName +
+            " is requesting ${session.minutes} min screen time",
+        buttonTitle: "ACCEPT",
+        cancelTitle: "DON'T ALLOW",
+      );
+      if (screenTimeService.supportedExplorerScreenTimeSessionsRequested
+          .containsKey(session.uid)) {
+        try {
+          if (res?.confirmed == true) {
+            // somehow need to check if screen time was not cancelled in exactly this moment!
+            session = session.copyWith(startedAt: DateTime.now());
+            await screenTimeService.acceptScreenTimeSession(session: session);
+            session = await screenTimeService.startScreenTime(
+                session: session, callback: () {});
+            navToActiveScreenTimeView(session: session);
+            // maybe also start with counter!? not clear!
+            // navToScreenTimeCounterView(session: session);
+          } else {
+            await screenTimeService.denyScreenTimeSession(session: session);
+          }
+        } catch (e) {
+          log.wtf("Error dealing with screen time request: $e");
+          // when screen time request is cancelled at same time from child!
+          await dialogService.showDialog(
+              title: "Screen time request was cancelled",
+              description: session.userName + " cancelled the request already",
+              barrierDismissible: true);
+        }
+      } else {
+        await dialogService.showDialog(
+            title: "Screen time request was cancelled",
+            description: session.userName + " cancelled the request already",
+            barrierDismissible: true);
       }
     }
   }

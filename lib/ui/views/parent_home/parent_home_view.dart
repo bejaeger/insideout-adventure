@@ -45,8 +45,7 @@ class ParentHomeView extends StatelessWidget {
         },
         // fireOnModelReadyOnce: true, TODO: Not sure why this was set
         builder: (context, model, child) {
-          print("==>> Rebuild parent home view");
-          print(model.userHasGivenFeedback);
+          // print("==>> Rebuild parent home view");
           return WillPopScope(
             onWillPop: () async => false,
             child: SafeArea(
@@ -71,13 +70,13 @@ class ParentHomeView extends StatelessWidget {
                         title: "Kids area",
                         onPressed: model.showSwitchAreaBottomSheet,
                       ),
-                body: model.navigatingToActiveScreenTimeView
+                body: model.isBusy
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                             AFKProgressIndicator(),
                             verticalSpaceSmall,
-                            AfkCreditsText.body("Loading screen timer..."),
+                            AfkCreditsText.body("Loading..."),
                           ])
                     : RefreshIndicator(
                         onRefresh: () => model.listenToData(),
