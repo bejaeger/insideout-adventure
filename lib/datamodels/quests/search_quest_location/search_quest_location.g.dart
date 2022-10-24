@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'treasure_search_location.dart';
+part of 'search_quest_location.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TreasureSearchLocation _$$_TreasureSearchLocationFromJson(
+_$_SearchQuestLocation _$$_SearchQuestLocationFromJson(
         Map<String, dynamic> json) =>
-    _$_TreasureSearchLocation(
+    _$_SearchQuestLocation(
       currentLat: (json['currentLat'] as num).toDouble(),
       currentLon: (json['currentLon'] as num).toDouble(),
       currentAccuracy: (json['currentAccuracy'] as num).toDouble(),
@@ -20,8 +20,8 @@ _$_TreasureSearchLocation _$$_TreasureSearchLocationFromJson(
           (json['distanceToPreviousPosition'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$$_TreasureSearchLocationToJson(
-        _$_TreasureSearchLocation instance) =>
+Map<String, dynamic> _$$_SearchQuestLocationToJson(
+        _$_SearchQuestLocation instance) =>
     <String, dynamic>{
       'currentLat': instance.currentLat,
       'currentLon': instance.currentLon,

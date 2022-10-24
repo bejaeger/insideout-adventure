@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/active_quest_overlays/gps_area_hike/gps_area_hike_viewmodel.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_treasure_location_search_quest/active_treasure_location_search_quest_viewmodel.dart';
+import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_search_quest/active_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
@@ -12,7 +12,7 @@ import 'package:afkcredits/ui/widgets/common_quest_details_header.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
-import 'package:afkcredits/ui/widgets/treasure_location_search_widgets.dart';
+import 'package:afkcredits/ui/widgets/search_quest_widgets.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -110,7 +110,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                 // To be shown below the header once quest has started
                 if (quest != null &&
                     quest.type == QuestType.TreasureLocationSearch)
-                  TreasureLocationSearch(
+                  SearchQuestView(
                       showStartSlider: !model.showCompletedQuestNote() &&
                           model.isNearStartMarker &&
                           model.previouslyFinishedQuest == null &&
@@ -176,12 +176,12 @@ class SpecificQuestLayout extends StatelessWidget {
 }
 
 // Quest details for treasure location search!
-class TreasureLocationSearch extends StatelessWidget {
+class SearchQuestView extends StatelessWidget {
   final Quest quest;
   final bool showStartSlider;
   final void Function() notifyParentCallback;
   // final void Function() onStartQuest;
-  const TreasureLocationSearch({
+  const SearchQuestView({
     Key? key,
     required this.quest,
     required this.showStartSlider,
@@ -191,9 +191,8 @@ class TreasureLocationSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<
-        ActiveTreasureLocationSearchQuestViewModel>.reactive(
-      viewModelBuilder: () => ActiveTreasureLocationSearchQuestViewModel(),
+    return ViewModelBuilder<SearchQuestViewModel>.reactive(
+      viewModelBuilder: () => SearchQuestViewModel(),
       onModelReady: (model) => model.initialize(
           quest: quest, notifyParentCallback: notifyParentCallback),
       builder: (context, model, child) {
@@ -227,6 +226,8 @@ class TreasureLocationSearch extends StatelessWidget {
                 previousDistance: model.previousDistanceInMeters,
                 activatedQuest: model.activeQuestNullable,
                 directionStatus: model.directionStatus,
+                numCheckpointsReached: model.numCheckpointsReached,
+                numMarkers: model.numMarkers,
               ),
             ),
             if (model.useSuperUserFeatures &&

@@ -12,9 +12,11 @@ import 'package:transparent_pointer/transparent_pointer.dart';
 class GoogleMapScreen extends StatelessWidget {
   final MapViewModel model;
   final void Function()? callback;
+  final void Function(LatLng)? showCreateQuestDialog;
   const GoogleMapScreen({
     Key? key,
     required this.model,
+    this.showCreateQuestDialog,
     this.callback,
   }) : super(key: key);
 
@@ -45,6 +47,7 @@ class GoogleMapScreen extends StatelessWidget {
               child: GoogleMap(
                 //onTap: (_) => print("TAPPED"),
                 //mapType: MapType.hybrid,
+                onTap: showCreateQuestDialog != null ? (LatLng latLng) => showCreateQuestDialog!(latLng) : null,
                 initialCameraPosition: GoogleMapService.initialCameraPosition(
                   userLocation: model.userLocation,
                   parentAccount: model.isParentAccount,

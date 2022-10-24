@@ -5,6 +5,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/enums/quests/direction_status.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
 class CurrentQuestStatusInfo extends StatelessWidget {
@@ -14,6 +15,9 @@ class CurrentQuestStatusInfo extends StatelessWidget {
   final ActivatedQuest? activatedQuest;
   final bool isBusy;
   final bool isFirstDistanceCheck;
+  final int numCheckpointsReached;
+  final int numMarkers;
+
   const CurrentQuestStatusInfo(
       {Key? key,
       required this.activatedQuest,
@@ -21,6 +25,8 @@ class CurrentQuestStatusInfo extends StatelessWidget {
       required this.previousDistance,
       required this.currentDistance,
       required this.isFirstDistanceCheck,
+      required this.numCheckpointsReached,
+      required this.numMarkers,
       this.isBusy = false})
       : super(key: key);
 
@@ -38,20 +44,39 @@ class CurrentQuestStatusInfo extends StatelessWidget {
           decoration: BoxDecoration(
             color: getDirectionStatusColor(directionStatus),
             borderRadius: BorderRadius.circular(20.0),
-            border: Border.all(color: Colors.grey[400]!),
+            border: Border.all(color: Colors.grey[300]!),
           ),
-          child: directionStatus == DirectionStatus.nearGoal
-              ? AfkCreditsText.successThree("Yippieh! You found the treasure.",
+          child: getOtherStatusString(directionStatus) != null
+              ? AfkCreditsText.successThree(
+                  getOtherStatusString(directionStatus)!,
                   align: TextAlign.center)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         AfkCreditsText.headingFour(
-                          "Distance to treasure",
+                          "Distance to checkpoint " +
+                              (numCheckpointsReached + 1).toString() +
+                              " / " +
+                              numMarkers.toString(),
                         ),
+                        // Column(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     Row(
+                        //       children: [
+                        //         AfkCreditsText.headingFour(
+                        //             numCheckpointsReached.toString() +
+                        //                 " / " +
+                        //                 numMarkers.toString()),
+                        //       ],
+                        //     ),
+                        //     // AfkCreditsText.caption("Collected")
+                        //   ],
+                        // ),
                         // AfkCreditsText.body(
                         //     getDirectionStatusString(directionStatus)),
                       ],
@@ -60,20 +85,25 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                     Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Image.asset(kTreasureMapIconPath, width: 45),
-                        horizontalSpaceSmall,
-                        Icon(Icons.arrow_forward, size: 28),
-                        horizontalSpaceSmall,
-                        Image.asset(kAFKCreditsLogoPath,
-                            width: 45,
+                        Image.asset(kActivityIcon,
+                            width: 40,
                             color: directionStatus == DirectionStatus.closer
                                 ? Colors.white
                                 : kcPrimaryColor),
-                        AfkCreditsText.headingThree(" :    "),
+                        horizontalSpaceSmall,
+                        Icon(Icons.arrow_forward,
+                            size: 22, color: kcMediumGrey),
+                        horizontalSpaceSmall,
+                        Image.asset(kAFKCreditsLogoPath,
+                            width: 38,
+                            color: directionStatus == DirectionStatus.closer
+                                ? Colors.white
+                                : kcPrimaryColor),
+                        AfkCreditsText.headingThree(" "),
                         horizontalSpaceSmall,
                         isBusy
-                            ? AFKProgressIndicator(color: Colors.grey[600])
-                            : AfkCreditsText.headingThree(
+                            ? AFKProgressIndicator(color: Colors.grey[500])
+                            : AfkCreditsText.headingTwo(
                                 !isFirstDistanceCheck
                                     ? "${currentDistance.toStringAsFixed(1)} m"
                                     : "?",
@@ -83,7 +113,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                   ],
                 ),
         ),
-        verticalSpaceTiny,
+        verticalSpaceSmall,
         AfkCreditsText.headingThree(getDirectionStatusString(directionStatus),
             align: TextAlign.center),
         // Text("Aktuelle Distanz",
@@ -107,10 +137,29 @@ class CurrentQuestStatusInfo extends StatelessWidget {
         return "";
       case DirectionStatus.denied:
         return "";
+      case DirectionStatus.checkingDistance:
+        return "Checking distance...";
       case DirectionStatus.nearGoal:
-        return "Tap on the credits on the map";
+        return "Tap the credits on the map";
+      case DirectionStatus.nextNextMarker:
+        return "Tap the credits on the map";
+      case DirectionStatus.nextMarkerWaiting:
+        return "Find the next checkpoint!";
       default:
         return "Start to walk!";
+    }
+  }
+
+  String? getOtherStatusString(DirectionStatus? status) {
+    if (status == null) return null;
+    switch (status) {
+      case DirectionStatus.nearGoal:
+        return "Yippieh, you reached the finish line! " +
+            Emojis.smile_partying_face;
+      case DirectionStatus.nextNextMarker:
+        return "Checkpoint found! " + Emojis.hand_clapping_hands;
+      default:
+        return null;
     }
   }
 

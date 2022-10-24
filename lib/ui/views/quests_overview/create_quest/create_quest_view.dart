@@ -46,7 +46,8 @@ final circularBorder = OutlineInputBorder(
 // ignore: must_be_immutable
 class CreateQuestView extends StatelessWidget with $CreateQuestView {
   final bool fromMap;
-  CreateQuestView({Key? key, this.fromMap = false}) : super(key: key);
+  final List<double>? latLng;
+  CreateQuestView({Key? key, this.fromMap = false, this.latLng}) : super(key: key);
 
   // TODO: need to dispose this so need to have stateful function here!
   // TODO: This does not work with formView
@@ -59,7 +60,8 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
         model.getLocation();
         listenToFormUpdated(model);
       },
-      viewModelBuilder: () => CreateQuestViewModel(fromMap: fromMap, disposeController: () => controller.dispose()),
+      viewModelBuilder: () => CreateQuestViewModel(
+          fromMap: fromMap, latLng: latLng, disposeController: () => controller.dispose()),
       // onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) {
         return SafeArea(
@@ -351,7 +353,7 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
             markers: model.getMarkersOnMap,
             //callback that’s called when the map is ready to us.
             onMapCreated: model.onMapCreated,
-            onTap: model.displayMarkersOnMap,
+            onTap: (LatLng latLng) => model.displayMarkersOnMap([latLng.latitude, latLng.longitude]),
             // scrollGesturesEnabled: true,
             myLocationEnabled: true,
             zoomControlsEnabled: false,

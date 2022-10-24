@@ -1,10 +1,16 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
+
+// ! GOOGLE MAPS FLUTTER DEPENDENCY!
+// ! ONLY NEEDED FOR ONE FEATURE!
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:stacked_services/stacked_services.dart';
 
 class ParentMapViewModel extends QuestViewModel {
@@ -102,6 +108,20 @@ class ParentMapViewModel extends QuestViewModel {
           );
         }
       }
+    }
+  }
+
+  void showCreateQuestDialog(LatLng latLng) async {
+    final res = await dialogService.showDialog(
+        title: "Create quest",
+        description: "You can create a quest starting here",
+        cancelTitle: "Nope",
+        barrierDismissible: true,
+        buttonTitle: "Create quest");
+    if (res?.confirmed == true) {
+      await navigationService.navigateTo(Routes.createQuestView,
+          arguments: CreateQuestViewArguments(
+              fromMap: true, latLng: [latLng.latitude, latLng.longitude]));
     }
   }
 

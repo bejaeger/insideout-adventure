@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'treasure_search_location.dart';
+part of 'search_quest_location.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,13 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-TreasureSearchLocation _$TreasureSearchLocationFromJson(
-    Map<String, dynamic> json) {
-  return _TreasureSearchLocation.fromJson(json);
+SearchQuestLocation _$SearchQuestLocationFromJson(Map<String, dynamic> json) {
+  return _SearchQuestLocation.fromJson(json);
 }
 
 /// @nodoc
-mixin _$TreasureSearchLocation {
+mixin _$SearchQuestLocation {
   double get currentLat => throw _privateConstructorUsedError;
   double get currentLon => throw _privateConstructorUsedError;
   double get currentAccuracy => throw _privateConstructorUsedError;
@@ -32,15 +31,15 @@ mixin _$TreasureSearchLocation {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TreasureSearchLocationCopyWith<TreasureSearchLocation> get copyWith =>
+  $SearchQuestLocationCopyWith<SearchQuestLocation> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TreasureSearchLocationCopyWith<$Res> {
-  factory $TreasureSearchLocationCopyWith(TreasureSearchLocation value,
-          $Res Function(TreasureSearchLocation) then) =
-      _$TreasureSearchLocationCopyWithImpl<$Res>;
+abstract class $SearchQuestLocationCopyWith<$Res> {
+  factory $SearchQuestLocationCopyWith(
+          SearchQuestLocation value, $Res Function(SearchQuestLocation) then) =
+      _$SearchQuestLocationCopyWithImpl<$Res>;
   $Res call(
       {double currentLat,
       double currentLon,
@@ -53,13 +52,13 @@ abstract class $TreasureSearchLocationCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TreasureSearchLocationCopyWithImpl<$Res>
-    implements $TreasureSearchLocationCopyWith<$Res> {
-  _$TreasureSearchLocationCopyWithImpl(this._value, this._then);
+class _$SearchQuestLocationCopyWithImpl<$Res>
+    implements $SearchQuestLocationCopyWith<$Res> {
+  _$SearchQuestLocationCopyWithImpl(this._value, this._then);
 
-  final TreasureSearchLocation _value;
+  final SearchQuestLocation _value;
   // ignore: unused_field
-  final $Res Function(TreasureSearchLocation) _then;
+  final $Res Function(SearchQuestLocation) _then;
 
   @override
   $Res call({
@@ -110,11 +109,11 @@ class _$TreasureSearchLocationCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$$_TreasureSearchLocationCopyWith<$Res>
-    implements $TreasureSearchLocationCopyWith<$Res> {
-  factory _$$_TreasureSearchLocationCopyWith(_$_TreasureSearchLocation value,
-          $Res Function(_$_TreasureSearchLocation) then) =
-      __$$_TreasureSearchLocationCopyWithImpl<$Res>;
+abstract class _$$_SearchQuestLocationCopyWith<$Res>
+    implements $SearchQuestLocationCopyWith<$Res> {
+  factory _$$_SearchQuestLocationCopyWith(_$_SearchQuestLocation value,
+          $Res Function(_$_SearchQuestLocation) then) =
+      __$$_SearchQuestLocationCopyWithImpl<$Res>;
   @override
   $Res call(
       {double currentLat,
@@ -128,16 +127,15 @@ abstract class _$$_TreasureSearchLocationCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TreasureSearchLocationCopyWithImpl<$Res>
-    extends _$TreasureSearchLocationCopyWithImpl<$Res>
-    implements _$$_TreasureSearchLocationCopyWith<$Res> {
-  __$$_TreasureSearchLocationCopyWithImpl(_$_TreasureSearchLocation _value,
-      $Res Function(_$_TreasureSearchLocation) _then)
-      : super(_value, (v) => _then(v as _$_TreasureSearchLocation));
+class __$$_SearchQuestLocationCopyWithImpl<$Res>
+    extends _$SearchQuestLocationCopyWithImpl<$Res>
+    implements _$$_SearchQuestLocationCopyWith<$Res> {
+  __$$_SearchQuestLocationCopyWithImpl(_$_SearchQuestLocation _value,
+      $Res Function(_$_SearchQuestLocation) _then)
+      : super(_value, (v) => _then(v as _$_SearchQuestLocation));
 
   @override
-  _$_TreasureSearchLocation get _value =>
-      super._value as _$_TreasureSearchLocation;
+  _$_SearchQuestLocation get _value => super._value as _$_SearchQuestLocation;
 
   @override
   $Res call({
@@ -150,7 +148,7 @@ class __$$_TreasureSearchLocationCopyWithImpl<$Res>
     Object? previousAccuracy = freezed,
     Object? distanceToPreviousPosition = freezed,
   }) {
-    return _then(_$_TreasureSearchLocation(
+    return _then(_$_SearchQuestLocation(
       currentLat: currentLat == freezed
           ? _value.currentLat
           : currentLat // ignore: cast_nullable_to_non_nullable
@@ -189,8 +187,8 @@ class __$$_TreasureSearchLocationCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TreasureSearchLocation implements _TreasureSearchLocation {
-  _$_TreasureSearchLocation(
+class _$_SearchQuestLocation implements _SearchQuestLocation {
+  _$_SearchQuestLocation(
       {required this.currentLat,
       required this.currentLon,
       required this.currentAccuracy,
@@ -200,8 +198,8 @@ class _$_TreasureSearchLocation implements _TreasureSearchLocation {
       this.previousAccuracy,
       this.distanceToPreviousPosition});
 
-  factory _$_TreasureSearchLocation.fromJson(Map<String, dynamic> json) =>
-      _$$_TreasureSearchLocationFromJson(json);
+  factory _$_SearchQuestLocation.fromJson(Map<String, dynamic> json) =>
+      _$$_SearchQuestLocationFromJson(json);
 
   @override
   final double currentLat;
@@ -222,14 +220,14 @@ class _$_TreasureSearchLocation implements _TreasureSearchLocation {
 
   @override
   String toString() {
-    return 'TreasureSearchLocation(currentLat: $currentLat, currentLon: $currentLon, currentAccuracy: $currentAccuracy, distanceToGoal: $distanceToGoal, previousLat: $previousLat, previousLon: $previousLon, previousAccuracy: $previousAccuracy, distanceToPreviousPosition: $distanceToPreviousPosition)';
+    return 'SearchQuestLocation(currentLat: $currentLat, currentLon: $currentLon, currentAccuracy: $currentAccuracy, distanceToGoal: $distanceToGoal, previousLat: $previousLat, previousLon: $previousLon, previousAccuracy: $previousAccuracy, distanceToPreviousPosition: $distanceToPreviousPosition)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TreasureSearchLocation &&
+            other is _$_SearchQuestLocation &&
             const DeepCollectionEquality()
                 .equals(other.currentLat, currentLat) &&
             const DeepCollectionEquality()
@@ -263,20 +261,20 @@ class _$_TreasureSearchLocation implements _TreasureSearchLocation {
 
   @JsonKey(ignore: true)
   @override
-  _$$_TreasureSearchLocationCopyWith<_$_TreasureSearchLocation> get copyWith =>
-      __$$_TreasureSearchLocationCopyWithImpl<_$_TreasureSearchLocation>(
+  _$$_SearchQuestLocationCopyWith<_$_SearchQuestLocation> get copyWith =>
+      __$$_SearchQuestLocationCopyWithImpl<_$_SearchQuestLocation>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TreasureSearchLocationToJson(
+    return _$$_SearchQuestLocationToJson(
       this,
     );
   }
 }
 
-abstract class _TreasureSearchLocation implements TreasureSearchLocation {
-  factory _TreasureSearchLocation(
+abstract class _SearchQuestLocation implements SearchQuestLocation {
+  factory _SearchQuestLocation(
       {required final double currentLat,
       required final double currentLon,
       required final double currentAccuracy,
@@ -284,10 +282,10 @@ abstract class _TreasureSearchLocation implements TreasureSearchLocation {
       final double? previousLat,
       final double? previousLon,
       final double? previousAccuracy,
-      final double? distanceToPreviousPosition}) = _$_TreasureSearchLocation;
+      final double? distanceToPreviousPosition}) = _$_SearchQuestLocation;
 
-  factory _TreasureSearchLocation.fromJson(Map<String, dynamic> json) =
-      _$_TreasureSearchLocation.fromJson;
+  factory _SearchQuestLocation.fromJson(Map<String, dynamic> json) =
+      _$_SearchQuestLocation.fromJson;
 
   @override
   double get currentLat;
@@ -307,6 +305,6 @@ abstract class _TreasureSearchLocation implements TreasureSearchLocation {
   double? get distanceToPreviousPosition;
   @override
   @JsonKey(ignore: true)
-  _$$_TreasureSearchLocationCopyWith<_$_TreasureSearchLocation> get copyWith =>
+  _$$_SearchQuestLocationCopyWith<_$_SearchQuestLocation> get copyWith =>
       throw _privateConstructorUsedError;
 }

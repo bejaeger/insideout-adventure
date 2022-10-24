@@ -53,8 +53,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   List<Quest> get nearbyQuests => questService.getNearByQuest;
   bool get isFingerOnScreen => mapStateService.isFingerOnScreen;
   DateTime startedRotating = DateTime.now();
-  bool get showAvatarAndMapEffects =>
-      userService.isShowAvatarAndMapEffects;
+  bool get showAvatarAndMapEffects => userService.isShowAvatarAndMapEffects;
   // bool isRotating = false;
 
   // -------------------------------------------------
@@ -334,7 +333,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         userService.currentUserSettings.isShowingCompletedQuests;
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
-        bool completed = userService.hasCompletedQuest(questId: _q.id);         
+        bool completed = userService.hasCompletedQuest(questId: _q.id);
         // bool showCompletedQuest =
         if (completed &&
             !showCompletedQuests &&
@@ -494,8 +493,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         // ? ALLOW testing quests by pressing on markers on map!
         log.i("Quest active, handling qrCodeScanEvent");
         if (appConfigProvider.allowDummyMarkerCollection) {
-          MarkerAnalysisResult markerResult =
-              await activeQuestService.analyzeMarker(marker: afkmarker);
+          MarkerAnalysisResult markerResult = await activeQuestService
+              .analyzeMarkerAndUpdateQuest(marker: afkmarker);
           if (handleMarkerAnalysisResultCustom != null) {
             await handleMarkerAnalysisResultCustom(markerResult);
           } else {

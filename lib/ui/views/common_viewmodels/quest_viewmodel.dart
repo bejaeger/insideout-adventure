@@ -154,7 +154,7 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
       }
     }
     MarkerAnalysisResult scanResult =
-        await activeQuestService.analyzeMarker(marker: marker);
+        await activeQuestService.analyzeMarkerAndUpdateQuest(marker: marker);
     return scanResult;
   }
 

@@ -1,12 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 
-part 'treasure_search_location.freezed.dart';
-part 'treasure_search_location.g.dart';
+part 'search_quest_location.freezed.dart';
+part 'search_quest_location.g.dart';
 
 @freezed
-class TreasureSearchLocation with _$TreasureSearchLocation {
-  factory TreasureSearchLocation({
+class SearchQuestLocation with _$SearchQuestLocation {
+  factory SearchQuestLocation({
     required double currentLat,
     required double currentLon,
     required double currentAccuracy,
@@ -15,8 +15,8 @@ class TreasureSearchLocation with _$TreasureSearchLocation {
     double? previousLon,
     double? previousAccuracy,
     double? distanceToPreviousPosition,
-  }) = _TreasureSearchLocation;
+  }) = _SearchQuestLocation;
 
-  factory TreasureSearchLocation.fromJson(Map<String, dynamic> json) =>
-      _$TreasureSearchLocationFromJson(json);
+  factory SearchQuestLocation.fromJson(Map<String, dynamic> json) =>
+      _$SearchQuestLocationFromJson(json);
 }

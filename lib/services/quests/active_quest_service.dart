@@ -208,6 +208,8 @@ class ActiveQuestService with ReactiveServiceMixin {
     );
   }
 
+  int get getNumberMarkers =>
+      activatedQuest == null ? 0 : activatedQuest!.quest.markers.length;
   int get getNumberMarkersCollected => activatedQuest == null
       ? 0
       : activatedQuest!.markersCollected
@@ -558,7 +560,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   // If a quest is active, the marker is validated .
   // In each case, an appropriate QuestQRCodeScanResult is returned.
   // This result is interpreted in the viewmodels
-  Future<MarkerAnalysisResult> analyzeMarker(
+  Future<MarkerAnalysisResult> analyzeMarkerAndUpdateQuest(
       {AFKMarker? marker, bool locationVerification = true}) async {
     if (marker == null) return MarkerAnalysisResult.empty();
 
@@ -625,6 +627,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   AFKMarker? getNextMarker({Quest? quest}) {
     late int index;
     if (hasActiveQuest) {
+      log.wtf("markersCollected: ${activatedQuest!.markersCollected}");
       index = activatedQuest!.markersCollected
           .lastIndexWhere((element) => element == true);
       if (index < 0) {
@@ -633,11 +636,13 @@ class ActiveQuestService with ReactiveServiceMixin {
       } else {
         index++;
       }
+      log.wtf("INDEX: $index");
       if (index < activatedQuest!.quest.markers.length) {
         return activatedQuest!.quest.markers[index];
       }
     } else {
       if (quest != null && (1 < quest.markers.length)) {
+        log.wtf("INDEX: 1");
         return quest.markers[1];
       }
     }

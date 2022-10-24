@@ -65,7 +65,26 @@ class QuestSpecificationsRow extends StatelessWidget {
                 color: textColor ?? kcGreyTextColor,
               ),
             ],
-          )
+          ),
+        // if (quest!.type == QuestType.TreasureLocationSearch &&
+        //     quest!.markers.length > 2)
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //AfkCreditsText.headingThreeLight("  -  "),
+            horizontalSpaceMedium,
+            Image.asset(
+              kPinInAreaIcon,
+              height: 18,
+              color: kcPrimaryColor,
+            ),
+            horizontalSpaceTiny,
+            AfkCreditsText.bodyBold(
+              (quest!.markers.length - 1).toString(),
+              color: textColor ?? kcGreyTextColor,
+            ),
+          ],
+        ),
       ],
     );
   }

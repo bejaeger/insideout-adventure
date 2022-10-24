@@ -29,7 +29,13 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   // member vars
   bool fromMap;
   void Function() disposeController;
-  CreateQuestViewModel({required this.fromMap, required this.disposeController});
+
+  // if this is set, the user wants to start a quest here!
+  final List<double>? latLng;
+  CreateQuestViewModel(
+      {required this.fromMap,
+      required this.disposeController,
+      required this.latLng});
 
   // -------------------------------------------------------
   // services
@@ -338,25 +344,26 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     return result;
   }
 
-  void displayMarkersOnMap(LatLng pos) {
+  void displayMarkersOnMap(List<double> pos) {
     if (selectedQuestType == QuestType.TreasureLocationSearch) {
       // At the moment we only support a start and a finish for
       // a search quest!
-      if (getAFKMarkers.length == 2) {
-        snackbarService.showSnackbar(
-            title: "Oops...",
-            message:
-                "Only two markers are supported for search quests at the moment",
-            duration: Duration(milliseconds: 1500));
-        return;
-      }
+      // if (getAFKMarkers.length == 2) {
+      //   snackbarService.showSnackbar(
+      //       title: "Oops...",
+      //       message:
+      //           "Only two markers are supported for search quests at the moment",
+      //       duration: Duration(milliseconds: 1500));
+      //   return;
+      // }
+
       // minimum distance of start and finish
       if (getAFKMarkers.length == 1) {
         double distance = _geoLocationService.distanceBetween(
             lat1: getAFKMarkers[0].lat,
             lon1: getAFKMarkers[0].lon,
-            lat2: pos.latitude,
-            lon2: pos.longitude);
+            lat2: pos[0],
+            lon2: pos[1]);
         if (distance < 100) {
           snackbarService.showSnackbar(
               title: "Oops...",
@@ -366,7 +373,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
         }
       }
     }
-    addMarkerOnMap(pos: pos, number: getAFKMarkers.length);
+    addMarkerOnMap(pos: LatLng(pos[0], pos[1]), number: getAFKMarkers.length);
     notifyListeners();
   }
 
@@ -450,6 +457,12 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   void onMapCreated(GoogleMapController controller) {
     setBusy(true);
     _googleMapController = controller;
+    if (latLng != null) {
+      addMarkerOnMap(
+          pos: LatLng(latLng![0], latLng![1]), number: getAFKMarkers.length);
+      _googleMapController!.animateCamera(
+          CameraUpdate.newLatLng(LatLng(latLng![0], latLng![1])));
+    }
     setBusy(false);
     notifyListeners();
   }

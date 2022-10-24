@@ -20,6 +20,7 @@ UserSettings _$UserSettingsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserSettings {
+// this is mostly used together with a check of appConfigProvide.isARAvailable!
   bool get isUsingAR =>
       throw _privateConstructorUsedError; // Switch to make completed quests visible/invisible
 // (only done for search quests at the moment
@@ -162,6 +163,7 @@ class _$_UserSettings implements _UserSettings {
   factory _$_UserSettings.fromJson(Map<String, dynamic> json) =>
       _$$_UserSettingsFromJson(json);
 
+// this is mostly used together with a check of appConfigProvide.isARAvailable!
   @override
   @JsonKey()
   final bool isUsingAR;
@@ -236,7 +238,7 @@ abstract class _UserSettings implements UserSettings {
   factory _UserSettings.fromJson(Map<String, dynamic> json) =
       _$_UserSettings.fromJson;
 
-  @override
+  @override // this is mostly used together with a check of appConfigProvide.isARAvailable!
   bool get isUsingAR;
   @override // Switch to make completed quests visible/invisible
 // (only done for search quests at the moment

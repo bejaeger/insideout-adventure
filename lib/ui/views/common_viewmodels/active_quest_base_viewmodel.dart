@@ -293,6 +293,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
   }
 
+  // adds AR marker to map and decides how to collect it with onCollected callback
   void showNextARObjects({required Future Function() onCollected}) {
     // TODO: I am not sure if this is the best way to implement this!
     // But maybe it is!?

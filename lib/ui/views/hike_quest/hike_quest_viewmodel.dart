@@ -266,8 +266,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
         return;
       }
     }
-    MarkerAnalysisResult markerResult =
-        await activeQuestService.analyzeMarker(marker: markerInArea);
+    MarkerAnalysisResult markerResult = await activeQuestService
+        .analyzeMarkerAndUpdateQuest(marker: markerInArea);
     return await handleMarkerAnalysisResult(markerResult,
         isShowCollectedMarkerDialog:
             !(userService.isUsingAR && appConfigProvider.isARAvailable) ||
@@ -495,8 +495,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     notifyListeners();
     if (currentQuest?.type == QuestType.GPSAreaHike ||
         currentQuest?.type == QuestType.GPSAreaHunt) {
-      dialogService.showDialog(
-          title: "New checkpoint spotted!", description: "Find next location!");
+      snackbarService.showSnackbar(
+          title: "New checkpoint spotted", message: "Find the next location!");
     } else {
       snackbarService.showSnackbar(
           title: "Let's go", message: "The next marker is waiting!");

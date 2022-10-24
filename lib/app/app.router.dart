@@ -576,8 +576,8 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const CreateQuestViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i26.CreateQuestView(key: args.key, fromMap: args.fromMap),
+        builder: (context) => _i26.CreateQuestView(
+            key: args.key, fromMap: args.fromMap, latLng: args.latLng),
         settings: data,
       );
     },
@@ -878,11 +878,14 @@ class CreateQuestViewArguments {
   const CreateQuestViewArguments({
     this.key,
     this.fromMap = false,
+    this.latLng,
   });
 
   final _i41.Key? key;
 
   final bool fromMap;
+
+  final List<double>? latLng;
 }
 
 class HistoryAndAchievementsViewArguments {
@@ -1391,6 +1394,7 @@ extension NavigatorStateExtension on _i51.NavigationService {
   Future<dynamic> navigateToCreateQuestView({
     _i41.Key? key,
     bool fromMap = false,
+    List<double>? latLng,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1398,7 +1402,8 @@ extension NavigatorStateExtension on _i51.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.createQuestView,
-        arguments: CreateQuestViewArguments(key: key, fromMap: fromMap),
+        arguments: CreateQuestViewArguments(
+            key: key, fromMap: fromMap, latLng: latLng),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

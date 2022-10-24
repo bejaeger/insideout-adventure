@@ -373,7 +373,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       if (admin == true) {
         // collect next marker automatically!
         AFKMarker? nextMarker = activeQuestService.getNextMarker();
-        await activeQuestService.analyzeMarker(marker: nextMarker);
+        await activeQuestService.analyzeMarkerAndUpdateQuest(
+            marker: nextMarker);
         final result = MarkerAnalysisResult.marker(marker: nextMarker);
         await handleMarkerAnalysisResult(result);
         baseModelLog.w("Cheated to collect this marker!");
@@ -397,7 +398,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
     validatingMarker = true;
     MarkerAnalysisResult scanResult =
-        await activeQuestService.analyzeMarker(marker: marker);
+        await activeQuestService.analyzeMarkerAndUpdateQuest(marker: marker);
     validatingMarker = false;
     return scanResult;
   }
