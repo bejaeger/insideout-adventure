@@ -46,7 +46,8 @@ class HelpDeskView extends StatelessWidget {
                                 (int index) {
                                   String answer = model.faqs.answers[index];
                                   String question = model.faqs.questions[index];
-                                  if (!question.endsWith("?")) {
+                                  if (!question.endsWith("?") &&
+                                      !question.endsWith("? ")) {
                                     question = question + "?";
                                   }
                                   return ExpansionPanel(
