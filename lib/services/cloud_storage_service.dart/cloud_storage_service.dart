@@ -18,6 +18,10 @@ class CloudStorageService {
   Map<QuestType, List<dynamic>> exampleScreenShots = {};
   Set<Reference> exampleScreenShotsRef = {};
 
+  // map of quest to list of screenshots
+  List<dynamic> pictures =[];
+  Set<Reference> picturesRef = {};
+
   // ---------------------------------------
   // Functions
   Future<CloudStorageResult> uploadImage({
@@ -97,5 +101,28 @@ class CloudStorageService {
 
     // final Reference firebaseStorageRef =
     //     FirebaseStorage.instance.ref().child(imageFileName);
+  }
+
+  Future loadPictures({required List<String>urls}) async {
+    try {
+        for (String url in urls) {
+          try {
+            Reference ref = FirebaseStorage.instance.refFromURL(url);
+            if (picturesRef.contains(ref)) {
+              continue;
+            }
+            picturesRef.add(ref);
+
+            final data = await ref.getData();
+            if (!pictures.contains(data)) {
+              pictures.add(data);
+            } 
+          } catch (e) {
+            log.e("Could not load image. Error: $e");
+          }
+      }
+    } catch (e) {
+      log.e("Could not load screen shot urls. Error: $e");
+    }
   }
 }

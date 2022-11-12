@@ -10,7 +10,6 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/marker_collection_failure_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
-import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
@@ -20,6 +19,7 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:rxdart/subjects.dart';
@@ -246,7 +246,12 @@ class ActiveQuestService with ReactiveServiceMixin {
 
     // ----------------
     // 2.
-    await uploadAndBookkeepFinishedQuest();
+    final res = await Connectivity().checkConnectivity();
+    if (res != ConnectivityResult.none) {
+      await uploadAndBookkeepFinishedQuest();
+    } else {
+      return WarningFirestoreCallTimeout;
+    }
 
     // ---------------
     // 3.
@@ -276,8 +281,13 @@ class ActiveQuestService with ReactiveServiceMixin {
       log.wtf("no active quest to collect credits from");
       return;
     }
+
     try {
-      await _firestoreApi.bookkeepFinishedQuest(quest: activatedQuest!);
+      final res =
+          await _firestoreApi.bookkeepFinishedQuest(quest: activatedQuest!);
+      if (res is String) {
+        return res;
+      }
     } catch (e) {
       if (e is FirestoreApiException) {
         if (activatedQuest!.status != QuestStatus.success) {
@@ -627,7 +637,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   AFKMarker? getNextMarker({Quest? quest}) {
     late int index;
     if (hasActiveQuest) {
-      log.wtf("markersCollected: ${activatedQuest!.markersCollected}");
+      log.v("currently collected markers: ${activatedQuest!.markersCollected}");
       index = activatedQuest!.markersCollected
           .lastIndexWhere((element) => element == true);
       if (index < 0) {
@@ -636,13 +646,13 @@ class ActiveQuestService with ReactiveServiceMixin {
       } else {
         index++;
       }
-      log.wtf("INDEX: $index");
+      // log.wtf("INDEX: $index");
       if (index < activatedQuest!.quest.markers.length) {
         return activatedQuest!.quest.markers[index];
       }
     } else {
       if (quest != null && (1 < quest.markers.length)) {
-        log.wtf("INDEX: 1");
+        // log.wtf("INDEX: 1");
         return quest.markers[1];
       }
     }

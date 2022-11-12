@@ -1,6 +1,8 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
+import 'package:afkcredits/ui/widgets/info_container.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
 import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -13,6 +15,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
   final Quest? quest;
   final ActivatedQuest? finishedQuest;
   final bool completed;
+  final bool isParentAccount;
   const CommonQuestDetailsHeader({
     Key? key,
     required this.quest,
@@ -21,6 +24,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
     required this.showInstructionsDialog,
     this.finishedQuest,
     this.completed = false,
+    required this.isParentAccount,
   }) : super(key: key);
 
   @override
@@ -121,6 +125,48 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                       maxLines: 2,
                     ),
                   ),
+                if (quest != null && !completed) verticalSpaceSmall,
+                if (quest != null && !completed && !isParentAccount)
+                  InfoContainer(
+                    child: Text.rich(
+                      style: bodyStyleSofia,
+                      TextSpan(
+                        children: [
+                          TextSpan(text: "Earn "),
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Image.asset(kAFKCreditsLogoPath,
+                                color: kcPrimaryColor, height: 18),
+                          ),
+                          TextSpan(
+                            text: " " + quest!.afkCredits.toStringAsFixed(0),
+                            style: TextStyle(
+                                color: kcPrimaryColor,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          TextSpan(
+                            text: " by ",
+                          ),
+                          quest!.type == QuestType.TreasureLocationSearch
+                              ? TextSpan(
+                                  text: "finding ",
+                                )
+                              : TextSpan(
+                                  text: "collecting ",
+                                ),
+                          TextSpan(
+                            text: "all checkpoints",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (quest != null &&
+                    quest!.type == QuestType.TreasureLocationSearch &&
+                    isParentAccount)
+                  InfoContainer(
+                      child: AfkCreditsText.body(
+                          "Only the start marker is visible to children.")),
               ],
             ),
           ),

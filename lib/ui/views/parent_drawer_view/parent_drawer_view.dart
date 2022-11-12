@@ -21,8 +21,17 @@ class ParentDrawerView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
             child: ListTile(
               title: AfkCreditsText.body("Introduction"),
-              leading: Icon(Icons.help),
+              leading: Icon(Icons.info_rounded),
               onTap: model.navToOnboardingScreens,
+            ),
+          ),
+          verticalSpaceTiny,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+            child: ListTile(
+              title: AfkCreditsText.body("Help Desk"),
+              leading: Icon(Icons.help_center),
+              onTap: model.navToHelpDesk,
             ),
           ),
           verticalSpaceTiny,
@@ -39,7 +48,7 @@ class ParentDrawerView extends StatelessWidget {
                 showBadge: !model.userHasGivenFeedback,
                 child: AfkCreditsText.body("Feedback"),
               ),
-              leading: Icon(Icons.chat_bubble_outline_rounded),
+              leading: Icon(Icons.chat_bubble_rounded),
               onTap: model.navToFeedbackView,
             ),
           ),

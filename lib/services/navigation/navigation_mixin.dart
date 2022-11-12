@@ -77,6 +77,10 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.onBoardingScreensView);
   }
 
+  void navToHelpDesk() {
+    _navigationService.navigateTo(Routes.helpDeskView);
+  }
+
   void navToFeedbackView() {
     _navigationService.navigateTo(Routes.feedbackView);
   }

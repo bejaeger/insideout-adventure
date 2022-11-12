@@ -42,15 +42,15 @@ class NotCloseToQuestNote extends StatelessWidget {
         //height: 120,
         decoration: BoxDecoration(
           color: kcWhiteTextColor,
-          borderRadius: BorderRadius.circular(20.0),
-          border: Border.all(),
-          boxShadow: [
-            BoxShadow(
-                blurRadius: 2,
-                spreadRadius: 0.5,
-                offset: Offset(1, 1),
-                color: kcShadowColor),
-          ],
+          borderRadius: BorderRadius.circular(15.0),
+          border: Border.all(color: Colors.grey[400]!),
+          // boxShadow: [
+          //   BoxShadow(
+          //       blurRadius: 1,
+          //       spreadRadius: 0.3,
+          //       offset: Offset(1, 1),
+          //       color: kcShadowColor),
+          // ],
         ),
         padding:
             const EdgeInsets.only(top: 15, right: 15, left: 15, bottom: 10.0),
@@ -140,10 +140,11 @@ class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
   void launchMapsForNavigation() async {
     final res = await dialogService.showDialog(
         title: "Open navigation app?",
+        barrierDismissible: true,
         description: "Use external app for navigation",
         cancelTitle: "Cancel",
         buttonTitle: "Open app");
-    if (res?.confirmed == false) {
+    if (res?.confirmed == false || res == null) {
       return;
     }
 

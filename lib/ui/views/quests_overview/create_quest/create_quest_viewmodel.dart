@@ -71,14 +71,14 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   bool laodingScreenShots = false;
 
   Map<QuestType, List<dynamic>> get exampleScreenShots =>
-      _cloudStorageService.exampleScreenShots;
+      _cloudStorageService.exampleScreenShots;      
 
   List<dynamic>? get exampleScreenShotsWithType =>
       _cloudStorageService.exampleScreenShots[selectedQuestType];
 
   Future loadExampleScreenshots() async {
-    notifyListeners();
     laodingScreenShots = true;
+    notifyListeners();
     await _cloudStorageService.loadExampleScreenshots(
         questType: selectedQuestType);
     laodingScreenShots = false;
@@ -364,10 +364,10 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
             lon1: getAFKMarkers[0].lon,
             lat2: pos[0],
             lon2: pos[1]);
-        if (distance < 100) {
+        if (distance < 80) {
           snackbarService.showSnackbar(
               title: "Oops...",
-              message: "Markers need to be at least 100m away from each other.",
+              message: "Markers need to be at least 80m away from each other.",
               duration: Duration(milliseconds: 1500));
           return;
         }

@@ -38,6 +38,7 @@ import 'package:afkcredits/ui/views/create_account/create_account_user_role_view
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart';
+import 'package:afkcredits/ui/views/help_desk/hep_desk_view.dart';
 import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart';
 import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
@@ -114,6 +115,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: PermissionsView),
     MaterialRoute(page: StartScreenTimeCounterView),
     MaterialRoute(page: ScreenTimeRequestedView),
+    MaterialRoute(page: HelpDeskView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

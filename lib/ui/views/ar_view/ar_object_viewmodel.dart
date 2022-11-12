@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
@@ -6,6 +7,25 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ARObjectViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
+  Timer? timer;
+  bool showHelpMessage = false;
+  ARObjectViewModel() {
+    startTimer();
+  }
+
+  // show help message after 5 seconds
+  void startTimer() {
+    timer = Timer.periodic(
+      Duration(seconds: 1),
+      (timer) {
+        if (timer.tick == 5) {
+          showHelpMessage = true;
+          notifyListeners();
+        }
+      },
+    );
+  }
+
   @override
   bool isQuestCompleted() {
     // TODO: implement isQuestCompleted
@@ -33,5 +53,11 @@ class ARObjectViewModel extends ActiveQuestBaseViewModel
       {required Quest? quest, void Function()? notifyParentCallback}) {
     // TODO: implement maybeStartQuest
     throw UnimplementedError();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
   }
 }

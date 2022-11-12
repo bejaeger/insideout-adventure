@@ -11,11 +11,13 @@ class ConnectivityService {
 
   ConnectivityService() {
     // Subscribe to the connectivity Chanaged Steam
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      // Use Connectivity() here to gather more info if you need t
-      var connectivityStatus = _getStatusFromResult(result);
-      connectionStatusController.add(connectivityStatus);
-    });
+    Connectivity().onConnectivityChanged.listen(
+      (ConnectivityResult result) {
+        // Use Connectivity() here to gather more info if you need t
+        var status = _getStatusFromResult(result);
+        connectionStatusController.add(status);
+      },
+    );
   }
 
   // Convert from the third part enum to our own enum
@@ -23,7 +25,6 @@ class ConnectivityService {
     switch (result) {
       case ConnectivityResult.mobile:
         return ConnectivityType.Cellular;
-
       case ConnectivityResult.wifi:
         return ConnectivityType.WiFi;
       case ConnectivityResult.none:

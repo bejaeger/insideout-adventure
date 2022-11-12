@@ -46,6 +46,35 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
               enableTapRecognizer: true,
             ),
             Align(
+              alignment: Alignment(0, 0.1),
+              child: AnimatedOpacity(
+                opacity: model.showHelpMessage ? 1 : 0,
+                duration: Duration(milliseconds: 500),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: kcCultured,
+                      borderRadius: BorderRadius.circular(20)),
+                  padding: const EdgeInsets.all(12.0),
+                  width: screenWidth(context, percentage: 0.7),
+                  child: Column(
+                    children: [
+                      AfkCreditsText.headingFour(
+                        "Can't find them?",
+                        align: TextAlign.center,
+                      ),
+                      verticalSpaceSmall,
+                      AfkCreditsButton(
+                        title: "Collect immediately",
+                        onTap: model.handleCollectedArObjectEvent,
+                        trailing: Icon(Icons.arrow_forward,
+                            size: 20, color: Colors.white),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Align(
               alignment: Alignment(0, 0.7),
               child: Container(
                 decoration: BoxDecoration(

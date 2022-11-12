@@ -1,5 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/enums/connectivity_type.dart';
 import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/animations/confetti_from_top.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -7,6 +9,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:provider/provider.dart';
 
 class CollectCreditsDialogView extends StatelessWidget {
   final DialogRequest request;
@@ -80,6 +83,8 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
 
   @override
   Widget build(BuildContext context) {
+    ActivatedQuest? activeQuest = widget.request.data["activeQuest"];
+    var connectionStatus = Provider.of<ConnectivityType>(context);
     return Stack(
       children: [
         AnimatedOpacity(
@@ -111,24 +116,36 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                             fontSize: 32,
                             fontWeight: FontWeight.w800)),
                     verticalSpaceSmall,
-                    if (widget.request.data["activeQuest"].quest != null)
-                      Text(
+                    if (activeQuest?.quest != null)
+                      AfkCreditsText.body(
                           widget.model.isNeedToCollectCredits
                               ? "You get " +
-                                  widget.request.data["activeQuest"].quest
-                                      .afkCredits
-                                      .toString() +
-                                  " Hercules credits"
+                                  activeQuest!.quest.afkCredits.toString() +
+                                  " credits"
                               : "You mastered this mission and earned " +
-                                  widget.request.data["activeQuest"].quest
-                                      .afkCredits
-                                      .toString() +
+                                  activeQuest!.quest.afkCredits.toString() +
                                   " Hercules credits!",
-                          textAlign: TextAlign.center,
-                          style: textTheme(context)
-                              .headline4!
-                              .copyWith(color: kcMediumGrey, fontSize: 18)),
-                    if (widget.request.data["activeQuest"].quest == null)
+                          align: TextAlign.center),
+                    if (connectionStatus == ConnectivityType.Offline)
+                      verticalSpaceSmall,
+                    if (connectionStatus == ConnectivityType.Offline)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AfkCreditsText.body(
+                            "Waiting for data connection...",
+                            align: TextAlign.center,
+                          ),
+                          AfkCreditsText.body("WARNING: Don't close the app!"),
+                          verticalSpaceSmall,
+                          CircularProgressIndicator(color: kcPrimaryColor),
+                          verticalSpaceSmall,
+                        ],
+                      ),
+
+                    if (activeQuest?.quest == null &&
+                        !widget.model.isNeedToCollectCredits)
                       AfkCreditsText.warn(
                           "Error: Unfortunately something went wrong when finishing the quest. Please let the developers know."),
                     verticalSpaceSmall,
@@ -153,31 +170,50 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                             ),
                     ),
                     verticalSpaceMedium,
-                    if (widget.model.isNoNetwork)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: const Text(
-                            "Please make sure you have an active network connection.",
-                            style: TextStyle(color: Colors.red),
-                            textAlign: TextAlign.center),
-                      ),
+                    // if (connectionStatus == ConnectivityType.Offline)
+                    //   Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: [
+                    //       AfkCreditsText.body("WARNING: Don't close the app!"),
+                    //       AfkCreditsText.body(
+                    //         "Waiting for data connection...",
+                    //         align: TextAlign.center,
+                    //       ),
+                    //       verticalSpaceSmall,
+                    //       CircularProgressIndicator(color: kcPrimaryColor),
+                    //     ],
+                    //   ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                    //   child: const Text(
+                    //       "Please make sure you have an active network connection.",
+                    //       style: TextStyle(color: Colors.red),
+                    //       textAlign: TextAlign.center),
+                    // ),
                     if (widget.model.isNoNetwork) verticalSpaceTiny,
-                    widget.model.isNeedToCollectCredits
-                        ? AfkCreditsButton(
-                            width: 150,
-                            onTap: widget.model.getCredits,
-                            title: "Get credits",
-                            trailing: Icon(Icons.arrow_forward,
-                                size: 20, color: Colors.white),
-                          )
-                        : AfkCreditsButton(
-                            width: 150,
-                            onTap: () => widget
-                                .completer(DialogResponse(confirmed: true)),
-                            title: "Continue",
-                            trailing: Icon(Icons.arrow_forward,
-                                size: 20, color: Colors.white),
-                          ),
+                    if (connectionStatus != ConnectivityType.Offline)
+                      widget.model.isNeedToCollectCredits
+                          ? AfkCreditsButton(
+                              width: 150,
+                              disabled:
+                                  connectionStatus == ConnectivityType.Offline,
+                              onTap:
+                                  connectionStatus == ConnectivityType.Offline
+                                      ? null
+                                      : widget.model.getCredits,
+                              title: "Get credits",
+                              trailing: Icon(Icons.arrow_forward,
+                                  size: 20, color: Colors.white),
+                            )
+                          : AfkCreditsButton(
+                              width: 150,
+                              onTap: () => widget
+                                  .completer(DialogResponse(confirmed: true)),
+                              title: "Continue",
+                              trailing: Icon(Icons.arrow_forward,
+                                  size: 20, color: Colors.white),
+                            ),
                   ],
                 ),
               ),

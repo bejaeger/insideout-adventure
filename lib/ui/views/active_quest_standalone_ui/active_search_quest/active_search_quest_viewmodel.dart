@@ -312,6 +312,7 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
           handleSuccessfullyFinishedQuest(showDialogs: false),
           Future.delayed(Duration(milliseconds: 1000))
         ],
+        
       );
       collectCreditsStatus = results[0];
     } catch (e) {

@@ -404,8 +404,16 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     if (activeQuestNullable?.status == QuestStatus.success) {
       log.i("Found that quest was successfully finished!");
       try {
-        await activeQuestService.handleSuccessfullyFinishedQuest(
+        final res = await activeQuestService.handleSuccessfullyFinishedQuest(
             disposeQuest: showDialogs);
+        if (res == WarningFirestoreCallTimeout) {
+          if (showDialogs) {
+            await dialogService.showDialog(
+                title: "Unstable network connection",
+                description: "Make sure you have data connection");
+          }
+          return CollectCreditsStatus.noNetwork;
+        }
         return CollectCreditsStatus.done;
       } catch (e) {
         if (e is QuestServiceException) {
@@ -423,8 +431,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
           }
           return CollectCreditsStatus.noNetwork;
         } else {
-          log.e(
-              "Unknown error occured f{CollectCreditsStatus collectCreditsStatus}rom evaluateAndFinishQuest");
+          log.e("Unknown error occured from evaluateAndFinishQuest");
           setBusy(false);
           rethrow;
         }

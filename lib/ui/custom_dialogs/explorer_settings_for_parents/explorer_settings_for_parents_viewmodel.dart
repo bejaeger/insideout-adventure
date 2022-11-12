@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
@@ -27,8 +28,9 @@ class ExplorerSettingsForParentsDialogViewModel extends BaseModel {
 
   // shown in parents account
   bool get isAcceptScreenTimeFirst =>
-      explorer!.userSettings!.isAcceptScreenTimeFirst;
-  bool get isUsingOwnPhone => explorer!.userSettings!.ownPhone;
+      (explorer!.userSettings ?? UserSettings()).isAcceptScreenTimeFirst;
+  bool get isUsingOwnPhone =>
+      (explorer!.userSettings ?? UserSettings()).ownPhone;
 
   // -------------------------------------------------
   // functions
@@ -38,7 +40,7 @@ class ExplorerSettingsForParentsDialogViewModel extends BaseModel {
       await dialogService.showDialog(
           title: "Not recommended",
           description:
-              "The screen time verification is only recommended when your child uses his own phone");
+              "Setting screen time verification to true is only possible when your child uses his own phone");
       return;
     }
     isAcceptScreenTimeFirstTmp = b;
@@ -51,5 +53,4 @@ class ExplorerSettingsForParentsDialogViewModel extends BaseModel {
     userService.setIsUsingOwnPhone(uid: explorerUid, value: b);
     notifyListeners();
   }
-
 }

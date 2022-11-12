@@ -58,6 +58,7 @@ class ParentMapView extends StatelessWidget {
                   if (model.selectedQuest != null)
                     CommonQuestDetailsHeader(
                       quest: model.selectedQuest,
+                      isParentAccount: model.isParentAccount,
                       showInstructionsDialog: model.showInstructions,
                     ),
                   if (model.isDeletingQuest || model.isBusy)

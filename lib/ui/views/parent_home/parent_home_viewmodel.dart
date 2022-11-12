@@ -101,12 +101,13 @@ class ParentHomeViewModel extends TransferBaseViewModel {
       }
       if (session != null) {
         await navToActiveScreenTimeView(session: session);
-      } else {
-        await dialogService.showDialog(
-            title: "Screen time session not found",
-            description:
-                "An error occured loading the screen time. A restart of the app should fix this.");
       }
+      // } else {
+      //   await dialogService.showDialog(
+      //       title: "Screen time session not found",
+      //       description:
+      //           "An error occured loading the screen time. A restart of the app should fix this.");
+      // }
       //navigatingToActiveScreenTimeView = false;
       notifyListeners();
     } else {

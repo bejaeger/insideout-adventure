@@ -41,7 +41,7 @@ class MainHeader extends StatelessWidget {
           padding: const EdgeInsets.only(
               left: kHorizontalPadding, right: 10, top: 10, bottom: 10),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
                 //color: Colors.red,
@@ -55,37 +55,42 @@ class MainHeader extends StatelessWidget {
                 ),
               ),
               //Spacer(),
-              horizontalSpaceSmall,
-              if (onDevFeaturePressed != null)
-                Opacity(
-                  opacity: 0.1,
-                  child: GestureDetector(
-                    onTap: onDevFeaturePressed,
+              horizontalSpaceRegular,
+              horizontalSpaceMedium,
+              // if (onDevFeaturePressed != null)
+              //   Opacity(
+              //     opacity: 0.1,
+              //     child: GestureDetector(
+              //       onTap: onDevFeaturePressed,
+              //       child: Container(
+              //           alignment: Alignment.center,
+              //           width: 40,
+              //           height: 80,
+              //           color: kcCultured,
+              //           child: AfkCreditsText.captionBold(
+              //             "Dev",
+              //             align: TextAlign.center,
+              //           )),
+              //     ),
+              //   ),
+              // Spacer(),
+              Expanded(
+                child: GestureDetector(
+                  onTap: onCreditsPressed,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
                     child: Container(
-                        alignment: Alignment.center,
-                        width: 40,
-                        height: 80,
-                        color: kcCultured,
-                        child: AfkCreditsText.captionBold(
-                          "Dev",
-                          align: TextAlign.center,
-                        )),
+                      padding: const EdgeInsets.only(
+                          right: 15.0, top: 14, bottom: 5.0, left: 8.0),
+                      //color: Colors.red,
+                      child: CreditsToScreenTimeWidget(
+                        credits: balance.toInt(),
+                        availableScreenTime: creditsToScreenTime(balance),
+                        // sizeScale: screenWidth(context) / 450,
+                      ),
+                      // child: AFKCreditsDisplay(balance: balance),
+                    ),
                   ),
-                ),
-              Spacer(),
-              GestureDetector(
-                onTap: onCreditsPressed,
-                child: Container(
-                  padding: const EdgeInsets.only(
-                      right: 15.0, top: 14, bottom: 5.0, left: 8.0),
-                  //color: Colors.red,
-                  // child: CreditsToScreenTimeWidget(
-                  //   credits: balance.toInt(),
-                  //   availableScreenTime: creditsToScreenTime(balance),
-                  //   sizeScale: 0.9,
-                  // ),
-
-                  child: AFKCreditsDisplay(balance: balance),
                 ),
               ),
             ],

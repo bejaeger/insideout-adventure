@@ -130,69 +130,80 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       {required AFKMarker? marker,
       required Position position,
       bool isShowInAreaDialog = true}) async {
-    if (marker != null) {
-      if (marker.lat != null && marker.lon != null) {
-        double distance =
-            geolocationService.distanceBetweenPositionAndCoordinates(
-          position: position,
-          lat: marker.lat!,
-          lon: marker.lon!,
+    if (marker == null) {
+      return;
+    }
+    if (marker.lat == null || marker.lon == null) {
+      return;
+    }
+    double distance = geolocationService.distanceBetweenPositionAndCoordinates(
+      position: position,
+      lat: marker.lat!,
+      lon: marker.lon!,
+    );
+    bool isInAreaNow = distance < kDistanceFromCenterOfArea;
+    if ((isInAreaNow && isShowInAreaDialog && markerInArea == null)) {
+      //isInAreaOfMarker = true;
+      markerInArea = marker;
+      log.i("User in area of marker!");
+      questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.liveQuestUICallback,
+        position: position,
+        pushToNotion: true,
+        userEventDescription: "in area of marker",
+      );
+
+      vibrateAlert();
+      activeQuestService.pausePositionListener();
+
+      final result = await showQrCodeIsInAreaDialog();
+
+      if (result?.confirmed != true) {
+        log.i(
+            "Did close the area alert dialog without having fetched the marker");
+        // this allows to show the dialog again!
+        // but only after a certain dead time.
+        // The dead time avoids additional dialogs appear immediately
+        // after closing the first one when marker was NOT collected.
+        // (cause of location listener events fired in the background
+        // WHILE the dialog was open)
+        Future.delayed(
+          Duration(seconds: 3),
+          () {
+            //isInAreaOfMarker = false;
+            markerInArea = null;
+          },
         );
-        bool isInAreaNow = distance < kDistanceFromCenterOfArea;
-        if (isInAreaNow && markerInArea == null ||
-            appConfigProvider.allowDummyMarkerCollection) {
-          //isInAreaOfMarker = true;
-          markerInArea = marker;
-          log.i("User in area of marker!");
-          questTestingService.maybeRecordData(
-            trigger: QuestDataPointTrigger.liveQuestUICallback,
-            position: position,
-            pushToNotion: true,
-            userEventDescription: "in area of marker",
-          );
-          if (currentQuest?.type == QuestType.QRCodeHike ||
-              currentQuest?.type == QuestType.GPSAreaHike) {
-            vibrateAlert();
-            activeQuestService.pausePositionListener();
-
-            if (isShowInAreaDialog) {
-              final result = await showQrCodeIsInAreaDialog();
-
-              if (result?.confirmed == false) {
-                log.i(
-                    "Did close the area alert dialog without having fetched the marker");
-                // this allows to show the dialog again!
-                // but only after a certain dead time.
-                // The dead time avoids additional dialogs appear immediately
-                // after closing the first one when marker was NOT collected.
-                // (cause of location listener events fired in the background
-                // WHILE the dialog was open)
-                Future.delayed(Duration(seconds: 4), () {
-                  //isInAreaOfMarker = false;
-                  markerInArea = null;
-                });
-              }
-            } else {
-              await collectMarkerFromGPSLocation(
-                  forceNoAR: !(userService.isUsingAR &&
-                      appConfigProvider.isARAvailable));
-            }
-            activeQuestService.resumePositionListener();
-          }
-        }
-        // apply a tolerance of 10 meters here to mark the user as NOT in area.
-        // Useful when, because of bad gps accuracy, the user is "jumping" in and out
-        // of the geofence.
-        else if (!isInAreaNow &&
-            markerInArea != null &&
-            (distance > (kDistanceFromCenterOfArea + 10))) {
-          log.i("Outside of the area again");
-          markerInArea = null;
-        } else {
-          // not in area of map
-          return false;
-        }
       }
+
+      activeQuestService.resumePositionListener();
+    } else if (isInAreaNow && !isShowInAreaDialog ||
+        appConfigProvider.allowDummyMarkerCollection) {
+      markerInArea = marker;
+      // collect marker immediately (from floating button)
+      try {
+        final res = await collectMarkerFromGPSLocation(
+            forceNoAR:
+                !(userService.isUsingAR && appConfigProvider.isARAvailable));
+        return res;
+      } catch (e) {
+        log.wtf(
+            "Something went wrong when trying to collect marker from gps, error: $e");
+        return false;
+      }
+    }
+    // apply a tolerance of 10 meters here to mark the user as NOT in area.
+    // Useful when, because of bad gps accuracy, the user is "jumping" in and out
+    // of the geofence.
+    else if (!isInAreaNow &&
+        markerInArea != null &&
+        (distance > (kDistanceFromCenterOfArea + 10))) {
+      log.i("Outside of the area again");
+      markerInArea = null;
+      return false;
+    } else {
+      // not in area of map
+      return false;
     }
   }
 
@@ -263,7 +274,9 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
             title: "Try again",
             message: "Find and catch the credits",
             duration: Duration(seconds: 1));
-        return;
+        return false;
+      } else {
+        return true;
       }
     }
     MarkerAnalysisResult markerResult = await activeQuestService

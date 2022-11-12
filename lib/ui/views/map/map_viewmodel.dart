@@ -674,9 +674,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         infoWindowText: m == quest.startMarker
             ? "Start"
             : counter == quest.markers.length
-                ? quest.type == QuestType.TreasureLocationSearch
-                    ? "Finish, not visible to children"
-                    : "Finish"
+                ? "Finish"
                 : "Checkpoint $counter",
       );
     }

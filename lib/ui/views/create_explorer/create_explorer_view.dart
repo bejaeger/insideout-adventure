@@ -29,6 +29,7 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
       viewModelBuilder: () => CreateExplorerViewModel(
           disposeController: () => controller.dispose()),
       onModelReady: (model) => listenToFormUpdated(model),
+      onDispose: (_) => disposeForm(),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text("Create Child Account"),
@@ -110,7 +111,7 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                   children: [
                     verticalSpaceMedium,
                     AfkCreditsText.subheading(
-                        "Does ${nameController.text} use this phone or his or her own one?"),
+                        "Does your child use their own phone?"),
                     verticalSpaceMedium,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +127,7 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                             height: 80,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              border: Border.all(color: kcShadowColor),
+                                border: Border.all(color: kcShadowColor),
                                 color: (model.ownPhoneSelected != null &&
                                         model.ownPhoneSelected! == false)
                                     ? kcPrimaryColor.withOpacity(0.8)
@@ -134,30 +135,31 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
 //                                    color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(20)),
                             child: (model.ownPhoneSelected != null &&
-                                        model.ownPhoneSelected! == false)
-                                    ? AfkCreditsText.headingFour("This phone") : AfkCreditsText.headingFourLight("This phone"),
+                                    model.ownPhoneSelected! == false)
+                                ? AfkCreditsText.headingFour("No")
+                                : AfkCreditsText.headingFourLight("No"),
                           ),
                         ),
                         horizontalSpaceMedium,
                         GestureDetector(
                           onTap: () => model.switchOnOwnPhoneSelected(true),
-                         //selected: model.ownPhoneSelected ?? false,
+                          //selected: model.ownPhoneSelected ?? false,
                           child: Container(
                             width: 125,
                             height: 80,
                             alignment: Alignment.center,
-                            
                             decoration: BoxDecoration(
-                              border: Border.all(color: kcShadowColor),
+                                border: Border.all(color: kcShadowColor),
                                 color: (model.ownPhoneSelected != null &&
                                         model.ownPhoneSelected! == true)
                                     ? kcPrimaryColor.withOpacity(0.8)
                                     : Colors.grey[200],
-                                                                    //color: Colors.grey[200],
+                                //color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(20)),
                             child: (model.ownPhoneSelected != null &&
-                                        model.ownPhoneSelected! == true)
-                                    ? AfkCreditsText.headingFour("Own phone") : AfkCreditsText.headingFourLight("Own phone"),
+                                    model.ownPhoneSelected! == true)
+                                ? AfkCreditsText.headingFour("Yes")
+                                : AfkCreditsText.headingFourLight("Yes"),
                           ),
                         ),
                       ],

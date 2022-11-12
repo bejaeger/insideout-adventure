@@ -28,6 +28,7 @@ final String purchasedScreenTimeCollectionKey = "screentime";
 final String feedbackCampaignInfoDocumentKey = "campaignInfo";
 final String generalFeedbackDocumentKey = "generalFeedback";
 final String feedbackCollectionKey = "feedback";
+final String faqDocumentKey = "faqs";
 
 // properties
 final String kQuestGeoPointPropertyName = "location";
@@ -39,6 +40,8 @@ final CollectionReference feedbackCollection =
     FirebaseFirestore.instance.collection('feedback');
 final CollectionReference screenShotsCollection =
     FirebaseFirestore.instance.collection('screenshots');
+final CollectionReference picturesCollection =
+    FirebaseFirestore.instance.collection('pictures');
 // collection references
 final CollectionReference giftCardsCollection =
     FirebaseFirestore.instance.collection('giftCardCategories');
@@ -55,6 +58,8 @@ final CollectionReference globalStatsCollection =
     FirebaseFirestore.instance.collection("globalStats");
 final CollectionReference markersCollection =
     FirebaseFirestore.instance.collection("markers");
+final CollectionReference faqCollection =
+    FirebaseFirestore.instance.collection("faqs");
 final afkMarkersPositionsCollection =
     FirebaseFirestore.instance.collection("afkMarkersPositions");
 final CollectionReference activatedQuestsCollection =
@@ -146,7 +151,6 @@ const double kMinLocationAccuracy = 100;
 const double kUnrealisticallyHighDistance = 100000000;
 
 const int kDistanceFilterForCalibration = 5;
-
 const int kDefaultGeolocationDistanceFilter = 10;
 
 const double kDefaultQuestDownloadRadiusInKm = 10;

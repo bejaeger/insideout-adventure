@@ -40,13 +40,29 @@ class StartScreenTimeCounterView extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Lottie.asset(kLottieBigTv, height: 150),
-                            Flexible(
-                              child: AfkCreditsText.headingThreeLight(
-                                "Enjoy your well deserved screen time!",
-                                align: TextAlign.center,
-                              ),
-                            ),
+                            // Lottie.asset(kLottieBigTv, height: 150),
+                            // Flexible(
+                            //   child: AfkCreditsText.headingThreeLight(
+                            //     "Enjoy!",
+                            //     align: TextAlign.center,
+                            //   ),
+                            // ),
+                            ScreenTimeNotificationsNote()
+                            // Flexible(
+                            //   child: Row(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: [
+                            //       Icon(Icons.info_outline_rounded,
+                            //           color: kcPrimaryColor, size: 45),
+                            //       horizontalSpaceSmall,
+                            //       Flexible(
+                            //         child: AfkCreditsText.subheading(
+                            //           "Make sure your sound or vibration is turned on",
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

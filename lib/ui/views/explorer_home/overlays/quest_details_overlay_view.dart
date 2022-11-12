@@ -74,6 +74,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
               children: [
                 // Quest Info on top of screen
                 CommonQuestDetailsHeader(
+                  isParentAccount: model.isParentAccount,
                   quest: quest,
                   hasActiveQuest: model.hasActiveQuest,
                   showInstructionsDialog: model.showInstructions,

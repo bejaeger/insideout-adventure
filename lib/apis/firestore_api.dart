@@ -5,6 +5,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
+import 'package:afkcredits/datamodels/faqs/faqs.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
 import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
 import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
@@ -12,6 +13,7 @@ import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_pur
 import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
+import 'package:afkcredits/datamodels/playground/images.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -316,7 +318,9 @@ class FirestoreApi {
   }
 
   Future updateUserSettings(
-      {required String uid, required String key, required dynamic value}) async {
+      {required String uid,
+      required String key,
+      required dynamic value}) async {
     try {
       await usersCollection.doc(uid).set({
         "userSettings": {
@@ -749,7 +753,7 @@ class FirestoreApi {
       log.wtf("Uids field empty in ActivatedQuest. Can't upload anything");
       return;
     }
-
+    bool timedout = false;
     for (String uid in uids) {
       await firestoreInstance.runTransaction(
         (transaction) async {
@@ -811,7 +815,16 @@ class FirestoreApi {
                     "This problem is likely caused by some not well defined datamodels and their json serializability.");
           }
         },
+      ).timeout(
+        Duration(seconds: 5),
+        onTimeout: () {
+          timedout = true;
+          log.w("Uploading quest timed out. Probs no data connection");
+        },
       );
+    }
+    if (timedout) {
+      return WarningFirestoreCallTimeout;
     }
   }
 
@@ -838,6 +851,24 @@ class FirestoreApi {
           "screenshot document with id $questType does not exist in screenshots firestore collection");
     }
     return null;
+  }
+
+  Stream<Images> getPicturesStream() {
+    return picturesCollection.doc("pictures").snapshots().map(
+      (event) {
+        if (!event.exists || event.data() == null) {
+          throw FirestoreApiException(message: "Pictures stream not valid!");
+        }
+        return Images.fromJson(event.data()! as Map<String, dynamic>);
+      },
+    );
+  }
+
+  Future addPictureUrl({required Images images}) async {
+    log.v("get list of screen shot names");
+    await picturesCollection.doc("pictures").update(
+          images.toJson(),
+        );
   }
 
   ///////////////////////////////////////////////////
@@ -1375,7 +1406,26 @@ class FirestoreApi {
       "totalScreenTime": FieldValue.increment(deltaScreenTime),
     });
   }
+
+// --------------------------------------------------
+  Future<FAQs> getFaqs() async {
+    DocumentReference doc = getFAQDocument();
+    DocumentSnapshot snapshot = await doc.get();
+    if (snapshot.exists && snapshot.data() != null) {
+      try {
+        return FAQs.fromJson(snapshot.data()! as Map<String, dynamic>);
+      } catch (e) {
+        throw FirestoreApiException(
+            message: 'Failed to get the FAQs', devDetails: '$e');
+      }
+    } else {
+      return FAQs(answers: [], questions: []);
+    }
+  }
 }
+
+// --------------------------------------------------
+// --------------------------------------------------
 
 /////////////////////////////////////////////////////////
 // Collection's getter
@@ -1425,4 +1475,8 @@ CollectionReference getUserGiftCardsCollection({required String uid}) {
 
 CollectionReference getUserScreenTimeCollection({required String uid}) {
   return usersCollection.doc(uid).collection(purchasedScreenTimeCollectionKey);
+}
+
+DocumentReference getFAQDocument() {
+  return faqCollection.doc(faqDocumentKey);
 }

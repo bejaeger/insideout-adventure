@@ -20,11 +20,14 @@ import 'package:afkcredits/ui/views/login/login_view.form.dart';
 class LoginView extends StatelessWidget with $LoginView {
   LoginView({Key? key}) : super(key: key);
 
+  // emailOrNameController.clear();
+  // passwordController.clear();
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<LoginViewModel>.reactive(
       viewModelBuilder: () => LoginViewModel(),
       onModelReady: (model) => listenToFormUpdated(model),
+      onDispose: (_) => disposeForm(),
       builder: (context, model, child) => Scaffold(
         body: AuthenticationLayout(
           busy: model.isBusy,
@@ -111,11 +114,12 @@ class LoginView extends StatelessWidget with $LoginView {
           releaseName: model.getReleaseName,
           onForgotPassword: model.onForgotPassword,
           onGoogleButtonTapped: () =>
-              model.saveData(AuthenticationMethod.google),
+            model.saveData(AuthenticationMethod.google),
           // onFacebookButtonTapped: () =>
           //     model.runAuthentication(AuthenticationMethod.facebook),
           onAppleButtonTapped: (!kIsWeb && Platform.isIOS)
-              ? () => model.saveData(AuthenticationMethod.apple)
+              ? () =>
+                  model.saveData(AuthenticationMethod.apple)
               : null,
         ),
       ),
