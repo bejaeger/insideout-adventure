@@ -46,7 +46,7 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
               enableTapRecognizer: true,
             ),
             Align(
-              alignment: Alignment(0, 0.1),
+              alignment: Alignment(0, -0.9),
               child: AnimatedOpacity(
                 opacity: model.showHelpMessage ? 1 : 0,
                 duration: Duration(milliseconds: 500),
@@ -57,9 +57,10 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
                   padding: const EdgeInsets.all(12.0),
                   width: screenWidth(context, percentage: 0.7),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       AfkCreditsText.headingFour(
-                        "Can't find them?",
+                        "Can't find the credits?",
                         align: TextAlign.center,
                       ),
                       verticalSpaceSmall,

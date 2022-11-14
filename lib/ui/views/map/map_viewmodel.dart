@@ -361,7 +361,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
           onTap: onARObjectMarkerTap,
           lat: 49.27215968930406,
           lon: -123.15749607547962,
-          isCoin: true);
+          isGreen: true);
       // addARObjectToMap(
       //     onTap: onARObjectMarkerTap,
       //     lat: 49.26843866276503,
@@ -972,10 +972,10 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   final void Function() resetMapMarkers;
   final void Function() resetMapAreas;
   final void Function(
-      {required void Function(double lat, double lon, bool isCoin) onTap,
+      {required void Function(double lat, double lon, bool isGreen) onTap,
       required double lat,
       required double lon,
-      required bool isCoin}) addARObjectToMap;
+      required bool isGreen}) addARObjectToMap;
   final void Function({required AFKMarker afkmarker, required bool collected})
       updateMapMarkers;
   final void Function({required AFKMarker afkmarker}) updateMapAreas;

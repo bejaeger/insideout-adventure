@@ -18,7 +18,7 @@ class ARObjectViewModel extends ActiveQuestBaseViewModel
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
-        if (timer.tick == 5) {
+        if (timer.tick == 8) {
           showHelpMessage = true;
           notifyListeners();
         }

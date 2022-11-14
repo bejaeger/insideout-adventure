@@ -226,22 +226,22 @@ class GoogleMapService {
       {required void Function(double lat, double lon, bool isCoin) onTap,
       required double lat,
       required double lon,
-      required bool isCoin}) async {
+      required bool isGreen}) async {
     final coinBitmap = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(size: Size(4, 4)), kAFKCreditsLogoSmallPath);
     final treasureBitmap = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(4, 4)), kTreasureIconSmallPath);
+        ImageConfiguration(size: Size(4, 4)), kAFKCreditsLogoSmallPathYellow);
     Marker marker = Marker(
       markerId: MarkerId("COIN" +
-          isCoin
+          isGreen
               .toString()), // google maps marker id of start marker will be our quest id
       //position: LatLng(49.26813866276503, -122.98950899176373),
       position: LatLng(lat, lon),
-      icon: isCoin ? coinBitmap : treasureBitmap,
+      icon: isGreen ? coinBitmap : treasureBitmap,
       onTap: () async {
         // needed to avoid navigating to that marker!
         dontMoveCamera();
-        onTap(lat, lon, isCoin);
+        onTap(lat, lon, isGreen);
       },
     );
     // Marker markerTreasure = Marker(
@@ -261,6 +261,8 @@ class GoogleMapService {
     //   },
     // );
     markersOnMap.add(marker);
+
+    
     // markersOnMap.add(markerTreasure);
   }
 

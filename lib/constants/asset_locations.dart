@@ -1,6 +1,8 @@
 const String kAFKCreditsLogoPath = "assets/icons/afk_credits_orig.png";
 const String kAFKCreditsLogoSmallPath =
     "assets/icons/afk_credits_small_orig.png";
+const String kAFKCreditsLogoSmallPathYellow =
+    "assets/icons/afk_credits.png";
 const String kAFKCreditsLogoSmallPathColored =
     "assets/icons/afk_credits_small_colored.PNG";
 const String kMapPath = "assets/icons/map.png";

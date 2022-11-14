@@ -307,7 +307,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     mapViewModel.addARObjectToMap(
       lat: marker.lat!,
       lon: marker.lon!,
-      isCoin: true,
+      isGreen: true,
       onTap: (double lat, double lon, bool isCoin) async {
         // 1. Open AR view with nice zoom in and fade out triggered
         bool collected =
