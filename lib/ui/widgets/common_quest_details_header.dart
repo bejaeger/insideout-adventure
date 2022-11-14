@@ -125,8 +125,8 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                       maxLines: 2,
                     ),
                   ),
-                if (quest != null && !completed) verticalSpaceSmall,
-                if (quest != null && !completed && !isParentAccount)
+                if (quest != null && !completed && !hasActiveQuest) verticalSpaceSmall,
+                if (quest != null && !completed && !isParentAccount && !hasActiveQuest)
                   InfoContainer(
                     child: Text.rich(
                       style: bodyStyleSofia,
