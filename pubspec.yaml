@@ -68,7 +68,7 @@ dependencies:
   logger:
   freezed_annotation: ^2.1.0
   json_annotation: ^4.6.0
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.11.0
   notion_api: ^1.2.0
   device_info: ^2.0.3
   dropdown_button2: ^1.8.2

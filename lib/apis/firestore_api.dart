@@ -340,7 +340,7 @@ class FirestoreApi {
     log.v("Updating fcm token for user with id $uid");
     usersCollection.doc(uid).update(
       {
-        'tokens': FieldValue.arrayUnion([token]),
+        'tokens': [token],
       },
     );
   }

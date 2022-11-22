@@ -1,5 +1,3 @@
-import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/common_services/pausable_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
