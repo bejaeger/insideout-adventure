@@ -1,4 +1,3 @@
-import 'package:afkcredits/datamodels/faqs/faqs.dart';
 import 'package:afkcredits/ui/views/help_desk/help_desk_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';

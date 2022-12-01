@@ -25,9 +25,9 @@ mixin NavigationMixin {
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
   void navToAdminHomeView({required UserRole role}) {
-    //navigationService.replaceWith(Routes.homeView);
+    // no special VIEW for admin master at this time
     _navigationService.replaceWith(
-      Routes.bottomBarLayoutTemplateView,
+      Routes.parentHomeView,
       arguments: BottomBarLayoutTemplateViewArguments(userRole: role),
     );
   }

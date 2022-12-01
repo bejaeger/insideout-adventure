@@ -20,14 +20,6 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   ///////////////////////////////////////////////
   /// Switch from explorer back to sponsor account
   Future handleSwitchToExplorerEvent({String? explorerUidInput}) async {
-    // if (isScreenTimeActive) {
-    //   snackbarService.showSnackbar(
-    //       message:
-    //           "You cannot change to the child's account while screen time is active",
-    //       title: "Sorry");
-    //   return;
-    // }
-
     User? tmpExplorer;
     if (explorerUidInput != null) {
       tmpExplorer = userService.supportedExplorers[explorerUidInput];
@@ -46,10 +38,10 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     final result = await bottomSheetService.showBottomSheet(
         title: "Switch to " + tmpExplorer.fullName + "'s area",
         description: "Do you want to lock this parent area with a passcode?",
-        confirmButtonTitle: "No",
-        cancelButtonTitle: "Yes");
+        confirmButtonTitle: "Yes",
+        cancelButtonTitle: "No");
 
-    if (result?.confirmed == false) {
+    if (result?.confirmed == true) {
       // Set PIN
       log.i("Asking to set PIN before switching to explorer session");
       final pinResult = await navigationService.navigateTo(Routes.setPinView);
@@ -66,7 +58,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
             pin: pinResult.pin, explorer: tmpExplorer);
       }
     }
-    if (result?.confirmed == true) {
+    if (result?.confirmed == false) {
       await switchToExplorerAccount(explorer: tmpExplorer);
     }
   }

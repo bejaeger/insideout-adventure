@@ -175,7 +175,9 @@ class LoginViewModel extends AuthenticationViewModel {
   }
 
   void navigateToCreateAccount() {
-    _navigationService.replaceWith(Routes.createAccountUserRoleView);
+    navToSponsorCreateAccount(role: UserRole.sponsor);
+    // don't show view where account can be selected!
+    // _navigationService.replaceWith(Routes.createAccountUserRoleView);
   }
 
   bool isPwShown = false;

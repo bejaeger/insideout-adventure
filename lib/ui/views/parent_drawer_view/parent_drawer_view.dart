@@ -26,15 +26,15 @@ class ParentDrawerView extends StatelessWidget {
             ),
           ),
           verticalSpaceTiny,
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-            child: ListTile(
-              title: AfkCreditsText.body("Help Desk"),
-              leading: Icon(Icons.help_center),
-              onTap: model.navToHelpDesk,
-            ),
-          ),
-          verticalSpaceTiny,
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+          //   child: ListTile(
+          //     title: AfkCreditsText.body("Help Desk"),
+          //     leading: Icon(Icons.help_center),
+          //     onTap: model.navToHelpDesk,
+          //   ),
+          // ),
+          // verticalSpaceTiny,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
             child:

@@ -275,9 +275,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
             message: "Find and catch the credits",
             duration: Duration(seconds: 1));
         return false;
-      } else {
-        return true;
-      }
+      } 
     }
     MarkerAnalysisResult markerResult = await activeQuestService
         .analyzeMarkerAndUpdateQuest(marker: markerInArea);

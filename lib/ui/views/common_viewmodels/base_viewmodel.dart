@@ -277,15 +277,10 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   Future clearStackAndNavigateToHomeView(
       {bool showBewareDialog = false,
       bool showNumberQuestsDialog = false}) async {
-    if (currentUser.role == UserRole.sponsor) {
+    if (isParentAccount || isAdminMaster) {
       await navigationService.clearStackAndShow(
         Routes.parentHomeView,
       );
-    } else if (currentUser.role == UserRole.adminMaster) {
-      await navigationService.clearStackAndShow(
-          Routes.bottomBarLayoutTemplateView,
-          arguments:
-              BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
     } else {
       await navigationService.clearStackAndShow(
         Routes.explorerHomeView,
@@ -309,12 +304,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         await navigationService.navigateTo(Routes.permissionsView);
       }
     }
-    if (currentUser.role == UserRole.sponsor) {
+    if (isParentAccount || isAdminMaster) {
       await replaceWithParentHomeView(screenTimeSession: screenTimeSession);
-    } else if (currentUser.role == UserRole.adminMaster) {
-      await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-          arguments:
-              BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
     } else {
       await replaceWithExplorerHomeView(
           showBewareDialog: showBewareDialog,

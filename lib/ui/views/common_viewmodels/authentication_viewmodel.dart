@@ -78,12 +78,12 @@ abstract class AuthenticationViewModel extends FormViewModel
         if (role == UserRole.explorer || role == UserRole.superUser) {
           _navigationService.replaceWith(Routes.explorerHomeView);
         } else {
-          if (role == UserRole.adminMaster) {
-            await _navigationService.replaceWith(
-                Routes.bottomBarLayoutTemplateView,
-                arguments:
-                    BottomBarLayoutTemplateViewArguments(userRole: role));
-          } else {
+          // if (role == UserRole.adminMaster) {
+          //   await _navigationService.replaceWith(
+          //       Routes.bottomBarLayoutTemplateView,
+          //       arguments:
+          //           BottomBarLayoutTemplateViewArguments(userRole: role));
+          // } else {
             // check if onboarding screen was already looked at
             final onboarded = await _localStorageService.getFromDisk(
                 key: kLocalStorageSawOnBoardingKey);
@@ -99,7 +99,7 @@ abstract class AuthenticationViewModel extends FormViewModel
                   key: kLocalStorageSawOnBoardingKey,
                   value: _userService.currentUser.uid);
             }
-          }
+            // }
 
           // _navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
           //     arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
@@ -122,42 +122,6 @@ abstract class AuthenticationViewModel extends FormViewModel
     }
   }
 
-//Back Office Data Flow
-  Future saveAdminData() async {
-    log.v('Valued: $formValueMap');
-    try {
-      final result =
-          await runBusyFuture(runAdminAuthResult(), throwException: true);
-      log.i("This is the User Email: ${result.user!.email}");
-      await _handleAuthResponse(authResult: result);
-    } on FirestoreApiException catch (e) {
-      log.i(e.toString());
-    }
-  }
-
-  //This code needs to be moved accordingly, based on the discussion Ben and I will have.
-  Future<void> _handleAuthResponse(
-      {required FirebaseAuthenticationResult authResult}) async {
-    log.v('AuthResult.hasError: ${authResult.hasError}');
-    if (!authResult.hasError && authResult.user != null) {
-      final adminUser = authResult.user;
-      await _userService.syncOrCreateUserAdminAccount(
-          userAdmin: UserAdmin(
-              id: adminUser!.uid,
-              email: adminUser.email,
-              role: UserRole.adminMaster,
-              name: 'Admin AFK'),
-          method: AuthenticationMethod.dummy,
-          fromLocalStorate: true);
-
-      navToAdminHomeView(role: UserRole.adminMaster);
-    } else {
-      if (!authResult.hasError && authResult.user == null) {
-        log.wtf('We have no Error But user is Null');
-      }
-    }
-  }
-
   Future initializeUser({
     String? uid,
     bool fromLocalStorage = false,
@@ -165,9 +129,6 @@ abstract class AuthenticationViewModel extends FormViewModel
     return await _userService.syncUserAccount(
         uid: uid, fromLocalStorage: fromLocalStorage);
   }
-
-  //This is for the Back Office
-  Future<FirebaseAuthenticationResult> runAdminAuthResult();
 
   // needs to be overrriden!
   Future<AFKCreditsAuthenticationResultService> runAuthentication(
