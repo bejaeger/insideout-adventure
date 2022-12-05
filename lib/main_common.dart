@@ -55,20 +55,20 @@ void mainCommon(Flavor flavor) async {
     NotificationController().initializeLocalNotifications();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    // FirebaseMessaging.onMessageOpenedApp.listen(
-    //   (event) {
-    //     print("received remote message with id: ${event.messageId}");
-    //     try {
-    //       if (event.data["category"] == "feedback") {
-    //         StackedService.navigatorKey?.currentState?.pushNamed(
-    //           Routes.feedbackView,
-    //         );
-    //       }
-    //     } catch (e) {
-    //       print("Error: Could not check category in data");
-    //     }
-    //   },
-    // );
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (event) {
+        print("received remote message with id: ${event.messageId}");
+        try {
+          if (event.data["category"] == "feedback") {
+            StackedService.navigatorKey?.currentState?.pushNamed(
+              Routes.feedbackView,
+            );
+          }
+        } catch (e) {
+          print("Error: Could not check category in data");
+        }
+      },
+    );
 
     String? fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken != null) {
