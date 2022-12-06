@@ -110,7 +110,7 @@ dependencies:
 
   circular_menu: ^2.0.1
   pedometer: ^3.0.0
-  flutter_background_service: ^2.0.0
+  # flutter_background_service: ^2.0.0
   freezed: ^2.0.3+1
   #source_gen: ^1.2.2
   json_serializable: ^6.2.0

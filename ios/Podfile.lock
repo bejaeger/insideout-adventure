@@ -752,8 +752,6 @@ PODS:
   - flutter_archive (0.0.1):
     - Flutter
     - ZIPFoundation (= 0.9.13)
-  - flutter_background_service_ios (0.0.3):
-    - Flutter
   - flutter_secure_storage (3.3.1):
     - Flutter
   - flutter_vibrate (0.0.1):
@@ -931,7 +929,6 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
   - flutter_archive (from `.symlinks/plugins/flutter_archive/ios`)
-  - flutter_background_service_ios (from `.symlinks/plugins/flutter_background_service_ios/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_vibrate (from `.symlinks/plugins/flutter_vibrate/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
@@ -1027,8 +1024,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_archive:
     :path: ".symlinks/plugins/flutter_archive/ios"
-  flutter_background_service_ios:
-    :path: ".symlinks/plugins/flutter_background_service_ios/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_vibrate:
@@ -1101,7 +1096,6 @@ SPEC CHECKSUMS:
   FirebaseStorageInternal: 81d8a597324ccd06c41a43c5700bc1185a2fc328
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_archive: 1805fdd3a695fd284b43edb53dc35ca843fb761c
-  flutter_background_service_ios: e30e0d3ee69e4cee66272d0c78eacd48c2e94aac
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   flutter_vibrate: 9f4c2ab57008965f78969472367c329dd77eb801
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
