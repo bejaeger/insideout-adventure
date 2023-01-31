@@ -6,8 +6,6 @@ import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 
-// ! Not used at the moment
-
 // https://berux.design/detective-rabbit
 // https://iopscience.iop.org/article/10.1088/1742-6596/1187/5/052068/pdf#:~:text=2.1.,typically%2C%20word%20error%20rate).
 class GamificationService {

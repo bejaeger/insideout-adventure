@@ -14,7 +14,6 @@ class AvatarAndEffectsOnMapViewModel extends BaseModel {
   // -----------------------------------------
   // getters
   bool get isAvatarView => mapStateService.isAvatarView;
-
   bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
@@ -49,11 +48,11 @@ class AvatarAndEffectsOnMapViewModel extends BaseModel {
         (value) {
           if (value != prevValue) {
             if (value) {
-              log.v("STOP the lottie animation");
+              log.d("STOP the lottie animation");
               stopAnimation();
               isAnimating = false;
             } else {
-              log.v("START the lottie animation");
+              log.d("START the lottie animation");
               startAnimation();
               isAnimating = true;
             }

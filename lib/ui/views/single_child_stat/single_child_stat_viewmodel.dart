@@ -165,7 +165,6 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
   }
 
   Future navigateToAddFundsView() async {
-    //layoutService.setShowBottomNavBar(false);
     if (explorer != null) {
       await navigationService.navigateTo(Routes.transferFundsView,
           arguments: TransferFundsViewArguments(
@@ -175,7 +174,6 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
               recipientInfo: PublicUserInfo(
                   name: explorer!.fullName, uid: explorer!.uid)));
       await Future.delayed(Duration(milliseconds: 300));
-      //layoutService.setShowBottomNavBar(true);
       notifyListeners();
     } else {
       log.wtf("No explorer found!");

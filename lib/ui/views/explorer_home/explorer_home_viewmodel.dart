@@ -177,26 +177,11 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       completer: completer,
       callback: () => notifyListeners(),
     );
-    // not used atm!
-    // questService.setupPastQuestsListener(
-    //   completer: completerTwo,
-    //   uid: currentUser.uid,
-    //   callback: () => notifyListeners(),
-    // );
-    // not used atm!
-    // gamificationService.setupAchievementsListener(
-    //   completer: completerThree,
-    //   uid: currentUser.uid,
-    //   callback: () => notifyListeners(),
-    // );
     activeQuestService.addMainLocationListener();
     await Future.wait(
       [
         completer.future,
-        //completerTwo.future,
-        //completerThree.future,
         getLocation(forceAwait: true, forceGettingNewPosition: false),
-        // checkIsUsingScreenTime(),
         // adds listener to screen time collection!
         // needed e.g. when child creates screen time session but parent removes it
         userService.addExplorerScreenTimeListener(
@@ -295,21 +280,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     }
   }
 
-  // Future<ScreenTimeSession?> checkIsUsingScreenTime() async {
-  //   final String? id = await _localStorageService.getFromDisk(
-  //       key: kLocalStorageScreenTimeSessionKey);
-  //   if (id != null) {
-  //     final session = await screenTimeService.checkForActiveScreenTimeSession(
-  //         uid: currentUser.uid, sessionId: id);
-  //     if (session != null) {
-  //       notifyListeners();
-  //       return session;
-  //     }
-  //   }
-  //   notifyListeners();
-  //   return null;
-  // }
-
   Future showToEarnExplanationDialog() async {
     dialogService.showDialog(
         title: "Sponsored Credits",
@@ -322,13 +292,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         title: "Your Earned Credits",
         description:
             "This is the amount you successfully earned already! You can spend credits on gift cards!");
-  }
-
-  Future navigateToRewardsView() async {
-    await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(
-            userRole: currentUser.role,
-            initialBottomNavBarIndex: BottomNavBarIndex.giftcard));
   }
 
   //-----------------------------------------

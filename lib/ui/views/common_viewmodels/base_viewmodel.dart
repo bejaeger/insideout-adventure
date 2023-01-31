@@ -159,29 +159,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
-  // screen time will be added to subject every 60 seconds.
-  // Map<String, StreamSubscription?> screenTimeSubjectSubscription = {};
-  // void listenToScreenTime() {
-  //   baseModelLog.e(
-  //       "active screen time length: ${userService.supportedExplorerScreenTimeSessionsActive.length}");
-  //   userService.supportedExplorerScreenTimeSessionsActive.forEach(
-  //     (key, element) {
-  //       if (!screenTimeSubjectSubscription.containsKey(element.uid) ||
-  //           screenTimeSubjectSubscription[element.uid] == null) {
-  //         screenTimeSubjectSubscription[element.uid] =
-  //             screenTimeService.screenTimeActiveSubject[element.uid]?.listen(
-  //           (_) {
-  //             newScreenTimeLeft = secondsToMinuteTime(
-  //                 screenTimeService.getMinSreenTimeLeftInSeconds());
-  //             baseModelLog.e("new screentime left: $newScreenTimeLeft");
-  //             notifyListeners();
-  //           },
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
-
   Future clearServiceData(
       {bool logOutFromFirebase = true,
       bool doNotClearSponsorReference = false}) async {
@@ -196,27 +173,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         doNotClearSponsorReference: doNotClearSponsorReference);
   }
 
-  void unregisterViewModels() {
-    // unregister all singleton viewmodels when logging out
-    // TODO: remove data from viewmodels on loggin!
-    // if (locator.isRegistered<ActiveTreasureLocationSearchQuestViewModel>()) {
-    //   locator.unregister<ActiveTreasureLocationSearchQuestViewModel>();
-    // }
-    // if (locator.isRegistered<ActiveDistanceEstimateQuestViewModel>()) {
-    //   locator.unregister<ActiveDistanceEstimateQuestViewModel>();
-    // }
-    // if (locator.isRegistered<ActiveQrCodeSearchViewModel>()) {
-    //   locator.unregister<ActiveQrCodeSearchViewModel>();
-    // }
-    // if (locator.isRegistered<PurchasedGiftCardsViewModel>()) {
-    //   locator.unregister<PurchasedGiftCardsViewModel>();
-    // }
-  }
-
   Future logout() async {
     // TODO: Check that there is no active quest present!
     clearServiceData();
-    unregisterViewModels();
     navigationService.clearStackAndShow(Routes.loginView);
   }
 
@@ -226,15 +185,13 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
+  // TODO: Remove concept of "enough sponsoring"
   bool hasEnoughSponsoring({required Quest? quest}) {
     if (quest == null) {
       baseModelLog.e(
           "Attempted to check whether sponsoring is enough for quest that is null!");
       return false;
     }
-    // TODO: Pay attention to this here
-    // return quest.afkCredits <= currentUserStats.availableSponsoring;
-    // TODO: For now we always assume we have enough funding
     return true;
   }
 
@@ -312,20 +269,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
           showNumberQuestsDialog: showNumberQuestsDialog,
           screenTimeSession: screenTimeSession);
     }
-  }
-
-  Future replaceWithMainView({required BottomNavBarIndex index}) async {
-    await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(
-            userRole: currentUser.role, initialBottomNavBarIndex: index));
-  }
-
-  Future clearStackAndNavigateToMainView(
-      {required BottomNavBarIndex index}) async {
-    await navigationService.clearStackAndShow(
-        Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(
-            userRole: currentUser.role, initialBottomNavBarIndex: index));
   }
 
   Future showGenericInternalErrorDialog() async {
@@ -427,10 +370,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       variant: BottomSheetType.questInformation,
       title: quest.name,
       enterBottomSheetDuration: Duration(milliseconds: 300),
-      // exitBottomSheetDuration: Duration(milliseconds: 1),
-      // curve: Curves.easeInExpo,
-      // curve: Curves.linear,
-      // barrierColor: Colors.black45,
       description: quest.description,
       mainButtonTitle: isParentAccount ? "Show markers" : "Play",
       secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
@@ -441,13 +380,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       },
     );
     return sheetResponse;
-    // if (sheetResponse?.confirmed == true) {
-    //   baseModelLog
-    //       .i("Looking at details of quest OR starting quest immediately");
-    //   return true;
-    // questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
-    //     ? await navigateToActiveQuestUI(quest: quest)
-    //     : await navigateToActiveQuestUI(quest: quest);
   }
 
   Future openSuperUserSettingsDialog() async {
@@ -500,16 +432,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   //////////////////////////////////////////
   /// Clean-up
 
-  // void cancelScreenTimeLeftInSecondsSubjectListener() {
-  //   screenTimeSubjectSubscription.forEach((key, value) {
-  //     value?.cancel();
-  //     screenTimeSubjectSubscription[key] = null;
-  //   });
-  // }
 
   @override
   void dispose() {
     super.dispose();
-    //cancelScreenTimeLeftInSecondsSubjectListener();
   }
 }

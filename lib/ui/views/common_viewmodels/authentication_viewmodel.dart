@@ -3,7 +3,6 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
@@ -13,7 +12,6 @@ import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 abstract class AuthenticationViewModel extends FormViewModel
@@ -78,12 +76,6 @@ abstract class AuthenticationViewModel extends FormViewModel
         if (role == UserRole.explorer || role == UserRole.superUser) {
           _navigationService.replaceWith(Routes.explorerHomeView);
         } else {
-          // if (role == UserRole.adminMaster) {
-          //   await _navigationService.replaceWith(
-          //       Routes.bottomBarLayoutTemplateView,
-          //       arguments:
-          //           BottomBarLayoutTemplateViewArguments(userRole: role));
-          // } else {
             // check if onboarding screen was already looked at
             final onboarded = await _localStorageService.getFromDisk(
                 key: kLocalStorageSawOnBoardingKey);
@@ -99,20 +91,7 @@ abstract class AuthenticationViewModel extends FormViewModel
                   key: kLocalStorageSawOnBoardingKey,
                   value: _userService.currentUser.uid);
             }
-            // }
-
-          // _navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-          //     arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
         }
-        // if (role == UserRole.explorer) {
-        //   navigationService.replaceWith(Routes.explorerHomeView);
-        // } else if (role == UserRole.sponsor) {
-        //   navigationService.replaceWith(Routes.sponsorHomeView);
-        // } else if (role == UserRole.admin) {
-        //   navigationService.replaceWith(Routes.adminHomeView);
-        // }
-
-        //_layoutService.setShowBottomNavBar(true);
       }
     } else {
       log.e(

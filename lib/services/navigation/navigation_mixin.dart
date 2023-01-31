@@ -3,15 +3,12 @@ import 'dart:io';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -24,31 +21,19 @@ mixin NavigationMixin {
   final LayoutService _layoutService = locator<LayoutService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
-  void navToAdminHomeView({required UserRole role}) {
-    // no special VIEW for admin master at this time
-    _navigationService.replaceWith(
-      Routes.parentHomeView,
-      arguments: BottomBarLayoutTemplateViewArguments(userRole: role),
-    );
-  }
-
   void navToUpdatingQuestView() {
-    //navigationService.replaceWith(Routes.homeView);
     _navigationService.navigateTo(
       Routes.updatingQuestView,
-      //arguments: BottomBarLayoutTemplateViewArguments(userRole: role),
     );
   }
 
   void navToSingleMarkerView() {
-    //navigationService.replaceWith(Routes.homeView);
     _navigationService.navigateTo(
       Routes.singleMarkerView,
     );
   }
 
   void navToQrcodeView() {
-    //navigationService.replaceWith(Routes.homeView);
     _navigationService.navigateTo(
       Routes.qRCodeView,
     );
@@ -121,26 +106,13 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.parentMapView);
   }
 
-  void navToMapView({required UserRole role}) {
-    _navigationService.navigateTo(
-      Routes.bottomBarLayoutTemplateView,
-      arguments: BottomBarLayoutTemplateViewArguments(
-          userRole: role,
-          initialBottomNavBarIndex: BottomNavBarIndex.quest,
-          questViewIndex: QuestViewType.map),
-    );
-  }
-
   void navToQuestOverView() {
-    //SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
     _navigationService.navigateTo(Routes.questsOverviewView);
-    //});
   }
 
   void navToCreateQuest({bool fromMap = false}) {
     _navigationService.navigateTo(Routes.createQuestView,
         arguments: CreateQuestViewArguments(fromMap: fromMap));
-    //});
   }
 
   Future popUntilMapView() async {
@@ -157,20 +129,6 @@ mixin NavigationMixin {
     _geolocationService.clearData();
     await _userService.handleLogoutEvent(logOutFromFirebase: true);
     _navigationService.clearStackAndShow(Routes.loginView);
-  }
-
-  void navToQuestsOfSpecificTypeView(
-      {required QuestType type, required UserRole role}) {
-    // Use the below to have the nav bottom bar visible!
-    _navigationService.navigateTo(
-      Routes.bottomBarLayoutTemplateView,
-      arguments: BottomBarLayoutTemplateViewArguments(
-        userRole: role,
-        initialBottomNavBarIndex: BottomNavBarIndex.quest,
-        questViewIndex: QuestViewType.singlequest,
-        questType: type,
-      ),
-    );
   }
 
   void showQuestListOverlay() {

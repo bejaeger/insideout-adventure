@@ -23,8 +23,6 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_distance_estimate_quest/active_distance_estimate_quest_view.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_qrcode_search/active_qrcode_search_view.dart';
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart';
 import 'package:afkcredits/ui/views/active_screen_time/screen_time_requested_view.dart';
 import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_view.dart';
@@ -39,8 +37,6 @@ import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart';
 import 'package:afkcredits/ui/views/help_desk/hep_desk_view.dart';
-import 'package:afkcredits/ui/views/history_and_achievements/history_and_achievements_view.dart';
-import 'package:afkcredits/ui/views/layout/bottom_bar_layout_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_overview_view.dart';
@@ -60,7 +56,6 @@ import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart';
 import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart';
-import 'package:afkcredits/ui/views/single_quest_type/single_quest_type_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
@@ -97,9 +92,6 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: QRCodeViewExample),
     MaterialRoute(page: AddMarkersView),
     MaterialRoute(page: SetPinView),
-    MaterialRoute(page: BottomBarLayoutTemplateView),
-    MaterialRoute(page: ActiveQrCodeSearchView),
-    MaterialRoute(page: ActiveDistanceEstimateQuestView),
     MaterialRoute(page: CreateQuestView),
     MaterialRoute(page: ManageQuestView),
     MaterialRoute(page: QuestsOverviewView),
@@ -107,7 +99,6 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: ARObjectIosView),
     MaterialRoute(page: ActiveScreenTimeView),
     MaterialRoute(page: SelectScreenTimeView),
-    MaterialRoute(page: SingleQuestTypeView),
     MaterialRoute(page: OnBoardingScreensView),
     MaterialRoute(page: ParentMapView),
     MaterialRoute(page: FeedbackView),
@@ -150,23 +141,10 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: ScreenTimeService),
     LazySingleton(classType: PermissionService),
     LazySingleton(classType: NotificationsService),
-
-    // needed so that notifications and screen time things
-    // are properly reacted to
     LazySingleton(classType: ParentHomeViewModel),
-
-    // TODO: this is a test
     LazySingleton(classType: ExplorerHomeViewModel),
-
-    //LazySingleton(classType: MarkersInMap),
-    // LazySingleton(classType: MapViewModel),
     Presolve(classType: MapViewModel, presolveUsing: presolveMapViewModel),
-
-    // Just a test if this helps reducing/removing the
-    // map failures
     LazySingleton(classType: GoogleMapService),
-
-    // Services
   ],
   logger: StackedLogger(),
 )

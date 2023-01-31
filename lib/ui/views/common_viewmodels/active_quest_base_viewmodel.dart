@@ -122,9 +122,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
 
     try {
-      // if (quest.type == QuestType.VibrationSearch && startFromMap) {
-      //   await navigateToVibrationSearchView();
-      // }
       questTestingService.maybeInitialize(user: currentUser);
 
       /// Once The user Click on Start a Quest. It is her/him to new Page
@@ -170,58 +167,40 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       log.wtf("No active quest present to cancel");
       return;
     }
-    if (activeQuest.status != QuestStatus.success) {
-      DialogResponse<dynamic>? continueQuest;
-      if (!force) {
-        log.w("Quest is incomplete, show dialog");
-        continueQuest = await dialogService.showConfirmationDialog(
-            barrierDismissible: true,
-            title: WarningQuestNotFinished,
-            cancelTitle: "CANCEL QUEST",
-            confirmationTitle: "CONTINUE QUEST");
-      } else {
-        log.w("You are forcing to end the quest");
-      }
-
-      if (continueQuest?.confirmed == true) {
-        await activeQuestService.continueIncompleteQuest();
-      }
-      if (continueQuest?.confirmed == false || force) {
-        // TODO: Handle quest testing service if some positions aren't pushed yet!
-        if (questTestingService.isRecordingLocationData &&
-            !questTestingService.isAllQuestDataPointsPushed()) {
-          log.i("push to notion");
-          await dialogService.showCustomDialog(
-              barrierDismissible: true,
-              variant: DialogType.SuperUserSettings,
-              data: SuperUserDialogType.sendDiagnostics);
-        }
-
-        // will reset activeQuest
-        await activeQuestService.cancelIncompleteQuest();
-
-        resetPreviousQuest();
-        popQuestDetails();
-
-        //replaceWithMainView(index: BottomNavBarIndex.quest);
-        log.i("replaced view with mapView");
-      }
+    DialogResponse<dynamic>? continueQuest;
+    if (!force) {
+      log.w("Quest is incomplete, show dialog");
+      continueQuest = await dialogService.showConfirmationDialog(
+          barrierDismissible: true,
+          title: WarningQuestNotFinished,
+          cancelTitle: "CANCEL QUEST",
+          confirmationTitle: "CONTINUE QUEST");
     } else {
-      if (activeQuestService.previouslyFinishedQuest == null) {
-        log.wtf(
-            "Quest was successfully finished but previouslyFinishedQuest was not set! This should never happen and is due to an internal error in quest service..");
-        setBusy(false);
-        throw Exception(
-            "Internal Error: For developers, please set the variable 'previouslyFinishedQuest' in the quest service.");
+      log.w("You are forcing to end the quest");
+    }
+
+    if (continueQuest?.confirmed == true) {
+      await activeQuestService.continueIncompleteQuest();
+    }
+    if (continueQuest?.confirmed == false || force) {
+      // TODO: Handle quest testing service if some positions aren't pushed yet!
+      if (questTestingService.isRecordingLocationData &&
+          !questTestingService.isAllQuestDataPointsPushed()) {
+        log.i("push to notion");
+        await dialogService.showCustomDialog(
+            barrierDismissible: true,
+            variant: DialogType.SuperUserSettings,
+            data: SuperUserDialogType.sendDiagnostics);
       }
-      // Quest succesfully finished!
-      await dialogService.showCustomDialog(
-        variant: DialogType.CollectCredits,
-        data: activeQuestService.previouslyFinishedQuest!,
-      );
-      replaceWithMainView(index: BottomNavBarIndex.quest);
-      setBusy(false);
-      return true;
+
+      // will reset activeQuest
+      await activeQuestService.cancelIncompleteQuest();
+
+      resetPreviousQuest();
+      popQuestDetails();
+
+      //replaceWithMainView(index: BottomNavBarIndex.quest);
+      log.i("replaced view with mapView");
     }
     setBusy(false);
   }

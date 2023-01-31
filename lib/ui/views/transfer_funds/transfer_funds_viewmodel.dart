@@ -162,9 +162,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
               type == TransferType.Sponsor2ExplorerCredits) {
             // navigate back to home
             popView();
-          } else {
-            // clear view
-            clearTillFirstAndShowExplorerHomeScreen();
           }
           return true;
         }
@@ -343,20 +340,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
         title: "Not yet implemented.", message: "I know... it's sad");
   }
 
-  ////////////////////////////////////////////////////////////////
-  // Navigations
-  //
-  void clearTillFirstAndShowExplorerHomeScreen() {
-    _navigationService.clearTillFirstAndShow(Routes.bottomBarLayoutTemplateView,
-        arguments:
-            BottomBarLayoutTemplateViewArguments(userRole: UserRole.explorer));
-  }
-
-  void clearTillFirstAndShowSponsorHomeScreen() {
-    _navigationService.clearTillFirstAndShow(Routes.bottomBarLayoutTemplateView,
-        arguments:
-            BottomBarLayoutTemplateViewArguments(userRole: UserRole.sponsor));
-  }
 
   ////////////////////////////////////////////////////////////////
   /// Clean-up

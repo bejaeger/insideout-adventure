@@ -175,26 +175,19 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/map_style.txt
     - assets/DayStyle.json
-    - assets/PokemonStyle.json
     - assets/hercules_world_logo.png
-    - assets/avatars/hercules-avatar.png
     - assets/avatars/chilldude.png
     - assets/avatars/chilldude-head.png
-    - assets/avatars/hercules-avatar2.png    
     - assets/icons/
     - assets/icons/beware.png
     - assets/icons/afk_credits.PNG
     - assets/icons/afk_credits_orig.png
-    - assets/icons/melted-clock.png
     - assets/icons/afk_credits_small.PNG
     - assets/icons/afk_credits_small_orig.png
     - assets/icons/afk_credits_small_colored.PNG
-    - assets/icons/trash_icon.svg
-    - assets/icons/measure-distance.png    
-    - assets/icons/magnet.png
-    - assets/icons/drawing-compass.png
+
+    # TODO: -> Continue to delete assets!
     - assets/icons/treasure.png
     - assets/icons/treasure2.png
     - assets/icons/treasure2_big.png
@@ -235,14 +228,9 @@ flutter:
     - assets/illustrations/wallet_spending.png
     - assets/illustrations/activity_illustration_with_arrows.png
     - assets/images/luz-azul-cielo-azul.jpg
-    # - assets/3d/Black_XBOX_controller.glb
 
-  # To add assets to your application, add an assets section, like this:
-  #assets:
     - .env
     - dotenv
-  #- icons/sem-internet.jpg
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

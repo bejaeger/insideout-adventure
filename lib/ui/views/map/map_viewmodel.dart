@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -70,7 +71,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   // TODO: This function is only called for the explorer!
   Future initializeMapAndMarkers() async {
     if (!isParentAccount) {
-      mapStyle = await rootBundle.loadString('assets/DayStyle.json');
+      mapStyle = await rootBundle.loadString(kMapStylePath);
     }
     if (hasActiveQuest) return;
     initialized = false;

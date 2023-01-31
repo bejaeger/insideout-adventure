@@ -99,8 +99,7 @@ class QuestLists extends StatelessWidget {
                   ...model.questTypes
                       .map(
                         (e) => QuestTypeCard(
-                          onPressed: () =>
-                              model.navigateToQuestsOfSpecificTypeView(e),
+                          onPressed: model.showNotImplementedSnackbar,
                           category: e,
                           backgroundColor: getColorOfType(e),
                         ),
