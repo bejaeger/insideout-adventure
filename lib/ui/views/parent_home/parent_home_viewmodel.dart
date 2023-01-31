@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -27,7 +26,6 @@ class ParentHomeViewModel extends TransferBaseViewModel {
           .toList();
   Map<String, ScreenTimeSession> get childScreenTimeSessionsActiveMap =>
       screenTimeService.supportedExplorerScreenTimeSessionsActive;
-
   List<dynamic> get sortedHistory => userService.sortedHistory();
   Map<String, int> get totalChildScreenTimeLastDays =>
       userService.totalChildScreenTimeLastDays();
@@ -46,6 +44,7 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   bool navigatingToActiveScreenTimeView = false;
 
   //  ---------------------------------
+  // functions
   String explorerNameFromUid(String uid) {
     return userService.explorerNameFromUid(uid);
   }
@@ -181,23 +180,6 @@ class ParentHomeViewModel extends TransferBaseViewModel {
 
   // ------------------------------------------------------
   // bottom sheets
-  Future showAddExplorerBottomSheet() async {
-    // ! NOT FOR MVP
-    // final result = await _bottomSheetService.showBottomSheet(
-    //   barrierDismissible: true,
-    //   title: 'Create new account or search for existing child account?',
-    //   confirmButtonTitle: 'Create New Child Account',
-    //   cancelButtonTitle: 'Search',
-    // );
-    // if (result?.confirmed == true) {
-    //   await navigationService.navigateTo(Routes.addExplorerView);
-    // } else if (result?.confirmed == false) {
-    //   await navigationService.navigateTo(Routes.searchExplorerView);
-    // }
-    // ! FOR MVP WE ONLY ALLOW CREATING CHILD ACCOUNTS
-    await navigationService.navigateTo(Routes.createExplorerView);
-  }
-
   void showSwitchAreaBottomSheet() async {
     await bottomSheetService.showCustomSheet(
         variant: BottomSheetType.switchArea);
@@ -223,8 +205,6 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   @override
   void dispose() {
     super.dispose();
-    log.wtf("Dispose parent_home_viewmodel.dart");
-    // alternative is to use the parent_home_viewmodel.dart as singleton and never dispose the viewmodel!
-    // screenTimeService.cancelOnlyActiveScreenTimeSubjectListenersAll();
+    log.wtf("Disposed parent_home_viewmodel.dart");
   }
 }

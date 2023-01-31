@@ -102,7 +102,7 @@ class ParentHomeView extends StatelessWidget {
                             verticalSpaceSmall,
                             SectionHeader(
                               title: "Children",
-                              onButtonTap: model.showAddExplorerBottomSheet,
+                              onButtonTap: model.navToCreateChildAccount,
                               buttonIcon: Container(
                                 alignment: Alignment.centerRight,
                                 padding: const EdgeInsets.only(right: 5.0),
@@ -119,7 +119,7 @@ class ParentHomeView extends StatelessWidget {
                                   : Padding(
                                       padding: const EdgeInsets.all(20.0),
                                       child: AfkCreditsButton(
-                                        onTap: model.showAddExplorerBottomSheet,
+                                        onTap: model.navToCreateChildAccount,
                                         title: "Create child account",
                                         height: 80,
                                         //imagePath: ImagePath.peopleHoldingHands,
