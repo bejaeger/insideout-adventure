@@ -1,4 +1,3 @@
-import 'dart:io' show Platform;
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/notifications/notification_controller.dart';
 import 'package:afkcredits/services/permission_service.dart';
@@ -23,18 +22,6 @@ class StartUpViewModel extends TransferBaseViewModel {
     NotificationController().initializeNotificationsEventListeners();
     await _environmentService.initialise();
 
-    // TODO: Likely deprecated
-    //final placesKey =  _environment.getValue(key)
-    // if (!kIsWeb) {
-    //   // Platform call causes crash when running on web (22.02.22)
-    //   if (Platform.isIOS) {
-    //     _placesService.initialize(
-    //         apiKey: _environmentService.getValue(GoogleMapsEnvKeyIOS));
-    //   } else if (Platform.isAndroid) {
-    //     _placesService.initialize(
-    //         apiKey: _environmentService.getValue(GoogleMapsEnvKey));
-    //   }
-    // }
     // TODO: Check for network connection!
 
     try {
@@ -75,27 +62,15 @@ class StartUpViewModel extends TransferBaseViewModel {
         } else {
           final currentUser = userService.currentUser;
           log.v('User sync complete. User profile: $currentUser');
-
-          // ? Check if all permissions are given
           if (!(await _permissionService.allPermissionsProvided())) {
             await navigationService.navigateTo(Routes.permissionsView);
           }
-
-          // TODO: check whether there is an active screen time and if yes navigate to it, potentially handling completion event which includes an update of the database
-          // final String? id = await _localStorageService.getFromDisk(
-          //     key: kLocalStorageScreenTimeSessionKey);
-          // if (id != null && localUserRole == UserRole.explorer) {
-          //   // FOUND SCREEN TIME! Navigate to screen time view
-          //   log.i("Found active screen time, navigating to active view");
-          //   navToActiveScreenTimeView(sessionId: id);
-          // } else {
           if (localUserRole == UserRole.adminMaster) {
             navToAdminHomeView(role: localUserRole!);
           } else {
             await replaceWithHomeView(
                 showBewareDialog: true, showNumberQuestsDialog: true);
           }
-//          }
         }
       } else {
         log.v('No user on disk, navigate to the LoginView');

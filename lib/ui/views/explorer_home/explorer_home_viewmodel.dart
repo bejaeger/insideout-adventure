@@ -331,16 +331,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
             initialBottomNavBarIndex: BottomNavBarIndex.giftcard));
   }
 
-  void navigateToAchievementsView() {
-    navigationService.navigateTo(Routes.historyAndAchievementsView,
-        arguments: HistoryAndAchievementsViewArguments(initialIndex: 1));
-  }
-
-  void navigateToQuestHistoryView() {
-    navigationService.navigateTo(Routes.historyAndAchievementsView,
-        arguments: HistoryAndAchievementsViewArguments(initialIndex: 0));
-  }
-
   //-----------------------------------------
   // Some R & D
   // TO BE DEPRECATED!

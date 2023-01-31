@@ -5,7 +5,6 @@ import 'package:afkcredits/ui/widgets/activity_conversion_icon.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits/ui/widgets/screen_time_conversion_icon.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:introduction_screen/introduction_screen.dart';

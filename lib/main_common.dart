@@ -106,7 +106,6 @@ void mainCommon(Flavor flavor) async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return LifeCycleManager(
@@ -146,13 +145,6 @@ class MyApp extends StatelessWidget {
             ),
             navigatorKey: StackedService.navigatorKey,
             onGenerateRoute: StackedRouter().onGenerateRoute,
-
-            ///////////////////////////
-            /// Use the following with the AFK Custom bottom nav bar
-            // builder: (context, child) => LayoutTemplateView(childView: child!),
-
-            /////////////////////////////
-            /// Use this when persistent nav bar is used
             home: StartUpView()),
       ),
     );

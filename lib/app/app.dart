@@ -103,7 +103,6 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: CreateQuestView),
     MaterialRoute(page: ManageQuestView),
     MaterialRoute(page: QuestsOverviewView),
-    MaterialRoute(page: HistoryAndAchievementsView),
     MaterialRoute(page: ARObjectAndroidView),
     MaterialRoute(page: ARObjectIosView),
     MaterialRoute(page: ActiveScreenTimeView),

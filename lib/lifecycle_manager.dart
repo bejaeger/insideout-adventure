@@ -5,9 +5,12 @@ import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:flutter/material.dart';
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:stacked_services/stacked_services.dart';
 
+// Lifecycle manager of app 
+// TODO: Add link to stacked video
 /// Stop and start long running services
+/// 
+/// 
 class LifeCycleManager extends StatefulWidget {
   final Widget child;
 
@@ -20,10 +23,8 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final ScreenTimeService screenTimeService = locator<ScreenTimeService>();
-  final NavigationService _navigationService = locator<NavigationService>();
   List<PausableService? Function()> servicesToManage = [];
 
-  // Get all services
   @override
   Widget build(BuildContext context) {
     return widget.child;
@@ -61,25 +62,5 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
         }
       },
     );
-
-    // HACKY SOLUTION!
-    // if (screenTimeService.scheduledScreenTimeSession != null) {
-    //   print(
-    //       "LIFECYCLE MANAGER: Waiting for screen time start counter to execute");
-    //   // await Future.delayed(Duration(seconds: screenTimeService.counter));
-    //   if (state != AppLifecycleState.resumed) {
-    //     if (screenTimeService.scheduledScreenTimeSession != null) {
-    //       await NotificationsService()
-    //           .maybeCreatePermanentIsUsingScreenTimeNotification(
-    //               session: screenTimeService.scheduledScreenTimeSession!);
-    //     }
-    //     if (screenTimeService.scheduledScreenTimeSession != null) {
-    //       await NotificationsService()
-    //           .maybeCreateScheduledIsUsingScreenTimeNotification(
-    //               session: screenTimeService.scheduledScreenTimeSession!);
-    //     }
-    //     screenTimeService.scheduledScreenTimeSession = null;
-    //   }
-    // }
   }
 }

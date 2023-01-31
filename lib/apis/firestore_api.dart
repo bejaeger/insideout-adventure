@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
@@ -51,7 +50,6 @@ class FirestoreApi {
   // ignore: close_sinks
 
   Stream<dynamic>? query;
-  StreamSubscription? subscription;
 
   StreamSubscription? publicQuestsStreamSubscription;
   Map<String, StreamSubscription?> parentQuestsStreamSubscriptions = {};
@@ -931,23 +929,6 @@ class FirestoreApi {
   Stream<List<Achievement>> getAchievementsStream({required String uid}) {
     // TODO: Dummy for now!
     return Stream.value(getDummyAchievements());
-    // try {
-    //   final returnStream = activatedQuestsCollection
-    //       .where("uids", arrayContains: uid)
-    //       .orderBy("createdAt", descending: true)
-    //       .where("status",
-    //           isEqualTo: describeEnum(QuestStatus.success.toString()))
-    //       .snapshots()
-    //       .map((event) => event.docs
-    //           .map((doc) => ActivatedQuest.fromJson(doc.data()))
-    //           .toList());
-    //   return returnStream;
-    // } catch (e) {
-    //   throw FirestoreApiException(
-    //       message:
-    //           "Unknown expection when listening to past quests the user has successfully done",
-    //       devDetails: '$e');
-    // }
   }
 
   ///////////////////////////////////////////////////////
