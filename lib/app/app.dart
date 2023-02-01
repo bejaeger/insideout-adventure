@@ -1,4 +1,3 @@
-import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/notifications/notifications_service.dart';
@@ -99,7 +98,6 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: EnvironmentService),
     LazySingleton(classType: UserService),
     LazySingleton(classType: FirestoreApi),
-    LazySingleton(classType: CloudFunctionsApi),
     LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: AFKMarkersPositionService),
     LazySingleton(classType: AppConfigProvider),

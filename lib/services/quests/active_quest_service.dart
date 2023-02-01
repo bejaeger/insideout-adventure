@@ -34,7 +34,6 @@ class ActiveQuestService with ReactiveServiceMixin {
   final log = getLogger("ActiveQuestService");
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final MarkerService _markerService = locator<MarkerService>();
-  final CloudFunctionsApi _cloudFunctionsApi = locator<CloudFunctionsApi>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final StopWatchService _stopWatchService =
       locator<StopWatchService>(); // Create instance.
