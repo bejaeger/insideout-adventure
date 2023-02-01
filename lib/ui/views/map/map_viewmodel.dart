@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
@@ -10,7 +9,6 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
@@ -42,14 +40,13 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   });
 
   // -----------------------------------------------
-  // Services
+  // services
   final log = getLogger('MapViewModel');
   final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
-  final _qrCodeService = locator<QRCodeService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
 
   // -----------------------------
-  // Getters
+  // getters
   bool get isAvatarView => mapStateService.isAvatarView;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
   bool get isFingerOnScreen => mapStateService.isFingerOnScreen;
@@ -58,7 +55,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   // bool isRotating = false;
 
   // -------------------------------------------------
-  // State variables
+  // state 
   StreamSubscription? _bearingListenerSubscription;
   StreamSubscription? _mapEventListenerSubscription;
   bool initialized = false;
@@ -66,8 +63,10 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   bool get showReloadQuestButton => questService.showReloadQuestButton;
   bool get isReloadingQuests => questService.isReloadingQuests;
 
-  // last element of cameraBearingZoom determines whether listener should be fired!
+  // ------------------------------------------------
+  // methods
 
+  // last element of cameraBearingZoom determines whether listener should be fired!
   // TODO: This function is only called for the explorer!
   Future initializeMapAndMarkers() async {
     if (!isParentAccount) {

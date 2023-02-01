@@ -50,7 +50,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   final GeolocationService geolocationService = locator<GeolocationService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
-  final QRCodeService qrCodeService = locator<QRCodeService>();
   final GamificationService gamificationService =
       locator<GamificationService>();
   final ScreenTimeService screenTimeService = locator<ScreenTimeService>();

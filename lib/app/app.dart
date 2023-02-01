@@ -15,7 +15,6 @@ import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/apis/notion_api.dart';
 import 'package:afkcredits/services/pedometer/pedometer_service.dart';
 import 'package:afkcredits/services/permission_service.dart';
-import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
@@ -106,9 +105,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: FlutterSecureStorage),
     LazySingleton(classType: QuestService),
     LazySingleton(classType: ActiveQuestService),
-    // LazySingleton(classType: AFKCreditsAuthenticationResultService),
     LazySingleton(classType: StopWatchService),
-    LazySingleton(classType: QRCodeService),
     LazySingleton(classType: MarkerService),
     LazySingleton(classType: QuestTestingService),
     LazySingleton(classType: GamificationService),

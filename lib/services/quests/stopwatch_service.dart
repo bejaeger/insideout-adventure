@@ -176,20 +176,6 @@ class StopWatchService extends PausableService {
     onChangeRawSecond = onChangeSecond;
   }
 
-  // void lap() {
-  //   if (isRunning) {
-  //     final rawValue = _rawTimeController.value;
-  //     _records.add(StopWatchRecord(
-  //       rawValue: rawValue,
-  //       hours: getRawHours(rawValue),
-  //       minute: getRawMinute(rawValue),
-  //       second: getRawSecond(rawValue),
-  //       displayTime: getDisplayTime(rawValue, hours: isLapHours),
-  //     ));
-  //     _recordsController.add(_records);
-  //   }
-  // }
-
   // -------------------------------------
   // preset time functionality
   void setPresetHoursTime(int value) =>

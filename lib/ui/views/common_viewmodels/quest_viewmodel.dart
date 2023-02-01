@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -18,26 +16,24 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
   final log = getLogger("QuestViewModel");
 
-  // -----------------------------------------------
-  // Setters
+  // -----------------------------------------
+  // services
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
-  final QRCodeService qrCodeService = locator<QRCodeService>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
-  // ------------------------------------------
-  // Getters
+  // -----------------------------------------
+  // getters
   bool get isDevFlavor => appConfigProvider.flavor == Flavor.dev;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
   List<Quest> get nearbyQuestsTodo => questService.getNearByQuestTodo;
 
   // -----------------------------------------
-  // State
+  // state
   List<double> distancesFromQuests = [];
 
-  // ---------------------------------------
-  // Methods
-
+  // -----------------------------------------
+  // methods
   List<Quest> getQuestsOfType({required QuestType type}) {
     return questService.extractQuestsOfType(
         quests: nearbyQuests, questType: type);
