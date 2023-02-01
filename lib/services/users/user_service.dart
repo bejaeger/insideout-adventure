@@ -14,7 +14,6 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
-import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -218,18 +217,6 @@ class UserService {
             "User data could not be created in our databank. Please try again later or contact support with error messaage: ${e.toString()}",
       );
     }
-  }
-
-  Future<void> createUserFavouritePlaces(
-      {required String userId, required UserFavPlaces favouritePlaces}) async {
-    await _firestoreApi.createUserFavouritePlaces(
-        userId: userId, favouritePlaces: favouritePlaces);
-  }
-
-//Get User Favourite Places
-  Future<List<UserFavPlaces>?> getUserFavouritePlaces(
-      {required String userId}) async {
-    return await _firestoreApi.getUserFavouritePlaces(userId: userId);
   }
 
   Future<String?> getLocallyLoggedInUserId() async {

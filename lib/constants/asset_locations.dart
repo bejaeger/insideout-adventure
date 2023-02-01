@@ -19,6 +19,7 @@ const String kHerculesWorldLogo = "assets/hercules_world_logo.png";
 const String kBewareOfSurroundingsIcon = "assets/icons/beware.png";
 const String kWalkingIcon = "assets/icons/walk.png";
 const String kActivityIcon = "assets/icons/run.png";
+const String kPinInAreaIcon = "assets/icons/location-icon.ico";
 
 const String kScreenTimeIcon = "assets/icons/computer.png";
 const String kScreenTimeIcon2 = "assets/icons/person.png";

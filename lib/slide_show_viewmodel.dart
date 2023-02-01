@@ -40,13 +40,14 @@ class SlideShowViewModel extends BaseModel {
   }
 
   Future getPictures() async {
-    firestoreApi.getPicturesStream().listen(
-      (image) async {
-        urls = image.imageUrls;
-        await cloudStorageService.loadPictures(urls: urls);
-        notifyListeners();
-      },
-    );
+    // NOT IMPLEMENTED
+    // firestoreApi.getPicturesStream().listen(
+    //   (image) async {
+    //     urls = image.imageUrls;
+    //     await cloudStorageService.loadPictures(urls: urls);
+    //     notifyListeners();
+    //   },
+    // );
     notifyListeners();    
   }
 }

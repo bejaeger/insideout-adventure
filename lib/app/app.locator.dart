@@ -15,7 +15,6 @@ import 'package:stacked_services/src/dialog/dialog_service.dart';
 import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_services/src/snackbar/snackbar_service.dart';
 
-import '../apis/cloud_functions_api.dart';
 import '../apis/firestore_api.dart';
 import '../apis/notion_api.dart';
 import '../app_config_provider.dart';
@@ -32,9 +31,7 @@ import '../services/local_storage_service.dart';
 import '../services/maps/google_map_service.dart';
 import '../services/maps/map_state_service.dart';
 import '../services/markers/marker_service.dart';
-import '../services/pedometer/pedometer_service.dart';
 import '../services/permission_service.dart';
-import '../services/qrcodes/qrcode_service.dart';
 import '../services/quest_testing_service/quest_testing_service.dart';
 import '../services/quests/active_quest_service.dart';
 import '../services/quests/quest_service.dart';
@@ -64,7 +61,6 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => EnvironmentService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => FirestoreApi());
-  locator.registerLazySingleton(() => CloudFunctionsApi());
   locator.registerLazySingleton(() => FirebaseAuthenticationService());
   locator.registerLazySingleton(() => AFKMarkersPositionService());
   locator.registerLazySingleton(() => AppConfigProvider());
@@ -74,12 +70,10 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => QuestService());
   locator.registerLazySingleton(() => ActiveQuestService());
   locator.registerLazySingleton(() => StopWatchService());
-  locator.registerLazySingleton(() => QRCodeService());
   locator.registerLazySingleton(() => MarkerService());
   locator.registerLazySingleton(() => QuestTestingService());
   locator.registerLazySingleton(() => GamificationService());
   locator.registerLazySingleton(() => MapStateService());
-  locator.registerLazySingleton(() => PedometerService());
   locator.registerLazySingleton(() => CloudStorageService());
   locator.registerLazySingleton(() => ImageSelector());
   locator.registerLazySingleton(() => NotionApi());

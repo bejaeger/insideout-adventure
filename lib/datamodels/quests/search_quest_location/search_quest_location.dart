@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:geolocator/geolocator.dart';
 
 part 'search_quest_location.freezed.dart';
 part 'search_quest_location.g.dart';

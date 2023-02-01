@@ -205,6 +205,7 @@ flutter:
     - assets/illustrations/wallet_earning.png
     - assets/illustrations/wallet_spending.png
     - assets/images/luz-azul-cielo-azul.jpg
+    - assets/icons/location-icon.ico
 
     - .env
     - dotenv

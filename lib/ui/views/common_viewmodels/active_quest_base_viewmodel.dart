@@ -1,16 +1,12 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/super_user_dialog_type.dart';
-import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
@@ -394,13 +390,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
                 title: e.prettyDetails, buttonTitle: 'Ok');
           }
           return CollectCreditsStatus.todo;
-        } else if (e is CloudFunctionsApiException) {
-          log.e(e);
-          if (showDialogs) {
-            await dialogService.showDialog(
-                title: e.prettyDetails, buttonTitle: 'Ok');
-          }
-          return CollectCreditsStatus.noNetwork;
         } else {
           log.e("Unknown error occured from evaluateAndFinishQuest");
           setBusy(false);

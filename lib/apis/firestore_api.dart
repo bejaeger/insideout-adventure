@@ -7,22 +7,16 @@ import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/faqs/faqs.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
 import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
-import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
-import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
-import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
-import 'package:afkcredits/datamodels/playground/images.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
-import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -31,13 +25,11 @@ import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
   final firestoreInstance = FirebaseFirestore.instance;
   GeoFirePoint? center;
-  DocumentReference? _documentReference;
   List<Quest>? newQuestResult;
 
   Geoflutterfire geo = Geoflutterfire();
@@ -89,21 +81,6 @@ class FirestoreApi {
     log.v('Stats document added to ${docRef.path}');
   }
 
-  //Create a List of My Favourite Places
-  Future<void> createUserFavouritePlaces(
-      {required userId, required UserFavPlaces favouritePlaces}) async {
-    try {
-      final _docRef = getUserFavouritePlacesDocument(uid: userId);
-      await _docRef.set(favouritePlaces.toJson());
-      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
-      log.v('Your Document Reference is: ${_docRef.toString()}');
-    } catch (e) {
-      throw FirestoreApiException(
-          message: 'Failed To Insert Places',
-          devDetails: 'Failed Caused By $e.');
-    }
-  }
-
   // when explorer is added without authentication so without ID
   // we need to generate that id and add it to the datamodel.
   DocumentReference createUserDocument() {
@@ -153,28 +130,6 @@ class FirestoreApi {
       return UserAdmin.fromJson(userData! as Map<String, dynamic>);
     } else {
       throw FirestoreApiException(message: 'You have passed an empty Id');
-    }
-  }
-
-// Get User Favourite Places.
-  Future<List<UserFavPlaces>?>? getUserFavouritePlaces(
-      {required String userId}) async {
-    final userFavouritePlaces = await usersCollection
-        .doc(userId)
-        .collection(userFavouritePlacesCollectionKey)
-        .get();
-
-    if (userFavouritePlaces.docs.isNotEmpty) {
-      try {
-        return userFavouritePlaces.docs
-            .map((docs) => UserFavPlaces.fromJson(docs.data()))
-            .toList();
-      } catch (e) {
-        throw FirestoreApiException(
-            message: 'Failed to get the Places', devDetails: '$e');
-      }
-    } else {
-      return null;
     }
   }
 
@@ -788,24 +743,6 @@ class FirestoreApi {
           "screenshot document with id $questType does not exist in screenshots firestore collection");
     }
     return null;
-  }
-
-  Stream<Images> getPicturesStream() {
-    return picturesCollection.doc("pictures").snapshots().map(
-      (event) {
-        if (!event.exists || event.data() == null) {
-          throw FirestoreApiException(message: "Pictures stream not valid!");
-        }
-        return Images.fromJson(event.data()! as Map<String, dynamic>);
-      },
-    );
-  }
-
-  Future addPictureUrl({required Images images}) async {
-    log.v("get list of screen shot names");
-    await picturesCollection.doc("pictures").update(
-          images.toJson(),
-        );
   }
 
   ///////////////////////////////////////////////////
