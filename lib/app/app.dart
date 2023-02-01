@@ -27,9 +27,6 @@ import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.d
 import 'package:afkcredits/ui/views/active_screen_time/screen_time_requested_view.dart';
 import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_view.dart';
 import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart';
-import 'package:afkcredits/ui/views/admin/admin_home_view.dart';
-import 'package:afkcredits/ui/views/admin/admin_user/home/home_view.dart';
-import 'package:afkcredits/ui/views/admin/admin_user/markers/add_markers/add_markers_view.dart';
 import 'package:afkcredits/ui/views/ar_view/ar_object_ios_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
@@ -46,14 +43,9 @@ import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart';
 import 'package:afkcredits/ui/views/permissions/permissions_view.dart';
-import 'package:afkcredits/ui/views/qrcode/qrcode_view_example.dart';
-import 'package:afkcredits/ui/views/qrcode/qrcode_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/edit_quest/edit_quest_view.dart';
-import 'package:afkcredits/ui/views/quests_overview/manage_quest/manage_quest_view.dart';
-import 'package:afkcredits/ui/views/quests_overview/quests_overview_view.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart';
-import 'package:afkcredits/ui/views/search_explorer/search_explorer_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart';
@@ -66,13 +58,11 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../services/afk_markers_positions_services/afk_markers_positions_service.dart';
-import '../ui/views/admin/admin_user/markers/single/single_marker_view.dart';
 import '../ui/views/ar_view/ar_object_android_view.dart';
 
 @StackedApp(
   routes: [
     MaterialRoute(page: ParentHomeView),
-    MaterialRoute(page: SingleMarkerView),
     MaterialRoute(page: UpdatingQuestView),
     MaterialRoute(page: ExplorerHomeView),
     MaterialRoute(page: MapOverviewView),
@@ -81,20 +71,12 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: CreateAccountUserRoleView),
     MaterialRoute(page: StartUpView, initial: true),
     MaterialRoute(page: StartUpScreenTimeView),
-    MaterialRoute(page: HomeView),
-    MaterialRoute(page: AdminHomeView),
     MaterialRoute(page: SelectRoleAfterLoginView),
     MaterialRoute(page: CreateExplorerView),
-    MaterialRoute(page: SearchExplorerView),
     MaterialRoute(page: SingleChildStatView),
     MaterialRoute(page: TransferFundsView),
-    MaterialRoute(page: QRCodeView),
-    MaterialRoute(page: QRCodeViewExample),
-    MaterialRoute(page: AddMarkersView),
     MaterialRoute(page: SetPinView),
     MaterialRoute(page: CreateQuestView),
-    MaterialRoute(page: ManageQuestView),
-    MaterialRoute(page: QuestsOverviewView),
     MaterialRoute(page: ARObjectAndroidView),
     MaterialRoute(page: ARObjectIosView),
     MaterialRoute(page: ActiveScreenTimeView),

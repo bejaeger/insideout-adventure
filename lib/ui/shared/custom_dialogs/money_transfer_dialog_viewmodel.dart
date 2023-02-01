@@ -17,7 +17,7 @@ class MoneyTransferDialogViewModel extends BaseModel {
   String? mainButtonTitle;
   String? secondaryButtonTitle;
 
-  waitForTransfer({required dynamic request}) async {
+  Future waitForTransfer({required dynamic request}) async {
     if (request.data["moneyTransferStatus"] == null) {
       log.w(
           "Somehow the completer could not be parsed to the money transfer dialog!");

@@ -122,42 +122,6 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
     }
   }
 
-  // TODO: MAYBE this can go into the base_viewmodel as it's needed also in other screens!
-  Future scanQrCode() async {
-    // navigate to qr code view, validate results in quest service, and continue
-    MarkerAnalysisResult result = await navigateToQrcodeViewAndReturnResult();
-    if (result.isEmpty) {
-      log.wtf("The object QuestQRCodeScanResult is empty!");
-      return;
-    }
-    if (result.hasError) {
-      log.e("Error occured: ${result.errorMessage}");
-      dialogService.showDialog(
-        title: "Failed to collect marker!",
-        description: result.errorMessage!,
-      );
-      return;
-    }
-    return await handleMarkerAnalysisResult(result);
-  }
-
-  Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
-    final marker = await navigationService.navigateTo(Routes.qRCodeView);
-    if (useSuperUserFeatures && marker != null) {
-      final adminMode = await showAdminDialogAndGetResponse();
-      if (adminMode == true) {
-        String qrCodeString =
-            qrCodeService.getQrCodeStringFromMarker(marker: marker);
-        await navigationService.navigateTo(Routes.qRCodeView,
-            arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-        return MarkerAnalysisResult.empty();
-      }
-    }
-    MarkerAnalysisResult scanResult =
-        await activeQuestService.analyzeMarkerAndUpdateQuest(marker: marker);
-    return scanResult;
-  }
-
   ////////////////////////////
   // can be overriden?
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {

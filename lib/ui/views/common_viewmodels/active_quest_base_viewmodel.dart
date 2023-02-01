@@ -367,14 +367,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     notifyListeners();
   }
 
-  // show Qr Code instead of animating to marker
-  void displayQrCode(AFKMarker marker) {
-    String qrCodeString =
-        qrCodeService.getQrCodeStringFromMarker(marker: marker);
-    navigationService.navigateTo(Routes.qRCodeView,
-        arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-  }
-
   // showDialogs = true determines that dialogs should be shown on exceptions
   // showDialogs = false specifies that exceptions are handled by returning
   // adequate data;

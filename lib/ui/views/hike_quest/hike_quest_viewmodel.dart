@@ -156,7 +156,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       vibrateAlert();
       activeQuestService.pausePositionListener();
 
-      final result = await showQrCodeIsInAreaDialog();
+      final result = await showIsInAreaDialog();
 
       if (result?.confirmed != true) {
         log.i(
@@ -207,15 +207,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     }
   }
 
-  Future showQrCodeIsInAreaDialog() async {
-    if (currentQuest?.type == QuestType.QRCodeHike) {
-      return await dialogService.showCustomDialog(
-        variant: DialogType.QrCodeInArea,
-        data: {
-          "function": scanQrCode,
-        },
-      );
-    } else if (currentQuest?.type == QuestType.GPSAreaHike) {
+  Future showIsInAreaDialog() async {
+    if (currentQuest?.type == QuestType.GPSAreaHike) {
       return await dialogService.showCustomDialog(
         variant: DialogType.CheckpointInArea,
         barrierDismissible: true,
@@ -275,7 +268,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
             message: "Find and catch the credits",
             duration: Duration(seconds: 1));
         return false;
-      } 
+      }
     }
     MarkerAnalysisResult markerResult = await activeQuestService
         .analyzeMarkerAndUpdateQuest(marker: markerInArea);

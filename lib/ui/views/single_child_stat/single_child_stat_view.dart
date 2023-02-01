@@ -362,13 +362,6 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                           child: Icon(Icons.arrow_downward_rounded,
                               size: 40, color: kcPrimaryColor),
                         ),
-                      // Image.asset(
-                      //   kIllustrationActivity,
-                      //   fit: BoxFit.contain,
-                      //   height: 100,
-                      //   width: 300,
-                      //   alignment: Alignment.center,
-                      // ),
                     ],
                   ),
           ),

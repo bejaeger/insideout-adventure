@@ -23,63 +23,33 @@ class QuestLists extends StatelessWidget {
           if (model.currentUser.role == UserRole.adminMaster)
             SectionHeader(title: "Create "),
           Container(
-            height: 220,
-            child: model.currentUser.role != UserRole.adminMaster
-                ? ListView(
-                    //itemExtent: 120,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ...model.nearbyQuests
-                          .asMap()
-                          .map((index, quest) {
-                            return MapEntry(
-                              index,
-                              QuestInfoCard(
-                                height: 200,
-                                marginRight: 5,
-                                width: screenWidth(context, percentage: 0.8),
-                                quest: quest,
-                                subtitle: quest.description,
-                                onCardPressed: () async =>
-                                    await model.onQuestInListTapped(quest),
-                              ),
-                            );
-                          })
-                          .values
-                          .toList(),
-                      verticalSpaceLarge,
-                    ],
-                  )
-                //:Todo Code To be Removed
-                : Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: assetsQuestImages.length,
-                      itemBuilder: (BuildContext context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            model.navigateToQuestViews(index: index);
-                          },
-                          child: Container(
-                            height: 250,
-                            width: 350,
-                            child: Card(
-                              semanticContainer: true,
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              child: Image.asset(assetsQuestImages[index]
-                                  //fit: BoxFit.fill,
-                                  ),
-                              elevation: 5,
-                            ),
+              height: 220,
+              child: ListView(
+                //itemExtent: 120,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: [
+                  ...model.nearbyQuests
+                      .asMap()
+                      .map((index, quest) {
+                        return MapEntry(
+                          index,
+                          QuestInfoCard(
+                            height: 200,
+                            marginRight: 5,
+                            width: screenWidth(context, percentage: 0.8),
+                            quest: quest,
+                            subtitle: quest.description,
+                            onCardPressed: () async =>
+                                await model.onQuestInListTapped(quest),
                           ),
                         );
-                      },
-                    ),
-                  ),
-          ),
+                      })
+                      .values
+                      .toList(),
+                  verticalSpaceLarge,
+                ],
+              )),
           verticalSpaceSmall,
           // if (model.currentUser.role != UserRole.adminMaster)
           //   SectionHeader(title: "Types"),

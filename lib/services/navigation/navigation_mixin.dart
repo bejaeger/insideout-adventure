@@ -27,18 +27,6 @@ mixin NavigationMixin {
     );
   }
 
-  void navToSingleMarkerView() {
-    _navigationService.navigateTo(
-      Routes.singleMarkerView,
-    );
-  }
-
-  void navToQrcodeView() {
-    _navigationService.navigateTo(
-      Routes.qRCodeView,
-    );
-  }
-
   void navToExplorerCreateAccount({required UserRole role}) {
     _navigationService.replaceWith(Routes.createAccountView,
         arguments: CreateAccountViewArguments(role: role));
@@ -104,10 +92,6 @@ mixin NavigationMixin {
 
   void navToParentMapView() {
     _navigationService.navigateTo(Routes.parentMapView);
-  }
-
-  void navToQuestOverView() {
-    _navigationService.navigateTo(Routes.questsOverviewView);
   }
 
   void navToCreateQuest({bool fromMap = false}) {

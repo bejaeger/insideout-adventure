@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
@@ -14,7 +12,6 @@ import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/money_source.dart';
 import 'package:afkcredits/enums/money_transfer_dialog_status.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
-import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
@@ -71,11 +68,9 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
           type == TransferType.Explorer2AFK) {
         return await handleTransfer(type: type);
       }
-      //await createStripePayment();
       else if (type == TransferType.Sponsor2ExplorerCredits) {
         return await handleTransfer(type: type);
       } else {
-        //await createStripePayment();
         _snackbarService!.showSnackbar(
             title: "Not yet implemented.", message: "I know... it's sad");
       }

@@ -426,22 +426,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       required bool completed,
       Future Function(MarkerAnalysisResult)?
           handleMarkerAnalysisResultCustom}) async {
-    // --------------------------------------------
-    // Maybe use some super user features
-    dynamic adminMode = false;
-    if (useSuperUserFeatures) {
-      adminMode = await showAdminDialogAndGetResponse();
-      if (adminMode == true) {
-        String qrCodeString =
-            _qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
-        navigationService.navigateTo(Routes.qRCodeView,
-            arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-      }
-    }
 
-    // ------------------------------------------------
-    // normal function to be executed when marker is tapped
-    if (!useSuperUserFeatures || adminMode == false) {
+    if (!useSuperUserFeatures) {
       if (hasActiveQuest == false) {
         // -->> BEGIN No active quest
 
@@ -476,9 +462,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
             showMarkerInfoWindowNow(markerId: afkmarker.id);
             await Future.delayed(Duration(milliseconds: 1500));
             hideMarkerInfoWindowNow(markerId: afkmarker.id);
-            // await dialogService.showDialog(
-            //     title: "Checkpoint",
-            //     description: "Start the quest and reach this checkpoint.");
           } else {
             await dialogService.showDialog(
                 title: "Marker",
@@ -490,8 +473,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       } else {
         // -->> BEGIN Has active quest
 
-        // ? DEVELOPMENT FEATURE ONLY!
-        // ? ALLOW testing quests by pressing on markers on map!
+        // ! DEVELOPMENT FEATURE ONLY!
+        // ! ALLOW testing quests by pressing on markers on map!
         log.i("Quest active, handling qrCodeScanEvent");
         if (appConfigProvider.allowDummyMarkerCollection) {
           MarkerAnalysisResult markerResult = await activeQuestService
@@ -509,18 +492,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   Future onAreaTap({required Quest quest, required AFKMarker afkmarker}) async {
     // event triggered when user taps marker
-    dynamic adminMode = false;
-    if (useSuperUserFeatures) {
-      adminMode = await showAdminDialogAndGetResponse();
-      if (adminMode == true) {
-        String qrCodeString =
-            qrCodeService.getQrCodeStringFromMarker(marker: afkmarker);
-        navigationService.navigateTo(Routes.qRCodeView,
-            arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-      }
-    }
-
-    if (!useSuperUserFeatures || adminMode == false) {
+    if (!useSuperUserFeatures) {
       if (afkmarker == quest.startMarker) {
         await dialogService.showDialog(
             title: "The start",

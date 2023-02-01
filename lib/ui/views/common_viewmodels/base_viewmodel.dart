@@ -278,29 +278,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
             "An internal error occured on our side. Sorry, please try again later.");
   }
 
-  // TODO: MAYBE this can go into the base_viewmodel as it's needed also in other screens!
-  Future scanQrCode() async {
-    if (await maybeCheatAndCollectNextMarker()) {
-      return;
-    }
-
-    // navigate to qr code view, validate results in quest service, and continue
-    MarkerAnalysisResult result = await navigateToQrcodeViewAndReturnResult();
-    if (result.isEmpty) {
-      baseModelLog.wtf("The object QuestQRCodeScanResult is empty!");
-      return;
-    }
-    if (result.hasError) {
-      baseModelLog.e("Error occured: ${result.errorMessage}");
-      await dialogService.showDialog(
-        title: "Cannot collect marker!",
-        description: result.errorMessage!,
-      );
-      return;
-    }
-    return await handleMarkerAnalysisResult(result);
-  }
-
   Future maybeCheatAndCollectNextMarker() async {
     if (useSuperUserFeatures) {
       final admin = await showAdminDialogAndGetResponse();
@@ -316,25 +293,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       }
     }
     return false;
-  }
-
-  Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
-    final marker = await navigationService.navigateTo(Routes.qRCodeView);
-    if (useSuperUserFeatures && marker != null) {
-      final adminMode = await showAdminDialogAndGetResponse();
-      if (adminMode == true) {
-        String qrCodeString =
-            qrCodeService.getQrCodeStringFromMarker(marker: marker);
-        await navigationService.navigateTo(Routes.qRCodeView,
-            arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-        return MarkerAnalysisResult.empty();
-      }
-    }
-    validatingMarker = true;
-    MarkerAnalysisResult scanResult =
-        await activeQuestService.analyzeMarkerAndUpdateQuest(marker: marker);
-    validatingMarker = false;
-    return scanResult;
   }
 
   ////////////////////////////
