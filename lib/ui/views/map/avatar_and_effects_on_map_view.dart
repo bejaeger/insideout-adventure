@@ -4,7 +4,6 @@ import 'package:afkcredits/ui/views/map/avatar_and_effects_on_map_viewmodel.dart
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:stacked/stacked.dart';
@@ -80,7 +79,6 @@ class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
                         ..duration = composition.duration
                         ..repeat();
                     },
-                    //frameRate: FrameRate.max,
                   ),
                 ),
               ),
@@ -111,45 +109,7 @@ class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
                           ..repeat();
                       },
                     )
-                    //     // .network(
-                    //     //     // chilling dude
-                    //     //     'https://assets2.lottiefiles.com/packages/lf20_0w4fvbov.json',
-                    //     //     fit: BoxFit.contain,
-                    //     //   )
-                    //     : characterNumber == 1
-                    //         ?
-                    //         // Left!
-                    //         Lottie.asset(
-                    //             kLottieWalkingGirl,
-                    //             frameRate: FrameRate(0.01),
-                    //           )
-                    //         // walking normal girl
-                    //         //'https://assets6.lottiefiles.com/private_files/lf30_afru6l2d.json',
-                    //         //fit: BoxFit.contain,
-                    //         //)
-                    //         : characterNumber == 2
-                    //             ? Lottie.asset(kLottieWalkingBoy)
-                    //             // dude walking to the right
-                    //             // 'https://assets3.lottiefiles.com/packages/lf20_4jip3mqj.json',
-                    //             : Lottie.asset(
-                    //                 // colored stick figure walking to the left
-                    //                 kLottieColoredSportsFigure,
-                    //               )
-                    // characterNumber == 4
-                    //     ? Lottie.network(
-                    //         // colored stick figure walking to the left
-                    //         'https://assets3.lottiefiles.com/packages/lf20_tbbtmun4.json',
-                    //         fit: BoxFit.contain,
-                    //       )
-                    //     : Lottie.asset(kLottieTestV1),
                     ),
-
-                // Lottie.network(
-                //     // weird figure walking to the right
-                //     //'https://raw.githubusercontent.com/xvrh/lottie-flutter/master/example/assets/lottiefiles/walking.json',
-                //     height: 200,
-                //     width: 180,
-                //   ),
               ),
             ),
           ],

@@ -76,29 +76,6 @@ class SelectAvatarDialogView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    //   children: [
-                    //     SelectableBox(
-                    //       selected: model.selectedCharacter == 3,
-                    //       onTap: () => model.selectCharacter(3),
-                    //       child: Lottie.asset(
-                    //         kLottieWalkingBoy,
-                    //         height: 50,
-                    //         frameRate: FrameRate(10),
-                    //       ),
-                    //     ),
-                    //     SelectableBox(
-                    //       selected: model.selectedCharacter == 4,
-                    //       onTap: () => model.selectCharacter(4),
-                    //       child: Lottie.asset(
-                    //         kLottieColoredSportsFigure,
-                    //         height: 50,
-                    //         frameRate: FrameRate(10),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                     verticalSpaceMedium,
                     Stack(
                       children: [
@@ -151,7 +128,6 @@ class SelectAvatarDialogView extends StatelessWidget {
                                       : model.selectedCharacter == 3
                                           ? kLottieWalkingBoy
                                           : kLottieColoredSportsFigure,
-                              //height: model.selectedCharacter == 1 ? 100 : 150,
                             ),
                           ),
                         ),

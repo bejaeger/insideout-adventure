@@ -37,9 +37,6 @@ class SlideShowViewModel extends BaseModel {
         ),
       ),
     );
-
-    // result = await cloudStorageService.uploadImage(
-    //       imageToUpload: selectedImage!, title: "");
   }
 
   Future getPictures() async {

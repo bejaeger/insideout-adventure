@@ -5,7 +5,6 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_result.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class CloudStorageService {
@@ -98,9 +97,6 @@ class CloudStorageService {
       log.e("Could not load screen shot urls. Error: $e");
       exampleScreenShots[questType] = [];
     }
-
-    // final Reference firebaseStorageRef =
-    //     FirebaseStorage.instance.ref().child(imageFileName);
   }
 
   Future loadPictures({required List<String>urls}) async {

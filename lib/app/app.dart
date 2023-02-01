@@ -13,7 +13,6 @@ import 'package:afkcredits/services/maps/google_map_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/apis/notion_api.dart';
-import 'package:afkcredits/services/pedometer/pedometer_service.dart';
 import 'package:afkcredits/services/permission_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -110,7 +109,6 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: QuestTestingService),
     LazySingleton(classType: GamificationService),
     LazySingleton(classType: MapStateService),
-    LazySingleton(classType: PedometerService),
     LazySingleton(classType: CloudStorageService),
     LazySingleton(classType: ImageSelector),
     LazySingleton(classType: NotionApi),

@@ -47,7 +47,6 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final _userService = locator<UserService>();
   Geoflutterfire geo = Geoflutterfire();
 
-  //CameraPosition? _initialCameraPosition;
   final _displaySnackBars = DisplaySnackBars();
   final SnackbarService snackbarService = locator<SnackbarService>();
   final DialogService _dialogService = locator<DialogService>();

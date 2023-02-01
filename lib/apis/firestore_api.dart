@@ -37,17 +37,10 @@ class FirestoreApi {
   final log = getLogger('FirestoreApi');
   final firestoreInstance = FirebaseFirestore.instance;
   GeoFirePoint? center;
-  //List<UserFavPlaces>? places;
-  // Create user documents
   DocumentReference? _documentReference;
   List<Quest>? newQuestResult;
-  // BehaviorSubject<double>? radius = BehaviorSubject<double>.seeded(50.0);
-  // BehaviorSubject<double>? radius;
 
   Geoflutterfire geo = Geoflutterfire();
-
-  List<GiftCardCategory> giftCartCategory = [];
-  // ignore: close_sinks
 
   Stream<dynamic>? query;
 
@@ -67,7 +60,6 @@ class FirestoreApi {
     }
   }
 
-//For Admin Starts Here
   Future<void> createUserAdmin({required UserAdmin userAdmin}) async {
     try {
       log.i("User:$userAdmin");
@@ -111,40 +103,6 @@ class FirestoreApi {
           devDetails: 'Failed Caused By $e.');
     }
   }
-
-  //Create a List of My Favourite Places
-  Future<void> addMarkers({required AFKMarker markers}) async {
-    try {
-      final _docRef = getMarkersDocs(markerId: markers.id);
-      log.i("Document Reference: " + _docRef.toString());
-      log.i("Marker ID: " + markers.id);
-      await _docRef.set(markers.toJson());
-      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
-      log.v('Your Document Reference is: ${_docRef.toString()}');
-    } catch (e) {
-      throw FirestoreApiException(
-          message: 'Failed To Insert Places',
-          devDetails: 'Failed Caused By $e.');
-    }
-  }
-
-  //Create a List of My Favourite Places
-/*   Future<void> addAFKMarkersPositions(
-      {required AfkMarkersPositions afkMarkersPositions}) async {
-    try {
-      final _docRef =
-          getAFKMarkersPositionDocs(markerId: afkMarkersPositions.documentId!);
-      log.i("Document Reference: " + _docRef.toString());
-      log.i("Marker ID: " + afkMarkersPositions.documentId!);
-      await _docRef.set(afkMarkersPositions.toJson());
-      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
-      log.v('Your Document Reference is: ${_docRef.toString()}');
-    } catch (e) {
-      throw FirestoreApiException(
-          message: 'Failed To Insert Places',
-          devDetails: 'Failed Caused By $e.');
-    }
-  } */
 
   // when explorer is added without authentication so without ID
   // we need to generate that id and add it to the datamodel.
@@ -217,25 +175,6 @@ class FirestoreApi {
       }
     } else {
       return null;
-    }
-  }
-
-  // Get Markers For the Quest.
-  // ignore: non_constant_identifier_names
-  Future<List<AFKMarker>> getAllMarkers() async {
-    final _markers = await markersCollection.get();
-    if (_markers.docs.isNotEmpty) {
-      try {
-        return _markers.docs
-            .map((docs) =>
-                AFKMarker.fromJson(docs.data() as Map<String, dynamic>))
-            .toList();
-      } catch (e) {
-        throw FirestoreApiException(
-            message: 'Failed to get the Markers', devDetails: '$e');
-      }
-    } else {
-      return [];
     }
   }
 
@@ -1104,197 +1043,6 @@ class FirestoreApi {
     await feedbackCollection
         .doc(feedbackCampaignInfoDocumentKey)
         .update(feedbackCampaignInfo.toJson());
-  }
-
-  ////////////////////////////////////////////////////////
-  // Gift Cards functions (DEPRECATED)
-  //
-
-  Future<List<GiftCardCategory>> getGiftCardsForCategory(
-      {required String categoryName}) async {
-    try {
-      final giftCards = await giftCardsCollection
-          .where("name", isEqualTo: categoryName)
-          .get();
-      if (giftCards.docs.isNotEmpty) {
-        log.v('This is our List of Gift Cards: $giftCards in our Database');
-        return giftCards.docs
-            .map((docs) =>
-                GiftCardCategory.fromJson(docs.data() as Map<String, dynamic>))
-            .toList();
-      } else {
-        log.wtf('You are Providing me Empty Document $giftCards' +
-            GiftCardType.Steam.toString());
-        throw FirestoreApiException(
-            message: "Data could not be found",
-            devDetails: "gift card document is empty");
-      }
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Error Was Thrown",
-          devDetails: "$e" + GiftCardType.Steam.toString());
-    }
-  }
-
-  Future<List<PrePurchasedGiftCard?>> getPreGiftCardsForCategory() async {
-    try {
-      final prePurchasedGiftCards = await preGiftCardsCollection.get();
-      if (prePurchasedGiftCards.docs.isNotEmpty) {
-        log.v(
-            'This is our List of Gift Cards: $prePurchasedGiftCards in our Database');
-        return prePurchasedGiftCards.docs
-            .map(
-              (docs) => PrePurchasedGiftCard.fromJson(
-                docs.data() as Map<String, dynamic>,
-              ),
-            )
-            .toList();
-      } else {
-        log.wtf('You are Providing me Empty Document $prePurchasedGiftCards');
-      }
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Error Was Thrown",
-          devDetails: "$e" + GiftCardType.Steam.toString());
-    }
-    return [];
-  }
-
-  getListQuerySnapShot({QuerySnapshot? query}) {
-    List<QuerySnapshot> snapShot = [];
-    if (query!.docs.isNotEmpty) {
-      snapShot.add(query);
-      return snapShot;
-    } else
-      return [];
-  }
-
-  Future<List<GiftCardCategory>> getAllGiftCards() async {
-    try {
-      final giftCards = await giftCardsCollection.get();
-      getListQuerySnapShot(query: giftCards);
-      if (giftCards.docs.isNotEmpty) {
-        log.v('This is our List of Gift Cards: $giftCards in our Database');
-        return giftCards.docs
-            .map((docs) =>
-                GiftCardCategory.fromJson(docs.data() as Map<String, dynamic>))
-            .toList();
-      } else {
-        log.wtf('You are Providing me Empty Document $giftCards' +
-            GiftCardType.Steam.toString());
-        throw FirestoreApiException(
-            message: "Data could not be found",
-            devDetails: "gift card document is empty");
-      }
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Error Was Thrown",
-          devDetails: "$e" + GiftCardType.Steam.toString());
-    }
-  }
-
-  Stream<List<GiftCardPurchase>> getPurchasedGiftCardsStream(
-      {required String uid}) {
-    try {
-      final returnStream = getUserGiftCardsCollection(uid: uid)
-          .orderBy("purchasedAt", descending: true)
-          .snapshots()
-          .map((event) => event.docs
-              .map((doc) =>
-                  GiftCardPurchase.fromJson(doc.data() as Map<String, dynamic>))
-              .toList());
-      return returnStream;
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Unknown expection when listening to purchased gift cards",
-          devDetails: '$e');
-    }
-  }
-
-  Stream<List<ScreenTimeSession>> getPurchasedScreenTimesStream(
-      {required String uid}) {
-    try {
-      final returnStream = getUserScreenTimeCollection(uid: uid)
-          .orderBy("purchasedAt", descending: true)
-          .snapshots()
-          .map((event) => event.docs
-              .map((doc) => ScreenTimeSession.fromJson(
-                  doc.data() as Map<String, dynamic>))
-              .toList());
-      return returnStream;
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Unknown expection when listening to purchased screen times",
-          devDetails: '$e');
-    }
-  }
-
-  Future updateGiftCardPurchase(
-      {required GiftCardPurchase giftCardPurchase, required String uid}) async {
-    getUserGiftCardsCollection(uid: uid)
-        .doc(giftCardPurchase.transferId)
-        .update(giftCardPurchase.toJson());
-  }
-
-  Future updateScreenTimePurchase(
-      {required ScreenTimeSession screenTimePurchase,
-      required ScreenTimeSessionStatus newStatus,
-      required String uid}) async {
-    late ScreenTimeSession newScreenTimePurchase;
-    newScreenTimePurchase = screenTimePurchase.copyWith(
-        startedAt: newStatus == ScreenTimeSessionStatus.active
-            ? ""
-            : FieldValue.serverTimestamp());
-    await getUserScreenTimeCollection(uid: uid)
-        .doc(newScreenTimePurchase.sessionId)
-        .update(newScreenTimePurchase.toJson());
-  }
-
-  Future<bool> addGiftCardCategory(
-      {required GiftCardCategory giftCardCategory}) async {
-    //TODO: Refactor this code .
-    if (giftCardCategory.categoryId.isNotEmpty) {
-      log.i("Upload quest with id ${giftCardCategory.categoryId} to firestore");
-      //Get the Document Created Reference
-      _documentReference =
-          await giftCardsCollection.add(giftCardCategory.toJson());
-      //update the newly created document reference with the Firestore Id.
-      //This is to make suret that the document has the same id as the quest.
-      await giftCardsCollection
-          .doc(_documentReference!.id)
-          .update({'id': _documentReference!.id});
-      log.i(
-          'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
-      return true;
-    }
-    return false;
-
-    //update the newly created document reference with the Firestore Id.
-    //This is to make suret that the document has the same id as the quest.
-  }
-
-  Future<bool> insertPrePurchasedGiftCardCategory(
-      {required PrePurchasedGiftCard prePurchasedGiftCard}) async {
-    //TODO: Refactor this code .
-    if (prePurchasedGiftCard.categoryId.isNotEmpty) {
-      log.i(
-          "Upload quest with id ${prePurchasedGiftCard.categoryId} to firestore");
-      //Get the Document Created Reference
-      _documentReference =
-          await preGiftCardsCollection.add(prePurchasedGiftCard.toJson());
-      //update the newly created document reference with the Firestore Id.
-      //This is to make suret that the document has the same id as the quest.
-      await preGiftCardsCollection
-          .doc(_documentReference!.id)
-          .update({'id': _documentReference!.id});
-      log.i(
-          'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
-      return true;
-    }
-    return false;
-
-    //update the newly created document reference with the Firestore Id.
-    //This is to make suret that the document has the same id as the quest.
   }
 
   // ! It is important that this is a transaction.

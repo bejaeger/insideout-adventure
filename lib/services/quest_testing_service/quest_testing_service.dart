@@ -77,7 +77,6 @@ class QuestTestingService {
   String? _questCategory;
   String? _currentUserName;
 
-  bool _pushToNotion = false;
   int _numberQuestDataPoints = 0;
 
   Database? _questDataPointsDatabase;

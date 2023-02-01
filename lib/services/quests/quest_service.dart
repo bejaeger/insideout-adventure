@@ -61,13 +61,6 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
-  // Get a List of Quests
-  // Get Markers For the Quest.
-  Future<List<AFKMarker?>?> getAllMarkers() async {
-    //So Far I will only return the Markers with the FB.
-    return await _firestoreApi.getAllMarkers();
-  }
-
   // remove quest from database
   Future<void> removeQuest({required Quest quest}) async {
     try {

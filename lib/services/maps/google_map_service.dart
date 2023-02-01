@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:io';
 
 class GoogleMapService {
   static GoogleMapController? _mapController;
@@ -235,7 +233,6 @@ class GoogleMapService {
       markerId: MarkerId("COIN" +
           isGreen
               .toString()), // google maps marker id of start marker will be our quest id
-      //position: LatLng(49.26813866276503, -122.98950899176373),
       position: LatLng(lat, lon),
       icon: isGreen ? coinBitmap : treasureBitmap,
       onTap: () async {
@@ -244,26 +241,7 @@ class GoogleMapService {
         onTap(lat, lon, isGreen);
       },
     );
-    // Marker markerTreasure = Marker(
-    //   markerId: MarkerId(
-    //       "TREASURE"), // google maps marker id of start marker will be our quest id
-    //   position: LatLng(49.26843866276503, -122.99103899176373),
-
-    //   //infoWindow:
-    //   //  InfoWindow(
-    //   //     title: afkmarker == quest.startMarker ? "START HERE" : "GO HERE"),
-    //   // InfoWindow(snippet: quest.name),
-    //   icon: treasureBitmap,
-    //   onTap: () async {
-    //     // needed to avoid navigating to that marker!
-    //     dontMoveCamera();
-    //     onTap(false);
-    //   },
-    // );
     markersOnMap.add(marker);
-
-    
-    // markersOnMap.add(markerTreasure);
   }
 
   static void resetMapMarkers() {
@@ -332,38 +310,13 @@ class GoogleMapService {
       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
     }
     if (completed) {
-      //late BitmapDescriptor icon;
       if (quest?.type == QuestType.TreasureLocationSearch) {
-        // return await BitmapDescriptor.fromAssetImage(
-        //     ImageConfiguration(
-        //         platform: Platform.isAndroid
-        //             ? TargetPlatform.android
-        //             : TargetPlatform.iOS,
-        //         size: Size(0.1, 0.1),
-        //         devicePixelRatio: 0.1),
-        //     kGreyMapMarker);
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueViolet);
       } else {
         return BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueOrange);
       }
-      //   icon = await BitmapDescriptor.fromAssetImage(
-      //       ImageConfiguration(
-      //           platform: Platform.isAndroid
-      //               ? TargetPlatform.android
-      //               : TargetPlatform.iOS,
-      //           size: Size(4, 4)),
-      //       kSearchQuestIcon);
-      // } else {
-      // icon = await BitmapDescriptor.fromAssetImage(
-      //     ImageConfiguration(
-      //         platform: Platform.isAndroid
-      //             ? TargetPlatform.android
-      //             : TargetPlatform.iOS,
-      //         size: Size(4, 4)),
-      //     kAFKCreditsLogoSmallPathColored);
-      // return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
     } else {
       if (quest?.type == QuestType.QRCodeHike) {
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
@@ -468,7 +421,6 @@ class GoogleMapService {
   }
 }
 
-//Ben I just wonder why are we defining a function type ViewModel into services.
 Future<MapViewModel> presolveMapViewModel() async {
   MapViewModel _instance = MapViewModel(
       moveCamera: GoogleMapService.moveCamera,
