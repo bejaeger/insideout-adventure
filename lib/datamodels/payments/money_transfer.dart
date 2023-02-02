@@ -36,11 +36,10 @@ class MoneyTransfer with _$MoneyTransfer {
         dynamic createdAt,
     @Default(TransferStatus.Initialized)
         TransferStatus status,
-    @Default(TransferType.Sponsor2Explorer)
+    @Default(TransferType.Sponsor2ExplorerCredits)
         TransferType type,
     @JsonKey(
       name: "transferId",
-      //toJson: MoneyTransfer._checkIftransferIdIsSet,
     )
     @Default("placeholder")
         String transferId,

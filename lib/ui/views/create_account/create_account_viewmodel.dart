@@ -95,15 +95,6 @@ class CreateAccountViewModel extends AuthenticationViewModel {
   void replaceWithSelectRoleView() =>
       _navigationService.replaceWith(Routes.createAccountUserRoleView);
 
-  @override
-  Future<FirebaseAuthenticationResult> runAdminAuthResult() =>
-      _firebaseAuthenticationService!.createAccountWithEmail(
-        email:
-            _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster).trim(),
-        password: _userService
-            .hashPassword(_flavorConfigProvider.getTestUserPassword()),
-      );
-
   void resetValidationMessages() {
     emailInputValidationMessage = null;
     fullNameInputValidationMessage = null;

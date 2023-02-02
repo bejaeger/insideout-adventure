@@ -134,7 +134,6 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
               sponsorReference: userService.sponsorReference!);
         }
       }
-      //layoutService.setShowBottomNavBar(true);
     }
   }
 

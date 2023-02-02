@@ -60,13 +60,6 @@ class CustomScreenTimeDialogView extends StatelessWidget
                       focusNode: timeFocusNode,
                       controller: timeController,
                       style: heading3Style,
-                      // trailing: Container(
-                      //   width: 20,
-                      //   child: AfkCreditsText.body(
-                      //     "min",
-                      //     align: TextAlign.center,
-                      //   ),
-                      // ),
                       leading: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Image.asset(kScreenTimeIcon,

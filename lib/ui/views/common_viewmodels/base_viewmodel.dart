@@ -59,7 +59,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
   bool get isParentAccount => currentUser.role == UserRole.sponsor;
-  bool get isAdminMaster => userService.isAdminMaster;
+  bool get isAdminMaster => userService.isAdminUser;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
       : userService.isSuperUser;
@@ -384,7 +384,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   //////////////////////////////////////////
   /// Clean-up
-
 
   @override
   void dispose() {

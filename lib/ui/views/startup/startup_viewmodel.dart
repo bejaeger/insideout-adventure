@@ -65,13 +65,8 @@ class StartUpViewModel extends TransferBaseViewModel {
           if (!(await _permissionService.allPermissionsProvided())) {
             await navigationService.navigateTo(Routes.permissionsView);
           }
-          // TODO: Re-establish admin master role?
-          // if (localUserRole == UserRole.adminMaster) {
-          //   navToAdminHomeView(role: localUserRole!);
-          // } else {
-            await replaceWithHomeView(
-                showBewareDialog: true, showNumberQuestsDialog: true);
-          // }
+          await replaceWithHomeView(
+              showBewareDialog: true, showNumberQuestsDialog: true);
         }
       } else {
         log.v('No user on disk, navigate to the LoginView');

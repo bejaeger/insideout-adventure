@@ -73,7 +73,7 @@ class UserService {
 
   UserRole get getUserRole => currentUser.role;
   bool get isSuperUser => currentUser.role == UserRole.superUser;
-  bool get isAdminMaster => currentUser.role == UserRole.adminMaster;
+  bool get isAdminUser => currentUser.role == UserRole.admin;
   bool get hasRole => currentUserNullable == null ? false : true;
 
   // state
@@ -105,11 +105,7 @@ class UserService {
         uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
 
     log.v('Sync user $actualUid');
-    // if (role == UserRole.adminMaster) {
-    //   userAccount = await _firestoreApi.getUserAdmin(uid: actualUid);
-    // } else {
     userAccount = await _firestoreApi.getUser(uid: actualUid);
-    // }
 
     if (userAccount != null) {
       log.v('User account exists. Save as _currentUser');
@@ -149,34 +145,6 @@ class UserService {
       log.e("User account with id $actualUid does not exist! Can't sync user");
     }
   }
-
-  Future<void> syncOrCreateUserAdminAccount(
-      {required UserAdmin userAdmin,
-      required AuthenticationMethod method,
-      bool fromLocalStorate = false}) async {
-    // create a new user profile on firestore
-    log.i("user created by Harguilar: $userAdmin");
-    await syncUserAccount(
-        fromLocalStorage: fromLocalStorate, role: userAdmin.role);
-    try {
-      if (_currentUserAdmin == null) {
-        await _firestoreApi.createUserAdmin(userAdmin: userAdmin);
-        _currentUserAdmin = userAdmin;
-        log.v('User Information Has Been Saved $_currentUserAdmin');
-      }
-      //return await _firestoreApi.createUserAdmin(userAdmin: userAdmin);
-    } catch (e) {
-      log.e("Error in createUser(): ${e.toString()}");
-      throw UserServiceException(
-        message: "Creating user data failed with message",
-        devDetails: e.toString(),
-        prettyDetails:
-            "User data could not be created in our databank. Please try again later or contact support with error messaage: ${e.toString()}",
-      );
-    }
-  }
-
-//BackOffice Ends Here.
 
   Future<User> createUserAccountFromFirebaseUser(
       {required UserRole role,

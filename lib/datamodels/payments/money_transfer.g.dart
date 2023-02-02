@@ -14,7 +14,7 @@ _$_MoneyTransfer _$$_MoneyTransferFromJson(Map<String, dynamic> json) =>
       status: $enumDecodeNullable(_$TransferStatusEnumMap, json['status']) ??
           TransferStatus.Initialized,
       type: $enumDecodeNullable(_$TransferTypeEnumMap, json['type']) ??
-          TransferType.Sponsor2Explorer,
+          TransferType.Sponsor2ExplorerCredits,
       transferId: json['transferId'] as String? ?? "placeholder",
     );
 

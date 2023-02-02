@@ -42,13 +42,8 @@ class LoginView extends StatelessWidget with $LoginView {
               model.userLoginTapped(userRole: UserRole.superUser),
           onDummyLoginAdminMasterTapped:
               model.userLoginTapped(userRole: UserRole.adminMaster),
-          //model.saveAdminData,
           onMainButtonTapped: model.userLoginTapped(),
           validationMessage: model.validationMessage,
-          // title: AfkCreditsText.headingOne(
-          //   'Welcome to',
-          //   align: TextAlign.left,
-          // ),
           logo: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -114,12 +109,11 @@ class LoginView extends StatelessWidget with $LoginView {
           releaseName: model.getReleaseName,
           onForgotPassword: model.onForgotPassword,
           onGoogleButtonTapped: () =>
-            model.saveData(AuthenticationMethod.google),
+              model.saveData(AuthenticationMethod.google),
           // onFacebookButtonTapped: () =>
           //     model.runAuthentication(AuthenticationMethod.facebook),
           onAppleButtonTapped: (!kIsWeb && Platform.isIOS)
-              ? () =>
-                  model.saveData(AuthenticationMethod.apple)
+              ? () => model.saveData(AuthenticationMethod.apple)
               : null,
         ),
       ),

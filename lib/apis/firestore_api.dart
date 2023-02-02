@@ -13,7 +13,6 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
@@ -51,22 +50,6 @@ class FirestoreApi {
       );
     }
   }
-
-  Future<void> createUserAdmin({required UserAdmin userAdmin}) async {
-    try {
-      log.i("User:$userAdmin");
-      final userAdminDocument = usersCollection.doc(userAdmin.id);
-      await userAdminDocument.set(userAdmin.toJson());
-      log.v('User document added to ${userAdminDocument.path}');
-      //print(result);
-    } catch (error) {
-      throw FirestoreApiException(
-        message: 'Failed to create new user',
-        devDetails: '$error',
-      );
-    }
-  }
-  //Ends Here
 
   Future<void> createUserInfo({required User user}) async {
     final userDocument = usersCollection.doc(user.uid);
@@ -113,23 +96,6 @@ class FirestoreApi {
         message: 'Failed to get user',
         devDetails: '$error',
       );
-    }
-  }
-
-  ////////////////////////////////////////////////////////
-  // This is the User who will managed The App Code for the BackOffice
-  Future<UserAdmin?> getUserAdmin({required String uid}) async {
-    log.i('userId: $uid');
-    if (uid.isNotEmpty) {
-      final userDoc = await usersCollection.doc(uid).get();
-      if (!userDoc.exists) {
-        log.v("User $uid does not exist in our DB ");
-        return null;
-      }
-      final userData = userDoc.data();
-      return UserAdmin.fromJson(userData! as Map<String, dynamic>);
-    } else {
-      throw FirestoreApiException(message: 'You have passed an empty Id');
     }
   }
 
@@ -386,11 +352,9 @@ class FirestoreApi {
     log.v("converting snapshot to list of money transfers");
 
     try {
-      // convert Stream<QuerySnapshot> to Stream<List<MoneyTransfer>>
       Stream<List<MoneyTransfer>> returnStream = query.snapshots().map(
             (event) => event.docs.map(
               (doc) {
-                //log.v("Data to read into MoneyTransfer document ${doc.data()}");
                 return MoneyTransfer.fromJson(
                     doc.data() as Map<String, dynamic>);
               },
@@ -756,10 +720,6 @@ class FirestoreApi {
 
   Future<List<Quest>> downloadQuestsWithStartMarkerId(
       {required String? startMarkerId}) async {
-    // List<Quest> quests = await getNearbyQuests();
-    // return quests
-    //     .where((element) => element.startMarker.id == startMarkerId)
-    //     .toList();
     QuerySnapshot snapshot = await questsCollection
         .where(startMarkerId!, isEqualTo: startMarkerId)
         .get();

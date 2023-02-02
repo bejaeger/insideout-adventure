@@ -261,7 +261,9 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     final added = await _questService.createQuest(
       quest: Quest(
         id: questId,
-        createdBy: _userService.getUserRole == UserRole.adminMaster
+        // the following allows to separate between quests created from
+        // an admin account and not!
+        createdBy: _userService.isAdminUser
             ? null
             : _userService.currentUser.uid,
         startMarker: getAFKMarkers.first,
@@ -316,7 +318,6 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
             CameraUpdate.newLatLng(LatLng(startMarker.lat!, startMarker.lon!)));
       }
       //   await mapViewModel.animateNewLatLon(
-      // lat: startMarker.lat!, lon: startMarker.lon!, force: true);
       await Future.delayed(Duration(milliseconds: 1200));
       addMarkerOnMap(
         pos: LatLng(startMarker.lat!, startMarker.lon!),

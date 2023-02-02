@@ -80,29 +80,6 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
     }
   }
 
-/*   Future getDistancesToStartOfQuests() async {
-    if (nearbyQuests.isNotEmpty) {
-      log.i("Check distances for current quest list");
-
-      // need to use normal for loop to await results
-      for (var i = 0; i < nearbyQuests.length; i++) {
-        if (nearbyQuests[i].startMarker != null) {
-          double distance =
-              await _geolocationService.distanceBetweenUserAndCoordinates(
-                  lat: nearbyQuests[i].startMarker!.lat,
-                  lon: nearbyQuests[i].startMarker!.lon);
-          nearbyQuests[i] =
-              nearbyQuests[i].copyWith(distanceFromUser: distance);
-        }
-      }
-    } else {
-      log.w(
-          "Curent quests empty, or distance check not required. Can't check distances");
-    }
-    log.i("Notify listeners");
-    notifyListeners();
-  } */
-
   Future onQuestInListTapped(Quest quest) async {
     if (hasActiveQuest == false) {
       removeQuestListOverlay();
@@ -157,18 +134,8 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
     notifyListeners();
   }
 
-  //////////////////////////////////////////
-  /// Clean-up
-  ///
-  // void cancelQuestListener() {
-  //   log.i("Cancelling subscription to quest");
-  //   _activeQuestSubscription?.cancel();
-  //   _activeQuestSubscription = null;
-  // }
-
   @override
   void dispose() {
-    // _activeQuestSubscription?.cancel();
     super.dispose();
   }
 }

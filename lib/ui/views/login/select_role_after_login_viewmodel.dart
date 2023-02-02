@@ -29,50 +29,5 @@ class SelectRoleAfterLoginViewModel extends TransferBaseViewModel {
       // TODO: Proper error message to user
       log.e("Could not create user account, error: $e");
     }
-    //setBusy(false);
   }
-
-/*
-  Future createSponsorAccountAndNavigateToSponsorHome() async {
-    try {
-      setBusy(true);
-      await _userService.createUserAccountFromFirebaseUser(
-          role: UserRole.sponsor, authMethod: authMethod);
-      await _userService.syncUserAccount();
-      replaceWithHomeView();
-      setBusy(false);
-    } catch (e) {
-      // TODO: Proper error message to user
-      log.e("Could not create user account, error: $e");
-    }
-  }
-
-  Future createExploreAccountAndNavigateToExplorerHome() async {
-    try {
-      setBusy(true);
-      await _userService.createUserAccountFromFirebaseUser(
-          role: UserRole.explorer, authMethod: authMethod);
-      await _userService.syncUserAccount();
-      replaceWithHomeView();
-      setBusy(false);
-    } catch (e) {
-      // TODO: Proper error message to user
-      log.e("Could not create user account, error: $e");
-    }
-  }
-
-  Future createAdminAccountAndNavigateToExplorerHome() async {
-    try {
-      setBusy(true);
-      await _userService.createUserAccountFromFirebaseUser(
-          role: UserRole.admin, authMethod: authMethod);
-      await _userService.syncUserAccount();
-      replaceWithHomeView();
-      setBusy(false);
-    } catch (e) {
-      // TODO: Proper error message to user
-      log.e("Could not create user account, error: $e");
-    }
-  }
-  */
 }

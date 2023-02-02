@@ -117,18 +117,6 @@ class LoginViewModel extends AuthenticationViewModel {
     notifyListeners();
   }
 
-/*   @override
-  Future<FirebaseAuthenticationResult> runAdminAuthResult() =>
-      _userService.createUserAdminAccount(
-        userAdmin: UserAdmin(
-            id: _flavorConfigProvider.getTestUserId(UserRole.adminMaster),
-            role: UserRole.adminMaster,
-            email: _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster),
-            password: _userService
-                .hashPassword(_flavorConfigProvider.getTestUserPassword())),
-        method: AuthenticationMethod.dummy,
-      ); */
-
   @override
   Future<AFKCreditsAuthenticationResultService> runAuthentication(
     AuthenticationMethod method, [
@@ -185,15 +173,6 @@ class LoginViewModel extends AuthenticationViewModel {
     isPwShown = show;
     notifyListeners();
   }
-
-  @override
-  Future<FirebaseAuthenticationResult> runAdminAuthResult() =>
-      _firebaseAuthenticationService.createAccountWithEmail(
-        email:
-            _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster).trim(),
-        password: _userService
-            .hashPassword(_flavorConfigProvider.getTestUserPassword()),
-      );
 
   void showNotImplementedSnackbar() {
     _snackbarService.showSnackbar(
