@@ -351,14 +351,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
         lat: geolocationService.getUserLivePositionNullable!.latitude,
         lon: geolocationService.getUserLivePositionNullable!.longitude,
         force: true);
-    //   CameraUpdate.newCameraPosition(
-    //     CameraPosition(
-    //         target: LatLng(
-    //             geolocationService.getUserLivePositionNullable!.latitude,
-    //             geolocationService.getUserLivePositionNullable!.longitude),
-    //         zoom: await controller.getZoomLevel()),
-    //   ),
-    // );
     activeQuestService.questCenteredOnMap = false;
     notifyListeners();
   }

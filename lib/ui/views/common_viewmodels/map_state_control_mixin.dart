@@ -1,8 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
 mixin MapStateControlMixin {
   // Class implementing common functionality to update and get map information
@@ -10,11 +7,9 @@ mixin MapStateControlMixin {
   // --------------------------------------
   // Services
   final MapStateService mapStateService = locator<MapStateService>();
-  // final LayoutService layoutService = locator<LayoutService>();
 
   // ----------------------------------------
   // Getters
-  //double get bearing => mapStateService.bearingSubject.value;
   double get bearing => mapStateService.bearing;
   double get tilt => mapStateService.tilt;
   double get zoom => mapStateService.zoom;
@@ -23,7 +18,6 @@ mixin MapStateControlMixin {
   double? get lastBirdViewZoom => mapStateService.lastBirdViewZoom;
   bool get isAvatarView => mapStateService.isAvatarView;
   bool get navigatedFromQuestList => mapStateService.navigatedFromQuestList;
-  // bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
   // -------------------------------------
   // functions
   void changeCameraTilt(double tiltIn) {
@@ -94,7 +88,4 @@ mixin MapStateControlMixin {
     mapStateService.takeSnapshotOfBirdViewCameraPosition();
   }
 
-  // void switchIsShowingQuestDetails() {
-  //   layoutService.switchIsShowingQuestDetails();
-  // }
 }

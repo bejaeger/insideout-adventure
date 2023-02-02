@@ -21,12 +21,6 @@ mixin NavigationMixin {
   final LayoutService _layoutService = locator<LayoutService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
-  void navToUpdatingQuestView() {
-    _navigationService.navigateTo(
-      Routes.updatingQuestView,
-    );
-  }
-
   void navToExplorerCreateAccount({required UserRole role}) {
     _navigationService.replaceWith(Routes.createAccountView,
         arguments: CreateAccountViewArguments(role: role));

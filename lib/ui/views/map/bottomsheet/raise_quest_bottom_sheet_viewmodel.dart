@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/exceptions/mapviewmodel_expection.dart';
+import 'package:afkcredits/exceptions/mapviewmodel_exception.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

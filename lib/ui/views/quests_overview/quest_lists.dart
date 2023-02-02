@@ -1,4 +1,3 @@
-import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/views/quests_overview/quests_overview_viewmodel.dart';

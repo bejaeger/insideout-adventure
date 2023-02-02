@@ -7,19 +7,19 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:uuid/uuid.dart';
-import '../../app/app.locator.dart';
-import '../../datamodels/dummy_data.dart';
-import '../../exceptions/mapviewmodel_expection.dart';
-import '../../services/geolocation/geolocation_service.dart';
-import '../../services/markers/marker_service.dart';
+import '../../../app/app.locator.dart';
+import '../../../datamodels/dummy_data.dart';
+import '../../../exceptions/mapviewmodel_exception.dart';
+import '../../../services/geolocation/geolocation_service.dart';
+import '../../../services/markers/marker_service.dart';
 
-abstract class AFKMarks extends FormViewModel {
+abstract class QuestMarkerViewModel extends FormViewModel {
   // ---------------------------------------------------------
   // services
   final GeolocationService geolocationService = locator<GeolocationService>();
   final MarkerService markersServices = locator<MarkerService>();
   final QuestService questService = locator<QuestService>();
-  final logger = getLogger('AFKMarks');
+  final logger = getLogger('QuestMarkerViewModel');
 
   // --------------------------------------------------------
   // getters
@@ -34,7 +34,7 @@ abstract class AFKMarks extends FormViewModel {
 
   // -----------------------------------------
   // methods
-  
+
   CameraPosition initialCameraPosition() {
     if (userLocation != null) {
       if (questService.lonAtLatestQuestDownload == null &&
@@ -60,7 +60,7 @@ abstract class AFKMarks extends FormViewModel {
     await geolocationService.getAndSetCurrentLocation();
   }
 
-  Marker addMarkers(
+  Marker _getMapMarker(
       {required LatLng pos,
       required String markerId,
       required int number,
@@ -85,32 +85,6 @@ abstract class AFKMarks extends FormViewModel {
           markerId: markerId,
         );
       },
-    );
-  }
-
-  AFKMarker returnAFKMarker(
-      {required LatLng pos, required String markerId, required String qrCode}) {
-    return AFKMarker(
-        id: markerId, qrCodeId: qrCode, lat: pos.latitude, lon: pos.longitude);
-  }
-
-  void _addMarkerOnMapAndAFKMarker(
-      {required String markerId,
-      required LatLng position,
-      required String qrdCodeId,
-      required int number,
-      QuestType? questType}) {
-    var id2 = Uuid();
-    final id = id2.v1().toString().replaceAll('-', '');
-    _markersOnMap.add(
-      addMarkers(
-          markerId: markerId,
-          pos: position,
-          number: number,
-          questType: questType),
-    );
-    _afkMarkers.add(
-      returnAFKMarker(pos: position, markerId: markerId, qrCode: qrdCodeId),
     );
   }
 
@@ -142,19 +116,23 @@ abstract class AFKMarks extends FormViewModel {
       final markerId = id.v1().toString().replaceAll('-', '');
       final qrdCdId = id2.v1().toString().replaceAll('-', '');
 
-      _addMarkerOnMapAndAFKMarker(
-          markerId: markerId,
-          position: pos,
-          qrdCodeId: qrdCdId,
-          number: number,
-          questType: questType);
+      _markersOnMap.add(
+        _getMapMarker(
+            markerId: markerId, pos: pos, number: number, questType: questType),
+      );
+      _afkMarkers.add(
+        AFKMarker(
+            id: markerId,
+            qrCodeId: qrdCdId,
+            lat: pos.latitude,
+            lon: pos.longitude),
+      );
     } catch (error) {
       throw MapViewModelException(
-          message: 'An error occured when creating the map',
+          message: 'An error occured when adding a marker on the map',
           devDetails: "Error message from Map View Model $error ",
           prettyDetails:
               "An internal error occured on our side, sorry, please try again later.");
     }
   }
-  
 }

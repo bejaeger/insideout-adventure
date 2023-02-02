@@ -4,16 +4,17 @@ import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_service.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:afkcredits/ui/views/quests_overview/edit_quest/basic_dialog_content/basic_dialog_content.form.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
-import 'package:afkcredits/utils/markers/markers.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/quest_marker_viewmodel.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,9 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
+import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.form.dart';
 
-import '../../../../datamodels/quests/quest.dart';
-import '../../../../services/geolocation/geolocation_service.dart';
-
-class CreateQuestViewModel extends AFKMarks with NavigationMixin {
+class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   // member vars
   bool fromMap;
   void Function() disposeController;
@@ -42,11 +41,10 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   final _log = getLogger('CreateQuestViewModel');
   GoogleMapController? _googleMapController;
   GoogleMapController? get getGoogleMapController => _googleMapController;
-  final _questService = locator<QuestService>();
-  final _geoLocationService = locator<GeolocationService>();
-  final _userService = locator<UserService>();
+  final QuestService _questService = locator<QuestService>();
+  final GeolocationService _geoLocationService = locator<GeolocationService>();
+  final UserService _userService = locator<UserService>();
   Geoflutterfire geo = Geoflutterfire();
-
   final _displaySnackBars = DisplaySnackBars();
   final SnackbarService snackbarService = locator<SnackbarService>();
   final DialogService _dialogService = locator<DialogService>();
@@ -70,7 +68,7 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
   bool laodingScreenShots = false;
 
   Map<QuestType, List<dynamic>> get exampleScreenShots =>
-      _cloudStorageService.exampleScreenShots;      
+      _cloudStorageService.exampleScreenShots;
 
   List<dynamic>? get exampleScreenShotsWithType =>
       _cloudStorageService.exampleScreenShots[selectedQuestType];
@@ -345,17 +343,6 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
 
   void displayMarkersOnMap(List<double> pos) {
     if (selectedQuestType == QuestType.TreasureLocationSearch) {
-      // At the moment we only support a start and a finish for
-      // a search quest!
-      // if (getAFKMarkers.length == 2) {
-      //   snackbarService.showSnackbar(
-      //       title: "Oops...",
-      //       message:
-      //           "Only two markers are supported for search quests at the moment",
-      //       duration: Duration(milliseconds: 1500));
-      //   return;
-      // }
-
       // minimum distance of start and finish
       if (getAFKMarkers.length == 1) {
         double distance = _geoLocationService.distanceBetween(
@@ -376,7 +363,6 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     notifyListeners();
   }
 
-  // THE FOLLOWING IS VERY IMPORTANT!
   double getTotalDistanceOfMarkers() {
     AFKMarker? previousMarker;
     double totalDistanceInMeter = 0;
@@ -447,10 +433,6 @@ class CreateQuestViewModel extends AFKMarks with NavigationMixin {
     questTypeInputValidationMessage = null;
     afkMarkersInputValidationMessage = null;
     notifyListeners();
-  }
-
-  void displayEmptyTextsSnackBar([String? message]) {
-    _displaySnackBars.snackBarTextBoxEmpty(message);
   }
 
   void onMapCreated(GoogleMapController controller) {

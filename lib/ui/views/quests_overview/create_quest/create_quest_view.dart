@@ -31,23 +31,14 @@ final circularBorder = OutlineInputBorder(
     ),
     FormTextField(name: 'description'),
     FormTextField(name: 'afkCreditAmount'),
-    FormDropdownField(
-      name: 'questType',
-      items: [
-        StaticDropdownItem(
-          title: 'QuestType',
-          value: 'QuestTypeDr',
-        ),
-      ],
-    )
-    //FormTextField(name: 'markerNotes'),
   ],
 )
 // ignore: must_be_immutable
 class CreateQuestView extends StatelessWidget with $CreateQuestView {
   final bool fromMap;
   final List<double>? latLng;
-  CreateQuestView({Key? key, this.fromMap = false, this.latLng}) : super(key: key);
+  CreateQuestView({Key? key, this.fromMap = false, this.latLng})
+      : super(key: key);
 
   // TODO: need to dispose this so need to have stateful function here!
   // TODO: This does not work with formView
@@ -61,13 +52,12 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
         listenToFormUpdated(model);
       },
       viewModelBuilder: () => CreateQuestViewModel(
-          fromMap: fromMap, latLng: latLng, disposeController: () => controller.dispose()),
-      // onModelReady: (model) => listenToFormUpdated(model),
+          fromMap: fromMap,
+          latLng: latLng,
+          disposeController: () => controller.dispose()),
       builder: (context, model, child) {
         return SafeArea(
           child: Scaffold(
-            //resizeToAvoidBottomInset: true,
-            // resizeToAvoidBottomInset: false,
             appBar: CustomAppBar(
               title: "Create Quest",
               onBackButton: () => model.onBackButton(controller),
@@ -246,87 +236,6 @@ class QuestTypeSelection extends StatelessWidget with $CreateQuestView {
             ),
           ),
           verticalSpaceMedium,
-          // AfkCreditsButton.text(
-          //   title: "Show example screenshots",
-          //   onTap: model.loadExampleScreenshots,
-          // ),
-          // if (model.laodingScreenShots) AFKProgressIndicator(),
-          // if (model.exampleScreenShots.containsKey(model.selectedQuestType))
-          //   if (model.exampleScreenShotsWithType == null ||
-          //       model.exampleScreenShotsWithType!.length == 0)
-          //     Padding(
-          //       padding: const EdgeInsets.only(
-          //           bottom: 100.0, left: 20.0, right: 20.0),
-          //       child: AfkCreditsText.headingFour(
-          //           "Sorry, there are no example screenshots available at this time.",
-          //           align: TextAlign.center),
-          //     ),
-          // if (model.exampleScreenShotsWithType != null &&
-          //     model.exampleScreenShotsWithType!.length > 0)
-          //   Container(
-          //     height: 380,
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(20),
-          //       color: kcCultured,
-          //     ),
-          //     child: ListView.builder(
-          //       scrollDirection: Axis.horizontal,
-          //       shrinkWrap: true,
-          //       itemCount: model.exampleScreenShotsWithType!.length,
-          //       itemBuilder: (context, idx) {
-          //         return Column(
-          //           children: [
-          //             verticalSpaceSmall,
-          //             AfkCreditsText.headingFour(idx.toString()),
-          //             verticalSpaceSmall,
-          //             Padding(
-          //               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //               child: Image.memory(
-          //                   model.exampleScreenShotsWithType![idx],
-          //                   height: 320),
-          //             ),
-          //           ],
-          //         );
-          //       },
-          //     ),
-          //   ),
-          // if (model.exampleScreenShotsWithType != null &&
-          //     model.exampleScreenShotsWithType!.length > 0)
-          //   verticalSpaceMassive,
-          // AfkCreditsDropdownFormField<QuestType>(
-          //   items: CreateQuestType.values.map(
-          //     (_questType) {
-          //       return DropdownMenuItem(
-          //         value: _questType == CreateQuestType.TreasureLocationSearch
-          //             ? QuestType.TreasureLocationSearch
-          //             : _questType == CreateQuestType.GPSAreaHike
-          //                 ? QuestType.GPSAreaHike
-          //                 : QuestType.GPSAreaHunt,
-          //         child: model.isLoading == false
-          //             ? Text(
-          //                 getShortQuestType(
-          //                   _questType ==
-          //                           CreateQuestType.TreasureLocationSearch
-          //                       ? QuestType.TreasureLocationSearch
-          //                       : _questType == CreateQuestType.GPSAreaHike
-          //                           ? QuestType.GPSAreaHike
-          //                           : QuestType.GPSAreaHunt,
-          //                 ),
-          //               )
-          //             : Text(
-          //                 "Select Quest Type",
-          //               ),
-          //       );
-          //     },
-          //   ).toList(),
-          //   onChanged: (QuestType? questType) {
-          //     questTypeValue = questType;
-          //     model.setQuestType(selectedQuestType: questType!);
-          //   },
-          //   placeholder: 'Select quest type',
-          //   value: questTypeValue,
-          //   errorText: model.questTypeInputValidationMessage,
-          // ),
         ],
       ),
     );
@@ -353,7 +262,8 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
             markers: model.getMarkersOnMap,
             //callback that’s called when the map is ready to us.
             onMapCreated: model.onMapCreated,
-            onTap: (LatLng latLng) => model.displayMarkersOnMap([latLng.latitude, latLng.longitude]),
+            onTap: (LatLng latLng) =>
+                model.displayMarkersOnMap([latLng.latitude, latLng.longitude]),
             // scrollGesturesEnabled: true,
             myLocationEnabled: true,
             zoomControlsEnabled: false,
@@ -453,7 +363,6 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
   });
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
     if (afkCreditAmountController.text == "") {
       afkCreditAmountFocusNode.requestFocus();
     }
@@ -533,108 +442,3 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
     );
   }
 }
-
-// ! DEPRECATED
-
-/* Widget showErrorTextBox(String? message) {
-  if (message != null) {
-    return Text(message, style: TextStyle(color: Colors.red));
-  } else {
-    return SizedBox(height: 0, width: 0);
-  }
-}
- */
-
-// class QuestCardList extends StatelessWidget with $CreateQuestView {
-//   final CreateQuestViewModel model;
-//   final TextEditingController nameController;
-//   final TextEditingController descriptionController;
-//   final TextEditingController afkCreditAmountController;
-//   QuestType? questTypeValue;
-
-//   QuestCardList({
-//     required this.model,
-//     required this.nameController,
-//     required this.descriptionController,
-//     required this.afkCreditAmountController,
-//   });
-//   @override
-//   Widget build(BuildContext context) {
-//     bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
-
-//     return SingleChildScrollView(
-//       child: Container(
-//         padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-//         height: screenHeight(context) - 120,
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.start,
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             keyboardIsOpened ? verticalSpaceMedium : verticalSpaceLarge,
-//             AfkCreditsInputField(
-//                 // decoration: InputDecoration(
-//                 //   labelText: 'Quest Name: ',
-//                 // ),
-//                 placeholder: 'Quest name',
-//                 controller: nameController,
-//                 errorText: model.nameInputValidationMessage
-//                 //keyboardType: TextInputType.text,
-//                 // focusNode: nameFocusNode,
-//                 ),
-//             //ErrorTextBox(message: model.nameInputValidationMessage),
-//             verticalSpaceSmall,
-//             AfkCreditsInputField(
-//               placeholder: 'Quest description (optional)',
-//               controller: descriptionController,
-//             ),
-//             verticalSpaceLarge,
-//             AfkCreditsDropdownFormField<QuestType>(
-//               items: CreateQuestType.values.map(
-//                 (_questType) {
-//                   return DropdownMenuItem(
-//                     value: _questType == CreateQuestType.TreasureLocationSearch
-//                         ? QuestType.TreasureLocationSearch
-//                         : _questType == CreateQuestType.GPSAreaHike
-//                             ? QuestType.GPSAreaHike
-//                             : QuestType.GPSAreaHunt,
-//                     child: model.isLoading == false
-//                         ? Text(
-//                             getShortQuestType(
-//                               _questType ==
-//                                       CreateQuestType.TreasureLocationSearch
-//                                   ? QuestType.TreasureLocationSearch
-//                                   : _questType == CreateQuestType.GPSAreaHike
-//                                       ? QuestType.GPSAreaHike
-//                                       : QuestType.GPSAreaHunt,
-//                             ),
-//                           )
-//                         : Text(
-//                             "Select Quest Type",
-//                           ),
-//                   );
-//                 },
-//               ).toList(),
-//               onChanged: (QuestType? questType) {
-//                 questTypeValue = questType;
-//                 model.setQuestType(selectedQuestType: questType!);
-//               },
-//               placeholder: 'Select quest type',
-//               value: questTypeValue,
-//               errorText: model.questTypeInputValidationMessage,
-//             ),
-//             verticalSpaceLarge,
-//             AfkCreditsInputField(
-//               placeholder: 'Credit amount',
-//               keyboardType: TextInputType.number,
-//               inputFormatters: <TextInputFormatter>[
-//                 FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-//               ],
-//               controller: afkCreditAmountController,
-//               errorText: model.afkCreditsInputValidationMessage,
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

@@ -11,11 +11,6 @@ class MarkerService {
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final log = getLogger("MarkerService");
-  final FirestoreApi _firestoreApi = locator<FirestoreApi>();
-
-  // -------------------------------------------------------
-  // state
-  List<AFKMarker>? _markersLists;
 
   // -------------------------------------------------------
   // methods

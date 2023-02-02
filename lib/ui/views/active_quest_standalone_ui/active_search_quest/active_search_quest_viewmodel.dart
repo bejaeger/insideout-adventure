@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/search_quest_location/search_quest_location.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
-import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -65,7 +62,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     // start position!
     resetPreviousQuest();
     loadQuestMarkers(quest: quest);
-    // await setInitialDistance(quest: quest);
     setBusy(false);
   }
 
@@ -81,9 +77,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
           minAccuracy: kMinRequiredAccuracyLocationSearch))) {
         if (useSuperUserFeatures) {
           if (await useSuperUserFeature()) {
-            /*   Notifications()
-                .unlockedAchievement(message: "Active Tresuare Location"); */
-
             snackbarService.showSnackbar(
                 title: "Starting quest as super user",
                 message:
@@ -241,12 +234,10 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
       // update UI on quest update
       if (checkpoints.elementAt(max(checkpoints.length - 2, 0)).distanceToGoal >
           checkpoints.last.distanceToGoal) {
-        // directionStatus = "Getting closer!";
         directionStatus = DirectionStatus.closer;
         logString =
             "Updated: Right direction (${checkpoints.last.distanceToGoal.toStringAsFixed(2)} m left)";
         notifyListeners();
-        await vibrateRightDirection();
       } else {
         directionStatus = DirectionStatus.further;
         logString =
@@ -337,7 +328,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
 
   @override
   void resetPreviousQuest() {
-    // cancelQuestListener();
     markersOnMap = {};
     checkpoints = [];
     directionStatus = DirectionStatus.notstarted;
@@ -389,17 +379,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     // TODO: ALTERNATIVE: have smaller distanceFilter and additional filter to
     // select when user can update location
     final position = await _geolocationService.getUserLivePosition;
-    // if (!await checkAccuracy(
-    //     position: position,
-    //     showDialog: false,
-    //     minAccuracy: kMinRequiredAccuracyLocationSearch)) {
-    //   // TODO: Think if I should try to retrieve CURRENT position once /
-    //   log.v(
-    //       "Accuracy is ${position.accuracy} and not enough to take next point!");
-    //   // setSkipUpdatingQuestStatus(true);
-    //   return "GPS Accuracy low, walk further";
-    //   // return "GPS Accuracy low, please walk futher and try again";
-    // }
 
     // check distance to goal!
     addCheckpoint(newPosition: position);
@@ -444,8 +423,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
       log.wtf(
           "Checking new location returned 'false' or something unknwon! Check code!");
     }
-    // await Future.delayed(
-    //     Duration(seconds: kCheckDistanceReloadDurationInSeconds));
     setIsCheckingDistance(false);
     setAllowCheckingPosition(false);
     notifyListeners();
@@ -535,51 +512,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
-  // check whether distance can be checked based on accuracy,
-  // distance to last check, and quest configuration
-
-  // This is currently not used as we use a position listener
-  // which seems to perform much better!
-  // TODO THIS IS POSSIBLY DEPRECATED
-  bool isDistanceCheckAllowed({required Position newPosition}) {
-    if (activeQuestService.activatedQuest == null) {
-      log.wtf("no quest active at the moment");
-      return false;
-    }
-    // check how far user went when last check happened!
-    final distanceFromLastCheck =
-        getDistanceToPreviousCheckpoint(newPosition: newPosition);
-
-    // treats accuracy as uncorrelated (conservative approach!)
-    double propagatedAccuracy = getPropagatedAccuracy(newPosition: newPosition);
-
-    propagatedAccuracy = propagatedAccuracy *
-        0.7; // assume that there is some correlation between the two points
-    // clamp it to between 30 and 80 to have some consistency.
-    double minDistanceFromLastCheck = propagatedAccuracy.clamp(10, 80);
-
-    double? lastDistanceToGoal =
-        activeQuestService.activatedQuest!.lastDistanceInMeters;
-    late bool allow;
-    if (lastDistanceToGoal != null) {
-      // to allow for more chances to check closer to the finish line to increase
-      // chances that due to fluctuations the trophy is found and the user does not get stuck
-      // and frustrated when being close to the goal!
-      allow = distanceFromLastCheck >
-          minDistanceFromLastCheck * (lastDistanceToGoal / 200).clamp(0.25, 1);
-    } else {
-      allow = distanceFromLastCheck > minDistanceFromLastCheck;
-    }
-    if (allow) {
-      log.v(
-          "Allowing distance check! Distance from last check: ${distanceFromLastCheck.toStringAsFixed(0)}. Propagated accuracy: ${propagatedAccuracy.toStringAsFixed(0)}.");
-      return true;
-    }
-    log.v(
-        "Not allowing distance check! Distance from last check: ${distanceFromLastCheck.toStringAsFixed(0)}. Propagated accuracy: ${propagatedAccuracy.toStringAsFixed(0)}.");
-    return false;
-  }
-
   // returns propagated accuracy from last two points by treating it as uncorrelated
   // -> Very Conservative -> maybe too conservative
   double getPropagatedAccuracy({required Position newPosition}) {
@@ -599,12 +531,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     throw UnimplementedError();
   }
 
-  // void cancelQuestListener() {
-  //   log.i("Cancelling subscription to vibration search quest");
-  //   _activeVibrationQuestSubscription?.cancel();
-  //   _activeVibrationQuestSubscription = null;
-  // }
-
   void showReloadingInfo() {
     snackbarService.showSnackbar(title: "Walk to reload", message: "...");
   }
@@ -620,7 +546,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
 
   @override
   void dispose() {
-    // cancelQuestListener();
     super.dispose();
   }
 
@@ -647,7 +572,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     notifyListeners();
   }
 
-  @override
   void addMarkerToMap({required Quest quest, required AFKMarker? afkmarker}) {
     if (afkmarker == null) return;
     markersOnMap.add(
@@ -662,7 +586,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     notifyListeners();
   }
 
-  @override
   BitmapDescriptor defineMarkersColour(
       {required AFKMarker afkmarker, required Quest? quest}) {
     if (afkmarker == quest!.startMarker) {

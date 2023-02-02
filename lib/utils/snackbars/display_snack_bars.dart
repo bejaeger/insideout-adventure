@@ -31,32 +31,6 @@ class DisplaySnackBars {
     );
   }
 
-  void snackBarTextBoxEmpty([String? message]) {
-    _snackBarService.showSnackbar(
-      message: message ?? 'At least one of the input fields is empty',
-      title: 'Input not valid',
-      // duration: Duration(seconds: 5),
-      onTap: (_) {
-        print('snackbar tapped');
-      },
-      //mainButtonTitle: 'Ok',
-      onMainButtonTapped: () => print('Undo the action!'),
-    );
-  }
-
-  void snackBarInsertedPrePurchasedGC() {
-    _snackBarService.showSnackbar(
-      message: 'Gift Cart Inserted Successfully',
-      title: 'Successful ',
-      //duration: Duration(seconds: 5),
-      onTap: (_) {
-        print('snackbar tapped');
-      },
-      //mainButtonTitle: 'Ok',
-      onMainButtonTapped: () => print('Undo the action!'),
-    );
-  }
-
   void snackBarUpdateQuest({required Quest quest}) {
     _snackBarService.showSnackbar(
       title: "Quest Updated ",
