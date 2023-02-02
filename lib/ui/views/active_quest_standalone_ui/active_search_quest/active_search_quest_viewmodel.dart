@@ -5,6 +5,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/search_quest_location/search_quest_location.dart';
+import 'package:afkcredits/enums/collect_credits_status.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
@@ -12,9 +13,6 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../../../enums/collect_credits_status.dart';
 
 // Singleton ViewModel!
 
@@ -27,11 +25,12 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
   // ------------------------------------------
   // getters
   int? get currentGPSAccuracy => _geolocationService.currentGPSAccuracy;
-  bool get isFirstDistanceCheck => numberTimesFired == 0;
-  int get numCheckpointsReached => activeQuestService.getNumberMarkersCollected;
-  int get numMarkers =>
+  bool get isFirstDistanceCheck => numTimesFired == 0;
+  int get numCheckpointsCollected =>
+      activeQuestService.getNumberMarkersCollected;
+  int get numCheckpointsToCollect =>
       activeQuestService.getNumberMarkers -
-      1; // -1 cause we don't wanna count start marker
+      1; // -1 cause we don't wanna countthe start marker
 
   // ----------------
   // state
@@ -43,11 +42,10 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
 
   double currentDistanceInMeters = -1;
   double previousDistanceInMeters = -1;
-  int numberTimesFired = 0;
+  int numTimesFired = 0;
   bool allowCheckingPosition = true;
 
   // markers on map
-  Set<Marker> markersOnMap = {};
   void Function()? notifyParentView;
 
   @override
@@ -61,7 +59,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     // Add listener with a small distance filter to get most precise
     // start position!
     resetPreviousQuest();
-    loadQuestMarkers(quest: quest);
     setBusy(false);
   }
 
@@ -173,7 +170,7 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
       if (appConfigProvider.dummyQuestCompletionVerification) {
         return true;
       } else {
-        if (numMarkers == numCheckpointsReached + 1) {
+        if (numCheckpointsToCollect == numCheckpointsCollected + 1) {
           if (appConfigProvider.allowDummyMarkerCollection) {
             return true;
           } else {
@@ -303,7 +300,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
           handleSuccessfullyFinishedQuest(showDialogs: false),
           Future.delayed(Duration(milliseconds: 1000))
         ],
-        
       );
       collectCreditsStatus = results[0];
     } catch (e) {
@@ -328,13 +324,12 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
 
   @override
   void resetPreviousQuest() {
-    markersOnMap = {};
     checkpoints = [];
     directionStatus = DirectionStatus.notstarted;
     questSuccessfullyFinished = false;
     currentDistanceInMeters = -1;
     previousDistanceInMeters = -1;
-    numberTimesFired = 0;
+    numTimesFired = 0;
     setIsCheckingDistance(false);
     setAllowCheckingPosition(true);
     super.resetPreviousQuest();
@@ -359,7 +354,7 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     previousDistanceInMeters = currentDistanceInMeters;
     currentDistanceInMeters = newDistanceInMeters;
     log.i("Setting initial data for Search Quest $newDistanceInMeters meters");
-    numberTimesFired++;
+    numTimesFired++;
     questTestingService.maybeRecordData(
       trigger: QuestDataPointTrigger.userAction,
       userEventDescription:
@@ -397,7 +392,7 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
         ]);
         setIsCheckingDistance(false);
         setAllowCheckingPosition(false);
-        numberTimesFired++;
+        numTimesFired++;
         directionStatus = DirectionStatus.unknown;
         notifyListeners();
         return;
@@ -553,45 +548,5 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     notifyListeners();
     await Future.delayed(Duration(milliseconds: 400));
     notifyListeners();
-  }
-
-  /////////////////////////////////////////
-  ///////////////////////////////////////////
-  ////////////////////////////////////////
-  // Map functionality
-
-  void loadQuestMarkers({Quest? quest}) {
-    log.i("Loading quest markers");
-    if (quest != null) {
-      addMarkerToMap(quest: quest, afkmarker: quest.startMarker);
-    } else {
-      addMarkerToMap(
-          quest: activeQuest.quest, afkmarker: activeQuest.quest.startMarker);
-      log.v('These Are the values of the current Markers $markersOnMap');
-    }
-    notifyListeners();
-  }
-
-  void addMarkerToMap({required Quest quest, required AFKMarker? afkmarker}) {
-    if (afkmarker == null) return;
-    markersOnMap.add(
-      Marker(
-        markerId: MarkerId(afkmarker
-            .id), // google maps marker id of start marker will be our quest id
-        position: LatLng(afkmarker.lat!, afkmarker.lon!),
-        infoWindow: InfoWindow(snippet: quest.name),
-        icon: defineMarkersColour(quest: quest, afkmarker: afkmarker),
-      ),
-    );
-    notifyListeners();
-  }
-
-  BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker, required Quest? quest}) {
-    if (afkmarker == quest!.startMarker) {
-      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
-    } else {
-      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
-    }
   }
 }

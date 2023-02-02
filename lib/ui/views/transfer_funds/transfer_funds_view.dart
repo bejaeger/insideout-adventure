@@ -1,7 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
-import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -15,12 +14,10 @@ import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart
   FormTextField(name: 'amount'),
 ])
 class TransferFundsView extends StatelessWidget with $TransferFundsView {
-  final TransferType type;
   final PublicUserInfo senderInfo;
   final PublicUserInfo recipientInfo;
   TransferFundsView(
       {Key? key,
-      required this.type,
       required this.senderInfo,
       required this.recipientInfo})
       : super(key: key);
@@ -28,8 +25,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TransferFundsViewModel>.reactive(
-      viewModelBuilder: () => TransferFundsViewModel(
-          type: type, senderInfo: senderInfo, recipientInfo: recipientInfo),
+      viewModelBuilder: () => TransferFundsViewModel(senderInfo: senderInfo, recipientInfo: recipientInfo),
       onModelReady: (model) {
         listenToFormUpdated(model);
       },

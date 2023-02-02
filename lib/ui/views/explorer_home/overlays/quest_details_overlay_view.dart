@@ -227,8 +227,8 @@ class SearchQuestView extends StatelessWidget {
                 previousDistance: model.previousDistanceInMeters,
                 activatedQuest: model.activeQuestNullable,
                 directionStatus: model.directionStatus,
-                numCheckpointsReached: model.numCheckpointsReached,
-                numMarkers: model.numMarkers,
+                numCheckpointsReached: model.numCheckpointsCollected,
+                numMarkers: model.numCheckpointsToCollect,
               ),
             ),
             if (model.useSuperUserFeatures &&

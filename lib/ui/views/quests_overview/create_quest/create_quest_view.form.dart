@@ -13,11 +13,6 @@ import 'package:stacked/stacked.dart';
 const String NameValueKey = 'name';
 const String DescriptionValueKey = 'description';
 const String AfkCreditAmountValueKey = 'afkCreditAmount';
-const String QuestTypeValueKey = 'questType';
-
-final Map<String, String> QuestTypeValueToTitleMap = {
-  'QuestTypeDr': 'QuestType',
-};
 
 final Map<String, TextEditingController>
     _CreateQuestViewTextEditingControllers = {};
@@ -130,13 +125,11 @@ extension ValueProperties on FormViewModel {
       this.formValueMap[DescriptionValueKey] as String?;
   String? get afkCreditAmountValue =>
       this.formValueMap[AfkCreditAmountValueKey] as String?;
-  String? get questTypeValue => this.formValueMap[QuestTypeValueKey] as String?;
 
   bool get hasName => this.formValueMap.containsKey(NameValueKey);
   bool get hasDescription => this.formValueMap.containsKey(DescriptionValueKey);
   bool get hasAfkCreditAmount =>
       this.formValueMap.containsKey(AfkCreditAmountValueKey);
-  bool get hasQuestType => this.formValueMap.containsKey(QuestTypeValueKey);
 
   bool get hasNameValidationMessage =>
       this.fieldsValidationMessages[NameValueKey]?.isNotEmpty ?? false;
@@ -145,8 +138,6 @@ extension ValueProperties on FormViewModel {
   bool get hasAfkCreditAmountValidationMessage =>
       this.fieldsValidationMessages[AfkCreditAmountValueKey]?.isNotEmpty ??
       false;
-  bool get hasQuestTypeValidationMessage =>
-      this.fieldsValidationMessages[QuestTypeValueKey]?.isNotEmpty ?? false;
 
   String? get nameValidationMessage =>
       this.fieldsValidationMessages[NameValueKey];
@@ -154,15 +145,9 @@ extension ValueProperties on FormViewModel {
       this.fieldsValidationMessages[DescriptionValueKey];
   String? get afkCreditAmountValidationMessage =>
       this.fieldsValidationMessages[AfkCreditAmountValueKey];
-  String? get questTypeValidationMessage =>
-      this.fieldsValidationMessages[QuestTypeValueKey];
 }
 
 extension Methods on FormViewModel {
-  void setQuestType(String questType) {
-    this.setData(this.formValueMap..addAll({QuestTypeValueKey: questType}));
-  }
-
   setNameValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[NameValueKey] = validationMessage;
   setDescriptionValidationMessage(String? validationMessage) =>
@@ -170,6 +155,4 @@ extension Methods on FormViewModel {
   setAfkCreditAmountValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[AfkCreditAmountValueKey] =
           validationMessage;
-  setQuestTypeValidationMessage(String? validationMessage) =>
-      this.fieldsValidationMessages[QuestTypeValueKey] = validationMessage;
 }
