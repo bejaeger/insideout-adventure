@@ -90,9 +90,6 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
       }
     }
 
-    // ----------------------------------------------
-    // prepare feedback file and upload to firestore
-
     await _feedbackService.loadFeedbackCampaignInfo();
     String deviceInfo = await _feedbackService.getDeviceInfoString();
     Feedback feedback = Feedback(

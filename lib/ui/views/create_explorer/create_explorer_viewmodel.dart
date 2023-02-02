@@ -14,20 +14,15 @@ class CreateExplorerViewModel extends FormViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final log = getLogger("AddExplorerViewModel");
 
-  // ------------------------
-  // state
   bool isLoading = false;
 
   void Function() disposeController;
   CreateExplorerViewModel({required this.disposeController});
 
-  // ------------------------------------------
-  // state
   int pageIndex = 0;
   bool? ownPhoneSelected;
   String? chooseValueMessage;
-  // -------------------------
-  // functions
+
   Future onBackButton(PageController controller) async {
     if (pageIndex > 0) {
       controller.previousPage(
@@ -44,21 +39,13 @@ class CreateExplorerViewModel extends FormViewModel {
     if (pageIndex == 0) {
       final result = isValidInput(name: nameValue, password: passwordValue);
       if (result == true) {
-        // quest type selection input
         controller.nextPage(
             duration: Duration(milliseconds: 200), curve: Curves.easeIn);
         pageIndex = pageIndex + 1;
         notifyListeners();
       }
     } else if (pageIndex == 1) {
-      // quest marker selection
-      // ? for some reason this caused an error in the google map library
-      // ? However, I don't know why I added this anyways!
-      // isLoading = true;
-      // notifyListeners();
       addExplorer();
-      // isLoading = false;
-      // notifyListeners();
     }
   }
 
@@ -67,9 +54,6 @@ class CreateExplorerViewModel extends FormViewModel {
     notifyListeners();
   }
 
-  //No Need for this since we are going to start doing realtime validation on
-  //setFormStatus()
-  // Still need this e.g. if the user didn't tap the password field.
   dynamic isValidInput({required String? name, required String? password}) {
     log.i("Testing if user input is valid: name = $name, password = $password");
     if (name == null || name == "") {
@@ -108,7 +92,6 @@ class CreateExplorerViewModel extends FormViewModel {
         await _dialogService.showDialog(
             title: "Could not create user", description: result);
       } else {
-        // successfully added user
         await _dialogService.showDialog(
             title: "Successfully created account",
             description:
@@ -130,7 +113,6 @@ class CreateExplorerViewModel extends FormViewModel {
   @override
   void setFormStatus() {
     log.i('Set form Status with data: $formValueMap');
-    // Set a validation message for the entire form
     if (hasPasswordValidationMessage) {
       setValidationMessage('Error in the form, please check again');
     }

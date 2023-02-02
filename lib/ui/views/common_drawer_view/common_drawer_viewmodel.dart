@@ -10,18 +10,13 @@ class CommonDrawerViewModel extends BaseModel {
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
   final FeedbackService _feedbackService = locator<FeedbackService>();
 
-  // ----------------------------------------
-  // getters
   FeedbackCampaignInfo? get feedbackCampaignInfo =>
       _feedbackService.feedbackCampaignInfo;
   bool get userHasGivenFeedback => _feedbackService.userHasGivenFeedback();
-
   bool get showFeedbackBadge =>
       feedbackCampaignInfo?.surveyUrl != null &&
       feedbackCampaignInfo?.surveyUrl != "";
 
-  // -----------------------------------------
-  // functions
   void handleLogoutEvent() async {
     final result = await dialogService.showDialog(
         barrierDismissible: true,

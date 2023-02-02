@@ -47,8 +47,6 @@ class NotionApi {
         notionToken: _appConfigProvider.notionFeedbackToken, page: page);
   }
 
-  // ---------------------------------------------------
-  // helper functions
   void _addNotionDatabaseTextProperty(
       {required Page page, required String name, required String? value}) {
     page.addProperty(

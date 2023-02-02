@@ -53,12 +53,6 @@ class ScreenTimeService {
   int counter = 10;
   ScreenTimeSession? scheduledScreenTimeSession;
 
-  // set from user_service
-  String? currentUserId;
-  void setUserId(String id) {
-    currentUserId = id;
-  }
-
   // helper function
   int getMinSreenTimeLeftInSeconds() {
     DateTime now = DateTime.now();

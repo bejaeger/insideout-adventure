@@ -23,8 +23,6 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
 
 class TransferFundsViewModel extends FormViewModel with NavigationMixin {
-  //--------------------------------------------------------------
-  // services
   final BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
   final SnackbarService? _snackbarService = locator<SnackbarService>();
   final UserService _userService = locator<UserService>();
@@ -33,12 +31,8 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final log = getLogger("AddFundsViewModel");
 
-  // -------------------------------------------
-  // getters
   User get currentUser => _userService.currentUser;
 
-  // --------------------------------------------
-  // state
   num? amount;
   num? screenTimeEquivalent;
 
@@ -100,7 +94,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       setBusy(false);
       return false;
     } else if (finalConfirmation?.confirmed == true) {
-      // -----------------------------------------------------
       // We create a completer and parse it to the pop-up window.
       // The pop-up window shows a progress indicator and
       // displays a success or error dialog when the completer is completed
@@ -115,7 +108,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       dynamic dialogResult = await _showMoneyTransferDialog(
           moneyTransferCompleter: moneyTransferCompleter);
 
-      // -----------------------------------------------------
       // Handle user input after success or error of transfer!
       // Navigation depends on user input and transfer type;
       if (dialogResult?.confirmed == true) {

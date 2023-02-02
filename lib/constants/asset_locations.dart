@@ -38,7 +38,6 @@ const String kIllustrationWalletEarning =
 const String kIllustrationWalletSpending =
     "assets/illustrations/wallet_spending.png";
 
-// ------------------------------------------
 // lottie
 // @see: https://assets2.lottiefiles.com/packages/lf20_0w4fvbov.json
 const String kLottieChillDude = "assets/lottie/chilldude.json";

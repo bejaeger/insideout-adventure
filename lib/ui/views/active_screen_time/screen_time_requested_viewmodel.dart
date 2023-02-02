@@ -5,12 +5,8 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class ScreenTimeRequestedViewModel extends BaseModel {
-  // ------------------------------------------------
-  // services
   final log = getLogger("StartScreenTimeCounterViewModel");
 
-  // ----------------------------------------------
-  // state
   StreamSubscription? screenTimeSubscription;
 
   Future listenToData({required ScreenTimeSession session}) async {

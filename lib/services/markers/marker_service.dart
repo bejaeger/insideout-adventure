@@ -6,14 +6,10 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class MarkerService {
-  // -------------------------------------------------------
-  // services
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final log = getLogger("MarkerService");
 
-  // -------------------------------------------------------
-  // methods
   Future<bool> isUserCloseby(
       {required AFKMarker? marker, int? geofenceRadius}) async {
     if (marker == null) {

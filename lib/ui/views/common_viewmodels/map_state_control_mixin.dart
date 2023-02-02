@@ -1,15 +1,11 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 
-mixin MapStateControlMixin {
-  // Class implementing common functionality to update and get map information
+// Class implementing common functionality to update and get map information
 
-  // --------------------------------------
-  // Services
+mixin MapStateControlMixin {
   final MapStateService mapStateService = locator<MapStateService>();
 
-  // ----------------------------------------
-  // Getters
   double get bearing => mapStateService.bearing;
   double get tilt => mapStateService.tilt;
   double get zoom => mapStateService.zoom;
@@ -18,8 +14,7 @@ mixin MapStateControlMixin {
   double? get lastBirdViewZoom => mapStateService.lastBirdViewZoom;
   bool get isAvatarView => mapStateService.isAvatarView;
   bool get navigatedFromQuestList => mapStateService.navigatedFromQuestList;
-  // -------------------------------------
-  // functions
+
   void changeCameraTilt(double tiltIn) {
     mapStateService.tilt = tiltIn;
   }
@@ -29,7 +24,6 @@ mixin MapStateControlMixin {
   }
 
   void changeCameraBearing(double bearingIn) {
-    // mapStateService.bearingSubject.add(bearingIn);
     mapStateService.bearing = bearingIn;
   }
 
@@ -39,7 +33,6 @@ mixin MapStateControlMixin {
 
   void setCameraSettings({double? bearing, double? zoom, double? tilt}) {
     if (bearing != null) {
-      // mapStateService.bearingSubject.add(bearing);
       mapStateService.bearing = bearing;
     }
     if (tilt != null) {

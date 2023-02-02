@@ -5,7 +5,6 @@ import 'package:afkcredits/ui/views/login/select_role_after_login_viewmodel.dart
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-// ----------------------------------------------------
 // ! THIS class is called
 // ! when the user logs in with a third party provider!
 

@@ -5,18 +5,13 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class HelpDeskViewModel extends BaseModel {
-  // ----------------------------------------------
-  // services
+
   final FirestoreApi firestoreApi = locator<FirestoreApi>();
   final log = getLogger("HelpDeskViewModel");
 
-  // -------------------------------------------
-  // state
   FAQs faqs = FAQs(answers: [], questions: []);
   List<bool> isExpanded = [];
 
-  // -------------------------------------
-  // functions
   Future getData() async {
     setBusy(true);
     faqs = await firestoreApi.getFaqs();

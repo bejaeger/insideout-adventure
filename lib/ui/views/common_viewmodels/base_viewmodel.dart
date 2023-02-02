@@ -52,8 +52,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   final PermissionService _permissionService = locator<PermissionService>();
   final baseModelLog = getLogger("BaseModel");
 
-  // ------------------------------------------------------
-  // getters
   User get currentUser => userService.currentUser;
   User? get currentUserNullable => userService.currentUserNullable;
   UserStatistics get currentUserStats => userService.currentUserStats;
@@ -84,8 +82,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   int get avatarIdx => currentUserNullable?.avatarIdx != null
       ? currentUserNullable!.avatarIdx!
       : 1;
-  // -----------------------------------------------
-  // gamification system
+
   int currentLevel({num? lifetimeEarnings}) {
     return gamificationService.getCurrentLevel(
         lifetimeEarnings: lifetimeEarnings);
@@ -97,11 +94,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       gamificationService.getPercentageOfNextLevel();
   String get currentLevelName => gamificationService.getCurrentLevelName();
 
-  // --------------------------------------------------
   bool get hasSelectedQuest => activeQuestService.hasSelectedQuest;
   Quest? get selectedQuest => activeQuestService.selectedQuest;
   bool get hasActiveQuest => activeQuestService.hasActiveQuest;
-  // only access this
   ActivatedQuest get activeQuest => activeQuestService.activatedQuest!;
   ActivatedQuest? get previouslyFinishedQuest =>
       activeQuestService.previouslyFinishedQuest;
@@ -110,9 +105,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   String get getHourMinuteSecondsTime =>
       _stopWatchService.secondsToHourMinuteSecondTime(activeQuest.timeElapsed);
 
-  bool? canVibrate;
-
-  bool validatingMarker = false;
 
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
@@ -122,8 +114,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       screenTimeService.supportedExplorerScreenTimeSessionsActive.values
           .toList();
 
-  // ------------------------------------------
-  // state
+  bool? canVibrate;
+  bool validatingMarker = false;
 
   int getMinSreenTimeLeftInSeconds(
       {required List<ScreenTimeSession> sessions}) {
@@ -348,7 +340,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
   }
 
-  //------------------------------------------
   // this is supposed to show the main instructions.
   // For now it's just a simple dialog
   Future showInstructions(QuestType? type) async {

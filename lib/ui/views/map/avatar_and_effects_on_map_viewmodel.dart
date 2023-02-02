@@ -6,13 +6,14 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class AvatarAndEffectsOnMapViewModel extends BaseModel {
-  // -----------------------------------------
-  // services
+  final void Function() startAnimation;
+  final void Function() stopAnimation;
+  AvatarAndEffectsOnMapViewModel(
+      {required this.startAnimation, required this.stopAnimation});
+
   final MapStateService mapStateService = locator<MapStateService>();
   final log = getLogger("AvatarOnMapViewModel");
 
-  // -----------------------------------------
-  // getters
   bool get isAvatarView => mapStateService.isAvatarView;
   bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;
   bool get isMovingCamera => layoutService.isMovingCamera;
@@ -26,22 +27,11 @@ class AvatarAndEffectsOnMapViewModel extends BaseModel {
           !hasActiveQuest)) &&
       isAvatarView;
 
-  // -----------------------------------------
-  // constructor with callbacks from animation controller
-  final void Function() startAnimation;
-  final void Function() stopAnimation;
-  AvatarAndEffectsOnMapViewModel(
-      {required this.startAnimation, required this.stopAnimation});
-
-  // -----------------------------------------
-  // state
   bool prevValue = false;
   bool isAnimating = true;
   StreamSubscription? isFingerOnScreenListener;
   StreamSubscription? isMovingCameraSubscription;
 
-  // -----------------------------------------
-  // functions
   void listenToData() async {
     if (isFingerOnScreenListener == null) {
       isFingerOnScreenListener = mapStateService.isFingerOnScreenSubject.listen(

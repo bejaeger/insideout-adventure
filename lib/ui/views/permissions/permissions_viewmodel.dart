@@ -22,37 +22,28 @@ import 'package:afkcredits/app/app.logger.dart';
 // - maybe battery save mode
 
 class PermissionsViewModel extends BaseModel {
-  // -----------------------------------------------------------
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   final LocalStorageService  _localStorageServie = locator<LocalStorageService>();
       final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
-
   final log = getLogger("PermissionsViewModel");
 
-  // -----------------------------
-  // state
   bool showReinstallScreen = false;
   bool changedPermission = false;
 
-  // -------------------------------------------------
-  // Main function
   Future<void> runPermissionLogic() async {
     bool allGood = true;
 
-    // - location permission
     allGood = allGood & await handleLocationPermission();
 
-    // - notification service
     allGood = allGood & await handleNotificationPermissions();
 
-    // - camera service
-    // Not used at the moment!
+    // not used at the moment
     // allGood = allGood & await handleCameraPermissions();
 
     await handleArTest();
 
     // - activity service
-    // Not used at the moment!
+    // Not implemented used at the moment!
 
     if (allGood) {
       if (changedPermission) {
@@ -68,15 +59,11 @@ class PermissionsViewModel extends BaseModel {
     notifyListeners();
   }
 
-  // ---------------------------------------------
-  // helper functions
-
   // @ https://pub.dev/packages/geolocator
   // The geolocator will automatically try to request permissions when you try to acquire a location through the getCurrentPosition or getPositionStream methods.
   Future<bool> handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
-    // Test if location services are enabled.
     serviceEnabled = await _geolocatorPlatform.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Location services are not enabled don't continue
@@ -130,7 +117,6 @@ class PermissionsViewModel extends BaseModel {
     var status = await Permission.camera.status;
     log.v("camera permissions: $status");
     if (status.isDenied || status.isPermanentlyDenied) {
-      // We didn't ask for permission yet or the permission has been denied before but not permanently.
       await showCameraPermissionRequestDialog();
       status = await Permission.camera.request();
       if (status.isDenied) {
@@ -156,7 +142,6 @@ class PermissionsViewModel extends BaseModel {
     // AR not supported yet for Android
     if (!appConfigProvider.isARAvailable) {
       _localStorageServie.saveToDisk(key: kConfiguredArKey, value: "true");
-      // await showArDoesNotWorkDialog();
       return;
     }
 
@@ -166,8 +151,7 @@ class PermissionsViewModel extends BaseModel {
       dynamic res = await navToArObjectView(true);
       ok = res is bool && res == true;
     } catch (e) {
-      // if camera permission denied previously we will end up here
-      log.wtf("Cannot open AR view");
+      log.e("Cannot open AR view");
     }
     if (ok) {
       userService.setIsUsingAr(value: true);
@@ -187,8 +171,6 @@ class PermissionsViewModel extends BaseModel {
     }
   }
 
-  // -------------------------------------------------------
-  // Dialogs
   Future showLocationPermissionRequestDialog() async {
     await dialogService.showDialog(
         title: "Give location access",
@@ -235,8 +217,6 @@ class PermissionsViewModel extends BaseModel {
         notifyListeners();
       },
     );
-    //await AwesomeNotifications().showGlobalDndOverridePage();
-    // await AwesomeNotifications().showAlarmPage();
   }
 
   Future showCameraPermissionRequestDialog() async {

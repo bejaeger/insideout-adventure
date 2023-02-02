@@ -4,7 +4,6 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/lifecycle_manager.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
-import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
@@ -31,9 +30,6 @@ const bool USE_EMULATOR = false;
 
 void mainCommon(Flavor flavor) async {
   try {
-    // NOTE
-    // ? Firebase is initialiezd in flavor specific files
-
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
@@ -51,7 +47,6 @@ void mainCommon(Flavor flavor) async {
     setupDialogUi();
     setupSnackbarUi();
     setupBottomSheetUi();
-    // initialize notifications
     NotificationController().initializeLocalNotifications();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -77,25 +72,19 @@ void mainCommon(Flavor flavor) async {
 
     // configure services that need settings dependent on flavor
     final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
-    final UserService userService = locator<UserService>();
     appConfigProvider.configure(flavor);
     print("==>> Running with flavor $flavor");
 
     if (!kIsWeb && Platform.isAndroid) {
-      // await ArCoreController.checkArCoreAvailability() &&
-      // await ArCoreController.checkIsArCoreInstalled()) {
       appConfigProvider.setIsARAvailable(false);
-      // appConfigProvider.setIsUsingAR(false);
     } else {
       if (await ARKitPlugin.checkConfiguration(
               ARKitConfiguration.worldTracking) &&
           await ARKitPlugin.checkConfiguration(
               ARKitConfiguration.imageTracking)) {
         appConfigProvider.setIsARAvailable(true);
-        // appConfigProvider.setIsUsingAR(true);
       } else {
         appConfigProvider.setIsARAvailable(false);
-        // appConfigProvider.setIsUsingAR(false);
       }
     }
 
@@ -135,8 +124,8 @@ class MyApp extends StatelessWidget {
                   ),
               primaryIconTheme: IconThemeData(color: Colors.white),
               primaryTextTheme: TextTheme(
+                // color of app bar title
                 headline6: TextStyle(
-                    // color of app bar title
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -151,7 +140,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Declared as global, outside of any class
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 
@@ -161,7 +149,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
-  //final localHostString = "192.168.1.69";
   FirebaseFirestore.instance.settings = Settings(
     host: '$localHostString:8080',
     sslEnabled: false,
@@ -174,7 +161,6 @@ Future _connectToFirebaseEmulator() async {
 ButtonStyle getRaisedButtonStyle() {
   return ElevatedButton.styleFrom(
     onPrimary: Colors.white,
-    // primary: darkTurquoise,
     primary: kcPrimaryColor,
     minimumSize: Size(88, 45),
     padding: EdgeInsets.symmetric(horizontal: 16),

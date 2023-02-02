@@ -11,8 +11,6 @@ import '../../../utils/utilities/utilities.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class NotificationsService {
-  // -------------------------------------------
-  // services
   final log = getLogger("NotificationsService");
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
@@ -167,10 +165,7 @@ class NotificationsService {
     }
   }
 
-  // ------------------------------------------------------
-  // For push notifications
-  Future updateToken(
-      {required String uid, required List<String>? tokens}) async {
+    Future pushToken({required String uid, required List<String>? tokens}) async {
     String? token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
       if ((tokens != null && tokens.length > 1) ||

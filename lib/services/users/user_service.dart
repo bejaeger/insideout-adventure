@@ -38,8 +38,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'afkcredits_authentication_result_service.dart'; // for the utf8.encode method
 
 class UserService {
-  // -----------------------------------
-  // services
   final _firestoreApi = locator<FirestoreApi>();
   final FirebaseAuthenticationService _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
@@ -51,41 +49,18 @@ class UserService {
       locator<NotificationsService>();
   final log = getLogger('UserService');
 
-  // ---------------------------------------
-  // state / member variables and exposed objects
-  User? _currentUser;
-  UserAdmin? _currentUserAdmin;
   User? get currentUserNullable => _currentUser;
   User get currentUser => _currentUser!;
   UserSettings get currentUserSettings =>
       currentUserNullable?.userSettings ?? UserSettings();
-
-  UserStatistics? _currentUserStats;
   UserStatistics get currentUserStats => _currentUserStats!;
   UserStatistics? get currentUserStatsNullable => _currentUserStats;
-  StreamSubscription? _currentUserStreamSubscription;
-  StreamSubscription? _currentUserStatsStreamSubscription;
-
   UserAdmin? get getCurrentUserAdmin => _currentUserAdmin!;
-  SponsorReference? sponsorReference;
-
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
-
   UserRole get getUserRole => currentUser.role;
   bool get isSuperUser => currentUser.role == UserRole.superUser;
   bool get isAdminUser => currentUser.role == UserRole.admin;
   bool get hasRole => currentUserNullable == null ? false : true;
-
-  // state
-  // store list of supportedExplorers
-  // map of list of money pools with money Pool id as key
-  Map<String, User> supportedExplorers = {};
-  Map<String, UserStatistics> supportedExplorerStats = {};
-
-  // quest history is added to user service (NOT IDEAL!)
-  Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
-
-  StreamSubscription? _explorersDataStreamSubscriptions;
   List<User> get supportedExplorersList {
     List<User> list = [];
     supportedExplorers.forEach((key, value) {
@@ -94,6 +69,17 @@ class UserService {
     return list;
   }
 
+  User? _currentUser;
+  UserAdmin? _currentUserAdmin;
+  UserStatistics? _currentUserStats;
+  StreamSubscription? _currentUserStreamSubscription;
+  StreamSubscription? _currentUserStatsStreamSubscription;
+  SponsorReference? sponsorReference;
+  Map<String, User> supportedExplorers = {};
+  Map<String, UserStatistics> supportedExplorerStats = {};
+  // we add the quest history to user service (THIS IS NOT IDEAL!)
+  Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
+  StreamSubscription? _explorersDataStreamSubscriptions;
   Map<String, StreamSubscription?> _explorerStatsStreamSubscriptions = {};
   Map<String, StreamSubscription?> _explorerHistoryStreamSubscriptions = {};
   Map<String, StreamSubscription?> _explorerScreenTimeStreamSubscriptions = {};
@@ -111,15 +97,11 @@ class UserService {
       log.v('User account exists. Save as _currentUser');
 
       _currentUser = userAccount!;
-      // need to add default user settings here in case it's not yet in user collection
-      _screenTimeService.setUserId(_currentUser!.uid);
 
-      // some user data management, mainly stored for push notifications
-      _notificationsService.updateToken(
+      _notificationsService.pushToken(
           uid: _currentUser!.uid, tokens: _currentUser!.tokens);
       maybeUpdateDeviceId(onlineDeviceId: _currentUser!.deviceId);
 
-      // }
       if (fromLocalStorage) {
         log.v("Save current user id to disk");
         await _localStorageService.saveToDisk(
@@ -166,9 +148,7 @@ class UserService {
     );
   }
 
-  // create user documents (user info, statistics) in firestore
   Future<User> createUserAccount({required User user}) async {
-    // create a new user profile on firestore
     try {
       log.v("Creating user account");
       List<String> keywords = getListOfKeywordsFromString(user.fullName);
@@ -177,7 +157,7 @@ class UserService {
       await _firestoreApi.createUser(user: newUser, stats: stats);
       return newUser;
     } catch (e) {
-      log.e("Error in createUser(): ${e.toString()}");
+      log.e(e);
       throw UserServiceException(
         message: "Creating user data failed with message",
         devDetails: e.toString(),
@@ -189,12 +169,6 @@ class UserService {
 
   Future<String?> getLocallyLoggedInUserId() async {
     final id = await _localStorageService.getFromDisk(key: kLocalStorageUidKey);
-    return id;
-  }
-
-  Future<UserRole?> getLocallyLoggedUserRole() async {
-    final id =
-        await _localStorageService.getFromDisk(key: kLocalStorageRoleKey);
     return id;
   }
 
@@ -227,14 +201,14 @@ class UserService {
           // if user is not created by another user we talk about an explorer with an own account
           // authenticate him with email
           log.i(
-              "User is NOT created by sponsor, running standard email login logic");
+              "User is NOT created by sponsor, explorer has its own account.");
           return await runLoginLogic(
               method: AuthenticationMethod.email,
               emailOrName: user.email,
               stringPw: stringPw,
               role: role);
         } else {
-          // user is created by sponsor
+          // user is created by parent
           if (user.password == null) {
             // something really bad happened
             log.wtf(
@@ -247,7 +221,6 @@ class UserService {
               hashedPw1: user.password,
               stringPw2: stringPw,
               hashedPw2: hashedPw)) {
-            // && password == user.password) {
             log.i(
                 "Found AFK user that was created by a sponsor inside the app");
             return AFKCreditsAuthenticationResultService.fromLocalStorage(
@@ -324,7 +297,6 @@ class UserService {
       return AFKCreditsAuthenticationResultService.error(
           errorMessage: result.errorMessage);
     } else {
-      // create user in data bank
       try {
         final user = result.user!;
         await createUserAccount(
@@ -357,9 +329,6 @@ class UserService {
           firebaseUser: result.user);
     }
   }
-
-  /////////////////////////////////////////////////
-  /// Functions to add explorer accounts!
 
   bool isSupportedExplorer({required String uid}) {
     List<String> explorerIds = currentUser.explorerIds;
@@ -426,7 +395,6 @@ class UserService {
       } else {
         log.i("Removing explorer with id $uid from list of explorers");
         List<String> newExplorerIds = removeFromExplorerLists(uid: uid);
-        // Ideal way would be to add a transaction here!
         await Future.wait([
           updateUserData(
               user: currentUser.copyWith(explorerIds: newExplorerIds)),

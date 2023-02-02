@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
@@ -17,23 +15,15 @@ class ExplorerSettingsForParentsDialogViewModel extends BaseModel {
     isUsingOwnPhoneTmp = isUsingOwnPhone;
   }
 
-  // ----------------------------------------------
-  // servies
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
-  // ----------------------------------------------
-  // getters
+
   bool get isARAvailable => appConfigProvider.isARAvailable;
   User? get explorer => userService.supportedExplorers[explorerUid];
-
-  // shown in parents account
   bool get isAcceptScreenTimeFirst =>
       (explorer!.userSettings ?? UserSettings()).isAcceptScreenTimeFirst;
   bool get isUsingOwnPhone =>
       (explorer!.userSettings ?? UserSettings()).ownPhone;
-
-  // -------------------------------------------------
-  // functions
 
   void setIsAcceptScreenTime(bool b) async {
     if (b == true && isUsingOwnPhone == false) {

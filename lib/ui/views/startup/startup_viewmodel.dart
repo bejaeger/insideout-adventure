@@ -6,17 +6,14 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
-import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 
 class StartUpViewModel extends TransferBaseViewModel {
-  // ------------------------------------------------------------
   final EnvironmentService _environmentService = locator<EnvironmentService>();
   final PermissionService _permissionService = locator<PermissionService>();
   final log = getLogger("StartUpViewModel");
 
-  // --------------------------------------------------------
   Future<void> runStartupLogic() async {
     // Only after at least the action method is set, the notification events are delivered
     NotificationController().initializeNotificationsEventListeners();
@@ -26,10 +23,8 @@ class StartUpViewModel extends TransferBaseViewModel {
 
     try {
       String? localUserId;
-      UserRole? localUserRole;
       if (!kIsWeb) {
         localUserId = await userService.getLocallyLoggedInUserId();
-        localUserRole = await userService.getLocallyLoggedUserRole();
       }
 
       if (localUserId != null) {

@@ -73,6 +73,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   }
 
   void resetSelectedQuest() {
+    // if selectedQuest is null and currentQuest is not null: quest active
     selectedQuestSubject.add(null);
   }
 

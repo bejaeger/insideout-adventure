@@ -15,30 +15,21 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class LoginViewModel extends AuthenticationViewModel {
-  // ----------------------------------------
-  // services
   final FirebaseAuthenticationService _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
   final SnackbarService _snackbarService = locator<SnackbarService>();
   bool checkUserRole = true;
-  final _navigationService = locator<NavigationService>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final log = getLogger("LoginViewModel");
   final UserService _userService = locator<UserService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
   final DialogService _dialogService = locator<DialogService>();
 
-  // ---------------------------
-  // getters
   String get getReleaseName => flavorConfigProvider.appName;
 
-  // --------------------------
-  // state
   String? emailOrNameInputValidationMessage;
   String? passwordInputValidationMessage;
 
-  // ------------------------------
-  // functions
   dynamic userLoginTapped({UserRole? userRole}) {
     if (userRole == null) {
       return () {
@@ -56,16 +47,7 @@ class LoginViewModel extends AuthenticationViewModel {
       }
       // ? do not provide dummy login also in prod database!
       if (_flavorConfigProvider.flavor == Flavor.prod) {
-        // if (userRole == UserRole.sponsor)
-        //   return () {
-        //     saveData(AuthenticationMethod.dummy, userRole);
-        //   };
-        // else {
         return null;
-        // }
-        // return () {
-        //   saveData(AuthenticationMethod.dummy, userRole);
-        // };
       }
     }
   }
@@ -90,16 +72,6 @@ class LoginViewModel extends AuthenticationViewModel {
       passwordInputValidationMessage = "Please provide a password";
       returnVal = false;
     }
-    // if (emailOrNameValue != null) {
-    //   bool emailValid =
-    //       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]\.[a-zA-Z]+")
-    //           .hasMatch(emailOrNameValue!);
-    //   if (!emailValid) {
-    //     emailOrNameInputValidationMessage =
-    //         'Please provide a valid email address';
-    //     returnVal = false;
-    //   }
-    // }
     return returnVal;
   }
 
@@ -164,8 +136,6 @@ class LoginViewModel extends AuthenticationViewModel {
 
   void navigateToCreateAccount() {
     navToSponsorCreateAccount(role: UserRole.sponsor);
-    // don't show view where account can be selected!
-    // _navigationService.replaceWith(Routes.createAccountUserRoleView);
   }
 
   bool isPwShown = false;

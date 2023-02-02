@@ -36,11 +36,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       required this.disposeController,
       required this.latLng});
 
-  // -------------------------------------------------------
-  // services
   final _log = getLogger('CreateQuestViewModel');
-  GoogleMapController? _googleMapController;
-  GoogleMapController? get getGoogleMapController => _googleMapController;
   final QuestService _questService = locator<QuestService>();
   final GeolocationService _geoLocationService = locator<GeolocationService>();
   final UserService _userService = locator<UserService>();
@@ -51,25 +47,23 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   final MapViewModel mapViewModel = locator<MapViewModel>();
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
-  // ------------------------------------------
-  // state
+
+  GoogleMapController? get getGoogleMapController => _googleMapController;
+
+  GoogleMapController? _googleMapController;
   int pageIndex = 0;
   bool isLoading = false;
   bool result = false;
   QuestType selectedQuestType = QuestType.TreasureLocationSearch;
-
   String? afkCreditsInputValidationMessage;
   String? nameInputValidationMessage;
   String? questTypeInputValidationMessage;
   String? afkMarkersInputValidationMessage;
   num? screenTimeEquivalent;
 
-  // to show loading indicator when screen shots are downloaded
   bool laodingScreenShots = false;
-
   Map<QuestType, List<dynamic>> get exampleScreenShots =>
       _cloudStorageService.exampleScreenShots;
-
   List<dynamic>? get exampleScreenShotsWithType =>
       _cloudStorageService.exampleScreenShots[selectedQuestType];
 
@@ -116,8 +110,6 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     notifyListeners();
   }
 
-  // ----------------------------------------------
-  // Back or next navigations
   Future onNextButton(PageController controller) async {
     if (pageIndex == 2) {
       // Name and description inputs
@@ -212,7 +204,6 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     }
     if (!isValid) {
       _log.e("Input not valid");
-      //displayEmptyTextsSnackBar();
       notifyListeners();
     }
     return isValid;

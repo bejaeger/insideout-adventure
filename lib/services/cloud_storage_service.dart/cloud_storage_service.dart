@@ -21,8 +21,6 @@ class CloudStorageService {
   List<dynamic> pictures =[];
   Set<Reference> picturesRef = {};
 
-  // ---------------------------------------
-  // Functions
   Future<CloudStorageResult> uploadImage({
     required File imageToUpload,
     required String title,

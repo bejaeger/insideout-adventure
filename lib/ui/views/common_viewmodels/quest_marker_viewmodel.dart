@@ -14,26 +14,18 @@ import '../../../services/geolocation/geolocation_service.dart';
 import '../../../services/markers/marker_service.dart';
 
 abstract class QuestMarkerViewModel extends FormViewModel {
-  // ---------------------------------------------------------
-  // services
   final GeolocationService geolocationService = locator<GeolocationService>();
   final MarkerService markersServices = locator<MarkerService>();
   final QuestService questService = locator<QuestService>();
   final logger = getLogger('QuestMarkerViewModel');
 
-  // --------------------------------------------------------
-  // getters
+
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
   Set<Marker> get getMarkersOnMap => _markersOnMap;
   List<AFKMarker> get getAFKMarkers => _afkMarkers;
 
-  // -----------------------------------------------------------
-  // state
   Set<Marker> _markersOnMap = {};
   List<AFKMarker> _afkMarkers = [];
-
-  // -----------------------------------------
-  // methods
 
   CameraPosition initialCameraPosition() {
     if (userLocation != null) {
@@ -67,7 +59,6 @@ abstract class QuestMarkerViewModel extends FormViewModel {
       QuestType? questType}) {
     return Marker(
       markerId: MarkerId(markerId),
-      //infoWindow: InfoWindow(title: "Marker"),
       icon: number == 0
           ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
           : (questType == QuestType.GPSAreaHike ||

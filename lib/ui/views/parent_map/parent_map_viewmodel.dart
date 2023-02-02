@@ -14,21 +14,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class ParentMapViewModel extends QuestViewModel {
-  // -----------------------------------------
-  // services
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
-  // ----------------------------------
-  // getters
   bool get showReloadQuestButton => questService.showReloadQuestButton;
   bool get isReloadingQuests => questService.isReloadingQuests;
 
-  // ---------------------------------------
-  // state
   bool isDeletingQuest = false;
 
-  // ---------------------------------
-  // initialize function
   void initialize() async {
     setBusy(true);
     mapViewModel.resetAllMapMarkersAndAreas();
@@ -139,14 +131,12 @@ class ParentMapViewModel extends QuestViewModel {
         cancelTitle: "NO",
       );
       if (response2?.confirmed == true) {
-        // Delete quest!
         await removeQuest(quest: quest);
         snackbarService.showSnackbar(
             title: "Deleted quest",
             message: "Successfully deleted quest.",
             duration: Duration(milliseconds: 1500));
 
-        // update marker on map!
         mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
         addStartMarkers();
         notifyListeners();
@@ -163,7 +153,7 @@ class ParentMapViewModel extends QuestViewModel {
     }
   }
 
-  // TODO: Function also in single_quest_type_viewmodel.dart, NEEDED there!?
+  // TODO: Function also in single_quest_type_viewmodel.dart
   Future<void> removeQuest({required Quest quest}) async {
     isDeletingQuest = true;
     notifyListeners();
@@ -194,8 +184,6 @@ class ParentMapViewModel extends QuestViewModel {
   // (for parent account this is easy than the corresponding function
   // (active_quest_base_viewmodel.dart)
   void popQuestDetails() async {
-    // Restore camera
-    // Could be handled in one function!
     mapStateService.restorePreviousCameraPosition();
     mapViewModel.animateCameraViewModel(
         forceUseLocation: true,
@@ -203,12 +191,11 @@ class ParentMapViewModel extends QuestViewModel {
         customLon: mapStateService.newLon);
     mapStateService.resetNewLatLon();
 
-    // reset/add back all quests
+    // UI: reset/add back all quests
     mapViewModel.resetAllMapMarkersAndAreas();
     addStartMarkers();
 
-    // reset selected quest -> don't show quest details anymore
-    // reset previouslyFinishedQuest
+    // reset selected quest -> UI: don't show quest details anymore
     activeQuestService.resetSelectedAndMaybePreviouslyFinishedQuest();
 
     notifyListeners();

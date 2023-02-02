@@ -16,24 +16,16 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
   final log = getLogger("QuestViewModel");
 
-  // -----------------------------------------
-  // services
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
-  // -----------------------------------------
-  // getters
   bool get isDevFlavor => appConfigProvider.flavor == Flavor.dev;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
   List<Quest> get nearbyQuestsTodo => questService.getNearByQuestTodo;
 
-  // -----------------------------------------
-  // state
   List<double> distancesFromQuests = [];
 
-  // -----------------------------------------
-  // methods
   List<Quest> getQuestsOfType({required QuestType type}) {
     return questService.extractQuestsOfType(
         quests: nearbyQuests, questType: type);
@@ -56,10 +48,6 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
       }
     } catch (e) {
       if (e is GeolocationServiceException) {
-        // if (kIsWeb) {
-        //   await dialogService.showDialog(
-        //       title: "Sorry", description: "Map not supported on PWA version");
-        // } else {
         if (appConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
@@ -85,18 +73,11 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
       removeQuestListOverlay();
       changeNavigatedFromQuestList(true);
       showQuestDetailsFromList(quest: quest);
-      //await navigateToActiveQuestUI(quest: quest);
-
-      // ! This notify listeners is important as the
-      // ! the view renders the state based on whether a quest is active or not
-      //notifyListeners();
     } else {
       dialogService.showDialog(title: "You currently have a running quest!");
     }
   }
 
-  ////////////////////////////
-  // can be overriden?
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
     log.i("Handling marker analysis result");
     if (!hasActiveQuest &&
@@ -108,7 +89,6 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
     }
     if (result.quests != null && result.quests!.length > 0) {
       // TODO: Handle case where more than one quest is returned here!
-      // For now, just start first quest!
       if (!hasActiveQuest) {
         log.i("Found quests associated to the scanned start marker.");
         await displayQuestBottomSheet(

@@ -24,8 +24,13 @@ import 'package:geolocator/geolocator.dart';
 
 class ExplorerHomeViewModel extends SwitchAccountsViewModel
     with MapStateControlMixin {
-  //-------------------------------------------------------
-  // services
+
+  late final String name;
+  ExplorerHomeViewModel() : super(explorerUid: "") {
+    // have to do that otherwise we get a null error when
+    // switching account to the sponsor account
+    this.name = currentUser.fullName;
+  }
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
@@ -34,15 +39,10 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   final NotificationsService _notificationService =
       locator<NotificationsService>();
 
-  // Stateful Data
-  // ignore: close_sinks
-
-  // --------------------------------------------------
-  // getters
   bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
   String get liveDistance => geolocationService
-      .getLiveDistancesToGoal(); // ----------------------------------
+      .getLiveDistancesToGoal();
   bool get showReloadQuestButton => questService.showReloadQuestButton;
   bool get isReloadingQuests => questService.isReloadingQuests;
   String get lastKnownDistance =>
@@ -54,24 +54,17 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   List<Achievement> get achievements => gamificationService.achievements;
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
   bool get isDevFlavor => appConfigProvider.isDevFlavor;
+  ScreenTimeSession? get currentScreenTimeSession =>
+      _screenTimeService.getActiveScreenTimeInMemory(uid: currentUser.uid);
 
-  // ---------------------------------------
-  // state
-  late final String name;
-  ExplorerHomeViewModel() : super(explorerUid: "") {
-    // have to do that otherwise we get a null error when
-    // switching account to the sponsor account
-    this.name = currentUser.fullName;
-    //_reactToServices(reactiveServices);
-  }
-
+  StreamSubscription? _isFadingOutOverlayStream;
+  StreamSubscription? _isShowingQuestListStream;
+  StreamSubscription? _selectedQuestStream;
+  StreamSubscription? _isFadingOutQuestDetailsSubjectStream;
   bool addingPositionToNotionDB = false;
-
   bool showQuestLoadingScreen = false;
   bool showFullLoadingScreen = true;
 
-  ScreenTimeSession? get currentScreenTimeSession =>
-      _screenTimeService.getActiveScreenTimeInMemory(uid: currentUser.uid);
   Future initialize({
     bool showBewareDialog = false,
     bool showNumberQuestsDialog = false,
@@ -81,8 +74,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     try {
       setBusy(true);
 
-      // ? we use a singleton for this viewmodel so we need
-      // ? to reset the flags here
+      // UI: we use a singleton for this viewmodel so we need to reset the flags here
       showQuestLoadingScreen = true;
       showFullLoadingScreen = true;
 
@@ -91,7 +83,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
       mapStateService.setCameraToDefaultChildPosition();
 
-      // makes sure that screen time subject is listened to in case one is active!
       // ! This is duplicated in parent_home_viewmodel.dart
       if (screenTimeSession != null) {
         await screenTimeService.listenToPotentialScreenTimes(
@@ -113,20 +104,18 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
           await navToActiveScreenTimeView(session: session);
         } 
       } else {
-        // no need to await for it when we don't navigate to it
         screenTimeService.listenToPotentialScreenTimes(
             callback: notifyListeners);
       }
 
       setBusy(false);
-      // fade loading screen out process
+      // UI: fading out loading screen
       await Future.delayed(
         Duration(milliseconds: 500),
       );
       final result = await initializeQuests();
       mapViewModel.extractStartMarkersAndAddToMap();
 
-      // remove full screen loading screen
       showFullLoadingScreen = false;
       showQuestLoadingScreen = false;
       notifyListeners();
@@ -136,22 +125,16 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         setNewUserPropertyToFalse();
       }
 
-      // Show beware dialog!
       if (showBewareDialog) {
         await _showBewareDialog();
       }
 
-      // Show quests dialog
-      // if no quests are found.
-      // Give some UI element that shows how many quests were found in the
-      // neighborhood
       if (result is void Function()) {
         showQuestLoadingScreen = true;
         notifyListeners();
         await Future.delayed(Duration(milliseconds: 1500));
         result();
       } else {
-        // quests were found!
         if (showNumberQuestsDialog) {
           await _showNumberQuestsDialog(
               numberQuests: questService.getNearByQuest.length);
@@ -171,8 +154,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   Future listenToData() async {
     Completer completer = Completer<void>();
-    // Completer completerTwo = Completer<void>();
-    // Completer completerThree = Completer<void>();
     userService.setupUserDataListeners(
       completer: completer,
       callback: () => notifyListeners(),
@@ -294,10 +275,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
             "This is the amount you successfully earned already! You can spend credits on gift cards!");
   }
 
-  //-----------------------------------------
-  // Some R & D
-  // TO BE DEPRECATED!
-
+  // to be deprecated >>
   Future pushAllPositionsToNotion() async {
     addingPositionToNotionDB = true;
     notifyListeners();
@@ -337,6 +315,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
           title: "Failure", message: "Connect to a network and try again");
     }
   }
+  // << no be deprecated
 
   Future _showNumberQuestsDialog({required int numberQuests}) async {
     await dialogService.showCustomDialog(
@@ -365,10 +344,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     }
   }
 
-  //------------------------
-  // cleanup
-
-  // SOME TEST NOTIFICATIONS
   void createTestNotification() async {
     await _notificationService.createPermanentNotification(
       title: "SCREEN TIME STARTED",
@@ -406,13 +381,6 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     notifyListeners();
   }
 
-  // ----------------------------------------------------------------
-  // listeners for layout changes!
-
-  StreamSubscription? _isFadingOutOverlayStream;
-  StreamSubscription? _isShowingQuestListStream;
-  StreamSubscription? _selectedQuestStream;
-  StreamSubscription? _isFadingOutQuestDetailsSubjectStream;
   void listenToLayout() {    
     if (_isFadingOutOverlayStream == null) {
       _isFadingOutOverlayStream =
@@ -453,28 +421,4 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     _isFadingOutQuestDetailsSubjectStream?.cancel();
     super.dispose();
   }
-
-  //------------------------------------------------------------
-  // Reactive Service Mixin Functionality from stacked ReactiveViewModel!
-  // late List<ReactiveServiceMixin> _reactiveServices;
-  // List<ReactiveServiceMixin> get reactiveServices =>
-  //     [layoutService]; // _reactiveServices;
-  // void _reactToServices(List<ReactiveServiceMixin> reactiveServices) {
-  //   _reactiveServices = reactiveServices;
-  //   for (var reactiveService in _reactiveServices) {
-  //     reactiveService.addListener(_indicateChange);
-  //   }
-  // }
-
-  // @override
-  // void dispose() {
-  //   for (var reactiveService in _reactiveServices) {
-  //     reactiveService.removeListener(_indicateChange);
-  //   }
-  //   super.dispose();
-  // }
-
-  // void _indicateChange() {
-  //   notifyListeners();
-  // }
 }

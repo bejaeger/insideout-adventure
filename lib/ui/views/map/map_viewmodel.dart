@@ -38,35 +38,23 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     required this.showMarkerInfoWindow,
     required this.hideMarkerInfoWindow,
   });
-
-  // -----------------------------------------------
-  // services
   final log = getLogger('MapViewModel');
   final ActiveQuestService activeQuestService = locator<ActiveQuestService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
 
-  // -----------------------------
-  // getters
   bool get isAvatarView => mapStateService.isAvatarView;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
   bool get isFingerOnScreen => mapStateService.isFingerOnScreen;
-  DateTime startedRotating = DateTime.now();
   bool get showAvatarAndMapEffects => userService.isShowAvatarAndMapEffects;
-  // bool isRotating = false;
+  bool get showReloadQuestButton => questService.showReloadQuestButton;
+  bool get isReloadingQuests => questService.isReloadingQuests;
 
-  // -------------------------------------------------
-  // state 
   StreamSubscription? _bearingListenerSubscription;
   StreamSubscription? _mapEventListenerSubscription;
   bool initialized = false;
   String mapStyle = "";
-  bool get showReloadQuestButton => questService.showReloadQuestButton;
-  bool get isReloadingQuests => questService.isReloadingQuests;
+  DateTime startedRotating = DateTime.now();
 
-  // ------------------------------------------------
-  // methods
-
-  // last element of cameraBearingZoom determines whether listener should be fired!
   // TODO: This function is only called for the explorer!
   Future initializeMapAndMarkers() async {
     if (!isParentAccount) {
@@ -536,9 +524,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   // the quest will be like!
   void animateMapToQuestParentAccount({required Quest quest}) async {
     log.v("Animating map to quest markers in parent account");
-    // if (quest.type == QuestType.TreasureLocationSearch) {
 
-    // We want to navigate to the map
     resetMapMarkers();
     addAllMarkersNumbered(quest: quest);
     animateCameraToBetweenQuestMarkers(quest: quest);

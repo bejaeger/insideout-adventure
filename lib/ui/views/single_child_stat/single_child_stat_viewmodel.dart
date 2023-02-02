@@ -10,20 +10,14 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 
-// extend from switch account viewmodel for switch functionality
 class SingleChildStatViewModel extends SwitchAccountsViewModel {
   final String explorerUid;
   SingleChildStatViewModel({required this.explorerUid});
 
-  User? get explorer => userService.supportedExplorers[explorerUid];
-  UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
-
-  // --------------------------------
-  // services
   final log = getLogger("SingleExplorerViewModel");
 
-  // ---------------------------------
-  // getters
+  User? get explorer => userService.supportedExplorers[explorerUid];
+  UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
   List<dynamic> get sortedHistory =>
       userService.sortedHistory(uid: explorerUid);
   int? get totalChildScreenTimeLastDays =>
@@ -43,8 +37,6 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
           ? totalChildActivityLastDays.toString()
           : "0";
 
-  // --------------------------------------
-  // functions
   String explorerNameFromUid(String uid) {
     return userService.explorerNameFromUid(uid);
   }
@@ -53,8 +45,6 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     return screenTimeService.getActiveScreenTimeInMemory(uid: uid);
   }
 
-  // -----------------------------
-  // remove child
   Future removeChildFromParentAccount() async {
     if (explorer != null) {
       log.i("Remove user with id = ${explorer!.uid}");
@@ -64,7 +54,6 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
       await Future.delayed(Duration(milliseconds: 10));
       final confirmation =
           await showConfirmationBottomSheet(explorer!.fullName);
-      log.i("WHAT IS HAPPENING");
       if (confirmation?.confirmed == true) {
         try {
           setBusy(true);
@@ -85,8 +74,6 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     }
   }
 
-  /////////////////////////////////////////////
-  /// bottom sheets
   Future showConfirmationBottomSheet(String name) async {
     return await bottomSheetService.showBottomSheet(
       barrierDismissible: true,
@@ -110,8 +97,6 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     );
   }
 
-  // ---------------------------------
-  // helpers
   void showHistoryItemInfoDialog(dynamic data) async {
     if (data is ActivatedQuest) {
       await dialogService.showDialog(

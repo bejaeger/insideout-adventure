@@ -100,9 +100,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                     ),
                                   ],
                                 ),
-                                // -----------------------------------------
                                 Spacer(),
-                                // -----------------------------------------
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -126,9 +124,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                     ),
                                   ],
                                 ),
-                                // -----------------------------------------
                                 Spacer(),
-                                // -----------------------------------------
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

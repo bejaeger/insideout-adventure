@@ -11,13 +11,9 @@ import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.da
 import 'package:afkcredits/app/app.logger.dart';
 
 class ParentHomeViewModel extends TransferBaseViewModel {
-  // ----------------------------------------
-  // services
   final FeedbackService _feedbackService = locator<FeedbackService>();
   final log = getLogger("ParentHomeViewModel");
 
-  // -------------------------------------------------
-  // getters
   List<User> get supportedExplorers => userService.supportedExplorersList;
   Map<String, UserStatistics> get childStats =>
       userService.supportedExplorerStats;
@@ -39,19 +35,12 @@ class ParentHomeViewModel extends TransferBaseViewModel {
       _feedbackService.feedbackCampaignInfo;
   bool get userHasGivenFeedback => _feedbackService.userHasGivenFeedback();
 
-  // ------------------------------
-  // state
   bool navigatingToActiveScreenTimeView = false;
 
-  //  ---------------------------------
-  // functions
   String explorerNameFromUid(String uid) {
     return userService.explorerNameFromUid(uid);
   }
 
-  // -------------------------------------------------
-  // Listen to streams of latest donations and transactions to be displayed
-  // instantly when pulling up bottom sheets
   Future listenToData({ScreenTimeSession? screenTimeSession}) async {
     // reset this flag! needed if we use parent_home_viewmodel.dart as singleton!
     // navigatingToActiveScreenTimeView = false;
@@ -60,9 +49,6 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     // ! When clicking expired screen time notification after a longer time
     // navToActiveScreenTimeView is true when a notification is
     // clicked!
-    // if (screenTimeSession != null) {
-    //   navigatingToActiveScreenTimeView = true;
-    // }
     setBusy(true);
     Completer completerOne = Completer<void>();
 
@@ -101,13 +87,6 @@ class ParentHomeViewModel extends TransferBaseViewModel {
       if (session != null) {
         await navToActiveScreenTimeView(session: session);
       }
-      // } else {
-      //   await dialogService.showDialog(
-      //       title: "Screen time session not found",
-      //       description:
-      //           "An error occured loading the screen time. A restart of the app should fix this.");
-      // }
-      //navigatingToActiveScreenTimeView = false;
       notifyListeners();
     } else {
       // don't need to await for it
@@ -150,14 +129,11 @@ class ParentHomeViewModel extends TransferBaseViewModel {
           .containsKey(session.uid)) {
         try {
           if (res?.confirmed == true) {
-            // somehow need to check if screen time was not cancelled in exactly this moment!
             session = session.copyWith(startedAt: DateTime.now());
             await screenTimeService.acceptScreenTimeSession(session: session);
             session = await screenTimeService.startScreenTime(
                 session: session, callback: () {});
             navToActiveScreenTimeView(session: session);
-            // maybe also start with counter!? not clear!
-            // navToScreenTimeCounterView(session: session);
           } else {
             await screenTimeService.denyScreenTimeSession(session: session);
           }
@@ -178,8 +154,6 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     }
   }
 
-  // ------------------------------------------------------
-  // bottom sheets
   void showSwitchAreaBottomSheet() async {
     await bottomSheetService.showCustomSheet(
         variant: BottomSheetType.switchArea);
@@ -191,8 +165,6 @@ class ParentHomeViewModel extends TransferBaseViewModel {
     );
   }
 
-  // ----------------------------
-  // navigation
   void navigateToScreenTimeOrSingleChildView({required String uid}) async {
     final session = getScreenTime(uid: uid);
     if (session != null) {

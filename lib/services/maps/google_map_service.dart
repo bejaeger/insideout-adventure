@@ -339,9 +339,6 @@ class GoogleMapService {
     }
   }
 
-  // -----------------------------------------------------------
-  // HELPER FUNCTIONS
-
   // From list of [double, double] make LatLngBounds out of it!
   static LatLngBounds boundsFromLatLngList(
       {required List<List<double>> latLngList}) {

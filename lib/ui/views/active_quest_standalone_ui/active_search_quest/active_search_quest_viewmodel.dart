@@ -14,16 +14,10 @@ import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmode
 import 'package:geolocator/geolocator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-// Singleton ViewModel!
-
 class SearchQuestViewModel extends ActiveQuestBaseViewModel {
-  // ----------------------------------
-  // services
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final log = getLogger("SearchQuestViewModel");
 
-  // ------------------------------------------
-  // getters
   int? get currentGPSAccuracy => _geolocationService.currentGPSAccuracy;
   bool get isFirstDistanceCheck => numTimesFired == 0;
   int get numCheckpointsCollected =>
@@ -32,20 +26,15 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
       activeQuestService.getNumberMarkers -
       1; // -1 cause we don't wanna countthe start marker
 
-  // ----------------
-  // state
   DirectionStatus directionStatus = DirectionStatus.notstarted;
   bool isCheckingDistance = false;
   bool isNearGoal = false;
-
   List<SearchQuestLocation> checkpoints = [];
-
   double currentDistanceInMeters = -1;
   double previousDistanceInMeters = -1;
   int numTimesFired = 0;
   bool allowCheckingPosition = true;
 
-  // markers on map
   void Function()? notifyParentView;
 
   @override
@@ -53,7 +42,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
       {required Quest quest, void Function()? notifyParentCallback}) async {
     notifyParentView = notifyParentCallback;
     setBusy(true);
-    // here the calibration listener is called
     // !(maybe this is done twice at the moment as we also do it in QuestDetailsOverlayViewModel
     await super.initialize(quest: quest);
     // Add listener with a small distance filter to get most precise

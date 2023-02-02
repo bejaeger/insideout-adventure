@@ -1033,7 +1033,6 @@ class FirestoreApi {
     });
   }
 
-// --------------------------------------------------
   Future<FAQs> getFaqs() async {
     DocumentReference doc = getFAQDocument();
     DocumentSnapshot snapshot = await doc.get();
@@ -1050,8 +1049,6 @@ class FirestoreApi {
   }
 }
 
-// --------------------------------------------------
-// --------------------------------------------------
 
 /////////////////////////////////////////////////////////
 // Collection's getter

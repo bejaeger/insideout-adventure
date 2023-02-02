@@ -18,8 +18,6 @@ class SlideShowViewModel extends BaseModel {
 
   List<String> urls = [];
 
-  // --------------------------------------------
-  // functions
   Future handleAddPicture(BuildContext context) async {
     print("handleAddPicture");
 

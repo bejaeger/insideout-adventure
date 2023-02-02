@@ -8,24 +8,15 @@ class ExplorerSettingsDialogViewModel extends BaseModel {
   final String explorerUid;
   ExplorerSettingsDialogViewModel({required this.explorerUid});
 
-  // ----------------------------------------------
-  // servies
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
-  // ----------------------------------------------
-  // getters
+
   bool get isARAvailable => appConfigProvider.isARAvailable;
-
   User? get explorer => userService.supportedExplorers[explorerUid];
-
   bool get isUsingAR => userService.isUsingAR;
   bool get isShowAvatarAndMapEffects => userService.isShowAvatarAndMapEffects;
-
   bool get isShowingCompletedQuests =>
       userService.currentUserSettings.isShowingCompletedQuests;
-
-  // -------------------------------------------------
-  // functions
 
   void setIsShowAvatarAndMapEffects(bool b) async {
     userService.setIsShowingAvatarAndMapEffects(value: b);
@@ -46,10 +37,8 @@ class ExplorerSettingsDialogViewModel extends BaseModel {
   void setARFeatureEnabled(bool b) async {
     if (b == true && isARAvailable) {
       userService.setIsUsingAr(value: true);
-      // appConfigProvider.setIsUsingAR(true);
     } else {
       userService.setIsUsingAr(value: false);
-      // appConfigProvider.setIsUsingAR(false);
     }
     if (b == true && !isARAvailable) {
       await dialogService.showDialog(

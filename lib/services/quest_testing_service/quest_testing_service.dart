@@ -259,9 +259,6 @@ class QuestTestingService {
     return questDataPoint;
   }
 
-  // ------------------------------------------------
-  // -------------------------------------------------
-
   Future pushAllPositionsToNotion() async {
     for (int i = 0; i < allQuestDataPoints.length; i++) {
       final ok = await pushNotionDatabaseEntry(allQuestDataPoints[i]);
@@ -489,37 +486,27 @@ class QuestTestingService {
     }
   }
 
-  // -----------------------------------------
-  /// helpers
-  ///
   ///  these are the names of the properties in the notion database
   String currentLocationDistanceKey = "currentLocationDistance";
   String liveLocationDistanceKey = "1distanceToNextMarker";
   String lastKnownLocationDistanceKey = "lastKnownLocationDistance";
   String triggeredByKey = "4triggeredBy";
   String userEventDescriptionKey = "3userEventDescription";
-
   String currentLocationTimestampKey = "currentLocationTimestamp";
   String liveLocationTimestampKey = "5liveLocationTimestamp";
   String lastKnownLocationTimestampKey = "lastKnownLocationTimestamp";
-
   String timestampKey = "6timestamp";
-
   String currentLocationLatitudeKey = "currentLocationLatitude";
   String liveLocationLatitudeKey = "liveLocationLatitude";
   String lastKnownLocationLatitudeKey = "lastKnownLocationLatitude";
-
   String currentLocationLongitudeKey = "currentLocationLongitude";
   String liveLocationLongitudeKey = "liveLocationLongitude";
   String lastKnownLocationLongitudeKey = "lastKnownLocationLongitude";
-
   String currentLocationAccuracyKey = "currentLocationAccuracy";
   String liveLocationAccuracyKey = "2liveLocationAccuracy";
   String lastKnownLocationAccuracyKey = "lastKnownLocationAccuracy";
-
   String trialEntryKey = "questTrial";
   String deviceInfoKey = "deviceInfo";
-
   String activeQuestIdKey = "questId";
   String activeQuestCategoryKey = "questCategory";
   String activeQuestNameKey = "7questName";

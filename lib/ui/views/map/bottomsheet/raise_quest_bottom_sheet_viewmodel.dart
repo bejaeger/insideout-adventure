@@ -12,32 +12,20 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
   final Quest quest;
   RaiseQuestBottomSheetViewModel({required this.quest});
 
-  // ----------------------------------------
-  // services
-
   final log = getLogger("RaiseQuestBottomSheetViewModel");
   final MapViewModel mapViewModel = locator<MapViewModel>();
-  // ---------------------------------------
-  // getters
 
-  // -------------------------------
-  // state
   Set<Marker> _markersTmp = {};
   GoogleMapController? _googleMapController;
 
-  // -------------------------------
-  // functions
   Future navigateToAcceptPaymentsView() async {
     log.i("Clicked navigating to accept payments view (not yet implemented!)");
   }
 
   Set<Marker>? get getMarkers => _markersTmp;
 
-  // ignore: non_constant_identifier_names
   CameraPosition initialCameraPosition() {
     final CameraPosition _initialCameraPosition = CameraPosition(
-      //In Future I will change these values to dynamically Change the Initial Camera Position
-      //Based on teh city
       target: LatLng(quest.startMarker!.lat!, quest.startMarker!.lon!),
       zoom: 14,
     );
@@ -57,9 +45,7 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     setBusy(true);
     try {
       _googleMapController = controller;
-      //Add Starter Marker
       getQuestMarkers();
-      //addMarker(markers: _startedQuest!.startMarker);
     } catch (error) {
       throw MapViewModelException(
           message: 'An error occured in the defining ',

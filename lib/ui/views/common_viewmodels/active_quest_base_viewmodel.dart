@@ -28,8 +28,6 @@ import 'package:afkcredits/app/app.logger.dart';
 
 abstract class ActiveQuestBaseViewModel extends BaseModel
     with MapStateControlMixin {
-  // ---------------------------------------------------------
-  // Services
   final MapStateService mapsService = locator<MapStateService>();
   final QuestTestingService questTestingService =
       locator<QuestTestingService>();
@@ -38,8 +36,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   final MapViewModel mapViewModel = locator<MapViewModel>();
   final log = getLogger("ActiveQuestBaseViewModel");
 
-  // ----------------------------------------------------------
-  // getters
   bool get isDevFlavor => appConfigProvider.flavor == Flavor.dev;
   bool get isNearStartMarker => !appConfigProvider.enableGPSVerification
       ? true
@@ -51,40 +47,18 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   String get timeElapsed => activeQuestService.getMinutesElapsedString();
   double get distanceToStartMarker => geolocationService.distanceToStartMarker;
   bool get isCalculatingDistanceToStartMarker => distanceToStartMarker < 0;
-  // -----------------------------------------------------------
-  // UI state
-  bool showCollectedMarkerAnimation = false;
-
-  // to show progress indicator to make user aware something is happening in the background
-  bool isAnimatingCamera = false;
-
-  // bool showStartSwipe = true;
   bool get showStartSwipe => !activeQuestService.hasActiveQuest;
+  bool get questCenteredOnMap => activeQuestService.questCenteredOnMap;
 
   bool questSuccessfullyFinished = false;
   bool questFinished = false;
-
-  // bool that decides which UI is shown to user in case
-  // a quest has been completed before
+  bool showCollectedMarkerAnimation = false;
+  // to show progress indicator to make user aware something is happening in the background
+  bool isAnimatingCamera = false;
   bool redoQuest = false;
 
-  bool get questCenteredOnMap => activeQuestService.questCenteredOnMap;
-
-  // TODO: maybe deprecated
-  String lastActivatedQuestInfoText = "Active Quest";
-
-  // ------------------------------------------
-  // Functions to override!
   bool isQuestCompleted();
 
-  //  {
-  //   return false;
-  // }
-  // void updateMapMarkers({required AFKMarker afkmarker}) {}
-
-  ///------------------------------------------------------------
-  /// Main Functions
-  /// -----------------------------------------------------------
   @mustCallSuper
   Future initialize({required Quest quest}) async {
     // sets current quest in service so it is accessible anywhere
@@ -98,38 +72,28 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     startPositionCalibrationListener(quest: quest);
   }
 
-  // Main function always called when quest is started
+  // always called when quest is started 
   Future startQuestMain(
       {required Quest quest,
       Future Function(int)? periodicFuncFromViewModel,
       bool countStartMarkerAsCollected = false}) async {
-    // cancel listener that was only used for calibration
+    // cancels listener that was only used for calibration
     cancelPositionListener();
 
-    // TODO: this might not be needed
     // if (await checkIfBatterySaveModeOn()) {
     //   resetSlider();
     //   return false;
     // }
 
-    // TODO: This might be deprecated as we changed business/app model
-    if (!hasEnoughSponsoring(quest: quest)) {
-      return false;
-    }
-
     try {
       questTestingService.maybeInitialize(user: currentUser);
 
-      /// Once The user Click on Start a Quest. It is her/him to new Page
-      /// Differents Markers will Display as Part of the quest as well The App showing the counting of the
-      /// Quest.
       final isQuestStarted = await activeQuestService.startQuest(
           quest: quest,
           uids: [currentUser.uid],
           periodicFuncFromViewModel: periodicFuncFromViewModel,
           countStartMarkerAsCollected: countStartMarkerAsCollected);
 
-      // this will also change the MapViewModel to show the ActiveQuestView
       if (isQuestStarted is String) {
         await dialogService.showDialog(
             title: "You cannot start the quest", description: isQuestStarted);
@@ -137,13 +101,10 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
         return false;
       }
 
-      // Quest is succesfully started so hasActiveQuest == true
-
-      // selected quest is reset...hopefully I'm not accessing it in the active quest
-      // by resetting the UI will react and now knows that an active quest is present, not only a "selected" quest
+      // Quest started
       activeQuestService.resetSelectedQuest();
+      // ^ by resetting this the UI will react and knows that an active quest is present, not only the "selected" quest
 
-      // ? needed for TreasureLocationSearch
       if (currentQuest?.type == QuestType.TreasureLocationSearch) {
         changeCameraZoom(kInitialZoomAvatarView);
         animateMap(forceUseLocation: true);
@@ -155,18 +116,17 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
   }
 
-  // function called to cancel quest OR when quest is finished
-  // but markers weren't collected yet.
   Future cancelOrFinishQuest(
       {bool force = false, bool showDialog = true}) async {
     if (!hasActiveQuest) {
-      log.wtf("No active quest present to cancel");
+      log.w("No active quest present to cancel");
       return;
     }
-    DialogResponse<dynamic>? continueQuest;
+
+    DialogResponse<dynamic>? response = DialogResponse(confirmed: false);
     if (!force) {
       log.w("Quest is incomplete, show dialog");
-      continueQuest = await dialogService.showConfirmationDialog(
+      response = await dialogService.showConfirmationDialog(
           barrierDismissible: true,
           title: WarningQuestNotFinished,
           cancelTitle: "CANCEL QUEST",
@@ -175,57 +135,46 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       log.w("You are forcing to end the quest");
     }
 
-    if (continueQuest?.confirmed == true) {
+    if (response?.confirmed == true) {
       await activeQuestService.continueIncompleteQuest();
     }
-    if (continueQuest?.confirmed == false || force) {
-      // TODO: Handle quest testing service if some positions aren't pushed yet!
+    if (response?.confirmed == false || force) {
       if (questTestingService.isRecordingLocationData &&
           !questTestingService.isAllQuestDataPointsPushed()) {
-        log.i("push to notion");
+        log.v("push quest data to notion");
         await dialogService.showCustomDialog(
             barrierDismissible: true,
             variant: DialogType.SuperUserSettings,
             data: SuperUserDialogType.sendDiagnostics);
       }
-
-      // will reset activeQuest
       await activeQuestService.cancelIncompleteQuest();
 
       resetPreviousQuest();
       popQuestDetails();
-
-      //replaceWithMainView(index: BottomNavBarIndex.quest);
-      log.i("replaced view with mapView");
     }
     setBusy(false);
   }
 
   // All this is essential and should probably be unit tested
   void popQuestDetails() async {
-    // set flag to start fade out
     layoutService.setIsFadingOutQuestDetails(true);
     layoutService.setIsMovingCamera(true);
 
-    // Restore camera
     restorePreviousCameraPositionAndAnimate();
 
-    // reset/add back all quests
     mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
 
-    // maybe show quest list again
     if (navigatedFromQuestList) {
       showQuestListOverlay();
       changeNavigatedFromQuestList(false);
     }
 
-    // reset selected quest after delay so the fade out is smooth
     await Future.delayed(
         Duration(milliseconds: (800 * mapAnimationSpeedFraction()).round()));
 
-    // reset flags
     layoutService.setIsMovingCamera(false);
     layoutService.setIsFadingOutQuestDetails(false);
+
     // for rotation camera movements in avatar view
     activeQuestService.questCenteredOnMap = false;
 
@@ -233,12 +182,10 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     // reset previouslyFinishedQuest
     activeQuestService.resetSelectedAndMaybePreviouslyFinishedQuest();
 
-    // cancel position listener that was used for calibration
+    // cancel position listener that was used for calibration and add main location listener
     cancelPositionListener();
     activeQuestService.addMainLocationListener();
 
-    // TODO: not sure why this is done!
-    // reset distances to markers
     geolocationService.resetStoredDistancesToMarkers();
     notifyListeners();
   }
@@ -440,7 +387,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
   }
 
-  // ---------------------------------------------------
   // Function to call when quest was detected to be finished in individual viewmodel
   // We can parse it a collectCreditsStatus to check whether
   // we still need to collect the credits in the view or not!
@@ -493,7 +439,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     notifyListeners();
   }
 
-  //------------------------------------------------------------
   // Reactive Service Mixin Functionality from stacked ReactiveViewModel!
   late List<ReactiveServiceMixin> _reactiveServices;
   ActiveQuestBaseViewModel() {
@@ -544,7 +489,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   }
 
   Future<bool> checkIfBatterySaveModeOn() async {
-    // Instantiate it
     try {
       final Battery battery = Battery();
       final isInBatterySaveMode = await battery.isInBatterySaveMode;
@@ -574,12 +518,10 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
             );
             return true;
           }
-          // await checkIfBatterySaveModeOn();
         } else if (result?.confirmed == false) {
           return false;
         }
         return true;
-        // await Future.delayed(Duration(milliseconds: 300));
       }
       return true;
     } catch (e) {
@@ -590,29 +532,23 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   }
 
   void navigateBackFromSingleQuestView({bool replaceView = false}) {
-    // set Fading Out layout to false otherwise screen is black
+    // screen is black otherwise
     layoutService.setIsFadingOutOverlay(false);
-    // cancel Position listener
+    // cancel calibration position listener
     cancelPositionListener();
     // add main location listener
     activeQuestService.addMainLocationListener();
-    // restore distances to markers
     geolocationService.resetStoredDistancesToMarkers();
-    // finally navigate back
     if (replaceView) {
       replaceWithHomeView();
     } else {
       popView();
     }
-    // restore previous camera position. (not so important for standalone ui)
     restorePreviousCameraPositionAndAnimate(moveInsteadOfAnimate: true);
   }
 
   Future maybeStartQuest(
       {required Quest? quest, void Function()? notifyParentCallback});
-
-  //-------------------------------------------
-  // Helper
 
   Future vibrateAlert() async {
     await checkCanVibrate();
@@ -632,13 +568,11 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   }
 
   Future vibrateRightDirection() async {
-    // Check if the device can vibrate
     await checkCanVibrate();
     if (canVibrate!) {
       log.v("Phone is supposed to vibrate now");
       // vibrate for default (500ms on android, about 500ms on iphone)
       await Vibrate.vibrate();
-      // Vibrate.feedback(FeedbackType.success);
     }
   }
 

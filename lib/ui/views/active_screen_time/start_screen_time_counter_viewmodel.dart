@@ -4,13 +4,10 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class StartScreenTimeCounterViewModel extends BaseModel {
-  // ------------------------------------------------
-  // services
   final log = getLogger("StartScreenTimeCounterViewModel");
 
-  // ----------------------------------------------
-  // state
   int get counter => screenTimeService.counter;
+
   Timer? timer;
 
   void startCounter({required ScreenTimeSession session}) {
@@ -32,7 +29,6 @@ class StartScreenTimeCounterViewModel extends BaseModel {
           if (counter <= 0) {
             log.v("Replacing view with active screen time view");
             await start(session: session);
-            // store unique ids for notifications to keep track
           }
         },
       );
@@ -52,10 +48,6 @@ class StartScreenTimeCounterViewModel extends BaseModel {
   Future start({required ScreenTimeSession session}) async {
     session = await screenTimeService.startScreenTime(
         session: session, callback: () {});
-    // await NotificationsService()
-    //     .maybeCreatePermanentIsUsingScreenTimeNotification(session: session);
-    // await NotificationsService()
-    //     .maybeCreateScheduledIsUsingScreenTimeNotification(session: session);
     resetStopWatch();
     replaceWithActiveScreenTimeView(session: session);
   }
