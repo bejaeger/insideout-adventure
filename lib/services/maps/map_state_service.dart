@@ -7,19 +7,14 @@ import 'package:rxdart/rxdart.dart';
 class MapStateService {
   final log = getLogger("MapsService");
 
-  // whether map is zoomed in to avatar with tilt
-  bool isAvatarView = true;
+  bool isAvatarView = true; // avatarView = map zoomed in with tilt
   void setIsAvatarView(bool set) {
     isAvatarView = set;
   }
 
   double tilt = kInitialTilt;
   double zoom = kInitialZoomAvatarView;
-
   double bearing = kInitialBearing;
-  // double get bearing => bearingSubject.value;
-  // final BehaviorSubject<double> bearingSubject =
-  //     BehaviorSubject<double>.seeded(kInitialBearing);
   final mapEventListener = BehaviorSubject<MapUpdate>();
 
   // to create snapshot of previous camera position
@@ -33,7 +28,7 @@ class MapStateService {
 
   // create snapshot of previous camera position
   // before Ar view is shown or marker is collected!
-  // Needed because we have a fancy animation before this happens
+  // Needed because we have a fancy animation before the AR
   double? beforeArBearing;
   double? beforeArZoom;
   double? beforeArTilt;
@@ -58,7 +53,6 @@ class MapStateService {
   final BehaviorSubject<bool> isFingerOnScreenSubject =
       BehaviorSubject<bool>.seeded(false);
 
-  // navigated form quest list
   bool navigatedFromQuestList = false;
 
   void takeSnapshotOfCameraPosition() {
@@ -121,7 +115,6 @@ class MapStateService {
 
   void restorePreviousCameraPosition() {
     if (previousBearing != null) {
-      // bearingSubject.add(previousBearing!);
       bearing = previousBearing!;
     }
     if (previousZoom != null) {
@@ -149,7 +142,6 @@ class MapStateService {
 
   void restoreBeforeArCameraPosition() {
     if (beforeArBearing != null) {
-      //bearingSubject.add(beforeArBearing!);
       bearing = beforeArBearing!;
     }
     if (beforeArZoom != null) {
@@ -256,10 +248,6 @@ class MapStateService {
       //title: "AFK Credits Quest",
     );
   }
-
-  ////////////////////////////////////////////////////////
-  /// Clean up
-  ///
 
   // ! THIS IS NEVER CALLED ANYWHERE!
   // ! SHOULD IT BE CALLED!?

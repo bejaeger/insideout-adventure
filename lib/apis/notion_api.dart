@@ -27,7 +27,6 @@ class NotionApi {
       title: Text(feedback.userName),
     );
 
-    // add all properties in feedback
     Map<String, dynamic> jsonFeedback = feedback.toJson();
     jsonFeedback.forEach(
       (key, value) {

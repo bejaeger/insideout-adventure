@@ -25,7 +25,8 @@ import 'package:notion_api/notion/objects/pages.dart';
 import 'package:notion_api/notion/objects/parent.dart';
 import 'package:notion_api/responses/notion_response.dart';
 
-//TODO
+// Dev Service to upload quest data to notion
+// Can soon be deprecated
 
 // 1. delete all Locations when quest is cancelled?
 //    -> could ask user to send diagnostics data
@@ -155,7 +156,7 @@ class QuestTestingService {
         "Initialized quest testing data for quest with trial id '$_questTrialId', and quest id '$_questId' and user name $_currentUserName");
   }
 
-  void newNextMarker(AFKMarker? marker) {
+  void setNewNextMarker(AFKMarker? marker) {
     _nextMarker = marker;
   }
 

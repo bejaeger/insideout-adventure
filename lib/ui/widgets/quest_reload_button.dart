@@ -1,4 +1,4 @@
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';

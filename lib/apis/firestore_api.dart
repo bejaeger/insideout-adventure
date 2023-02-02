@@ -71,8 +71,6 @@ class FirestoreApi {
     return docRef;
   }
 
-  ////////////////////////////////////////////////////////
-  // Get user if exists
   Future<User?> getUser({required String uid}) async {
     var userData = await usersCollection.doc(uid).get();
     if (!userData.exists) {
@@ -122,8 +120,6 @@ class FirestoreApi {
     return null;
   }
 
-  ///////////////////////////////////////////////////////
-  // Fetch user statistics once
   Future<UserStatistics> getUserSummaryStatistics({required String uid}) async {
     try {
       final docRef = await getUserSummaryStatisticsDocument(uid: uid).get();
@@ -148,8 +144,6 @@ class FirestoreApi {
     }
   }
 
-  ///////////////////////////////////////////////////////
-  // Get user streams
   Stream<UserStatistics> getUserSummaryStatisticsStream({required String uid}) {
     return getUserSummaryStatisticsDocument(uid: uid).snapshots().map((event) {
       if (!event.exists || event.data() == null) {
@@ -218,8 +212,6 @@ class FirestoreApi {
       await questsCollection
           .doc(quest.id)
           .set(quest.toJson(), SetOptions(merge: true));
-
-      //return result;
     } catch (e) {
       throw FirestoreApiException(
           message:
@@ -281,7 +273,6 @@ class FirestoreApi {
   }
 
   Future<void> removeQuest({required Quest quest}) async {
-    //Remove The quest from Firebase
     await questsCollection.doc(quest.id).delete();
   }
 
@@ -299,7 +290,6 @@ class FirestoreApi {
     );
   }
 
-  /// invitations
   Stream<List<User>> getExplorersDataStream({required String uid}) {
     try {
       return usersCollection
@@ -308,7 +298,6 @@ class FirestoreApi {
           .map((event) => event.docs
               .map((doc) => User.fromJson(doc.data() as Map<String, dynamic>))
               .toList());
-      // return returnStream;
     } catch (e) {
       throw FirestoreApiException(
           message:
@@ -316,9 +305,6 @@ class FirestoreApi {
           devDetails: '$e');
     }
   }
-
-  //////////////////////////////////////////////////////
-  /// Queries for existing users
 
   Future<List<PublicUserInfo>> queryExplorers(
       {required String queryString}) async {
@@ -338,8 +324,6 @@ class FirestoreApi {
     return results;
   }
 
-  ///////////////////////////////////////////////////////
-  /// Get Money Transfer Stream
   Stream<List<MoneyTransfer>> getTransferDataStream(
       {required MoneyTransferQueryConfig config, required String uid}) {
     Query query;
@@ -369,10 +353,6 @@ class FirestoreApi {
     }
   }
 
-  ////////////////////////////////////////////////////////
-  /// Everything related to quests
-
-  // Returns dummy data for now!
   Quest? getQuest({required String questId}) {
     log.i("Get dummy quest");
     return getDummyQuest1();
@@ -380,7 +360,6 @@ class FirestoreApi {
 
   Future _uploadQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
-    //Get the Document Created Reference
     final _documentReference = await questsCollection.add(
       quest.toJson(),
     );
@@ -393,7 +372,6 @@ class FirestoreApi {
 
   Future createQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
-    //Get the Document Created Reference
     final _documentReference = questsCollection.doc();
     bool timedout = false;
     //update the newly created document reference with the Firestore Id.
@@ -441,7 +419,6 @@ class FirestoreApi {
               field: kQuestGeoPointPropertyName,
               strictMode: true);
 
-      // cancel previous stream subscription
       publicQuestsStreamSubscription?.cancel();
       publicQuestsStreamSubscription = null;
       publicQuestsStreamSubscription = publicQuestsStream.listen(
@@ -537,7 +514,6 @@ class FirestoreApi {
     return returnQuests;
   }
 
-  // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> getNearbyQuests(
       {required List<String> sponsorIds,
       required double lat,
@@ -572,7 +548,6 @@ class FirestoreApi {
     }
   }
 
-  // Returns dummy data for now!
   Future pushFinishedQuest({required ActivatedQuest? quest}) async {
     if (quest == null) {
       log.wtf("Quest to push is null! This should not happen");
@@ -582,7 +557,6 @@ class FirestoreApi {
       final docRef = activatedQuestsCollection.doc();
       ActivatedQuest newQuest = quest.copyWith(
           id: docRef.id, createdAt: FieldValue.serverTimestamp());
-      //log.v("Adding the following quest to firestore: ${newQuest.toJson()}");
       await docRef.set(newQuest.toJson());
     } catch (e) {
       log.e(
@@ -629,12 +603,7 @@ class FirestoreApi {
           UserStatistics userStats =
               UserStatistics.fromJson(userDoc.data() as Map<String, dynamic>);
 
-          // values to increment and decrement
           final incrementCredits = FieldValue.increment(afkCreditsEarned);
-          // ! This here is very important and needs to be done more properly!
-          // ! This is our business model / the conversion between dollar and credits
-          // ! availableSponsoring is given in CENTS!
-          // ? NOT so important at the moment as we changed our business model
           final decrementSponsoring =
               FieldValue.increment(-afkCreditsEarned * 10);
 
@@ -654,7 +623,6 @@ class FirestoreApi {
           );
 
           try {
-            // Also upload new document to quest collection
             final docRef = activatedQuestsCollection.doc();
             ActivatedQuest newQuest = quest.copyWith(
                 id: docRef.id, createdAt: FieldValue.serverTimestamp());
@@ -709,15 +677,6 @@ class FirestoreApi {
     return null;
   }
 
-  ///////////////////////////////////////////////////
-  /// Functions related to markers
-  Future<AFKMarker?> getMarkerFromQrCodeId({required String qrCodeId}) async {
-    /////////////////////////////////////////////
-    // For now we return dummy data!
-    return Future.value(
-        AFKMarker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.1, lon: -122));
-  }
-
   Future<List<Quest>> downloadQuestsWithStartMarkerId(
       {required String? startMarkerId}) async {
     QuerySnapshot snapshot = await questsCollection
@@ -736,8 +695,6 @@ class FirestoreApi {
     }
   }
 
-  ////////////////////////////////////////////////////////
-  // Quest collection
   Stream<List<ActivatedQuest>> getPastQuestsStream({required String uid}) {
     try {
       final returnStream = activatedQuestsCollection
@@ -760,15 +717,11 @@ class FirestoreApi {
     }
   }
 
-  ////////////////////////////////////////////////////////
-  // Quest collection
   Stream<List<Achievement>> getAchievementsStream({required String uid}) {
     // TODO: Dummy for now!
     return Stream.value(getDummyAchievements());
   }
 
-  ///////////////////////////////////////////////////////
-  /// Screen Time functions
   String getScreenTimeSessionDocId() {
     final docRef = screenTimeSessionCollection.doc();
     return docRef.id;
@@ -777,7 +730,6 @@ class FirestoreApi {
   Future<void> addScreenTimeSession(
       {required ScreenTimeSession session}) async {
     log.i("Add screen time session to firestore");
-    //Get the Document Created Reference
     late Timestamp validStartedAt;
     if (session.startedAt is DateTime) {
       validStartedAt = Timestamp.fromDate(session.startedAt);
@@ -788,7 +740,6 @@ class FirestoreApi {
         session
             .copyWith(
               startedAt: validStartedAt,
-              //startedAt: Timestamp.now(),
             )
             .toJson(),
         SetOptions(merge: true));
@@ -851,7 +802,6 @@ class FirestoreApi {
   Future<ScreenTimeSession?> getScreenTimeSession(
       {required String sessionId}) async {
     log.i("get screen time session from firestore");
-    //Get the Document Created Reference
     final sessionDoc = await screenTimeSessionCollection.doc(sessionId).get();
     if (sessionDoc.exists) {
       try {
@@ -895,9 +845,6 @@ class FirestoreApi {
     }
   }
 
-  ///////////////////////////////////////////////
-  /// Feedback
-  ///
   Future uploadFeedback(
       {required Feedback feedback, String? feedbackDocumentKey}) async {
     log.i("Uploading feedback document");
@@ -976,7 +923,6 @@ class FirestoreApi {
                 },
               );
 
-              // NOW also update screen time session:
               final ref3 = screenTimeSessionCollection.doc(session.sessionId);
               transaction.update(
                 ref3,
@@ -1049,9 +995,6 @@ class FirestoreApi {
   }
 }
 
-
-/////////////////////////////////////////////////////////
-// Collection's getter
 DocumentReference getUserStatisticsCollection({required String uid}) {
   return usersCollection.doc(uid).collection(userStatisticsCollectionKey).doc();
 }

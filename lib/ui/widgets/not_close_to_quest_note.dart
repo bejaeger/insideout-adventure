@@ -1,5 +1,4 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';

@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';

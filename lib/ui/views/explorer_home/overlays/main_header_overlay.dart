@@ -1,6 +1,5 @@
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/widgets/credits_to_screentime_widget.dart';
-import 'package:afkcredits/ui/widgets/explorer_home_widgets/afk_credits_display.dart';
 import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_view.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';

@@ -3,7 +3,7 @@
 //
 //
 
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 

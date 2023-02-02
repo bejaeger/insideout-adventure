@@ -3,24 +3,18 @@ import 'package:afkcredits/enums/connectivity_type.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ConnectivityService {
-  // Create our public controller
   StreamController<ConnectivityType> connectionStatusController =
       StreamController<ConnectivityType>();
 
-  //final Connectivity _connectivity = Connectivity();
-
   ConnectivityService() {
-    // Subscribe to the connectivity Chanaged Steam
     Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) {
-        // Use Connectivity() here to gather more info if you need t
         var status = _getStatusFromResult(result);
         connectionStatusController.add(status);
       },
     );
   }
 
-  // Convert from the third part enum to our own enum
   ConnectivityType _getStatusFromResult(ConnectivityResult result) {
     switch (result) {
       case ConnectivityResult.mobile:

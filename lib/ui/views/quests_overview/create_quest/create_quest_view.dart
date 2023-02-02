@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable, unnecessary_statements
 
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/ui/views/create_explorer/validators.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';

@@ -11,22 +11,17 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-// ? service for managing feedback campaigns!
+// service for managing feedback campaigns!
+
 class FeedbackService {
-  // -------------------------------
-  // services
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final NotionApi _notionApi = locator<NotionApi>();
   final UserService _userService = locator<UserService>();
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   final log = getLogger("FeedbackService");
 
-  // ------------------------------
-  // state
   FeedbackCampaignInfo? feedbackCampaignInfo;
 
-  // --------------------------
-  // functions
   Future<String> getCurrentFeedbackCampaignDocumentKey() async {
     FeedbackCampaignInfo info = await loadFeedbackCampaignInfo();
     return info.currentCampaign;

@@ -1,6 +1,5 @@
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/create_explorer/create_explorer_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/selectable_box.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';

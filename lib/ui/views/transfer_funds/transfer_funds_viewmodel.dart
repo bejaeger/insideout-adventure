@@ -63,9 +63,8 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     }
   }
 
-  // Validate user input, very important function, TODO: should be unit tested!
+  // TODO: should be unit tested!
   bool isValidData([bool setNoMessage = false]) {
-    // check if amount is valid!
     bool returnValue = true;
     if (amountValue == null || amountValue == "" || amountValue == "-") {
       log.w("No valid amount");
@@ -108,8 +107,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       dynamic dialogResult = await _showMoneyTransferDialog(
           moneyTransferCompleter: moneyTransferCompleter);
 
-      // Handle user input after success or error of transfer!
-      // Navigation depends on user input and transfer type;
       if (dialogResult?.confirmed == true) {
         popView();
       }
@@ -120,7 +117,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
 
   Future _processPayment(
       Completer<TransferDialogStatus> moneyTransferCompleter) async {
-    // FOR now, implemented dummy payment processing here
     try {
       final MoneyTransfer data = prepareTransferData();
       await Future.delayed(Duration(milliseconds: 300)); // artificial delay
@@ -192,8 +188,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     _navigationService.back();
   }
 
-  /////////////////////////////////////////////////////////////////////
-  // Pop-ups!
   Future _showFinalConfirmationBottomSheet() async {
     return await _bottomSheetService!.showBottomSheet(
       barrierDismissible: true,

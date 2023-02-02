@@ -1,9 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
-import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 

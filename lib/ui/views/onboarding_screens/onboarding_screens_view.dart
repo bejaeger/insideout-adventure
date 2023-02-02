@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/activity_conversion_icon.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
@@ -11,16 +11,6 @@ import 'package:introduction_screen/introduction_screen.dart';
 
 class OnBoardingScreensView extends StatelessWidget {
   const OnBoardingScreensView({Key? key}) : super(key: key);
-
-  Widget _buildFullscreenImage() {
-    return Image.asset(
-      kIllustrationActivity,
-      fit: BoxFit.cover,
-      height: double.infinity,
-      width: double.infinity,
-      alignment: Alignment.center,
-    );
-  }
 
   Widget _buildImage(String assetName, [double width = 350]) {
     return Image.asset('$assetName', width: width);

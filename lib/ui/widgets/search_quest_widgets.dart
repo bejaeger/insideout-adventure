@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';

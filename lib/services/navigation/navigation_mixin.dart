@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
@@ -70,8 +69,6 @@ mixin NavigationMixin {
             ParentHomeViewArguments(screenTimeSession: screenTimeSession));
   }
 
-  ////////////////////////////////////////
-  // Navigation and dialogs
   void popView() {
     _navigationService.back();
   }
@@ -102,7 +99,6 @@ mixin NavigationMixin {
   }
 
   Future logout() async {
-    // TODO: Check that there is no active quest present!
     _questService.clearData();
     _geolocationService.clearData();
     await _userService.handleLogoutEvent(logOutFromFirebase: true);

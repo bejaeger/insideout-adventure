@@ -8,16 +8,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class CloudStorageService {
-  // ----------------------------
-  // services
   final log = getLogger("CloudStorageService");
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
 
-  // map of quest to list of screenshots
   Map<QuestType, List<dynamic>> exampleScreenShots = {};
   Set<Reference> exampleScreenShotsRef = {};
 
-  // map of quest to list of screenshots
   List<dynamic> pictures =[];
   Set<Reference> picturesRef = {};
 
@@ -28,15 +24,11 @@ class CloudStorageService {
     var imageFileName =
         title + DateTime.now().millisecondsSinceEpoch.toString();
 
-    // reference of file we want to create
     final Reference firebaseStorageRef =
         FirebaseStorage.instance.ref().child(imageFileName);
-
-    // upload faile
     UploadTask uploadTask = firebaseStorageRef.putFile(imageToUpload);
 
     try {
-      // get back snapshot
       TaskSnapshot storageSnapshot = await uploadTask
           .whenComplete(() => log.i("Uploaded file with name $imageFileName"));
       var downloadUrl = await storageSnapshot.ref.getDownloadURL();

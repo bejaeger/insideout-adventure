@@ -58,11 +58,9 @@ class GoogleMapService {
     bool? force,
   }) async {
     if (_mapController == null) return;
-    // tilt = tilt ?? await _mapController!.bea;
     CameraPosition position = CameraPosition(
       bearing: bearing,
       target: LatLng(lat, lon),
-      // target: LatLng(currentLat, currentLon),
       zoom: zoom,
       tilt: tilt,
     );
@@ -144,7 +142,6 @@ class GoogleMapService {
     }
   }
 
-  // configures map marker
   static void configureAndAddMapMarker({
     required Quest quest,
     required AFKMarker afkmarker,
@@ -165,15 +162,12 @@ class GoogleMapService {
       markerId: MarkerId(afkmarker
           .id), // google maps marker id of start marker will be our quest id
       position: LatLng(afkmarker.lat!, afkmarker.lon!),
-      infoWindow: // isStartMarker
-          //    ?
-          infoWindowText != null
-              ? InfoWindow(title: infoWindowText)
-              : InfoWindow(
-                  title: afkmarker == quest.startMarker
-                      ? "START HERE"
-                      : "NEXT CHECKPOINT"),
-      //: InfoWindow.noText,
+      infoWindow: infoWindowText != null
+          ? InfoWindow(title: infoWindowText)
+          : InfoWindow(
+              title: afkmarker == quest.startMarker
+                  ? "START HERE"
+                  : "NEXT CHECKPOINT"),
       icon: icon,
       alpha: (completed && quest.type == QuestType.TreasureLocationSearch)
           ? 0.2
@@ -187,7 +181,6 @@ class GoogleMapService {
     markersOnMap.add(marker);
   }
 
-  // configures map marker
   static void configureAndAddMapArea(
       {required Quest quest,
       required AFKMarker afkmarker,
@@ -280,14 +273,10 @@ class GoogleMapService {
       isAnimating = false;
       rethrow;
     }
-    // 1 second is default length of animation for android.
-    // TODO: This is different for iOS
     await Future.delayed(Duration(milliseconds: mapAnimationSpeed()));
     isAnimating = false;
   }
 
-  ///////////////////////////////////////////////////////////
-  /// Map Style
   static Future<BitmapDescriptor> defineMarkersColour({
     required AFKMarker afkmarker,
     required Quest? quest,
@@ -328,7 +317,6 @@ class GoogleMapService {
           return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
         }
       } else {
-        // GPS Hikes
         if (isStartMarker) {
           return BitmapDescriptor.defaultMarkerWithHue(
               BitmapDescriptor.hueOrange);
@@ -339,7 +327,6 @@ class GoogleMapService {
     }
   }
 
-  // From list of [double, double] make LatLngBounds out of it!
   static LatLngBounds boundsFromLatLngList(
       {required List<List<double>> latLngList}) {
     if (latLngList.length == 0) {
@@ -362,7 +349,6 @@ class GoogleMapService {
         northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
   }
 
-  // update color of marker on map
   static void updateMapMarkers(
       {required AFKMarker afkmarker,
       required bool collected,
@@ -383,7 +369,6 @@ class GoogleMapService {
         .toSet();
   }
 
-  // update color of area on map
   static void updateMapAreas({required AFKMarker afkmarker}) {
     circlesOnMap = circlesOnMap
         .map((item) => item.circleId == CircleId(afkmarker.id)

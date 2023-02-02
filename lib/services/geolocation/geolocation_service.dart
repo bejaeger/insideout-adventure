@@ -7,7 +7,6 @@ import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/services/common_services/pausable_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -15,21 +14,11 @@ class GeolocationService extends PausableService {
   final log = getLogger('GeolocationService');
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
-  // listener for active quests
-  StreamSubscription? _livePositionStreamSubscription;
   bool get isListeningToLocation => _livePositionStreamSubscription != null;
-  StreamSubscription? _livePositionMainStreamSubscription;
   bool get isListeningToMainLocation =>
       _livePositionMainStreamSubscription != null &&
       !_livePositionMainStreamSubscription!.isPaused;
-
   int? get currentGPSAccuracy => _livePosition?.accuracy.round();
-  String? gpsAccuracyInfo;
-
-  bool isGeolocationAvailable = false;
-
-  // position with stream
-  Position? _livePosition;
   Future<Position> get getUserLivePosition async =>
       _livePosition ??
       await getAndSetCurrentLocation(forceGettingNewPosition: false);
@@ -37,13 +26,15 @@ class GeolocationService extends PausableService {
       LatLng(_livePosition!.latitude, _livePosition!.longitude);
   List<double> get getUserLatLngInList =>
       [_livePosition!.latitude, _livePosition!.longitude];
-
   Position? get getUserLivePositionNullable => _livePosition;
 
-  // for testing
-  // current position forced
+  StreamSubscription? _livePositionStreamSubscription;
+  StreamSubscription? _livePositionMainStreamSubscription;
+  String? gpsAccuracyInfo;
+  bool isGeolocationAvailable = false;
+  Position? _livePosition;
+
   Position? _currentPosition;
-  // last known position
   Position? _lastKnownPosition;
 
   double distanceToLastCheckedMarker = -1;
@@ -73,9 +64,6 @@ class GeolocationService extends PausableService {
       // otherwise stream from geolocator is not reset!
       cancelMainPositionListener();
 
-      // TODO: Provide proper error message to user in case of
-      // denied permission, no access to gps, ...
-
       _livePositionStreamSubscription = Geolocator.getPositionStream(
               locationSettings: LocationSettings(
                   accuracy: LocationAccuracy.best,
@@ -89,7 +77,6 @@ class GeolocationService extends PausableService {
             onData(position);
           }
           if (viewModelCallback != null) {
-            // option to not fire callback on first event
             if (skipFirstStreamEvent) {
               if (completer.isCompleted) {
                 viewModelCallback(position);
@@ -122,8 +109,6 @@ class GeolocationService extends PausableService {
     Completer<void> completer = Completer();
     if (_livePositionMainStreamSubscription == null) {
       currentPositionDistanceFilter = distanceFilter.round();
-      // TODO: Provide proper error message to user in case of
-      // denied permission, no access to gps, ...
       _livePositionMainStreamSubscription = Geolocator.getPositionStream(
               locationSettings: LocationSettings(
                   accuracy: LocationAccuracy.best,
@@ -137,7 +122,6 @@ class GeolocationService extends PausableService {
             onData(position);
           }
           if (viewModelCallback != null) {
-            // option to not fire callback on first event
             if (skipFirstStreamEvent) {
               if (completer.isCompleted) {
                 viewModelCallback(position);
@@ -165,7 +149,6 @@ class GeolocationService extends PausableService {
         log.v('Quest Geolocation listener resumed');
         resumePositionListener();
       } else {
-        // resume main position listener
         resumeMainPositionListener();
       }
       super.resume();
@@ -212,13 +195,11 @@ class GeolocationService extends PausableService {
 
   Future<Position> getAndSetCurrentLocation(
       {bool forceGettingNewPosition = false}) async {
-    //Verify If location is available on device.
     if (!isGeolocationAvailable) {
       isGeolocationAvailable = await checkGeolocationAvailable();
     }
     if (isGeolocationAvailable == true) {
       try {
-        // if (!kIsWeb) {
         Duration? difference;
         if (getUserLivePositionNullable != null) {
           difference = getUserLivePositionNullable?.timestamp
@@ -229,11 +210,9 @@ class GeolocationService extends PausableService {
         if (((difference != null && difference.inSeconds.abs() > 5) ||
                 difference == null) &&
             forceGettingNewPosition) {
-          // log.wtf("---------------------------------");
           log.i("Getting current position now at ${DateTime.now().toString()}");
           final geolocatorPosition = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best,
-            //forceAndroidLocationManager: true,
           );
 
           log.i("Retrieved position at ${DateTime.now().toString()}");
@@ -242,8 +221,6 @@ class GeolocationService extends PausableService {
           printPositionInfo(geolocatorPosition);
           return geolocatorPosition;
         } else {
-          // return previous location
-
           final lastKnownPosition =
               kIsWeb ? null : await Geolocator.getLastKnownPosition();
           if (lastKnownPosition != null) {
@@ -272,7 +249,6 @@ class GeolocationService extends PausableService {
             prettyDetails:
                 "Geolocation could not be found. Please make sure you have your location service activated on your phone.");
       }
-      // return _position;
     } else {
       log.e("Location service seems to be turned off on the phone");
       throw GeolocationServiceException(
@@ -303,16 +279,13 @@ class GeolocationService extends PausableService {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Test if location services are enabled.
     serviceEnabled = await _geolocatorPlatform.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Location services are not enabled don't continue
       // accessing the position and request users of the
       // App to enable the location services.
-
       return false;
     }
-    var request = await Permission.locationAlways.request();
 
     permission = await _geolocatorPlatform.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -332,7 +305,6 @@ class GeolocationService extends PausableService {
 
   Future<bool> isUserCloseby(
       {required double lat, required double lon, int? threshold}) async {
-    // log.v("Check if user is closeby marker based on last known location");
     final position = await getAndSetCurrentLocation();
     if (countAsCloseByMarker(
         position: position,
@@ -362,7 +334,6 @@ class GeolocationService extends PausableService {
       int threshold = kMaxDistanceFromMarkerInMeter}) {
     double distanceInMeters = Geolocator.distanceBetween(
         position.latitude, position.longitude, lat, lon);
-    // log.v("D, Position positionistance from marker: $distanceInMeters");
     distanceToLastCheckedMarker = distanceInMeters;
     if (distanceInMeters < threshold.toDouble()) {
       return true;
@@ -399,7 +370,6 @@ class GeolocationService extends PausableService {
     } else {
       positionActual = position;
     }
-    // DISTANCE TO CURRENT MARKER!
     distanceToStartMarker = Geolocator.distanceBetween(
         positionActual.latitude, positionActual.longitude, lat, lon);
     distanceToLastCheckedMarker = distanceToStartMarker;
@@ -433,7 +403,6 @@ class GeolocationService extends PausableService {
     return distanceInMeters;
   }
 
-  // returns distance in meters between two coordinates
   double distanceBetween(
       {required double? lat1,
       required double? lon1,
@@ -457,12 +426,6 @@ class GeolocationService extends PausableService {
     log.v("Cancel Quest position listener");
     _livePositionStreamSubscription?.cancel();
     _livePositionStreamSubscription = null;
-    // don't do this implicitely here. Explicit treatment is better!
-    // if (_livePositionMainStreamSubscription != null &&
-    //     _livePositionMainStreamSubscription!.isPaused) {
-    //   // resumeMainPositionListener();
-    //   //listenToPositionMain(distanceFilter: distanceFilter);
-    // }
   }
 
   void cancelMainPositionListener() {
@@ -549,11 +512,8 @@ class GeolocationService extends PausableService {
     //Earth’s radius, sphere
     double R = 6378137;
     //Coordinate offsets in radians
-    // final double dLat = offset/R;
     final double dLon =
         offset / (R * math.cos(math.pi * latLng.latitude / 180));
-    //OffsetPosition, decimal degrees
-    // final double newLat = latLng.latitude + dLat * 180/math.pi;
     final double newLon = latLng.longitude + dLon * 180 / math.pi;
     return LatLng(latLng.latitude, newLon);
   }
@@ -563,10 +523,7 @@ class GeolocationService extends PausableService {
     //Earth’s radius, sphere
     double R = 6378137;
     //Coordinate offsets in radians
-    // final double dLat = offset/R;
     final double dLon = offset / (R * math.cos(math.pi * latLng[0] / 180));
-    //OffsetPosition, decimal degrees
-    // final double newLat = latLng.latitude + dLat * 180/math.pi;
     final double newLon = latLng[1] + dLon * 180 / math.pi;
     return [latLng[0], newLon];
   }
@@ -575,11 +532,7 @@ class GeolocationService extends PausableService {
       {required List<double> latLng, double offset = 100}) {
     //Earth’s radius, sphere
     double R = 6378137;
-    //Coordinate offsets in radians
-    // final double dLat = offset/R;
     final double dLat = offset / R;
-    //OffsetPosition, decimal degrees
-    // final double newLat = latLng.latitude + dLat * 180/math.pi;
     final double newLat = latLng[0] + dLat * 180 / math.pi;
     return [newLat, latLng[1]];
   }
@@ -588,7 +541,4 @@ class GeolocationService extends PausableService {
     return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
   }
-
-//  Position get getCUrrentUserPostion => _position!;
-
 }
