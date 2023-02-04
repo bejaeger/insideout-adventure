@@ -12,7 +12,7 @@ import 'package:transparent_pointer/transparent_pointer.dart';
 class GoogleMapScreen extends StatelessWidget {
   final MapViewModel model;
   final void Function()? callback;
-  final void Function(LatLng)? showCreateQuestDialog;
+  final void Function(double, double)? showCreateQuestDialog;
   const GoogleMapScreen({
     Key? key,
     required this.model,
@@ -22,6 +22,8 @@ class GoogleMapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // transparent pointer needed so that rotation gesture widget
+    // receives events!
     return TransparentPointer(
       child: Container(
         height: screenHeight(context),
@@ -42,17 +44,14 @@ class GoogleMapScreen extends StatelessWidget {
               ),
             Container(
               height: screenHeight(context),
-              // transparent pointer needed so that rotation gesture widget
-              // receives events!
               child: GoogleMap(
-                //onTap: (_) => print("TAPPED"),
-                //mapType: MapType.hybrid,
-                onTap: showCreateQuestDialog != null ? (LatLng latLng) => showCreateQuestDialog!(latLng) : null,
+                onTap: showCreateQuestDialog != null
+                    ? (LatLng latLng) => showCreateQuestDialog!(latLng.latitude, latLng.longitude)
+                    : null,
                 initialCameraPosition: GoogleMapService.initialCameraPosition(
                   userLocation: model.userLocation,
                   parentAccount: model.isParentAccount,
                 ),
-                //Place Markers in the Map
                 markers: GoogleMapService.markersOnMap,
                 circles: GoogleMapService.circlesOnMap,
                 //callback that’s called when the map is ready to use.
@@ -60,18 +59,12 @@ class GoogleMapScreen extends StatelessWidget {
                   if (!model.isParentAccount) {
                     controller.setMapStyle(model.mapStyle);
                   }
-                  //We are calling a service Directly Into a view.
                   GoogleMapService.setMapController(controller);
                 },
-                //enable zoom gestures
                 zoomGesturesEnabled: true,
-                //minMaxZoomPreference: MinMaxZoomPreference(13,17)
-                //For showing your current location on Map with a blue dot.
                 myLocationEnabled: true,
-                //Remove the Zoom in and out button
                 zoomControlsEnabled: model.isParentAccount ? true : false,
                 tiltGesturesEnabled: model.isParentAccount ? true : false,
-                // Button used for bringing the user location to the center of the camera view.
                 myLocationButtonEnabled:
                     false, //model.isParentAccount ? true : false,
                 mapToolbarEnabled: false,

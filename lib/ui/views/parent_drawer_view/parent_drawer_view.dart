@@ -38,8 +38,6 @@ class ParentDrawerView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
             child:
-                //model.feedbackCampaignInfo?.surveyUrl != null &&
-                //  model.feedbackCampaignInfo?.surveyUrl != "",
                 ListTile(
               title: Badge(
                 alignment: Alignment.centerLeft,

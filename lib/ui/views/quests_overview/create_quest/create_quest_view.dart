@@ -134,7 +134,6 @@ class NameSelection extends StatelessWidget with $CreateQuestView {
   });
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
@@ -156,7 +155,6 @@ class NameSelection extends StatelessWidget with $CreateQuestView {
                 //keyboardType: TextInputType.text,
                 // focusNode: nameFocusNode,
                 ),
-            //ErrorTextBox(message: model.nameInputValidationMessage),
             verticalSpaceMedium,
             AfkCreditsInputField(
               placeholder: 'Quest description (optional)',
@@ -255,10 +253,7 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
       child: Stack(
         children: [
           GoogleMap(
-            // zoomControlsEnabled: true,
-            //mapType: MapType.hybrid,
             initialCameraPosition: model.initialCameraPosition(),
-            //Place Markers in the Map
             markers: model.getMarkersOnMap,
             //callback that’s called when the map is ready to us.
             onMapCreated: model.onMapCreated,
@@ -267,7 +262,6 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
             // scrollGesturesEnabled: true,
             myLocationEnabled: true,
             zoomControlsEnabled: false,
-            // gestureRecognizers: Set()
           ),
           if (!model.isBusy)
             Column(
@@ -411,7 +405,6 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                           ],
-                          //errorText: model.afkCreditsInputValidationMessage,
                         ),
                       ),
                       //Container(color: Colors.red),

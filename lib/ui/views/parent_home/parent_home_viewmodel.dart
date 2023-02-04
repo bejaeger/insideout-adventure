@@ -42,17 +42,9 @@ class ParentHomeViewModel extends TransferBaseViewModel {
   }
 
   Future listenToData({ScreenTimeSession? screenTimeSession}) async {
-    // reset this flag! needed if we use parent_home_viewmodel.dart as singleton!
-    // navigatingToActiveScreenTimeView = false;
-
-    // ! Using this sometimes makes the screen stuck in loading state
-    // ! When clicking expired screen time notification after a longer time
-    // navToActiveScreenTimeView is true when a notification is
-    // clicked!
     setBusy(true);
     Completer completerOne = Completer<void>();
 
-    // adds several listeners to user data including the data from the supported explorers
     userService.setupUserDataListeners(
         completer: completerOne,
         callback: () => notifyListeners(),

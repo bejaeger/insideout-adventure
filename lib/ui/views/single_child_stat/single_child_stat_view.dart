@@ -69,12 +69,10 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              //mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Spacer(),
-                                // ----------------------------
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
@@ -105,7 +103,6 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
-                                      //color: Colors.red,
                                       child: IconButton(
                                           padding: const EdgeInsets.only(
                                               top: 4.0,

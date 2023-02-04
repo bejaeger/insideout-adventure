@@ -6,11 +6,6 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-
-// ! GOOGLE MAPS FLUTTER DEPENDENCY!
-// ! ONLY NEEDED FOR ONE FEATURE!
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:stacked_services/stacked_services.dart';
 
 class ParentMapViewModel extends QuestViewModel {
@@ -24,10 +19,7 @@ class ParentMapViewModel extends QuestViewModel {
   void initialize() async {
     setBusy(true);
     mapViewModel.resetAllMapMarkersAndAreas();
-
-    // reset camera to default position for parent
     mapStateService.setCameraToDefaultParentPosition();
-
     await getLocation(forceAwait: true, forceGettingNewPosition: false);
     setBusy(false);
     await initializeQuests(force: true);
@@ -35,7 +27,7 @@ class ParentMapViewModel extends QuestViewModel {
     notifyListeners();
   }
 
-  // ? Note: Same function exists in explorer_home_viewmodel.dart
+  // ! Note: Same function exists in explorer_home_viewmodel.dart
   Future initializeQuests(
       {bool? force,
       double? lat,
@@ -103,7 +95,7 @@ class ParentMapViewModel extends QuestViewModel {
     }
   }
 
-  void showCreateQuestDialog(LatLng latLng) async {
+  void showCreateQuestDialog(double lat, double lon) async {
     final res = await dialogService.showDialog(
         title: "Create quest",
         description: "You can create a quest starting here",
@@ -112,31 +104,31 @@ class ParentMapViewModel extends QuestViewModel {
         buttonTitle: "Create quest");
     if (res?.confirmed == true) {
       await navigationService.navigateTo(Routes.createQuestView,
-          arguments: CreateQuestViewArguments(
-              fromMap: true, latLng: [latLng.latitude, latLng.longitude]));
+          arguments:
+              CreateQuestViewArguments(fromMap: true, latLng: [lat, lon]));
     }
   }
 
   Future onMarkerTapParent(
       {required Quest quest, required AFKMarker marker}) async {
-    // marker info window shows automatically. hide it when not in avatar view
+    // marker info window shows automatically (google maps feature). hide it when not in avatar view
     mapViewModel.hideMarkerInfoWindowNow(markerId: marker.id);
     SheetResponse? response = await displayQuestBottomSheet(quest: quest);
 
-    if (response?.confirmed == false) {
-      DialogResponse? response2 = await dialogService.showDialog(
+    bool deleteQuest = response?.confirmed == false;
+    if (deleteQuest) {
+      DialogResponse? confirmation = await dialogService.showDialog(
         title: "Sure?",
         description: "Are you sure you want to delete this quest?",
         buttonTitle: "YES",
         cancelTitle: "NO",
       );
-      if (response2?.confirmed == true) {
+      if (confirmation?.confirmed == true) {
         await removeQuest(quest: quest);
         snackbarService.showSnackbar(
             title: "Deleted quest",
             message: "Successfully deleted quest.",
             duration: Duration(milliseconds: 1500));
-
         mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
         addStartMarkers();
         notifyListeners();
@@ -145,21 +137,17 @@ class ParentMapViewModel extends QuestViewModel {
       }
     }
 
-    if (response?.confirmed == true) {
-      // never await the animate function! Need to call notifyListeners()
-      // and in that function await to execute the infoTextWindow command
+    bool showQuestDetails = response?.confirmed == true;
+    if (showQuestDetails) {
       mapViewModel.animateToQuestDetails(quest: quest);
       notifyListeners();
     }
   }
 
-  // TODO: Function also in single_quest_type_viewmodel.dart
   Future<void> removeQuest({required Quest quest}) async {
     isDeletingQuest = true;
     notifyListeners();
-    //Remove Quest in the Firebase
     await questService.removeQuest(quest: quest);
-    //Remove Quest In the List.
     nearbyQuests.remove(quest);
     isDeletingQuest = false;
     notifyListeners();
@@ -181,8 +169,8 @@ class ParentMapViewModel extends QuestViewModel {
   }
 
   // when quest details are shown we need to remove them again
-  // (for parent account this is easy than the corresponding function
-  // (active_quest_base_viewmodel.dart)
+  // (for parent account this is simple. Corresponding function for explorer account is in
+  // active_quest_base_viewmodel.dart)
   void popQuestDetails() async {
     mapStateService.restorePreviousCameraPosition();
     mapViewModel.animateCameraViewModel(
@@ -191,7 +179,6 @@ class ParentMapViewModel extends QuestViewModel {
         customLon: mapStateService.newLon);
     mapStateService.resetNewLatLon();
 
-    // UI: reset/add back all quests
     mapViewModel.resetAllMapMarkersAndAreas();
     addStartMarkers();
 

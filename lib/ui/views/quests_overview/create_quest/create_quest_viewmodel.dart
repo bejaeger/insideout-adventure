@@ -23,10 +23,8 @@ import 'package:uuid/uuid.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.form.dart';
 
 class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
-  // member vars
-  bool fromMap;
   void Function() disposeController;
-
+  bool fromMap;
   // if this is set, the user wants to start a quest here!
   final List<double>? latLng;
   CreateQuestViewModel(
@@ -47,6 +45,10 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       locator<CloudStorageService>();
 
   GoogleMapController? get getGoogleMapController => _googleMapController;
+  Map<QuestType, List<dynamic>> get exampleScreenShots =>
+      _cloudStorageService.exampleScreenShots;
+  List<dynamic>? get exampleScreenShotsWithType =>
+      _cloudStorageService.exampleScreenShots[selectedQuestType];
 
   GoogleMapController? _googleMapController;
   int pageIndex = 0;
@@ -58,12 +60,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   String? questTypeInputValidationMessage;
   String? afkMarkersInputValidationMessage;
   num? screenTimeEquivalent;
-
   bool laodingScreenShots = false;
-  Map<QuestType, List<dynamic>> get exampleScreenShots =>
-      _cloudStorageService.exampleScreenShots;
-  List<dynamic>? get exampleScreenShotsWithType =>
-      _cloudStorageService.exampleScreenShots[selectedQuestType];
 
   Future loadExampleScreenshots() async {
     laodingScreenShots = true;

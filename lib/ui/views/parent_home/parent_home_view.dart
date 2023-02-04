@@ -23,8 +23,7 @@ class ParentHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ParentHomeViewModel>.reactive(
-        // Make this a singleton because we listen to screen time changes
-        // from here!
+        // this a singleton because we listen to screen time changes from here!
         viewModelBuilder: () => locator<ParentHomeViewModel>(),
         disposeViewModel: false,
         onModelReady: (model) async {
@@ -43,9 +42,7 @@ class ParentHomeView extends StatelessWidget {
             },
           );
         },
-        // fireOnModelReadyOnce: true, TODO: Not sure why this was set
         builder: (context, model, child) {
-          // print("==>> Rebuild parent home view");
           return WillPopScope(
             onWillPop: () async => false,
             child: SafeArea(
@@ -84,18 +81,6 @@ class ParentHomeView extends StatelessWidget {
                           // physics: BouncingScrollPhysics(),
                           children: [
                             verticalSpaceMedium,
-                            // if (model.childScreenTimeSessionsActive.isNotEmpty)
-                            //   AfkCreditsText.alertThree("Active Screen Time"),
-                            // if (model.childScreenTimeSessionsActive.isNotEmpty)
-                            //   AfkCreditsText.body(model.explorerNameFromUid(
-                            //           model.childScreenTimeSessionsActive[0].uid) +
-                            //       ", Minutes: " +
-                            //       model.childScreenTimeSessionsActive[0].minutes
-                            //           .toString() +
-                            //       ", started at: " +
-                            //       formatDateDetails(model
-                            //           .childScreenTimeSessionsActive[0].startedAt
-                            //           .toDate())),
                             Center(
                                 child:
                                     AfkCreditsText.headingOne("Parent Area")),
@@ -161,10 +146,6 @@ class ParentHomeView extends StatelessWidget {
                               ),
                             ),
                             verticalSpaceMedium,
-                            // Divider(
-                            //   indent: 20,
-                            //   endIndent: 20,
-                            // ),
                             verticalSpaceMedium,
                             AfkCreditsText.headingFour(
                               "How can we improve?",
@@ -205,7 +186,6 @@ class ChildrenStatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //print("==>> Rebuilding children stats list");
     return Container(
       height: 180,
       child: ListView.builder(

@@ -35,18 +35,11 @@ class MainMapView extends StatelessWidget {
                   .isAvatarView, // ignore gestures when we are in bird's view
               onRotate: (ScaleUpdateDetails details) => model.rotate(
                 dxPan: details.focalPointDelta.dx,
-                //details.delta.dx,
                 dyPan: details.focalPointDelta.dy,
                 dxGlob: details.focalPoint.dx,
                 dyGlob: details.focalPoint.dy,
                 scale: details.scale,
                 rotation: details.rotation,
-                // dxPan: details.delta.dx,
-                // //details.delta.dx,
-                // dyPan: details.delta.dy,
-                // dxGlob: details.position.dx,
-                // dyGlob: details.position.dy,
-                // scale: 1,
                 screenWidth: screenWidth(context),
                 screenHeight: screenHeight(context),
               ),

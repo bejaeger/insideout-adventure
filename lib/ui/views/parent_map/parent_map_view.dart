@@ -38,8 +38,6 @@ class ParentMapView extends StatelessWidget {
               showBackButton: model.selectedQuest != null,
               child: Stack(
                 children: [
-                  // bottom layer
-                  //if (!model.isBusy)
                   model.isBusy
                       ? MapLoadingOverlay(
                           show: true,

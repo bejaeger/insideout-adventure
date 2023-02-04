@@ -15,13 +15,11 @@ class QuestListOverlayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("==>> Rebuild QuestListOverlay");
     return ViewModelBuilder<QuestListOverlayViewModel>.reactive(
       viewModelBuilder: () => QuestListOverlayViewModel(),
       onModelReady: (model) => model.listenToLayout(),
       builder: (context, model, child) => AnimatedPositioned(
         duration: const Duration(milliseconds: 500),
-        // bottom: show ? 500 : screenHeight(context),
         top: model.isShowingQuestList
             ? kTopHeaderPadding
             : screenHeight(context),
@@ -39,7 +37,6 @@ class QuestListOverlayView extends StatelessWidget {
               width: screenWidth(context),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    //colors: [Colors.white, kcPrimaryColor],
                     colors: [kcGreenWhiter, kcPrimaryColor],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -68,7 +65,6 @@ class QuestListOverlayView extends StatelessWidget {
                               title: "Near You",
                               onButtonTap: () =>
                                   model.initializeQuests(force: true),
-                              // textButtonText: "REFRESH",
                               buttonIcon: model.isBusy
                                   ? AFKProgressIndicator()
                                   : Icon(Icons.refresh_rounded),
@@ -89,9 +85,7 @@ class QuestListOverlayView extends StatelessWidget {
                                     "Ask your parents to create one")),
                           ListView(
                             physics: ScrollPhysics(),
-                            //itemExtent: 120,
                             shrinkWrap: true,
-                            //scrollDirection: Axis.vertical,
                             children: [
                               ...model.nearbyQuestsTodo
                                   .asMap()
@@ -112,36 +106,8 @@ class QuestListOverlayView extends StatelessWidget {
                                   })
                                   .values
                                   .toList(),
-                              //verticalSpaceLarge,
                             ],
                           ),
-                          // SectionHeader(title: "Types"),
-                          // Container(
-                          //   padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                          //   child: GridView.count(
-                          //     shrinkWrap: true,
-                          //     crossAxisCount: 2,
-                          //     crossAxisSpacing: 10,
-                          //     mainAxisSpacing: 10,
-                          //     physics:
-                          //         NeverScrollableScrollPhysics(), // to disable GridView's scrolling
-                          //     children: [
-                          //       ...model.questTypes
-                          //           .map(
-                          //             (e) => AfkCreditsCategoryCard(
-                          //               onPressed:
-                          //                   model.navigateToQuestsOfSpecificTypeView,
-                          //               category: e,
-                          //               backgroundColor: getColorOfType(e),
-                          //             ),
-                          //           )
-                          //           .toList(),
-                          //       // QuestCategoryCard(
-                          //       //     onPressed: model.navigateToQuestsOfSpecificTypeView,
-                          //       //     category: QuestType.DistanceEstimate)
-                          //     ],
-                          //   ),
-                          // ),
                           verticalSpaceMassive,
                         ],
                       ),

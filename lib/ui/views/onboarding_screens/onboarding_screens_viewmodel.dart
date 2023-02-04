@@ -6,5 +6,4 @@ class OnBoardingScreensViewModel extends BaseModel {
   final AppConfigProvider _appConfigProvider = locator<AppConfigProvider>();
 
   String get versionName => _appConfigProvider.versionName;
-
 }

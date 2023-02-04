@@ -72,10 +72,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       }
     } catch (e) {
       if (e is GeolocationServiceException) {
-        // if (kIsWeb) {
-        //   await dialogService.showDialog(
-        //       title: "Sorry", description: "Map not supported on PWA version");
-        // } else {
         if (appConfigProvider.enableGPSVerification) {
           await dialogService.showDialog(
               title: "Sorry", description: e.prettyDetails);
@@ -88,13 +84,11 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
             shownDummyModeDialog = true;
           }
         }
-        // }
       } else {
         await showGenericInternalErrorDialog();
       }
     }
     try {
-      // await loadQuests();
       extractStartMarkersAndAddToMap();
       notifyListeners();
     } catch (e) {
@@ -322,7 +316,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
         bool completed = userService.hasCompletedQuest(questId: _q.id);
-        // bool showCompletedQuest =
         if (completed &&
             !showCompletedQuests &&
             _q.type == QuestType.TreasureLocationSearch) {
@@ -344,17 +337,11 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       log.i('Markers are Empty');
     }
     if (!isParentAccount && appConfigProvider.isDevFlavor) {
-      // if (!isParentAccount) {
       addARObjectToMap(
           onTap: onARObjectMarkerTap,
           lat: 49.27215968930406,
           lon: -123.15749607547962,
           isGreen: true);
-      // addARObjectToMap(
-      //     onTap: onARObjectMarkerTap,
-      //     lat: 49.26843866276503,
-      //     lon: -122.99103899176373,
-      //     isCoin: false);
     }
   }
 
@@ -416,15 +403,10 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
     if (!useSuperUserFeatures) {
       if (hasActiveQuest == false) {
-        // -->> BEGIN No active quest
-
-        // -->> BEGIN isStartMarker
         if (afkmarker == quest.startMarker) {
           dynamic result;
-
-          // When in bird view we show a bottom sheet!
           if (!isAvatarView && selectedQuest == null) {
-            // marker info window shows automatically. hide it when not in avatar view
+            // marker info window shows automatically (google map). hide it when not in avatar view
             hideMarkerInfoWindowNow(markerId: afkmarker.id);
             result = await displayQuestBottomSheet(
               quest: quest,
@@ -432,20 +414,13 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
               startMarker: afkmarker,
             );
           }
-
           // When we select the quest from the bottom sheet OR are in avatar view
           // we smoothly animate to the quest
           if (result?.confirmed == true || isAvatarView) {
-            // showQuestDetails
             animateToQuestDetails(quest: quest);
           }
-          // <<-- END isStartMarker
         } else {
-          // -->> BEGIN is quest marker
-
-          // information dialogs
           if (quest.type != QuestType.QRCodeHike) {
-            // show info dialog for 1.5 seconds.
             showMarkerInfoWindowNow(markerId: afkmarker.id);
             await Future.delayed(Duration(milliseconds: 1500));
             hideMarkerInfoWindowNow(markerId: afkmarker.id);
@@ -455,11 +430,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
                 description: "Start the quest and collect this marker.");
           }
         }
-
-        // <<-- END No active quest
       } else {
-        // -->> BEGIN Has active quest
-
         // ! DEVELOPMENT FEATURE ONLY!
         // ! ALLOW testing quests by pressing on markers on map!
         log.i("Quest active, handling qrCodeScanEvent");
@@ -478,7 +449,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   Future onAreaTap({required Quest quest, required AFKMarker afkmarker}) async {
-    // event triggered when user taps marker
     if (!useSuperUserFeatures) {
       if (afkmarker == quest.startMarker) {
         await dialogService.showDialog(
@@ -498,20 +468,16 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       return;
     }
 
-    // take snapshot so we can easily restore current view
     takeSnapshotOfCameraPosition();
 
-    // set selected quest to show on screen
-    // UI will react to this!
     activeQuestService.setSelectedQuest(quest);
     // for rotation animation in avatar view
     activeQuestService.questCenteredOnMap = true;
 
-    // animate camera to quest start
-    animateMapToQuest(quest: quest);
+    animateMapToQuestLocation(quest: quest);
   }
 
-  void animateMapToQuest({required Quest quest}) async {
+  void animateMapToQuestLocation({required Quest quest}) async {
     if (isParentAccount) {
       animateMapToQuestParentAccount(quest: quest);
     } else {
@@ -519,35 +485,22 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     }
   }
 
-  // animates map so that all markers are visible and the
-  // marker info is shown so that parents can see what
-  // the quest will be like!
   void animateMapToQuestParentAccount({required Quest quest}) async {
     log.v("Animating map to quest markers in parent account");
-
     resetMapMarkers();
     addAllMarkersNumbered(quest: quest);
     animateCameraToBetweenQuestMarkers(quest: quest);
     await Future.delayed(
         Duration(milliseconds: (800 * mapAnimationSpeedFraction()).round()));
     showMarkerInfoWindowNumbers(quest: quest);
-
-    // ! this notifyListeners does not work in parent account
-    // ! Need to call notifyListenesr in parent_map_viewmodel.dart
-    // notifyListeners();
   }
 
   void animateMapToQuestChildAccount({required Quest quest}) async {
-    // Show marker info
     showMarkerInfoWindowNow(markerId: quest.startMarker?.id);
 
-    // some listeners will react
     layoutService.setIsMovingCamera(true);
 
-    // ----------------------------------
-    // -->> START TreasureLocationSearch Quest Section
     if (quest.type == QuestType.TreasureLocationSearch) {
-      // animate camera
       if (quest.startMarker != null) {
         changeCameraTilt(90);
         changeCameraZoom(kMaxZoom);
@@ -559,27 +512,20 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       }
       mapStateService.setIsAvatarView(true);
 
-      // ONLY markers relevant to quest
       if (quest.startMarker != null) {
         resetMapMarkers();
         addMarkerToMap(quest: quest, afkmarker: quest.startMarker!);
       }
-      // ----------------------------------
-      // <<-- END TreasureLocationSearch Quest Section
-
-      // ----------------------------------
-      // -->> START Hike Quest Section
     } else if (quest.type == QuestType.GPSAreaHike ||
         quest.type == QuestType.GPSAreaHike) {
+
       // ? Map animation is handled in initializer of gps_area_hike_viewmodel.dart (overlay viewmodel)
       // ? Because we need quest information there
 
       // this is however still needed here. Not exactly clear why
-      // need this slight delay for better navigation
-      // risky cause when user immediately taps close we are in camera nirvana
+      // need this slight delay for better navigation.
       await Future.delayed(Duration(milliseconds: 300));
       mapStateService.setIsAvatarView(false);
-      // change tilt of camera to default in hike quest
       changeCameraTilt(0);
       notifyListeners();
 
@@ -587,11 +533,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       // ? handleMarkerAnalysisResult
       // ? All handled in gps_area_hike_viewmodel.dart
 
-      // <<-- END Hike Quest
-      // ---------------------------------------------
     }
-
-    // some listeners will react
     Future.delayed(
         Duration(seconds: 1), () => layoutService.setIsMovingCamera(false));
   }
@@ -639,9 +581,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   void showMarkerInfoWindowNumbers({required Quest quest}) async {
-    // Wait to first show markers on map after notifyListeners() has benn
+    // Wait to first show markers on map after notifyListeners() has been
     // called in the relevant viewmodel (e.g. parent_home_viewmodel)
-    // show this three times...why not?
     for (AFKMarker m in quest.markers) {
       showMarkerInfoWindow(markerId: m.id);
       await Future.delayed(Duration(milliseconds: 1000));
@@ -650,7 +591,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   void showMarkerInfoWindowNow({required String? markerId}) {
     showMarkerInfoWindow(markerId: markerId);
-    // needed to show info window and also next marker
     notifyListeners();
   }
 
@@ -660,7 +600,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   void animateCameraToBetweenQuestMarkers({required Quest quest}) {
-    // animate camera so that markers are shown:
     List<List<double>> latLngListToAnimate =
         quest.markers.map((m) => [m.lat!, m.lon!]).toList();
     // add ghost latLong positions (in-place) to avoid  zooming
@@ -675,49 +614,17 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     );
   }
 
+  // Same function as above but takes latLngList instead of quest
   void animateCameraToBetweenCoordinatesWithPadding(
       {required List<List<double>> latLngList}) {
-    // animate camera so that markers are shown:
-    // add ghost latLong positions (in-place) to avoid  zooming
-    // too far if only two positions very close by are shown!
-
-    log.wtf("latLngList BEFORE padding: $latLngList");
-
-    // TODO: Could add more ghost markers this cause sometimes the zoom is too much
-    // TODO:  e.g. if line between markers is parallel to the north-south direction
     potentiallyAddGhostLatLng(latLngList: latLngList);
-    log.wtf("latLngList AFTER padding: $latLngList");
-
     Future.delayed(
       Duration(milliseconds: 0),
       () => animateCameraToBetweenCoordinates(latLngList: latLngList),
     );
   }
 
-  // if only two locations are shown we want to provide more padding on the
-  // screen and therefore add ghost markers!
   void potentiallyAddGhostLatLng({required List<List<double>> latLngList}) {
-    // if (latLngList.length == 2) {
-    //   if (geolocationService.distanceBetween(
-    //           lat1: latLngList[0][0],
-    //           lon1: latLngList[0][1],
-    //           lat2: latLngList[1][0],
-    //           lon2: latLngList[1][1]) <
-    //       150) {
-    //     // add ghost latLng positions for padding of camera!
-    //     latLngList.add(geolocationService.getLatLngShiftedLonInList(
-    //         latLng: latLngList[0], offset: 80));
-    //     latLngList.add(geolocationService.getLatLngShiftedLonInList(
-    //         latLng: latLngList[0], offset: -80));
-    //     // add ghost latLng positions for padding of camera!
-    //     latLngList.add(geolocationService.getLatLngShiftedLatInList(
-    //         latLng: latLngList[0], offset: 80));
-    //     latLngList.add(geolocationService.getLatLngShiftedLatInList(
-    //         latLng: latLngList[0], offset: -80));
-    //     // getLatLngShiftedLatInList
-    //   }
-    // }
-    // This just adds some padding
     latLngList.add(geolocationService.getLatLngShiftedLatInList(
         latLng: latLngList[0], offset: 150));
     latLngList.add(geolocationService.getLatLngShiftedLatInList(
@@ -742,7 +649,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   void checkForNewQuests({void Function()? callback}) {
     // check distance between currentLat and currentLon of map and
     // lat and lon where quests were previously downloaded
-    // TODO: Maybe put in quest_service
     double distance = geolocationService.distanceBetween(
         lat1: mapStateService.currentLat,
         lon1: mapStateService.currentLon,
@@ -756,7 +662,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
           callback();
         }
       }
-      // show button to download new quests within a radius of new lat lon!
       questService.showReloadQuestButton = true;
     } else {
       if (showReloadQuestButton) {
@@ -781,17 +686,15 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
     log.i("Handling marker analysis result");
     if (result.isEmpty) {
-      log.wtf("The object QuestQRCodeScanResult is empty!");
+      log.e("The object QuestQRCodeScanResult is empty!");
       return false;
     }
     if (result.hasError) {
       log.e("Error occured: ${result.errorMessage}");
-      // if (result.errorType != MarkerCollectionFailureType.alreadyCollected) {
       await dialogService.showDialog(
         title: "Can't collect marker!",
         description: result.errorMessage!,
       );
-      // }
       return false;
     } else {
       if (!hasActiveQuest && result.quests == null) {
@@ -833,15 +736,11 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     resetMapAreas();
   }
 
-  Future changeSettingsForNewView(double? lat, double? lon) async {
-    // 1. First take snapshot
+  Future fadeOutAndZoomCamera(double? lat, double? lon) async {
     mapStateService.takeBeforeARSnapshotOfCameraPosition();
-
-    // 2. set is fading out to show black fade out when AR marker is tapped
     layoutService.setIsFadingOutOverlay(true);
-
     changeCameraTilt(90);
-    changeCameraZoom(40); // ridiculous zoom (will be clipped)
+    changeCameraZoom(40); // zoom in while fading out for UI effect
     if (lat != null && lon != null) {
       animateCameraViewModel(customLat: lat, customLon: lon, force: true);
     }
@@ -850,8 +749,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   Future onARObjectMarkerTap(double lat, double lon, bool isCoin) async {
     // This triggers an fade out animation and save the current camera position
-    await changeSettingsForNewView(lat, lon);
-
+    await fadeOutAndZoomCamera(lat, lon);
     if (appConfigProvider.isARAvailable) {
       return await openARView(isCoin);
     } else {
@@ -867,7 +765,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   void clearAllMapData() {
     resetAllMapMarkersAndAreas();
     resetSnapshotOfCameraPosition();
-    // change avatar view back to default
     mapStateService.setIsAvatarView(true);
   }
 
@@ -878,10 +775,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   @override
   void dispose() {
-    // cameraZoom.close();
-    // cameraBearing.close();
-    // cameraTilt.close();
-    // TODO: implement dispose
     _mapEventListenerSubscription?.cancel();
     _mapEventListenerSubscription = null;
     _bearingListenerSubscription?.cancel();
@@ -889,8 +782,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     super.dispose();
   }
 
-  ///////////////////////////////////////////////////////////////////
-  // Map Callback functions
+  // Declaration of map callback functions
 
   final void Function({
     required double bearing,

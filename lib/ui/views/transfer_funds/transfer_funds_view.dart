@@ -52,13 +52,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                         child: Image.asset(kAFKCreditsLogoPath, height: 10),
                       ),
                       autofocus: true,
-                      //placeholder: 'Amount',
                       keyboardType: TextInputType.number,
-                      // inputFormatters: <TextInputFormatter>[
-                      //   FilteringTextInputFormatter.allow(
-                      //       RegExp(r'^[-+]?\d+(\.\d+)?$')),
-                      // ],
-                      //errorText: model.customValidationMessage,
                     ),
                   ),
                   //Container(color: Colors.red),
