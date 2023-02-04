@@ -1,7 +1,6 @@
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
 import 'package:afkcredits/services/feedback_service/feedback_service.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
 import '../../../app/app.locator.dart';

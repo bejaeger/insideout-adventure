@@ -43,13 +43,6 @@ class ActiveScreenTimeView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // if (model.currentScreenTimeSession == null &&
-                    //     model.expiredScreenTime == null)
-                    //   model.isBusy
-                    //       ? AFKProgressIndicator()
-                    //       : AfkCreditsText.subheading(
-                    //           "Error: Sorry something went wrong when starting the screen time session. Please let the developers know via our feedback option, thank you!"),
-                    
                     // Display the following when screen time is still active!
                     if (model.currentScreenTimeSession?.status ==
                         ScreenTimeSessionStatus.active)
@@ -70,10 +63,6 @@ class ActiveScreenTimeView extends StatelessWidget {
                                 ),
                                 Column(
                                   children: [
-                                    // Center(
-                                    //   child: AfkCreditsText.headingTwo(
-                                    //       "Active screen time"),
-                                    // ),
                                     verticalSpaceSmall,
                                     Center(
                                       child: AfkCreditsText.headingTwo(
@@ -84,19 +73,10 @@ class ActiveScreenTimeView extends StatelessWidget {
                                           align: TextAlign.center),
                                     ),
                                     verticalSpaceSmall,
-                                    // if (model.currentUser.createdByUserWithId !=
-                                    //     null)
-                                    //   SwitchToParentsAreaButton(
-                                    //     onTap: model.showNotImplementedSnackbar,
-                                    //     show: !(model.isShowingQuestDetails ||
-                                    //             model.hasActiveQuest) ||
-                                    //         model.isFadingOutQuestDetails,
-                                    //   ),
                                     verticalSpaceMedium,
                                     Align(
                                       child: AfkCreditsText.subheading(
                                         "Time left",
-                                        //align: TextAlign.center,
                                       ),
                                     ),
                                     verticalSpaceTiny,
@@ -106,13 +86,6 @@ class ActiveScreenTimeView extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
-                                        // Column(
-                                        //   children: [
-                                        //     Image.asset(kScreenTimeIcon,
-                                        //         width: 45,
-                                        //         color: kcScreenTimeBlue),
-                                        //   ],
-                                        // ),
                                         horizontalSpaceSmall,
                                         !(model.screenTimeLeft is int)
                                             ? AFKProgressIndicator(
@@ -122,11 +95,6 @@ class ActiveScreenTimeView extends StatelessWidget {
                                                     model.screenTimeLeft),
                                                 style: heading2Style.copyWith(
                                                     fontSize: 40)),
-                                        // AfkCreditsText.headingTwo(
-                                        //     secondsToMinuteSecondTime(
-                                        //         model.screenTimeLeft),
-                                        //   ),
-                                        // : SizedBox(height: 0, width: 0)
                                         Column(
                                           children: [
                                             AfkCreditsText.body(
@@ -137,12 +105,6 @@ class ActiveScreenTimeView extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    // verticalSpaceSmall,
-                                    // AfkCreditsText.body("Total length"),
-                                    // verticalSpaceTiny,
-                                    // AfkCreditsText.bodyBold(
-                                    //     "${session.minutes} min",
-                                    //     color: kcBlackHeadlineColor),
                                   ],
                                 ),
                               ],

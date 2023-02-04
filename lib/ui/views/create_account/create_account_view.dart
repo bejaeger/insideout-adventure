@@ -1,4 +1,3 @@
-import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_viewmodel.dart';
@@ -45,7 +44,6 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
                 errorText: model.fullNameInputValidationMessage,
               ),
               verticalSpaceRegular,
-              // PratokenteText.headingLogin('Email: '),
               AfkCreditsInputField(
                 controller: emailController,
                 leading: Icon(Icons.email),
@@ -55,7 +53,6 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
                 errorText: model.emailInputValidationMessage,
               ),
               verticalSpaceRegular,
-              //PratokenteText.headingLogin('Password: '),
               AfkCreditsInputField(
                 leading: Icon(Icons.lock),
                 controller: passwordController,

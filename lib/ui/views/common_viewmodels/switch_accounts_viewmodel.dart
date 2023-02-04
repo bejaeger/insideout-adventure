@@ -17,8 +17,6 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
   SwitchAccountsViewModel({this.explorerUid});
 
-  ///////////////////////////////////////////////
-  /// Switch from explorer back to sponsor account
   Future handleSwitchToExplorerEvent({String? explorerUidInput}) async {
     User? tmpExplorer;
     if (explorerUidInput != null) {
@@ -27,47 +25,35 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       tmpExplorer = explorer;
     }
 
-    // check if explorerUid is set:
     if (tmpExplorer == null) {
       log.e("Please provide an explorerUid you want to switch to!");
       await showGenericInternalErrorDialog();
       return;
     }
 
-    // Check if user wants to set PIN
     final result = await bottomSheetService.showBottomSheet(
         title: "Switch to " + tmpExplorer.fullName + "'s area",
         description: "Do you want to lock this parent area with a passcode?",
         confirmButtonTitle: "Yes",
         cancelButtonTitle: "No");
 
-    if (result?.confirmed == true) {
-      // Set PIN
+    String? pin;
+    bool setPin = result?.confirmed == true;
+    if (setPin) {
       log.i("Asking to set PIN before switching to explorer session");
       final pinResult = await navigationService.navigateTo(Routes.setPinView);
-
-      // If PIN not set correctly, show bottom sheet of this function again
       if (pinResult == null) {
-        // ! Important return here
         return;
-      } else {
-        // Store PIN in local storage!
-        // And keep reference to currently logged in user!
-        // We don't even need google auth!
-        await switchToExplorerAccount(
-            pin: pinResult.pin, explorer: tmpExplorer);
       }
+      pin = pinResult.pin;
     }
-    if (result?.confirmed == false) {
-      await switchToExplorerAccount(explorer: tmpExplorer);
-    }
+    await switchToExplorerAccount(pin: pin, explorer: tmpExplorer);
   }
 
   Future switchToExplorerAccount({String? pin, required User explorer}) async {
     setBusy(true);
     await userService.saveSponsorReference(
         uid: currentUser.uid, authMethod: currentUser.authMethod, pin: pin);
-    // Clear all service data but keep logged in with firebase!
     await clearServiceData(
         logOutFromFirebase: false, doNotClearSponsorReference: true);
     mapViewModel.clearAllMapData();
@@ -83,18 +69,13 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       await navigationService.clearStackAndShow(Routes.loginView);
       return;
     }
-    // navigate to screen
     await clearStackAndNavigateToHomeView(
         showBewareDialog: true, showNumberQuestsDialog: true);
 
     setBusy(false);
   }
 
-  ///////////////////////////////////////////////
-  /// Switch from explorer back to sponsor account
-
   Future handleSwitchToSponsorEvent() async {
-    // If no reference found give hint what to do
     if (userService.sponsorReference == null) {
       await dialogService.showDialog(
           title: "Error",
@@ -103,13 +84,10 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       return;
     } else {
       if (userService.sponsorReference!.withPasscode) {
-        // user has to type passcode to switch
-        //layoutService.setShowBottomNavBar(false);
         final pinResult = await navigationService.navigateTo(Routes.setPinView);
         if (pinResult == null) {
           return;
         } else {
-          // Check if pin is correct
           final valid =
               await userService.validateSponsorPin(pin: pinResult.pin);
           setBusy(true);
@@ -124,7 +102,6 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
           setBusy(false);
         }
       } else {
-        // no passcode provided.
         final confirmation = await bottomSheetService.showBottomSheet(
             title: "Switch to parent area?",
             confirmButtonTitle: "Switch",
@@ -140,9 +117,6 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   Future switchToSponsorAccount(
       {required SponsorReference sponsorReference}) async {
     setBusy(true);
-    // Clear all service data but keep logged in with firebase!
-    log.i("Clearing all explorer data");
-    //await Future.delayed(Duration(seconds: 5));
     await clearServiceData(logOutFromFirebase: false);
     mapViewModel.clearAllMapData();
     try {
@@ -150,14 +124,13 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       await userService.syncUserAccount(
           uid: sponsorReference.uid, fromLocalStorage: false);
     } catch (e) {
-      log.wtf("Error when trying to sync explorer account.");
+      log.e("Error when trying to sync explorer account.");
       await dialogService.showDialog(
           title: "Internal Failure",
           description: "Sorry, an internal error occured: $e");
       navigationService.clearStackAndShow(Routes.loginView);
       return;
     }
-    // navigate to screen
     await clearStackAndNavigateToHomeView();
     userService.clearSponsorReference();
     setBusy(false);

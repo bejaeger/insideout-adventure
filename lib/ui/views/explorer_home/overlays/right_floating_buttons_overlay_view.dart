@@ -7,14 +7,10 @@ import 'package:stacked/stacked.dart';
 class RightFloatingButtonsView extends StatelessWidget {
   final void Function() onZoomPressed;
 
-  // !!! Temporary
-  final void Function()? onChangeCharacterTap;
-
   const RightFloatingButtonsView({
     Key? key,
     //required this.bearing,
     required this.onZoomPressed,
-    this.onChangeCharacterTap,
   }) : super(key: key);
 
   @override
@@ -26,16 +22,6 @@ class RightFloatingButtonsView extends StatelessWidget {
         // print("-->> rebuild floating buttons");
         return Stack(
           children: [
-            if (onChangeCharacterTap != null)
-              Align(
-                alignment: Alignment(-1, 0.65),
-                child: Container(
-                  color: Colors.grey[200]!.withOpacity(0.3),
-                  width: 55,
-                  height: 55,
-                  child: GestureDetector(onTap: onChangeCharacterTap!),
-                ),
-              ),
             Align(
               alignment: Alignment(1, -0.35),
               child: Padding(

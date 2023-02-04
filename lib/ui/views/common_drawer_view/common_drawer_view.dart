@@ -56,38 +56,6 @@ class CommonDrawerView extends StatelessWidget {
                     ...children
                   ],
                 ), // AfkCreditsText.subheading(userName),
-
-                // Stack(
-                //   children: [
-                //     Align(
-                //       alignment: Alignment.center,
-                //       child: Column(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         children: [
-                //           Padding(
-                //               padding: EdgeInsets.only(
-                //                   top: 25, bottom: 25, right: 25, left: 70),
-                //               child: AfkCreditsText.headingTwo("MENU")),
-                //         ],
-                //       ),
-                //     ),
-                //     Align(
-                //       alignment: Alignment.centerLeft,
-                //       child: Padding(
-                //         padding: const EdgeInsets.all(25.0),
-                //         child: GestureDetector(
-                //           onTap: model.popView,
-                //           child: Icon(Icons.arrow_back,
-                //               color: Colors.black, size: 35),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // verticalSpaceMedium,
-                // Column(
-                //   children: children,
-                // )
               ),
             ),
           );

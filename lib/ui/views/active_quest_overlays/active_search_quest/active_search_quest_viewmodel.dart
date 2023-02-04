@@ -247,7 +247,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
 
     directionStatus = DirectionStatus.checkingDistance;
     isCheckingDistance = true;
-    // isAnimatingCamera = true;
     notifyListeners();
 
     await activeQuestService.analyzeMarkerAndUpdateQuest(marker: marker);

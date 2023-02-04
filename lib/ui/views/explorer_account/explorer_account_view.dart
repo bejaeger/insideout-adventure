@@ -120,11 +120,6 @@ class ExplorerAccountView extends StatelessWidget {
                                     .toString(),
                                 title: "Total collected",
                               ),
-
-                              // horizontalSpaceLarge,
-                              // horizontalSpaceLarge,
-                              // horizontalSpaceMedium,
-                              // horizontalSpaceSmall,
                             ],
                           ),
                           Spacer(),
@@ -155,8 +150,6 @@ class ExplorerAccountView extends StatelessWidget {
                             widthProgressBar: screenWidth(context) - 80,
                             percentage: model.percentageOfNextLevel,
                             height: 25,
-                            //currentLevel: "3",
-                            //nextLevel: "Level " + (model.currentLevel + 1).toString(),
                           ),
                           verticalSpaceSmall,
                           Wrap(
@@ -190,18 +183,6 @@ class ExplorerAccountView extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Expanded(
-                        //   child: SummaryStatsDisplay(
-                        //     stats: model.currentUserStats.lifetimeEarnings.toString(),
-                        //     title: "Total collected",
-                        //     icon: Image.asset(
-                        //       kAFKCreditsLogoPath,
-                        //       color: kcPrimaryColor,
-                        //       width: 20,
-                        //     ),
-                        //   ),
-                        // ),
-                        // horizontalSpaceSmall,
                         horizontalSpaceSmall,
                         SummaryStatsDisplay(
                           icon: Image.asset(kActivityIcon,

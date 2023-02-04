@@ -1,10 +1,8 @@
-import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/screen_time_notifications_note.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class StartScreenTimeCounterView extends StatelessWidget {
@@ -40,29 +38,7 @@ class StartScreenTimeCounterView extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            // Lottie.asset(kLottieBigTv, height: 150),
-                            // Flexible(
-                            //   child: AfkCreditsText.headingThreeLight(
-                            //     "Enjoy!",
-                            //     align: TextAlign.center,
-                            //   ),
-                            // ),
                             ScreenTimeNotificationsNote()
-                            // Flexible(
-                            //   child: Row(
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //     children: [
-                            //       Icon(Icons.info_outline_rounded,
-                            //           color: kcPrimaryColor, size: 45),
-                            //       horizontalSpaceSmall,
-                            //       Flexible(
-                            //         child: AfkCreditsText.subheading(
-                            //           "Make sure your sound or vibration is turned on",
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),

@@ -21,8 +21,6 @@ class MainFooterOverlayView extends StatelessWidget {
     return ViewModelBuilder<MainFooterViewModel>.reactive(
       viewModelBuilder: () => MainFooterViewModel(),
       onModelReady: (model) {
-        // TODO: Move somewhere else!
-        // TODO: Needs to go into onboarding!
         model.listenToLayout();
       },
       builder: (context, model, child) => Container(
@@ -77,19 +75,6 @@ class MainFooterOverlayView extends StatelessWidget {
                         },
                         toggleButtonBoxShadow: mainFooterBoxShadow(),
                         alignment: Alignment.bottomCenter,
-                        // backgroundWidget: model.isMenuOpen
-                        //     ? Expanded(
-                        //         child: GestureDetector(
-                        //           onTap: () {
-                        //             model.isMenuOpen = !model.isMenuOpen;
-                        //             model.notifyListeners();
-                        //           },
-                        //           child: Container(
-                        //             color: Colors.black12,
-                        //           ),
-                        //         ),
-                        //       )
-                        //     : null,
                         startingAngleInRadian: 1.3 * 3.14,
                         endingAngleInRadian: 1.7 * 3.14,
                         toggleButtonColor: kcCultured,

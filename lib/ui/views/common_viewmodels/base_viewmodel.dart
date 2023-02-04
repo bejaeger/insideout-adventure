@@ -28,6 +28,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
+
 // The Basemodel
 // All our ViewModels inherit from this class so
 // put everything here that needs to be available throughout the
@@ -160,7 +161,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   }
 
   Future logout() async {
-    // TODO: Check that there is no active quest present!
     clearServiceData();
     navigationService.clearStackAndShow(Routes.loginView);
   }
@@ -185,8 +185,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     return currentUserStats.afkCreditsBalance >= credits;
   }
 
-  ////////////////////////////////////////
-  // Navigation and dialogs
   void navigateBack() {
     navigationService.back();
   }
@@ -371,9 +369,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     baseModelLog.i("Setting 'avatar id' to $id");
     await userService.setNewAvatarId(id: id, user: currentUser);
   }
-
-  //////////////////////////////////////////
-  /// Clean-up
 
   @override
   void dispose() {

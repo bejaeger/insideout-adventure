@@ -1,6 +1,5 @@
 import 'package:afkcredits/ui/views/common_viewmodels/main_page_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

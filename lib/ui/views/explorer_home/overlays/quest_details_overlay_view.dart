@@ -1,8 +1,8 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
+import 'package:afkcredits/ui/views/active_quest_overlays/active_search_quest/active_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_overlays/gps_area_hike/gps_area_hike_viewmodel.dart';
-import 'package:afkcredits/ui/views/active_quest_standalone_ui/active_search_quest/active_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
@@ -181,13 +181,11 @@ class SearchQuestView extends StatelessWidget {
   final Quest quest;
   final bool showStartSlider;
   final void Function() notifyParentCallback;
-  // final void Function() onStartQuest;
   const SearchQuestView({
     Key? key,
     required this.quest,
     required this.showStartSlider,
     required this.notifyParentCallback,
-    // required this.onStartQuest,
   }) : super(key: key);
 
   @override
@@ -197,9 +195,6 @@ class SearchQuestView extends StatelessWidget {
       onModelReady: (model) => model.initialize(
           quest: quest, notifyParentCallback: notifyParentCallback),
       builder: (context, model, child) {
-        // bool activeDetector = model.hasActiveQuest &&
-        //     !model.isCheckingDistance &&
-        //     model.allowCheckingPosition;
         return SpecificQuestLayout(
           maybeStartQuest: () => model.maybeStartQuest(
               quest: quest, notifyParentCallback: notifyParentCallback),
@@ -216,11 +211,6 @@ class SearchQuestView extends StatelessWidget {
                   !model.questFinished &&
                   model.hasActiveQuest,
               child: CurrentQuestStatusInfo(
-                // isBusy: false,
-                // isFirstDistanceCheck: true,
-                // currentDistance: 100,
-                // previousDistance: 110,
-                // directionStatus: DirectionStatus.unknown,
                 isBusy: model.isCheckingDistance,
                 isFirstDistanceCheck: model.isFirstDistanceCheck,
                 currentDistance: model.currentDistanceInMeters,

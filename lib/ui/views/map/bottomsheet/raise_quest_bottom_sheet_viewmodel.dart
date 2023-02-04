@@ -5,7 +5,6 @@ import 'package:afkcredits/exceptions/mapviewmodel_exception.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../../../../app/app.locator.dart';
 
 class RaiseQuestBottomSheetViewModel extends BaseModel {
@@ -15,14 +14,14 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
   final log = getLogger("RaiseQuestBottomSheetViewModel");
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
+  Set<Marker>? get getMarkers => _markersTmp;
+
   Set<Marker> _markersTmp = {};
   GoogleMapController? _googleMapController;
 
   Future navigateToAcceptPaymentsView() async {
     log.i("Clicked navigating to accept payments view (not yet implemented!)");
   }
-
-  Set<Marker>? get getMarkers => _markersTmp;
 
   CameraPosition initialCameraPosition() {
     final CameraPosition _initialCameraPosition = CameraPosition(

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:afkcredits/utils/utilities/utilities.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -13,7 +12,6 @@ import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmode
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
-
 import '../../../app/app.locator.dart';
 import '../../../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 
@@ -30,9 +28,6 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   /// If not null: don't show alert dialog on additional location listener events
   /// @see checkIfInAreaOfMarker()
   AFKMarker? markerInArea;
-
-  GoogleMapController? _googleMapController;
-  GoogleMapController? get getGoogleMapController => _googleMapController;
 
   String mapStyle = "";
   bool isAnimatingCamera = false;
@@ -543,7 +538,6 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   @override
   dispose() {
     resetPreviousQuest();
-    _googleMapController?.dispose();
     super.dispose();
   }
 }

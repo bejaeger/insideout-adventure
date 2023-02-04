@@ -9,34 +9,20 @@ import 'package:afkcredits/services/users/afkcredits_authentication_result_servi
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/authentication_viewmodel.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.form.dart';
-import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import '../../../app_config_provider.dart';
-
 class CreateAccountViewModel extends AuthenticationViewModel {
-  // -----------------------------
-  // services
+  final UserRole role;
+  CreateAccountViewModel({required this.role}) : super(role: role);
+
   final log = getLogger("CreateAccountViewModel");
   final UserService _userService = locator<UserService>();
-  final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
-  final FirebaseAuthenticationService? _firebaseAuthenticationService =
-      locator<FirebaseAuthenticationService>();
   final _navigationService = locator<NavigationService>();
 
-  // --------------------------
-  // state
   String? emailInputValidationMessage;
   String? passwordInputValidationMessage;
   String? fullNameInputValidationMessage;
 
-  // ---------------------------
-  // member variables
-  final UserRole role;
-  CreateAccountViewModel({required this.role}) : super(role: role);
-
-  // -----------------------------
-  // functions
   void Function()? onSignUpTapped() {
     return () {
       if (!isValidUserInput()) {

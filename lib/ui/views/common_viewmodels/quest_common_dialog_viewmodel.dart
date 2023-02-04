@@ -6,9 +6,10 @@ import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmode
 import 'package:google_maps_flutter_platform_interface/src/types/bitmap.dart';
 
 class QuestCommonDialogViewModel extends ActiveQuestBaseViewModel {
-  final log = getLogger("QuestCommonDialogViewModel");
   CollectCreditsStatus status;
   QuestCommonDialogViewModel({required this.status});
+  
+  final log = getLogger("QuestCommonDialogViewModel");
 
   bool get isCollectedCredits => status == CollectCreditsStatus.done;
   bool get isNeedToCollectCredits =>

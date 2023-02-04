@@ -1,10 +1,8 @@
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
 class QuestDetailsOverlayViewModel extends ActiveQuestBaseViewModel {
-  // to show progress indicator when camera is moving
-  bool isAnimatingCamera = false;
+  bool isAnimatingCamera = false; // to show progress indicator when camera is moving
 
   @override
   Future initialize({required Quest? quest}) async {
@@ -12,7 +10,6 @@ class QuestDetailsOverlayViewModel extends ActiveQuestBaseViewModel {
         activeQuestNullable?.quest ??
         previouslyFinishedQuest?.quest ??
         null;
-    // this will start the calibration listener!
     if (quest != null) {
       await super.initialize(quest: quest);
     }
@@ -28,6 +25,6 @@ class QuestDetailsOverlayViewModel extends ActiveQuestBaseViewModel {
   Future maybeStartQuest(
       {required Quest? quest, void Function()? notifyParentCallback}) async {
     // TODO: implement maybeStartQuest
-    // throw UnimplementedError();
+    throw UnimplementedError();
   }
 }

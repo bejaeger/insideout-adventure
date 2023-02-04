@@ -19,7 +19,6 @@ abstract class QuestMarkerViewModel extends FormViewModel {
   final QuestService questService = locator<QuestService>();
   final logger = getLogger('QuestMarkerViewModel');
 
-
   Position? get userLocation => geolocationService.getUserLivePositionNullable;
   Set<Marker> get getMarkersOnMap => _markersOnMap;
   List<AFKMarker> get getAFKMarkers => _afkMarkers;

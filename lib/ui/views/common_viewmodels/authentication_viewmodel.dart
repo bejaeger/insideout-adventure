@@ -29,8 +29,6 @@ abstract class AuthenticationViewModel extends FormViewModel
   void setFormStatus() {}
 
   Future saveData(AuthenticationMethod method, [UserRole? role]) async {
-    // Run the authentication and set viewmodel to busy
-
     if (role != null && this.role == null) this.role = role;
     log.i("Trying to authenticate user with method $method and role $role ");
     final AFKCreditsAuthenticationResultService result = await (runBusyFuture(
@@ -58,45 +56,43 @@ abstract class AuthenticationViewModel extends FormViewModel
         return;
       }
 
-      if (_userService.currentUserNullable == null) {
-        // User logged in but account not created in database yet -> third party login
-        // navigate to selectUserRoleView to select user role
+      bool userAccountNotCreated = _userService.currentUserNullable == null;
+      if (userAccountNotCreated) {
+        // User logged in but account not created in database yet -> e.g. when process
+        // was interrupted or user used third party login and something went wrong.
+        // navigate back to loginView!
+        logout();
         log.i(
             "User logged in with third-party provider. Navigate to select role view");
-        _navigationService.replaceWith(Routes.selectRoleAfterLoginView,
+        _navigationService.replaceWith(Routes.loginView,
             arguments: SelectRoleAfterLoginViewArguments(authMethod: method));
         return;
       } else {
-        // User account found in database
         final role = this.role ?? _userService.getUserRole;
-
         log.i("User logged in with role $role");
-        // ADD logic to navigate to different views depending on user role!
-        // authenticated and initialized -> go to successRoute
+
         if (role == UserRole.explorer || role == UserRole.superUser) {
           _navigationService.replaceWith(Routes.explorerHomeView);
         } else {
-            // check if onboarding screen was already looked at
-            final onboarded = await _localStorageService.getFromDisk(
-                key: kLocalStorageSawOnBoardingKey);
-            if (onboarded == _userService.currentUser.uid) {
-              await _navigationService.replaceWith(
-                Routes.parentHomeView,
-              );
-            } else {
-              await _navigationService.replaceWith(
-                Routes.onBoardingScreensView,
-              );
-              _localStorageService.saveToDisk(
-                  key: kLocalStorageSawOnBoardingKey,
-                  value: _userService.currentUser.uid);
-            }
+          final onboarded = await _localStorageService.getFromDisk(
+              key: kLocalStorageSawOnBoardingKey);
+          if (onboarded == _userService.currentUser.uid) {
+            await _navigationService.replaceWith(
+              Routes.parentHomeView,
+            );
+          } else {
+            await _navigationService.replaceWith(
+              Routes.onBoardingScreensView,
+            );
+            _localStorageService.saveToDisk(
+                key: kLocalStorageSawOnBoardingKey,
+                value: _userService.currentUser.uid);
+          }
         }
       }
     } else {
       log.e(
           "User could not be logged in or signed-up, error: ${result.errorMessage}");
-      // set validation message if we have an error
       setValidationMessage(result.errorMessage);
     }
   }

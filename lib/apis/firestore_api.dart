@@ -324,35 +324,6 @@ class FirestoreApi {
     return results;
   }
 
-  Stream<List<MoneyTransfer>> getTransferDataStream(
-      {required MoneyTransferQueryConfig config, required String uid}) {
-    Query query;
-    query = paymentsCollection
-        .where("transferDetails.senderId", isEqualTo: config.senderId!)
-        .orderBy("createdAt", descending: true);
-    if (config.maxNumberReturns != null)
-      query = query.limit(config.maxNumberReturns!);
-
-    log.v("converting snapshot to list of money transfers");
-
-    try {
-      Stream<List<MoneyTransfer>> returnStream = query.snapshots().map(
-            (event) => event.docs.map(
-              (doc) {
-                return MoneyTransfer.fromJson(
-                    doc.data() as Map<String, dynamic>);
-              },
-            ).toList(),
-          );
-      return returnStream;
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Failed to read money transfer documents into dart model",
-          devDetails:
-              "Are you sure your documents in the backend are valid? Are you running with an emulator? Check the logs for concrete data that could not be read into the MoneyTransfer document");
-    }
-  }
-
   Quest? getQuest({required String questId}) {
     log.i("Get dummy quest");
     return getDummyQuest1();

@@ -90,7 +90,7 @@ class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
               left: 2,
               right: 2,
               child: FadingWidget(
-                show: model.show,
+                show: model.showAvatar,
                 ignorePointer: true,
                 child: Container(
                     height: screenHeight(context,
@@ -108,8 +108,7 @@ class _AvatarAndEffectsOnMapViewState extends State<AvatarAndEffectsOnMapView>
                           ..duration = composition.duration
                           ..repeat();
                       },
-                    )
-                    ),
+                    )),
               ),
             ),
           ],

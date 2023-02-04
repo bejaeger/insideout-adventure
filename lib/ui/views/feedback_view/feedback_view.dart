@@ -8,7 +8,6 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'feedback_view.form.dart';
 
 @FormView(

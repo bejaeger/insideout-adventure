@@ -33,7 +33,6 @@ import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart';
 import 'package:afkcredits/ui/views/help_desk/hep_desk_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
-import 'package:afkcredits/ui/views/map/map_overview_view.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
@@ -60,7 +59,6 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
   routes: [
     MaterialRoute(page: ParentHomeView),
     MaterialRoute(page: ExplorerHomeView),
-    MaterialRoute(page: MapOverviewView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: CreateAccountView),
     MaterialRoute(page: CreateAccountUserRoleView),

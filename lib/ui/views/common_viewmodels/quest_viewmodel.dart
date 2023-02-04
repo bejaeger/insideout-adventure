@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -14,11 +13,10 @@ import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 
 abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
-  final log = getLogger("QuestViewModel");
-
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
+  final log = getLogger("QuestViewModel");
 
   bool get isDevFlavor => appConfigProvider.flavor == Flavor.dev;
   List<Quest> get nearbyQuests => questService.getNearByQuest;
@@ -60,7 +58,6 @@ abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
             shownDummyModeDialog = true;
           }
         }
-        // }
       } else {
         log.wtf("Could not get location of user");
         await showGenericInternalErrorDialog();

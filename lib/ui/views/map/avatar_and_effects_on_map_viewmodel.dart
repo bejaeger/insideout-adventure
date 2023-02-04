@@ -19,7 +19,7 @@ class AvatarAndEffectsOnMapViewModel extends BaseModel {
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
   bool get hasActiveQuest => activeQuestService.hasActiveQuest;
-  bool get show =>
+  bool get showAvatar =>
       (!((isShowingQuestDetails ||
               !isAvatarView ||
               isFadingOutOverlay ||

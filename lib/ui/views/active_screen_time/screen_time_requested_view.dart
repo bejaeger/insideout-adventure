@@ -33,9 +33,6 @@ class ScreenTimeRequestedView extends StatelessWidget {
                   SizedBox(height: 50),
                   AfkCreditsText.headingTwo(
                       "Requested ${session.minutes.toString()} min"),
-                  //verticalSpaceTiny,
-                  // Text("Ask your parents to accept screen time",
-                  //     style: heading2Style.copyWith(fontSize: 60)),
                   Spacer(),
                   Container(
                     height: 220,
@@ -44,12 +41,6 @@ class ScreenTimeRequestedView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Lottie.asset(kLottieBigTv, height: 150),
-                        // Flexible(
-                        //   child: AfkCreditsText.headingThreeLight(
-                        //     "Ask your parents to accept your well deserved screen time!",
-                        //     align: TextAlign.center,
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -60,11 +51,6 @@ class ScreenTimeRequestedView extends StatelessWidget {
                   verticalSpaceMedium,
                   AFKProgressIndicator(linear: true, color: kcScreenTimeBlue),
                   Spacer(),
-                  // AfkCreditsButton.text(
-                  //   title: "Start immediately",
-                  //   color: kcGreyTextColor,
-                  //   onTap: () => model.startNow(session: session),
-                  // ),
                   verticalSpaceRegular,
                   AfkCreditsButton(
                     height: 50,

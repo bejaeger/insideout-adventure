@@ -80,6 +80,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     // cancels listener that was only used for calibration
     cancelPositionListener();
 
+    // not used atm
     // if (await checkIfBatterySaveModeOn()) {
     //   resetSlider();
     //   return false;

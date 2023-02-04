@@ -1,7 +1,6 @@
 // Model that has holds some functions for showing transfer information
 
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
-import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
@@ -11,10 +10,6 @@ import 'package:stacked_services/stacked_services.dart';
 
 abstract class TransferBaseViewModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
-
-  // Listeners for transfers
-  MoneyTransferQueryConfig get queryConfig =>
-      MoneyTransferQueryConfig(senderId: userService.currentUser.uid);
 
   Future showMoneyTransferInfoDialog(MoneyTransfer transfer) async {
     final details = transfer.transferDetails;

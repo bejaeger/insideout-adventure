@@ -7,29 +7,23 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ARObjectViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
-  Timer? timer;
-  bool showHelpMessage = false;
   ARObjectViewModel() {
-    startTimer();
+    startTimerForPotentialHelpMessage();
   }
 
-  // show help message after 5 seconds
-  void startTimer() {
+  Timer? timer;
+  bool showHelpMessage = false;
+
+  void startTimerForPotentialHelpMessage() {
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
-        if (timer.tick == 8) {
+        if (timer.tick == 8) { // shows help message after X seconds
           showHelpMessage = true;
           notifyListeners();
         }
       },
     );
-  }
-
-  @override
-  bool isQuestCompleted() {
-    // TODO: implement isQuestCompleted
-    throw UnimplementedError();
   }
 
   Future handleCollectedArObjectEvent() async {
@@ -46,6 +40,12 @@ class ARObjectViewModel extends ActiveQuestBaseViewModel
     popViewReturnValue(result: result);
     mapStateService.restoreBeforeArCameraPositionAndAnimate(
         moveInsteadOfAnimate: true);
+  }
+
+  @override
+  bool isQuestCompleted() {
+    // TODO: implement isQuestCompleted
+    throw UnimplementedError();
   }
 
   @override

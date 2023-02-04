@@ -99,7 +99,6 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                     Text(
                       model.checkSponsoringSentence()!,
                       style: TextStyle(color: Colors.red),
-                      // textAlign: TextAlign.left,
                     ),
                   //verticalSpaceSmall,
                   if (completed)

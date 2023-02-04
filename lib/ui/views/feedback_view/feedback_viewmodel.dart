@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
@@ -17,8 +16,6 @@ import 'feedback_view.form.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class FeedbackViewModel extends FormViewModel with NavigationMixin {
-  // ----------------------------------
-  // services
   final ImageSelector _imageSelector = locator<ImageSelector>();
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
@@ -28,20 +25,14 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
   final UserService _userService = locator<UserService>();
   final log = getLogger("FeedbackViewModel");
 
-  // ------------------------------------
-  // getters
   FeedbackCampaignInfo? get feedbackCampaignInfo =>
       _feedbackService.feedbackCampaignInfo;
   bool get userHasGivenFeedback => _feedbackService.userHasGivenFeedback();
 
-  // ------------------------------
-  // state
   File? selectedImage;
   String? feedbackInputValidationMessage;
   bool isInitializing = true;
 
-  // --------------------------------
-  // functions
   void initialize() async {
     isInitializing = true;
     notifyListeners();
@@ -66,20 +57,17 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
   }
 
   Future sendFeedback({bool generalFeedback = true}) async {
-    // uploading text
     if (!isValidInput() && selectedImage == null) {
       feedbackInputValidationMessage = "No feedback provided";
       notifyListeners();
       return;
     }
     setBusy(true);
-    // maybe uploading image
     CloudStorageResult? result;
     if (selectedImage != null) {
       result = await _cloudStorageService.uploadImage(
           imageToUpload: selectedImage!, title: "");
       if (!result.hasError) {
-        // successfully uploaded image
         log.i("Uploaded image");
       } else {
         _snackbarService.showSnackbar(
@@ -127,7 +115,6 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
 
   Future<void> launchUrlViewModel(String url) async {
     Uri uri = Uri.parse(url);
-    // Uri uri = Uri.https(authority, path);
     if (await canLaunchUrl(uri)) {
       if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
         throw 'Could not launch $uri';
