@@ -31,7 +31,6 @@ class CreateExplorerViewModel extends FormViewModel {
       notifyListeners();
     } else {
       popView();
-      disposeController();
     }
   }
 

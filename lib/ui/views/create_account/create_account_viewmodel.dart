@@ -78,8 +78,8 @@ class CreateAccountViewModel extends AuthenticationViewModel {
         password: passwordValue);
   }
 
-  void replaceWithSelectRoleView() =>
-      _navigationService.replaceWith(Routes.createAccountUserRoleView);
+  void replaceWithLoginView() =>
+      _navigationService.replaceWith(Routes.loginView);
 
   void resetValidationMessages() {
     emailInputValidationMessage = null;

@@ -26,7 +26,7 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
         body: AuthenticationLayout(
           busy: model.isBusy,
           onMainButtonTapped: model.onSignUpTapped(),
-          onBackPressed: model.replaceWithSelectRoleView,
+          onBackPressed: model.replaceWithLoginView,
           validationMessage: model.validationMessage,
           title: AfkCreditsText.headingOne('Create $roleString Account'),
           subtitle: AfkCreditsText.body(
