@@ -1,4 +1,4 @@
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_view.form.dart';
@@ -30,11 +30,10 @@ class CustomScreenTimeDialogViewModel extends FormViewModel {
 
   @override
   void setFormStatus() {
-    // log.v("Setting form");
     if (timeValue != null && timeValue != "") {
       if (isValidData()) {
         int tmpTime = int.parse(timeValue!);
-        creditsEquivalent = screenTimeToCredits(tmpTime);
+        creditsEquivalent = HerculesWorldCreditSystem.screenTimeToCredits(tmpTime);
         minutes = tmpTime;
       }
     }

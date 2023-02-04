@@ -1,6 +1,5 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
-import 'package:afkcredits/utils/other_helpers.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:intl/intl.dart';
 
@@ -29,11 +28,10 @@ String formatAmount(amount,
   return returnValue;
 }
 
-// Format amount for stripe that takes it in cents
-num scaleAmountForStripe(num amount) {
-  num returnAmount =
-      isNonZeroDecimalCurrency() ? (amount * 100).round() : amount.round();
-  return returnAmount;
+String formatToUsd({required double amount}) {
+  final currency =
+      NumberFormat.currency(locale: "en_US", symbol: 'usd ').format(amount);
+  return currency;
 }
 
 // There are currencies without decimals, check for this
@@ -47,35 +45,4 @@ bool isNonZeroDecimalCurrency() {
   }
 }
 
-////////////////////////////////////
-// credit and currency conversion (maybe put this in a sevice?)
-int centsToAfkCredits(num cents) {
-  return (cents * kCentsToAfkCreditsConversionFactor).round();
-}
 
-// credit and currency conversion (maybe put this in a sevice?)
-int creditsToScreenTime(num credits) {
-  return (credits *
-          HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor)
-      .round();
-}
-
-// credit and currency conversion (maybe put this in a sevice?)
-int screenTimeToCredits(int minutes) {
-  return (minutes /
-          HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor)
-      .round();
-}
-
-String formatAfkCreditsFromCents(num cents) {
-  return ((cents * kCentsToAfkCreditsConversionFactor).round()).toString();
-}
-
-String formatDollarFromCents(num cents) {
-  return ((cents * 0.01).round()).toString();
-}
-
-String formatAFKCreditsToActivityHours(num credits) {
-  // assume 100 credits are worth 1 hour activities
-  return ((credits * 0.01).round()).toString();
-}

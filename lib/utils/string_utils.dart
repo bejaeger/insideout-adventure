@@ -1,5 +1,3 @@
-// Some small helper functions
-
 import 'package:intl/intl.dart';
 
 String getInitialsFromName(String name) {
@@ -74,7 +72,6 @@ String removeLastCharacters(String string, {int removeNumber = 1}) {
   return returnValue;
 }
 
-// Helper functions
 String secondsToHourMinuteSecondTime(int? value) {
   if (value == null) return "00:00:00";
   int h = value ~/ 3600;
@@ -91,7 +88,6 @@ String secondsToHourMinuteSecondTime(int? value) {
   return result;
 }
 
-// Helper functions
 String secondsToMinuteSecondTime(int? value) {
   if (value == null) return "0m 0s";
   int m = ((value)) ~/ 60;

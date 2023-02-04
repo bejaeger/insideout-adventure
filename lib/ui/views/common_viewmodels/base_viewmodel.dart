@@ -105,7 +105,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   String get getHourMinuteSecondsTime =>
       _stopWatchService.secondsToHourMinuteSecondTime(activeQuest.timeElapsed);
 
-
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
   bool get isScreenTimeActive =>
@@ -342,7 +341,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   // this is supposed to show the main instructions.
   // For now it's just a simple dialog
-  Future showInstructions(QuestType? type) async {
+  Future showQuestInstructionDialog(QuestType? type) async {
     if (type == QuestType.TreasureLocationSearch) {
       await dialogService.showDialog(
           title: "How it works",

@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/ui/widgets/credits_to_screentime_widget.dart';
 import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_view.dart';
-import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -56,23 +56,6 @@ class MainHeader extends StatelessWidget {
               //Spacer(),
               horizontalSpaceRegular,
               horizontalSpaceMedium,
-              // if (onDevFeaturePressed != null)
-              //   Opacity(
-              //     opacity: 0.1,
-              //     child: GestureDetector(
-              //       onTap: onDevFeaturePressed,
-              //       child: Container(
-              //           alignment: Alignment.center,
-              //           width: 40,
-              //           height: 80,
-              //           color: kcCultured,
-              //           child: AfkCreditsText.captionBold(
-              //             "Dev",
-              //             align: TextAlign.center,
-              //           )),
-              //     ),
-              //   ),
-              // Spacer(),
               Expanded(
                 child: GestureDetector(
                   onTap: onCreditsPressed,
@@ -84,7 +67,7 @@ class MainHeader extends StatelessWidget {
                       //color: Colors.red,
                       child: CreditsToScreenTimeWidget(
                         credits: balance.toInt(),
-                        availableScreenTime: creditsToScreenTime(balance),
+                        availableScreenTime: HerculesWorldCreditSystem.creditsToScreenTime(balance),
                         // sizeScale: screenWidth(context) / 450,
                       ),
                       // child: AFKCreditsDisplay(balance: balance),

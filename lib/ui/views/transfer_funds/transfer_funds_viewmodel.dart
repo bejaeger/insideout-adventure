@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
@@ -231,7 +232,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     if (amountValue != null && amountValue != "") {
       if (isValidData(true)) {
         num tmpamount = int.parse(amountValue!);
-        screenTimeEquivalent = creditsToScreenTime(tmpamount);
+        screenTimeEquivalent = HerculesWorldCreditSystem.creditsToScreenTime(tmpamount);
       }
     }
     await Future.delayed(Duration(milliseconds: 2000));

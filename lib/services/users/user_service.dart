@@ -1,10 +1,3 @@
-// Intermediary between Firestore and Viewmodels
-
-// Functionalities
-// - initializing current User (id, e-mail, fullname, wallet balances)
-// - exposing currentUser
-// - exposing stream of statistics
-
 import 'dart:async';
 import 'dart:io';
 import 'package:afkcredits/apis/firestore_api.dart';
@@ -35,7 +28,8 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'afkcredits_authentication_result_service.dart'; // for the utf8.encode method
+import 'afkcredits_authentication_result_service.dart';
+
 
 class UserService {
   final _firestoreApi = locator<FirestoreApi>();
@@ -77,7 +71,7 @@ class UserService {
   SponsorReference? sponsorReference;
   Map<String, User> supportedExplorers = {};
   Map<String, UserStatistics> supportedExplorerStats = {};
-  // we add the quest history to user service (THIS IS NOT IDEAL!)
+  // we add the quest history to the user service (THIS IS NOT IDEAL!)
   Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
   StreamSubscription? _explorersDataStreamSubscriptions;
   Map<String, StreamSubscription?> _explorerStatsStreamSubscriptions = {};
@@ -664,11 +658,9 @@ class UserService {
             }
           }
 
-          // Check for any active screen times!
           try {
             ScreenTimeSession session = snapshot.firstWhere((element) =>
                 element.status == ScreenTimeSessionStatus.requested);
-            // if no session is found a StateError is thrown
             _screenTimeService
                     .supportedExplorerScreenTimeSessionsRequested[explorerId] =
                 session;
@@ -774,11 +766,7 @@ class UserService {
     }
   }
 
-  /////////////////////////////////////////////
-  /// Functions used in parents area for displaying child statistics
-  ///
   List<ActivatedQuest> sortedChildQuestHistory({String? uid}) {
-    // TODO: Also add screen time into the mix!
     List<ActivatedQuest> sortedQuests = [];
     if (uid == null) {
       supportedExplorerQuestsHistory.forEach((key, quests) {
@@ -947,8 +935,6 @@ class UserService {
     return "";
   }
 
-  //////////////////////////////////////////
-  /// Some smaller helper functions
   bool isSponsored({required String uid}) {
     return supportedExplorersList.any((element) => element.uid == uid);
   }
@@ -1000,7 +986,6 @@ class UserService {
     return sha1.convert(bytes1).toString();
   }
 
-  // USER SETTINGS FUNCTIONS
   bool get isShowingCompletedQuests =>
       currentUserSettings.isShowingCompletedQuests;
   Future setIsShowingCompletedQuests({required bool value}) async {
@@ -1052,9 +1037,6 @@ class UserService {
         uid: uid, key: "ownPhone", value: value);
   }
 
-  //////////////////////////////////////////////////
-  // Calls to database
-
   Future updateUserData({required User user}) async {
     _currentUser = user;
     _firestoreApi.updateUserData(user: user);
@@ -1076,10 +1058,6 @@ class UserService {
     return uid != null;
   }
 
-  ///////////////////////////////////////////////////
-  // Clean up
-
-  // pause the listener
   void cancelExplorerListener({required String uid}) {
     log.v("Cancel transfer data listener with config: '$uid'");
     _explorerStatsStreamSubscriptions[uid]?.cancel();
@@ -1090,19 +1068,15 @@ class UserService {
     _explorerScreenTimeStreamSubscriptions[uid] = null;
   }
 
-  // clear all data when user logs out!
   Future handleLogoutEvent(
       {bool logOutFromFirebase = true,
       bool doNotClearSponsorReference = false}) async {
     if (!kIsWeb) {
-      // remove uid from local storage
       await _localStorageService.deleteFromDisk(key: kLocalStorageUidKey);
     }
-    // set current user to null
     _currentUser = null;
     _currentUserStats = null;
 
-    // remove user listeners
     _currentUserStreamSubscription?.cancel();
     _currentUserStreamSubscription = null;
     _currentUserStatsStreamSubscription?.cancel();
@@ -1123,10 +1097,8 @@ class UserService {
     supportedExplorers = {};
     supportedExplorerStats = {};
 
-    // remove sponsor reference
     if (!doNotClearSponsorReference) clearSponsorReference();
 
-    // actually log out from firebase
     if (logOutFromFirebase) {
       await _firebaseAuthenticationService.logout();
     }

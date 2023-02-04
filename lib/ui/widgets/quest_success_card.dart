@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
+import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +79,7 @@ class QuestSuccessCard extends StatelessWidget {
                 //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
                 //     height: 40),
                 AfkCreditsText.headingThree(
-                    creditsToScreenTime(finishedQuest!.afkCreditsEarned!)
+                    HerculesWorldCreditSystem.creditsToScreenTime(finishedQuest!.afkCreditsEarned!)
                             .toString() +
                         " min"),
               ],

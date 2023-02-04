@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LocalStorageService {
   final FlutterSecureStorage _secureStorage = locator<FlutterSecureStorage>();
-
   final log = getLogger("LocalStorageService");
 
   String authTokenDataKey = "authTokenData";

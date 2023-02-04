@@ -365,28 +365,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     setBusy(false);
   }
 
-  Future showQuestInfoDialog({required Quest quest}) async {
-    await dialogService.showDialog(
-        title: quest.name.toString() + "-" + quest.type.toString(),
-        //title: quest.name + " - " + describeEnum(quest.type).toString(),
-        description: "Earn ${quest.afkCredits} Hercules credits by " +
-            getQuestDescriptionString(quest));
-  }
-
-  String getQuestDescriptionString(Quest quest) {
-    if (quest.type == QuestType.GPSAreaHike) {
-      return "collecting each checkpoint by walking to the shown red areas.";
-    } else if (quest.type == QuestType.QRCodeHike) {
-      return "finding all QR codes hidden in the highlighted areas.";
-    } else if (quest.type == QuestType.DistanceEstimate) {
-      return "walking the specified distance.";
-    } else if (quest.type == QuestType.TreasureLocationSearch) {
-      return "finding the treasure.";
-    } else {
-      return "collecting all markers";
-    }
-  }
-
   // Function to call when quest was detected to be finished in individual viewmodel
   // We can parse it a collectCreditsStatus to check whether
   // we still need to collect the credits in the view or not!

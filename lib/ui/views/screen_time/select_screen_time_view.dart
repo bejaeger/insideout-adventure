@@ -1,4 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
+import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_viewmodel.dart';
 import 'package:afkcredits/utils/currency_formatting_helpers.dart';
@@ -149,7 +150,7 @@ class SelectScreenTimeView extends StatelessWidget {
                             height: 18, color: kcPrimaryColor),
                         horizontalSpaceTiny,
                         AfkCreditsText.headingFourLight(
-                            screenTimeToCredits(model.screenTimePreset)
+                            HerculesWorldCreditSystem.screenTimeToCredits(model.screenTimePreset)
                                 .toString()),
                         //verticalSpaceTiny,
                         // Lottie.network(

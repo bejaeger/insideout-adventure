@@ -6,14 +6,12 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
-import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_marker_viewmodel.dart';
 import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -83,7 +81,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     if (afkCreditAmountValue != null && afkCreditAmountValue != "") {
       if (isValidUserInputs(credits: true)) {
         num tmpamount = int.parse(afkCreditAmountValue!);
-        screenTimeEquivalent = creditsToScreenTime(tmpamount);
+        screenTimeEquivalent = HerculesWorldCreditSystem.creditsToScreenTime(tmpamount);
       }
     }
     if (nameValue?.isEmpty ?? true) {
@@ -408,7 +406,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     final response = await _dialogService.showDialog(
         title: "Recommendation",
         description:
-            "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${creditsToScreenTime(recommendedCredits)} min screen time.",
+            "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${HerculesWorldCreditSystem.creditsToScreenTime(recommendedCredits)} min screen time.",
         cancelTitle: "Learn more",
         cancelTitleColor: kcOrange);
     if (response?.confirmed == false) {

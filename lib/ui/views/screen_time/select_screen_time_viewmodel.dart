@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
@@ -102,7 +103,7 @@ class SelectScreenTimeViewModel extends BaseModel {
         Duration(seconds: 10),
       ), // add 10 seconds because we wait for another 10 seconds in the next view!
       afkCredits: double.parse(
-          screenTimeToCredits(useSuperUserFeatures ? 1 : screenTimePreset)
+          HerculesWorldCreditSystem.screenTimeToCredits(useSuperUserFeatures ? 1 : screenTimePreset)
               .toString()),
     );
 

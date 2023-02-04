@@ -2,30 +2,21 @@ import 'dart:async';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
-import 'package:afkcredits/notifications/notification_controller.dart';
 import 'package:afkcredits/notifications/notifications_service.dart';
-import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/subjects.dart';
 
 class ScreenTimeService {
-  // ----------------------------
-  // services
   final log = getLogger('ScreenTimeService');
-  //final UserService _userService = locator<UserService>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final NotificationsService _notificationService =
       locator<NotificationsService>();
 
-  // -----------------------------
-  // Return values and state
-
   bool get hasActiveScreenTime => screenTimeActiveSubject.length != 0;
 
-  //? State connected to firestore!
+  //? State synced with firestore!
   // quest history is added to user service (NOT IDEAL! cause we have a quest service)
   // map of explorerIds and screen time sessions (list with 1 entry!)
   Map<String, List<ScreenTimeSession>> supportedExplorerScreenTimeSessions = {};
@@ -36,11 +27,10 @@ class ScreenTimeService {
   Map<String, ScreenTimeSession> supportedExplorerScreenTimeSessionsRequested =
       {};
 
-  // ? State connected to local app!
+  // ? State synced with local app!
   // map of uid and screen time that are over and we want to show
-  // the stats
+  // the stats of
   Map<String, ScreenTimeSession> screenTimeExpired = {};
-  // map of uid and screen time
   Map<String, BehaviorSubject<ScreenTimeSession>> screenTimeActiveSubject = {};
   Map<String, StreamSubscription?> screenTimeSubjectSubscription = {};
   Map<String, Timer> screenTimeTimer = {};
@@ -53,7 +43,6 @@ class ScreenTimeService {
   int counter = 10;
   ScreenTimeSession? scheduledScreenTimeSession;
 
-  // helper function
   int getMinSreenTimeLeftInSeconds() {
     DateTime now = DateTime.now();
     int min = -1;
@@ -81,9 +70,6 @@ class ScreenTimeService {
       return timeLeft;
     }
   }
-
-  // ---------------------------------
-  // Functions
 
   DateTime getScreenTimeStartTime({required ScreenTimeSession session}) {
     if (session.startedAt is DateTime) {
@@ -126,14 +112,6 @@ class ScreenTimeService {
       return null;
     }
   }
-
-  // ScreenTimeSession? getFirstExpiredScreenTimeSession() {
-  //   if (screenTimeExpired.length > 0) {
-  //     return screenTimeExpired.any;
-  //   } else {
-  //     return null;
-  //   }
-  // }
 
   Future<ScreenTimeSession?> loadAndGetScreenTimeSession(
       {required String sessionId}) async {
@@ -198,8 +176,6 @@ class ScreenTimeService {
     return _firestoreApi.getScreenTimeSessionDocId();
   }
 
-  // Function to convert screen time into credits
-  // Might need to be more sophisticated!
   Future startScreenTime(
       {required ScreenTimeSession session,
       required void Function() callback}) async {
@@ -213,7 +189,6 @@ class ScreenTimeService {
       screenTimeActiveSubject[session.uid]!.add(session);
     }
 
-    // listen to behavior subject with callback from where this function was called!
     if (!screenTimeSubjectSubscription.containsKey(session.uid) ||
         screenTimeSubjectSubscription[session.uid] == null) {
       screenTimeSubjectSubscription[session.uid] =
@@ -225,18 +200,13 @@ class ScreenTimeService {
       );
     }
 
-    // upload
     await _firestoreApi.addScreenTimeSession(session: session);
 
-    // start periodic function to update UI (every 60 seconds)
-    // cancels automatically.
     // start periodic function to update UI (every 60 seconds)
     // cancels automatically.
     screenTimeTimer[session.uid] =
         startTimer(session: session, callback: callback, previousDiff: 0);
 
-    log.v("Fire notifications");
-    // store unique ids for notifications to keep track
     await NotificationsService()
         .maybeCreatePermanentIsUsingScreenTimeNotification(session: session);
     await NotificationsService()
@@ -246,7 +216,6 @@ class ScreenTimeService {
     // on just added screenTimeActiveSubject!
     callback();
 
-    // return updated session with firestore document id
     return session;
   }
 
@@ -277,21 +246,18 @@ class ScreenTimeService {
     screenTimeTimer[session.uid] = startTimer(
         session: session, callback: callback, previousDiff: previousDiff);
 
-    // this listener is just for updating the local state!
-    // TODO: Not sure if this is needed
+    // TODO: Not sure if this is still needed
     if (!screenTimeSubjectSubscription.containsKey(session.uid) ||
         screenTimeSubjectSubscription[session.uid] == null) {
       screenTimeSubjectSubscription[session.uid] =
           screenTimeActiveSubject[session.uid]?.listen(
         (value) {
-          // log.v("Running callback of screenTimeActiveSubject!");
           callback();
         },
         onDone: () => callback(),
       );
     }
 
-    // Maybe start notifications here.
     // Needed for 2-phone scenario!
     await NotificationsService()
         .maybeCreatePermanentIsUsingScreenTimeNotification(session: session);
@@ -302,7 +268,6 @@ class ScreenTimeService {
     callback();
   }
 
-  // previous difference of timer as offset
   Timer startTimer(
       {required ScreenTimeSession session,
       required void Function() callback,
@@ -311,7 +276,6 @@ class ScreenTimeService {
       const Duration(seconds: 1),
       (timer) async {
         int secondsLeft = session.minutes * 60 - previousDiff - timer.tick;
-        // update every minute!
         if (secondsLeft % 60 == 0) {
           if (secondsLeft == 0) {
             if (screenTimeActiveSubject[session.uid] == null) {
@@ -332,8 +296,6 @@ class ScreenTimeService {
             } else {
               screenTimeActiveSubject[session.uid]!.add(session);
             }
-            // since I listen to the behavior subject no need to call the callback here
-            // callback();
           }
         }
       },
@@ -346,7 +308,6 @@ class ScreenTimeService {
     log.i("${session.status}");
     session = screenTimeActiveSubject[session.uid]?.value ?? session;
     log.i("${session.status}");
-    // check if this function was already called
     if (session.status == ScreenTimeSessionStatus.completed) {
       log.i(
           "Found that session is completed already. dismiss notifications and return");
@@ -362,7 +323,6 @@ class ScreenTimeService {
       return;
     }
 
-    // else finish screen time session
     final currentSession = session.copyWith(
       status: ScreenTimeSessionStatus.completed,
       minutesUsed: session.minutes,
@@ -374,12 +334,11 @@ class ScreenTimeService {
     screenTimeActiveSubject[currentSession.uid]?.close();
     screenTimeActiveSubject.remove(currentSession.uid);
 
-    // ? not sure if that is needed here.
+    // TODO: not sure if that is needed here.
     if (callback != null) {
       callback();
     }
 
-    // runs a transaction
     await _firestoreApi.updateStatsAfterScreenTimeFinished(
       session: currentSession,
       deltaCredits: -currentSession.afkCredits,
@@ -391,8 +350,7 @@ class ScreenTimeService {
 
   Future stopScreenTime({required ScreenTimeSession session}) async {
     dynamic returnVal;
-    // check how long session went on
-    // delete and don't bookkeep if less than 30 seconds!
+
     if (DateTime.now()
             .difference(getScreenTimeStartTime(session: session))
             .inSeconds <
@@ -402,7 +360,6 @@ class ScreenTimeService {
       resetScreenTimeSession(session: session);
       returnVal = false;
     } else {
-      // calculate difference
       int minutesUsed = (DateTime.now()
                   .difference(getScreenTimeStartTime(session: session))
                   .inSeconds /
@@ -421,7 +378,6 @@ class ScreenTimeService {
       );
 
       screenTimeActiveSubject[session.uid]?.add(session);
-      // run transaction
       await _firestoreApi.updateStatsAfterScreenTimeFinished(
         session: session,
         deltaCredits: -afkCreditsUsed,
@@ -436,19 +392,16 @@ class ScreenTimeService {
   Future continueOrBookkeepScreenTimeSessionOnStartup(
       {required ScreenTimeSession session,
       required Function() callback}) async {
-    // load screen time from firestore
-    // check status
-    // -> if completed:
+
     if (session.status == ScreenTimeSessionStatus.completed) {
       await handleScreenTimeOverEvent(session: session);
     } else {
-      // -> if not completed
       // --> check if time is UP already?
+      // TODO: add var: ifTimeIsUp (self documenting code!)
       if (DateTime.now().difference(session.startedAt.toDate()).inSeconds >=
           session.minutes * 60) {
         await handleScreenTimeOverEvent(session: session, callback: callback);
       } else {
-        // --> if NOT: create session with remaining minutes!
         await continueScreenTime(session: session, callback: callback);
       }
     }
@@ -477,12 +430,8 @@ class ScreenTimeService {
     // store in local state the session that was expired
     screenTimeExpired[session.uid] = session;
 
-    // cancel all state and listeners related to screen time session
     cancelActiveScreenTimeListeners(uid: session.uid);
 
-    log.v("Cancelling scheduled notification");
-
-    // dismiss nofifications
     await _notificationService.dismissPermanentNotification(
         sessionId: session.sessionId);
     if (session.status == ScreenTimeSessionStatus.cancelled) {
@@ -510,11 +459,8 @@ class ScreenTimeService {
 
     for (ScreenTimeSession session
         in supportedExplorerScreenTimeSessionsActive.values) {
-      // supportedExplorerScreenTimeSessionsActive.forEach(
-      //   (key, session) {
 
       // TODO: TEST THIS
-      // continue session OR FINISH from user_service!
       await continueOrBookkeepScreenTimeSessionOnStartup(
         session: session,
         callback: () {},
@@ -526,7 +472,6 @@ class ScreenTimeService {
         screenTimeSubjectSubscription[session.uid] =
             screenTimeActiveSubject[session.uid]?.listen(
           (value) {
-            // log.v("Running callback of screenTimeActiveSubject!");
             callback();
             // wait until all screen time sessions were listened to!
             if (counter == l && !completer.isCompleted) {
@@ -548,8 +493,6 @@ class ScreenTimeService {
     return completer.future;
   }
 
-  // Hanlding confirmation between children and parents when child starts screen time
-
   Future uploadScreenTimeRequest({required ScreenTimeSession session}) async {
     await _firestoreApi.addScreenTimeSession(
         session: session.copyWith(status: ScreenTimeSessionStatus.requested));
@@ -561,7 +504,6 @@ class ScreenTimeService {
   }
 
   Future acceptScreenTimeSession({required ScreenTimeSession session}) async {
-    // schedule screen time for starting
     await _firestoreApi.updateScreenTimeSessionStatus(
         session: session, status: ScreenTimeSessionStatus.active);
   }
@@ -578,15 +520,12 @@ class ScreenTimeService {
   Future<ScreenTimeSession?> getSpecificScreenTime(
       {required String? uid, required String? sessionId}) async {
     if (uid == null || sessionId == null) return null;
-    // get latest status of active screen time
     ScreenTimeSession? session =
         getActiveScreenTimeInMemory(uid: uid, sessionId: sessionId);
-    // if null see if it is an expired screen time session
     if (session == null) {
       session =
           getExpiredScreenTimeSessionInMemory(uid: uid, sessionId: sessionId);
     }
-    // no screen time in memory, need to download it from firestore
     if (session == null) {
       session = await loadAndGetScreenTimeSession(sessionId: sessionId);
     }
@@ -606,20 +545,13 @@ class ScreenTimeService {
   }
 
   void cancelActiveScreenTimeListeners({required String uid}) async {
-    // Don't cancel all of it!
-    // screenTimeSubjectSubscription.forEach((key, value) {
-    //   value?.cancel();
-    //   screenTimeSubjectSubscription[key] = null;
-    // });
     screenTimeSubjectSubscription[uid]?.cancel();
     screenTimeSubjectSubscription[uid] = null;
     screenTimeActiveSubject[uid]?.close();
     screenTimeActiveSubject.remove(uid);
 
-    //
     supportedExplorerScreenTimeSessionsActive.remove(uid);
 
-    // also cancel timer, otherwise screen time will be pushed over and over again
     screenTimeTimer[uid]?.cancel();
     screenTimeTimer.remove(uid);
   }
@@ -634,87 +566,5 @@ class ScreenTimeService {
 
   void clearData() async {
     cancelAllActiveScreenTimes();
-    //cancelScreenTimeSubjectSubscription();
   }
 }
-// ///////////////////////////////////////////////////////////////
-// //////////////////////////////////////////////////////////////////
-// //////////////////////////////////////////////////////////////////
-// //////////////////////////////////////////////////////////////////
-// // !!! BELOW IS DEPRECATED CODE!
-
-// final _firestoreApi = locator<FirestoreApi>();
-// final CloudFunctionsApi _cloudFunctionsApi = locator<CloudFunctionsApi>();
-// StreamSubscription? _purchasedScreenTimesStreamSubscription;
-// List<ScreenTimeSession> purchasedScreenTimeVouchers = [];
-
-// ////////////////////////////////////////////
-// /// History of screen time
-// // adds listener to money pools the user is contributing to
-// // allows to wait for the first emission of the stream via the completer
-// Future<void>? setupPurchasedScreenTimeListener(
-//     {required Completer<void> completer,
-//     required String uid,
-//     void Function()? callback}) async {
-//   if (_purchasedScreenTimesStreamSubscription == null) {
-//     bool listenedOnce = false;
-//     _purchasedScreenTimesStreamSubscription = _firestoreApi
-//         .getPurchasedScreenTimesStream(uid: uid)
-//         .listen((snapshot) {
-//       listenedOnce = true;
-//       purchasedScreenTimeVouchers = snapshot;
-//       if (!completer.isCompleted) {
-//         completer.complete();
-//       }
-//       if (callback != null) {
-//         callback();
-//       }
-//       log.v("Listened to ${purchasedScreenTimeVouchers.length} screen time");
-//     });
-//     if (!listenedOnce) {
-//       if (!completer.isCompleted) {
-//         completer.complete();
-//       }
-//     }
-//     return completer.future;
-//   } else {
-//     log.w(
-//         "Already listening to list of purchased screen time, not adding another listener");
-//     completer.complete();
-//   }
-// }
-
-// Future switchScreenTimeStatus({
-//   required ScreenTimeSession screenTimePurchase,
-//   required ScreenTimeSessionStatus newStatus,
-//   required String uid,
-// }) async {
-//   log.i("Switching status of screen time to $newStatus");
-//   ScreenTimeSession newScreenTimePurchase =
-//       screenTimePurchase.copyWith(status: newStatus);
-//   await _firestoreApi.updateScreenTimePurchase(
-//       screenTimePurchase: newScreenTimePurchase,
-//       newStatus: newStatus,
-//       uid: uid);
-// }
-
-// Future purchaseScreenTime(
-//     {required ScreenTimeSession screenTimePurchase}) async {
-//   return await _cloudFunctionsApi.purchaseScreenTime(
-//       screenTimePurchase: screenTimePurchase);
-// }
-// ////////////////////////////////////////////////////////////
-// // Clean-up
-
-// void clearData() {
-//   log.i("Clear purchased screen time vouchers");
-//   purchasedScreenTimeVouchers = [];
-//   _purchasedScreenTimesStreamSubscription?.cancel();
-//   _purchasedScreenTimesStreamSubscription = null;
-// }
-
-// void cancelPurchasedScreenTimeSubscription() {
-//   _purchasedScreenTimesStreamSubscription?.cancel();
-//   _purchasedScreenTimesStreamSubscription = null;
-// }
-// }

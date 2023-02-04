@@ -77,7 +77,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                   isParentAccount: model.isParentAccount,
                   quest: quest,
                   hasActiveQuest: model.hasActiveQuest,
-                  showInstructionsDialog: model.showInstructions,
+                  showInstructionsDialog: model.showQuestInstructionDialog,
                   openSuperUserSettingsDialog:
                       model.openSuperUserSettingsDialog,
                   finishedQuest: model.previouslyFinishedQuest,
