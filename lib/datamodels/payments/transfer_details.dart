@@ -13,7 +13,7 @@ class TransferDetails with _$TransferDetails {
     required String senderName,
     required num amount,
     required String currency,
-    required MoneySource sourceType,
+    required MoneySource sourceType, /* legacy */
   }) = _TransferDetails;
 
   factory TransferDetails.fromJson(Map<String, dynamic> json) =>

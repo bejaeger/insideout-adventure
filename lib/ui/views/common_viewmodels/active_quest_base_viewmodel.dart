@@ -385,15 +385,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
       },
     );
     if (result?.confirmed == true) {
-      // TODO: This is the moment where we should show a summary statistic!
-
-      // TODO: Then we should set previouslyFinishedQuest to null!
-
-      // this means everything went fine!
-      // Show statistics display
       questSuccessfullyFinished = true;
     }
-    // cancelQuestListener();
     notifyListeners();
     return questSuccessfullyFinished;
   }

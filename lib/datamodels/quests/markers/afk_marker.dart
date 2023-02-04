@@ -11,7 +11,7 @@ class AFKMarker with _$AFKMarker {
     String? qrCodeId,
     double? lat,
     double? lon,
-    @Default(MarkerStatus.testing) MarkerStatus markerStatus,
+    @Default(MarkerStatus.testing) MarkerStatus markerStatus, /* legacy */
     @Default(0) int repeatable,
   }) = _AFKMarker;
 

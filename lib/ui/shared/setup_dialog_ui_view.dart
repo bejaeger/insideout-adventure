@@ -30,9 +30,6 @@ void setupDialogUi() {
         FoundTreasureDialog(request: sheetRequest, completer: completer),
     DialogType.SuperUserSettings: (context, sheetRequest, completer) =>
         SuperUserDialogView(request: sheetRequest, completer: completer),
-    DialogType.QrCodeInArea: (context, sheetRequest, completer) =>
-        InAreaAlertDialogView(
-            request: sheetRequest, completer: completer, isQrCodeInArea: true),
     DialogType.CheckpointInArea: (context, sheetRequest, completer) =>
         InAreaAlertDialogView(
             request: sheetRequest, completer: completer, isQrCodeInArea: false),

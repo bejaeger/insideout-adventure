@@ -48,24 +48,7 @@ Size screenSize(BuildContext context) => MediaQuery.of(context).size;
 
 isDesktop(BuildContext context) => MediaQuery.of(context).size.width > 600;
 TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
-/*
-IconData getIconForCategory(QuestType category) {
-  switch (category) {
-    case QuestType.DistanceEstimate:
-      return Icons.arrow_right_alt;
-    case QuestType.TreasureLocationSearch:
-      return Icons.location_on;
-    case QuestType.QRCodeHunt:
-      return Icons.pets;
-    case QuestType.QRCodeHike:
-      return Icons.nature_people;
-    case QuestType.GPSAreaHike:
-      return Icons.explore;
-    default:
-      return Icons.map;
-  }
-}
-*/
+
 IconData getIconForCategory(QuestType? category) {
   if (category == null) return Icons.location_on;
   if (category == QuestType.DistanceEstimate) {

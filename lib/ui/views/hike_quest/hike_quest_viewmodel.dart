@@ -12,12 +12,9 @@ import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmode
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../../app/app.locator.dart';
-import '../../../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 
 class HikeQuestViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
-  final afkMarkersPositionsServices = locator<AFKMarkersPositionService>();
 
   /// If user enters an area, the following AFKMarker will be set that corresponds to the marker.
   /// If the user walks outside the area (geofence) (+ some extra buffer zone)

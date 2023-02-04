@@ -51,8 +51,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
-
-import '../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 import '../ui/views/ar_view/ar_object_android_view.dart';
 
 @StackedApp(
@@ -93,7 +91,6 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: UserService),
     LazySingleton(classType: FirestoreApi),
     LazySingleton(classType: FirebaseAuthenticationService),
-    LazySingleton(classType: AFKMarkersPositionService),
     LazySingleton(classType: AppConfigProvider),
     LazySingleton(classType: LayoutService),
     LazySingleton(classType: LocalStorageService),

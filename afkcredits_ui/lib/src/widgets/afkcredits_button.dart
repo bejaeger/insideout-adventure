@@ -1,8 +1,5 @@
 import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:afkcredits_ui/src/shared/styles.dart';
 import 'package:flutter/material.dart';
-
-// const Color DarkTurquoise = Color(0xFF00827e);
 
 class AfkCreditsButton extends StatelessWidget {
   final String title;

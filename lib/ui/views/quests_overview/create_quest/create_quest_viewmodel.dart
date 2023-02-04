@@ -343,8 +343,8 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
             lat2: pos[0],
             lon2: pos[1]);
         if (distance < 80) {
-          snackbarService.showSnackbar(
-              title: "Oops...",
+          _snackbarService.showSnackbar(
+              title: "Sorry...",
               message: "Markers need to be at least 80m away from each other.",
               duration: Duration(milliseconds: 1500));
           return;

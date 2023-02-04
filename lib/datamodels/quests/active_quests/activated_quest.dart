@@ -1,5 +1,4 @@
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/enums/last_direction_check.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

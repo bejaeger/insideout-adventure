@@ -25,13 +25,10 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
   final firestoreInstance = FirebaseFirestore.instance;
-  GeoFirePoint? center;
+
   List<Quest>? newQuestResult;
-
   Geoflutterfire geo = Geoflutterfire();
-
   Stream<dynamic>? query;
-
   StreamSubscription? publicQuestsStreamSubscription;
   Map<String, StreamSubscription?> parentQuestsStreamSubscriptions = {};
 

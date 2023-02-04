@@ -116,17 +116,6 @@ class SuperUserDialogView extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              // Row(
-                              //   mainAxisAlignment:
-                              //       MainAxisAlignment.spaceBetween,
-                              //   children: [
-                              //     Text("# uploaded / available positions: "),
-                              //     Text(model.numberPushedLocations.toString() +
-                              //         " / " +
-                              //         model.allRecordedLocations.length
-                              //             .toString()),
-                              //   ],
-                              // ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -167,23 +156,6 @@ class SuperUserDialogView extends StatelessWidget {
                               ),
                               Wrap(
                                 children: [
-                                  // TextButton(
-                                  //   onPressed: model.resetLocationsList,
-                                  //   child: Text("Reset locations list"),
-                                  // ),
-                                  // TextButton(
-                                  //   onPressed: () {
-                                  //     model.cancelPositionListener();
-                                  //     model.notifyListeners();
-                                  //   },
-                                  //   child: Text("Cancel listener"),
-                                  // ),
-                                  // model.addingPositionToNotionDB
-                                  //     ? AFKProgressIndicator()
-                                  //     : TextButton(
-                                  //         onPressed:
-                                  //             model.pushAllPositionsToNotion,
-                                  //         child: Text("Push to notion"))
                                 ],
                               )
                             ],
@@ -193,51 +165,43 @@ class SuperUserDialogView extends StatelessWidget {
                         SwitchListTile(
                             dense: true,
                             title: Text("Record quest data?"),
-                            //subtitle: Text(
-                            //    "Data is recorded during the quest and pushed to notion."),
                             value: model.isRecordingLocationData,
                             onChanged: (bool value) =>
                                 model.setIsRecordingLocationData(value)),
                         SwitchListTile(
                             dense: true,
                             title: Text("Permanent Admin Mode?"),
-                            //subtitle:
-                            //    Text("Always show and use admin features"),
                             value: model.isPermanentAdminMode,
                             onChanged: (bool value) =>
                                 model.setIsPermanentAdminMode(value)),
                         SwitchListTile(
                             dense: true,
                             title: Text("Permanent User Mode?"),
-                            //subtitle: Text("App behaves as user would see it"),
                             value: model.isPermanentUserMode,
                             onChanged: (bool value) =>
                                 model.setIsPermanentUserMode(value)),
                         SwitchListTile(
                             dense: true,
                             title: Text("Dummy Marker Collection"),
-                            //subtitle: Text("Collect markers on map by tapping"),
                             value: model.allowDummyMarkerCollection,
                             onChanged: (bool value) =>
                                 model.setAllowDummyMarkerCollection(value)),
                         SwitchListTile(
                             dense: true,
                             title: Text("AR Marker Collection"),
-                            //subtitle: Text("Complete quest on next step"),
                             value: model.isARAvailable,
                             onChanged: (bool value) =>
                                 model.setARFeatureEnabled(value)),
                         SwitchListTile(
                             dense: true,
                             title: Text("Enable GPS Verification"),
-                            //subtitle: Text("Verify location on quest actions"),
                             value: model.enableGPSVerification,
                             onChanged: (bool value) =>
                                 model.setEnableGPSVerification(value)),
                         SwitchListTile(
                             dense: true,
                             title: Text("Fake-Complete Quest"),
-                            //subtitle: Text("Complete quest on next step"),
+                            subtitle: Text("Complete quest on next step"),
                             value: model.dummyQuestCompletionVerification,
                             onChanged: (bool value) => model
                                 .setDummyQuestCompletionVerification(value)),
