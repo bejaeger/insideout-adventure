@@ -4,7 +4,7 @@ import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:afkcredits/utils/utilities/utilities.dart';
+import 'package:afkcredits/utils/utilities.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';

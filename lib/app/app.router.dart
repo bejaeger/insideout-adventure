@@ -6,62 +6,59 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart'
-    as _i28;
+    as _i27;
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart'
-    as _i31;
-import 'package:afkcredits/enums/authentication_method.dart' as _i30;
-import 'package:afkcredits/enums/user_role.dart' as _i29;
+    as _i30;
+import 'package:afkcredits/enums/authentication_method.dart' as _i29;
+import 'package:afkcredits/enums/user_role.dart' as _i28;
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart'
-    as _i18;
+    as _i17;
 import 'package:afkcredits/ui/views/active_screen_time/screen_time_requested_view.dart'
-    as _i25;
-import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_view.dart'
     as _i24;
+import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_view.dart'
+    as _i23;
 import 'package:afkcredits/ui/views/ar_view/ar_object_android_view.dart'
-    as _i16;
-import 'package:afkcredits/ui/views/ar_view/ar_object_ios_view.dart' as _i17;
+    as _i15;
+import 'package:afkcredits/ui/views/ar_view/ar_object_ios_view.dart' as _i16;
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart'
-    as _i7;
-import 'package:afkcredits/ui/views/create_account/create_account_view.dart'
     as _i6;
+import 'package:afkcredits/ui/views/create_account/create_account_view.dart'
+    as _i5;
 import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart'
-    as _i11;
+    as _i10;
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart'
     as _i3;
-import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart' as _i22;
-import 'package:afkcredits/ui/views/help_desk/hep_desk_view.dart' as _i26;
-import 'package:afkcredits/ui/views/login/login_view.dart' as _i5;
+import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart' as _i21;
+import 'package:afkcredits/ui/views/help_desk/hep_desk_view.dart' as _i25;
+import 'package:afkcredits/ui/views/login/login_view.dart' as _i4;
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart'
-    as _i10;
-import 'package:afkcredits/ui/views/map/map_overview_view.dart' as _i4;
-import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart'
-    as _i20;
-import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart' as _i2;
-import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart' as _i21;
-import 'package:afkcredits/ui/views/permissions/permissions_view.dart' as _i23;
-import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart'
-    as _i15;
-import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart'
-    as _i19;
-import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart' as _i14;
-import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart'
-    as _i12;
-import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart'
     as _i9;
-import 'package:afkcredits/ui/views/startup/startup_view.dart' as _i8;
+import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart'
+    as _i19;
+import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart' as _i2;
+import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart' as _i20;
+import 'package:afkcredits/ui/views/permissions/permissions_view.dart' as _i22;
+import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart'
+    as _i14;
+import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart'
+    as _i18;
+import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart' as _i13;
+import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart'
+    as _i11;
+import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart'
+    as _i8;
+import 'package:afkcredits/ui/views/startup/startup_view.dart' as _i7;
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart'
-    as _i13;
-import 'package:flutter/foundation.dart' as _i27;
+    as _i12;
+import 'package:flutter/foundation.dart' as _i26;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i32;
+import 'package:stacked_services/stacked_services.dart' as _i31;
 
 class Routes {
   static const parentHomeView = '/parent-home-view';
 
   static const explorerHomeView = '/explorer-home-view';
-
-  static const mapOverviewView = '/map-overview-view';
 
   static const loginView = '/login-view';
 
@@ -110,7 +107,6 @@ class Routes {
   static const all = <String>{
     parentHomeView,
     explorerHomeView,
-    mapOverviewView,
     loginView,
     createAccountView,
     createAccountUserRoleView,
@@ -147,96 +143,92 @@ class StackedRouter extends _i1.RouterBase {
       page: _i3.ExplorerHomeView,
     ),
     _i1.RouteDef(
-      Routes.mapOverviewView,
-      page: _i4.MapOverviewView,
-    ),
-    _i1.RouteDef(
       Routes.loginView,
-      page: _i5.LoginView,
+      page: _i4.LoginView,
     ),
     _i1.RouteDef(
       Routes.createAccountView,
-      page: _i6.CreateAccountView,
+      page: _i5.CreateAccountView,
     ),
     _i1.RouteDef(
       Routes.createAccountUserRoleView,
-      page: _i7.CreateAccountUserRoleView,
+      page: _i6.CreateAccountUserRoleView,
     ),
     _i1.RouteDef(
       Routes.startUpView,
-      page: _i8.StartUpView,
+      page: _i7.StartUpView,
     ),
     _i1.RouteDef(
       Routes.startUpScreenTimeView,
-      page: _i9.StartUpScreenTimeView,
+      page: _i8.StartUpScreenTimeView,
     ),
     _i1.RouteDef(
       Routes.selectRoleAfterLoginView,
-      page: _i10.SelectRoleAfterLoginView,
+      page: _i9.SelectRoleAfterLoginView,
     ),
     _i1.RouteDef(
       Routes.createExplorerView,
-      page: _i11.CreateExplorerView,
+      page: _i10.CreateExplorerView,
     ),
     _i1.RouteDef(
       Routes.singleChildStatView,
-      page: _i12.SingleChildStatView,
+      page: _i11.SingleChildStatView,
     ),
     _i1.RouteDef(
       Routes.transferFundsView,
-      page: _i13.TransferFundsView,
+      page: _i12.TransferFundsView,
     ),
     _i1.RouteDef(
       Routes.setPinView,
-      page: _i14.SetPinView,
+      page: _i13.SetPinView,
     ),
     _i1.RouteDef(
       Routes.createQuestView,
-      page: _i15.CreateQuestView,
+      page: _i14.CreateQuestView,
     ),
     _i1.RouteDef(
       Routes.aRObjectAndroidView,
-      page: _i16.ARObjectAndroidView,
+      page: _i15.ARObjectAndroidView,
     ),
     _i1.RouteDef(
       Routes.aRObjectIosView,
-      page: _i17.ARObjectIosView,
+      page: _i16.ARObjectIosView,
     ),
     _i1.RouteDef(
       Routes.activeScreenTimeView,
-      page: _i18.ActiveScreenTimeView,
+      page: _i17.ActiveScreenTimeView,
     ),
     _i1.RouteDef(
       Routes.selectScreenTimeView,
-      page: _i19.SelectScreenTimeView,
+      page: _i18.SelectScreenTimeView,
     ),
     _i1.RouteDef(
       Routes.onBoardingScreensView,
-      page: _i20.OnBoardingScreensView,
+      page: _i19.OnBoardingScreensView,
     ),
     _i1.RouteDef(
       Routes.parentMapView,
-      page: _i21.ParentMapView,
+      page: _i20.ParentMapView,
     ),
     _i1.RouteDef(
       Routes.feedbackView,
-      page: _i22.FeedbackView,
+      page: _i21.FeedbackView,
     ),
     _i1.RouteDef(
       Routes.permissionsView,
-      page: _i23.PermissionsView,
+      page: _i22.PermissionsView,
     ),
     _i1.RouteDef(
       Routes.startScreenTimeCounterView,
-      page: _i24.StartScreenTimeCounterView,
+      page: _i23.StartScreenTimeCounterView,
     ),
     _i1.RouteDef(
       Routes.screenTimeRequestedView,
-      page: _i25.ScreenTimeRequestedView,
+      page: _i24.ScreenTimeRequestedView,
     ),
     _i1.RouteDef(
       Routes.helpDeskView,
-      page: _i26.HelpDeskView,
+      page: _i25.HelpDeskView,
     ),
   ];
 
@@ -264,192 +256,186 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i4.MapOverviewView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i4.MapOverviewView(),
-        settings: data,
-      );
-    },
-    _i5.LoginView: (data) {
+    _i4.LoginView: (data) {
       final args = data.getArgs<LoginViewArguments>(
         orElse: () => const LoginViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i5.LoginView(key: args.key),
+        builder: (context) => _i4.LoginView(key: args.key),
         settings: data,
       );
     },
-    _i6.CreateAccountView: (data) {
+    _i5.CreateAccountView: (data) {
       final args = data.getArgs<CreateAccountViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i6.CreateAccountView(key: args.key, role: args.role),
+            _i5.CreateAccountView(key: args.key, role: args.role),
         settings: data,
       );
     },
-    _i7.CreateAccountUserRoleView: (data) {
+    _i6.CreateAccountUserRoleView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i7.CreateAccountUserRoleView(),
+        builder: (context) => const _i6.CreateAccountUserRoleView(),
         settings: data,
       );
     },
-    _i8.StartUpView: (data) {
+    _i7.StartUpView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i8.StartUpView(),
+        builder: (context) => const _i7.StartUpView(),
         settings: data,
       );
     },
-    _i9.StartUpScreenTimeView: (data) {
+    _i8.StartUpScreenTimeView: (data) {
       final args = data.getArgs<StartUpScreenTimeViewArguments>(
         orElse: () => const StartUpScreenTimeViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i9.StartUpScreenTimeView(
+        builder: (context) => _i8.StartUpScreenTimeView(
             key: args.key, screenTimeSession: args.screenTimeSession),
         settings: data,
       );
     },
-    _i10.SelectRoleAfterLoginView: (data) {
+    _i9.SelectRoleAfterLoginView: (data) {
       final args =
           data.getArgs<SelectRoleAfterLoginViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i10.SelectRoleAfterLoginView(
+        builder: (context) => _i9.SelectRoleAfterLoginView(
             key: args.key, authMethod: args.authMethod),
         settings: data,
       );
     },
-    _i11.CreateExplorerView: (data) {
+    _i10.CreateExplorerView: (data) {
       final args = data.getArgs<CreateExplorerViewArguments>(
         orElse: () => const CreateExplorerViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i11.CreateExplorerView(key: args.key),
+        builder: (context) => _i10.CreateExplorerView(key: args.key),
         settings: data,
       );
     },
-    _i12.SingleChildStatView: (data) {
+    _i11.SingleChildStatView: (data) {
       final args = data.getArgs<SingleChildStatViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i12.SingleChildStatView(key: args.key, uid: args.uid),
+            _i11.SingleChildStatView(key: args.key, uid: args.uid),
         settings: data,
       );
     },
-    _i13.TransferFundsView: (data) {
+    _i12.TransferFundsView: (data) {
       final args = data.getArgs<TransferFundsViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i13.TransferFundsView(
+        builder: (context) => _i12.TransferFundsView(
             key: args.key,
             senderInfo: args.senderInfo,
             recipientInfo: args.recipientInfo),
         settings: data,
       );
     },
-    _i14.SetPinView: (data) {
+    _i13.SetPinView: (data) {
       final args = data.getArgs<SetPinViewArguments>(
         orElse: () => const SetPinViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i14.SetPinView(key: args.key),
+        builder: (context) => _i13.SetPinView(key: args.key),
         settings: data,
       );
     },
-    _i15.CreateQuestView: (data) {
+    _i14.CreateQuestView: (data) {
       final args = data.getArgs<CreateQuestViewArguments>(
         orElse: () => const CreateQuestViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i15.CreateQuestView(
+        builder: (context) => _i14.CreateQuestView(
             key: args.key, fromMap: args.fromMap, latLng: args.latLng),
         settings: data,
       );
     },
-    _i16.ARObjectAndroidView: (data) {
+    _i15.ARObjectAndroidView: (data) {
       final args = data.getArgs<ARObjectAndroidViewArguments>(
         orElse: () => const ARObjectAndroidViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i16.ARObjectAndroidView(key: args.key, isCoins: args.isCoins),
+            _i15.ARObjectAndroidView(key: args.key, isCoins: args.isCoins),
         settings: data,
       );
     },
-    _i17.ARObjectIosView: (data) {
+    _i16.ARObjectIosView: (data) {
       final args = data.getArgs<ARObjectIosViewArguments>(
         orElse: () => const ARObjectIosViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i17.ARObjectIosView(key: args.key, isCoins: args.isCoins),
+            _i16.ARObjectIosView(key: args.key, isCoins: args.isCoins),
         settings: data,
       );
     },
-    _i18.ActiveScreenTimeView: (data) {
+    _i17.ActiveScreenTimeView: (data) {
       final args = data.getArgs<ActiveScreenTimeViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i18.ActiveScreenTimeView(key: args.key, session: args.session),
+            _i17.ActiveScreenTimeView(key: args.key, session: args.session),
         settings: data,
       );
     },
-    _i19.SelectScreenTimeView: (data) {
+    _i18.SelectScreenTimeView: (data) {
       final args = data.getArgs<SelectScreenTimeViewArguments>(
         orElse: () => const SelectScreenTimeViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i19.SelectScreenTimeView(key: args.key, childId: args.childId),
+            _i18.SelectScreenTimeView(key: args.key, childId: args.childId),
         settings: data,
       );
     },
-    _i20.OnBoardingScreensView: (data) {
+    _i19.OnBoardingScreensView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i20.OnBoardingScreensView(),
+        builder: (context) => const _i19.OnBoardingScreensView(),
         settings: data,
       );
     },
-    _i21.ParentMapView: (data) {
+    _i20.ParentMapView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i21.ParentMapView(),
+        builder: (context) => const _i20.ParentMapView(),
         settings: data,
       );
     },
-    _i22.FeedbackView: (data) {
+    _i21.FeedbackView: (data) {
       final args = data.getArgs<FeedbackViewArguments>(
         orElse: () => const FeedbackViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i22.FeedbackView(key: args.key),
+        builder: (context) => _i21.FeedbackView(key: args.key),
         settings: data,
       );
     },
-    _i23.PermissionsView: (data) {
+    _i22.PermissionsView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i23.PermissionsView(),
+        builder: (context) => const _i22.PermissionsView(),
         settings: data,
       );
     },
-    _i24.StartScreenTimeCounterView: (data) {
+    _i23.StartScreenTimeCounterView: (data) {
       final args =
           data.getArgs<StartScreenTimeCounterViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i24.StartScreenTimeCounterView(
+        builder: (context) => _i23.StartScreenTimeCounterView(
             key: args.key, session: args.session),
         settings: data,
       );
     },
-    _i25.ScreenTimeRequestedView: (data) {
+    _i24.ScreenTimeRequestedView: (data) {
       final args =
           data.getArgs<ScreenTimeRequestedViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i25.ScreenTimeRequestedView(key: args.key, session: args.session),
+            _i24.ScreenTimeRequestedView(key: args.key, session: args.session),
         settings: data,
       );
     },
-    _i26.HelpDeskView: (data) {
+    _i25.HelpDeskView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i26.HelpDeskView(),
+        builder: (context) => const _i25.HelpDeskView(),
         settings: data,
       );
     },
@@ -467,9 +453,9 @@ class ParentHomeViewArguments {
     this.screenTimeSession,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
-  final _i28.ScreenTimeSession? screenTimeSession;
+  final _i27.ScreenTimeSession? screenTimeSession;
 }
 
 class ExplorerHomeViewArguments {
@@ -480,11 +466,11 @@ class ExplorerHomeViewArguments {
     this.showNumberQuestsDialog = false,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
   final bool showBewareDialog;
 
-  final _i28.ScreenTimeSession? screenTimeSession;
+  final _i27.ScreenTimeSession? screenTimeSession;
 
   final bool showNumberQuestsDialog;
 }
@@ -492,7 +478,7 @@ class ExplorerHomeViewArguments {
 class LoginViewArguments {
   const LoginViewArguments({this.key});
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 }
 
 class CreateAccountViewArguments {
@@ -501,9 +487,9 @@ class CreateAccountViewArguments {
     required this.role,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
-  final _i29.UserRole role;
+  final _i28.UserRole role;
 }
 
 class StartUpScreenTimeViewArguments {
@@ -512,9 +498,9 @@ class StartUpScreenTimeViewArguments {
     this.screenTimeSession,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
-  final _i28.ScreenTimeSession? screenTimeSession;
+  final _i27.ScreenTimeSession? screenTimeSession;
 }
 
 class SelectRoleAfterLoginViewArguments {
@@ -523,15 +509,15 @@ class SelectRoleAfterLoginViewArguments {
     required this.authMethod,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
-  final _i30.AuthenticationMethod authMethod;
+  final _i29.AuthenticationMethod authMethod;
 }
 
 class CreateExplorerViewArguments {
   const CreateExplorerViewArguments({this.key});
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 }
 
 class SingleChildStatViewArguments {
@@ -540,7 +526,7 @@ class SingleChildStatViewArguments {
     required this.uid,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
   final String uid;
 }
@@ -552,17 +538,17 @@ class TransferFundsViewArguments {
     required this.recipientInfo,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
-  final _i31.PublicUserInfo senderInfo;
+  final _i30.PublicUserInfo senderInfo;
 
-  final _i31.PublicUserInfo recipientInfo;
+  final _i30.PublicUserInfo recipientInfo;
 }
 
 class SetPinViewArguments {
   const SetPinViewArguments({this.key});
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 }
 
 class CreateQuestViewArguments {
@@ -572,7 +558,7 @@ class CreateQuestViewArguments {
     this.latLng,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
   final bool fromMap;
 
@@ -585,7 +571,7 @@ class ARObjectAndroidViewArguments {
     this.isCoins = false,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
   final bool isCoins;
 }
@@ -596,7 +582,7 @@ class ARObjectIosViewArguments {
     this.isCoins = false,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
   final bool isCoins;
 }
@@ -607,9 +593,9 @@ class ActiveScreenTimeViewArguments {
     required this.session,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
-  final _i28.ScreenTimeSession session;
+  final _i27.ScreenTimeSession session;
 }
 
 class SelectScreenTimeViewArguments {
@@ -618,7 +604,7 @@ class SelectScreenTimeViewArguments {
     this.childId,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
   final String? childId;
 }
@@ -626,7 +612,7 @@ class SelectScreenTimeViewArguments {
 class FeedbackViewArguments {
   const FeedbackViewArguments({this.key});
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 }
 
 class StartScreenTimeCounterViewArguments {
@@ -635,9 +621,9 @@ class StartScreenTimeCounterViewArguments {
     required this.session,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
-  final _i28.ScreenTimeSession session;
+  final _i27.ScreenTimeSession session;
 }
 
 class ScreenTimeRequestedViewArguments {
@@ -646,15 +632,15 @@ class ScreenTimeRequestedViewArguments {
     required this.session,
   });
 
-  final _i27.Key? key;
+  final _i26.Key? key;
 
-  final _i28.ScreenTimeSession session;
+  final _i27.ScreenTimeSession session;
 }
 
-extension NavigatorStateExtension on _i32.NavigationService {
+extension NavigatorStateExtension on _i31.NavigationService {
   Future<dynamic> navigateToParentHomeView({
-    _i27.Key? key,
-    _i28.ScreenTimeSession? screenTimeSession,
+    _i26.Key? key,
+    _i27.ScreenTimeSession? screenTimeSession,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -671,9 +657,9 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToExplorerHomeView({
-    _i27.Key? key,
+    _i26.Key? key,
     bool showBewareDialog = false,
-    _i28.ScreenTimeSession? screenTimeSession,
+    _i27.ScreenTimeSession? screenTimeSession,
     bool showNumberQuestsDialog = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -693,22 +679,8 @@ extension NavigatorStateExtension on _i32.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToMapOverviewView([
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
-  ]) async {
-    return navigateTo<dynamic>(Routes.mapOverviewView,
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
-  }
-
   Future<dynamic> navigateToLoginView({
-    _i27.Key? key,
+    _i26.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -724,8 +696,8 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToCreateAccountView({
-    _i27.Key? key,
-    required _i29.UserRole role,
+    _i26.Key? key,
+    required _i28.UserRole role,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -769,8 +741,8 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToStartUpScreenTimeView({
-    _i27.Key? key,
-    _i28.ScreenTimeSession? screenTimeSession,
+    _i26.Key? key,
+    _i27.ScreenTimeSession? screenTimeSession,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -787,8 +759,8 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToSelectRoleAfterLoginView({
-    _i27.Key? key,
-    required _i30.AuthenticationMethod authMethod,
+    _i26.Key? key,
+    required _i29.AuthenticationMethod authMethod,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -805,7 +777,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToCreateExplorerView({
-    _i27.Key? key,
+    _i26.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -821,7 +793,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToSingleChildStatView({
-    _i27.Key? key,
+    _i26.Key? key,
     required String uid,
     int? routerId,
     bool preventDuplicates = true,
@@ -838,9 +810,9 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToTransferFundsView({
-    _i27.Key? key,
-    required _i31.PublicUserInfo senderInfo,
-    required _i31.PublicUserInfo recipientInfo,
+    _i26.Key? key,
+    required _i30.PublicUserInfo senderInfo,
+    required _i30.PublicUserInfo recipientInfo,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -857,7 +829,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToSetPinView({
-    _i27.Key? key,
+    _i26.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -873,7 +845,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToCreateQuestView({
-    _i27.Key? key,
+    _i26.Key? key,
     bool fromMap = false,
     List<double>? latLng,
     int? routerId,
@@ -892,7 +864,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToARObjectAndroidView({
-    _i27.Key? key,
+    _i26.Key? key,
     bool isCoins = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -909,7 +881,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToARObjectIosView({
-    _i27.Key? key,
+    _i26.Key? key,
     bool isCoins = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -926,8 +898,8 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToActiveScreenTimeView({
-    _i27.Key? key,
-    required _i28.ScreenTimeSession session,
+    _i26.Key? key,
+    required _i27.ScreenTimeSession session,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -943,7 +915,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToSelectScreenTimeView({
-    _i27.Key? key,
+    _i26.Key? key,
     String? childId,
     int? routerId,
     bool preventDuplicates = true,
@@ -988,7 +960,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToFeedbackView({
-    _i27.Key? key,
+    _i26.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1018,8 +990,8 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToStartScreenTimeCounterView({
-    _i27.Key? key,
-    required _i28.ScreenTimeSession session,
+    _i26.Key? key,
+    required _i27.ScreenTimeSession session,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1036,8 +1008,8 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }
 
   Future<dynamic> navigateToScreenTimeRequestedView({
-    _i27.Key? key,
-    required _i28.ScreenTimeSession session,
+    _i26.Key? key,
+    required _i27.ScreenTimeSession session,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,

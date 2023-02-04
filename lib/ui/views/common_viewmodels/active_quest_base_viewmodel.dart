@@ -15,7 +15,7 @@ import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:afkcredits/utils/utilities/utilities.dart';
+import 'package:afkcredits/utils/utilities.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';

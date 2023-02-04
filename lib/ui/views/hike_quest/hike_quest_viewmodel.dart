@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:afkcredits/utils/utilities/utilities.dart';
+import 'package:afkcredits/utils/utilities.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';

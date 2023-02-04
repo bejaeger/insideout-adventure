@@ -1,6 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/parent_drawer_view/parent_drawer_view.dart';
@@ -8,7 +7,6 @@ import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/child_stats_card.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/money_transfer_list_tile.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
@@ -223,42 +221,3 @@ class ChildrenStatsList extends StatelessWidget {
   }
 }
 
-class LatestTransfersList extends StatelessWidget {
-  final List<MoneyTransfer> transfers;
-  final void Function(MoneyTransfer)? onTilePressed;
-  const LatestTransfersList({
-    Key? key,
-    required this.transfers,
-    this.onTilePressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        border: Border.all(color: Colors.grey[400]!),
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: ScrollPhysics(),
-          itemCount: transfers.length > 3 ? 3 : transfers.length,
-          itemBuilder: (context, index) {
-            var data = transfers[index];
-            return TransferListTile(
-              onTap: onTilePressed == null ? null : () => onTilePressed!(data),
-              dense: true,
-              showBottomDivider: index < 2 && transfers.length > 2,
-              showTopDivider: false,
-              transaction: data,
-              amount: data.transferDetails.amount,
-            );
-          },
-        ),
-      ),
-    );
-  }
-}

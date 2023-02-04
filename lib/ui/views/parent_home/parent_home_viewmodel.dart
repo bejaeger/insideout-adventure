@@ -7,10 +7,10 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/services/feedback_service/feedback_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-class ParentHomeViewModel extends TransferBaseViewModel {
+class ParentHomeViewModel extends BaseModel {
   final FeedbackService _feedbackService = locator<FeedbackService>();
   final log = getLogger("ParentHomeViewModel");
 

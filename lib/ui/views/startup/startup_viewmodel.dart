@@ -1,15 +1,15 @@
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/notifications/notification_controller.dart';
 import 'package:afkcredits/services/permission_service.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/services/environment_services.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
 
-class StartUpViewModel extends TransferBaseViewModel {
+class StartUpViewModel extends BaseModel {
   final EnvironmentService _environmentService = locator<EnvironmentService>();
   final PermissionService _permissionService = locator<PermissionService>();
   final log = getLogger("StartUpViewModel");

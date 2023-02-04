@@ -19,7 +19,6 @@ class MapEffects extends StatelessWidget {
   Widget build(BuildContext context) {
     return activeQuest.quest.type == QuestType.TreasureLocationSearch
         ? Positioned(
-            //alignment: Alignment(0, 0.4),
             bottom: 105,
             left: 2,
             right: 2,

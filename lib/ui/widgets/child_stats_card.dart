@@ -2,7 +2,6 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/trend_icon.dart';
@@ -36,7 +35,6 @@ class ChildStatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      //color: Color.fromARGB(255, 231, 234, 241),
       color: kcCultured.withOpacity(0.5),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.hardEdge,
@@ -129,18 +127,8 @@ class ChildStatsCard extends StatelessWidget {
                                           screenTime: true)
                                   ],
                                 ),
-                              // AfkCreditsText.body("# quests compl.: " +
-                              //     stats.numberQuestsCompleted.toString()),
-                              // AfkCreditsText.body(
-                              //     "screen time: " + stats.afkCreditsSpent.toString()),
                             ],
                           ),
-
-                    // Flexible(
-                    //     //heightFactor: 0.6,
-                    //     child: Icon(Icons.trip_origin_sharp,
-                    //         size: 50, color: Colors.orange.shade400)),
-                    // verticalSpaceSmall,
                     Spacer(),
                     if (screenTimeSession != null)
                       Expanded(

@@ -1,11 +1,9 @@
-// Heading for section with text button on the right
-//
-//
-//
 
 import 'package:afkcredits/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
+
+// Heading for section with text button on the right
 
 class SectionHeader extends StatelessWidget {
   final void Function()? onButtonTap;
@@ -33,7 +31,6 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Padding(
           padding: EdgeInsets.symmetric(

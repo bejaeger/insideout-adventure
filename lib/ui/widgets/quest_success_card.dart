@@ -29,26 +29,12 @@ class QuestSuccessCard extends StatelessWidget {
               offset: Offset(1, 1),
               color: kcShadowColor),
         ],
-        // boxShadow: [
-        //   BoxShadow(
-        //     blurRadius: 0.3,
-        //     spreadRadius: 0.4,
-        //     offset: Offset(1, 1),
-        //     color: kcShadowColor,
-        //   )
-        // ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Image.asset(, height: 120),
-          // Icon(Icons.celebration, size: 70, color: kcPrimaryColor),
           Text(Emojis.smile_partying_face, style: TextStyle(fontSize: 50)),
-
-          // AfkCreditsText.headingFour(
-          //   "You mastered this mission!", // "You are the best, you successfully finished the quest",
-          // ),
           verticalSpaceMedium,
           AfkCreditsText.headingFour(
             "You just earned", // "You are the best, you successfully finished the quest",
@@ -58,11 +44,6 @@ class QuestSuccessCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Hero(
-                //   tag: "CREDITS",
-                //   child: Image.asset(kAFKCreditsLogoPath,
-                //       height: 30, color: kcPrimaryColor),
-                // ),
                 Image.asset(kAFKCreditsLogoPath,
                     height: 24, color: kcPrimaryColor),
                 horizontalSpaceTiny,
@@ -75,9 +56,6 @@ class QuestSuccessCard extends StatelessWidget {
                 Image.asset(kScreenTimeIcon,
                     height: 24, color: kcScreenTimeBlue),
                 horizontalSpaceTiny,
-                // Lottie.network(
-                //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
-                //     height: 40),
                 AfkCreditsText.headingThree(
                     HerculesWorldCreditSystem.creditsToScreenTime(finishedQuest!.afkCreditsEarned!)
                             .toString() +

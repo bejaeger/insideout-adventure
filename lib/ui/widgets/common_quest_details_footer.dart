@@ -13,13 +13,11 @@ class CommonQuestDetailsFooter extends StatelessWidget {
     Key? key,
     required this.quest,
     required this.model,
-    //required this.child,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // TODO: Here we have the option to show a statistics display cause the
         // TODO: quest is finished but we still have the previouslyFinishedQuest

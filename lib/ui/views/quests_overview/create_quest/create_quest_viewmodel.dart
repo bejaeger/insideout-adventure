@@ -13,7 +13,6 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_marker_viewmodel.dart';
-import 'package:afkcredits/utils/snackbars/display_snack_bars.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -37,8 +36,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   final GeolocationService _geoLocationService = locator<GeolocationService>();
   final UserService _userService = locator<UserService>();
   Geoflutterfire geo = Geoflutterfire();
-  final _displaySnackBars = DisplaySnackBars();
-  final SnackbarService snackbarService = locator<SnackbarService>();
+  final SnackbarService _snackbarService = locator<SnackbarService>();
   final DialogService _dialogService = locator<DialogService>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
   final CloudStorageService _cloudStorageService =
@@ -78,7 +76,8 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     if (afkCreditAmountValue != null && afkCreditAmountValue != "") {
       if (isValidUserInputs(credits: true)) {
         num tmpamount = int.parse(afkCreditAmountValue!);
-        screenTimeEquivalent = HerculesWorldCreditSystem.creditsToScreenTime(tmpamount);
+        screenTimeEquivalent =
+            HerculesWorldCreditSystem.creditsToScreenTime(tmpamount);
       }
     }
     if (nameValue?.isEmpty ?? true) {
@@ -249,9 +248,8 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
         id: questId,
         // the following allows to separate between quests created from
         // an admin account and not!
-        createdBy: _userService.isAdminUser
-            ? null
-            : _userService.currentUser.uid,
+        createdBy:
+            _userService.isAdminUser ? null : _userService.currentUser.uid,
         startMarker: getAFKMarkers.first,
         location: geo.point(
             latitude: getAFKMarkers.first.lat!,
@@ -284,7 +282,10 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       return true;
     }
 
-    _displaySnackBars.snackBarNotCreatedQuest();
+    _snackbarService.showSnackbar(
+      message: "Quest Not Created  ",
+      title: 'Could Not Created Quest',
+    );
     return false;
   }
 
@@ -314,7 +315,11 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       await Future.delayed(Duration(milliseconds: 500));
       isLoading = false;
       notifyListeners();
-      _displaySnackBars.snackBarCreatedQuest();
+      _snackbarService.showSnackbar(
+        message: "Check out the new quest on the map",
+        title: 'New quest created',
+        duration: Duration(seconds: 2),
+      );
       await Future.delayed(Duration(milliseconds: 2000));
       setBusy(false);
       if (!fromMap) {

@@ -37,11 +37,6 @@ class CreditsAmount extends StatelessWidget {
               style: heading3Style.copyWith(
                   color: textColor, fontSize: height * 1.05),
             ),
-          // Text(
-          //   amountString ?? amount.toStringAsFixed(0),
-          //   style: textTheme(context).bodyText2!.copyWith(
-          //       color: color, fontSize: 22, fontWeight: FontWeight.w400),
-          // ),
         ],
       ),
     );

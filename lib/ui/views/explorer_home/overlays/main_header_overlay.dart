@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/ui/widgets/credits_to_screentime_widget.dart';
-import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_view.dart';
+import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_overlay.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +46,7 @@ class MainHeader extends StatelessWidget {
                 //color: Colors.red,
                 padding:
                     const EdgeInsets.only(right: 5.0, bottom: 5.0, left: 5.0),
-                child: AvatarView(
+                child: AvatarOverlay(
                   percentage: percentageOfNextLevel,
                   level: currentLevel,
                   onPressed: onAvatarPressed,
@@ -67,7 +67,9 @@ class MainHeader extends StatelessWidget {
                       //color: Colors.red,
                       child: CreditsToScreenTimeWidget(
                         credits: balance.toInt(),
-                        availableScreenTime: HerculesWorldCreditSystem.creditsToScreenTime(balance),
+                        availableScreenTime:
+                            HerculesWorldCreditSystem.creditsToScreenTime(
+                                balance),
                         // sizeScale: screenWidth(context) / 450,
                       ),
                       // child: AFKCreditsDisplay(balance: balance),

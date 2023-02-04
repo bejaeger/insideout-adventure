@@ -16,8 +16,6 @@ class QuestTypeTag extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
-        //color: Colors.purple.withOpacity(0.2),
-        // border: Border.all(color: Colors.grey[600]!),
         border: Border.all(color: getColorOfType(quest?.type)),
       ),
       padding: const EdgeInsets.all(8.0),

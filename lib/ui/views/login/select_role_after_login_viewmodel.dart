@@ -4,10 +4,10 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/transfer_base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class SelectRoleAfterLoginViewModel extends TransferBaseViewModel {
+class SelectRoleAfterLoginViewModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final UserService _userService = locator<UserService>();
   final log = getLogger("SelectRoleAfterLoginViewModel");

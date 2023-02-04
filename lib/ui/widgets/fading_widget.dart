@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+
 //
 // A little helper widget that uses animatied opacity and ignore pointer
 // to fade in and out a widget on the map
 //
-
-import 'package:flutter/material.dart';
 
 class FadingWidget extends StatelessWidget {
   final Widget child;

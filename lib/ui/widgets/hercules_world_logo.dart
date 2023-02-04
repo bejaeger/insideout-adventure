@@ -16,8 +16,6 @@ class HerculesWorldLogo extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // AFKCreditsIcon(height: 170),
-        // verticalSpaceSmall,
         Text("HERCULES",
             style: textTheme(context).headline6!.copyWith(
                   fontSize: 40 * sizeScale,

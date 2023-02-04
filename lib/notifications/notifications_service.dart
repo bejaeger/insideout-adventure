@@ -7,7 +7,7 @@ import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../../../utils/utilities/utilities.dart';
+import '../utils/utilities.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class NotificationsService {

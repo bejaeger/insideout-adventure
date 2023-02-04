@@ -37,7 +37,6 @@ class QuestCompletedNote extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: AfkCreditsButton(
                   title: "Redo quest",
-                  // color: Colors.white,
                   width: 120,
                   onTap: onTap),
             ),

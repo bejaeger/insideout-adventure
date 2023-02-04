@@ -7,7 +7,6 @@ import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../constants/constants.dart';
 
 // ignore: must_be_immutable
@@ -133,7 +132,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               session: screenTimes[0]),
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
-                            child: BlinkingScreenTimeAnimation(
+                            child: ActiveScreenTimeBadge(
                               screenTimeLeft: screenTimes.length > 1
                                   ? null
                                   : secondsToMinuteTime(
@@ -192,17 +191,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 alignment: Alignment.topLeft,
                 child: GestureDetector(
                   onTap: model.openSuperUserSettingsDialog,
-                  // mainAxisSize: MainAxisSize.min,
-                  //children: [
-                  // IconButton(
-                  //     visualDensity: VisualDensity.compact,
-                  //     padding: const EdgeInsets.all(0),
-                  //     onPressed: model.openSuperUserSettingsDialog,
-                  //     icon: Icon(Icons.settings,
-                  //         color: model.listenedToNewPosition
-                  //             ? Colors.orange
-                  //             : Colors.white,
-                  //         size: 16)),
                   child: Text(
                     "Super User",
                     style: TextStyle(color: Colors.white, fontSize: 12),
@@ -221,18 +209,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       Size.fromHeight(height + kActiveQuestPanelMaxHeight);
 }
 
-class BlinkingScreenTimeAnimation extends StatefulWidget {
+class ActiveScreenTimeBadge extends StatefulWidget {
   final String? screenTimeLeft;
 
-  BlinkingScreenTimeAnimation({Key? key, required this.screenTimeLeft})
+  ActiveScreenTimeBadge({Key? key, required this.screenTimeLeft})
       : super(key: key);
   @override
-  _BlinkingScreenTimeAnimationState createState() =>
-      _BlinkingScreenTimeAnimationState();
+  _ActiveScreenTimeBadgeState createState() =>
+      _ActiveScreenTimeBadgeState();
 }
 
-class _BlinkingScreenTimeAnimationState
-    extends State<BlinkingScreenTimeAnimation>
+class _ActiveScreenTimeBadgeState
+    extends State<ActiveScreenTimeBadge>
     with SingleTickerProviderStateMixin {
   late Animation<Color?> animation;
   late AnimationController controller;
@@ -247,9 +235,6 @@ class _BlinkingScreenTimeAnimationState
     animation = ColorTween(
             begin: kcScreenTimeBlue, end: kcScreenTimeBlue.withOpacity(0.2))
         .animate(curve);
-    // animation = ColorTween(
-    //         begin: kcScreenTimeBlue, end: kcScreenTimeBlue.withOpacity(0.2))
-    //     .animate(curve);
     controller.repeat();
   }
 

@@ -15,7 +15,6 @@ class RoundCloseButton extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.translucent,
       child: Container(
-        //color: Colors.green,
         padding: const EdgeInsets.all(8.0),
         child: Container(
             height: 40,

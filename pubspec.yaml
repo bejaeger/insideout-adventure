@@ -129,12 +129,6 @@ dependencies:
       ref: "2225876"
       url: https://github.com/bejaeger/arcore_flutter_plugin
 
-
-  ## TO BE DELETED. JUST TO PLAY AROUND FOR BIRTHDAY
-  camera: ^0.10.0+4
-  path_provider: ^2.0.11
-  path: ^1.8.1
-
 dev_dependencies:
   # flutter_test:
   #   sdk: flutter

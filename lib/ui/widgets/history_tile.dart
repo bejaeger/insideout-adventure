@@ -31,19 +31,6 @@ class HistoryTile extends StatelessWidget {
         height: 55,
         padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
         alignment: Alignment.center,
-        // decoration: BoxDecoration(
-        //     //color: screenTime ? kcScreenTimeBlueOpaque : kcActivityColorOpaque,
-        //     border: Border.all(color: Colors.grey[400]!),
-        //     color: Colors.white,
-        //     boxShadow: const [
-        //       BoxShadow(
-        //         color: kcLightGreyColor,
-        //         offset: Offset(1, 1),
-        //         blurRadius: 0.3,
-        //         spreadRadius: 0.1,
-        //       )
-        //     ],
-        //     borderRadius: BorderRadius.circular(20.0)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -26,7 +26,6 @@ class AFKSlideButton extends StatelessWidget {
         sliderButtonIcon: Icon(Icons.play_arrow_rounded, color: kcPrimaryColor),
         alignment: alignment ?? Alignment.center,
         outerColor: kcPrimaryColor,
-        //text: "Start",
         child: canStartQuest
             ? Shimmer.fromColors(
                 baseColor: kcGreyTextColor.withOpacity(1),
@@ -41,12 +40,8 @@ class AFKSlideButton extends StatelessWidget {
         height: 50,
         elevation: 1,
         sliderRotate: false,
-        //key: _key,
         onSubmit: canStartQuest ? onSubmit : null,
         borderRadius: 30,
-        //sliderButtonIcon: Icon(Icons.play_arrow)
-        // submittedIcon: Icon(Icons.railway_alert),
-        // animationDuration: Duration(seconds: 1),
       ),
     );
   }

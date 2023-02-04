@@ -2,53 +2,7 @@ import 'package:afkcredits/ui/layout_widgets/layout_settings.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
-class CustomAppBarSmall extends StatelessWidget {
-  final String title;
-  final Widget? rightWidget;
-  final PreferredSize? bottom;
-  final double height;
-  final double titleSize;
-
-  const CustomAppBarSmall(
-      {Key? key,
-      required this.title,
-      this.rightWidget,
-      this.bottom,
-      this.height = LayoutSettings.minAppBarHeight,
-      this.titleSize = 22})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      child: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(title,
-                    overflow: TextOverflow.ellipsis,
-                    style: textTheme(context)
-                        .headline3!
-                        .copyWith(fontSize: titleSize)),
-                if (rightWidget != null) rightWidget!,
-              ],
-            ),
-          ],
-        ),
-        titleSpacing: 20,
-        toolbarHeight: LayoutSettings.minAppBarHeight,
-        backgroundColor: kcPrimaryColor, //Colors.white,
-        elevation: 2.0,
-        bottom: bottom,
-      ),
-    );
-  }
-}
-
+// not used atm
 class CustomSliverAppBarSmall extends StatelessWidget {
   final String title;
   final void Function()? onRightIconPressed;

@@ -2,9 +2,8 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits_ui/afkcredits_ui.dart';
 import 'package:flutter/material.dart';
 
-// TODO: Add real user information to this widget
+class AvatarOverlay extends StatelessWidget {
 
-class AvatarView extends StatelessWidget {
   // current level of avatar
   final int level;
 
@@ -14,10 +13,10 @@ class AvatarView extends StatelessWidget {
   // callback function to execute when avatar is pressed
   final void Function()? onPressed;
 
-  // identifier of avatar
+  // identifier of avatar icon
   final int avatarIdx;
 
-  const AvatarView(
+  const AvatarOverlay(
       {Key? key,
       required this.level,
       required this.percentage,
@@ -29,7 +28,6 @@ class AvatarView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      //onDoubleTap: () => print("DOUBLE TAP!"),
       child: Container(
         width: 80,
         child: Stack(
@@ -64,7 +62,6 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Image.asset(kHerculesAvatar);
     return Image.asset(
         avatarIdx == 1 ? kLottieChillDudeHeadPng : kLottieWalkingGirlPng,
         height: 39);
@@ -112,13 +109,8 @@ class ProgressBar extends StatelessWidget {
                         topLeft: Radius.circular(20.0),
                         bottomLeft: Radius.circular(20.0))
                     : BorderRadius.circular(20.0),
-//                    borderRadius: BorderRadius.circular(20.0)
               ),
               width: percentage * widthProgressBar,
-              // child: (height > 19 && percentage > 0.24)
-              //     ? Text((percentage * 100).toStringAsFixed(0) + "%",
-              //         style: TextStyle(color: kcVeryLightGrey))
-              //     : null
             ),
           ),
         ),

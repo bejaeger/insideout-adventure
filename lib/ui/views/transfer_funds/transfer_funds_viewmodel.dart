@@ -18,7 +18,6 @@ import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/utils/currency_formatting_helpers.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
@@ -194,7 +193,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       barrierDismissible: true,
       title: 'Confirmation',
       description:
-          "Are you sure you would like to send ${formatAmount(amount, userInput: true)} to ${recipientInfo.name}?",
+          "Are you sure you would like to send $amount credits to ${recipientInfo.name}?",
       confirmButtonTitle: 'YES',
       cancelButtonTitle: 'NO',
     );

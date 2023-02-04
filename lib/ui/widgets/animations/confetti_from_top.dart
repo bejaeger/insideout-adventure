@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +20,6 @@ class ConfettieFromTop extends StatelessWidget {
           maxBlastForce: 10,
           minBlastForce: 1,
           gravity: 0.15,
-          //particleDrag: 0.1,
           confettiController: _confettiController,
           blastDirection: pi / 2,
           blastDirectionality: BlastDirectionality
@@ -53,7 +51,6 @@ class ConfettieFromTop extends StatelessWidget {
             Colors.orange,
             Colors.purple
           ], // manually specify the colors to be used
-          //createParticlePath: drawStar, // define a custom shape/path.
         ),
       ],
     );

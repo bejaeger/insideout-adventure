@@ -21,8 +21,6 @@ import 'notifications/notification_controller.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
-    show ArCoreController;
 import 'package:arkit_plugin/arkit_plugin.dart'
     show ARKitConfiguration, ARKitPlugin;
 

@@ -19,11 +19,6 @@ class CreditsToScreenTimeWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        // Hero(
-        //   tag: "CREDITS",
-        //   child: Image.asset(kAFKCreditsLogoPath,
-        //       height: 30, color: kcPrimaryColor),
-        // ),
         Image.asset(kAFKCreditsLogoPath,
             height: 28 * sizeScale, color: kcPrimaryColor),
         SizedBox(width: 8.0 * sizeScale),
@@ -37,9 +32,6 @@ class CreditsToScreenTimeWidget extends StatelessWidget {
         Image.asset(kScreenTimeIcon,
             height: 28 * sizeScale, color: kcScreenTimeBlue),
         SizedBox(width: 8.0 * sizeScale),
-        // Lottie.network(
-        //     'https://assets8.lottiefiles.com/packages/lf20_wTfKKa.json',
-        //     height: 40),
         AfkCreditsText(
           text: availableScreenTime.toString(),
           style: heading3Style.copyWith(fontSize: 24 * sizeScale),

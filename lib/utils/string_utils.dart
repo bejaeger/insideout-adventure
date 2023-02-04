@@ -25,11 +25,6 @@ List<String> getListOfKeywordsFromString(String? str) {
   return searchKeywords;
 }
 
-String getFirstName(String name) {
-  List<String> splitName = name.split(" ");
-  return splitName[0];
-}
-
 String getStringFromEnum(dynamic enumItem) {
   if (enumItem == null) return "";
   return enumItem.toString().split('.').last;

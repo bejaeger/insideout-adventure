@@ -23,7 +23,6 @@ class QuestSpecificationsRow extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // AfkCreditsText.headingThreeLight("  -  "),
               Image.asset(
                 kWalkingIcon,
                 height: 18,
@@ -39,7 +38,6 @@ class QuestSpecificationsRow extends StatelessWidget {
                         .toStringAsFixed(1) +
                     "km",
                 color: textColor ?? kcGreyTextColor,
-                //color: kcOrange,
               ),
             ],
           ),
@@ -47,7 +45,6 @@ class QuestSpecificationsRow extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //AfkCreditsText.headingThreeLight("  -  "),
               horizontalSpaceMedium,
               Icon(
                 Icons.schedule,
@@ -66,12 +63,9 @@ class QuestSpecificationsRow extends StatelessWidget {
               ),
             ],
           ),
-        // if (quest!.type == QuestType.TreasureLocationSearch &&
-        //     quest!.markers.length > 2)
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            //AfkCreditsText.headingThreeLight("  -  "),
             horizontalSpaceMedium,
             Image.asset(
               kPinInAreaIcon,

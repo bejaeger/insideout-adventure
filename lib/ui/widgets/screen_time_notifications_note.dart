@@ -14,10 +14,6 @@ class ScreenTimeNotificationsNote extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          // Icon(Icons.alarm_on_outlined,
-          //     size: 80, color: kcScreenTimeBlue),
-          // TODO: Add these notes also to active screen
-          // TODO: time when in parents account
           verticalSpaceLarge,
           Flexible(
             child: Row(

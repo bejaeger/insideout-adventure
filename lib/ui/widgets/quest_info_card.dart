@@ -62,12 +62,6 @@ class QuestInfoCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    //     QuestTypeTag(quest: quest),
-                    //   ],
-                    // ),
                     Padding(
                       padding: const EdgeInsets.only(left: 4.0, top: 4.0),
                       child: AfkCreditsText(
@@ -114,12 +108,6 @@ class QuestInfoCard extends StatelessWidget {
                         textColor: kcGreyTextColorSoft,
                       ),
                     ),
-                    // verticalSpaceTiny,
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 4.0),
-                    //   child: AfkCreditsText.body(
-                    //       "${(0.001 * quest.distanceFromUser!).toStringAsFixed(1)} km away"),
-                    // ),
                   ],
                 ),
               ),
