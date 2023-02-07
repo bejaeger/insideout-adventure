@@ -16,7 +16,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/utils/utilities.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
@@ -72,7 +72,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     startPositionCalibrationListener(quest: quest);
   }
 
-  // always called when quest is started 
+  // always called when quest is started
   Future startQuestMain(
       {required Quest quest,
       Future Function(int)? periodicFuncFromViewModel,

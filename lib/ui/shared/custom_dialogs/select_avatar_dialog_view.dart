@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/select_avatar_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/selectable_box.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -46,10 +46,10 @@ class SelectAvatarDialogView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     verticalSpaceSmall,
-                    AfkCreditsText.headingThree(
+                    InsideOutText.headingThree(
                         'Hi ${model.currentUser.fullName}!'),
                     verticalSpaceSmall,
-                    AfkCreditsText.body('Choose your favorite avatar'),
+                    InsideOutText.body('Choose your favorite avatar'),
                     verticalSpaceLarge,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -143,7 +143,7 @@ class SelectAvatarDialogView extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          AfkCreditsButton(
+                          InsideOutButton(
                             title: 'Choose avatar',
                             // trailing: Icon(Icons.arrow_forward,
                             //     size: 20, color: Colors.white),

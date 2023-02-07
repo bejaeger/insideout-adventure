@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -45,7 +45,7 @@ class SetPinView extends StatelessWidget with $SetPinView {
               children: [
                 IgnorePointer(child: generateTextFields(context, model)),
                 verticalSpaceMedium,
-                AfkCreditsButton.text(
+                InsideOutButton.text(
                   leading: Icon(Icons.clear, color: kcPrimaryColor),
                   title: "Clear",
                   onTap: () => clearTextFields(),

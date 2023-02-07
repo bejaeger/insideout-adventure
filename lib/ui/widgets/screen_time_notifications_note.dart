@@ -1,4 +1,4 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class ScreenTimeNotificationsNote extends StatelessWidget {
@@ -23,7 +23,7 @@ class ScreenTimeNotificationsNote extends StatelessWidget {
                     color: kcScreenTimeBlue, size: 45),
                 horizontalSpaceSmall,
                 Flexible(
-                  child: AfkCreditsText.subheading(
+                  child: InsideOutText.subheading(
                     "We will notify you once the screen time is over",
                   ),
                 ),
@@ -39,7 +39,7 @@ class ScreenTimeNotificationsNote extends StatelessWidget {
                     color: kcPrimaryColor, size: 45),
                 horizontalSpaceSmall,
                 Flexible(
-                  child: AfkCreditsText.subheading(
+                  child: InsideOutText.subheading(
                     "Make sure your sound or vibration is turned on",
                   ),
                 ),

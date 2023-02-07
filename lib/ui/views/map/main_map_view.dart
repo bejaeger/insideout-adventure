@@ -5,7 +5,7 @@ import 'package:afkcredits/ui/views/map/google_map_screen.dart';
 import 'package:afkcredits/ui/views/map/map_gestures_widget.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/overlays/cloud_overlay.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

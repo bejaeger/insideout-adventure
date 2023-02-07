@@ -6,7 +6,7 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/screen_time_notifications_note.dart';
 import 'package:afkcredits/ui/widgets/simple_statistics_display.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
@@ -65,7 +65,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                   children: [
                                     verticalSpaceSmall,
                                     Center(
-                                      child: AfkCreditsText.headingTwo(
+                                      child: InsideOutText.headingTwo(
                                           !model.isParentAccount
                                               ? "Woop woop, enjoy time on the screen!"
                                               : model.childName +
@@ -75,7 +75,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                     verticalSpaceSmall,
                                     verticalSpaceMedium,
                                     Align(
-                                      child: AfkCreditsText.subheading(
+                                      child: InsideOutText.subheading(
                                         "Time left",
                                       ),
                                     ),
@@ -97,7 +97,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                                     fontSize: 40)),
                                         Column(
                                           children: [
-                                            AfkCreditsText.body(
+                                            InsideOutText.body(
                                                 "  / ${session.minutes} min",
                                                 color: kcBlackHeadlineColor),
                                             SizedBox(height: 8),
@@ -131,7 +131,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                   ),
                                 ),
                                 Center(
-                                  child: AfkCreditsText.headingTwo(
+                                  child: InsideOutText.headingTwo(
                                       "Screen Time Over"),
                                 ),
                                 //Spacer(),
@@ -145,7 +145,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                 Container(
                                   padding: const EdgeInsets.only(
                                       left: 20, right: 20),
-                                  child: AfkCreditsText.subheading(
+                                  child: InsideOutText.subheading(
                                       model.childName +
                                           "'s screen time expired",
                                       align: TextAlign.center),
@@ -211,7 +211,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                             ),
                     Spacer(),
                     if (showStats && model.isParentAccount)
-                      AfkCreditsButton.text(
+                      InsideOutButton.text(
                         title: "See ${model.childName}'s statistics",
                         onTap: () => model.replaceWithSingleChildView(
                             uid: model.childId),
@@ -219,10 +219,11 @@ class ActiveScreenTimeView extends StatelessWidget {
                     verticalSpaceSmall,
                     if (!model.currentUserSettings.ownPhone ||
                         model.currentScreenTimeSession?.status !=
-                            ScreenTimeSessionStatus.active || model.isParentAccount)
+                            ScreenTimeSessionStatus.active ||
+                        model.isParentAccount)
                       Container(
                         padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: AfkCreditsButton(
+                        child: InsideOutButton(
                           color: model.currentScreenTimeSession?.status ==
                                   ScreenTimeSessionStatus.active
                               ? kcRed

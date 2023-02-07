@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class CreditsToScreenTimeWidget extends StatelessWidget {
@@ -22,7 +22,7 @@ class CreditsToScreenTimeWidget extends StatelessWidget {
         Image.asset(kAFKCreditsLogoPath,
             height: 28 * sizeScale, color: kcPrimaryColor),
         SizedBox(width: 8.0 * sizeScale),
-        AfkCreditsText(
+        InsideOutText(
             text: credits.toStringAsFixed(0),
             style: heading3Style.copyWith(fontSize: 24 * sizeScale)),
         SizedBox(width: 8.0 * sizeScale),
@@ -32,11 +32,11 @@ class CreditsToScreenTimeWidget extends StatelessWidget {
         Image.asset(kScreenTimeIcon,
             height: 28 * sizeScale, color: kcScreenTimeBlue),
         SizedBox(width: 8.0 * sizeScale),
-        AfkCreditsText(
+        InsideOutText(
           text: availableScreenTime.toString(),
           style: heading3Style.copyWith(fontSize: 24 * sizeScale),
         ),
-        AfkCreditsText.bodyBold(
+        InsideOutText.bodyBold(
           " min",
           color: kcBlackHeadlineColor,
         ),

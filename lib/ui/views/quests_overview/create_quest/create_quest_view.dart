@@ -8,7 +8,7 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/selectable_box.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -144,9 +144,9 @@ class NameSelection extends StatelessWidget with $CreateQuestView {
           children: [
             //keyboardIsOpened ? verticalSpaceMedium : verticalSpaceLarge,
             verticalSpaceMedium,
-            AfkCreditsText.subheadingItalic("Choose a name"),
+            InsideOutText.subheadingItalic("Choose a name"),
             verticalSpaceMedium,
-            AfkCreditsInputField(
+            InsideOutInputField(
                 //focusNode: nameFocusNode,
                 autofocus: nameController.text == "" ? true : false,
                 placeholder: 'Quest name',
@@ -156,7 +156,7 @@ class NameSelection extends StatelessWidget with $CreateQuestView {
                 // focusNode: nameFocusNode,
                 ),
             verticalSpaceMedium,
-            AfkCreditsInputField(
+            InsideOutInputField(
               placeholder: 'Quest description (optional)',
               controller: descriptionController,
             ),
@@ -185,7 +185,7 @@ class QuestTypeSelection extends StatelessWidget with $CreateQuestView {
           verticalSpaceMedium,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-            child: AfkCreditsText.subheadingItalic("Choose a quest type"),
+            child: InsideOutText.subheadingItalic("Choose a quest type"),
           ),
           verticalSpaceMedium,
           // keyboardIsOpened ? verticalSpaceMedium : verticalSpaceLarge,
@@ -225,11 +225,11 @@ class QuestTypeSelection extends StatelessWidget with $CreateQuestView {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AfkCreditsText.subheading(
+                InsideOutText.subheading(
                   getShortQuestType(model.selectedQuestType),
                 ),
                 verticalSpaceSmall,
-                AfkCreditsText.body(model.getQuestTypeExplanation()),
+                InsideOutText.body(model.getQuestTypeExplanation()),
               ],
             ),
           ),
@@ -286,14 +286,14 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AfkCreditsText.label(
+                        InsideOutText.label(
                             (model.getAFKMarkers.length + 1)
                                     .clamp(0, 3)
                                     .toString() +
                                 ")",
                             align: TextAlign.left),
                         verticalSpaceTiny,
-                        AfkCreditsText.subheadingItalic(
+                        InsideOutText.subheadingItalic(
                           model.getAFKMarkers.length == 0
                               ? "Tap on the map to choose the start of the quest"
                               : model.getAFKMarkers.length == 1
@@ -309,7 +309,7 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
                         ),
                         if (model.getAFKMarkers.length >= 1) verticalSpaceSmall,
                         if (model.getAFKMarkers.length >= 1)
-                          AfkCreditsText.body(
+                          InsideOutText.body(
                               "Tip: You can remove markers by tapping on them"),
                       ],
                     ),
@@ -326,7 +326,7 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    child: AfkCreditsText.alertThree(
+                    child: InsideOutText.alertThree(
                         "Total distance: ${model.getTotalDistanceOfMarkers().toStringAsFixed(0)} m"),
                   ),
                 ),
@@ -369,11 +369,11 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             verticalSpaceMedium,
-            AfkCreditsText.subheadingItalic(
+            InsideOutText.subheadingItalic(
                 "Choose number of credits that can be earned"),
             Row(
               children: [
-                AfkCreditsText.body(
+                InsideOutText.body(
                     "We recommend giving ${model.getRecommendedCredits()} credits"),
                 horizontalSpaceTiny,
                 IconButton(
@@ -391,7 +391,7 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                     children: [
                       Container(
                         width: screenWidth(context, percentage: 0.35),
-                        child: AfkCreditsInputField(
+                        child: InsideOutInputField(
                           focusNode: afkCreditAmountFocusNode,
                           controller: afkCreditAmountController,
                           style: heading3Style,
@@ -426,7 +426,7 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                   ),
             if (model.afkCreditsInputValidationMessage != null)
               Expanded(
-                  child: AfkCreditsText.warn(
+                  child: InsideOutText.warn(
                       model.afkCreditsInputValidationMessage!)),
             verticalSpaceMassive,
           ],

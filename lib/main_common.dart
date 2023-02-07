@@ -7,7 +7,7 @@ import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

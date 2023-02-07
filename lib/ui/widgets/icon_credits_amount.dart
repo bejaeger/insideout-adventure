@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/cupertino.dart';
 
 class CreditsAmount extends StatelessWidget {
@@ -32,7 +32,7 @@ class CreditsAmount extends StatelessWidget {
           if (style != null)
             Text(amountString ?? amount.toStringAsFixed(0), style: style),
           if (style == null)
-            AfkCreditsText(
+            InsideOutText(
               text: amountString ?? amount.toStringAsFixed(0),
               style: heading3Style.copyWith(
                   color: textColor, fontSize: height * 1.05),

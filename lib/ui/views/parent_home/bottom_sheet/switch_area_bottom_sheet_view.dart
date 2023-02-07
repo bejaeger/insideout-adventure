@@ -1,5 +1,5 @@
 import 'package:afkcredits/ui/views/parent_home/bottom_sheet/switch_area_bottom_sheet_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -39,7 +39,7 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                 ),
                 verticalSpaceSmall,
                 Center(
-                  child: AfkCreditsText.headingFour("Switch area",
+                  child: InsideOutText.headingFour("Switch area",
                       align: TextAlign.center),
                 ),
                 verticalSpaceSmall,
@@ -47,7 +47,7 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                 if (model.supportedExplorers.length == 0) verticalSpaceMedium,
                 if (model.supportedExplorers.length == 0)
                   Center(
-                    child: AfkCreditsText.body(
+                    child: InsideOutText.body(
                       "There is no child account yet",
                       align: TextAlign.center,
                     ),
@@ -55,7 +55,7 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                 if (model.supportedExplorers.length == 0)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
-                    child: AfkCreditsButton.text(
+                    child: InsideOutButton.text(
                       title: "Create one",
                       onTap: () {
                         completer(
@@ -79,7 +79,7 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: AfkCreditsText.subheading(
+                            child: InsideOutText.subheading(
                                 model.supportedExplorers[index].fullName),
                           ),
                         ),

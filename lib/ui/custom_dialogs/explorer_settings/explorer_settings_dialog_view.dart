@@ -1,5 +1,5 @@
 import 'package:afkcredits/ui/custom_dialogs/explorer_settings/explorer_settings_dialog_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -37,14 +37,15 @@ class ExplorerSettingsDialogView extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: AfkCreditsText.headingFour("Settings"),
+                      child: InsideOutText.headingFour("Settings"),
                     ),
                     verticalSpaceMedium,
                     SwitchListTile(
                       dense: true,
                       title: Text("Augmented reality"),
                       subtitle: Text("Use augmented reality for quests?"),
-                      value: model.isUsingAR && model.appConfigProvider.isARAvailable,
+                      value: model.isUsingAR &&
+                          model.appConfigProvider.isARAvailable,
                       onChanged: (bool value) =>
                           model.setARFeatureEnabled(value),
                     ),

@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class QuestSpecificationsRow extends StatelessWidget {
@@ -29,7 +29,7 @@ class QuestSpecificationsRow extends StatelessWidget {
                 color: kcOrange,
               ),
               horizontalSpaceTiny,
-              AfkCreditsText.bodyBold(
+              InsideOutText.bodyBold(
                 "~" +
                     (HerculesWorldCreditSystem
                                 .kSimpleDistanceMarkersToDistanceWalkScaling *
@@ -52,7 +52,7 @@ class QuestSpecificationsRow extends StatelessWidget {
                 color: kcScreenTimeBlue,
               ),
               horizontalSpaceTiny,
-              AfkCreditsText.bodyBold(
+              InsideOutText.bodyBold(
                 "~" +
                     (HerculesWorldCreditSystem
                                 .kDistanceInMeterToActivityMinuteConversion *
@@ -73,7 +73,7 @@ class QuestSpecificationsRow extends StatelessWidget {
               color: kcPrimaryColor,
             ),
             horizontalSpaceTiny,
-            AfkCreditsText.bodyBold(
+            InsideOutText.bodyBold(
               (quest!.markers.length - 1).toString(),
               color: textColor ?? kcGreyTextColor,
             ),

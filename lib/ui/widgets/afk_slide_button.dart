@@ -1,4 +1,4 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:slide_to_act/slide_to_act.dart';
@@ -31,7 +31,7 @@ class AFKSlideButton extends StatelessWidget {
                 baseColor: kcGreyTextColor.withOpacity(1),
                 highlightColor: Colors.white,
                 period: const Duration(milliseconds: 1000),
-                child: AfkCreditsText.subheading("      Start"),
+                child: InsideOutText.subheading("      Start"),
               )
             : Text("Cannot start",
                 style: textTheme(context)

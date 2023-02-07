@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 

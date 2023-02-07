@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/ar_view/ar_object_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:stacked/stacked.dart';
@@ -59,12 +59,12 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      AfkCreditsText.headingFour(
+                      InsideOutText.headingFour(
                         "Can't find the credits?",
                         align: TextAlign.center,
                       ),
                       verticalSpaceSmall,
-                      AfkCreditsButton(
+                      InsideOutButton(
                         title: "Collect immediately",
                         onTap: model.handleCollectedArObjectEvent,
                         trailing: Icon(Icons.arrow_forward,
@@ -82,7 +82,7 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
                     color: kcCultured, borderRadius: BorderRadius.circular(20)),
                 padding: const EdgeInsets.all(12.0),
                 width: screenWidth(context, percentage: 0.7),
-                child: AfkCreditsText.headingFour(
+                child: InsideOutText.headingFour(
                   "Look around and tap the credits",
                   align: TextAlign.center,
                 ),

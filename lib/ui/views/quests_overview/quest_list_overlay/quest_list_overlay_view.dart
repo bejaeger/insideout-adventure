@@ -3,7 +3,7 @@ import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_lis
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -49,7 +49,7 @@ class QuestListOverlayView extends StatelessWidget {
                   GrabberLine(),
                   Padding(
                     padding: const EdgeInsets.only(left: 20.0, top: 15),
-                    child: AfkCreditsText.headingTwo(
+                    child: InsideOutText.headingTwo(
                       "Quest list",
                       align: TextAlign.center,
                     ),
@@ -74,14 +74,14 @@ class QuestListOverlayView extends StatelessWidget {
                             Container(
                               alignment: Alignment.center,
                               padding: const EdgeInsets.only(top: 30),
-                              child: AfkCreditsText.headingThree(
-                                  "No quests found"),
+                              child:
+                                  InsideOutText.headingThree("No quests found"),
                             ),
                           if (model.nearbyQuests.length == 0)
                             Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.only(top: 15),
-                                child: AfkCreditsText.subheading(
+                                child: InsideOutText.subheading(
                                     "Ask your parents to create one")),
                           ListView(
                             physics: ScrollPhysics(),

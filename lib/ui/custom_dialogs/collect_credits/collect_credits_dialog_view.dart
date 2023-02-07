@@ -4,7 +4,7 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/enums/connectivity_type.dart';
 import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/animations/confetti_from_top.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -117,7 +117,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                             fontWeight: FontWeight.w800)),
                     verticalSpaceSmall,
                     if (activeQuest?.quest != null)
-                      AfkCreditsText.body(
+                      InsideOutText.body(
                           widget.model.isNeedToCollectCredits
                               ? "You get " +
                                   activeQuest!.quest.afkCredits.toString() +
@@ -133,11 +133,11 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          AfkCreditsText.body(
+                          InsideOutText.body(
                             "Waiting for data connection...",
                             align: TextAlign.center,
                           ),
-                          AfkCreditsText.body("WARNING: Don't close the app!"),
+                          InsideOutText.body("WARNING: Don't close the app!"),
                           verticalSpaceSmall,
                           CircularProgressIndicator(color: kcPrimaryColor),
                           verticalSpaceSmall,
@@ -146,7 +146,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
 
                     if (activeQuest?.quest == null &&
                         !widget.model.isNeedToCollectCredits)
-                      AfkCreditsText.warn(
+                      InsideOutText.warn(
                           "Error: Unfortunately something went wrong when finishing the quest. Please let the developers know."),
                     verticalSpaceSmall,
                     AnimatedSwitcher(
@@ -175,8 +175,8 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                     //     crossAxisAlignment: CrossAxisAlignment.center,
                     //     mainAxisAlignment: MainAxisAlignment.center,
                     //     children: [
-                    //       AfkCreditsText.body("WARNING: Don't close the app!"),
-                    //       AfkCreditsText.body(
+                    //       InsideOutText.body("WARNING: Don't close the app!"),
+                    //       InsideOutText.body(
                     //         "Waiting for data connection...",
                     //         align: TextAlign.center,
                     //       ),
@@ -194,7 +194,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                     if (widget.model.isNoNetwork) verticalSpaceTiny,
                     if (connectionStatus != ConnectivityType.Offline)
                       widget.model.isNeedToCollectCredits
-                          ? AfkCreditsButton(
+                          ? InsideOutButton(
                               width: 150,
                               disabled:
                                   connectionStatus == ConnectivityType.Offline,
@@ -206,7 +206,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                               trailing: Icon(Icons.arrow_forward,
                                   size: 20, color: Colors.white),
                             )
-                          : AfkCreditsButton(
+                          : InsideOutButton(
                               width: 150,
                               onTap: () => widget
                                   .completer(DialogResponse(confirmed: true)),

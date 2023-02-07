@@ -1,5 +1,5 @@
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class SwitchToParentsAreaButton extends StatelessWidget {
@@ -42,22 +42,22 @@ class SwitchToParentsAreaButton extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      AfkCreditsText.vertical("P"),
-                      AfkCreditsText.vertical("A"),
-                      AfkCreditsText.vertical("R"),
-                      AfkCreditsText.vertical("E"),
-                      AfkCreditsText.vertical("N"),
-                      AfkCreditsText.vertical("T"),
+                      InsideOutText.vertical("P"),
+                      InsideOutText.vertical("A"),
+                      InsideOutText.vertical("R"),
+                      InsideOutText.vertical("E"),
+                      InsideOutText.vertical("N"),
+                      InsideOutText.vertical("T"),
                     ],
                   ),
                 ),
                 Expanded(
                   child: Column(
                     children: [
-                      AfkCreditsText.vertical("A"),
-                      AfkCreditsText.vertical("R"),
-                      AfkCreditsText.vertical("E"),
-                      AfkCreditsText.vertical("A"),
+                      InsideOutText.vertical("A"),
+                      InsideOutText.vertical("R"),
+                      InsideOutText.vertical("E"),
+                      InsideOutText.vertical("A"),
                       Text(
                         "\u279A",
                         style: TextStyle(

@@ -1,9 +1,8 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class AvatarOverlay extends StatelessWidget {
-
   // current level of avatar
   final int level;
 
@@ -88,7 +87,7 @@ class ProgressBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        if (currentLevel != null) AfkCreditsText.body(currentLevel!),
+        if (currentLevel != null) InsideOutText.body(currentLevel!),
         if (currentLevel != null) horizontalSpaceSmall,
         Container(
           height: height,
@@ -115,7 +114,7 @@ class ProgressBar extends StatelessWidget {
           ),
         ),
         if (nextLevel != null) horizontalSpaceSmall,
-        if (nextLevel != null) AfkCreditsText.body(nextLevel!),
+        if (nextLevel != null) InsideOutText.body(nextLevel!),
       ],
     );
   }
@@ -128,7 +127,7 @@ class LevelIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: AfkCreditsText.label(level.toString()),
+      child: InsideOutText.label(level.toString()),
     );
   }
 }

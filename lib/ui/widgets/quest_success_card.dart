@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +36,7 @@ class QuestSuccessCard extends StatelessWidget {
         children: [
           Text(Emojis.smile_partying_face, style: TextStyle(fontSize: 50)),
           verticalSpaceMedium,
-          AfkCreditsText.headingFour(
+          InsideOutText.headingFour(
             "You just earned", // "You are the best, you successfully finished the quest",
           ),
           verticalSpaceSmall,
@@ -47,7 +47,7 @@ class QuestSuccessCard extends StatelessWidget {
                 Image.asset(kAFKCreditsLogoPath,
                     height: 24, color: kcPrimaryColor),
                 horizontalSpaceTiny,
-                AfkCreditsText.headingThree(
+                InsideOutText.headingThree(
                     finishedQuest!.afkCreditsEarned.toString()),
                 horizontalSpaceSmall,
                 Icon(Icons.arrow_right_alt, size: 24),
@@ -56,14 +56,15 @@ class QuestSuccessCard extends StatelessWidget {
                 Image.asset(kScreenTimeIcon,
                     height: 24, color: kcScreenTimeBlue),
                 horizontalSpaceTiny,
-                AfkCreditsText.headingThree(
-                    HerculesWorldCreditSystem.creditsToScreenTime(finishedQuest!.afkCreditsEarned!)
+                InsideOutText.headingThree(
+                    HerculesWorldCreditSystem.creditsToScreenTime(
+                                finishedQuest!.afkCreditsEarned!)
                             .toString() +
                         " min"),
               ],
             ),
           verticalSpaceMedium,
-          AfkCreditsButton(
+          InsideOutButton(
             onTap: onContinuePressed,
             title: "Great",
             trailing: Icon(Icons.arrow_forward, size: 20, color: Colors.white),

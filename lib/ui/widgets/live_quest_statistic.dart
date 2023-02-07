@@ -1,4 +1,4 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class LiveQuestStatistic extends StatefulWidget {
@@ -20,9 +20,9 @@ class _LiveQuestStatisticState extends State<LiveQuestStatistic> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        AfkCreditsText.headingTwo(widget.statistic),
+        InsideOutText.headingTwo(widget.statistic),
         verticalSpaceTiny,
-        AfkCreditsText.caption(widget.title),
+        InsideOutText.caption(widget.title),
       ],
     );
   }

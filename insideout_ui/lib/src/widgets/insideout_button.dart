@@ -1,7 +1,7 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
-class AfkCreditsButton extends StatelessWidget {
+class InsideOutButton extends StatelessWidget {
   final String title;
   final bool disabled;
   final bool busy;
@@ -17,7 +17,7 @@ class AfkCreditsButton extends StatelessWidget {
   final double? width;
   final List<BoxShadow>? boxShadow;
 
-  const AfkCreditsButton({
+  const InsideOutButton({
     Key? key,
     required this.title,
     this.disabled = false,
@@ -35,7 +35,7 @@ class AfkCreditsButton extends StatelessWidget {
   })  : outline = false,
         super(key: key);
 
-  const AfkCreditsButton.outline({
+  const InsideOutButton.outline({
     required this.title,
     this.onTap,
     this.leading,
@@ -51,7 +51,7 @@ class AfkCreditsButton extends StatelessWidget {
         textButton = false,
         outline = true;
 
-  const AfkCreditsButton.text({
+  const InsideOutButton.text({
     required this.title,
     this.onTap,
     this.leading,

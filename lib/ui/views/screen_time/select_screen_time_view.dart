@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -22,7 +22,7 @@ class SelectScreenTimeView extends StatelessWidget {
           showBackButton: !model.isParentAccount,
           resizeToAvoidBottomInset: false,
           child: Container(
-              child: Padding(
+            child: Padding(
               padding: EdgeInsets.only(
                 left: 20,
                 right: 20,
@@ -50,7 +50,7 @@ class SelectScreenTimeView extends StatelessWidget {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AfkCreditsText.headingTwo(
+                        InsideOutText.headingTwo(
                             model.isParentAccount
                                 ? "Choose time for " +
                                     model.userService
@@ -62,7 +62,7 @@ class SelectScreenTimeView extends StatelessWidget {
                     verticalSpaceMedium,
                     Spacer(),
                     if (model.isParentAccount)
-                      AfkCreditsText.body("Total available"),
+                      InsideOutText.body("Total available"),
                     if (model.isParentAccount) verticalSpaceTiny,
                     if (model.isParentAccount)
                       Row(
@@ -71,7 +71,7 @@ class SelectScreenTimeView extends StatelessWidget {
                           Image.asset(kAFKCreditsLogoPath,
                               height: 18, color: kcPrimaryColor),
                           horizontalSpaceTiny,
-                          AfkCreditsText.headingFourLight(
+                          InsideOutText.headingFourLight(
                               model.afkCreditsBalance.toStringAsFixed(0)),
                           horizontalSpaceSmall,
                           Icon(Icons.arrow_right_alt, size: 20),
@@ -79,7 +79,7 @@ class SelectScreenTimeView extends StatelessWidget {
                           Image.asset(kScreenTimeIcon,
                               height: 18, color: kcScreenTimeBlue),
                           horizontalSpaceTiny,
-                          AfkCreditsText.headingFourLight(
+                          InsideOutText.headingFourLight(
                               model.totalAvailableScreenTime.toString() +
                                   " min"),
                         ],
@@ -87,22 +87,23 @@ class SelectScreenTimeView extends StatelessWidget {
                     if (!model.isParentAccount)
                       Lottie.asset(kLottieBigTv, height: 130),
                     Spacer(),
-                    AfkCreditsText.body("Selected"),
+                    InsideOutText.body("Selected"),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        AfkCreditsText(
+                        InsideOutText(
                             text: model.screenTimePreset.toString() + " min",
                             style: heading1Style.copyWith(
                                 fontWeight: FontWeight.w800)),
                         horizontalSpaceSmall,
-                        AfkCreditsText.headingFourLight("="),
+                        InsideOutText.headingFourLight("="),
                         horizontalSpaceSmall,
                         Image.asset(kAFKCreditsLogoPath,
                             height: 18, color: kcPrimaryColor),
                         horizontalSpaceTiny,
-                        AfkCreditsText.headingFourLight(
-                            HerculesWorldCreditSystem.screenTimeToCredits(model.screenTimePreset)
+                        InsideOutText.headingFourLight(
+                            HerculesWorldCreditSystem.screenTimeToCredits(
+                                    model.screenTimePreset)
                                 .toString()),
                       ],
                     ),
@@ -116,7 +117,7 @@ class SelectScreenTimeView extends StatelessWidget {
                           padding: const EdgeInsets.only(
                               top: 25, bottom: 25, left: 20, right: 20),
                           alignment: Alignment.center,
-                          child: AfkCreditsText.bodyBold(
+                          child: InsideOutText.bodyBold(
                             "Custom",
                             color: kcScreenTimeBlue,
                           ),
@@ -128,7 +129,7 @@ class SelectScreenTimeView extends StatelessWidget {
                         Row(
                           children: [
                             Expanded(
-                              child: AfkCreditsButton.outline(
+                              child: InsideOutButton.outline(
                                 height: 60,
                                 enabled: model.screenTimePreset == 20,
                                 title: "20 min",
@@ -142,7 +143,7 @@ class SelectScreenTimeView extends StatelessWidget {
                             ),
                             horizontalSpaceTiny,
                             Expanded(
-                              child: AfkCreditsButton.outline(
+                              child: InsideOutButton.outline(
                                 height: 60,
                                 enabled: model.screenTimePreset == 40,
                                 title: "40 min",
@@ -156,7 +157,7 @@ class SelectScreenTimeView extends StatelessWidget {
                             ),
                             horizontalSpaceTiny,
                             Expanded(
-                              child: AfkCreditsButton.outline(
+                              child: InsideOutButton.outline(
                                 height: 60,
                                 enabled: model.screenTimePreset ==
                                     model.totalAvailableScreenTime,
@@ -173,7 +174,7 @@ class SelectScreenTimeView extends StatelessWidget {
                       ],
                     ),
                     Spacer(),
-                    AfkCreditsButton(
+                    InsideOutButton(
                         height: 50,
                         leading:
                             Icon(Icons.play_arrow_rounded, color: Colors.white),

@@ -9,7 +9,7 @@ import 'package:afkcredits/ui/widgets/history_tile.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:afkcredits/ui/widgets/trend_icon.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -36,15 +36,14 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                     : "Child Statistics",
             onBackButton: model.popView,
             dropDownButton: CustomDropDownMenu(
-                icon1: Icon(Icons.delete_outline_rounded,
-                    color: kcMediumGrey, size: 22),
-                onTap1: model.removeChildFromParentAccount,
-                text1: 'Remove child', 
-                icon2: Icon(Icons.settings,
-                    color: kcMediumGrey, size: 22),
-                onTap2: model.showExplorerSettingsDialogDialog,
-                text2: 'Settings', 
-                ),
+              icon1: Icon(Icons.delete_outline_rounded,
+                  color: kcMediumGrey, size: 22),
+              onTap1: model.removeChildFromParentAccount,
+              text1: 'Remove child',
+              icon2: Icon(Icons.settings, color: kcMediumGrey, size: 22),
+              onTap2: model.showExplorerSettingsDialogDialog,
+              text2: 'Settings',
+            ),
           ),
           floatingActionButton: BottomFloatingActionButtons(
               // titleMain: "Add Credits",
@@ -87,7 +86,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                     verticalSpaceTiny,
                                     Container(
                                       width: 120,
-                                      child: AfkCreditsButton(
+                                      child: InsideOutButton(
                                         leading: Icon(
                                           Icons.add,
                                           color: Colors.white,
@@ -144,7 +143,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                           model.getScreenTimeSession(
                                                       uid: widget.uid) !=
                                                   null
-                                              ? AfkCreditsButton.outline(
+                                              ? InsideOutButton.outline(
                                                   leading: Icon(
                                                       Icons
                                                           .hourglass_top_rounded,
@@ -154,7 +153,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                       .navToSelectScreenTimeView(
                                                           childId: widget.uid),
                                                   color: kcScreenTimeBlue)
-                                              : AfkCreditsButton.outline(
+                                              : InsideOutButton.outline(
                                                   leading: Icon(
                                                       Icons.play_arrow_rounded,
                                                       color: kcPrimaryColor),
@@ -166,7 +165,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                           if (model.getScreenTimeSession(
                                                   uid: widget.uid) !=
                                               null)
-                                            AfkCreditsText.screenTimeWarn(
+                                            InsideOutText.screenTimeWarn(
                                                 "Screen time active"),
                                         ],
                                       ),
@@ -182,7 +181,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                               horizontalPadding: 0,
                               //onButtonTap: model.showNotImplementedSnackbar,
                               otherTrailingIcon: TextButton(
-                                child: AfkCreditsText.body(
+                                child: InsideOutText.body(
                                   "Total Stats",
                                   color: kcPrimaryColor,
                                 ),
@@ -207,7 +206,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                         children: [
                                           Row(
                                             children: [
-                                              AfkCreditsText.statsStyle(model
+                                              InsideOutText.statsStyle(model
                                                       .totalChildActivityLastDaysString +
                                                   " min"),
                                               TrendIcon(
@@ -217,7 +216,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                           ),
                                           if (model.totalChildActivityTrend !=
                                               null)
-                                            AfkCreditsText.caption(
+                                            InsideOutText.caption(
                                                 ((model.totalChildActivityTrend ??
                                                                 0) >=
                                                             0
@@ -229,7 +228,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                     " min"),
                                           if (model.totalChildActivityTrend !=
                                               null)
-                                            AfkCreditsText.caption(
+                                            InsideOutText.caption(
                                                 "from prev. week"),
                                         ],
                                       ),
@@ -251,7 +250,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                         children: [
                                           Row(
                                             children: [
-                                              AfkCreditsText.statsStyle(model
+                                              InsideOutText.statsStyle(model
                                                       .totalChildScreenTimeLastDaysString +
                                                   " min"),
                                               TrendIcon(
@@ -262,7 +261,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                           ),
                                           if (model.totalChildScreenTimeTrend !=
                                               null)
-                                            AfkCreditsText.caption(
+                                            InsideOutText.caption(
                                                 ((model.totalChildScreenTimeTrend ??
                                                                 0) >=
                                                             0
@@ -274,7 +273,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                     " min"),
                                           if (model.totalChildScreenTimeTrend !=
                                               null)
-                                            AfkCreditsText.caption(
+                                            InsideOutText.caption(
                                                 "from prev. week"),
                                         ],
                                       ),
@@ -343,7 +342,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
-                          child: AfkCreditsText.headingTwoLight(
+                          child: InsideOutText.headingTwoLight(
                               "Switch account and let " +
                                   model.explorer!.fullName +
                                   " earn credits",

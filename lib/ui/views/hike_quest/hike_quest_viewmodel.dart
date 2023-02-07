@@ -10,12 +10,11 @@ import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
 class HikeQuestViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
-
   /// If user enters an area, the following AFKMarker will be set that corresponds to the marker.
   /// If the user walks outside the area (geofence) (+ some extra buffer zone)
   /// the marker is set to null again (after some time delay to avoid multiple dialogs

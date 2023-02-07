@@ -4,7 +4,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -60,13 +60,13 @@ class NotCloseToQuestNote extends StatelessWidget {
               "You are too far away!",
               style: subheadingStyle.copyWith(color: kcRed),
             ),
-            // AfkCreditsText.subheading(
+            // InsideOutText.subheading(
             //   "You are too far away!",
             //   color: kcRed,
             //   align: TextAlign.left,
             // ),
             verticalSpaceTiny,
-            AfkCreditsText.body(
+            InsideOutText.body(
               "The start is ${(model.distanceFromQuest * 0.001).toStringAsFixed(1)} km away. ",
               //_getInfoString(questType),
               align: TextAlign.center,
@@ -79,7 +79,7 @@ class NotCloseToQuestNote extends StatelessWidget {
                 if (animateCameraToUserPosition != null &&
                     animateCameraToQuestMarkers != null)
                   Expanded(
-                    child: AfkCreditsButton.outline(
+                    child: InsideOutButton.outline(
                       height: 45,
                       onTap: model.launchMapsForNavigation,
                       leading: Icon(Icons.open_in_new, color: kcPrimaryColor),
@@ -89,7 +89,7 @@ class NotCloseToQuestNote extends StatelessWidget {
                 horizontalSpaceTiny,
                 model.questCenteredOnMap
                     ? Expanded(
-                        child: AfkCreditsButton(
+                        child: InsideOutButton(
                           height: 45,
                           onTap: () {
                             animateCameraToUserPosition!();
@@ -105,7 +105,7 @@ class NotCloseToQuestNote extends StatelessWidget {
                         ),
                       )
                     : Expanded(
-                        child: AfkCreditsButton(
+                        child: InsideOutButton(
                           height: 45,
                           onTap: () {
                             animateCameraToQuestMarkers!();

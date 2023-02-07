@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/ar_view/ar_object_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -57,7 +57,7 @@ class _ARObjectAndroidViewState extends State<ARObjectAndroidView> {
                       borderRadius: BorderRadius.circular(20)),
                   padding: const EdgeInsets.all(8.0),
                   width: screenWidth(context, percentage: 0.7),
-                  child: AfkCreditsText.headingThree(
+                  child: InsideOutText.headingThree(
                     "Find credits and tap fast to collect",
                     align: TextAlign.center,
                   ),
@@ -69,13 +69,13 @@ class _ARObjectAndroidViewState extends State<ARObjectAndroidView> {
                 child: AnimatedSwitcher(
                   duration: Duration(milliseconds: 500),
                   child: isShowingTreasure
-                      ? AfkCreditsText.successThree(
+                      ? InsideOutText.successThree(
                           "Congratz! Tap to collect the treasure",
                           align: TextAlign.center,
                         )
                       : currentPlane == null
-                          ? AfkCreditsText.headingThree("Find a surface")
-                          : AfkCreditsText.headingThree("Tap to show treasure"),
+                          ? InsideOutText.headingThree("Find a surface")
+                          : InsideOutText.headingThree("Tap to show treasure"),
                 ),
               ),
           ],

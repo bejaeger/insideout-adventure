@@ -1,4 +1,4 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class SummaryStatsDisplay extends StatelessWidget {
@@ -29,17 +29,17 @@ class SummaryStatsDisplay extends StatelessWidget {
           children: [
             if (icon != null) icon!,
             if (icon != null) SizedBox(width: 4),
-            AfkCreditsText(text: stats, style: statsStyle ?? statsStyleBlack),
+            InsideOutText(text: stats, style: statsStyle ?? statsStyleBlack),
             if (unit != null) SizedBox(width: 2),
             if (unit != null)
-              AfkCreditsText.caption(
+              InsideOutText.caption(
                 unit!,
               )
           ],
         ),
         if (title != null) SizedBox(height: 2),
         if (title != null)
-          AfkCreditsText(text: title!, style: titleStyle ?? captionStyle),
+          InsideOutText(text: title!, style: titleStyle ?? captionStyle),
       ],
     );
   }

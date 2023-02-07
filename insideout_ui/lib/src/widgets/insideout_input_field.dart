@@ -1,8 +1,8 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AfkCreditsInputField extends StatelessWidget {
+class InsideOutInputField extends StatelessWidget {
   final TextEditingController controller;
   final String placeholder;
   final Widget? leading;
@@ -21,7 +21,7 @@ class AfkCreditsInputField extends StatelessWidget {
     borderRadius: BorderRadius.circular(8),
   );
 
-  AfkCreditsInputField(
+  InsideOutInputField(
       {Key? key,
       required this.controller,
       this.placeholder = '',

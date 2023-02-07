@@ -13,7 +13,7 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_marker_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

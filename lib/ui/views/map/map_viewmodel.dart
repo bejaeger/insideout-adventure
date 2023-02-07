@@ -14,7 +14,7 @@ import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/utils/utilities.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -400,7 +400,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       required bool completed,
       Future Function(MarkerAnalysisResult)?
           handleMarkerAnalysisResultCustom}) async {
-
     if (!useSuperUserFeatures) {
       if (hasActiveQuest == false) {
         if (afkmarker == quest.startMarker) {
@@ -518,7 +517,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       }
     } else if (quest.type == QuestType.GPSAreaHike ||
         quest.type == QuestType.GPSAreaHike) {
-
       // ? Map animation is handled in initializer of gps_area_hike_viewmodel.dart (overlay viewmodel)
       // ? Because we need quest information there
 

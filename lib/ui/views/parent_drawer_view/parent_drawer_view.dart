@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_view.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -20,7 +20,7 @@ class ParentDrawerView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
             child: ListTile(
-              title: AfkCreditsText.body("Introduction"),
+              title: InsideOutText.body("Introduction"),
               leading: Icon(Icons.info_rounded),
               onTap: model.navToOnboardingScreens,
             ),
@@ -29,7 +29,7 @@ class ParentDrawerView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
             child: ListTile(
-              title: AfkCreditsText.body("Help Desk"),
+              title: InsideOutText.body("Help Desk"),
               leading: Icon(Icons.help_center),
               onTap: model.navToHelpDesk,
             ),
@@ -37,14 +37,13 @@ class ParentDrawerView extends StatelessWidget {
           verticalSpaceTiny,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-            child:
-                ListTile(
+            child: ListTile(
               title: Badge(
                 alignment: Alignment.centerLeft,
                 badgeColor: kcOrange,
                 position: BadgePosition.topEnd(end: 40, top: -3),
                 showBadge: !model.userHasGivenFeedback,
-                child: AfkCreditsText.body("Feedback"),
+                child: InsideOutText.body("Feedback"),
               ),
               leading: Icon(Icons.chat_bubble_rounded),
               onTap: model.navToFeedbackView,
@@ -56,7 +55,7 @@ class ParentDrawerView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
             child: ListTile(
-              title: AfkCreditsText.body("Logout"),
+              title: InsideOutText.body("Logout"),
               leading: Icon(Icons.logout_rounded),
               onTap: model.handleLogoutEvent,
             ),

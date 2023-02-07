@@ -1,7 +1,6 @@
-
 import 'package:afkcredits/constants/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 // Heading for section with text button on the right
 

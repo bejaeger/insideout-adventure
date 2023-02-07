@@ -23,7 +23,7 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';

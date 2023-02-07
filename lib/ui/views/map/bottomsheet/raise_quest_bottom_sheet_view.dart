@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
 import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -55,8 +55,8 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                           QuestTypeTag(quest: model.quest),
                           if (model.isParentAccount)
                             model.quest.createdBy == null
-                                ? AfkCreditsText.body("Public")
-                                : AfkCreditsText.body(
+                                ? InsideOutText.body("Public")
+                                : InsideOutText.body(
                                     "Created ${model.isParentAccount ? "by" : "for"} you"),
                         ],
                       ),
@@ -67,11 +67,11 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                           Image.asset(kAFKCreditsLogoPath,
                               height: 24, color: kcPrimaryColor),
                           SizedBox(width: 6.0),
-                          AfkCreditsText.headingThree(
+                          InsideOutText.headingThree(
                             quest.afkCredits.toStringAsFixed(0),
                           ),
                           horizontalSpaceSmall,
-                          AfkCreditsText.headingFour("-"),
+                          InsideOutText.headingFour("-"),
                           horizontalSpaceSmall,
                           Expanded(
                             child: Text(quest.name.toString(),
@@ -118,7 +118,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                         SwitchListTile(
                           value: model.userService.currentUserSettings
                               .isShowingCompletedQuests,
-                          title: AfkCreditsText.body(
+                          title: InsideOutText.body(
                             "Display on map",
                           ),
                           onChanged: (value) =>
@@ -136,7 +136,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                           children: [
                             if (quest.createdBy != null ||
                                 !model.isParentAccount)
-                              AfkCreditsButton.text(
+                              InsideOutButton.text(
                                 leading: model.isParentAccount
                                     ? null
                                     : Icon(Icons.close, color: kcPrimaryColor),
@@ -150,7 +150,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                               ),
                             if (model.isParentAccount &&
                                 quest.createdBy == null)
-                              AfkCreditsText.caption(
+                              InsideOutText.caption(
                                   "Can't delete quest because this is a public quest",
                                   align: TextAlign.center),
                           ],
@@ -162,7 +162,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              AfkCreditsButton(
+                              InsideOutButton(
                                 //disabled: model.isParentAccount,
                                 leading: model.isParentAccount
                                     ? null
@@ -180,7 +180,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                                         : null,
                               ),
                               // if (model.isParentAccount)
-                              //   AfkCreditsText.caption(
+                              //   InsideOutText.caption(
                               //       "Not supported in parent account yet",
                               //       align: TextAlign.center),
                             ],

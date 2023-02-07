@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -49,7 +48,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
     }
     if (emailValue != null) {
       bool emailValid =
-          RegExp(r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
+          RegExp(r"^([a-zA-Z0-9_+\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
               .hasMatch(emailValue!);
       if (!emailValid) {
         emailInputValidationMessage = 'Please provide a valid email address';

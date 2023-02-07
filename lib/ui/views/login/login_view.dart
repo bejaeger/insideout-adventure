@@ -4,7 +4,7 @@ import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -54,7 +54,7 @@ class LoginView extends StatelessWidget with $LoginView {
             children: [
               horizontalSpaceTiny,
               Expanded(
-                child: AfkCreditsText.body(
+                child: InsideOutText.body(
                     'Creating a healthy balance between activity and screen time'),
               ),
             ],
@@ -63,7 +63,7 @@ class LoginView extends StatelessWidget with $LoginView {
           form: Column(
             children: [
               verticalSpaceMedium,
-              AfkCreditsInputField(
+              InsideOutInputField(
                 controller: emailOrNameController,
                 // leading: Icon(Icons.email),
                 placeholder: "Email or name",
@@ -78,7 +78,7 @@ class LoginView extends StatelessWidget with $LoginView {
                     InputDecoration(labelText: 'Email or explorer name'),
                 controller: emailOrNameController,
               ), */
-              AfkCreditsInputField(
+              InsideOutInputField(
                 //leading: Icon(Icons.lock),
                 controller: passwordController,
                 placeholder: "Password",

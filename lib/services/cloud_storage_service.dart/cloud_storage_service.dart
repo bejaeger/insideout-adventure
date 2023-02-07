@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_result.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -14,7 +14,7 @@ class CloudStorageService {
   Map<QuestType, List<dynamic>> exampleScreenShots = {};
   Set<Reference> exampleScreenShotsRef = {};
 
-  List<dynamic> pictures =[];
+  List<dynamic> pictures = [];
   Set<Reference> picturesRef = {};
 
   Future<CloudStorageResult> uploadImage({
@@ -89,23 +89,23 @@ class CloudStorageService {
     }
   }
 
-  Future loadPictures({required List<String>urls}) async {
+  Future loadPictures({required List<String> urls}) async {
     try {
-        for (String url in urls) {
-          try {
-            Reference ref = FirebaseStorage.instance.refFromURL(url);
-            if (picturesRef.contains(ref)) {
-              continue;
-            }
-            picturesRef.add(ref);
-
-            final data = await ref.getData();
-            if (!pictures.contains(data)) {
-              pictures.add(data);
-            } 
-          } catch (e) {
-            log.e("Could not load image. Error: $e");
+      for (String url in urls) {
+        try {
+          Reference ref = FirebaseStorage.instance.refFromURL(url);
+          if (picturesRef.contains(ref)) {
+            continue;
           }
+          picturesRef.add(ref);
+
+          final data = await ref.getData();
+          if (!pictures.contains(data)) {
+            pictures.add(data);
+          }
+        } catch (e) {
+          log.e("Could not load image. Error: $e");
+        }
       }
     } catch (e) {
       log.e("Could not load screen shot urls. Error: $e");

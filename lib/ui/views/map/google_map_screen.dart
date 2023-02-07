@@ -1,6 +1,6 @@
 import 'package:afkcredits/services/maps/google_map_service.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
@@ -46,7 +46,8 @@ class GoogleMapScreen extends StatelessWidget {
               height: screenHeight(context),
               child: GoogleMap(
                 onTap: showCreateQuestDialog != null
-                    ? (LatLng latLng) => showCreateQuestDialog!(latLng.latitude, latLng.longitude)
+                    ? (LatLng latLng) => showCreateQuestDialog!(
+                        latLng.latitude, latLng.longitude)
                     : null,
                 initialCameraPosition: GoogleMapService.initialCameraPosition(
                   userLocation: model.userLocation,

@@ -10,7 +10,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 abstract class QuestViewModel extends BaseModel with MapStateControlMixin {
   final GeolocationService _geolocationService = locator<GeolocationService>();

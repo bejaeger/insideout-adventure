@@ -1,7 +1,7 @@
 import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/ui/custom_dialogs/super_user_dialog/super_user_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -155,8 +155,7 @@ class SuperUserDialogView extends StatelessWidget {
                                 ],
                               ),
                               Wrap(
-                                children: [
-                                ],
+                                children: [],
                               )
                             ],
                           ),

@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked/stacked.dart';
@@ -56,7 +56,7 @@ class CustomScreenTimeDialogView extends StatelessWidget
                 children: [
                   Container(
                     width: screenWidth(context, percentage: 0.35),
-                    child: AfkCreditsInputField(
+                    child: InsideOutInputField(
                       focusNode: timeFocusNode,
                       controller: timeController,
                       style: heading3Style,
@@ -91,7 +91,7 @@ class CustomScreenTimeDialogView extends StatelessWidget
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: AfkCreditsButton.text(
+                    child: InsideOutButton.text(
                       title: 'Close',
                       onTap: () {
                         timeController.clear();
@@ -102,7 +102,7 @@ class CustomScreenTimeDialogView extends StatelessWidget
                     ),
                   ),
                   Expanded(
-                    child: AfkCreditsButton(
+                    child: InsideOutButton(
                       title: 'Select',
                       onTap: () {
                         timeController.clear();

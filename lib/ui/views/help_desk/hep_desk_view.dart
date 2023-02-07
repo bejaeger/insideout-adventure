@@ -1,7 +1,7 @@
 import 'package:afkcredits/ui/views/help_desk/help_desk_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -29,7 +29,7 @@ class HelpDeskView extends StatelessWidget {
                 : model.faqs.answers.length == 0
                     ? Container(
                         padding: const EdgeInsets.all(20.0),
-                        child: AfkCreditsText.subheading(
+                        child: InsideOutText.subheading(
                             "Sorry, content could not be downloaded"),
                       )
                     : Padding(
@@ -59,7 +59,7 @@ class HelpDeskView extends StatelessWidget {
                                               left: 20.0,
                                               right: 20.0,
                                               bottom: isExpanded ? 5 : 20.0),
-                                          child: AfkCreditsText.headingFour(
+                                          child: InsideOutText.headingFour(
                                               question));
                                     },
                                     body: Container(
@@ -68,7 +68,7 @@ class HelpDeskView extends StatelessWidget {
                                           bottom: 20.0,
                                           left: 20.0,
                                           right: 20.0),
-                                      child: AfkCreditsText.body(
+                                      child: InsideOutText.body(
                                         answer,
                                         align: TextAlign.left,
                                       ),

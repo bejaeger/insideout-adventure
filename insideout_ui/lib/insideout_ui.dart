@@ -1,10 +1,10 @@
-library afkcredits_ui;
+library insideout_ui;
 
 // Widgets Export
-export 'src/widgets/afkcredits_text.dart';
-export 'src/widgets/afkcredits_button.dart';
-export 'src/widgets/afkcredits_input_field.dart';
-export 'src/widgets/afkcredits_category_card.dart';
+export 'src/widgets/insideout_text.dart';
+export 'src/widgets/insideout_button.dart';
+export 'src/widgets/insideout_input_field.dart';
+export 'src/widgets/quest_type_card.dart';
 export 'src/widgets/bottom_floating_action_buttons.dart';
 export 'src/shared/styles.dart';
 export 'src/widgets/grabber_line.dart';

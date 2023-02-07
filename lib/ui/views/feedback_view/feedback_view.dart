@@ -3,7 +3,7 @@ import 'package:afkcredits/ui/views/feedback_view/feedback_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -62,12 +62,12 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               verticalSpaceSmall,
-                              AfkCreditsText.headingThree("Take our survey"),
+                              InsideOutText.headingThree("Take our survey"),
                               if (model.userHasGivenFeedback)
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       top: 8.0, bottom: 0.0),
-                                  child: AfkCreditsText.bodyItalic(
+                                  child: InsideOutText.bodyItalic(
                                     "Thank you, you already viewed the survey below.",
                                     color: kcPrimaryColor,
                                   ),
@@ -77,7 +77,7 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                                 Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: AfkCreditsText.bodyItalic(
+                                  child: InsideOutText.bodyItalic(
                                     "There is a new survey for you. Your feedback is very valuable",
                                   ),
                                 ), //   ),
@@ -115,7 +115,7 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             Expanded(
-                                              child: AfkCreditsText.bodyItalic(
+                                              child: InsideOutText.bodyItalic(
                                                   "Survey link"),
                                             ),
                                             Spacer(),
@@ -124,7 +124,7 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                                           ],
                                         ),
                                         verticalSpaceTiny,
-                                        AfkCreditsText(
+                                        InsideOutText(
                                             text: model.feedbackCampaignInfo!
                                                 .surveyUrl,
                                             style: captionStyle.copyWith(
@@ -145,7 +145,7 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                         //     crossAxisAlignment: CrossAxisAlignment.start,
                         //     children: [
                         //       verticalSpaceSmall,
-                        //       AfkCreditsText.headingThree(
+                        //       InsideOutText.headingThree(
                         //           "Question of the week"),
                         //       verticalSpaceSmall,
                         //       Container(
@@ -163,7 +163,7 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                         //           ],
                         //         ),
                         //         alignment: Alignment.center,
-                        //         child: AfkCreditsText.headingFour(
+                        //         child: InsideOutText.headingFour(
                         //             model.feedbackCampaignInfo!.questions[0]),
                         //       ),
                         //       verticalSpaceMedium,
@@ -175,19 +175,19 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                         //     leading: Icon(Icons.send, color: Colors.white),
                         //     ),
                         verticalSpaceSmall,
-                        AfkCreditsText.headingThree("General feedback"),
+                        InsideOutText.headingThree("General feedback"),
                         verticalSpaceSmall,
-                        AfkCreditsText.bodyItalic(
+                        InsideOutText.bodyItalic(
                             "Found bugs? Have suggestions? Anything else? Please let us know."),
                         verticalSpaceSmall,
-                        AfkCreditsInputField(
+                        InsideOutInputField(
                           maxLines: 5,
                           controller: feedbackController,
                           placeholder: 'Add feedback here...',
                           errorText: model.feedbackInputValidationMessage,
                         ),
                         verticalSpaceMedium,
-                        AfkCreditsText.bodyItalic(
+                        InsideOutText.bodyItalic(
                             "Upload a screenshot of the bug"),
                         verticalSpaceSmall,
                         GestureDetector(

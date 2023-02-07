@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class SimpleStatisticsDisplay extends StatelessWidget {
@@ -53,7 +53,7 @@ class SimpleStatisticsDisplay extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         color: kcScreenTimeBlue),
                   ),
-                AfkCreditsText.headingThree(
+                InsideOutText.headingThree(
                   statistic,
                 ),
               ],

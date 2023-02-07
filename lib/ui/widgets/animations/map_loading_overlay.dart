@@ -1,5 +1,5 @@
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class MapLoadingOverlay extends StatelessWidget {
@@ -36,8 +36,8 @@ class MapLoadingOverlay extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               loadingQuests && !show
-                  ? AfkCreditsText.subheading("Loading Quests...")
-                  : AfkCreditsText.subheading("Loading Map..."),
+                  ? InsideOutText.subheading("Loading Quests...")
+                  : InsideOutText.subheading("Loading Map..."),
             ],
           ),
         ),

@@ -3,7 +3,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +46,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
             border: Border.all(color: Colors.grey[300]!),
           ),
           child: getOtherStatusString(directionStatus) != null
-              ? AfkCreditsText.successThree(
+              ? InsideOutText.successThree(
                   getOtherStatusString(directionStatus)!,
                   align: TextAlign.center)
               : Column(
@@ -56,7 +56,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        AfkCreditsText.headingFour(
+                        InsideOutText.headingFour(
                           "Distance to checkpoint " +
                               (numCheckpointsReached + 1).toString() +
                               " / " +
@@ -67,16 +67,16 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                         //   children: [
                         //     Row(
                         //       children: [
-                        //         AfkCreditsText.headingFour(
+                        //         InsideOutText.headingFour(
                         //             numCheckpointsReached.toString() +
                         //                 " / " +
                         //                 numMarkers.toString()),
                         //       ],
                         //     ),
-                        //     // AfkCreditsText.caption("Collected")
+                        //     // InsideOutText.caption("Collected")
                         //   ],
                         // ),
-                        // AfkCreditsText.body(
+                        // InsideOutText.body(
                         //     getDirectionStatusString(directionStatus)),
                       ],
                     ),
@@ -98,11 +98,11 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                             color: directionStatus == DirectionStatus.closer
                                 ? Colors.white
                                 : kcPrimaryColor),
-                        AfkCreditsText.headingThree(" "),
+                        InsideOutText.headingThree(" "),
                         horizontalSpaceSmall,
                         isBusy
                             ? AFKProgressIndicator(color: Colors.grey[500])
-                            : AfkCreditsText.headingTwo(
+                            : InsideOutText.headingTwo(
                                 !isFirstDistanceCheck
                                     ? "${currentDistance.toStringAsFixed(1)} m"
                                     : "?",
@@ -113,7 +113,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                 ),
         ),
         verticalSpaceSmall,
-        AfkCreditsText.headingThree(getDirectionStatusString(directionStatus),
+        InsideOutText.headingThree(getDirectionStatusString(directionStatus),
             align: TextAlign.center),
         // Text("Aktuelle Distanz",
         //     textAlign: TextAlign.center, style: textTheme(context).headline6),

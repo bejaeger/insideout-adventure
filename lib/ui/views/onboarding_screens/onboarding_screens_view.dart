@@ -4,7 +4,7 @@ import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_viewmo
 import 'package:afkcredits/ui/widgets/activity_conversion_icon.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits/ui/widgets/screen_time_conversion_icon.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -38,7 +38,7 @@ class OnBoardingScreensView extends StatelessWidget {
                 titleWidget: Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.only(left: 20),
-                  child: AfkCreditsText.headingTwo(
+                  child: InsideOutText.headingTwo(
                       "Incentivizing a healthy screen time balance"),
                 ),
                 // body:
@@ -48,10 +48,10 @@ class OnBoardingScreensView extends StatelessWidget {
                   padding: const EdgeInsets.all(6.0),
                   child: Column(
                     children: [
-                      AfkCreditsText.bodyItalic(
+                      InsideOutText.bodyItalic(
                           "Prototype Version - " + model.versionName),
                       verticalSpaceMedium,
-                      AfkCreditsText.body(
+                      InsideOutText.body(
                           "Thank you for testing our prototype, we hope you will enjoy it."),
                     ],
                   ),
@@ -76,7 +76,7 @@ class OnBoardingScreensView extends StatelessWidget {
                 titleWidget: Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.only(left: 20),
-                  child: AfkCreditsText.headingTwo("Our Concept"),
+                  child: InsideOutText.headingTwo("Our Concept"),
                 ),
                 //body:
                 //  "Children can earn Hercules Credits through outdoor activities and can redeem these credits to unlock screen time.",
@@ -143,7 +143,7 @@ class OnBoardingScreensView extends StatelessWidget {
                 ),
                 footer: Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: AfkCreditsButton(
+                  child: InsideOutButton(
                     onTap: () =>
                         model.replaceWithHomeView(showPermissionView: true),
                     title: "Start Now",
@@ -219,7 +219,7 @@ class OnboardingBodyWidget extends StatelessWidget {
                       color: kcPrimaryColor, size: 24),
               horizontalSpaceSmall,
               Expanded(
-                child: AfkCreditsText.body(text1),
+                child: InsideOutText.body(text1),
               ),
             ],
           ),
@@ -233,7 +233,7 @@ class OnboardingBodyWidget extends StatelessWidget {
                         color: kcPrimaryColor, size: 24),
                 horizontalSpaceSmall,
                 Expanded(
-                  child: AfkCreditsText.body(text2!),
+                  child: InsideOutText.body(text2!),
                 ),
               ],
             ),
@@ -246,7 +246,7 @@ class OnboardingBodyWidget extends StatelessWidget {
                     color: kcPrimaryColor, size: 24),
                 horizontalSpaceSmall,
                 Expanded(
-                  child: AfkCreditsText.body(text3!),
+                  child: InsideOutText.body(text3!),
                 ),
               ],
             ),
@@ -271,9 +271,9 @@ class OnboardingTitleWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AfkCreditsText.headingFourLight(subtitle),
+          InsideOutText.headingFourLight(subtitle),
           horizontalSpaceTiny,
-          AfkCreditsText.headingTwo(title),
+          InsideOutText.headingTwo(title),
         ],
       ),
     );
@@ -310,7 +310,7 @@ class OnboardingColumnBodyWidget extends StatelessWidget {
                   Icon(Icons.check_circle_outline,
                       color: kcPrimaryColor, size: 24),
               verticalSpaceTiny,
-              AfkCreditsText.body(text1),
+              InsideOutText.body(text1),
             ],
           ),
           if (text2 != null) verticalSpaceMedium,
@@ -322,7 +322,7 @@ class OnboardingColumnBodyWidget extends StatelessWidget {
                     Icon(Icons.check_circle_outline,
                         color: kcPrimaryColor, size: 24),
                 verticalSpaceTiny,
-                AfkCreditsText.body(text2!),
+                InsideOutText.body(text2!),
               ],
             ),
           if (text3 != null) verticalSpaceMedium,
@@ -333,7 +333,7 @@ class OnboardingColumnBodyWidget extends StatelessWidget {
                 Icon(Icons.check_circle_outline,
                     color: kcPrimaryColor, size: 24),
                 horizontalSpaceSmall,
-                AfkCreditsText.body(text3!),
+                InsideOutText.body(text3!),
               ],
             ),
         ],

@@ -6,7 +6,7 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/trend_icon.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class ChildStatsCard extends StatelessWidget {
@@ -60,14 +60,14 @@ class ChildStatsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                            child: AfkCreditsText.headingFour(user.fullName)),
+                            child: InsideOutText.headingFour(user.fullName)),
                         Icon(Icons.arrow_forward_ios,
                             size: 20, color: kcPrimaryColorSecondary),
                       ],
                     ),
                     Row(
                       children: [
-                        //AfkCreditsText.body("Balance: "),
+                        //InsideOutText.body("Balance: "),
                         if (childStats != null)
                           CreditsAmount(
                             amount: childStats!.afkCreditsBalance,
@@ -78,13 +78,13 @@ class ChildStatsCard extends StatelessWidget {
                     verticalSpaceSmall,
                     if (activityTimeLastWeek != null ||
                         screenTimeLastWeek != null)
-                      AfkCreditsText.body("Last 7 days"),
+                      InsideOutText.body("Last 7 days"),
                     if (activityTimeLastWeek == null &&
                         screenTimeLastWeek == null)
-                      AfkCreditsText.body("No recent activities"),
+                      InsideOutText.body("No recent activities"),
                     if (activityTimeLastWeek == null &&
                         screenTimeLastWeek == null)
-                      AfkCreditsText.body("Switch to " +
+                      InsideOutText.body("Switch to " +
                           user.fullName +
                           "'s account to get started"),
                     childStats == null
@@ -100,12 +100,12 @@ class ChildStatsCard extends StatelessWidget {
                                         width: 20,
                                         color: kcActivityIconColor),
                                     SizedBox(width: 4),
-                                    AfkCreditsText.body(
+                                    InsideOutText.body(
                                         activityTimeLastWeek.toString() +
                                             " min"),
                                     if (activityTimeTrend != null)
                                       TrendIcon(metric: activityTimeTrend!)
-                                    // AfkCreditsText.body("(" +
+                                    // InsideOutText.body("(" +
                                     //     (activityTimeTrend! >= 0 ? "+" : "") +
                                     //     activityTimeTrend.toString() +
                                     //     ")"),
@@ -119,7 +119,7 @@ class ChildStatsCard extends StatelessWidget {
                                         width: 18,
                                         color: kcScreenTimeBlue),
                                     SizedBox(width: 4),
-                                    AfkCreditsText.body(
+                                    InsideOutText.body(
                                         screenTimeLastWeek.toString() + " min"),
                                     if (screenTimeTrend != null)
                                       TrendIcon(
@@ -135,9 +135,9 @@ class ChildStatsCard extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            AfkCreditsText.screenTimeWarn("Screen time active"),
-                            AfkCreditsText.screenTimeWarn(" "),
-                            AfkCreditsText.screenTimeWarn(secondsToMinuteTime(
+                            InsideOutText.screenTimeWarn("Screen time active"),
+                            InsideOutText.screenTimeWarn(" "),
+                            InsideOutText.screenTimeWarn(secondsToMinuteTime(
                                   getTimeLeftInSeconds(
                                       session: screenTimeSession!),
                                 )

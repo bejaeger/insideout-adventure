@@ -1,4 +1,4 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 const String WarningQuestNotFinished = "Cancel Incomplete Quest?";
 

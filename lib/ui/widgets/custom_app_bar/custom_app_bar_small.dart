@@ -1,5 +1,5 @@
 import 'package:afkcredits/ui/layout_widgets/layout_settings.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 // not used atm

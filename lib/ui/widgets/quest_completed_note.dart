@@ -1,4 +1,4 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class QuestCompletedNote extends StatelessWidget {
@@ -30,20 +30,18 @@ class QuestCompletedNote extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AfkCreditsText.headingFour("Quest already completed"),
+          InsideOutText.headingFour("Quest already completed"),
           verticalSpaceSmall,
           if (repeatable == true)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: AfkCreditsButton(
-                  title: "Redo quest",
-                  width: 120,
-                  onTap: onTap),
+              child: InsideOutButton(
+                  title: "Redo quest", width: 120, onTap: onTap),
             ),
           if (repeatable == false)
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
-              child: AfkCreditsText.body("You cannot redo this quest"),
+              child: InsideOutText.body("You cannot redo this quest"),
             ),
         ],
       ),

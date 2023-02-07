@@ -9,7 +9,7 @@ import 'package:afkcredits/ui/widgets/child_stats_card.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
@@ -71,7 +71,7 @@ class ParentHomeView extends StatelessWidget {
                         children: [
                             AFKProgressIndicator(),
                             verticalSpaceSmall,
-                            AfkCreditsText.body("Loading..."),
+                            InsideOutText.body("Loading..."),
                           ])
                     : RefreshIndicator(
                         onRefresh: () => model.listenToData(),
@@ -80,8 +80,7 @@ class ParentHomeView extends StatelessWidget {
                           children: [
                             verticalSpaceMedium,
                             Center(
-                                child:
-                                    AfkCreditsText.headingOne("Parent Area")),
+                                child: InsideOutText.headingOne("Parent Area")),
                             verticalSpaceSmall,
                             SectionHeader(
                               title: "Children",
@@ -101,7 +100,7 @@ class ParentHomeView extends StatelessWidget {
                                   ? AFKProgressIndicator()
                                   : Padding(
                                       padding: const EdgeInsets.all(20.0),
-                                      child: AfkCreditsButton(
+                                      child: InsideOutButton(
                                         onTap: model.navToCreateChildAccount,
                                         title: "Create child account",
                                         height: 80,
@@ -122,7 +121,7 @@ class ParentHomeView extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: AfkCreditsButton(
+                                    child: InsideOutButton(
                                         leading: Icon(Icons.add,
                                             color: Colors.white),
                                         title: "Quest",
@@ -131,7 +130,7 @@ class ParentHomeView extends StatelessWidget {
                                   ),
                                   horizontalSpaceMedium,
                                   Expanded(
-                                    child: AfkCreditsButton.outline(
+                                    child: InsideOutButton.outline(
                                       title: "Map",
                                       leading: Icon(Icons.map,
                                           color: kcPrimaryColor),
@@ -145,7 +144,7 @@ class ParentHomeView extends StatelessWidget {
                             ),
                             verticalSpaceMedium,
                             verticalSpaceMedium,
-                            AfkCreditsText.headingFour(
+                            InsideOutText.headingFour(
                               "How can we improve?",
                               align: TextAlign.center,
                             ),
@@ -155,7 +154,7 @@ class ParentHomeView extends StatelessWidget {
                                 color: Colors.transparent,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: kHorizontalPadding),
-                                child: AfkCreditsButton.text(
+                                child: InsideOutButton.text(
                                   title: "Provide Feedback",
                                   onTap: null,
                                   height: 35,
@@ -220,4 +219,3 @@ class ChildrenStatsList extends StatelessWidget {
     );
   }
 }
-

@@ -5,7 +5,7 @@ import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/info_container.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
 import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class CommonQuestDetailsHeader extends StatelessWidget {
@@ -92,7 +92,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                         textColor: kcPrimaryColor,
                       ),
                       horizontalSpaceSmall,
-                      AfkCreditsText.headingThree("-"),
+                      InsideOutText.headingThree("-"),
                       horizontalSpaceSmall,
                       Expanded(
                         child: Text(
@@ -125,8 +125,16 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                       maxLines: 2,
                     ),
                   ),
-                if (quest != null && !completed && !hasActiveQuest && finishedQuest == null) verticalSpaceSmall,
-                if (quest != null && !completed && !isParentAccount && !hasActiveQuest && finishedQuest == null)
+                if (quest != null &&
+                    !completed &&
+                    !hasActiveQuest &&
+                    finishedQuest == null)
+                  verticalSpaceSmall,
+                if (quest != null &&
+                    !completed &&
+                    !isParentAccount &&
+                    !hasActiveQuest &&
+                    finishedQuest == null)
                   InfoContainer(
                     child: Text.rich(
                       style: bodyStyleSofia,
@@ -165,7 +173,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                     quest!.type == QuestType.TreasureLocationSearch &&
                     isParentAccount)
                   InfoContainer(
-                      child: AfkCreditsText.body(
+                      child: InsideOutText.body(
                           "Only the start marker is visible to children.")),
               ],
             ),

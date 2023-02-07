@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../afkcredits_ui.dart';
+import '../../insideout_ui.dart';
 
 class QuestTypeCard extends StatelessWidget {
   final void Function() onPressed;

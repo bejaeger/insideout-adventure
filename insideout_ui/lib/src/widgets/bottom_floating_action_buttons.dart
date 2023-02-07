@@ -1,4 +1,4 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class BottomFloatingActionButtons extends StatelessWidget {
@@ -41,12 +41,12 @@ class BottomFloatingActionButtons extends StatelessWidget {
           const SizedBox(width: klHorizontalPadding),
           Expanded(
             child: swapButtons
-                ? AfkCreditsButton.outline(
+                ? InsideOutButton.outline(
                     title: titleMain,
                     leading: leadingMain,
                     onTap: onTapMain,
                   )
-                : AfkCreditsButton(
+                : InsideOutButton(
                     leading: leadingMain,
                     title: titleMain,
                     onTap: onTapMain,
@@ -57,14 +57,14 @@ class BottomFloatingActionButtons extends StatelessWidget {
           if (titleSecondary != null)
             Expanded(
               child: swapButtons
-                  ? AfkCreditsButton(
+                  ? InsideOutButton(
                       title: titleSecondary!,
                       leading: leadingSecondary,
                       onTap: busySecondary ? null : onTapSecondary,
                       disabled: onTapSecondary == null,
                       busy: busySecondary,
                     )
-                  : AfkCreditsButton.outline(
+                  : InsideOutButton.outline(
                       title: titleSecondary!,
                       leading: leadingSecondary,
                       onTap: onTapSecondary,

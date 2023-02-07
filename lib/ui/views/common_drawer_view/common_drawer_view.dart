@@ -1,6 +1,6 @@
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -38,7 +38,7 @@ class CommonDrawerView extends StatelessWidget {
                           CircleAvatar(
                             radius: 34,
                             backgroundColor: kcWhiteTextColor,
-                            child: AfkCreditsText.headingFourLight(
+                            child: InsideOutText.headingFourLight(
                                 getInitialsFromName(realUserName)),
                           ),
                           horizontalSpaceMedium,
@@ -55,7 +55,7 @@ class CommonDrawerView extends StatelessWidget {
                     ),
                     ...children
                   ],
-                ), // AfkCreditsText.subheading(userName),
+                ), // InsideOutText.subheading(userName),
               ),
             ),
           );

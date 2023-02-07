@@ -1,6 +1,6 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/custom_dialogs/in_area_alert/in_area_alert_dialog_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -159,7 +159,8 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                                 CircleAvatar(
                                   backgroundColor: kcPrimaryColor,
                                   child: Icon(
-                                    widget.model.isUsingAR && widget.model.isARAvailable
+                                    widget.model.isUsingAR &&
+                                            widget.model.isARAvailable
                                         ? Icons.camera_alt_outlined
                                         : Icons.add_circle_outline_rounded,
                                     color: Colors.grey[50],
@@ -194,7 +195,8 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        if (widget.model.isUsingAR && widget.model.isARAvailable)
+                        if (widget.model.isUsingAR &&
+                            widget.model.isARAvailable)
                           TextButton(
                             onPressed: () async {
                               dynamic collected =

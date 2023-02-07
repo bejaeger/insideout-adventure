@@ -1,5 +1,5 @@
 import 'package:afkcredits/ui/custom_dialogs/explorer_settings_for_parents/explorer_settings_for_parents_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -15,7 +15,8 @@ class ExplorerSettingsForParentsDialogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerSettingsForParentsDialogViewModel>.reactive(
-      viewModelBuilder: () => ExplorerSettingsForParentsDialogViewModel(explorerUid: request.data["explorerUid"]),
+      viewModelBuilder: () => ExplorerSettingsForParentsDialogViewModel(
+          explorerUid: request.data["explorerUid"]),
       builder: (context, model, child) {
         String? name = request.data["name"];
         if (name == null) {
@@ -41,7 +42,7 @@ class ExplorerSettingsForParentsDialogView extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: AfkCreditsText.headingFour("Settings"),
+                      child: InsideOutText.headingFour("Settings"),
                     ),
                     verticalSpaceMedium,
                     SwitchListTile(
@@ -56,8 +57,7 @@ class ExplorerSettingsForParentsDialogView extends StatelessWidget {
                     SwitchListTile(
                       dense: true,
                       title: Text("Uses his/her own phone"),
-                      subtitle:
-                          Text("Does $name use his or her own phone?"),
+                      subtitle: Text("Does $name use his or her own phone?"),
                       value: model.isUsingOwnPhoneTmp,
                       onChanged: (bool value) =>
                           model.setIsUsingOwnPhone(value),

@@ -1,5 +1,5 @@
-import 'package:afkcredits_ui/src/shared/app_colors.dart';
-import 'package:afkcredits_ui/src/shared/layout.dart';
+import 'package:insideout_ui/src/shared/app_colors.dart';
+import 'package:insideout_ui/src/shared/layout.dart';
 import 'package:flutter/material.dart';
 
 import '../enums/quest_type.dart';

@@ -3,7 +3,7 @@ import 'package:afkcredits/ui/layout_widgets/card_overlay_layout.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_overlay.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -85,10 +85,10 @@ class ExplorerAccountView extends StatelessWidget {
                             //mainAxisAlignment: MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              AfkCreditsText.headingTwo(
+                              InsideOutText.headingTwo(
                                   model.currentUserNullable?.fullName ?? ""),
                               SizedBox(height: 2),
-                              AfkCreditsText.body(
+                              InsideOutText.body(
                                   "Level ${model.currentLevel()}: ${model.currentLevelName}"),
                             ],
                           ),
@@ -97,7 +97,7 @@ class ExplorerAccountView extends StatelessWidget {
                     ),
                     verticalSpaceMedium,
                     verticalSpaceSmall,
-                    //AfkCreditsText.headingFour("Stats"),
+                    //InsideOutText.headingFour("Stats"),
                     // verticalSpaceSmall,
                     // verticalSpaceTiny,
                     Container(
@@ -154,7 +154,7 @@ class ExplorerAccountView extends StatelessWidget {
                           verticalSpaceSmall,
                           Wrap(
                             children: [
-                              AfkCreditsText.headingFourLight("Earn",
+                              InsideOutText.headingFourLight("Earn",
                                   align: TextAlign.left),
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -165,7 +165,7 @@ class ExplorerAccountView extends StatelessWidget {
                                   height: 20.0,
                                 ),
                               ),
-                              AfkCreditsText.headingFourLight(
+                              InsideOutText.headingFourLight(
                                   "${model.creditsToNextLevel} ",
                                   align: TextAlign.left),
                               Text("to reach the next level!",

@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/active_screen_time/screen_time_requested_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
@@ -31,7 +31,7 @@ class ScreenTimeRequestedView extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: 50),
-                  AfkCreditsText.headingTwo(
+                  InsideOutText.headingTwo(
                       "Requested ${session.minutes.toString()} min"),
                   Spacer(),
                   Container(
@@ -44,7 +44,7 @@ class ScreenTimeRequestedView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  AfkCreditsText.headingThreeLight(
+                  InsideOutText.headingThreeLight(
                     "Waiting for parents to accept...",
                     align: TextAlign.center,
                   ),
@@ -52,7 +52,7 @@ class ScreenTimeRequestedView extends StatelessWidget {
                   AFKProgressIndicator(linear: true, color: kcScreenTimeBlue),
                   Spacer(),
                   verticalSpaceRegular,
-                  AfkCreditsButton(
+                  InsideOutButton(
                     height: 50,
                     title: "Cancel",
                     onTap: () => model.cancel(session: session),

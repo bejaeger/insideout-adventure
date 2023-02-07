@@ -3,7 +3,7 @@ import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -215,12 +215,10 @@ class ActiveScreenTimeBadge extends StatefulWidget {
   ActiveScreenTimeBadge({Key? key, required this.screenTimeLeft})
       : super(key: key);
   @override
-  _ActiveScreenTimeBadgeState createState() =>
-      _ActiveScreenTimeBadgeState();
+  _ActiveScreenTimeBadgeState createState() => _ActiveScreenTimeBadgeState();
 }
 
-class _ActiveScreenTimeBadgeState
-    extends State<ActiveScreenTimeBadge>
+class _ActiveScreenTimeBadgeState extends State<ActiveScreenTimeBadge>
     with SingleTickerProviderStateMixin {
   late Animation<Color?> animation;
   late AnimationController controller;
@@ -262,7 +260,7 @@ class _ActiveScreenTimeBadgeState
                     width: 20, color: animation.value),
                 if (widget.screenTimeLeft != null) horizontalSpaceTiny,
                 if (widget.screenTimeLeft != null)
-                  AfkCreditsText(
+                  InsideOutText(
                       text: widget.screenTimeLeft!,
                       style: captionStyleBold.copyWith(color: kcScreenTimeBlue))
               ],

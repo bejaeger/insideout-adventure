@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';

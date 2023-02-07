@@ -1,6 +1,6 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/widgets/animations/confetti_from_top.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -122,7 +122,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     ),
                   ),
                   verticalSpaceLarge,
-                  AfkCreditsButton(
+                  InsideOutButton(
                     width: 180,
                     title: "Continue",
                     trailing: Icon(Icons.arrow_forward,
