@@ -95,7 +95,6 @@ app.*.map.json
 # Firebase settings
 .firebase/
 .vscode/settings.json
-.firebaserc
 
 # ios build
 ios/build/
@@ -113,3 +112,4 @@ test/
 
 ios/Podfile.lock
 ios/Runner.xcodeproj/project.pbxproj
+ios/firebase_app_id_file.json
