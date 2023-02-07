@@ -7,17 +7,14 @@ import 'package:rxdart/rxdart.dart';
 class MapStateService {
   final log = getLogger("MapsService");
 
-  // whether map is zoomed in to avatar with tilt
-  bool isAvatarView = true;
+  bool isAvatarView = true; // avatarView = map zoomed in with tilt
   void setIsAvatarView(bool set) {
     isAvatarView = set;
   }
 
-  int characterNumber = 0;
   double tilt = kInitialTilt;
   double zoom = kInitialZoomAvatarView;
-  double get bearing => bearingSubject.value;
-  final bearingSubject = BehaviorSubject<double>.seeded(kInitialBearing);
+  double bearing = kInitialBearing;
   final mapEventListener = BehaviorSubject<MapUpdate>();
 
   // to create snapshot of previous camera position
@@ -28,6 +25,16 @@ class MapStateService {
   bool? previousIsAvatarView;
   double? previousLat;
   double? previousLon;
+
+  // create snapshot of previous camera position
+  // before Ar view is shown or marker is collected!
+  // Needed because we have a fancy animation before the AR
+  double? beforeArBearing;
+  double? beforeArZoom;
+  double? beforeArTilt;
+  bool? beforeArIsAvatarView;
+  double? beforeArLat;
+  double? beforeArLon;
 
   // variable holding last bird view zoom to restore back to it
   double? lastBirdViewZoom;
@@ -41,7 +48,11 @@ class MapStateService {
   double? newLat;
   double? newLon;
 
-  // navigated form quest list
+  // if finger on screen we want to stop the lottie animations
+  bool get isFingerOnScreen => isFingerOnScreenSubject.value;
+  final BehaviorSubject<bool> isFingerOnScreenSubject =
+      BehaviorSubject<bool>.seeded(false);
+
   bool navigatedFromQuestList = false;
 
   void takeSnapshotOfCameraPosition() {
@@ -55,6 +66,17 @@ class MapStateService {
     previousLon = currentLon;
   }
 
+  void takeBeforeARSnapshotOfCameraPosition() {
+    if (beforeArBearing != null)
+      return; // only take snapshot when no snapshot is stored!
+    beforeArIsAvatarView = isAvatarView;
+    beforeArBearing = bearing;
+    beforeArZoom = zoom;
+    beforeArTilt = tilt;
+    beforeArLat = currentLat;
+    beforeArLon = currentLon;
+  }
+
   void resetSnapshotOfCameraPosition() {
     previousIsAvatarView = null;
     previousBearing = null;
@@ -64,13 +86,36 @@ class MapStateService {
     previousLon = null;
   }
 
+  void resetBeforeArSnapshotOfCameraPosition() {
+    beforeArIsAvatarView = null;
+    beforeArBearing = null;
+    beforeArZoom = null;
+    beforeArTilt = null;
+    beforeArLat = null;
+    beforeArLon = null;
+  }
+
   void takeSnapshotOfBirdViewCameraPosition() {
     lastBirdViewZoom = zoom;
   }
 
-  void restorePreviousCameraPosition({bool moveInsteadOfAnimate = false}) {
+  void setCameraToDefaultChildPosition() {
+    resetSnapshotOfCameraPosition();
+    tilt = kInitialTilt;
+    zoom = kInitialZoomAvatarView;
+    setIsAvatarView(true);
+  }
+
+  void setCameraToDefaultParentPosition() {
+    resetSnapshotOfCameraPosition();
+    tilt = 0;
+    zoom = kInitialZoomBirdsView;
+    setIsAvatarView(false);
+  }
+
+  void restorePreviousCameraPosition() {
     if (previousBearing != null) {
-      bearingSubject.add(previousBearing!);
+      bearing = previousBearing!;
     }
     if (previousZoom != null) {
       zoom = previousZoom!;
@@ -93,6 +138,48 @@ class MapStateService {
     previousLon = null;
     previousLat = null;
     previousIsAvatarView = null;
+  }
+
+  void restoreBeforeArCameraPosition() {
+    if (beforeArBearing != null) {
+      bearing = beforeArBearing!;
+    }
+    if (beforeArZoom != null) {
+      zoom = beforeArZoom!;
+    }
+    if (beforeArTilt != null) {
+      tilt = beforeArTilt!;
+    }
+    if (beforeArIsAvatarView != null) {
+      isAvatarView = beforeArIsAvatarView!;
+    }
+    if (beforeArLat != null) {
+      newLat = beforeArLat;
+    }
+    if (beforeArLon != null) {
+      newLon = beforeArLon;
+    }
+    beforeArBearing = null;
+    beforeArZoom = null;
+    beforeArTilt = null;
+    beforeArLon = null;
+    beforeArLat = null;
+    beforeArIsAvatarView = null;
+  }
+
+  void restorePreviousCameraPositionAndAnimate(
+      {bool moveInsteadOfAnimate = false}) {
+    restorePreviousCameraPosition();
+    if (moveInsteadOfAnimate) {
+      restoreMapSnapshotByMoving();
+    } else {
+      restoreMapSnapshot();
+    }
+  }
+
+  void restoreBeforeArCameraPositionAndAnimate(
+      {bool moveInsteadOfAnimate = false}) {
+    restoreBeforeArCameraPosition();
     if (moveInsteadOfAnimate) {
       restoreMapSnapshotByMoving();
     } else {
@@ -128,6 +215,10 @@ class MapStateService {
     }
   }
 
+  void notify() {
+    mapEventListener.add(MapUpdate.notify);
+  }
+
   void animateOnNewLocation() {
     mapEventListener.add(MapUpdate.animateOnNewLocation);
   }
@@ -158,11 +249,11 @@ class MapStateService {
     );
   }
 
-  ////////////////////////////////////////////////////////
-  /// Clean up
-  ///
+  // ! THIS IS NEVER CALLED ANYWHERE!
+  // ! SHOULD IT BE CALLED!?
   void closeListener() {
-    bearingSubject.close();
+    // bearingSubject.close();
+    isFingerOnScreenSubject.close();
     mapEventListener.close();
   }
 }

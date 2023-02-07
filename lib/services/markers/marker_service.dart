@@ -1,4 +1,3 @@
-import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/app_config_provider.dart';
@@ -8,10 +7,7 @@ import 'package:afkcredits/app/app.logger.dart';
 class MarkerService {
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
-
   final log = getLogger("MarkerService");
-  final _firestoreApi = locator<FirestoreApi>();
-  List<AFKMarker>? _markersLists;
 
   Future<bool> isUserCloseby(
       {required AFKMarker? marker, int? geofenceRadius}) async {
@@ -35,32 +31,4 @@ class MarkerService {
     }
   }
 
-  Future<void> addMarkers({required AFKMarker markers}) async {
-    await _firestoreApi.addMarkers(markers: markers);
-  }
-
-/*   Future<void> addAFKMarkersPositions(
-      {required AfkMarkersPositions afkMarkersPositions}) async {
-    await _firestoreApi.addAFKMarkersPositions(
-        afkMarkersPositions: afkMarkersPositions);
-  } */
-
-  //Get User Favourite Places
-  Future<List<AFKMarker>> getQuestMarkers() async {
-    return await _firestoreApi.getAllMarkers();
-  }
-
-  Future<void> setQuestMarkers({required List<AFKMarker> markers}) async {
-    _markersLists = markers;
-  }
-
-  List<AFKMarker> get getSetMarkers => _markersLists!;
-
-  //Markers get getMarkers => getDummyMarker1
-  // TODO
-  // Future functions for admin account!
-  // - generateMarker
-  //   -> calls qrcode service to generate a qrcodeId
-  //   -> build marker model with that qrcode Id
-  //   -> adds marker to firestore with document id also stored in Marker model
 }

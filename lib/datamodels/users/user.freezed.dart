@@ -26,12 +26,16 @@ mixin _$User {
   List<String> get sponsorIds => throw _privateConstructorUsedError;
   List<String> get explorerIds => throw _privateConstructorUsedError;
   UserRole get role => throw _privateConstructorUsedError;
+  UserSettings? get userSettings => throw _privateConstructorUsedError;
   AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
   bool get newUser => throw _privateConstructorUsedError;
   @JsonKey(toJson: User._checkIfKeywordsAreSet)
   List<String>? get fullNameSearch => throw _privateConstructorUsedError;
   String? get createdByUserWithId => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
+  List<String>? get tokens => throw _privateConstructorUsedError;
+  String? get deviceId => throw _privateConstructorUsedError;
+  int? get avatarIdx => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,12 +53,18 @@ abstract class $UserCopyWith<$Res> {
       List<String> sponsorIds,
       List<String> explorerIds,
       UserRole role,
+      UserSettings? userSettings,
       AuthenticationMethod? authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
       String? createdByUserWithId,
-      String? password});
+      String? password,
+      List<String>? tokens,
+      String? deviceId,
+      int? avatarIdx});
+
+  $UserSettingsCopyWith<$Res>? get userSettings;
 }
 
 /// @nodoc
@@ -73,11 +83,15 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? sponsorIds = freezed,
     Object? explorerIds = freezed,
     Object? role = freezed,
+    Object? userSettings = freezed,
     Object? authMethod = freezed,
     Object? newUser = freezed,
     Object? fullNameSearch = freezed,
     Object? createdByUserWithId = freezed,
     Object? password = freezed,
+    Object? tokens = freezed,
+    Object? deviceId = freezed,
+    Object? avatarIdx = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -104,6 +118,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as UserRole,
+      userSettings: userSettings == freezed
+          ? _value.userSettings
+          : userSettings // ignore: cast_nullable_to_non_nullable
+              as UserSettings?,
       authMethod: authMethod == freezed
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
@@ -124,7 +142,30 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String?,
+      tokens: tokens == freezed
+          ? _value.tokens
+          : tokens // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      deviceId: deviceId == freezed
+          ? _value.deviceId
+          : deviceId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      avatarIdx: avatarIdx == freezed
+          ? _value.avatarIdx
+          : avatarIdx // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
+  }
+
+  @override
+  $UserSettingsCopyWith<$Res>? get userSettings {
+    if (_value.userSettings == null) {
+      return null;
+    }
+
+    return $UserSettingsCopyWith<$Res>(_value.userSettings!, (value) {
+      return _then(_value.copyWith(userSettings: value));
+    });
   }
 }
 
@@ -140,12 +181,19 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       List<String> sponsorIds,
       List<String> explorerIds,
       UserRole role,
+      UserSettings? userSettings,
       AuthenticationMethod? authMethod,
       bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           List<String>? fullNameSearch,
       String? createdByUserWithId,
-      String? password});
+      String? password,
+      List<String>? tokens,
+      String? deviceId,
+      int? avatarIdx});
+
+  @override
+  $UserSettingsCopyWith<$Res>? get userSettings;
 }
 
 /// @nodoc
@@ -165,11 +213,15 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? sponsorIds = freezed,
     Object? explorerIds = freezed,
     Object? role = freezed,
+    Object? userSettings = freezed,
     Object? authMethod = freezed,
     Object? newUser = freezed,
     Object? fullNameSearch = freezed,
     Object? createdByUserWithId = freezed,
     Object? password = freezed,
+    Object? tokens = freezed,
+    Object? deviceId = freezed,
+    Object? avatarIdx = freezed,
   }) {
     return _then(_$_User(
       uid: uid == freezed
@@ -196,6 +248,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as UserRole,
+      userSettings: userSettings == freezed
+          ? _value.userSettings
+          : userSettings // ignore: cast_nullable_to_non_nullable
+              as UserSettings?,
       authMethod: authMethod == freezed
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
@@ -216,6 +272,18 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String?,
+      tokens: tokens == freezed
+          ? _value._tokens
+          : tokens // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      deviceId: deviceId == freezed
+          ? _value.deviceId
+          : deviceId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      avatarIdx: avatarIdx == freezed
+          ? _value.avatarIdx
+          : avatarIdx // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -231,15 +299,20 @@ class _$_User implements _User {
       required final List<String> sponsorIds,
       required final List<String> explorerIds,
       required this.role,
+      this.userSettings,
       this.authMethod,
       this.newUser = true,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           final List<String>? fullNameSearch,
       this.createdByUserWithId,
-      this.password})
+      this.password,
+      final List<String>? tokens,
+      this.deviceId,
+      this.avatarIdx = 1})
       : _sponsorIds = sponsorIds,
         _explorerIds = explorerIds,
-        _fullNameSearch = fullNameSearch;
+        _fullNameSearch = fullNameSearch,
+        _tokens = tokens;
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
@@ -266,6 +339,8 @@ class _$_User implements _User {
   @override
   final UserRole role;
   @override
+  final UserSettings? userSettings;
+  @override
   final AuthenticationMethod? authMethod;
   @override
   @JsonKey()
@@ -284,10 +359,24 @@ class _$_User implements _User {
   final String? createdByUserWithId;
   @override
   final String? password;
+  final List<String>? _tokens;
+  @override
+  List<String>? get tokens {
+    final value = _tokens;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final String? deviceId;
+  @override
+  @JsonKey()
+  final int? avatarIdx;
 
   @override
   String toString() {
-    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password)';
+    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
   }
 
   @override
@@ -304,13 +393,18 @@ class _$_User implements _User {
                 .equals(other._explorerIds, _explorerIds) &&
             const DeepCollectionEquality().equals(other.role, role) &&
             const DeepCollectionEquality()
+                .equals(other.userSettings, userSettings) &&
+            const DeepCollectionEquality()
                 .equals(other.authMethod, authMethod) &&
             const DeepCollectionEquality().equals(other.newUser, newUser) &&
             const DeepCollectionEquality()
                 .equals(other._fullNameSearch, _fullNameSearch) &&
             const DeepCollectionEquality()
                 .equals(other.createdByUserWithId, createdByUserWithId) &&
-            const DeepCollectionEquality().equals(other.password, password));
+            const DeepCollectionEquality().equals(other.password, password) &&
+            const DeepCollectionEquality().equals(other._tokens, _tokens) &&
+            const DeepCollectionEquality().equals(other.deviceId, deviceId) &&
+            const DeepCollectionEquality().equals(other.avatarIdx, avatarIdx));
   }
 
   @JsonKey(ignore: true)
@@ -323,11 +417,15 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(_sponsorIds),
       const DeepCollectionEquality().hash(_explorerIds),
       const DeepCollectionEquality().hash(role),
+      const DeepCollectionEquality().hash(userSettings),
       const DeepCollectionEquality().hash(authMethod),
       const DeepCollectionEquality().hash(newUser),
       const DeepCollectionEquality().hash(_fullNameSearch),
       const DeepCollectionEquality().hash(createdByUserWithId),
-      const DeepCollectionEquality().hash(password));
+      const DeepCollectionEquality().hash(password),
+      const DeepCollectionEquality().hash(_tokens),
+      const DeepCollectionEquality().hash(deviceId),
+      const DeepCollectionEquality().hash(avatarIdx));
 
   @JsonKey(ignore: true)
   @override
@@ -350,12 +448,16 @@ abstract class _User implements User {
       required final List<String> sponsorIds,
       required final List<String> explorerIds,
       required final UserRole role,
+      final UserSettings? userSettings,
       final AuthenticationMethod? authMethod,
       final bool newUser,
       @JsonKey(toJson: User._checkIfKeywordsAreSet)
           final List<String>? fullNameSearch,
       final String? createdByUserWithId,
-      final String? password}) = _$_User;
+      final String? password,
+      final List<String>? tokens,
+      final String? deviceId,
+      final int? avatarIdx}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -372,6 +474,8 @@ abstract class _User implements User {
   @override
   UserRole get role;
   @override
+  UserSettings? get userSettings;
+  @override
   AuthenticationMethod? get authMethod;
   @override
   bool get newUser;
@@ -382,6 +486,12 @@ abstract class _User implements User {
   String? get createdByUserWithId;
   @override
   String? get password;
+  @override
+  List<String>? get tokens;
+  @override
+  String? get deviceId;
+  @override
+  int? get avatarIdx;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;

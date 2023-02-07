@@ -1,13 +1,12 @@
-import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/services/screentime/screen_time_service.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class NotificationController {
-  final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
-
   Future<void> initializeLocalNotifications() async {
     //Notificaitons Package
     await AwesomeNotifications().initialize(
@@ -19,7 +18,10 @@ class NotificationController {
           channelDescription:
               'Scheduled notification when screen time is expired.',
           defaultColor: kcPrimaryColor,
-          importance: NotificationImportance.High,
+          importance: NotificationImportance.Max,
+          criticalAlerts: true,
+          enableVibration: true,
+          playSound: true,
           //channelShowBadge: true,
         ),
         NotificationChannel(
@@ -64,6 +66,32 @@ class NotificationController {
     WidgetsFlutterBinding.ensureInitialized();
     print("==>> on action received method");
     // bool isSilentAction = receivedAction.actionType == ActionType.SilentAction;
+
+    // if this is an expired screen time session alarm we navigate to the active screen time session
+    // to show statistics
+    if (receivedAction.payload != null) {
+      Map<String, String?> payload = receivedAction.payload!;
+      if (payload.containsKey("uid") && payload.containsKey("sessionId")) {
+        ScreenTimeSession? session;
+        try {
+          session = getSessionFromStringMap(payload: payload);
+        } catch (e) {
+          print("==>> Error when getting the screen time session: $e");
+          return;
+        }
+
+        // await StackedService.navigatorKey?.currentState
+        //     ?.pushNamedAndRemoveUntil(Routes.startUpScreenTimeView, (route) {
+        //   return (route.settings.name == '/') || route.isFirst;
+        // },
+        //         arguments:
+        //             StartUpScreenTimeViewArguments(screenTimeSession: session));
+        await StackedService.navigatorKey?.currentState?.pushNamed(
+            Routes.startUpScreenTimeView,
+            arguments:
+                StartUpScreenTimeViewArguments(screenTimeSession: session));
+      }
+    }
 
     // SilentBackgroundAction runs on background thread and cannot show
     // UI/visual elements
@@ -136,11 +164,6 @@ class NotificationController {
   Future<void> dismissScheduledNotifications() async {
     await AwesomeNotifications()
         .dismissNotificationsByChannelKey(kScheduledNotificationChannelKey);
-  }
-
-  Future<void> dismissNotifications({required int? id}) async {
-    if (id == null) return;
-    await AwesomeNotifications().dismissNotificationsByGroupKey(id.toString());
   }
 
   Future<void> cancelNotifications({required int? id}) async {

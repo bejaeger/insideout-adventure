@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class QuestSpecificationsRow extends StatelessWidget {
@@ -23,22 +23,21 @@ class QuestSpecificationsRow extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // AfkCreditsText.headingThreeLight("  -  "),
               Image.asset(
                 kWalkingIcon,
                 height: 18,
                 color: kcOrange,
               ),
               horizontalSpaceTiny,
-              AfkCreditsText.bodyBold(
+              InsideOutText.bodyBold(
                 "~" +
                     (HerculesWorldCreditSystem
                                 .kSimpleDistanceMarkersToDistanceWalkScaling *
-                            quest!.distanceMarkers!)
-                        .toStringAsFixed(0) +
-                    "m",
+                            quest!.distanceMarkers! *
+                            0.001)
+                        .toStringAsFixed(1) +
+                    "km",
                 color: textColor ?? kcGreyTextColor,
-                //color: kcOrange,
               ),
             ],
           ),
@@ -46,7 +45,6 @@ class QuestSpecificationsRow extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //AfkCreditsText.headingThreeLight("  -  "),
               horizontalSpaceMedium,
               Icon(
                 Icons.schedule,
@@ -54,7 +52,7 @@ class QuestSpecificationsRow extends StatelessWidget {
                 color: kcScreenTimeBlue,
               ),
               horizontalSpaceTiny,
-              AfkCreditsText.bodyBold(
+              InsideOutText.bodyBold(
                 "~" +
                     (HerculesWorldCreditSystem
                                 .kDistanceInMeterToActivityMinuteConversion *
@@ -64,7 +62,23 @@ class QuestSpecificationsRow extends StatelessWidget {
                 color: textColor ?? kcGreyTextColor,
               ),
             ],
-          )
+          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            horizontalSpaceMedium,
+            Image.asset(
+              kPinInAreaIcon,
+              height: 18,
+              color: kcPrimaryColor,
+            ),
+            horizontalSpaceTiny,
+            InsideOutText.bodyBold(
+              (quest!.markers.length - 1).toString(),
+              color: textColor ?? kcGreyTextColor,
+            ),
+          ],
+        ),
       ],
     );
   }

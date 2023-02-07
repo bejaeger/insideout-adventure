@@ -24,7 +24,8 @@ mixin _$AFKMarker {
   String? get qrCodeId => throw _privateConstructorUsedError;
   double? get lat => throw _privateConstructorUsedError;
   double? get lon => throw _privateConstructorUsedError;
-  MarkerStatus get markerStatus => throw _privateConstructorUsedError;
+  MarkerStatus get markerStatus =>
+      throw _privateConstructorUsedError; /* legacy */
   int get repeatable => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -180,6 +181,7 @@ class _$_AFKMarker implements _AFKMarker {
   @override
   @JsonKey()
   final MarkerStatus markerStatus;
+/* legacy */
   @override
   @JsonKey()
   final int repeatable;
@@ -250,7 +252,7 @@ abstract class _AFKMarker implements AFKMarker {
   double? get lon;
   @override
   MarkerStatus get markerStatus;
-  @override
+  @override /* legacy */
   int get repeatable;
   @override
   @JsonKey(ignore: true)

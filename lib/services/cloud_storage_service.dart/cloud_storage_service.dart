@@ -1,17 +1,22 @@
 import 'dart:io';
 
+import 'package:afkcredits/apis/firestore_api.dart';
+import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_result.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class CloudStorageService {
-  // ----------------------------
-  // services
   final log = getLogger("CloudStorageService");
+  final FirestoreApi _firestoreApi = locator<FirestoreApi>();
 
-  // ---------------------------------------
-  // Functions
+  Map<QuestType, List<dynamic>> exampleScreenShots = {};
+  Set<Reference> exampleScreenShotsRef = {};
+
+  List<dynamic> pictures = [];
+  Set<Reference> picturesRef = {};
+
   Future<CloudStorageResult> uploadImage({
     required File imageToUpload,
     required String title,
@@ -19,15 +24,11 @@ class CloudStorageService {
     var imageFileName =
         title + DateTime.now().millisecondsSinceEpoch.toString();
 
-    // reference of file we want to create
     final Reference firebaseStorageRef =
         FirebaseStorage.instance.ref().child(imageFileName);
-
-    // upload faile
     UploadTask uploadTask = firebaseStorageRef.putFile(imageToUpload);
 
     try {
-      // get back snapshot
       TaskSnapshot storageSnapshot = await uploadTask
           .whenComplete(() => log.i("Uploaded file with name $imageFileName"));
       var downloadUrl = await storageSnapshot.ref.getDownloadURL();
@@ -53,6 +54,61 @@ class CloudStorageService {
       return true;
     } catch (e) {
       return e.toString();
+    }
+  }
+
+  Future loadExampleScreenshots({required QuestType questType}) async {
+    try {
+      final screenshotNames = await _firestoreApi.getListOfScreenShotNames(
+          questType: questType.toSimpleString());
+      log.e("FOUND screenshot names: $screenshotNames");
+      if (screenshotNames != null) {
+        for (String url in screenshotNames) {
+          try {
+            Reference ref = FirebaseStorage.instance.refFromURL(url);
+            if (exampleScreenShotsRef.contains(ref)) {
+              continue;
+            }
+            exampleScreenShotsRef.add(ref);
+
+            final data = await ref.getData();
+            if (!exampleScreenShots.containsKey(questType)) {
+              exampleScreenShots[questType] = [data];
+            } else {
+              exampleScreenShots[questType]!.add(data);
+            }
+          } catch (e) {
+            log.e("Could not load image. Error: $e");
+            exampleScreenShots[questType] = [];
+          }
+        }
+      }
+    } catch (e) {
+      log.e("Could not load screen shot urls. Error: $e");
+      exampleScreenShots[questType] = [];
+    }
+  }
+
+  Future loadPictures({required List<String> urls}) async {
+    try {
+      for (String url in urls) {
+        try {
+          Reference ref = FirebaseStorage.instance.refFromURL(url);
+          if (picturesRef.contains(ref)) {
+            continue;
+          }
+          picturesRef.add(ref);
+
+          final data = await ref.getData();
+          if (!pictures.contains(data)) {
+            pictures.add(data);
+          }
+        } catch (e) {
+          log.e("Could not load image. Error: $e");
+        }
+      }
+    } catch (e) {
+      log.e("Could not load screen shot urls. Error: $e");
     }
   }
 }

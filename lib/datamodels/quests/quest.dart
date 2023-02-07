@@ -1,38 +1,10 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'marker_note/marker_note.dart';
-/* part 'quest.freezed.dart';
-part 'quest.g.dart';
-
-@freezed
-class Quest with _$Quest {
-  @JsonSerializable(explicitToJson: true)
-  factory Quest({
-    required String id,
-    required String name,
-    required String description,
-    required QuestType type,
-    //GeoFirePoint? location,
-    String? createdBy,
-    AFKMarker? startMarker,
-    AFKMarker? finishMarker,
-    required List<AFKMarker> markers,
-    List<MarkerNote>? markerNotes,
-    required num afkCredits,
-    String? networkImagePath,
-    List<num>? afkCreditsPerMarker,
-    num? bonusAfkCreditsOnSuccess,
-    double? distanceFromUser,
-    double? distanceToTravelInMeter, // for distance estimate
-    @Default(0) int repeatable,
-  }) = _Quest;
-
-  factory Quest.fromJson(Map<String, dynamic> json) => _$QuestFromJson(json);
-} */
 
 class Quest {
   late String id;
@@ -52,7 +24,7 @@ class Quest {
   double? distanceFromUser;
   double? distanceToTravelInMeter;
   late QuestType type;
-  int repeatable = 1;
+  int? repeatable;
 
   Quest({
     required this.id,
@@ -72,6 +44,7 @@ class Quest {
     this.distanceFromUser,
     this.distanceToTravelInMeter,
     this.networkImagePath,
+    this.repeatable = 0,
   });
 
   Quest copyWith({
@@ -92,6 +65,7 @@ class Quest {
     double? distanceFromUser,
     double? distanceToTravelInMeter,
     QuestType? type,
+    int? repeatable,
   }) =>
       Quest(
         id: id ?? this.id,
@@ -114,6 +88,7 @@ class Quest {
         distanceToTravelInMeter:
             distanceToTravelInMeter ?? this.distanceToTravelInMeter,
         type: type ?? this.type,
+        repeatable: repeatable ?? this.repeatable,
       );
   Quest.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -142,6 +117,7 @@ class Quest {
         ? GeoFirePoint(json['location']!['geopoint'].latitude,
             json['location']!['geopoint'].longitude)
         : null; // need to convert geopoint to GeoFirePoint
+    repeatable = json['repeatable'] != null ? json['repeatable'] : 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -167,6 +143,7 @@ class Quest {
     data['location'] = this.location != null
         ? this.location!.data
         : null; // will convert GeoFirePoint to GeoPoint for firebase!
+    data['repeatable'] = this.repeatable;
     return data;
   }
 

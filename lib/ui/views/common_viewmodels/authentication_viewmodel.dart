@@ -3,7 +3,6 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
@@ -13,13 +12,13 @@ import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 abstract class AuthenticationViewModel extends FormViewModel
     with NavigationMixin {
   UserRole? role;
   AuthenticationViewModel({this.role});
+
   final NavigationService _navigationService = locator<NavigationService>();
   final UserService _userService = locator<UserService>();
   final LocalStorageService _localStorageService =
@@ -31,8 +30,6 @@ abstract class AuthenticationViewModel extends FormViewModel
   void setFormStatus() {}
 
   Future saveData(AuthenticationMethod method, [UserRole? role]) async {
-    // Run the authentication and set viewmodel to busy
-
     if (role != null && this.role == null) this.role = role;
     log.i("Trying to authenticate user with method $method and role $role ");
     final AFKCreditsAuthenticationResultService result = await (runBusyFuture(
@@ -44,7 +41,7 @@ abstract class AuthenticationViewModel extends FormViewModel
 
       try {
         await (runBusyFuture(
-            initializeUser(
+            _userService.syncUserAccount(
                 uid: result.uid, fromLocalStorage: result.fromLocalStorage),
             throwException: true));
       } catch (e) {
@@ -60,116 +57,62 @@ abstract class AuthenticationViewModel extends FormViewModel
         return;
       }
 
-      if (_userService.currentUserNullable == null) {
-        // User logged in but account not created in database yet -> third party login
-        // navigate to selectUserRoleView to select user role
-        log.i(
-            "User logged in with third-party provider. Navigate to select role view");
-        _navigationService.replaceWith(Routes.selectRoleAfterLoginView,
-            arguments: SelectRoleAfterLoginViewArguments(authMethod: method));
+      bool userAccountNotCreated = _userService.currentUserNullable == null;
+      if (userAccountNotCreated) {
+        // User logged in but account not created in database yet -> e.g. when process
+        // was interrupted or user used third party login and something went wrong.
+        // navigate back to loginView!
+        log.w(
+            "User logged in with third-party provider but no account has been created yet. Trying to create account");
+        setBusy(true);
+        await _userService.createUserAccountFromFirebaseUser(
+            role: this.role ?? UserRole.sponsor, authMethod: method);
+        await _userService.syncUserAccount(
+            uid: result.uid, fromLocalStorage: result.fromLocalStorage);
+        setBusy(false);
+      }
+      userAccountNotCreated = _userService.currentUserNullable == null;
+      if (userAccountNotCreated) {
+        log.e(
+            "Something went wrong with the authentication. Navigating to login view");
+        _navigationService.replaceWith(Routes.loginView);
+        setValidationMessage(
+            "We could not authenticate this account. Please try again later.");
         return;
       } else {
-        // User account found in database
-        final role = this.role ?? _userService.getUserRole;
-
-        log.i("User logged in with role $role");
-        // ADD logic to navigate to different views depending on user role!
-        // authenticated and initialized -> go to successRoute
-        if (role == UserRole.explorer || role == UserRole.superUser) {
-          _navigationService.replaceWith(Routes.explorerHomeView);
-        } else {
-          if (role == UserRole.adminMaster) {
-            await _navigationService.replaceWith(
-                Routes.bottomBarLayoutTemplateView,
-                arguments:
-                    BottomBarLayoutTemplateViewArguments(userRole: role));
-          } else {
-            // check if onboarding screen was already looked at
-            final onboarded = await _localStorageService.getFromDisk(
-                key: kLocalStorageSawOnBoardingKey);
-            if (onboarded == _userService.currentUser.uid) {
-              await _navigationService.replaceWith(
-                Routes.parentHomeView,
-              );
-            } else {
-              await _navigationService.replaceWith(
-                Routes.onBoardingScreensView,
-              );
-              _localStorageService.saveToDisk(
-                  key: kLocalStorageSawOnBoardingKey,
-                  value: _userService.currentUser.uid);
-            }
-          }
-
-          // _navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-          //     arguments: BottomBarLayoutTemplateViewArguments(userRole: role));
-        }
-        // if (role == UserRole.explorer) {
-        //   navigationService.replaceWith(Routes.explorerHomeView);
-        // } else if (role == UserRole.sponsor) {
-        //   navigationService.replaceWith(Routes.sponsorHomeView);
-        // } else if (role == UserRole.admin) {
-        //   navigationService.replaceWith(Routes.adminHomeView);
-        // }
-
-        //_layoutService.setShowBottomNavBar(true);
+        navigateToViewAfterSyncingAccount();
       }
     } else {
       log.e(
           "User could not be logged in or signed-up, error: ${result.errorMessage}");
-      // set validation message if we have an error
       setValidationMessage(result.errorMessage);
     }
   }
 
-//Back Office Data Flow
-  Future saveAdminData() async {
-    log.v('Valued: $formValueMap');
-    try {
-      final result =
-          await runBusyFuture(runAdminAuthResult(), throwException: true);
-      log.i("This is the User Email: ${result.user!.email}");
-      await _handleAuthResponse(authResult: result);
-    } on FirestoreApiException catch (e) {
-      log.i(e.toString());
-    }
-  }
+  void navigateToViewAfterSyncingAccount() async {
+    final role = this.role ?? _userService.getUserRole;
+    log.i("User logged in with role $role");
 
-  //This code needs to be moved accordingly, based on the discussion Ben and I will have.
-  Future<void> _handleAuthResponse(
-      {required FirebaseAuthenticationResult authResult}) async {
-    log.v('AuthResult.hasError: ${authResult.hasError}');
-    if (!authResult.hasError && authResult.user != null) {
-      final adminUser = authResult.user;
-      await _userService.syncOrCreateUserAdminAccount(
-          userAdmin: UserAdmin(
-              id: adminUser!.uid,
-              email: adminUser.email,
-              role: UserRole.adminMaster,
-              name: 'Admin AFK'),
-          method: AuthenticationMethod.dummy,
-          fromLocalStorate: true);
-
-      navToAdminHomeView(role: UserRole.adminMaster);
+    if (role == UserRole.explorer || role == UserRole.superUser) {
+      _navigationService.replaceWith(Routes.explorerHomeView);
     } else {
-      if (!authResult.hasError && authResult.user == null) {
-        log.wtf('We have no Error But user is Null');
+      final onboarded = await _localStorageService.getFromDisk(
+          key: kLocalStorageSawOnBoardingKey);
+      if (onboarded == _userService.currentUser.uid) {
+        await _navigationService.replaceWith(
+          Routes.parentHomeView,
+        );
+      } else {
+        await _navigationService.replaceWith(
+          Routes.onBoardingScreensView,
+        );
+        _localStorageService.saveToDisk(
+            key: kLocalStorageSawOnBoardingKey,
+            value: _userService.currentUser.uid);
       }
     }
   }
 
-  Future initializeUser({
-    String? uid,
-    bool fromLocalStorage = false,
-  }) async {
-    return await _userService.syncUserAccount(
-        uid: uid, fromLocalStorage: fromLocalStorage);
-  }
-
-  //This is for the Back Office
-  Future<FirebaseAuthenticationResult> runAdminAuthResult();
-
-  // needs to be overrriden!
   Future<AFKCreditsAuthenticationResultService> runAuthentication(
       AuthenticationMethod method,
       [UserRole? role]);

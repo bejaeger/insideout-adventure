@@ -22,6 +22,7 @@ SponsorReference _$SponsorReferenceFromJson(Map<String, dynamic> json) {
 mixin _$SponsorReference {
   String get uid => throw _privateConstructorUsedError;
   AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
+  String? get deviceId => throw _privateConstructorUsedError;
   bool get withPasscode => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +36,11 @@ abstract class $SponsorReferenceCopyWith<$Res> {
   factory $SponsorReferenceCopyWith(
           SponsorReference value, $Res Function(SponsorReference) then) =
       _$SponsorReferenceCopyWithImpl<$Res>;
-  $Res call({String uid, AuthenticationMethod? authMethod, bool withPasscode});
+  $Res call(
+      {String uid,
+      AuthenticationMethod? authMethod,
+      String? deviceId,
+      bool withPasscode});
 }
 
 /// @nodoc
@@ -51,6 +56,7 @@ class _$SponsorReferenceCopyWithImpl<$Res>
   $Res call({
     Object? uid = freezed,
     Object? authMethod = freezed,
+    Object? deviceId = freezed,
     Object? withPasscode = freezed,
   }) {
     return _then(_value.copyWith(
@@ -62,6 +68,10 @@ class _$SponsorReferenceCopyWithImpl<$Res>
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
               as AuthenticationMethod?,
+      deviceId: deviceId == freezed
+          ? _value.deviceId
+          : deviceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       withPasscode: withPasscode == freezed
           ? _value.withPasscode
           : withPasscode // ignore: cast_nullable_to_non_nullable
@@ -77,7 +87,11 @@ abstract class _$$_SponsorReferenceCopyWith<$Res>
           _$_SponsorReference value, $Res Function(_$_SponsorReference) then) =
       __$$_SponsorReferenceCopyWithImpl<$Res>;
   @override
-  $Res call({String uid, AuthenticationMethod? authMethod, bool withPasscode});
+  $Res call(
+      {String uid,
+      AuthenticationMethod? authMethod,
+      String? deviceId,
+      bool withPasscode});
 }
 
 /// @nodoc
@@ -95,6 +109,7 @@ class __$$_SponsorReferenceCopyWithImpl<$Res>
   $Res call({
     Object? uid = freezed,
     Object? authMethod = freezed,
+    Object? deviceId = freezed,
     Object? withPasscode = freezed,
   }) {
     return _then(_$_SponsorReference(
@@ -106,6 +121,10 @@ class __$$_SponsorReferenceCopyWithImpl<$Res>
           ? _value.authMethod
           : authMethod // ignore: cast_nullable_to_non_nullable
               as AuthenticationMethod?,
+      deviceId: deviceId == freezed
+          ? _value.deviceId
+          : deviceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       withPasscode: withPasscode == freezed
           ? _value.withPasscode
           : withPasscode // ignore: cast_nullable_to_non_nullable
@@ -118,7 +137,10 @@ class __$$_SponsorReferenceCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_SponsorReference implements _SponsorReference {
   _$_SponsorReference(
-      {required this.uid, this.authMethod, required this.withPasscode});
+      {required this.uid,
+      this.authMethod,
+      this.deviceId,
+      required this.withPasscode});
 
   factory _$_SponsorReference.fromJson(Map<String, dynamic> json) =>
       _$$_SponsorReferenceFromJson(json);
@@ -128,11 +150,13 @@ class _$_SponsorReference implements _SponsorReference {
   @override
   final AuthenticationMethod? authMethod;
   @override
+  final String? deviceId;
+  @override
   final bool withPasscode;
 
   @override
   String toString() {
-    return 'SponsorReference(uid: $uid, authMethod: $authMethod, withPasscode: $withPasscode)';
+    return 'SponsorReference(uid: $uid, authMethod: $authMethod, deviceId: $deviceId, withPasscode: $withPasscode)';
   }
 
   @override
@@ -143,6 +167,7 @@ class _$_SponsorReference implements _SponsorReference {
             const DeepCollectionEquality().equals(other.uid, uid) &&
             const DeepCollectionEquality()
                 .equals(other.authMethod, authMethod) &&
+            const DeepCollectionEquality().equals(other.deviceId, deviceId) &&
             const DeepCollectionEquality()
                 .equals(other.withPasscode, withPasscode));
   }
@@ -153,6 +178,7 @@ class _$_SponsorReference implements _SponsorReference {
       runtimeType,
       const DeepCollectionEquality().hash(uid),
       const DeepCollectionEquality().hash(authMethod),
+      const DeepCollectionEquality().hash(deviceId),
       const DeepCollectionEquality().hash(withPasscode));
 
   @JsonKey(ignore: true)
@@ -172,6 +198,7 @@ abstract class _SponsorReference implements SponsorReference {
   factory _SponsorReference(
       {required final String uid,
       final AuthenticationMethod? authMethod,
+      final String? deviceId,
       required final bool withPasscode}) = _$_SponsorReference;
 
   factory _SponsorReference.fromJson(Map<String, dynamic> json) =
@@ -181,6 +208,8 @@ abstract class _SponsorReference implements SponsorReference {
   String get uid;
   @override
   AuthenticationMethod? get authMethod;
+  @override
+  String? get deviceId;
   @override
   bool get withPasscode;
   @override

@@ -1,5 +1,5 @@
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class SelectUserRoleLayout extends StatelessWidget {
@@ -32,7 +32,7 @@ class SelectUserRoleLayout extends StatelessWidget {
           children: [
             verticalSpaceRegular,
             IconButton(
-              padding: EdgeInsets.zero,
+              //padding: EdgeInsets.zero,
               alignment: Alignment.centerLeft,
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -40,19 +40,19 @@ class SelectUserRoleLayout extends StatelessWidget {
               ),
               onPressed: onBackPressed,
             ),
-            AfkCreditsText.headingOne(
+            InsideOutText.headingOne(
               "Select your account type",
             ),
             verticalSpaceLarge,
             verticalSpaceSmall,
-            AfkCreditsButton(
+            InsideOutButton(
               onTap: onExplorerPressed,
               title: "I am a child",
               height: 80,
               disabled: true,
             ),
             verticalSpaceLarge,
-            AfkCreditsButton(
+            InsideOutButton(
               onTap: onSponsorPressed,
               title: "I am a parent",
               height: 80,

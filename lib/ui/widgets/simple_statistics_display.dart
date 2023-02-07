@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class SimpleStatisticsDisplay extends StatelessWidget {
@@ -42,23 +42,19 @@ class SimpleStatisticsDisplay extends StatelessWidget {
               children: [
                 if (showCreditsIcon)
                   AFKCreditsIcon(
-                      height: 40,
+                      height: 35,
                       alignment: Alignment.center,
                       color: kcPrimaryColor),
                 if (showScreenTimeIcon)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.asset(kScreenTimeIcon2,
-                        height: 35,
+                        height: 28,
                         alignment: Alignment.centerLeft,
                         color: kcScreenTimeBlue),
                   ),
-                Text(
+                InsideOutText.headingThree(
                   statistic,
-                  style: textTheme(context).bodyText2!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                      color: kcBlackHeadlineColor),
                 ),
               ],
             ),

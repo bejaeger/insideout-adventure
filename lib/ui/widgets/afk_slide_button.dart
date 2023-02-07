@@ -1,6 +1,4 @@
-import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:slide_to_act/slide_to_act.dart';
@@ -11,13 +9,10 @@ class AFKSlideButton extends StatelessWidget {
   final Alignment? alignment;
   const AFKSlideButton(
       {Key? key,
-      required this.quest,
       required this.canStartQuest,
       required this.onSubmit,
       this.alignment})
       : super(key: key);
-
-  final Quest quest;
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +26,12 @@ class AFKSlideButton extends StatelessWidget {
         sliderButtonIcon: Icon(Icons.play_arrow_rounded, color: kcPrimaryColor),
         alignment: alignment ?? Alignment.center,
         outerColor: kcPrimaryColor,
-        //text: "Start",
         child: canStartQuest
             ? Shimmer.fromColors(
                 baseColor: kcGreyTextColor.withOpacity(1),
                 highlightColor: Colors.white,
                 period: const Duration(milliseconds: 1000),
-                child: AfkCreditsText.subheading("      Start"),
+                child: InsideOutText.subheading("      Start"),
               )
             : Text("Cannot start",
                 style: textTheme(context)
@@ -46,12 +40,8 @@ class AFKSlideButton extends StatelessWidget {
         height: 50,
         elevation: 1,
         sliderRotate: false,
-        //key: _key,
         onSubmit: canStartQuest ? onSubmit : null,
         borderRadius: 30,
-        //sliderButtonIcon: Icon(Icons.play_arrow)
-        // submittedIcon: Icon(Icons.railway_alert),
-        // animationDuration: Duration(seconds: 1),
       ),
     );
   }

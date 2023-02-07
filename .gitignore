@@ -34,16 +34,15 @@
 pubspec.lock
 
 #Android Services 
+android/app/src/*/*/google-services.json
 android/app/src/*/google-services.json
 android/app/google-services.json
-android/app/src/*/AndroidManifest.xml
+android/local.properties
 
 #Lib folder 
 lib/firebase_options.dart
 .env
 dotenv
-#ios/Xcode Related
-#ios/Runner/AppDelegate.swift
 # iOS/XCode related
 **/ios/**/*.mode1v3
 **/ios/**/*.mode2v3
@@ -75,6 +74,10 @@ dotenv
 **/ios/Runner/GoogleService-Info.plist
 **/ios/Runner/GoogleService-Info-2.plist
 
+# from npm
+node_modules/
+package-lock.json
+
 # Web related
 lib/generated_plugin_registrant.dart
 
@@ -92,23 +95,14 @@ app.*.map.json
 # Firebase settings
 .firebase/
 .vscode/settings.json
-.firebaserc
 
 # ios build
 ios/build/
 ios/Runner/Info.plist
 ios/Runner/AppDelegate.swift
-#ios/Runner/GoogleService-Info.plist
-#ios/Runner/GoogleService-Info-2.plist
 
 # firebase config files
 lib/firebase_options_dev.dart
 lib/firebase_options_prod.dart
+ios/firebase_app_id_file.json
 
-#
-# since no unit tests are used atm we can remove that from git
-lib/test/
-test/
-
-ios/Podfile.lock
-ios/Runner.xcodeproj/project.pbxproj

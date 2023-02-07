@@ -1,11 +1,9 @@
-import 'package:afkcredits/constants/layout.dart';
-import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/ui/layout_widgets/main_page.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -17,13 +15,11 @@ class QuestListOverlayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("==>> Rebuild QuestListOverlay");
     return ViewModelBuilder<QuestListOverlayViewModel>.reactive(
       viewModelBuilder: () => QuestListOverlayViewModel(),
       onModelReady: (model) => model.listenToLayout(),
       builder: (context, model, child) => AnimatedPositioned(
         duration: const Duration(milliseconds: 500),
-        // bottom: show ? 500 : screenHeight(context),
         top: model.isShowingQuestList
             ? kTopHeaderPadding
             : screenHeight(context),
@@ -41,7 +37,6 @@ class QuestListOverlayView extends StatelessWidget {
               width: screenWidth(context),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    //colors: [Colors.white, kcPrimaryColor],
                     colors: [kcGreenWhiter, kcPrimaryColor],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -54,7 +49,7 @@ class QuestListOverlayView extends StatelessWidget {
                   GrabberLine(),
                   Padding(
                     padding: const EdgeInsets.only(left: 20.0, top: 15),
-                    child: AfkCreditsText.headingTwo(
+                    child: InsideOutText.headingTwo(
                       "Quest list",
                       align: TextAlign.center,
                     ),
@@ -70,7 +65,6 @@ class QuestListOverlayView extends StatelessWidget {
                               title: "Near You",
                               onButtonTap: () =>
                                   model.initializeQuests(force: true),
-                              // textButtonText: "REFRESH",
                               buttonIcon: model.isBusy
                                   ? AFKProgressIndicator()
                                   : Icon(Icons.refresh_rounded),
@@ -80,22 +74,20 @@ class QuestListOverlayView extends StatelessWidget {
                             Container(
                               alignment: Alignment.center,
                               padding: const EdgeInsets.only(top: 30),
-                              child: AfkCreditsText.headingThree(
-                                  "No quests found"),
+                              child:
+                                  InsideOutText.headingThree("No quests found"),
                             ),
                           if (model.nearbyQuests.length == 0)
                             Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.only(top: 15),
-                                child: AfkCreditsText.subheading(
+                                child: InsideOutText.subheading(
                                     "Ask your parents to create one")),
                           ListView(
                             physics: ScrollPhysics(),
-                            //itemExtent: 120,
                             shrinkWrap: true,
-                            //scrollDirection: Axis.vertical,
                             children: [
-                              ...model.nearbyQuests
+                              ...model.nearbyQuestsTodo
                                   .asMap()
                                   .map((index, quest) {
                                     return MapEntry(
@@ -114,36 +106,8 @@ class QuestListOverlayView extends StatelessWidget {
                                   })
                                   .values
                                   .toList(),
-                              //verticalSpaceLarge,
                             ],
                           ),
-                          // SectionHeader(title: "Types"),
-                          // Container(
-                          //   padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                          //   child: GridView.count(
-                          //     shrinkWrap: true,
-                          //     crossAxisCount: 2,
-                          //     crossAxisSpacing: 10,
-                          //     mainAxisSpacing: 10,
-                          //     physics:
-                          //         NeverScrollableScrollPhysics(), // to disable GridView's scrolling
-                          //     children: [
-                          //       ...model.questTypes
-                          //           .map(
-                          //             (e) => AfkCreditsCategoryCard(
-                          //               onPressed:
-                          //                   model.navigateToQuestsOfSpecificTypeView,
-                          //               category: e,
-                          //               backgroundColor: getColorOfType(e),
-                          //             ),
-                          //           )
-                          //           .toList(),
-                          //       // QuestCategoryCard(
-                          //       //     onPressed: model.navigateToQuestsOfSpecificTypeView,
-                          //       //     category: QuestType.DistanceEstimate)
-                          //     ],
-                          //   ),
-                          // ),
                           verticalSpaceMassive,
                         ],
                       ),

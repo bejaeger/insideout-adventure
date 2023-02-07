@@ -1,25 +1,26 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:stacked/stacked.dart';
 
 class LayoutService {
   BehaviorSubject<bool> showBottomNavBarSubject =
       BehaviorSubject<bool>.seeded(false);
   bool get showBottomNavBar => showBottomNavBarSubject.value;
 
-  // BehaviorSubject<bool> isShowingQuestListSubject =
-  //     BehaviorSubject<bool>.seeded(false);
+  // true when quest list is shown
   BehaviorSubject<bool> isShowingQuestListSubject =
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingQuestList => isShowingQuestListSubject.value;
 
+  // true if explorer account is shown
   BehaviorSubject<bool> isShowingExplorerAccountSubject =
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingExplorerAccount => isShowingExplorerAccountSubject.value;
 
+  // true if credits overlay (top right credits button) is shown
   BehaviorSubject<bool> isShowingCreditsOverlaySubject =
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingCreditsOverlay => isShowingCreditsOverlaySubject.value;
 
+  // Fade out for when user enters AR view or Marker collection animation!
   BehaviorSubject<bool> isFadingOutOverlaySubject =
       BehaviorSubject<bool>.seeded(false);
   bool get isFadingOutOverlay => isFadingOutOverlaySubject.value;
@@ -28,6 +29,7 @@ class LayoutService {
       BehaviorSubject<bool>.seeded(false);
   bool get isMovingCamera => isMovingCameraSubject.value;
 
+  // When quest details are faded out again
   BehaviorSubject<bool> isFadingOutQuestDetailsSubject =
       BehaviorSubject<bool>.seeded(false);
   bool get isFadingOutQuestDetails => isFadingOutQuestDetailsSubject.value;

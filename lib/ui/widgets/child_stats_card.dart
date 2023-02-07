@@ -2,12 +2,11 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/trend_icon.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class ChildStatsCard extends StatelessWidget {
@@ -36,7 +35,6 @@ class ChildStatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      //color: Color.fromARGB(255, 231, 234, 241),
       color: kcCultured.withOpacity(0.5),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.hardEdge,
@@ -62,14 +60,14 @@ class ChildStatsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                            child: AfkCreditsText.headingFour(user.fullName)),
+                            child: InsideOutText.headingFour(user.fullName)),
                         Icon(Icons.arrow_forward_ios,
                             size: 20, color: kcPrimaryColorSecondary),
                       ],
                     ),
                     Row(
                       children: [
-                        //AfkCreditsText.body("Balance: "),
+                        //InsideOutText.body("Balance: "),
                         if (childStats != null)
                           CreditsAmount(
                             amount: childStats!.afkCreditsBalance,
@@ -80,12 +78,15 @@ class ChildStatsCard extends StatelessWidget {
                     verticalSpaceSmall,
                     if (activityTimeLastWeek != null ||
                         screenTimeLastWeek != null)
-                      AfkCreditsText.body("Last 7 days"),
+                      InsideOutText.body("Last 7 days"),
                     if (activityTimeLastWeek == null &&
                         screenTimeLastWeek == null)
-                      AfkCreditsText.body("Switch to " +
+                      InsideOutText.body("No recent activities"),
+                    if (activityTimeLastWeek == null &&
+                        screenTimeLastWeek == null)
+                      InsideOutText.body("Switch to " +
                           user.fullName +
-                          "'s account to earn screen time"),
+                          "'s account to get started"),
                     childStats == null
                         ? AFKProgressIndicator()
                         : Column(
@@ -99,12 +100,12 @@ class ChildStatsCard extends StatelessWidget {
                                         width: 20,
                                         color: kcActivityIconColor),
                                     SizedBox(width: 4),
-                                    AfkCreditsText.body(
+                                    InsideOutText.body(
                                         activityTimeLastWeek.toString() +
                                             " min"),
                                     if (activityTimeTrend != null)
                                       TrendIcon(metric: activityTimeTrend!)
-                                    // AfkCreditsText.body("(" +
+                                    // InsideOutText.body("(" +
                                     //     (activityTimeTrend! >= 0 ? "+" : "") +
                                     //     activityTimeTrend.toString() +
                                     //     ")"),
@@ -118,7 +119,7 @@ class ChildStatsCard extends StatelessWidget {
                                         width: 18,
                                         color: kcScreenTimeBlue),
                                     SizedBox(width: 4),
-                                    AfkCreditsText.body(
+                                    InsideOutText.body(
                                         screenTimeLastWeek.toString() + " min"),
                                     if (screenTimeTrend != null)
                                       TrendIcon(
@@ -126,27 +127,17 @@ class ChildStatsCard extends StatelessWidget {
                                           screenTime: true)
                                   ],
                                 ),
-                              // AfkCreditsText.body("# quests compl.: " +
-                              //     stats.numberQuestsCompleted.toString()),
-                              // AfkCreditsText.body(
-                              //     "screen time: " + stats.afkCreditsSpent.toString()),
                             ],
                           ),
-
-                    // Flexible(
-                    //     //heightFactor: 0.6,
-                    //     child: Icon(Icons.trip_origin_sharp,
-                    //         size: 50, color: Colors.orange.shade400)),
-                    // verticalSpaceSmall,
                     Spacer(),
                     if (screenTimeSession != null)
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            AfkCreditsText.screenTimeWarn("Screen time active"),
-                            AfkCreditsText.screenTimeWarn("-"),
-                            AfkCreditsText.screenTimeWarn(secondsToMinuteTime(
+                            InsideOutText.screenTimeWarn("Screen time active"),
+                            InsideOutText.screenTimeWarn(" "),
+                            InsideOutText.screenTimeWarn(secondsToMinuteTime(
                                   getTimeLeftInSeconds(
                                       session: screenTimeSession!),
                                 )

@@ -7,11 +7,10 @@ import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,32 +20,16 @@ import 'app_config_provider.dart';
 import 'notifications/notification_controller.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
 import 'package:flutter/services.dart';
-import 'firebase_options_dev.dart' as dev;
-
-// import 'firebase_options_prod.dart' as prod;
-
 import 'package:flutter/foundation.dart' show kIsWeb;
-
-// import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
-//     show ArCoreController;
+import 'package:arkit_plugin/arkit_plugin.dart'
+    show ARKitConfiguration, ARKitPlugin;
 
 const bool USE_EMULATOR = false;
 
 void mainCommon(Flavor flavor) async {
   try {
-    WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    // initialize firebase app via index.html
-    if (!kIsWeb) {
-      await Firebase.initializeApp(
-          options: dev.DefaultFirebaseOptions.currentPlatform);
-      //: prod.DefaultFirebaseOptions.currentPlatform);
-/*       await Firebase.initializeApp(
-          options: flavor == Flavor.dev
-              ? dev.DefaultFirebaseOptions.currentPlatform
-              : prod.DefaultFirebaseOptions.currentPlatform); */
-    }
 
     if (USE_EMULATOR) {
       await _connectToFirebaseEmulator();
@@ -62,9 +45,24 @@ void mainCommon(Flavor flavor) async {
     setupDialogUi();
     setupSnackbarUi();
     setupBottomSheetUi();
-    // initialize notifications
     NotificationController().initializeLocalNotifications();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (event) {
+        print("received remote message with id: ${event.messageId}");
+        try {
+          if (event.data["category"] == "feedback") {
+            StackedService.navigatorKey?.currentState?.pushNamed(
+              Routes.feedbackView,
+            );
+          }
+        } catch (e) {
+          print("Error: Could not check category in data");
+        }
+      },
+    );
+
     String? fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken != null) {
       print("FCM Token: $fcmToken");
@@ -75,14 +73,18 @@ void mainCommon(Flavor flavor) async {
     appConfigProvider.configure(flavor);
     print("==>> Running with flavor $flavor");
 
-    // if (!kIsWeb &&
-    //     Platform.isAndroid &&
-    //     await ArCoreController.checkArCoreAvailability() &&
-    //     await ArCoreController.checkIsArCoreInstalled()) {
-    //   appConfigProvider.setIsARAvailable(true);
-    // } else {
-    appConfigProvider.setIsARAvailable(false);
-    // }
+    if (!kIsWeb && Platform.isAndroid) {
+      appConfigProvider.setIsARAvailable(false);
+    } else {
+      if (await ARKitPlugin.checkConfiguration(
+              ARKitConfiguration.worldTracking) &&
+          await ARKitPlugin.checkConfiguration(
+              ARKitConfiguration.imageTracking)) {
+        appConfigProvider.setIsARAvailable(true);
+      } else {
+        appConfigProvider.setIsARAvailable(false);
+      }
+    }
 
     runApp(MyApp());
   } catch (e) {
@@ -91,7 +93,6 @@ void mainCommon(Flavor flavor) async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return LifeCycleManager(
@@ -121,8 +122,8 @@ class MyApp extends StatelessWidget {
                   ),
               primaryIconTheme: IconThemeData(color: Colors.white),
               primaryTextTheme: TextTheme(
+                // color of app bar title
                 headline6: TextStyle(
-                    // color of app bar title
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -131,20 +132,12 @@ class MyApp extends StatelessWidget {
             ),
             navigatorKey: StackedService.navigatorKey,
             onGenerateRoute: StackedRouter().onGenerateRoute,
-
-            ///////////////////////////
-            /// Use the following with the AFK Custom bottom nav bar
-            // builder: (context, child) => LayoutTemplateView(childView: child!),
-
-            /////////////////////////////
-            /// Use this when persistent nav bar is used
             home: StartUpView()),
       ),
     );
   }
 }
 
-// Declared as global, outside of any class
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 
@@ -154,7 +147,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
-  //final localHostString = "192.168.1.69";
   FirebaseFirestore.instance.settings = Settings(
     host: '$localHostString:8080',
     sslEnabled: false,
@@ -167,7 +159,6 @@ Future _connectToFirebaseEmulator() async {
 ButtonStyle getRaisedButtonStyle() {
   return ElevatedButton.styleFrom(
     onPrimary: Colors.white,
-    // primary: darkTurquoise,
     primary: kcPrimaryColor,
     minimumSize: Size(88, 45),
     padding: EdgeInsets.symmetric(horizontal: 16),

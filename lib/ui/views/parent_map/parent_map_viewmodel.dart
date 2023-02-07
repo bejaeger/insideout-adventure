@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -8,32 +9,25 @@ import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class ParentMapViewModel extends QuestViewModel {
-  // -----------------------------------------
-  // services
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
-  // ----------------------------------
-  // getters
   bool get showReloadQuestButton => questService.showReloadQuestButton;
   bool get isReloadingQuests => questService.isReloadingQuests;
 
-  // ---------------------------------------
-  // state
   bool isDeletingQuest = false;
 
-  // ---------------------------------
-  // initialize function
   void initialize() async {
     setBusy(true);
     mapViewModel.resetAllMapMarkersAndAreas();
+    mapStateService.setCameraToDefaultParentPosition();
     await getLocation(forceAwait: true, forceGettingNewPosition: false);
     setBusy(false);
     await initializeQuests(force: true);
-    addMarkers();
+    addStartMarkers();
     notifyListeners();
   }
 
-  // ? Note: Same function exists in explorer_home_viewmodel.dart
+  // ! Note: Same function exists in explorer_home_viewmodel.dart
   Future initializeQuests(
       {bool? force,
       double? lat,
@@ -52,7 +46,7 @@ class ParentMapViewModel extends QuestViewModel {
       }
     } catch (e) {
       log.e(
-          "Error when loading quests, this could happen when the quests collection is flawed. Error: $e");
+          "Error when loading quests, this could happen when the quests collection is flawed or when no quests were found. Error: $e");
       if (e is QuestServiceException) {
         if (e.message == WarningNoQuestsDownloaded) {
           // delay makes for some nicer UX
@@ -82,61 +76,78 @@ class ParentMapViewModel extends QuestViewModel {
     }
   }
 
-  void addMarkers() {
+  void addStartMarkers() {
     if (nearbyQuests.isNotEmpty) {
       for (Quest _q in nearbyQuests) {
         log.v("Add start marker of quest with name ${_q.name} to map");
         if (_q.startMarker != null) {
           AFKMarker _m = _q.startMarker!;
           mapViewModel.addMarkerToMap(
-              quest: _q,
-              afkmarker: _m,
-              isStartMarker: _m == _q.startMarker,
-              onMarkerTapCustom: () => onMarkerTapParent(quest: _q, marker: _m),
-              completed: currentUserStats.completedQuestIds.contains(_q.id));
+            quest: _q,
+            afkmarker: _m,
+            isStartMarker: _m == _q.startMarker,
+            onMarkerTapCustom: () => onMarkerTapParent(quest: _q, marker: _m),
+            completed: false,
+            isParentAccount: true,
+          );
         }
       }
     }
   }
 
+  void showCreateQuestDialog(double lat, double lon) async {
+    final res = await dialogService.showDialog(
+        title: "Create quest",
+        description: "You can create a quest starting here",
+        cancelTitle: "Nope",
+        barrierDismissible: true,
+        buttonTitle: "Create quest");
+    if (res?.confirmed == true) {
+      await navigationService.navigateTo(Routes.createQuestView,
+          arguments:
+              CreateQuestViewArguments(fromMap: true, latLng: [lat, lon]));
+    }
+  }
+
   Future onMarkerTapParent(
       {required Quest quest, required AFKMarker marker}) async {
-    // marker info window shows automatically. hide it when not in avatar view
+    // marker info window shows automatically (google maps feature). hide it when not in avatar view
     mapViewModel.hideMarkerInfoWindowNow(markerId: marker.id);
     SheetResponse? response = await displayQuestBottomSheet(quest: quest);
 
-    if (response?.confirmed == false) {
-      DialogResponse? response2 = await dialogService.showDialog(
+    bool deleteQuest = response?.confirmed == false;
+    if (deleteQuest) {
+      DialogResponse? confirmation = await dialogService.showDialog(
         title: "Sure?",
         description: "Are you sure you want to delete this quest?",
         buttonTitle: "YES",
         cancelTitle: "NO",
       );
-      if (response2?.confirmed == true) {
-        // Delete quest!
+      if (confirmation?.confirmed == true) {
         await removeQuest(quest: quest);
         snackbarService.showSnackbar(
             title: "Deleted quest",
             message: "Successfully deleted quest.",
             duration: Duration(milliseconds: 1500));
-
-        // update marker on map!
         mapViewModel.resetAndAddBackAllMapMarkersAndAreas();
-        addMarkers();
+        addStartMarkers();
         notifyListeners();
       } else {
         await onMarkerTapParent(quest: quest, marker: marker);
       }
     }
+
+    bool showQuestDetails = response?.confirmed == true;
+    if (showQuestDetails) {
+      mapViewModel.animateToQuestDetails(quest: quest);
+      notifyListeners();
+    }
   }
 
-  // TODO: Function also in single_quest_type_viewmodel.dart, NEEDED there!?
   Future<void> removeQuest({required Quest quest}) async {
     isDeletingQuest = true;
     notifyListeners();
-    //Remove Quest in the Firebase
     await questService.removeQuest(quest: quest);
-    //Remove Quest In the List.
     nearbyQuests.remove(quest);
     isDeletingQuest = false;
     notifyListeners();
@@ -153,7 +164,27 @@ class ParentMapViewModel extends QuestViewModel {
         loadNewQuests: true);
     questService.showReloadQuestButton = false;
     questService.isReloadingQuests = false;
-    addMarkers();
+    addStartMarkers();
+    notifyListeners();
+  }
+
+  // when quest details are shown we need to remove them again
+  // (for parent account this is simple. Corresponding function for explorer account is in
+  // active_quest_base_viewmodel.dart)
+  void popQuestDetails() async {
+    mapStateService.restorePreviousCameraPosition();
+    mapViewModel.animateCameraViewModel(
+        forceUseLocation: true,
+        customLat: mapStateService.newLat,
+        customLon: mapStateService.newLon);
+    mapStateService.resetNewLatLon();
+
+    mapViewModel.resetAllMapMarkersAndAreas();
+    addStartMarkers();
+
+    // reset selected quest -> UI: don't show quest details anymore
+    activeQuestService.resetSelectedAndMaybePreviouslyFinishedQuest();
+
     notifyListeners();
   }
 }

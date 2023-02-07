@@ -1,4 +1,4 @@
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 const String WarningQuestNotFinished = "Cancel Incomplete Quest?";
 
@@ -9,7 +9,7 @@ const String WarningNotNearbyMarker =
     "You are not close to the actual marker. ";
 
 const String WarningScannedMarkerAlreadyCollected =
-    "Your scanned marker has already been collected.";
+    "Marker has already been collected.";
 
 const String WarningNoQuestsDownloaded = "No quests found in this area.";
 

@@ -82,7 +82,16 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
       // }
       return;
     }
-    _flavorConfigProvider.isARAvailable = b;
+    if (b == true && isARAvailable) {
+      userService.setIsUsingAr(value: true);
+      // _flavorConfigProvider.setIsUsingAR(true);
+    } else {
+      userService.setIsUsingAr(value: false);
+      // _flavorConfigProvider.setIsUsingAR(false);
+    }
+    if (b == true && !isARAvailable) {
+      snackbarService.showSnackbar(message: "AR not supported on this device.");
+    }
     notifyListeners();
   }
 
@@ -146,7 +155,7 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
 
   @override
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? onStartQuestCallback}) {
+      {required Quest? quest, void Function()? notifyParentCallback}) {
     // TODO: implement maybeStartQuest
     throw UnimplementedError();
   }

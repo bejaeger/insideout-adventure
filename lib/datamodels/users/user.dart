@@ -1,3 +1,4 @@
+import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -27,6 +28,7 @@ class User with _$User {
     required List<String> sponsorIds,
     required List<String> explorerIds,
     required UserRole role,
+    UserSettings? userSettings,
     AuthenticationMethod? authMethod,
     @Default(true)
         bool newUser,
@@ -36,6 +38,10 @@ class User with _$User {
         List<String>? fullNameSearch,
     String? createdByUserWithId,
     String? password,
+    List<String>? tokens,
+    String? deviceId,
+    @Default(1)
+        int? avatarIdx,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -54,5 +60,6 @@ User getEmptyUser() {
     sponsorIds: [],
     explorerIds: [],
     newUser: false,
+    userSettings: UserSettings(),
   );
 }

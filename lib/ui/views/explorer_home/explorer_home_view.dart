@@ -1,3 +1,4 @@
+import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
@@ -12,15 +13,25 @@ import 'package:afkcredits/ui/widgets/animations/fade_transition_animation.dart'
 import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
 import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
+
+import '../../../datamodels/screentime/screen_time_session.dart';
 
 final log = getLogger("REBUILD LOGGER");
 
 class ExplorerHomeView extends StatefulWidget {
-  final bool showQuestsFoundSnackbar;
-  const ExplorerHomeView({Key? key, this.showQuestsFoundSnackbar = false})
+  final bool showBewareDialog;
+  final bool showNumberQuestsDialog;
+  final ScreenTimeSession? screenTimeSession;
+  const ExplorerHomeView(
+      {Key? key,
+      this.showBewareDialog = false,
+      this.screenTimeSession,
+      this.showNumberQuestsDialog = false})
       : super(key: key);
 
   @override
@@ -31,9 +42,17 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
+      // viewModelBuilder: () => ExplorerHomeViewModel(),
       viewModelBuilder: () => ExplorerHomeViewModel(),
-      onModelReady: (model) => model.initialize(
-          showQuestsFoundSnackbar: widget.showQuestsFoundSnackbar),
+      // using singleton was kind of unstable :ooo
+      // disposeViewModel: false,
+      onModelReady: (model) {
+        model.initialize(
+            showBewareDialog: widget.showBewareDialog,
+            showNumberQuestsDialog: widget.showNumberQuestsDialog,
+            showSelectAvatarDialog: model.currentUser.newUser,
+            screenTimeSession: widget.screenTimeSession);
+      },
       builder: (context, model, child) {
         bool showMainWidgets =
             (!(model.isShowingQuestDetails || model.hasActiveQuest) ||
@@ -78,15 +97,17 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   // TODO: Can also make MainHeader a view!
                   if (!model.isBusy)
                     MainHeader(
-                        percentageOfNextLevel: model.percentageOfNextLevel,
-                        currentLevel: model.currentLevel(),
-                        onAvatarPressed: model.showExplorerAccountOverlay,
-                        show: showMainWidgets,
-                        onDevFeaturePressed: model.isDevFlavor
-                            ? model.openSuperUserSettingsDialog
-                            : null, // model.showNotImplementedSnackbar,
-                        onCreditsPressed: model.showCreditsOverlay,
-                        balance: model.currentUserStats.afkCreditsBalance),
+                      percentageOfNextLevel: model.percentageOfNextLevel,
+                      currentLevel: model.currentLevel(),
+                      onAvatarPressed: model.showExplorerAccountOverlay,
+                      show: showMainWidgets,
+                      onDevFeaturePressed: model.isDevFlavor
+                          ? model.openSuperUserSettingsDialog
+                          : null, // model.showNotImplementedSnackbar,
+                      onCreditsPressed: model.showCreditsOverlay,
+                      balance: model.currentUserStats.afkCreditsBalance,
+                      avatarIdx: model.avatarIdx,
+                    ),
 
                   if (!model.isBusy)
                     MainFooterOverlayView(
@@ -110,6 +131,20 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                   OverlayedCloseButton(),
 
                   if (model.isFadingOutOverlay) FadeTransitionAnimation(),
+
+                  // to test notifications during development
+                  // Align(
+                  //   alignment: Alignment.center,
+                  //   child: AfkCreditsButton(
+                  //     title: model.notId != null
+                  //         ? "Dismiss notification"
+                  //         : "Create notification",
+                  //     onTap:
+                  //     model.notId != null
+                  //         ? model.dismissTestNotification
+                  //         : model.createTestNotification,
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -131,8 +166,11 @@ class OverlayedCloseButton extends StatelessWidget {
       builder: (context, model, child) => model.isShowingQuestList
           ? Container(
               alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.only(bottom: 20),
-              child: RoundCloseButton(onTap: model.removeQuestListOverlay),
+              padding: const EdgeInsets.only(bottom: 12),
+              child: RoundCloseButton(
+                onTap: model.removeQuestListOverlay,
+                color: kcCultured,
+              ),
             )
           : SizedBox(height: 0, width: 0),
     );

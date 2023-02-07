@@ -19,8 +19,8 @@ class AppConfigProvider {
   // dummy checks for quest completion for testing purposes
   bool dummyQuestCompletionVerification = false;
 
-// variable that is set when the app starts to check whether
-// AR functionality is available or not (defaults to false)
+  // variable that is set when the app starts to check whether
+  // AR functionality is available or not (defaults to false)
   bool isARAvailable = false;
 
   Flavor flavor = Flavor.unknown;
@@ -30,14 +30,14 @@ class AppConfigProvider {
 
   bool get isDevFlavor => flavor == Flavor.dev;
 
-  String get versionName => "0.1.0+1";
+  String get versionName => "0.1.0";
 
   String get appName {
     switch (this.flavor) {
       case Flavor.dev:
         return "Hercules World - Dev";
       case Flavor.prod:
-        return "Hercules World - v0.1.0+1";
+        return "Hercules World - v0.1.0";
       default:
         return "Hercules World - Dev";
     }
@@ -48,21 +48,11 @@ class AppConfigProvider {
   }
 
   String getTestUserEmail(UserRole? role) {
-    /* if (role == null) return "";
-    if (role == UserRole.explorer) {
-      return "test@gmail.com";
-    }
-    if (role == UserRole.sponsor) {
-      return "test2@gmail.com";
-    } else {
-      return "";
-    } */
-
     if (role == UserRole.explorer) {
       return "test@gmail.com";
     } else if (role == UserRole.sponsor) {
       return "test2@gmail.com";
-    } else if (role == UserRole.adminMaster) {
+    } else if (role == UserRole.admin) {
       return "adminMaster@gmail.com";
     } else if (role == UserRole.admin) {
       return "admin@gmail.com";
@@ -75,38 +65,6 @@ class AppConfigProvider {
 
   String getTestUserPassword() {
     return "m1m1m1";
-  }
-
-  String getTestUserId(UserRole role) {
-    /* if (this.flavor == Flavor.prod) {
-      return "";
-    } else {
-      if (role == UserRole.explorer) {
-        return "anLaRoIZCXU0TgZYTmp1AVnRhnD3";
-      }
-      if (role == UserRole.sponsor) {
-        return "N3INiSGUOvXsinbbyKZhFvq3AbW2";
-      } else {
-        return "";
-      }
-    } */
-    if (this.flavor == Flavor.prod) {
-      return "";
-    } else {
-      if (role == UserRole.explorer) {
-        return "anLaRoIZCXU0TgZYTmp1AVnRhnD3";
-      } else if (role == UserRole.sponsor) {
-        return "N3INiSGUOvXsinbbyKZhFvq3AbW2";
-      } else if (role == UserRole.adminMaster) {
-        return "tSeaJAjbZteeHYYmcU9k5TvlOcS2";
-      } else if (role == UserRole.admin) {
-        return "RhLyUQmewCXH8pF7VQsFKADK9hs1";
-      } else if (role == UserRole.superUser) {
-        return "Ag0rQIXsayPbAL7A8Ohk5h6tyo92";
-      } else {
-        return "";
-      }
-    }
   }
 
   String get authority {

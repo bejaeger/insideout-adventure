@@ -4,44 +4,36 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
-import 'package:afkcredits/enums/quest_ui_style.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stacked/stacked.dart';
 
 class QuestService with ReactiveServiceMixin {
-  // -----------------------------------
-  // services
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final log = getLogger("QuestService");
 
-  // ---------------------------------------------
-  // state
-  List<ActivatedQuest> activatedQuestsHistory = [];
-  StreamSubscription? _pastQuestsStreamSubscription;
-  // Turned local variable pvt
-  List<Quest> _nearbyQuests = [];
   List<Quest> get getNearByQuest => _nearbyQuests;
-  double? lonAtLatestQuestDownload;
-  double? latAtLatestQuestDownload;
-
-  Quest? _questToUpdate;
+  List<Quest> get getNearByQuestTodo => _nearbyQuestsTodo;
   Quest? get getQuestToUpdate => _questToUpdate;
 
+  double? lonAtLatestQuestDownload;
+  double? latAtLatestQuestDownload;
+  List<ActivatedQuest> activatedQuestsHistory = [];
+  StreamSubscription? _pastQuestsStreamSubscription;
+  List<Quest> _nearbyQuests = [];
+  List<Quest> _nearbyQuestsTodo = [];
+  Quest? _questToUpdate;
   bool sortedNearbyQuests = false;
-  // List<String> allQuestTypes = [];
   List<QuestType> allQuestTypes = [];
-
   bool showReloadQuestButton = false;
   bool isReloadingQuests = false;
 
@@ -59,14 +51,6 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
-  // Get a List of Quests
-  // Get Markers For the Quest.
-  Future<List<AFKMarker?>?> getAllMarkers() async {
-    //So Far I will only return the Markers with the FB.
-    return await _firestoreApi.getAllMarkers();
-  }
-
-  // remove quest from database
   Future<void> removeQuest({required Quest quest}) async {
     try {
       if (quest.id != "") {
@@ -79,15 +63,7 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
-  Future<AFKMarker?> getMarkerFromQrCodeId({required String qrCodeId}) async {
-    // TODO: Check wether marker is in active quest or whether it needs to be downloaded!
-    return await _firestoreApi.getMarkerFromQrCodeId(qrCodeId: qrCodeId);
-  }
-
-  ////////////////////////////////////////////
-  /// History of quests
-  // adds listener to money pools the user is contributing to
-  // allows to wait for the first emission of the stream via the completer
+  // not used atm
   Future<void>? setupPastQuestsListener(
       {required Completer<void> completer,
       required String uid,
@@ -146,18 +122,13 @@ class QuestService with ReactiveServiceMixin {
             pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
             sponsorIds: sponsorIds);
         if (addQuestsToExisting) {
-          // _nearbyQuests.addAll(newQuests);
-          // log.wtf("nearby quests length: ${_nearbyQuests.length}");
-          // // make unique
-          // _nearbyQuests = _nearbyQuests.toSet().toList();
-          // TODO: Very inefficient but does the job atm
-          newQuests.forEach(
-            (newq) {
-              if (!_nearbyQuests.any((element) => element.id == newq.id)) {
-                _nearbyQuests.add(newq);
-              }
-            },
-          );
+          Set<String> existingQuests = Set.from(_nearbyQuests.map((q) => q.id));
+          newQuests.forEach((newq) {
+            if (!existingQuests.contains(newq.id)) {
+              existingQuests.add(newq.id);
+              _nearbyQuests.add(newq);
+            }
+          });
         } else {
           _nearbyQuests = newQuests;
         }
@@ -197,7 +168,7 @@ class QuestService with ReactiveServiceMixin {
     if (_nearbyQuests.isNotEmpty) {
       for (Quest _q in _nearbyQuests) {
         if (!allQuestTypes.any((element) => element == _q.type)) {
-          allQuestTypes.add(_q.type as QuestType);
+          allQuestTypes.add(_q.type);
         }
       }
     } else {
@@ -205,23 +176,17 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
-  // Very likely deprecated!
-  // Useful for UI, check if active quest screen is standalone ui or map view!
-  QuestUIStyle getQuestUIStyle({Quest? quest}) {
-    return QuestUIStyle.standalone;
-  }
-
   Future sortNearbyQuests() async {
     if (_nearbyQuests.isNotEmpty) {
-      log.i("Check distances for current quest list");
-
-      // need to use normal for loop to await results
+      log.v("Check distances for current quest list");
+      final position = await _geolocationService.getAndSetCurrentLocation();
       for (var i = 0; i < _nearbyQuests.length; i++) {
         if (_nearbyQuests[i].startMarker != null) {
-          double distance =
-              await _geolocationService.distanceBetweenUserAndCoordinates(
-                  lat: _nearbyQuests[i].startMarker!.lat,
-                  lon: _nearbyQuests[i].startMarker!.lon);
+          double distance = _geolocationService.distanceBetween(
+              lat1: position.latitude,
+              lon1: position.longitude,
+              lat2: _nearbyQuests[i].startMarker!.lat,
+              lon2: _nearbyQuests[i].startMarker!.lon);
           _nearbyQuests[i] =
               _nearbyQuests[i].copyWith(distanceFromUser: distance);
         } else {
@@ -236,7 +201,22 @@ class QuestService with ReactiveServiceMixin {
       log.w(
           "Curent quests empty, or distance check not required. Can't check distances");
     }
-    log.i("Notify listeners");
+  }
+
+  void loadNearbyQuestsTodo({required List<String> completedQuestIds}) {
+    log.v("Extracting only quests that are not completed");
+    _nearbyQuestsTodo = [];
+    if (_nearbyQuests.isNotEmpty) {
+      _nearbyQuests.forEach(
+        (element) {
+          if (!completedQuestIds.contains(element.id)) {
+            if (!_nearbyQuestsTodo.any((el) => el.id == element.id)) {
+              _nearbyQuestsTodo.add(element);
+            }
+          }
+        },
+      );
+    }
   }
 
   Future getQuest({required String questId}) async {
@@ -252,7 +232,6 @@ class QuestService with ReactiveServiceMixin {
 
   Future<List<Quest>> getQuestsWithStartMarkerId(
       {required String markerId}) async {
-    // get Quests with start marker id
     late List<Quest> quests;
     if (_nearbyQuests.length == 0) {
       quests = await _firestoreApi.downloadQuestsWithStartMarkerId(

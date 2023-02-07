@@ -1,10 +1,9 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/card_overlay_layout.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_view.dart';
-import 'package:afkcredits/ui/widgets/section_header.dart';
+import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_overlay.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -31,13 +30,74 @@ class ExplorerAccountView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AfkCreditsText.headingThree(
-                        model.currentUserNullable?.fullName ?? ""),
-                    SizedBox(height: 2),
-                    AfkCreditsText.body(
-                        "Level ${model.currentLevel()}: ${model.currentLevelName}"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: model.showAndHandleAvatarSelection,
+                          child: Stack(
+                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 75,
+                                width: 50,
+                                //color: Colors.red,
+                              ),
+                              Column(
+                                children: [
+                                  SizedBox(height: 7),
+                                  CircleAvatar(
+                                    maxRadius: 32,
+                                    backgroundColor: Colors.grey[200],
+                                    child: Image.asset(
+                                        model.avatarIdx == 1
+                                            ? kLottieChillDudeHeadPng
+                                            : kLottieWalkingGirlPng,
+                                        height: 40),
+                                  ),
+                                ],
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SizedBox(height: 51),
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 42),
+                                        Icon(
+                                          Icons.edit,
+                                          color: kcPrimaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        horizontalSpaceRegular,
+                        Expanded(
+                          child: Column(
+                            //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InsideOutText.headingTwo(
+                                  model.currentUserNullable?.fullName ?? ""),
+                              SizedBox(height: 2),
+                              InsideOutText.body(
+                                  "Level ${model.currentLevel()}: ${model.currentLevelName}"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                     verticalSpaceMedium,
-                    //AfkCreditsText.headingFour("Stats"),
+                    verticalSpaceSmall,
+                    //InsideOutText.headingFour("Stats"),
                     // verticalSpaceSmall,
                     // verticalSpaceTiny,
                     Container(
@@ -60,11 +120,6 @@ class ExplorerAccountView extends StatelessWidget {
                                     .toString(),
                                 title: "Total collected",
                               ),
-
-                              // horizontalSpaceLarge,
-                              // horizontalSpaceLarge,
-                              // horizontalSpaceMedium,
-                              // horizontalSpaceSmall,
                             ],
                           ),
                           Spacer(),
@@ -95,13 +150,11 @@ class ExplorerAccountView extends StatelessWidget {
                             widthProgressBar: screenWidth(context) - 80,
                             percentage: model.percentageOfNextLevel,
                             height: 25,
-                            //currentLevel: "3",
-                            //nextLevel: "Level " + (model.currentLevel + 1).toString(),
                           ),
                           verticalSpaceSmall,
-                          Row(
+                          Wrap(
                             children: [
-                              AfkCreditsText.subheadingItalic("Earn",
+                              InsideOutText.headingFourLight("Earn",
                                   align: TextAlign.left),
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -109,15 +162,16 @@ class ExplorerAccountView extends StatelessWidget {
                                 child: Image.asset(
                                   kAFKCreditsLogoPath,
                                   color: kcPrimaryColor,
-                                  height: 18.0,
+                                  height: 20.0,
                                 ),
                               ),
-                              AfkCreditsText.statsStyleBlack(
+                              InsideOutText.headingFourLight(
                                   "${model.creditsToNextLevel} ",
                                   align: TextAlign.left),
-                              AfkCreditsText.subheadingItalic(
-                                  "to reach the next level!",
-                                  align: TextAlign.left),
+                              Text("to reach the next level!",
+                                  style: heading4LightStyle.copyWith(),
+                                  textAlign: TextAlign.left,
+                                  maxLines: 2),
                             ],
                           ),
                           verticalSpaceTiny,
@@ -129,18 +183,6 @@ class ExplorerAccountView extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Expanded(
-                        //   child: SummaryStatsDisplay(
-                        //     stats: model.currentUserStats.lifetimeEarnings.toString(),
-                        //     title: "Total collected",
-                        //     icon: Image.asset(
-                        //       kAFKCreditsLogoPath,
-                        //       color: kcPrimaryColor,
-                        //       width: 20,
-                        //     ),
-                        //   ),
-                        // ),
-                        // horizontalSpaceSmall,
                         horizontalSpaceSmall,
                         SummaryStatsDisplay(
                           icon: Image.asset(kActivityIcon,

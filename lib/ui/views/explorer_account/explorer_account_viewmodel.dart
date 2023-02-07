@@ -1,15 +1,12 @@
 import 'dart:async';
 
+import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
 class ExplorerAccountViewModel extends BaseModel {
-  // ----------------------
-  // services
   final log = getLogger("ExplorerAccountViewModel");
 
-  // ------------------------
-  // state
   StreamSubscription? subscription;
 
   void listenToLayout() {
@@ -20,6 +17,23 @@ class ExplorerAccountViewModel extends BaseModel {
       });
     } else {
       log.wtf("isShowingExplorerAccount already listened to");
+    }
+  }
+
+  // ! Duplicated in explorer_home_viewmodel.dart at the moment!
+  Future showAndHandleAvatarSelection() async {
+    final res = await dialogService.showCustomDialog(
+      variant: DialogType.AvatarSelectDialog,
+      barrierDismissible: true,
+    );
+    final characterNumber = res?.data;
+    if (characterNumber is int) {
+      log.i("Chose character with number $characterNumber");
+      await setNewAvatarId(characterNumber);
+      return true;
+    } else {
+      log.e("Selected data from avatar view is not an int!");
+      return false;
     }
   }
 

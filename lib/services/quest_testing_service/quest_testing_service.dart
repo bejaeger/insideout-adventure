@@ -25,7 +25,8 @@ import 'package:notion_api/notion/objects/pages.dart';
 import 'package:notion_api/notion/objects/parent.dart';
 import 'package:notion_api/responses/notion_response.dart';
 
-//TODO
+// Dev Service to upload quest data to notion
+// Can soon be deprecated
 
 // 1. delete all Locations when quest is cancelled?
 //    -> could ask user to send diagnostics data
@@ -77,7 +78,6 @@ class QuestTestingService {
   String? _questCategory;
   String? _currentUserName;
 
-  bool _pushToNotion = false;
   int _numberQuestDataPoints = 0;
 
   Database? _questDataPointsDatabase;
@@ -156,7 +156,7 @@ class QuestTestingService {
         "Initialized quest testing data for quest with trial id '$_questTrialId', and quest id '$_questId' and user name $_currentUserName");
   }
 
-  void newNextMarker(AFKMarker? marker) {
+  void setNewNextMarker(AFKMarker? marker) {
     _nextMarker = marker;
   }
 
@@ -259,9 +259,6 @@ class QuestTestingService {
     );
     return questDataPoint;
   }
-
-  // ------------------------------------------------
-  // -------------------------------------------------
 
   Future pushAllPositionsToNotion() async {
     for (int i = 0; i < allQuestDataPoints.length; i++) {
@@ -490,37 +487,27 @@ class QuestTestingService {
     }
   }
 
-  // -----------------------------------------
-  /// helpers
-  ///
   ///  these are the names of the properties in the notion database
   String currentLocationDistanceKey = "currentLocationDistance";
   String liveLocationDistanceKey = "1distanceToNextMarker";
   String lastKnownLocationDistanceKey = "lastKnownLocationDistance";
   String triggeredByKey = "4triggeredBy";
   String userEventDescriptionKey = "3userEventDescription";
-
   String currentLocationTimestampKey = "currentLocationTimestamp";
   String liveLocationTimestampKey = "5liveLocationTimestamp";
   String lastKnownLocationTimestampKey = "lastKnownLocationTimestamp";
-
   String timestampKey = "6timestamp";
-
   String currentLocationLatitudeKey = "currentLocationLatitude";
   String liveLocationLatitudeKey = "liveLocationLatitude";
   String lastKnownLocationLatitudeKey = "lastKnownLocationLatitude";
-
   String currentLocationLongitudeKey = "currentLocationLongitude";
   String liveLocationLongitudeKey = "liveLocationLongitude";
   String lastKnownLocationLongitudeKey = "lastKnownLocationLongitude";
-
   String currentLocationAccuracyKey = "currentLocationAccuracy";
   String liveLocationAccuracyKey = "2liveLocationAccuracy";
   String lastKnownLocationAccuracyKey = "lastKnownLocationAccuracy";
-
   String trialEntryKey = "questTrial";
   String deviceInfoKey = "deviceInfo";
-
   String activeQuestIdKey = "questId";
   String activeQuestCategoryKey = "questCategory";
   String activeQuestNameKey = "7questName";

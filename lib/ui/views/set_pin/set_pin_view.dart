@@ -1,12 +1,11 @@
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.form.dart';
 
-// !Todo
 // Might wanna switch to this package!
 // https://pub.dev/packages/pin_code_fields
 
@@ -46,8 +45,11 @@ class SetPinView extends StatelessWidget with $SetPinView {
               children: [
                 IgnorePointer(child: generateTextFields(context, model)),
                 verticalSpaceMedium,
-                ElevatedButton(
-                    onPressed: () => clearTextFields(), child: Text("Clear"))
+                InsideOutButton.text(
+                  leading: Icon(Icons.clear, color: kcPrimaryColor),
+                  title: "Clear",
+                  onTap: () => clearTextFields(),
+                )
               ],
             )),
       ),
@@ -117,39 +119,24 @@ class SetPinView extends StatelessWidget with $SetPinView {
             getFocusNodes()[i].unfocus();
             if (_pin[i] == '') {
               if (i - 1 >= 0) {
-                print("jumping one down to ${i - 1}");
                 getFocusNodes()[i - 1].requestFocus();
-              } //FocusScope.of(context).requestFocus(getFocusNodes()[i - 1]);
+              } 
             } else {
-              print("jumping one up to ${i + 1}");
               getFocusNodes()[i + 1].requestFocus();
-              // FocusScope.of(context).requestFocus(getFocusNodes()[i + 1]);
             }
           } else {
             getFocusNodes()[i].unfocus();
             if (_pin[i] == '') {
               if (i - 1 >= 0) {
                 getFocusNodes()[i - 1].requestFocus();
-              } // FocusScope.of(context).requestFocus(getFocusNodes()[i - 1]);
+              }
             }
           }
           if (_pin.every((String digit) => digit != '')) {
-            //final res = await
             model.onSubmit(_pin.join());
-            //if (res == true) {
             clearTextFields();
-            //}
           }
         },
-        // onSubmitted: (String str) async {
-        //   print("================= HIER");
-        //   if (_pin.every((String digit) => digit != '')) {
-        //     final res = await model.onSubmit(_pin.join());
-        //     if (res == true) {
-        //       clearTextFields();
-        //     }
-        //   }
-        // },
       ),
     );
   }

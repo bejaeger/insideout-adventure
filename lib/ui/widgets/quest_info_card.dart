@@ -1,10 +1,8 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
-import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class QuestInfoCard extends StatelessWidget {
@@ -64,15 +62,9 @@ class QuestInfoCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    //     QuestTypeTag(quest: quest),
-                    //   ],
-                    // ),
                     Padding(
                       padding: const EdgeInsets.only(left: 4.0, top: 4.0),
-                      child: AfkCreditsText(
+                      child: InsideOutText(
                           text:
                               "${(0.001 * quest.distanceFromUser!).toStringAsFixed(1)} km away",
                           style: bodyStyleSofia.copyWith(
@@ -98,7 +90,7 @@ class QuestInfoCard extends StatelessWidget {
                                   color: kcPrimaryColor)),
                         ),
                         horizontalSpaceTiny,
-                        // AfkCreditsText.headingFour("-"),
+                        // InsideOutText.headingFour("-"),
                         horizontalSpaceTiny,
                         Expanded(
                           child: Text(quest.name.toString(),
@@ -116,12 +108,6 @@ class QuestInfoCard extends StatelessWidget {
                         textColor: kcGreyTextColorSoft,
                       ),
                     ),
-                    // verticalSpaceTiny,
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 4.0),
-                    //   child: AfkCreditsText.body(
-                    //       "${(0.001 * quest.distanceFromUser!).toStringAsFixed(1)} km away"),
-                    // ),
                   ],
                 ),
               ),

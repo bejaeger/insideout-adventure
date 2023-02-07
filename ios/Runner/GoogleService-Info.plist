@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>73058156701-dtnpmihfkall6qi9uu32ok9hk909agoc.apps.googleusercontent.com</string>
+	<string>73058156701-9ukfrs09ufdpj3uvhji9qug1ha170c37.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.73058156701-dtnpmihfkall6qi9uu32ok9hk909agoc</string>
+	<string>com.googleusercontent.apps.73058156701-9ukfrs09ufdpj3uvhji9qug1ha170c37</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>73058156701-l7s528khru9qeti8vg7iu8d1itna9oa8.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.afkcredits.prod</string>
+	<string>com.hercules.prod</string>
 	<key>PROJECT_ID</key>
 	<string>afk-credits-prod</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:73058156701:ios:f574208bf55e794a4ed474</string>
+	<string>1:73058156701:ios:d7fa5eebfaa3af584ed474</string>
 </dict>
 </plist>

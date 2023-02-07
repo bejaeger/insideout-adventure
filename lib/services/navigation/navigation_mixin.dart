@@ -1,17 +1,16 @@
+import 'dart:io';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
-import 'package:afkcredits/enums/quest_view_index.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 mixin NavigationMixin {
   final NavigationService _navigationService = locator<NavigationService>();
@@ -20,36 +19,6 @@ mixin NavigationMixin {
   final UserService _userService = locator<UserService>();
   final LayoutService _layoutService = locator<LayoutService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
-
-  void navToAdminHomeView({required UserRole role}) {
-    //navigationService.replaceWith(Routes.homeView);
-    _navigationService.replaceWith(
-      Routes.bottomBarLayoutTemplateView,
-      arguments: BottomBarLayoutTemplateViewArguments(userRole: role),
-    );
-  }
-
-  void navToUpdatingQuestView() {
-    //navigationService.replaceWith(Routes.homeView);
-    _navigationService.navigateTo(
-      Routes.updatingQuestView,
-      //arguments: BottomBarLayoutTemplateViewArguments(userRole: role),
-    );
-  }
-
-  void navToSingleMarkerView() {
-    //navigationService.replaceWith(Routes.homeView);
-    _navigationService.navigateTo(
-      Routes.singleMarkerView,
-    );
-  }
-
-  void navToQrcodeView() {
-    //navigationService.replaceWith(Routes.homeView);
-    _navigationService.navigateTo(
-      Routes.qRCodeView,
-    );
-  }
 
   void navToExplorerCreateAccount({required UserRole role}) {
     _navigationService.replaceWith(Routes.createAccountView,
@@ -74,24 +43,32 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.onBoardingScreensView);
   }
 
+  void navToHelpDesk() {
+    _navigationService.navigateTo(Routes.helpDeskView);
+  }
+
   void navToFeedbackView() {
     _navigationService.navigateTo(Routes.feedbackView);
   }
 
-  void replaceWithExplorerHomeView() {
-    _navigationService.replaceWith(
-      Routes.explorerHomeView,
-    );
+  Future replaceWithExplorerHomeView(
+      {bool showBewareDialog = false,
+      bool showNumberQuestsDialog = false,
+      ScreenTimeSession? screenTimeSession}) async {
+    await _navigationService.replaceWith(Routes.explorerHomeView,
+        arguments: ExplorerHomeViewArguments(
+            showBewareDialog: showBewareDialog,
+            showNumberQuestsDialog: showNumberQuestsDialog,
+            screenTimeSession: screenTimeSession));
   }
 
-  void replaceWithParentHomeView() {
-    _navigationService.replaceWith(
-      Routes.parentHomeView,
-    );
+  Future replaceWithParentHomeView(
+      {ScreenTimeSession? screenTimeSession}) async {
+    await _navigationService.replaceWith(Routes.parentHomeView,
+        arguments:
+            ParentHomeViewArguments(screenTimeSession: screenTimeSession));
   }
 
-  ////////////////////////////////////////
-  // Navigation and dialogs
   void popView() {
     _navigationService.back();
   }
@@ -108,26 +85,9 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.parentMapView);
   }
 
-  void navToMapView({required UserRole role}) {
-    _navigationService.navigateTo(
-      Routes.bottomBarLayoutTemplateView,
-      arguments: BottomBarLayoutTemplateViewArguments(
-          userRole: role,
-          initialBottomNavBarIndex: BottomNavBarIndex.quest,
-          questViewIndex: QuestViewType.map),
-    );
-  }
-
-  void navToQuestOverView() {
-    //SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
-    _navigationService.navigateTo(Routes.questsOverviewView);
-    //});
-  }
-
   void navToCreateQuest({bool fromMap = false}) {
     _navigationService.navigateTo(Routes.createQuestView,
         arguments: CreateQuestViewArguments(fromMap: fromMap));
-    //});
   }
 
   Future popUntilMapView() async {
@@ -139,25 +99,10 @@ mixin NavigationMixin {
   }
 
   Future logout() async {
-    // TODO: Check that there is no active quest present!
     _questService.clearData();
     _geolocationService.clearData();
     await _userService.handleLogoutEvent(logOutFromFirebase: true);
     _navigationService.clearStackAndShow(Routes.loginView);
-  }
-
-  void navToQuestsOfSpecificTypeView(
-      {required QuestType type, required UserRole role}) {
-    // Use the below to have the nav bottom bar visible!
-    _navigationService.navigateTo(
-      Routes.bottomBarLayoutTemplateView,
-      arguments: BottomBarLayoutTemplateViewArguments(
-        userRole: role,
-        initialBottomNavBarIndex: BottomNavBarIndex.quest,
-        questViewIndex: QuestViewType.singlequest,
-        questType: type,
-      ),
-    );
   }
 
   void showQuestListOverlay() {
@@ -201,14 +146,26 @@ mixin NavigationMixin {
         arguments: SingleChildStatViewArguments(uid: uid));
   }
 
+  void replaceWithSingleChildView({required String uid}) async {
+    await _navigationService.replaceWith(Routes.singleChildStatView,
+        arguments: SingleChildStatViewArguments(uid: uid));
+  }
+
   Future navToArObjectView(bool isCoins) async {
-    return await _navigationService.navigateTo(Routes.aRObjectView,
-        arguments: ARObjectViewArguments(isCoins: isCoins));
+    if (!kIsWeb && Platform.isAndroid) {
+      return await _navigationService.navigateTo(Routes.aRObjectAndroidView,
+          arguments: ARObjectAndroidViewArguments(isCoins: isCoins));
+    }
+    if (!kIsWeb && Platform.isIOS) {
+      return await _navigationService.navigateTo(Routes.aRObjectIosView,
+          arguments: ARObjectIosViewArguments(isCoins: isCoins));
+    }
   }
 
   Future navToSelectScreenTimeView(
       {String? childId, bool isParentAccount = true}) async {
-    final session = _screenTimeService.getActiveScreenTimeSession(uid: childId);
+    final session =
+        _screenTimeService.getActiveScreenTimeInMemory(uid: childId);
     if (session != null) {
       navToActiveScreenTimeView(session: session);
     } else {
@@ -219,14 +176,43 @@ mixin NavigationMixin {
   }
 
   Future navToCreateChildAccount() async {
-    await _navigationService.navigateTo(Routes.addExplorerView);
+    await _navigationService.navigateTo(Routes.createExplorerView);
   }
 
   Future navToActiveScreenTimeView({required ScreenTimeSession session}) async {
-    // TODO: Handle case when more sessions are active
     await _navigationService.navigateTo(
       Routes.activeScreenTimeView,
       arguments: ActiveScreenTimeViewArguments(
+        session: session,
+      ),
+    );
+  }
+
+  Future replaceWithActiveScreenTimeView(
+      {required ScreenTimeSession session}) async {
+    await _navigationService.replaceWith(
+      Routes.activeScreenTimeView,
+      arguments: ActiveScreenTimeViewArguments(
+        session: session,
+      ),
+    );
+  }
+
+  Future navToScreenTimeCounterView(
+      {required ScreenTimeSession session}) async {
+    await _navigationService.navigateTo(
+      Routes.startScreenTimeCounterView,
+      arguments: StartScreenTimeCounterViewArguments(
+        session: session,
+      ),
+    );
+  }
+
+  Future navToScreenTimeRequestedView(
+      {required ScreenTimeSession session}) async {
+    await _navigationService.navigateTo(
+      Routes.screenTimeRequestedView,
+      arguments: ScreenTimeRequestedViewArguments(
         session: session,
       ),
     );

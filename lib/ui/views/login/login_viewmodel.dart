@@ -2,42 +2,32 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/authentication_viewmodel.dart';
-// import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:afkcredits/ui/views/login/login_view.form.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class LoginViewModel extends AuthenticationViewModel {
-  // ----------------------------------------
-  // services
-  final FirebaseAuthenticationService? _firebaseAuthenticationService =
+  final FirebaseAuthenticationService _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
   final SnackbarService _snackbarService = locator<SnackbarService>();
   bool checkUserRole = true;
-  final _navigationService = locator<NavigationService>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final log = getLogger("LoginViewModel");
   final UserService _userService = locator<UserService>();
   final AppConfigProvider flavorConfigProvider = locator<AppConfigProvider>();
+  final DialogService _dialogService = locator<DialogService>();
 
-  // ---------------------------
-  // getters
   String get getReleaseName => flavorConfigProvider.appName;
 
-  // --------------------------
-  // state
   String? emailOrNameInputValidationMessage;
   String? passwordInputValidationMessage;
 
-  // ------------------------------
-  // functions
   dynamic userLoginTapped({UserRole? userRole}) {
     if (userRole == null) {
       return () {
@@ -53,18 +43,9 @@ class LoginViewModel extends AuthenticationViewModel {
           saveData(AuthenticationMethod.dummy, userRole);
         };
       }
-      // provide dummy login also in prod database!
+      // ? do not provide dummy login also in prod database!
       if (_flavorConfigProvider.flavor == Flavor.prod) {
-        if (userRole == UserRole.sponsor)
-          return () {
-            saveData(AuthenticationMethod.dummy, userRole);
-          };
-        else {
-          return null;
-        }
-        // return () {
-        //   saveData(AuthenticationMethod.dummy, userRole);
-        // };
+        return null;
       }
     }
   }
@@ -89,16 +70,14 @@ class LoginViewModel extends AuthenticationViewModel {
       passwordInputValidationMessage = "Please provide a password";
       returnVal = false;
     }
-    // if (emailOrNameValue != null) {
-    //   bool emailValid =
-    //       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]\.[a-zA-Z]+")
-    //           .hasMatch(emailOrNameValue!);
-    //   if (!emailValid) {
-    //     emailOrNameInputValidationMessage =
-    //         'Please provide a valid email address';
-    //     returnVal = false;
-    //   }
-    // }
+    return returnVal;
+  }
+
+  bool isValidEmail() {
+    bool returnVal = true;
+    if (emailOrNameValue == "" || emailOrNameValue == null) {
+      returnVal = false;
+    }
     return returnVal;
   }
 
@@ -107,18 +86,6 @@ class LoginViewModel extends AuthenticationViewModel {
     passwordInputValidationMessage = null;
     notifyListeners();
   }
-
-/*   @override
-  Future<FirebaseAuthenticationResult> runAdminAuthResult() =>
-      _userService.createUserAdminAccount(
-        userAdmin: UserAdmin(
-            id: _flavorConfigProvider.getTestUserId(UserRole.adminMaster),
-            role: UserRole.adminMaster,
-            email: _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster),
-            password: _userService
-                .hashPassword(_flavorConfigProvider.getTestUserPassword())),
-        method: AuthenticationMethod.dummy,
-      ); */
 
   @override
   Future<AFKCreditsAuthenticationResultService> runAuthentication(
@@ -132,8 +99,41 @@ class LoginViewModel extends AuthenticationViewModel {
         role: role);
   }
 
+  Future onForgotPassword() async {
+    if (emailOrNameValue == "" || emailOrNameValue == null) {
+      await _dialogService.showDialog(
+          title: "Enter email and tap again",
+          description: "We will send you a password reset link");
+      return;
+    } else {
+      final response = await _dialogService.showDialog(
+          title: "Send email to $emailOrNameValue?",
+          description: "We will send you an email with a password reset link",
+          buttonTitle: "Send email",
+          cancelTitle: "Cancel");
+      if (response?.confirmed == true) {
+        bool res = await _firebaseAuthenticationService
+            .sendResetPasswordLink(emailOrNameValue!);
+        if (res == true) {
+          await _dialogService.showDialog(
+            title: "Check your inbox",
+            description: "We sent you a password reset link.",
+            buttonTitle: "Ok",
+          );
+        } else {
+          await _dialogService.showDialog(
+            title: "Sending email failed",
+            description:
+                "Are you sure you already registered with $emailOrNameValue?",
+            buttonTitle: "Try again",
+          );
+        }
+      }
+    }
+  }
+
   void navigateToCreateAccount() {
-    _navigationService.replaceWith(Routes.createAccountUserRoleView);
+    navToSponsorCreateAccount(role: UserRole.sponsor);
   }
 
   bool isPwShown = false;
@@ -141,15 +141,6 @@ class LoginViewModel extends AuthenticationViewModel {
     isPwShown = show;
     notifyListeners();
   }
-
-  @override
-  Future<FirebaseAuthenticationResult> runAdminAuthResult() =>
-      _firebaseAuthenticationService!.createAccountWithEmail(
-        email:
-            _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster).trim(),
-        password: _userService
-            .hashPassword(_flavorConfigProvider.getTestUserPassword()),
-      );
 
   void showNotImplementedSnackbar() {
     _snackbarService.showSnackbar(

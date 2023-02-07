@@ -9,7 +9,5 @@ class CloudStorageResult {
       : imageUrl = "",
         imageFileName = "";
 
-  /// Contains the error message for the request
-
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
 }

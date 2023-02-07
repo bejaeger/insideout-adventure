@@ -1,7 +1,7 @@
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class ReloadQuestsButton extends StatelessWidget {
@@ -62,7 +62,7 @@ class ReloadQuestsButton extends StatelessWidget {
                             Icon(Icons.refresh_outlined, color: Colors.white),
                             horizontalSpaceSmall,
                             Expanded(
-                              child: AfkCreditsText(
+                              child: InsideOutText(
                                 text: "Load new quests",
                                 style: bodyStyleSofia.copyWith(
                                     color: Colors.white,

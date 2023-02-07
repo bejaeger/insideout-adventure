@@ -13,6 +13,9 @@ _$_FeedbackCampaignInfo _$$_FeedbackCampaignInfoFromJson(
       questions:
           (json['questions'] as List<dynamic>).map((e) => e as String).toList(),
       surveyUrl: json['surveyUrl'] as String,
+      takenByUserWithUids: (json['takenByUserWithUids'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$$_FeedbackCampaignInfoToJson(
@@ -21,4 +24,5 @@ Map<String, dynamic> _$$_FeedbackCampaignInfoToJson(
       'currentCampaign': instance.currentCampaign,
       'questions': instance.questions,
       'surveyUrl': instance.surveyUrl,
+      'takenByUserWithUids': instance.takenByUserWithUids,
     };

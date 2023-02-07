@@ -1,4 +1,3 @@
-import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -10,7 +9,7 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/marker_collection_failure_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
-import 'package:afkcredits/exceptions/cloud_function_api_exception.dart';
+import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -18,7 +17,8 @@ import 'package:afkcredits/services/quest_testing_service/quest_testing_service.
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:rxdart/subjects.dart';
@@ -29,11 +29,9 @@ class ActiveQuestService with ReactiveServiceMixin {
     listenToReactiveValues([_timeElapsed]);
   }
 
-  // services
   final log = getLogger("ActiveQuestService");
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final MarkerService _markerService = locator<MarkerService>();
-  final CloudFunctionsApi _cloudFunctionsApi = locator<CloudFunctionsApi>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final StopWatchService _stopWatchService =
       locator<StopWatchService>(); // Create instance.
@@ -42,23 +40,29 @@ class ActiveQuestService with ReactiveServiceMixin {
   final QuestService questService = locator<QuestService>();
   final MapStateService mapStateService = locator<MapStateService>();
 
-  // members
-  BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
-      BehaviorSubject<ActivatedQuest?>();
-
-  ActivatedQuest? previouslyFinishedQuest;
-
-  // state
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
-
   bool get hasSelectedQuest => selectedQuest != null;
-  BehaviorSubject<Quest?> selectedQuestSubject = BehaviorSubject<Quest?>();
   Quest? get selectedQuest => selectedQuestSubject.valueOrNull;
+  int get getNumberMarkers =>
+      activatedQuest == null ? 0 : activatedQuest!.quest.markers.length;
+  int get getNumberMarkersCollected => activatedQuest == null
+      ? 0
+      : activatedQuest!.markersCollected
+          .where((element) => element == true)
+          .toList()
+          .length;
+  bool get isAllMarkersCollected =>
+      activatedQuest!.quest.markers.length == getNumberMarkersCollected;
 
+  BehaviorSubject<ActivatedQuest?> activatedQuestSubject =
+      BehaviorSubject<ActivatedQuest?>();
+  ActivatedQuest? previouslyFinishedQuest;
+  BehaviorSubject<Quest?> selectedQuestSubject = BehaviorSubject<Quest?>();
   bool questCenteredOnMap = false;
-
   DateTime? _questStartTime;
+  Quest? currentQuest;
+  String? activatedQuestTrialId;
 
   void setSelectedQuest(Quest quest) {
     selectedQuestSubject.add(quest);
@@ -74,25 +78,18 @@ class ActiveQuestService with ReactiveServiceMixin {
   }
 
   void resetSelectedQuest() {
+    // if selectedQuest is null and currentQuest is not null -> quest active
     selectedQuestSubject.add(null);
   }
 
-  // Maybe deprecated?
-  Quest? currentQuest;
-  String? activatedQuestTrialId;
-
-  // functions
   Future startQuest(
       {required Quest quest,
       required List<String> uids,
       Future Function(int)? periodicFuncFromViewModel,
       bool countStartMarkerAsCollected = false}) async {
-    // Get active quest
     ActivatedQuest tmpActivatedQuest =
         _getActivatedQuest(quest: quest, uids: uids);
 
-    // Location check
-    // TODO: Double check this
     if (quest.type != QuestType.DistanceEstimate) {
       try {
         AFKMarker fullMarker = tmpActivatedQuest.quest.markers
@@ -103,8 +100,6 @@ class ActiveQuestService with ReactiveServiceMixin {
           log.w("You are not nearby the marker, cannot start quest!");
           return "Get closer to the start first.";
         }
-        // return Notifications().createPermanentNotification(
-        //     title: "Search quest ongoing", message: "Collect all markers");
       } catch (e) {
         log.e("Error thrown when searching for start marker: $e");
         if (e is StateError) {
@@ -122,8 +117,8 @@ class ActiveQuestService with ReactiveServiceMixin {
           tmpActivatedQuest.copyWith(markersCollected: tmpMarkersCollectedList);
     }
 
-    // ! quest activated!
-    // Add quest to behavior subject
+    // quest activated!
+
     pushActivatedQuest(tmpActivatedQuest);
     setNewTrialNumber();
     _questTestingService.maybeInitialize(
@@ -148,7 +143,7 @@ class ActiveQuestService with ReactiveServiceMixin {
         quest.type == QuestType.GPSAreaHike) {
       _stopWatchService.listenToSecondTime(callback: trackTime);
     }
-    // Quest succesfully started
+
     _questTestingService.maybeRecordData(
         trigger: QuestDataPointTrigger.userAction,
         userEventDescription: "quest started",
@@ -168,7 +163,6 @@ class ActiveQuestService with ReactiveServiceMixin {
     return await _geolocationService.listenToPosition(
         distanceFilter: distanceFilter.round(),
         onData: (Position position) {
-          // log.v("New position event fired from location listener!");
           if (recordPositionDataEvent) {
             _questTestingService.maybeRecordData(
               trigger: QuestDataPointTrigger.locationListener,
@@ -207,16 +201,6 @@ class ActiveQuestService with ReactiveServiceMixin {
     );
   }
 
-  int get getNumberMarkersCollected => activatedQuest == null
-      ? 0
-      : activatedQuest!.markersCollected
-          .where((element) => element == true)
-          .toList()
-          .length;
-  // TODO: unit test this?
-  bool get isAllMarkersCollected =>
-      activatedQuest!.quest.markers.length == getNumberMarkersCollected;
-
   bool isFinishMarker(AFKMarker marker) {
     return activatedQuest?.quest.finishMarker == marker;
   }
@@ -225,32 +209,29 @@ class ActiveQuestService with ReactiveServiceMixin {
     return activatedQuest?.quest.startMarker == marker;
   }
 
-  Future handleSuccessfullyFinishedQuest() async {
-    // 1. Get credits collected, time elapsed and other potential data at the end of the quest
-    // 2. bookkeep credits
-    // 3. clean-up old quest
+  Future handleSuccessfullyFinishedQuest({bool disposeQuest = false}) async {
+    log.v("Handling successfully finished quest");
 
-    // Quest succesfully finished
     _questTestingService.maybeRecordData(
         trigger: QuestDataPointTrigger.userAction,
         userEventDescription: "Quest succesfully finished",
         pushToNotion: true);
 
-    // ------------------
-    // 1.
     evaluateFinishedQuest();
 
-    // ----------------
-    // 2.
-    await collectCredits();
+    final res = await Connectivity().checkConnectivity();
+    if (res != ConnectivityResult.none) {
+      await uploadAndBookkeepFinishedQuest();
+    } else {
+      return WarningFirestoreCallTimeout;
+    }
 
-    // ---------------
-    // 3.
-    await uploadAndCleanUpFinishedQuest();
+    if (disposeQuest) {
+      cleanUpFinishedQuest();
+    }
   }
 
-  Future evaluateFinishedQuest() async {
-    // TODO: Possibley also calculate how many credits were earned here
+  void evaluateFinishedQuest() {
     if (_questStartTime != null) {
       pushActivatedQuest(activatedQuest!.copyWith(
           status: QuestStatus.success,
@@ -263,15 +244,21 @@ class ActiveQuestService with ReactiveServiceMixin {
     }
   }
 
-  Future collectCredits() async {
+  Future uploadAndBookkeepFinishedQuest() async {
+    log.v("bookeep credits in database");
     if (activatedQuest == null) {
-      log.wtf("no active quest to collect credits from");
+      log.e("no active quest to collect credits from");
       return;
     }
+
     try {
-      await _cloudFunctionsApi.bookkeepFinishedQuest(quest: activatedQuest!);
+      final res =
+          await _firestoreApi.bookkeepFinishedQuest(quest: activatedQuest!);
+      if (res is String) {
+        return res;
+      }
     } catch (e) {
-      if (e is CloudFunctionsApiException) {
+      if (e is FirestoreApiException) {
         if (activatedQuest!.status != QuestStatus.success) {
           continueIncompleteQuest();
         }
@@ -287,46 +274,10 @@ class ActiveQuestService with ReactiveServiceMixin {
     }
   }
 
-  Future uploadAndCleanUpFinishedQuest() async {
-    // At this point the quest has successfully finished!
-    await _firestoreApi.pushFinishedQuest(quest: activatedQuest);
+  void cleanUpFinishedQuest() {
     // keep copy of finished quest to show in success dialog view
     previouslyFinishedQuest = activatedQuest;
     disposeActivatedQuest();
-  }
-
-  // Handle the scenario when a user finishes a hike
-  // First evaluate the activated quest data and return values according to that
-  Future evaluateAndFinishQuest({bool force = false}) async {
-    log.i("Evaluating quest and finishing it if finished");
-    // Fetch quest information
-    if (activatedQuest == null) {
-      log.e(
-          "No activated quest present, can't finish anything! This function should have probably never been called!");
-      return;
-    } else {
-      _stopWatchService.stopTimer();
-      trackData(_stopWatchService.getSecondTime, forceNoPush: true);
-      // updateData();
-
-      // TODO: Add evaluation (how many afk credits were earned) for all quest types
-
-      evaluateQuestAndSetStatus();
-
-      if (activatedQuest!.status == QuestStatus.incomplete && !force) {
-        log.w("Quest is incomplete. Show message to user");
-        return WarningQuestNotFinished;
-      }
-      if (activatedQuest!.status == QuestStatus.success || force) {
-        log.i(
-            "Quest successfully finished (or forcing to finish), pushing to firebase!");
-        //try {
-        // if we end up here it means the quest has finished succesfully!
-        await collectCredits();
-        // At this point the quest has successfully finished!
-        await uploadAndCleanUpFinishedQuest();
-      }
-    }
   }
 
   dynamic checkQuestStatus() {
@@ -337,8 +288,6 @@ class ActiveQuestService with ReactiveServiceMixin {
   }
 
   Future continueIncompleteQuest() async {
-    // TODO: recover quest! of all types!
-
     if (activatedQuest != null) {
       _stopWatchService.resume();
       _stopWatchService.startTimer();
@@ -369,10 +318,6 @@ class ActiveQuestService with ReactiveServiceMixin {
     }
   }
 
-  //////////////////////////////////////////
-  //////////////////////////////////////////////////////////
-  // Internal & Important functions
-
   // evaluate the quest
   // Set status of quest according to what is found
   // success: user succesfully finished the quest
@@ -401,9 +346,6 @@ class ActiveQuestService with ReactiveServiceMixin {
           ),
         );
       }
-
-      // } else if (activatedQuest?.quest.type == QuestType.DistanceEstimate) {
-
     } else {
       bool? markerMissing =
           activatedQuest?.markersCollected.any((element) => element == false);
@@ -449,43 +391,11 @@ class ActiveQuestService with ReactiveServiceMixin {
     }
   }
 
-  // Functions called periodically
-  Future trackData(int seconds, {bool forceNoPush = false}) async {
-    if (activatedQuest != null) {
-      ActivatedQuest tmpActivatedQuest = activatedQuest!;
-      //void updateTime(int seconds) {
-      bool push = false;
-      if (seconds % 1 == 0) {
-        push = true;
-        // every five seconds
-        tmpActivatedQuest = this.updateTimeOnQuest(tmpActivatedQuest, seconds);
-      }
-      if (seconds % 10 == 0) {
-        push = true;
-        // every ten seconds
-        log.v("quest active since $seconds seconds!");
-        // tmpActivatedQuest = trackSomeOtherData(tmpActivatedQuest, seconds);
-      }
-      if (seconds >= kMaxQuestTimeInSeconds) {
-        push = false;
-        log.wtf(
-            "Cancel quest after $kMaxQuestTimeInSeconds seconds, it was probably forgotten!");
-        await cancelIncompleteQuest();
-        return;
-      }
-      //}
-      if (push && !forceNoPush) {
-        pushActivatedQuest(tmpActivatedQuest);
-      }
-    }
-  }
-
   void updateCollectedMarkers({required AFKMarker marker}) {
     if (activatedQuest != null) {
       final index = activatedQuest!.quest.markers
           .indexWhere((element) => element == marker);
 
-      // some error catching
       if (index < 0) {
         log.wtf(
             "Marker is not available in currently active quest. Before this function is called, this should have been already checked, please check your code!");
@@ -499,7 +409,6 @@ class ActiveQuestService with ReactiveServiceMixin {
         return;
       }
 
-      // actually updating the marker list storing the info whether a marker is found or not
       markersCollectedNew[index] = true;
       log.v("New Marker collected!");
       pushActivatedQuest(
@@ -523,7 +432,6 @@ class ActiveQuestService with ReactiveServiceMixin {
   }
 
   List<AFKMarker> markersToShowOnMap({Quest? questIn}) {
-    // late Quest quest;
     List<AFKMarker> markers = [];
     if (hasActiveQuest) {
       if (activatedQuest!.quest.type == QuestType.QRCodeHike) {
@@ -582,13 +490,13 @@ class ActiveQuestService with ReactiveServiceMixin {
     }
   }
 
-  // Function that interprets QR Code scanning event
+  // Function that interprets checkpoint checking event
   // If no quest is active, a check is performed whether the marker is a start marker.
   // If a quest is active, the marker is validated .
   // In each case, an appropriate QuestQRCodeScanResult is returned.
   // This result is interpreted in the viewmodels
-  Future<MarkerAnalysisResult> analyzeMarker(
-      {AFKMarker? marker, bool locationVerification = true}) async {
+  Future<MarkerAnalysisResult> analyzeMarkerAndUpdateQuest(
+      {AFKMarker? marker, bool verifyLocation = true}) async {
     if (marker == null) return MarkerAnalysisResult.empty();
 
     if (!hasActiveQuest) {
@@ -597,12 +505,6 @@ class ActiveQuestService with ReactiveServiceMixin {
           await questService.getQuestsWithStartMarkerId(markerId: marker.id);
       return MarkerAnalysisResult.quests(quests: quests);
     } else {
-      // Checks to perform:
-      // 1. isMarkerInQuest
-      // 2. isUserCloseby?
-      // 3. isMarkerAlreadyCollected?
-
-      // 1.
       if (!isMarkerInQuest(marker: marker)) {
         log.w("Scanned marker does not belong to currently active quest");
         return MarkerAnalysisResult.error(
@@ -615,8 +517,7 @@ class ActiveQuestService with ReactiveServiceMixin {
       AFKMarker fullMarker = activatedQuest!.quest.markers
           .firstWhere((element) => element.id == marker.id);
 
-      // 2.
-      if (locationVerification) {
+      if (verifyLocation) {
         final bool closeby = await _markerService.isUserCloseby(
             marker: fullMarker, geofenceRadius: getGeoFenceForCurrentQuest());
         if (!closeby) {
@@ -625,7 +526,7 @@ class ActiveQuestService with ReactiveServiceMixin {
               errorMessage: WarningNotNearbyMarker);
         }
       }
-      // 3.
+
       if (isMarkerCollected(marker: fullMarker)) {
         log.w("Scanned marker has been collected already");
         return MarkerAnalysisResult.error(
@@ -635,9 +536,7 @@ class ActiveQuestService with ReactiveServiceMixin {
       log.i(
           "Marker verified! Continue with updated collected markers in activated quest");
       updateCollectedMarkers(marker: fullMarker);
-      // set next marker for log data
-      _questTestingService.newNextMarker(getNextMarker());
-      // return marker that was succesfully scanned
+      _questTestingService.setNewNextMarker(getNextMarker());
 
       return MarkerAnalysisResult.marker(marker: fullMarker);
     }
@@ -654,6 +553,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   AFKMarker? getNextMarker({Quest? quest}) {
     late int index;
     if (hasActiveQuest) {
+      log.v("currently collected markers: ${activatedQuest!.markersCollected}");
       index = activatedQuest!.markersCollected
           .lastIndexWhere((element) => element == true);
       if (index < 0) {
@@ -700,7 +600,6 @@ class ActiveQuestService with ReactiveServiceMixin {
   }
 
   String getMinutesElapsedString() {
-    // return _stopWatchService.secondsToMinuteSecondTime(timeElapsed);
     return _stopWatchService.durationString(timeElapsed);
   }
 
@@ -741,8 +640,7 @@ class ActiveQuestService with ReactiveServiceMixin {
     return activatedQuest.copyWith(lastCheckLat: newLat, lastCheckLon: newLon);
   }
 
-  // to identify trial number in diagnosis data
-  //Harguilar Commented out
+  // to identify trial number in quest analytics data
   void setNewTrialNumber() {
     activatedQuestTrialId = nanoid(6);
   }
@@ -750,7 +648,6 @@ class ActiveQuestService with ReactiveServiceMixin {
   void disposeActivatedQuest() {
     _stopWatchService.stopTimer();
     _stopWatchService.resetTimer();
-    // cancelLocationListener();
     cancelPositionListener();
     addMainLocationListener();
     _questTestingService.maybeReset();

@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:afkcredits/utils/utilities.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/collect_credits_status.dart';
@@ -13,13 +10,8 @@ import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geolocator/geolocator.dart';
-
-import '../../../app/app.locator.dart';
-import '../../../exceptions/mapviewmodel_expection.dart';
-import '../../../services/afk_markers_positions_services/afk_markers_positions_service.dart';
 
 class HikeQuestViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
@@ -33,18 +25,11 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   /// @see checkIfInAreaOfMarker()
   AFKMarker? markerInArea;
 
-  GoogleMapController? _googleMapController;
-  GoogleMapController? get getGoogleMapController => _googleMapController;
-
-  // UI state
   String mapStyle = "";
   bool isAnimatingCamera = false;
   bool validatingMarkerInArea = false;
+  bool isManuallyChecking = false;
 
-  final afkMarkersPositionsServices = locator<AFKMarkersPositionService>();
-
-  // -------------------------------------------------
-  // initialize
   @override
   Future initialize({required Quest quest}) async {
     log.i("Initializing active map quest of tye: ${quest.type}");
@@ -56,7 +41,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
 
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? onStartQuestCallback}) async {
+      {required Quest? quest, void Function()? notifyParentCallback}) async {
     if (quest != null && !hasActiveQuest) {
       final result =
           await startQuestMain(quest: quest, countStartMarkerAsCollected: true);
@@ -64,38 +49,36 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
         log.wtf("Not starting quest, due to an unknown reason");
         return;
       }
-      // quest started
-      //if (quest.type != QuestType.GPSAreaHike) {
-      // Notifications().createPermanentNotification(
-      //     title: "Hike quest ongoing", message: "Collect all markers.");
+
+      // quest has started!
+
       activeQuestService.listenToPosition(
         distanceFilter: kDistanceFilterHikeQuest,
         pushToNotion: true,
         viewModelCallback: (userLivePosition) async {
           // ! this only ever checks the "next" marker
           // ! that is only really defined if the checkpoints are ordered!
-          // ! Need to have a method in place that allows some freedom here.
+          // ! Need to add a method that allows some freedom here.
           checkIfInAreaOfMarker(
               marker: activeQuestService.getNextMarker(),
               position: userLivePosition);
         },
       );
 
-      // quest has started!
-      // we should have some UI animation here to
-      // make the user aware he needs to go to the next marker
       AFKMarker? nextMarker = activeQuestService.getNextMarker();
       mapViewModel.updateMapDisplay(afkmarker: quest.startMarker);
       showInfoWindowOfNextMarker(marker: nextMarker);
       snackbarService.showSnackbar(
           title: "Started quest",
-          message: "Let's go...the first checkpoint is waiting!");
+          message: "Let's go...the first checkpoint is waiting!",
+          duration: Duration(milliseconds: 1500));
       await Future.delayed(Duration(milliseconds: 600));
       if (nextMarker != null && quest.startMarker != null) {
         await mapViewModel.animateNewLatLonZoomDelta(
             lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
-        await Future.delayed(Duration(milliseconds: 600));
-        await mapViewModel.animateCameraToBetweenCoordinates(
+        await Future.delayed(Duration(
+            milliseconds: (600 * mapAnimationSpeedFraction()).round()));
+        mapViewModel.animateCameraToBetweenCoordinatesWithPadding(
           latLngList: [
             [quest.startMarker!.lat!, quest.startMarker!.lon!],
             [nextMarker.lat!, nextMarker.lon!],
@@ -106,143 +89,185 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     }
   }
 
-  Future checkIfInAreaOfMarker(
-      {required AFKMarker? marker, required Position position}) async {
-    if (marker != null) {
-      if (marker.lat != null && marker.lon != null) {
-        double distance =
-            geolocationService.distanceBetweenPositionAndCoordinates(
-          position: position,
-          lat: marker.lat!,
-          lon: marker.lon!,
-        );
-        bool isInAreaNow = distance < kDistanceFromCenterOfArea;
-        if (isInAreaNow && markerInArea == null) {
-          //isInAreaOfMarker = true;
-          markerInArea = marker;
-          log.i("User in area of marker!");
-          questTestingService.maybeRecordData(
-            trigger: QuestDataPointTrigger.liveQuestUICallback,
-            position: position,
-            pushToNotion: true,
-            userEventDescription: "in area of marker",
-          );
-          if (currentQuest?.type == QuestType.QRCodeHike ||
-              currentQuest?.type == QuestType.GPSAreaHike) {
-            vibrateAlert();
-            activeQuestService.pausePositionListener();
-            final result = await showQrCodeIsInAreaDialog();
+  Future manualCheckIfInAreaOfMarker() async {
+    isManuallyChecking = true;
+    notifyListeners();
+    Position pos = await geolocationService.getAndSetCurrentLocation();
+    final res = await checkIfInAreaOfMarker(
+        marker: activeQuestService.getNextMarker(),
+        position: pos,
+        isShowInAreaDialog: false);
+    if (res == false) {
+      log.i("User not in area");
+      snackbarService.showSnackbar(
+          title: "Not at a checkpoint",
+          message: "Walk to the next checkpoint",
+          duration: Duration(seconds: 1));
+    }
+    isManuallyChecking = false;
+    notifyListeners();
+  }
 
-            if (result?.confirmed == false) {
-              log.i(
-                  "Did close the area alert dialog without having fetched the marker");
-              // this allows to show the dialog again!
-              // but only after a certain dead time.
-              // The dead time avoids additional dialogs appear immediately
-              // after closing the first one when marker was NOT collected.
-              // (cause of location listener events fired in the background
-              // WHILE the dialog was open)
-              Future.delayed(Duration(seconds: 4), () {
-                //isInAreaOfMarker = false;
-                markerInArea = null;
-              });
-            }
-            activeQuestService.resumePositionListener();
-          }
-        }
-        // apply a tolerance of 10 meters here to mark the user as NOT in area.
-        // Useful when, because of bad gps accuracy, the user is "jumping" in and out
-        // of the geofence.
-        else if (!isInAreaNow &&
-            markerInArea != null &&
-            (distance > (kDistanceFromCenterOfArea + 10))) {
-          log.i("Outside of the area again");
-          markerInArea = null;
-        }
+  Future checkIfInAreaOfMarker(
+      {required AFKMarker? marker,
+      required Position position,
+      bool isShowInAreaDialog = true}) async {
+    if (marker == null) {
+      return;
+    }
+    if (marker.lat == null || marker.lon == null) {
+      return;
+    }
+    double distance = geolocationService.distanceBetweenPositionAndCoordinates(
+      position: position,
+      lat: marker.lat!,
+      lon: marker.lon!,
+    );
+    bool isInAreaNow = distance < kDistanceFromCenterOfArea;
+    if ((isInAreaNow && isShowInAreaDialog && markerInArea == null)) {
+      markerInArea = marker;
+      log.i("User in area of marker!");
+      questTestingService.maybeRecordData(
+        trigger: QuestDataPointTrigger.liveQuestUICallback,
+        position: position,
+        pushToNotion: true,
+        userEventDescription: "in area of marker",
+      );
+
+      vibrateAlert();
+      activeQuestService.pausePositionListener();
+
+      final result = await showIsInAreaDialog();
+
+      if (result?.confirmed != true) {
+        log.i(
+            "Did close the area alert dialog without having fetched the marker");
+        // this allows to show the dialog again!
+        // but only after a certain dead time.
+        // The dead time avoids additional dialogs appear immediately
+        // after closing the first one when marker was NOT collected.
+        // (cause of location listener events fired in the background
+        // WHILE the dialog was open)
+        Future.delayed(
+          Duration(seconds: 3),
+          () {
+            markerInArea = null;
+          },
+        );
       }
+
+      activeQuestService.resumePositionListener();
+    } else if (isInAreaNow && !isShowInAreaDialog ||
+        appConfigProvider.allowDummyMarkerCollection) {
+      markerInArea = marker;
+      // collect marker immediately (from floating button)
+      try {
+        final res = await collectMarkerFromGPSLocation(
+            forceNoAR:
+                !(userService.isUsingAR && appConfigProvider.isARAvailable));
+        return res;
+      } catch (e) {
+        log.wtf(
+            "Something went wrong when trying to collect marker from gps, error: $e");
+        return false;
+      }
+    }
+    // apply a tolerance of 10 meters here to mark the user as NOT in area.
+    // Useful when, because of bad gps accuracy, the user is "jumping" in and out
+    // of the geofence.
+    else if (!isInAreaNow &&
+        markerInArea != null &&
+        (distance > (kDistanceFromCenterOfArea + 10))) {
+      log.i("Outside of the area again");
+      markerInArea = null;
+      return false;
+    } else {
+      return false;
     }
   }
 
-  Future showQrCodeIsInAreaDialog() async {
-    if (currentQuest?.type == QuestType.QRCodeHike) {
-      return await dialogService.showCustomDialog(
-        variant: DialogType.QrCodeInArea,
-        data: {
-          "function": scanQrCode,
-        },
-      );
-    } else if (currentQuest?.type == QuestType.GPSAreaHike) {
+  Future showIsInAreaDialog() async {
+    if (currentQuest?.type == QuestType.GPSAreaHike) {
       return await dialogService.showCustomDialog(
         variant: DialogType.CheckpointInArea,
+        barrierDismissible: true,
         data: {
           "function": () async {
             return await collectMarkerFromGPSLocation();
+          },
+          "functionNoAr": () async {
+            return await collectMarkerFromGPSLocation(forceNoAR: true);
           }
         },
       );
     } else {
-      log.wtf("Unknown quest type");
-      //showGenericInternalErrorDialog();
+      log.e("Unknown quest type");
     }
   }
 
-  Future collectMarkerFromGPSLocation() async {
+  Future collectMarkerFromGPSLocation({bool forceNoAR = false}) async {
+    log.i("collectMarkerFromGPSLocation");
     if (await maybeCheatAndCollectNextMarker()) {
-      return;
+      return false;
     }
 
-    validatingMarkerInArea = true;
-    notifyListeners();
-    await Future.delayed(Duration(milliseconds: 500));
-    validatingMarkerInArea = false;
-    notifyListeners();
     if (!hasActiveQuest) {
       await dialogService.showDialog(
           title: "Start the quest to collect markers");
-      return;
+      return false;
     }
-    // if ((flavorConfigProvider.allowDummyMarkerCollection &&
-    //     !flavorConfigProvider.enableGPSVerification)) {
-    //   markerInArea = activeQuestService.getNextMarker();
-    // }
+
     if (markerInArea == null) {
       await dialogService.showDialog(
         title: "Cannot collect marker!",
         description: "You are not in the area of a checkpoint!",
       );
-      return;
+      return false;
     }
-    MarkerAnalysisResult markerResult =
-        await activeQuestService.analyzeMarker(marker: markerInArea);
-    return await handleMarkerAnalysisResult(markerResult);
+
+    if ((userService.isUsingAR && appConfigProvider.isARAvailable) &&
+        !forceNoAR) {
+      bool collected = await mapViewModel.openARView(true);
+      if (!collected) {
+        snackbarService.showSnackbar(
+            title: "Try again",
+            message: "Find and catch the credits",
+            duration: Duration(seconds: 1));
+        return false;
+      }
+    }
+    MarkerAnalysisResult markerResult = await activeQuestService
+        .analyzeMarkerAndUpdateQuest(marker: markerInArea);
+    return await handleMarkerAnalysisResult(markerResult,
+        isShowCollectedMarkerDialog:
+            !(userService.isUsingAR && appConfigProvider.isARAvailable) ||
+                forceNoAR);
   }
 
   String getNumberMarkersCollectedString() {
     if (activeQuestService.hasActiveQuest) {
-      // minus one because start marker is counted as collected from the start!
       return (numMarkersCollected - 1).toString() +
           " / " +
           (activeQuest.markersCollected.length - 1).toString();
+      // ^ minus one because start marker is counted as collected from the start!
     } else {
       return "0";
     }
   }
 
-  @override
-  Future handleMarkerAnalysisResult(MarkerAnalysisResult result) async {
-    log.i("Handling marker analysis result");
+  Future handleMarkerAnalysisResult(MarkerAnalysisResult result,
+      {bool isShowCollectedMarkerDialog = true}) async {
+    log.v("Handling marker analysis result");
     if (result.isEmpty) {
-      log.wtf("The object QuestQRCodeScanResult is empty!");
+      log.e("The object QuestQRCodeScanResult is empty!");
       return false;
     }
     if (result.hasError) {
       log.e("Error occured: ${result.errorMessage}");
-      // if (result.errorType != MarkerCollectionFailureType.alreadyCollected) {
       await dialogService.showDialog(
         title: "Can't collect marker!",
         description: result.errorMessage!,
       );
-      // }
       return false;
     } else {
       if (!hasActiveQuest && result.quests == null) {
@@ -255,7 +280,9 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       if (result.marker != null) {
         if (hasActiveQuest) {
           log.i("Scanned marker sucessfully collected!");
-          await handleCollectedMarkerEvent(afkmarker: result.marker!);
+          await handleCollectedMarkerEvent(
+              afkmarker: result.marker!,
+              isShowCollectedMarkerDialog: isShowCollectedMarkerDialog);
         }
         return true;
       }
@@ -275,7 +302,11 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     }
   }
 
-  Future handleCollectedMarkerEvent({required AFKMarker afkmarker}) async {
+  // Called when marker is successfully collected.
+  // Desides what to do in UI, given quest status.
+  Future handleCollectedMarkerEvent(
+      {required AFKMarker afkmarker,
+      bool isShowCollectedMarkerDialog = true}) async {
     if (hasActiveQuest == true) {
       questTestingService.maybeRecordData(
         trigger: QuestDataPointTrigger.userAction,
@@ -286,12 +317,14 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
 
       // Move this to isQuestCompleted function and remove stuff from service!
       if (isQuestCompleted()) {
-        await showCollectedMarkerDialog();
+        if (isShowCollectedMarkerDialog) {
+          await showCollectedMarkerDialog();
+        }
         handleQuestCompletedEvent(afkmarker: afkmarker);
         return;
       } else {
-        // animate camera to preview next marker
-        animateCameraToPreviewNextMarker();
+        animateCameraToPreviewNextMarker(
+            isShowCollectedMarkerDialog: isShowCollectedMarkerDialog);
       }
     } else {
       dialogService.showDialog(
@@ -301,22 +334,24 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
 
   Future handleQuestCompletedEvent({required AFKMarker afkmarker}) async {
-    //checkQuestAndFinishWhenCompleted();
     isAnimatingCamera = true;
     setBusy(true);
     mapViewModel.updateMapDisplay(afkmarker: afkmarker);
+    mapViewModel.hideMarkerInfoWindowNow(markerId: afkmarker.id);
     await animateCameraToQuestMarkers();
     questFinished = true;
+
+    // Need to set this so the functions below do the right thing
     activeQuestService.setSuccessAsQuestStatus();
 
     CollectCreditsStatus collectCreditsStatus = CollectCreditsStatus.todo;
     try {
-      // Upload quest but give it some time 4 seconds while the camera is animating
+      // Upload quest but give it some time while the camera is animating
       // for some sweet UX experience
       final results = await Future.wait(
         [
           handleSuccessfullyFinishedQuest(showDialogs: false),
-          Future.delayed(Duration(milliseconds: 2000))
+          Future.delayed(Duration(milliseconds: 2500))
         ],
       );
       collectCreditsStatus = results[0];
@@ -326,9 +361,12 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       collectCreditsStatus = CollectCreditsStatus.todo;
     }
 
-    setBusy(false);
-    // quest succesfully completed
     await showSuccessDialog(collectCreditsStatus: collectCreditsStatus);
+
+    // we need to do this because we set showDialogs == false above!
+    activeQuestService.cleanUpFinishedQuest();
+    isAnimatingCamera = false;
+    setBusy(false);
   }
 
   @override
@@ -340,22 +378,13 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     super.resetPreviousQuest();
   }
 
-  void showInfoWindowOfNextMarker({Quest? quest, AFKMarker? marker}) async {
-    if (quest == null && marker == null) return;
-    late MarkerId markerId;
-    if (quest != null) {
-      if (quest.markers.length > 1) {
-        markerId = MarkerId(quest.markers[1].id);
-      }
-    }
-    if (marker != null) {
-      markerId = MarkerId(marker.id);
-    }
+  void showInfoWindowOfNextMarker({AFKMarker? marker}) async {
+    if (marker == null) return;
     try {
       Future.delayed(
-        Duration(seconds: marker != null ? 0 : 1),
+        Duration(seconds: 0),
         () {
-          mapViewModel.showMarkerInfoWindowNow(markerId: marker?.id);
+          mapViewModel.showMarkerInfoWindowNow(markerId: marker.id);
         },
       );
     } catch (e) {
@@ -367,7 +396,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     }
   }
 
-  Future animateCameraToPreviewNextMarker() async {
+  Future animateCameraToPreviewNextMarker(
+      {bool isShowCollectedMarkerDialog = true}) async {
     log.i("Animate camera to preview next marker");
     isAnimatingCamera = true;
     notifyListeners();
@@ -382,31 +412,29 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
         previousMarker.lon != null) {
       await mapViewModel.animateNewLatLon(
           lat: previousMarker.lat!, lon: previousMarker.lon!);
-      await showCollectedMarkerDialog();
+      if (isShowCollectedMarkerDialog) await showCollectedMarkerDialog();
       await Future.delayed(Duration(milliseconds: 600));
       mapViewModel.updateMapDisplay(afkmarker: previousMarker);
       triggerCollectedMarkerAnimation();
       await Future.delayed(Duration(milliseconds: 600));
       await mapViewModel.animateNewLatLon(
           lat: nextMarker.lat!, lon: nextMarker.lon!);
-      if (currentQuest?.type == QuestType.GPSAreaHike) {
-        await Future.delayed(Duration(milliseconds: 400));
-        addNextArea(marker: nextMarker);
-        addNextMarker(marker: nextMarker);
-        showInfoWindowOfNextMarker(marker: nextMarker);
-        await mapViewModel.animateNewLatLonZoomDelta(
-            lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
-        await Future.delayed(Duration(milliseconds: 400));
-      } else {
-        if (currentQuest!.type == QuestType.QRCodeHike) {
-          await Future.delayed(Duration(milliseconds: 600));
-          showInfoWindowOfNextMarker(marker: nextMarker);
-          await Future.delayed(Duration(milliseconds: 600));
-        } else {
-          await Future.delayed(Duration(milliseconds: 1200));
-        }
-      }
-      await mapViewModel.animateCameraToBetweenCoordinates(
+
+      await Future.delayed(Duration(milliseconds: 400));
+      addNextArea(marker: nextMarker);
+      addNextMarker(marker: nextMarker);
+
+      mapViewModel.notifyListeners();
+      await mapViewModel.animateNewLatLonZoomDelta(
+          lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
+      await Future.delayed(
+          Duration(milliseconds: (400 * mapAnimationSpeedFraction()).round()));
+
+      // ! This needs to happen after notifyListeners() is called
+      // ! on mapviewmodel and the marker is placed on the map!
+      showInfoWindowOfNextMarker(marker: nextMarker);
+
+      mapViewModel.animateCameraToBetweenCoordinatesWithPadding(
         latLngList: [
           [previousMarker.lat!, previousMarker.lon!],
           [nextMarker.lat!, nextMarker.lon!],
@@ -422,8 +450,8 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     notifyListeners();
     if (currentQuest?.type == QuestType.GPSAreaHike ||
         currentQuest?.type == QuestType.GPSAreaHunt) {
-      dialogService.showDialog(
-          title: "New checkpoint spotted!", description: "Find next location!");
+      snackbarService.showSnackbar(
+          title: "New checkpoint spotted", message: "Find the next location!");
     } else {
       snackbarService.showSnackbar(
           title: "Let's go", message: "The next marker is waiting!");
@@ -464,24 +492,9 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
 
   void triggerCollectedMarkerAnimation() {
-    showCollectedMarkerAnimation = true;
+    showCollectedMarkerAnimation = true; // will be set to false again from view
     notifyListeners();
   }
-
-  // Future animateToUserPosition(GoogleMapController? controller) async {
-  //   if (controller == null) return;
-  //   await controller.animateCamera(
-  //     CameraUpdate.newCameraPosition(
-  //       CameraPosition(
-  //           target: LatLng(
-  //               geolocationService.getUserLivePositionNullable!.latitude,
-  //               geolocationService.getUserLivePositionNullable!.longitude),
-  //           zoom: await controller.getZoomLevel()),
-  //     ),
-  //   );
-  //   questCenteredOnMap = false;
-  //   notifyListeners();
-  // }
 
   BitmapDescriptor defineMarkersColour(
       {required AFKMarker afkmarker,
@@ -494,7 +507,6 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
         if (!isFinishMarker) {
           return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
         } else {
-          // finish marker gets different icon
           return BitmapDescriptor.defaultMarkerWithHue(
               BitmapDescriptor.hueOrange);
         }
@@ -522,9 +534,6 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   @override
   dispose() {
     resetPreviousQuest();
-    _googleMapController?.dispose();
     super.dispose();
   }
-  /////// New Code **************
-
 }

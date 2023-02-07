@@ -1,11 +1,9 @@
-import 'dart:io' show Platform;
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
 import 'package:notion_api/notion.dart';
 import 'package:notion_api/notion/general/property.dart';
 import 'package:notion_api/notion/general/rich_text.dart';
-import 'package:notion_api/notion/objects/database.dart';
 import 'package:notion_api/notion/objects/pages.dart';
 import 'package:notion_api/notion/objects/parent.dart';
 import 'package:notion_api/responses/notion_response.dart';
@@ -29,7 +27,6 @@ class NotionApi {
       title: Text(feedback.userName),
     );
 
-    // add all properties in feedback
     Map<String, dynamic> jsonFeedback = feedback.toJson();
     jsonFeedback.forEach(
       (key, value) {
@@ -49,8 +46,6 @@ class NotionApi {
         notionToken: _appConfigProvider.notionFeedbackToken, page: page);
   }
 
-  // ---------------------------------------------------
-  // helper functions
   void _addNotionDatabaseTextProperty(
       {required Page page, required String name, required String? value}) {
     page.addProperty(

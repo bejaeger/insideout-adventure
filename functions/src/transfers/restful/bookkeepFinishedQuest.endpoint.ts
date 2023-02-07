@@ -16,8 +16,6 @@ function log(message: string) {
     console.log(`bookkeepFinishedQuest | ${message}`);
 }
 
-//----------------------------------------------------
-
 export default new Post((request: Request, response: Response) => {
     cors()(request, response, async () => {
         try {

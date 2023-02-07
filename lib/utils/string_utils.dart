@@ -1,5 +1,3 @@
-// Some small helper functions
-
 import 'package:intl/intl.dart';
 
 String getInitialsFromName(String name) {
@@ -27,11 +25,6 @@ List<String> getListOfKeywordsFromString(String? str) {
   return searchKeywords;
 }
 
-String getFirstName(String name) {
-  List<String> splitName = name.split(" ");
-  return splitName[0];
-}
-
 String getStringFromEnum(dynamic enumItem) {
   if (enumItem == null) return "";
   return enumItem.toString().split('.').last;
@@ -57,6 +50,10 @@ String formatDateDetailsType5(DateTime timestamp) {
   return DateFormat.MMMEd().format(timestamp);
 }
 
+String formatDateDetailsType6(DateTime timestamp) {
+  return DateFormat.jm().format(timestamp);
+}
+
 String formatDateDetails(DateTime timestamp) {
   return DateFormat.yMd().add_jm().format(timestamp);
 }
@@ -70,7 +67,6 @@ String removeLastCharacters(String string, {int removeNumber = 1}) {
   return returnValue;
 }
 
-// Helper functions
 String secondsToHourMinuteSecondTime(int? value) {
   if (value == null) return "00:00:00";
   int h = value ~/ 3600;
@@ -87,7 +83,6 @@ String secondsToHourMinuteSecondTime(int? value) {
   return result;
 }
 
-// Helper functions
 String secondsToMinuteSecondTime(int? value) {
   if (value == null) return "0m 0s";
   int m = ((value)) ~/ 60;

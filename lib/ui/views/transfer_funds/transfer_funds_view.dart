@@ -1,12 +1,10 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
-import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
@@ -16,21 +14,17 @@ import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart
   FormTextField(name: 'amount'),
 ])
 class TransferFundsView extends StatelessWidget with $TransferFundsView {
-  final TransferType type;
   final PublicUserInfo senderInfo;
   final PublicUserInfo recipientInfo;
   TransferFundsView(
-      {Key? key,
-      required this.type,
-      required this.senderInfo,
-      required this.recipientInfo})
+      {Key? key, required this.senderInfo, required this.recipientInfo})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TransferFundsViewModel>.reactive(
       viewModelBuilder: () => TransferFundsViewModel(
-          type: type, senderInfo: senderInfo, recipientInfo: recipientInfo),
+          senderInfo: senderInfo, recipientInfo: recipientInfo),
       onModelReady: (model) {
         listenToFormUpdated(model);
       },
@@ -41,14 +35,14 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
           child: ListView(
             children: [
               verticalSpaceMedium,
-              AfkCreditsText.subheadingItalic(
-                  "How many credits do you want to add to ${recipientInfo.name}?"),
+              InsideOutText.subheadingItalic(
+                  "How many credits do you want to add to ${recipientInfo.name}'s account?"),
               verticalSpaceMedium,
               Row(
                 children: [
                   Container(
                     width: screenWidth(context, percentage: 0.35),
-                    child: AfkCreditsInputField(
+                    child: InsideOutInputField(
                       focusNode: amountFocusNode,
                       controller: amountController,
                       style: heading3Style,
@@ -57,13 +51,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                         child: Image.asset(kAFKCreditsLogoPath, height: 10),
                       ),
                       autofocus: true,
-                      //placeholder: 'Amount',
                       keyboardType: TextInputType.number,
-                      // inputFormatters: <TextInputFormatter>[
-                      //   FilteringTextInputFormatter.allow(
-                      //       RegExp(r'^[-+]?\d+(\.\d+)?$')),
-                      // ],
-                      //errorText: model.customValidationMessage,
                     ),
                   ),
                   //Container(color: Colors.red),
@@ -85,9 +73,9 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
               ),
               if (model.customValidationMessage != null)
                 Expanded(
-                    child: AfkCreditsText.warn(model.customValidationMessage!)),
+                    child: InsideOutText.warn(model.customValidationMessage!)),
               verticalSpaceMedium,
-              AfkCreditsButton(
+              InsideOutButton(
                 leading: Icon(Icons.add, color: Colors.white),
                 title: "Add credits",
                 onTap: () async {

@@ -1,27 +1,18 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
+import 'package:afkcredits/datamodels/faqs/faqs.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
 import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
-import 'package:afkcredits/datamodels/giftcards/gift_card_category/gift_card_category.dart';
-import 'package:afkcredits/datamodels/giftcards/gift_card_purchase/gift_card_purchase.dart';
-import 'package:afkcredits/datamodels/giftcards/pre_purchased_gift_cards/pre_purchased_gift_card.dart';
-import 'package:afkcredits/datamodels/payments/money_transfer.dart';
-import 'package:afkcredits/datamodels/payments/money_transfer_query_config.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
-import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/gift_card_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -30,27 +21,14 @@ import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 
 class FirestoreApi {
   final log = getLogger('FirestoreApi');
   final firestoreInstance = FirebaseFirestore.instance;
-  GeoFirePoint? center;
-  //List<UserFavPlaces>? places;
-  // Create user documents
-  DocumentReference? _documentReference;
+
   List<Quest>? newQuestResult;
-  // BehaviorSubject<double>? radius = BehaviorSubject<double>.seeded(50.0);
-  // BehaviorSubject<double>? radius;
-
   Geoflutterfire geo = Geoflutterfire();
-
-  List<GiftCardCategory> giftCartCategory = [];
-  // ignore: close_sinks
-
   Stream<dynamic>? query;
-  StreamSubscription? subscription;
-
   StreamSubscription? publicQuestsStreamSubscription;
   Map<String, StreamSubscription?> parentQuestsStreamSubscriptions = {};
 
@@ -67,23 +45,6 @@ class FirestoreApi {
     }
   }
 
-//For Admin Starts Here
-  Future<void> createUserAdmin({required UserAdmin userAdmin}) async {
-    try {
-      log.i("User:$userAdmin");
-      final userAdminDocument = usersCollection.doc(userAdmin.id);
-      await userAdminDocument.set(userAdmin.toJson());
-      log.v('User document added to ${userAdminDocument.path}');
-      //print(result);
-    } catch (error) {
-      throw FirestoreApiException(
-        message: 'Failed to create new user',
-        devDetails: '$error',
-      );
-    }
-  }
-  //Ends Here
-
   Future<void> createUserInfo({required User user}) async {
     final userDocument = usersCollection.doc(user.uid);
     await userDocument.set(user.toJson());
@@ -97,55 +58,6 @@ class FirestoreApi {
     log.v('Stats document added to ${docRef.path}');
   }
 
-  //Create a List of My Favourite Places
-  Future<void> createUserFavouritePlaces(
-      {required userId, required UserFavPlaces favouritePlaces}) async {
-    try {
-      final _docRef = getUserFavouritePlacesDocument(uid: userId);
-      await _docRef.set(favouritePlaces.toJson());
-      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
-      log.v('Your Document Reference is: ${_docRef.toString()}');
-    } catch (e) {
-      throw FirestoreApiException(
-          message: 'Failed To Insert Places',
-          devDetails: 'Failed Caused By $e.');
-    }
-  }
-
-  //Create a List of My Favourite Places
-  Future<void> addMarkers({required AFKMarker markers}) async {
-    try {
-      final _docRef = getMarkersDocs(markerId: markers.id);
-      log.i("Document Reference: " + _docRef.toString());
-      log.i("Marker ID: " + markers.id);
-      await _docRef.set(markers.toJson());
-      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
-      log.v('Your Document Reference is: ${_docRef.toString()}');
-    } catch (e) {
-      throw FirestoreApiException(
-          message: 'Failed To Insert Places',
-          devDetails: 'Failed Caused By $e.');
-    }
-  }
-
-  //Create a List of My Favourite Places
-/*   Future<void> addAFKMarkersPositions(
-      {required AfkMarkersPositions afkMarkersPositions}) async {
-    try {
-      final _docRef =
-          getAFKMarkersPositionDocs(markerId: afkMarkersPositions.documentId!);
-      log.i("Document Reference: " + _docRef.toString());
-      log.i("Marker ID: " + afkMarkersPositions.documentId!);
-      await _docRef.set(afkMarkersPositions.toJson());
-      log.v('Favourite Places document added to ${_docRef.path}' + '\n');
-      log.v('Your Document Reference is: ${_docRef.toString()}');
-    } catch (e) {
-      throw FirestoreApiException(
-          message: 'Failed To Insert Places',
-          devDetails: 'Failed Caused By $e.');
-    }
-  } */
-
   // when explorer is added without authentication so without ID
   // we need to generate that id and add it to the datamodel.
   DocumentReference createUserDocument() {
@@ -153,8 +65,6 @@ class FirestoreApi {
     return docRef;
   }
 
-  ////////////////////////////////////////////////////////
-  // Get user if exists
   Future<User?> getUser({required String uid}) async {
     var userData = await usersCollection.doc(uid).get();
     if (!userData.exists) {
@@ -181,64 +91,6 @@ class FirestoreApi {
     }
   }
 
-  ////////////////////////////////////////////////////////
-  // This is the User who will managed The App Code for the BackOffice
-  Future<UserAdmin?> getUserAdmin({required String uid}) async {
-    log.i('userId: $uid');
-    if (uid.isNotEmpty) {
-      final userDoc = await usersCollection.doc(uid).get();
-      if (!userDoc.exists) {
-        log.v("User $uid does not exist in our DB ");
-        return null;
-      }
-      final userData = userDoc.data();
-      return UserAdmin.fromJson(userData! as Map<String, dynamic>);
-    } else {
-      throw FirestoreApiException(message: 'You have passed an empty Id');
-    }
-  }
-
-// Get User Favourite Places.
-  Future<List<UserFavPlaces>?>? getUserFavouritePlaces(
-      {required String userId}) async {
-    final userFavouritePlaces = await usersCollection
-        .doc(userId)
-        .collection(userFavouritePlacesCollectionKey)
-        .get();
-
-    if (userFavouritePlaces.docs.isNotEmpty) {
-      try {
-        return userFavouritePlaces.docs
-            .map((docs) => UserFavPlaces.fromJson(docs.data()))
-            .toList();
-      } catch (e) {
-        throw FirestoreApiException(
-            message: 'Failed to get the Places', devDetails: '$e');
-      }
-    } else {
-      return null;
-    }
-  }
-
-  // Get Markers For the Quest.
-  // ignore: non_constant_identifier_names
-  Future<List<AFKMarker>> getAllMarkers() async {
-    final _markers = await markersCollection.get();
-    if (_markers.docs.isNotEmpty) {
-      try {
-        return _markers.docs
-            .map((docs) =>
-                AFKMarker.fromJson(docs.data() as Map<String, dynamic>))
-            .toList();
-      } catch (e) {
-        throw FirestoreApiException(
-            message: 'Failed to get the Markers', devDetails: '$e');
-      }
-    } else {
-      return [];
-    }
-  }
-
   Future<User?> getUserWithName({required String? name}) async {
     if (name == null) return null;
     QuerySnapshot doc =
@@ -262,8 +114,6 @@ class FirestoreApi {
     return null;
   }
 
-  ///////////////////////////////////////////////////////
-  // Fetch user statistics once
   Future<UserStatistics> getUserSummaryStatistics({required String uid}) async {
     try {
       final docRef = await getUserSummaryStatisticsDocument(uid: uid).get();
@@ -288,8 +138,6 @@ class FirestoreApi {
     }
   }
 
-  ///////////////////////////////////////////////////////
-  // Get user streams
   Stream<UserStatistics> getUserSummaryStatisticsStream({required String uid}) {
     return getUserSummaryStatisticsDocument(uid: uid).snapshots().map((event) {
       if (!event.exists || event.data() == null) {
@@ -315,13 +163,49 @@ class FirestoreApi {
     }
   }
 
+  Future updateUserSettings(
+      {required String uid,
+      required String key,
+      required dynamic value}) async {
+    try {
+      await usersCollection.doc(uid).set({
+        "userSettings": {
+          key: value,
+        },
+      }, SetOptions(merge: true));
+    } catch (e) {
+      throw FirestoreApiException(
+          message:
+              "Unknown expection when updating user settings in users collection",
+          devDetails: '$e');
+    }
+  }
+
+  Future<void> updateTokenForUser(
+      {required String uid, required String token}) async {
+    log.v("Updating fcm token for user with id $uid");
+    usersCollection.doc(uid).update(
+      {
+        'tokens': [token],
+      },
+    );
+  }
+
+  Future<void> updateDeviceId(
+      {required String uid, required String deviceId}) async {
+    log.v("Updating device id for user with id $uid");
+    usersCollection.doc(uid).update(
+      {
+        'deviceId': deviceId,
+      },
+    );
+  }
+
   Future<void> updateQuestData({required Quest quest}) async {
     try {
       await questsCollection
           .doc(quest.id)
           .set(quest.toJson(), SetOptions(merge: true));
-
-      //return result;
     } catch (e) {
       throw FirestoreApiException(
           message:
@@ -383,23 +267,23 @@ class FirestoreApi {
   }
 
   Future<void> removeQuest({required Quest quest}) async {
-    //Remove The quest from Firebase
     await questsCollection.doc(quest.id).delete();
   }
 
   Stream<User> getUserStream({required String uid}) {
-    return usersCollection.doc(uid).snapshots().map((event) {
-      if (!event.exists || event.data() == null) {
-        throw FirestoreApiException(
-            message: "User document not valid!",
-            devDetails:
-                "Something must have failed before when creating user account. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
-      }
-      return User.fromJson(event.data()! as Map<String, dynamic>);
-    });
+    return usersCollection.doc(uid).snapshots().map(
+      (event) {
+        if (!event.exists || event.data() == null) {
+          throw FirestoreApiException(
+              message: "User document not valid!",
+              devDetails:
+                  "Something must have failed before when creating user account. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
+        }
+        return User.fromJson(event.data()! as Map<String, dynamic>);
+      },
+    );
   }
 
-  /// invitations
   Stream<List<User>> getExplorersDataStream({required String uid}) {
     try {
       return usersCollection
@@ -408,7 +292,6 @@ class FirestoreApi {
           .map((event) => event.docs
               .map((doc) => User.fromJson(doc.data() as Map<String, dynamic>))
               .toList());
-      // return returnStream;
     } catch (e) {
       throw FirestoreApiException(
           message:
@@ -416,9 +299,6 @@ class FirestoreApi {
           devDetails: '$e');
     }
   }
-
-  //////////////////////////////////////////////////////
-  /// Queries for existing users
 
   Future<List<PublicUserInfo>> queryExplorers(
       {required String queryString}) async {
@@ -438,43 +318,6 @@ class FirestoreApi {
     return results;
   }
 
-  ///////////////////////////////////////////////////////
-  /// Get Money Transfer Stream
-  Stream<List<MoneyTransfer>> getTransferDataStream(
-      {required MoneyTransferQueryConfig config, required String uid}) {
-    Query query;
-    query = paymentsCollection
-        .where("transferDetails.senderId", isEqualTo: config.senderId!)
-        .orderBy("createdAt", descending: true);
-    if (config.maxNumberReturns != null)
-      query = query.limit(config.maxNumberReturns!);
-
-    log.v("converting snapshot to list of money transfers");
-
-    try {
-      // convert Stream<QuerySnapshot> to Stream<List<MoneyTransfer>>
-      Stream<List<MoneyTransfer>> returnStream = query.snapshots().map(
-            (event) => event.docs.map(
-              (doc) {
-                //log.v("Data to read into MoneyTransfer document ${doc.data()}");
-                return MoneyTransfer.fromJson(
-                    doc.data() as Map<String, dynamic>);
-              },
-            ).toList(),
-          );
-      return returnStream;
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Failed to read money transfer documents into dart model",
-          devDetails:
-              "Are you sure your documents in the backend are valid? Are you running with an emulator? Check the logs for concrete data that could not be read into the MoneyTransfer document");
-    }
-  }
-
-  ////////////////////////////////////////////////////////
-  /// Everything related to quests
-
-  // Returns dummy data for now!
   Quest? getQuest({required String questId}) {
     log.i("Get dummy quest");
     return getDummyQuest1();
@@ -482,7 +325,6 @@ class FirestoreApi {
 
   Future _uploadQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
-    //Get the Document Created Reference
     final _documentReference = await questsCollection.add(
       quest.toJson(),
     );
@@ -495,7 +337,6 @@ class FirestoreApi {
 
   Future createQuest({required Quest quest}) async {
     log.i("Upload quest with id ${quest.id} to firestore");
-    //Get the Document Created Reference
     final _documentReference = questsCollection.doc();
     bool timedout = false;
     //update the newly created document reference with the Firestore Id.
@@ -532,7 +373,8 @@ class FirestoreApi {
     try {
       final center = geo.point(latitude: lat, longitude: lon);
 
-      // only gets quests NOT created by a standard parent
+      // only returns quests NOT created by a standard parent
+      // ? we can't query for ONLY quests that are NOT done by users, unfortunately.
       final questsRef = questsCollection.where("createdBy", isNull: true);
       Stream<List<DocumentSnapshot>> publicQuestsStream = geo
           .collection(collectionRef: questsRef)
@@ -542,20 +384,20 @@ class FirestoreApi {
               field: kQuestGeoPointPropertyName,
               strictMode: true);
 
-      // cancel previous stream subscription
       publicQuestsStreamSubscription?.cancel();
       publicQuestsStreamSubscription = null;
       publicQuestsStreamSubscription = publicQuestsStream.listen(
         (List<DocumentSnapshot> docList) {
           if (docList.isNotEmpty) {
             try {
-              returnQuests = docList
+              List<Quest> questList = docList
                   .map(
                     (docs) => Quest.fromJson(
                       docs.data() as Map<String, dynamic>,
                     ),
                   )
                   .toList();
+              returnQuests.addAll(questList);
             } catch (e) {
               log.e("Error loading quest datamodel from firestore: $e");
               rethrow;
@@ -570,12 +412,15 @@ class FirestoreApi {
       );
 
       if (sponsorIds.length == 0) {
+        log.i(
+            "No parent associated to child, not looking for custom created quests");
         if (!completer2.isCompleted) {
           completer2.complete();
         }
       }
       int counter = 0;
       for (String id in sponsorIds) {
+        log.v("checking for quests from parent with id $id");
         counter = counter + 1;
         final qref = questsCollection.where("createdBy", isEqualTo: id);
         Stream<List<DocumentSnapshot>> parentQuestsStream = geo
@@ -591,13 +436,14 @@ class FirestoreApi {
           (List<DocumentSnapshot> docList) {
             if (docList.isNotEmpty) {
               try {
-                returnQuests.addAll(docList
+                List<Quest> questList = docList
                     .map(
                       (docs) => Quest.fromJson(
                         docs.data() as Map<String, dynamic>,
                       ),
                     )
-                    .toList());
+                    .toList();
+                returnQuests.addAll(questList);
               } catch (e) {
                 log.e("Error loading quest datamodel from firestore: $e");
                 rethrow;
@@ -629,10 +475,10 @@ class FirestoreApi {
             "No quests were found in this area. Ask your parents to create one.",
       );
     }
+    log.i("Found ${returnQuests.length} nearby quests.");
     return returnQuests;
   }
 
-  // Changed the Scope of the Method. from _pvt to public
   Future<List<Quest>> getNearbyQuests(
       {required List<String> sponsorIds,
       required double lat,
@@ -667,7 +513,6 @@ class FirestoreApi {
     }
   }
 
-  // Returns dummy data for now!
   Future pushFinishedQuest({required ActivatedQuest? quest}) async {
     if (quest == null) {
       log.wtf("Quest to push is null! This should not happen");
@@ -677,7 +522,6 @@ class FirestoreApi {
       final docRef = activatedQuestsCollection.doc();
       ActivatedQuest newQuest = quest.copyWith(
           id: docRef.id, createdAt: FieldValue.serverTimestamp());
-      //log.v("Adding the following quest to firestore: ${newQuest.toJson()}");
       await docRef.set(newQuest.toJson());
     } catch (e) {
       log.e(
@@ -689,21 +533,117 @@ class FirestoreApi {
     }
   }
 
-  ///////////////////////////////////////////////////
-  /// Functions related to markers
-  Future<AFKMarker?> getMarkerFromQrCodeId({required String qrCodeId}) async {
-    /////////////////////////////////////////////
-    // For now we return dummy data!
-    return Future.value(
-        AFKMarker(id: "MarkerId", qrCodeId: "QRCodeId", lat: 49.1, lon: -122));
+  Future bookkeepFinishedQuest({required ActivatedQuest quest}) async {
+    log.v("Uploading and bookkeeping finished quest");
+
+    num? afkCreditsEarned = quest.afkCreditsEarned;
+    String? questId = quest.quest.id;
+    List<String>? uids = quest.uids;
+    if (afkCreditsEarned == null) {
+      log.wtf(
+          "afkCreditsEarned field is null in ActivatedQuest. Can't upload anything");
+      return;
+    }
+    if (uids == null) {
+      log.wtf("Uids field empty in ActivatedQuest. Can't upload anything");
+      return;
+    }
+    bool timedout = false;
+    for (String uid in uids) {
+      await firestoreInstance.runTransaction(
+        (transaction) async {
+          DocumentReference userDocRef =
+              getUserSummaryStatisticsDocument(uid: uid);
+          DocumentSnapshot userDoc = await transaction.get(userDocRef);
+          if (!userDoc.exists) {
+            log.wtf(
+                "Summary statistics document of user with id $uid does not exist");
+            throw FirestoreApiException(
+                message: "Unknown expection when uploading quest",
+                prettyDetails:
+                    "An error occured when uploading a quest. Please make sure you have data connection and try again later.",
+                devDetails:
+                    "Summary statistics document of user with id $uid does not exist");
+          }
+          UserStatistics userStats =
+              UserStatistics.fromJson(userDoc.data() as Map<String, dynamic>);
+
+          final incrementCredits = FieldValue.increment(afkCreditsEarned);
+          final decrementSponsoring =
+              FieldValue.increment(-afkCreditsEarned * 10);
+
+          transaction.update(
+            userDocRef,
+            {
+              "availableSponsoring":
+                  decrementSponsoring, // decrement available sponsoring of explorer
+              "afkCreditsBalance":
+                  incrementCredits, // increment afk credits balance
+              "lifetimeEarnings":
+                  incrementCredits, // increment lifetime earnings
+              "numberQuestsCompleted": FieldValue.increment(
+                  1), // increment number of quests completed
+              "completedQuestIds": userStats.completedQuestIds + [questId],
+            },
+          );
+
+          try {
+            final docRef = activatedQuestsCollection.doc();
+            ActivatedQuest newQuest = quest.copyWith(
+                id: docRef.id, createdAt: FieldValue.serverTimestamp());
+            transaction.set(
+              docRef,
+              newQuest.toJson(),
+            );
+          } catch (e) {
+            log.e(
+                "Something went wrong when pushing a finished quest, this is the error: $e");
+            throw FirestoreApiException(
+                message: "A peculiar error occured",
+                devDetails:
+                    "This problem is likely caused by some not well defined datamodels and their json serializability.");
+          }
+        },
+      ).timeout(
+        Duration(seconds: 5),
+        onTimeout: () {
+          timedout = true;
+          log.w("Uploading quest timed out. Probs no data connection");
+        },
+      );
+    }
+    if (timedout) {
+      return WarningFirestoreCallTimeout;
+    }
+  }
+
+  Future<List<dynamic>?> getListOfScreenShotNames(
+      {required String questType}) async {
+    log.v("get list of screen shot names");
+    final DocumentSnapshot docSnapshot =
+        await screenShotsCollection.doc(questType).get();
+    if (docSnapshot.exists) {
+      try {
+        final data = docSnapshot.data() as Map<String, dynamic>;
+        return data["screenshotUrls"];
+      } catch (error) {
+        log.wtf(
+            'Failed to get list of screen shot names for quest Type $questType');
+        throw FirestoreApiException(
+          message:
+              'Failed to get list of screen shot names for quest Type $questType',
+          devDetails: '$error',
+        );
+      }
+    } else {
+      log.e(
+          "screenshot document with id $questType does not exist in screenshots firestore collection");
+    }
+    return null;
   }
 
   Future<List<Quest>> downloadQuestsWithStartMarkerId(
       {required String? startMarkerId}) async {
-    // List<Quest> quests = await getNearbyQuests();
-    // return quests
-    //     .where((element) => element.startMarker.id == startMarkerId)
-    //     .toList();
     QuerySnapshot snapshot = await questsCollection
         .where(startMarkerId!, isEqualTo: startMarkerId)
         .get();
@@ -720,8 +660,6 @@ class FirestoreApi {
     }
   }
 
-  ////////////////////////////////////////////////////////
-  // Quest collection
   Stream<List<ActivatedQuest>> getPastQuestsStream({required String uid}) {
     try {
       final returnStream = activatedQuestsCollection
@@ -744,54 +682,71 @@ class FirestoreApi {
     }
   }
 
-  ////////////////////////////////////////////////////////
-  // Quest collection
   Stream<List<Achievement>> getAchievementsStream({required String uid}) {
     // TODO: Dummy for now!
     return Stream.value(getDummyAchievements());
-    // try {
-    //   final returnStream = activatedQuestsCollection
-    //       .where("uids", arrayContains: uid)
-    //       .orderBy("createdAt", descending: true)
-    //       .where("status",
-    //           isEqualTo: describeEnum(QuestStatus.success.toString()))
-    //       .snapshots()
-    //       .map((event) => event.docs
-    //           .map((doc) => ActivatedQuest.fromJson(doc.data()))
-    //           .toList());
-    //   return returnStream;
-    // } catch (e) {
-    //   throw FirestoreApiException(
-    //       message:
-    //           "Unknown expection when listening to past quests the user has successfully done",
-    //       devDetails: '$e');
-    // }
   }
 
-  ///////////////////////////////////////////////////////
-  /// Screen Time functions
-  Future<String> addScreenTimeSession(
+  String getScreenTimeSessionDocId() {
+    final docRef = screenTimeSessionCollection.doc();
+    return docRef.id;
+  }
+
+  Future<void> addScreenTimeSession(
       {required ScreenTimeSession session}) async {
     log.i("Add screen time session to firestore");
-    //Get the Document Created Reference
-    final _documentReference = screenTimeSessionCollection.doc();
-    _documentReference.set(session
-        .copyWith(
-          sessionId: _documentReference.id,
-          //startedAt: Timestamp.now(),
-        )
-        .toJson());
-    //update the newly created document reference with the Firestore Id.
-    return _documentReference.id;
+    late Timestamp validStartedAt;
+    if (session.startedAt is DateTime) {
+      validStartedAt = Timestamp.fromDate(session.startedAt);
+    } else {
+      validStartedAt = session.startedAt;
+    }
+    screenTimeSessionCollection.doc(session.sessionId).set(
+        session
+            .copyWith(
+              startedAt: validStartedAt,
+            )
+            .toJson(),
+        SetOptions(merge: true));
+  }
+
+  Future removeScreenTimeSessionStatus({required String sessionId}) async {
+    await screenTimeSessionCollection.doc(sessionId).delete();
+  }
+
+  Stream<ScreenTimeSession> getScreenTimeStream({required String sessionId}) {
+    return screenTimeSessionCollection.doc(sessionId).snapshots().map((event) {
+      if (!event.exists || event.data() == null) {
+        throw FirestoreApiException(
+            message: "screen time session document not valid!",
+            devDetails:
+                "Something must have failed before when creating the screen time session. This is likely due to some backwards-compatibility-breaking updates to the data models or firestore collection setup.");
+      }
+      return ScreenTimeSession.fromJson(event.data() as Map<String, dynamic>);
+    });
+  }
+
+  Future updateScreenTimeSessionStatus(
+      {required ScreenTimeSession session,
+      required ScreenTimeSessionStatus status}) async {
+    log.i("Update screen time session to firestore");
+    session = session.copyWith(status: status);
+    await screenTimeSessionCollection.doc(session.sessionId).update(
+      {
+        'status': session.toJson()["status"],
+      },
+    );
   }
 
   Future updateScreenTimeSession({required ScreenTimeSession session}) async {
     log.i("Update screen time session to firestore");
-    await screenTimeSessionCollection.doc(session.sessionId).update({
-      'status': session.toJson()["status"],
-      'afkCreditsUsed': session.afkCreditsUsed,
-      'minutesUsed': session.minutesUsed,
-    });
+    await screenTimeSessionCollection.doc(session.sessionId).update(
+      {
+        'status': session.toJson()["status"],
+        'afkCreditsUsed': session.afkCreditsUsed,
+        'minutesUsed': session.minutesUsed,
+      },
+    );
   }
 
   Future cancelScreenTimeSession({required ScreenTimeSession session}) async {
@@ -812,7 +767,6 @@ class FirestoreApi {
   Future<ScreenTimeSession?> getScreenTimeSession(
       {required String sessionId}) async {
     log.i("get screen time session from firestore");
-    //Get the Document Created Reference
     final sessionDoc = await screenTimeSessionCollection.doc(sessionId).get();
     if (sessionDoc.exists) {
       try {
@@ -856,9 +810,6 @@ class FirestoreApi {
     }
   }
 
-  ///////////////////////////////////////////////
-  /// Feedback
-  ///
   Future uploadFeedback(
       {required Feedback feedback, String? feedbackDocumentKey}) async {
     log.i("Uploading feedback document");
@@ -896,195 +847,11 @@ class FirestoreApi {
     }
   }
 
-  ////////////////////////////////////////////////////////
-  // Gift Cards functions (DEPRECATED)
-  //
-
-  Future<List<GiftCardCategory>> getGiftCardsForCategory(
-      {required String categoryName}) async {
-    try {
-      final giftCards = await giftCardsCollection
-          .where("name", isEqualTo: categoryName)
-          .get();
-      if (giftCards.docs.isNotEmpty) {
-        log.v('This is our List of Gift Cards: $giftCards in our Database');
-        return giftCards.docs
-            .map((docs) =>
-                GiftCardCategory.fromJson(docs.data() as Map<String, dynamic>))
-            .toList();
-      } else {
-        log.wtf('You are Providing me Empty Document $giftCards' +
-            GiftCardType.Steam.toString());
-        throw FirestoreApiException(
-            message: "Data could not be found",
-            devDetails: "gift card document is empty");
-      }
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Error Was Thrown",
-          devDetails: "$e" + GiftCardType.Steam.toString());
-    }
-  }
-
-  Future<List<PrePurchasedGiftCard?>> getPreGiftCardsForCategory() async {
-    try {
-      final prePurchasedGiftCards = await preGiftCardsCollection.get();
-      if (prePurchasedGiftCards.docs.isNotEmpty) {
-        log.v(
-            'This is our List of Gift Cards: $prePurchasedGiftCards in our Database');
-        return prePurchasedGiftCards.docs
-            .map(
-              (docs) => PrePurchasedGiftCard.fromJson(
-                docs.data() as Map<String, dynamic>,
-              ),
-            )
-            .toList();
-      } else {
-        log.wtf('You are Providing me Empty Document $prePurchasedGiftCards');
-      }
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Error Was Thrown",
-          devDetails: "$e" + GiftCardType.Steam.toString());
-    }
-    return [];
-  }
-
-  getListQuerySnapShot({QuerySnapshot? query}) {
-    List<QuerySnapshot> snapShot = [];
-    if (query!.docs.isNotEmpty) {
-      snapShot.add(query);
-      return snapShot;
-    } else
-      return [];
-  }
-
-  Future<List<GiftCardCategory>> getAllGiftCards() async {
-    try {
-      final giftCards = await giftCardsCollection.get();
-      getListQuerySnapShot(query: giftCards);
-      if (giftCards.docs.isNotEmpty) {
-        log.v('This is our List of Gift Cards: $giftCards in our Database');
-        return giftCards.docs
-            .map((docs) =>
-                GiftCardCategory.fromJson(docs.data() as Map<String, dynamic>))
-            .toList();
-      } else {
-        log.wtf('You are Providing me Empty Document $giftCards' +
-            GiftCardType.Steam.toString());
-        throw FirestoreApiException(
-            message: "Data could not be found",
-            devDetails: "gift card document is empty");
-      }
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Error Was Thrown",
-          devDetails: "$e" + GiftCardType.Steam.toString());
-    }
-  }
-
-  Stream<List<GiftCardPurchase>> getPurchasedGiftCardsStream(
-      {required String uid}) {
-    try {
-      final returnStream = getUserGiftCardsCollection(uid: uid)
-          .orderBy("purchasedAt", descending: true)
-          .snapshots()
-          .map((event) => event.docs
-              .map((doc) =>
-                  GiftCardPurchase.fromJson(doc.data() as Map<String, dynamic>))
-              .toList());
-      return returnStream;
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Unknown expection when listening to purchased gift cards",
-          devDetails: '$e');
-    }
-  }
-
-  Stream<List<ScreenTimeSession>> getPurchasedScreenTimesStream(
-      {required String uid}) {
-    try {
-      final returnStream = getUserScreenTimeCollection(uid: uid)
-          .orderBy("purchasedAt", descending: true)
-          .snapshots()
-          .map((event) => event.docs
-              .map((doc) => ScreenTimeSession.fromJson(
-                  doc.data() as Map<String, dynamic>))
-              .toList());
-      return returnStream;
-    } catch (e) {
-      throw FirestoreApiException(
-          message: "Unknown expection when listening to purchased screen times",
-          devDetails: '$e');
-    }
-  }
-
-  Future updateGiftCardPurchase(
-      {required GiftCardPurchase giftCardPurchase, required String uid}) async {
-    getUserGiftCardsCollection(uid: uid)
-        .doc(giftCardPurchase.transferId)
-        .update(giftCardPurchase.toJson());
-  }
-
-  Future updateScreenTimePurchase(
-      {required ScreenTimeSession screenTimePurchase,
-      required ScreenTimeSessionStatus newStatus,
-      required String uid}) async {
-    late ScreenTimeSession newScreenTimePurchase;
-    newScreenTimePurchase = screenTimePurchase.copyWith(
-        startedAt: newStatus == ScreenTimeSessionStatus.active
-            ? ""
-            : FieldValue.serverTimestamp());
-    await getUserScreenTimeCollection(uid: uid)
-        .doc(newScreenTimePurchase.sessionId)
-        .update(newScreenTimePurchase.toJson());
-  }
-
-  Future<bool> addGiftCardCategory(
-      {required GiftCardCategory giftCardCategory}) async {
-    //TODO: Refactor this code .
-    if (giftCardCategory.categoryId.isNotEmpty) {
-      log.i("Upload quest with id ${giftCardCategory.categoryId} to firestore");
-      //Get the Document Created Reference
-      _documentReference =
-          await giftCardsCollection.add(giftCardCategory.toJson());
-      //update the newly created document reference with the Firestore Id.
-      //This is to make suret that the document has the same id as the quest.
-      await giftCardsCollection
-          .doc(_documentReference!.id)
-          .update({'id': _documentReference!.id});
-      log.i(
-          'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
-      return true;
-    }
-    return false;
-
-    //update the newly created document reference with the Firestore Id.
-    //This is to make suret that the document has the same id as the quest.
-  }
-
-  Future<bool> insertPrePurchasedGiftCardCategory(
-      {required PrePurchasedGiftCard prePurchasedGiftCard}) async {
-    //TODO: Refactor this code .
-    if (prePurchasedGiftCard.categoryId.isNotEmpty) {
-      log.i(
-          "Upload quest with id ${prePurchasedGiftCard.categoryId} to firestore");
-      //Get the Document Created Reference
-      _documentReference =
-          await preGiftCardsCollection.add(prePurchasedGiftCard.toJson());
-      //update the newly created document reference with the Firestore Id.
-      //This is to make suret that the document has the same id as the quest.
-      await preGiftCardsCollection
-          .doc(_documentReference!.id)
-          .update({'id': _documentReference!.id});
-      log.i(
-          'These are the Documents Id Being Created Harguilar ${_documentReference!.id}');
-      return true;
-    }
-    return false;
-
-    //update the newly created document reference with the Firestore Id.
-    //This is to make suret that the document has the same id as the quest.
+  Future updateFeedbackCampaignInfo(
+      {required FeedbackCampaignInfo feedbackCampaignInfo}) async {
+    await feedbackCollection
+        .doc(feedbackCampaignInfoDocumentKey)
+        .update(feedbackCampaignInfo.toJson());
   }
 
   // ! It is important that this is a transaction.
@@ -1121,7 +888,6 @@ class FirestoreApi {
                 },
               );
 
-              // NOW also update screen time session:
               final ref3 = screenTimeSessionCollection.doc(session.sessionId);
               transaction.update(
                 ref3,
@@ -1177,10 +943,23 @@ class FirestoreApi {
       "totalScreenTime": FieldValue.increment(deltaScreenTime),
     });
   }
+
+  Future<FAQs> getFaqs() async {
+    DocumentReference doc = getFAQDocument();
+    DocumentSnapshot snapshot = await doc.get();
+    if (snapshot.exists && snapshot.data() != null) {
+      try {
+        return FAQs.fromJson(snapshot.data()! as Map<String, dynamic>);
+      } catch (e) {
+        throw FirestoreApiException(
+            message: 'Failed to get the FAQs', devDetails: '$e');
+      }
+    } else {
+      return FAQs(answers: [], questions: []);
+    }
+  }
 }
 
-/////////////////////////////////////////////////////////
-// Collection's getter
 DocumentReference getUserStatisticsCollection({required String uid}) {
   return usersCollection.doc(uid).collection(userStatisticsCollectionKey).doc();
 }
@@ -1227,4 +1006,8 @@ CollectionReference getUserGiftCardsCollection({required String uid}) {
 
 CollectionReference getUserScreenTimeCollection({required String uid}) {
   return usersCollection.doc(uid).collection(purchasedScreenTimeCollectionKey);
+}
+
+DocumentReference getFAQDocument() {
+  return faqCollection.doc(faqDocumentKey);
 }

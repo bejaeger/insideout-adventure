@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.1.0+1
+version: 0.1.0+12
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -64,21 +64,16 @@ dependencies:
   battery_plus: ^2.1.4
   open_settings: ^2.0.2
   cached_network_image: ^3.2.1
-  flutter_svg: ^1.1.1+1
-  #get_it: ^7.2.0
   logger:
   freezed_annotation: ^2.1.0
   json_annotation: ^4.6.0
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.11.0
   notion_api: ^1.2.0
   device_info: ^2.0.3
+  dropdown_button2: ^1.8.2
 
   lottie: ^1.2.2
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  #flutter_stripe: ^1.2.0
-  #pay: ^1.0.1
   transparent_image: ^2.0.0
   flutter_secure_storage: ^6.0.0
   crypto: ^3.0.1
@@ -92,32 +87,33 @@ dependencies:
   slide_to_act: ^2.0.1
   shimmer: ^2.0.0
   image_picker: ^0.8.4+4
-  # get: 4.6.5
-  #get: ^4.6.5
-  #background_fetch: ^1.1.0
-  #awesome_notifications: ^0.6.21
   awesome_notifications: ^0.7.0-beta.6+1
-    # git:
-    #   #ref: "8d0bc27"
-    #   ref: "a850f27"
-    #   url: https://github.com/rafaelsetragni/awesome_notifications
   fluttertoast: ^8.0.3
 
   transparent_pointer: ^1.0.0
-  afkcredits_ui: 
-    path: ./afkcredits_ui/
+  insideout_ui: 
+    path: ./insideout_ui/
 
   circular_menu: ^2.0.1
   pedometer: ^3.0.0
-  flutter_background_service: ^2.0.0
   freezed: ^2.0.3+1
-  #source_gen: ^1.2.2
   json_serializable: ^6.2.0
   introduction_screen: ^3.0.1
   dotenv: ^4.0.1
   
   flutter_archive: ^5.0.0
   flutter_dotenv: ^5.0.2
+  flutter_svg: ^1.1.5
+
+  confetti: ^0.7.0
+  badges: ^2.0.3
+
+  arkit_plugin: ^1.0.5
+  arcore_flutter_plugin:
+     #0.1.0-null-safety.3
+    git:
+      ref: "2225876"
+      url: https://github.com/bejaeger/arcore_flutter_plugin
 
 dev_dependencies:
   # flutter_test:
@@ -143,6 +139,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
+  remove_alpha_ios: true # important otherwise apple doesn't accept app
   image_path: "assets/hercules_world_logo.png"
 
 # For information on the generic Dart part of this file, see the
@@ -156,41 +153,22 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/map_style.txt
     - assets/DayStyle.json
-    - assets/PokemonStyle.json
     - assets/hercules_world_logo.png
-    - assets/avatars/hercules-avatar.png
-    - assets/avatars/hercules-avatar2.png    
+    - assets/avatars/chilldude-head.png
     - assets/icons/
+    - assets/icons/beware.png
     - assets/icons/afk_credits.PNG
     - assets/icons/afk_credits_orig.png
-    - assets/icons/melted-clock.png
     - assets/icons/afk_credits_small.PNG
     - assets/icons/afk_credits_small_orig.png
     - assets/icons/afk_credits_small_colored.PNG
-    - assets/icons/trash_icon.svg
-    - assets/icons/measure-distance.png    
-    - assets/icons/magnet.png
-    - assets/icons/drawing-compass.png
-    - assets/icons/treasure.png
-    - assets/icons/treasure2.png
     - assets/icons/treasure2_big.png
-    - assets/icons/treasure_small.png
-    - assets/icons/treasure-map.png
-    - assets/icons/measure.png
-    - assets/icons/create_quest.png
-    - assets/icons/giftcard.png
-    - assets/icons/money.png
-    - assets/icons/qrcode.png
-    - assets/icons/map.png
-    - assets/icons/location-icon.ico
-    - assets/icons/curve-arrow.png
     - assets/icons/cardinal-point.png  
-    - assets/lottie/lottietest.json  
     - assets/lottie/ripple-effect.json  
     - assets/lottie/chilldude.json
     - assets/lottie/walkinggirl.json
+    - assets/avatars/walking-girl-2.png
     - assets/lottie/walkingboy.json
     - assets/lottie/colored-sports-figure.json
     - assets/lottie/big-tv-screen-time.json
@@ -200,21 +178,15 @@ flutter:
     - assets/icons/computer.png
     - assets/illustrations/activity_illustration.png
     - assets/illustrations/anna_hercules_world.png
-    - assets/illustrations/infographic_wallet.png
     - assets/illustrations/infographic.png
     - assets/illustrations/parents_meditate.png
     - assets/illustrations/screen_time.png
     - assets/illustrations/wallet_earning.png
     - assets/illustrations/wallet_spending.png
-    - assets/illustrations/activity_illustration_with_arrows.png
     - assets/images/luz-azul-cielo-azul.jpg
+    - assets/icons/location-icon.ico
 
-  # To add assets to your application, add an assets section, like this:
-  #assets:
     - .env
-    - dotenv
-  #- icons/sem-internet.jpg
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

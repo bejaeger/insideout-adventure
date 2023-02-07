@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -19,7 +19,6 @@ class MapEffects extends StatelessWidget {
   Widget build(BuildContext context) {
     return activeQuest.quest.type == QuestType.TreasureLocationSearch
         ? Positioned(
-            //alignment: Alignment(0, 0.4),
             bottom: 105,
             left: 2,
             right: 2,
@@ -28,6 +27,7 @@ class MapEffects extends StatelessWidget {
                 kLottieRippleEffect,
                 height: 200,
                 width: 200,
+                frameRate: FrameRate.max,
               ),
             ),
           )

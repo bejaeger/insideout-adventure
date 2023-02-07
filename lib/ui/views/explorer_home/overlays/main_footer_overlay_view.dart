@@ -1,9 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/main_footer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
-import 'package:afkcredits/ui/widgets/outline_box.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -23,8 +21,6 @@ class MainFooterOverlayView extends StatelessWidget {
     return ViewModelBuilder<MainFooterViewModel>.reactive(
       viewModelBuilder: () => MainFooterViewModel(),
       onModelReady: (model) {
-        // TODO: Move somewhere else!
-        // TODO: Needs to go into onboarding!
         model.listenToLayout();
       },
       builder: (context, model, child) => Container(
@@ -42,7 +38,7 @@ class MainFooterOverlayView extends StatelessWidget {
                       child: AnimatedOpacity(
                           duration: Duration(milliseconds: 100),
                           opacity: model.isMenuOpen ? 0 : 1,
-                          child: AfkCreditsButton(
+                          child: InsideOutButton(
                             title: "",
                             border: isUsingScreenTime
                                 ? Border.all(
@@ -79,19 +75,6 @@ class MainFooterOverlayView extends StatelessWidget {
                         },
                         toggleButtonBoxShadow: mainFooterBoxShadow(),
                         alignment: Alignment.bottomCenter,
-                        // backgroundWidget: model.isMenuOpen
-                        //     ? Expanded(
-                        //         child: GestureDetector(
-                        //           onTap: () {
-                        //             model.isMenuOpen = !model.isMenuOpen;
-                        //             model.notifyListeners();
-                        //           },
-                        //           child: Container(
-                        //             color: Colors.black12,
-                        //           ),
-                        //         ),
-                        //       )
-                        //     : null,
                         startingAngleInRadian: 1.3 * 3.14,
                         endingAngleInRadian: 1.7 * 3.14,
                         toggleButtonColor: kcCultured,
@@ -106,7 +89,7 @@ class MainFooterOverlayView extends StatelessWidget {
                             margin: 0,
                             boxShadow: [],
                             onTap: () {
-                              model.showNotImplementedSnackbar();
+                              model.showExplorerSettingsDialog();
                             },
                           ),
                           CircularMenuItem(
@@ -136,7 +119,7 @@ class MainFooterOverlayView extends StatelessWidget {
                       child: AnimatedOpacity(
                           duration: Duration(milliseconds: 100),
                           opacity: model.isMenuOpen ? 0 : 1,
-                          child: AfkCreditsButton(
+                          child: InsideOutButton(
                               title: "",
                               color: kcOrange,
                               onTap: model.showQuestListOverlay,

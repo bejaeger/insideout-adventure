@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -47,7 +47,7 @@ class OnboardingDialog extends StatelessWidget {
                         .copyWith(fontWeight: FontWeight.w800)),
                 verticalSpaceSmall,
                 Text(
-                    'Start by creating a child account and quests, and let your child earn its screen time. Thank you for testing our prototype!',
+                    'Start by creating a child account and quests, and let your child earn screen time. Thank you for testing our prototype!',
                     textAlign: TextAlign.center),
                 verticalSpaceMedium,
                 Row(

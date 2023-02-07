@@ -11,36 +11,10 @@ class AFKMarker with _$AFKMarker {
     String? qrCodeId,
     double? lat,
     double? lon,
-    @Default(MarkerStatus.testing) MarkerStatus markerStatus,
+    @Default(MarkerStatus.testing) MarkerStatus markerStatus, /* legacy */
     @Default(0) int repeatable,
   }) = _AFKMarker;
 
   factory AFKMarker.fromJson(Map<String, dynamic> json) =>
       _$AFKMarkerFromJson(json);
 }
-
-/* class AfkMarkersPositions {
-  String? documentId;
-  GeoFirePoint? point;
-  // GeoPoint? point;
-
-  AfkMarkersPositions({required this.documentId, required this.point});
-
-  AfkMarkersPositions.fromJson(Map<String, dynamic> json) {
-    try {
-      documentId = json['documentId'];
-      point = json['point']!['geopoint'];
-      //point = json['point'];
-
-    } catch (e) {
-      e.toString();
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['documentId'] = this.documentId;
-    data['point'] = this.point!.data;
-    return data;
-  }
-} */

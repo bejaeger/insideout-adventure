@@ -1,12 +1,13 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/layout.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import '../../../constants/constants.dart';
 
 // ignore: must_be_immutable
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -16,9 +17,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   bool? alignLeft = false;
   final bool showLogo;
   final Widget? widget;
+  final Widget? dropDownButton;
   final void Function()? onBackButton;
   final void Function()? onAppBarButtonPressed;
   final List<ScreenTimeSession> screenTimes;
+  final bool hasUserGivenFeedback;
 
   final IconData appBarButtonIcon;
   CustomAppBar({
@@ -33,6 +36,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onAppBarButtonPressed,
     this.showLogo = false,
     this.screenTimes = const [],
+    this.dropDownButton,
+    this.hasUserGivenFeedback = true,
   }) : super(key: key);
 
   double get getHeight => height;
@@ -61,10 +66,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
-                          child: Icon(Icons.menu,
-                              color: kcWhiteTextColor, size: 30),
+                          child: Badge(
+                            badgeColor: kcOrange,
+                            position: BadgePosition.topEnd(end: -5, top: -3),
+                            showBadge: !hasUserGivenFeedback,
+                            child: Icon(Icons.menu,
+                                color: kcWhiteTextColor, size: 30),
+                          ),
                         ),
                       ),
+                    ),
+                  if (dropDownButton != null)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: //Text("HI"),
+                          Container(
+                              //color: Colors.red,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: dropDownButton!),
                     ),
                   if (showLogo)
                     Align(
@@ -112,7 +132,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               session: screenTimes[0]),
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
-                            child: BlinkingScreenTimeAnimation(
+                            child: ActiveScreenTimeBadge(
                               screenTimeLeft: screenTimes.length > 1
                                   ? null
                                   : secondsToMinuteTime(
@@ -171,17 +191,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 alignment: Alignment.topLeft,
                 child: GestureDetector(
                   onTap: model.openSuperUserSettingsDialog,
-                  // mainAxisSize: MainAxisSize.min,
-                  //children: [
-                  // IconButton(
-                  //     visualDensity: VisualDensity.compact,
-                  //     padding: const EdgeInsets.all(0),
-                  //     onPressed: model.openSuperUserSettingsDialog,
-                  //     icon: Icon(Icons.settings,
-                  //         color: model.listenedToNewPosition
-                  //             ? Colors.orange
-                  //             : Colors.white,
-                  //         size: 16)),
                   child: Text(
                     "Super User",
                     style: TextStyle(color: Colors.white, fontSize: 12),
@@ -200,18 +209,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       Size.fromHeight(height + kActiveQuestPanelMaxHeight);
 }
 
-class BlinkingScreenTimeAnimation extends StatefulWidget {
+class ActiveScreenTimeBadge extends StatefulWidget {
   final String? screenTimeLeft;
 
-  BlinkingScreenTimeAnimation({Key? key, required this.screenTimeLeft})
+  ActiveScreenTimeBadge({Key? key, required this.screenTimeLeft})
       : super(key: key);
   @override
-  _BlinkingScreenTimeAnimationState createState() =>
-      _BlinkingScreenTimeAnimationState();
+  _ActiveScreenTimeBadgeState createState() => _ActiveScreenTimeBadgeState();
 }
 
-class _BlinkingScreenTimeAnimationState
-    extends State<BlinkingScreenTimeAnimation>
+class _ActiveScreenTimeBadgeState extends State<ActiveScreenTimeBadge>
     with SingleTickerProviderStateMixin {
   late Animation<Color?> animation;
   late AnimationController controller;
@@ -226,9 +233,6 @@ class _BlinkingScreenTimeAnimationState
     animation = ColorTween(
             begin: kcScreenTimeBlue, end: kcScreenTimeBlue.withOpacity(0.2))
         .animate(curve);
-    // animation = ColorTween(
-    //         begin: kcScreenTimeBlue, end: kcScreenTimeBlue.withOpacity(0.2))
-    //     .animate(curve);
     controller.repeat();
   }
 
@@ -256,7 +260,7 @@ class _BlinkingScreenTimeAnimationState
                     width: 20, color: animation.value),
                 if (widget.screenTimeLeft != null) horizontalSpaceTiny,
                 if (widget.screenTimeLeft != null)
-                  AfkCreditsText(
+                  InsideOutText(
                       text: widget.screenTimeLeft!,
                       style: captionStyleBold.copyWith(color: kcScreenTimeBlue))
               ],

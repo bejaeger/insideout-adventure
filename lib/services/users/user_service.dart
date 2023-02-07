@@ -1,11 +1,5 @@
-// Intermediary between Firestore and Viewmodels
-
-// Functionalities
-// - initializing current User (id, e-mail, fullname, wallet balances)
-// - exposing currentUser
-// - exposing stream of statistics
-
 import 'dart:async';
+import 'dart:io';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -13,7 +7,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
-import 'package:afkcredits/datamodels/users/favorite_places/user_fav_places.dart';
+import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
@@ -24,19 +18,20 @@ import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'afkcredits_authentication_result_service.dart'; // for the utf8.encode method
+import 'afkcredits_authentication_result_service.dart';
+
 
 class UserService {
-  // -----------------------------------
-  // services
   final _firestoreApi = locator<FirestoreApi>();
   final FirebaseAuthenticationService _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
@@ -44,40 +39,22 @@ class UserService {
   final LocalStorageService _localStorageService =
       locator<LocalStorageService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
+  final NotificationsService _notificationsService =
+      locator<NotificationsService>();
   final log = getLogger('UserService');
 
-  // ---------------------------------------
-  // state / member variables and exposed objects
-  User? _currentUser;
-  UserAdmin? _currentUserAdmin;
   User? get currentUserNullable => _currentUser;
   User get currentUser => _currentUser!;
-  UserStatistics? _currentUserStats;
+  UserSettings get currentUserSettings =>
+      currentUserNullable?.userSettings ?? UserSettings();
   UserStatistics get currentUserStats => _currentUserStats!;
   UserStatistics? get currentUserStatsNullable => _currentUserStats;
-  StreamSubscription? _currentUserStreamSubscription;
-  StreamSubscription? _currentUserStatsStreamSubscription;
-
   UserAdmin? get getCurrentUserAdmin => _currentUserAdmin!;
-  SponsorReference? sponsorReference;
-
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
-
   UserRole get getUserRole => currentUser.role;
   bool get isSuperUser => currentUser.role == UserRole.superUser;
-  bool get isAdminMaster => currentUser.role == UserRole.adminMaster;
+  bool get isAdminUser => currentUser.role == UserRole.admin;
   bool get hasRole => currentUserNullable == null ? false : true;
-
-  // state
-  // store list of supportedExplorers
-  // map of list of money pools with money Pool id as key
-  Map<String, User> supportedExplorers = {};
-  Map<String, UserStatistics> supportedExplorerStats = {};
-
-  // quest history is added to user service (NOT IDEAL!)
-  Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
-
-  StreamSubscription? _explorersDataStreamSubscriptions;
   List<User> get supportedExplorersList {
     List<User> list = [];
     supportedExplorers.forEach((key, value) {
@@ -86,6 +63,17 @@ class UserService {
     return list;
   }
 
+  User? _currentUser;
+  UserAdmin? _currentUserAdmin;
+  UserStatistics? _currentUserStats;
+  StreamSubscription? _currentUserStreamSubscription;
+  StreamSubscription? _currentUserStatsStreamSubscription;
+  SponsorReference? sponsorReference;
+  Map<String, User> supportedExplorers = {};
+  Map<String, UserStatistics> supportedExplorerStats = {};
+  // we add the quest history to the user service (THIS IS NOT IDEAL!)
+  Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
+  StreamSubscription? _explorersDataStreamSubscriptions;
   Map<String, StreamSubscription?> _explorerStatsStreamSubscriptions = {};
   Map<String, StreamSubscription?> _explorerHistoryStreamSubscriptions = {};
   Map<String, StreamSubscription?> _explorerScreenTimeStreamSubscriptions = {};
@@ -97,34 +85,36 @@ class UserService {
         uid ?? _firebaseAuthenticationService.firebaseAuth.currentUser!.uid;
 
     log.v('Sync user $actualUid');
-    // if (role == UserRole.adminMaster) {
-    //   userAccount = await _firestoreApi.getUserAdmin(uid: actualUid);
-    // } else {
     userAccount = await _firestoreApi.getUser(uid: actualUid);
-    // }
 
     if (userAccount != null) {
       log.v('User account exists. Save as _currentUser');
-      // if (UserRole.adminMaster == role) {
-      //   _currentUserAdmin = userAccount;
-      // } else {
-      _currentUser = userAccount;
-      _screenTimeService.setUserId(_currentUser!.uid);
-      // }
+
+      _currentUser = userAccount!;
+
+      _notificationsService.pushToken(
+          uid: _currentUser!.uid, tokens: _currentUser!.tokens);
+      maybeUpdateDeviceId(onlineDeviceId: _currentUser!.deviceId);
+
       if (fromLocalStorage) {
         log.v("Save current user id to disk");
         await _localStorageService.saveToDisk(
-            key: kLocalStorageUidKey, value: userAccount.uid);
+            key: kLocalStorageUidKey, value: _currentUser!.uid);
         await _localStorageService.saveRoleToDisk(
             key: kLocalStorageRoleKey, value: role);
 
+        // ? Unclear why the following is needed.
+        // Maybe if an explorer logs in himself, the sponsor reference
+        // is loaded!
         String? id = await _localStorageService.getFromDisk(
             key: kLocalStorageSponsorReferenceKey);
         String? pin = await _localStorageService.getFromDisk(
             key: kLocalStorageSponsorPinKey);
         if (id != null) {
-          sponsorReference =
-              SponsorReference(uid: id, withPasscode: pin != null);
+          sponsorReference = SponsorReference(
+            uid: id,
+            withPasscode: pin != null,
+          );
         }
       }
     } else {
@@ -132,54 +122,27 @@ class UserService {
     }
   }
 
-  Future<void> syncOrCreateUserAdminAccount(
-      {required UserAdmin userAdmin,
-      required AuthenticationMethod method,
-      bool fromLocalStorate = false}) async {
-    // create a new user profile on firestore
-    log.i("user created by Harguilar: $userAdmin");
-    await syncUserAccount(
-        fromLocalStorage: fromLocalStorate, role: userAdmin.role);
-    try {
-      if (_currentUserAdmin == null) {
-        await _firestoreApi.createUserAdmin(userAdmin: userAdmin);
-        _currentUserAdmin = userAdmin;
-        log.v('User Information Has Been Saved $_currentUserAdmin');
-      }
-      //return await _firestoreApi.createUserAdmin(userAdmin: userAdmin);
-    } catch (e) {
-      log.e("Error in createUser(): ${e.toString()}");
-      throw UserServiceException(
-        message: "Creating user data failed with message",
-        devDetails: e.toString(),
-        prettyDetails:
-            "User data could not be created in our databank. Please try again later or contact support with error messaage: ${e.toString()}",
-      );
-    }
-  }
-
-//BackOffice Ends Here.
-
   Future<User> createUserAccountFromFirebaseUser(
       {required UserRole role,
       required AuthenticationMethod authMethod}) async {
     final user = _firebaseAuthenticationService.firebaseAuth.currentUser!;
     return await createUserAccount(
-        user: User(
-      authMethod: authMethod,
-      uid: user.uid,
-      role: role,
-      fullName: user.displayName ?? "",
-      email: user.email ?? "",
-      newUser: true,
-      explorerIds: [],
-      sponsorIds: [],
-    ));
+      user: User(
+        authMethod: authMethod,
+        uid: user.uid,
+        role: role,
+        fullName: user.displayName ?? "",
+        email: user.email ?? "",
+        newUser: true,
+        explorerIds: [],
+        sponsorIds: [],
+        avatarIdx: 1,
+        userSettings: UserSettings(),
+      ),
+    );
   }
 
-  // create user documents (user info, statistics) in firestore
   Future<User> createUserAccount({required User user}) async {
-    // create a new user profile on firestore
     try {
       log.v("Creating user account");
       List<String> keywords = getListOfKeywordsFromString(user.fullName);
@@ -188,7 +151,7 @@ class UserService {
       await _firestoreApi.createUser(user: newUser, stats: stats);
       return newUser;
     } catch (e) {
-      log.e("Error in createUser(): ${e.toString()}");
+      log.e(e);
       throw UserServiceException(
         message: "Creating user data failed with message",
         devDetails: e.toString(),
@@ -198,26 +161,8 @@ class UserService {
     }
   }
 
-  Future<void> createUserFavouritePlaces(
-      {required String userId, required UserFavPlaces favouritePlaces}) async {
-    await _firestoreApi.createUserFavouritePlaces(
-        userId: userId, favouritePlaces: favouritePlaces);
-  }
-
-//Get User Favourite Places
-  Future<List<UserFavPlaces>?> getUserFavouritePlaces(
-      {required String userId}) async {
-    return await _firestoreApi.getUserFavouritePlaces(userId: userId);
-  }
-
   Future<String?> getLocallyLoggedInUserId() async {
     final id = await _localStorageService.getFromDisk(key: kLocalStorageUidKey);
-    return id;
-  }
-
-  Future<UserRole?> getLocallyLoggedUserRole() async {
-    final id =
-        await _localStorageService.getFromDisk(key: kLocalStorageRoleKey);
     return id;
   }
 
@@ -250,14 +195,14 @@ class UserService {
           // if user is not created by another user we talk about an explorer with an own account
           // authenticate him with email
           log.i(
-              "User is NOT created by sponsor, running standard email login logic");
+              "User is NOT created by sponsor, explorer has its own account.");
           return await runLoginLogic(
               method: AuthenticationMethod.email,
               emailOrName: user.email,
               stringPw: stringPw,
               role: role);
         } else {
-          // user is created by sponsor
+          // user is created by parent
           if (user.password == null) {
             // something really bad happened
             log.wtf(
@@ -270,7 +215,6 @@ class UserService {
               hashedPw1: user.password,
               stringPw2: stringPw,
               hashedPw2: hashedPw)) {
-            // && password == user.password) {
             log.i(
                 "Found AFK user that was created by a sponsor inside the app");
             return AFKCreditsAuthenticationResultService.fromLocalStorage(
@@ -288,14 +232,26 @@ class UserService {
       log.i("Login with e-mail");
       return AFKCreditsAuthenticationResultService
           .fromFirebaseAuthenticationResult(
-              firebaseAuthenticationResult: await _firebaseAuthenticationService
-                  .loginWithEmail(email: emailOrName!, password: stringPw!));
+        firebaseAuthenticationResult: await _firebaseAuthenticationService
+            .loginWithEmail(email: emailOrName!, password: stringPw!),
+      );
     } else if (method == AuthenticationMethod.google) {
       log.i("Login with google");
       return AFKCreditsAuthenticationResultService
           .fromFirebaseAuthenticationResult(
-              firebaseAuthenticationResult:
-                  await _firebaseAuthenticationService.signInWithGoogle());
+        firebaseAuthenticationResult:
+            await _firebaseAuthenticationService.signInWithGoogle(),
+      );
+    } else if (method == AuthenticationMethod.apple) {
+      log.i("Login with apple");
+      return AFKCreditsAuthenticationResultService
+          .fromFirebaseAuthenticationResult(
+        firebaseAuthenticationResult:
+            await _firebaseAuthenticationService.signInWithApple(
+          appleClientId: kAppleClientId,
+          appleRedirectUri: kAppleRedirectUri,
+        ),
+      );
     } else if (method == AuthenticationMethod.dummy) {
       return AFKCreditsAuthenticationResultService
           .fromFirebaseAuthenticationResult(
@@ -308,7 +264,7 @@ class UserService {
           "The authentication method you tried to use is not implemented yet. Use E-mail, Google, or Apple to authenticate");
       return Future.value(AFKCreditsAuthenticationResultService.error(
           errorMessage:
-              "Authentification method you try to use is not available."));
+              "The authentication method you tried to use is not available."));
     }
   }
 
@@ -335,20 +291,22 @@ class UserService {
       return AFKCreditsAuthenticationResultService.error(
           errorMessage: result.errorMessage);
     } else {
-      // create user in data bank
       try {
         final user = result.user!;
         await createUserAccount(
-            user: User(
-          authMethod: method,
-          uid: user.uid,
-          role: role,
-          fullName: fullName ?? (user.displayName ?? ""),
-          email: user.email ?? "",
-          newUser: true,
-          explorerIds: [],
-          sponsorIds: [],
-        ));
+          user: User(
+            authMethod: method,
+            uid: user.uid,
+            role: role,
+            fullName: fullName ?? (user.displayName ?? ""),
+            email: user.email ?? "",
+            newUser: true,
+            explorerIds: [],
+            sponsorIds: [],
+            avatarIdx: 1,
+            userSettings: UserSettings(),
+          ),
+        );
       } catch (e) {
         log.e("Error: $e");
         if (e is FirestoreApiException) {
@@ -366,9 +324,6 @@ class UserService {
     }
   }
 
-  /////////////////////////////////////////////////
-  /// Functions to add explorer accounts!
-
   bool isSupportedExplorer({required String uid}) {
     List<String> explorerIds = currentUser.explorerIds;
     return explorerIds.contains(uid);
@@ -377,7 +332,8 @@ class UserService {
   Future createExplorerAccount(
       {required String name,
       required String password,
-      required AuthenticationMethod authMethod}) async {
+      required AuthenticationMethod authMethod,
+      required UserSettings userSettings}) async {
     if (await isUserAlreadyPresent(name: name)) {
       return "User with name $name already present. Please choose a different name.";
     }
@@ -393,33 +349,15 @@ class UserService {
       createdByUserWithId: currentUser.uid,
       explorerIds: [],
       newUser: true,
+      deviceId: currentUser.deviceId,
+      tokens: currentUser.tokens,
+      avatarIdx: 1,
+      userSettings: userSettings,
     );
     await createUserAccount(user: newExplorer);
     List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
     await updateUserData(
         user: currentUser.copyWith(explorerIds: newExplorerIds));
-  }
-
-  Future addExplorerToSupportedExplorers({required String uid}) async {
-    try {
-      if (currentUser.explorerIds.contains(uid)) {
-        return "Explorer already supported";
-      } else {
-        log.i("Adding explorer with id $uid to list of explorers");
-        List<String> newExplorerIds = addToSupportedExplorersList(uid: uid);
-        // Ideal way would be to add a transaction here!
-        await Future.wait([
-          updateUserData(
-              user: currentUser.copyWith(explorerIds: newExplorerIds)),
-          addSponsorIdToOtherUser(
-              otherUsersId: uid, sponsorId: currentUser.uid),
-        ]);
-      }
-    } catch (e) {
-      log.e(
-          "Error when trying to add new explorer to list of supported explorers");
-      rethrow;
-    }
   }
 
   Future removeExplorerFromSupportedExplorers({required String uid}) async {
@@ -429,7 +367,6 @@ class UserService {
       } else {
         log.i("Removing explorer with id $uid from list of explorers");
         List<String> newExplorerIds = removeFromExplorerLists(uid: uid);
-        // Ideal way would be to add a transaction here!
         await Future.wait([
           updateUserData(
               user: currentUser.copyWith(explorerIds: newExplorerIds)),
@@ -463,7 +400,9 @@ class UserService {
   ///
 
   void setupUserDataListeners(
-      {required Completer<void> completer, void Function()? callback}) async {
+      {required Completer<void> completer,
+      void Function()? callback,
+      void Function()? screenTimeRequestDialogCallback}) async {
     if (_currentUserStreamSubscription == null) {
       Stream<User> userStream =
           _firestoreApi.getUserStream(uid: currentUser.uid);
@@ -516,7 +455,10 @@ class UserService {
           );
 
           // adds listener to stats document and quest history of each explorer
-          await addExplorerListeners(explorerIds: newUids, callback: callback);
+          await addExplorerListeners(
+              explorerIds: newUids,
+              callback: callback,
+              screenTimeRequestDialogCallback: screenTimeRequestDialogCallback);
 
           if (!completer.isCompleted) {
             completer.complete();
@@ -538,7 +480,9 @@ class UserService {
   // listens to the user document as well as the user stats document
   // of all explorers.
   Future<void> addExplorerListeners(
-      {required List<String> explorerIds, void Function()? callback}) async {
+      {required List<String> explorerIds,
+      void Function()? callback,
+      void Function()? screenTimeRequestDialogCallback}) async {
     Completer<void> completer = Completer();
     int i = 0;
     if (explorerIds.length == 0) {
@@ -550,7 +494,9 @@ class UserService {
       await addExplorerHistoryListener(
           explorerId: explorerId, callback: callback);
       await addExplorerScreenTimeListener(
-          explorerId: explorerId, callback: callback);
+          explorerId: explorerId,
+          callback: callback,
+          screenTimeRequestDialogCallback: screenTimeRequestDialogCallback);
       i += 1;
       if (i == explorerIds.length) {
         if (!completer.isCompleted) {
@@ -610,86 +556,112 @@ class UserService {
   }
 
   Future addExplorerScreenTimeListener(
-      {required String explorerId, void Function()? callback}) async {
+      {required String explorerId,
+      void Function()? callback,
+      void Function()? screenTimeRequestDialogCallback}) async {
     Completer<void> completer = Completer();
     if (!_explorerScreenTimeStreamSubscriptions.containsKey(explorerId) ||
         _explorerScreenTimeStreamSubscriptions[explorerId] == null) {
-      _explorerScreenTimeStreamSubscriptions[explorerId] = _firestoreApi
-          .getScreenTimeSessionStream(uid: explorerId)
-          .listen((snapshot) {
-        _screenTimeService.supportedExplorerScreenTimeSessions[explorerId] =
-            snapshot;
+      _explorerScreenTimeStreamSubscriptions[explorerId] =
+          _firestoreApi.getScreenTimeSessionStream(uid: explorerId).listen(
+        (snapshot) async {
+          _screenTimeService.supportedExplorerScreenTimeSessions[explorerId] =
+              snapshot;
 
-        // Need to remove active screen time here when it
-        // is stopped on another phone!
-        List<ScreenTimeSession> completedOrCancelled = snapshot
-            .where((element) =>
-                (element.status == ScreenTimeSessionStatus.completed) ||
-                (element.status == ScreenTimeSessionStatus.cancelled))
-            .toList();
-        if (completedOrCancelled.any((element) =>
-            element.sessionId ==
-            _screenTimeService
-                .supportedExplorerScreenTimeSessionsActive[explorerId]
-                ?.sessionId)) {
-          // this means an active screen time session was stopped manuarlly!
-          _screenTimeService.cancelActiveScreenTimeListeners(uid: explorerId);
+          // Need to remove active screen time here when it
+          // is stopped on another phone!
+          List<ScreenTimeSession> completedOrCancelled = snapshot
+              .where((element) =>
+                  (element.status == ScreenTimeSessionStatus.completed) ||
+                  (element.status == ScreenTimeSessionStatus.cancelled))
+              .toList();
+          if (completedOrCancelled.any((element) =>
+              element.sessionId ==
+              _screenTimeService
+                  .supportedExplorerScreenTimeSessionsActive[explorerId]
+                  ?.sessionId)) {
+            // this means an active screen time session was stopped manually!
+            _screenTimeService.cancelActiveScreenTimeListeners(uid: explorerId);
+            log.v(
+                "Cancelling screen time event for explorer with id $explorerId");
+            if (callback != null) {
+              callback();
+            }
+          }
           log.v(
-              "Cancelling screen time event for explorer with id $explorerId");
+              "Listened to new screen time session event fired from firestore listener.");
+
+          // potentially add to active screen time map
+          ScreenTimeSession? prevActiveSessions = _screenTimeService
+              .supportedExplorerScreenTimeSessionsActive[explorerId];
+
+          // Check for any active screen times!
+          try {
+            ScreenTimeSession session = snapshot.firstWhere(
+                (element) => element.status == ScreenTimeSessionStatus.active);
+            _screenTimeService
+                    .supportedExplorerScreenTimeSessionsActive[explorerId] =
+                session;
+            // there is an active session for explorer with id explorerId
+            // need to start local screen time listeners if they are not yet started!
+            await _screenTimeService
+                .continueOrBookkeepScreenTimeSessionOnStartup(
+              session: session,
+              callback: () {
+                if (callback != null) {
+                  callback();
+                }
+              },
+            );
+          } catch (e) {
+            if (e is StateError) {
+              log.v("No active screen time for explorer with id $explorerId");
+              if (prevActiveSessions != null) {
+                // THIS means a screen time session was cancelled prematurely after X
+                // seconds (30 seconds per default) and was deleted from firestore!
+                // See stopScreenTime function in screen_time_service.dart
+                _screenTimeService.cancelActiveScreenTimeListeners(
+                    uid: explorerId);
+                log.v(
+                    "Cancelling screen time event because it was deleted for explorer with id $explorerId");
+                if (callback != null) {
+                  callback();
+                }
+              }
+              // since there is no active session we should not forget to remove it from the state!
+              _screenTimeService.supportedExplorerScreenTimeSessionsActive
+                  .remove(explorerId);
+            } else {
+              rethrow;
+            }
+          }
+
+          try {
+            ScreenTimeSession session = snapshot.firstWhere((element) =>
+                element.status == ScreenTimeSessionStatus.requested);
+            _screenTimeService
+                    .supportedExplorerScreenTimeSessionsRequested[explorerId] =
+                session;
+            if (screenTimeRequestDialogCallback != null) {
+              screenTimeRequestDialogCallback();
+            }
+          } catch (e) {
+            if (e is StateError) {
+              log.v(
+                  "No requested screen time for explorer with id $explorerId anymore");
+              _screenTimeService.supportedExplorerScreenTimeSessionsRequested
+                  .remove(explorerId);
+            }
+          }
+
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
           if (callback != null) {
             callback();
           }
-        }
-        log.v(
-            "Listened to new screen time session event fired from firestore listener.");
-
-        // potentially add to active screen time map
-        ScreenTimeSession? prevActiveSessions = _screenTimeService
-            .supportedExplorerScreenTimeSessionsActive[explorerId];
-        try {
-          ScreenTimeSession session = snapshot.firstWhere(
-              (element) => element.status == ScreenTimeSessionStatus.active);
-          _screenTimeService
-              .supportedExplorerScreenTimeSessionsActive[explorerId] = session;
-          // there is an active session for explorer with id explorerId
-          // need to start local screen time listeners if they are not yet started!
-          _screenTimeService.continueOrBookkeepScreenTimeSessionOnStartup(
-            session: session,
-            callback: () {
-              if (callback != null) {
-                callback();
-              }
-            },
-          );
-        } catch (e) {
-          if (e is StateError) {
-            log.v("No active screen time for explorer with id $explorerId");
-            if (prevActiveSessions != null) {
-              // THIS means a screen time session was cancelled after X seconds (30 seconds per default) and was deleted from firestore!
-              // See stopScreenTime function in screen_time_service.dart
-              _screenTimeService.cancelActiveScreenTimeListeners(
-                  uid: explorerId);
-              log.v(
-                  "Cancelling screen time event because it was deleted for explorer with id $explorerId");
-              if (callback != null) {
-                callback();
-              }
-            }
-            // since there is no active session we cannot forget to remove it from the state!
-            _screenTimeService.supportedExplorerScreenTimeSessionsActive
-                .remove(explorerId);
-          } else {
-            rethrow;
-          }
-        }
-
-        if (!completer.isCompleted) {
-          completer.complete();
-        }
-        if (callback != null) {
-          callback();
-        }
-      });
+        },
+      );
     } else {
       log.w(
           "Screen time session stream of user with id $explorerId already listened to!");
@@ -732,9 +704,11 @@ class UserService {
     }
     await _localStorageService.saveToDisk(
         key: kLocalStorageSponsorReferenceKey, value: uid);
-    log.wtf("PIN => $pin");
     sponsorReference = SponsorReference(
-        uid: uid, authMethod: authMethod, withPasscode: pin != null);
+        uid: uid,
+        authMethod: authMethod,
+        withPasscode: pin != null,
+        deviceId: currentUser.deviceId);
   }
 
   Future clearSponsorReference() async {
@@ -745,11 +719,31 @@ class UserService {
     sponsorReference = null;
   }
 
-  /////////////////////////////////////////////
-  /// Functions used in parents area for displaying child statistics
-  ///
+  Future maybeUpdateDeviceId({required String? onlineDeviceId}) async {
+    // we update the device id in the database in case it is different
+    // We want to keep track of this to decide on which and if we should
+    // show push notifications for the screen time feature
+    String currentDeviceId = await _getDeviceId();
+    if (onlineDeviceId != currentDeviceId) {
+      _firestoreApi.updateDeviceId(
+          uid: currentUser.uid, deviceId: currentDeviceId);
+    }
+  }
+
+  Future _getDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (kIsWeb) return;
+    if (Platform.isIOS) {
+      // import 'dart:io'
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else if (Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.androidId; // unique ID on Android
+    }
+  }
+
   List<ActivatedQuest> sortedChildQuestHistory({String? uid}) {
-    // TODO: Also add screen time into the mix!
     List<ActivatedQuest> sortedQuests = [];
     if (uid == null) {
       supportedExplorerQuestsHistory.forEach((key, quests) {
@@ -918,15 +912,23 @@ class UserService {
     return "";
   }
 
-  //////////////////////////////////////////
-  /// Some smaller helper functions
   bool isSponsored({required String uid}) {
     return supportedExplorersList.any((element) => element.uid == uid);
+  }
+
+  bool hasCompletedQuest({required String? questId}) {
+    if (questId == null) return false;
+    return currentUserStats.completedQuestIds.contains(questId);
   }
 
   Future setNewUserPropertyToFalse({required User user}) async {
     User newUser = user.copyWith(newUser: false);
     _firestoreApi.updateUserData(user: newUser);
+  }
+
+  Future setNewAvatarId({required int id, required User user}) async {
+    User newUser = user.copyWith(avatarIdx: id);
+    await _firestoreApi.updateUserData(user: newUser);
   }
 
   List<String> removeFromExplorerLists({required String uid}) {
@@ -961,17 +963,60 @@ class UserService {
     return sha1.convert(bytes1).toString();
   }
 
-  //////////////////////////////////////////////////
-  // Calls to database
+  bool get isShowingCompletedQuests =>
+      currentUserSettings.isShowingCompletedQuests;
+  Future setIsShowingCompletedQuests({required bool value}) async {
+    updateUserData(
+      user: currentUser.copyWith(
+        userSettings:
+            currentUserSettings.copyWith(isShowingCompletedQuests: value),
+      ),
+    );
+  }
+
+  bool get isUsingAR => currentUserSettings.isUsingAR;
+  Future setIsUsingAr({required bool value}) async {
+    updateUserData(
+      user: currentUser.copyWith(
+        userSettings: currentUserSettings.copyWith(isUsingAR: value),
+      ),
+    );
+  }
+
+  // On older phones the lottie effects lead to huge lags.
+  // This provides an option to avoid showing the lottie effects!
+  bool get isShowAvatarAndMapEffects =>
+      currentUserSettings.isShowAvatarAndMapEffects;
+  Future setIsShowingAvatarAndMapEffects({required bool value}) async {
+    updateUserData(
+      user: currentUser.copyWith(
+        userSettings:
+            currentUserSettings.copyWith(isShowAvatarAndMapEffects: value),
+      ),
+    );
+  }
+
+  // USED to make settings from parents account to user account
+  bool get isAcceptScreenTimeFirst =>
+      currentUserSettings.isAcceptScreenTimeFirst;
+  Future setIsAcceptScreenTimeFirst(
+      {required String uid, required bool value}) async {
+    // This is a bit critical: Check UserSettings class if the key is correct
+    await _firestoreApi.updateUserSettings(
+        uid: uid, key: "isAcceptScreenTimeFirst", value: value);
+  }
+
+  // USED to make settings from parents account to user account
+  bool get isUsingOwnPhone => currentUserSettings.ownPhone;
+  Future setIsUsingOwnPhone({required String uid, required bool value}) async {
+    // This is a bit critical: Check UserSettings class if the key is correct
+    await _firestoreApi.updateUserSettings(
+        uid: uid, key: "ownPhone", value: value);
+  }
 
   Future updateUserData({required User user}) async {
     _currentUser = user;
     _firestoreApi.updateUserData(user: user);
-  }
-
-  Future addSponsorIdToOtherUser(
-      {required String otherUsersId, required String sponsorId}) async {
-    _firestoreApi.addSponsorIdToUser(uid: otherUsersId, sponsorId: sponsorId);
   }
 
   Future removeSponsorIdFromOtherUser(
@@ -985,10 +1030,6 @@ class UserService {
     return uid != null;
   }
 
-  ///////////////////////////////////////////////////
-  // Clean up
-
-  // pause the listener
   void cancelExplorerListener({required String uid}) {
     log.v("Cancel transfer data listener with config: '$uid'");
     _explorerStatsStreamSubscriptions[uid]?.cancel();
@@ -999,19 +1040,15 @@ class UserService {
     _explorerScreenTimeStreamSubscriptions[uid] = null;
   }
 
-  // clear all data when user logs out!
   Future handleLogoutEvent(
       {bool logOutFromFirebase = true,
       bool doNotClearSponsorReference = false}) async {
     if (!kIsWeb) {
-      // remove uid from local storage
       await _localStorageService.deleteFromDisk(key: kLocalStorageUidKey);
     }
-    // set current user to null
     _currentUser = null;
     _currentUserStats = null;
 
-    // remove user listeners
     _currentUserStreamSubscription?.cancel();
     _currentUserStreamSubscription = null;
     _currentUserStatsStreamSubscription?.cancel();
@@ -1032,10 +1069,8 @@ class UserService {
     supportedExplorers = {};
     supportedExplorerStats = {};
 
-    // remove sponsor reference
     if (!doNotClearSponsorReference) clearSponsorReference();
 
-    // actually log out from firebase
     if (logOutFromFirebase) {
       await _firebaseAuthenticationService.logout();
     }

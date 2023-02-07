@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/bottom_nav_bar_index.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -16,7 +16,6 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/permission_service.dart';
-import 'package:afkcredits/services/qrcodes/qrcode_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
@@ -24,13 +23,12 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:afkcredits/utils/string_utils.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
+
 // The Basemodel
 // All our ViewModels inherit from this class so
 // put everything here that needs to be available throughout the
@@ -49,21 +47,18 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   final GeolocationService geolocationService = locator<GeolocationService>();
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
-  final QRCodeService qrCodeService = locator<QRCodeService>();
   final GamificationService gamificationService =
       locator<GamificationService>();
   final ScreenTimeService screenTimeService = locator<ScreenTimeService>();
   final PermissionService _permissionService = locator<PermissionService>();
   final baseModelLog = getLogger("BaseModel");
 
-  // ------------------------------------------------------
-  // getters
   User get currentUser => userService.currentUser;
   User? get currentUserNullable => userService.currentUserNullable;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
   bool get isParentAccount => currentUser.role == UserRole.sponsor;
-  bool get isAdminMaster => userService.isAdminMaster;
+  bool get isAdminMaster => userService.isAdminUser;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
       : userService.isSuperUser;
@@ -85,8 +80,10 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   bool get isMovingCamera => layoutService.isMovingCamera;
   bool get isFadingOutQuestDetails => layoutService.isFadingOutQuestDetails;
 
-  // -----------------------------------------------
-  // gamification system
+  int get avatarIdx => currentUserNullable?.avatarIdx != null
+      ? currentUserNullable!.avatarIdx!
+      : 1;
+
   int currentLevel({num? lifetimeEarnings}) {
     return gamificationService.getCurrentLevel(
         lifetimeEarnings: lifetimeEarnings);
@@ -98,11 +95,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       gamificationService.getPercentageOfNextLevel();
   String get currentLevelName => gamificationService.getCurrentLevelName();
 
-  // --------------------------------------------------
   bool get hasSelectedQuest => activeQuestService.hasSelectedQuest;
   Quest? get selectedQuest => activeQuestService.selectedQuest;
   bool get hasActiveQuest => activeQuestService.hasActiveQuest;
-  // only access this
   ActivatedQuest get activeQuest => activeQuestService.activatedQuest!;
   ActivatedQuest? get previouslyFinishedQuest =>
       activeQuestService.previouslyFinishedQuest;
@@ -110,10 +105,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   String get getHourMinuteSecondsTime =>
       _stopWatchService.secondsToHourMinuteSecondTime(activeQuest.timeElapsed);
-
-  bool? canVibrate;
-
-  bool validatingMarker = false;
 
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
@@ -123,8 +114,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       screenTimeService.supportedExplorerScreenTimeSessionsActive.values
           .toList();
 
-  // ------------------------------------------
-  // state
+  bool? canVibrate;
+  bool validatingMarker = false;
 
   int getMinSreenTimeLeftInSeconds(
       {required List<ScreenTimeSession> sessions}) {
@@ -155,29 +146,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
-  // screen time will be added to subject every 60 seconds.
-  // Map<String, StreamSubscription?> screenTimeSubjectSubscription = {};
-  // void listenToScreenTime() {
-  //   baseModelLog.e(
-  //       "active screen time length: ${userService.supportedExplorerScreenTimeSessionsActive.length}");
-  //   userService.supportedExplorerScreenTimeSessionsActive.forEach(
-  //     (key, element) {
-  //       if (!screenTimeSubjectSubscription.containsKey(element.uid) ||
-  //           screenTimeSubjectSubscription[element.uid] == null) {
-  //         screenTimeSubjectSubscription[element.uid] =
-  //             screenTimeService.screenTimeActiveSubject[element.uid]?.listen(
-  //           (_) {
-  //             newScreenTimeLeft = secondsToMinuteTime(
-  //                 screenTimeService.getMinSreenTimeLeftInSeconds());
-  //             baseModelLog.e("new screentime left: $newScreenTimeLeft");
-  //             notifyListeners();
-  //           },
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
-
   Future clearServiceData(
       {bool logOutFromFirebase = true,
       bool doNotClearSponsorReference = false}) async {
@@ -192,27 +160,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         doNotClearSponsorReference: doNotClearSponsorReference);
   }
 
-  void unregisterViewModels() {
-    // unregister all singleton viewmodels when logging out
-    // TODO: remove data from viewmodels on loggin!
-    // if (locator.isRegistered<ActiveTreasureLocationSearchQuestViewModel>()) {
-    //   locator.unregister<ActiveTreasureLocationSearchQuestViewModel>();
-    // }
-    // if (locator.isRegistered<ActiveDistanceEstimateQuestViewModel>()) {
-    //   locator.unregister<ActiveDistanceEstimateQuestViewModel>();
-    // }
-    // if (locator.isRegistered<ActiveQrCodeSearchViewModel>()) {
-    //   locator.unregister<ActiveQrCodeSearchViewModel>();
-    // }
-    // if (locator.isRegistered<PurchasedGiftCardsViewModel>()) {
-    //   locator.unregister<PurchasedGiftCardsViewModel>();
-    // }
-  }
-
   Future logout() async {
-    // TODO: Check that there is no active quest present!
     clearServiceData();
-    unregisterViewModels();
     navigationService.clearStackAndShow(Routes.loginView);
   }
 
@@ -222,15 +171,13 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
+  // TODO: Remove concept of "enough sponsoring"
   bool hasEnoughSponsoring({required Quest? quest}) {
     if (quest == null) {
       baseModelLog.e(
           "Attempted to check whether sponsoring is enough for quest that is null!");
       return false;
     }
-    // TODO: Pay attention to this here
-    // return quest.afkCredits <= currentUserStats.availableSponsoring;
-    // TODO: For now we always assume we have enough funding
     return true;
   }
 
@@ -238,8 +185,6 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     return currentUserStats.afkCreditsBalance >= credits;
   }
 
-  ////////////////////////////////////////
-  // Navigation and dialogs
   void navigateBack() {
     navigationService.back();
   }
@@ -271,55 +216,43 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   }
 
   Future clearStackAndNavigateToHomeView(
-      {bool showQuestsFoundSnackbar = false}) async {
-    if (currentUser.role == UserRole.sponsor) {
+      {bool showBewareDialog = false,
+      bool showNumberQuestsDialog = false}) async {
+    if (isParentAccount || isAdminMaster) {
       await navigationService.clearStackAndShow(
         Routes.parentHomeView,
       );
-    } else if (currentUser.role == UserRole.adminMaster) {
-      await navigationService.clearStackAndShow(
-          Routes.bottomBarLayoutTemplateView,
-          arguments:
-              BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
     } else {
       await navigationService.clearStackAndShow(
         Routes.explorerHomeView,
         arguments: ExplorerHomeViewArguments(
-            showQuestsFoundSnackbar: showQuestsFoundSnackbar),
+          showBewareDialog: showBewareDialog,
+          showNumberQuestsDialog: showNumberQuestsDialog,
+        ),
       );
     }
   }
 
-  Future replaceWithHomeView({bool showPermissionView = false}) async {
+  Future replaceWithHomeView(
+      {bool showPermissionView = false,
+      bool showBewareDialog = false,
+      bool showNumberQuestsDialog = false,
+      ScreenTimeSession? screenTimeSession}) async {
+    baseModelLog.v("Replacing view with home view");
     // ? Request for all necessary permissions
     if (showPermissionView) {
       if (!(await _permissionService.allPermissionsProvided())) {
         await navigationService.navigateTo(Routes.permissionsView);
       }
     }
-    if (currentUser.role == UserRole.sponsor) {
-      replaceWithParentHomeView();
-    } else if (currentUser.role == UserRole.adminMaster) {
-      await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-          arguments:
-              BottomBarLayoutTemplateViewArguments(userRole: currentUser.role));
+    if (isParentAccount || isAdminMaster) {
+      await replaceWithParentHomeView(screenTimeSession: screenTimeSession);
     } else {
-      replaceWithExplorerHomeView();
+      await replaceWithExplorerHomeView(
+          showBewareDialog: showBewareDialog,
+          showNumberQuestsDialog: showNumberQuestsDialog,
+          screenTimeSession: screenTimeSession);
     }
-  }
-
-  Future replaceWithMainView({required BottomNavBarIndex index}) async {
-    await navigationService.replaceWith(Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(
-            userRole: currentUser.role, initialBottomNavBarIndex: index));
-  }
-
-  Future clearStackAndNavigateToMainView(
-      {required BottomNavBarIndex index}) async {
-    await navigationService.clearStackAndShow(
-        Routes.bottomBarLayoutTemplateView,
-        arguments: BottomBarLayoutTemplateViewArguments(
-            userRole: currentUser.role, initialBottomNavBarIndex: index));
   }
 
   Future showGenericInternalErrorDialog() async {
@@ -329,61 +262,21 @@ class BaseModel extends BaseViewModel with NavigationMixin {
             "An internal error occured on our side. Sorry, please try again later.");
   }
 
-  // TODO: MAYBE this can go into the base_viewmodel as it's needed also in other screens!
-  Future scanQrCode() async {
-    if (await maybeCheatAndCollectNextMarker()) {
-      return;
-    }
-
-    // navigate to qr code view, validate results in quest service, and continue
-    MarkerAnalysisResult result = await navigateToQrcodeViewAndReturnResult();
-    if (result.isEmpty) {
-      baseModelLog.wtf("The object QuestQRCodeScanResult is empty!");
-      return;
-    }
-    if (result.hasError) {
-      baseModelLog.e("Error occured: ${result.errorMessage}");
-      await dialogService.showDialog(
-        title: "Cannot collect marker!",
-        description: result.errorMessage!,
-      );
-      return;
-    }
-    return await handleMarkerAnalysisResult(result);
-  }
-
   Future maybeCheatAndCollectNextMarker() async {
     if (useSuperUserFeatures) {
       final admin = await showAdminDialogAndGetResponse();
       if (admin == true) {
         // collect next marker automatically!
         AFKMarker? nextMarker = activeQuestService.getNextMarker();
-        await activeQuestService.analyzeMarker(marker: nextMarker);
+        await activeQuestService.analyzeMarkerAndUpdateQuest(
+            marker: nextMarker);
         final result = MarkerAnalysisResult.marker(marker: nextMarker);
         await handleMarkerAnalysisResult(result);
+        baseModelLog.w("Cheated to collect this marker!");
         return true;
       }
     }
     return false;
-  }
-
-  Future<MarkerAnalysisResult> navigateToQrcodeViewAndReturnResult() async {
-    final marker = await navigationService.navigateTo(Routes.qRCodeView);
-    if (useSuperUserFeatures && marker != null) {
-      final adminMode = await showAdminDialogAndGetResponse();
-      if (adminMode == true) {
-        String qrCodeString =
-            qrCodeService.getQrCodeStringFromMarker(marker: marker);
-        await navigationService.navigateTo(Routes.qRCodeView,
-            arguments: QRCodeViewArguments(qrCodeString: qrCodeString));
-        return MarkerAnalysisResult.empty();
-      }
-    }
-    validatingMarker = true;
-    MarkerAnalysisResult scanResult =
-        await activeQuestService.analyzeMarker(marker: marker);
-    validatingMarker = false;
-    return scanResult;
   }
 
   ////////////////////////////
@@ -412,52 +305,73 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   }
 
   Future<SheetResponse?> displayQuestBottomSheet(
-      {required Quest quest, AFKMarker? startMarker}) async {
+      {required Quest quest,
+      AFKMarker? startMarker,
+      bool completed = false}) async {
     SheetResponse? sheetResponse = await bottomSheetService.showCustomSheet(
-        variant: BottomSheetType.questInformation,
-        title: quest.name,
-        enterBottomSheetDuration: Duration(milliseconds: 300),
-        // exitBottomSheetDuration: Duration(milliseconds: 1),
-        // curve: Curves.easeInExpo,
-        // curve: Curves.linear,
-        // barrierColor: Colors.black45,
-        description: quest.description,
-        mainButtonTitle: isParentAccount ? "Show quest" : "Play",
-        secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
-        data: quest);
+      variant: BottomSheetType.questInformation,
+      title: quest.name,
+      enterBottomSheetDuration: Duration(milliseconds: 300),
+      description: quest.description,
+      mainButtonTitle: isParentAccount ? "Show markers" : "Play",
+      secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
+      data: {
+        "quest": quest,
+        "completed":
+            completed && !(quest.repeatable == 1) && !useSuperUserFeatures
+      },
+    );
     return sheetResponse;
-    // if (sheetResponse?.confirmed == true) {
-    //   baseModelLog
-    //       .i("Looking at details of quest OR starting quest immediately");
-    //   return true;
-    // questService.getQuestUIStyle(quest: quest) == QuestUIStyle.map
-    //     ? await navigateToActiveQuestUI(quest: quest)
-    //     : await navigateToActiveQuestUI(quest: quest);
   }
 
   Future openSuperUserSettingsDialog() async {
-    await dialogService.showCustomDialog(variant: DialogType.SuperUserSettings);
-    setListenedToNewPosition(false);
-    notifyListeners();
+    if (isSuperUser) {
+      await dialogService.showCustomDialog(
+          barrierDismissible: true, variant: DialogType.SuperUserSettings);
+      setListenedToNewPosition(false);
+      notifyListeners();
+    }
   }
 
   Future showCollectedMarkerDialog() async {
     await dialogService.showCustomDialog(variant: DialogType.CollectedMarker);
   }
 
-  //////////////////////////////////////////
-  /// Clean-up
+  // this is supposed to show the main instructions.
+  // For now it's just a simple dialog
+  Future showQuestInstructionDialog(QuestType? type) async {
+    if (type == QuestType.TreasureLocationSearch) {
+      await dialogService.showDialog(
+          title: "How it works",
+          description: kLocationSearchDescription,
+          barrierDismissible: true);
+    } else if (type == QuestType.GPSAreaHike) {
+      await dialogService.showDialog(
+          title: "How it works",
+          description: kGPSAreaHikeDescription,
+          barrierDismissible: true);
+    } else if (type == QuestType.DistanceEstimate) {
+      await dialogService.showDialog(
+          title: "How it works",
+          description: kDistanceEstimateDescription,
+          barrierDismissible: true);
+    } else {
+      showGenericInternalErrorDialog();
+    }
+  }
 
-  // void cancelScreenTimeLeftInSecondsSubjectListener() {
-  //   screenTimeSubjectSubscription.forEach((key, value) {
-  //     value?.cancel();
-  //     screenTimeSubjectSubscription[key] = null;
-  //   });
-  // }
+  Future setNewUserPropertyToFalse() async {
+    baseModelLog.i("Setting 'new user' property to false");
+    userService.setNewUserPropertyToFalse(user: currentUser);
+  }
+
+  Future setNewAvatarId(int id) async {
+    baseModelLog.i("Setting 'avatar id' to $id");
+    await userService.setNewAvatarId(id: id, user: currentUser);
+  }
 
   @override
   void dispose() {
     super.dispose();
-    //cancelScreenTimeLeftInSecondsSubjectListener();
   }
 }

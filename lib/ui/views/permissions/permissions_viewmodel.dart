@@ -1,50 +1,35 @@
 import 'dart:async';
 
+import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/services/local_storage_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
-// View that asks for all permissions
-
-// - Geolocation
-// - Notifications
-
-// - Camera for AR view
-// - URL launcher?
-// - Activity
-// - ...
-// - maybe battery save mode
-
 class PermissionsViewModel extends BaseModel {
-  // -----------------------------------------------------------
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
+  final LocalStorageService  _localStorageServie = locator<LocalStorageService>();
+      final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final log = getLogger("PermissionsViewModel");
 
-  // -----------------------------
-  // state
   bool showReinstallScreen = false;
   bool changedPermission = false;
 
-  // -------------------------------------------------
-  // Main function
   Future<void> runPermissionLogic() async {
     bool allGood = true;
 
-    // - location permission
     allGood = allGood & await handleLocationPermission();
 
-    // - notification service
     allGood = allGood & await handleNotificationPermissions();
 
-    // - camera service
-    // Not used at the moment!
-    //allGood = allGood & await handleCameraPermissions();
+    // not used at the moment
+    // allGood = allGood & await handleCameraPermissions();
 
-    // - activity service
-    // Not used at the moment!
+    await handleArTest();
 
     if (allGood) {
       if (changedPermission) {
@@ -60,15 +45,11 @@ class PermissionsViewModel extends BaseModel {
     notifyListeners();
   }
 
-  // ---------------------------------------------
-  // helper functions
-
   // @ https://pub.dev/packages/geolocator
   // The geolocator will automatically try to request permissions when you try to acquire a location through the getCurrentPosition or getPositionStream methods.
   Future<bool> handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
-    // Test if location services are enabled.
     serviceEnabled = await _geolocatorPlatform.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Location services are not enabled don't continue
@@ -94,7 +75,13 @@ class PermissionsViewModel extends BaseModel {
       // Permissions are denied forever, handle appropriately.
       log.i("Location service denied forever.");
       await showReinstallOrChangePermissionDialog(permissionType: "location");
+      // This won't await for the user to turn back to the app.
+      // So he will be immediately faced with the new handleLocationPermission and thus
+      // the "Oops" text
       await openAppSettings();
+      // UNLESS: We show this again. and when the user pressed okay things should be fine now!
+      await showReinstallOrChangePermissionDialog(permissionType: "location");
+      notifyListeners();
       return await handleLocationPermission();
     }
     return true;
@@ -112,12 +99,10 @@ class PermissionsViewModel extends BaseModel {
     return true;
   }
 
-  // ? Not used at the moment
   Future handleCameraPermissions() async {
     var status = await Permission.camera.status;
     log.v("camera permissions: $status");
-    if (status.isDenied) {
-      // We didn't ask for permission yet or the permission has been denied before but not permanently.
+    if (status.isDenied || status.isPermanentlyDenied) {
       await showCameraPermissionRequestDialog();
       status = await Permission.camera.request();
       if (status.isDenied) {
@@ -128,6 +113,9 @@ class PermissionsViewModel extends BaseModel {
       if (status.isPermanentlyDenied) {
         await showReinstallOrChangePermissionDialog(permissionType: "camera");
         await openAppSettings();
+        // see comments above on why we show this dialog again
+        await showReinstallOrChangePermissionDialog(permissionType: "camera");
+        notifyListeners();
         return await handleCameraPermissions();
       } else {
         changedPermission = true;
@@ -136,13 +124,44 @@ class PermissionsViewModel extends BaseModel {
     return true;
   }
 
-  // -------------------------------------------------------
-  // Dialogs
+  Future handleArTest() async {
+    // AR not supported yet for Android
+    if (!appConfigProvider.isARAvailable) {
+      _localStorageServie.saveToDisk(key: kConfiguredArKey, value: "true");
+      return;
+    }
+
+    await showTestArDialog();
+    bool ok = false;
+    try {
+      dynamic res = await navToArObjectView(true);
+      ok = res is bool && res == true;
+    } catch (e) {
+      log.e("Cannot open AR view");
+    }
+    if (ok) {
+      userService.setIsUsingAr(value: true);
+      await showArWorksDialog();
+      await _localStorageServie.saveToDisk(key: kConfiguredArKey, value: "true");
+    } else {
+      final res = await showArFailedDialog();
+      if (res?.confirmed == true) {
+        await handleCameraPermissions();
+        await handleArTest();
+      } else {
+        await showArDoesNotWorkDialog();
+        await _localStorageServie.saveToDisk(key: kConfiguredArKey, value: "true");
+        // AR is available but it is configured NOT to use AR!
+        userService.setIsUsingAr(value: false);
+      }
+    }
+  }
+
   Future showLocationPermissionRequestDialog() async {
     await dialogService.showDialog(
-        title: "Give location access",
+        title: "Enable location access",
         description:
-            "For this app to work we need your location. Please allow us to use your precise location in the following.");
+            "For this app to work we need to know about your location. Please allow us to use your precise location in the following.");
   }
 
   // ? This is a bit more complicated as the 'requestPermissionToSendNotifications' does
@@ -151,7 +170,7 @@ class PermissionsViewModel extends BaseModel {
   // ? Otherwise the user will be always prompted with the notifications dialog.
   Future showNotificationPermissionRequestDialog({Completer? completer}) async {
     final res = await dialogService.showDialog(
-        title: "Allow notifications",
+        title: "Enable notifications",
         description:
             "For optimal usage of the app we would like to send you notifications.");
     if (res?.confirmed == true) {
@@ -164,7 +183,20 @@ class PermissionsViewModel extends BaseModel {
   }
 
   Future askForNotificationPermission({required Completer completer}) async {
-    AwesomeNotifications().requestPermissionToSendNotifications().then(
+    await AwesomeNotifications().requestPermissionToSendNotifications(
+      //channelKey: kScheduledNotificationChannelKey,
+      // TODO: Maybe have to add CriticalAlert here
+      permissions: const [
+        NotificationPermission.Badge,
+        NotificationPermission.Alert,
+        NotificationPermission.Sound,
+        NotificationPermission.Vibration,
+        NotificationPermission.Light,
+        NotificationPermission.CriticalAlert,
+        NotificationPermission.PreciseAlarms,
+        NotificationPermission.OverrideDnD,
+      ],
+    ).then(
       (_) {
         popView();
         completer.complete();
@@ -175,15 +207,42 @@ class PermissionsViewModel extends BaseModel {
 
   Future showCameraPermissionRequestDialog() async {
     await dialogService.showDialog(
-        title: "Allow camera access",
+        title: "Enable camera access",
         description:
             "To use our augmented reality features we need to access the camera.");
+  }
+
+  Future showTestArDialog() async {
+    await dialogService.showDialog(
+        title: "Test AR feature",
+        description:
+            "To use our augmented reality feature we need to access the camera.");
+  }
+
+  Future showArWorksDialog() async {
+    await dialogService.showDialog(
+        title: "Augmented reality is ready to go", description: "Enjoy!");
+  }
+
+  Future showArFailedDialog() async {
+    return await dialogService.showDialog(
+        title: "Cannot configure AR",
+        description: "Did you deny camera access?",
+        buttonTitle: "Give camera access",
+        cancelTitle: "Continue without AR");
+  }
+
+  Future showArDoesNotWorkDialog() async {
+    await dialogService.showDialog(
+        title: "Cannot configure AR",
+        description:
+            "Good news: everything in the app still works. Only the augmented reality reature is not supported for this device :)");
   }
 
   Future showReinstallOrChangePermissionDialog(
       {required String permissionType}) async {
     await dialogService.showDialog(
-        title: "Oops...that didn't work",
+        title: "Sorry...that did not work",
         description:
             "For this app to work we need $permissionType permissions. Please change the permissions in your settings to which we will forward you.");
   }
@@ -197,7 +256,7 @@ class PermissionsViewModel extends BaseModel {
 
   Future showEnableLocationOnDeviceDialog() async {
     await dialogService.showDialog(
-        title: "Oops...",
+        title: "Sorry...that did not work",
         description:
             "Please enable your location service on the device to use this app.");
   }

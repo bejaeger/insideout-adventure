@@ -2,12 +2,8 @@ import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/hike_quest/hike_quest_viewmodel.dart';
 
 class GPSAreaHikeViewModel extends HikeQuestViewModel {
-  final Quest quest;
-  GPSAreaHikeViewModel({required this.quest}) {
-    // animate to quest markers!
-    mapStateService.setIsAvatarView(false);
+  Future addQuestMarkers({required Quest quest}) async {
     animateCameraToQuestMarkers();
-
     if (quest.startMarker != null) {
       mapViewModel.resetMapMarkers();
       // add start marker & area
@@ -24,5 +20,6 @@ class GPSAreaHikeViewModel extends HikeQuestViewModel {
           handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
       mapViewModel.addAreas(quest: quest);
     }
+    mapStateService.notify();
   }
 }

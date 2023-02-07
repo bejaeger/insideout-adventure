@@ -1,6 +1,6 @@
-import 'package:afkcredits/constants/layout.dart';
+import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_viewmodel.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -52,45 +52,6 @@ class DrawerWidgetView extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: NavButtonWidget(
-                //         title: 'REWARDS',
-                //         icon: const Icon(
-                //           Icons.card_giftcard_outlined,
-                //           color: kDarkTurquoise,
-                //           size: 70,
-                //         ),
-                //         onTap: model.navigateToGiftCardsView,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // Row(
-                //   children: [
-                //     Expanded(
-                //         child: NavButtonWidget(
-                //       title: 'ASK FOR FUNDS',
-                //       icon: const Icon(
-                //         Icons.arrow_downward_rounded,
-                //         color: kDarkTurquoise,
-                //         size: 70,
-                //       ),
-                //       onTap: model.showNotImplementedSnackbar,
-                //     ),),
-                // Expanded(
-                //     child: NavButtonWidget(
-                //   title: 'ACHIEVEMENTS',
-                //   icon: const Icon(
-                //     Icons.badge_rounded,
-                //     color: kDarkTurquoise,
-                //     size: 70,
-                //   ),
-                //   onTap: model.showNotImplementedSnackbar,
-                // )),
-                //  ],
-                //),
                 verticalSpaceMedium,
                 if (model.currentUser.createdByUserWithId != null)
                   Padding(
@@ -137,23 +98,6 @@ class DrawerWidgetView extends StatelessWidget {
                   ),
                 ),
                 verticalSpaceLarge,
-
-                // Row(
-                //   children: [
-                //     Expanded(
-                //         child: navButtonWidget(
-                //             'DONATE',
-                //             'https://www.freecodecamp.org/donate/',
-                //             const Icon(
-                //               Icons.favorite,
-                //               color: kDarkTurquoise,
-                //               size: 70,
-                //             ),
-                //             true,
-                //             model,
-                //             context)),
-                //   ],
-                // ),
               ],
             ),
           ),

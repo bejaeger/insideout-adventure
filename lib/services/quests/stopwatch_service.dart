@@ -1,9 +1,7 @@
 // A wrapper around the stop watch package
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
 import 'package:afkcredits/services/common_services/pausable_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -19,12 +17,10 @@ class StopWatchService extends PausableService {
   Function(int)? onChangeRawMinute;
   final VoidCallback? onEnded;
 
-  // getter
   bool get isRunning => _timer != null && _timer!.isActive;
   int get initialPresetTime => _initialPresetTime;
   int get getSecondTime => _second;
 
-  /// Private
   // ! WARNING this should not change from 1000
   int timerDuration = 1000; // in ms
   Timer? _timer;
@@ -33,11 +29,8 @@ class StopWatchService extends PausableService {
   int _stopTimeRelative = 0;
   late int _presetTime;
   int _second = 0;
-  // int? _minute;
-  // List<StopWatchRecord> _records = [];
   late int _initialPresetTime;
 
-  // constructor
   StopWatchService({
     this.isLapHours = true,
     this.mode = StopWatchMode.countUp,
@@ -55,6 +48,11 @@ class StopWatchService extends PausableService {
   void listenToSecondTime({required void Function(int) callback}) {
     setOnChangeSecond(callback);
     startTimer();
+  }
+
+  void forceListenToSecondTime({required void Function(int) callback}) {
+    setOnChangeSecond(callback);
+    forceStartTimer();
   }
 
   @override
@@ -80,7 +78,6 @@ class StopWatchService extends PausableService {
     if (mode == StopWatchMode.countUp) {
       final time = _getCountUpTime(timer.tick);
       periodicFunction(time);
-      // _elapsedTime.add(time);
     } else if (mode == StopWatchMode.countDown) {
       final time = _getCountDownTime(timer.tick);
       if (time == 0) {
@@ -94,7 +91,6 @@ class StopWatchService extends PausableService {
     }
   }
 
-  // TODO: probably presetTime and stopTimeRelative is the same
   int _getCountUpTime(num tick) =>
       tick.toInt() * timerDuration + _stopTimeRelative + _presetTime;
 
@@ -107,10 +103,9 @@ class StopWatchService extends PausableService {
     if (!isRunning) {
       _stopTimeRelative = _stopTimeRelative +
           (DateTime.now().millisecondsSinceEpoch - _stopTimeAbsolute);
-      // the following is to update immediately when resuming
       final time = _getCountUpTime(0);
       periodicFunction(time);
-      // otherwise the Timer.periodic function waits for a minute to execute the update!
+      // ^ otherwise the Timer.periodic function waits for a minute to execute the update!
       startTimer();
     }
   }
@@ -123,11 +118,20 @@ class StopWatchService extends PausableService {
     }
   }
 
-  // value in ms
+  void forceStartTimer() {
+    if (isRunning) {
+      resetTimer();
+    }
+    if (!isRunning) {
+      _startTimeAbsolute = DateTime.now().millisecondsSinceEpoch;
+      _timer =
+          Timer.periodic(Duration(milliseconds: timerDuration), _increment);
+    }
+  }
+
   void periodicFunction(int value) {
     final latestSecond = getRawSecond(value);
     if (_second != latestSecond) {
-      // _secondTimeController.add(latestSecond);
       _second = latestSecond;
       if (onChangeRawSecond != null) {
         onChangeRawSecond!(latestSecond);
@@ -146,46 +150,21 @@ class StopWatchService extends PausableService {
   void resetTimer() {
     if (isRunning) {
       stopTimer();
-      _timer?.cancel();
-      _timer = null;
     }
     _startTimeAbsolute = 0;
     _stopTimeRelative = 0;
     _stopTimeAbsolute = 0;
     _second = 0;
-    // _minute = null;
-    // _records = [];
-    // _recordsController.add(_records);
   }
 
   setOnChangeSecond(void Function(int)? onChangeSecond) {
     onChangeRawSecond = onChangeSecond;
   }
 
-  // void lap() {
-  //   if (isRunning) {
-  //     final rawValue = _rawTimeController.value;
-  //     _records.add(StopWatchRecord(
-  //       rawValue: rawValue,
-  //       hours: getRawHours(rawValue),
-  //       minute: getRawMinute(rawValue),
-  //       second: getRawSecond(rawValue),
-  //       displayTime: getDisplayTime(rawValue, hours: isLapHours),
-  //     ));
-  //     _recordsController.add(_records);
-  //   }
-  // }
-
-  // -------------------------------------
-  // preset time functionality
   void setPresetHoursTime(int value) =>
       setPresetTime(mSec: value * 3600 * 1000);
-
   void setPresetMinuteTime(int value) => setPresetTime(mSec: value * 60 * 1000);
-
   void setPresetSecondTime(int value) => setPresetTime(mSec: value * 1000);
-
-  /// Set preset time. 1000 mSec => 1 sec
   void setPresetTime({required int mSec}) {
     _presetTime += mSec;
   }
@@ -200,10 +179,6 @@ class StopWatchService extends PausableService {
     }
   }
 
-  // ----------------------------------------------------------------
-  // static functions
-
-  /// Get display time.
   static String getDisplayTime(
     int value, {
     bool hours = true,
@@ -243,12 +218,10 @@ class StopWatchService extends PausableService {
     return result;
   }
 
-  /// Get display hours time.
   static String getDisplayTimeHours(int mSec) {
     return getRawHours(mSec).floor().toString().padLeft(2, '0');
   }
 
-  /// Get display minute time.
   static String getDisplayTimeMinute(int mSec, {bool hours = false}) {
     if (hours) {
       return getMinute(mSec).floor().toString().padLeft(2, '0');
@@ -257,43 +230,32 @@ class StopWatchService extends PausableService {
     }
   }
 
-  /// Get display second time.
   static String getDisplayTimeSecond(int mSec) {
     final s = (mSec % 60000 / 1000).floor();
     return s.toString().padLeft(2, '0');
   }
 
-  /// Get display millisecond time.
   static String getDisplayTimeMillisecond(int mSec) {
     final ms = (mSec % 1000 / 10).floor();
     return ms.toString().padLeft(2, '0');
   }
 
-  /// Get Raw Hours.
   static int getRawHours(int milliSecond) =>
       (milliSecond / (3600 * 1000)).floor();
 
-  /// Get Raw Minute. 0 ~ 59. 1 hours = 0.
   static int getMinute(int milliSecond) =>
       (milliSecond / (60 * 1000) % 60).floor();
 
-  /// Get Raw Minute
   static int getRawMinute(int milliSecond) => (milliSecond / 60000).floor();
 
-  /// Get Raw Second
   static int getRawSecond(int milliSecond) => (milliSecond / 1000).floor();
 
-  /// Get milli second from hour
   static int getMilliSecFromHour(int hour) => (hour * (3600 * 1000)).floor();
 
-  /// Get milli second from minute
   static int getMilliSecFromMinute(int minute) => (minute * 60000).floor();
 
-  /// Get milli second from second
   static int getMilliSecFromSecond(int second) => (second * 1000).floor();
 
-  // ---------------------------------------------------
-  // Helper functions
   String durationString(int? value) {
     if (value == null) return "00:00:00";
     int h = value ~/ 3600;

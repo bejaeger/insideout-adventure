@@ -9,22 +9,15 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase;
 /// added from sponsors)
 
 class AFKCreditsAuthenticationResultService {
-  /// AFK Credits user
   final User? user;
   Map<String, User> supportedExplorers = {};
 
-  /// Firebase user
   final firebase.User? firebaseUser;
-
-  /// Firebase user
   final String? uid;
 
   final bool fromLocalStorage;
-
-  /// Firebase user
   final FirebaseAuthenticationResult? firebaseAuthenticationResult;
 
-  /// Contains the error message for the request
   final String? errorMessage;
 
   AFKCreditsAuthenticationResultService.authenticatedUser({this.firebaseUser})
@@ -63,7 +56,6 @@ class AFKCreditsAuthenticationResultService {
         fromLocalStorage = false,
         firebaseAuthenticationResult = null;
 
-  /// Returns true if the response has an error associated with it
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
 
   bool get isExplorerCreatedFromSponsor =>

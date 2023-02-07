@@ -11,6 +11,7 @@ _$_SponsorReference _$$_SponsorReferenceFromJson(Map<String, dynamic> json) =>
       uid: json['uid'] as String,
       authMethod: $enumDecodeNullable(
           _$AuthenticationMethodEnumMap, json['authMethod']),
+      deviceId: json['deviceId'] as String?,
       withPasscode: json['withPasscode'] as bool,
     );
 
@@ -18,6 +19,7 @@ Map<String, dynamic> _$$_SponsorReferenceToJson(_$_SponsorReference instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'authMethod': _$AuthenticationMethodEnumMap[instance.authMethod],
+      'deviceId': instance.deviceId,
       'withPasscode': instance.withPasscode,
     };
 

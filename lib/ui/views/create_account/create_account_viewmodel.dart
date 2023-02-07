@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -9,34 +8,20 @@ import 'package:afkcredits/services/users/afkcredits_authentication_result_servi
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/authentication_viewmodel.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.form.dart';
-import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import '../../../app_config_provider.dart';
-
 class CreateAccountViewModel extends AuthenticationViewModel {
-  // -----------------------------
-  // services
+  final UserRole role;
+  CreateAccountViewModel({required this.role}) : super(role: role);
+
   final log = getLogger("CreateAccountViewModel");
   final UserService _userService = locator<UserService>();
-  final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
-  final FirebaseAuthenticationService? _firebaseAuthenticationService =
-      locator<FirebaseAuthenticationService>();
   final _navigationService = locator<NavigationService>();
 
-  // --------------------------
-  // state
   String? emailInputValidationMessage;
   String? passwordInputValidationMessage;
   String? fullNameInputValidationMessage;
 
-  // ---------------------------
-  // member variables
-  final UserRole role;
-  CreateAccountViewModel({required this.role}) : super(role: role);
-
-  // -----------------------------
-  // functions
   void Function()? onSignUpTapped() {
     return () {
       if (!isValidUserInput()) {
@@ -63,7 +48,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
     }
     if (emailValue != null) {
       bool emailValid =
-          RegExp(r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
+          RegExp(r"^([a-zA-Z0-9_+\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
               .hasMatch(emailValue!);
       if (!emailValid) {
         emailInputValidationMessage = 'Please provide a valid email address';
@@ -92,17 +77,8 @@ class CreateAccountViewModel extends AuthenticationViewModel {
         password: passwordValue);
   }
 
-  void replaceWithSelectRoleView() =>
-      _navigationService.replaceWith(Routes.createAccountUserRoleView);
-
-  @override
-  Future<FirebaseAuthenticationResult> runAdminAuthResult() =>
-      _firebaseAuthenticationService!.createAccountWithEmail(
-        email:
-            _flavorConfigProvider.getTestUserEmail(UserRole.adminMaster).trim(),
-        password: _userService
-            .hashPassword(_flavorConfigProvider.getTestUserPassword()),
-      );
+  void replaceWithLoginView() =>
+      _navigationService.replaceWith(Routes.loginView);
 
   void resetValidationMessages() {
     emailInputValidationMessage = null;

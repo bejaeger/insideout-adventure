@@ -1,7 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -39,7 +38,6 @@ class SetPinViewModel extends FormViewModel {
 class SetPinResult {
   final String? pin;
 
-  /// Contains the error message for the request
   final String? errorMessage;
 
   SetPinResult.withPin({this.pin}) : errorMessage = null;

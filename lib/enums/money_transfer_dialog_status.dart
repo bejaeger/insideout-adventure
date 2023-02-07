@@ -1,1 +1,1 @@
-enum TransferDialogStatus { success, error, warning, giftCardPending }
+enum TransferDialogStatus { success, error, warning }

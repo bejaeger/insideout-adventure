@@ -1,31 +1,20 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/services/layout/layout_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
+
+// Class implementing common functionality to update and get map information
 
 mixin MapStateControlMixin {
-  // Class implementing common functionality to update and get map information
-
-  // --------------------------------------
-  // Services
   final MapStateService mapStateService = locator<MapStateService>();
-  // final LayoutService layoutService = locator<LayoutService>();
 
-  // ----------------------------------------
-  // Getters
-  double get bearing => mapStateService.bearingSubject.value;
+  double get bearing => mapStateService.bearing;
   double get tilt => mapStateService.tilt;
   double get zoom => mapStateService.zoom;
   double? get newLat => mapStateService.newLat;
   double? get newLon => mapStateService.newLon;
   double? get lastBirdViewZoom => mapStateService.lastBirdViewZoom;
   bool get isAvatarView => mapStateService.isAvatarView;
-  int get characterNumber => mapStateService.characterNumber;
   bool get navigatedFromQuestList => mapStateService.navigatedFromQuestList;
-  // bool get isShowingQuestDetails => layoutService.isShowingQuestDetails;
-  // -------------------------------------
-  // functions
+
   void changeCameraTilt(double tiltIn) {
     mapStateService.tilt = tiltIn;
   }
@@ -35,7 +24,7 @@ mixin MapStateControlMixin {
   }
 
   void changeCameraBearing(double bearingIn) {
-    mapStateService.bearingSubject.add(bearingIn);
+    mapStateService.bearing = bearingIn;
   }
 
   void changeNavigatedFromQuestList(bool set) {
@@ -44,7 +33,7 @@ mixin MapStateControlMixin {
 
   void setCameraSettings({double? bearing, double? zoom, double? tilt}) {
     if (bearing != null) {
-      mapStateService.bearingSubject.add(bearing);
+      mapStateService.bearing = bearing;
     }
     if (tilt != null) {
       mapStateService.tilt = tilt;
@@ -70,8 +59,9 @@ mixin MapStateControlMixin {
     mapStateService.animateMap(forceUseLocation: forceUseLocation);
   }
 
-  void restorePreviousCameraPosition({bool moveInsteadOfAnimate = false}) {
-    mapStateService.restorePreviousCameraPosition(
+  void restorePreviousCameraPositionAndAnimate(
+      {bool moveInsteadOfAnimate = false}) {
+    mapStateService.restorePreviousCameraPositionAndAnimate(
         moveInsteadOfAnimate: moveInsteadOfAnimate);
   }
 
@@ -91,7 +81,4 @@ mixin MapStateControlMixin {
     mapStateService.takeSnapshotOfBirdViewCameraPosition();
   }
 
-  // void switchIsShowingQuestDetails() {
-  //   layoutService.switchIsShowingQuestDetails();
-  // }
 }

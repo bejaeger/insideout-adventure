@@ -9,19 +9,14 @@ import 'package:afkcredits/services/users/user_service.dart';
 // https://berux.design/detective-rabbit
 // https://iopscience.iop.org/article/10.1088/1742-6596/1187/5/052068/pdf#:~:text=2.1.,typically%2C%20word%20error%20rate).
 class GamificationService {
-  // ---------------------------------------
-  // services
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final UserService _userService = locator<UserService>();
 
   final log = getLogger("GamificationService");
 
-  // ----------------------------------
-  // state
   List<Achievement> achievements = [];
   StreamSubscription? _achievementsStreamSubscription;
 
-  // -------------------------------------------------------
   // Simple functions of level system
   // if lifetimeEarnings are provided there is need to check user stats document!
   int getCurrentLevel({num? lifetimeEarnings}) {
@@ -73,10 +68,6 @@ class GamificationService {
     }
   }
 
-  //---------------------------------------------------
-  /// History of quests
-  // adds listener to money pools the user is contributing to
-  // allows to wait for the first emission of the stream via the completer
   Future<void>? setupAchievementsListener(
       {required Completer<void> completer,
       required String uid,

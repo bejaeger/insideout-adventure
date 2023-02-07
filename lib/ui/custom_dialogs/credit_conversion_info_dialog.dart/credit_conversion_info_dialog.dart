@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/ui/widgets/activity_conversion_icon.dart';
 import 'package:afkcredits/ui/widgets/screen_time_conversion_icon.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -27,14 +27,14 @@ class CreditConversionInfoDialog extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AfkCreditsText.headingThree("Our conversions"),
+              InsideOutText.headingThree("Our conversions"),
               verticalSpaceMedium,
               //OnboardingActivityConversionIcon(),
               // Row(
               //   children: [
-              //     AfkCreditsText.headingFour("Activity"),
+              //     InsideOutText.headingFour("Activity"),
               //     Icon(Icons.arrow_right_alt, size: 24, color: kcMediumGrey),
-              //     AfkCreditsText.headingFour("Credits"),
+              //     InsideOutText.headingFour("Credits"),
               //   ],
               // ),
               Row(
@@ -47,7 +47,7 @@ class CreditConversionInfoDialog extends StatelessWidget {
                         height: 24,
                         color: kcActivityIconColor,
                       ),
-                      AfkCreditsText.captionBold(
+                      InsideOutText.captionBold(
                           "${(1 / HerculesWorldCreditSystem.kMinuteActivityToCreditsConversion).round().toString()} min"),
                     ],
                   ),
@@ -62,21 +62,21 @@ class CreditConversionInfoDialog extends StatelessWidget {
                         height: 24,
                         color: kcPrimaryColor,
                       ),
-                      AfkCreditsText.captionBold("1 credit"),
+                      InsideOutText.captionBold("1 credit"),
                     ],
                   ),
                 ],
               ),
               verticalSpaceTiny,
-              AfkCreditsText.body(
+              InsideOutText.body(
                   "We recommend giving 1 credit for ${(1 / HerculesWorldCreditSystem.kMinuteActivityToCreditsConversion).round().toString()} minutes of activity. By creating your own quests you can decide on this conversion."),
               verticalSpaceMedium,
 
               // Row(
               //   children: [
-              //     AfkCreditsText.headingFour("Credits"),
+              //     InsideOutText.headingFour("Credits"),
               //     Icon(Icons.arrow_right_alt, size: 24, color: kcMediumGrey),
-              //     AfkCreditsText.headingFour("Screen time"),
+              //     InsideOutText.headingFour("Screen time"),
               //   ],
               // ),
               Row(
@@ -89,7 +89,7 @@ class CreditConversionInfoDialog extends StatelessWidget {
                         height: 24,
                         color: kcPrimaryColor,
                       ),
-                      AfkCreditsText.captionBold("1 credit"),
+                      InsideOutText.captionBold("1 credit"),
                     ],
                   ),
                   horizontalSpaceTiny,
@@ -103,21 +103,21 @@ class CreditConversionInfoDialog extends StatelessWidget {
                         height: 24,
                         color: kcScreenTimeBlue,
                       ),
-                      AfkCreditsText.captionBold(
+                      InsideOutText.captionBold(
                           "${HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor.round()} min"),
                     ],
                   ),
                 ],
               ),
               verticalSpaceTiny,
-              AfkCreditsText.body(
+              InsideOutText.body(
                   "Per default 1 credit converts to ${HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor.round()} minute screen time. In future versions of the app we will allow to adjust this conversion."),
               verticalSpaceSmall,
               Row(
                 children: [
                   Spacer(),
                   TextButton(
-                    child: AfkCreditsText.body("Ok", color: kcPrimaryColor),
+                    child: InsideOutText.body("Ok", color: kcPrimaryColor),
                     onPressed: () => completer(DialogResponse(confirmed: true)),
                   )
                 ],

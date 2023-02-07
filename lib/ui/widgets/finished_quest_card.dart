@@ -1,6 +1,6 @@
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -16,26 +16,13 @@ class FinishedQuestCard extends StatelessWidget {
       child: Card(
         elevation: 2,
         clipBehavior: Clip.antiAlias,
-        //clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Container(
           height: 200,
           decoration: BoxDecoration(
             color: kcPrimaryColorSecondary.withOpacity(0.2),
-            // gradient: LinearGradient(
-            //   begin: Alignment.topCenter,
-            //   end: Alignment.bottomCenter,
-            //   colors: [
-            //     kNiceOrange.withOpacity(0.4),
-            //     kNiceOrange.withOpacity(0.8),
-            //   ],
-            // ),
-            //border:
-            //  Border.all(color: Colors.black.withOpacity(0.1), width: 2.0),
             borderRadius: BorderRadius.circular(15.0),
-            //color: kPrimaryColor.withOpacity(0.2),
           ),
-          //width: screenWidthPercentage(context, percentage: 0.8),
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -96,10 +83,6 @@ class FinishedQuestCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         AFKCreditsIcon(height: 40),
-                        // Text("Earned Credits: ",
-                        //     style: textTheme(context)
-                        //         .bodyText1!
-                        //         .copyWith(color: kWhiteTextColor)),
                         Text(quest.afkCreditsEarned.toString(),
                             style: textTheme(context)
                                 .headline4!

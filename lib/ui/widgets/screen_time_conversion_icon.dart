@@ -1,6 +1,8 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+
+// showing `Credits icon -> screen time icon`
 
 class OnboardingScreenTimeConversionIcon extends StatelessWidget {
   const OnboardingScreenTimeConversionIcon({
@@ -12,7 +14,6 @@ class OnboardingScreenTimeConversionIcon extends StatelessWidget {
     return Container(
       height: 25,
       width: 68,
-      //color: Colors.red.withOpacity(0.4),
       child: Stack(
         children: [
           Align(
@@ -24,16 +25,16 @@ class OnboardingScreenTimeConversionIcon extends StatelessWidget {
             ),
           ),
           Align(
+            alignment: Alignment.center,
+            child: Icon(Icons.arrow_right_alt, size: 20),
+          ),
+          Align(
             alignment: Alignment.centerRight,
             child: Image.asset(
               kScreenTimeIcon,
               height: 24,
               color: kcScreenTimeBlue,
             ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Icon(Icons.arrow_right_alt, size: 20),
           ),
         ],
       ),

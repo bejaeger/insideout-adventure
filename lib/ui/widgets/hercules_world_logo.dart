@@ -1,5 +1,5 @@
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:afkcredits_ui/afkcredits_ui.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
 class HerculesWorldLogo extends StatelessWidget {
@@ -16,8 +16,6 @@ class HerculesWorldLogo extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // AFKCreditsIcon(height: 170),
-        // verticalSpaceSmall,
         Text("HERCULES",
             style: textTheme(context).headline6!.copyWith(
                   fontSize: 40 * sizeScale,
