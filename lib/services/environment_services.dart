@@ -8,11 +8,8 @@ class EnvironmentService {
   final log = getLogger('EnvironmentService');
 
   Future initialise() async {
-    log.i('Load environment');
-
+    log.i('Loading environment');
     await dotenv.load(fileName: ".env");
-
-    log.v('Environement loaded');
   }
 
   String getValue(String key, {bool verbose = false}) {

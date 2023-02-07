@@ -18,6 +18,7 @@ abstract class AuthenticationViewModel extends FormViewModel
     with NavigationMixin {
   UserRole? role;
   AuthenticationViewModel({this.role});
+
   final NavigationService _navigationService = locator<NavigationService>();
   final UserService _userService = locator<UserService>();
   final LocalStorageService _localStorageService =
@@ -40,7 +41,7 @@ abstract class AuthenticationViewModel extends FormViewModel
 
       try {
         await (runBusyFuture(
-            initializeUser(
+            _userService.syncUserAccount(
                 uid: result.uid, fromLocalStorage: result.fromLocalStorage),
             throwException: true));
       } catch (e) {
@@ -61,34 +62,25 @@ abstract class AuthenticationViewModel extends FormViewModel
         // User logged in but account not created in database yet -> e.g. when process
         // was interrupted or user used third party login and something went wrong.
         // navigate back to loginView!
-        logout();
-        log.i(
-            "User logged in with third-party provider. Navigate to select role view");
-        _navigationService.replaceWith(Routes.loginView,
-            arguments: SelectRoleAfterLoginViewArguments(authMethod: method));
+        log.w(
+            "User logged in with third-party provider but no account has been created yet. Trying to create account");
+        setBusy(true);
+        await _userService.createUserAccountFromFirebaseUser(
+            role: this.role ?? UserRole.sponsor, authMethod: method);
+        await _userService.syncUserAccount(
+            uid: result.uid, fromLocalStorage: result.fromLocalStorage);
+        setBusy(false);
+      }
+      userAccountNotCreated = _userService.currentUserNullable == null;
+      if (userAccountNotCreated) {
+        log.e(
+            "Something went wrong with the authentication. Navigating to login view");
+        _navigationService.replaceWith(Routes.loginView);
+        setValidationMessage(
+            "We could not authenticate this account. Please try again later.");
         return;
       } else {
-        final role = this.role ?? _userService.getUserRole;
-        log.i("User logged in with role $role");
-
-        if (role == UserRole.explorer || role == UserRole.superUser) {
-          _navigationService.replaceWith(Routes.explorerHomeView);
-        } else {
-          final onboarded = await _localStorageService.getFromDisk(
-              key: kLocalStorageSawOnBoardingKey);
-          if (onboarded == _userService.currentUser.uid) {
-            await _navigationService.replaceWith(
-              Routes.parentHomeView,
-            );
-          } else {
-            await _navigationService.replaceWith(
-              Routes.onBoardingScreensView,
-            );
-            _localStorageService.saveToDisk(
-                key: kLocalStorageSawOnBoardingKey,
-                value: _userService.currentUser.uid);
-          }
-        }
+        navigateToViewAfterSyncingAccount();
       }
     } else {
       log.e(
@@ -97,15 +89,30 @@ abstract class AuthenticationViewModel extends FormViewModel
     }
   }
 
-  Future initializeUser({
-    String? uid,
-    bool fromLocalStorage = false,
-  }) async {
-    return await _userService.syncUserAccount(
-        uid: uid, fromLocalStorage: fromLocalStorage);
+  void navigateToViewAfterSyncingAccount() async {
+    final role = this.role ?? _userService.getUserRole;
+    log.i("User logged in with role $role");
+
+    if (role == UserRole.explorer || role == UserRole.superUser) {
+      _navigationService.replaceWith(Routes.explorerHomeView);
+    } else {
+      final onboarded = await _localStorageService.getFromDisk(
+          key: kLocalStorageSawOnBoardingKey);
+      if (onboarded == _userService.currentUser.uid) {
+        await _navigationService.replaceWith(
+          Routes.parentHomeView,
+        );
+      } else {
+        await _navigationService.replaceWith(
+          Routes.onBoardingScreensView,
+        );
+        _localStorageService.saveToDisk(
+            key: kLocalStorageSawOnBoardingKey,
+            value: _userService.currentUser.uid);
+      }
+    }
   }
 
-  // needs to be overrriden!
   Future<AFKCreditsAuthenticationResultService> runAuthentication(
       AuthenticationMethod method,
       [UserRole? role]);

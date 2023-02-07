@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 const String kAppName = "Hercules World";
 const NoKey = 'NoKey';
-const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY_ENVIRONMENT_VARIABLE';
+const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY_ENV_VARIABLE';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";

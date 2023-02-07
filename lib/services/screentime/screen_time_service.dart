@@ -282,7 +282,7 @@ class ScreenTimeService {
   // so it starts again here!
   Future listenToPotentialScreenTimes(
       {required void Function() callback}) async {
-    log.v("Start listening to the screen times in memory");
+    log.v("Start listening to the screen times in memory (if there are any)");
     Completer<void> completer = Completer();
     int l = supportedExplorerScreenTimeSessionsActive.length;
     int counter = 0;

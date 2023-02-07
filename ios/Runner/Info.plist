@@ -32,7 +32,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 			<!-- TODO Hide googleusercontent key here!?-->
-				<string>com.googleusercontent.apps.73058156701-9ukfrs09ufdpj3uvhji9qug1ha170c37</string>
+				<string>com.googleusercontent.apps.$(IOS_GOOGLE_LOGIN_KEY)</string>
 			</array>
 		</dict>
 	</array>

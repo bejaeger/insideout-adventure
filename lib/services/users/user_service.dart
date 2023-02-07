@@ -648,7 +648,7 @@ class UserService {
           } catch (e) {
             if (e is StateError) {
               log.v(
-                  "No requests screen time for explorer with id $explorerId anymore");
+                  "No requested screen time for explorer with id $explorerId anymore");
               _screenTimeService.supportedExplorerScreenTimeSessionsRequested
                   .remove(explorerId);
             }
@@ -704,7 +704,6 @@ class UserService {
     }
     await _localStorageService.saveToDisk(
         key: kLocalStorageSponsorReferenceKey, value: uid);
-    log.wtf("PIN => $pin");
     sponsorReference = SponsorReference(
         uid: uid,
         authMethod: authMethod,

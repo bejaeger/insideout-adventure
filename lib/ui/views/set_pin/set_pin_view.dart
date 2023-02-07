@@ -119,28 +119,22 @@ class SetPinView extends StatelessWidget with $SetPinView {
             getFocusNodes()[i].unfocus();
             if (_pin[i] == '') {
               if (i - 1 >= 0) {
-                print("jumping one down to ${i - 1}");
                 getFocusNodes()[i - 1].requestFocus();
-              } //FocusScope.of(context).requestFocus(getFocusNodes()[i - 1]);
+              } 
             } else {
-              print("jumping one up to ${i + 1}");
               getFocusNodes()[i + 1].requestFocus();
-              // FocusScope.of(context).requestFocus(getFocusNodes()[i + 1]);
             }
           } else {
             getFocusNodes()[i].unfocus();
             if (_pin[i] == '') {
               if (i - 1 >= 0) {
                 getFocusNodes()[i - 1].requestFocus();
-              } // FocusScope.of(context).requestFocus(getFocusNodes()[i - 1]);
+              }
             }
           }
           if (_pin.every((String digit) => digit != '')) {
-            //final res = await
             model.onSubmit(_pin.join());
-            //if (res == true) {
             clearTextFields();
-            //}
           }
         },
       ),

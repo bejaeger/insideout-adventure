@@ -26,7 +26,6 @@ class SelectRoleAfterLoginViewModel extends BaseModel {
       await _userService.syncUserAccount();
       replaceWithHomeView();
     } catch (e) {
-      // TODO: Proper error message to user
       log.e("Could not create user account, error: $e");
     }
   }

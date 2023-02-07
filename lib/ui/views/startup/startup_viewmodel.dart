@@ -42,17 +42,9 @@ class StartUpViewModel extends BaseModel {
 
       if (userService.hasLoggedInUser || localUserId != null) {
         if (userService.currentUserNullable == null) {
-          // This means we used a third party provider when loggin in
-          // the first time but didn't make it until
-          // the role selection. Do it now!
-          // TODO: Revisit this! Not clear if that is a case that will ever occur!
-          log.wtf(
+          log.w(
               "We found a logged in user but no user document in the database. This happens at the first time when logging in with a third party service and not choosing a role. So it is very rare and might also be due to some inconsistency in the backend during development! Maybe look into it but you might not need to worry about it.");
-          await navigationService.replaceWith(
-            Routes.selectRoleAfterLoginView,
-            arguments: SelectRoleAfterLoginViewArguments(
-                authMethod: AuthenticationMethod.google),
-          );
+          await navigationService.replaceWith(Routes.loginView);
           return;
         } else {
           final currentUser = userService.currentUser;
@@ -64,7 +56,7 @@ class StartUpViewModel extends BaseModel {
               showBewareDialog: true, showNumberQuestsDialog: true);
         }
       } else {
-        log.v('No user on disk, navigate to the LoginView');
+        log.i('No user on disk, navigate to the LoginView');
         navigationService.replaceWith(Routes.loginView);
       }
     } catch (e) {

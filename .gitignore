@@ -34,9 +34,9 @@
 pubspec.lock
 
 #Android Services 
+android/app/src/*/*/google-services.json
 android/app/src/*/google-services.json
 android/app/google-services.json
-android/app/src/*/AndroidManifest.xml
 android/local.properties
 
 #Lib folder 
@@ -104,12 +104,5 @@ ios/Runner/AppDelegate.swift
 # firebase config files
 lib/firebase_options_dev.dart
 lib/firebase_options_prod.dart
-
-#
-# since no unit tests are used atm we can remove that from git
-lib/test/
-test/
-
-ios/Podfile.lock
-ios/Runner.xcodeproj/project.pbxproj
 ios/firebase_app_id_file.json
+

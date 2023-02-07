@@ -321,7 +321,6 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
             _q.type == QuestType.TreasureLocationSearch) {
           continue;
         }
-        log.v("Add start marker of quest with name ${_q.name} to map");
         if (_q.startMarker != null) {
           AFKMarker _m = _q.startMarker!;
           addMarkerToMap(
