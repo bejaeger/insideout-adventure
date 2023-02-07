@@ -360,28 +360,6 @@ class UserService {
         user: currentUser.copyWith(explorerIds: newExplorerIds));
   }
 
-  Future addExplorerToSupportedExplorers({required String uid}) async {
-    try {
-      if (currentUser.explorerIds.contains(uid)) {
-        return "Explorer already supported";
-      } else {
-        log.i("Adding explorer with id $uid to list of explorers");
-        List<String> newExplorerIds = addToSupportedExplorersList(uid: uid);
-        // Ideal way would be to add a transaction here!
-        await Future.wait([
-          updateUserData(
-              user: currentUser.copyWith(explorerIds: newExplorerIds)),
-          addSponsorIdToOtherUser(
-              otherUsersId: uid, sponsorId: currentUser.uid),
-        ]);
-      }
-    } catch (e) {
-      log.e(
-          "Error when trying to add new explorer to list of supported explorers");
-      rethrow;
-    }
-  }
-
   Future removeExplorerFromSupportedExplorers({required String uid}) async {
     try {
       if (!currentUser.explorerIds.contains(uid)) {
@@ -1040,11 +1018,6 @@ class UserService {
   Future updateUserData({required User user}) async {
     _currentUser = user;
     _firestoreApi.updateUserData(user: user);
-  }
-
-  Future addSponsorIdToOtherUser(
-      {required String otherUsersId, required String sponsorId}) async {
-    _firestoreApi.addSponsorIdToUser(uid: otherUsersId, sponsorId: sponsorId);
   }
 
   Future removeSponsorIdFromOtherUser(
