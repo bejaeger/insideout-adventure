@@ -6,7 +6,6 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits/datamodels/users/admin/user_admin.dart';
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -49,7 +48,6 @@ class UserService {
       currentUserNullable?.userSettings ?? UserSettings();
   UserStatistics get currentUserStats => _currentUserStats!;
   UserStatistics? get currentUserStatsNullable => _currentUserStats;
-  UserAdmin? get getCurrentUserAdmin => _currentUserAdmin!;
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
   UserRole get getUserRole => currentUser.role;
   bool get isSuperUser => currentUser.role == UserRole.superUser;
@@ -64,7 +62,6 @@ class UserService {
   }
 
   User? _currentUser;
-  UserAdmin? _currentUserAdmin;
   UserStatistics? _currentUserStats;
   StreamSubscription? _currentUserStreamSubscription;
   StreamSubscription? _currentUserStatsStreamSubscription;

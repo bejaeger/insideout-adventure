@@ -4,6 +4,7 @@ part 'public_user_info.freezed.dart';
 part 'public_user_info.g.dart';
 
 // class holding public info of user
+
 @freezed
 class PublicUserInfo with _$PublicUserInfo {
   factory PublicUserInfo({

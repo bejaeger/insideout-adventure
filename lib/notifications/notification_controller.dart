@@ -65,7 +65,6 @@ class NotificationController {
     // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
     print("==>> on action received method");
-    // bool isSilentAction = receivedAction.actionType == ActionType.SilentAction;
 
     // if this is an expired screen time session alarm we navigate to the active screen time session
     // to show statistics
@@ -79,31 +78,12 @@ class NotificationController {
           print("==>> Error when getting the screen time session: $e");
           return;
         }
-
-        // await StackedService.navigatorKey?.currentState
-        //     ?.pushNamedAndRemoveUntil(Routes.startUpScreenTimeView, (route) {
-        //   return (route.settings.name == '/') || route.isFirst;
-        // },
-        //         arguments:
-        //             StartUpScreenTimeViewArguments(screenTimeSession: session));
         await StackedService.navigatorKey?.currentState?.pushNamed(
             Routes.startUpScreenTimeView,
             arguments:
                 StartUpScreenTimeViewArguments(screenTimeSession: session));
       }
     }
-
-    // SilentBackgroundAction runs on background thread and cannot show
-    // UI/visual elements
-    // if (receivedAction.actionType != ActionType.SilentBackgroundAction)
-    //   log("message");
-/*       Fluttertoast.showToast(
-        msg:
-            '${isSilentAction ? 'Silent action' : 'Action'} received on ${_toSimpleEnum(receivedAction.actionLifeCycle!)}',
-        toastLength: Toast.LENGTH_SHORT,
-        backgroundColor: isSilentAction ? Colors.blueAccent : Colors.teal,
-        gravity: ToastGravity.BOTTOM,
-      ); */
   }
 
   static String _toSimpleEnum(NotificationLifeCycle lifeCycle) =>
@@ -113,38 +93,18 @@ class NotificationController {
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
     print("==>> onNotificationDisplayedMethod");
-/*     Fluttertoast.showToast(
-        msg:
-            'Notification displayed on ${_toSimpleEnum(receivedNotification.displayedLifeCycle!)}',
-        toastLength: Toast.LENGTH_SHORT,
-        backgroundColor: Colors.blue,
-        gravity: ToastGravity.BOTTOM); */
   }
 
   /// Use this method to detect when a new notification or a schedule is created
   static Future<void> onNotificationCreatedMethod(
       ReceivedNotification receivedNotification) async {
     print("==>> onNotificationCreatedMethod");
-
-/*     Fluttertoast.showToast(
-        msg:
-            'Notification created on ${_toSimpleEnum(receivedNotification.createdLifeCycle!)}',
-        toastLength: Toast.LENGTH_SHORT,
-        backgroundColor: Colors.green,
-        gravity: ToastGravity.BOTTOM); */
   }
 
   /// Use this method to detect if the user dismissed a notification
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
     print("==>> onDismissActionReceivedMethod");
-
-/*     Fluttertoast.showToast(
-        msg:
-            'Notification dismissed on ${_toSimpleEnum(receivedAction.dismissedLifeCycle!)}',
-        toastLength: Toast.LENGTH_SHORT,
-        backgroundColor: Colors.orange,
-        gravity: ToastGravity.BOTTOM); */
   }
 
   Future<String?> getTimeZone() async {

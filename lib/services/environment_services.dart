@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Returns values from the environment read from the .env file
 
+// not used atm
 class EnvironmentService {
   final log = getLogger('EnvironmentService');
 

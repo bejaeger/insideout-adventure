@@ -4,15 +4,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'sponsor_reference.freezed.dart';
 part 'sponsor_reference.g.dart';
 
-/////////////////////////////////
 ///
-/// Model that holds a reference to a sponsor
+/// Model that holds a reference to a sponsor/parent
 /// in the scenario where the explorer does not
 /// have his own phone.
 /// The sponsor can switch to his account
 /// with a reference stored in this datamodel.
 ///
-//////////////////////////////////////
 
 @freezed
 class SponsorReference with _$SponsorReference {

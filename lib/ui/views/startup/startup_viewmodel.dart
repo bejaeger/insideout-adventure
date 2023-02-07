@@ -6,18 +6,14 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
-import 'package:afkcredits/enums/authentication_method.dart';
-import 'package:afkcredits/services/environment_services.dart';
 
 class StartUpViewModel extends BaseModel {
-  final EnvironmentService _environmentService = locator<EnvironmentService>();
   final PermissionService _permissionService = locator<PermissionService>();
   final log = getLogger("StartUpViewModel");
 
   Future<void> runStartupLogic() async {
     // Only after at least the action method is set, the notification events are delivered
     NotificationController().initializeNotificationsEventListeners();
-    await _environmentService.initialise();
 
     // TODO: Check for network connection!
 
@@ -43,7 +39,7 @@ class StartUpViewModel extends BaseModel {
       if (userService.hasLoggedInUser || localUserId != null) {
         if (userService.currentUserNullable == null) {
           log.w(
-              "We found a logged in user but no user document in the database. This happens at the first time when logging in with a third party service and not choosing a role. So it is very rare and might also be due to some inconsistency in the backend during development! Maybe look into it but you might not need to worry about it.");
+              "We found a logged in user but no user document in the database. This happens when the process of logging in with a third party service is interrupted.");
           await navigationService.replaceWith(Routes.loginView);
           return;
         } else {

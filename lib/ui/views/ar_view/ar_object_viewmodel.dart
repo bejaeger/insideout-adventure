@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/app/app.logger.dart';
 
-class ARObjectViewModel extends ActiveQuestBaseViewModel
+class ARObjectViewModel extends BaseModel
     with MapStateControlMixin {
   ARObjectViewModel() {
     startTimerForPotentialHelpMessage();
   }
+
+  final log = getLogger("ARObjectViewModel");
 
   Timer? timer;
   bool showHelpMessage = false;

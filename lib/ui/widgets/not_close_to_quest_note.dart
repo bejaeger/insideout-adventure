@@ -1,13 +1,12 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
 class NotCloseToQuestNote extends StatelessWidget {
   final void Function()? animateCameraToUserPosition;
@@ -43,13 +42,6 @@ class NotCloseToQuestNote extends StatelessWidget {
           color: kcWhiteTextColor,
           borderRadius: BorderRadius.circular(15.0),
           border: Border.all(color: Colors.grey[400]!),
-          // boxShadow: [
-          //   BoxShadow(
-          //       blurRadius: 1,
-          //       spreadRadius: 0.3,
-          //       offset: Offset(1, 1),
-          //       color: kcShadowColor),
-          // ],
         ),
         padding:
             const EdgeInsets.only(top: 15, right: 15, left: 15, bottom: 10.0),
@@ -60,21 +52,14 @@ class NotCloseToQuestNote extends StatelessWidget {
               "You are too far away!",
               style: subheadingStyle.copyWith(color: kcRed),
             ),
-            // InsideOutText.subheading(
-            //   "You are too far away!",
-            //   color: kcRed,
-            //   align: TextAlign.left,
-            // ),
             verticalSpaceTiny,
             InsideOutText.body(
               "The start is ${(model.distanceFromQuest * 0.001).toStringAsFixed(1)} km away. ",
-              //_getInfoString(questType),
               align: TextAlign.center,
             ),
             verticalSpaceSmall,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 if (animateCameraToUserPosition != null &&
                     animateCameraToQuestMarkers != null)
@@ -129,11 +114,12 @@ class NotCloseToQuestNote extends StatelessWidget {
   }
 }
 
-class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
+class NotCloseToQuestNoteViewModel extends BaseModel {
   final MapStateService _mapsService = locator<MapStateService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final log = getLogger("NotCloseToQuestNoteViewModel");
 
+  bool get questCenteredOnMap => activeQuestService.questCenteredOnMap;
   double get distanceFromQuest => _geolocationService.distanceToStartMarker;
 
   void launchMapsForNavigation() async {
@@ -172,20 +158,7 @@ class NotCloseToQuestNoteViewModel extends ActiveQuestBaseViewModel {
   }
 
   @override
-  bool isQuestCompleted() {
-    // TODO: implement isQuestCompleted
-    throw UnimplementedError();
-  }
-
-  @override
   void dispose() {
     super.dispose();
-  }
-
-  @override
-  Future maybeStartQuest(
-      {required Quest? quest, void Function()? notifyParentCallback}) {
-    // TODO: implement maybeStartQuest
-    throw UnimplementedError();
   }
 }
