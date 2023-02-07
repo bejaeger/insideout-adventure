@@ -37,13 +37,12 @@ pubspec.lock
 android/app/src/*/google-services.json
 android/app/google-services.json
 android/app/src/*/AndroidManifest.xml
+android/local.properties
 
 #Lib folder 
 lib/firebase_options.dart
 .env
 dotenv
-#ios/Xcode Related
-#ios/Runner/AppDelegate.swift
 # iOS/XCode related
 **/ios/**/*.mode1v3
 **/ios/**/*.mode2v3
@@ -102,8 +101,6 @@ app.*.map.json
 ios/build/
 ios/Runner/Info.plist
 ios/Runner/AppDelegate.swift
-#ios/Runner/GoogleService-Info.plist
-#ios/Runner/GoogleService-Info-2.plist
 
 # firebase config files
 lib/firebase_options_dev.dart
