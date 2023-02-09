@@ -5,7 +5,7 @@ import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_overlay.dart'
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 
-class MainHeader extends StatelessWidget {
+class MainHeaderOverlay extends StatelessWidget {
   final bool show;
   final num balance;
   final int currentLevel;
@@ -14,7 +14,7 @@ class MainHeader extends StatelessWidget {
   final void Function()? onAvatarPressed;
   final void Function()? onCreditsPressed;
   final int avatarIdx;
-  const MainHeader(
+  const MainHeaderOverlay(
       {Key? key,
       this.onDevFeaturePressed,
       required this.onAvatarPressed,
@@ -28,7 +28,6 @@ class MainHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //log.wtf("Rebuilding MainHeader");
     return IgnorePointer(
       ignoring: !show,
       child: AnimatedOpacity(

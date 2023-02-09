@@ -1,24 +1,14 @@
 enum QuestType {
-  QRCodeHike,
-  GPSAreaHike,
-  // Hunt,
-  QRCodeHunt, // changes to UI w.r.t. outdoor hunt
-  GPSAreaHunt, // changes to UI w.r.t. outdoor hunt
-  // QRCodeSearch,
-  // QRCodeSearchIndoor, // changes in UI!
-  DistanceEstimate,
-  TreasureLocationSearch, // SearchQuest
+  QRCodeHike, // not implemented
+  GPSAreaHike, 
+  QRCodeHunt, // (not implemented) changes to UI w.r.t. outdoor hunt
+  GPSAreaHunt, // (not implemented) changes to UI w.r.t. outdoor hunt
+  DistanceEstimate, // not implemented anymore
+  TreasureLocationSearch, // (legacy name) called SearchQuest now
 }
 
 enum CreateQuestType {
-  // QRCodeHike,
-  GPSAreaHike,
-  // Hunt,
-  // QRCodeHunt, // changes to UI w.r.t. outdoor hunt
-  // GPSAreaHunt, // changes to UI w.r.t. outdoor hunt
-  // QRCodeSearch,
-  // QRCodeSearchIndoor, // changes in UI!
-  // DistanceEstimate,
+  GPSAreaHike,  
   TreasureLocationSearch,
 }
 

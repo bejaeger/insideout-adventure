@@ -160,7 +160,6 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     } else if (isInAreaNow && !isShowInAreaDialog ||
         appConfigProvider.allowDummyMarkerCollection) {
       markerInArea = marker;
-      // collect marker immediately (from floating button)
       try {
         final res = await collectMarkerFromGPSLocation(
             forceNoAR:
@@ -225,8 +224,9 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       return false;
     }
 
-    if ((userService.isUsingAR && appConfigProvider.isARAvailable) &&
-        !forceNoAR) {
+    bool collectCheckpointViaAR =
+        userService.isUsingAR && appConfigProvider.isARAvailable && !forceNoAR;
+    if (collectCheckpointViaAR) {
       bool collected = await mapViewModel.openARView(true);
       if (!collected) {
         snackbarService.showSnackbar(
@@ -239,9 +239,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     MarkerAnalysisResult markerResult = await activeQuestService
         .analyzeMarkerAndUpdateQuest(marker: markerInArea);
     return await handleMarkerAnalysisResult(markerResult,
-        isShowCollectedMarkerDialog:
-            !(userService.isUsingAR && appConfigProvider.isARAvailable) ||
-                forceNoAR);
+        isShowCollectedMarkerDialog: !collectCheckpointViaAR);
   }
 
   String getNumberMarkersCollectedString() {
@@ -259,7 +257,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       {bool isShowCollectedMarkerDialog = true}) async {
     log.v("Handling marker analysis result");
     if (result.isEmpty) {
-      log.e("The object QuestQRCodeScanResult is empty!");
+      log.e("The marker result is empty!");
       return false;
     }
     if (result.hasError) {
@@ -291,7 +289,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
         // TODO: Handle case where more than one quest is returned here!
         // For now, just start first quest!
         if (!hasActiveQuest) {
-          log.i("Found quests associated to the scanned start marker.");
+          log.i("Found quests associated to the marker.");
           await displayQuestBottomSheet(
             quest: result.quests![0],
             startMarker: result.quests![0].startMarker,
@@ -315,7 +313,6 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
             "collected marker " + getNumberMarkersCollectedString(),
       );
 
-      // Move this to isQuestCompleted function and remove stuff from service!
       if (isQuestCompleted()) {
         if (isShowCollectedMarkerDialog) {
           await showCollectedMarkerDialog();
@@ -347,10 +344,10 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     CollectCreditsStatus collectCreditsStatus = CollectCreditsStatus.todo;
     try {
       // Upload quest but give it some time while the camera is animating
-      // for some sweet UX experience
+      // for some nice UX
       final results = await Future.wait(
         [
-          handleSuccessfullyFinishedQuest(showDialogs: false),
+          handleQuestCompletedEventBase(showDialogs: false),
           Future.delayed(Duration(milliseconds: 2500))
         ],
       );
@@ -363,7 +360,6 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
 
     await showSuccessDialog(collectCreditsStatus: collectCreditsStatus);
 
-    // we need to do this because we set showDialogs == false above!
     activeQuestService.cleanUpFinishedQuest();
     isAnimatingCamera = false;
     setBusy(false);
@@ -430,7 +426,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       await Future.delayed(
           Duration(milliseconds: (400 * mapAnimationSpeedFraction()).round()));
 
-      // ! This needs to happen after notifyListeners() is called
+      // ! Note that this needs to happen after notifyListeners() is called
       // ! on mapviewmodel and the marker is placed on the map!
       showInfoWindowOfNextMarker(marker: nextMarker);
 
@@ -480,50 +476,9 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     notifyListeners();
   }
 
-  void maybeAddFinishMarker({AFKMarker? marker}) {
-    if (marker == null) return;
-    if (activeQuestService.isFinishMarker(marker)) {
-      // TODO: See what Finish marker makes different!
-      mapViewModel.addMarkerToMap(
-          quest: activeQuest.quest,
-          afkmarker: marker,
-          handleMarkerAnalysisResultCustom: handleMarkerAnalysisResult);
-    }
-  }
-
   void triggerCollectedMarkerAnimation() {
     showCollectedMarkerAnimation = true; // will be set to false again from view
     notifyListeners();
-  }
-
-  BitmapDescriptor defineMarkersColour(
-      {required AFKMarker afkmarker,
-      required Quest? quest,
-      bool isFinishMarker = false}) {
-    if (hasActiveQuest) {
-      final index = activeQuest.quest.markers
-          .indexWhere((element) => element == afkmarker);
-      if (!activeQuest.markersCollected[index]) {
-        if (!isFinishMarker) {
-          return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-        } else {
-          return BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueOrange);
-        }
-      } else {
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-      }
-    } else {
-      if (quest?.type == QuestType.QRCodeHike) {
-        return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueOrange);
-      } else if (quest?.type == QuestType.TreasureLocationSearch) {
-        return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueViolet);
-      } else {
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-      }
-    }
   }
 
   @override
@@ -532,7 +487,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   }
 
   @override
-  dispose() {
+  void dispose() {
     resetPreviousQuest();
     super.dispose();
   }

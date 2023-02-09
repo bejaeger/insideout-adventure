@@ -1,23 +1,18 @@
-import 'dart:io';
-
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
-import 'package:flutter/foundation.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
-class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
+class SuperUserDialogViewModel extends BaseModel {
   final QuestTestingService _questTestingService =
       locator<QuestTestingService>();
   final GeolocationService _geolocationService = locator<GeolocationService>();
   final AppConfigProvider _flavorConfigProvider = locator<AppConfigProvider>();
   final _firestoreApi = locator<FirestoreApi>();
 
-  // getters
   bool get isRecordingLocationData =>
       _questTestingService.isRecordingLocationData;
   bool get isPermanentAdminMode => _questTestingService.isPermanentAdminMode;
@@ -31,7 +26,6 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
   bool get isListeningToPosition => _geolocationService.isListeningToLocation;
   bool get isListeningToMainPosition =>
       _geolocationService.isListeningToMainLocation;
-
   bool get allowDummyMarkerCollection =>
       _flavorConfigProvider.allowDummyMarkerCollection;
   bool get enableGPSVerification => _flavorConfigProvider.enableGPSVerification;
@@ -39,7 +33,6 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
       _flavorConfigProvider.dummyQuestCompletionVerification;
   bool get isARAvailable => _flavorConfigProvider.isARAvailable;
 
-  // setters
   void setIsRecordingLocationData(bool b) {
     _questTestingService.setIsRecordingLocationData(b);
     notifyListeners();
@@ -84,10 +77,8 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
     }
     if (b == true && isARAvailable) {
       userService.setIsUsingAr(value: true);
-      // _flavorConfigProvider.setIsUsingAR(true);
     } else {
       userService.setIsUsingAr(value: false);
-      // _flavorConfigProvider.setIsUsingAR(false);
     }
     if (b == true && !isARAvailable) {
       snackbarService.showSnackbar(message: "AR not supported on this device.");
@@ -109,7 +100,7 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
     notifyListeners();
   }
 
-  void removeAfkCreditsCheat() async {
+  void deductAfkCreditsCheat() async {
     isCheating = true;
     notifyListeners();
     await _firestoreApi.changeAfkCreditsBalanceCheat(
@@ -145,18 +136,5 @@ class SuperUserDialogViewModel extends ActiveQuestBaseViewModel {
       snackbarService.showSnackbar(
           title: "Failure", message: "Connect to a network and try again");
     }
-  }
-
-  @override
-  bool isQuestCompleted() {
-    // TODO: implement isQuestCompleted
-    throw UnimplementedError();
-  }
-
-  @override
-  Future maybeStartQuest(
-      {required Quest? quest, void Function()? notifyParentCallback}) {
-    // TODO: implement maybeStartQuest
-    throw UnimplementedError();
   }
 }

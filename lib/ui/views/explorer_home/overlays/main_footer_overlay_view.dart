@@ -17,7 +17,6 @@ class MainFooterOverlayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // log.wtf("==>> Rebuild MainFooterView");
     return ViewModelBuilder<MainFooterViewModel>.reactive(
       viewModelBuilder: () => MainFooterViewModel(),
       onModelReady: (model) {

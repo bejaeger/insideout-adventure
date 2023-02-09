@@ -30,7 +30,6 @@ class QuestDetailsOverlayView extends StatefulWidget {
 class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
-  // ..repeat(reverse: true);
   late final Animation<double> _animation;
   @override
   void initState() {
@@ -72,7 +71,6 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
             showBackButton: !model.hasActiveQuest,
             child: Stack(
               children: [
-                // Quest Info on top of screen
                 CommonQuestDetailsHeader(
                   isParentAccount: model.isParentAccount,
                   quest: quest,
@@ -84,7 +82,6 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                   completed: model.showCompletedQuestNote(),
                 ),
 
-                // cancel button
                 if (model.hasActiveQuest)
                   Align(
                     alignment: Alignment.topRight,
@@ -97,7 +94,6 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                     ),
                   ),
 
-                // Quest info on bottom of screen
                 if (quest != null)
                   Padding(
                     padding: const EdgeInsets.only(left: 12.0, right: 12.0),
@@ -118,7 +114,6 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                           !model.hasActiveQuest,
                       notifyParentCallback: model.notifyListeners,
                       quest: quest),
-                // ? Takes same arguments as above, could be improved to have common widget
                 if (quest != null && quest.type == QuestType.GPSAreaHike)
                   GPSAreaHike(
                       showStartSlider: !model.showCompletedQuestNote() &&
@@ -176,7 +171,6 @@ class SpecificQuestLayout extends StatelessWidget {
   }
 }
 
-// Quest details for treasure location search!
 class SearchQuestView extends StatelessWidget {
   final Quest quest;
   final bool showStartSlider;
@@ -317,7 +311,7 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
             ),
           ),
           children: [
-            // ? ACTIVE QUEST CARD
+            // ACTIVE QUEST CARD
             FadingWidget(
               ignorePointer: true,
               show: model.previouslyFinishedQuest == null &&
@@ -403,20 +397,11 @@ class StartButtonOverlay extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            // if (!model.hasActiveQuest)
-            //   Expanded(
-            //     child: AfkCreditsButton(
-            //         onTap: () => model.showInstructions(quest.type),
-            //         title: "Tutorial",
-            //         color: kPrimaryColor.withOpacity(0.7),
-            //         leading: Icon(Icons.help, color: Colors.grey[100])),
-            //   ),
-            // if (!model.hasActiveQuest) horizontalSpaceSmall,
             if (model.showStartSwipe && !model.isBusy)
               Expanded(
                 child: AFKSlideButton(
                   alignment: Alignment.bottomCenter,
-                  canStartQuest: true, // model.isNearStartMarker == true,
+                  canStartQuest: true,
                   onSubmit: maybeStartQuest,
                 ),
               ),

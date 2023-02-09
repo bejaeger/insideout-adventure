@@ -42,7 +42,6 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
       {required Quest quest, void Function()? notifyParentCallback}) async {
     notifyParentView = notifyParentCallback;
     setBusy(true);
-    // !(maybe this is done twice at the moment as we also do it in QuestDetailsOverlayViewModel
     await super.initialize(quest: quest);
     // Add listener with a small distance filter to get most precise
     // start position!
@@ -284,7 +283,7 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     try {
       final results = await Future.wait(
         [
-          handleSuccessfullyFinishedQuest(showDialogs: false),
+          handleQuestCompletedEventBase(showDialogs: false),
           Future.delayed(Duration(milliseconds: 1000))
         ],
       );

@@ -7,7 +7,7 @@ import 'package:google_maps_flutter_platform_interface/src/types/bitmap.dart';
 class QuestCommonDialogViewModel extends ActiveQuestBaseViewModel {
   CollectCreditsStatus status;
   QuestCommonDialogViewModel({required this.status});
-  
+
   final log = getLogger("QuestCommonDialogViewModel");
 
   bool get isCollectedCredits => status == CollectCreditsStatus.done;
@@ -20,7 +20,7 @@ class QuestCommonDialogViewModel extends ActiveQuestBaseViewModel {
 
   Future getCredits() async {
     setBusy(true);
-    final result = await handleSuccessfullyFinishedQuest();
+    final result = await handleQuestCompletedEventBase();
     if (result == CollectCreditsStatus.done) {
       log.i("Credits succesfully collected");
       if (isNeedToCollectCredits) {
@@ -33,15 +33,16 @@ class QuestCommonDialogViewModel extends ActiveQuestBaseViewModel {
     }
     setBusy(false);
   }
-  
+
   @override
   bool isQuestCompleted() {
     // TODO: implement isQuestCompleted
     throw UnimplementedError();
   }
-  
+
   @override
-  Future maybeStartQuest({required Quest? quest, void Function()? notifyParentCallback}) {
+  Future maybeStartQuest(
+      {required Quest? quest, void Function()? notifyParentCallback}) {
     // TODO: implement maybeStartQuest
     throw UnimplementedError();
   }

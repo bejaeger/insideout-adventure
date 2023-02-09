@@ -61,6 +61,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   BehaviorSubject<Quest?> selectedQuestSubject = BehaviorSubject<Quest?>();
   bool questCenteredOnMap = false;
   DateTime? _questStartTime;
+  // TODO: seems to solve the same purpose as selectedQuest(?)
   Quest? currentQuest;
   String? activatedQuestTrialId;
 

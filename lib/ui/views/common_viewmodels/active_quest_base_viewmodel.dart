@@ -305,8 +305,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
 
   // showDialogs = true determines that dialogs should be shown on exceptions
   // showDialogs = false specifies that exceptions are handled by returning
-  // adequate data;
-  Future<CollectCreditsStatus> handleSuccessfullyFinishedQuest(
+  Future<CollectCreditsStatus> handleQuestCompletedEventBase(
       {bool showDialogs = true}) async {
     if (activeQuestNullable?.status == QuestStatus.success) {
       log.i("Found that quest was successfully finished!");
@@ -343,7 +342,6 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
     }
   }
 
-  // -------------------------------------
   // More common way to treat super user
   Future<bool> useSuperUserFeature() async {
     if (questTestingService.isPermanentAdminMode) {

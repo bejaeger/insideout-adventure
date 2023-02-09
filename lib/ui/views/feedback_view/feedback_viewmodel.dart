@@ -103,7 +103,6 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
           description: "Could not send feedback. Do you have data connection?");
       return;
     }
-    // successfully uploaded feedback document
     log.i("Uploaded feedback");
     setBusy(false);
     _snackbarService.showSnackbar(

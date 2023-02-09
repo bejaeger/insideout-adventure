@@ -96,7 +96,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
 
                   // TODO: Can also make MainHeader a view!
                   if (!model.isBusy)
-                    MainHeader(
+                    MainHeaderOverlay(
                       percentageOfNextLevel: model.percentageOfNextLevel,
                       currentLevel: model.currentLevel(),
                       onAvatarPressed: model.showExplorerAccountOverlay,

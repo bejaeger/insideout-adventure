@@ -1,5 +1,7 @@
 import 'package:insideout_ui/insideout_ui.dart';
 
+// file that ultimately should hold all text appearing in the app
+
 const String WarningQuestNotFinished = "Cancel Incomplete Quest?";
 
 const String WarningScannedMarkerNotInQuest =
