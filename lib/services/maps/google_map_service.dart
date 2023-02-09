@@ -386,7 +386,7 @@ class GoogleMapService {
     try {
       await _mapController!.showMarkerInfoWindow(markerIdConverted);
     } catch (e) {
-      mapLogger.e(
+      mapLogger.v(
           "Could not show info window, maybe no info window was specified. Error: $e");
     }
   }
@@ -397,7 +397,7 @@ class GoogleMapService {
     try {
       await _mapController!.hideMarkerInfoWindow(markerIdConverted);
     } catch (e) {
-      mapLogger.e(
+      mapLogger.v(
           "Could not show info window, maybe no info window was specified. Error: $e");
     }
   }

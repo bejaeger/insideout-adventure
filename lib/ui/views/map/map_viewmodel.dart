@@ -399,36 +399,36 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       required bool completed,
       Future Function(MarkerAnalysisResult)?
           handleMarkerAnalysisResultCustom}) async {
-    if (!useSuperUserFeatures) {
-      if (hasActiveQuest == false) {
-        if (afkmarker == quest.startMarker) {
-          dynamic result;
-          if (!isAvatarView && selectedQuest == null) {
-            // marker info window shows automatically (google map). hide it when not in avatar view
-            hideMarkerInfoWindowNow(markerId: afkmarker.id);
-            result = await displayQuestBottomSheet(
-              quest: quest,
-              completed: completed,
-              startMarker: afkmarker,
-            );
-          }
-          // When we select the quest from the bottom sheet OR are in avatar view
-          // we smoothly animate to the quest
-          if (result?.confirmed == true || isAvatarView) {
-            animateToQuestDetails(quest: quest);
-          }
-        } else {
-          if (quest.type != QuestType.QRCodeHike) {
-            showMarkerInfoWindowNow(markerId: afkmarker.id);
-            await Future.delayed(Duration(milliseconds: 1500));
-            hideMarkerInfoWindowNow(markerId: afkmarker.id);
-          } else {
-            await dialogService.showDialog(
-                title: "Marker",
-                description: "Start the quest and collect this marker.");
-          }
+    if (hasActiveQuest == false) {
+      if (afkmarker == quest.startMarker) {
+        dynamic result;
+        if (!isAvatarView && selectedQuest == null) {
+          // marker info window shows automatically (google map). hide it when not in avatar view
+          hideMarkerInfoWindowNow(markerId: afkmarker.id);
+          result = await displayQuestBottomSheet(
+            quest: quest,
+            completed: completed,
+            startMarker: afkmarker,
+          );
+        }
+        // When we select the quest from the bottom sheet OR are in avatar view
+        // we smoothly animate to the quest
+        if (result?.confirmed == true || isAvatarView) {
+          animateToQuestDetails(quest: quest);
         }
       } else {
+        if (quest.type != QuestType.QRCodeHike) {
+          showMarkerInfoWindowNow(markerId: afkmarker.id);
+          await Future.delayed(Duration(milliseconds: 1500));
+          hideMarkerInfoWindowNow(markerId: afkmarker.id);
+        } else {
+          await dialogService.showDialog(
+              title: "Marker",
+              description: "Start the quest and collect this marker.");
+        }
+      }
+    } else {
+      if (useSuperUserFeatures) {
         // ! DEVELOPMENT FEATURE ONLY!
         // ! ALLOW testing quests by pressing on markers on map!
         log.i("Quest active, handling qrCodeScanEvent");

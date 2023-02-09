@@ -4,17 +4,19 @@ This is the mobile adventure app of InsideOutAdventure
 # Setup instructions
 
 ## Get code and packages
-The current version is tested with
+The current version of the app is tested with
 ```
 Flutter 3.0.5 • channel stable • https://github.com/flutter/flutter.git
 Framework • revision f1875d570e (7 months ago) • 2022-07-13 11:24:16 -0700
 Engine • revision e85ea0e79c
 Tools • Dart 2.17.6 • DevTools 2.12.2
 ```
-Checkout the correct flutter version, clone the repo and run
+Checkout the correct flutter version, clone the repo, and in the root folder of the repository run
 ```bash
 flutter pub get
-# set necessary env variables with api keys
+```
+to define the necessary api keys as env variables run
+```bash
 source setup.sh # (requires .env file to be present)
 ```
 
@@ -31,7 +33,7 @@ firebase projects:list
 firebase use <project_id>
 ```
 The project IDs of our development database is `afk-credits-112d2`, our production database has the id `afk-credits-prod` (afk-credits is a legacy name). 
-Now we can generate the firebase configuration file with flutterfire
+Now we can generate the necessary firebase configuration file with flutterfire
 ```bash
 # for the dev environment 
 source configure-flutterfire-dev.sh
@@ -45,7 +47,7 @@ We use different Flutter flavors to run the app with the different firebase proj
 ```bash
 flutter run --flavor dev -t lib/main_dev.dart --debug
 ```
-To run the prod environment switch the firebase project and run
+To run the prod environment (use with caution) switch the firebase project and run
 ```bash
 flutter run --flavor prod -t lib/main_prod.dart --debug
 ```
@@ -54,15 +56,17 @@ For iOS, it is recommended to run in `--release` mode, because otherwise the app
 For convenience, different modes are configured in `.vscode/launch.json`
 
 # Developer Wiki
-## Framework / state Management
+## Framework / state management
+- We use the stacked framework. It is one of the cleanest and most scalable solutions out there. (Find an introduction video [here](https://www.youtube.com/watch?v=hEy_36LPcgQ&ab_channel=FilledStacks))
+- We have also a little search tool available, to pull up relevant FilledStacks video snippets with great explanations on various concepts: https://huggingface.co/spaces/bejaeger/filled-stacks-search (try for example: 'How does the stacked work?'). Note that some details in the videos are outdated, the general concepts are, however, still very relevant.
 
-- We use the stacked solution as state management as it is one of the cleanest solution out there (Find an introduction video [here](https://www.youtube.com/watch?v=hEy_36LPcgQ&ab_channel=FilledStacks))
-- Example commit with addition of datamodel, new service, firestore api connection: commit `2fa8996` ([link](https://github.com/bejaeger/afk-credits/commit/2fa8996faddc2a9290766953fa34b220f0a88158))
-- Example commit for adding a new view: commit `2bcf41b` ([link](https://github.com/bejaeger/afk-credits/commit/2bcf41bf0f28713b12f627b55c89e395e641091b))
+## File structure
+- Our structure is adopted from the recommendations from the stacked framework
+- In addition, we use a separate package for standard UI elements. It is found under the `insideout_ui/` directory. 
 
 ## Coding Guidelines
-- Generally we follow the guidelines from the stacked framework. 
-- Please log what the code is doing with an appropriate logger level (Tip: filter for `flutter` in the debug console to only get our logger outputs)
+- Generally, we follow the guidelines from the stacked framework. 
+- Please use the logger and print information about the code including an appropriate logger level (Tip: when running the app, filter for `flutter` in the debug console to only get our logger outputs)
 - Please try to write self-documenting code and only add comments when it is really necessary to understand the logic or to explain the reason behind a code snippet that otherwise might be forgotten.
 
 ## Code Generation
@@ -71,15 +75,19 @@ For convenience, different modes are configured in `.vscode/launch.json`
 - Run `source runCodeGen.sh` to generate all required snippets.
 - `watchCodeGen.sh` can be used to continuously update all generated code whenever a file changes.
 
-## Version control
-- We follow a [feature branch workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow)
+## Collaboration / version control
+- We follow a [feature branch workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow). In short: For any change to the app:
+  1. create a new branch
+  2. create a PR and ask for review
+  3. revise the code if necessary
+  4. ask it to be merged to master whenever it is considered ready
 
 # Information about status of code
 
 ## Legacy naming
 Some classes or packages still use legacy names. This is a list of terms that are used interchangeably:
-- Sponsor = Parent, Explorer = Child
-- Payment = Money Transfer = Credit Transfer
-- AFK(Credits) = Hercules(Credits) = InsideOut(Credits) = Credits
-- In project settings/names sometimes afkcredits or hercules is still used instead of insideout(adventure)
+- 'Sponsor' = 'Parent', 'Explorer' = 'Child'
+- 'Payment' = 'Money Transfer' = 'Credit Transfer'
+- 'AFK(Credits)' = 'Hercules(Credits)' = 'InsideOut(Credits)' = 'Credits'
+- Also in the project settings/names 'afkcredits' or 'hercules' may still be used instead of 'insideout' or 'insideoutadventure'
 

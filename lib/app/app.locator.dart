@@ -1,4 +1,6 @@
 import 'package:afkcredits/services/maps/google_map_service.dart';
+import 'package:afkcredits/services/maps/google_map_service.dart';
+import 'package:afkcredits/services/maps/google_map_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
