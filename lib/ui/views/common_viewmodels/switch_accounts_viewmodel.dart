@@ -36,18 +36,19 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
         description: "Do you want to lock this parent area with a passcode?",
         confirmButtonTitle: "Yes",
         cancelButtonTitle: "No");
-
-    String? pin;
-    bool setPin = result?.confirmed == true;
-    if (setPin) {
-      log.i("Asking to set PIN before switching to explorer session");
-      final pinResult = await navigationService.navigateTo(Routes.setPinView);
-      if (pinResult == null) {
-        return;
+    if (result != null) {
+      String? pin;
+      bool setPin = result.confirmed == true;
+      if (setPin) {
+        log.i("Asking to set PIN before switching to explorer session");
+        final pinResult = await navigationService.navigateTo(Routes.setPinView);
+        if (pinResult == null) {
+          return;
+        }
+        pin = pinResult.pin;
       }
-      pin = pinResult.pin;
+      await switchToExplorerAccount(pin: pin, explorer: tmpExplorer);
     }
-    await switchToExplorerAccount(pin: pin, explorer: tmpExplorer);
   }
 
   Future switchToExplorerAccount({String? pin, required User explorer}) async {
