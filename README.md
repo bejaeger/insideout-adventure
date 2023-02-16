@@ -53,7 +53,11 @@ flutter run --flavor prod -t lib/main_prod.dart --debug
 ```
 Note that some warnings are currently expected when building the app.
 For iOS, it is recommended to run in `--release` mode, because otherwise the app cannot be used on the phone standalone. 
-For convenience, different modes are configured in `.vscode/launch.json`
+For convenience, different modes are configured in `.vscode/launch.json`. 
+
+## Troubleshooting
+### iOS
+- When building iOS, and error might appear saying `error: Unexpected duplicate tasks`. To solve it, delete the `GoogleService-Info.plist` file from the Compile Sources of the Build Phases of your target in xcode. See (here)[https://stackoverflow.com/questions/73653470/error-xcode-unexpected-duplicate-tasks-target-runner-has-copy-command-from].
 
 # Developer Wiki
 ## Framework / state management
