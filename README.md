@@ -57,7 +57,7 @@ For convenience, different modes are configured in `.vscode/launch.json`.
 
 ## Troubleshooting
 ### iOS
-- When building iOS, and error might appear saying `error: Unexpected duplicate tasks`. To solve it, delete the `GoogleService-Info.plist` file from the Compile Sources of the Build Phases of your target in xcode. See (here)[https://stackoverflow.com/questions/73653470/error-xcode-unexpected-duplicate-tasks-target-runner-has-copy-command-from].
+- When building iOS, and error might appear saying `error: Unexpected duplicate tasks`. To solve it, delete the `GoogleService-Info.plist` file from the Compile Sources of the Build Phases of your target in xcode. See [here](https://stackoverflow.com/questions/73653470/error-xcode-unexpected-duplicate-tasks-target-runner-has-copy-command-from).
 
 # Developer Wiki
 ## Framework / state management
