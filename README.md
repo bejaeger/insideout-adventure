@@ -32,6 +32,17 @@ firebase projects:list
 # switch projects with 
 firebase use <project_id>
 ```
+
+We also use the flutterfire CLI
+```bash
+# install the flutterfire CLI
+dart pub global activate flutterfire_cli
+
+# as per the post-install prompt (at least on MacOS),
+# add this to your shell's config file (.bashrc, .bash_profile, etc.):
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+```
+
 The project IDs of our development database is `afk-credits-112d2`, our production database has the id `afk-credits-prod` (afk-credits is a legacy name). 
 Now we can generate the necessary firebase configuration file with flutterfire
 ```bash
