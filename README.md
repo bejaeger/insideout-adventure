@@ -64,7 +64,31 @@ flutter run --flavor prod -t lib/main_prod.dart --debug
 ```
 Note that some warnings are currently expected when building the app.
 For iOS, it is recommended to run in `--release` mode, because otherwise the app cannot be used on the phone standalone. 
-For convenience, different modes are configured in `.vscode/launch.json`. 
+
+## IDE Setup Notes
+
+Just listing items specific to this project here.
+
+### Visual Studio Code
+For convenience, different modes (flavors) are configured in `.vscode/launch.json`.
+
+### Jetbrains (IntelliJ IDEA)
+**Dev Flavor**
+```
+Dart entrypoint
+<repo_path>/afk-credits/libs/main_dev.dart
+
+Additional run args
+--debug
+
+Additional attach args:
+<empty>
+
+Build flavor:
+dev
+```
+
+**TODO: Prod Flavor**
 
 ## Troubleshooting
 ### iOS
