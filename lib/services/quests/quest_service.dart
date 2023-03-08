@@ -149,6 +149,14 @@ class QuestService with ReactiveServiceMixin {
     }
   }
 
+  void removeFromNearbyQuests({required Quest quest}) {
+    if (quest.id.isNotEmpty) {
+      _nearbyQuests.removeWhere((element) => element.id == quest.id);
+    } else {
+      log.e('Cannot remove quest from nearby quests, empty quest id provided ${quest.id}');
+    }
+  }
+
   List<Quest> extractQuestsOfType(
       {required List<Quest> quests, required QuestType questType}) {
     List<Quest> returnQuests = [];

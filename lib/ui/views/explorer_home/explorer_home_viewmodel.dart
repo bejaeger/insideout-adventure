@@ -38,8 +38,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
-  String get liveDistance => geolocationService
-      .getLiveDistancesToGoal();
+  String get liveDistance => geolocationService.getLiveDistancesToGoal();
   bool get showReloadQuestButton => questService.showReloadQuestButton;
   bool get isReloadingQuests => questService.isReloadingQuests;
   String get lastKnownDistance =>
@@ -87,19 +86,17 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
         ScreenTimeSession? session;
         try {
-        session  =
-            await screenTimeService.getSpecificScreenTime(
-          uid: screenTimeSession.uid,
-          sessionId: screenTimeSession.sessionId,
-        );
-        } catch(e) {
+          session = await screenTimeService.getSpecificScreenTime(
+            uid: screenTimeSession.uid,
+            sessionId: screenTimeSession.sessionId,
+          );
+        } catch (e) {
           log.wtf(
               "NO screen time session found. This should never be the case. Error: $e");
-
         }
         if (session != null) {
           await navToActiveScreenTimeView(session: session);
-        } 
+        }
       } else {
         screenTimeService.listenToPotentialScreenTimes(
             callback: notifyListeners);
@@ -134,7 +131,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       } else {
         if (showNumberQuestsDialog) {
           await _showNumberQuestsDialog(
-              numberQuests: questService.getNearByQuest.length);
+              numberQuests: questService.getNearByQuestTodo.length);
         }
       }
 
@@ -183,7 +180,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
           addQuestsToExisting: loadNewQuests,
         );
         await questService.sortNearbyQuests();
-        questService.loadNearbyQuestsTodo(completedQuestIds: currentUserStats.completedQuestIds);
+        questService.loadNearbyQuestsTodo(
+            completedQuestIds: currentUserStats.completedQuestIds);
         questService.extractAllQuestTypes();
       }
     } catch (e) {
@@ -378,7 +376,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     notifyListeners();
   }
 
-  void listenToLayout() {    
+  void listenToLayout() {
     if (_isFadingOutOverlayStream == null) {
       _isFadingOutOverlayStream =
           layoutService.isFadingOutOverlaySubject.listen(
@@ -386,7 +384,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
           notifyListeners();
         },
       );
-    }    
+    }
     if (_isShowingQuestListStream == null) {
       _isShowingQuestListStream =
           layoutService.isShowingQuestListSubject.listen(
