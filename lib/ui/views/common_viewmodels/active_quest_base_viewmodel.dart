@@ -1,6 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/collect_credits_status.dart';
@@ -9,6 +10,7 @@ import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/services/local_secure_storage_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -49,6 +51,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   bool get isCalculatingDistanceToStartMarker => distanceToStartMarker < 0;
   bool get showStartSwipe => !activeQuestService.hasActiveQuest;
   bool get questCenteredOnMap => activeQuestService.questCenteredOnMap;
+  bool get hasActivatedQuestToBeStarted => activeQuestService.hasActiveQuestToBeStarted;
+  ActivatedQuest? get questToBeStarted => activeQuestService.questToBeStarted;
 
   bool questSuccessfullyFinished = false;
   bool questFinished = false;

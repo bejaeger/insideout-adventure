@@ -108,6 +108,8 @@ dependencies:
   confetti: ^0.7.0
   badges: ^2.0.3
 
+  path_provider: ^2.0.13
+
   arkit_plugin: ^1.0.5
   arcore_flutter_plugin:
      #0.1.0-null-safety.3

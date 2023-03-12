@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/local_secure_storage_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,8 +12,9 @@ import 'package:afkcredits/app/app.logger.dart';
 
 class PermissionsViewModel extends BaseModel {
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
-  final LocalStorageService  _localStorageServie = locator<LocalStorageService>();
-      final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
+  final LocalSecureStorageService _localStorageServie =
+      locator<LocalSecureStorageService>();
+  final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final log = getLogger("PermissionsViewModel");
 
   bool showReinstallScreen = false;
@@ -142,7 +143,8 @@ class PermissionsViewModel extends BaseModel {
     if (ok) {
       userService.setIsUsingAr(value: true);
       await showArWorksDialog();
-      await _localStorageServie.saveToDisk(key: kConfiguredArKey, value: "true");
+      await _localStorageServie.saveToDisk(
+          key: kConfiguredArKey, value: "true");
     } else {
       final res = await showArFailedDialog();
       if (res?.confirmed == true) {
@@ -150,7 +152,8 @@ class PermissionsViewModel extends BaseModel {
         await handleArTest();
       } else {
         await showArDoesNotWorkDialog();
-        await _localStorageServie.saveToDisk(key: kConfiguredArKey, value: "true");
+        await _localStorageServie.saveToDisk(
+            key: kConfiguredArKey, value: "true");
         // AR is available but it is configured NOT to use AR!
         userService.setIsUsingAr(value: false);
       }

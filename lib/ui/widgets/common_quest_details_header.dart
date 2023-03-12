@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/info_container.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 
 class CommonQuestDetailsHeader extends StatelessWidget {
   final bool hasActiveQuest;
+  final bool hasActiveQuestToBeStarted;
   final void Function()? openSuperUserSettingsDialog;
   final void Function(QuestType?) showInstructionsDialog;
   final Quest? quest;
@@ -24,6 +26,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
     required this.showInstructionsDialog,
     this.finishedQuest,
     this.completed = false,
+    this.hasActiveQuestToBeStarted = false,
     required this.isParentAccount,
   }) : super(key: key);
 
@@ -51,6 +54,10 @@ class CommonQuestDetailsHeader extends StatelessWidget {
           ),
         ),
 
+        if (hasActiveQuestToBeStarted)
+          AFKProgressIndicator(),
+
+        if (!hasActiveQuestToBeStarted)
         Align(
           alignment: Alignment.topLeft,
           child: Padding(

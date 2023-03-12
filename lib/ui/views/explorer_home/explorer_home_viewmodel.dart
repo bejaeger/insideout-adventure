@@ -61,6 +61,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   bool showQuestLoadingScreen = false;
   bool showFullLoadingScreen = true;
 
+  bool get hasActivatedQuestToBeStarted =>
+      activeQuestService.hasActiveQuestToBeStarted;
+
   Future initialize({
     bool showBewareDialog = false,
     bool showNumberQuestsDialog = false,
@@ -102,39 +105,61 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
             callback: notifyListeners);
       }
 
+      dynamic initializeQuestResult;
+      initializeQuestResult = await initializeQuests();
+
       setBusy(false);
       // UI: fading out loading screen
       await Future.delayed(
         Duration(milliseconds: 500),
       );
-      final result = await initializeQuests();
-      mapViewModel.extractStartMarkersAndAddToMap();
 
-      showFullLoadingScreen = false;
-      showQuestLoadingScreen = false;
-      notifyListeners();
-
-      if (showSelectAvatarDialog) {
-        await showAndHandleAvatarSelection();
-        setNewUserPropertyToFalse();
-      }
-
-      if (showBewareDialog) {
-        await _showBewareDialog();
-      }
-
-      if (result is void Function()) {
-        showQuestLoadingScreen = true;
-        notifyListeners();
-        await Future.delayed(Duration(milliseconds: 1500));
-        result();
+      // means app crashed while a quest was active. Maybe we want to start from here?
+      final activatedQuestFromLocalStorage =
+          await activeQuestService.loadActiveQuestFromLocalStorage();
+      if (activatedQuestFromLocalStorage != null) {
+        showSelectAvatarDialog = false;
+        showNumberQuestsDialog = false;
+        showBewareDialog = false;
+        final result = await _showContinueQuestDialog();
+        if (result?.confirmed == true) {
+          activeQuestService.setTemporaryQuestToBeStarted(
+              quest: activatedQuestFromLocalStorage);
+          mapViewModel.animateToQuestDetails(
+              quest: activatedQuestFromLocalStorage.quest);
+        } else {
+          await activeQuestService.deleteActiveQuestFromLocalStorage();
+        }
       } else {
-        if (showNumberQuestsDialog) {
-          await _showNumberQuestsDialog(
-              numberQuests: questService.getNearByQuestTodo.length);
+        mapViewModel.extractStartMarkersAndAddToMap();
+
+        showFullLoadingScreen = false;
+        showQuestLoadingScreen = false;
+        notifyListeners();
+
+        if (showSelectAvatarDialog) {
+          await showAndHandleAvatarSelection();
+          setNewUserPropertyToFalse();
+        }
+
+        if (showBewareDialog) {
+          await _showBewareDialog();
+        }
+
+        if (initializeQuestResult is void Function()) {
+          showQuestLoadingScreen = true;
+          notifyListeners();
+          await Future.delayed(Duration(milliseconds: 1500));
+          initializeQuestResult();
+        } else {
+          if (showNumberQuestsDialog) {
+            await _showNumberQuestsDialog(
+                numberQuests: questService.getNearByQuestTodo.length);
+          }
         }
       }
 
+      showFullLoadingScreen = false;
       showQuestLoadingScreen = false;
       notifyListeners();
     } catch (e) {
@@ -322,6 +347,15 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   Future _showBewareDialog() async {
     await dialogService.showCustomDialog(
         variant: DialogType.BewareOfSurroundings);
+  }
+
+  Future _showContinueQuestDialog() async {
+    return await dialogService.showDialog(
+        title: "Continue Previous Quest?",
+        description:
+            "We found an active quest, do you want to continue this quest?",
+        buttonTitle: "CONTINUE",
+        cancelTitle: "CANCEL");
   }
 
   Future showAndHandleAvatarSelection() async {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/quests/search_quest_location/search_quest_location.dart';
@@ -39,41 +40,63 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
 
   @override
   Future initialize(
-      {required Quest quest, void Function()? notifyParentCallback}) async {
+      {required Quest quest,
+      void Function()? notifyParentCallback,
+      ActivatedQuest? activatedQuestFromLocalStorage}) async {
+    log.wtf("Initializing search quest view");
+
     notifyParentView = notifyParentCallback;
     setBusy(true);
     await super.initialize(quest: quest);
-    // Add listener with a small distance filter to get most precise
+    // ^ Add listener with a small distance filter to get most precise
     // start position!
+
     resetPreviousQuest();
+    if (hasActivatedQuestToBeStarted) {
+      log.i("Trying to start quest found in local storage");
+      maybeStartQuest(
+        quest: activeQuestService.questToBeStarted!.quest,
+        notifyParentCallback: notifyParentCallback,
+        activatedQuestFromLocalStorage: activeQuestService.questToBeStarted,
+      );
+    }
     setBusy(false);
   }
 
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? notifyParentCallback}) async {
-    if (quest != null) {
+      {required Quest? quest,
+      void Function()? notifyParentCallback,
+      ActivatedQuest? activatedQuestFromLocalStorage}) async {
+    if (quest != null || activatedQuestFromLocalStorage != null) {
+      quest = activatedQuestFromLocalStorage?.quest ?? quest!;
       notifyParentCallback = notifyParentCallback;
       log.i("Starting vibration search quest with name ${quest.name}");
 
       final position = await _geolocationService.getUserLivePosition;
-      if (!(await checkAccuracy(
-          position: position,
-          minAccuracy: kMinRequiredAccuracyLocationSearch))) {
-        if (useSuperUserFeatures) {
-          if (await useSuperUserFeature()) {
-            snackbarService.showSnackbar(
-                title: "Starting quest as super user",
-                message:
-                    "Although accuracy is low: ${position.accuracy.toStringAsFixed(0)}");
+
+      if (activatedQuestFromLocalStorage == null) {
+        // ^ don't check for gps when continuing quest from local storage
+        bool isAccurateGPS = await checkAccuracy(
+            position: position,
+            minAccuracy: kMinRequiredAccuracyLocationSearch);
+        if (!isAccurateGPS) {
+          if (useSuperUserFeatures) {
+            if (await useSuperUserFeature()) {
+              snackbarService.showSnackbar(
+                  title: "Starting quest as super user",
+                  message:
+                      "Although accuracy is low: ${position.accuracy.toStringAsFixed(0)}");
+            } else {
+              await resetSlider();
+              return false;
+            }
           } else {
             await resetSlider();
             return false;
           }
-        } else {
-          await resetSlider();
-          return false;
         }
       }
+
       dynamic result;
       result = await startQuestMain(quest: quest);
 
@@ -123,6 +146,7 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
           message: "Start to walk and try to get closer",
           duration: Duration(milliseconds: 1500));
       await checkDistance();
+      return true;
     } else {
       log.i("Not starting quest, quest is probably already running");
     }
