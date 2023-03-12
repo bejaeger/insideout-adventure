@@ -155,7 +155,7 @@ class __$$_UserSettingsCopyWithImpl<$Res>
 class _$_UserSettings implements _UserSettings {
   _$_UserSettings(
       {this.isUsingAR = true,
-      this.isShowingCompletedQuests = true,
+      this.isShowingCompletedQuests = false,
       this.isShowAvatarAndMapEffects = true,
       this.ownPhone = false,
       this.isAcceptScreenTimeFirst = false});
