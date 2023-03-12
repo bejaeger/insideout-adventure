@@ -37,7 +37,7 @@ class AppConfigProvider {
       case Flavor.dev:
         return "Hercules World - Dev";
       case Flavor.prod:
-        return "Hercules World - v0.1.0";
+        return "Hercules World - v0.1.1";
       default:
         return "Hercules World - Dev";
     }
