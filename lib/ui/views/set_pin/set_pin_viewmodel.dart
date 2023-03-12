@@ -29,9 +29,14 @@ class SetPinViewModel extends FormViewModel {
     }
   }
 
+  void popView() {
+    _navigationService.back();
+  }
+
   @override
   void setFormStatus() {
     // TODO: implement setFormStatus
+    print("Set form status!");
   }
 }
 
