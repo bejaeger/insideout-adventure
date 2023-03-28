@@ -4,7 +4,35 @@ This is the mobile adventure app of InsideOutAdventure
 # Setup instructions
 
 ## Get code and packages
-The current version of the app is tested with
+### Xcode
+Version: **14.1** released November 1, 2022
+[Release Notes Summary](https://developer.apple.com/documentation/xcode-release-notes/xcode-14_2-release-notes)
+> Xcode 14.1 includes Swift 5.7 and SDKs for iOS 16.1, iPadOS 16.1, tvOS 16.1, watchOS 9.1, and macOS Ventura.
+> The Xcode 14.1 release supports on-device debugging in iOS 11 and later, tvOS 11 and later, and watchOS 4 and later.
+> Xcode 14.1 requires a Mac running macOS Monterey 12.5 or later.
+
+Relevant excerpts re: supportability ([source](https://developer.apple.com/support/xcode/))
+```
+Xcode Version
+  Xcode 14.1
+Minimum OS Required
+  macOS Monterey 12.5
+SDK
+  iOS 16.1
+  macOS 13
+Deployment Targets
+  iOS 11-16.1
+  macOS 10.13-13
+Simulator
+  iOS 12.4-16.1
+Swift
+  Swift 4
+  Swift 4.2
+  Swift 5.7
+```
+
+### Flutter
+The current version of the app is tested with:
 ```
 Flutter 3.0.5 • channel stable • https://github.com/flutter/flutter.git
 Framework • revision f1875d570e (7 months ago) • 2022-07-13 11:24:16 -0700
@@ -73,20 +101,7 @@ Just listing items specific to this project here.
 For convenience, different modes (flavors) are configured in `.vscode/launch.json`.
 
 ### Jetbrains (IntelliJ IDEA)
-**Dev Flavor**
-```
-Dart entrypoint
-<repo_path>/afk-credits/libs/main_dev.dart
-
-Additional run args
---debug
-
-Additional attach args:
-<empty>
-
-Build flavor:
-dev
-```
+For convenience, different modes (flavors) are configured in `.iml` files inside `.intellij/.run`
 
 **TODO: Prod Flavor**
 
