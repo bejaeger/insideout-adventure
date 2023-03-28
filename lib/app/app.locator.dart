@@ -1,6 +1,5 @@
 import 'package:afkcredits/services/maps/google_map_service.dart';
 import 'package:afkcredits/services/maps/google_map_service.dart';
-import 'package:afkcredits/services/maps/google_map_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -28,7 +27,8 @@ import '../services/feedback_service/feedback_service.dart';
 import '../services/gamification/gamification_service.dart';
 import '../services/geolocation/geolocation_service.dart';
 import '../services/layout/layout_service.dart';
-import '../services/local_storage_service.dart';
+import '../services/local_secure_storage_service.dart';
+import '../services/local_storage_service/local_storage_service.dart';
 import '../services/maps/google_map_service.dart';
 import '../services/maps/map_state_service.dart';
 import '../services/markers/marker_service.dart';
@@ -65,7 +65,7 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => FirebaseAuthenticationService());
   locator.registerLazySingleton(() => AppConfigProvider());
   locator.registerLazySingleton(() => LayoutService());
-  locator.registerLazySingleton(() => LocalStorageService());
+  locator.registerLazySingleton(() => LocalSecureStorageService());
   locator.registerLazySingleton(() => FlutterSecureStorage());
   locator.registerLazySingleton(() => QuestService());
   locator.registerLazySingleton(() => ActiveQuestService());
@@ -83,6 +83,7 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => NotificationsService());
   locator.registerLazySingleton(() => ParentHomeViewModel());
   locator.registerLazySingleton(() => ExplorerHomeViewModel());
+  locator.registerLazySingleton(() => LocalStorageService());
   final mapViewModel = await presolveMapViewModel();
   locator.registerSingleton(mapViewModel);
 

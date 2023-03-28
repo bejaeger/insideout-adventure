@@ -1,5 +1,6 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -34,24 +35,30 @@ class SetPinView extends StatelessWidget with $SetPinView {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SetPinViewModel>.reactive(
       viewModelBuilder: () => SetPinViewModel(),
-      builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: Text("Enter Passcode"),
+      builder: (context, model, child) => SafeArea(
+        child: Scaffold(
+          appBar: CustomAppBar(
+            title: "Enter Passcode",
+            onBackButton: () {
+              clearTextFields();
+              model.popView();
+            },
+          ),
+          body: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: kHorizontalPadding, vertical: 50),
+              child: Column(
+                children: [
+                  generateTextFields(context, model),
+                  verticalSpaceMedium,
+                  InsideOutButton.text(
+                    leading: Icon(Icons.clear, color: kcPrimaryColor, size: 22),
+                    title: "Clear",
+                    onTap: () => clearTextFields(),
+                  )
+                ],
+              )),
         ),
-        body: Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: kHorizontalPadding, vertical: 50),
-            child: Column(
-              children: [
-                IgnorePointer(child: generateTextFields(context, model)),
-                verticalSpaceMedium,
-                InsideOutButton.text(
-                  leading: Icon(Icons.clear, color: kcPrimaryColor),
-                  title: "Clear",
-                  onTap: () => clearTextFields(),
-                )
-              ],
-            )),
       ),
     );
   }
@@ -85,7 +92,7 @@ class SetPinView extends StatelessWidget with $SetPinView {
         children: textFields);
   }
 
-  Widget buildTextField(int i, BuildContext context, dynamic model,
+  Widget buildTextField(int i, BuildContext context, SetPinViewModel model,
       [bool autofocus = false]) {
     final String lastDigit = getControllers()[i].text;
 
@@ -102,27 +109,31 @@ class SetPinView extends StatelessWidget with $SetPinView {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
         focusNode: getFocusNodes()[i],
         obscureText: isTextObscure,
+        onTap: () => getFocusNodes()[i].requestFocus(),
         decoration: InputDecoration(
             counterText: "",
             enabledBorder: showFieldAsBox
                 ? OutlineInputBorder(
-                    borderSide: BorderSide(width: 1.0, color: kcPrimaryColor))
+                    borderSide: BorderSide(width: 1.0, color: kcPrimaryColor),
+                    borderRadius: BorderRadius.circular(15.0))
                 : null,
             focusedBorder: showFieldAsBox
                 ? OutlineInputBorder(
-                    borderSide: BorderSide(width: 2.0, color: kcPrimaryColor))
+                    borderSide: BorderSide(width: 2.0, color: kcPrimaryColor),
+                    borderRadius: BorderRadius.circular(15.0))
                 : null),
         onChanged: (String str) async {
-          print("current i = $i");
+          print("number already set: ${_pin[i]}");
           _pin[i] = str;
+          print("slot i = $i, current entry = ${_pin[i]}, input: $str");
           if (i + 1 != numberFields) {
-            getFocusNodes()[i].unfocus();
-            if (_pin[i] == '') {
-              if (i - 1 >= 0) {
-                getFocusNodes()[i - 1].requestFocus();
-              } 
-            } else {
+            if (_pin[i] != '') {
+              getFocusNodes()[i].unfocus();
               getFocusNodes()[i + 1].requestFocus();
+              if (i + 1 < numberFields && _pin[i] != '') {
+                getControllers()[i + 1].clear();
+                _pin[i + 1] = '';
+              }
             }
           } else {
             getFocusNodes()[i].unfocus();
@@ -133,7 +144,7 @@ class SetPinView extends StatelessWidget with $SetPinView {
             }
           }
           if (_pin.every((String digit) => digit != '')) {
-            model.onSubmit(_pin.join());
+            await model.onSubmit(_pin.join());
             clearTextFields();
           }
         },

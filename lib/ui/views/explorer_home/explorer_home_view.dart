@@ -1,4 +1,4 @@
-import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
@@ -15,7 +15,6 @@ import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:afkcredits/app/app.logger.dart';
 
@@ -48,10 +47,11 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
       // disposeViewModel: false,
       onModelReady: (model) {
         model.initialize(
-            showBewareDialog: widget.showBewareDialog,
-            showNumberQuestsDialog: widget.showNumberQuestsDialog,
-            showSelectAvatarDialog: model.currentUser.newUser,
-            screenTimeSession: widget.screenTimeSession);
+          showBewareDialog: widget.showBewareDialog,
+          showNumberQuestsDialog: widget.showNumberQuestsDialog,
+          showSelectAvatarDialog: model.currentUser.newUser,
+          screenTimeSession: widget.screenTimeSession,
+        );
       },
       builder: (context, model, child) {
         bool showMainWidgets =
@@ -121,9 +121,12 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
 
                   QuestListOverlayView(),
 
-                  if (model.isShowingQuestDetails || model.hasActiveQuest)
+                  if (model.isShowingQuestDetails ||
+                      model.hasActiveQuest ||
+                      model.hasActivatedQuestToBeStarted)
                     QuestDetailsOverlayView(
-                        startFadeOut: model.isFadingOutQuestDetails),
+                      startFadeOut: model.isFadingOutQuestDetails,
+                    ),
 
                   // StepCounterOverlay(),
 

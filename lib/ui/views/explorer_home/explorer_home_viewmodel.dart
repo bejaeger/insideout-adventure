@@ -38,8 +38,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   bool get isListeningToLocation => geolocationService.isListeningToLocation;
   String get currentDistance => geolocationService.getCurrentDistancesToGoal();
-  String get liveDistance => geolocationService
-      .getLiveDistancesToGoal();
+  String get liveDistance => geolocationService.getLiveDistancesToGoal();
   bool get showReloadQuestButton => questService.showReloadQuestButton;
   bool get isReloadingQuests => questService.isReloadingQuests;
   String get lastKnownDistance =>
@@ -61,6 +60,9 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   bool addingPositionToNotionDB = false;
   bool showQuestLoadingScreen = false;
   bool showFullLoadingScreen = true;
+
+  bool get hasActivatedQuestToBeStarted =>
+      activeQuestService.hasActiveQuestToBeStarted;
 
   Future initialize({
     bool showBewareDialog = false,
@@ -87,57 +89,77 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
         ScreenTimeSession? session;
         try {
-        session  =
-            await screenTimeService.getSpecificScreenTime(
-          uid: screenTimeSession.uid,
-          sessionId: screenTimeSession.sessionId,
-        );
-        } catch(e) {
+          session = await screenTimeService.getSpecificScreenTime(
+            uid: screenTimeSession.uid,
+            sessionId: screenTimeSession.sessionId,
+          );
+        } catch (e) {
           log.wtf(
               "NO screen time session found. This should never be the case. Error: $e");
-
         }
         if (session != null) {
           await navToActiveScreenTimeView(session: session);
-        } 
+        }
       } else {
         screenTimeService.listenToPotentialScreenTimes(
             callback: notifyListeners);
       }
+
+      dynamic initializeQuestResult;
+      initializeQuestResult = await initializeQuests();
 
       setBusy(false);
       // UI: fading out loading screen
       await Future.delayed(
         Duration(milliseconds: 500),
       );
-      final result = await initializeQuests();
-      mapViewModel.extractStartMarkersAndAddToMap();
 
-      showFullLoadingScreen = false;
-      showQuestLoadingScreen = false;
-      notifyListeners();
-
-      if (showSelectAvatarDialog) {
-        await showAndHandleAvatarSelection();
-        setNewUserPropertyToFalse();
-      }
-
-      if (showBewareDialog) {
-        await _showBewareDialog();
-      }
-
-      if (result is void Function()) {
-        showQuestLoadingScreen = true;
-        notifyListeners();
-        await Future.delayed(Duration(milliseconds: 1500));
-        result();
+      // means app crashed while a quest was active. Maybe we want to start from here?
+      final activatedQuestFromLocalStorage =
+          await activeQuestService.loadActiveQuestFromLocalStorage();
+      if (activatedQuestFromLocalStorage != null) {
+        showSelectAvatarDialog = false;
+        showNumberQuestsDialog = false;
+        showBewareDialog = false;
+        final result = await _showContinueQuestDialog();
+        if (result?.confirmed == true) {
+          activeQuestService.setTemporaryQuestToBeStarted(
+              quest: activatedQuestFromLocalStorage);
+          mapViewModel.animateToQuestDetails(
+              quest: activatedQuestFromLocalStorage.quest);
+        } else {
+          await activeQuestService.deleteActiveQuestFromLocalStorage();
+        }
       } else {
-        if (showNumberQuestsDialog) {
-          await _showNumberQuestsDialog(
-              numberQuests: questService.getNearByQuest.length);
+        mapViewModel.extractStartMarkersAndAddToMap();
+
+        showFullLoadingScreen = false;
+        showQuestLoadingScreen = false;
+        notifyListeners();
+
+        if (showSelectAvatarDialog) {
+          await showAndHandleAvatarSelection();
+          setNewUserPropertyToFalse();
+        }
+
+        if (showBewareDialog) {
+          await _showBewareDialog();
+        }
+
+        if (initializeQuestResult is void Function()) {
+          showQuestLoadingScreen = true;
+          notifyListeners();
+          await Future.delayed(Duration(milliseconds: 1500));
+          initializeQuestResult();
+        } else {
+          if (showNumberQuestsDialog) {
+            await _showNumberQuestsDialog(
+                numberQuests: questService.getNearByQuestTodo.length);
+          }
         }
       }
 
+      showFullLoadingScreen = false;
       showQuestLoadingScreen = false;
       notifyListeners();
     } catch (e) {
@@ -183,7 +205,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
           addQuestsToExisting: loadNewQuests,
         );
         await questService.sortNearbyQuests();
-        questService.loadNearbyQuestsTodo(completedQuestIds: currentUserStats.completedQuestIds);
+        questService.loadNearbyQuestsTodo(
+            completedQuestIds: currentUserStats.completedQuestIds);
         questService.extractAllQuestTypes();
       }
     } catch (e) {
@@ -326,6 +349,15 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         variant: DialogType.BewareOfSurroundings);
   }
 
+  Future _showContinueQuestDialog() async {
+    return await dialogService.showDialog(
+        title: "Continue Previous Quest?",
+        description:
+            "We found an active quest, do you want to continue this quest?",
+        buttonTitle: "CONTINUE",
+        cancelTitle: "CANCEL");
+  }
+
   Future showAndHandleAvatarSelection() async {
     final res = await dialogService.showCustomDialog(
       variant: DialogType.AvatarSelectDialog,
@@ -378,7 +410,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
     notifyListeners();
   }
 
-  void listenToLayout() {    
+  void listenToLayout() {
     if (_isFadingOutOverlayStream == null) {
       _isFadingOutOverlayStream =
           layoutService.isFadingOutOverlaySubject.listen(
@@ -386,7 +418,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
           notifyListeners();
         },
       );
-    }    
+    }
     if (_isShowingQuestListStream == null) {
       _isShowingQuestListStream =
           layoutService.isShowingQuestListSubject.listen(

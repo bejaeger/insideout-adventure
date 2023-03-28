@@ -7,7 +7,7 @@ import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
-import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/local_secure_storage_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -21,8 +21,8 @@ abstract class AuthenticationViewModel extends FormViewModel
 
   final NavigationService _navigationService = locator<NavigationService>();
   final UserService _userService = locator<UserService>();
-  final LocalStorageService _localStorageService =
-      locator<LocalStorageService>();
+  final LocalSecureStorageService _localStorageService =
+      locator<LocalSecureStorageService>();
 
   final log = getLogger("AuthenticationViewModel");
 

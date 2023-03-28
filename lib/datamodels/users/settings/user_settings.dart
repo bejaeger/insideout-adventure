@@ -13,7 +13,7 @@ class UserSettings with _$UserSettings {
     // Switch to make completed quests visible/invisible
     // (only done for search quests at the moment
     // as hike quests can ALWAYS be redone))
-    @Default(true) bool isShowingCompletedQuests,
+    @Default(false) bool isShowingCompletedQuests,
     @Default(true) bool isShowAvatarAndMapEffects,
     @Default(false) bool ownPhone, // child using his/her own phone
     @Default(false) bool isAcceptScreenTimeFirst,

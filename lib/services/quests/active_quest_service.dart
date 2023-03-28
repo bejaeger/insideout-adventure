@@ -11,6 +11,7 @@ import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
+import 'package:afkcredits/services/local_storage_service/local_storage_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
@@ -39,9 +40,16 @@ class ActiveQuestService with ReactiveServiceMixin {
       locator<QuestTestingService>();
   final QuestService questService = locator<QuestService>();
   final MapStateService mapStateService = locator<MapStateService>();
+  final LocalStorageService localStorageService =
+      locator<LocalStorageService>();
 
   bool get hasActiveQuest => activatedQuest != null;
   ActivatedQuest? get activatedQuest => activatedQuestSubject.valueOrNull;
+  ActivatedQuest? _temporaryActivatedQuestFromLocalStorageToStart;
+  ActivatedQuest? get questToBeStarted =>
+      _temporaryActivatedQuestFromLocalStorageToStart;
+  bool get hasActiveQuestToBeStarted =>
+      _temporaryActivatedQuestFromLocalStorageToStart != null;
   bool get hasSelectedQuest => selectedQuest != null;
   Quest? get selectedQuest => selectedQuestSubject.valueOrNull;
   int get getNumberMarkers =>
@@ -83,13 +91,27 @@ class ActiveQuestService with ReactiveServiceMixin {
     selectedQuestSubject.add(null);
   }
 
+  void setTemporaryQuestToBeStarted({required ActivatedQuest? quest}) {
+    _temporaryActivatedQuestFromLocalStorageToStart = quest;
+  }
+
+  void resetTemporaryQuestToBeStarted({required ActivatedQuest? quest}) {
+    setTemporaryQuestToBeStarted(quest: null);
+  }
+
   Future startQuest(
       {required Quest quest,
       required List<String> uids,
       Future Function(int)? periodicFuncFromViewModel,
-      bool countStartMarkerAsCollected = false}) async {
-    ActivatedQuest tmpActivatedQuest =
-        _getActivatedQuest(quest: quest, uids: uids);
+      bool countStartMarkerAsCollected = false,
+      ActivatedQuest? activatedQuestFromLocalStorage}) async {
+    late ActivatedQuest tmpActivatedQuest;
+    if (!hasActiveQuestToBeStarted) {
+      tmpActivatedQuest = _createActivatedQuest(quest: quest, uids: uids);
+    } else {
+      // this means a quest was found in local storage at startup and this quest is resumed
+      tmpActivatedQuest = questToBeStarted!;
+    }
 
     if (quest.type != QuestType.DistanceEstimate) {
       try {
@@ -110,7 +132,7 @@ class ActiveQuestService with ReactiveServiceMixin {
       }
     }
 
-    if (countStartMarkerAsCollected) {
+    if (countStartMarkerAsCollected && !hasActiveQuestToBeStarted) {
       List<bool> tmpMarkersCollectedList =
           List.from(tmpActivatedQuest.markersCollected);
       tmpMarkersCollectedList[0] = true;
@@ -121,6 +143,12 @@ class ActiveQuestService with ReactiveServiceMixin {
     // quest activated!
 
     pushActivatedQuest(tmpActivatedQuest);
+    // careful: don't move before pushActivatedQuest
+    if (!hasActiveQuestToBeStarted) {
+      saveActiveQuestToLocalStorage();
+    } else {
+      resetTemporaryQuestToBeStarted(quest: null);
+    }
     setNewTrialNumber();
     _questTestingService.maybeInitialize(
       activatedQuest: activatedQuest,
@@ -210,6 +238,46 @@ class ActiveQuestService with ReactiveServiceMixin {
     return activatedQuest?.quest.startMarker == marker;
   }
 
+  Future saveActiveQuestToLocalStorage() async {
+    if (activatedQuest == null) {
+      log.e("No active quest to save to local storage");
+      return;
+    }
+    try {
+      Map<String, dynamic> jsonData = activatedQuest!.toJson();
+      // careful/hack: have to set GeoPoint to null here because
+      // it is not serializable!
+      jsonData['quest']['location'] = null;
+      await localStorageService.saveJsonData(
+          data: jsonData, fileName: kActivatedQuestLocalFileName);
+      log.i("Saved active quest to local storage");
+    } catch (e) {
+      log.e("Error saving active quest to local storage: $e");
+      rethrow;
+    }
+  }
+
+  Future updateActiveQuestInLocalStorage() async {
+    await saveActiveQuestToLocalStorage();
+  }
+
+  Future<ActivatedQuest?> loadActiveQuestFromLocalStorage() async {
+    try {
+      final data = await localStorageService.loadJsonData(
+          fileName: kActivatedQuestLocalFileName);
+      log.i("Found activated quest in local storage");
+      return ActivatedQuest.fromJson(data);
+    } catch (e) {
+      log.i("No activated quest present");
+      return null;
+    }
+  }
+
+  Future<void> deleteActiveQuestFromLocalStorage() async {
+    await localStorageService.deleteJsonData(
+        fileName: kActivatedQuestLocalFileName);
+  }
+
   Future handleSuccessfullyFinishedQuest({bool disposeQuest = false}) async {
     log.v("Handling successfully finished quest");
 
@@ -285,6 +353,20 @@ class ActiveQuestService with ReactiveServiceMixin {
     if (activatedQuest!.status == QuestStatus.incomplete) {
       log.w("Quest is incomplete. Show message to user");
       return WarningQuestNotFinished;
+    }
+  }
+
+  Future<dynamic> startQuestFromLocalStorage() async {
+    final ActivatedQuest? quest = await loadActiveQuestFromLocalStorage();
+    if (quest != null) {
+      log.i("Found incomplete quest in local storage");
+      return await startQuest(
+          quest: quest.quest,
+          uids: quest.uids ?? [],
+          activatedQuestFromLocalStorage: quest);
+    } else {
+      log.i("No incomplete quest found in local storage");
+      return false;
     }
   }
 
@@ -494,7 +576,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   // Function that interprets checkpoint checking event
   // If no quest is active, a check is performed whether the marker is a start marker.
   // If a quest is active, the marker is validated .
-  // In each case, an appropriate QuestQRCodeScanResult is returned.
+  // In each case, an appropriate MarkerAnalysisResult is returned.
   // This result is interpreted in the viewmodels
   Future<MarkerAnalysisResult> analyzeMarkerAndUpdateQuest(
       {AFKMarker? marker, bool verifyLocation = true}) async {
@@ -537,6 +619,7 @@ class ActiveQuestService with ReactiveServiceMixin {
       log.i(
           "Marker verified! Continue with updated collected markers in activated quest");
       updateCollectedMarkers(marker: fullMarker);
+      await updateActiveQuestInLocalStorage();
       _questTestingService.setNewNextMarker(getNextMarker());
 
       return MarkerAnalysisResult.marker(marker: fullMarker);
@@ -655,9 +738,10 @@ class ActiveQuestService with ReactiveServiceMixin {
     resetTimeElapsed();
     removeActivatedQuest();
     _questStartTime = null;
+    deleteActiveQuestFromLocalStorage();
   }
 
-  ActivatedQuest _getActivatedQuest(
+  ActivatedQuest _createActivatedQuest(
       {required Quest quest, required List<String> uids}) {
     return ActivatedQuest(
       quest: quest,

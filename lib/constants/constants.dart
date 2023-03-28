@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 const String kAppName = "Hercules World";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY_ENV_VARIABLE';
+const ProdGoogleMapsEnvKey = 'PROD_GOOGLE_MAPS_API_KEY_ENV_VARIABLE';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
 const kLocalStorageSponsorPinKey = "pinKey";
@@ -10,6 +11,9 @@ const kLocalStorageSponsorReferenceKey = "PARENT_ID";
 const kLocalStorageSawOnBoardingKey = "SAW_ONBOARDING";
 const kConfiguredArKey = "CONFIGURED_AR";
 final appName = 'Hercules World';
+
+// local storage keys
+final String kActivatedQuestLocalFileName = "activatedQuest.json";
 
 // Firebase collections and document keys
 final String userStatisticsCollectionKey = "statistics";

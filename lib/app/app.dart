@@ -8,7 +8,8 @@ import 'package:afkcredits/services/feedback_service/feedback_service.dart';
 import 'package:afkcredits/services/gamification/gamification_service.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/layout/layout_service.dart';
-import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/local_secure_storage_service.dart';
+import 'package:afkcredits/services/local_storage_service/local_storage_service.dart';
 import 'package:afkcredits/services/maps/google_map_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
@@ -93,7 +94,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: AppConfigProvider),
     LazySingleton(classType: LayoutService),
-    LazySingleton(classType: LocalStorageService),
+    LazySingleton(classType: LocalSecureStorageService),
     LazySingleton(classType: FlutterSecureStorage),
     LazySingleton(classType: QuestService),
     LazySingleton(classType: ActiveQuestService),
@@ -111,6 +112,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: NotificationsService),
     LazySingleton(classType: ParentHomeViewModel),
     LazySingleton(classType: ExplorerHomeViewModel),
+    LazySingleton(classType: LocalStorageService),
     Presolve(classType: MapViewModel, presolveUsing: presolveMapViewModel),
     LazySingleton(classType: GoogleMapService),
   ],

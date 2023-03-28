@@ -112,7 +112,7 @@ For convenience, different modes (flavors) are configured in `.iml` files inside
 # Developer Wiki
 ## Framework / state management
 - We use the stacked framework. It is one of the cleanest and most scalable solutions out there. (Find an introduction video [here](https://www.youtube.com/watch?v=hEy_36LPcgQ&ab_channel=FilledStacks))
-- We also have a youtube search tool available, to pull up relevant FilledStacks video snippets with great explanations on various concepts: https://huggingface.co/spaces/bejaeger/filled-stacks-search (try for example: 'How does the stacked work?'). Note that some details in the videos are outdated, the general concepts are, however, still very relevant.
+- We also have a youtube search tool available, to pull up relevant FilledStacks video snippets with great explanations on various concepts: https://huggingface.co/spaces/bejaeger/filled-stacks-search (try for example: 'How does stacked work?'). Note that some details in the videos are outdated, the general concepts are, however, still very relevant.
 
 ## File structure
 - Our structure is adopted from the recommendations from the stacked framework

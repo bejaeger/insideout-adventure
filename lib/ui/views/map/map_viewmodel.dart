@@ -632,13 +632,23 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
         latLng: latLngList[0], offset: -80));
   }
 
+  void updateMapDisplayAllCollectedMarkersInQuest() {
+    updateMapDisplay(afkmarker: activeQuest.quest.startMarker);
+    for (AFKMarker m in activeQuest.quest.markers) {
+      if (activeQuestService.isMarkerCollected(marker: m)) {
+        updateMapDisplay(afkmarker: m);
+      }
+    }
+  }
+
   void updateMapDisplay({required AFKMarker? afkmarker}) {
-    if (afkmarker == null) return;
+    if (afkmarker == null) {
+      return;
+    }
     updateMapAreas(afkmarker: afkmarker);
     updateMapMarkers(
       afkmarker: afkmarker,
-      collected: activeQuest.markersCollected[activeQuest.quest.markers
-          .indexWhere((element) => element == afkmarker)],
+      collected: activeQuestService.isMarkerCollected(marker: afkmarker),
     );
     notifyListeners();
   }

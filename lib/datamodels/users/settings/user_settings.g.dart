@@ -10,7 +10,7 @@ _$_UserSettings _$$_UserSettingsFromJson(Map<String, dynamic> json) =>
     _$_UserSettings(
       isUsingAR: json['isUsingAR'] as bool? ?? true,
       isShowingCompletedQuests:
-          json['isShowingCompletedQuests'] as bool? ?? true,
+          json['isShowingCompletedQuests'] as bool? ?? false,
       isShowAvatarAndMapEffects:
           json['isShowAvatarAndMapEffects'] as bool? ?? true,
       ownPhone: json['ownPhone'] as bool? ?? false,

@@ -148,7 +148,7 @@ class ParentMapViewModel extends QuestViewModel {
     isDeletingQuest = true;
     notifyListeners();
     await questService.removeQuest(quest: quest);
-    nearbyQuests.remove(quest);
+    questService.removeFromNearbyQuests(quest: quest);
     isDeletingQuest = false;
     notifyListeners();
   }
