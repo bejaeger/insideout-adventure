@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class CreditsAmount extends StatelessWidget {
   final num amount;

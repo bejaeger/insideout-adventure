@@ -9,9 +9,9 @@ import 'package:afkcredits/ui/widgets/child_stats_card.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class ParentHomeView extends StatelessWidget {

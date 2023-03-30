@@ -2,10 +2,11 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
 import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+
 import 'raise_quest_bottom_sheet_viewmodel.dart';
 
 class RaiseQuestBottomSheetView extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
-import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
+import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 
 class MarkerService {
   final GeolocationService _geolocationService = locator<GeolocationService>();
@@ -30,5 +30,4 @@ class MarkerService {
       return true;
     }
   }
-
 }

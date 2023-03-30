@@ -1,13 +1,12 @@
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.form.dart';
 import 'package:afkcredits/ui/views/create_explorer/create_explorer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
-
 import 'package:stacked/stacked_annotations.dart';
-import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.form.dart';
 
 import 'validators.dart';
 

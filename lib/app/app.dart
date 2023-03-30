@@ -1,4 +1,5 @@
 import 'package:afkcredits/apis/firestore_api.dart';
+import 'package:afkcredits/apis/notion_api.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_service.dart';
@@ -13,7 +14,6 @@ import 'package:afkcredits/services/local_storage_service/local_storage_service.
 import 'package:afkcredits/services/maps/google_map_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/markers/marker_service.dart';
-import 'package:afkcredits/apis/notion_api.dart';
 import 'package:afkcredits/services/permission_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -24,10 +24,10 @@ import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_view.dart';
 import 'package:afkcredits/ui/views/active_screen_time/screen_time_requested_view.dart';
 import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_view.dart';
-import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart';
 import 'package:afkcredits/ui/views/ar_view/ar_object_ios_view.dart';
-import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
+import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
+import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart';
@@ -52,6 +52,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
+
 import '../ui/views/ar_view/ar_object_android_view.dart';
 
 @StackedApp(

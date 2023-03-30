@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
@@ -9,14 +11,11 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nanoid/nanoid.dart';
-
-import 'dart:io' show Platform;
 import 'package:notion_api/notion.dart';
 import 'package:notion_api/notion/general/property.dart';
 import 'package:notion_api/notion/general/rich_text.dart';

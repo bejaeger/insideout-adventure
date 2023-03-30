@@ -1,18 +1,19 @@
 import 'dart:async';
+
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/quest_status.dart';
-import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
-import 'package:afkcredits/app/app.logger.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class QuestService with ReactiveServiceMixin {
@@ -153,7 +154,8 @@ class QuestService with ReactiveServiceMixin {
     if (quest.id.isNotEmpty) {
       _nearbyQuests.removeWhere((element) => element.id == quest.id);
     } else {
-      log.e('Cannot remove quest from nearby quests, empty quest id provided ${quest.id}');
+      log.e(
+          'Cannot remove quest from nearby quests, empty quest id provided ${quest.id}');
     }
   }
 

@@ -1,6 +1,6 @@
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 
 /// AFK Credits authentication result
 /// We need this abstraction because we

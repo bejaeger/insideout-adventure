@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
@@ -9,8 +10,8 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:stacked_services/stacked_services.dart';
 
 mixin NavigationMixin {
   final NavigationService _navigationService = locator<NavigationService>();

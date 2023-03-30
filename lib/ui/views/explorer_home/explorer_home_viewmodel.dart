@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/achievements/achievement.dart';
@@ -9,9 +13,6 @@ import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/app_config_provider.dart';
-import 'dart:async';
-import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';

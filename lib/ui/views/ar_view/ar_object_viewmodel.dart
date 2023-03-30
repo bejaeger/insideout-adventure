@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io';
+
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
-class ARObjectViewModel extends BaseModel
-    with MapStateControlMixin {
+class ARObjectViewModel extends BaseModel with MapStateControlMixin {
   ARObjectViewModel() {
     startTimerForPotentialHelpMessage();
   }
@@ -21,7 +21,8 @@ class ARObjectViewModel extends BaseModel
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
-        if (timer.tick == 8) { // shows help message after X seconds
+        if (timer.tick == 8) {
+          // shows help message after X seconds
           showHelpMessage = true;
           notifyListeners();
         }

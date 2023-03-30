@@ -1,4 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -9,8 +11,6 @@ import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
-import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/services/local_secure_storage_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
@@ -18,15 +18,14 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/utils/utilities.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:open_settings/open_settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 abstract class ActiveQuestBaseViewModel extends BaseModel
     with MapStateControlMixin {
@@ -51,7 +50,8 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   bool get isCalculatingDistanceToStartMarker => distanceToStartMarker < 0;
   bool get showStartSwipe => !activeQuestService.hasActiveQuest;
   bool get questCenteredOnMap => activeQuestService.questCenteredOnMap;
-  bool get hasActivatedQuestToBeStarted => activeQuestService.hasActiveQuestToBeStarted;
+  bool get hasActivatedQuestToBeStarted =>
+      activeQuestService.hasActiveQuestToBeStarted;
   ActivatedQuest? get questToBeStarted => activeQuestService.questToBeStarted;
 
   bool questSuccessfullyFinished = false;

@@ -1,9 +1,9 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/main_footer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class MainFooterOverlayView extends StatelessWidget {

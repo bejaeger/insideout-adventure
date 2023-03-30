@@ -3,10 +3,10 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.form.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.form.dart';
 
 class CreateExplorerViewModel extends FormViewModel {
   final UserService _userService = locator<UserService>();
@@ -81,7 +81,9 @@ class CreateExplorerViewModel extends FormViewModel {
     final result = isValidInput(name: nameValue, password: passwordValue!);
     if (result == true) {
       // per default if child has own phone we enable verification step
-      UserSettings userSettings = UserSettings(ownPhone: ownPhoneSelected!, isAcceptScreenTimeFirst: ownPhoneSelected!);
+      UserSettings userSettings = UserSettings(
+          ownPhone: ownPhoneSelected!,
+          isAcceptScreenTimeFirst: ownPhoneSelected!);
       final result = await runBusyFuture(_userService.createExplorerAccount(
           name: nameValue!,
           password: passwordValue!,

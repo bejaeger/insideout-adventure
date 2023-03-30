@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -8,7 +10,6 @@ import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/services/feedback_service/feedback_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 class ParentHomeViewModel extends BaseModel {
   final FeedbackService _feedbackService = locator<FeedbackService>();

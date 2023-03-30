@@ -1,8 +1,8 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class ReloadQuestsButton extends StatelessWidget {
   final void Function() onPressed;

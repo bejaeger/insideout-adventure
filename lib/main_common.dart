@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/constants.dart';
@@ -7,22 +8,23 @@ import 'package:afkcredits/services/connectivity/connectivity_service.dart';
 import 'package:afkcredits/ui/shared/setup_dialog_ui_view.dart';
 import 'package:afkcredits/ui/shared/setup_snackbar_ui.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
-import 'package:insideout_ui/insideout_ui.dart';
+import 'package:arkit_plugin/arkit_plugin.dart'
+    show ARKitConfiguration, ARKitPlugin;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'enums/connectivity_type.dart';
+
 import 'app_config_provider.dart';
+import 'enums/connectivity_type.dart';
 import 'notifications/notification_controller.dart';
 import 'ui/shared/setup_bottom_sheet_ui.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:arkit_plugin/arkit_plugin.dart'
-    show ARKitConfiguration, ARKitPlugin;
 
 const bool USE_EMULATOR = false;
 

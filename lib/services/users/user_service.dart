@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
@@ -16,17 +19,16 @@ import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
-import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/local_secure_storage_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info/device_info.dart';
-import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:crypto/crypto.dart';
-import 'dart:convert';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
+
 import 'afkcredits_authentication_result_service.dart';
 
 class UserService {

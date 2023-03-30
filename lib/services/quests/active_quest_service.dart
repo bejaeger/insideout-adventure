@@ -18,9 +18,9 @@ import 'package:afkcredits/services/quest_testing_service/quest_testing_service.
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:stacked/stacked.dart';

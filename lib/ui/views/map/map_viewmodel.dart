@@ -1,22 +1,23 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/utils/utilities.dart';
-import 'package:insideout_ui/insideout_ui.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:insideout_ui/insideout_ui.dart';
 
 class MapViewModel extends BaseModel with MapStateControlMixin {
   // Viewmodel that receives callback functions to update map

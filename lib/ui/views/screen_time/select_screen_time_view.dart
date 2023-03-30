@@ -2,10 +2,9 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_viewmodel.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:lottie/lottie.dart';
-
 import 'package:stacked/stacked.dart';
 
 class SelectScreenTimeView extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/screen_time_notifications_note.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class StartScreenTimeCounterView extends StatelessWidget {

@@ -3,8 +3,8 @@ import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/ui/widgets/quest_completed_note.dart';
 import 'package:afkcredits/ui/widgets/quest_success_card.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class CommonQuestDetailsFooter extends StatelessWidget {
   final QuestDetailsOverlayViewModel model;

@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -23,11 +25,10 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 // The Basemodel
 // All our ViewModels inherit from this class so

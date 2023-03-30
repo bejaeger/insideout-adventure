@@ -1,4 +1,4 @@
-import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
@@ -13,10 +13,9 @@ import 'package:afkcredits/ui/widgets/animations/fade_transition_animation.dart'
 import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
 import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 import '../../../datamodels/screentime/screen_time_session.dart';
 

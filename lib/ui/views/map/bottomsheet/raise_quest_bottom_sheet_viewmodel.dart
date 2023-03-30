@@ -5,6 +5,7 @@ import 'package:afkcredits/exceptions/mapviewmodel_exception.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import '../../../../app/app.locator.dart';
 
 class RaiseQuestBottomSheetViewModel extends BaseModel {

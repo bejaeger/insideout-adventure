@@ -1,13 +1,12 @@
 import 'package:afkcredits/constants/asset_locations.dart';
+import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_view.form.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked_services/stacked_services.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
-
-import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_view.form.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 @FormView(
   fields: [

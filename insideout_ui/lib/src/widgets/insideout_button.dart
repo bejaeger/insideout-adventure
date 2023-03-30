@@ -1,5 +1,5 @@
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class InsideOutButton extends StatelessWidget {
   final String title;

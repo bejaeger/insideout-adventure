@@ -1,7 +1,7 @@
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class QuestTypeTag extends StatelessWidget {
   const QuestTypeTag({

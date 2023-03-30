@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
@@ -13,7 +15,6 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 class SearchQuestViewModel extends ActiveQuestBaseViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();

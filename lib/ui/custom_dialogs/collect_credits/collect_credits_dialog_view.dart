@@ -4,12 +4,12 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/enums/connectivity_type.dart';
 import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/animations/confetti_from_top.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:provider/provider.dart';
 
 class CollectCreditsDialogView extends StatelessWidget {
   final DialogRequest request;

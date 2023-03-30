@@ -2,8 +2,8 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/ui/widgets/credits_to_screentime_widget.dart';
 import 'package:afkcredits/ui/widgets/explorer_home_widgets/avatar_overlay.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class MainHeaderOverlay extends StatelessWidget {
   final bool show;

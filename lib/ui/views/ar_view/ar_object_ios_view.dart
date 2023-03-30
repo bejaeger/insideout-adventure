@@ -4,9 +4,9 @@ import 'dart:math';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/ar_view/ar_object_viewmodel.dart';
-import 'package:insideout_ui/insideout_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:arkit_plugin/arkit_plugin.dart';
+import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 

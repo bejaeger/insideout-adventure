@@ -105,6 +105,14 @@ For convenience, different modes (flavors) are configured in `.iml` files inside
 
 **TODO: Prod Flavor**
 
+#### Optimize Imports and 'dart format'
+TODO: Find a way to exclude these in the future or customize this functionality for our project
+
+These locations were reverted since the emitted changes were messy:
+* `functions/` - Javascript code
+* `insideout_ui/lib/insideout_ui.dart` - Export commands are interleaved with comments which gets mangled
+* `lib/app/app.locator.dart` - Comments re: generated code get deleted
+
 ## Troubleshooting
 ### iOS
 - When building iOS, and error might appear saying `error: Unexpected duplicate tasks`. To solve it, delete the `GoogleService-Info.plist` file from the Compile Sources of the Build Phases of your target in xcode. See [here](https://stackoverflow.com/questions/73653470/error-xcode-unexpected-duplicate-tasks-target-runner-has-copy-command-from).

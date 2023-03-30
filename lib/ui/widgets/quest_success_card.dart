@@ -1,9 +1,9 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/hercules_world_credit_system.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class QuestSuccessCard extends StatelessWidget {
   final void Function() onContinuePressed;

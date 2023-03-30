@@ -1,8 +1,9 @@
 import 'dart:async';
+
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/enums/money_transfer_dialog_status.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
 class MoneyTransferDialogViewModel extends BaseModel {
   final log = getLogger("MoneyTransferDialogViewModel");

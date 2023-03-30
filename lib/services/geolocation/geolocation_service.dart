@@ -1,14 +1,15 @@
 import 'dart:async';
+import 'dart:math' as math;
+
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
 import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
 import 'package:afkcredits/services/common_services/pausable_service.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:math' as math;
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GeolocationService extends PausableService {
   final log = getLogger('GeolocationService');

@@ -1,3 +1,4 @@
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -6,7 +7,6 @@ import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
-import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 

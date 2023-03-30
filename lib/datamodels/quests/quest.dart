@@ -1,9 +1,10 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:insideout_ui/insideout_ui.dart';
+
 import 'marker_note/marker_note.dart';
 
 class Quest {

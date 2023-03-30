@@ -9,9 +9,9 @@ import 'package:afkcredits/ui/custom_dialogs/found_treasure/found_treasure_dialo
 import 'package:afkcredits/ui/custom_dialogs/in_area_alert/in_area_alert_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/marker_collected/collected_marker_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/super_user_dialog/super_user_dialog_view.dart';
+import 'package:afkcredits/ui/shared/custom_dialogs/beware_of_surroundings_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_view.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/money_transfer_dialog_view.dart';
-import 'package:afkcredits/ui/shared/custom_dialogs/beware_of_surroundings_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/number_quests_founds_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/onboarding_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/select_avatar_dialog_view.dart';
@@ -50,7 +50,8 @@ void setupDialogUi() {
     DialogType.ExplorerSettings: (context, sheetRequest, completer) =>
         ExplorerSettingsDialogView(request: sheetRequest, completer: completer),
     DialogType.ExplorerSettingsForParents: (context, sheetRequest, completer) =>
-        ExplorerSettingsForParentsDialogView(request: sheetRequest, completer: completer),
+        ExplorerSettingsForParentsDialogView(
+            request: sheetRequest, completer: completer),
   };
   dialogService.registerCustomDialogBuilders(builders);
 }

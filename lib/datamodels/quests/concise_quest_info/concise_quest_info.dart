@@ -1,5 +1,5 @@
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 part 'concise_quest_info.freezed.dart';
 part 'concise_quest_info.g.dart';

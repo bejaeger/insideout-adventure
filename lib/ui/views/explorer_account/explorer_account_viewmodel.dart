@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 class ExplorerAccountViewModel extends BaseModel {
   final log = getLogger("ExplorerAccountViewModel");

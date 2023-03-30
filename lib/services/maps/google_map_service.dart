@@ -1,3 +1,4 @@
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
@@ -5,11 +6,10 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/utils/utilities.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:afkcredits/app/app.logger.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class GoogleMapService {
   static GoogleMapController? _mapController;

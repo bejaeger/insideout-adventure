@@ -4,10 +4,10 @@ import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_viewmo
 import 'package:afkcredits/ui/widgets/activity_conversion_icon.dart';
 import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:afkcredits/ui/widgets/screen_time_conversion_icon.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:stacked/stacked.dart';
 
 class OnBoardingScreensView extends StatelessWidget {
   const OnBoardingScreensView({Key? key}) : super(key: key);

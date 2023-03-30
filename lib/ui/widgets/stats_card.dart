@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class AFKCreditsIcon extends StatelessWidget {
   final bool locked;

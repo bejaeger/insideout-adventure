@@ -6,8 +6,8 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/trend_icon.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class ChildStatsCard extends StatelessWidget {
   final UserStatistics? childStats;

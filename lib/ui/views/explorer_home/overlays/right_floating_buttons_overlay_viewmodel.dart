@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:math' as m;
 
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
-import 'dart:math' as m;
-import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 
 class RightFloatingButtonsOverlayViewModel extends BaseModel

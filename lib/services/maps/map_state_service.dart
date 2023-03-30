@@ -1,7 +1,7 @@
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:map_launcher/map_launcher.dart';
-import 'package:afkcredits/app/app.logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MapStateService {

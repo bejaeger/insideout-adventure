@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -347,7 +348,6 @@ class ScreenTimeService {
     }
     return null;
   }
-
 
   int getTimeLeftInSeconds({required ScreenTimeSession session}) {
     DateTime now = DateTime.now();

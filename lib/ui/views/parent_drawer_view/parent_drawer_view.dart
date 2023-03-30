@@ -1,9 +1,9 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_view.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class ParentDrawerView extends StatelessWidget {

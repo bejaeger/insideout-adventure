@@ -11,15 +11,15 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_marker_viewmodel.dart';
-import 'package:insideout_ui/insideout_ui.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
+import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.form.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
-import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.form.dart';
 
 class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   void Function() disposeController;

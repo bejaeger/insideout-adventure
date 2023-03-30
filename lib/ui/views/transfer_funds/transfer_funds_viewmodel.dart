@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -18,9 +19,9 @@ import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/users/user_service.dart';
+import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
 
 class TransferFundsViewModel extends FormViewModel with NavigationMixin {
   final BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
@@ -231,7 +232,8 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     if (amountValue != null && amountValue != "") {
       if (isValidData(true)) {
         num tmpamount = int.parse(amountValue!);
-        screenTimeEquivalent = HerculesWorldCreditSystem.creditsToScreenTime(tmpamount);
+        screenTimeEquivalent =
+            HerculesWorldCreditSystem.creditsToScreenTime(tmpamount);
       }
     }
     await Future.delayed(Duration(milliseconds: 2000));

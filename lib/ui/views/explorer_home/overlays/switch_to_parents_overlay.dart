@@ -1,6 +1,6 @@
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class SwitchToParentsAreaButton extends StatelessWidget {
   final void Function() onTap;

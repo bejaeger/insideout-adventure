@@ -13,8 +13,8 @@ import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:afkcredits/ui/widgets/live_quest_statistic.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/search_quest_widgets.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class QuestDetailsOverlayView extends StatefulWidget {

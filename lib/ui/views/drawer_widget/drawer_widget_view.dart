@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_viewmodel.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class DrawerWidgetView extends StatelessWidget {
