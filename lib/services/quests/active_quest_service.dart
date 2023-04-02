@@ -103,13 +103,14 @@ class ActiveQuestService with ReactiveServiceMixin {
       {required Quest quest,
       required List<String> uids,
       Future Function(int)? periodicFuncFromViewModel,
-      bool countStartMarkerAsCollected = false,
-      ActivatedQuest? activatedQuestFromLocalStorage}) async {
+      bool countStartMarkerAsCollected = false}) async {
     late ActivatedQuest tmpActivatedQuest;
     if (!hasActiveQuestToBeStarted) {
+      _timeElapsedOffset = 0;
       tmpActivatedQuest = _createActivatedQuest(quest: quest, uids: uids);
     } else {
       // this means a quest was found in local storage at startup and this quest is resumed
+      _timeElapsedOffset = questToBeStarted!.timeElapsed;
       tmpActivatedQuest = questToBeStarted!;
     }
 
@@ -356,20 +357,6 @@ class ActiveQuestService with ReactiveServiceMixin {
     }
   }
 
-  Future<dynamic> startQuestFromLocalStorage() async {
-    final ActivatedQuest? quest = await loadActiveQuestFromLocalStorage();
-    if (quest != null) {
-      log.i("Found incomplete quest in local storage");
-      return await startQuest(
-          quest: quest.quest,
-          uids: quest.uids ?? [],
-          activatedQuestFromLocalStorage: quest);
-    } else {
-      log.i("No incomplete quest found in local storage");
-      return false;
-    }
-  }
-
   Future continueIncompleteQuest() async {
     if (activatedQuest != null) {
       _stopWatchService.resume();
@@ -494,8 +481,8 @@ class ActiveQuestService with ReactiveServiceMixin {
 
       markersCollectedNew[index] = true;
       log.v("New Marker collected!");
-      pushActivatedQuest(
-          activatedQuest!.copyWith(markersCollected: markersCollectedNew));
+      pushActivatedQuest(activatedQuest!.copyWith(
+          markersCollected: markersCollectedNew, timeElapsed: timeElapsed));
     } else {
       log.e(
           "Can't update the collected markers because there is no quest present. This function should have probably never been called! Please check!");
@@ -516,27 +503,30 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   List<AFKMarker> markersToShowOnMap({Quest? questIn}) {
     List<AFKMarker> markers = [];
-    if (hasActiveQuest) {
-      if (activatedQuest!.quest.type == QuestType.QRCodeHike) {
-        markers = activatedQuest!.quest.markers;
+    if (hasActiveQuest || hasActiveQuestToBeStarted) {
+      ActivatedQuest actQuest =
+          (activatedQuest ?? _temporaryActivatedQuestFromLocalStorageToStart)!;
+      if (actQuest.quest.type == QuestType.QRCodeHike) {
+        markers = actQuest.quest.markers;
       }
-      if (activatedQuest!.quest.type == QuestType.GPSAreaHike) {
-        for (var i = 0; i < activatedQuest!.markersCollected.length; i++) {
-          if (activatedQuest!.markersCollected[i]) {
-            markers.add(activatedQuest!.quest.markers[i]);
+      if (actQuest.quest.type == QuestType.GPSAreaHike) {
+        for (var i = 0; i < actQuest.markersCollected.length; i++) {
+          if (actQuest.markersCollected[i]) {
+            markers.add(actQuest.quest.markers[i]);
           }
         }
-        int index = activatedQuest!.markersCollected
+        // add next checkpoint to the list
+        int index = actQuest.markersCollected
             .lastIndexWhere((element) => element == true);
-        if (index + 1 < activatedQuest!.quest.markers.length) {
-          markers.add(activatedQuest!.quest.markers[index + 1]);
+        if (index + 1 < actQuest.quest.markers.length) {
+          markers.add(actQuest.quest.markers[index + 1]);
         }
       }
-      if (activatedQuest!.quest.type == QuestType.QRCodeHunt ||
-          activatedQuest!.quest.type == QuestType.GPSAreaHunt) {
-        for (var i = 0; i < activatedQuest!.markersCollected.length; i++) {
-          if (activatedQuest!.markersCollected[i]) {
-            markers.add(activatedQuest!.quest.markers[i]);
+      if (actQuest.quest.type == QuestType.QRCodeHunt ||
+          actQuest.quest.type == QuestType.GPSAreaHunt) {
+        for (var i = 0; i < actQuest.markersCollected.length; i++) {
+          if (actQuest.markersCollected[i]) {
+            markers.add(actQuest.quest.markers[i]);
           }
         }
       }
@@ -677,10 +667,11 @@ class ActiveQuestService with ReactiveServiceMixin {
     return null;
   }
 
+  int _timeElapsedOffset = 0;
   ReactiveValue<int> _timeElapsed = ReactiveValue<int>(0);
   int get timeElapsed => _timeElapsed.value;
   void updateTimeElapsed(int seconds) {
-    _timeElapsed.value = seconds;
+    _timeElapsed.value = seconds + _timeElapsedOffset;
   }
 
   String getMinutesElapsedString() {
@@ -693,16 +684,6 @@ class ActiveQuestService with ReactiveServiceMixin {
 
   void resetTimeElapsed() {
     _timeElapsed.value = 0;
-  }
-
-  void updateTime(int seconds) {
-    if (activatedQuest != null) {
-      pushActivatedQuest(activatedQuest!.copyWith(timeElapsed: seconds));
-    }
-  }
-
-  ActivatedQuest updateTimeOnQuest(ActivatedQuest activatedQuest, int seconds) {
-    return activatedQuest.copyWith(timeElapsed: seconds);
   }
 
   ActivatedQuest updateDistanceOnQuest(
@@ -730,6 +711,7 @@ class ActiveQuestService with ReactiveServiceMixin {
   }
 
   void disposeActivatedQuest() {
+    _timeElapsedOffset = 0;
     _stopWatchService.stopTimer();
     _stopWatchService.resetTimer();
     cancelPositionListener();
