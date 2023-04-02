@@ -322,13 +322,8 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       );
       await Future.delayed(Duration(milliseconds: 2000));
       setBusy(false);
-      if (!fromMap) {
-        replaceWithParentHomeView();
-        disposeController();
-      } else {
-        await popUntilMapView();
-        disposeController();
-      }
+      replaceWithParentHomeView();
+      disposeController();
     }
     return result;
   }
