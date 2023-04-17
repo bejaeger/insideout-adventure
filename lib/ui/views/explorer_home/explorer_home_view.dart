@@ -3,7 +3,7 @@ import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/main_footer_overlay_view.dart';
-import 'package:afkcredits/ui/views/explorer_home/overlays/main_header_overlay.dart';
+import 'package:afkcredits/ui/views/explorer_home/overlays/main_header_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/switch_to_parents_overlay.dart';
 import 'package:afkcredits/ui/views/map/main_map_view.dart';
@@ -96,16 +96,8 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
 
                   // TODO: Can also make MainHeader a view!
                   if (!model.isBusy)
-                    MainHeaderOverlay(
-                      percentageOfNextLevel: model.percentageOfNextLevel,
-                      currentLevel: model.currentLevel(),
-                      onAvatarPressed: model.showExplorerAccountOverlay,
+                    MainHeaderOverlayView(
                       show: showMainWidgets,
-                      onDevFeaturePressed: model.isDevFlavor
-                          ? model.openSuperUserSettingsDialog
-                          : null, // model.showNotImplementedSnackbar,
-                      onCreditsPressed: model.showCreditsOverlay,
-                      balance: model.currentUserStats.afkCreditsBalance,
                       avatarIdx: model.avatarIdx,
                     ),
 

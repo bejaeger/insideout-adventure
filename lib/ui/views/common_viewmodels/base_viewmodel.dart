@@ -325,6 +325,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   }
 
   Future openSuperUserSettingsDialog() async {
+    // needed when using this in Custom_dop_down_button
+    await Future.delayed(Duration(milliseconds: 10));
     if (isSuperUser) {
       await dialogService.showCustomDialog(
           barrierDismissible: true, variant: DialogType.SuperUserSettings);

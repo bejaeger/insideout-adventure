@@ -28,11 +28,11 @@ class AvatarOverlay extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: 80,
+        width: 70,
         child: Stack(
           children: [
             Align(
-              alignment: Alignment.topCenter,
+              alignment: Alignment(0, -0.4),
               child: Avatar(
                 avatarIdx: avatarIdx,
               ),
@@ -40,7 +40,7 @@ class AvatarOverlay extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: ProgressBar(
-                widthProgressBar: 70,
+                widthProgressBar: 55,
                 percentage: percentage,
               ),
             ),
@@ -63,7 +63,7 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
         avatarIdx == 1 ? kLottieChillDudeHeadPng : kLottieWalkingGirlPng,
-        height: 39);
+        height: 30);
   }
 }
 
@@ -127,7 +127,10 @@ class LevelIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: InsideOutText.label(level.toString()),
+      child: InsideOutText(
+        text: level.toString(),
+        style: heading3Style.copyWith(fontSize: 16),
+      ),
     );
   }
 }

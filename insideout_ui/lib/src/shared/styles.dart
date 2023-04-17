@@ -125,7 +125,7 @@ const TextStyle bookStyle = TextStyle(
   color: kcOrange,
 );
 const TextStyle labelStyle =
-    TextStyle(fontSize: 20, fontWeight: FontWeight.w800);
+    TextStyle(fontSize: 19, fontWeight: FontWeight.w800);
 
 const TextStyle statsStyle = TextStyle(
     fontSize: 20, fontWeight: FontWeight.w600, color: kcGreyTextColorSoft);

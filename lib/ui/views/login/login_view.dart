@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
-import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
+import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -47,7 +47,7 @@ class LoginView extends StatelessWidget with $LoginView {
           logo: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HerculesWorldLogo(),
+              InsideOutLogo(),
             ],
           ),
           subtitle: Row(

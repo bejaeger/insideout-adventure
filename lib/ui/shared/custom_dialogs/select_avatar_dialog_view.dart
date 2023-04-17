@@ -169,7 +169,7 @@ class SelectAvatarDialogView extends StatelessWidget {
                   minRadius: 16,
                   maxRadius: 38,
                   backgroundColor: kcPrimaryColor,
-                  child: Image.asset(kHerculesWorldLogo, height: 45)
+                  child: Image.asset(kInsideOutLogo, height: 45)
                   // Icon(
                   //   Icons.favorite,
                   //   size: 28,

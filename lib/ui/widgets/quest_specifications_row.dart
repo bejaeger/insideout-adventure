@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/hercules_world_credit_system.dart';
+import 'package:afkcredits/constants/inside_out_credit_system.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,7 @@ class QuestSpecificationsRow extends StatelessWidget {
               horizontalSpaceTiny,
               InsideOutText.bodyBold(
                 "~" +
-                    (HerculesWorldCreditSystem
+                    (InsideOutCreditSystem
                                 .kSimpleDistanceMarkersToDistanceWalkScaling *
                             quest!.distanceMarkers! *
                             0.001)
@@ -54,7 +54,7 @@ class QuestSpecificationsRow extends StatelessWidget {
               horizontalSpaceTiny,
               InsideOutText.bodyBold(
                 "~" +
-                    (HerculesWorldCreditSystem
+                    (InsideOutCreditSystem
                                 .kDistanceInMeterToActivityMinuteConversion *
                             quest!.distanceMarkers!)
                         .toStringAsFixed(0) +

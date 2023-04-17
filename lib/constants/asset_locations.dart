@@ -15,12 +15,12 @@ const String kCloudOverlayImagePath = "assets/images/luz-azul-cielo-azul.jpg";
 // icons
 const String kTreasureIconARPath = "assets/icons/treasure2_big.png";
 const String kCompassIcon = "assets/icons/cardinal-point.png";
-const String kHerculesWorldLogo = "assets/hercules_world_logo.png";
+const String kInsideOutLogo = "assets/inside_out_logo.png";
 const String kBewareOfSurroundingsIcon = "assets/icons/beware.png";
 const String kWalkingIcon = "assets/icons/walk.png";
 const String kActivityIcon = "assets/icons/run.png";
 const String kPinInAreaIcon = "assets/icons/location-icon.ico";
-
+const String kSwitchAccountIcon = "assets/icons/switch_accounts.png";
 const String kScreenTimeIcon = "assets/icons/computer.png";
 const String kScreenTimeIcon2 = "assets/icons/person.png";
 
@@ -59,4 +59,3 @@ const String kLottieBigTv = "assets/lottie/big-tv-screen-time.json";
 
 // @see: https://assets7.lottiefiles.com/packages/lf20_Ei9xER.json
 const String kLottieRippleEffect = "assets/lottie/ripple-effect.json";
-

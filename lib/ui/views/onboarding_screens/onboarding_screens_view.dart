@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/activity_conversion_icon.dart';
-import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
+import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
 import 'package:afkcredits/ui/widgets/screen_time_conversion_icon.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +62,7 @@ class OnBoardingScreensView extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.only(bottom: 30.0),
                       //color: Colors.red,
-                      child: HerculesWorldLogo(
+                      child: InsideOutLogo(
                         sizeScale: 1.1,
                       ),
                     ),
@@ -82,9 +82,9 @@ class OnBoardingScreensView extends StatelessWidget {
                 //  "Children can earn Hercules Credits through outdoor activities and can redeem these credits to unlock screen time.",
                 bodyWidget: OnboardingBodyWidget(
                   text1:
-                      "Children can earn Hercules Credits through outdoor activities",
+                      "Children can earn InsideOut Credits through outdoor activities",
                   text2:
-                      "Children can redeem Hercules Credits to activate screen time",
+                      "Children can redeem InsideOut Credits to activate screen time",
                   text3: "Parents can monitor and relax",
                   icon1: OnboardingActivityConversionIcon(),
                   icon2: OnboardingScreenTimeConversionIcon(),
@@ -111,7 +111,7 @@ class OnBoardingScreensView extends StatelessWidget {
                 bodyWidget: OnboardingBodyWidget(
                   icon1: OnboardingActivityConversionIcon(),
                   text1:
-                      "Your child can earn Hercules Credits through gps-based outdoor games",
+                      "Your child can earn InsideOut Credits through gps-based outdoor games",
                   text2:
                       "You as a parent can create these games in your preferred locations",
                 ),

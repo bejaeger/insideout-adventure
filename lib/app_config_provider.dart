@@ -35,11 +35,11 @@ class AppConfigProvider {
   String get appName {
     switch (this.flavor) {
       case Flavor.dev:
-        return "Hercules World - Dev";
+        return "InsideOut Adventure - Dev";
       case Flavor.prod:
-        return "Hercules World - v0.1.1";
+        return "InsideOut Adventure - v0.1.1";
       default:
-        return "Hercules World - Dev";
+        return "InsideOut Adventure - Dev";
     }
   }
 

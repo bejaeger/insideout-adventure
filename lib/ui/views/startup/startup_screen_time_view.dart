@@ -1,6 +1,6 @@
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
+import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
@@ -24,7 +24,7 @@ class StartUpScreenTimeView extends StatelessWidget {
       viewModelBuilder: () => StartUpViewModel(),
       builder: (context, model, child) => Scaffold(
         body: Center(
-          child: HerculesWorldLogo(isBusy: true),
+          child: InsideOutLogo(isBusy: true),
         ),
       ),
     );

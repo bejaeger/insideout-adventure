@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/hercules_world_credit_system.dart';
+import 'package:afkcredits/constants/inside_out_credit_system.dart';
 import 'package:afkcredits/ui/widgets/activity_conversion_icon.dart';
 import 'package:afkcredits/ui/widgets/screen_time_conversion_icon.dart';
 import 'package:insideout_ui/insideout_ui.dart';
@@ -48,7 +48,7 @@ class CreditConversionInfoDialog extends StatelessWidget {
                         color: kcActivityIconColor,
                       ),
                       InsideOutText.captionBold(
-                          "${(1 / HerculesWorldCreditSystem.kMinuteActivityToCreditsConversion).round().toString()} min"),
+                          "${(1 / InsideOutCreditSystem.kMinuteActivityToCreditsConversion).round().toString()} min"),
                     ],
                   ),
                   horizontalSpaceTiny,
@@ -69,7 +69,7 @@ class CreditConversionInfoDialog extends StatelessWidget {
               ),
               verticalSpaceTiny,
               InsideOutText.body(
-                  "We recommend giving 1 credit for ${(1 / HerculesWorldCreditSystem.kMinuteActivityToCreditsConversion).round().toString()} minutes of activity. By creating your own quests you can decide on this conversion."),
+                  "We recommend giving 1 credit for ${(1 / InsideOutCreditSystem.kMinuteActivityToCreditsConversion).round().toString()} minutes of activity. By creating your own quests you can decide on this conversion."),
               verticalSpaceMedium,
 
               // Row(
@@ -104,14 +104,14 @@ class CreditConversionInfoDialog extends StatelessWidget {
                         color: kcScreenTimeBlue,
                       ),
                       InsideOutText.captionBold(
-                          "${HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor.round()} min"),
+                          "${InsideOutCreditSystem.kCreditsToScreenTimeConversionFactor.round()} min"),
                     ],
                   ),
                 ],
               ),
               verticalSpaceTiny,
               InsideOutText.body(
-                  "Per default 1 credit converts to ${HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor.round()} minute screen time. In future versions of the app we will allow to adjust this conversion."),
+                  "Per default 1 credit converts to ${InsideOutCreditSystem.kCreditsToScreenTimeConversionFactor.round()} minute screen time. In future versions of the app we will allow to adjust this conversion."),
               verticalSpaceSmall,
               Row(
                 children: [

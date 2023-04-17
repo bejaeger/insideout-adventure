@@ -2,7 +2,7 @@ const double kDollarToAfkCreditsConversionFactor = 10;
 const double kCentsToAfkCreditsConversionFactor =
     kDollarToAfkCreditsConversionFactor * 0.01;
 
-class HerculesWorldCreditSystem {
+class InsideOutCreditSystem {
   static const double kCreditsToScreenTimeConversionFactor =
       1; // 1 credit = 1 minute
 
@@ -19,14 +19,13 @@ class HerculesWorldCreditSystem {
 
   static int screenTimeToCredits(int minutes) {
     return (minutes /
-            HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor)
+            InsideOutCreditSystem.kCreditsToScreenTimeConversionFactor)
         .round();
   }
 
   static int creditsToScreenTime(num credits) {
     return (credits *
-            HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor)
+            InsideOutCreditSystem.kCreditsToScreenTimeConversionFactor)
         .round();
   }
-
 }

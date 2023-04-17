@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/hercules_world_credit_system.dart';
+import 'package:afkcredits/constants/inside_out_credit_system.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -57,7 +57,7 @@ class QuestSuccessCard extends StatelessWidget {
                     height: 24, color: kcScreenTimeBlue),
                 horizontalSpaceTiny,
                 InsideOutText.headingThree(
-                    HerculesWorldCreditSystem.creditsToScreenTime(
+                    InsideOutCreditSystem.creditsToScreenTime(
                                 finishedQuest!.afkCreditsEarned!)
                             .toString() +
                         " min"),

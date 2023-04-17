@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
+import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:badges/badges.dart';
@@ -92,7 +92,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       child: Padding(
                         padding:
                             const EdgeInsets.only(left: kHorizontalPadding),
-                        child: HerculesWorldLogo(sizeScale: 0.4),
+                        child: InsideOutLogo(
+                            sizeScale: 0.4,
+                            boxed: true,
+                            onTap: model.navToOnboardingScreens),
                       ),
                     ),
                   Align(
