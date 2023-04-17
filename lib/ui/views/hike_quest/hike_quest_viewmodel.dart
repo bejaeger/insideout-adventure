@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/utils/utilities.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -31,18 +31,31 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
   bool isManuallyChecking = false;
 
   @override
-  Future initialize({required Quest quest}) async {
+  Future initialize(
+      {required Quest quest, void Function()? notifyParentCallback}) async {
     log.i("Initializing active map quest of tye: ${quest.type}");
     resetPreviousQuest();
     setBusy(true);
     await super.initialize(quest: quest);
+    if (hasActivatedQuestToBeStarted) {
+      maybeStartQuest(
+        quest: activeQuestService.questToBeStarted!.quest,
+        notifyParentCallback: notifyParentCallback,
+        activatedQuestFromLocalStorage: activeQuestService.questToBeStarted,
+      );
+    }
     setBusy(false);
     notifyListeners();
   }
 
-  Future maybeStartQuest(
-      {required Quest? quest, void Function()? notifyParentCallback}) async {
-    if (quest != null && !hasActiveQuest) {
+  Future maybeStartQuest({
+    required Quest? quest,
+    void Function()? notifyParentCallback,
+    ActivatedQuest? activatedQuestFromLocalStorage,
+  }) async {
+    if ((quest != null && !hasActiveQuest) ||
+        activatedQuestFromLocalStorage != null) {
+      quest = activatedQuestFromLocalStorage?.quest ?? quest!;
       final result =
           await startQuestMain(quest: quest, countStartMarkerAsCollected: true);
       if (result == false) {
@@ -66,24 +79,29 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
       );
 
       AFKMarker? nextMarker = activeQuestService.getNextMarker();
-      mapViewModel.updateMapDisplay(afkmarker: quest.startMarker);
+      mapViewModel.updateMapDisplayAllCollectedMarkersInQuest();
       showInfoWindowOfNextMarker(marker: nextMarker);
-      snackbarService.showSnackbar(
-          title: "Started quest",
-          message: "Let's go...the first checkpoint is waiting!",
-          duration: Duration(milliseconds: 1500));
-      await Future.delayed(Duration(milliseconds: 600));
-      if (nextMarker != null && quest.startMarker != null) {
-        await mapViewModel.animateNewLatLonZoomDelta(
-            lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
-        await Future.delayed(Duration(
-            milliseconds: (600 * mapAnimationSpeedFraction()).round()));
-        mapViewModel.animateCameraToBetweenCoordinatesWithPadding(
-          latLngList: [
-            [quest.startMarker!.lat!, quest.startMarker!.lon!],
-            [nextMarker.lat!, nextMarker.lon!],
-          ],
-        );
+
+      if (activatedQuestFromLocalStorage != null) {
+        animateCameraToPreviewNextMarker(isShowCollectedMarkerDialog: false);
+      } else {
+        snackbarService.showSnackbar(
+            title: "Started quest",
+            message: "Let's go...the first checkpoint is waiting!",
+            duration: Duration(milliseconds: 1500));
+        await Future.delayed(Duration(milliseconds: 600));
+        if (nextMarker != null && quest.startMarker != null) {
+          await mapViewModel.animateNewLatLonZoomDelta(
+              lat: nextMarker.lat!, lon: nextMarker.lon!, deltaZoom: 1);
+          await Future.delayed(Duration(
+              milliseconds: (600 * mapAnimationSpeedFraction()).round()));
+          mapViewModel.animateCameraToBetweenCoordinatesWithPadding(
+            latLngList: [
+              [quest.startMarker!.lat!, quest.startMarker!.lon!],
+              [nextMarker.lat!, nextMarker.lon!],
+            ],
+          );
+        }
       }
       notifyListeners();
     }

@@ -2,7 +2,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class LocalStorageService {
+class LocalSecureStorageService {
   final FlutterSecureStorage _secureStorage = locator<FlutterSecureStorage>();
   final log = getLogger("LocalStorageService");
 

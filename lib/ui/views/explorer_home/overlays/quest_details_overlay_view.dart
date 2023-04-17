@@ -55,7 +55,9 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
   Widget build(BuildContext context) {
     return ViewModelBuilder<QuestDetailsOverlayViewModel>.reactive(
       viewModelBuilder: () => QuestDetailsOverlayViewModel(),
-      onModelReady: (model) => model.initialize(quest: null),
+      onModelReady: (model) => model.initialize(
+        quest: null,
+      ),
       builder: (context, model, child) {
         if (widget.startFadeOut) {
           _controller.reverse(from: 0.5);
@@ -63,7 +65,13 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
         final Quest? quest = model.selectedQuest ??
             model.activeQuestNullable?.quest ??
             model.previouslyFinishedQuest?.quest ??
+            model.questToBeStarted?.quest ??
             null;
+        final bool showStartSlider = !model.showCompletedQuestNote() &&
+            model.isNearStartMarker &&
+            model.previouslyFinishedQuest == null &&
+            !model.hasActiveQuest &&
+            !model.hasActivatedQuestToBeStarted;
         return FadeTransition(
           opacity: _animation,
           child: MainStack(
@@ -74,7 +82,9 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                 CommonQuestDetailsHeader(
                   isParentAccount: model.isParentAccount,
                   quest: quest,
+                  // maybe instead of parsing activatedQuest to "hasActiveQuest" parse separately and use progress indicator as long as activatedQuestFromLocalStorage is loaded"
                   hasActiveQuest: model.hasActiveQuest,
+                  hasActiveQuestToBeStarted: model.hasActivatedQuestToBeStarted,
                   showInstructionsDialog: model.showQuestInstructionDialog,
                   openSuperUserSettingsDialog:
                       model.openSuperUserSettingsDialog,
@@ -94,7 +104,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                     ),
                   ),
 
-                if (quest != null)
+                if (quest != null && !model.hasActivatedQuestToBeStarted)
                   Padding(
                     padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                     child: CommonQuestDetailsFooter(
@@ -108,20 +118,16 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                 if (quest != null &&
                     quest.type == QuestType.TreasureLocationSearch)
                   SearchQuestView(
-                      showStartSlider: !model.showCompletedQuestNote() &&
-                          model.isNearStartMarker &&
-                          model.previouslyFinishedQuest == null &&
-                          !model.hasActiveQuest,
-                      notifyParentCallback: model.notifyListeners,
-                      quest: quest),
+                    showStartSlider: showStartSlider,
+                    notifyParentCallback: model.notifyListeners,
+                    quest: quest,
+                  ),
                 if (quest != null && quest.type == QuestType.GPSAreaHike)
                   GPSAreaHike(
-                      showStartSlider: !model.showCompletedQuestNote() &&
-                          model.isNearStartMarker &&
-                          model.previouslyFinishedQuest == null &&
-                          !model.hasActiveQuest,
-                      notifyParentCallback: model.notifyListeners,
-                      quest: quest),
+                    showStartSlider: showStartSlider,
+                    notifyParentCallback: model.notifyListeners,
+                    quest: quest,
+                  ),
               ],
             ),
           ),
@@ -187,7 +193,9 @@ class SearchQuestView extends StatelessWidget {
     return ViewModelBuilder<SearchQuestViewModel>.reactive(
       viewModelBuilder: () => SearchQuestViewModel(),
       onModelReady: (model) => model.initialize(
-          quest: quest, notifyParentCallback: notifyParentCallback),
+        quest: quest,
+        notifyParentCallback: notifyParentCallback,
+      ),
       builder: (context, model, child) {
         return SpecificQuestLayout(
           maybeStartQuest: () => model.maybeStartQuest(
@@ -280,7 +288,9 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
       viewModelBuilder: () => GPSAreaHikeViewModel(),
       onModelReady: (model) {
         model.addQuestMarkers(quest: widget.quest);
-        model.initialize(quest: widget.quest);
+        model.initialize(
+            quest: widget.quest,
+            notifyParentCallback: widget.notifyParentCallback);
       },
       builder: (context, model, child) {
         if (model.showCollectedMarkerAnimation) {

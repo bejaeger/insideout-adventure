@@ -108,9 +108,9 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     if (pageIndex == 2) {
       // Name and description inputs
       if (isValidUserInputs(name: true, description: true)) {
-        controller.nextPage(
-            duration: Duration(milliseconds: 200), curve: Curves.easeIn);
         pageIndex = pageIndex + 1;
+        await controller.nextPage(
+            duration: Duration(milliseconds: 200), curve: Curves.easeIn);
         notifyListeners();
       }
     } else if (pageIndex == 0) {
@@ -122,9 +122,9 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
         notifyListeners();
       }
       // quest type selection input
-      controller.nextPage(
-          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
       pageIndex = pageIndex + 1;
+      await controller.nextPage(
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
       notifyListeners();
     } else if (pageIndex == 1) {
       // quest marker selection
@@ -135,9 +135,9 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
         // ? However, I don't know why I added this anyways!
         // isLoading = true;
         // notifyListeners();
+        pageIndex = pageIndex + 1;
         await controller.nextPage(
             duration: Duration(milliseconds: 200), curve: Curves.easeIn);
-        pageIndex = pageIndex + 1;
         // isLoading = false;
         // notifyListeners();
       }
@@ -322,13 +322,8 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       );
       await Future.delayed(Duration(milliseconds: 2000));
       setBusy(false);
-      if (!fromMap) {
-        replaceWithParentHomeView();
-        disposeController();
-      } else {
-        await popUntilMapView();
-        disposeController();
-      }
+      replaceWithParentHomeView();
+      disposeController();
     }
     return result;
   }

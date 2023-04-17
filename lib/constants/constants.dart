@@ -12,6 +12,9 @@ const kLocalStorageSawOnBoardingKey = "SAW_ONBOARDING";
 const kConfiguredArKey = "CONFIGURED_AR";
 final appName = 'Hercules World';
 
+// local storage keys
+final String kActivatedQuestLocalFileName = "activatedQuest.json";
+
 // Firebase collections and document keys
 final String userStatisticsCollectionKey = "statistics";
 final String userFavouritePlacesCollectionKey = "FavouritePlaces";

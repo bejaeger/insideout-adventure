@@ -3,7 +3,7 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
-import 'package:afkcredits/services/local_storage_service.dart';
+import 'package:afkcredits/services/local_secure_storage_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,8 +12,8 @@ import 'package:afkcredits/app/app.logger.dart';
 
 class NotificationsService {
   final log = getLogger("NotificationsService");
-  final LocalStorageService _localStorageService =
-      locator<LocalStorageService>();
+  final LocalSecureStorageService _localStorageService =
+      locator<LocalSecureStorageService>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
 
   Future createPermanentNotification(
@@ -165,7 +165,7 @@ class NotificationsService {
     }
   }
 
-    Future pushToken({required String uid, required List<String>? tokens}) async {
+  Future pushToken({required String uid, required List<String>? tokens}) async {
     String? token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
       if ((tokens != null && tokens.length > 1) ||
