@@ -57,7 +57,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
     }
     if (passwordValue != null) {
       if (passwordValue!.length < 4) {
-        emailInputValidationMessage =
+        passwordInputValidationMessage =
             'Please choose a password that is at least 4 characters long.';
         returnVal = false;
       }
@@ -65,6 +65,12 @@ class CreateAccountViewModel extends AuthenticationViewModel {
     return returnVal;
   }
 
+  bool isPwShown = false;
+  setIsPwShown(bool show) {
+    isPwShown = show;
+    notifyListeners();
+  }
+  
   @override
   Future<AFKCreditsAuthenticationResultService> runAuthentication(
       AuthenticationMethod method,
