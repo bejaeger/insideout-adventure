@@ -37,6 +37,8 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
           ? totalChildActivityLastDays.toString()
           : "0";
 
+  bool removedUser = false;
+
   String explorerNameFromUid(String uid) {
     return userService.explorerNameFromUid(uid);
   }
@@ -66,6 +68,7 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
         } catch (e) {
           log.e("$e");
         }
+        removedUser = true;
         await showSuccessBottomSheet();
         replaceWithHomeView();
       }

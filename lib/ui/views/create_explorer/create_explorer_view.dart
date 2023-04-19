@@ -37,6 +37,8 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
             title: "Create Child Account",
             onBackButton: () => model.onBackButton(controller),
           ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           floatingActionButton: model.isBusy || model.pageIndex == 1
               ? null
               : BottomFloatingActionButtons(
@@ -133,16 +135,12 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                                     decoration: BoxDecoration(
                                         border:
                                             Border.all(color: kcShadowColor),
-                                        color: (model.ownPhoneSelected !=
-                                                    null &&
-                                                model.ownPhoneSelected! ==
-                                                    false)
+                                        color: model.ownPhoneSelected == false
                                             ? kcPrimaryColor.withOpacity(0.8)
                                             : Colors.grey[200],
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    child: (model.ownPhoneSelected != null &&
-                                            model.ownPhoneSelected! == false)
+                                    child: model.ownPhoneSelected == false
                                         ? InsideOutText.headingFour("No")
                                         : InsideOutText.headingFourLight("No"),
                                   ),
@@ -158,15 +156,12 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                                     decoration: BoxDecoration(
                                         border:
                                             Border.all(color: kcShadowColor),
-                                        color: (model.ownPhoneSelected !=
-                                                    null &&
-                                                model.ownPhoneSelected! == true)
+                                        color: model.ownPhoneSelected == true
                                             ? kcPrimaryColor.withOpacity(0.8)
                                             : Colors.grey[200],
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    child: (model.ownPhoneSelected != null &&
-                                            model.ownPhoneSelected! == true)
+                                    child: model.ownPhoneSelected == true
                                         ? InsideOutText.headingFour("Yes")
                                         : InsideOutText.headingFourLight("Yes"),
                                   ),
@@ -184,7 +179,13 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                                 leading: Icon(Icons.add_circle_outline,
                                     color: Colors.white),
                                 busy: model.isBusy,
-                                onTap: model.addExplorer,
+                                onTap: () async {
+                                  bool res = await model.addExplorer();
+                                  if (res == false) {
+                                    FocusScope.of(context).unfocus();
+                                    model.onBackButton(controller);
+                                  }
+                                },
                                 title: "Create account"),
                           ],
                         ),

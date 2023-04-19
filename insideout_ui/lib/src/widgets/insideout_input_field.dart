@@ -70,6 +70,7 @@ class InsideOutInputField extends StatelessWidget {
                 )
               : null,
           errorText: errorText,
+          errorMaxLines: 2,
           border: circularBorder.copyWith(
             borderSide: const BorderSide(color: kcLightGrey),
           ),

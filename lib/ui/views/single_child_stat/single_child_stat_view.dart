@@ -57,7 +57,9 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
           body: RefreshIndicator(
             onRefresh: model.refresh,
             child: model.isBusy
-                ? AFKProgressIndicator()
+                ? model.removedUser
+                    ? Container()
+                    : AFKProgressIndicator()
                 : ListView(
                     children: [
                       verticalSpaceMedium,
