@@ -15,7 +15,7 @@ const String kCloudOverlayImagePath = "assets/images/luz-azul-cielo-azul.jpg";
 // icons
 const String kTreasureIconARPath = "assets/icons/treasure2_big.png";
 const String kCompassIcon = "assets/icons/cardinal-point.png";
-const String kInsideOutLogo = "assets/inside_out_logo.png";
+const String kInsideOutLogo = "assets/inside_out_logo_2.png";
 const String kBewareOfSurroundingsIcon = "assets/icons/beware.png";
 const String kWalkingIcon = "assets/icons/walk.png";
 const String kActivityIcon = "assets/icons/run.png";
