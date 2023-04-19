@@ -52,7 +52,7 @@ class InsideOutLogo extends StatelessWidget {
                     height: 0.95,
                     fontWeight: FontWeight.w800,
                     color: kcOrangeYellow,
-                    letterSpacing: 1,
+                    letterSpacing: 0.9,
                   ),
             ),
             if (isBusy) verticalSpaceMedium,
