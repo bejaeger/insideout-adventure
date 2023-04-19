@@ -28,7 +28,7 @@ const String kScreenTimeIcon2 = "assets/icons/person.png";
 const String kIllustrationActivity =
     "assets/illustrations/activity_illustration.png";
 const String kIllustrationAnnaHercules =
-    "assets/illustrations/anna_hercules_world.png";
+    "assets/illustrations/anna_inside_out.png";
 const String kIllustrationInfographic = "assets/illustrations/infographic.png";
 const String kIllustrationParentsMeditate =
     "assets/illustrations/parents_meditate.png";

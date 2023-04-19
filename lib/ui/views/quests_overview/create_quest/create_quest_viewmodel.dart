@@ -52,7 +52,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   int pageIndex = 0;
   bool isLoading = false;
   bool result = false;
-  QuestType selectedQuestType = QuestType.TreasureLocationSearch;
+  QuestType selectedQuestType = QuestType.GPSAreaHike;
   String? afkCreditsInputValidationMessage;
   String? nameInputValidationMessage;
   String? questTypeInputValidationMessage;

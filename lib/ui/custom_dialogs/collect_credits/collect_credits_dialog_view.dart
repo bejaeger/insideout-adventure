@@ -124,7 +124,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                                   " credits"
                               : "You mastered this mission and earned " +
                                   activeQuest!.quest.afkCredits.toString() +
-                                  " Hercules credits!",
+                                  " InsideOut credits!",
                           align: TextAlign.center),
                     if (connectionStatus == ConnectivityType.Offline)
                       verticalSpaceSmall,

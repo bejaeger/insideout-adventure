@@ -56,64 +56,77 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
           latLng: latLng,
           disposeController: () => controller.dispose()),
       builder: (context, model, child) {
-        return SafeArea(
-          child: Scaffold(
-            appBar: CustomAppBar(
-              title: "Create Quest",
-              onBackButton: () => model.onBackButton(controller),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            floatingActionButton: model.isBusy
-                ? null
-                : BottomFloatingActionButtons(
-                    swapButtons: true,
-                    onTapSecondary: model.pageIndex == 1
-                        ? model.getAFKMarkers.length < 2
-                            ? null
-                            : () async {
-                                if (model.pageIndex == 0) {
-                                  FocusScope.of(context).unfocus();
+        return WillPopScope(
+          onWillPop: model.pageIndex >= 2
+              ? () async {
+                  FocusScope.of(context).unfocus();
+                  model.onBackButton(controller);
+                  return false;
+                }
+              : () async {
+                  model.onBackButton(controller);
+                  return false;
+                },
+          child: SafeArea(
+            child: Scaffold(
+              appBar: CustomAppBar(
+                title: "Create Quest",
+                onBackButton: () => model.onBackButton(controller),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: model.isBusy
+                  ? null
+                  : BottomFloatingActionButtons(
+                      swapButtons: true,
+                      onTapSecondary: model.pageIndex == 1
+                          ? model.getAFKMarkers.length < 2
+                              ? null
+                              : () async {
+                                  if (model.pageIndex == 0) {
+                                    FocusScope.of(context).unfocus();
+                                  }
+                                  await model.onNextButton(controller);
                                 }
-                                await model.onNextButton(controller);
+                          : () async {
+                              if (model.pageIndex == 2) {
+                                FocusScope.of(context).unfocus();
                               }
-                        : () async {
-                            if (model.pageIndex == 2) {
+                              await model.onNextButton(controller);
+                            },
+                      titleSecondary:
+                          model.pageIndex < 3 ? "Next \u2192" : "Create Quest",
+                      busySecondary: model.isLoading,
+                      onTapMain: model.pageIndex >= 2
+                          ? () async {
                               FocusScope.of(context).unfocus();
+                              model.onBackButton(controller);
                             }
-                            await model.onNextButton(controller);
-                          },
-                    titleSecondary:
-                        model.pageIndex < 3 ? "Next \u2192" : "Create Quest",
-                    busySecondary: model.isLoading,
-                    onTapMain: model.pageIndex >= 2
-                        ? () async {
-                            FocusScope.of(context).unfocus();
-                            model.onBackButton(controller);
-                          }
-                        : () => model.onBackButton(controller),
-                    titleMain: model.pageIndex >= 1 ? "\u2190 Back" : "Cancel",
+                          : () => model.onBackButton(controller),
+                      titleMain:
+                          model.pageIndex >= 1 ? "\u2190 Back" : "Cancel",
+                    ),
+              body: PageView(
+                controller: controller,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  QuestTypeSelection(
+                    model: model,
                   ),
-            body: PageView(
-              controller: controller,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                QuestTypeSelection(
-                  model: model,
-                ),
-                QuestMarkersSelection(
-                  model: model,
-                ),
-                NameSelection(
-                  model: model,
-                  nameController: nameController,
-                  descriptionController: descriptionController,
-                ),
-                CreditsSelection(
-                  model: model,
-                  afkCreditAmountController: afkCreditAmountController,
-                ),
-              ],
+                  QuestMarkersSelection(
+                    model: model,
+                  ),
+                  NameSelection(
+                    model: model,
+                    nameController: nameController,
+                    descriptionController: descriptionController,
+                  ),
+                  CreditsSelection(
+                    model: model,
+                    afkCreditAmountController: afkCreditAmountController,
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -196,22 +209,22 @@ class QuestTypeSelection extends StatelessWidget with $CreateQuestView {
               children: [
                 Expanded(
                   child: SelectableBox(
+                    selected: model.selectedQuestType == QuestType.GPSAreaHike,
+                    child: QuestTypeCard(
+                      category: QuestType.GPSAreaHike,
+                      onPressed: () =>
+                          model.selectQuestType(type: QuestType.GPSAreaHike),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SelectableBox(
                     selected: model.selectedQuestType ==
                         QuestType.TreasureLocationSearch,
                     child: QuestTypeCard(
                       category: QuestType.TreasureLocationSearch,
                       onPressed: () => model.selectQuestType(
                           type: QuestType.TreasureLocationSearch),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: SelectableBox(
-                    selected: model.selectedQuestType == QuestType.GPSAreaHike,
-                    child: QuestTypeCard(
-                      category: QuestType.GPSAreaHike,
-                      onPressed: () =>
-                          model.selectQuestType(type: QuestType.GPSAreaHike),
                     ),
                   ),
                 ),
