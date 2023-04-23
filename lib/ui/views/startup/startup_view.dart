@@ -15,7 +15,7 @@ class StartUpView extends StatelessWidget {
       builder: (context, model, child) => model.showLoadingScreen()
           ? Scaffold(
               body: Center(
-                child: InsideOutLogo(isBusy: true),
+                child: InsideOutLogo(isBusy: true, center: true),
               ),
             )
           : Scaffold(

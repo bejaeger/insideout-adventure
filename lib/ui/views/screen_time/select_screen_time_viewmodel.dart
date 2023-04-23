@@ -36,7 +36,7 @@ class SelectScreenTimeViewModel extends BaseModel {
 
   Future selectCustomScreenTime() async {
     DialogResponse? response = await dialogService.showCustomDialog(
-        variant: DialogType.CustomScreenTime);
+        variant: DialogType.CustomScreenTime, barrierDismissible: true);
     if (response?.confirmed == true) {
       if (response?.data is int) {
         screenTimePreset = response?.data;

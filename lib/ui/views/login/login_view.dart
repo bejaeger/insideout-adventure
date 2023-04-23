@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
@@ -47,7 +48,11 @@ class LoginView extends StatelessWidget with $LoginView {
           logo: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InsideOutLogo(),
+              Row(
+                children: [
+                  InsideOutLogo(),
+                ],
+              ),
             ],
           ),
           subtitle: Row(

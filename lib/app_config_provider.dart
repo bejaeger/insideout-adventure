@@ -30,14 +30,14 @@ class AppConfigProvider {
 
   bool get isDevFlavor => flavor == Flavor.dev;
 
-  String get versionName => "0.1.0";
+  String get versionName => "0.1.1+2";
 
   String get appName {
     switch (this.flavor) {
       case Flavor.dev:
         return "InsideOut Adventure - Dev";
       case Flavor.prod:
-        return "InsideOut Adventure - v0.1.1";
+        return "InsideOut Adventure - v0.1.1+2";
       default:
         return "InsideOut Adventure - Dev";
     }

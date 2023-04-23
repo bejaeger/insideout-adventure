@@ -7,12 +7,14 @@ class InsideOutLogo extends StatelessWidget {
   final double sizeScale;
   final Function()? onTap;
   final bool boxed;
+  final bool center;
   const InsideOutLogo({
     Key? key,
     this.onTap,
     this.isBusy = false,
     this.sizeScale = 1,
     this.boxed = false,
+    this.center = false,
   }) : super(key: key);
 
   @override
@@ -35,7 +37,8 @@ class InsideOutLogo extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              center ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: [
             Text(
               "InsideOut",
@@ -61,7 +64,7 @@ class InsideOutLogo extends StatelessWidget {
             if (isBusy)
               AFKProgressIndicator(
                 linear: false,
-                color: kcOrange,
+                color: kcPrimaryColor,
               ),
           ],
         ),
