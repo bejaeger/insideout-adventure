@@ -48,17 +48,20 @@ class OnBoardingScreensView extends StatelessWidget {
                   padding: const EdgeInsets.all(6.0),
                   child: Column(
                     children: [
-                      InsideOutText.bodyItalic(
-                          "Prototype Version - " + model.versionName),
-                      verticalSpaceMedium,
                       InsideOutText.body(
                           "Thank you for testing our prototype, we hope you will enjoy it."),
+                      verticalSpaceMedium,
+                      InsideOutText.bodyItalic(
+                        "Prototype Version - " + model.versionName,
+                      ),
                     ],
                   ),
                 ),
                 image: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    Image.asset(kInsideOutLogo, height: 120),
+                    verticalSpaceSmall,
                     Container(
                       padding: const EdgeInsets.only(bottom: 30.0),
                       //color: Colors.red,

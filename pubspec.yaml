@@ -142,7 +142,7 @@ flutter_icons:
   android: "launcher_icon"
   ios: true
   remove_alpha_ios: true # important otherwise apple doesn't accept app
-  image_path: "assets/inside_out_logo_2.png"
+  image_path: "assets/inside_out_logo_io_adv.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -156,8 +156,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/DayStyle.json
-    - assets/inside_out_logo.png
-    - assets/inside_out_logo_2.png
+    - assets/inside_out_logo_io_adv.png
     - assets/avatars/chilldude-head.png
     - assets/icons/
     - assets/icons/beware.png

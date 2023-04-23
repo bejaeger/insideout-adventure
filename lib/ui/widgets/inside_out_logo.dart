@@ -28,21 +28,22 @@ class InsideOutLogo extends StatelessWidget {
             : null,
         decoration: boxed
             ? BoxDecoration(
-                color: kcGreenDark.withOpacity(0.3),
+                color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(16),
               )
             : null,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "InsideOut",
               style: textTheme(context).headline6!.copyWith(
                     fontSize: 40 * sizeScale,
-                    color: kcOrange,
+                    color: kcPrimaryColor, // Color(0xff8EBDE5), // kcOrange,
                     fontWeight: FontWeight.w800,
-                    letterSpacing: 1.5,
+                    letterSpacing: 1,
                   ),
             ),
             Text(
@@ -51,8 +52,9 @@ class InsideOutLogo extends StatelessWidget {
                     fontSize: 40 * sizeScale,
                     height: 0.95,
                     fontWeight: FontWeight.w800,
-                    color: kcOrangeYellow,
-                    letterSpacing: 0.9,
+                    color:
+                        kcPrimaryColor, // Color(0xff8EBDE5), //kcOrangeYellow,
+                    letterSpacing: 1,
                   ),
             ),
             if (isBusy) verticalSpaceMedium,
