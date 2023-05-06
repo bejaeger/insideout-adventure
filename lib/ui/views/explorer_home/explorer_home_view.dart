@@ -1,4 +1,3 @@
-import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_account/explorer_account_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
@@ -94,7 +93,6 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                     loadingQuests: model.showQuestLoadingScreen,
                   ),
 
-                  // TODO: Can also make MainHeader a view!
                   if (!model.isBusy)
                     MainHeaderOverlayView(
                       show: showMainWidgets,

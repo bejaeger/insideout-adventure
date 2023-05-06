@@ -56,8 +56,8 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
               InsideOutInputField(
                 leading: Icon(Icons.lock),
                 controller: passwordController,
-                obscureText: model.isPwShown,
-                trailing: (model.isPwShown)
+                obscureText: !model.isPwShown,
+                trailing: (!model.isPwShown)
                     ? Icon(Icons.visibility)
                     : Icon(Icons.visibility_off),
                 trailingTapped: () => model.setIsPwShown(!model.isPwShown),

@@ -45,7 +45,7 @@ class InsideOutLogo extends StatelessWidget {
               style: textTheme(context).headline6!.copyWith(
                     fontSize: 40 * sizeScale,
                     color: kcPrimaryColor, // Color(0xff8EBDE5), // kcOrange,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 1,
                   ),
             ),
@@ -54,7 +54,7 @@ class InsideOutLogo extends StatelessWidget {
               style: textTheme(context).headline6!.copyWith(
                     fontSize: 40 * sizeScale,
                     height: 0.95,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                     color:
                         kcPrimaryColor, // Color(0xff8EBDE5), //kcOrangeYellow,
                     letterSpacing: 1,

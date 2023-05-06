@@ -17,6 +17,9 @@ class CommonQuestDetailsFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool showNotCloseToQuest =
+        (model.isNearStartMarker || model.previouslyFinishedQuest != null) &&
+            (!model.hasActivatedQuestToBeStarted && !model.hasActiveQuest);
     return Stack(
       children: [
         // TODO: Here we have the option to show a statistics display cause the
@@ -33,9 +36,7 @@ class CommonQuestDetailsFooter extends StatelessWidget {
                   onTap: model.switchRedoQuestAndRebuildUI,
                   repeatable:
                       (quest.repeatable == 1 || model.useSuperUserFeatures))
-              : model.isNearStartMarker ||
-                      model.previouslyFinishedQuest !=
-                          null // specicif quest UI will show the start slider
+              : !showNotCloseToQuest // specicif quest UI will show the start slider
                   ? SizedBox(height: 0, width: 0)
                   : NotCloseToQuestNote(
                       animateCameraToQuestMarkers:

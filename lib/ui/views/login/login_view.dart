@@ -84,13 +84,14 @@ class LoginView extends StatelessWidget with $LoginView {
                 controller: emailOrNameController,
               ), */
               InsideOutInputField(
-                //leading: Icon(Icons.lock),
+                // leading: Icon(Icons.lock),
                 controller: passwordController,
+                obscureText: !model.isPwShown,
+                trailing: (!model.isPwShown)
+                    ? Icon(Icons.visibility)
+                    : Icon(Icons.visibility_off),
+                trailingTapped: () => model.setIsPwShown(!model.isPwShown),
                 placeholder: "Password",
-                //leading: Text('Password'),
-                obscureText: true,
-                trailing: Icon(Icons.close),
-                trailingTapped: () => passwordController.clear(),
                 errorText: model.passwordInputValidationMessage,
               ),
               /*         TextField(
