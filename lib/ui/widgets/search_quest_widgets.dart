@@ -31,19 +31,20 @@ class CurrentQuestStatusInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color textColor = kcBlackOnBackground;
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: screenWidth(context) - 2 * kHorizontalPadding,
           alignment: Alignment.center,
           padding:
               const EdgeInsets.only(top: 10.0, left: 15, right: 15, bottom: 15),
-          //margin: const EdgeInsets.all(kHorizontalPadding),
           decoration: BoxDecoration(
             color: getDirectionStatusColor(directionStatus),
             borderRadius: BorderRadius.circular(20.0),
-            border: Border.all(color: Colors.grey[300]!),
+            border: Border.all(color: Colors.grey[400]!),
           ),
           child: getOtherStatusString(directionStatus) != null
               ? InsideOutText.successThree(
@@ -56,28 +57,12 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        InsideOutText.headingFour(
-                          "Distance to checkpoint " +
-                              (numCheckpointsReached + 1).toString() +
-                              " / " +
-                              numMarkers.toString(),
-                        ),
-                        // Column(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Row(
-                        //       children: [
-                        //         InsideOutText.headingFour(
-                        //             numCheckpointsReached.toString() +
-                        //                 " / " +
-                        //                 numMarkers.toString()),
-                        //       ],
-                        //     ),
-                        //     // InsideOutText.caption("Collected")
-                        //   ],
-                        // ),
-                        // InsideOutText.body(
-                        //     getDirectionStatusString(directionStatus)),
+                        Text(
+                            "Distance to checkpoint " +
+                                (numCheckpointsReached + 1).toString() +
+                                " / " +
+                                numMarkers.toString(),
+                            style: heading4Style.copyWith(color: textColor)),
                       ],
                     ),
                     verticalSpaceTiny,
@@ -86,35 +71,41 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                       children: [
                         Image.asset(kActivityIcon,
                             width: 40,
-                            color: directionStatus == DirectionStatus.closer
-                                ? Colors.white
+                            color: directionStatus == DirectionStatus.closer ||
+                                    directionStatus == DirectionStatus.further
+                                ? textColor
                                 : kcPrimaryColor),
                         horizontalSpaceSmall,
-                        Icon(Icons.arrow_forward,
-                            size: 22, color: kcMediumGrey),
+                        Icon(Icons.arrow_forward, size: 22, color: textColor),
                         horizontalSpaceSmall,
                         Image.asset(kAFKCreditsLogoPath,
                             width: 38,
-                            color: directionStatus == DirectionStatus.closer
-                                ? Colors.white
+                            color: directionStatus == DirectionStatus.closer ||
+                                    directionStatus == DirectionStatus.further
+                                ? textColor
                                 : kcPrimaryColor),
                         InsideOutText.headingThree(" "),
                         horizontalSpaceSmall,
                         isBusy
-                            ? AFKProgressIndicator(color: Colors.grey[500])
-                            : InsideOutText.headingTwo(
+                            ? AFKProgressIndicator(color: textColor)
+                            : Text(
                                 !isFirstDistanceCheck
                                     ? "${currentDistance.toStringAsFixed(1)} m"
                                     : "?",
-                              )
+                                style:
+                                    heading2Style.copyWith(color: textColor)),
                       ],
                     ),
                   ],
                 ),
         ),
-        verticalSpaceSmall,
-        InsideOutText.headingThree(getDirectionStatusString(directionStatus),
-            align: TextAlign.center),
+        verticalSpaceTiny,
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Text(getDirectionStatusString(directionStatus),
+              style: heading3Style.copyWith(
+                  color: kcBlackOnBackground, fontStyle: FontStyle.italic)),
+        ),
         // Text("Aktuelle Distanz",
         //     textAlign: TextAlign.center, style: textTheme(context).headline6),
         // Text("Last Distance",
@@ -170,9 +161,9 @@ class CurrentQuestStatusInfo extends StatelessWidget {
       case DirectionStatus.further:
         return Colors.red.withOpacity(0.8);
       case DirectionStatus.denied:
-        return Colors.grey[200]!;
+        return Colors.grey[50]!;
       default:
-        return Colors.grey[200]!.withOpacity(0.8);
+        return Colors.grey[50]!.withOpacity(0.8);
     }
   }
 }

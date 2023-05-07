@@ -331,7 +331,7 @@ class UserService {
       required AuthenticationMethod authMethod,
       required UserSettings userSettings}) async {
     if (await isUserAlreadyPresent(name: name)) {
-      return "User with name $name already present. Please choose a different name.";
+      return "User with name $name exists already. Please choose a different name.";
     }
 
     final docRef = _firestoreApi.createUserDocument();

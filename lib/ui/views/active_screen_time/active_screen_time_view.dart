@@ -58,14 +58,14 @@ class ActiveScreenTimeView extends StatelessWidget {
                                     onPressed: () =>
                                         model.resetActiveScreenTimeView(
                                             uid: session.uid),
-                                    icon: Icon(Icons.arrow_back_ios, size: 26),
+                                    icon: Icon(Icons.arrow_back, size: 26),
                                   ),
                                 ),
                                 Column(
                                   children: [
                                     verticalSpaceSmall,
                                     Center(
-                                      child: InsideOutText.headingTwo(
+                                      child: InsideOutText.headingThree(
                                           !model.isParentAccount
                                               ? "Woop woop, enjoy time on the screen!"
                                               : model.childName +
@@ -94,13 +94,13 @@ class ActiveScreenTimeView extends StatelessWidget {
                                                 secondsToMinuteSecondTime(
                                                     model.screenTimeLeft),
                                                 style: heading2Style.copyWith(
-                                                    fontSize: 40)),
+                                                    fontSize: 35)),
                                         Column(
                                           children: [
                                             InsideOutText.body(
                                                 "  / ${session.minutes} min",
                                                 color: kcBlackHeadlineColor),
-                                            SizedBox(height: 8),
+                                            SizedBox(height: 6),
                                           ],
                                         ),
                                       ],
@@ -204,7 +204,9 @@ class ActiveScreenTimeView extends StatelessWidget {
                     if (!showStats) Spacer(),
                     if (!showStats)
                       model.isParentAccount
-                          ? ScreenTimeNotificationsNote()
+                          ? model.isBusy
+                              ? AFKProgressIndicator()
+                              : ScreenTimeNotificationsNote()
                           : Lottie.asset(
                               kLottieBigTv,
                               height: screenHeight(context, percentage: 0.25),
@@ -217,10 +219,11 @@ class ActiveScreenTimeView extends StatelessWidget {
                             uid: model.childId),
                       ),
                     verticalSpaceSmall,
-                    if (!model.currentUserSettings.ownPhone ||
-                        model.currentScreenTimeSession?.status !=
-                            ScreenTimeSessionStatus.active ||
-                        model.isParentAccount)
+                    if ((!model.currentUserSettings.ownPhone ||
+                            model.currentScreenTimeSession?.status !=
+                                ScreenTimeSessionStatus.active ||
+                            model.isParentAccount) &&
+                        !model.isBusy)
                       Container(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: InsideOutButton(

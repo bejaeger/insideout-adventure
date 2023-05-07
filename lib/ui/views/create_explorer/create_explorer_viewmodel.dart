@@ -36,7 +36,8 @@ class CreateExplorerViewModel extends FormViewModel {
 
   Future onNextButton(PageController controller) async {
     if (pageIndex == 0) {
-      final result = isValidInput(name: nameValue, password: passwordValue);
+      final result =
+          await isValidInput(name: nameValue, password: passwordValue);
       if (result == true) {
         controller.nextPage(
             duration: Duration(milliseconds: 200), curve: Curves.easeIn);
@@ -53,30 +54,36 @@ class CreateExplorerViewModel extends FormViewModel {
     notifyListeners();
   }
 
-  dynamic isValidInput({required String? name, required String? password}) {
+  Future isValidInput(
+      {required String? name, required String? password}) async {
     log.i("Testing if user input is valid: name = $name, password = $password");
+    bool returnValue = true;
     if (name == null || name == "") {
       fieldsValidationMessages[NameValueKey] = "Please provide a valid name";
-      notifyListeners();
-      return;
+      returnValue = false;
+    }
+    if (await _userService.isUserAlreadyPresent(name: name)) {
+      fieldsValidationMessages[NameValueKey] =
+          "User with name $name exists already. Please choose a different name.";
+      returnValue = false;
     }
     if (password == null || password == "") {
       fieldsValidationMessages[PasswordValueKey] =
           "Please provide a valid password";
-      notifyListeners();
-      return;
+      returnValue = false;
     }
-    if (password.length < 4) {
+    if (password != null && password.length < 4) {
       fieldsValidationMessages[PasswordValueKey] =
           "Please provide a password with at least 4 characters";
-      notifyListeners();
-      return;
+      returnValue = false;
     }
-    return true;
+    notifyListeners();
+    return returnValue;
   }
 
   Future addExplorer() async {
-    final result = isValidInput(name: nameValue, password: passwordValue!);
+    final result =
+        await isValidInput(name: nameValue, password: passwordValue!);
     if (result == true) {
       // per default if child has own phone we enable verification step
       UserSettings userSettings = UserSettings(

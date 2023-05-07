@@ -45,7 +45,7 @@ class AvatarOverlay extends StatelessWidget {
               ),
             ),
             Align(
-              alignment: Alignment(-0.9, 0.3),
+              alignment: Alignment(-0.8, 0.35),
               child: LevelIndicator(level: level),
             ),
           ],

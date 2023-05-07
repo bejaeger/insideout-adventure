@@ -43,7 +43,7 @@ class StartScreenTimeCounterView extends StatelessWidget {
                 Spacer(),
                 InsideOutButton.text(
                   title: "Start immediately",
-                  color: kcGreyTextColor,
+                  color: kcBlackHeadlineColor,
                   onTap: () => model.startNow(session: session),
                 ),
                 verticalSpaceRegular,

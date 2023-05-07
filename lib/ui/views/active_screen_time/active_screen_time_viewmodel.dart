@@ -11,7 +11,8 @@ import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ActiveScreenTimeViewModel extends BaseModel {
-  ScreenTimeSession? session; // not null if previous screen time session was found
+  ScreenTimeSession?
+      session; // not null if previous screen time session was found
   ActiveScreenTimeViewModel({required this.session});
 
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
@@ -44,7 +45,8 @@ class ActiveScreenTimeViewModel extends BaseModel {
       justStartedListeningToScreenTime = true;
     }
 
-    bool continueExistingScreenTime = session != null && session?.status == ScreenTimeSessionStatus.active;
+    bool continueExistingScreenTime =
+        session != null && session?.status == ScreenTimeSessionStatus.active;
     if (continueExistingScreenTime) {
       log.i(
           "screen time session has started or is active and will be continued");
@@ -75,13 +77,14 @@ class ActiveScreenTimeViewModel extends BaseModel {
     if (screenTimeLeft == null) return;
     dynamic result;
     if (screenTimeLeft! > 0) {
+      String note = secondsToMinuteTime(screenTimeLeft) == "1" ? "is" : "are";
+      String description =
+          "There $note ${secondsToMinuteTime(screenTimeLeft)}in left.";
       result = await dialogService.showDialog(
           buttonTitle: "YES",
           cancelTitle: "NO",
           title: "Cancel Active Screen Time?",
-          description: "There are " +
-              secondsToMinuteTime(screenTimeLeft) +
-              "in left.");
+          description: description);
     }
     setBusy(true);
     if (result == null || result?.confirmed == true) {
@@ -104,9 +107,10 @@ class ActiveScreenTimeViewModel extends BaseModel {
       snackbarService.showSnackbar(
         title: snackBarTitle,
         message: snackBarMsg,
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 3),
       );
     }
+    await Future.delayed(Duration(milliseconds: 1000));
     setBusy(false);
   }
 

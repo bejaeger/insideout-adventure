@@ -48,8 +48,8 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
           floatingActionButton: BottomFloatingActionButtons(
               // titleMain: "Add Credits",
               // onTapMain: model.navigateToAddFundsView,
-              leadingMain:
-                  Icon(Icons.switch_account_outlined, color: Colors.white),
+              leadingMain: Image.asset(kSwitchAccountIcon,
+                  height: 22, color: Colors.white),
               titleMain: "Switch area",
               onTapMain: model.handleSwitchToExplorerEvent),
           floatingActionButtonLocation:

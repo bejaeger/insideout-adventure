@@ -202,6 +202,22 @@ class SearchQuestView extends StatelessWidget {
               quest: quest, notifyParentCallback: notifyParentCallback),
           model: model,
           showStartSlider: showStartSlider,
+          bottomWidget: FadingWidget(
+            show: model.hasActiveQuest,
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: AFKFloatingActionButton(
+                  icon: Image.asset(kPinInAreaIcon,
+                      color: kcWhiteTextColor, height: 34),
+                  onPressed: model.manualCheckIfInAreaOfMarker,
+                  width: 65,
+                  height: 65,
+                ),
+              ),
+            ),
+          ),
           children: [
             if (model.isAnimatingCamera)
               AFKProgressIndicator(

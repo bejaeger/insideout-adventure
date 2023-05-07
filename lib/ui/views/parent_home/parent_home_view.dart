@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
@@ -56,8 +57,8 @@ class ParentHomeView extends StatelessWidget {
                 floatingActionButton: model.navigatingToActiveScreenTimeView
                     ? null
                     : AFKFloatingActionButton(
-                        icon: Icon(Icons.switch_account_outlined,
-                            color: Colors.white),
+                        icon: Image.asset(kSwitchAccountIcon,
+                            height: 22, color: Colors.white),
                         width: 140,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),

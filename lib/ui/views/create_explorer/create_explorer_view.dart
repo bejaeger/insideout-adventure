@@ -89,8 +89,8 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                             ),
                             verticalSpaceMedium,
                             InsideOutInputField(
-                              placeholder: 'Password',
-                              obscureText: (model.isPwShown) ? false : true,
+                              placeholder: 'Password',                              
+                              obscureText: (model.isPwShown) ? false : true,                              
                               controller: passwordController,
                               errorText: model
                                   .fieldsValidationMessages[PasswordValueKey],
