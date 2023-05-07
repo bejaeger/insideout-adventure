@@ -98,7 +98,7 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                                 onPressed: () {
                                   model.setIsPwShown(!model.isPwShown);
                                 },
-                                icon: (model.isPwShown)
+                                icon: (!model.isPwShown)
                                     ? Icon(Icons.visibility,
                                         color: kcPrimaryColor)
                                     : Icon(Icons.visibility_off,
