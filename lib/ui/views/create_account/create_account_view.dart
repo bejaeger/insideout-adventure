@@ -1,6 +1,7 @@
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/terms_and_privacy.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.form.dart';
@@ -66,7 +67,8 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
               ),
             ],
           ),
-          showTermsText: true,
+          showTerms: () =>
+              showTermsAndPrivacyDialog(context, model.appConfigProvider),
         ),
       ),
     );

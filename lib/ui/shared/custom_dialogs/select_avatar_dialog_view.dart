@@ -113,7 +113,6 @@ class SelectAvatarDialogView extends StatelessWidget {
                         Container(
                           height: 180,
                           //height: screenHeight(context, percentage: 0.2),
-                          //color: Colors.red,
                           alignment: Alignment.center,
                           child: Container(
                             //color: Colors.green,

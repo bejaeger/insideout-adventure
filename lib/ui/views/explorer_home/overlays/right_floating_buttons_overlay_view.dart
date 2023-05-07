@@ -25,7 +25,6 @@ class RightFloatingButtonsView extends StatelessWidget {
             Align(
               alignment: Alignment(1, -0.35),
               child: Padding(
-                //color: Colors.red,
                 padding: const EdgeInsets.only(
                     right: 15, bottom: 8.0, top: 8.0, left: 8.0),
                 child: GestureDetector(

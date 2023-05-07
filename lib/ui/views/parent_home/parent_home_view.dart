@@ -91,7 +91,6 @@ class ParentHomeView extends StatelessWidget {
                                 padding: const EdgeInsets.only(right: 5.0),
                                 height: 30,
                                 width: 40,
-                                //color: Colors.red,
                                 child: Icon(Icons.person_add,
                                     size: 28, color: kcPrimaryColor),
                               ),

@@ -420,7 +420,6 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                           ],
                         ),
                       ),
-                      //Container(color: Colors.red),
                       horizontalSpaceSmall,
                       Icon(Icons.arrow_right_alt, size: 26),
                       horizontalSpaceSmall,

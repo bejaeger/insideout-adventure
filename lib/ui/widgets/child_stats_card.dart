@@ -82,11 +82,11 @@ class ChildStatsCard extends StatelessWidget {
                     if (activityTimeLastWeek == null &&
                         screenTimeLastWeek == null)
                       InsideOutText.body("No recent activities"),
-                    if (activityTimeLastWeek == null &&
-                        screenTimeLastWeek == null)
-                      InsideOutText.body("Switch to " +
-                          user.fullName +
-                          "'s account to get started"),
+                    // if (activityTimeLastWeek == null &&
+                    //     screenTimeLastWeek == null)
+                    //   InsideOutText.body("Switch to " +
+                    //       user.fullName +
+                    //       "'s account to get started"),
                     childStats == null
                         ? AFKProgressIndicator()
                         : Column(

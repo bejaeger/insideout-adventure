@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
@@ -17,6 +18,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
   final log = getLogger("CreateAccountViewModel");
   final UserService _userService = locator<UserService>();
   final _navigationService = locator<NavigationService>();
+  final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
 
   String? emailInputValidationMessage;
   String? passwordInputValidationMessage;

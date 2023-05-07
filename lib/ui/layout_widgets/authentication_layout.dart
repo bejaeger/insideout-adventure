@@ -9,7 +9,7 @@ class AuthenticationLayout extends StatelessWidget {
   final String? mainButtonTitle;
   final Widget? form;
   final String? googleText;
-  final bool showTermsText;
+  final void Function()? showTerms;
   final void Function()? onMainButtonTapped;
   final void Function()? onCreateAccountTapped;
   final void Function()? onForgotPassword;
@@ -37,7 +37,7 @@ class AuthenticationLayout extends StatelessWidget {
     this.onForgotPassword,
     this.onBackPressed,
     this.validationMessage,
-    this.showTermsText = false,
+    this.showTerms,
     this.busy = false,
     this.onGoogleButtonTapped,
     this.onAppleButtonTapped,
@@ -62,7 +62,7 @@ class AuthenticationLayout extends StatelessWidget {
             if (onBackPressed != null) verticalSpaceRegular,
             if (onBackPressed != null)
               IconButton(
-                //padding: EdgeInsets.zero,
+                padding: EdgeInsets.zero,
                 alignment: Alignment.centerLeft,
                 icon: Icon(
                   Icons.arrow_back,
@@ -310,10 +310,14 @@ class AuthenticationLayout extends StatelessWidget {
                   ],
                 ),
               ),
-            if (showTermsText)
-              Text(
-                'By signing up you agree to our terms, conditions and privacy policy.',
-                textAlign: TextAlign.center,
+            if (showTerms != null)
+              GestureDetector(
+                child: Text(
+                  'By signing up you agree to our terms, conditions and privacy policy.',
+                  textAlign: TextAlign.center,
+                  style: labelStyle.copyWith(fontSize: 12),
+                ),
+                onTap: showTerms,
               ),
             if (onGoogleButtonTapped != null || onAppleButtonTapped != null)
               Padding(

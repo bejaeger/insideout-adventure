@@ -37,12 +37,10 @@ class ExplorerAccountView extends StatelessWidget {
                         GestureDetector(
                           onTap: model.showAndHandleAvatarSelection,
                           child: Stack(
-                            //crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
                                 height: 75,
                                 width: 50,
-                                //color: Colors.red,
                               ),
                               Column(
                                 children: [

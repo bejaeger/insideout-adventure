@@ -34,7 +34,6 @@ class StartScreenTimeCounterView extends StatelessWidget {
                     ? ScreenTimeNotificationsNote()
                     : Container(
                         height: 220,
-                        //color: Colors.red,
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [ScreenTimeNotificationsNote()],

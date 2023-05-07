@@ -127,8 +127,8 @@ class NotCloseToQuestNoteViewModel extends BaseModel {
         title: "Open navigation app?",
         barrierDismissible: true,
         description: "Use external app for navigation",
-        cancelTitle: "Cancel",
-        buttonTitle: "Open app");
+        cancelTitle: "CANCEL",
+        buttonTitle: "OPEN APP");
     if (res?.confirmed == false || res == null) {
       return;
     }

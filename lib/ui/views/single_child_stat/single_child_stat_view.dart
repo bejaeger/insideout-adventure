@@ -79,7 +79,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                   children: [
                                     verticalSpaceMedium,
                                     SummaryStatsDisplay(
-                                      title: "Current credits",
+                                      title: "Credits",
                                       icon: Image.asset(kAFKCreditsLogoPath,
                                           color: kcPrimaryColor, height: 24),
                                       stats: model.stats.afkCreditsBalance
@@ -128,7 +128,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                   children: [
                                     verticalSpaceMedium,
                                     SummaryStatsDisplay(
-                                      title: "Equiv. screen time",
+                                      title: "Screen time",
                                       icon: Image.asset(kScreenTimeIcon,
                                           height: 26, color: kcScreenTimeBlue),
                                       unit: "min",

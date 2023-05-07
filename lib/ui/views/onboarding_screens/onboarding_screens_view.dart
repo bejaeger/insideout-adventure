@@ -64,7 +64,6 @@ class OnBoardingScreensView extends StatelessWidget {
                     verticalSpaceSmall,
                     Container(
                       padding: const EdgeInsets.only(bottom: 30.0),
-                      //color: Colors.red,
                       child: InsideOutLogo(
                         sizeScale: 1.1,
                       ),

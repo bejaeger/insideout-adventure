@@ -35,7 +35,6 @@ class MainHeaderOverlayView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  //color: Colors.red,
                   padding: const EdgeInsets.only(
                       top: 3, right: 5.0, bottom: 17.0, left: 5.0),
                   child: AvatarOverlay(
@@ -46,7 +45,7 @@ class MainHeaderOverlayView extends StatelessWidget {
                   ),
                 ),
                 //Spacer(),
-                horizontalSpaceRegular,
+                horizontalSpaceSmall,
                 GestureDetector(
                   onTap: model.showCreditsOverlay,
                   child: Center(

@@ -69,7 +69,6 @@ class CustomScreenTimeDialogView extends StatelessWidget
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  //Container(color: Colors.red),
                   horizontalSpaceSmall,
                   Icon(Icons.arrow_right_alt, size: 26),
                   horizontalSpaceSmall,
