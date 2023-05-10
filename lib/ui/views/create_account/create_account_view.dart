@@ -23,52 +23,58 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
     return ViewModelBuilder<CreateAccountViewModel>.reactive(
       viewModelBuilder: () => CreateAccountViewModel(role: role),
       onModelReady: (model) => listenToFormUpdated(model),
-      builder: (context, model, child) => Scaffold(
-        body: AuthenticationLayout(
-          busy: model.isBusy,
-          onMainButtonTapped: model.onSignUpTapped(),
-          onBackPressed: model.replaceWithLoginView,
-          validationMessage: model.validationMessage,
-          title: InsideOutText.headingOne('Create $roleString Account'),
-          subtitle: InsideOutText.body(
-              'Enter your name, email and password for sign up.'),
-          mainButtonTitle: 'SIGN UP',
-          form: Column(
-            children: [
-              verticalSpaceMedium,
-              InsideOutInputField(
-                leading: Icon(Icons.person),
-                controller: fullNameController,
-                trailing: Icon(Icons.close),
-                trailingTapped: () => fullNameController.clear(),
-                placeholder: 'Name',
-                errorText: model.fullNameInputValidationMessage,
-              ),
-              verticalSpaceRegular,
-              InsideOutInputField(
-                controller: emailController,
-                leading: Icon(Icons.email),
-                trailing: Icon(Icons.close),
-                trailingTapped: () => emailController.clear(),
-                placeholder: 'Email',
-                errorText: model.emailInputValidationMessage,
-              ),
-              verticalSpaceRegular,
-              InsideOutInputField(
-                leading: Icon(Icons.lock),
-                controller: passwordController,
-                obscureText: !model.isPwShown,
-                trailing: (!model.isPwShown)
-                    ? Icon(Icons.visibility)
-                    : Icon(Icons.visibility_off),
-                trailingTapped: () => model.setIsPwShown(!model.isPwShown),
-                placeholder: "Password",
-                errorText: model.passwordInputValidationMessage,
-              ),
-            ],
+      builder: (context, model, child) => WillPopScope(
+        onWillPop: () async {
+          model.replaceWithLoginView();
+          return false;
+        },
+        child: Scaffold(
+          body: AuthenticationLayout(
+            busy: model.isBusy,
+            onMainButtonTapped: model.onSignUpTapped(),
+            onBackPressed: model.replaceWithLoginView,
+            validationMessage: model.validationMessage,
+            title: InsideOutText.headingOne('Create $roleString Account'),
+            subtitle: InsideOutText.body(
+                'Enter your name, email and password for sign up.'),
+            mainButtonTitle: 'SIGN UP',
+            form: Column(
+              children: [
+                verticalSpaceMedium,
+                InsideOutInputField(
+                  leading: Icon(Icons.person),
+                  controller: fullNameController,
+                  trailing: Icon(Icons.close),
+                  trailingTapped: () => fullNameController.clear(),
+                  placeholder: 'Name',
+                  errorText: model.fullNameInputValidationMessage,
+                ),
+                verticalSpaceRegular,
+                InsideOutInputField(
+                  controller: emailController,
+                  leading: Icon(Icons.email),
+                  trailing: Icon(Icons.close),
+                  trailingTapped: () => emailController.clear(),
+                  placeholder: 'Email',
+                  errorText: model.emailInputValidationMessage,
+                ),
+                verticalSpaceRegular,
+                InsideOutInputField(
+                  leading: Icon(Icons.lock),
+                  controller: passwordController,
+                  obscureText: !model.isPwShown,
+                  trailing: (!model.isPwShown)
+                      ? Icon(Icons.visibility)
+                      : Icon(Icons.visibility_off),
+                  trailingTapped: () => model.setIsPwShown(!model.isPwShown),
+                  placeholder: "Password",
+                  errorText: model.passwordInputValidationMessage,
+                ),
+              ],
+            ),
+            showTerms: () =>
+                showTermsAndPrivacyDialog(context, model.appConfigProvider),
           ),
-          showTerms: () =>
-              showTermsAndPrivacyDialog(context, model.appConfigProvider),
         ),
       ),
     );
