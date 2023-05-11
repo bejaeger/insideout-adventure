@@ -64,7 +64,7 @@ class CreateExplorerViewModel extends FormViewModel {
     }
     if (await _userService.isUserAlreadyPresent(name: name)) {
       fieldsValidationMessages[NameValueKey] =
-          "User with name $name exists already. Please choose a different name.";
+          "A user with name $name exists already in our system. Please choose a different name.";
       returnValue = false;
     }
     if (password == null || password == "") {

@@ -1,5 +1,4 @@
 import 'package:afkcredits/services/maps/google_map_service.dart';
-import 'package:afkcredits/services/maps/google_map_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -16,6 +15,7 @@ import 'package:stacked_services/src/dialog/dialog_service.dart';
 import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_services/src/snackbar/snackbar_service.dart';
 
+import '../apis/cloud_functions_api.dart';
 import '../apis/firestore_api.dart';
 import '../apis/notion_api.dart';
 import '../app_config_provider.dart';
@@ -53,6 +53,7 @@ Future<void> setupLocator(
       environment: environment, environmentFilter: environmentFilter);
 
 // Register dependencies
+  locator.registerLazySingleton(() => CloudFunctionsApi());
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => ConnectivityService());

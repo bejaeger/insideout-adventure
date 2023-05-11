@@ -22,7 +22,7 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
     String roleString = role == UserRole.sponsor ? "Parent" : "Child";
     return ViewModelBuilder<CreateAccountViewModel>.reactive(
       viewModelBuilder: () => CreateAccountViewModel(role: role),
-      onModelReady: (model) => listenToFormUpdated(model),
+      onModelReady: (model) => listenToFormUpdated(model),      
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
           model.replaceWithLoginView();

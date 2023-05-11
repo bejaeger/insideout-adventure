@@ -5,9 +5,6 @@ function log(message: string) {
     console.log(`EmailService | ${message}`);
 }
 
-/**
- * A class that helps with populating a local firestore database
- */
 export class EmailService {
     transporter: any;
 
@@ -19,9 +16,9 @@ export class EmailService {
             port: 465,
             secure: true, // true for 465, false for other ports
             auth: {
-                user: 'afkcredits@gmail.com',
+                user: 'jaeger.benjamin7@gmail.com',
                 // generated app password from google account
-                pass: 'oiyogcgucpmxmbbp',
+                pass: 'jmdkgdqaaslejgeo',
             },
         });
     }
@@ -52,6 +49,18 @@ export class EmailService {
             from: senderName,
             to: "afkcredits@gmail.com",
             subject: 'ACTION NEEDED: New Gift Card Purchase',
+            text: message,
+        };
+        this.sendMail(mailOptions);
+    }
+
+    async sendEmailFeedback(message: string) {
+        // TODO: In message include app version, uid, email of sender
+        let senderName: string = "InsideOut Adventure App - Feedback";
+        const mailOptions = {
+            from: senderName,
+            to: "benjamin.jaeger@posteo.de",
+            subject: 'New Feedback to InsideOut Adventure App',
             text: message,
         };
         this.sendMail(mailOptions);
