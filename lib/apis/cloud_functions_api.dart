@@ -11,30 +11,26 @@ class CloudFunctionsApi {
   final log = getLogger("CloudFunctionApi");
   final AppConfigProvider _appConfigProvider = locator<AppConfigProvider>();
 
-  Future sendFeedbackEmail({required String message, String? uid, String? email}) async {
+  Future sendEmail({required String message, String? receiverEmail}) async {
     try {
       log.i("Calling restful server function sendemail");
+      Uri url = Uri.https(_appConfigProvider.authority,
+          p.join(_appConfigProvider.uripathprepend, "customers-api/sendemail"));
 
-      // poor-man composing of email
-      message = "FEEDBACK FROM USER:\n==>> \n" + message;
-      message = message + "\n<<==";
-      message = message + "\n\n ------------------\n";
-      message = message + "Sender information:\n";
-      message = message + "UID: ${uid ?? "N/A"} \n";
-      message = message + "Email: ${email ?? "N/A"}\n";
-      message = message + "App information:\n";
-      message = message + "Version: ${_appConfigProvider.versionName}\n";
-      message = message + "------------------";
+      dynamic body;
+      if (receiverEmail == null) {
+        body = json.encode({
+          "message": message,
+        });
+      } else {
+        body = json.encode({
+          "message": message,
+          "receiverEmail": receiverEmail,
+        });
+      }
 
-      Uri url = Uri.https(
-          _appConfigProvider.authority,
-          p.join(_appConfigProvider.uripathprepend,
-              "customers-api/sendemail"));
-      http.Response? response = await http.post(url,
-          body: json.encode({
-            "message": message,
-          }),
-          headers: {"Accept": "application/json"});
+      http.Response? response = await http
+          .post(url, body: body, headers: {"Accept": "application/json"});
       log.i("posted http request");
       dynamic result = json.decode(response.body);
       log.i("decoded json response");
@@ -43,11 +39,9 @@ class CloudFunctionsApi {
         log.i("Successfully sent email");
         return true;
       } else {
-        log.e(
-            "Error when sending email: ${result["error"]["message"]}");
+        log.e("Error when sending email: ${result["error"]["message"]}");
         throw CloudFunctionsApiException(
-            message:
-                "An error occured in the cloud function 'sendemail'",
+            message: "An error occured in the cloud function 'sendemail'",
             devDetails:
                 "Error message from cloud function: ${result["error"]["message"]}",
             prettyDetails:
@@ -56,12 +50,11 @@ class CloudFunctionsApi {
     } catch (e) {
       log.e("Couldn't process transfer: ${e.toString()}");
       throw CloudFunctionsApiException(
-          message:
-              "Something failed when calling the https function sendemail",
+          message: "Something failed when calling the https function sendemail",
           devDetails:
               "This should not happen and is due to an error on the Firestore side or the datamodels that were being pushed!",
           prettyDetails:
-              "An internal error occured on our side, please apologize and try again later.");
+              "An internal error occured on our side, please try again later.");
     }
   }
 }

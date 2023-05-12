@@ -22,6 +22,7 @@ import '../app_config_provider.dart';
 import '../notifications/notifications_service.dart';
 import '../services/cloud_storage_service.dart/cloud_storage_service.dart';
 import '../services/connectivity/connectivity_service.dart';
+import '../services/email_service/email_service.dart';
 import '../services/environment_services.dart';
 import '../services/feedback_service/feedback_service.dart';
 import '../services/gamification/gamification_service.dart';
@@ -54,6 +55,7 @@ Future<void> setupLocator(
 
 // Register dependencies
   locator.registerLazySingleton(() => CloudFunctionsApi());
+  locator.registerLazySingleton(() => EmailService());
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => ConnectivityService());

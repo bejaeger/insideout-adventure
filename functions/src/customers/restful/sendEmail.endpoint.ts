@@ -22,7 +22,12 @@ export default new Post((request: Request, response: Response) => {
             const emailService = new EmailService();
 
             try {
-                await emailService.sendEmailFeedback(data["message"]);
+                if ('receiverEmail' in data) {
+                    await emailService.sendEmailConsent(data["message"], data["receiverEmail"]);
+                } else {
+                    await emailService.sendEmailFeedback(data["message"]);
+                }
+                
             } catch (e) {
                 log("Error when sending email alert!")
                 if (typeof e === "string") {

@@ -4,6 +4,7 @@ import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_service.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
+import 'package:afkcredits/services/email_service/email_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/feedback_service/feedback_service.dart';
 import 'package:afkcredits/services/gamification/gamification_service.dart';
@@ -84,6 +85,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
   ],
   dependencies: [
     LazySingleton(classType: CloudFunctionsApi),
+    LazySingleton(classType: EmailService),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: DialogService),
     LazySingleton(classType: ConnectivityService),

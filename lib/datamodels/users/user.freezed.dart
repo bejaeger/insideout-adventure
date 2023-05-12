@@ -36,6 +36,8 @@ mixin _$User {
   List<String>? get tokens => throw _privateConstructorUsedError;
   String? get deviceId => throw _privateConstructorUsedError;
   int? get avatarIdx => throw _privateConstructorUsedError;
+  ParentalVerificationStatus? get parentalVerificationStatus =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -62,7 +64,8 @@ abstract class $UserCopyWith<$Res> {
       String? password,
       List<String>? tokens,
       String? deviceId,
-      int? avatarIdx});
+      int? avatarIdx,
+      ParentalVerificationStatus? parentalVerificationStatus});
 
   $UserSettingsCopyWith<$Res>? get userSettings;
 }
@@ -92,6 +95,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? tokens = freezed,
     Object? deviceId = freezed,
     Object? avatarIdx = freezed,
+    Object? parentalVerificationStatus = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -154,6 +158,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.avatarIdx
           : avatarIdx // ignore: cast_nullable_to_non_nullable
               as int?,
+      parentalVerificationStatus: parentalVerificationStatus == freezed
+          ? _value.parentalVerificationStatus
+          : parentalVerificationStatus // ignore: cast_nullable_to_non_nullable
+              as ParentalVerificationStatus?,
     ));
   }
 
@@ -190,7 +198,8 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       String? password,
       List<String>? tokens,
       String? deviceId,
-      int? avatarIdx});
+      int? avatarIdx,
+      ParentalVerificationStatus? parentalVerificationStatus});
 
   @override
   $UserSettingsCopyWith<$Res>? get userSettings;
@@ -222,6 +231,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? tokens = freezed,
     Object? deviceId = freezed,
     Object? avatarIdx = freezed,
+    Object? parentalVerificationStatus = freezed,
   }) {
     return _then(_$_User(
       uid: uid == freezed
@@ -284,6 +294,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.avatarIdx
           : avatarIdx // ignore: cast_nullable_to_non_nullable
               as int?,
+      parentalVerificationStatus: parentalVerificationStatus == freezed
+          ? _value.parentalVerificationStatus
+          : parentalVerificationStatus // ignore: cast_nullable_to_non_nullable
+              as ParentalVerificationStatus?,
     ));
   }
 }
@@ -308,7 +322,8 @@ class _$_User implements _User {
       this.password,
       final List<String>? tokens,
       this.deviceId,
-      this.avatarIdx = 1})
+      this.avatarIdx = 1,
+      this.parentalVerificationStatus})
       : _sponsorIds = sponsorIds,
         _explorerIds = explorerIds,
         _fullNameSearch = fullNameSearch,
@@ -373,10 +388,12 @@ class _$_User implements _User {
   @override
   @JsonKey()
   final int? avatarIdx;
+  @override
+  final ParentalVerificationStatus? parentalVerificationStatus;
 
   @override
   String toString() {
-    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
+    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx, parentalVerificationStatus: $parentalVerificationStatus)';
   }
 
   @override
@@ -404,7 +421,9 @@ class _$_User implements _User {
             const DeepCollectionEquality().equals(other.password, password) &&
             const DeepCollectionEquality().equals(other._tokens, _tokens) &&
             const DeepCollectionEquality().equals(other.deviceId, deviceId) &&
-            const DeepCollectionEquality().equals(other.avatarIdx, avatarIdx));
+            const DeepCollectionEquality().equals(other.avatarIdx, avatarIdx) &&
+            const DeepCollectionEquality().equals(
+                other.parentalVerificationStatus, parentalVerificationStatus));
   }
 
   @JsonKey(ignore: true)
@@ -425,7 +444,8 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(password),
       const DeepCollectionEquality().hash(_tokens),
       const DeepCollectionEquality().hash(deviceId),
-      const DeepCollectionEquality().hash(avatarIdx));
+      const DeepCollectionEquality().hash(avatarIdx),
+      const DeepCollectionEquality().hash(parentalVerificationStatus));
 
   @JsonKey(ignore: true)
   @override
@@ -457,7 +477,8 @@ abstract class _User implements User {
       final String? password,
       final List<String>? tokens,
       final String? deviceId,
-      final int? avatarIdx}) = _$_User;
+      final int? avatarIdx,
+      final ParentalVerificationStatus? parentalVerificationStatus}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -492,6 +513,8 @@ abstract class _User implements User {
   String? get deviceId;
   @override
   int? get avatarIdx;
+  @override
+  ParentalVerificationStatus? get parentalVerificationStatus;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;

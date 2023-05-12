@@ -21,7 +21,6 @@ final String userFavouritePlacesCollectionKey = "FavouritePlaces";
 final String activatedQuestsCollectionKey = "activatedQuests";
 final String screenTimeSessionsCollectionKey = "screenTimeSessions";
 final String userSummaryStatisticsDocumentKey = "summaryStats";
-final String purchasedGiftCardsCollectionKey = "giftcards";
 final String purchasedScreenTimeCollectionKey = "screentime";
 final String feedbackCampaignInfoDocumentKey = "campaignInfo";
 final String generalFeedbackDocumentKey = "generalFeedback";

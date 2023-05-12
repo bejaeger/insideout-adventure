@@ -1,5 +1,6 @@
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
+import 'package:afkcredits/enums/parental_verification_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:afkcredits/exceptions/datamodel_exception.dart';
@@ -42,6 +43,7 @@ class User with _$User {
     String? deviceId,
     @Default(1)
         int? avatarIdx,
+    ParentalVerificationStatus? parentalVerificationStatus
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -61,5 +63,5 @@ User getEmptyUser() {
     explorerIds: [],
     newUser: false,
     userSettings: UserSettings(),
-  );
+    parentalVerificationStatus: ParentalVerificationStatus.notInitiated);
 }

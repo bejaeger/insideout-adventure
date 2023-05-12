@@ -7,22 +7,25 @@ function log(message: string) {
 
 export class EmailService {
     transporter: any;
+    senderEmail: string;
+    contactEmail: string;
 
     constructor(
     ) {
         //create and config transporter
+        this.senderEmail = 'jaeger.benjamin7@gmail.com';
+        this.contactEmail = 'benjamin.jaeger@posteo.de';
         this.transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
             secure: true, // true for 465, false for other ports
             auth: {
-                user: 'jaeger.benjamin7@gmail.com',
+                user: this.senderEmail,
                 // generated app password from google account
                 pass: 'jmdkgdqaaslejgeo',
             },
         });
     }
-
 
     async sendMail(mailOptions: any) {
         log("send email");
@@ -33,6 +36,30 @@ export class EmailService {
                 log("Succesfully sent email");
             }
         });
+    }
+
+    async sendEmailFeedback(message: string) {
+        // TODO: In message include app version, uid, email of sender
+        let senderName: string = "InsideOut Adventure App ".concat("<", this.senderEmail, ">");
+        const mailOptions = {
+            from: senderName,
+            to: this.contactEmail,
+            subject: 'New Feedback from InsideOut Adventure App',
+            text: message,
+        };
+        this.sendMail(mailOptions);
+    }
+
+    async sendEmailConsent(message: string, receiverEmail: string) {
+        // TODO: In message include app version, uid, email of sender
+        let senderName: string = "InsideOut Adventure App ".concat("<", this.senderEmail, ">");
+        const mailOptions = {
+            from: senderName,
+            to: receiverEmail,
+            subject: 'Verification for Adventure App',
+            text: message,
+        };
+        this.sendMail(mailOptions);
     }
 
     async notifyAFKCreditsTeamAfterGiftCardPurchase(status: string, uid: string, categoryId: string, transferId: string, code: any) {
@@ -53,18 +80,5 @@ export class EmailService {
         };
         this.sendMail(mailOptions);
     }
-
-    async sendEmailFeedback(message: string) {
-        // TODO: In message include app version, uid, email of sender
-        let senderName: string = "InsideOut Adventure App - Feedback";
-        const mailOptions = {
-            from: senderName,
-            to: "benjamin.jaeger@posteo.de",
-            subject: 'New Feedback to InsideOut Adventure App',
-            text: message,
-        };
-        this.sendMail(mailOptions);
-    }
-
 }
 

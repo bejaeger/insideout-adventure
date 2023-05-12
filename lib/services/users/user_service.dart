@@ -11,6 +11,7 @@ import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
+import 'package:afkcredits/enums/parental_verification_status.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -134,6 +135,7 @@ class UserService {
         sponsorIds: [],
         avatarIdx: 1,
         userSettings: UserSettings(),
+        parentalVerificationStatus: ParentalVerificationStatus.notInitiated,
       ),
     );
   }
@@ -301,6 +303,7 @@ class UserService {
             sponsorIds: [],
             avatarIdx: 1,
             userSettings: UserSettings(),
+            parentalVerificationStatus: ParentalVerificationStatus.notInitiated,
           ),
         );
       } catch (e) {
@@ -349,6 +352,7 @@ class UserService {
       tokens: currentUser.tokens,
       avatarIdx: 1,
       userSettings: userSettings,
+      parentalVerificationStatus: ParentalVerificationStatus.notInitiated,
     );
     await createUserAccount(user: newExplorer);
     List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
@@ -920,6 +924,15 @@ class UserService {
   Future setNewUserPropertyToFalse({required User user}) async {
     User newUser = user.copyWith(newUser: false);
     _firestoreApi.updateUserData(user: newUser);
+  }
+
+  Future updateParentalVerificationStatus({required ParentalVerificationStatus status}) async {
+    if (currentUserNullable != null) {
+      User newUser = currentUser.copyWith(parentalVerificationStatus: status);
+      _firestoreApi.updateUserData(user: newUser);
+    } else {
+      log.wtf("User is null in updateParentalVerificationStatus() function. Should never happen");
+    }
   }
 
   Future setNewAvatarId({required int id, required User user}) async {
