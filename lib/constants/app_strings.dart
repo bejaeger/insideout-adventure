@@ -1,7 +1,7 @@
 const String kUserRoleSelectionDialogTitle =
-    "Are you an explorer or a sponsor?";
+    "Are you an explorer or a guardian?";
 const String kUserRoleSelectionDialogButtonTitle = "Explorer";
-const String kUserRoleSelectionDialogCancelTitle = "Sponsor";
+const String kUserRoleSelectionDialogCancelTitle = "Guardian";
 
 const String kCreditsToEarnDescription = "TO EARN";
 const String kCurrentAFKCreditsDescription = "EARNED";

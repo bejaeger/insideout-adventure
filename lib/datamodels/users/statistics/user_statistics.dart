@@ -11,7 +11,7 @@ class UserStatistics with _$UserStatistics {
     required num afkCreditsBalance, // in credits
     required num afkCreditsSpent, // in credits
     required num totalScreenTime, // in minutes
-    required num availableSponsoring, // in cents!
+    required num availableGuardianship, // in cents!
     required num lifetimeEarnings, // in credits
     required int numberQuestsCompleted,
     required int numberGiftCardsPurchased,
@@ -31,7 +31,7 @@ class UserStatistics with _$UserStatistics {
 UserStatistics getEmptyUserStatistics({required String uid}) {
   return UserStatistics(
     afkCreditsBalance: 0,
-    availableSponsoring: 0,
+    availableGuardianship: 0,
     totalScreenTime: 0, // in credits
     numberQuestsCompleted: 0,
     numberGiftCardsPurchased: 0,

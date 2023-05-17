@@ -34,8 +34,8 @@ class LoginView extends StatelessWidget with $LoginView {
           onCreateAccountTapped: model.navigateToCreateAccount,
           onDummyLoginExplorerTapped:
               model.userLoginTapped(userRole: UserRole.explorer),
-          onDummyLoginSponsorTapped:
-              model.userLoginTapped(userRole: UserRole.sponsor),
+          onDummyLoginGuardianTapped:
+              model.userLoginTapped(userRole: UserRole.guardian),
           onDummyLoginAdminTapped:
               model.userLoginTapped(userRole: UserRole.admin),
           onDummyLoginSuperUserTapped:

@@ -61,7 +61,7 @@ class DrawerWidgetView extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             // onPressed: model.navigateToExplorerHomeView,
-                            onPressed: model.handleSwitchToSponsorEvent,
+                            onPressed: model.handleSwitchToGuardianEvent,
                             //child: Text("Go to explorer home/map")),
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),

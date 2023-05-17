@@ -36,7 +36,7 @@ export class AFKCreditsBookkeeper {
     // There will probably be more things to update so that's why we keep it in
     // a separate function here
     batch.update(docRefRecipient, {
-      availableSponsoring: increment, // increment available sponsoring of explorer
+      availableGuardianship: increment, // increment available guardianship of explorer
     });
   }
 
@@ -57,8 +57,8 @@ export class AFKCreditsBookkeeper {
     if (userStats != null) {
       log('Fetched user statistics document');
       // Validate request (validate whether current amount of GW is enough)
-      if (!this.hasEnoughBalance(userStats["availableSponsoring"], afkCreditsEarned)) {
-        throw Error(`Current Sponsoring is not enough to earn ${afkCreditsEarned} AFK Credits.`);
+      if (!this.hasEnoughBalance(userStats["availableGuardianship"], afkCreditsEarned)) {
+        throw Error(`Current Guardianship is not enough to earn ${afkCreditsEarned} AFK Credits.`);
       }
     } else {
       throw Error("No data in summary statistics document!");
@@ -70,15 +70,15 @@ export class AFKCreditsBookkeeper {
 
     // ! This here is very important and needs to be done more properly!
     // ! This is our business model / the conversion between dollar and credits
-    // ! availableSponsoring is given in CENTS!
-    const decrementSponsoring = admin.firestore.FieldValue.increment(-afkCreditsEarned * 10);
+    // ! availableGuardianship is given in CENTS!
+    const decrementGuardianship = admin.firestore.FieldValue.increment(-afkCreditsEarned * 10);
 
     const docRefRecipient = this.dbManager.getUserSummaryStatisticsDocument(uid);
 
     // There will probably be more things to update so that's why we keep it in
     // a separate function here
     transaction.update(docRefRecipient, {
-      availableSponsoring: decrementSponsoring, // decrement available sponsoring of explorer
+      availableGuardianship: decrementGuardianship, // decrement available guardianship of explorer
       afkCreditsBalance: increment, // increment afk credits balance
       lifetimeEarnings: increment, // increment lifetime earnings
       numberQuestsCompleted: incrementNumberQuests,  // increment number of quests completed

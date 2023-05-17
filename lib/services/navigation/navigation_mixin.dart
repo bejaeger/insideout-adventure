@@ -26,7 +26,7 @@ mixin NavigationMixin {
         arguments: CreateAccountViewArguments(role: role));
   }
 
-  void navToSponsorCreateAccount({required UserRole role}) {
+  void navToGuardianCreateAccount({required UserRole role}) {
     _navigationService.replaceWith(Routes.createAccountView,
         arguments: CreateAccountViewArguments(role: role));
   }

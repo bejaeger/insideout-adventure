@@ -15,7 +15,7 @@ class AuthenticationLayout extends StatelessWidget {
   final void Function()? onForgotPassword;
   final void Function()? onBackPressed;
   final void Function()? onDummyLoginExplorerTapped;
-  final void Function()? onDummyLoginSponsorTapped;
+  final void Function()? onDummyLoginGuardianTapped;
   final void Function()? onDummyLoginAdminTapped;
   final void Function()? onDummyLoginSuperUserTapped;
   final void Function()? onDummyLoginAdminMasterTapped;
@@ -44,7 +44,7 @@ class AuthenticationLayout extends StatelessWidget {
     this.releaseName,
     this.onDummyLoginAdminTapped,
     this.onDummyLoginExplorerTapped,
-    this.onDummyLoginSponsorTapped,
+    this.onDummyLoginGuardianTapped,
     this.googleText,
     this.onDummyLoginSuperUserTapped,
     this.onDummyLoginAdminMasterTapped,
@@ -137,16 +137,16 @@ class AuthenticationLayout extends StatelessWidget {
               ),
             ),
             if (onDummyLoginExplorerTapped != null ||
-                onDummyLoginSponsorTapped != null)
+                onDummyLoginGuardianTapped != null)
               verticalSpaceRegular,
             if (onDummyLoginExplorerTapped != null ||
-                onDummyLoginSponsorTapped != null)
+                onDummyLoginGuardianTapped != null)
               Row(
                 children: [
-                  if (onDummyLoginSponsorTapped != null)
+                  if (onDummyLoginGuardianTapped != null)
                     Expanded(
                       child: GestureDetector(
-                        onTap: onDummyLoginSponsorTapped,
+                        onTap: onDummyLoginGuardianTapped,
                         child: Container(
                           height: 40,
                           alignment: Alignment.center,

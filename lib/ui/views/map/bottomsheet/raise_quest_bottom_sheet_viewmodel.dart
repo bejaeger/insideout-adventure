@@ -70,11 +70,11 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     }
   }
 
-  String? checkSponsoringSentence() {
-    if (hasEnoughSponsoring(quest: quest)) {
+  String? checkGuardianshipSentence() {
+    if (hasEnoughGuardianship(quest: quest)) {
       return null;
     } else {
-      return "You don't have enough AFK Credits funds to earn ${quest.afkCredits} credits. Ask a sponsor to support you :)";
+      return "You don't have enough AFK Credits funds to earn ${quest.afkCredits} credits. Ask a guardian to support you :)";
     }
   }
 

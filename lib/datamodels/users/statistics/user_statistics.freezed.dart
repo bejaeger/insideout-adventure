@@ -23,7 +23,7 @@ mixin _$UserStatistics {
   num get afkCreditsBalance => throw _privateConstructorUsedError; // in credits
   num get afkCreditsSpent => throw _privateConstructorUsedError; // in credits
   num get totalScreenTime => throw _privateConstructorUsedError; // in minutes
-  num get availableSponsoring =>
+  num get availableGuardianship =>
       throw _privateConstructorUsedError; // in cents!
   num get lifetimeEarnings => throw _privateConstructorUsedError; // in credits
   int get numberQuestsCompleted => throw _privateConstructorUsedError;
@@ -50,7 +50,7 @@ abstract class $UserStatisticsCopyWith<$Res> {
       {num afkCreditsBalance,
       num afkCreditsSpent,
       num totalScreenTime,
-      num availableSponsoring,
+      num availableGuardianship,
       num lifetimeEarnings,
       int numberQuestsCompleted,
       int numberGiftCardsPurchased,
@@ -74,7 +74,7 @@ class _$UserStatisticsCopyWithImpl<$Res>
     Object? afkCreditsBalance = freezed,
     Object? afkCreditsSpent = freezed,
     Object? totalScreenTime = freezed,
-    Object? availableSponsoring = freezed,
+    Object? availableGuardianship = freezed,
     Object? lifetimeEarnings = freezed,
     Object? numberQuestsCompleted = freezed,
     Object? numberGiftCardsPurchased = freezed,
@@ -96,9 +96,9 @@ class _$UserStatisticsCopyWithImpl<$Res>
           ? _value.totalScreenTime
           : totalScreenTime // ignore: cast_nullable_to_non_nullable
               as num,
-      availableSponsoring: availableSponsoring == freezed
-          ? _value.availableSponsoring
-          : availableSponsoring // ignore: cast_nullable_to_non_nullable
+      availableGuardianship: availableGuardianship == freezed
+          ? _value.availableGuardianship
+          : availableGuardianship // ignore: cast_nullable_to_non_nullable
               as num,
       lifetimeEarnings: lifetimeEarnings == freezed
           ? _value.lifetimeEarnings
@@ -143,7 +143,7 @@ abstract class _$$_UserStatisticsCopyWith<$Res>
       {num afkCreditsBalance,
       num afkCreditsSpent,
       num totalScreenTime,
-      num availableSponsoring,
+      num availableGuardianship,
       num lifetimeEarnings,
       int numberQuestsCompleted,
       int numberGiftCardsPurchased,
@@ -169,7 +169,7 @@ class __$$_UserStatisticsCopyWithImpl<$Res>
     Object? afkCreditsBalance = freezed,
     Object? afkCreditsSpent = freezed,
     Object? totalScreenTime = freezed,
-    Object? availableSponsoring = freezed,
+    Object? availableGuardianship = freezed,
     Object? lifetimeEarnings = freezed,
     Object? numberQuestsCompleted = freezed,
     Object? numberGiftCardsPurchased = freezed,
@@ -191,9 +191,9 @@ class __$$_UserStatisticsCopyWithImpl<$Res>
           ? _value.totalScreenTime
           : totalScreenTime // ignore: cast_nullable_to_non_nullable
               as num,
-      availableSponsoring: availableSponsoring == freezed
-          ? _value.availableSponsoring
-          : availableSponsoring // ignore: cast_nullable_to_non_nullable
+      availableGuardianship: availableGuardianship == freezed
+          ? _value.availableGuardianship
+          : availableGuardianship // ignore: cast_nullable_to_non_nullable
               as num,
       lifetimeEarnings: lifetimeEarnings == freezed
           ? _value.lifetimeEarnings
@@ -235,7 +235,7 @@ class _$_UserStatistics implements _UserStatistics {
       {required this.afkCreditsBalance,
       required this.afkCreditsSpent,
       required this.totalScreenTime,
-      required this.availableSponsoring,
+      required this.availableGuardianship,
       required this.lifetimeEarnings,
       required this.numberQuestsCompleted,
       required this.numberGiftCardsPurchased,
@@ -259,7 +259,7 @@ class _$_UserStatistics implements _UserStatistics {
   final num totalScreenTime;
 // in minutes
   @override
-  final num availableSponsoring;
+  final num availableGuardianship;
 // in cents!
   @override
   final num lifetimeEarnings;
@@ -290,7 +290,7 @@ class _$_UserStatistics implements _UserStatistics {
 
   @override
   String toString() {
-    return 'UserStatistics(afkCreditsBalance: $afkCreditsBalance, afkCreditsSpent: $afkCreditsSpent, totalScreenTime: $totalScreenTime, availableSponsoring: $availableSponsoring, lifetimeEarnings: $lifetimeEarnings, numberQuestsCompleted: $numberQuestsCompleted, numberGiftCardsPurchased: $numberGiftCardsPurchased, numberScreenTimeHoursPurchased: $numberScreenTimeHoursPurchased, completedQuests: $completedQuests, completedQuestIds: $completedQuestIds, uid: $uid)';
+    return 'UserStatistics(afkCreditsBalance: $afkCreditsBalance, afkCreditsSpent: $afkCreditsSpent, totalScreenTime: $totalScreenTime, availableGuardianship: $availableGuardianship, lifetimeEarnings: $lifetimeEarnings, numberQuestsCompleted: $numberQuestsCompleted, numberGiftCardsPurchased: $numberGiftCardsPurchased, numberScreenTimeHoursPurchased: $numberScreenTimeHoursPurchased, completedQuests: $completedQuests, completedQuestIds: $completedQuestIds, uid: $uid)';
   }
 
   @override
@@ -305,7 +305,7 @@ class _$_UserStatistics implements _UserStatistics {
             const DeepCollectionEquality()
                 .equals(other.totalScreenTime, totalScreenTime) &&
             const DeepCollectionEquality()
-                .equals(other.availableSponsoring, availableSponsoring) &&
+                .equals(other.availableGuardianship, availableGuardianship) &&
             const DeepCollectionEquality()
                 .equals(other.lifetimeEarnings, lifetimeEarnings) &&
             const DeepCollectionEquality()
@@ -329,7 +329,7 @@ class _$_UserStatistics implements _UserStatistics {
       const DeepCollectionEquality().hash(afkCreditsBalance),
       const DeepCollectionEquality().hash(afkCreditsSpent),
       const DeepCollectionEquality().hash(totalScreenTime),
-      const DeepCollectionEquality().hash(availableSponsoring),
+      const DeepCollectionEquality().hash(availableGuardianship),
       const DeepCollectionEquality().hash(lifetimeEarnings),
       const DeepCollectionEquality().hash(numberQuestsCompleted),
       const DeepCollectionEquality().hash(numberGiftCardsPurchased),
@@ -356,7 +356,7 @@ abstract class _UserStatistics implements UserStatistics {
       {required final num afkCreditsBalance,
       required final num afkCreditsSpent,
       required final num totalScreenTime,
-      required final num availableSponsoring,
+      required final num availableGuardianship,
       required final num lifetimeEarnings,
       required final int numberQuestsCompleted,
       required final int numberGiftCardsPurchased,
@@ -375,7 +375,7 @@ abstract class _UserStatistics implements UserStatistics {
   @override // in credits
   num get totalScreenTime;
   @override // in minutes
-  num get availableSponsoring;
+  num get availableGuardianship;
   @override // in cents!
   num get lifetimeEarnings;
   @override // in credits

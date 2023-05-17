@@ -98,7 +98,7 @@ class QuestService with ReactiveServiceMixin {
   }
 
   Future loadNearbyQuests(
-      {required List<String> sponsorIds,
+      {required List<String> guardianIds,
       bool force = false,
       double? lat,
       double? lon,
@@ -121,7 +121,7 @@ class QuestService with ReactiveServiceMixin {
             lon: lonAtLatestQuestDownload!,
             radius: kDefaultQuestDownloadRadiusInKm,
             pushDummyQuests: _flavorConfigProvider.pushAndUseDummyQuests,
-            sponsorIds: sponsorIds);
+            guardianIds: guardianIds);
         if (addQuestsToExisting) {
           Set<String> existingQuests = Set.from(_nearbyQuests.map((q) => q.id));
           newQuests.forEach((newq) {

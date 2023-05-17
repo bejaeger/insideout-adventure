@@ -15,7 +15,7 @@ class GoogleMapLayout extends StatelessWidget {
   final void Function()? onBackPressed;
   final void Function()? onDummyLoginExplorerTapped;
   final void Function()? onDummyLoginAdminTapped;
-  final void Function()? onDummyLoginSponsorTapped;
+  final void Function()? onDummyLoginGuardianTapped;
   final void Function()? onGoogleButtonTapped;
   final void Function()? onAppleButtonTapped;
   final String? validationMessage;
@@ -40,7 +40,7 @@ class GoogleMapLayout extends StatelessWidget {
     this.releaseName,
     this.onDummyLoginExplorerTapped,
     this.onDummyLoginAdminTapped,
-    this.onDummyLoginSponsorTapped,
+    this.onDummyLoginGuardianTapped,
     this.googleText,
   }) : super(key: key);
 
@@ -112,16 +112,16 @@ class GoogleMapLayout extends StatelessWidget {
               ),
             ),
             if (onDummyLoginExplorerTapped != null ||
-                onDummyLoginSponsorTapped != null)
+                onDummyLoginGuardianTapped != null)
               verticalSpaceRegular,
             if (onDummyLoginExplorerTapped != null ||
-                onDummyLoginSponsorTapped != null)
+                onDummyLoginGuardianTapped != null)
               Row(
                 children: [
-                  if (onDummyLoginSponsorTapped != null)
+                  if (onDummyLoginGuardianTapped != null)
                     Expanded(
                       child: GestureDetector(
-                        onTap: onDummyLoginSponsorTapped,
+                        onTap: onDummyLoginGuardianTapped,
                         child: Container(
                           height: 40,
                           alignment: Alignment.center,
@@ -135,7 +135,7 @@ class GoogleMapLayout extends StatelessWidget {
                                       AlwaysStoppedAnimation(Colors.white),
                                 )
                               : Text(
-                                  "LOGIN AS TEST SPONSOR",
+                                  "LOGIN AS TEST GUARDIAN",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,

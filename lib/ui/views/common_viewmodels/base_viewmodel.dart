@@ -58,7 +58,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   User? get currentUserNullable => userService.currentUserNullable;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
-  bool get isParentAccount => currentUser.role == UserRole.sponsor;
+  bool get isParentAccount => currentUser.role == UserRole.guardian;
   bool get isAdminMaster => userService.isAdminUser;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
@@ -149,7 +149,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   Future clearServiceData(
       {bool logOutFromFirebase = true,
-      bool doNotClearSponsorReference = false}) async {
+      bool doNotClearGuardianReference = false}) async {
     questService.clearData();
     activeQuestService.clearData();
     geolocationService.clearData();
@@ -158,7 +158,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     gamificationService.clearData();
     await userService.handleLogoutEvent(
         logOutFromFirebase: logOutFromFirebase,
-        doNotClearSponsorReference: doNotClearSponsorReference);
+        doNotClearGuardianReference: doNotClearGuardianReference);
   }
 
   Future logout() async {
@@ -172,11 +172,11 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
-  // TODO: Remove concept of "enough sponsoring"
-  bool hasEnoughSponsoring({required Quest? quest}) {
+  // TODO: Remove concept of "enough guardianship"
+  bool hasEnoughGuardianship({required Quest? quest}) {
     if (quest == null) {
       baseModelLog.e(
-          "Attempted to check whether sponsoring is enough for quest that is null!");
+          "Attempted to check whether guardianship is enough for quest that is null!");
       return false;
     }
     return true;

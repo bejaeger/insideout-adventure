@@ -167,7 +167,7 @@ class _$_MoneyTransfer extends _MoneyTransfer {
       {required this.transferDetails,
       this.createdAt = "",
       this.status = TransferStatus.Initialized,
-      this.type = TransferType.Sponsor2ExplorerCredits,
+      this.type = TransferType.Guardian2ExplorerCredits,
       @JsonKey(name: "transferId") this.transferId = "placeholder"})
       : super._();
 

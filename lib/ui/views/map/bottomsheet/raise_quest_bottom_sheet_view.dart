@@ -96,9 +96,9 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                       ),
                     ),
                   verticalSpaceMedium,
-                  if (model.checkSponsoringSentence() != null)
+                  if (model.checkGuardianshipSentence() != null)
                     Text(
-                      model.checkSponsoringSentence()!,
+                      model.checkGuardianshipSentence()!,
                       style: TextStyle(color: Colors.red),
                     ),
                   //verticalSpaceSmall,
@@ -174,7 +174,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                                     // model.isParentAccount
                                     //     ? model.showNotImplementedInParentAccount
                                     //     :
-                                    model.hasEnoughSponsoring(
+                                    model.hasEnoughGuardianship(
                                             quest: model.quest)
                                         ? () => completer(
                                             SheetResponse(confirmed: true))

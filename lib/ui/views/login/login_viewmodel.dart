@@ -35,7 +35,7 @@ class LoginViewModel extends AuthenticationViewModel {
           notifyListeners();
           return;
         }
-        saveData(AuthenticationMethod.EmailOrSponsorCreatedExplorer);
+        saveData(AuthenticationMethod.EmailOrGuardianCreatedExplorer);
       };
     } else {
       if (_flavorConfigProvider.flavor == Flavor.dev) {
@@ -133,7 +133,7 @@ class LoginViewModel extends AuthenticationViewModel {
   }
 
   void navigateToCreateAccount() {
-    navToSponsorCreateAccount(role: UserRole.sponsor);
+    navToGuardianCreateAccount(role: UserRole.guardian);
   }
 
   bool isPwShown = false;

@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'sponsor_reference.dart';
+part of 'guardian_reference.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_SponsorReference _$$_SponsorReferenceFromJson(Map<String, dynamic> json) =>
-    _$_SponsorReference(
+_$_GuardianReference _$$_GuardianReferenceFromJson(Map<String, dynamic> json) =>
+    _$_GuardianReference(
       uid: json['uid'] as String,
       authMethod: $enumDecodeNullable(
           _$AuthenticationMethodEnumMap, json['authMethod']),
@@ -15,7 +15,8 @@ _$_SponsorReference _$$_SponsorReferenceFromJson(Map<String, dynamic> json) =>
       withPasscode: json['withPasscode'] as bool,
     );
 
-Map<String, dynamic> _$$_SponsorReferenceToJson(_$_SponsorReference instance) =>
+Map<String, dynamic> _$$_GuardianReferenceToJson(
+        _$_GuardianReference instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'authMethod': _$AuthenticationMethodEnumMap[instance.authMethod],
@@ -29,6 +30,6 @@ const _$AuthenticationMethodEnumMap = {
   AuthenticationMethod.facebook: 'facebook',
   AuthenticationMethod.apple: 'apple',
   AuthenticationMethod.dummy: 'dummy',
-  AuthenticationMethod.EmailOrSponsorCreatedExplorer:
-      'EmailOrSponsorCreatedExplorer',
+  AuthenticationMethod.EmailOrGuardianCreatedExplorer:
+      'EmailOrGuardianCreatedExplorer',
 };

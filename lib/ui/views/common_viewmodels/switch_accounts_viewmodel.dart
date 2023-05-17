@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
+import 'package:afkcredits/datamodels/users/guardian_reference/guardian_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
@@ -53,10 +53,10 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
   Future switchToExplorerAccount({String? pin, required User explorer}) async {
     setBusy(true);
-    await userService.saveSponsorReference(
+    await userService.saveGuardianReference(
         uid: currentUser.uid, authMethod: currentUser.authMethod, pin: pin);
     await clearServiceData(
-        logOutFromFirebase: false, doNotClearSponsorReference: true);
+        logOutFromFirebase: false, doNotClearGuardianReference: true);
     mapViewModel.clearAllMapData();
     try {
       log.i("Syncing explorer account");
@@ -76,25 +76,25 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     setBusy(false);
   }
 
-  Future handleSwitchToSponsorEvent() async {
-    if (userService.sponsorReference == null) {
+  Future handleSwitchToGuardianEvent() async {
+    if (userService.guardianReference == null) {
       await dialogService.showDialog(
           title: "Error",
           description:
               "No parent account found. Please first logout and then sign in to a parrent account.");
       return;
     } else {
-      if (userService.sponsorReference!.withPasscode) {
+      if (userService.guardianReference!.withPasscode) {
         final pinResult = await navigationService.navigateTo(Routes.setPinView);
         if (pinResult == null) {
           return;
         } else {
           final valid =
-              await userService.validateSponsorPin(pin: pinResult.pin);
+              await userService.validateGuardianPin(pin: pinResult.pin);
           setBusy(true);
           if (valid != null && valid == true) {
-            await switchToSponsorAccount(
-                sponsorReference: userService.sponsorReference!);
+            await switchToGuardianAccount(
+                guardianReference: userService.guardianReference!);
           } else {
             await dialogService.showDialog(
                 title: "Pin not correct",
@@ -108,22 +108,22 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
             confirmButtonTitle: "Switch",
             cancelButtonTitle: "Cancel");
         if (confirmation?.confirmed == true) {
-          await switchToSponsorAccount(
-              sponsorReference: userService.sponsorReference!);
+          await switchToGuardianAccount(
+              guardianReference: userService.guardianReference!);
         }
       }
     }
   }
 
-  Future switchToSponsorAccount(
-      {required SponsorReference sponsorReference}) async {
+  Future switchToGuardianAccount(
+      {required GuardianReference guardianReference}) async {
     setBusy(true);
     await clearServiceData(logOutFromFirebase: false);
     mapViewModel.clearAllMapData();
     try {
-      log.i("Syncing sponsor account");
+      log.i("Syncing guardian account");
       await userService.syncUserAccount(
-          uid: sponsorReference.uid, fromLocalStorage: false);
+          uid: guardianReference.uid, fromLocalStorage: false);
     } catch (e) {
       log.e("Error when trying to sync explorer account.");
       await dialogService.showDialog(
@@ -133,7 +133,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       return;
     }
     await clearStackAndNavigateToHomeView();
-    userService.clearSponsorReference();
+    userService.clearGuardianReference();
     setBusy(false);
   }
 }

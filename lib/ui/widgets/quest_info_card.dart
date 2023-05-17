@@ -9,7 +9,7 @@ class QuestInfoCard extends StatelessWidget {
   final double height;
   final double? width;
   final Quest quest;
-  final String? sponsoringSentence;
+  final String? guardianshipSentence;
   final String? subtitle;
   final double? marginRight;
   final double? marginTop;
@@ -21,7 +21,7 @@ class QuestInfoCard extends StatelessWidget {
       required this.quest,
       this.subtitle,
       required this.onCardPressed,
-      this.sponsoringSentence,
+      this.guardianshipSentence,
       this.width,
       this.marginRight,
       this.marginTop})
@@ -119,7 +119,7 @@ class QuestInfoCard extends StatelessWidget {
                       color: kcPrimaryColorSecondary),
                 ),
               ),
-              if (sponsoringSentence != null) Text(sponsoringSentence!),
+              if (guardianshipSentence != null) Text(guardianshipSentence!),
             ],
           ),
         ),

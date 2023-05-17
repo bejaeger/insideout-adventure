@@ -13,7 +13,7 @@ class SetPinViewModel extends FormViewModel {
   final log = getLogger("SetPinViewModel");
 
   Future onSubmit(String pin) async {
-    if (_userService.currentUser.role == UserRole.sponsor) {
+    if (_userService.currentUser.role == UserRole.guardian) {
       log.i("Pin set to $pin. Getting final confirmation to switch accounts");
       final result = await _bottomSheetService.showBottomSheet(
           title: "Switch to child area", cancelButtonTitle: "Cancel");

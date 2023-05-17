@@ -80,10 +80,10 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                     ),
 
                   if (model.currentUserNullable?.createdByUserWithId != null &&
-                      model.userService.sponsorReference != null)
+                      model.userService.guardianReference != null)
                     SwitchToParentsAreaButton(
                       onTap: () async =>
-                          await model.handleSwitchToSponsorEvent(),
+                          await model.handleSwitchToGuardianEvent(),
                       show: showMainWidgets,
                     ),
 

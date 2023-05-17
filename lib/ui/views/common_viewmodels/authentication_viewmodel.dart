@@ -67,7 +67,7 @@ abstract class AuthenticationViewModel extends FormViewModel
             "User logged in with third-party provider but no account has been created yet. Trying to create account");
         setBusy(true);
         await _userService.createUserAccountFromFirebaseUser(
-            role: this.role ?? UserRole.sponsor, authMethod: method);
+            role: this.role ?? UserRole.guardian, authMethod: method);
         await _userService.syncUserAccount(
             uid: result.uid, fromLocalStorage: result.fromLocalStorage);
         setBusy(false);

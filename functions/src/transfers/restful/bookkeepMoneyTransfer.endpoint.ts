@@ -39,7 +39,7 @@ export default new Post((request: Request, response: Response) => {
       const returnData: any = { transferId: docRef.id };
 
       // /////////////////////////////////////////////////////////////
-      // Sponsoring payment
+      // Guardianship payment
       if (type === "Sponsor2Explorer") {
         // at the moment we don't necessarily need a batch here
         // (cause we only need one operations)

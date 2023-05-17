@@ -170,7 +170,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
         currency: 'cad',
       );
       MoneyTransfer data = MoneyTransfer(
-          type: TransferType.Sponsor2ExplorerCredits /* legacy */,
+          type: TransferType.Guardian2ExplorerCredits /* legacy */,
           transferDetails: transferDetails);
       return data;
     } catch (e) {
@@ -209,7 +209,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       data: {
         "moneyTransferStatus": MoneyTransferStatusModel(
           futureStatus: moneyTransferCompleter.future,
-          type: TransferType.Sponsor2ExplorerCredits, // legacy code
+          type: TransferType.Guardian2ExplorerCredits, // legacy code
         )
       },
     );

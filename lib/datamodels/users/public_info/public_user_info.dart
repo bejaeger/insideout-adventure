@@ -12,7 +12,7 @@ class PublicUserInfo with _$PublicUserInfo {
     required String name,
     String? email,
     String? errorMessage,
-    bool? isSponsored,
+    bool? hasGuardian,
   }) = _PublicUserInfo;
 
   factory PublicUserInfo.fromJson(Map<String, dynamic> json) =>

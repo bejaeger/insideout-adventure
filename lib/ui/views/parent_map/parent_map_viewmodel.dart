@@ -37,7 +37,7 @@ class ParentMapViewModel extends QuestViewModel {
       if (questService.sortedNearbyQuests == false || force == true) {
         await questService.loadNearbyQuests(
             force: true,
-            sponsorIds: [currentUser.uid],
+            guardianIds: [currentUser.uid],
             lat: lat,
             lon: lon,
             addQuestsToExisting: loadNewQuests);

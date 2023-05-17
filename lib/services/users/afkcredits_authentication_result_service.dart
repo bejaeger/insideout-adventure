@@ -6,7 +6,7 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 /// We need this abstraction because we
 /// can have users not authenticated with
 /// firebase authentication (explorer accounts
-/// added from sponsors)
+/// added from guardians)
 
 class AFKCreditsAuthenticationResultService {
   final User? user;
@@ -35,7 +35,7 @@ class AFKCreditsAuthenticationResultService {
         fromLocalStorage = false,
         user = null;
 
-  AFKCreditsAuthenticationResultService.explorerCreatedFromSponsor({this.user})
+  AFKCreditsAuthenticationResultService.explorerCreatedFromGuardian({this.user})
       : errorMessage = null,
         firebaseUser = null,
         uid = user?.uid,
@@ -58,7 +58,7 @@ class AFKCreditsAuthenticationResultService {
 
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
 
-  bool get isExplorerCreatedFromSponsor =>
+  bool get isExplorerCreatedFromGuardian =>
       (firebaseUser == null && user != null) ||
       (firebaseUser == null && user == null && uid != null);
 

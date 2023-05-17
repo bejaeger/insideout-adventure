@@ -26,7 +26,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
   late final String name;
   ExplorerHomeViewModel() : super(explorerUid: "") {
     // have to do that otherwise we get a null error when
-    // switching account to the sponsor account
+    // switching account to the guardian account
     this.name = currentUser.fullName;
   }
   final QuestTestingService _questTestingService =
@@ -200,7 +200,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       if (questService.sortedNearbyQuests == false || force == true) {
         await questService.loadNearbyQuests(
           force: true,
-          sponsorIds: currentUser.sponsorIds,
+          guardianIds: currentUser.guardianIds,
           lat: lat,
           lon: lon,
           addQuestsToExisting: loadNewQuests,
@@ -284,7 +284,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
   Future showToEarnExplanationDialog() async {
     dialogService.showDialog(
-        title: "Sponsored Credits",
+        title: "Earned Credits",
         description:
             "Succeed in Quests to unlock these credits. If you don't have credits to earn, ask for funding!");
   }

@@ -87,7 +87,7 @@ class CreateExplorerViewModel extends FormViewModel {
       final result = await runBusyFuture(_userService.createExplorerAccount(
           name: nameValue!,
           password: passwordValue!,
-          authMethod: AuthenticationMethod.EmailOrSponsorCreatedExplorer,
+          authMethod: AuthenticationMethod.EmailOrGuardianCreatedExplorer,
           userSettings: userSettings));
       if (result is String) {
         await _dialogService.showDialog(

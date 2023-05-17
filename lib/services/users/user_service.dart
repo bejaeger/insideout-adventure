@@ -10,7 +10,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
-import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
+import 'package:afkcredits/datamodels/users/guardian_reference/guardian_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
@@ -66,7 +66,7 @@ class UserService {
   UserStatistics? _currentUserStats;
   StreamSubscription? _currentUserStreamSubscription;
   StreamSubscription? _currentUserStatsStreamSubscription;
-  SponsorReference? sponsorReference;
+  GuardianReference? guardianReference;
   Map<String, User> supportedExplorers = {};
   Map<String, UserStatistics> supportedExplorerStats = {};
   // we add the quest history to the user service (THIS IS NOT IDEAL!)
@@ -102,14 +102,14 @@ class UserService {
             key: kLocalStorageRoleKey, value: role);
 
         // ? Unclear why the following is needed.
-        // Maybe if an explorer logs in himself, the sponsor reference
+        // Maybe if an explorer logs in himself, the guardian reference
         // is loaded!
         String? id = await _localStorageService.getFromDisk(
-            key: kLocalStorageSponsorReferenceKey);
+            key: kLocalStorageGuardianReferenceKey);
         String? pin = await _localStorageService.getFromDisk(
-            key: kLocalStorageSponsorPinKey);
+            key: kLocalStorageGuardianPinKey);
         if (id != null) {
-          sponsorReference = SponsorReference(
+          guardianReference = GuardianReference(
             uid: id,
             withPasscode: pin != null,
           );
@@ -133,7 +133,7 @@ class UserService {
         email: user.email ?? "",
         newUser: true,
         explorerIds: [],
-        sponsorIds: [],
+        guardianIds: [],
         avatarIdx: 1,
         userSettings: UserSettings(),
       ),
@@ -170,13 +170,13 @@ class UserService {
       String? stringPw,
       String? hashedPw,
       UserRole? role}) async {
-    if (method == AuthenticationMethod.EmailOrSponsorCreatedExplorer) {
-      log.i("Login with email or sponsor created explorer");
+    if (method == AuthenticationMethod.EmailOrGuardianCreatedExplorer) {
+      log.i("Login with email or guardian created explorer");
       // check whether account exists with emailOrName as name.
       // In that case we are dealing with an explorer account
-      // created by a sponsor in the app. This account does
+      // created by a guardian in the app. This account does
       // not have authentication set up but has a reference to the
-      // sponsor account with the createdByUserWithId field.
+      // guardian account with the createdByUserWithId field.
       // We just return the id of that user here.
       final user = await _firestoreApi.getUserWithName(name: emailOrName);
       if (user == null) {
@@ -193,7 +193,7 @@ class UserService {
           // if user is not created by another user we talk about an explorer with an own account
           // authenticate him with email
           log.i(
-              "User is NOT created by sponsor, explorer has its own account.");
+              "User is NOT created by guardian, explorer has its own account.");
           return await runLoginLogic(
               method: AuthenticationMethod.email,
               emailOrName: user.email,
@@ -214,12 +214,12 @@ class UserService {
               stringPw2: stringPw,
               hashedPw2: hashedPw)) {
             log.i(
-                "Found AFK user that was created by a sponsor inside the app");
+                "Found AFK user that was created by a guardian inside the app");
             return AFKCreditsAuthenticationResultService.fromLocalStorage(
                 uid: user.uid);
           } else {
             log.i(
-                "Found AFK user that was created by a sponsor inside the app but password is not valid!");
+                "Found AFK user that was created by a guardian inside the app but password is not valid!");
             return Future.value(AFKCreditsAuthenticationResultService.error(
                 errorMessage:
                     "Password for user with name $emailOrName is not correct."));
@@ -300,7 +300,7 @@ class UserService {
             email: user.email ?? "",
             newUser: true,
             explorerIds: [],
-            sponsorIds: [],
+            guardianIds: [],
             avatarIdx: 1,
             userSettings: UserSettings(),
           ),
@@ -343,7 +343,7 @@ class UserService {
       password: hashPassword(password),
       uid: docRef.id,
       role: UserRole.explorer,
-      sponsorIds: [currentUser.uid],
+      guardianIds: [currentUser.uid],
       createdByUserWithId: currentUser.uid,
       explorerIds: [],
       newUser: true,
@@ -368,8 +368,8 @@ class UserService {
         await Future.wait([
           updateUserData(
               user: currentUser.copyWith(explorerIds: newExplorerIds)),
-          removeSponsorIdFromOtherUser(
-              otherUsersId: uid, sponsorId: currentUser.uid),
+          removeGuardianIdFromOtherUser(
+              otherUsersId: uid, guardianId: currentUser.uid),
         ]);
       }
     } catch (e) {
@@ -389,7 +389,7 @@ class UserService {
   ///
   /// 3. explorer user data
   ///    -> handled with a query snapshot to look for all users that
-  ///       have the currentUser's id in the sponsorIds arraay
+  ///       have the currentUser's id in the guardianIds arraay
   ///
   /// 4. explorer statistics documents / quest history of each explorer
   ///   -> handled manually in the listener of 3. by adding and removing
@@ -686,35 +686,35 @@ class UserService {
     return (credits * screenTimeFactor).toInt();
   }
 
-  Future validateSponsorPin({required String pin}) async {
-    final hashedPin =
-        await _localStorageService.getFromDisk(key: kLocalStorageSponsorPinKey);
+  Future validateGuardianPin({required String pin}) async {
+    final hashedPin = await _localStorageService.getFromDisk(
+        key: kLocalStorageGuardianPinKey);
     return isMatchingPasswords(hashedPw1: hashedPin, stringPw2: pin);
   }
 
-  Future saveSponsorReference(
+  Future saveGuardianReference(
       {required String uid,
       AuthenticationMethod? authMethod,
       String? pin}) async {
     if (pin != null) {
       await _localStorageService.saveToDisk(
-          key: kLocalStorageSponsorPinKey, value: hashPassword(pin));
+          key: kLocalStorageGuardianPinKey, value: hashPassword(pin));
     }
     await _localStorageService.saveToDisk(
-        key: kLocalStorageSponsorReferenceKey, value: uid);
-    sponsorReference = SponsorReference(
+        key: kLocalStorageGuardianReferenceKey, value: uid);
+    guardianReference = GuardianReference(
         uid: uid,
         authMethod: authMethod,
         withPasscode: pin != null,
         deviceId: currentUser.deviceId);
   }
 
-  Future clearSponsorReference() async {
-    log.v("Clearing sponsor reference from local disk");
-    await _localStorageService.deleteFromDisk(key: kLocalStorageSponsorPinKey);
+  Future clearGuardianReference() async {
+    log.v("Clearing guardian reference from local disk");
+    await _localStorageService.deleteFromDisk(key: kLocalStorageGuardianPinKey);
     await _localStorageService.deleteFromDisk(
-        key: kLocalStorageSponsorReferenceKey);
-    sponsorReference = null;
+        key: kLocalStorageGuardianReferenceKey);
+    guardianReference = null;
   }
 
   Future maybeUpdateDeviceId({required String? onlineDeviceId}) async {
@@ -910,7 +910,7 @@ class UserService {
     return "";
   }
 
-  bool isSponsored({required String uid}) {
+  bool hasGuardian({required String uid}) {
     return supportedExplorersList.any((element) => element.uid == uid);
   }
 
@@ -1017,10 +1017,10 @@ class UserService {
     _firestoreApi.updateUserData(user: user);
   }
 
-  Future removeSponsorIdFromOtherUser(
-      {required String otherUsersId, required String sponsorId}) async {
-    _firestoreApi.removeSponsorIdFromUser(
-        uid: otherUsersId, sponsorId: sponsorId);
+  Future removeGuardianIdFromOtherUser(
+      {required String otherUsersId, required String guardianId}) async {
+    _firestoreApi.removeGuardianIdFromUser(
+        uid: otherUsersId, guardianId: guardianId);
   }
 
   Future isUserAlreadyPresent({required name}) async {
@@ -1040,7 +1040,7 @@ class UserService {
 
   Future handleLogoutEvent(
       {bool logOutFromFirebase = true,
-      bool doNotClearSponsorReference = false}) async {
+      bool doNotClearGuardianReference = false}) async {
     if (!kIsWeb) {
       await _localStorageService.deleteFromDisk(key: kLocalStorageUidKey);
     }
@@ -1067,7 +1067,7 @@ class UserService {
     supportedExplorers = {};
     supportedExplorerStats = {};
 
-    if (!doNotClearSponsorReference) clearSponsorReference();
+    if (!doNotClearGuardianReference) clearGuardianReference();
 
     if (logOutFromFirebase) {
       await _firebaseAuthenticationService.logout();

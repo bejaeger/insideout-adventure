@@ -22,7 +22,7 @@ class QuestListOverlayViewModel extends QuestViewModel {
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
         await questService.loadNearbyQuests(
-            force: true, sponsorIds: currentUser.sponsorIds);
+            force: true, guardianIds: currentUser.guardianIds);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }

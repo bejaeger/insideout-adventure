@@ -23,7 +23,7 @@ mixin _$User {
   String get uid => throw _privateConstructorUsedError;
   String get fullName => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
-  List<String> get sponsorIds => throw _privateConstructorUsedError;
+  List<String> get guardianIds => throw _privateConstructorUsedError;
   List<String> get explorerIds => throw _privateConstructorUsedError;
   UserRole get role => throw _privateConstructorUsedError;
   UserSettings? get userSettings => throw _privateConstructorUsedError;
@@ -50,7 +50,7 @@ abstract class $UserCopyWith<$Res> {
       {String uid,
       String fullName,
       String? email,
-      List<String> sponsorIds,
+      List<String> guardianIds,
       List<String> explorerIds,
       UserRole role,
       UserSettings? userSettings,
@@ -80,7 +80,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? uid = freezed,
     Object? fullName = freezed,
     Object? email = freezed,
-    Object? sponsorIds = freezed,
+    Object? guardianIds = freezed,
     Object? explorerIds = freezed,
     Object? role = freezed,
     Object? userSettings = freezed,
@@ -106,9 +106,9 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
-      sponsorIds: sponsorIds == freezed
-          ? _value.sponsorIds
-          : sponsorIds // ignore: cast_nullable_to_non_nullable
+      guardianIds: guardianIds == freezed
+          ? _value.guardianIds
+          : guardianIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
       explorerIds: explorerIds == freezed
           ? _value.explorerIds
@@ -178,7 +178,7 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       {String uid,
       String fullName,
       String? email,
-      List<String> sponsorIds,
+      List<String> guardianIds,
       List<String> explorerIds,
       UserRole role,
       UserSettings? userSettings,
@@ -210,7 +210,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? uid = freezed,
     Object? fullName = freezed,
     Object? email = freezed,
-    Object? sponsorIds = freezed,
+    Object? guardianIds = freezed,
     Object? explorerIds = freezed,
     Object? role = freezed,
     Object? userSettings = freezed,
@@ -236,9 +236,9 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
-      sponsorIds: sponsorIds == freezed
-          ? _value._sponsorIds
-          : sponsorIds // ignore: cast_nullable_to_non_nullable
+      guardianIds: guardianIds == freezed
+          ? _value._guardianIds
+          : guardianIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
       explorerIds: explorerIds == freezed
           ? _value._explorerIds
@@ -296,7 +296,7 @@ class _$_User implements _User {
       {required this.uid,
       required this.fullName,
       this.email,
-      required final List<String> sponsorIds,
+      required final List<String> guardianIds,
       required final List<String> explorerIds,
       required this.role,
       this.userSettings,
@@ -309,7 +309,7 @@ class _$_User implements _User {
       final List<String>? tokens,
       this.deviceId,
       this.avatarIdx = 1})
-      : _sponsorIds = sponsorIds,
+      : _guardianIds = guardianIds,
         _explorerIds = explorerIds,
         _fullNameSearch = fullNameSearch,
         _tokens = tokens;
@@ -322,11 +322,11 @@ class _$_User implements _User {
   final String fullName;
   @override
   final String? email;
-  final List<String> _sponsorIds;
+  final List<String> _guardianIds;
   @override
-  List<String> get sponsorIds {
+  List<String> get guardianIds {
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_sponsorIds);
+    return EqualUnmodifiableListView(_guardianIds);
   }
 
   final List<String> _explorerIds;
@@ -376,7 +376,7 @@ class _$_User implements _User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
+    return 'User(uid: $uid, fullName: $fullName, email: $email, guardianIds: $guardianIds, explorerIds: $explorerIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
   }
 
   @override
@@ -388,7 +388,7 @@ class _$_User implements _User {
             const DeepCollectionEquality().equals(other.fullName, fullName) &&
             const DeepCollectionEquality().equals(other.email, email) &&
             const DeepCollectionEquality()
-                .equals(other._sponsorIds, _sponsorIds) &&
+                .equals(other._guardianIds, _guardianIds) &&
             const DeepCollectionEquality()
                 .equals(other._explorerIds, _explorerIds) &&
             const DeepCollectionEquality().equals(other.role, role) &&
@@ -414,7 +414,7 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(uid),
       const DeepCollectionEquality().hash(fullName),
       const DeepCollectionEquality().hash(email),
-      const DeepCollectionEquality().hash(_sponsorIds),
+      const DeepCollectionEquality().hash(_guardianIds),
       const DeepCollectionEquality().hash(_explorerIds),
       const DeepCollectionEquality().hash(role),
       const DeepCollectionEquality().hash(userSettings),
@@ -445,7 +445,7 @@ abstract class _User implements User {
       {required final String uid,
       required final String fullName,
       final String? email,
-      required final List<String> sponsorIds,
+      required final List<String> guardianIds,
       required final List<String> explorerIds,
       required final UserRole role,
       final UserSettings? userSettings,
@@ -468,7 +468,7 @@ abstract class _User implements User {
   @override
   String? get email;
   @override
-  List<String> get sponsorIds;
+  List<String> get guardianIds;
   @override
   List<String> get explorerIds;
   @override
