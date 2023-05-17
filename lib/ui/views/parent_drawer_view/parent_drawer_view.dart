@@ -2,6 +2,7 @@ import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_view.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/terms_and_privacy.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,15 @@ class ParentDrawerView extends StatelessWidget {
               leading: Icon(Icons.chat_bubble_rounded),
               onTap: model.navToFeedbackView,
             ),
+          ),
+          verticalSpaceTiny,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+            child: ListTile(
+                title: InsideOutText.body("Terms & Policies"),
+                leading: Icon(Icons.book),
+                onTap: () => showTermsAndPrivacyDialog(
+                    context, model.appConfigProvider)),
           ),
           verticalSpaceTiny,
           Padding(

@@ -4,7 +4,7 @@ import 'package:insideout_ui/insideout_ui.dart';
 
 void showTermsAndPrivacyDialog(
     BuildContext context, AppConfigProvider appConfigProvider) {
-  return showAboutDialog(
+  return showAboutDialog(    
     context: context,
     applicationIcon: Image.asset(
       "assets/inside_out_logo_io_adv.png",

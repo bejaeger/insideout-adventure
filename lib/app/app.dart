@@ -41,6 +41,7 @@ import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.d
 import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
 import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart';
+import 'package:afkcredits/ui/views/parental_consent/parental_consent_view.dart';
 import 'package:afkcredits/ui/views/permissions/permissions_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart';
@@ -82,6 +83,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: StartScreenTimeCounterView),
     MaterialRoute(page: ScreenTimeRequestedView),
     MaterialRoute(page: HelpDeskView),
+    MaterialRoute(page: ParentalConsentView),
   ],
   dependencies: [
     LazySingleton(classType: CloudFunctionsApi),

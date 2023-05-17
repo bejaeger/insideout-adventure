@@ -52,7 +52,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       tmpExplorer = explorer;
     }
     
-    await handleParentalConsent();
+    // await handleParentalConsent();
 
     if (tmpExplorer == null) {
       log.e("Please provide an explorerUid you want to switch to!");

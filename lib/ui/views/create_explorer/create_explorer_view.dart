@@ -81,7 +81,7 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                           children: [
                             verticalSpaceLarge,
                             InsideOutInputField(
-                              placeholder: 'Name',
+                              placeholder: 'Account Name',
                               controller: nameController,
                               errorText:
                                   model.fieldsValidationMessages[NameValueKey],
@@ -89,8 +89,8 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                             ),
                             verticalSpaceMedium,
                             InsideOutInputField(
-                              placeholder: 'Password',                              
-                              obscureText: (model.isPwShown) ? false : true,                              
+                              placeholder: 'Password',
+                              obscureText: (model.isPwShown) ? false : true,
                               controller: passwordController,
                               errorText: model
                                   .fieldsValidationMessages[PasswordValueKey],
@@ -129,8 +129,8 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                                   onTap: () =>
                                       model.switchOnOwnPhoneSelected(false),
                                   child: Container(
-                                    width: 120,
-                                    height: 80,
+                                    width: 100,
+                                    height: 60,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                         border:
@@ -150,8 +150,8 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                                   onTap: () =>
                                       model.switchOnOwnPhoneSelected(true),
                                   child: Container(
-                                    width: 125,
-                                    height: 80,
+                                    width: 100,
+                                    height: 60,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                         border:
@@ -176,8 +176,8 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                             if (model.chooseValueMessage != null)
                               verticalSpaceMedium,
                             InsideOutButton(
-                                leading: Icon(Icons.add_circle_outline,
-                                    color: Colors.white),
+                                leading:
+                                    Icon(Icons.person_add, color: Colors.white),
                                 busy: model.isBusy,
                                 onTap: () async {
                                   bool res = await model.addExplorer();

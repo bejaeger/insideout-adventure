@@ -60,6 +60,8 @@ class UserService {
     });
     return list;
   }
+  bool get hasGivenConsent => currentUser.parentalVerificationStatus ==
+      ParentalVerificationStatus.verified;
 
   User? _currentUser;
   UserStatistics? _currentUserStats;
@@ -668,6 +670,10 @@ class UserService {
       completer.complete();
     }
     return completer.future;
+  }
+
+  Future verifyParentalConsentCode({required String code}) async {
+    return true;
   }
 
   dynamic getAfkCreditsBalance({String? childId}) {

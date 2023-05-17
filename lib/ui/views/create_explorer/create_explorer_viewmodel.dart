@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -85,6 +86,16 @@ class CreateExplorerViewModel extends FormViewModel {
     final result =
         await isValidInput(name: nameValue, password: passwordValue!);
     if (result == true) {
+
+      if (!_userService.hasGivenConsent) {
+        final res = await _navigationService.navigateTo(Routes.parentalConsentView);
+        if (res == false) {
+           await _dialogService.showDialog(
+            title: "Could not create user", description: "You need to give parental consent to create a child account.");
+            return false;
+        }
+      }
+
       // per default if child has own phone we enable verification step
       UserSettings userSettings = UserSettings(
           ownPhone: ownPhoneSelected,
