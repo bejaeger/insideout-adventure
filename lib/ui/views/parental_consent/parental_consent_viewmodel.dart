@@ -23,13 +23,13 @@ class ParentalConsentViewModel extends FormViewModel {
   bool isLoading = false;
   int pageIndex = 0;
   bool verifiedCode = false;
+  String code = "B4T6";
 
   Future sendConsentEmail(PageController controller) async {
     if (!isValidEmail()) {
       return;
     }
 
-    String code = "B4T6";
     _emailService.sendConsentEmail(
         code: code,
         email: emailValue!,
@@ -54,21 +54,25 @@ class ParentalConsentViewModel extends FormViewModel {
       fieldsValidationMessages[CodeValueKey] =
           "Please provide the code sent to you via email";
       returnVal = false;
+    } else if (codeValue! != code) {
+      fieldsValidationMessages[CodeValueKey] =
+          "Please provide the correct code we sent you via email";
+      returnVal = false;
     } else {
-      setBusy(true);
-      final res =
-          await _userService.verifyParentalConsentCode(code: codeValue!);
-      setBusy(false);
-      if (res is String) {
-        fieldsValidationMessages[CodeValueKey] = res;
-        returnVal = false;
-      } else if (res is bool && res == false) {
-        log.wtf("Could not verify parental consent is not valid");
-      } else {
-        _userService.updateParentalVerificationStatus(
-            status: ParentalVerificationStatus.verified);
-        verifiedCode = true;
-      }
+      // setBusy(true);
+      // final res =
+      //     await _userService.verifyParentalConsentCode(code: codeValue!, codeSent: code);
+      // setBusy(false);
+      // if (res is String) {
+      //   fieldsValidationMessages[CodeValueKey] = res;
+      //   returnVal = false;
+      // } else if (res is bool && res == false) {
+      //   log.wtf("Could not verify parental consent is not valid");
+      // } else {
+      _userService.updateParentalVerificationStatus(
+          status: ParentalVerificationStatus.verified);
+      verifiedCode = true;
+      // }
     }
     notifyListeners();
     return returnVal;

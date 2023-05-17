@@ -672,8 +672,8 @@ class UserService {
     return completer.future;
   }
 
-  Future verifyParentalConsentCode({required String code}) async {
-    return true;
+  Future verifyParentalConsentCode({required String code, required String codeSent}) async {
+    return code == codeSent;
   }
 
   dynamic getAfkCreditsBalance({String? childId}) {
