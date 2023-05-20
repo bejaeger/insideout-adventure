@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/app_strings.dart';
-import 'package:afkcredits/constants/hercules_world_credit_system.dart';
+import 'package:afkcredits/constants/credits_system.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';

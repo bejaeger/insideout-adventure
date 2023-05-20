@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/hercules_world_credit_system.dart';
+import 'package:afkcredits/constants/credits_system.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_viewmodel.dart';
 import 'package:flutter/material.dart';

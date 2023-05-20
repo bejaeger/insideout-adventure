@@ -1,5 +1,5 @@
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/constants/hercules_world_credit_system.dart';
+import 'package:afkcredits/constants/credits_system.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
