@@ -148,7 +148,6 @@ These locations were reverted since the emitted changes were messy:
 
 ## Legacy naming
 Some classes or packages still use legacy names. This is a list of terms that are used interchangeably:
-- 'Sponsor' = 'Parent', 'Explorer' = 'Child'
 - 'Payment' = 'Money Transfer' = 'Credit Transfer'
 - 'AFK(Credits)' = 'Hercules(Credits)' = 'InsideOut(Credits)' = 'Credits'
 - Also in the project settings/names 'afkcredits' or 'hercules' may still be used instead of 'insideout' or 'insideoutadventure'
