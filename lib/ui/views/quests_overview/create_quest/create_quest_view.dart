@@ -3,7 +3,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
-import 'package:afkcredits/ui/views/create_explorer/validators.dart';
+import 'package:afkcredits/ui/views/create_ward/validators.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/selectable_box.dart';

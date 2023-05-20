@@ -6,25 +6,24 @@
 
 // ignore_for_file: public_member_api_docs, constant_identifier_names, non_constant_identifier_names,unnecessary_this
 
-import 'package:afkcredits/ui/views/create_explorer/validators.dart';
+import 'package:afkcredits/ui/views/create_ward/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 const String NameValueKey = 'name';
 const String PasswordValueKey = 'password';
 
-final Map<String, TextEditingController>
-    _CreateExplorerViewTextEditingControllers = {};
+final Map<String, TextEditingController> _CreateWardViewTextEditingControllers =
+    {};
 
-final Map<String, FocusNode> _CreateExplorerViewFocusNodes = {};
+final Map<String, FocusNode> _CreateWardViewFocusNodes = {};
 
-final Map<String, String? Function(String?)?>
-    _CreateExplorerViewTextValidations = {
+final Map<String, String? Function(String?)?> _CreateWardViewTextValidations = {
   NameValueKey: FormValidators.nameValidator,
   PasswordValueKey: FormValidators.passwordValidator,
 };
 
-mixin $CreateExplorerView on StatelessWidget {
+mixin $CreateWardView on StatelessWidget {
   TextEditingController get nameController =>
       _getFormTextEditingController(NameValueKey);
   TextEditingController get passwordController =>
@@ -34,20 +33,20 @@ mixin $CreateExplorerView on StatelessWidget {
 
   TextEditingController _getFormTextEditingController(String key,
       {String? initialValue}) {
-    if (_CreateExplorerViewTextEditingControllers.containsKey(key)) {
-      return _CreateExplorerViewTextEditingControllers[key]!;
+    if (_CreateWardViewTextEditingControllers.containsKey(key)) {
+      return _CreateWardViewTextEditingControllers[key]!;
     }
-    _CreateExplorerViewTextEditingControllers[key] =
+    _CreateWardViewTextEditingControllers[key] =
         TextEditingController(text: initialValue);
-    return _CreateExplorerViewTextEditingControllers[key]!;
+    return _CreateWardViewTextEditingControllers[key]!;
   }
 
   FocusNode _getFormFocusNode(String key) {
-    if (_CreateExplorerViewFocusNodes.containsKey(key)) {
-      return _CreateExplorerViewFocusNodes[key]!;
+    if (_CreateWardViewFocusNodes.containsKey(key)) {
+      return _CreateWardViewFocusNodes[key]!;
     }
-    _CreateExplorerViewFocusNodes[key] = FocusNode();
-    return _CreateExplorerViewFocusNodes[key]!;
+    _CreateWardViewFocusNodes[key] = FocusNode();
+    return _CreateWardViewFocusNodes[key]!;
   }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -85,10 +84,10 @@ mixin $CreateExplorerView on StatelessWidget {
 
   /// Returns the validation message for the given key
   String? _getValidationMessage(String key) {
-    final validatorForKey = _CreateExplorerViewTextValidations[key];
+    final validatorForKey = _CreateWardViewTextValidations[key];
     if (validatorForKey == null) return null;
     String? validationMessageForKey =
-        validatorForKey(_CreateExplorerViewTextEditingControllers[key]!.text);
+        validatorForKey(_CreateWardViewTextEditingControllers[key]!.text);
     return validationMessageForKey;
   }
 
@@ -96,15 +95,15 @@ mixin $CreateExplorerView on StatelessWidget {
   void disposeForm() {
     // The dispose function for a TextEditingController sets all listeners to null
 
-    for (var controller in _CreateExplorerViewTextEditingControllers.values) {
+    for (var controller in _CreateWardViewTextEditingControllers.values) {
       controller.dispose();
     }
-    for (var focusNode in _CreateExplorerViewFocusNodes.values) {
+    for (var focusNode in _CreateWardViewFocusNodes.values) {
       focusNode.dispose();
     }
 
-    _CreateExplorerViewTextEditingControllers.clear();
-    _CreateExplorerViewFocusNodes.clear();
+    _CreateWardViewTextEditingControllers.clear();
+    _CreateWardViewFocusNodes.clear();
   }
 }
 

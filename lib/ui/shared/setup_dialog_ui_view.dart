@@ -1,14 +1,14 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
-import 'package:afkcredits/ui/custom_dialogs/child_stat_card/child_total_stats_card_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_view.dart';
 import 'package:afkcredits/ui/custom_dialogs/credit_conversion_info_dialog.dart/credit_conversion_info_dialog.dart';
-import 'package:afkcredits/ui/custom_dialogs/explorer_settings/explorer_settings_dialog_view.dart';
-import 'package:afkcredits/ui/custom_dialogs/explorer_settings_for_guardian/explorer_settings_for_guardian_view.dart';
+import 'package:afkcredits/ui/custom_dialogs/ward_settings/ward_settings_dialog_view.dart';
+import 'package:afkcredits/ui/custom_dialogs/ward_settings_for_guardian/ward_settings_for_guardian_view.dart';
 import 'package:afkcredits/ui/custom_dialogs/found_treasure/found_treasure_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/in_area_alert/in_area_alert_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/marker_collected/collected_marker_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/super_user_dialog/super_user_dialog_view.dart';
+import 'package:afkcredits/ui/custom_dialogs/ward_stat_card/ward_total_stats_card_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/beware_of_surroundings_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_view.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/money_transfer_dialog_view.dart';

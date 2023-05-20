@@ -1,5 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/ui/views/explorer_home/overlays/right_floating_buttons_overlay_view.dart';
+import 'package:afkcredits/ui/views/ward_home/overlays/right_floating_buttons_overlay_view.dart';
 import 'package:afkcredits/ui/views/map/avatar_and_effects_on_map_view.dart';
 import 'package:afkcredits/ui/views/map/google_map_screen.dart';
 import 'package:afkcredits/ui/views/map/map_gestures_widget.dart';

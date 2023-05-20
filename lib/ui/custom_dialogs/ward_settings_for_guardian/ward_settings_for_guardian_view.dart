@@ -1,4 +1,4 @@
-import 'package:afkcredits/ui/custom_dialogs/explorer_settings_for_guardian/explorer_settings_for_guardian_viewmodel.dart';
+import 'package:afkcredits/ui/custom_dialogs/ward_settings_for_guardian/ward_settings_for_guardian_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';

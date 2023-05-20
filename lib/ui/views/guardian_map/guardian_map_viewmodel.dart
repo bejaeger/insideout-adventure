@@ -27,7 +27,7 @@ class GuardianMapViewModel extends QuestViewModel {
     notifyListeners();
   }
 
-  // ! Note: Same function exists in explorer_home_viewmodel.dart
+  // ! Note: Same function exists in ward_home_viewmodel.dart
   Future initializeQuests(
       {bool? force,
       double? lat,

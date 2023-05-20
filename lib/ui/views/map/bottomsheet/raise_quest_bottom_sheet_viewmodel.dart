@@ -78,7 +78,7 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     }
   }
 
-  // ! Duplicated in explorer_settings_dialog_viewmodel.dart
+  // ! Duplicated in ward_settings_dialog_viewmodel.dart
   void setIsShowingCompletedQuests(bool? b) async {
     if (b == null) return;
     userService.updateUserData(

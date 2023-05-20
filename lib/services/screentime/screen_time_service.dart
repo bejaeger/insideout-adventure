@@ -278,7 +278,7 @@ class ScreenTimeService {
     }
   }
 
-  // this listener is meant for the guardian_home_view and the explorer_home_view
+  // this listener is meant for the guardian_home_view and the ward_home_view
   // So whenever these views get disposed, we should cancel the screenTimeSubjectSubscription
   // so it starts again here!
   Future listenToPotentialScreenTimes(

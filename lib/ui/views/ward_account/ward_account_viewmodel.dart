@@ -20,7 +20,7 @@ class ExplorerAccountViewModel extends BaseModel {
     }
   }
 
-  // ! Duplicated in explorer_home_viewmodel.dart at the moment!
+  // ! Duplicated in ward_home_viewmodel.dart at the moment!
   Future showAndHandleAvatarSelection() async {
     final res = await dialogService.showCustomDialog(
       variant: DialogType.AvatarSelectDialog,

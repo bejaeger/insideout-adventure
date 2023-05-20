@@ -60,7 +60,7 @@ class GuardianHomeViewModel extends BaseModel {
     );
 
     // if screenTimeSession is null we want to navigate to that particular one!
-    // ! This is duplicated in explorer_home_viewmodel.dart
+    // ! This is duplicated in ward_home_viewmodel.dart
     if (screenTimeSession != null) {
       log.v("started with non-null ScreenTimeSession");
 

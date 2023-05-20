@@ -27,9 +27,7 @@ import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter
 import 'package:afkcredits/ui/views/ar_view/ar_object_ios_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_user_role_view.dart';
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart';
-import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart';
-import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
-import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
+import 'package:afkcredits/ui/views/create_ward/create_ward_view.dart';
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart';
 import 'package:afkcredits/ui/views/guardian_home/guardian_home_view.dart';
 import 'package:afkcredits/ui/views/guardian_home/guardian_home_viewmodel.dart';
@@ -43,10 +41,12 @@ import 'package:afkcredits/ui/views/permissions/permissions_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
-import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart';
+import 'package:afkcredits/ui/views/single_ward_stat/single_ward_stat_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart';
 import 'package:afkcredits/ui/views/startup/startup_view.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart';
+import 'package:afkcredits/ui/views/ward_home/ward_home_view.dart';
+import 'package:afkcredits/ui/views/ward_home/ward_home_viewmodel.dart';
 import 'package:afkcredits/utils/image_selector.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -65,7 +65,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: StartUpView, initial: true),
     MaterialRoute(page: StartUpScreenTimeView),
     MaterialRoute(page: SelectRoleAfterLoginView),
-    MaterialRoute(page: CreateExplorerView),
+    MaterialRoute(page: CreateWardView),
     MaterialRoute(page: SingleChildStatView),
     MaterialRoute(page: TransferFundsView),
     MaterialRoute(page: SetPinView),

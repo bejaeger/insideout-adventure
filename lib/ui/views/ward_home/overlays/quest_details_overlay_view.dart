@@ -4,7 +4,7 @@ import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/active_quest_overlays/active_search_quest/active_search_quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/active_quest_overlays/gps_area_hike/gps_area_hike_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
-import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay_viewmodel.dart';
+import 'package:afkcredits/ui/views/ward_home/overlays/quest_details_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/afk_slide_button.dart';
 import 'package:afkcredits/ui/widgets/common_quest_details_footer.dart';

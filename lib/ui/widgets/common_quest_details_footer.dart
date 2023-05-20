@@ -1,5 +1,5 @@
 import 'package:afkcredits/datamodels/quests/quest.dart';
-import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay_viewmodel.dart';
+import 'package:afkcredits/ui/views/ward_home/overlays/quest_details_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/not_close_to_quest_note.dart';
 import 'package:afkcredits/ui/widgets/quest_completed_note.dart';
 import 'package:afkcredits/ui/widgets/quest_success_card.dart';

@@ -3,12 +3,12 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.form.dart';
+import 'package:afkcredits/ui/views/create_ward/create_ward_view.form.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class CreateExplorerViewModel extends FormViewModel {
+class CreateWardViewModel extends FormViewModel {
   final UserService _userService = locator<UserService>();
   final NavigationService _navigationService = locator<NavigationService>();
   final DialogService _dialogService = locator<DialogService>();
@@ -17,7 +17,7 @@ class CreateExplorerViewModel extends FormViewModel {
   bool isLoading = false;
 
   void Function() disposeController;
-  CreateExplorerViewModel({required this.disposeController});
+  CreateWardViewModel({required this.disposeController});
 
   int pageIndex = 0;
   bool? ownPhoneSelected;

@@ -24,10 +24,7 @@ import 'package:afkcredits/ui/views/create_account/create_account_user_role_view
     as _i6;
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart'
     as _i5;
-import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart'
-    as _i10;
-import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart'
-    as _i3;
+import 'package:afkcredits/ui/views/create_ward/create_ward_view.dart' as _i10;
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart' as _i21;
 import 'package:afkcredits/ui/views/guardian_home/guardian_home_view.dart'
     as _i2;
@@ -45,13 +42,14 @@ import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_vi
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart'
     as _i18;
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart' as _i13;
-import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart'
+import 'package:afkcredits/ui/views/single_ward_stat/single_ward_stat_view.dart'
     as _i11;
 import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart'
     as _i8;
 import 'package:afkcredits/ui/views/startup/startup_view.dart' as _i7;
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart'
     as _i12;
+import 'package:afkcredits/ui/views/ward_home/ward_home_view.dart' as _i3;
 import 'package:flutter/foundation.dart' as _i26;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
@@ -170,7 +168,7 @@ class StackedRouter extends _i1.RouterBase {
     ),
     _i1.RouteDef(
       Routes.createExplorerView,
-      page: _i10.CreateExplorerView,
+      page: _i10.CreateWardView,
     ),
     _i1.RouteDef(
       Routes.singleChildStatView,
@@ -306,12 +304,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i10.CreateExplorerView: (data) {
-      final args = data.getArgs<CreateExplorerViewArguments>(
-        orElse: () => const CreateExplorerViewArguments(),
+    _i10.CreateWardView: (data) {
+      final args = data.getArgs<CreateWardViewArguments>(
+        orElse: () => const CreateWardViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i10.CreateExplorerView(key: args.key),
+        builder: (context) => _i10.CreateWardView(key: args.key),
         settings: data,
       );
     },
@@ -516,8 +514,8 @@ class SelectRoleAfterLoginViewArguments {
   final _i29.AuthenticationMethod authMethod;
 }
 
-class CreateExplorerViewArguments {
-  const CreateExplorerViewArguments({this.key});
+class CreateWardViewArguments {
+  const CreateWardViewArguments({this.key});
 
   final _i26.Key? key;
 }
@@ -778,7 +776,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToCreateExplorerView({
+  Future<dynamic> navigateToCreateWardView({
     _i26.Key? key,
     int? routerId,
     bool preventDuplicates = true,
@@ -787,7 +785,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.createExplorerView,
-        arguments: CreateExplorerViewArguments(key: key),
+        arguments: CreateWardViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
