@@ -536,12 +536,12 @@ class FirestoreApi {
   Future bookkeepFinishedQuest({required ActivatedQuest quest}) async {
     log.v("Uploading and bookkeeping finished quest");
 
-    num? afkCreditsEarned = quest.afkCreditsEarned;
+    num? creditsEarned = quest.creditsEarned;
     String? questId = quest.quest.id;
     List<String>? uids = quest.uids;
-    if (afkCreditsEarned == null) {
+    if (creditsEarned == null) {
       log.wtf(
-          "afkCreditsEarned field is null in ActivatedQuest. Can't upload anything");
+          "creditsEarned field is null in ActivatedQuest. Can't upload anything");
       return;
     }
     if (uids == null) {
@@ -568,17 +568,16 @@ class FirestoreApi {
           UserStatistics userStats =
               UserStatistics.fromJson(userDoc.data() as Map<String, dynamic>);
 
-          final incrementCredits = FieldValue.increment(afkCreditsEarned);
+          final incrementCredits = FieldValue.increment(creditsEarned);
           final decrementGuardianship =
-              FieldValue.increment(-afkCreditsEarned * 10);
+              FieldValue.increment(-creditsEarned * 10);
 
           transaction.update(
             userDocRef,
             {
               "availableGuardianship":
                   decrementGuardianship, // decrement available guardianship of ward
-              "afkCreditsBalance":
-                  incrementCredits, // increment afk credits balance
+              "creditsBalance": incrementCredits, // increment credits balance
               "lifetimeEarnings":
                   incrementCredits, // increment lifetime earnings
               "numberQuestsCompleted": FieldValue.increment(
@@ -743,7 +742,7 @@ class FirestoreApi {
     await screenTimeSessionCollection.doc(session.sessionId).update(
       {
         'status': session.toJson()["status"],
-        'afkCreditsUsed': session.afkCreditsUsed,
+        'creditsUsed': session.creditsUsed,
         'minutesUsed': session.minutesUsed,
       },
     );
@@ -753,7 +752,7 @@ class FirestoreApi {
     log.i("cancel screen time session on firestore");
     await screenTimeSessionCollection.doc(session.sessionId).update({
       'status': session.toJson()["status"],
-      'afkCreditsUsed': session.afkCreditsUsed,
+      'creditsUsed': session.creditsUsed,
       'minutesUsed': session.minutesUsed,
       'endedAt': FieldValue.serverTimestamp(),
     });
@@ -883,7 +882,7 @@ class FirestoreApi {
               transaction.update(
                 ref2,
                 {
-                  "afkCreditsBalance": FieldValue.increment(deltaCredits),
+                  "creditsBalance": FieldValue.increment(deltaCredits),
                   "totalScreenTime": FieldValue.increment(deltaScreenTime),
                 },
               );
@@ -893,7 +892,7 @@ class FirestoreApi {
                 ref3,
                 {
                   'status': session.toJson()["status"],
-                  'afkCreditsUsed': session.afkCreditsUsed,
+                  'creditsUsed': session.creditsUsed,
                   'minutesUsed': session.minutesUsed,
                 },
               );
@@ -918,12 +917,12 @@ class FirestoreApi {
     );
   }
 
-  Future changeAfkCreditsBalanceCheat(
+  Future changeCreditsBalanceCheat(
       {required String uid, num deltaCredits = 50}) async {
     bool timedout = false;
     await getUserSummaryStatisticsDocument(uid: uid).update(
       {
-        "afkCreditsBalance": FieldValue.increment(deltaCredits),
+        "creditsBalance": FieldValue.increment(deltaCredits),
       },
     ).timeout(
       Duration(seconds: 5),

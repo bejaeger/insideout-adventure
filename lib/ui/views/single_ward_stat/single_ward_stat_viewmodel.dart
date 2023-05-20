@@ -100,7 +100,7 @@ class SingleWardStatViewModel extends SwitchAccountsViewModel {
       await dialogService.showDialog(
         title: "Finished: " + data.quest.name,
         description:
-            "Successfully finished ${getShortQuestType(data.quest.type, noCaps: true)} and earned ${data.afkCreditsEarned} credits on " +
+            "Successfully finished ${getShortQuestType(data.quest.type, noCaps: true)} and earned ${data.creditsEarned} credits on " +
                 formatDateDetailsType2(data.createdAt.toDate()),
       );
     } else if (data is ScreenTimeSession) {

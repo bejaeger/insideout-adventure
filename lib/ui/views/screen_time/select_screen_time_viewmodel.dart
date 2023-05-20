@@ -18,8 +18,8 @@ class SelectScreenTimeViewModel extends BaseModel {
 
   int get totalAvailableScreenTime =>
       userService.getTotalAvailableScreenTime(wardId: wardId);
-  int get afkCreditsBalance =>
-      userService.getAfkCreditsBalance(wardId: wardId).round();
+  int get creditsBalance =>
+      userService.getCreditsBalance(wardId: wardId).round();
 
   int screenTimePreset = 20; // in minutes
   int? screenTimePresetCustom;
@@ -79,7 +79,7 @@ class SelectScreenTimeViewModel extends BaseModel {
       startedAt: DateTime.now().add(
         Duration(seconds: 10),
       ), // add 10 seconds because we wait for another 10 seconds in the next view!
-      afkCredits: double.parse(HerculesWorldCreditSystem.screenTimeToCredits(
+      credits: double.parse(CreditsSystem.screenTimeToCredits(
               useSuperUserFeatures ? 1 : screenTimePreset)
           .toString()),
     );

@@ -208,7 +208,7 @@ class SuperUserDialogView extends StatelessWidget {
                           children: [
                             Text("Add credits cheat"),
                             IconButton(
-                              onPressed: model.addAfkCreditsCheat,
+                              onPressed: model.addCreditsCheat,
                               icon: Icon(Icons.add, size: 30),
                             ),
                             if (model.isCheating) AFKProgressIndicator(),
@@ -218,7 +218,7 @@ class SuperUserDialogView extends StatelessWidget {
                           children: [
                             Text("Remove credits cheat"),
                             IconButton(
-                              onPressed: model.deductAfkCreditsCheat,
+                              onPressed: model.deductCreditsCheat,
                               icon: Icon(Icons.remove, size: 30),
                             ),
                             if (model.isCheating) AFKProgressIndicator(),

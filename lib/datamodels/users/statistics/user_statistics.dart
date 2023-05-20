@@ -8,8 +8,8 @@ part 'user_statistics.g.dart';
 class UserStatistics with _$UserStatistics {
   @JsonSerializable(explicitToJson: true)
   factory UserStatistics({
-    required num afkCreditsBalance, // in credits
-    required num afkCreditsSpent, // in credits
+    required num creditsBalance, // in credits
+    required num creditsSpent, // in credits
     required num totalScreenTime, // in minutes
     required num availableGuardianship, // in cents!
     required num lifetimeEarnings, // in credits
@@ -30,12 +30,12 @@ class UserStatistics with _$UserStatistics {
 // model that is empty. This is used for creating the initial documents in firestore
 UserStatistics getEmptyUserStatistics({required String uid}) {
   return UserStatistics(
-    afkCreditsBalance: 0,
+    creditsBalance: 0,
     availableGuardianship: 0,
     totalScreenTime: 0, // in credits
     numberQuestsCompleted: 0,
     numberGiftCardsPurchased: 0,
-    afkCreditsSpent: 0,
+    creditsSpent: 0,
     lifetimeEarnings: 0,
     numberScreenTimeHoursPurchased: 0,
     uid: uid,

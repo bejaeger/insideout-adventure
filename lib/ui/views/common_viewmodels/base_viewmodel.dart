@@ -182,7 +182,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   }
 
   bool hasEnoughCredits({required int credits}) {
-    return currentUserStats.afkCreditsBalance >= credits;
+    return currentUserStats.creditsBalance >= credits;
   }
 
   void navigateBack() {

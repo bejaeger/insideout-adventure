@@ -656,17 +656,17 @@ class UserService {
     return completer.future;
   }
 
-  dynamic getAfkCreditsBalance({String? wardId}) {
+  dynamic getCreditsBalance({String? wardId}) {
     if (wardId == null) {
-      return currentUserStats.afkCreditsBalance;
+      return currentUserStats.creditsBalance;
     } else {
-      return supportedWardStats[wardId]!.afkCreditsBalance;
+      return supportedWardStats[wardId]!.creditsBalance;
     }
   }
 
   int getTotalAvailableScreenTime({String? wardId}) {
     return convertCreditsToScreenTime(
-        credits: getAfkCreditsBalance(wardId: wardId));
+        credits: getCreditsBalance(wardId: wardId));
   }
 
   int convertCreditsToScreenTime({required num credits}) {

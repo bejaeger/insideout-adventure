@@ -10,8 +10,8 @@ class ConciseFinishedQuestInfo with _$ConciseFinishedQuestInfo {
   factory ConciseFinishedQuestInfo({
     required String name,
     required QuestType type,
-    required num afkCredits,
-    required num afkCreditsEarned,
+    required num credits,
+    required num creditsEarned,
   }) = _ConciseFinishedQuestInfo;
 
   factory ConciseFinishedQuestInfo.fromJson(Map<String, dynamic> json) =>

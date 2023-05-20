@@ -80,7 +80,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                       title: "Current credits",
                                       icon: Image.asset(kAFKCreditsLogoPath,
                                           color: kcPrimaryColor, height: 24),
-                                      stats: model.stats.afkCreditsBalance
+                                      stats: model.stats.creditsBalance
                                           .toStringAsFixed(0),
                                     ),
                                     verticalSpaceTiny,
@@ -130,7 +130,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                       icon: Image.asset(kScreenTimeIcon,
                                           height: 26, color: kcScreenTimeBlue),
                                       unit: "min",
-                                      stats: model.stats.afkCreditsBalance
+                                      stats: model.stats.creditsBalance
                                           .toStringAsFixed(0),
                                     ),
                                     verticalSpaceTiny,

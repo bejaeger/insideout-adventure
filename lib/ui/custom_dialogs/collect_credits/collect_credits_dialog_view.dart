@@ -120,11 +120,11 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                       InsideOutText.body(
                           widget.model.isNeedToCollectCredits
                               ? "You get " +
-                                  activeQuest!.quest.afkCredits.toString() +
+                                  activeQuest!.quest.credits.toString() +
                                   " credits"
                               : "You mastered this mission and earned " +
-                                  activeQuest!.quest.afkCredits.toString() +
-                                  " Hercules credits!",
+                                  activeQuest!.quest.credits.toString() +
+                                  " Credits!",
                           align: TextAlign.center),
                     if (connectionStatus == ConnectivityType.Offline)
                       verticalSpaceSmall,

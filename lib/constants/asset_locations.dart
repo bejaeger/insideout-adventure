@@ -4,7 +4,7 @@ const String kMapStylePath = "assets/DayStyle.json";
 // logo
 const String kAFKCreditsLogoPath = "assets/icons/credits_orig.png";
 const String kAFKCreditsLogoSmallPath = "assets/icons/credits_small_orig.png";
-const String kAFKCreditsLogoSmallPathYellow = "assets/icons/afk_credits.png";
+const String kAFKCreditsLogoSmallPathYellow = "assets/icons/credits.png";
 const String kAFKCreditsLogoSmallPathColored =
     "assets/icons/credits_small_colored.PNG";
 

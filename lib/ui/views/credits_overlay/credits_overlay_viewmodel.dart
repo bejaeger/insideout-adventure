@@ -7,7 +7,7 @@ class CreditsOverlayViewModel extends BaseModel {
   final log = getLogger("CreditsOverlayViewModel");
 
   int get totalAvailableScreenTime => userService.getTotalAvailableScreenTime();
-  int get afkCreditsBalance => userService.getAfkCreditsBalance().round();
+  int get creditsBalance => userService.getCreditsBalance().round();
 
   StreamSubscription? subscription;
 

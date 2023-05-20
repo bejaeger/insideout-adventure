@@ -104,7 +104,7 @@ class _WardHomeViewState extends State<WardHomeView> {
                           ? model.openSuperUserSettingsDialog
                           : null, // model.showNotImplementedSnackbar,
                       onCreditsPressed: model.showCreditsOverlay,
-                      balance: model.currentUserStats.afkCreditsBalance,
+                      balance: model.currentUserStats.creditsBalance,
                       avatarIdx: model.avatarIdx,
                     ),
 
@@ -137,7 +137,7 @@ class _WardHomeViewState extends State<WardHomeView> {
                   // to test notifications during development
                   // Align(
                   //   alignment: Alignment.center,
-                  //   child: AfkCreditsButton(
+                  //   child: CreditsButton(
                   //     title: model.notId != null
                   //         ? "Dismiss notification"
                   //         : "Create notification",

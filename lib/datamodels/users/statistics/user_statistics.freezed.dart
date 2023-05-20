@@ -20,8 +20,8 @@ UserStatistics _$UserStatisticsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserStatistics {
-  num get afkCreditsBalance => throw _privateConstructorUsedError; // in credits
-  num get afkCreditsSpent => throw _privateConstructorUsedError; // in credits
+  num get creditsBalance => throw _privateConstructorUsedError; // in credits
+  num get creditsSpent => throw _privateConstructorUsedError; // in credits
   num get totalScreenTime => throw _privateConstructorUsedError; // in minutes
   num get availableGuardianship =>
       throw _privateConstructorUsedError; // in cents!
@@ -47,8 +47,8 @@ abstract class $UserStatisticsCopyWith<$Res> {
           UserStatistics value, $Res Function(UserStatistics) then) =
       _$UserStatisticsCopyWithImpl<$Res>;
   $Res call(
-      {num afkCreditsBalance,
-      num afkCreditsSpent,
+      {num creditsBalance,
+      num creditsSpent,
       num totalScreenTime,
       num availableGuardianship,
       num lifetimeEarnings,
@@ -71,8 +71,8 @@ class _$UserStatisticsCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? afkCreditsBalance = freezed,
-    Object? afkCreditsSpent = freezed,
+    Object? creditsBalance = freezed,
+    Object? creditsSpent = freezed,
     Object? totalScreenTime = freezed,
     Object? availableGuardianship = freezed,
     Object? lifetimeEarnings = freezed,
@@ -84,13 +84,13 @@ class _$UserStatisticsCopyWithImpl<$Res>
     Object? uid = freezed,
   }) {
     return _then(_value.copyWith(
-      afkCreditsBalance: afkCreditsBalance == freezed
-          ? _value.afkCreditsBalance
-          : afkCreditsBalance // ignore: cast_nullable_to_non_nullable
+      creditsBalance: creditsBalance == freezed
+          ? _value.creditsBalance
+          : creditsBalance // ignore: cast_nullable_to_non_nullable
               as num,
-      afkCreditsSpent: afkCreditsSpent == freezed
-          ? _value.afkCreditsSpent
-          : afkCreditsSpent // ignore: cast_nullable_to_non_nullable
+      creditsSpent: creditsSpent == freezed
+          ? _value.creditsSpent
+          : creditsSpent // ignore: cast_nullable_to_non_nullable
               as num,
       totalScreenTime: totalScreenTime == freezed
           ? _value.totalScreenTime
@@ -140,8 +140,8 @@ abstract class _$$_UserStatisticsCopyWith<$Res>
       __$$_UserStatisticsCopyWithImpl<$Res>;
   @override
   $Res call(
-      {num afkCreditsBalance,
-      num afkCreditsSpent,
+      {num creditsBalance,
+      num creditsSpent,
       num totalScreenTime,
       num availableGuardianship,
       num lifetimeEarnings,
@@ -166,8 +166,8 @@ class __$$_UserStatisticsCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? afkCreditsBalance = freezed,
-    Object? afkCreditsSpent = freezed,
+    Object? creditsBalance = freezed,
+    Object? creditsSpent = freezed,
     Object? totalScreenTime = freezed,
     Object? availableGuardianship = freezed,
     Object? lifetimeEarnings = freezed,
@@ -179,13 +179,13 @@ class __$$_UserStatisticsCopyWithImpl<$Res>
     Object? uid = freezed,
   }) {
     return _then(_$_UserStatistics(
-      afkCreditsBalance: afkCreditsBalance == freezed
-          ? _value.afkCreditsBalance
-          : afkCreditsBalance // ignore: cast_nullable_to_non_nullable
+      creditsBalance: creditsBalance == freezed
+          ? _value.creditsBalance
+          : creditsBalance // ignore: cast_nullable_to_non_nullable
               as num,
-      afkCreditsSpent: afkCreditsSpent == freezed
-          ? _value.afkCreditsSpent
-          : afkCreditsSpent // ignore: cast_nullable_to_non_nullable
+      creditsSpent: creditsSpent == freezed
+          ? _value.creditsSpent
+          : creditsSpent // ignore: cast_nullable_to_non_nullable
               as num,
       totalScreenTime: totalScreenTime == freezed
           ? _value.totalScreenTime
@@ -232,8 +232,8 @@ class __$$_UserStatisticsCopyWithImpl<$Res>
 @JsonSerializable(explicitToJson: true)
 class _$_UserStatistics implements _UserStatistics {
   _$_UserStatistics(
-      {required this.afkCreditsBalance,
-      required this.afkCreditsSpent,
+      {required this.creditsBalance,
+      required this.creditsSpent,
       required this.totalScreenTime,
       required this.availableGuardianship,
       required this.lifetimeEarnings,
@@ -250,10 +250,10 @@ class _$_UserStatistics implements _UserStatistics {
       _$$_UserStatisticsFromJson(json);
 
   @override
-  final num afkCreditsBalance;
+  final num creditsBalance;
 // in credits
   @override
-  final num afkCreditsSpent;
+  final num creditsSpent;
 // in credits
   @override
   final num totalScreenTime;
@@ -290,7 +290,7 @@ class _$_UserStatistics implements _UserStatistics {
 
   @override
   String toString() {
-    return 'UserStatistics(afkCreditsBalance: $afkCreditsBalance, afkCreditsSpent: $afkCreditsSpent, totalScreenTime: $totalScreenTime, availableGuardianship: $availableGuardianship, lifetimeEarnings: $lifetimeEarnings, numberQuestsCompleted: $numberQuestsCompleted, numberGiftCardsPurchased: $numberGiftCardsPurchased, numberScreenTimeHoursPurchased: $numberScreenTimeHoursPurchased, completedQuests: $completedQuests, completedQuestIds: $completedQuestIds, uid: $uid)';
+    return 'UserStatistics(creditsBalance: $creditsBalance, creditsSpent: $creditsSpent, totalScreenTime: $totalScreenTime, availableGuardianship: $availableGuardianship, lifetimeEarnings: $lifetimeEarnings, numberQuestsCompleted: $numberQuestsCompleted, numberGiftCardsPurchased: $numberGiftCardsPurchased, numberScreenTimeHoursPurchased: $numberScreenTimeHoursPurchased, completedQuests: $completedQuests, completedQuestIds: $completedQuestIds, uid: $uid)';
   }
 
   @override
@@ -299,9 +299,9 @@ class _$_UserStatistics implements _UserStatistics {
         (other.runtimeType == runtimeType &&
             other is _$_UserStatistics &&
             const DeepCollectionEquality()
-                .equals(other.afkCreditsBalance, afkCreditsBalance) &&
+                .equals(other.creditsBalance, creditsBalance) &&
             const DeepCollectionEquality()
-                .equals(other.afkCreditsSpent, afkCreditsSpent) &&
+                .equals(other.creditsSpent, creditsSpent) &&
             const DeepCollectionEquality()
                 .equals(other.totalScreenTime, totalScreenTime) &&
             const DeepCollectionEquality()
@@ -326,8 +326,8 @@ class _$_UserStatistics implements _UserStatistics {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(afkCreditsBalance),
-      const DeepCollectionEquality().hash(afkCreditsSpent),
+      const DeepCollectionEquality().hash(creditsBalance),
+      const DeepCollectionEquality().hash(creditsSpent),
       const DeepCollectionEquality().hash(totalScreenTime),
       const DeepCollectionEquality().hash(availableGuardianship),
       const DeepCollectionEquality().hash(lifetimeEarnings),
@@ -353,8 +353,8 @@ class _$_UserStatistics implements _UserStatistics {
 
 abstract class _UserStatistics implements UserStatistics {
   factory _UserStatistics(
-      {required final num afkCreditsBalance,
-      required final num afkCreditsSpent,
+      {required final num creditsBalance,
+      required final num creditsSpent,
       required final num totalScreenTime,
       required final num availableGuardianship,
       required final num lifetimeEarnings,
@@ -369,9 +369,9 @@ abstract class _UserStatistics implements UserStatistics {
       _$_UserStatistics.fromJson;
 
   @override
-  num get afkCreditsBalance;
+  num get creditsBalance;
   @override // in credits
-  num get afkCreditsSpent;
+  num get creditsSpent;
   @override // in credits
   num get totalScreenTime;
   @override // in minutes

@@ -70,7 +70,7 @@ class SelectScreenTimeView extends StatelessWidget {
                               height: 18, color: kcPrimaryColor),
                           horizontalSpaceTiny,
                           InsideOutText.headingFourLight(
-                              model.afkCreditsBalance.toStringAsFixed(0)),
+                              model.creditsBalance.toStringAsFixed(0)),
                           horizontalSpaceSmall,
                           Icon(Icons.arrow_right_alt, size: 20),
                           horizontalSpaceSmall,
@@ -100,7 +100,7 @@ class SelectScreenTimeView extends StatelessWidget {
                             height: 18, color: kcPrimaryColor),
                         horizontalSpaceTiny,
                         InsideOutText.headingFourLight(
-                            HerculesWorldCreditSystem.screenTimeToCredits(
+                            CreditsSystem.screenTimeToCredits(
                                     model.screenTimePreset)
                                 .toString()),
                       ],
@@ -176,16 +176,16 @@ class SelectScreenTimeView extends StatelessWidget {
                         height: 50,
                         leading:
                             Icon(Icons.play_arrow_rounded, color: Colors.white),
-                        onTap: model.afkCreditsBalance == 0 ||
+                        onTap: model.creditsBalance == 0 ||
                                 model.screenTimePreset >
                                     model.totalAvailableScreenTime
                             ? null
                             : model.startScreenTime,
-                        disabled: model.afkCreditsBalance == 0 ||
+                        disabled: model.creditsBalance == 0 ||
                             model.screenTimePreset >
                                 model.totalAvailableScreenTime,
                         color: kcScreenTimeBlue,
-                        title: model.afkCreditsBalance == 0 ||
+                        title: model.creditsBalance == 0 ||
                                 model.screenTimePreset >
                                     model.totalAvailableScreenTime
                             ? "Not enough credits"

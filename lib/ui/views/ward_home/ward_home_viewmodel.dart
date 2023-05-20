@@ -386,7 +386,7 @@ class WardHomeViewModel extends SwitchAccountsViewModel
           createdByUid: "hi",
           minutes: 10,
           status: ScreenTimeSessionStatus.active,
-          afkCredits: 10),
+          credits: 10),
     );
     await _notificationService.createScheduledNotification(
       title: "EXPIRED",
@@ -400,7 +400,7 @@ class WardHomeViewModel extends SwitchAccountsViewModel
           createdByUid: "hi",
           minutes: 10,
           status: ScreenTimeSessionStatus.active,
-          afkCredits: 10),
+          credits: 10),
     );
     notifyListeners();
   }

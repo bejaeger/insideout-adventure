@@ -67,8 +67,7 @@ class MainHeaderOverlay extends StatelessWidget {
                       child: CreditsToScreenTimeWidget(
                         credits: balance.toInt(),
                         availableScreenTime:
-                            HerculesWorldCreditSystem.creditsToScreenTime(
-                                balance),
+                            CreditsSystem.creditsToScreenTime(balance),
                         // sizeScale: screenWidth(context) / 450,
                       ),
                       // child: AFKCreditsDisplay(balance: balance),

@@ -28,9 +28,9 @@ mixin _$ScreenTimeSession {
   dynamic get endedAt => throw _privateConstructorUsedError;
   int get minutes => throw _privateConstructorUsedError;
   int? get minutesUsed => throw _privateConstructorUsedError;
-  num? get afkCreditsUsed => throw _privateConstructorUsedError;
+  num? get creditsUsed => throw _privateConstructorUsedError;
   ScreenTimeSessionStatus get status => throw _privateConstructorUsedError;
-  double get afkCredits => throw _privateConstructorUsedError;
+  double get credits => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -52,9 +52,9 @@ abstract class $ScreenTimeSessionCopyWith<$Res> {
       dynamic endedAt,
       int minutes,
       int? minutesUsed,
-      num? afkCreditsUsed,
+      num? creditsUsed,
       ScreenTimeSessionStatus status,
-      double afkCredits});
+      double credits});
 }
 
 /// @nodoc
@@ -76,9 +76,9 @@ class _$ScreenTimeSessionCopyWithImpl<$Res>
     Object? endedAt = freezed,
     Object? minutes = freezed,
     Object? minutesUsed = freezed,
-    Object? afkCreditsUsed = freezed,
+    Object? creditsUsed = freezed,
     Object? status = freezed,
-    Object? afkCredits = freezed,
+    Object? credits = freezed,
   }) {
     return _then(_value.copyWith(
       sessionId: sessionId == freezed
@@ -113,17 +113,17 @@ class _$ScreenTimeSessionCopyWithImpl<$Res>
           ? _value.minutesUsed
           : minutesUsed // ignore: cast_nullable_to_non_nullable
               as int?,
-      afkCreditsUsed: afkCreditsUsed == freezed
-          ? _value.afkCreditsUsed
-          : afkCreditsUsed // ignore: cast_nullable_to_non_nullable
+      creditsUsed: creditsUsed == freezed
+          ? _value.creditsUsed
+          : creditsUsed // ignore: cast_nullable_to_non_nullable
               as num?,
       status: status == freezed
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ScreenTimeSessionStatus,
-      afkCredits: afkCredits == freezed
-          ? _value.afkCredits
-          : afkCredits // ignore: cast_nullable_to_non_nullable
+      credits: credits == freezed
+          ? _value.credits
+          : credits // ignore: cast_nullable_to_non_nullable
               as double,
     ));
   }
@@ -145,9 +145,9 @@ abstract class _$$_ScreenTimeSessionCopyWith<$Res>
       dynamic endedAt,
       int minutes,
       int? minutesUsed,
-      num? afkCreditsUsed,
+      num? creditsUsed,
       ScreenTimeSessionStatus status,
-      double afkCredits});
+      double credits});
 }
 
 /// @nodoc
@@ -171,9 +171,9 @@ class __$$_ScreenTimeSessionCopyWithImpl<$Res>
     Object? endedAt = freezed,
     Object? minutes = freezed,
     Object? minutesUsed = freezed,
-    Object? afkCreditsUsed = freezed,
+    Object? creditsUsed = freezed,
     Object? status = freezed,
-    Object? afkCredits = freezed,
+    Object? credits = freezed,
   }) {
     return _then(_$_ScreenTimeSession(
       sessionId: sessionId == freezed
@@ -208,17 +208,17 @@ class __$$_ScreenTimeSessionCopyWithImpl<$Res>
           ? _value.minutesUsed
           : minutesUsed // ignore: cast_nullable_to_non_nullable
               as int?,
-      afkCreditsUsed: afkCreditsUsed == freezed
-          ? _value.afkCreditsUsed
-          : afkCreditsUsed // ignore: cast_nullable_to_non_nullable
+      creditsUsed: creditsUsed == freezed
+          ? _value.creditsUsed
+          : creditsUsed // ignore: cast_nullable_to_non_nullable
               as num?,
       status: status == freezed
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ScreenTimeSessionStatus,
-      afkCredits: afkCredits == freezed
-          ? _value.afkCredits
-          : afkCredits // ignore: cast_nullable_to_non_nullable
+      credits: credits == freezed
+          ? _value.credits
+          : credits // ignore: cast_nullable_to_non_nullable
               as double,
     ));
   }
@@ -236,9 +236,9 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
       this.endedAt = "",
       required this.minutes,
       this.minutesUsed,
-      this.afkCreditsUsed,
+      this.creditsUsed,
       required this.status,
-      required this.afkCredits});
+      required this.credits});
 
   factory _$_ScreenTimeSession.fromJson(Map<String, dynamic> json) =>
       _$$_ScreenTimeSessionFromJson(json);
@@ -262,15 +262,15 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
   @override
   final int? minutesUsed;
   @override
-  final num? afkCreditsUsed;
+  final num? creditsUsed;
   @override
   final ScreenTimeSessionStatus status;
   @override
-  final double afkCredits;
+  final double credits;
 
   @override
   String toString() {
-    return 'ScreenTimeSession(sessionId: $sessionId, uid: $uid, userName: $userName, createdByUid: $createdByUid, startedAt: $startedAt, endedAt: $endedAt, minutes: $minutes, minutesUsed: $minutesUsed, afkCreditsUsed: $afkCreditsUsed, status: $status, afkCredits: $afkCredits)';
+    return 'ScreenTimeSession(sessionId: $sessionId, uid: $uid, userName: $userName, createdByUid: $createdByUid, startedAt: $startedAt, endedAt: $endedAt, minutes: $minutes, minutesUsed: $minutesUsed, creditsUsed: $creditsUsed, status: $status, credits: $credits)';
   }
 
   @override
@@ -289,10 +289,9 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
             const DeepCollectionEquality()
                 .equals(other.minutesUsed, minutesUsed) &&
             const DeepCollectionEquality()
-                .equals(other.afkCreditsUsed, afkCreditsUsed) &&
+                .equals(other.creditsUsed, creditsUsed) &&
             const DeepCollectionEquality().equals(other.status, status) &&
-            const DeepCollectionEquality()
-                .equals(other.afkCredits, afkCredits));
+            const DeepCollectionEquality().equals(other.credits, credits));
   }
 
   @JsonKey(ignore: true)
@@ -307,9 +306,9 @@ class _$_ScreenTimeSession implements _ScreenTimeSession {
       const DeepCollectionEquality().hash(endedAt),
       const DeepCollectionEquality().hash(minutes),
       const DeepCollectionEquality().hash(minutesUsed),
-      const DeepCollectionEquality().hash(afkCreditsUsed),
+      const DeepCollectionEquality().hash(creditsUsed),
       const DeepCollectionEquality().hash(status),
-      const DeepCollectionEquality().hash(afkCredits));
+      const DeepCollectionEquality().hash(credits));
 
   @JsonKey(ignore: true)
   @override
@@ -335,9 +334,9 @@ abstract class _ScreenTimeSession implements ScreenTimeSession {
       final dynamic endedAt,
       required final int minutes,
       final int? minutesUsed,
-      final num? afkCreditsUsed,
+      final num? creditsUsed,
       required final ScreenTimeSessionStatus status,
-      required final double afkCredits}) = _$_ScreenTimeSession;
+      required final double credits}) = _$_ScreenTimeSession;
 
   factory _ScreenTimeSession.fromJson(Map<String, dynamic> json) =
       _$_ScreenTimeSession.fromJson;
@@ -359,11 +358,11 @@ abstract class _ScreenTimeSession implements ScreenTimeSession {
   @override
   int? get minutesUsed;
   @override
-  num? get afkCreditsUsed;
+  num? get creditsUsed;
   @override
   ScreenTimeSessionStatus get status;
   @override
-  double get afkCredits;
+  double get credits;
   @override
   @JsonKey(ignore: true)
   _$$_ScreenTimeSessionCopyWith<_$_ScreenTimeSession> get copyWith =>

@@ -31,8 +31,7 @@ class QuestSpecificationsRow extends StatelessWidget {
               horizontalSpaceTiny,
               InsideOutText.bodyBold(
                 "~" +
-                    (HerculesWorldCreditSystem
-                                .kSimpleDistanceMarkersToDistanceWalkScaling *
+                    (CreditsSystem.kSimpleDistanceMarkersToDistanceWalkScaling *
                             quest!.distanceMarkers! *
                             0.001)
                         .toStringAsFixed(1) +
@@ -54,8 +53,7 @@ class QuestSpecificationsRow extends StatelessWidget {
               horizontalSpaceTiny,
               InsideOutText.bodyBold(
                 "~" +
-                    (HerculesWorldCreditSystem
-                                .kDistanceInMeterToActivityMinuteConversion *
+                    (CreditsSystem.kDistanceInMeterToActivityMinuteConversion *
                             quest!.distanceMarkers!)
                         .toStringAsFixed(0) +
                     "min",

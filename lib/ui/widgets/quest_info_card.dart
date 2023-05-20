@@ -85,7 +85,7 @@ class QuestInfoCard extends StatelessWidget {
                         SizedBox(width: 4.0),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 2.0),
-                          child: Text(quest.afkCredits.toStringAsFixed(0),
+                          child: Text(quest.credits.toStringAsFixed(0),
                               style: heading3Style.copyWith(
                                   color: kcPrimaryColor)),
                         ),

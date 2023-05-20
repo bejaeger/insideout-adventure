@@ -120,8 +120,8 @@ class HistoryTile extends StatelessWidget {
                     children: [
                       CreditsAmount(
                           amount: screenTime
-                              ? data.afkCreditsUsed ?? data.afkCredits
-                              : data.afkCreditsEarned,
+                              ? data.creditsUsed ?? data.credits
+                              : data.creditsEarned,
                           height: 16,
                           style: bodyStyleSofia),
                       SizedBox(width: 3),

@@ -8,8 +8,8 @@ part of 'user_statistics.dart';
 
 _$_UserStatistics _$$_UserStatisticsFromJson(Map<String, dynamic> json) =>
     _$_UserStatistics(
-      afkCreditsBalance: json['afkCreditsBalance'] as num,
-      afkCreditsSpent: json['afkCreditsSpent'] as num,
+      creditsBalance: json['creditsBalance'] as num,
+      creditsSpent: json['creditsSpent'] as num,
       totalScreenTime: json['totalScreenTime'] as num,
       availableGuardianship: json['availableGuardianship'] as num,
       lifetimeEarnings: json['lifetimeEarnings'] as num,
@@ -29,8 +29,8 @@ _$_UserStatistics _$$_UserStatisticsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_UserStatisticsToJson(_$_UserStatistics instance) =>
     <String, dynamic>{
-      'afkCreditsBalance': instance.afkCreditsBalance,
-      'afkCreditsSpent': instance.afkCreditsSpent,
+      'creditsBalance': instance.creditsBalance,
+      'creditsSpent': instance.creditsSpent,
       'totalScreenTime': instance.totalScreenTime,
       'availableGuardianship': instance.availableGuardianship,
       'lifetimeEarnings': instance.lifetimeEarnings,

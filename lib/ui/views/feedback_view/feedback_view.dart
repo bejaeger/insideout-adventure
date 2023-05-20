@@ -170,7 +170,7 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                         //       verticalSpaceMedium,
                         //     ],
                         //   ),
-                        // AfkCreditsButton(
+                        // CreditsButton(
                         //     onTap: model.sendFeedback,
                         //     title: "Answer question of the week",
                         //     leading: Icon(Icons.send, color: Colors.white),

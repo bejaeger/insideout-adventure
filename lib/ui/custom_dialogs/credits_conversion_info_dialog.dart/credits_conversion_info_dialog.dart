@@ -46,7 +46,7 @@ class CreditConversionInfoDialog extends StatelessWidget {
                         color: kcActivityIconColor,
                       ),
                       InsideOutText.captionBold(
-                          "${(1 / HerculesWorldCreditSystem.kMinuteActivityToCreditsConversion).round().toString()} min"),
+                          "${(1 / CreditsSystem.kMinuteActivityToCreditsConversion).round().toString()} min"),
                     ],
                   ),
                   horizontalSpaceTiny,
@@ -67,7 +67,7 @@ class CreditConversionInfoDialog extends StatelessWidget {
               ),
               verticalSpaceTiny,
               InsideOutText.body(
-                  "We recommend giving 1 credit for ${(1 / HerculesWorldCreditSystem.kMinuteActivityToCreditsConversion).round().toString()} minutes of activity. By creating your own quests you can decide on this conversion."),
+                  "We recommend giving 1 credit for ${(1 / CreditsSystem.kMinuteActivityToCreditsConversion).round().toString()} minutes of activity. By creating your own quests you can decide on this conversion."),
               verticalSpaceMedium,
 
               // Row(
@@ -102,14 +102,14 @@ class CreditConversionInfoDialog extends StatelessWidget {
                         color: kcScreenTimeBlue,
                       ),
                       InsideOutText.captionBold(
-                          "${HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor.round()} min"),
+                          "${CreditsSystem.kCreditsToScreenTimeConversionFactor.round()} min"),
                     ],
                   ),
                 ],
               ),
               verticalSpaceTiny,
               InsideOutText.body(
-                  "Per default 1 credit converts to ${HerculesWorldCreditSystem.kCreditsToScreenTimeConversionFactor.round()} minute screen time. In future versions of the app we will allow to adjust this conversion."),
+                  "Per default 1 credit converts to ${CreditsSystem.kCreditsToScreenTimeConversionFactor.round()} minute screen time. In future versions of the app we will allow to adjust this conversion."),
               verticalSpaceSmall,
               Row(
                 children: [

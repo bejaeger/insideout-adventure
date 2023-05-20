@@ -14,7 +14,7 @@ class ActivatedQuest with _$ActivatedQuest {
     required List<bool> markersCollected,
     required QuestStatus status,
     List<String>? uids,
-    num? afkCreditsEarned,
+    num? creditsEarned,
     required int timeElapsed, // in seconds!
     @Default("") dynamic createdAt,
     double? lastCheckLat, // For VibrationSearch quest

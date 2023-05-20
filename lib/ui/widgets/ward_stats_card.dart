@@ -70,7 +70,7 @@ class WardStatsCard extends StatelessWidget {
                         //InsideOutText.body("Balance: "),
                         if (wardStats != null)
                           CreditsAmount(
-                            amount: wardStats!.afkCreditsBalance,
+                            amount: wardStats!.creditsBalance,
                             height: 18,
                           ),
                       ],

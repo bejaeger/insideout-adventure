@@ -94,7 +94,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CreditsAmount(
-                          amount: quest?.afkCredits ?? -1,
+                          amount: quest?.credits ?? -1,
                           height: 24,
                           textColor: kcPrimaryColor,
                         ),
@@ -154,7 +154,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                                   color: kcPrimaryColor, height: 18),
                             ),
                             TextSpan(
-                              text: " " + quest!.afkCredits.toStringAsFixed(0),
+                              text: " " + quest!.credits.toStringAsFixed(0),
                               style: TextStyle(
                                   color: kcPrimaryColor,
                                   fontWeight: FontWeight.w500),

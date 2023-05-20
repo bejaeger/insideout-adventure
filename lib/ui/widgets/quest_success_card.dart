@@ -40,7 +40,7 @@ class QuestSuccessCard extends StatelessWidget {
             "You just earned", // "You are the best, you successfully finished the quest",
           ),
           verticalSpaceSmall,
-          if (finishedQuest != null && finishedQuest!.afkCreditsEarned != null)
+          if (finishedQuest != null && finishedQuest!.creditsEarned != null)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -48,7 +48,7 @@ class QuestSuccessCard extends StatelessWidget {
                     height: 24, color: kcPrimaryColor),
                 horizontalSpaceTiny,
                 InsideOutText.headingThree(
-                    finishedQuest!.afkCreditsEarned.toString()),
+                    finishedQuest!.creditsEarned.toString()),
                 horizontalSpaceSmall,
                 Icon(Icons.arrow_right_alt, size: 24),
                 horizontalSpaceSmall,
@@ -56,11 +56,10 @@ class QuestSuccessCard extends StatelessWidget {
                 Image.asset(kScreenTimeIcon,
                     height: 24, color: kcScreenTimeBlue),
                 horizontalSpaceTiny,
-                InsideOutText.headingThree(
-                    HerculesWorldCreditSystem.creditsToScreenTime(
-                                finishedQuest!.afkCreditsEarned!)
-                            .toString() +
-                        " min"),
+                InsideOutText.headingThree(CreditsSystem.creditsToScreenTime(
+                            finishedQuest!.creditsEarned!)
+                        .toString() +
+                    " min"),
               ],
             ),
           verticalSpaceMedium,

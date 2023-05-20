@@ -35,8 +35,7 @@ class CustomScreenTimeDialogViewModel extends FormViewModel {
     if (timeValue != null && timeValue != "") {
       if (isValidData()) {
         int tmpTime = int.parse(timeValue!);
-        creditsEquivalent =
-            HerculesWorldCreditSystem.screenTimeToCredits(tmpTime);
+        creditsEquivalent = CreditsSystem.screenTimeToCredits(tmpTime);
         minutes = tmpTime;
       }
     }

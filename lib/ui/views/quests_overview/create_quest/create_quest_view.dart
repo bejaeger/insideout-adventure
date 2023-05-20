@@ -425,10 +425,10 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                       ),
                     ],
                   ),
-            if (model.afkCreditsInputValidationMessage != null)
+            if (model.creditsInputValidationMessage != null)
               Expanded(
-                  child: InsideOutText.warn(
-                      model.afkCreditsInputValidationMessage!)),
+                  child:
+                      InsideOutText.warn(model.creditsInputValidationMessage!)),
             verticalSpaceMassive,
           ],
         ),

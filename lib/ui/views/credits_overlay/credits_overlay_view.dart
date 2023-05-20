@@ -34,7 +34,7 @@ class CreditsOverlayView extends StatelessWidget {
               model.currentUserNullable == null
                   ? SizedBox(height: 0, width: 0)
                   : CreditsToScreenTimeWidget(
-                      credits: model.afkCreditsBalance,
+                      credits: model.creditsBalance,
                       availableScreenTime: model.totalAvailableScreenTime),
               verticalSpaceLarge,
               InsideOutText.subheadingItalic("Claim your screen time now!"),

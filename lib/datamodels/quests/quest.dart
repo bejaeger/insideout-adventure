@@ -18,10 +18,10 @@ class Quest {
   late List<AFKMarker> markers;
   double? distanceMarkers; // in meters
   List<MarkerNote>? markerNotes;
-  late num afkCredits;
+  late num credits;
   String? networkImagePath;
-  List<num>? afkCreditsPerMarker;
-  num? bonusAfkCreditsOnSuccess;
+  List<num>? creditsPerMarker;
+  num? bonusCreditsOnSuccess;
   double? distanceFromUser;
   double? distanceToTravelInMeter;
   late QuestType type;
@@ -32,7 +32,7 @@ class Quest {
     required this.name,
     required this.description,
     required this.type,
-    required this.afkCredits,
+    required this.credits,
     this.markerNotes,
     this.distanceMarkers,
     this.startMarker,
@@ -40,8 +40,8 @@ class Quest {
     required this.markers,
     required this.location,
     this.createdBy,
-    this.afkCreditsPerMarker,
-    this.bonusAfkCreditsOnSuccess,
+    this.creditsPerMarker,
+    this.bonusCreditsOnSuccess,
     this.distanceFromUser,
     this.distanceToTravelInMeter,
     this.networkImagePath,
@@ -59,10 +59,10 @@ class Quest {
     List<AFKMarker>? markers,
     double? distanceMarkers, // in meters
     List<MarkerNote>? markerNotes,
-    num? afkCredits,
+    num? credits,
     String? networkImagePath,
-    List<num>? afkCreditsPerMarker,
-    num? bonusAfkCreditsOnSuccess,
+    List<num>? creditsPerMarker,
+    num? bonusCreditsOnSuccess,
     double? distanceFromUser,
     double? distanceToTravelInMeter,
     QuestType? type,
@@ -79,11 +79,11 @@ class Quest {
         markers: markers ?? this.markers,
         distanceMarkers: distanceMarkers ?? this.distanceMarkers, // in meters
         markerNotes: markerNotes ?? this.markerNotes,
-        afkCredits: afkCredits ?? this.afkCredits,
+        credits: credits ?? this.credits,
         networkImagePath: networkImagePath ?? this.networkImagePath,
-        afkCreditsPerMarker: afkCreditsPerMarker ?? this.afkCreditsPerMarker,
-        bonusAfkCreditsOnSuccess:
-            bonusAfkCreditsOnSuccess ?? this.bonusAfkCreditsOnSuccess,
+        creditsPerMarker: creditsPerMarker ?? this.creditsPerMarker,
+        bonusCreditsOnSuccess:
+            bonusCreditsOnSuccess ?? this.bonusCreditsOnSuccess,
         distanceFromUser: distanceFromUser ?? this.distanceFromUser,
 
         distanceToTravelInMeter:
@@ -97,7 +97,7 @@ class Quest {
     description = json['description'];
     type = questTypeFromString(json['type']);
     createdBy = json['createdBy'];
-    afkCredits = json['afkCredits'];
+    credits = json['credits'];
     startMarker = AFKMarker.fromJson(json['startMarker']!);
     finishMarker = AFKMarker.fromJson(json['finishMarker']!);
     markers = List<dynamic>.from(json['markers'])
@@ -109,8 +109,8 @@ class Quest {
             .toList()
         : null;
     distanceMarkers = json['distanceMarkers'];
-    afkCreditsPerMarker = json['afkCreditsPerMarker'];
-    bonusAfkCreditsOnSuccess = json['bonusAfkCreditsOnSuccess'];
+    creditsPerMarker = json['creditsPerMarker'];
+    bonusCreditsOnSuccess = json['bonusCreditsOnSuccess'];
     distanceFromUser = json['distanceFromUser'];
     distanceToTravelInMeter = json['distanceToTravelInMeter'];
     networkImagePath = json['networkImagePath'];
@@ -128,16 +128,16 @@ class Quest {
     data['description'] = this.description;
     data['type'] = this.type.toSimpleString();
     data['createdBy'] = this.createdBy;
-    data['afkCredits'] = this.afkCredits;
+    data['credits'] = this.credits;
     data['markers'] = this.markers.map((e) => e.toJson()).toList();
     data['markerNotes'] = this.markerNotes != null
         ? this.markerNotes!.map((e) => e.toJson()).toList()
         : null;
     data['distanceMarkers'] = this.distanceMarkers;
-    data['afkCreditsPerMarker'] = this.afkCreditsPerMarker;
+    data['creditsPerMarker'] = this.creditsPerMarker;
     data['startMarker'] = this.startMarker!.toJson();
     data['finishMarker'] = this.finishMarker!.toJson();
-    data['bonusAfkCreditsOnSuccess'] = this.bonusAfkCreditsOnSuccess;
+    data['bonusCreditsOnSuccess'] = this.bonusCreditsOnSuccess;
     data['distanceFromUser'] = this.distanceFromUser;
     data['distanceToTravelInMeter'] = this.distanceToTravelInMeter;
     data['networkImagePath'] = this.networkImagePath;
@@ -166,14 +166,13 @@ class Quest {
             const DeepCollectionEquality().equals(other.markers, markers) &&
             const DeepCollectionEquality()
                 .equals(other.markerNotes, markerNotes) &&
-            const DeepCollectionEquality()
-                .equals(other.afkCredits, afkCredits) &&
+            const DeepCollectionEquality().equals(other.credits, credits) &&
             const DeepCollectionEquality()
                 .equals(other.networkImagePath, networkImagePath) &&
             const DeepCollectionEquality()
-                .equals(other.afkCreditsPerMarker, afkCreditsPerMarker) &&
-            const DeepCollectionEquality().equals(
-                other.bonusAfkCreditsOnSuccess, bonusAfkCreditsOnSuccess) &&
+                .equals(other.creditsPerMarker, creditsPerMarker) &&
+            const DeepCollectionEquality()
+                .equals(other.bonusCreditsOnSuccess, bonusCreditsOnSuccess) &&
             const DeepCollectionEquality()
                 .equals(other.distanceFromUser, distanceFromUser) &&
             const DeepCollectionEquality().equals(

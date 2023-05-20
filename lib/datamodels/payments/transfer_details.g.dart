@@ -30,5 +30,5 @@ Map<String, dynamic> _$$_TransferDetailsToJson(_$_TransferDetails instance) =>
 
 const _$MoneySourceEnumMap = {
   MoneySource.Bank: 'Bank',
-  MoneySource.AFKCredits: 'AFKCredits',
+  MoneySource.Credits: 'Credits',
 };

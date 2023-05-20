@@ -195,7 +195,7 @@ class ScreenTimeService {
     final currentSession = session.copyWith(
       status: ScreenTimeSessionStatus.completed,
       minutesUsed: session.minutes,
-      afkCreditsUsed: session.afkCredits,
+      creditsUsed: session.credits,
     );
 
     // this will make the UI react to the finish event cause now the status is complete!
@@ -210,7 +210,7 @@ class ScreenTimeService {
 
     await _firestoreApi.updateStatsAfterScreenTimeFinished(
       session: currentSession,
-      deltaCredits: -currentSession.afkCredits,
+      deltaCredits: -currentSession.credits,
       deltaScreenTime: currentSession.minutes,
     );
 
@@ -231,16 +231,16 @@ class ScreenTimeService {
       int minutesUsed = getScreenTimeDurationInMinutes(session: session);
       int secondsUsed = getScreenTimeDurationInSeconds(session: session);
       double fraction = secondsUsed / (session.minutes * 60);
-      num afkCreditsUsed = (fraction * session.afkCredits).round();
+      num creditsUsed = (fraction * session.credits).round();
       session = session.copyWith(
         status: ScreenTimeSessionStatus.cancelled,
-        afkCreditsUsed: afkCreditsUsed,
+        creditsUsed: creditsUsed,
         minutesUsed: minutesUsed,
       );
       screenTimeActiveSubject[session.uid]?.add(session);
       await _firestoreApi.updateStatsAfterScreenTimeFinished(
         session: session,
-        deltaCredits: -afkCreditsUsed,
+        deltaCredits: -creditsUsed,
         deltaScreenTime: minutesUsed,
       );
       returnVal = true;

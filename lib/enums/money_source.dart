@@ -1,2 +1,2 @@
 /* legacy */
-enum MoneySource { Bank, AFKCredits }
+enum MoneySource { Bank, Credits }

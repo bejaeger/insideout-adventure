@@ -189,7 +189,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                         showScreenTimeIcon: true),
                                     SimpleStatisticsDisplay(
                                       statistic: model
-                                          .expiredScreenTime!.afkCreditsUsed
+                                          .expiredScreenTime!.creditsUsed
                                           .toString()
                                           .split(".")
                                           .first,

@@ -126,7 +126,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       //  - notification in ward account
       //  - history visible for guardian and ward
       //  - option to add description to transfer for guardian
-      final res = await _firestoreApi.changeAfkCreditsBalanceCheat(
+      final res = await _firestoreApi.changeCreditsBalanceCheat(
           uid: data.transferDetails.recipientId,
           deltaCredits: data.transferDetails.amount);
       if (res is String) {
@@ -232,8 +232,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     if (amountValue != null && amountValue != "") {
       if (isValidData(true)) {
         num tmpamount = int.parse(amountValue!);
-        screenTimeEquivalent =
-            HerculesWorldCreditSystem.creditsToScreenTime(tmpamount);
+        screenTimeEquivalent = CreditsSystem.creditsToScreenTime(tmpamount);
       }
     }
     await Future.delayed(Duration(milliseconds: 2000));

@@ -69,7 +69,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                               height: 24, color: kcPrimaryColor),
                           SizedBox(width: 6.0),
                           InsideOutText.headingThree(
-                            quest.afkCredits.toStringAsFixed(0),
+                            quest.credits.toStringAsFixed(0),
                           ),
                           horizontalSpaceSmall,
                           InsideOutText.headingFour("-"),

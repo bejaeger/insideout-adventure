@@ -79,12 +79,10 @@ class OnBoardingScreensView extends StatelessWidget {
                   child: InsideOutText.headingTwo("Our Concept"),
                 ),
                 //body:
-                //  "Children can earn Hercules Credits through outdoor activities and can redeem these credits to unlock screen time.",
+                //  "Children can earn Credits through outdoor activities and can redeem these credits to unlock screen time.",
                 bodyWidget: OnboardingBodyWidget(
-                  text1:
-                      "Children can earn Hercules Credits through outdoor activities",
-                  text2:
-                      "Children can redeem Hercules Credits to activate screen time",
+                  text1: "Children can earn Credits through outdoor activities",
+                  text2: "Children can redeem Credits to activate screen time",
                   text3: "Parents can monitor and relax",
                   icon1: OnboardingActivityConversionIcon(),
                   icon2: OnboardingScreenTimeConversionIcon(),
@@ -111,11 +109,11 @@ class OnBoardingScreensView extends StatelessWidget {
                 bodyWidget: OnboardingBodyWidget(
                   icon1: OnboardingActivityConversionIcon(),
                   text1:
-                      "Your child can earn Hercules Credits through gps-based outdoor games",
+                      "Your child can earn Credits through gps-based outdoor games",
                   text2:
                       "You as a parent can create these games in your preferred locations",
                 ),
-                // "Your child can earn Hercules Credits through gps-based outdoor games. You are also able to create these games in your preferred locations or manually add credits to the child’s account.",
+                // "Your child can earn Credits through gps-based outdoor games. You are also able to create these games in your preferred locations or manually add credits to the child’s account.",
                 image: _buildImage(kIllustrationActivity, 250),
                 decoration: pageDecoration,
                 //reverse: true,
@@ -129,7 +127,7 @@ class OnBoardingScreensView extends StatelessWidget {
                   text2:
                       "If you went for a Sunday walk together and forgot to use this app, you can give credits afterwards",
                 ),
-                //  "Your child can spend Hercules Credits for screen time, may it be for streaming, gaming, or anything else your child enjoys. We will start a timer and notify you when the screen time is over.",
+                //  "Your child can spend Credits for screen time, may it be for streaming, gaming, or anything else your child enjoys. We will start a timer and notify you when the screen time is over.",
                 image: _buildImage(kIllustrationActivity, 250),
                 decoration: pageDecoration,
               ),

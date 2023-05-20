@@ -53,7 +53,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   bool isLoading = false;
   bool result = false;
   QuestType selectedQuestType = QuestType.TreasureLocationSearch;
-  String? afkCreditsInputValidationMessage;
+  String? creditsInputValidationMessage;
   String? nameInputValidationMessage;
   String? questTypeInputValidationMessage;
   String? afkMarkersInputValidationMessage;
@@ -76,8 +76,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     if (afkCreditAmountValue != null && afkCreditAmountValue != "") {
       if (isValidUserInputs(credits: true)) {
         num tmpamount = int.parse(afkCreditAmountValue!);
-        screenTimeEquivalent =
-            HerculesWorldCreditSystem.creditsToScreenTime(tmpamount);
+        screenTimeEquivalent = CreditsSystem.creditsToScreenTime(tmpamount);
       }
     }
     if (nameValue?.isEmpty ?? true) {
@@ -164,16 +163,16 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     resetValidationMessages();
     bool isValid = true;
     if (credits && afkCreditAmountValue == null) {
-      afkCreditsInputValidationMessage = 'Choose AFK Credits amount';
+      creditsInputValidationMessage = 'Choose Credits amount';
       isValid = false;
     }
-    // also check type of afkCredits input
+    // also check type of credits input
     if (credits) {
       try {
         num tmpValue = num.parse(afkCreditAmountValue.toString());
       } catch (e) {
         if (e is FormatException) {
-          afkCreditsInputValidationMessage = "Please provide a numerical value";
+          creditsInputValidationMessage = "Please provide a numerical value";
           isValid = false;
         } else {
           rethrow;
@@ -261,7 +260,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
         repeatable:
             selectedQuestType == QuestType.TreasureLocationSearch ? 0 : 1,
         markers: getAFKMarkers,
-        afkCredits: afkCreditAmount,
+        credits: afkCreditAmount,
         distanceMarkers: getTotalDistanceOfMarkers(),
       ),
     );
@@ -377,8 +376,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       actualDistanceMarkers = distanceMarkers;
     }
     return (actualDistanceMarkers *
-            HerculesWorldCreditSystem
-                .kDistanceInMeterToActivityMinuteConversion)
+            CreditsSystem.kDistanceInMeterToActivityMinuteConversion)
         .round();
   }
 
@@ -389,8 +387,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     } else {
       actualDuration = durationQuestInMinutes;
     }
-    return (actualDuration *
-            HerculesWorldCreditSystem.kMinuteActivityToCreditsConversion)
+    return (actualDuration * CreditsSystem.kMinuteActivityToCreditsConversion)
         .round();
   }
 
@@ -403,7 +400,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     final response = await _dialogService.showDialog(
         title: "Recommendation",
         description:
-            "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${HerculesWorldCreditSystem.creditsToScreenTime(recommendedCredits)} min screen time.",
+            "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${CreditsSystem.creditsToScreenTime(recommendedCredits)} min screen time.",
         cancelTitle: "Learn more",
         cancelTitleColor: kcOrange);
     if (response?.confirmed == false) {
@@ -415,7 +412,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   }
 
   void resetValidationMessages() {
-    afkCreditsInputValidationMessage = null;
+    creditsInputValidationMessage = null;
     nameInputValidationMessage = null;
     questTypeInputValidationMessage = null;
     afkMarkersInputValidationMessage = null;
