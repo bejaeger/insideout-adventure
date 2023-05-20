@@ -5,11 +5,11 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 
-class ExplorerSettingsForParentDialogViewModel extends BaseModel {
+class ExplorerSettingsForGuardianDialogViewModel extends BaseModel {
   final String explorerUid;
   late bool isAcceptScreenTimeFirstTmp;
   late bool isUsingOwnPhoneTmp;
-  ExplorerSettingsForParentDialogViewModel({required this.explorerUid}) {
+  ExplorerSettingsForGuardianDialogViewModel({required this.explorerUid}) {
     // use local variables here so UI state is immediately updated.
     isAcceptScreenTimeFirstTmp = isAcceptScreenTimeFirst;
     isUsingOwnPhoneTmp = isUsingOwnPhone;

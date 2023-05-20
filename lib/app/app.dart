@@ -31,14 +31,14 @@ import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart';
+import 'package:afkcredits/ui/views/guardian_home/guardian_home_view.dart';
+import 'package:afkcredits/ui/views/guardian_home/guardian_home_viewmodel.dart';
+import 'package:afkcredits/ui/views/guardian_map/guardian_map_view.dart';
 import 'package:afkcredits/ui/views/help_desk/hep_desk_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart';
-import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart';
-import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
-import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart';
 import 'package:afkcredits/ui/views/permissions/permissions_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart';
@@ -57,7 +57,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
 
 @StackedApp(
   routes: [
-    MaterialRoute(page: ParentHomeView),
+    MaterialRoute(page: GuardianHomeView),
     MaterialRoute(page: ExplorerHomeView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: CreateAccountView),
@@ -75,7 +75,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: ActiveScreenTimeView),
     MaterialRoute(page: SelectScreenTimeView),
     MaterialRoute(page: OnBoardingScreensView),
-    MaterialRoute(page: ParentMapView),
+    MaterialRoute(page: GuardianMapView),
     MaterialRoute(page: FeedbackView),
     MaterialRoute(page: PermissionsView),
     MaterialRoute(page: StartScreenTimeCounterView),
@@ -111,7 +111,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: ScreenTimeService),
     LazySingleton(classType: PermissionService),
     LazySingleton(classType: NotificationsService),
-    LazySingleton(classType: ParentHomeViewModel),
+    LazySingleton(classType: GuardianHomeViewModel),
     LazySingleton(classType: ExplorerHomeViewModel),
     LazySingleton(classType: LocalStorageService),
     Presolve(classType: MapViewModel, presolveUsing: presolveMapViewModel),

@@ -14,5 +14,5 @@ enum DialogType {
   NumberQuests,
   AvatarSelectDialog,
   ExplorerSettings,
-  ExplorerSettingsForParent,
+  ExplorerSettingsForGuardian,
 }

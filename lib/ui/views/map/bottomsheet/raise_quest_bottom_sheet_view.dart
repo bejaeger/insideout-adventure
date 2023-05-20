@@ -54,11 +54,11 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           QuestTypeTag(quest: model.quest),
-                          if (model.isParentAccount)
+                          if (model.isGuardianAccount)
                             model.quest.createdBy == null
                                 ? InsideOutText.body("Public")
                                 : InsideOutText.body(
-                                    "Created ${model.isParentAccount ? "by" : "for"} you"),
+                                    "Created ${model.isGuardianAccount ? "by" : "for"} you"),
                         ],
                       ),
                       verticalSpaceSmall,
@@ -136,20 +136,20 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             if (quest.createdBy != null ||
-                                !model.isParentAccount)
+                                !model.isGuardianAccount)
                               InsideOutButton.text(
-                                leading: model.isParentAccount
+                                leading: model.isGuardianAccount
                                     ? null
                                     : Icon(Icons.close, color: kcPrimaryColor),
                                 title: request.secondaryButtonTitle.toString(),
                                 onTap: quest.createdBy == null &&
-                                        model.isParentAccount
+                                        model.isGuardianAccount
                                     ? null
                                     : () => completer(
                                           SheetResponse(confirmed: false),
                                         ),
                               ),
-                            if (model.isParentAccount &&
+                            if (model.isGuardianAccount &&
                                 quest.createdBy == null)
                               InsideOutText.caption(
                                   "Can't delete quest because this is a public quest",
@@ -164,15 +164,15 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               InsideOutButton(
-                                //disabled: model.isParentAccount,
-                                leading: model.isParentAccount
+                                //disabled: model.isGuardianAccount,
+                                leading: model.isGuardianAccount
                                     ? null
                                     : Icon(Icons.play_arrow_rounded,
                                         color: Colors.white),
                                 title: request.mainButtonTitle.toString(),
                                 onTap:
-                                    // model.isParentAccount
-                                    //     ? model.showNotImplementedInParentAccount
+                                    // model.isGuardianAccount
+                                    //     ? model.showNotImplementedInGuardianAccount
                                     //     :
                                     model.hasEnoughGuardianship(
                                             quest: model.quest)
@@ -180,9 +180,9 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                                             SheetResponse(confirmed: true))
                                         : null,
                               ),
-                              // if (model.isParentAccount)
+                              // if (model.isGuardianAccount)
                               //   InsideOutText.caption(
-                              //       "Not supported in parent account yet",
+                              //       "Not supported in guardian account yet",
                               //       align: TextAlign.center),
                             ],
                           ),

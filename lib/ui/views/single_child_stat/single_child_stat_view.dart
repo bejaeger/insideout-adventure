@@ -38,7 +38,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
             dropDownButton: CustomDropDownMenu(
               icon1: Icon(Icons.delete_outline_rounded,
                   color: kcMediumGrey, size: 22),
-              onTap1: model.removeChildFromParentAccount,
+              onTap1: model.removeChildFromGuardianAccount,
               text1: 'Remove child',
               icon2: Icon(Icons.settings, color: kcMediumGrey, size: 22),
               onTap2: model.showExplorerSettingsDialogDialog,

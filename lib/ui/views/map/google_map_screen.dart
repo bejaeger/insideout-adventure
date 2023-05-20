@@ -32,7 +32,7 @@ class GoogleMapScreen extends StatelessWidget {
           children: [
             // This container is used to push the center of the map
             // a bit further down on the screen (similar to Pokemon Go)
-            if (!model.isParentAccount)
+            if (!model.isGuardianAccount)
               AnimatedContainer(
                 // this decides on whether the avatar is on top of the blue button or not
                 // TODO: TEST for different device sizes!
@@ -51,26 +51,26 @@ class GoogleMapScreen extends StatelessWidget {
                     : null,
                 initialCameraPosition: GoogleMapService.initialCameraPosition(
                   userLocation: model.userLocation,
-                  parentAccount: model.isParentAccount,
+                  guardianAccount: model.isGuardianAccount,
                 ),
                 markers: GoogleMapService.markersOnMap,
                 circles: GoogleMapService.circlesOnMap,
                 //callback that’s called when the map is ready to use.
                 onMapCreated: (GoogleMapController controller) {
-                  if (!model.isParentAccount) {
+                  if (!model.isGuardianAccount) {
                     controller.setMapStyle(model.mapStyle);
                   }
                   GoogleMapService.setMapController(controller);
                 },
                 zoomGesturesEnabled: true,
                 myLocationEnabled: true,
-                zoomControlsEnabled: model.isParentAccount ? true : false,
-                tiltGesturesEnabled: model.isParentAccount ? true : false,
+                zoomControlsEnabled: model.isGuardianAccount ? true : false,
+                tiltGesturesEnabled: model.isGuardianAccount ? true : false,
                 myLocationButtonEnabled:
-                    false, //model.isParentAccount ? true : false,
+                    false, //model.isGuardianAccount ? true : false,
                 mapToolbarEnabled: false,
                 buildingsEnabled: false,
-                compassEnabled: model.isParentAccount ? true : false,
+                compassEnabled: model.isGuardianAccount ? true : false,
                 onCameraMove: (position) {
                   // only sets state. values are not listened to.
                   // just to be able to go back to previous camera settings
@@ -78,7 +78,7 @@ class GoogleMapScreen extends StatelessWidget {
                   model.changeCameraZoom(position.zoom);
                   model.changeCameraLatLon(
                       position.target.latitude, position.target.longitude);
-                  if ((!model.isAvatarView || model.isParentAccount) &&
+                  if ((!model.isAvatarView || model.isGuardianAccount) &&
                       (!model.hasActiveQuest)) {
                     model.checkForNewQuests(callback: callback);
                   }

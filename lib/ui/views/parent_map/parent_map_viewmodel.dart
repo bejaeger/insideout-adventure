@@ -8,7 +8,7 @@ import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class ParentMapViewModel extends QuestViewModel {
+class GuardianMapViewModel extends QuestViewModel {
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
   bool get showReloadQuestButton => questService.showReloadQuestButton;
@@ -19,7 +19,7 @@ class ParentMapViewModel extends QuestViewModel {
   void initialize() async {
     setBusy(true);
     mapViewModel.resetAllMapMarkersAndAreas();
-    mapStateService.setCameraToDefaultParentPosition();
+    mapStateService.setCameraToDefaultGuardianPosition();
     await getLocation(forceAwait: true, forceGettingNewPosition: false);
     setBusy(false);
     await initializeQuests(force: true);
@@ -86,9 +86,9 @@ class ParentMapViewModel extends QuestViewModel {
             quest: _q,
             afkmarker: _m,
             isStartMarker: _m == _q.startMarker,
-            onMarkerTapCustom: () => onMarkerTapParent(quest: _q, marker: _m),
+            onMarkerTapCustom: () => onMarkerTapGuardian(quest: _q, marker: _m),
             completed: false,
-            isParentAccount: true,
+            isGuardianAccount: true,
           );
         }
       }
@@ -109,7 +109,7 @@ class ParentMapViewModel extends QuestViewModel {
     }
   }
 
-  Future onMarkerTapParent(
+  Future onMarkerTapGuardian(
       {required Quest quest, required AFKMarker marker}) async {
     // marker info window shows automatically (google maps feature). hide it when not in avatar view
     mapViewModel.hideMarkerInfoWindowNow(markerId: marker.id);
@@ -133,7 +133,7 @@ class ParentMapViewModel extends QuestViewModel {
         addStartMarkers();
         notifyListeners();
       } else {
-        await onMarkerTapParent(quest: quest, marker: marker);
+        await onMarkerTapGuardian(quest: quest, marker: marker);
       }
     }
 
@@ -169,7 +169,7 @@ class ParentMapViewModel extends QuestViewModel {
   }
 
   // when quest details are shown we need to remove them again
-  // (for parent account this is simple. Corresponding function for explorer account is in
+  // (for guardian account this is simple. Corresponding function for explorer account is in
   // active_quest_base_viewmodel.dart)
   void popQuestDetails() async {
     mapStateService.restorePreviousCameraPosition();

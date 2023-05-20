@@ -63,11 +63,11 @@ mixin NavigationMixin {
             screenTimeSession: screenTimeSession));
   }
 
-  Future replaceWithParentHomeView(
+  Future replaceWithGuardianHomeView(
       {ScreenTimeSession? screenTimeSession}) async {
-    await _navigationService.replaceWith(Routes.parentHomeView,
+    await _navigationService.replaceWith(Routes.guardianHomeView,
         arguments:
-            ParentHomeViewArguments(screenTimeSession: screenTimeSession));
+            GuardianHomeViewArguments(screenTimeSession: screenTimeSession));
   }
 
   void popView() {
@@ -82,8 +82,8 @@ mixin NavigationMixin {
     _navigationService.back(result: result);
   }
 
-  void navToParentMapView() {
-    _navigationService.navigateTo(Routes.parentMapView);
+  void navToGuardianMapView() {
+    _navigationService.navigateTo(Routes.guardianMapView);
   }
 
   void navToCreateQuest({bool fromMap = false}) {
@@ -92,7 +92,7 @@ mixin NavigationMixin {
   }
 
   Future popUntilMapView() async {
-    await _navigationService.clearTillFirstAndShow(Routes.parentMapView);
+    await _navigationService.clearTillFirstAndShow(Routes.guardianMapView);
   }
 
   void navBackToPreviousView() {
@@ -164,7 +164,7 @@ mixin NavigationMixin {
   }
 
   Future navToSelectScreenTimeView(
-      {String? childId, bool isParentAccount = true}) async {
+      {String? childId, bool isGuardianAccount = true}) async {
     final session =
         _screenTimeService.getActiveScreenTimeInMemory(uid: childId);
     if (session != null) {
@@ -172,7 +172,7 @@ mixin NavigationMixin {
     } else {
       await _navigationService.navigateTo(Routes.selectScreenTimeView,
           arguments: SelectScreenTimeViewArguments(
-              childId: isParentAccount ? childId : null));
+              childId: isGuardianAccount ? childId : null));
     }
   }
 

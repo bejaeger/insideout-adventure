@@ -54,7 +54,7 @@ class ARObjectViewModel extends BaseModel with MapStateControlMixin {
 
   @override
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? notifyParentCallback}) {
+      {required Quest? quest, void Function()? notifyGuardianCallback}) {
     // TODO: implement maybeStartQuest
     throw UnimplementedError();
   }

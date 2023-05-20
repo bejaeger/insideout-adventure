@@ -5,7 +5,7 @@ import 'package:afkcredits/ui/views/explorer_home/explorer_home_viewmodel.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/main_footer_overlay_view.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/main_header_overlay.dart';
 import 'package:afkcredits/ui/views/explorer_home/overlays/quest_details_overlay_view.dart';
-import 'package:afkcredits/ui/views/explorer_home/overlays/switch_to_parent_overlay.dart';
+import 'package:afkcredits/ui/views/explorer_home/overlays/switch_to_guardian_overlay.dart';
 import 'package:afkcredits/ui/views/map/main_map_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
@@ -81,7 +81,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
 
                   if (model.currentUserNullable?.createdByUserWithId != null &&
                       model.userService.guardianReference != null)
-                    SwitchToParentAreaButton(
+                    SwitchToGuardianAreaButton(
                       onTap: () async =>
                           await model.handleSwitchToGuardianEvent(),
                       show: showMainWidgets,

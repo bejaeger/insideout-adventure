@@ -31,7 +31,7 @@ class FirestoreApi {
   Geoflutterfire geo = Geoflutterfire();
   Stream<dynamic>? query;
   StreamSubscription? publicQuestsStreamSubscription;
-  Map<String, StreamSubscription?> parentQuestsStreamSubscriptions = {};
+  Map<String, StreamSubscription?> guardianQuestsStreamSubscriptions = {};
 
   Future<void> createUser(
       {required User user, required UserStatistics stats}) async {
@@ -374,7 +374,7 @@ class FirestoreApi {
     try {
       final center = geo.point(latitude: lat, longitude: lon);
 
-      // only returns quests NOT created by a standard parent
+      // only returns quests NOT created by a standard guardian
       // ? we can't query for ONLY quests that are NOT done by users, unfortunately.
       final questsRef = questsCollection.where("createdBy", isNull: true);
       Stream<List<DocumentSnapshot>> publicQuestsStream = geo
@@ -414,26 +414,26 @@ class FirestoreApi {
 
       if (guardianIds.length == 0) {
         log.i(
-            "No parent associated to child, not looking for custom created quests");
+            "No guardian associated to child, not looking for custom created quests");
         if (!completer2.isCompleted) {
           completer2.complete();
         }
       }
       int counter = 0;
       for (String id in guardianIds) {
-        log.v("checking for quests from parent with id $id");
+        log.v("checking for quests from guardian with id $id");
         counter = counter + 1;
         final qref = questsCollection.where("createdBy", isEqualTo: id);
-        Stream<List<DocumentSnapshot>> parentQuestsStream = geo
+        Stream<List<DocumentSnapshot>> guardianQuestsStream = geo
             .collection(collectionRef: qref)
             .within(
                 center: center,
                 radius: radius,
                 field: kQuestGeoPointPropertyName,
                 strictMode: true);
-        parentQuestsStreamSubscriptions[id]?.cancel();
-        parentQuestsStreamSubscriptions[id] = null;
-        parentQuestsStreamSubscriptions[id] = parentQuestsStream.listen(
+        guardianQuestsStreamSubscriptions[id]?.cancel();
+        guardianQuestsStreamSubscriptions[id] = null;
+        guardianQuestsStreamSubscriptions[id] = guardianQuestsStream.listen(
           (List<DocumentSnapshot> docList) {
             if (docList.isNotEmpty) {
               try {
@@ -451,7 +451,7 @@ class FirestoreApi {
               }
             } else {
               log.w(
-                  'There is no \'quests\' collection from parent on firestore');
+                  'There is no \'quests\' collection from guardian on firestore');
             }
             if (counter == guardianIds.length) {
               if (!completer2.isCompleted) {

@@ -11,9 +11,9 @@ import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/services/feedback_service/feedback_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
-class ParentHomeViewModel extends BaseModel {
+class GuardianHomeViewModel extends BaseModel {
   final FeedbackService _feedbackService = locator<FeedbackService>();
-  final log = getLogger("ParentHomeViewModel");
+  final log = getLogger("GuardianHomeViewModel");
 
   List<User> get supportedExplorers => userService.supportedExplorersList;
   Map<String, UserStatistics> get childStats =>
@@ -83,8 +83,8 @@ class ParentHomeViewModel extends BaseModel {
       notifyListeners();
     } else {
       // don't need to await for it
-      // This is a little hacky! This awaits for the previous parent_home_viewmodel.dart to be disposed!
-      // So that new parent_home_viewmodel.dart can listen to it again
+      // This is a little hacky! This awaits for the previous guardian_home_viewmodel.dart to be disposed!
+      // So that new guardian_home_viewmodel.dart can listen to it again
       // Alternative might be to have a viewmodel that does not dispose at all and is a singleton!
       // await Future.delayed(Duration(milliseconds: 500));
       // For now, we go with the singleton. Seems to perform stable!
@@ -170,6 +170,6 @@ class ParentHomeViewModel extends BaseModel {
   @override
   void dispose() {
     super.dispose();
-    log.wtf("Disposed parent_home_viewmodel.dart");
+    log.wtf("Disposed guardian_home_viewmodel.dart");
   }
 }

@@ -30,8 +30,8 @@ const String kIllustrationActivity =
 const String kIllustrationAnnaHercules =
     "assets/illustrations/anna_hercules_world.png";
 const String kIllustrationInfographic = "assets/illustrations/infographic.png";
-const String kIllustrationParentMeditate =
-    "assets/illustrations/parent_meditate.png";
+const String kIllustrationGuardianMeditate =
+    "assets/illustrations/guardian_meditate.png";
 const String kIllustrationScreenTime = "assets/illustrations/screen_time.png";
 const String kIllustrationWalletEarning =
     "assets/illustrations/wallet_earning.png";

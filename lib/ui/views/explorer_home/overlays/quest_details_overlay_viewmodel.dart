@@ -25,7 +25,7 @@ class QuestDetailsOverlayViewModel extends ActiveQuestBaseViewModel {
 
   @override
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? notifyParentCallback}) async {
+      {required Quest? quest, void Function()? notifyGuardianCallback}) async {
     // TODO: implement maybeStartQuest
     throw UnimplementedError();
   }

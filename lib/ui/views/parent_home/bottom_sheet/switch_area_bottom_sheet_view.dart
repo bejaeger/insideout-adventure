@@ -1,4 +1,4 @@
-import 'package:afkcredits/ui/views/parent_home/bottom_sheet/switch_area_bottom_sheet_viewmodel.dart';
+import 'package:afkcredits/ui/views/guardian_home/bottom_sheet/switch_area_bottom_sheet_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';

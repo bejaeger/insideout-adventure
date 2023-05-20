@@ -200,7 +200,7 @@ class UserService {
               stringPw: stringPw,
               role: role);
         } else {
-          // user is created by parent
+          // user is created by guardian
           if (user.password == null) {
             // something really bad happened
             log.wtf(
@@ -994,7 +994,7 @@ class UserService {
     );
   }
 
-  // USED to make settings from parent account to user account
+  // USED to make settings from guardian account to user account
   bool get isAcceptScreenTimeFirst =>
       currentUserSettings.isAcceptScreenTimeFirst;
   Future setIsAcceptScreenTimeFirst(
@@ -1004,7 +1004,7 @@ class UserService {
         uid: uid, key: "isAcceptScreenTimeFirst", value: value);
   }
 
-  // USED to make settings from parent account to user account
+  // USED to make settings from guardian account to user account
   bool get isUsingOwnPhone => currentUserSettings.ownPhone;
   Future setIsUsingOwnPhone({required String uid, required bool value}) async {
     // This is a bit critical: Check UserSettings class if the key is correct

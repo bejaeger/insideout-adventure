@@ -223,15 +223,15 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       case QuestType.DistanceEstimate:
         return kDistanceEstimateDescription;
       case QuestType.TreasureLocationSearch:
-        return kLocationSearchDescriptionParent;
+        return kLocationSearchDescriptionGuardian;
       case QuestType.QRCodeHunt:
-        return kGPSAreaHikeDescriptionParent;
+        return kGPSAreaHikeDescriptionGuardian;
       case QuestType.QRCodeHike:
         return kGPSAreaHikeDescription;
       case QuestType.GPSAreaHike:
-        return kGPSAreaHikeDescriptionParent;
+        return kGPSAreaHikeDescriptionGuardian;
       case QuestType.GPSAreaHunt:
-        return kGPSAreaHikeDescriptionParent;
+        return kGPSAreaHikeDescriptionGuardian;
       default:
         return kGPSAreaHikeDescription;
     }
@@ -322,7 +322,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       );
       await Future.delayed(Duration(milliseconds: 2000));
       setBusy(false);
-      replaceWithParentHomeView();
+      replaceWithGuardianHomeView();
       disposeController();
     }
     return result;

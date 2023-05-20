@@ -94,7 +94,7 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     notifyListeners();
   }
 
-  void showNotImplementedInParentAccount() {
+  void showNotImplementedInGuardianAccount() {
     dialogService.showDialog(
       title: "Not supported yet",
       description: "Go to child account to do the quest",

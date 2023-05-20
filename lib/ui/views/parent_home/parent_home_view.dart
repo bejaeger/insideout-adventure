@@ -2,8 +2,8 @@ import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/ui/views/parent_drawer_view/parent_drawer_view.dart';
-import 'package:afkcredits/ui/views/parent_home/parent_home_viewmodel.dart';
+import 'package:afkcredits/ui/views/guardian_drawer_view/guardian_drawer_view.dart';
+import 'package:afkcredits/ui/views/guardian_home/guardian_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/child_stats_card.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
@@ -14,15 +14,15 @@ import 'package:flutter/scheduler.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
-class ParentHomeView extends StatelessWidget {
+class GuardianHomeView extends StatelessWidget {
   final ScreenTimeSession? screenTimeSession;
-  const ParentHomeView({Key? key, this.screenTimeSession}) : super(key: key);
+  const GuardianHomeView({Key? key, this.screenTimeSession}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ParentHomeViewModel>.reactive(
+    return ViewModelBuilder<GuardianHomeViewModel>.reactive(
         // this a singleton because we listen to screen time changes from here!
-        viewModelBuilder: () => locator<ParentHomeViewModel>(),
+        viewModelBuilder: () => locator<GuardianHomeViewModel>(),
         disposeViewModel: false,
         onModelReady: (model) async {
           if (model.currentUser.newUser && screenTimeSession == null) {
@@ -52,7 +52,7 @@ class ParentHomeView extends StatelessWidget {
                   screenTimes: model.childScreenTimeSessionsActive,
                   hasUserGivenFeedback: model.userHasGivenFeedback,
                 ),
-                endDrawer: const ParentDrawerView(),
+                endDrawer: const GuardianDrawerView(),
                 floatingActionButton: model.navigatingToActiveScreenTimeView
                     ? null
                     : AFKFloatingActionButton(
@@ -134,7 +134,7 @@ class ParentHomeView extends StatelessWidget {
                                       title: "Map",
                                       leading: Icon(Icons.map,
                                           color: kcPrimaryColor),
-                                      onTap: model.navToParentMapView,
+                                      onTap: model.navToGuardianMapView,
                                       height: 50,
                                     ),
                                   ),
@@ -174,7 +174,7 @@ class ParentHomeView extends StatelessWidget {
 }
 
 class ChildrenStatsList extends StatelessWidget {
-  final ParentHomeViewModel viewModel;
+  final GuardianHomeViewModel viewModel;
 
   const ChildrenStatsList({
     Key? key,

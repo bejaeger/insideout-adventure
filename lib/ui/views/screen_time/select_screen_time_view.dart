@@ -8,7 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class SelectScreenTimeView extends StatelessWidget {
-  // childId needs to be provided when accessing this view from the parent account
+  // childId needs to be provided when accessing this view from the guardian account
   final String? childId;
   const SelectScreenTimeView({Key? key, this.childId}) : super(key: key);
 
@@ -18,7 +18,7 @@ class SelectScreenTimeView extends StatelessWidget {
       viewModelBuilder: () => SelectScreenTimeViewModel(childId: childId),
       builder: (context, model, child) {
         return MainPage(
-          showBackButton: !model.isParentAccount,
+          showBackButton: !model.isGuardianAccount,
           resizeToAvoidBottomInset: false,
           child: Container(
             child: Padding(
@@ -26,7 +26,7 @@ class SelectScreenTimeView extends StatelessWidget {
                 left: 20,
                 right: 20,
                 top: 40,
-                bottom: model.isParentAccount ? 20 : kBottomBackButtonPadding,
+                bottom: model.isGuardianAccount ? 20 : kBottomBackButtonPadding,
               ),
               child: Container(
                 height: 1000 + screenHeight(context, percentage: 0.15),
@@ -34,7 +34,7 @@ class SelectScreenTimeView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (model.isParentAccount)
+                    if (model.isGuardianAccount)
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Align(
@@ -50,7 +50,7 @@ class SelectScreenTimeView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InsideOutText.headingTwo(
-                            model.isParentAccount
+                            model.isGuardianAccount
                                 ? "Choose time for " +
                                     model.userService
                                         .explorerNameFromUid(childId!)
@@ -60,10 +60,10 @@ class SelectScreenTimeView extends StatelessWidget {
                     ),
                     verticalSpaceMedium,
                     Spacer(),
-                    if (model.isParentAccount)
+                    if (model.isGuardianAccount)
                       InsideOutText.body("Total available"),
-                    if (model.isParentAccount) verticalSpaceTiny,
-                    if (model.isParentAccount)
+                    if (model.isGuardianAccount) verticalSpaceTiny,
+                    if (model.isGuardianAccount)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -83,7 +83,7 @@ class SelectScreenTimeView extends StatelessWidget {
                                   " min"),
                         ],
                       ),
-                    if (!model.isParentAccount)
+                    if (!model.isGuardianAccount)
                       Lottie.asset(kLottieBigTv, height: 130),
                     Spacer(),
                     InsideOutText.body("Selected"),

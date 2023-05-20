@@ -48,7 +48,7 @@ class MainFooterOverlayView extends StatelessWidget {
                             color: kcScreenTimeBlue,
                             onTap: () => model.navToSelectScreenTimeView(
                                 childId: model.currentUser.uid,
-                                isParentAccount: false),
+                                isGuardianAccount: false),
                             height: 60,
                             boxShadow: isUsingScreenTime
                                 ? null

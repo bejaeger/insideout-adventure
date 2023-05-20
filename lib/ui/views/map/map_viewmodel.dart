@@ -58,7 +58,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   // TODO: This function is only called for the explorer!
   Future initializeMapAndMarkers() async {
-    if (!isParentAccount) {
+    if (!isGuardianAccount) {
       mapStyle = await rootBundle.loadString(kMapStylePath);
     }
     if (hasActiveQuest) return;
@@ -139,7 +139,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     setBusy(false);
     if (!kIsWeb && Platform.isIOS) {
       // Somehow this is needed for iOS.
-      // Otherwise map won't react at first when switching from parent
+      // Otherwise map won't react at first when switching from guardian
       // view to the explorer view.
       fakeAnimate();
       fakeAnimate();
@@ -336,7 +336,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     } else {
       log.i('Markers are Empty');
     }
-    if (!isParentAccount && appConfigProvider.isDevFlavor) {
+    if (!isGuardianAccount && appConfigProvider.isDevFlavor) {
       addARObjectToMap(
           onTap: onARObjectMarkerTap,
           lat: 49.27215968930406,
@@ -353,7 +353,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     bool isStartMarker = false,
     bool completed = false,
     String? infoWindowText,
-    bool isParentAccount = false,
+    bool isGuardianAccount = false,
   }) {
     configureAndAddMapMarker(
       quest: quest,
@@ -361,7 +361,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       completed: completed,
       isStartMarker: isStartMarker,
       infoWindowText: infoWindowText,
-      isParentAccount: isParentAccount,
+      isGuardianAccount: isGuardianAccount,
       onTap: onMarkerTapCustom != null
           ? () => onMarkerTapCustom()
           : () => onMarkerTap(
@@ -477,15 +477,15 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   void animateMapToQuestLocation({required Quest quest}) async {
-    if (isParentAccount) {
-      animateMapToQuestParentAccount(quest: quest);
+    if (isGuardianAccount) {
+      animateMapToQuestGuardianAccount(quest: quest);
     } else {
       animateMapToQuestChildAccount(quest: quest);
     }
   }
 
-  void animateMapToQuestParentAccount({required Quest quest}) async {
-    log.v("Animating map to quest markers in parent account");
+  void animateMapToQuestGuardianAccount({required Quest quest}) async {
+    log.v("Animating map to quest markers in guardian account");
     resetMapMarkers();
     addAllMarkersNumbered(quest: quest);
     animateCameraToBetweenQuestMarkers(quest: quest);
@@ -580,7 +580,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   void showMarkerInfoWindowNumbers({required Quest quest}) async {
     // Wait to first show markers on map after notifyListeners() has been
-    // called in the relevant viewmodel (e.g. parent_home_viewmodel)
+    // called in the relevant viewmodel (e.g. guardian_home_viewmodel)
     for (AFKMarker m in quest.markers) {
       showMarkerInfoWindow(markerId: m.id);
       await Future.delayed(Duration(milliseconds: 1000));
@@ -813,7 +813,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     bool isStartMarker,
     bool completed,
     String? infoWindowText,
-    bool isParentAccount,
+    bool isGuardianAccount,
   }) configureAndAddMapMarker;
   final void Function(
       {required Quest quest,

@@ -4,7 +4,7 @@ import 'package:afkcredits/ui/custom_dialogs/child_stat_card/child_total_stats_c
 import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_view.dart';
 import 'package:afkcredits/ui/custom_dialogs/credit_conversion_info_dialog.dart/credit_conversion_info_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/explorer_settings/explorer_settings_dialog_view.dart';
-import 'package:afkcredits/ui/custom_dialogs/explorer_settings_for_parent/explorer_settings_for_parent_view.dart';
+import 'package:afkcredits/ui/custom_dialogs/explorer_settings_for_guardian/explorer_settings_for_guardian_view.dart';
 import 'package:afkcredits/ui/custom_dialogs/found_treasure/found_treasure_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/in_area_alert/in_area_alert_dialog.dart';
 import 'package:afkcredits/ui/custom_dialogs/marker_collected/collected_marker_dialog.dart';
@@ -49,9 +49,10 @@ void setupDialogUi() {
         SelectAvatarDialogView(request: sheetRequest, completer: completer),
     DialogType.ExplorerSettings: (context, sheetRequest, completer) =>
         ExplorerSettingsDialogView(request: sheetRequest, completer: completer),
-    DialogType.ExplorerSettingsForParent: (context, sheetRequest, completer) =>
-        ExplorerSettingsForParentDialogView(
-            request: sheetRequest, completer: completer),
+    DialogType.ExplorerSettingsForGuardian:
+        (context, sheetRequest, completer) =>
+            ExplorerSettingsForGuardianDialogView(
+                request: sheetRequest, completer: completer),
   };
   dialogService.registerCustomDialogBuilders(builders);
 }

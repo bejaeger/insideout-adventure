@@ -149,7 +149,7 @@ class OnBoardingScreensView extends StatelessWidget {
                     title: "Start Now",
                   ),
                 ),
-                image: _buildImage(kIllustrationParentMeditate, 190),
+                image: _buildImage(kIllustrationGuardianMeditate, 190),
                 decoration: pageDecoration,
               ),
             ],

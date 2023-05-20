@@ -1,8 +1,8 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
+import 'package:afkcredits/ui/views/guardian_map/guardian_map_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/google_map_screen.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
-import 'package:afkcredits/ui/views/parent_map/parent_map_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
 import 'package:afkcredits/ui/widgets/common_quest_details_header.dart';
@@ -12,13 +12,13 @@ import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class ParentMapView extends StatelessWidget {
-  const ParentMapView({Key? key}) : super(key: key);
+class GuardianMapView extends StatelessWidget {
+  const GuardianMapView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ParentMapViewModel>.reactive(
-      viewModelBuilder: () => ParentMapViewModel(),
+    return ViewModelBuilder<GuardianMapViewModel>.reactive(
+      viewModelBuilder: () => GuardianMapViewModel(),
       onModelReady: (model) => model.initialize(),
       builder: (context, model, child) {
         return SafeArea(
@@ -56,7 +56,7 @@ class ParentMapView extends StatelessWidget {
                   if (model.selectedQuest != null)
                     CommonQuestDetailsHeader(
                       quest: model.selectedQuest,
-                      isParentAccount: model.isParentAccount,
+                      isGuardianAccount: model.isGuardianAccount,
                       showInstructionsDialog: model.showQuestInstructionDialog,
                     ),
                   if (model.isDeletingQuest || model.isBusy)

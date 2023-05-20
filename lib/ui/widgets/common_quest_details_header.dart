@@ -17,7 +17,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
   final Quest? quest;
   final ActivatedQuest? finishedQuest;
   final bool completed;
-  final bool isParentAccount;
+  final bool isGuardianAccount;
   const CommonQuestDetailsHeader({
     Key? key,
     required this.quest,
@@ -27,7 +27,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
     this.finishedQuest,
     this.completed = false,
     this.hasActiveQuestToBeStarted = false,
-    required this.isParentAccount,
+    required this.isGuardianAccount,
   }) : super(key: key);
 
   @override
@@ -139,7 +139,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                     verticalSpaceSmall,
                   if (quest != null &&
                       !completed &&
-                      !isParentAccount &&
+                      !isGuardianAccount &&
                       !hasActiveQuest &&
                       finishedQuest == null)
                     InfoContainer(
@@ -178,7 +178,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                     ),
                   if (quest != null &&
                       quest!.type == QuestType.TreasureLocationSearch &&
-                      isParentAccount)
+                      isGuardianAccount)
                     InfoContainer(
                         child: InsideOutText.body(
                             "Only the start marker is visible to children.")),

@@ -45,7 +45,7 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     return screenTimeService.getActiveScreenTimeInMemory(uid: uid);
   }
 
-  Future removeChildFromParentAccount() async {
+  Future removeChildFromGuardianAccount() async {
     if (explorer != null) {
       log.i("Remove user with id = ${explorer!.uid}");
       // ! Very peculiar. Without this we get an error of
@@ -125,7 +125,7 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     await Future.delayed(Duration(milliseconds: 10));
 
     await dialogService.showCustomDialog(
-      variant: DialogType.ExplorerSettingsForParent,
+      variant: DialogType.ExplorerSettingsForGuardian,
       barrierDismissible: true,
       data: {
         "name": explorer?.fullName,

@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
-class ParentDrawerView extends StatelessWidget {
-  const ParentDrawerView({Key? key}) : super(key: key);
+class GuardianDrawerView extends StatelessWidget {
+  const GuardianDrawerView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

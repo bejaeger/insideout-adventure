@@ -59,9 +59,9 @@ class SelectScreenTimeViewModel extends BaseModel {
       return;
     }
 
-    if (isParentAccount && childId == null) {
+    if (isGuardianAccount && childId == null) {
       log.wtf(
-          "childId cannot be null when accessing screen time from parent account!");
+          "childId cannot be null when accessing screen time from guardian account!");
       showGenericInternalErrorDialog();
       popView();
       return;
@@ -69,9 +69,9 @@ class SelectScreenTimeViewModel extends BaseModel {
 
     ScreenTimeSession session = ScreenTimeSession(
       sessionId: screenTimeService.getScreenTimeSessionDocId(),
-      uid: isParentAccount ? childId! : currentUser.uid,
+      uid: isGuardianAccount ? childId! : currentUser.uid,
       createdByUid: currentUser.uid,
-      userName: isParentAccount
+      userName: isGuardianAccount
           ? userService.explorerNameFromUid(childId!)
           : currentUser.fullName,
       minutes: useSuperUserFeatures ? 1 : screenTimePreset,
@@ -84,13 +84,13 @@ class SelectScreenTimeViewModel extends BaseModel {
           .toString()),
     );
 
-    if (isParentAccount ||
+    if (isGuardianAccount ||
         !userService.currentUserSettings.isAcceptScreenTimeFirst) {
       log.i("Navigating to start screen time session counter");
       navToScreenTimeCounterView(session: session);
     } else {
       session = session.copyWith(status: ScreenTimeSessionStatus.requested);
-      // if child starts screen time we first need confirmation from parent
+      // if child starts screen time we first need confirmation from guardian
       navToScreenTimeRequestedView(session: session);
     }
   }

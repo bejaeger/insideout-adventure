@@ -58,7 +58,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   User? get currentUserNullable => userService.currentUserNullable;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
-  bool get isParentAccount => currentUser.role == UserRole.guardian;
+  bool get isGuardianAccount => currentUser.role == UserRole.guardian;
   bool get isAdminMaster => userService.isAdminUser;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
@@ -219,9 +219,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   Future clearStackAndNavigateToHomeView(
       {bool showBewareDialog = false,
       bool showNumberQuestsDialog = false}) async {
-    if (isParentAccount || isAdminMaster) {
+    if (isGuardianAccount || isAdminMaster) {
       await navigationService.clearStackAndShow(
-        Routes.parentHomeView,
+        Routes.guardianHomeView,
       );
     } else {
       await navigationService.clearStackAndShow(
@@ -246,8 +246,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         await navigationService.navigateTo(Routes.permissionsView);
       }
     }
-    if (isParentAccount || isAdminMaster) {
-      await replaceWithParentHomeView(screenTimeSession: screenTimeSession);
+    if (isGuardianAccount || isAdminMaster) {
+      await replaceWithGuardianHomeView(screenTimeSession: screenTimeSession);
     } else {
       await replaceWithExplorerHomeView(
           showBewareDialog: showBewareDialog,
@@ -314,8 +314,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       title: quest.name,
       enterBottomSheetDuration: Duration(milliseconds: 300),
       description: quest.description,
-      mainButtonTitle: isParentAccount ? "Show markers" : "Play",
-      secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
+      mainButtonTitle: isGuardianAccount ? "Show markers" : "Play",
+      secondaryButtonTitle: isGuardianAccount ? "Delete quest" : "Close",
       data: {
         "quest": quest,
         "completed":

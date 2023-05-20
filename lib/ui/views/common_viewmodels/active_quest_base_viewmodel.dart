@@ -522,7 +522,7 @@ abstract class ActiveQuestBaseViewModel extends BaseModel
   }
 
   Future maybeStartQuest(
-      {required Quest? quest, void Function()? notifyParentCallback});
+      {required Quest? quest, void Function()? notifyGuardianCallback});
 
   Future vibrateAlert() async {
     await checkCanVibrate();

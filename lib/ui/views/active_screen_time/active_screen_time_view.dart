@@ -66,7 +66,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                     verticalSpaceSmall,
                                     Center(
                                       child: InsideOutText.headingTwo(
-                                          !model.isParentAccount
+                                          !model.isGuardianAccount
                                               ? "Woop woop, enjoy time on the screen!"
                                               : model.childName +
                                                   " is using screen time",
@@ -203,14 +203,14 @@ class ActiveScreenTimeView extends StatelessWidget {
                             ),
                     if (!showStats) Spacer(),
                     if (!showStats)
-                      model.isParentAccount
+                      model.isGuardianAccount
                           ? ScreenTimeNotificationsNote()
                           : Lottie.asset(
                               kLottieBigTv,
                               height: screenHeight(context, percentage: 0.25),
                             ),
                     Spacer(),
-                    if (showStats && model.isParentAccount)
+                    if (showStats && model.isGuardianAccount)
                       InsideOutButton.text(
                         title: "See ${model.childName}'s statistics",
                         onTap: () => model.replaceWithSingleChildView(
@@ -220,7 +220,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                     if (!model.currentUserSettings.ownPhone ||
                         model.currentScreenTimeSession?.status !=
                             ScreenTimeSessionStatus.active ||
-                        model.isParentAccount)
+                        model.isGuardianAccount)
                       Container(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: InsideOutButton(

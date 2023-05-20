@@ -5,7 +5,7 @@ part 'guardian_reference.freezed.dart';
 part 'guardian_reference.g.dart';
 
 ///
-/// Model that holds a reference to a guardian/parent
+/// Model that holds a reference to a guardian
 /// in the scenario where the explorer does not
 /// have his own phone.
 /// The guardian can switch to his account

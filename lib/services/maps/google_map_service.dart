@@ -122,14 +122,14 @@ class GoogleMapService {
 
   static CameraPosition initialCameraPosition({
     required Position? userLocation,
-    bool parentAccount = false,
+    bool guardianAccount = false,
   }) {
     if (userLocation != null) {
       return CameraPosition(
-        bearing: parentAccount ? 0 : kInitialBearing,
+        bearing: guardianAccount ? 0 : kInitialBearing,
         target: LatLng(userLocation.latitude, userLocation.longitude),
-        zoom: parentAccount ? kInitialZoomBirdsView : kInitialZoomAvatarView,
-        tilt: parentAccount ? 0 : kInitialTilt,
+        zoom: guardianAccount ? kInitialZoomBirdsView : kInitialZoomAvatarView,
+        tilt: guardianAccount ? 0 : kInitialTilt,
       );
     } else {
       print(
@@ -149,14 +149,14 @@ class GoogleMapService {
     bool isStartMarker = false,
     bool completed = false,
     String? infoWindowText,
-    bool isParentAccount = false,
+    bool isGuardianAccount = false,
   }) async {
     final icon = await defineMarkersColour(
         quest: quest,
         afkmarker: afkmarker,
         completed: completed,
         collected: false,
-        isParentAccount: isParentAccount,
+        isGuardianAccount: isGuardianAccount,
         isStartMarker: isStartMarker);
     Marker marker = Marker(
       markerId: MarkerId(afkmarker
@@ -283,9 +283,9 @@ class GoogleMapService {
     required bool completed,
     required bool isStartMarker,
     required bool collected,
-    required bool isParentAccount,
+    required bool isGuardianAccount,
   }) async {
-    if (isParentAccount && quest?.createdBy == null) {
+    if (isGuardianAccount && quest?.createdBy == null) {
       // this means it is a public quest. Display them a bit darker on the map
       if (quest?.type == QuestType.TreasureLocationSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
@@ -358,7 +358,7 @@ class GoogleMapService {
         quest: null,
         completed: completed,
         collected: collected,
-        isParentAccount: false,
+        isGuardianAccount: false,
         isStartMarker: false);
     markersOnMap = markersOnMap
         .map((item) => item.markerId == MarkerId(afkmarker.id)

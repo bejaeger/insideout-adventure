@@ -30,7 +30,7 @@ class StartScreenTimeCounterView extends StatelessWidget {
                 Text(model.counter.toString() + " s",
                     style: heading2Style.copyWith(fontSize: 60)),
                 Spacer(),
-                model.isParentAccount
+                model.isGuardianAccount
                     ? ScreenTimeNotificationsNote()
                     : Container(
                         height: 220,

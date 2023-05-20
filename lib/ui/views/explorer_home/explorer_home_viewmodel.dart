@@ -83,7 +83,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
 
       mapStateService.setCameraToDefaultChildPosition();
 
-      // ! This is duplicated in parent_home_viewmodel.dart
+      // ! This is duplicated in guardian_home_viewmodel.dart
       if (screenTimeSession != null) {
         await screenTimeService.listenToPotentialScreenTimes(
             callback: notifyListeners);
@@ -184,7 +184,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         completer.future,
         getLocation(forceAwait: true, forceGettingNewPosition: false),
         // adds listener to screen time collection!
-        // needed e.g. when child creates screen time session but parent removes it
+        // needed e.g. when child creates screen time session but guardian removes it
         userService.addExplorerScreenTimeListener(
             explorerId: currentUser.uid, callback: () => notifyListeners()),
       ],

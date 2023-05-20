@@ -106,7 +106,7 @@ class MapStateService {
     setIsAvatarView(true);
   }
 
-  void setCameraToDefaultParentPosition() {
+  void setCameraToDefaultGuardianPosition() {
     resetSnapshotOfCameraPosition();
     tilt = 0;
     zoom = kInitialZoomBirdsView;

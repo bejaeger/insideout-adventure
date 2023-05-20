@@ -33,7 +33,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
 
   @override
   Future initialize(
-      {required Quest quest, void Function()? notifyParentCallback}) async {
+      {required Quest quest, void Function()? notifyGuardianCallback}) async {
     log.i("Initializing active map quest of tye: ${quest.type}");
     resetPreviousQuest();
     setBusy(true);
@@ -41,7 +41,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     if (hasActivatedQuestToBeStarted) {
       maybeStartQuest(
         quest: activeQuestService.questToBeStarted!.quest,
-        notifyParentCallback: notifyParentCallback,
+        notifyGuardianCallback: notifyGuardianCallback,
         activatedQuestFromLocalStorage: activeQuestService.questToBeStarted,
       );
     }
@@ -51,7 +51,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
 
   Future maybeStartQuest({
     required Quest? quest,
-    void Function()? notifyParentCallback,
+    void Function()? notifyGuardianCallback,
     ActivatedQuest? activatedQuestFromLocalStorage,
   }) async {
     if ((quest != null && !hasActiveQuest) ||

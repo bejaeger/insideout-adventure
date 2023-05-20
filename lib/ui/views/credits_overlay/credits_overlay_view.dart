@@ -47,7 +47,8 @@ class CreditsOverlayView extends StatelessWidget {
                       height: 25, color: Colors.white),
                   onTap: () {
                     model.navToSelectScreenTimeView(
-                        childId: model.currentUser.uid, isParentAccount: false);
+                        childId: model.currentUser.uid,
+                        isGuardianAccount: false);
                     model.removeCreditsOverlay();
                   },
                   title: "Get screen time"),

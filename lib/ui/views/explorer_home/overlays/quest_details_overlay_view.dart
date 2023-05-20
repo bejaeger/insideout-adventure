@@ -80,7 +80,7 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
             child: Stack(
               children: [
                 CommonQuestDetailsHeader(
-                  isParentAccount: model.isParentAccount,
+                  isGuardianAccount: model.isGuardianAccount,
                   quest: quest,
                   // maybe instead of parsing activatedQuest to "hasActiveQuest" parse separately and use progress indicator as long as activatedQuestFromLocalStorage is loaded"
                   hasActiveQuest: model.hasActiveQuest,
@@ -119,13 +119,13 @@ class _QuestDetailsOverlayViewState extends State<QuestDetailsOverlayView>
                     quest.type == QuestType.TreasureLocationSearch)
                   SearchQuestView(
                     showStartSlider: showStartSlider,
-                    notifyParentCallback: model.notifyListeners,
+                    notifyGuardianCallback: model.notifyListeners,
                     quest: quest,
                   ),
                 if (quest != null && quest.type == QuestType.GPSAreaHike)
                   GPSAreaHike(
                     showStartSlider: showStartSlider,
-                    notifyParentCallback: model.notifyListeners,
+                    notifyGuardianCallback: model.notifyListeners,
                     quest: quest,
                   ),
               ],
@@ -180,12 +180,12 @@ class SpecificQuestLayout extends StatelessWidget {
 class SearchQuestView extends StatelessWidget {
   final Quest quest;
   final bool showStartSlider;
-  final void Function() notifyParentCallback;
+  final void Function() notifyGuardianCallback;
   const SearchQuestView({
     Key? key,
     required this.quest,
     required this.showStartSlider,
-    required this.notifyParentCallback,
+    required this.notifyGuardianCallback,
   }) : super(key: key);
 
   @override
@@ -194,12 +194,12 @@ class SearchQuestView extends StatelessWidget {
       viewModelBuilder: () => SearchQuestViewModel(),
       onModelReady: (model) => model.initialize(
         quest: quest,
-        notifyParentCallback: notifyParentCallback,
+        notifyGuardianCallback: notifyGuardianCallback,
       ),
       builder: (context, model, child) {
         return SpecificQuestLayout(
           maybeStartQuest: () => model.maybeStartQuest(
-              quest: quest, notifyParentCallback: notifyParentCallback),
+              quest: quest, notifyGuardianCallback: notifyGuardianCallback),
           model: model,
           showStartSlider: showStartSlider,
           children: [
@@ -246,12 +246,12 @@ class SearchQuestView extends StatelessWidget {
 class GPSAreaHike extends StatefulWidget {
   final Quest quest;
   final bool showStartSlider;
-  final void Function() notifyParentCallback;
+  final void Function() notifyGuardianCallback;
   const GPSAreaHike({
     Key? key,
     required this.quest,
     required this.showStartSlider,
-    required this.notifyParentCallback,
+    required this.notifyGuardianCallback,
   }) : super(key: key);
 
   @override
@@ -290,7 +290,7 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
         model.addQuestMarkers(quest: widget.quest);
         model.initialize(
             quest: widget.quest,
-            notifyParentCallback: widget.notifyParentCallback);
+            notifyGuardianCallback: widget.notifyGuardianCallback);
       },
       builder: (context, model, child) {
         if (model.showCollectedMarkerAnimation) {
@@ -301,7 +301,7 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
         return SpecificQuestLayout(
           maybeStartQuest: () => model.maybeStartQuest(
               quest: widget.quest,
-              notifyParentCallback: widget.notifyParentCallback),
+              notifyGuardianCallback: widget.notifyGuardianCallback),
           model: model,
           showStartSlider: widget.showStartSlider,
           bottomWidget: FadingWidget(
