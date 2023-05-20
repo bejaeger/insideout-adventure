@@ -1,21 +1,21 @@
-import 'package:afkcredits/ui/custom_dialogs/explorer_settings_for_parents/explorer_settings_for_parents_viewmodel.dart';
+import 'package:afkcredits/ui/custom_dialogs/explorer_settings_for_parent/explorer_settings_for_parent_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class ExplorerSettingsForParentsDialogView extends StatelessWidget {
+class ExplorerSettingsForParentDialogView extends StatelessWidget {
   final DialogRequest request;
   final Function(DialogResponse) completer;
 
-  const ExplorerSettingsForParentsDialogView(
+  const ExplorerSettingsForParentDialogView(
       {Key? key, required this.request, required this.completer})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ExplorerSettingsForParentsDialogViewModel>.reactive(
-      viewModelBuilder: () => ExplorerSettingsForParentsDialogViewModel(
+    return ViewModelBuilder<ExplorerSettingsForParentDialogViewModel>.reactive(
+      viewModelBuilder: () => ExplorerSettingsForParentDialogViewModel(
           explorerUid: request.data["explorerUid"]),
       builder: (context, model, child) {
         String? name = request.data["name"];

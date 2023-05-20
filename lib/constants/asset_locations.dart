@@ -30,8 +30,8 @@ const String kIllustrationActivity =
 const String kIllustrationAnnaHercules =
     "assets/illustrations/anna_hercules_world.png";
 const String kIllustrationInfographic = "assets/illustrations/infographic.png";
-const String kIllustrationParentsMeditate =
-    "assets/illustrations/parents_meditate.png";
+const String kIllustrationParentMeditate =
+    "assets/illustrations/parent_meditate.png";
 const String kIllustrationScreenTime = "assets/illustrations/screen_time.png";
 const String kIllustrationWalletEarning =
     "assets/illustrations/wallet_earning.png";
@@ -59,4 +59,3 @@ const String kLottieBigTv = "assets/lottie/big-tv-screen-time.json";
 
 // @see: https://assets7.lottiefiles.com/packages/lf20_Ei9xER.json
 const String kLottieRippleEffect = "assets/lottie/ripple-effect.json";
-

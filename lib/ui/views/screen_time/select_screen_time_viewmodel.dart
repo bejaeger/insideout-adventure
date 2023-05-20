@@ -90,7 +90,7 @@ class SelectScreenTimeViewModel extends BaseModel {
       navToScreenTimeCounterView(session: session);
     } else {
       session = session.copyWith(status: ScreenTimeSessionStatus.requested);
-      // if child starts screen time we first need confirmation from parents
+      // if child starts screen time we first need confirmation from parent
       navToScreenTimeRequestedView(session: session);
     }
   }

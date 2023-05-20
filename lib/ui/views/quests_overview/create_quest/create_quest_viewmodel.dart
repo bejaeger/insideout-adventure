@@ -223,15 +223,15 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       case QuestType.DistanceEstimate:
         return kDistanceEstimateDescription;
       case QuestType.TreasureLocationSearch:
-        return kLocationSearchDescriptionParents;
+        return kLocationSearchDescriptionParent;
       case QuestType.QRCodeHunt:
-        return kGPSAreaHikeDescriptionParents;
+        return kGPSAreaHikeDescriptionParent;
       case QuestType.QRCodeHike:
         return kGPSAreaHikeDescription;
       case QuestType.GPSAreaHike:
-        return kGPSAreaHikeDescriptionParents;
+        return kGPSAreaHikeDescriptionParent;
       case QuestType.GPSAreaHunt:
-        return kGPSAreaHikeDescriptionParents;
+        return kGPSAreaHikeDescriptionParent;
       default:
         return kGPSAreaHikeDescription;
     }

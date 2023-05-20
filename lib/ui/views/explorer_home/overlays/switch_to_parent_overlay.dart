@@ -2,10 +2,10 @@ import 'package:afkcredits/ui/widgets/fading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 
-class SwitchToParentsAreaButton extends StatelessWidget {
+class SwitchToParentAreaButton extends StatelessWidget {
   final void Function() onTap;
   final bool show;
-  const SwitchToParentsAreaButton({
+  const SwitchToParentAreaButton({
     Key? key,
     required this.onTap,
     required this.show,

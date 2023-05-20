@@ -125,7 +125,7 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     await Future.delayed(Duration(milliseconds: 10));
 
     await dialogService.showCustomDialog(
-      variant: DialogType.ExplorerSettingsForParents,
+      variant: DialogType.ExplorerSettingsForParent,
       barrierDismissible: true,
       data: {
         "name": explorer?.fullName,

@@ -451,7 +451,7 @@ class FirestoreApi {
               }
             } else {
               log.w(
-                  'There is no \'quests\' collection from parents on firestore');
+                  'There is no \'quests\' collection from parent on firestore');
             }
             if (counter == guardianIds.length) {
               if (!completer2.isCompleted) {

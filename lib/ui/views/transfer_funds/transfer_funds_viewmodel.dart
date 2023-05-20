@@ -125,7 +125,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       //  - make entry in transfer history!
       //  - notification in explorer account
       //  - history visible for parent and explorer
-      //  - option to add description to transfer for parents
+      //  - option to add description to transfer for parent
       final res = await _firestoreApi.changeAfkCreditsBalanceCheat(
           uid: data.transferDetails.recipientId,
           deltaCredits: data.transferDetails.amount);

@@ -9,8 +9,8 @@ import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
-import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/guardian_reference/guardian_reference.dart';
+import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
@@ -994,7 +994,7 @@ class UserService {
     );
   }
 
-  // USED to make settings from parents account to user account
+  // USED to make settings from parent account to user account
   bool get isAcceptScreenTimeFirst =>
       currentUserSettings.isAcceptScreenTimeFirst;
   Future setIsAcceptScreenTimeFirst(
@@ -1004,7 +1004,7 @@ class UserService {
         uid: uid, key: "isAcceptScreenTimeFirst", value: value);
   }
 
-  // USED to make settings from parents account to user account
+  // USED to make settings from parent account to user account
   bool get isUsingOwnPhone => currentUserSettings.ownPhone;
   Future setIsUsingOwnPhone({required String uid, required bool value}) async {
     // This is a bit critical: Check UserSettings class if the key is correct

@@ -8,7 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class SelectScreenTimeView extends StatelessWidget {
-  // childId needs to be provided when accessing this view from the parents account
+  // childId needs to be provided when accessing this view from the parent account
   final String? childId;
   const SelectScreenTimeView({Key? key, this.childId}) : super(key: key);
 

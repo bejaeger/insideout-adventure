@@ -65,7 +65,7 @@ class DrawerWidgetView extends StatelessWidget {
                             //child: Text("Go to explorer home/map")),
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
-                              child: Text("Parents Area \u279A",
+                              child: Text("Parent Area \u279A",
                                   style: TextStyle(fontSize: 20)),
                             ),
                           ),
