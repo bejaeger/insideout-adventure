@@ -14,7 +14,7 @@ _$_MoneyTransfer _$$_MoneyTransferFromJson(Map<String, dynamic> json) =>
       status: $enumDecodeNullable(_$TransferStatusEnumMap, json['status']) ??
           TransferStatus.Initialized,
       type: $enumDecodeNullable(_$TransferTypeEnumMap, json['type']) ??
-          TransferType.Guardian2ExplorerCredits,
+          TransferType.Guardian2WardCredits,
       transferId: json['transferId'] as String? ?? "placeholder",
     );
 
@@ -34,5 +34,5 @@ const _$TransferStatusEnumMap = {
 };
 
 const _$TransferTypeEnumMap = {
-  TransferType.Guardian2ExplorerCredits: 'Guardian2ExplorerCredits',
+  TransferType.Guardian2WardCredits: 'Guardian2WardCredits',
 };

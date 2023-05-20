@@ -26,7 +26,7 @@ class User with _$User {
     required String fullName,
     String? email,
     required List<String> guardianIds,
-    required List<String> explorerIds,
+    required List<String> wardIds,
     required UserRole role,
     UserSettings? userSettings,
     AuthenticationMethod? authMethod,
@@ -58,7 +58,7 @@ User getEmptyUser() {
     role: UserRole.unassigned,
     authMethod: AuthenticationMethod.dummy,
     guardianIds: [],
-    explorerIds: [],
+    wardIds: [],
     newUser: false,
     userSettings: UserSettings(),
   );

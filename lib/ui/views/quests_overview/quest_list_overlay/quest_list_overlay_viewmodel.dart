@@ -16,7 +16,7 @@ class QuestListOverlayViewModel extends QuestViewModel {
     }
   }
 
-  // !!! THE SAME FUNCTION EXISTS IN EXPLORER HOME VIEWMODEL!
+  // !!! THE SAME FUNCTION EXISTS IN WARD HOME VIEWMODEL!
   Future initializeQuests({bool? force}) async {
     setBusy(true);
     try {

@@ -25,14 +25,14 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SingleChildStatViewModel>.reactive(
-      viewModelBuilder: () => SingleChildStatViewModel(explorerUid: widget.uid),
+      viewModelBuilder: () => SingleChildStatViewModel(wardUid: widget.uid),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
             title: model.isBusy
                 ? "Child stats"
-                : model.explorer != null
-                    ? model.explorer!.fullName + '\'s Stats'
+                : model.ward != null
+                    ? model.ward!.fullName + '\'s Stats'
                     : "Child Statistics",
             onBackButton: model.popView,
             dropDownButton: CustomDropDownMenu(
@@ -41,7 +41,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
               onTap1: model.removeChildFromGuardianAccount,
               text1: 'Remove child',
               icon2: Icon(Icons.settings, color: kcMediumGrey, size: 22),
-              onTap2: model.showExplorerSettingsDialogDialog,
+              onTap2: model.showWardSettingsDialogDialog,
               text2: 'Settings',
             ),
           ),
@@ -51,7 +51,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
               leadingMain:
                   Icon(Icons.switch_account_outlined, color: Colors.white),
               titleMain: "Switch area",
-              onTapMain: model.handleSwitchToExplorerEvent),
+              onTapMain: model.handleSwitchToWardEvent),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           body: RefreshIndicator(
@@ -317,10 +317,10 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                             showCredits: true,
                                             data: data,
                                             name: data is ActivatedQuest
-                                                ? model.explorerNameFromUid(
+                                                ? model.wardNameFromUid(
                                                     data.uids![0])
-                                                : model.explorerNameFromUid(
-                                                    data.uid),
+                                                : model
+                                                    .wardNameFromUid(data.uid),
                                             onTap: () =>
                                                 model.showHistoryItemInfoDialog(
                                                     data),
@@ -344,7 +344,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                               horizontal: kHorizontalPadding),
                           child: InsideOutText.headingTwoLight(
                               "Switch account and let " +
-                                  model.explorer!.fullName +
+                                  model.ward!.fullName +
                                   " earn credits",
                               align: TextAlign.center),
                         ),

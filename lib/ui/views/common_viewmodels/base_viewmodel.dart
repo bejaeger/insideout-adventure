@@ -75,7 +75,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       (activeQuestService.selectedQuest != null) ||
       activeQuestService.previouslyFinishedQuest != null;
   bool get isShowingQuestList => layoutService.isShowingQuestList;
-  bool get isShowingExplorerAccount => layoutService.isShowingExplorerAccount;
+  bool get isShowingWardAccount => layoutService.isShowingWardAccount;
   bool get isShowingCreditsOverlay => layoutService.isShowingCreditsOverlay;
   bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;
   bool get isMovingCamera => layoutService.isMovingCamera;
@@ -110,10 +110,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
   bool get isScreenTimeActive =>
-      screenTimeService.supportedExplorerScreenTimeSessionsActive.length != 0;
+      screenTimeService.supportedWardScreenTimeSessionsActive.length != 0;
   List<ScreenTimeSession> get childScreenTimeSessionsActive =>
-      screenTimeService.supportedExplorerScreenTimeSessionsActive.values
-          .toList();
+      screenTimeService.supportedWardScreenTimeSessionsActive.values.toList();
 
   bool? canVibrate;
   bool validatingMarker = false;
@@ -225,8 +224,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       );
     } else {
       await navigationService.clearStackAndShow(
-        Routes.explorerHomeView,
-        arguments: ExplorerHomeViewArguments(
+        Routes.wardHomeView,
+        arguments: WardHomeViewArguments(
           showBewareDialog: showBewareDialog,
           showNumberQuestsDialog: showNumberQuestsDialog,
         ),
@@ -249,7 +248,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     if (isGuardianAccount || isAdminMaster) {
       await replaceWithGuardianHomeView(screenTimeSession: screenTimeSession);
     } else {
-      await replaceWithExplorerHomeView(
+      await replaceWithWardHomeView(
           showBewareDialog: showBewareDialog,
           showNumberQuestsDialog: showNumberQuestsDialog,
           screenTimeSession: screenTimeSession);

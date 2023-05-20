@@ -5,11 +5,11 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 
-class ExplorerSettingsForGuardianDialogViewModel extends BaseModel {
-  final String explorerUid;
+class WardSettingsForGuardianDialogViewModel extends BaseModel {
+  final String wardUid;
   late bool isAcceptScreenTimeFirstTmp;
   late bool isUsingOwnPhoneTmp;
-  ExplorerSettingsForGuardianDialogViewModel({required this.explorerUid}) {
+  WardSettingsForGuardianDialogViewModel({required this.wardUid}) {
     // use local variables here so UI state is immediately updated.
     isAcceptScreenTimeFirstTmp = isAcceptScreenTimeFirst;
     isUsingOwnPhoneTmp = isUsingOwnPhone;
@@ -19,11 +19,10 @@ class ExplorerSettingsForGuardianDialogViewModel extends BaseModel {
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
   bool get isARAvailable => appConfigProvider.isARAvailable;
-  User? get explorer => userService.supportedExplorers[explorerUid];
+  User? get ward => userService.supportedWards[wardUid];
   bool get isAcceptScreenTimeFirst =>
-      (explorer!.userSettings ?? UserSettings()).isAcceptScreenTimeFirst;
-  bool get isUsingOwnPhone =>
-      (explorer!.userSettings ?? UserSettings()).ownPhone;
+      (ward!.userSettings ?? UserSettings()).isAcceptScreenTimeFirst;
+  bool get isUsingOwnPhone => (ward!.userSettings ?? UserSettings()).ownPhone;
 
   void setIsAcceptScreenTime(bool b) async {
     if (b == true && isUsingOwnPhone == false) {
@@ -34,13 +33,13 @@ class ExplorerSettingsForGuardianDialogViewModel extends BaseModel {
       return;
     }
     isAcceptScreenTimeFirstTmp = b;
-    userService.setIsAcceptScreenTimeFirst(uid: explorerUid, value: b);
+    userService.setIsAcceptScreenTimeFirst(uid: wardUid, value: b);
     notifyListeners();
   }
 
   void setIsUsingOwnPhone(bool b) async {
     isUsingOwnPhoneTmp = b;
-    userService.setIsUsingOwnPhone(uid: explorerUid, value: b);
+    userService.setIsUsingOwnPhone(uid: wardUid, value: b);
     notifyListeners();
   }
 }

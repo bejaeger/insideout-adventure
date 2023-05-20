@@ -52,8 +52,7 @@ class SelectScreenTimeView extends StatelessWidget {
                         InsideOutText.headingTwo(
                             model.isGuardianAccount
                                 ? "Choose time for " +
-                                    model.userService
-                                        .explorerNameFromUid(childId!)
+                                    model.userService.wardNameFromUid(childId!)
                                 : "Get your well-deserved screen time",
                             align: TextAlign.center),
                       ],

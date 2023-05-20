@@ -15,14 +15,12 @@ class GuardianHomeViewModel extends BaseModel {
   final FeedbackService _feedbackService = locator<FeedbackService>();
   final log = getLogger("GuardianHomeViewModel");
 
-  List<User> get supportedExplorers => userService.supportedExplorersList;
-  Map<String, UserStatistics> get childStats =>
-      userService.supportedExplorerStats;
+  List<User> get supportedWards => userService.supportedWardsList;
+  Map<String, UserStatistics> get childStats => userService.supportedWardStats;
   List<ScreenTimeSession> get childScreenTimeSessionsActive =>
-      screenTimeService.supportedExplorerScreenTimeSessionsActive.values
-          .toList();
+      screenTimeService.supportedWardScreenTimeSessionsActive.values.toList();
   Map<String, ScreenTimeSession> get childScreenTimeSessionsActiveMap =>
-      screenTimeService.supportedExplorerScreenTimeSessionsActive;
+      screenTimeService.supportedWardScreenTimeSessionsActive;
   List<dynamic> get sortedHistory => userService.sortedHistory();
   Map<String, int> get totalChildScreenTimeLastDays =>
       userService.totalChildScreenTimeLastDays();
@@ -38,8 +36,8 @@ class GuardianHomeViewModel extends BaseModel {
 
   bool navigatingToActiveScreenTimeView = false;
 
-  String explorerNameFromUid(String uid) {
-    return userService.explorerNameFromUid(uid);
+  String wardNameFromUid(String uid) {
+    return userService.wardNameFromUid(uid);
   }
 
   Future listenToData({ScreenTimeSession? screenTimeSession}) async {
@@ -110,7 +108,7 @@ class GuardianHomeViewModel extends BaseModel {
 
   Future showScreenTimeRequestDialog() async {
     List<ScreenTimeSession> sessionsRequested = List.from(
-        screenTimeService.supportedExplorerScreenTimeSessionsRequested.values);
+        screenTimeService.supportedWardScreenTimeSessionsRequested.values);
     for (ScreenTimeSession session in sessionsRequested) {
       final res = await dialogService.showDialog(
         title: session.userName +
@@ -118,7 +116,7 @@ class GuardianHomeViewModel extends BaseModel {
         buttonTitle: "ACCEPT",
         cancelTitle: "DON'T ALLOW",
       );
-      if (screenTimeService.supportedExplorerScreenTimeSessionsRequested
+      if (screenTimeService.supportedWardScreenTimeSessionsRequested
           .containsKey(session.uid)) {
         try {
           if (res?.confirmed == true) {

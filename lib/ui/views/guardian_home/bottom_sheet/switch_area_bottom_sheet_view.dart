@@ -44,15 +44,15 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                 ),
                 verticalSpaceSmall,
                 verticalSpaceTiny,
-                if (model.supportedExplorers.length == 0) verticalSpaceMedium,
-                if (model.supportedExplorers.length == 0)
+                if (model.supportedWards.length == 0) verticalSpaceMedium,
+                if (model.supportedWards.length == 0)
                   Center(
                     child: InsideOutText.body(
                       "There is no child account yet",
                       align: TextAlign.center,
                     ),
                   ),
-                if (model.supportedExplorers.length == 0)
+                if (model.supportedWards.length == 0)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: InsideOutButton.text(
@@ -73,20 +73,19 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                             completer(
                               SheetResponse(confirmed: true),
                             );
-                            await model.handleSwitchToExplorerEvent(
-                                explorerUidInput:
-                                    model.supportedExplorers[index].uid);
+                            await model.handleSwitchToWardEvent(
+                                wardUidInput: model.supportedWards[index].uid);
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: InsideOutText.subheading(
-                                model.supportedExplorers[index].fullName),
+                                model.supportedWards[index].fullName),
                           ),
                         ),
                     separatorBuilder: (context, index) {
                       return Divider(indent: 10.0, endIndent: 10, height: 20);
                     },
-                    itemCount: model.supportedExplorers.length),
+                    itemCount: model.supportedWards.length),
               ],
             ),
           ),

@@ -13,6 +13,6 @@ enum DialogType {
   CustomScreenTime,
   NumberQuests,
   AvatarSelectDialog,
-  ExplorerSettings,
-  ExplorerSettingsForGuardian,
+  WardSettings,
+  WardSettingsForGuardian,
 }

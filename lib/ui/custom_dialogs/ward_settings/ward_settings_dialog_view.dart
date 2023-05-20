@@ -4,18 +4,18 @@ import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class ExplorerSettingsDialogView extends StatelessWidget {
+class WardSettingsDialogView extends StatelessWidget {
   final DialogRequest request;
   final Function(DialogResponse) completer;
 
-  const ExplorerSettingsDialogView(
+  const WardSettingsDialogView(
       {Key? key, required this.request, required this.completer})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ExplorerSettingsDialogViewModel>.reactive(
-      viewModelBuilder: () => ExplorerSettingsDialogViewModel(explorerUid: ""),
+    return ViewModelBuilder<WardSettingsDialogViewModel>.reactive(
+      viewModelBuilder: () => WardSettingsDialogViewModel(wardUid: ""),
       builder: (context, model, child) {
         return Dialog(
           elevation: 5,

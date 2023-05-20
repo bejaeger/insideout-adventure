@@ -56,7 +56,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   String mapStyle = "";
   DateTime startedRotating = DateTime.now();
 
-  // TODO: This function is only called for the explorer!
+  // TODO: This function is only called for the ward!
   Future initializeMapAndMarkers() async {
     if (!isGuardianAccount) {
       mapStyle = await rootBundle.loadString(kMapStylePath);
@@ -140,7 +140,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     if (!kIsWeb && Platform.isIOS) {
       // Somehow this is needed for iOS.
       // Otherwise map won't react at first when switching from guardian
-      // view to the explorer view.
+      // view to the ward view.
       fakeAnimate();
       fakeAnimate();
     }
@@ -310,7 +310,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     animateCameraViewModel();
   }
 
-  // Function called by explorer account!
+  // Function called by ward account!
   void extractStartMarkersAndAddToMap() {
     bool showCompletedQuests =
         userService.currentUserSettings.isShowingCompletedQuests;

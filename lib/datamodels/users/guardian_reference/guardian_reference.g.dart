@@ -30,6 +30,5 @@ const _$AuthenticationMethodEnumMap = {
   AuthenticationMethod.facebook: 'facebook',
   AuthenticationMethod.apple: 'apple',
   AuthenticationMethod.dummy: 'dummy',
-  AuthenticationMethod.EmailOrGuardianCreatedExplorer:
-      'EmailOrGuardianCreatedExplorer',
+  AuthenticationMethod.EmailOrGuardianCreatedWard: 'EmailOrGuardianCreatedWard',
 };

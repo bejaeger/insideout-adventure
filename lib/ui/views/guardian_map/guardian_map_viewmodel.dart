@@ -169,7 +169,7 @@ class GuardianMapViewModel extends QuestViewModel {
   }
 
   // when quest details are shown we need to remove them again
-  // (for guardian account this is simple. Corresponding function for explorer account is in
+  // (for guardian account this is simple. Corresponding function for ward account is in
   // active_quest_base_viewmodel.dart)
   void popQuestDetails() async {
     mapStateService.restorePreviousCameraPosition();

@@ -4,15 +4,15 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 
-class ExplorerSettingsDialogViewModel extends BaseModel {
-  final String explorerUid;
-  ExplorerSettingsDialogViewModel({required this.explorerUid});
+class WardSettingsDialogViewModel extends BaseModel {
+  final String wardUid;
+  WardSettingsDialogViewModel({required this.wardUid});
 
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final MapViewModel mapViewModel = locator<MapViewModel>();
 
   bool get isARAvailable => appConfigProvider.isARAvailable;
-  User? get explorer => userService.supportedExplorers[explorerUid];
+  User? get ward => userService.supportedWards[wardUid];
   bool get isUsingAR => userService.isUsingAR;
   bool get isShowAvatarAndMapEffects => userService.isShowAvatarAndMapEffects;
   bool get isShowingCompletedQuests =>

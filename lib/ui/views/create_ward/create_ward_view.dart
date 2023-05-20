@@ -183,7 +183,7 @@ class CreateWardView extends StatelessWidget with $CreateWardView {
                                 leading: Icon(Icons.add_circle_outline,
                                     color: Colors.white),
                                 busy: model.isBusy,
-                                onTap: model.addExplorer,
+                                onTap: model.addWard,
                                 title: "Create account"),
                           ],
                         ),

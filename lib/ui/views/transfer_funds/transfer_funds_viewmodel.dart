@@ -123,8 +123,8 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       await Future.delayed(Duration(milliseconds: 300)); // artificial delay
       // Possible Improvements
       //  - make entry in transfer history!
-      //  - notification in explorer account
-      //  - history visible for guardian and explorer
+      //  - notification in ward account
+      //  - history visible for guardian and ward
       //  - option to add description to transfer for guardian
       final res = await _firestoreApi.changeAfkCreditsBalanceCheat(
           uid: data.transferDetails.recipientId,
@@ -170,7 +170,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
         currency: 'cad',
       );
       MoneyTransfer data = MoneyTransfer(
-          type: TransferType.Guardian2ExplorerCredits /* legacy */,
+          type: TransferType.Guardian2WardCredits /* legacy */,
           transferDetails: transferDetails);
       return data;
     } catch (e) {
@@ -209,7 +209,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
       data: {
         "moneyTransferStatus": MoneyTransferStatusModel(
           futureStatus: moneyTransferCompleter.future,
-          type: TransferType.Guardian2ExplorerCredits, // legacy code
+          type: TransferType.Guardian2WardCredits, // legacy code
         )
       },
     );

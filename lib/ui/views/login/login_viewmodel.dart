@@ -35,7 +35,7 @@ class LoginViewModel extends AuthenticationViewModel {
           notifyListeners();
           return;
         }
-        saveData(AuthenticationMethod.EmailOrGuardianCreatedExplorer);
+        saveData(AuthenticationMethod.EmailOrGuardianCreatedWard);
       };
     } else {
       if (_flavorConfigProvider.flavor == Flavor.dev) {

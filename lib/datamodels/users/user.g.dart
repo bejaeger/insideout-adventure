@@ -13,9 +13,8 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       guardianIds: (json['guardianIds'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      explorerIds: (json['explorerIds'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      wardIds:
+          (json['wardIds'] as List<dynamic>).map((e) => e as String).toList(),
       role: $enumDecode(_$UserRoleEnumMap, json['role']),
       userSettings: json['userSettings'] == null
           ? null
@@ -39,7 +38,7 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'fullName': instance.fullName,
       'email': instance.email,
       'guardianIds': instance.guardianIds,
-      'explorerIds': instance.explorerIds,
+      'wardIds': instance.wardIds,
       'role': _$UserRoleEnumMap[instance.role]!,
       'userSettings': instance.userSettings?.toJson(),
       'authMethod': _$AuthenticationMethodEnumMap[instance.authMethod],
@@ -54,7 +53,7 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
 
 const _$UserRoleEnumMap = {
   UserRole.guardian: 'guardian',
-  UserRole.explorer: 'explorer',
+  UserRole.ward: 'ward',
   UserRole.admin: 'admin',
   UserRole.unassigned: 'unassigned',
   UserRole.adminMaster: 'adminMaster',
@@ -67,6 +66,5 @@ const _$AuthenticationMethodEnumMap = {
   AuthenticationMethod.facebook: 'facebook',
   AuthenticationMethod.apple: 'apple',
   AuthenticationMethod.dummy: 'dummy',
-  AuthenticationMethod.EmailOrGuardianCreatedExplorer:
-      'EmailOrGuardianCreatedExplorer',
+  AuthenticationMethod.EmailOrGuardianCreatedWard: 'EmailOrGuardianCreatedWard',
 };

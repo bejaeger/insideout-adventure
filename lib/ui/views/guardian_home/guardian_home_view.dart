@@ -95,7 +95,7 @@ class GuardianHomeView extends StatelessWidget {
                                     size: 28, color: kcPrimaryColor),
                               ),
                             ),
-                            if (model.supportedExplorers.length == 0)
+                            if (model.supportedWards.length == 0)
                               model.isBusy
                                   ? AFKProgressIndicator()
                                   : Padding(
@@ -107,7 +107,7 @@ class GuardianHomeView extends StatelessWidget {
                                         //imagePath: ImagePath.peopleHoldingHands,
                                       ),
                                     ),
-                            if (model.supportedExplorers.length > 0)
+                            if (model.supportedWards.length > 0)
                               ChildrenStatsList(
                                 viewModel: model,
                               ),
@@ -189,16 +189,15 @@ class ChildrenStatsList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         physics: ScrollPhysics(),
         //shrinkWrap: true,
-        itemCount: viewModel.supportedExplorers.length,
+        itemCount: viewModel.supportedWards.length,
         itemBuilder: (context, index) {
-          String uid = viewModel.supportedExplorers[index].uid;
-          User explorer = viewModel.supportedExplorers[index];
+          String uid = viewModel.supportedWards[index].uid;
+          User ward = viewModel.supportedWards[index];
           return Padding(
             padding: EdgeInsets.only(
                 left: (index == 0) ? 20.0 : 5.0,
-                right: (index == viewModel.supportedExplorers.length - 1)
-                    ? 20.0
-                    : 0),
+                right:
+                    (index == viewModel.supportedWards.length - 1) ? 20.0 : 0),
             child: GestureDetector(
               onTap: () => viewModel.navToSingleChildView(uid: uid),
               child: ChildStatsCard(
@@ -209,7 +208,7 @@ class ChildrenStatsList extends StatelessWidget {
                       viewModel.totalChildActivityLastDays[uid],
                   screenTimeTrend: viewModel.totalChildScreenTimeTrend[uid],
                   activityTimeTrend: viewModel.totalChildActivityTrend[uid],
-                  user: explorer,
+                  user: ward,
                   childStats: viewModel.childStats[uid],
                   screenTimeSession: viewModel.getScreenTime(uid: uid)),
             ),

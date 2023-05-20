@@ -13,7 +13,7 @@ class GoogleMapLayout extends StatelessWidget {
   final void Function()? onCreateAccountTapped;
   final void Function()? onForgotPassword;
   final void Function()? onBackPressed;
-  final void Function()? onDummyLoginExplorerTapped;
+  final void Function()? onDummyLoginWardTapped;
   final void Function()? onDummyLoginAdminTapped;
   final void Function()? onDummyLoginGuardianTapped;
   final void Function()? onGoogleButtonTapped;
@@ -38,7 +38,7 @@ class GoogleMapLayout extends StatelessWidget {
     this.onGoogleButtonTapped,
     this.onAppleButtonTapped,
     this.releaseName,
-    this.onDummyLoginExplorerTapped,
+    this.onDummyLoginWardTapped,
     this.onDummyLoginAdminTapped,
     this.onDummyLoginGuardianTapped,
     this.googleText,
@@ -111,10 +111,10 @@ class GoogleMapLayout extends StatelessWidget {
                       ),
               ),
             ),
-            if (onDummyLoginExplorerTapped != null ||
+            if (onDummyLoginWardTapped != null ||
                 onDummyLoginGuardianTapped != null)
               verticalSpaceRegular,
-            if (onDummyLoginExplorerTapped != null ||
+            if (onDummyLoginWardTapped != null ||
                 onDummyLoginGuardianTapped != null)
               Row(
                 children: [
@@ -144,11 +144,11 @@ class GoogleMapLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (onDummyLoginExplorerTapped != null) horizontalSpaceTiny,
-                  if (onDummyLoginExplorerTapped != null)
+                  if (onDummyLoginWardTapped != null) horizontalSpaceTiny,
+                  if (onDummyLoginWardTapped != null)
                     Expanded(
                       child: GestureDetector(
-                        onTap: onDummyLoginExplorerTapped,
+                        onTap: onDummyLoginWardTapped,
                         child: Container(
                           height: 40,
                           alignment: Alignment.center,
@@ -162,7 +162,7 @@ class GoogleMapLayout extends StatelessWidget {
                                       AlwaysStoppedAnimation(Colors.white),
                                 )
                               : Text(
-                                  "LOGIN AS TEST EXPLORER",
+                                  "LOGIN AS TEST CHILD",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,

@@ -12,7 +12,7 @@ class CreateWardViewModel extends FormViewModel {
   final UserService _userService = locator<UserService>();
   final NavigationService _navigationService = locator<NavigationService>();
   final DialogService _dialogService = locator<DialogService>();
-  final log = getLogger("AddExplorerViewModel");
+  final log = getLogger("AddWardViewModel");
 
   bool isLoading = false;
 
@@ -44,7 +44,7 @@ class CreateWardViewModel extends FormViewModel {
         notifyListeners();
       }
     } else if (pageIndex == 1) {
-      addExplorer();
+      addWard();
     }
   }
 
@@ -72,7 +72,7 @@ class CreateWardViewModel extends FormViewModel {
     return true;
   }
 
-  Future addExplorer() async {
+  Future addWard() async {
     if (ownPhoneSelected == null) {
       chooseValueMessage = "Choose yes or no";
       notifyListeners();
@@ -84,10 +84,10 @@ class CreateWardViewModel extends FormViewModel {
       UserSettings userSettings = UserSettings(
           ownPhone: ownPhoneSelected!,
           isAcceptScreenTimeFirst: ownPhoneSelected!);
-      final result = await runBusyFuture(_userService.createExplorerAccount(
+      final result = await runBusyFuture(_userService.createWardAccount(
           name: nameValue!,
           password: passwordValue!,
-          authMethod: AuthenticationMethod.EmailOrGuardianCreatedExplorer,
+          authMethod: AuthenticationMethod.EmailOrGuardianCreatedWard,
           userSettings: userSettings));
       if (result is String) {
         await _dialogService.showDialog(

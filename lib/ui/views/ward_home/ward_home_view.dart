@@ -1,9 +1,9 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_view.dart';
-import 'package:afkcredits/ui/views/ward_account/ward_account_view.dart';
 import 'package:afkcredits/ui/views/map/main_map_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
+import 'package:afkcredits/ui/views/ward_account/ward_account_view.dart';
 import 'package:afkcredits/ui/views/ward_home/overlays/main_footer_overlay_view.dart';
 import 'package:afkcredits/ui/views/ward_home/overlays/main_header_overlay.dart';
 import 'package:afkcredits/ui/views/ward_home/overlays/quest_details_overlay_view.dart';
@@ -21,11 +21,11 @@ import '../../../datamodels/screentime/screen_time_session.dart';
 
 final log = getLogger("REBUILD LOGGER");
 
-class ExplorerHomeView extends StatefulWidget {
+class WardHomeView extends StatefulWidget {
   final bool showBewareDialog;
   final bool showNumberQuestsDialog;
   final ScreenTimeSession? screenTimeSession;
-  const ExplorerHomeView(
+  const WardHomeView(
       {Key? key,
       this.showBewareDialog = false,
       this.screenTimeSession,
@@ -33,15 +33,15 @@ class ExplorerHomeView extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ExplorerHomeView> createState() => _ExplorerHomeViewState();
+  State<WardHomeView> createState() => _WardHomeViewState();
 }
 
-class _ExplorerHomeViewState extends State<ExplorerHomeView> {
+class _WardHomeViewState extends State<WardHomeView> {
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ExplorerHomeViewModel>.reactive(
-      // viewModelBuilder: () => ExplorerHomeViewModel(),
-      viewModelBuilder: () => ExplorerHomeViewModel(),
+    return ViewModelBuilder<WardHomeViewModel>.reactive(
+      // viewModelBuilder: () => WardHomeViewModel(),
+      viewModelBuilder: () => WardHomeViewModel(),
       // using singleton was kind of unstable :ooo
       // disposeViewModel: false,
       onModelReady: (model) {
@@ -59,7 +59,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                 (model.previouslyFinishedQuest == null);
         return WillPopScope(
           onWillPop: () async {
-            model.maybeRemoveExplorerAccountOverlay();
+            model.maybeRemoveWardAccountOverlay();
             model.maybeRemoveQuestListOverlay();
             return false;
           },
@@ -98,7 +98,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                     MainHeaderOverlay(
                       percentageOfNextLevel: model.percentageOfNextLevel,
                       currentLevel: model.currentLevel(),
-                      onAvatarPressed: model.showExplorerAccountOverlay,
+                      onAvatarPressed: model.showWardAccountOverlay,
                       show: showMainWidgets,
                       onDevFeaturePressed: model.isDevFlavor
                           ? model.openSuperUserSettingsDialog
@@ -114,7 +114,7 @@ class _ExplorerHomeViewState extends State<ExplorerHomeView> {
                         isUsingScreenTime:
                             model.currentScreenTimeSession != null),
 
-                  if (!model.isBusy) ExplorerAccountView(),
+                  if (!model.isBusy) WardAccountView(),
 
                   if (!model.isBusy) CreditsOverlayView(),
 

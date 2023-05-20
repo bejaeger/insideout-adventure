@@ -19,14 +19,13 @@ class ScreenTimeService {
 
   //? State synced with firestore!
   // quest history is added to user service (NOT IDEAL! cause we have a quest service)
-  // map of explorerIds and screen time sessions (list with 1 entry!)
-  Map<String, List<ScreenTimeSession>> supportedExplorerScreenTimeSessions = {};
-  // map of explorerIds with screen time session, filled from firestore
-  Map<String, ScreenTimeSession> supportedExplorerScreenTimeSessionsActive = {};
+  // map of wardIds and screen time sessions (list with 1 entry!)
+  Map<String, List<ScreenTimeSession>> supportedWardScreenTimeSessions = {};
+  // map of wardIds with screen time session, filled from firestore
+  Map<String, ScreenTimeSession> supportedWardScreenTimeSessionsActive = {};
 
   // when child asks for screen time, this map will be filled
-  Map<String, ScreenTimeSession> supportedExplorerScreenTimeSessionsRequested =
-      {};
+  Map<String, ScreenTimeSession> supportedWardScreenTimeSessionsRequested = {};
 
   // ? State synced with local app!
   // map of uid and screen time that are over and we want to show
@@ -285,9 +284,9 @@ class ScreenTimeService {
       {required void Function() callback}) async {
     log.v("Start listening to the screen times in memory (if there are any)");
     Completer<void> completer = Completer();
-    int l = supportedExplorerScreenTimeSessionsActive.length;
+    int l = supportedWardScreenTimeSessionsActive.length;
     int counter = 0;
-    if (supportedExplorerScreenTimeSessionsActive.isEmpty) {
+    if (supportedWardScreenTimeSessionsActive.isEmpty) {
       if (!completer.isCompleted) {
         completer.complete();
         return completer.future;
@@ -295,7 +294,7 @@ class ScreenTimeService {
     }
 
     for (ScreenTimeSession session
-        in supportedExplorerScreenTimeSessionsActive.values) {
+        in supportedWardScreenTimeSessionsActive.values) {
       await continueOrBookkeepScreenTimeSessionOnStartup(
         session: session,
         callback: () {},
@@ -476,7 +475,7 @@ class ScreenTimeService {
   }
 
   void cancelOnlyActiveScreenTimeSubjectListenersAll() {
-    supportedExplorerScreenTimeSessionsActive.forEach((key, session) {
+    supportedWardScreenTimeSessionsActive.forEach((key, session) {
       screenTimeSubjectSubscription[key]?.cancel();
       screenTimeSubjectSubscription[key] = null;
     });
@@ -488,7 +487,7 @@ class ScreenTimeService {
     screenTimeActiveSubject[uid]?.close();
     screenTimeActiveSubject.remove(uid);
 
-    supportedExplorerScreenTimeSessionsActive.remove(uid);
+    supportedWardScreenTimeSessionsActive.remove(uid);
 
     screenTimeTimer[uid]?.cancel();
     screenTimeTimer.remove(uid);

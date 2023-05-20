@@ -11,23 +11,22 @@ import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.
 import 'package:afkcredits/utils/string_utils.dart';
 
 class SingleChildStatViewModel extends SwitchAccountsViewModel {
-  final String explorerUid;
-  SingleChildStatViewModel({required this.explorerUid});
+  final String wardUid;
+  SingleChildStatViewModel({required this.wardUid});
 
-  final log = getLogger("SingleExplorerViewModel");
+  final log = getLogger("SingleWardViewModel");
 
-  User? get explorer => userService.supportedExplorers[explorerUid];
-  UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
-  List<dynamic> get sortedHistory =>
-      userService.sortedHistory(uid: explorerUid);
+  User? get ward => userService.supportedWards[wardUid];
+  UserStatistics get stats => userService.supportedWardStats[wardUid]!;
+  List<dynamic> get sortedHistory => userService.sortedHistory(uid: wardUid);
   int? get totalChildScreenTimeLastDays =>
-      userService.totalChildScreenTimeLastDays(uid: explorerUid)[explorerUid];
+      userService.totalChildScreenTimeLastDays(uid: wardUid)[wardUid];
   int? get totalChildActivityLastDays =>
-      userService.totalChildActivityLastDays(uid: explorerUid)[explorerUid];
+      userService.totalChildActivityLastDays(uid: wardUid)[wardUid];
   int? get totalChildScreenTimeTrend =>
-      userService.totalChildScreenTimeTrend(uid: explorerUid)[explorerUid];
+      userService.totalChildScreenTimeTrend(uid: wardUid)[wardUid];
   int? get totalChildActivityTrend =>
-      userService.totalChildActivityTrend(uid: explorerUid)[explorerUid];
+      userService.totalChildActivityTrend(uid: wardUid)[wardUid];
   String get totalChildScreenTimeLastDaysString =>
       totalChildScreenTimeLastDays != null
           ? totalChildScreenTimeLastDays.toString()
@@ -37,8 +36,8 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
           ? totalChildActivityLastDays.toString()
           : "0";
 
-  String explorerNameFromUid(String uid) {
-    return userService.explorerNameFromUid(uid);
+  String wardNameFromUid(String uid) {
+    return userService.wardNameFromUid(uid);
   }
 
   ScreenTimeSession? getScreenTimeSession({required String uid}) {
@@ -46,19 +45,18 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
   }
 
   Future removeChildFromGuardianAccount() async {
-    if (explorer != null) {
-      log.i("Remove user with id = ${explorer!.uid}");
+    if (ward != null) {
+      log.i("Remove user with id = ${ward!.uid}");
       // ! Very peculiar. Without this we get an error of
       // !_TypeError (type '_DropdownRouteResult<MenuItem>' is not a subtype of type 'SheetResponse<dynamic>?' of 'result')
       // ! From the navigator from the custom_drop_down_button
       await Future.delayed(Duration(milliseconds: 10));
-      final confirmation =
-          await showConfirmationBottomSheet(explorer!.fullName);
+      final confirmation = await showConfirmationBottomSheet(ward!.fullName);
       if (confirmation?.confirmed == true) {
         try {
           setBusy(true);
-          final result = await userService.removeExplorerFromSupportedExplorers(
-              uid: explorer!.uid);
+          final result =
+              await userService.removeWardFromSupportedWards(uid: ward!.uid);
           if (result is String) {
             await showFailureBottomSheet(result);
             return;
@@ -70,7 +68,7 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
         replaceWithHomeView();
       }
     } else {
-      log.wtf("Explorer is null!");
+      log.wtf("Ward is null!");
     }
   }
 
@@ -118,18 +116,18 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     }
   }
 
-  void showExplorerSettingsDialogDialog() async {
+  void showWardSettingsDialogDialog() async {
     // ! Very peculiar. Without this we get an error of
     // !_TypeError (type '_DropdownRouteResult<MenuItem>' is not a subtype of type 'SheetResponse<dynamic>?' of 'result')
     // ! From the navigator from the custom_drop_down_button
     await Future.delayed(Duration(milliseconds: 10));
 
     await dialogService.showCustomDialog(
-      variant: DialogType.ExplorerSettingsForGuardian,
+      variant: DialogType.WardSettingsForGuardian,
       barrierDismissible: true,
       data: {
-        "name": explorer?.fullName,
-        "explorerUid": explorer?.uid,
+        "name": ward?.fullName,
+        "wardUid": ward?.uid,
       },
     );
   }
@@ -149,17 +147,17 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
   }
 
   Future navigateToAddFundsView() async {
-    if (explorer != null) {
+    if (ward != null) {
       await navigationService.navigateTo(Routes.transferFundsView,
           arguments: TransferFundsViewArguments(
               senderInfo: PublicUserInfo(
                   name: currentUser.fullName, uid: currentUser.uid),
-              recipientInfo: PublicUserInfo(
-                  name: explorer!.fullName, uid: explorer!.uid)));
+              recipientInfo:
+                  PublicUserInfo(name: ward!.fullName, uid: ward!.uid)));
       await Future.delayed(Duration(milliseconds: 300));
       notifyListeners();
     } else {
-      log.wtf("No explorer found!");
+      log.wtf("No ward found!");
     }
   }
 

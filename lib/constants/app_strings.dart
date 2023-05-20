@@ -1,6 +1,5 @@
-const String kUserRoleSelectionDialogTitle =
-    "Are you an explorer or a guardian?";
-const String kUserRoleSelectionDialogButtonTitle = "Explorer";
+const String kUserRoleSelectionDialogTitle = "Are you an ward or a guardian?";
+const String kUserRoleSelectionDialogButtonTitle = "Ward";
 const String kUserRoleSelectionDialogCancelTitle = "Guardian";
 
 const String kCreditsToEarnDescription = "TO EARN";

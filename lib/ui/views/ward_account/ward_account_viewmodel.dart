@@ -4,19 +4,18 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
-class ExplorerAccountViewModel extends BaseModel {
-  final log = getLogger("ExplorerAccountViewModel");
+class WardAccountViewModel extends BaseModel {
+  final log = getLogger("WardAccountViewModel");
 
   StreamSubscription? subscription;
 
   void listenToLayout() {
     if (subscription == null) {
-      subscription =
-          layoutService.isShowingExplorerAccountSubject.listen((show) {
+      subscription = layoutService.isShowingWardAccountSubject.listen((show) {
         notifyListeners();
       });
     } else {
-      log.wtf("isShowingExplorerAccount already listened to");
+      log.wtf("isShowingWardAccount already listened to");
     }
   }
 

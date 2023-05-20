@@ -32,8 +32,8 @@ class LoginView extends StatelessWidget with $LoginView {
         body: AuthenticationLayout(
           busy: model.isBusy,
           onCreateAccountTapped: model.navigateToCreateAccount,
-          onDummyLoginExplorerTapped:
-              model.userLoginTapped(userRole: UserRole.explorer),
+          onDummyLoginWardTapped:
+              model.userLoginTapped(userRole: UserRole.ward),
           onDummyLoginGuardianTapped:
               model.userLoginTapped(userRole: UserRole.guardian),
           onDummyLoginAdminTapped:
@@ -75,7 +75,7 @@ class LoginView extends StatelessWidget with $LoginView {
               verticalSpaceRegular,
               /*        TextField(
                 decoration:
-                    InputDecoration(labelText: 'Email or explorer name'),
+                    InputDecoration(labelText: 'Email or ward name'),
                 controller: emailOrNameController,
               ), */
               InsideOutInputField(

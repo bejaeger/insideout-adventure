@@ -38,7 +38,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
         IgnorePointer(
           ignoring: true,
           child: Container(
-            // openSuperUserSettingsDialog only used in explorer view!
+            // openSuperUserSettingsDialog only used in ward view!
             height: openSuperUserSettingsDialog != null ? 400 : 300,
             decoration: BoxDecoration(
               gradient: LinearGradient(

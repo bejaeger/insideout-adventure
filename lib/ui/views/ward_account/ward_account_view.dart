@@ -7,23 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
-class ExplorerAccountView extends StatelessWidget {
-  const ExplorerAccountView({Key? key}) : super(key: key);
+class WardAccountView extends StatelessWidget {
+  const WardAccountView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("==>> Rebuild ExplorerAccountView");
-    return ViewModelBuilder<ExplorerAccountViewModel>.reactive(
-      viewModelBuilder: () => ExplorerAccountViewModel(),
+    print("==>> Rebuild WardAccountView");
+    return ViewModelBuilder<WardAccountViewModel>.reactive(
+      viewModelBuilder: () => WardAccountViewModel(),
       onModelReady: (model) => model.listenToLayout(),
       builder: (context, model, child) => AnimatedPositioned(
         duration: const Duration(milliseconds: 500),
-        top: model.isShowingExplorerAccount ? 0 : -screenHeight(context),
+        top: model.isShowingWardAccount ? 0 : -screenHeight(context),
         curve: Curves.easeOutCubic,
         left: 0,
         right: 0,
         child: CardOverlayLayout(
-          onBack: model.removeExplorerAccountOverlay,
+          onBack: model.removeWardAccountOverlay,
           child: model.currentUserNullable == null
               ? SizedBox(height: 0, width: 0)
               : Column(

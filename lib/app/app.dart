@@ -58,7 +58,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
 @StackedApp(
   routes: [
     MaterialRoute(page: GuardianHomeView),
-    MaterialRoute(page: ExplorerHomeView),
+    MaterialRoute(page: WardHomeView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: CreateAccountView),
     MaterialRoute(page: CreateAccountUserRoleView),
@@ -112,7 +112,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     LazySingleton(classType: PermissionService),
     LazySingleton(classType: NotificationsService),
     LazySingleton(classType: GuardianHomeViewModel),
-    LazySingleton(classType: ExplorerHomeViewModel),
+    LazySingleton(classType: WardHomeViewModel),
     LazySingleton(classType: LocalStorageService),
     Presolve(classType: MapViewModel, presolveUsing: presolveMapViewModel),
     LazySingleton(classType: GoogleMapService),

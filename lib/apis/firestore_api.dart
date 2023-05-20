@@ -59,7 +59,7 @@ class FirestoreApi {
     log.v('Stats document added to ${docRef.path}');
   }
 
-  // when explorer is added without authentication so without ID
+  // when ward is added without authentication so without ID
   // we need to generate that id and add it to the datamodel.
   DocumentReference createUserDocument() {
     final docRef = usersCollection.doc();
@@ -285,7 +285,7 @@ class FirestoreApi {
     );
   }
 
-  Stream<List<User>> getExplorersDataStream({required String uid}) {
+  Stream<List<User>> getWardsDataStream({required String uid}) {
     try {
       return usersCollection
           .where("guardianIds", arrayContains: uid)
@@ -301,10 +301,9 @@ class FirestoreApi {
     }
   }
 
-  Future<List<PublicUserInfo>> queryExplorers(
-      {required String queryString}) async {
+  Future<List<PublicUserInfo>> queryWards({required String queryString}) async {
     QuerySnapshot foundUsers = await usersCollection
-        .where("role", isEqualTo: getStringFromEnum(UserRole.explorer))
+        .where("role", isEqualTo: getStringFromEnum(UserRole.ward))
         .where("fullNameSearch", arrayContains: queryString.toLowerCase())
         .get();
     final results = foundUsers.docs.map(
@@ -577,7 +576,7 @@ class FirestoreApi {
             userDocRef,
             {
               "availableGuardianship":
-                  decrementGuardianship, // decrement available guardianship of explorer
+                  decrementGuardianship, // decrement available guardianship of ward
               "afkCreditsBalance":
                   incrementCredits, // increment afk credits balance
               "lifetimeEarnings":

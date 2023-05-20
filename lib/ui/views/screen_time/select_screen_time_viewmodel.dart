@@ -72,7 +72,7 @@ class SelectScreenTimeViewModel extends BaseModel {
       uid: isGuardianAccount ? childId! : currentUser.uid,
       createdByUid: currentUser.uid,
       userName: isGuardianAccount
-          ? userService.explorerNameFromUid(childId!)
+          ? userService.wardNameFromUid(childId!)
           : currentUser.fullName,
       minutes: useSuperUserFeatures ? 1 : screenTimePreset,
       status: ScreenTimeSessionStatus.notStarted,

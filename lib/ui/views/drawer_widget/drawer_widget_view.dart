@@ -60,9 +60,9 @@ class DrawerWidgetView extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            // onPressed: model.navigateToExplorerHomeView,
+                            // onPressed: model.navigateToWardHomeView,
                             onPressed: model.handleSwitchToGuardianEvent,
-                            //child: Text("Go to explorer home/map")),
+                            //child: Text("Go to ward home/map")),
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: Text("Parent Area \u279A",
@@ -84,9 +84,9 @@ class DrawerWidgetView extends StatelessWidget {
                           style: TextButton.styleFrom(
                               padding: const EdgeInsets.all(0.0),
                               primary: kcBlackHeadlineColor),
-                          // onPressed: model.navigateToExplorerHomeView,
+                          // onPressed: model.navigateToWardHomeView,
                           onPressed: model.logout,
-                          //child: Text("Go to explorer home/map")),
+                          //child: Text("Go to ward home/map")),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child:

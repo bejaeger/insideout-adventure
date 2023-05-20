@@ -54,9 +54,9 @@ class UserService {
   bool get isSuperUser => currentUser.role == UserRole.superUser;
   bool get isAdminUser => currentUser.role == UserRole.admin;
   bool get hasRole => currentUserNullable == null ? false : true;
-  List<User> get supportedExplorersList {
+  List<User> get supportedWardsList {
     List<User> list = [];
-    supportedExplorers.forEach((key, value) {
+    supportedWards.forEach((key, value) {
       list.add(value);
     });
     return list;
@@ -67,14 +67,14 @@ class UserService {
   StreamSubscription? _currentUserStreamSubscription;
   StreamSubscription? _currentUserStatsStreamSubscription;
   GuardianReference? guardianReference;
-  Map<String, User> supportedExplorers = {};
-  Map<String, UserStatistics> supportedExplorerStats = {};
+  Map<String, User> supportedWards = {};
+  Map<String, UserStatistics> supportedWardStats = {};
   // we add the quest history to the user service (THIS IS NOT IDEAL!)
-  Map<String, List<ActivatedQuest>> supportedExplorerQuestsHistory = {};
-  StreamSubscription? _explorersDataStreamSubscriptions;
-  Map<String, StreamSubscription?> _explorerStatsStreamSubscriptions = {};
-  Map<String, StreamSubscription?> _explorerHistoryStreamSubscriptions = {};
-  Map<String, StreamSubscription?> _explorerScreenTimeStreamSubscriptions = {};
+  Map<String, List<ActivatedQuest>> supportedWardQuestsHistory = {};
+  StreamSubscription? _wardsDataStreamSubscriptions;
+  Map<String, StreamSubscription?> _wardStatsStreamSubscriptions = {};
+  Map<String, StreamSubscription?> _wardHistoryStreamSubscriptions = {};
+  Map<String, StreamSubscription?> _wardScreenTimeStreamSubscriptions = {};
 
   Future<void> syncUserAccount(
       {String? uid, bool fromLocalStorage = false, UserRole? role}) async {
@@ -102,7 +102,7 @@ class UserService {
             key: kLocalStorageRoleKey, value: role);
 
         // ? Unclear why the following is needed.
-        // Maybe if an explorer logs in himself, the guardian reference
+        // Maybe if an ward logs in himself, the guardian reference
         // is loaded!
         String? id = await _localStorageService.getFromDisk(
             key: kLocalStorageGuardianReferenceKey);
@@ -132,7 +132,7 @@ class UserService {
         fullName: user.displayName ?? "",
         email: user.email ?? "",
         newUser: true,
-        explorerIds: [],
+        wardIds: [],
         guardianIds: [],
         avatarIdx: 1,
         userSettings: UserSettings(),
@@ -170,10 +170,10 @@ class UserService {
       String? stringPw,
       String? hashedPw,
       UserRole? role}) async {
-    if (method == AuthenticationMethod.EmailOrGuardianCreatedExplorer) {
-      log.i("Login with email or guardian created explorer");
+    if (method == AuthenticationMethod.EmailOrGuardianCreatedWard) {
+      log.i("Login with email or guardian created ward");
       // check whether account exists with emailOrName as name.
-      // In that case we are dealing with an explorer account
+      // In that case we are dealing with an ward account
       // created by a guardian in the app. This account does
       // not have authentication set up but has a reference to the
       // guardian account with the createdByUserWithId field.
@@ -190,10 +190,9 @@ class UserService {
             role: role);
       } else {
         if (user.createdByUserWithId == null) {
-          // if user is not created by another user we talk about an explorer with an own account
+          // if user is not created by another user we talk about an ward with an own account
           // authenticate him with email
-          log.i(
-              "User is NOT created by guardian, explorer has its own account.");
+          log.i("User is NOT created by guardian, ward has its own account.");
           return await runLoginLogic(
               method: AuthenticationMethod.email,
               emailOrName: user.email,
@@ -204,7 +203,7 @@ class UserService {
           if (user.password == null) {
             // something really bad happened
             log.wtf(
-                "Should never end up here: This is because no password of explorer was found.");
+                "Should never end up here: This is because no password of ward was found.");
             return Future.value(AFKCreditsAuthenticationResultService.error(
                 errorMessage:
                     "No permissions to login to user with name or email '$emailOrName'."));
@@ -299,7 +298,7 @@ class UserService {
             fullName: fullName ?? (user.displayName ?? ""),
             email: user.email ?? "",
             newUser: true,
-            explorerIds: [],
+            wardIds: [],
             guardianIds: [],
             avatarIdx: 1,
             userSettings: UserSettings(),
@@ -322,12 +321,12 @@ class UserService {
     }
   }
 
-  bool isSupportedExplorer({required String uid}) {
-    List<String> explorerIds = currentUser.explorerIds;
-    return explorerIds.contains(uid);
+  bool isSupportedWard({required String uid}) {
+    List<String> wardIds = currentUser.wardIds;
+    return wardIds.contains(uid);
   }
 
-  Future createExplorerAccount(
+  Future createWardAccount(
       {required String name,
       required String password,
       required AuthenticationMethod authMethod,
@@ -337,44 +336,41 @@ class UserService {
     }
 
     final docRef = _firestoreApi.createUserDocument();
-    final newExplorer = User(
+    final newWard = User(
       authMethod: authMethod,
       fullName: name,
       password: hashPassword(password),
       uid: docRef.id,
-      role: UserRole.explorer,
+      role: UserRole.ward,
       guardianIds: [currentUser.uid],
       createdByUserWithId: currentUser.uid,
-      explorerIds: [],
+      wardIds: [],
       newUser: true,
       deviceId: currentUser.deviceId,
       tokens: currentUser.tokens,
       avatarIdx: 1,
       userSettings: userSettings,
     );
-    await createUserAccount(user: newExplorer);
-    List<String> newExplorerIds = addToSupportedExplorersList(uid: docRef.id);
-    await updateUserData(
-        user: currentUser.copyWith(explorerIds: newExplorerIds));
+    await createUserAccount(user: newWard);
+    List<String> newWardIds = addToSupportedWardsList(uid: docRef.id);
+    await updateUserData(user: currentUser.copyWith(wardIds: newWardIds));
   }
 
-  Future removeExplorerFromSupportedExplorers({required String uid}) async {
+  Future removeWardFromSupportedWards({required String uid}) async {
     try {
-      if (!currentUser.explorerIds.contains(uid)) {
-        return "Explorer not supported";
+      if (!currentUser.wardIds.contains(uid)) {
+        return "Ward not supported";
       } else {
-        log.i("Removing explorer with id $uid from list of explorers");
-        List<String> newExplorerIds = removeFromExplorerLists(uid: uid);
+        log.i("Removing ward with id $uid from list of wards");
+        List<String> newWardIds = removeFromWardLists(uid: uid);
         await Future.wait([
-          updateUserData(
-              user: currentUser.copyWith(explorerIds: newExplorerIds)),
+          updateUserData(user: currentUser.copyWith(wardIds: newWardIds)),
           removeGuardianIdFromOtherUser(
               otherUsersId: uid, guardianId: currentUser.uid),
         ]);
       }
     } catch (e) {
-      log.e(
-          "Error when trying to add new explorer to list of supported explorers");
+      log.e("Error when trying to add new ward to list of supported wards");
       rethrow;
     }
   }
@@ -387,13 +383,13 @@ class UserService {
   /// 1. currentUser
   /// 2. currentUser stats
   ///
-  /// 3. explorer user data
+  /// 3. ward user data
   ///    -> handled with a query snapshot to look for all users that
   ///       have the currentUser's id in the guardianIds arraay
   ///
-  /// 4. explorer statistics documents / quest history of each explorer
+  /// 4. ward statistics documents / quest history of each ward
   ///   -> handled manually in the listener of 3. by adding and removing
-  ///      listeneres to the summary stats documents whenever the explorer
+  ///      listeneres to the summary stats documents whenever the ward
   ///      changes
   ///
 
@@ -429,32 +425,32 @@ class UserService {
       log.w("Already listening to current User document");
     }
 
-    // set up listener for explorer user data
-    if (_explorersDataStreamSubscriptions == null) {
-      _explorersDataStreamSubscriptions =
-          _firestoreApi.getExplorersDataStream(uid: currentUser.uid).listen(
+    // set up listener for ward user data
+    if (_wardsDataStreamSubscriptions == null) {
+      _wardsDataStreamSubscriptions =
+          _firestoreApi.getWardsDataStream(uid: currentUser.uid).listen(
         (users) async {
-          // remove explorers if not present anymore
+          // remove wards if not present anymore
           List<String> newUids = users.map((e) => e.uid).toList();
           List<String> currentUids =
-              supportedExplorersList.map((e) => e.uid).toList();
+              supportedWardsList.map((e) => e.uid).toList();
           currentUids.forEach(
             (element) {
               if (!newUids.contains(element)) {
-                removeFromExplorerLists(uid: element);
+                removeFromWardLists(uid: element);
               }
             },
           );
-          // update existing explorers
+          // update existing wards
           users.forEach(
             (user) {
-              supportedExplorers[user.uid] = user;
+              supportedWards[user.uid] = user;
             },
           );
 
-          // adds listener to stats document and quest history of each explorer
-          await addExplorerListeners(
-              explorerIds: newUids,
+          // adds listener to stats document and quest history of each ward
+          await addWardListeners(
+              wardIds: newUids,
               callback: callback,
               screenTimeRequestDialogCallback: screenTimeRequestDialogCallback);
 
@@ -464,39 +460,37 @@ class UserService {
           if (callback != null) {
             callback();
           }
-          log.v("Listened to ${supportedExplorers.length} supportedExplorers");
-          log.v(
-              "Listened to ${supportedExplorerStats.length} supportedExplorerStats");
+          log.v("Listened to ${supportedWards.length} supportedWards");
+          log.v("Listened to ${supportedWardStats.length} supportedWardStats");
         },
       );
     } else {
-      log.w("Already listening to list of explorers");
+      log.w("Already listening to list of wards");
       completer.complete();
     }
   }
 
   // listens to the user document as well as the user stats document
-  // of all explorers.
-  Future<void> addExplorerListeners(
-      {required List<String> explorerIds,
+  // of all wards.
+  Future<void> addWardListeners(
+      {required List<String> wardIds,
       void Function()? callback,
       void Function()? screenTimeRequestDialogCallback}) async {
     Completer<void> completer = Completer();
     int i = 0;
-    if (explorerIds.length == 0) {
+    if (wardIds.length == 0) {
       completer.complete();
       return completer.future;
     }
-    explorerIds.forEach((explorerId) async {
-      await addExplorerStatListener(explorerId: explorerId, callback: callback);
-      await addExplorerHistoryListener(
-          explorerId: explorerId, callback: callback);
-      await addExplorerScreenTimeListener(
-          explorerId: explorerId,
+    wardIds.forEach((wardId) async {
+      await addWardStatListener(wardId: wardId, callback: callback);
+      await addWardHistoryListener(wardId: wardId, callback: callback);
+      await addWardScreenTimeListener(
+          wardId: wardId,
           callback: callback,
           screenTimeRequestDialogCallback: screenTimeRequestDialogCallback);
       i += 1;
-      if (i == explorerIds.length) {
+      if (i == wardIds.length) {
         if (!completer.isCompleted) {
           completer.complete();
         }
@@ -505,15 +499,15 @@ class UserService {
     return completer.future;
   }
 
-  Future addExplorerStatListener(
-      {required String explorerId, void Function()? callback}) async {
+  Future addWardStatListener(
+      {required String wardId, void Function()? callback}) async {
     Completer<void> completer = Completer();
-    if (!_explorerStatsStreamSubscriptions.containsKey(explorerId) ||
-        _explorerStatsStreamSubscriptions[explorerId] == null) {
-      _explorerStatsStreamSubscriptions[explorerId] = _firestoreApi
-          .getUserSummaryStatisticsStream(uid: explorerId)
+    if (!_wardStatsStreamSubscriptions.containsKey(wardId) ||
+        _wardStatsStreamSubscriptions[wardId] == null) {
+      _wardStatsStreamSubscriptions[wardId] = _firestoreApi
+          .getUserSummaryStatisticsStream(uid: wardId)
           .listen((stats) {
-        supportedExplorerStats[explorerId] = stats;
+        supportedWardStats[wardId] = stats;
         if (!completer.isCompleted) {
           completer.complete();
         }
@@ -522,20 +516,20 @@ class UserService {
         }
       });
     } else {
-      log.w("Stats stream of user with id $explorerId already listened to!");
+      log.w("Stats stream of user with id $wardId already listened to!");
       completer.complete();
     }
     return completer.future;
   }
 
-  Future addExplorerHistoryListener(
-      {required String explorerId, void Function()? callback}) async {
+  Future addWardHistoryListener(
+      {required String wardId, void Function()? callback}) async {
     Completer<void> completer = Completer();
-    if (!_explorerHistoryStreamSubscriptions.containsKey(explorerId) ||
-        _explorerHistoryStreamSubscriptions[explorerId] == null) {
-      _explorerHistoryStreamSubscriptions[explorerId] =
-          _firestoreApi.getPastQuestsStream(uid: explorerId).listen((snapshot) {
-        supportedExplorerQuestsHistory[explorerId] = snapshot
+    if (!_wardHistoryStreamSubscriptions.containsKey(wardId) ||
+        _wardHistoryStreamSubscriptions[wardId] == null) {
+      _wardHistoryStreamSubscriptions[wardId] =
+          _firestoreApi.getPastQuestsStream(uid: wardId).listen((snapshot) {
+        supportedWardQuestsHistory[wardId] = snapshot
             .where((element) => element.status == QuestStatus.success)
             .toList();
         if (!completer.isCompleted) {
@@ -547,24 +541,23 @@ class UserService {
       });
     } else {
       log.w(
-          "Quest history stream of user with id $explorerId already listened to!");
+          "Quest history stream of user with id $wardId already listened to!");
       completer.complete();
     }
     return completer.future;
   }
 
-  Future addExplorerScreenTimeListener(
-      {required String explorerId,
+  Future addWardScreenTimeListener(
+      {required String wardId,
       void Function()? callback,
       void Function()? screenTimeRequestDialogCallback}) async {
     Completer<void> completer = Completer();
-    if (!_explorerScreenTimeStreamSubscriptions.containsKey(explorerId) ||
-        _explorerScreenTimeStreamSubscriptions[explorerId] == null) {
-      _explorerScreenTimeStreamSubscriptions[explorerId] =
-          _firestoreApi.getScreenTimeSessionStream(uid: explorerId).listen(
+    if (!_wardScreenTimeStreamSubscriptions.containsKey(wardId) ||
+        _wardScreenTimeStreamSubscriptions[wardId] == null) {
+      _wardScreenTimeStreamSubscriptions[wardId] =
+          _firestoreApi.getScreenTimeSessionStream(uid: wardId).listen(
         (snapshot) async {
-          _screenTimeService.supportedExplorerScreenTimeSessions[explorerId] =
-              snapshot;
+          _screenTimeService.supportedWardScreenTimeSessions[wardId] = snapshot;
 
           // Need to remove active screen time here when it
           // is stopped on another phone!
@@ -576,12 +569,10 @@ class UserService {
           if (completedOrCancelled.any((element) =>
               element.sessionId ==
               _screenTimeService
-                  .supportedExplorerScreenTimeSessionsActive[explorerId]
-                  ?.sessionId)) {
+                  .supportedWardScreenTimeSessionsActive[wardId]?.sessionId)) {
             // this means an active screen time session was stopped manually!
-            _screenTimeService.cancelActiveScreenTimeListeners(uid: explorerId);
-            log.v(
-                "Cancelling screen time event for explorer with id $explorerId");
+            _screenTimeService.cancelActiveScreenTimeListeners(uid: wardId);
+            log.v("Cancelling screen time event for ward with id $wardId");
             if (callback != null) {
               callback();
             }
@@ -590,17 +581,16 @@ class UserService {
               "Listened to new screen time session event fired from firestore listener.");
 
           // potentially add to active screen time map
-          ScreenTimeSession? prevActiveSessions = _screenTimeService
-              .supportedExplorerScreenTimeSessionsActive[explorerId];
+          ScreenTimeSession? prevActiveSessions =
+              _screenTimeService.supportedWardScreenTimeSessionsActive[wardId];
 
           // Check for any active screen times!
           try {
             ScreenTimeSession session = snapshot.firstWhere(
                 (element) => element.status == ScreenTimeSessionStatus.active);
-            _screenTimeService
-                    .supportedExplorerScreenTimeSessionsActive[explorerId] =
+            _screenTimeService.supportedWardScreenTimeSessionsActive[wardId] =
                 session;
-            // there is an active session for explorer with id explorerId
+            // there is an active session for ward with id wardId
             // need to start local screen time listeners if they are not yet started!
             await _screenTimeService
                 .continueOrBookkeepScreenTimeSessionOnStartup(
@@ -613,22 +603,21 @@ class UserService {
             );
           } catch (e) {
             if (e is StateError) {
-              log.v("No active screen time for explorer with id $explorerId");
+              log.v("No active screen time for ward with id $wardId");
               if (prevActiveSessions != null) {
                 // THIS means a screen time session was cancelled prematurely after X
                 // seconds (30 seconds per default) and was deleted from firestore!
                 // See stopScreenTime function in screen_time_service.dart
-                _screenTimeService.cancelActiveScreenTimeListeners(
-                    uid: explorerId);
+                _screenTimeService.cancelActiveScreenTimeListeners(uid: wardId);
                 log.v(
-                    "Cancelling screen time event because it was deleted for explorer with id $explorerId");
+                    "Cancelling screen time event because it was deleted for ward with id $wardId");
                 if (callback != null) {
                   callback();
                 }
               }
               // since there is no active session we should not forget to remove it from the state!
-              _screenTimeService.supportedExplorerScreenTimeSessionsActive
-                  .remove(explorerId);
+              _screenTimeService.supportedWardScreenTimeSessionsActive
+                  .remove(wardId);
             } else {
               rethrow;
             }
@@ -638,17 +627,16 @@ class UserService {
             ScreenTimeSession session = snapshot.firstWhere((element) =>
                 element.status == ScreenTimeSessionStatus.requested);
             _screenTimeService
-                    .supportedExplorerScreenTimeSessionsRequested[explorerId] =
-                session;
+                .supportedWardScreenTimeSessionsRequested[wardId] = session;
             if (screenTimeRequestDialogCallback != null) {
               screenTimeRequestDialogCallback();
             }
           } catch (e) {
             if (e is StateError) {
               log.v(
-                  "No requested screen time for explorer with id $explorerId anymore");
-              _screenTimeService.supportedExplorerScreenTimeSessionsRequested
-                  .remove(explorerId);
+                  "No requested screen time for ward with id $wardId anymore");
+              _screenTimeService.supportedWardScreenTimeSessionsRequested
+                  .remove(wardId);
             }
           }
 
@@ -662,7 +650,7 @@ class UserService {
       );
     } else {
       log.w(
-          "Screen time session stream of user with id $explorerId already listened to!");
+          "Screen time session stream of user with id $wardId already listened to!");
       completer.complete();
     }
     return completer.future;
@@ -672,7 +660,7 @@ class UserService {
     if (childId == null) {
       return currentUserStats.afkCreditsBalance;
     } else {
-      return supportedExplorerStats[childId]!.afkCreditsBalance;
+      return supportedWardStats[childId]!.afkCreditsBalance;
     }
   }
 
@@ -744,12 +732,12 @@ class UserService {
   List<ActivatedQuest> sortedChildQuestHistory({String? uid}) {
     List<ActivatedQuest> sortedQuests = [];
     if (uid == null) {
-      supportedExplorerQuestsHistory.forEach((key, quests) {
+      supportedWardQuestsHistory.forEach((key, quests) {
         sortedQuests.addAll(quests);
       });
     } else {
-      if (supportedExplorerQuestsHistory.containsKey(uid)) {
-        sortedQuests = supportedExplorerQuestsHistory[uid]!;
+      if (supportedWardQuestsHistory.containsKey(uid)) {
+        sortedQuests = supportedWardQuestsHistory[uid]!;
       }
     }
     sortedQuests.sort((a, b) {
@@ -767,14 +755,13 @@ class UserService {
   List<ScreenTimeSession> sortedChildScreenTimeSessions({String? uid}) {
     List<ScreenTimeSession> sortedSessions = [];
     if (uid == null) {
-      _screenTimeService.supportedExplorerScreenTimeSessions
-          .forEach((key, quests) {
+      _screenTimeService.supportedWardScreenTimeSessions.forEach((key, quests) {
         sortedSessions.addAll(quests);
       });
     } else {
-      if (supportedExplorerQuestsHistory.containsKey(uid)) {
+      if (supportedWardQuestsHistory.containsKey(uid)) {
         sortedSessions =
-            _screenTimeService.supportedExplorerScreenTimeSessions[uid]!;
+            _screenTimeService.supportedWardScreenTimeSessions[uid]!;
       }
     }
     sortedSessions.sort((a, b) {
@@ -794,11 +781,10 @@ class UserService {
     if (uid == null) {
       list = [...sortedChildScreenTimeSessions(), ...sortedChildQuestHistory()];
     } else {
-      if (_screenTimeService.supportedExplorerScreenTimeSessions
-          .containsKey(uid)) {
+      if (_screenTimeService.supportedWardScreenTimeSessions.containsKey(uid)) {
         list = list + sortedChildScreenTimeSessions(uid: uid);
       }
-      if (supportedExplorerQuestsHistory.containsKey(uid)) {
+      if (supportedWardQuestsHistory.containsKey(uid)) {
         list = list + sortedChildQuestHistory(uid: uid);
       }
     }
@@ -828,8 +814,7 @@ class UserService {
       {int deltaDays = 7, int daysAgo = 0, String? uid}) {
     Map<String, int> screenTime = {};
 
-    _screenTimeService.supportedExplorerScreenTimeSessions
-        .forEach((key, session) {
+    _screenTimeService.supportedWardScreenTimeSessions.forEach((key, session) {
       session.forEach((element) {
         if (element.startedAt is Timestamp) {
           if (DateTime.now().difference(element.startedAt.toDate()).inDays >=
@@ -855,7 +840,7 @@ class UserService {
   Map<String, int> totalChildActivityLastDays(
       {int deltaDays = 7, int daysAgo = 0, String? uid}) {
     Map<String, int> activity = {};
-    supportedExplorerQuestsHistory.forEach((key, session) {
+    supportedWardQuestsHistory.forEach((key, session) {
       session.forEach((element) {
         if (DateTime.now().difference(element.createdAt.toDate()).inDays >=
                 daysAgo &&
@@ -901,8 +886,8 @@ class UserService {
     return delta;
   }
 
-  String explorerNameFromUid(String uid) {
-    for (User user in supportedExplorersList) {
+  String wardNameFromUid(String uid) {
+    for (User user in supportedWardsList) {
       if (user.uid == uid) {
         return user.fullName;
       }
@@ -911,7 +896,7 @@ class UserService {
   }
 
   bool hasGuardian({required String uid}) {
-    return supportedExplorersList.any((element) => element.uid == uid);
+    return supportedWardsList.any((element) => element.uid == uid);
   }
 
   bool hasCompletedQuest({required String? questId}) {
@@ -929,22 +914,22 @@ class UserService {
     await _firestoreApi.updateUserData(user: newUser);
   }
 
-  List<String> removeFromExplorerLists({required String uid}) {
-    supportedExplorers.remove(uid);
-    supportedExplorerStats.remove(uid);
-    cancelExplorerListener(uid: uid);
-    List<String> newExplorerIds = [];
-    supportedExplorers.forEach((key, value) {
-      newExplorerIds.add(value.uid);
+  List<String> removeFromWardLists({required String uid}) {
+    supportedWards.remove(uid);
+    supportedWardStats.remove(uid);
+    cancelWardListener(uid: uid);
+    List<String> newWardIds = [];
+    supportedWards.forEach((key, value) {
+      newWardIds.add(value.uid);
     });
-    return newExplorerIds;
+    return newWardIds;
   }
 
-  List<String> addToSupportedExplorersList({required String uid}) {
-    List<String> newExplorerIds = [];
-    newExplorerIds.addAll(currentUser.explorerIds);
-    newExplorerIds.add(uid);
-    return newExplorerIds;
+  List<String> addToSupportedWardsList({required String uid}) {
+    List<String> newWardIds = [];
+    newWardIds.addAll(currentUser.wardIds);
+    newWardIds.add(uid);
+    return newWardIds;
   }
 
   bool isMatchingPasswords(
@@ -1028,14 +1013,14 @@ class UserService {
     return uid != null;
   }
 
-  void cancelExplorerListener({required String uid}) {
+  void cancelWardListener({required String uid}) {
     log.v("Cancel transfer data listener with config: '$uid'");
-    _explorerStatsStreamSubscriptions[uid]?.cancel();
-    _explorerStatsStreamSubscriptions[uid] = null;
-    _explorerHistoryStreamSubscriptions[uid]?.cancel();
-    _explorerHistoryStreamSubscriptions[uid] = null;
-    _explorerScreenTimeStreamSubscriptions[uid]?.cancel();
-    _explorerScreenTimeStreamSubscriptions[uid] = null;
+    _wardStatsStreamSubscriptions[uid]?.cancel();
+    _wardStatsStreamSubscriptions[uid] = null;
+    _wardHistoryStreamSubscriptions[uid]?.cancel();
+    _wardHistoryStreamSubscriptions[uid] = null;
+    _wardScreenTimeStreamSubscriptions[uid]?.cancel();
+    _wardScreenTimeStreamSubscriptions[uid] = null;
   }
 
   Future handleLogoutEvent(
@@ -1052,20 +1037,20 @@ class UserService {
     _currentUserStatsStreamSubscription?.cancel();
     _currentUserStatsStreamSubscription = null;
 
-    _explorerStatsStreamSubscriptions.forEach((key, value) {
-      cancelExplorerListener(uid: key);
+    _wardStatsStreamSubscriptions.forEach((key, value) {
+      cancelWardListener(uid: key);
     });
-    _explorerHistoryStreamSubscriptions.forEach((key, value) {
-      cancelExplorerListener(uid: key);
+    _wardHistoryStreamSubscriptions.forEach((key, value) {
+      cancelWardListener(uid: key);
     });
-    _explorerScreenTimeStreamSubscriptions.forEach((key, value) {
-      cancelExplorerListener(uid: key);
+    _wardScreenTimeStreamSubscriptions.forEach((key, value) {
+      cancelWardListener(uid: key);
     });
-    _explorersDataStreamSubscriptions?.cancel();
-    _explorersDataStreamSubscriptions = null;
+    _wardsDataStreamSubscriptions?.cancel();
+    _wardsDataStreamSubscriptions = null;
 
-    supportedExplorers = {};
-    supportedExplorerStats = {};
+    supportedWards = {};
+    supportedWardStats = {};
 
     if (!doNotClearGuardianReference) clearGuardianReference();
 

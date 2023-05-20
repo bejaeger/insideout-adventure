@@ -88,7 +88,7 @@ class MainFooterOverlayView extends StatelessWidget {
                             margin: 0,
                             boxShadow: [],
                             onTap: () {
-                              model.showExplorerSettingsDialog();
+                              model.showWardSettingsDialog();
                             },
                           ),
                           CircularMenuItem(

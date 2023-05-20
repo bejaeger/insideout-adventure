@@ -6,7 +6,7 @@ part 'guardian_reference.g.dart';
 
 ///
 /// Model that holds a reference to a guardian
-/// in the scenario where the explorer does not
+/// in the scenario where the ward does not
 /// have his own phone.
 /// The guardian can switch to his account
 /// with a reference stored in this datamodel.

@@ -94,8 +94,8 @@ abstract class AuthenticationViewModel extends FormViewModel
     final role = this.role ?? _userService.getUserRole;
     log.i("User logged in with role $role");
 
-    if (role == UserRole.explorer || role == UserRole.superUser) {
-      _navigationService.replaceWith(Routes.explorerHomeView);
+    if (role == UserRole.ward || role == UserRole.superUser) {
+      _navigationService.replaceWith(Routes.wardHomeView);
     } else {
       final onboarded = await _localStorageService.getFromDisk(
           key: kLocalStorageSawOnBoardingKey);

@@ -5,12 +5,12 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 /// AFK Credits authentication result
 /// We need this abstraction because we
 /// can have users not authenticated with
-/// firebase authentication (explorer accounts
+/// firebase authentication (ward accounts
 /// added from guardians)
 
 class AFKCreditsAuthenticationResultService {
   final User? user;
-  Map<String, User> supportedExplorers = {};
+  Map<String, User> supportedWards = {};
 
   final firebase.User? firebaseUser;
   final String? uid;
@@ -35,7 +35,7 @@ class AFKCreditsAuthenticationResultService {
         fromLocalStorage = false,
         user = null;
 
-  AFKCreditsAuthenticationResultService.explorerCreatedFromGuardian({this.user})
+  AFKCreditsAuthenticationResultService.wardCreatedFromGuardian({this.user})
       : errorMessage = null,
         firebaseUser = null,
         uid = user?.uid,
@@ -58,13 +58,13 @@ class AFKCreditsAuthenticationResultService {
 
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
 
-  bool get isExplorerCreatedFromGuardian =>
+  bool get isWardCreatedFromGuardian =>
       (firebaseUser == null && user != null) ||
       (firebaseUser == null && user == null && uid != null);
 
-  List<User> get supportedExplorersList {
+  List<User> get supportedWardsList {
     List<User> list = [];
-    supportedExplorers.forEach((key, value) {
+    supportedWards.forEach((key, value) {
       list.add(value);
     });
     return list;

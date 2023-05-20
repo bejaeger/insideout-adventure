@@ -21,7 +21,7 @@ mixin NavigationMixin {
   final LayoutService _layoutService = locator<LayoutService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
-  void navToExplorerCreateAccount({required UserRole role}) {
+  void navToWardCreateAccount({required UserRole role}) {
     _navigationService.replaceWith(Routes.createAccountView,
         arguments: CreateAccountViewArguments(role: role));
   }
@@ -52,12 +52,12 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.feedbackView);
   }
 
-  Future replaceWithExplorerHomeView(
+  Future replaceWithWardHomeView(
       {bool showBewareDialog = false,
       bool showNumberQuestsDialog = false,
       ScreenTimeSession? screenTimeSession}) async {
-    await _navigationService.replaceWith(Routes.explorerHomeView,
-        arguments: ExplorerHomeViewArguments(
+    await _navigationService.replaceWith(Routes.wardHomeView,
+        arguments: WardHomeViewArguments(
             showBewareDialog: showBewareDialog,
             showNumberQuestsDialog: showNumberQuestsDialog,
             screenTimeSession: screenTimeSession));
@@ -110,8 +110,8 @@ mixin NavigationMixin {
     _layoutService.setIsShowingQuestList(true);
   }
 
-  void showExplorerAccountOverlay() {
-    _layoutService.setIsShowingExplorerAccount(true);
+  void showWardAccountOverlay() {
+    _layoutService.setIsShowingWardAccount(true);
   }
 
   void showCreditsOverlay() {
@@ -126,8 +126,8 @@ mixin NavigationMixin {
     _layoutService.setIsShowingCreditsOverlay(false);
   }
 
-  void removeExplorerAccountOverlay() {
-    _layoutService.setIsShowingExplorerAccount(false);
+  void removeWardAccountOverlay() {
+    _layoutService.setIsShowingWardAccount(false);
   }
 
   void maybeRemoveQuestListOverlay() {
@@ -136,9 +136,9 @@ mixin NavigationMixin {
     }
   }
 
-  void maybeRemoveExplorerAccountOverlay() {
-    if (_layoutService.isShowingExplorerAccount) {
-      _layoutService.setIsShowingExplorerAccount(false);
+  void maybeRemoveWardAccountOverlay() {
+    if (_layoutService.isShowingWardAccount) {
+      _layoutService.setIsShowingWardAccount(false);
     }
   }
 
@@ -177,7 +177,7 @@ mixin NavigationMixin {
   }
 
   Future navToCreateChildAccount() async {
-    await _navigationService.navigateTo(Routes.createExplorerView);
+    await _navigationService.navigateTo(Routes.createWardView);
   }
 
   Future navToActiveScreenTimeView({required ScreenTimeSession session}) async {

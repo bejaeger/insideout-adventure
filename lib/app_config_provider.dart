@@ -48,7 +48,7 @@ class AppConfigProvider {
   }
 
   String getTestUserEmail(UserRole? role) {
-    if (role == UserRole.explorer) {
+    if (role == UserRole.ward) {
       return "test@gmail.com";
     } else if (role == UserRole.guardian) {
       return "test2@gmail.com";

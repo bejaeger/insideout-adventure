@@ -58,7 +58,7 @@ import 'package:stacked_services/stacked_services.dart' as _i31;
 class Routes {
   static const guardianHomeView = '/guardian-home-view';
 
-  static const explorerHomeView = '/explorer-home-view';
+  static const wardHomeView = '/ward-home-view';
 
   static const loginView = '/login-view';
 
@@ -72,7 +72,7 @@ class Routes {
 
   static const selectRoleAfterLoginView = '/select-role-after-login-view';
 
-  static const createExplorerView = '/create-explorer-view';
+  static const createWardView = '/create-ward-view';
 
   static const singleChildStatView = '/single-child-stat-view';
 
@@ -106,14 +106,14 @@ class Routes {
 
   static const all = <String>{
     guardianHomeView,
-    explorerHomeView,
+    wardHomeView,
     loginView,
     createAccountView,
     createAccountUserRoleView,
     startUpView,
     startUpScreenTimeView,
     selectRoleAfterLoginView,
-    createExplorerView,
+    createWardView,
     singleChildStatView,
     transferFundsView,
     setPinView,
@@ -139,8 +139,8 @@ class StackedRouter extends _i1.RouterBase {
       page: _i2.GuardianHomeView,
     ),
     _i1.RouteDef(
-      Routes.explorerHomeView,
-      page: _i3.ExplorerHomeView,
+      Routes.wardHomeView,
+      page: _i3.WardHomeView,
     ),
     _i1.RouteDef(
       Routes.loginView,
@@ -167,7 +167,7 @@ class StackedRouter extends _i1.RouterBase {
       page: _i9.SelectRoleAfterLoginView,
     ),
     _i1.RouteDef(
-      Routes.createExplorerView,
+      Routes.createWardView,
       page: _i10.CreateWardView,
     ),
     _i1.RouteDef(
@@ -243,12 +243,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i3.ExplorerHomeView: (data) {
-      final args = data.getArgs<ExplorerHomeViewArguments>(
-        orElse: () => const ExplorerHomeViewArguments(),
+    _i3.WardHomeView: (data) {
+      final args = data.getArgs<WardHomeViewArguments>(
+        orElse: () => const WardHomeViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i3.ExplorerHomeView(
+        builder: (context) => _i3.WardHomeView(
             key: args.key,
             showBewareDialog: args.showBewareDialog,
             screenTimeSession: args.screenTimeSession,
@@ -458,8 +458,8 @@ class GuardianHomeViewArguments {
   final _i27.ScreenTimeSession? screenTimeSession;
 }
 
-class ExplorerHomeViewArguments {
-  const ExplorerHomeViewArguments({
+class WardHomeViewArguments {
+  const WardHomeViewArguments({
     this.key,
     this.showBewareDialog = false,
     this.screenTimeSession,
@@ -656,7 +656,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToExplorerHomeView({
+  Future<dynamic> navigateToWardHomeView({
     _i26.Key? key,
     bool showBewareDialog = false,
     _i27.ScreenTimeSession? screenTimeSession,
@@ -667,8 +667,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo<dynamic>(Routes.explorerHomeView,
-        arguments: ExplorerHomeViewArguments(
+    return navigateTo<dynamic>(Routes.wardHomeView,
+        arguments: WardHomeViewArguments(
             key: key,
             showBewareDialog: showBewareDialog,
             screenTimeSession: screenTimeSession,
@@ -784,7 +784,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo<dynamic>(Routes.createExplorerView,
+    return navigateTo<dynamic>(Routes.createWardView,
         arguments: CreateWardViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,

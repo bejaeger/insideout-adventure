@@ -4,7 +4,7 @@ import 'package:insideout_ui/insideout_ui.dart';
 
 class SelectUserRoleLayout extends StatelessWidget {
   final void Function() onBackPressed;
-  final void Function() onExplorerPressed;
+  final void Function() onWardPressed;
   final void Function() onGuardianPressed;
   final void Function()? onSuperUserPressed;
   final void Function()? onAdminMasterPressed;
@@ -15,7 +15,7 @@ class SelectUserRoleLayout extends StatelessWidget {
   const SelectUserRoleLayout(
       {Key? key,
       required this.onBackPressed,
-      required this.onExplorerPressed,
+      required this.onWardPressed,
       required this.onGuardianPressed,
       this.isBusy = false,
       this.onSuperUserPressed,
@@ -46,7 +46,7 @@ class SelectUserRoleLayout extends StatelessWidget {
             verticalSpaceLarge,
             verticalSpaceSmall,
             InsideOutButton(
-              onTap: onExplorerPressed,
+              onTap: onWardPressed,
               title: "I am a child",
               height: 80,
               disabled: true,

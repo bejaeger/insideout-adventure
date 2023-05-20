@@ -21,10 +21,10 @@ import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.da
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
 
-class ExplorerHomeViewModel extends SwitchAccountsViewModel
+class WardHomeViewModel extends SwitchAccountsViewModel
     with MapStateControlMixin {
   late final String name;
-  ExplorerHomeViewModel() : super(explorerUid: "") {
+  WardHomeViewModel() : super(wardUid: "") {
     // have to do that otherwise we get a null error when
     // switching account to the guardian account
     this.name = currentUser.fullName;
@@ -33,7 +33,7 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
       locator<QuestTestingService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
-  final log = getLogger("ExplorerHomeViewModel");
+  final log = getLogger("WardHomeViewModel");
   final NotificationsService _notificationService =
       locator<NotificationsService>();
 
@@ -185,8 +185,8 @@ class ExplorerHomeViewModel extends SwitchAccountsViewModel
         getLocation(forceAwait: true, forceGettingNewPosition: false),
         // adds listener to screen time collection!
         // needed e.g. when child creates screen time session but guardian removes it
-        userService.addExplorerScreenTimeListener(
-            explorerId: currentUser.uid, callback: () => notifyListeners()),
+        userService.addWardScreenTimeListener(
+            wardId: currentUser.uid, callback: () => notifyListeners()),
       ],
     );
   }

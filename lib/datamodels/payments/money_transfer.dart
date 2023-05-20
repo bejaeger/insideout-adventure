@@ -36,7 +36,7 @@ class MoneyTransfer with _$MoneyTransfer {
         dynamic createdAt,
     @Default(TransferStatus.Initialized)
         TransferStatus status,
-    @Default(TransferType.Guardian2ExplorerCredits)
+    @Default(TransferType.Guardian2WardCredits)
         TransferType type,
     @JsonKey(
       name: "transferId",

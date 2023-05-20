@@ -4,7 +4,7 @@
 
 enum UserRole {
   guardian,
-  explorer,
+  ward,
   admin,
   unassigned,
   adminMaster /*legacy*/,
