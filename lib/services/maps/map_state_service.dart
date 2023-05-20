@@ -99,7 +99,7 @@ class MapStateService {
     lastBirdViewZoom = zoom;
   }
 
-  void setCameraToDefaultChildPosition() {
+  void setCameraToDefaultWardPosition() {
     resetSnapshotOfCameraPosition();
     tilt = kInitialTilt;
     zoom = kInitialZoomAvatarView;

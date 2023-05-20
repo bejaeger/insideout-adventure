@@ -10,30 +10,30 @@ import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 
-class SingleChildStatViewModel extends SwitchAccountsViewModel {
+class SingleWardStatViewModel extends SwitchAccountsViewModel {
   final String wardUid;
-  SingleChildStatViewModel({required this.wardUid});
+  SingleWardStatViewModel({required this.wardUid});
 
   final log = getLogger("SingleWardViewModel");
 
   User? get ward => userService.supportedWards[wardUid];
   UserStatistics get stats => userService.supportedWardStats[wardUid]!;
   List<dynamic> get sortedHistory => userService.sortedHistory(uid: wardUid);
-  int? get totalChildScreenTimeLastDays =>
-      userService.totalChildScreenTimeLastDays(uid: wardUid)[wardUid];
-  int? get totalChildActivityLastDays =>
-      userService.totalChildActivityLastDays(uid: wardUid)[wardUid];
-  int? get totalChildScreenTimeTrend =>
-      userService.totalChildScreenTimeTrend(uid: wardUid)[wardUid];
-  int? get totalChildActivityTrend =>
-      userService.totalChildActivityTrend(uid: wardUid)[wardUid];
-  String get totalChildScreenTimeLastDaysString =>
-      totalChildScreenTimeLastDays != null
-          ? totalChildScreenTimeLastDays.toString()
+  int? get totalWardScreenTimeLastDays =>
+      userService.totalWardScreenTimeLastDays(uid: wardUid)[wardUid];
+  int? get totalWardActivityLastDays =>
+      userService.totalWardActivityLastDays(uid: wardUid)[wardUid];
+  int? get totalWardScreenTimeTrend =>
+      userService.totalWardScreenTimeTrend(uid: wardUid)[wardUid];
+  int? get totalWardActivityTrend =>
+      userService.totalWardActivityTrend(uid: wardUid)[wardUid];
+  String get totalWardScreenTimeLastDaysString =>
+      totalWardScreenTimeLastDays != null
+          ? totalWardScreenTimeLastDays.toString()
           : "0";
-  String get totalChildActivityLastDaysString =>
-      totalChildActivityLastDays != null
-          ? totalChildActivityLastDays.toString()
+  String get totalWardActivityLastDaysString =>
+      totalWardActivityLastDays != null
+          ? totalWardActivityLastDays.toString()
           : "0";
 
   String wardNameFromUid(String uid) {
@@ -44,7 +44,7 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     return screenTimeService.getActiveScreenTimeInMemory(uid: uid);
   }
 
-  Future removeChildFromGuardianAccount() async {
+  Future removeWardFromGuardianAccount() async {
     if (ward != null) {
       log.i("Remove user with id = ${ward!.uid}");
       // ! Very peculiar. Without this we get an error of
@@ -139,9 +139,9 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
     );
   }
 
-  void showChildStatDetailsDialog() async {
+  void showWardStatDetailsDialog() async {
     await dialogService.showCustomDialog(
-        variant: DialogType.ChildStatCard,
+        variant: DialogType.WardStatCard,
         data: stats,
         barrierDismissible: true);
   }

@@ -68,7 +68,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                       child: InsideOutText.headingTwo(
                                           !model.isGuardianAccount
                                               ? "Woop woop, enjoy time on the screen!"
-                                              : model.childName +
+                                              : model.wardName +
                                                   " is using screen time",
                                           align: TextAlign.center),
                                     ),
@@ -146,8 +146,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                   padding: const EdgeInsets.only(
                                       left: 20, right: 20),
                                   child: InsideOutText.subheading(
-                                      model.childName +
-                                          "'s screen time expired",
+                                      model.wardName + "'s screen time expired",
                                       align: TextAlign.center),
                                 ),
                                 verticalSpaceMedium,
@@ -212,9 +211,9 @@ class ActiveScreenTimeView extends StatelessWidget {
                     Spacer(),
                     if (showStats && model.isGuardianAccount)
                       InsideOutButton.text(
-                        title: "See ${model.childName}'s statistics",
-                        onTap: () => model.replaceWithSingleChildView(
-                            uid: model.childId),
+                        title: "See ${model.wardName}'s statistics",
+                        onTap: () =>
+                            model.replaceWithSingleWardView(uid: model.wardId),
                       ),
                     verticalSpaceSmall,
                     if (!model.currentUserSettings.ownPhone ||

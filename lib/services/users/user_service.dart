@@ -656,17 +656,17 @@ class UserService {
     return completer.future;
   }
 
-  dynamic getAfkCreditsBalance({String? childId}) {
-    if (childId == null) {
+  dynamic getAfkCreditsBalance({String? wardId}) {
+    if (wardId == null) {
       return currentUserStats.afkCreditsBalance;
     } else {
-      return supportedWardStats[childId]!.afkCreditsBalance;
+      return supportedWardStats[wardId]!.afkCreditsBalance;
     }
   }
 
-  int getTotalAvailableScreenTime({String? childId}) {
+  int getTotalAvailableScreenTime({String? wardId}) {
     return convertCreditsToScreenTime(
-        credits: getAfkCreditsBalance(childId: childId));
+        credits: getAfkCreditsBalance(wardId: wardId));
   }
 
   int convertCreditsToScreenTime({required num credits}) {
@@ -729,7 +729,7 @@ class UserService {
     }
   }
 
-  List<ActivatedQuest> sortedChildQuestHistory({String? uid}) {
+  List<ActivatedQuest> sortedWardQuestHistory({String? uid}) {
     List<ActivatedQuest> sortedQuests = [];
     if (uid == null) {
       supportedWardQuestsHistory.forEach((key, quests) {
@@ -752,7 +752,7 @@ class UserService {
     return sortedQuests;
   }
 
-  List<ScreenTimeSession> sortedChildScreenTimeSessions({String? uid}) {
+  List<ScreenTimeSession> sortedWardScreenTimeSessions({String? uid}) {
     List<ScreenTimeSession> sortedSessions = [];
     if (uid == null) {
       _screenTimeService.supportedWardScreenTimeSessions.forEach((key, quests) {
@@ -779,13 +779,13 @@ class UserService {
   List<dynamic> sortedHistory({String? uid}) {
     List<dynamic> list = [];
     if (uid == null) {
-      list = [...sortedChildScreenTimeSessions(), ...sortedChildQuestHistory()];
+      list = [...sortedWardScreenTimeSessions(), ...sortedWardQuestHistory()];
     } else {
       if (_screenTimeService.supportedWardScreenTimeSessions.containsKey(uid)) {
-        list = list + sortedChildScreenTimeSessions(uid: uid);
+        list = list + sortedWardScreenTimeSessions(uid: uid);
       }
       if (supportedWardQuestsHistory.containsKey(uid)) {
-        list = list + sortedChildQuestHistory(uid: uid);
+        list = list + sortedWardQuestHistory(uid: uid);
       }
     }
     list.sort((a, b) {
@@ -810,7 +810,7 @@ class UserService {
     return list;
   }
 
-  Map<String, int> totalChildScreenTimeLastDays(
+  Map<String, int> totalWardScreenTimeLastDays(
       {int deltaDays = 7, int daysAgo = 0, String? uid}) {
     Map<String, int> screenTime = {};
 
@@ -837,7 +837,7 @@ class UserService {
     return screenTime;
   }
 
-  Map<String, int> totalChildActivityLastDays(
+  Map<String, int> totalWardActivityLastDays(
       {int deltaDays = 7, int daysAgo = 0, String? uid}) {
     Map<String, int> activity = {};
     supportedWardQuestsHistory.forEach((key, session) {
@@ -860,12 +860,12 @@ class UserService {
     return activity;
   }
 
-  Map<String, int> totalChildScreenTimeTrend(
+  Map<String, int> totalWardScreenTimeTrend(
       {int deltaDays = 7, int daysAgo = 7, String? uid}) {
-    Map<String, int> lastWeek = totalChildScreenTimeLastDays(
-        deltaDays: deltaDays, daysAgo: 0, uid: uid);
-    Map<String, int> previousWeek = totalChildScreenTimeLastDays(
-        deltaDays: deltaDays, daysAgo: 7, uid: uid);
+    Map<String, int> lastWeek =
+        totalWardScreenTimeLastDays(deltaDays: deltaDays, daysAgo: 0, uid: uid);
+    Map<String, int> previousWeek =
+        totalWardScreenTimeLastDays(deltaDays: deltaDays, daysAgo: 7, uid: uid);
     Map<String, int> delta = {};
     for (String k in lastWeek.keys) {
       delta[k] = (lastWeek[k] ?? 0) - (previousWeek[k] ?? 0);
@@ -873,12 +873,12 @@ class UserService {
     return delta;
   }
 
-  Map<String, int> totalChildActivityTrend(
+  Map<String, int> totalWardActivityTrend(
       {int deltaDays = 7, int daysAgo = 7, String? uid}) {
     Map<String, int> lastWeek =
-        totalChildActivityLastDays(deltaDays: deltaDays, daysAgo: 0, uid: uid);
+        totalWardActivityLastDays(deltaDays: deltaDays, daysAgo: 0, uid: uid);
     Map<String, int> previousWeek =
-        totalChildActivityLastDays(deltaDays: deltaDays, daysAgo: 7, uid: uid);
+        totalWardActivityLastDays(deltaDays: deltaDays, daysAgo: 7, uid: uid);
     Map<String, int> delta = {};
     for (String k in lastWeek.keys) {
       delta[k] = (lastWeek[k] ?? 0) - (previousWeek[k] ?? 0);

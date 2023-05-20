@@ -13,19 +13,19 @@ import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
-class SingleChildStatView extends StatefulWidget {
+class SingleWardStatView extends StatefulWidget {
   final String uid;
-  const SingleChildStatView({Key? key, required this.uid}) : super(key: key);
+  const SingleWardStatView({Key? key, required this.uid}) : super(key: key);
 
   @override
-  State<SingleChildStatView> createState() => _SingleChildStatViewState();
+  State<SingleWardStatView> createState() => _SingleWardStatViewState();
 }
 
-class _SingleChildStatViewState extends State<SingleChildStatView> {
+class _SingleWardStatViewState extends State<SingleWardStatView> {
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<SingleChildStatViewModel>.reactive(
-      viewModelBuilder: () => SingleChildStatViewModel(wardUid: widget.uid),
+    return ViewModelBuilder<SingleWardStatViewModel>.reactive(
+      viewModelBuilder: () => SingleWardStatViewModel(wardUid: widget.uid),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
@@ -38,7 +38,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
             dropDownButton: CustomDropDownMenu(
               icon1: Icon(Icons.delete_outline_rounded,
                   color: kcMediumGrey, size: 22),
-              onTap1: model.removeChildFromGuardianAccount,
+              onTap1: model.removeWardFromGuardianAccount,
               text1: 'Remove child',
               icon2: Icon(Icons.settings, color: kcMediumGrey, size: 22),
               onTap2: model.showWardSettingsDialogDialog,
@@ -151,16 +151,16 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                   title: "Show",
                                                   onTap: () => model
                                                       .navToSelectScreenTimeView(
-                                                          childId: widget.uid),
+                                                          wardId: widget.uid),
                                                   color: kcScreenTimeBlue)
                                               : InsideOutButton.outline(
                                                   leading: Icon(
                                                       Icons.play_arrow_rounded,
                                                       color: kcPrimaryColor),
                                                   title: "Set timer",
-                                                  onTap: () =>
-                                                      model.navToSelectScreenTimeView(
-                                                          childId: widget.uid),
+                                                  onTap: () => model
+                                                      .navToSelectScreenTimeView(
+                                                          wardId: widget.uid),
                                                   color: null),
                                           if (model.getScreenTimeSession(
                                                   uid: widget.uid) !=
@@ -185,7 +185,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                   "Total Stats",
                                   color: kcPrimaryColor,
                                 ),
-                                onPressed: model.showChildStatDetailsDialog,
+                                onPressed: model.showWardStatDetailsDialog,
                               ),
                             ),
                             verticalSpaceSmall,
@@ -207,26 +207,25 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                           Row(
                                             children: [
                                               InsideOutText.statsStyle(model
-                                                      .totalChildActivityLastDaysString +
+                                                      .totalWardActivityLastDaysString +
                                                   " min"),
                                               TrendIcon(
                                                   metric: model
-                                                      .totalChildActivityTrend),
+                                                      .totalWardActivityTrend),
                                             ],
                                           ),
-                                          if (model.totalChildActivityTrend !=
+                                          if (model.totalWardActivityTrend !=
                                               null)
                                             InsideOutText.caption(
-                                                ((model.totalChildActivityTrend ??
+                                                ((model.totalWardActivityTrend ??
                                                                 0) >=
                                                             0
                                                         ? "+"
                                                         : "") +
-                                                    model
-                                                        .totalChildActivityTrend
+                                                    model.totalWardActivityTrend
                                                         .toString() +
                                                     " min"),
-                                          if (model.totalChildActivityTrend !=
+                                          if (model.totalWardActivityTrend !=
                                               null)
                                             InsideOutText.caption(
                                                 "from prev. week"),
@@ -251,27 +250,27 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                           Row(
                                             children: [
                                               InsideOutText.statsStyle(model
-                                                      .totalChildScreenTimeLastDaysString +
+                                                      .totalWardScreenTimeLastDaysString +
                                                   " min"),
                                               TrendIcon(
                                                   metric: model
-                                                      .totalChildScreenTimeTrend,
+                                                      .totalWardScreenTimeTrend,
                                                   screenTime: true),
                                             ],
                                           ),
-                                          if (model.totalChildScreenTimeTrend !=
+                                          if (model.totalWardScreenTimeTrend !=
                                               null)
                                             InsideOutText.caption(
-                                                ((model.totalChildScreenTimeTrend ??
+                                                ((model.totalWardScreenTimeTrend ??
                                                                 0) >=
                                                             0
                                                         ? "+"
                                                         : "") +
                                                     model
-                                                        .totalChildScreenTimeTrend
+                                                        .totalWardScreenTimeTrend
                                                         .toString() +
                                                     " min"),
-                                          if (model.totalChildScreenTimeTrend !=
+                                          if (model.totalWardScreenTimeTrend !=
                                               null)
                                             InsideOutText.caption(
                                                 "from prev. week"),

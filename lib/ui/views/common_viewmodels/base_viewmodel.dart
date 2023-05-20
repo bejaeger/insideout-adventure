@@ -111,7 +111,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       activeQuest.markersCollected.where((element) => element == true).length;
   bool get isScreenTimeActive =>
       screenTimeService.supportedWardScreenTimeSessionsActive.length != 0;
-  List<ScreenTimeSession> get childScreenTimeSessionsActive =>
+  List<ScreenTimeSession> get wardScreenTimeSessionsActive =>
       screenTimeService.supportedWardScreenTimeSessionsActive.values.toList();
 
   bool? canVibrate;
@@ -135,7 +135,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   ScreenTimeSession? getScreenTime({required String uid}) {
     try {
-      return childScreenTimeSessionsActive
+      return wardScreenTimeSessionsActive
           .firstWhere((element) => element.uid == uid);
     } catch (e) {
       if (e is StateError) {

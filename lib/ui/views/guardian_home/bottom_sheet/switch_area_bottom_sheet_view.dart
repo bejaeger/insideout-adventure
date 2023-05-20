@@ -61,7 +61,7 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                         completer(
                           SheetResponse(confirmed: true),
                         );
-                        model.navToCreateChildAccount();
+                        model.navToCreateWardAccount();
                       },
                     ),
                   ),

@@ -6,7 +6,7 @@ enum DialogType {
   FoundTreasure,
   SuperUserSettings,
   CheckpointInArea,
-  ChildStatCard,
+  WardStatCard,
   CreditConversionInfo,
   OnboardingDialog,
   BewareOfSurroundings,

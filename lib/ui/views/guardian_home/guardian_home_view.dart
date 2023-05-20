@@ -49,7 +49,7 @@ class GuardianHomeView extends StatelessWidget {
                   showLogo: true,
                   title: " ",
                   drawer: true,
-                  screenTimes: model.childScreenTimeSessionsActive,
+                  screenTimes: model.wardScreenTimeSessionsActive,
                   hasUserGivenFeedback: model.userHasGivenFeedback,
                 ),
                 endDrawer: const GuardianDrawerView(),
@@ -84,7 +84,7 @@ class GuardianHomeView extends StatelessWidget {
                             verticalSpaceSmall,
                             SectionHeader(
                               title: "Children",
-                              onButtonTap: model.navToCreateChildAccount,
+                              onButtonTap: model.navToCreateWardAccount,
                               buttonIcon: Container(
                                 alignment: Alignment.centerRight,
                                 padding: const EdgeInsets.only(right: 5.0),
@@ -101,14 +101,14 @@ class GuardianHomeView extends StatelessWidget {
                                   : Padding(
                                       padding: const EdgeInsets.all(20.0),
                                       child: InsideOutButton(
-                                        onTap: model.navToCreateChildAccount,
+                                        onTap: model.navToCreateWardAccount,
                                         title: "Create child account",
                                         height: 80,
                                         //imagePath: ImagePath.peopleHoldingHands,
                                       ),
                                     ),
                             if (model.supportedWards.length > 0)
-                              ChildrenStatsList(
+                              WardsStatsList(
                                 viewModel: model,
                               ),
                             verticalSpaceMedium,
@@ -173,10 +173,10 @@ class GuardianHomeView extends StatelessWidget {
   }
 }
 
-class ChildrenStatsList extends StatelessWidget {
+class WardsStatsList extends StatelessWidget {
   final GuardianHomeViewModel viewModel;
 
-  const ChildrenStatsList({
+  const WardsStatsList({
     Key? key,
     required this.viewModel,
   }) : super(key: key);
@@ -199,17 +199,17 @@ class ChildrenStatsList extends StatelessWidget {
                 right:
                     (index == viewModel.supportedWards.length - 1) ? 20.0 : 0),
             child: GestureDetector(
-              onTap: () => viewModel.navToSingleChildView(uid: uid),
-              child: ChildStatsCard(
+              onTap: () => viewModel.navToSingleWardView(uid: uid),
+              child: WardStatsCard(
                   isBusy: viewModel.isBusy,
                   screenTimeLastWeek:
-                      viewModel.totalChildScreenTimeLastDays[uid],
+                      viewModel.totalWardScreenTimeLastDays[uid],
                   activityTimeLastWeek:
-                      viewModel.totalChildActivityLastDays[uid],
-                  screenTimeTrend: viewModel.totalChildScreenTimeTrend[uid],
-                  activityTimeTrend: viewModel.totalChildActivityTrend[uid],
+                      viewModel.totalWardActivityLastDays[uid],
+                  screenTimeTrend: viewModel.totalWardScreenTimeTrend[uid],
+                  activityTimeTrend: viewModel.totalWardActivityTrend[uid],
                   user: ward,
-                  childStats: viewModel.childStats[uid],
+                  wardStats: viewModel.wardStats[uid],
                   screenTimeSession: viewModel.getScreenTime(uid: uid)),
             ),
           );

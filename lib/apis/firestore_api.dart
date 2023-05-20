@@ -413,7 +413,7 @@ class FirestoreApi {
 
       if (guardianIds.length == 0) {
         log.i(
-            "No guardian associated to child, not looking for custom created quests");
+            "No guardian associated to ward, not looking for custom created quests");
         if (!completer2.isCompleted) {
           completer2.complete();
         }

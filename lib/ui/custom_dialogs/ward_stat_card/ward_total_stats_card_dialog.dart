@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class ChildTotalStatsCardDialog extends StatelessWidget {
+class WardTotalStatsCardDialog extends StatelessWidget {
   final DialogRequest request;
   final Function(DialogResponse) completer;
 
-  const ChildTotalStatsCardDialog(
+  const WardTotalStatsCardDialog(
       {Key? key, required this.request, required this.completer})
       : super(key: key);
 

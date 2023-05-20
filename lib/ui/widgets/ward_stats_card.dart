@@ -9,8 +9,8 @@ import 'package:afkcredits/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 
-class ChildStatsCard extends StatelessWidget {
-  final UserStatistics? childStats;
+class WardStatsCard extends StatelessWidget {
+  final UserStatistics? wardStats;
   final User user;
   final int? screenTimeLastWeek;
   final int? activityTimeLastWeek;
@@ -19,9 +19,9 @@ class ChildStatsCard extends StatelessWidget {
   final ScreenTimeSession? screenTimeSession;
   final bool isBusy;
 
-  const ChildStatsCard(
+  const WardStatsCard(
       {Key? key,
-      required this.childStats,
+      required this.wardStats,
       required this.user,
       required this.screenTimeLastWeek,
       required this.activityTimeLastWeek,
@@ -68,9 +68,9 @@ class ChildStatsCard extends StatelessWidget {
                     Row(
                       children: [
                         //InsideOutText.body("Balance: "),
-                        if (childStats != null)
+                        if (wardStats != null)
                           CreditsAmount(
-                            amount: childStats!.afkCreditsBalance,
+                            amount: wardStats!.afkCreditsBalance,
                             height: 18,
                           ),
                       ],
@@ -87,7 +87,7 @@ class ChildStatsCard extends StatelessWidget {
                       InsideOutText.body("Switch to " +
                           user.fullName +
                           "'s account to get started"),
-                    childStats == null
+                    wardStats == null
                         ? AFKProgressIndicator()
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -24,7 +24,7 @@ class ScreenTimeService {
   // map of wardIds with screen time session, filled from firestore
   Map<String, ScreenTimeSession> supportedWardScreenTimeSessionsActive = {};
 
-  // when child asks for screen time, this map will be filled
+  // when ward asks for screen time, this map will be filled
   Map<String, ScreenTimeSession> supportedWardScreenTimeSessionsRequested = {};
 
   // ? State synced with local app!

@@ -66,7 +66,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: StartUpScreenTimeView),
     MaterialRoute(page: SelectRoleAfterLoginView),
     MaterialRoute(page: CreateWardView),
-    MaterialRoute(page: SingleChildStatView),
+    MaterialRoute(page: SingleWardStatView),
     MaterialRoute(page: TransferFundsView),
     MaterialRoute(page: SetPinView),
     MaterialRoute(page: CreateQuestView),

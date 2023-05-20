@@ -8,14 +8,14 @@ import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class SelectScreenTimeView extends StatelessWidget {
-  // childId needs to be provided when accessing this view from the guardian account
-  final String? childId;
-  const SelectScreenTimeView({Key? key, this.childId}) : super(key: key);
+  // wardId needs to be provided when accessing this view from the guardian account
+  final String? wardId;
+  const SelectScreenTimeView({Key? key, this.wardId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SelectScreenTimeViewModel>.reactive(
-      viewModelBuilder: () => SelectScreenTimeViewModel(childId: childId),
+      viewModelBuilder: () => SelectScreenTimeViewModel(wardId: wardId),
       builder: (context, model, child) {
         return MainPage(
           showBackButton: !model.isGuardianAccount,
@@ -52,7 +52,7 @@ class SelectScreenTimeView extends StatelessWidget {
                         InsideOutText.headingTwo(
                             model.isGuardianAccount
                                 ? "Choose time for " +
-                                    model.userService.wardNameFromUid(childId!)
+                                    model.userService.wardNameFromUid(wardId!)
                                 : "Get your well-deserved screen time",
                             align: TextAlign.center),
                       ],

@@ -74,7 +74,7 @@ class Routes {
 
   static const createWardView = '/create-ward-view';
 
-  static const singleChildStatView = '/single-child-stat-view';
+  static const singleWardStatView = '/single-ward-stat-view';
 
   static const transferFundsView = '/transfer-funds-view';
 
@@ -114,7 +114,7 @@ class Routes {
     startUpScreenTimeView,
     selectRoleAfterLoginView,
     createWardView,
-    singleChildStatView,
+    singleWardStatView,
     transferFundsView,
     setPinView,
     createQuestView,
@@ -171,8 +171,8 @@ class StackedRouter extends _i1.RouterBase {
       page: _i10.CreateWardView,
     ),
     _i1.RouteDef(
-      Routes.singleChildStatView,
-      page: _i11.SingleChildStatView,
+      Routes.singleWardStatView,
+      page: _i11.SingleWardStatView,
     ),
     _i1.RouteDef(
       Routes.transferFundsView,
@@ -313,11 +313,11 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i11.SingleChildStatView: (data) {
-      final args = data.getArgs<SingleChildStatViewArguments>(nullOk: false);
+    _i11.SingleWardStatView: (data) {
+      final args = data.getArgs<SingleWardStatViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i11.SingleChildStatView(key: args.key, uid: args.uid),
+            _i11.SingleWardStatView(key: args.key, uid: args.uid),
         settings: data,
       );
     },
@@ -384,7 +384,7 @@ class StackedRouter extends _i1.RouterBase {
       );
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i18.SelectScreenTimeView(key: args.key, childId: args.childId),
+            _i18.SelectScreenTimeView(key: args.key, wardId: args.wardId),
         settings: data,
       );
     },
@@ -520,8 +520,8 @@ class CreateWardViewArguments {
   final _i26.Key? key;
 }
 
-class SingleChildStatViewArguments {
-  const SingleChildStatViewArguments({
+class SingleWardStatViewArguments {
+  const SingleWardStatViewArguments({
     this.key,
     required this.uid,
   });
@@ -601,12 +601,12 @@ class ActiveScreenTimeViewArguments {
 class SelectScreenTimeViewArguments {
   const SelectScreenTimeViewArguments({
     this.key,
-    this.childId,
+    this.wardId,
   });
 
   final _i26.Key? key;
 
-  final String? childId;
+  final String? wardId;
 }
 
 class FeedbackViewArguments {
@@ -792,7 +792,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToSingleChildStatView({
+  Future<dynamic> navigateToSingleWardStatView({
     _i26.Key? key,
     required String uid,
     int? routerId,
@@ -801,8 +801,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo<dynamic>(Routes.singleChildStatView,
-        arguments: SingleChildStatViewArguments(key: key, uid: uid),
+    return navigateTo<dynamic>(Routes.singleWardStatView,
+        arguments: SingleWardStatViewArguments(key: key, uid: uid),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -916,7 +916,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
 
   Future<dynamic> navigateToSelectScreenTimeView({
     _i26.Key? key,
-    String? childId,
+    String? wardId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -924,7 +924,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.selectScreenTimeView,
-        arguments: SelectScreenTimeViewArguments(key: key, childId: childId),
+        arguments: SelectScreenTimeViewArguments(key: key, wardId: wardId),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

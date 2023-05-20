@@ -33,8 +33,8 @@ void setupDialogUi() {
     DialogType.CheckpointInArea: (context, sheetRequest, completer) =>
         InAreaAlertDialogView(
             request: sheetRequest, completer: completer, isQrCodeInArea: false),
-    DialogType.ChildStatCard: (context, sheetRequest, completer) =>
-        ChildTotalStatsCardDialog(request: sheetRequest, completer: completer),
+    DialogType.WardStatCard: (context, sheetRequest, completer) =>
+        WardTotalStatsCardDialog(request: sheetRequest, completer: completer),
     DialogType.CreditConversionInfo: (context, sheetRequest, completer) =>
         CreditConversionInfoDialog(request: sheetRequest, completer: completer),
     DialogType.OnboardingDialog: (context, sheetRequest, completer) =>

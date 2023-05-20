@@ -7,8 +7,8 @@ import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class SelectScreenTimeViewModel extends BaseModel {
-  String? childId;
-  SelectScreenTimeViewModel({this.childId}) {
+  String? wardId;
+  SelectScreenTimeViewModel({this.wardId}) {
     if (screenTimePreset > totalAvailableScreenTime) {
       screenTimePreset = totalAvailableScreenTime;
     }
@@ -17,9 +17,9 @@ class SelectScreenTimeViewModel extends BaseModel {
   final log = getLogger("SelectScreenTimeViewModel");
 
   int get totalAvailableScreenTime =>
-      userService.getTotalAvailableScreenTime(childId: childId);
+      userService.getTotalAvailableScreenTime(wardId: wardId);
   int get afkCreditsBalance =>
-      userService.getAfkCreditsBalance(childId: childId).round();
+      userService.getAfkCreditsBalance(wardId: wardId).round();
 
   int screenTimePreset = 20; // in minutes
   int? screenTimePresetCustom;
@@ -29,7 +29,7 @@ class SelectScreenTimeViewModel extends BaseModel {
     screenTimePreset = minutes;
     if (screenTimePreset == -1) {
       screenTimePreset =
-          userService.getTotalAvailableScreenTime(childId: childId);
+          userService.getTotalAvailableScreenTime(wardId: wardId);
     }
     notifyListeners();
   }
@@ -59,9 +59,9 @@ class SelectScreenTimeViewModel extends BaseModel {
       return;
     }
 
-    if (isGuardianAccount && childId == null) {
+    if (isGuardianAccount && wardId == null) {
       log.wtf(
-          "childId cannot be null when accessing screen time from guardian account!");
+          "wardId cannot be null when accessing screen time from guardian account!");
       showGenericInternalErrorDialog();
       popView();
       return;
@@ -69,10 +69,10 @@ class SelectScreenTimeViewModel extends BaseModel {
 
     ScreenTimeSession session = ScreenTimeSession(
       sessionId: screenTimeService.getScreenTimeSessionDocId(),
-      uid: isGuardianAccount ? childId! : currentUser.uid,
+      uid: isGuardianAccount ? wardId! : currentUser.uid,
       createdByUid: currentUser.uid,
       userName: isGuardianAccount
-          ? userService.wardNameFromUid(childId!)
+          ? userService.wardNameFromUid(wardId!)
           : currentUser.fullName,
       minutes: useSuperUserFeatures ? 1 : screenTimePreset,
       status: ScreenTimeSessionStatus.notStarted,
@@ -90,7 +90,7 @@ class SelectScreenTimeViewModel extends BaseModel {
       navToScreenTimeCounterView(session: session);
     } else {
       session = session.copyWith(status: ScreenTimeSessionStatus.requested);
-      // if child starts screen time we first need confirmation from guardian
+      // if ward starts screen time we first need confirmation from guardian
       navToScreenTimeRequestedView(session: session);
     }
   }

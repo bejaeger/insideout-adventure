@@ -16,20 +16,20 @@ class GuardianHomeViewModel extends BaseModel {
   final log = getLogger("GuardianHomeViewModel");
 
   List<User> get supportedWards => userService.supportedWardsList;
-  Map<String, UserStatistics> get childStats => userService.supportedWardStats;
-  List<ScreenTimeSession> get childScreenTimeSessionsActive =>
+  Map<String, UserStatistics> get wardStats => userService.supportedWardStats;
+  List<ScreenTimeSession> get wardScreenTimeSessionsActive =>
       screenTimeService.supportedWardScreenTimeSessionsActive.values.toList();
   Map<String, ScreenTimeSession> get childScreenTimeSessionsActiveMap =>
       screenTimeService.supportedWardScreenTimeSessionsActive;
   List<dynamic> get sortedHistory => userService.sortedHistory();
-  Map<String, int> get totalChildScreenTimeLastDays =>
-      userService.totalChildScreenTimeLastDays();
-  Map<String, int> get totalChildActivityLastDays =>
-      userService.totalChildActivityLastDays();
-  Map<String, int> get totalChildScreenTimeTrend =>
-      userService.totalChildScreenTimeTrend();
-  Map<String, int> get totalChildActivityTrend =>
-      userService.totalChildActivityTrend();
+  Map<String, int> get totalWardScreenTimeLastDays =>
+      userService.totalWardScreenTimeLastDays();
+  Map<String, int> get totalWardActivityLastDays =>
+      userService.totalWardActivityLastDays();
+  Map<String, int> get totalWardScreenTimeTrend =>
+      userService.totalWardScreenTimeTrend();
+  Map<String, int> get totalWardActivityTrend =>
+      userService.totalWardActivityTrend();
   FeedbackCampaignInfo? get feedbackCampaignInfo =>
       _feedbackService.feedbackCampaignInfo;
   bool get userHasGivenFeedback => _feedbackService.userHasGivenFeedback();
@@ -94,7 +94,7 @@ class GuardianHomeViewModel extends BaseModel {
 
   ScreenTimeSession? getScreenTime({required String uid}) {
     try {
-      return childScreenTimeSessionsActive
+      return wardScreenTimeSessionsActive
           .firstWhere((element) => element.uid == uid);
     } catch (e) {
       if (e is StateError) // thrown when no element was found
@@ -130,7 +130,7 @@ class GuardianHomeViewModel extends BaseModel {
           }
         } catch (e) {
           log.wtf("Error dealing with screen time request: $e");
-          // when screen time request is cancelled at same time from child!
+          // when screen time request is cancelled at same time from ward!
           await dialogService.showDialog(
               title: "Screen time request was cancelled",
               description: session.userName + " cancelled the request already",
@@ -156,12 +156,12 @@ class GuardianHomeViewModel extends BaseModel {
     );
   }
 
-  void navigateToScreenTimeOrSingleChildView({required String uid}) async {
+  void navigateToScreenTimeOrSingleWardView({required String uid}) async {
     final session = getScreenTime(uid: uid);
     if (session != null) {
       navToActiveScreenTimeView(session: session);
     } else {
-      navToSingleChildView(uid: uid);
+      navToSingleWardView(uid: uid);
     }
   }
 

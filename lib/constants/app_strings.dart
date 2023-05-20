@@ -1,3 +1,4 @@
+// TODO: The next 7 strings seem to be unused. /unused_strings
 const String kUserRoleSelectionDialogTitle = "Are you an ward or a guardian?";
 const String kUserRoleSelectionDialogButtonTitle = "Ward";
 const String kUserRoleSelectionDialogCancelTitle = "Guardian";
@@ -6,6 +7,7 @@ const String kCreditsToEarnDescription = "TO EARN";
 const String kCurrentAFKCreditsDescription = "EARNED";
 const String kLifetimeEarningsDescription = "Lifetime earnings";
 const String kNumberCompletedQuestsDescription = "Completed quests";
+// /end_unused_strings
 
 const String kLocationSearchDescription =
     "Find the treasure by walking. Your distance will update regularly and you will know when you get closer or further away.";

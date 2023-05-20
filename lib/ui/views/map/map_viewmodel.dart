@@ -480,7 +480,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     if (isGuardianAccount) {
       animateMapToQuestGuardianAccount(quest: quest);
     } else {
-      animateMapToQuestChildAccount(quest: quest);
+      animateMapToQuestWardAccount(quest: quest);
     }
   }
 
@@ -494,7 +494,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     showMarkerInfoWindowNumbers(quest: quest);
   }
 
-  void animateMapToQuestChildAccount({required Quest quest}) async {
+  void animateMapToQuestWardAccount({required Quest quest}) async {
     showMarkerInfoWindowNow(markerId: quest.startMarker?.id);
 
     layoutService.setIsMovingCamera(true);

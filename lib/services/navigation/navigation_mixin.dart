@@ -142,14 +142,14 @@ mixin NavigationMixin {
     }
   }
 
-  void navToSingleChildView({required String uid}) async {
-    await _navigationService.navigateTo(Routes.singleChildStatView,
-        arguments: SingleChildStatViewArguments(uid: uid));
+  void navToSingleWardView({required String uid}) async {
+    await _navigationService.navigateTo(Routes.singleWardStatView,
+        arguments: SingleWardStatViewArguments(uid: uid));
   }
 
-  void replaceWithSingleChildView({required String uid}) async {
-    await _navigationService.replaceWith(Routes.singleChildStatView,
-        arguments: SingleChildStatViewArguments(uid: uid));
+  void replaceWithSingleWardView({required String uid}) async {
+    await _navigationService.replaceWith(Routes.singleWardStatView,
+        arguments: SingleWardStatViewArguments(uid: uid));
   }
 
   Future navToArObjectView(bool isCoins) async {
@@ -164,19 +164,18 @@ mixin NavigationMixin {
   }
 
   Future navToSelectScreenTimeView(
-      {String? childId, bool isGuardianAccount = true}) async {
-    final session =
-        _screenTimeService.getActiveScreenTimeInMemory(uid: childId);
+      {String? wardId, bool isGuardianAccount = true}) async {
+    final session = _screenTimeService.getActiveScreenTimeInMemory(uid: wardId);
     if (session != null) {
       navToActiveScreenTimeView(session: session);
     } else {
       await _navigationService.navigateTo(Routes.selectScreenTimeView,
           arguments: SelectScreenTimeViewArguments(
-              childId: isGuardianAccount ? childId : null));
+              wardId: isGuardianAccount ? wardId : null));
     }
   }
 
-  Future navToCreateChildAccount() async {
+  Future navToCreateWardAccount() async {
     await _navigationService.navigateTo(Routes.createWardView);
   }
 

@@ -80,7 +80,7 @@ class CreateWardViewModel extends FormViewModel {
     }
     final result = isValidInput(name: nameValue, password: passwordValue!);
     if (result == true) {
-      // per default if child has own phone we enable verification step
+      // per default if ward has own phone we enable verification step
       UserSettings userSettings = UserSettings(
           ownPhone: ownPhoneSelected!,
           isAcceptScreenTimeFirst: ownPhoneSelected!);
