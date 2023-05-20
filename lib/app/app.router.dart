@@ -29,14 +29,16 @@ import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart'
 import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart'
     as _i3;
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart' as _i21;
-import 'package:afkcredits/ui/views/guardian_home/guardian_home_view.dart' as _i2;
-import 'package:afkcredits/ui/views/guardian_map/guardian_map_view.dart' as _i20;
+import 'package:afkcredits/ui/views/guardian_home/guardian_home_view.dart'
+    as _i2;
+import 'package:afkcredits/ui/views/guardian_map/guardian_map_view.dart'
+    as _i20;
 import 'package:afkcredits/ui/views/help_desk/hep_desk_view.dart' as _i25;
 import 'package:afkcredits/ui/views/login/login_view.dart' as _i4;
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart'
     as _i9;
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart'
-    as _i19 as _i20;
+    as _i19;
 import 'package:afkcredits/ui/views/permissions/permissions_view.dart' as _i22;
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart'
     as _i14;
