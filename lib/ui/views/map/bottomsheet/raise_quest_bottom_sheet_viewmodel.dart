@@ -74,7 +74,7 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     if (hasEnoughGuardianship(quest: quest)) {
       return null;
     } else {
-      return "You don't have enough Credits to earn ${quest.credits} credits. Ask a guardian to support you :)";
+      return "You don't have enough Credits to earn ${quest.credits} credits. Ask a parent to support you :)";
     }
   }
 

@@ -135,7 +135,7 @@ class GoogleMapLayout extends StatelessWidget {
                                       AlwaysStoppedAnimation(Colors.white),
                                 )
                               : Text(
-                                  "LOGIN AS TEST GUARDIAN",
+                                  "LOGIN AS TEST PARENT",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
