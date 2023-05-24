@@ -5,10 +5,10 @@ import 'package:afkcredits/datamodels/helpers/transfer_status_model.dart';
 import 'package:afkcredits/enums/transfer_dialog_status.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 
-class MoneyTransferDialogViewModel extends BaseModel {
-  final log = getLogger("MoneyTransferDialogViewModel");
+class TransferDialogViewModel extends BaseModel {
+  final log = getLogger("TransferDialogViewModel");
 
-  MoneyTransferStatusModel? moneyTransferStatus;
+  TransferStatusModel? transferStatus;
   TransferDialogStatus? status;
   String? title;
   String? description;
@@ -16,21 +16,21 @@ class MoneyTransferDialogViewModel extends BaseModel {
   String? secondaryButtonTitle;
 
   Future waitForTransfer({required dynamic request}) async {
-    if (request.data["moneyTransferStatus"] == null) {
+    if (request.data["transferStatus"] == null) {
       log.w(
-          "Somehow the completer could not be parsed to the money transfer dialog!");
+          "Somehow the completer could not be parsed to the transfer dialog!");
       _setStatusText(TransferDialogStatus.warning, request);
     } else {
       setBusy(true);
-      moneyTransferStatus = request.data["moneyTransferStatus"]!;
-      await _waitForTransferAndSetStatusText(moneyTransferStatus!, request);
+      transferStatus = request.data["transferStatus"]!;
+      await _waitForTransferAndSetStatusText(transferStatus!, request);
       setBusy(false);
     }
   }
 
   Future _waitForTransferAndSetStatusText(
-      MoneyTransferStatusModel moneyTransferStatus, dynamic request) async {
-    status = await moneyTransferStatus.futureStatus;
+      TransferStatusModel transferStatus, dynamic request) async {
+    status = await transferStatus.futureStatus;
     _setStatusText(status!, request);
   }
 

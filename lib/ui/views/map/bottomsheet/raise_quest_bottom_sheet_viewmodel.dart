@@ -20,8 +20,8 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
   Set<Marker> _markersTmp = {};
   GoogleMapController? _googleMapController;
 
-  Future navigateToAcceptPaymentsView() async {
-    log.i("Clicked navigating to accept payments view (not yet implemented!)");
+  Future navigateToAcceptTransfersView() async {
+    log.i("Clicked navigating to accept transfers view (not yet implemented!)");
   }
 
   CameraPosition initialCameraPosition() {

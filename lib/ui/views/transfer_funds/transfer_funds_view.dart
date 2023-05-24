@@ -79,7 +79,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                 title: "Add credits",
                 onTap: () async {
                   amountFocusNode.unfocus();
-                  final res = await model.showBottomSheetAndProcessPayment();
+                  final res = await model.showBottomSheetAndProcessTransfer();
                   if (res is bool && res == true) {
                     amountController.clear();
                   }

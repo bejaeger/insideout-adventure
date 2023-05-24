@@ -296,7 +296,7 @@ class FirestoreApi {
     } catch (e) {
       throw FirestoreApiException(
           message:
-              "Unknown expection when listening to money pools the user is invited to",
+              "Unknown expection when listening to transfer pools the user is invited to",
           devDetails: '$e');
     }
   }

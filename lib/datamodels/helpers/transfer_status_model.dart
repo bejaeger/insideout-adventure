@@ -7,9 +7,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'transfer_status_model.freezed.dart';
 
 @freezed
-class MoneyTransferStatusModel with _$MoneyTransferStatusModel {
-  factory MoneyTransferStatusModel({
+class TransferStatusModel with _$TransferStatusModel {
+  factory TransferStatusModel({
     required Future<TransferDialogStatus> futureStatus,
     required TransferType type,
-  }) = _MoneyTransferStatusModel;
+  }) = _TransferStatusModel;
 }

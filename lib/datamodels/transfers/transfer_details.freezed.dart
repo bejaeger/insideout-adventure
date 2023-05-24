@@ -26,7 +26,7 @@ mixin _$TransferDetails {
   String get senderName => throw _privateConstructorUsedError;
   num get amount => throw _privateConstructorUsedError;
   String get currency => throw _privateConstructorUsedError;
-  MoneySource get sourceType => throw _privateConstructorUsedError;
+  TransferSource get sourceType => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +46,7 @@ abstract class $TransferDetailsCopyWith<$Res> {
       String senderName,
       num amount,
       String currency,
-      MoneySource sourceType});
+      TransferSource sourceType});
 }
 
 /// @nodoc
@@ -96,7 +96,7 @@ class _$TransferDetailsCopyWithImpl<$Res>
       sourceType: sourceType == freezed
           ? _value.sourceType
           : sourceType // ignore: cast_nullable_to_non_nullable
-              as MoneySource,
+              as TransferSource,
     ));
   }
 }
@@ -115,7 +115,7 @@ abstract class _$$_TransferDetailsCopyWith<$Res>
       String senderName,
       num amount,
       String currency,
-      MoneySource sourceType});
+      TransferSource sourceType});
 }
 
 /// @nodoc
@@ -167,7 +167,7 @@ class __$$_TransferDetailsCopyWithImpl<$Res>
       sourceType: sourceType == freezed
           ? _value.sourceType
           : sourceType // ignore: cast_nullable_to_non_nullable
-              as MoneySource,
+              as TransferSource,
     ));
   }
 }
@@ -200,7 +200,7 @@ class _$_TransferDetails implements _TransferDetails {
   @override
   final String currency;
   @override
-  final MoneySource sourceType;
+  final TransferSource sourceType;
 
   @override
   String toString() {
@@ -258,7 +258,7 @@ abstract class _TransferDetails implements TransferDetails {
       required final String senderName,
       required final num amount,
       required final String currency,
-      required final MoneySource sourceType}) = _$_TransferDetails;
+      required final TransferSource sourceType}) = _$_TransferDetails;
 
   factory _TransferDetails.fromJson(Map<String, dynamic> json) =
       _$_TransferDetails.fromJson;
@@ -276,7 +276,7 @@ abstract class _TransferDetails implements TransferDetails {
   @override
   String get currency;
   @override
-  MoneySource get sourceType;
+  TransferSource get sourceType;
   @override
   @JsonKey(ignore: true)
   _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>

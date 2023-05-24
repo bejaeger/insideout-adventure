@@ -20,8 +20,8 @@ import 'package:stacked_services/stacked_services.dart';
 void setupDialogUi() {
   final dialogService = locator<DialogService>();
   final builders = {
-    DialogType.MoneyTransfer: (context, sheetRequest, completer) =>
-        MoneyTransferDialogView(request: sheetRequest, completer: completer),
+    DialogType.Transfer: (context, sheetRequest, completer) =>
+        TransferDialogView(request: sheetRequest, completer: completer),
     DialogType.CollectCredits: (context, sheetRequest, completer) =>
         CollectCreditsDialogView(request: sheetRequest, completer: completer),
     DialogType.CollectedMarker: (context, sheetRequest, completer) =>

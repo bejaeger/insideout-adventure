@@ -1,6 +1,6 @@
 /// The type of dialog to show
 enum DialogType {
-  MoneyTransfer,
+  Transfer,
   CollectCredits,
   CollectedMarker,
   FoundTreasure,

@@ -40,7 +40,7 @@ final CollectionReference screenShotsCollection =
     FirebaseFirestore.instance.collection('screenshots');
 final CollectionReference picturesCollection =
     FirebaseFirestore.instance.collection('pictures');
-final CollectionReference paymentsCollection =
+final CollectionReference transfersCollection =
     FirebaseFirestore.instance.collection('transfers');
 var questsCollection = FirebaseFirestore.instance.collection('quests');
 final CollectionReference screenTimeSessionCollection =

@@ -6,8 +6,7 @@ part of 'transfer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_MoneyTransfer _$$_MoneyTransferFromJson(Map<String, dynamic> json) =>
-    _$_MoneyTransfer(
+_$_Transfer _$$_TransferFromJson(Map<String, dynamic> json) => _$_Transfer(
       transferDetails: TransferDetails.fromJson(
           json['transferDetails'] as Map<String, dynamic>),
       createdAt: json['createdAt'] ?? "",
@@ -18,7 +17,7 @@ _$_MoneyTransfer _$$_MoneyTransferFromJson(Map<String, dynamic> json) =>
       transferId: json['transferId'] as String? ?? "placeholder",
     );
 
-Map<String, dynamic> _$$_MoneyTransferToJson(_$_MoneyTransfer instance) =>
+Map<String, dynamic> _$$_TransferToJson(_$_Transfer instance) =>
     <String, dynamic>{
       'transferDetails': instance.transferDetails.toJson(),
       'createdAt': instance.createdAt,

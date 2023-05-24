@@ -13,7 +13,7 @@ class TransferDetails with _$TransferDetails {
     required String senderName,
     required num amount,
     required String currency,
-    required MoneySource sourceType,
+    required TransferSource sourceType,
     /* legacy */
   }) = _TransferDetails;
 

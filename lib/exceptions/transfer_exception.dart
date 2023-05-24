@@ -1,9 +1,9 @@
-class MoneyTransferException implements Exception {
+class TransferException implements Exception {
   final String message;
   final String? devDetails;
   final String? prettyDetails;
 
-  MoneyTransferException({
+  TransferException({
     required this.message,
     this.devDetails,
     this.prettyDetails,
@@ -11,6 +11,6 @@ class MoneyTransferException implements Exception {
 
   @override
   String toString() {
-    return 'MoneyTransferException (in-house exception): $message ${devDetails != null ? '- $devDetails' : ''}';
+    return 'TransferException (in-house exception): $message ${devDetails != null ? '- $devDetails' : ''}';
   }
 }

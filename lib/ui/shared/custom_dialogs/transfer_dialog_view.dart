@@ -6,10 +6,10 @@ import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class MoneyTransferDialogView extends StatelessWidget {
+class TransferDialogView extends StatelessWidget {
   final DialogRequest request;
   final Function(DialogResponse) completer;
-  const MoneyTransferDialogView({
+  const TransferDialogView({
     Key? key,
     required this.request,
     required this.completer,
@@ -17,8 +17,8 @@ class MoneyTransferDialogView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MoneyTransferDialogViewModel>.reactive(
-      viewModelBuilder: () => MoneyTransferDialogViewModel(),
+    return ViewModelBuilder<TransferDialogViewModel>.reactive(
+      viewModelBuilder: () => TransferDialogViewModel(),
       onModelReady: (model) => model.waitForTransfer(request: request),
       builder: (context, model, child) => Dialog(
         elevation: 0,
@@ -49,7 +49,7 @@ class _BasicDialogContent extends StatelessWidget {
     required this.model,
   }) : super(key: key);
 
-  final log = getLogger("MoneyTransferDialogView");
+  final log = getLogger("TransferDialogView");
 
   @override
   Widget build(BuildContext context) {

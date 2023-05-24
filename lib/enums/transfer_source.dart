@@ -1,2 +1,2 @@
 /* legacy */
-enum MoneySource { Bank, Credits }
+enum TransferSource { Bank, Credits }

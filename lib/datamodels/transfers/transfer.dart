@@ -8,8 +8,8 @@ part 'transfer.freezed.dart';
 part 'transfer.g.dart';
 
 @freezed
-class MoneyTransfer with _$MoneyTransfer {
-  const MoneyTransfer._(); // private constructor for implemented methods to work
+class Transfer with _$Transfer {
+  const Transfer._(); // private constructor for implemented methods to work
 
   // This function is deprecated for now since
   // we create the document in a server function now.
@@ -19,7 +19,7 @@ class MoneyTransfer with _$MoneyTransfer {
     if (id == "placeholder") {
       throw DataModelException(
           message:
-              "MoneyTransfer: You can't serialize a money transfer model that still has a placeholder for the 'transferId'!",
+              "Transfer: You can't serialize a transfer model that still has a placeholder for the 'transferId'!",
           devDetails:
               "Please provide a valid 'transferId' by creating a new 'Transaction' with the copyWith constructor and adding the firestore DocumentReference id as 'transferId'");
     } else
@@ -30,7 +30,7 @@ class MoneyTransfer with _$MoneyTransfer {
   // From the user perspective this can still be
   // an outgoing or incoming transaction
   @JsonSerializable(explicitToJson: true)
-  const factory MoneyTransfer({
+  const factory Transfer({
     required TransferDetails transferDetails,
     @Default("")
         dynamic createdAt,
@@ -43,8 +43,8 @@ class MoneyTransfer with _$MoneyTransfer {
     )
     @Default("placeholder")
         String transferId,
-  }) = _MoneyTransfer;
+  }) = _Transfer;
 
-  factory MoneyTransfer.fromJson(Map<String, dynamic> json) =>
-      _$MoneyTransferFromJson(json);
+  factory Transfer.fromJson(Map<String, dynamic> json) =>
+      _$TransferFromJson(json);
 }
