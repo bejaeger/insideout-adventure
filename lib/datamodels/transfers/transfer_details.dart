@@ -1,4 +1,4 @@
-import 'package:afkcredits/enums/money_source.dart';
+import 'package:afkcredits/enums/transfer_source.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'transfer_details.freezed.dart';
@@ -13,7 +13,8 @@ class TransferDetails with _$TransferDetails {
     required String senderName,
     required num amount,
     required String currency,
-    required MoneySource sourceType, /* legacy */
+    required MoneySource sourceType,
+    /* legacy */
   }) = _TransferDetails;
 
   factory TransferDetails.fromJson(Map<String, dynamic> json) =>

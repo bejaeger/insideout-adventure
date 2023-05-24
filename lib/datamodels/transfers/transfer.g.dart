@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'money_transfer.dart';
+part of 'transfer.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

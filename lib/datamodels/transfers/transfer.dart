@@ -1,11 +1,11 @@
-import 'package:afkcredits/datamodels/payments/transfer_details.dart';
+import 'package:afkcredits/datamodels/transfers/transfer_details.dart';
 import 'package:afkcredits/enums/transfer_status.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/exceptions/datamodel_exception.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'money_transfer.freezed.dart';
-part 'money_transfer.g.dart';
+part 'transfer.freezed.dart';
+part 'transfer.g.dart';
 
 @freezed
 class MoneyTransfer with _$MoneyTransfer {

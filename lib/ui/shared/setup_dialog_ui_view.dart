@@ -11,10 +11,10 @@ import 'package:afkcredits/ui/custom_dialogs/ward_settings_for_guardian/ward_set
 import 'package:afkcredits/ui/custom_dialogs/ward_stat_card/ward_total_stats_card_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/beware_of_surroundings_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_view.dart';
-import 'package:afkcredits/ui/shared/custom_dialogs/money_transfer_dialog_view.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/number_quests_founds_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/onboarding_dialog.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/select_avatar_dialog_view.dart';
+import 'package:afkcredits/ui/shared/custom_dialogs/transfer_dialog_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 void setupDialogUi() {
