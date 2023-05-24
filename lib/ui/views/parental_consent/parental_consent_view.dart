@@ -55,7 +55,7 @@ class ParentalConsentView extends StatelessWidget with $ParentalConsentView {
                           children: [
                             verticalSpaceMedium,
                             InsideOutText.bodyItalic(
-                                "We need your consent that you agree with our Terms of Service and Privacy Policy"),
+                                "We would like to get your consent to agree with our Terms of Service & Privacy Policy"),
                             verticalSpaceSmall,
                             InsideOutButton.outline(
                                 title: "Terms of Use & Privacy Policy",
@@ -63,7 +63,7 @@ class ParentalConsentView extends StatelessWidget with $ParentalConsentView {
                                     context, model.appConfigProvider)),
                             verticalSpaceMedium,
                             InsideOutText.bodyItalic(
-                              "Send code to the following address",
+                              "Send verification code to the address below",
                               align: TextAlign.left,
                             ),
                             verticalSpaceSmall,
@@ -114,14 +114,25 @@ class ParentalConsentView extends StatelessWidget with $ParentalConsentView {
                             if (!model.verifiedCode) verticalSpaceMedium,
                             if (!model.verifiedCode)
                               InsideOutButton(
-                                  title: "Verify code",
+                                  title: "Verify code and agree with Terms",
                                   busy: model.isBusy,
                                   onTap: () => model.verifyCode(controller)),
                             if (!model.verifiedCode) verticalSpaceSmall,
                             if (!model.verifiedCode)
-                              InsideOutButton.text(
-                                  title: "Resend email",
-                                  onTap: () => model.onBackButton(controller)),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  InsideOutButton.text(
+                                      title: "Change address",
+                                      onTap: () =>
+                                          model.onBackButton(controller)),
+                                  InsideOutButton.text(
+                                      title: "Resend email",
+                                      onTap: () =>
+                                          model.sendConsentEmail(controller, resend: true)),
+                                ],
+                              ),
                             if (model.verifiedCode) verticalSpaceMedium,
                             if (model.verifiedCode)
                               Center(

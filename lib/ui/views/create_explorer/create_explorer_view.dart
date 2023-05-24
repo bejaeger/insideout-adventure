@@ -85,7 +85,7 @@ class CreateExplorerView extends StatelessWidget with $CreateExplorerView {
                               controller: nameController,
                               errorText:
                                   model.fieldsValidationMessages[NameValueKey],
-                              autofocus: true,
+                              autofocus: model.nameValue == null,
                             ),
                             verticalSpaceMedium,
                             InsideOutInputField(

@@ -110,10 +110,11 @@ class CreateExplorerViewModel extends FormViewModel {
             title: "Could not create user", description: result);
         return false;
       } else {
+        String title = nameValue != null ? "Successfully created ${nameValue!}'s account" : "Successfully created child account";
         await _dialogService.showDialog(
-            title: "Successfully created account",
+            title: title,
             description:
-                "Tip: You can use the entered credentials to login on another phone");
+                "Tip: you can use the account name and password to login to the child's account on another phone");
         _navigationService.back();
         return true;
       }

@@ -60,7 +60,10 @@ class ChildStatsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                            child: InsideOutText.headingFour(user.fullName)),
+                            child: Text(user.fullName,
+                                maxLines: 2,
+                                style: heading4Style.copyWith(
+                                    overflow: TextOverflow.ellipsis))),
                         Icon(Icons.arrow_forward_ios,
                             size: 20, color: kcPrimaryColorSecondary),
                       ],

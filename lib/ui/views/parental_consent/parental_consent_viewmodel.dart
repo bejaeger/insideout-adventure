@@ -14,6 +14,7 @@ class ParentalConsentViewModel extends FormViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
   final EmailService _emailService = locator<EmailService>();
+  final SnackbarService _snackbarService = locator<SnackbarService>();
   final log = getLogger("AddExplorerViewModel");
 
   void Function() disposeController;
@@ -24,12 +25,15 @@ class ParentalConsentViewModel extends FormViewModel {
   int pageIndex = 0;
   bool verifiedCode = false;
   String code = "B4T6";
+  DateTime? timeSentEmail;
 
-  Future sendConsentEmail(PageController controller) async {
+  Future sendConsentEmail(PageController controller,
+      {bool resend = false}) async {
     if (!isValidEmail()) {
       return;
     }
 
+    timeSentEmail = DateTime.now();    
     _emailService.sendConsentEmail(
         code: code,
         email: emailValue!,
@@ -37,7 +41,11 @@ class ParentalConsentViewModel extends FormViewModel {
     _userService.updateParentalVerificationStatus(
         status: ParentalVerificationStatus.pending);
     onNextButton(controller);
-
+    if (resend) {
+      _snackbarService.showSnackbar(
+          message: "You may have to check your spam folder",
+          title: "Resent email!");
+    }
     return true;
   }
 
@@ -58,21 +66,14 @@ class ParentalConsentViewModel extends FormViewModel {
       fieldsValidationMessages[CodeValueKey] =
           "Please provide the correct code we sent you via email";
       returnVal = false;
+    } else if (timeSentEmail != null && DateTime.now().difference(timeSentEmail!).inMinutes > 60) {
+      fieldsValidationMessages[CodeValueKey] =
+          "Your verification code expired, please send a new email";
+      returnVal = false;
     } else {
-      // setBusy(true);
-      // final res =
-      //     await _userService.verifyParentalConsentCode(code: codeValue!, codeSent: code);
-      // setBusy(false);
-      // if (res is String) {
-      //   fieldsValidationMessages[CodeValueKey] = res;
-      //   returnVal = false;
-      // } else if (res is bool && res == false) {
-      //   log.wtf("Could not verify parental consent is not valid");
-      // } else {
       _userService.updateParentalVerificationStatus(
           status: ParentalVerificationStatus.verified);
       verifiedCode = true;
-      // }
     }
     notifyListeners();
     return returnVal;
