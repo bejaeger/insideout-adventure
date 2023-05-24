@@ -2,13 +2,13 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 
-/// AFK Credits authentication result
+/// InsideOut authentication result
 /// We need this abstraction because we
 /// can have users not authenticated with
 /// firebase authentication (ward accounts
 /// added from guardians)
 
-class AFKCreditsAuthenticationResultService {
+class InsideOutAuthenticationResultService {
   final User? user;
   Map<String, User> supportedWards = {};
 
@@ -20,14 +20,14 @@ class AFKCreditsAuthenticationResultService {
 
   final String? errorMessage;
 
-  AFKCreditsAuthenticationResultService.authenticatedUser({this.firebaseUser})
+  InsideOutAuthenticationResultService.authenticatedUser({this.firebaseUser})
       : errorMessage = null,
         user = null,
         fromLocalStorage = false,
         uid = firebaseUser?.uid,
         firebaseAuthenticationResult = null;
 
-  AFKCreditsAuthenticationResultService.fromFirebaseAuthenticationResult(
+  InsideOutAuthenticationResultService.fromFirebaseAuthenticationResult(
       {this.firebaseAuthenticationResult})
       : errorMessage = firebaseAuthenticationResult?.errorMessage,
         firebaseUser = firebaseAuthenticationResult?.user,
@@ -35,21 +35,21 @@ class AFKCreditsAuthenticationResultService {
         fromLocalStorage = false,
         user = null;
 
-  AFKCreditsAuthenticationResultService.wardCreatedFromGuardian({this.user})
+  InsideOutAuthenticationResultService.wardCreatedFromGuardian({this.user})
       : errorMessage = null,
         firebaseUser = null,
         uid = user?.uid,
         fromLocalStorage = false,
         firebaseAuthenticationResult = null;
 
-  AFKCreditsAuthenticationResultService.fromLocalStorage({this.uid})
+  InsideOutAuthenticationResultService.fromLocalStorage({this.uid})
       : errorMessage = null,
         firebaseUser = null,
         user = null,
         fromLocalStorage = true,
         firebaseAuthenticationResult = null;
 
-  AFKCreditsAuthenticationResultService.error({this.errorMessage})
+  InsideOutAuthenticationResultService.error({this.errorMessage})
       : user = null,
         firebaseUser = null,
         uid = null,

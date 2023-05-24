@@ -102,7 +102,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                       scale: _animation,
                       // duration: Duration(milliseconds: 500),
                       // height: height,
-                      child: Image.asset(kAFKCreditsLogoPath, width: 150),
+                      child: Image.asset(kInsideOutLogoPath, width: 150),
                     ),
                   ),
                   verticalSpaceMedium,

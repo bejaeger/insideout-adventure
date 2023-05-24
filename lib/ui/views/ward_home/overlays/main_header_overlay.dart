@@ -70,7 +70,7 @@ class MainHeaderOverlay extends StatelessWidget {
                             CreditsSystem.creditsToScreenTime(balance),
                         // sizeScale: screenWidth(context) / 450,
                       ),
-                      // child: AFKCreditsDisplay(balance: balance),
+                      // child: InsideOutDisplay(balance: balance),
                     ),
                   ),
                 ),

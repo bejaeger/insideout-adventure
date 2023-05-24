@@ -113,7 +113,7 @@ class WardAccountView extends StatelessWidget {
                               horizontalSpaceTiny,
                               SummaryStatsDisplay(
                                 icon: Image.asset(
-                                    kAFKCreditsLogoSmallPathColored,
+                                    kInsideOutLogoSmallPathColored,
                                     color: kcPrimaryColor,
                                     height: 25),
                                 stats: model.currentUserStats.lifetimeEarnings
@@ -128,7 +128,7 @@ class WardAccountView extends StatelessWidget {
                             children: [
                               SummaryStatsDisplay(
                                   icon: Image.asset(
-                                      kAFKCreditsLogoSmallPathColored,
+                                      kInsideOutLogoSmallPathColored,
                                       color: kcPrimaryColor.withOpacity(0.7),
                                       height: 25),
                                   stats: model.creditsForNextLevel.toString(),
@@ -160,7 +160,7 @@ class WardAccountView extends StatelessWidget {
                                 padding: const EdgeInsets.only(
                                     left: 6.0, right: 2.0),
                                 child: Image.asset(
-                                  kAFKCreditsLogoPath,
+                                  kInsideOutLogoPath,
                                   color: kcPrimaryColor,
                                   height: 20.0,
                                 ),

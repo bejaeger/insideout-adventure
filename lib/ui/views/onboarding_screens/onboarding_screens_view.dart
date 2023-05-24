@@ -68,7 +68,7 @@ class OnBoardingScreensView extends StatelessWidget {
                     ),
                   ],
                 ),
-                // _buildImage(kAFKCreditsLogoPath, 150),
+                // _buildImage(kInsideOutLogoPath, 150),
                 decoration: pageDecoration,
               ),
               PageViewModel(
@@ -87,7 +87,7 @@ class OnBoardingScreensView extends StatelessWidget {
                   icon1: OnboardingActivityConversionIcon(),
                   icon2: OnboardingScreenTimeConversionIcon(),
                 ),
-                // image: HerculesWorldLogo(),
+                // image: InsideOutLogo(),
                 image: _buildImage(kIllustrationInfographic, 500),
                 decoration: pageDecoration,
               ),
@@ -99,7 +99,7 @@ class OnBoardingScreensView extends StatelessWidget {
                       "Switch back and forth between parent and child account",
                   text2: "Monitor child activity from this parent account",
                 ),
-                image: _buildImage(kIllustrationAnnaHercules, 280),
+                image: _buildImage(kIllustrationAnnaInsideOut, 280),
                 decoration: pageDecoration,
               ),
               PageViewModel(

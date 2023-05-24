@@ -2,10 +2,10 @@
 const String kMapStylePath = "assets/DayStyle.json";
 
 // logo
-const String kAFKCreditsLogoPath = "assets/icons/credits_orig.png";
-const String kAFKCreditsLogoSmallPath = "assets/icons/credits_small_orig.png";
-const String kAFKCreditsLogoSmallPathYellow = "assets/icons/credits.png";
-const String kAFKCreditsLogoSmallPathColored =
+const String kInsideOutLogoPath = "assets/icons/credits_orig.png";
+const String kInsideOutLogoSmallPath = "assets/icons/credits_small_orig.png";
+const String kInsideOutLogoSmallPathYellow = "assets/icons/credits.png";
+const String kInsideOutLogoSmallPathColored =
     "assets/icons/credits_small_colored.PNG";
 
 // images
@@ -26,7 +26,7 @@ const String kScreenTimeIcon2 = "assets/icons/person.png";
 // illustrations
 const String kIllustrationActivity =
     "assets/illustrations/activity_illustration.png";
-const String kIllustrationAnnaHercules =
+const String kIllustrationAnnaInsideOut =
     "assets/illustrations/anna_hercules_world.png";
 const String kIllustrationInfographic = "assets/illustrations/infographic.png";
 const String kIllustrationGuardianMeditate =

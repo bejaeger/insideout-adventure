@@ -44,7 +44,7 @@ class QuestSuccessCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(kAFKCreditsLogoPath,
+                Image.asset(kInsideOutLogoPath,
                     height: 24, color: kcPrimaryColor),
                 horizontalSpaceTiny,
                 InsideOutText.headingThree(

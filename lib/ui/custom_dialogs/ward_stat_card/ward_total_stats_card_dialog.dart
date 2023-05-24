@@ -29,7 +29,7 @@ class WardTotalStatsCardDialog extends StatelessWidget {
               verticalSpaceMedium,
               verticalSpaceSmall,
               SummaryStatsDisplay(
-                icon: Image.asset(kAFKCreditsLogoPath,
+                icon: Image.asset(kInsideOutLogoPath,
                     color: kcPrimaryColor, height: 25),
                 stats: request.data.lifetimeEarnings.toString(),
                 title: "Total collected",

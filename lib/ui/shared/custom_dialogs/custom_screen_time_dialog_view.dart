@@ -75,7 +75,7 @@ class CustomScreenTimeDialogView extends StatelessWidget
                   Expanded(
                     child: SummaryStatsDisplay(
                       //title: "Amount credits",
-                      icon: Image.asset(kAFKCreditsLogoPath,
+                      icon: Image.asset(kInsideOutLogoPath,
                           height: 26, color: kcPrimaryColor),
                       //unit: "min",
                       stats: model.creditsEquivalent == null

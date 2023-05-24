@@ -101,7 +101,7 @@ class _ARObjectIosViewState extends State<ARObjectIosView> {
 
     final material = ARKitMaterial(
       lightingModelName: ARKitLightingModel.constant,
-      diffuse: ARKitMaterialProperty.image(kAFKCreditsLogoPath),
+      diffuse: ARKitMaterialProperty.image(kInsideOutLogoPath),
       blendMode: ARKitBlendMode.alpha,
     );
     final material2 = ARKitMaterial(

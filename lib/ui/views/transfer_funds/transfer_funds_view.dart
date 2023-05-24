@@ -47,7 +47,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                       style: heading3Style,
                       leading: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Image.asset(kAFKCreditsLogoPath, height: 10),
+                        child: Image.asset(kInsideOutLogoPath, height: 10),
                       ),
                       autofocus: true,
                       keyboardType: TextInputType.number,

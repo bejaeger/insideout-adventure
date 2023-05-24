@@ -93,7 +93,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                         Icon(Icons.arrow_forward,
                             size: 22, color: kcMediumGrey),
                         horizontalSpaceSmall,
-                        Image.asset(kAFKCreditsLogoPath,
+                        Image.asset(kInsideOutLogoPath,
                             width: 38,
                             color: directionStatus == DirectionStatus.closer
                                 ? Colors.white

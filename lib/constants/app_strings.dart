@@ -4,7 +4,7 @@ const String kUserRoleSelectionDialogButtonTitle = "Ward";
 const String kUserRoleSelectionDialogCancelTitle = "Guardian";
 
 const String kCreditsToEarnDescription = "TO EARN";
-const String kCurrentAFKCreditsDescription = "EARNED";
+const String kCurrentInsideOutDescription = "EARNED";
 const String kLifetimeEarningsDescription = "Lifetime earnings";
 const String kNumberCompletedQuestsDescription = "Completed quests";
 // /end_unused_strings

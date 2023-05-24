@@ -155,7 +155,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Image.asset(
-                                kAFKCreditsLogoPath,
+                                kInsideOutLogoPath,
                                 color: kcPrimaryColor,
                                 width: screenWidth(context, percentage: 0.4),
                               ),

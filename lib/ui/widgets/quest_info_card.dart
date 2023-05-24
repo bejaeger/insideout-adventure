@@ -79,7 +79,7 @@ class QuestInfoCard extends StatelessWidget {
                         SizedBox(width: 4),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 5.0),
-                          child: Image.asset(kAFKCreditsLogoPath,
+                          child: Image.asset(kInsideOutLogoPath,
                               height: 22, color: kcPrimaryColor),
                         ),
                         SizedBox(width: 4.0),

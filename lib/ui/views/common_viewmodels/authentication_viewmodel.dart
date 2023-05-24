@@ -10,7 +10,7 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/local_secure_storage_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
-import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
+import 'package:afkcredits/services/users/insideout_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -33,7 +33,7 @@ abstract class AuthenticationViewModel extends FormViewModel
   Future saveData(AuthenticationMethod method, [UserRole? role]) async {
     if (role != null && this.role == null) this.role = role;
     log.i("Trying to authenticate user with method $method and role $role ");
-    final AFKCreditsAuthenticationResultService result = await (runBusyFuture(
+    final InsideOutAuthenticationResultService result = await (runBusyFuture(
         runAuthentication(method, this.role),
         throwException: true));
 
@@ -114,7 +114,7 @@ abstract class AuthenticationViewModel extends FormViewModel
     }
   }
 
-  Future<AFKCreditsAuthenticationResultService> runAuthentication(
+  Future<InsideOutAuthenticationResultService> runAuthentication(
       AuthenticationMethod method,
       [UserRole? role]);
 }

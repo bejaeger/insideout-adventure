@@ -31,7 +31,7 @@ class OnboardingActivityConversionIcon extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: Image.asset(
-              kAFKCreditsLogoSmallPathColored,
+              kInsideOutLogoSmallPathColored,
               height: 24,
               color: kcPrimaryColor,
             ),

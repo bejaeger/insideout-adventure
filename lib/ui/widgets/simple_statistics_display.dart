@@ -41,7 +41,7 @@ class SimpleStatisticsDisplay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (showCreditsIcon)
-                  AFKCreditsIcon(
+                  InsideOutIcon(
                       height: 35,
                       alignment: Alignment.center,
                       color: kcPrimaryColor),

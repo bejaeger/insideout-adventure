@@ -219,9 +219,9 @@ class GoogleMapService {
       required double lon,
       required bool isGreen}) async {
     final coinBitmap = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(4, 4)), kAFKCreditsLogoSmallPath);
+        ImageConfiguration(size: Size(4, 4)), kInsideOutLogoSmallPath);
     final treasureBitmap = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(4, 4)), kAFKCreditsLogoSmallPathYellow);
+        ImageConfiguration(size: Size(4, 4)), kInsideOutLogoSmallPathYellow);
     Marker marker = Marker(
       markerId: MarkerId("COIN" +
           isGreen

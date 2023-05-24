@@ -29,7 +29,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 
-import 'afkcredits_authentication_result_service.dart';
+import 'insideout_authentication_result_service.dart';
 
 class UserService {
   final _firestoreApi = locator<FirestoreApi>();
@@ -164,7 +164,7 @@ class UserService {
     return id;
   }
 
-  Future<AFKCreditsAuthenticationResultService> runLoginLogic(
+  Future<InsideOutAuthenticationResultService> runLoginLogic(
       {required AuthenticationMethod method,
       String? emailOrName,
       String? stringPw,
@@ -204,7 +204,7 @@ class UserService {
             // something really bad happened
             log.wtf(
                 "Should never end up here: This is because no password of ward was found.");
-            return Future.value(AFKCreditsAuthenticationResultService.error(
+            return Future.value(InsideOutAuthenticationResultService.error(
                 errorMessage:
                     "No permissions to login to user with name or email '$emailOrName'."));
           }
@@ -214,12 +214,12 @@ class UserService {
               hashedPw2: hashedPw)) {
             log.i(
                 "Found AFK user that was created by a guardian inside the app");
-            return AFKCreditsAuthenticationResultService.fromLocalStorage(
+            return InsideOutAuthenticationResultService.fromLocalStorage(
                 uid: user.uid);
           } else {
             log.i(
                 "Found AFK user that was created by a guardian inside the app but password is not valid!");
-            return Future.value(AFKCreditsAuthenticationResultService.error(
+            return Future.value(InsideOutAuthenticationResultService.error(
                 errorMessage:
                     "Password for user with name $emailOrName is not correct."));
           }
@@ -227,21 +227,21 @@ class UserService {
       }
     } else if (method == AuthenticationMethod.email) {
       log.i("Login with e-mail");
-      return AFKCreditsAuthenticationResultService
+      return InsideOutAuthenticationResultService
           .fromFirebaseAuthenticationResult(
         firebaseAuthenticationResult: await _firebaseAuthenticationService
             .loginWithEmail(email: emailOrName!, password: stringPw!),
       );
     } else if (method == AuthenticationMethod.google) {
       log.i("Login with google");
-      return AFKCreditsAuthenticationResultService
+      return InsideOutAuthenticationResultService
           .fromFirebaseAuthenticationResult(
         firebaseAuthenticationResult:
             await _firebaseAuthenticationService.signInWithGoogle(),
       );
     } else if (method == AuthenticationMethod.apple) {
       log.i("Login with apple");
-      return AFKCreditsAuthenticationResultService
+      return InsideOutAuthenticationResultService
           .fromFirebaseAuthenticationResult(
         firebaseAuthenticationResult:
             await _firebaseAuthenticationService.signInWithApple(
@@ -250,7 +250,7 @@ class UserService {
         ),
       );
     } else if (method == AuthenticationMethod.dummy) {
-      return AFKCreditsAuthenticationResultService
+      return InsideOutAuthenticationResultService
           .fromFirebaseAuthenticationResult(
               firebaseAuthenticationResult:
                   await _firebaseAuthenticationService.loginWithEmail(
@@ -259,13 +259,13 @@ class UserService {
     } else {
       log.e(
           "The authentication method you tried to use is not implemented yet. Use E-mail, Google, or Apple to authenticate");
-      return Future.value(AFKCreditsAuthenticationResultService.error(
+      return Future.value(InsideOutAuthenticationResultService.error(
           errorMessage:
               "The authentication method you tried to use is not available."));
     }
   }
 
-  Future<AFKCreditsAuthenticationResultService> runCreateAccountLogic(
+  Future<InsideOutAuthenticationResultService> runCreateAccountLogic(
       {required AuthenticationMethod method,
       required UserRole role,
       String? fullName,
@@ -281,11 +281,11 @@ class UserService {
     } else {
       log.e(
           "The authentication method you tried to use is not implemented yet. Use E-mail, Google, Facebook, or Apple to authenticate");
-      return AFKCreditsAuthenticationResultService.error(
+      return InsideOutAuthenticationResultService.error(
           errorMessage: "Authentication method not valid!");
     }
     if (result.hasError) {
-      return AFKCreditsAuthenticationResultService.error(
+      return InsideOutAuthenticationResultService.error(
           errorMessage: result.errorMessage);
     } else {
       try {
@@ -307,16 +307,16 @@ class UserService {
       } catch (e) {
         log.e("Error: $e");
         if (e is FirestoreApiException) {
-          return AFKCreditsAuthenticationResultService.error(
+          return InsideOutAuthenticationResultService.error(
               errorMessage: e.prettyDetails ??
                   "Something went wrong when creating a new user in our databank. Please try again later or contact support!");
         } else {
-          return AFKCreditsAuthenticationResultService.error(
+          return InsideOutAuthenticationResultService.error(
               errorMessage:
                   "Something went wrong when creating a new user in our databank. Please try again later or contact support!");
         }
       }
-      return AFKCreditsAuthenticationResultService.authenticatedUser(
+      return InsideOutAuthenticationResultService.authenticatedUser(
           firebaseUser: result.user);
     }
   }

@@ -245,7 +245,7 @@ class MapStateService {
 
     await availableMaps.first.showDirections(
       destination: Coords(lat, lon),
-      //title: "AFK Credits Quest",
+      //title: "InsideOut Adventures Quest",
     );
   }
 

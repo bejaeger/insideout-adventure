@@ -134,7 +134,7 @@ class _ARObjectAndroidViewState extends State<ARObjectAndroidView> {
   void _addRotatingLogo(ArCoreController controller,
       [vector.Vector3? position]) async {
     // afk logo
-    final logoAsBundle = await rootBundle.load(kAFKCreditsLogoPath);
+    final logoAsBundle = await rootBundle.load(kInsideOutLogoPath);
     final logoAsUint8 = logoAsBundle.buffer.asUint8List();
     final imageMaterial = ArCoreMaterial(
       textureBytes: logoAsUint8,

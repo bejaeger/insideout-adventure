@@ -78,7 +78,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                     verticalSpaceMedium,
                                     SummaryStatsDisplay(
                                       title: "Current credits",
-                                      icon: Image.asset(kAFKCreditsLogoPath,
+                                      icon: Image.asset(kInsideOutLogoPath,
                                           color: kcPrimaryColor, height: 24),
                                       stats: model.stats.creditsBalance
                                           .toStringAsFixed(0),

@@ -19,7 +19,7 @@ class OnboardingScreenTimeConversionIcon extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Image.asset(
-              kAFKCreditsLogoSmallPathColored,
+              kInsideOutLogoSmallPathColored,
               height: 24,
               color: kcPrimaryColor,
             ),

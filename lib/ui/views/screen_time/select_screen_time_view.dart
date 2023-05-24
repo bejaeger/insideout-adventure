@@ -66,7 +66,7 @@ class SelectScreenTimeView extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(kAFKCreditsLogoPath,
+                          Image.asset(kInsideOutLogoPath,
                               height: 18, color: kcPrimaryColor),
                           horizontalSpaceTiny,
                           InsideOutText.headingFourLight(
@@ -96,7 +96,7 @@ class SelectScreenTimeView extends StatelessWidget {
                         horizontalSpaceSmall,
                         InsideOutText.headingFourLight("="),
                         horizontalSpaceSmall,
-                        Image.asset(kAFKCreditsLogoPath,
+                        Image.asset(kInsideOutLogoPath,
                             height: 18, color: kcPrimaryColor),
                         horizontalSpaceTiny,
                         InsideOutText.headingFourLight(

@@ -150,7 +150,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                             TextSpan(text: "Earn "),
                             WidgetSpan(
                               alignment: PlaceholderAlignment.middle,
-                              child: Image.asset(kAFKCreditsLogoPath,
+                              child: Image.asset(kInsideOutLogoPath,
                                   color: kcPrimaryColor, height: 18),
                             ),
                             TextSpan(

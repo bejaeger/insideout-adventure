@@ -56,7 +56,7 @@ class CreditConversionInfoDialog extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        kAFKCreditsLogoSmallPathColored,
+                        kInsideOutLogoSmallPathColored,
                         height: 24,
                         color: kcPrimaryColor,
                       ),
@@ -83,7 +83,7 @@ class CreditConversionInfoDialog extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        kAFKCreditsLogoSmallPathColored,
+                        kInsideOutLogoSmallPathColored,
                         height: 24,
                         color: kcPrimaryColor,
                       ),

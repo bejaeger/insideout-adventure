@@ -65,7 +65,7 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(kAFKCreditsLogoPath,
+                          Image.asset(kInsideOutLogoPath,
                               height: 24, color: kcPrimaryColor),
                           SizedBox(width: 6.0),
                           InsideOutText.headingThree(

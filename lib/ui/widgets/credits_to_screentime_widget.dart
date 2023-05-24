@@ -19,7 +19,7 @@ class CreditsToScreenTimeWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Image.asset(kAFKCreditsLogoPath,
+        Image.asset(kInsideOutLogoPath,
             height: 28 * sizeScale, color: kcPrimaryColor),
         SizedBox(width: 8.0 * sizeScale),
         InsideOutText(

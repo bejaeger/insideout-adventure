@@ -82,7 +82,7 @@ class FinishedQuestCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        AFKCreditsIcon(height: 40),
+                        InsideOutIcon(height: 40),
                         Text(quest.creditsEarned.toString(),
                             style: textTheme(context)
                                 .headline4!
