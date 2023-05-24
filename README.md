@@ -147,7 +147,5 @@ These locations were reverted since the emitted changes were messy:
 # Information about status of code
 
 ## Legacy naming
-Some classes or packages still use legacy names. This is a list of terms that are used interchangeably:
-- 'Payment' = 'Money Transfer' = 'Credit Transfer'
-- Also in the project settings/names 'afkcredits' or 'hercules' may still be used instead of 'insideout' or 'insideoutadventure'
+- In the project settings/names & DB names 'afkcredits' or 'hercules' may still be used instead of 'insideout' or 'insideoutadventure'
 
