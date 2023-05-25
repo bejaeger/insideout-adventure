@@ -60,7 +60,7 @@ class ParentalConsentView extends StatelessWidget with $ParentalConsentView {
                             InsideOutButton.outline(
                                 title: "Terms of Use & Privacy Policy",
                                 onTap: () => showTermsAndPrivacyDialog(
-                                    context, model.appConfigProvider)),
+                                    context: context, appConfigProvider: model.appConfigProvider)),
                             verticalSpaceMedium,
                             InsideOutText.bodyItalic(
                               "Send verification code to the address below",

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 
 void showTermsAndPrivacyDialog(
-    BuildContext context, AppConfigProvider appConfigProvider) {
+    {required BuildContext context, required AppConfigProvider appConfigProvider}) {
   return showAboutDialog(    
     context: context,
     applicationIcon: Image.asset(

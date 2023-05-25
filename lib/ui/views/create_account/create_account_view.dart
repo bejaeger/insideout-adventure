@@ -73,7 +73,7 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
               ],
             ),
             showTerms: () =>
-                showTermsAndPrivacyDialog(context, model.appConfigProvider),
+                showTermsAndPrivacyDialog(context: context, appConfigProvider: model.appConfigProvider),
           ),
         ),
       ),

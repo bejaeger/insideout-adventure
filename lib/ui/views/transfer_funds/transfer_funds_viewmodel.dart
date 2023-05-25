@@ -8,6 +8,7 @@ import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/transfer_details.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
+import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/money_source.dart';
@@ -34,7 +35,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
   User get currentUser => _userService.currentUser;
 
   num? amount;
-  num? screenTimeEquivalent;
+  num? equivalentValue;
 
   final PublicUserInfo recipientInfo;
   final PublicUserInfo senderInfo;
@@ -231,8 +232,7 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     if (amountValue != null && amountValue != "") {
       if (isValidData(true)) {
         num tmpamount = int.parse(amountValue!);
-        screenTimeEquivalent =
-            InsideOutCreditSystem.creditsToScreenTime(tmpamount);
+        equivalentValue = InsideOutCreditSystem.creditsToScreenTime(tmpamount);
       }
     }
     await Future.delayed(Duration(milliseconds: 2000));

@@ -112,29 +112,36 @@ class SelectScreenTimeView extends StatelessWidget {
                   Spacer(),
                   Align(
                     alignment: Alignment.center,
-                    child: GestureDetector(
+                    child: InsideOutButton.outline(
+                      height: 60,
+                      enabled: false,
+                      title: "Custom",
                       onTap: () => model.selectCustomScreenTime(),
-                      child: Container(
-                        width: 180,
-                        padding: const EdgeInsets.only(
-                            top: 25, bottom: 25, left: 20, right: 20),
-                        alignment: Alignment.center,
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: kcGreenDark,
-                              width: 0,
-                            ),
-                          ),
-                          child: InsideOutText.bodyBold(
-                            "Custom",
-                            color: kcGreenDark,
-                          ),
-                        ),
-                      ),
+                      color: kcGreen,
                     ),
+                    // GestureDetector(
+                    //   onTap: () => model.selectCustomScreenTime(),
+                    //   child: Container(
+                    //     width: 180,
+                    //     padding: const EdgeInsets.only(
+                    //         top: 25, bottom: 25, left: 20, right: 20),
+                    //     alignment: Alignment.center,
+                    //     child: Container(
+                    //       padding: const EdgeInsets.all(10),
+                    //       decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(20),
+                    //         border: Border.all(
+                    //           color: kcGreenDark,
+                    //           width: 0,
+                    //         ),
+                    //       ),
+                    //       child: InsideOutText.bodyBold(
+                    //         "Custom",
+                    //         color: kcGreenDark,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ),
                   Column(
                     children: [

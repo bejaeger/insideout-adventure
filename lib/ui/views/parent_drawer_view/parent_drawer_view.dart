@@ -58,7 +58,7 @@ class ParentDrawerView extends StatelessWidget {
                 title: InsideOutText.body("Terms & Policies"),
                 leading: Icon(Icons.book),
                 onTap: () => showTermsAndPrivacyDialog(
-                    context, model.appConfigProvider)),
+                    context: context, appConfigProvider: model.appConfigProvider)),
           ),
           verticalSpaceTiny,
           Padding(
