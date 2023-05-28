@@ -28,7 +28,7 @@ mixin _$UserSettings {
   bool get isShowingCompletedQuests => throw _privateConstructorUsedError;
   bool get isShowAvatarAndMapEffects => throw _privateConstructorUsedError;
   bool get ownPhone =>
-      throw _privateConstructorUsedError; // child using his/her own phone
+      throw _privateConstructorUsedError; // ward using his/her own phone
   bool get isAcceptScreenTimeFirst => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -179,7 +179,7 @@ class _$_UserSettings implements _UserSettings {
   @override
   @JsonKey()
   final bool ownPhone;
-// child using his/her own phone
+// ward using his/her own phone
   @override
   @JsonKey()
   final bool isAcceptScreenTimeFirst;
@@ -248,7 +248,7 @@ abstract class _UserSettings implements UserSettings {
   bool get isShowAvatarAndMapEffects;
   @override
   bool get ownPhone;
-  @override // child using his/her own phone
+  @override // ward using his/her own phone
   bool get isAcceptScreenTimeFirst;
   @override
   @JsonKey(ignore: true)

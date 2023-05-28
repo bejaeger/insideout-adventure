@@ -1,8 +1,8 @@
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/ui/widgets/stats_card.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class FinishedQuestCard extends StatelessWidget {
   final ActivatedQuest quest;
@@ -82,8 +82,8 @@ class FinishedQuestCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        AFKCreditsIcon(height: 40),
-                        Text(quest.afkCreditsEarned.toString(),
+                        InsideOutIcon(height: 40),
+                        Text(quest.creditsEarned.toString(),
                             style: textTheme(context)
                                 .headline4!
                                 .copyWith(color: kcPrimaryColor)),

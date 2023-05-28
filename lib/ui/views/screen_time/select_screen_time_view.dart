@@ -1,25 +1,24 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/hercules_world_credit_system.dart';
+import 'package:afkcredits/constants/credits_system.dart';
 import 'package:afkcredits/ui/layout_widgets/main_page.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_viewmodel.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:lottie/lottie.dart';
-
 import 'package:stacked/stacked.dart';
 
 class SelectScreenTimeView extends StatelessWidget {
-  // childId needs to be provided when accessing this view from the parents account
-  final String? childId;
-  const SelectScreenTimeView({Key? key, this.childId}) : super(key: key);
+  // wardId needs to be provided when accessing this view from the guardian account
+  final String? wardId;
+  const SelectScreenTimeView({Key? key, this.wardId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SelectScreenTimeViewModel>.reactive(
-      viewModelBuilder: () => SelectScreenTimeViewModel(childId: childId),
+      viewModelBuilder: () => SelectScreenTimeViewModel(wardId: wardId),
       builder: (context, model, child) {
         return MainPage(
-          showBackButton: !model.isParentAccount,
+          showBackButton: !model.isGuardianAccount,
           resizeToAvoidBottomInset: false,
           child: Container(
             child: Padding(
@@ -27,7 +26,7 @@ class SelectScreenTimeView extends StatelessWidget {
                 left: 20,
                 right: 20,
                 top: 40,
-                bottom: model.isParentAccount ? 20 : kBottomBackButtonPadding,
+                bottom: model.isGuardianAccount ? 20 : kBottomBackButtonPadding,
               ),
               child: Container(
                 height: 1000 + screenHeight(context, percentage: 0.15),
@@ -35,7 +34,7 @@ class SelectScreenTimeView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (model.isParentAccount)
+                    if (model.isGuardianAccount)
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Align(
@@ -51,28 +50,27 @@ class SelectScreenTimeView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InsideOutText.headingTwo(
-                            model.isParentAccount
+                            model.isGuardianAccount
                                 ? "Choose time for " +
-                                    model.userService
-                                        .explorerNameFromUid(childId!)
+                                    model.userService.wardNameFromUid(wardId!)
                                 : "Get your well-deserved screen time",
                             align: TextAlign.center),
                       ],
                     ),
                     verticalSpaceMedium,
                     Spacer(),
-                    if (model.isParentAccount)
+                    if (model.isGuardianAccount)
                       InsideOutText.body("Total available"),
-                    if (model.isParentAccount) verticalSpaceTiny,
-                    if (model.isParentAccount)
+                    if (model.isGuardianAccount) verticalSpaceTiny,
+                    if (model.isGuardianAccount)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(kAFKCreditsLogoPath,
+                          Image.asset(kInsideOutLogoPath,
                               height: 18, color: kcPrimaryColor),
                           horizontalSpaceTiny,
                           InsideOutText.headingFourLight(
-                              model.afkCreditsBalance.toStringAsFixed(0)),
+                              model.creditsBalance.toStringAsFixed(0)),
                           horizontalSpaceSmall,
                           Icon(Icons.arrow_right_alt, size: 20),
                           horizontalSpaceSmall,
@@ -84,7 +82,7 @@ class SelectScreenTimeView extends StatelessWidget {
                                   " min"),
                         ],
                       ),
-                    if (!model.isParentAccount)
+                    if (!model.isGuardianAccount)
                       Lottie.asset(kLottieBigTv, height: 130),
                     Spacer(),
                     InsideOutText.body("Selected"),
@@ -98,11 +96,11 @@ class SelectScreenTimeView extends StatelessWidget {
                         horizontalSpaceSmall,
                         InsideOutText.headingFourLight("="),
                         horizontalSpaceSmall,
-                        Image.asset(kAFKCreditsLogoPath,
+                        Image.asset(kInsideOutLogoPath,
                             height: 18, color: kcPrimaryColor),
                         horizontalSpaceTiny,
                         InsideOutText.headingFourLight(
-                            HerculesWorldCreditSystem.screenTimeToCredits(
+                            CreditsSystem.screenTimeToCredits(
                                     model.screenTimePreset)
                                 .toString()),
                       ],
@@ -178,16 +176,16 @@ class SelectScreenTimeView extends StatelessWidget {
                         height: 50,
                         leading:
                             Icon(Icons.play_arrow_rounded, color: Colors.white),
-                        onTap: model.afkCreditsBalance == 0 ||
+                        onTap: model.creditsBalance == 0 ||
                                 model.screenTimePreset >
                                     model.totalAvailableScreenTime
                             ? null
                             : model.startScreenTime,
-                        disabled: model.afkCreditsBalance == 0 ||
+                        disabled: model.creditsBalance == 0 ||
                             model.screenTimePreset >
                                 model.totalAvailableScreenTime,
                         color: kcScreenTimeBlue,
-                        title: model.afkCreditsBalance == 0 ||
+                        title: model.creditsBalance == 0 ||
                                 model.screenTimePreset >
                                     model.totalAvailableScreenTime
                             ? "Not enough credits"

@@ -24,41 +24,41 @@ import 'package:afkcredits/ui/views/create_account/create_account_user_role_view
     as _i6;
 import 'package:afkcredits/ui/views/create_account/create_account_view.dart'
     as _i5;
-import 'package:afkcredits/ui/views/create_explorer/create_explorer_view.dart'
-    as _i10;
-import 'package:afkcredits/ui/views/explorer_home/explorer_home_view.dart'
-    as _i3;
+import 'package:afkcredits/ui/views/create_ward/create_ward_view.dart' as _i10;
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart' as _i21;
+import 'package:afkcredits/ui/views/guardian_home/guardian_home_view.dart'
+    as _i2;
+import 'package:afkcredits/ui/views/guardian_map/guardian_map_view.dart'
+    as _i20;
 import 'package:afkcredits/ui/views/help_desk/hep_desk_view.dart' as _i25;
 import 'package:afkcredits/ui/views/login/login_view.dart' as _i4;
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart'
     as _i9;
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart'
     as _i19;
-import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart' as _i2;
-import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart' as _i20;
 import 'package:afkcredits/ui/views/permissions/permissions_view.dart' as _i22;
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart'
     as _i14;
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart'
     as _i18;
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart' as _i13;
-import 'package:afkcredits/ui/views/single_child_stat/single_child_stat_view.dart'
+import 'package:afkcredits/ui/views/single_ward_stat/single_ward_stat_view.dart'
     as _i11;
 import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart'
     as _i8;
 import 'package:afkcredits/ui/views/startup/startup_view.dart' as _i7;
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart'
     as _i12;
+import 'package:afkcredits/ui/views/ward_home/ward_home_view.dart' as _i3;
 import 'package:flutter/foundation.dart' as _i26;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
 import 'package:stacked_services/stacked_services.dart' as _i31;
 
 class Routes {
-  static const parentHomeView = '/parent-home-view';
+  static const guardianHomeView = '/guardian-home-view';
 
-  static const explorerHomeView = '/explorer-home-view';
+  static const wardHomeView = '/ward-home-view';
 
   static const loginView = '/login-view';
 
@@ -72,9 +72,9 @@ class Routes {
 
   static const selectRoleAfterLoginView = '/select-role-after-login-view';
 
-  static const createExplorerView = '/create-explorer-view';
+  static const createWardView = '/create-ward-view';
 
-  static const singleChildStatView = '/single-child-stat-view';
+  static const singleWardStatView = '/single-ward-stat-view';
 
   static const transferFundsView = '/transfer-funds-view';
 
@@ -92,7 +92,7 @@ class Routes {
 
   static const onBoardingScreensView = '/on-boarding-screens-view';
 
-  static const parentMapView = '/parent-map-view';
+  static const guardianMapView = '/guardian-map-view';
 
   static const feedbackView = '/feedback-view';
 
@@ -105,16 +105,16 @@ class Routes {
   static const helpDeskView = '/help-desk-view';
 
   static const all = <String>{
-    parentHomeView,
-    explorerHomeView,
+    guardianHomeView,
+    wardHomeView,
     loginView,
     createAccountView,
     createAccountUserRoleView,
     startUpView,
     startUpScreenTimeView,
     selectRoleAfterLoginView,
-    createExplorerView,
-    singleChildStatView,
+    createWardView,
+    singleWardStatView,
     transferFundsView,
     setPinView,
     createQuestView,
@@ -123,7 +123,7 @@ class Routes {
     activeScreenTimeView,
     selectScreenTimeView,
     onBoardingScreensView,
-    parentMapView,
+    guardianMapView,
     feedbackView,
     permissionsView,
     startScreenTimeCounterView,
@@ -135,12 +135,12 @@ class Routes {
 class StackedRouter extends _i1.RouterBase {
   final _routes = <_i1.RouteDef>[
     _i1.RouteDef(
-      Routes.parentHomeView,
-      page: _i2.ParentHomeView,
+      Routes.guardianHomeView,
+      page: _i2.GuardianHomeView,
     ),
     _i1.RouteDef(
-      Routes.explorerHomeView,
-      page: _i3.ExplorerHomeView,
+      Routes.wardHomeView,
+      page: _i3.WardHomeView,
     ),
     _i1.RouteDef(
       Routes.loginView,
@@ -167,12 +167,12 @@ class StackedRouter extends _i1.RouterBase {
       page: _i9.SelectRoleAfterLoginView,
     ),
     _i1.RouteDef(
-      Routes.createExplorerView,
-      page: _i10.CreateExplorerView,
+      Routes.createWardView,
+      page: _i10.CreateWardView,
     ),
     _i1.RouteDef(
-      Routes.singleChildStatView,
-      page: _i11.SingleChildStatView,
+      Routes.singleWardStatView,
+      page: _i11.SingleWardStatView,
     ),
     _i1.RouteDef(
       Routes.transferFundsView,
@@ -207,8 +207,8 @@ class StackedRouter extends _i1.RouterBase {
       page: _i19.OnBoardingScreensView,
     ),
     _i1.RouteDef(
-      Routes.parentMapView,
-      page: _i20.ParentMapView,
+      Routes.guardianMapView,
+      page: _i20.GuardianMapView,
     ),
     _i1.RouteDef(
       Routes.feedbackView,
@@ -233,22 +233,22 @@ class StackedRouter extends _i1.RouterBase {
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
-    _i2.ParentHomeView: (data) {
-      final args = data.getArgs<ParentHomeViewArguments>(
-        orElse: () => const ParentHomeViewArguments(),
+    _i2.GuardianHomeView: (data) {
+      final args = data.getArgs<GuardianHomeViewArguments>(
+        orElse: () => const GuardianHomeViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i2.ParentHomeView(
+        builder: (context) => _i2.GuardianHomeView(
             key: args.key, screenTimeSession: args.screenTimeSession),
         settings: data,
       );
     },
-    _i3.ExplorerHomeView: (data) {
-      final args = data.getArgs<ExplorerHomeViewArguments>(
-        orElse: () => const ExplorerHomeViewArguments(),
+    _i3.WardHomeView: (data) {
+      final args = data.getArgs<WardHomeViewArguments>(
+        orElse: () => const WardHomeViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i3.ExplorerHomeView(
+        builder: (context) => _i3.WardHomeView(
             key: args.key,
             showBewareDialog: args.showBewareDialog,
             screenTimeSession: args.screenTimeSession,
@@ -304,20 +304,20 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i10.CreateExplorerView: (data) {
-      final args = data.getArgs<CreateExplorerViewArguments>(
-        orElse: () => const CreateExplorerViewArguments(),
+    _i10.CreateWardView: (data) {
+      final args = data.getArgs<CreateWardViewArguments>(
+        orElse: () => const CreateWardViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i10.CreateExplorerView(key: args.key),
+        builder: (context) => _i10.CreateWardView(key: args.key),
         settings: data,
       );
     },
-    _i11.SingleChildStatView: (data) {
-      final args = data.getArgs<SingleChildStatViewArguments>(nullOk: false);
+    _i11.SingleWardStatView: (data) {
+      final args = data.getArgs<SingleWardStatViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i11.SingleChildStatView(key: args.key, uid: args.uid),
+            _i11.SingleWardStatView(key: args.key, uid: args.uid),
         settings: data,
       );
     },
@@ -384,7 +384,7 @@ class StackedRouter extends _i1.RouterBase {
       );
       return MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i18.SelectScreenTimeView(key: args.key, childId: args.childId),
+            _i18.SelectScreenTimeView(key: args.key, wardId: args.wardId),
         settings: data,
       );
     },
@@ -394,9 +394,9 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i20.ParentMapView: (data) {
+    _i20.GuardianMapView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i20.ParentMapView(),
+        builder: (context) => const _i20.GuardianMapView(),
         settings: data,
       );
     },
@@ -447,8 +447,8 @@ class StackedRouter extends _i1.RouterBase {
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-class ParentHomeViewArguments {
-  const ParentHomeViewArguments({
+class GuardianHomeViewArguments {
+  const GuardianHomeViewArguments({
     this.key,
     this.screenTimeSession,
   });
@@ -458,8 +458,8 @@ class ParentHomeViewArguments {
   final _i27.ScreenTimeSession? screenTimeSession;
 }
 
-class ExplorerHomeViewArguments {
-  const ExplorerHomeViewArguments({
+class WardHomeViewArguments {
+  const WardHomeViewArguments({
     this.key,
     this.showBewareDialog = false,
     this.screenTimeSession,
@@ -514,14 +514,14 @@ class SelectRoleAfterLoginViewArguments {
   final _i29.AuthenticationMethod authMethod;
 }
 
-class CreateExplorerViewArguments {
-  const CreateExplorerViewArguments({this.key});
+class CreateWardViewArguments {
+  const CreateWardViewArguments({this.key});
 
   final _i26.Key? key;
 }
 
-class SingleChildStatViewArguments {
-  const SingleChildStatViewArguments({
+class SingleWardStatViewArguments {
+  const SingleWardStatViewArguments({
     this.key,
     required this.uid,
   });
@@ -601,12 +601,12 @@ class ActiveScreenTimeViewArguments {
 class SelectScreenTimeViewArguments {
   const SelectScreenTimeViewArguments({
     this.key,
-    this.childId,
+    this.wardId,
   });
 
   final _i26.Key? key;
 
-  final String? childId;
+  final String? wardId;
 }
 
 class FeedbackViewArguments {
@@ -638,7 +638,7 @@ class ScreenTimeRequestedViewArguments {
 }
 
 extension NavigatorStateExtension on _i31.NavigationService {
-  Future<dynamic> navigateToParentHomeView({
+  Future<dynamic> navigateToGuardianHomeView({
     _i26.Key? key,
     _i27.ScreenTimeSession? screenTimeSession,
     int? routerId,
@@ -647,8 +647,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo<dynamic>(Routes.parentHomeView,
-        arguments: ParentHomeViewArguments(
+    return navigateTo<dynamic>(Routes.guardianHomeView,
+        arguments: GuardianHomeViewArguments(
             key: key, screenTimeSession: screenTimeSession),
         id: routerId,
         preventDuplicates: preventDuplicates,
@@ -656,7 +656,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToExplorerHomeView({
+  Future<dynamic> navigateToWardHomeView({
     _i26.Key? key,
     bool showBewareDialog = false,
     _i27.ScreenTimeSession? screenTimeSession,
@@ -667,8 +667,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo<dynamic>(Routes.explorerHomeView,
-        arguments: ExplorerHomeViewArguments(
+    return navigateTo<dynamic>(Routes.wardHomeView,
+        arguments: WardHomeViewArguments(
             key: key,
             showBewareDialog: showBewareDialog,
             screenTimeSession: screenTimeSession,
@@ -776,7 +776,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToCreateExplorerView({
+  Future<dynamic> navigateToCreateWardView({
     _i26.Key? key,
     int? routerId,
     bool preventDuplicates = true,
@@ -784,15 +784,15 @@ extension NavigatorStateExtension on _i31.NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo<dynamic>(Routes.createExplorerView,
-        arguments: CreateExplorerViewArguments(key: key),
+    return navigateTo<dynamic>(Routes.createWardView,
+        arguments: CreateWardViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> navigateToSingleChildStatView({
+  Future<dynamic> navigateToSingleWardStatView({
     _i26.Key? key,
     required String uid,
     int? routerId,
@@ -801,8 +801,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo<dynamic>(Routes.singleChildStatView,
-        arguments: SingleChildStatViewArguments(key: key, uid: uid),
+    return navigateTo<dynamic>(Routes.singleWardStatView,
+        arguments: SingleWardStatViewArguments(key: key, uid: uid),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -916,7 +916,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
 
   Future<dynamic> navigateToSelectScreenTimeView({
     _i26.Key? key,
-    String? childId,
+    String? wardId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -924,7 +924,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.selectScreenTimeView,
-        arguments: SelectScreenTimeViewArguments(key: key, childId: childId),
+        arguments: SelectScreenTimeViewArguments(key: key, wardId: wardId),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -945,14 +945,14 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToParentMapView([
+  Future<dynamic> navigateToGuardianMapView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   ]) async {
-    return navigateTo<dynamic>(Routes.parentMapView,
+    return navigateTo<dynamic>(Routes.guardianMapView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

@@ -1,5 +1,5 @@
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 

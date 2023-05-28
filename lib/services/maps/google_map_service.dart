@@ -1,3 +1,4 @@
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/dummy_data.dart';
@@ -5,11 +6,10 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/utils/utilities.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:afkcredits/app/app.logger.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class GoogleMapService {
   static GoogleMapController? _mapController;
@@ -122,14 +122,14 @@ class GoogleMapService {
 
   static CameraPosition initialCameraPosition({
     required Position? userLocation,
-    bool parentAccount = false,
+    bool guardianAccount = false,
   }) {
     if (userLocation != null) {
       return CameraPosition(
-        bearing: parentAccount ? 0 : kInitialBearing,
+        bearing: guardianAccount ? 0 : kInitialBearing,
         target: LatLng(userLocation.latitude, userLocation.longitude),
-        zoom: parentAccount ? kInitialZoomBirdsView : kInitialZoomAvatarView,
-        tilt: parentAccount ? 0 : kInitialTilt,
+        zoom: guardianAccount ? kInitialZoomBirdsView : kInitialZoomAvatarView,
+        tilt: guardianAccount ? 0 : kInitialTilt,
       );
     } else {
       print(
@@ -149,14 +149,14 @@ class GoogleMapService {
     bool isStartMarker = false,
     bool completed = false,
     String? infoWindowText,
-    bool isParentAccount = false,
+    bool isGuardianAccount = false,
   }) async {
     final icon = await defineMarkersColour(
         quest: quest,
         afkmarker: afkmarker,
         completed: completed,
         collected: false,
-        isParentAccount: isParentAccount,
+        isGuardianAccount: isGuardianAccount,
         isStartMarker: isStartMarker);
     Marker marker = Marker(
       markerId: MarkerId(afkmarker
@@ -219,9 +219,9 @@ class GoogleMapService {
       required double lon,
       required bool isGreen}) async {
     final coinBitmap = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(4, 4)), kAFKCreditsLogoSmallPath);
+        ImageConfiguration(size: Size(4, 4)), kInsideOutLogoSmallPath);
     final treasureBitmap = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(4, 4)), kAFKCreditsLogoSmallPathYellow);
+        ImageConfiguration(size: Size(4, 4)), kInsideOutLogoSmallPathYellow);
     Marker marker = Marker(
       markerId: MarkerId("COIN" +
           isGreen
@@ -283,9 +283,9 @@ class GoogleMapService {
     required bool completed,
     required bool isStartMarker,
     required bool collected,
-    required bool isParentAccount,
+    required bool isGuardianAccount,
   }) async {
-    if (isParentAccount && quest?.createdBy == null) {
+    if (isGuardianAccount && quest?.createdBy == null) {
       // this means it is a public quest. Display them a bit darker on the map
       if (quest?.type == QuestType.TreasureLocationSearch) {
         return BitmapDescriptor.defaultMarkerWithHue(
@@ -358,7 +358,7 @@ class GoogleMapService {
         quest: null,
         completed: completed,
         collected: collected,
-        isParentAccount: false,
+        isGuardianAccount: false,
         isStartMarker: false);
     markersOnMap = markersOnMap
         .map((item) => item.markerId == MarkerId(afkmarker.id)

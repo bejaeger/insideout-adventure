@@ -2,8 +2,8 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/layout_widgets/card_overlay_layout.dart';
 import 'package:afkcredits/ui/views/credits_overlay/credits_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/credits_to_screentime_widget.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class CreditsOverlayView extends StatelessWidget {
@@ -34,7 +34,7 @@ class CreditsOverlayView extends StatelessWidget {
               model.currentUserNullable == null
                   ? SizedBox(height: 0, width: 0)
                   : CreditsToScreenTimeWidget(
-                      credits: model.afkCreditsBalance,
+                      credits: model.creditsBalance,
                       availableScreenTime: model.totalAvailableScreenTime),
               verticalSpaceLarge,
               InsideOutText.subheadingItalic("Claim your screen time now!"),
@@ -47,7 +47,8 @@ class CreditsOverlayView extends StatelessWidget {
                       height: 25, color: Colors.white),
                   onTap: () {
                     model.navToSelectScreenTimeView(
-                        childId: model.currentUser.uid, isParentAccount: false);
+                        wardId: model.currentUser.uid,
+                        isGuardianAccount: false);
                     model.removeCreditsOverlay();
                   },
                   title: "Get screen time"),

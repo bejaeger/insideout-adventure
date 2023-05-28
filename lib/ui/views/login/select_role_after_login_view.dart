@@ -20,9 +20,9 @@ class SelectRoleAfterLoginView extends StatelessWidget {
           SelectRoleAfterLoginViewModel(authMethod: authMethod),
       builder: (context, model, child) => SelectUserRoleLayout(
         onBackPressed: model.navigateToLoginView,
-        onExplorerPressed: model.showNotImplementedSnackbar,
-        onSponsorPressed: () =>
-            model.createAccountAndNavigateToHome(role: UserRole.sponsor),
+        onWardPressed: model.showNotImplementedSnackbar,
+        onGuardianPressed: () =>
+            model.createAccountAndNavigateToHome(role: UserRole.guardian),
         isBusy: model.isBusy,
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class FoundTreasureDialog extends StatelessWidget {
@@ -102,7 +102,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                       scale: _animation,
                       // duration: Duration(milliseconds: 500),
                       // height: height,
-                      child: Image.asset(kAFKCreditsLogoPath, width: 150),
+                      child: Image.asset(kInsideOutLogoPath, width: 150),
                     ),
                   ),
                   verticalSpaceMedium,

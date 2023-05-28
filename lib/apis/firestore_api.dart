@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
@@ -30,7 +31,7 @@ class FirestoreApi {
   Geoflutterfire geo = Geoflutterfire();
   Stream<dynamic>? query;
   StreamSubscription? publicQuestsStreamSubscription;
-  Map<String, StreamSubscription?> parentQuestsStreamSubscriptions = {};
+  Map<String, StreamSubscription?> guardianQuestsStreamSubscriptions = {};
 
   Future<void> createUser(
       {required User user, required UserStatistics stats}) async {
@@ -58,7 +59,7 @@ class FirestoreApi {
     log.v('Stats document added to ${docRef.path}');
   }
 
-  // when explorer is added without authentication so without ID
+  // when ward is added without authentication so without ID
   // we need to generate that id and add it to the datamodel.
   DocumentReference createUserDocument() {
     final docRef = usersCollection.doc();
@@ -214,54 +215,54 @@ class FirestoreApi {
     }
   }
 
-  Future addSponsorIdToUser(
-      {required String uid, required String sponsorId}) async {
+  Future addGuardianIdToUser(
+      {required String uid, required String guardianId}) async {
     try {
       firestoreInstance.runTransaction((transaction) async {
         final doc = await usersCollection.doc(uid).get();
         User otherUser = User.fromJson(doc.data()! as Map<String, dynamic>);
-        List<String> newSponsorIds = [];
-        newSponsorIds.addAll(otherUser.sponsorIds);
-        if (newSponsorIds.contains(sponsorId)) {
+        List<String> newGuardianIds = [];
+        newGuardianIds.addAll(otherUser.guardianIds);
+        if (newGuardianIds.contains(guardianId)) {
           log.w(
-              "Sponsor Id already added! Nothing is really brokwn but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a sponsor. Then this issue can't appear");
+              "Guardian Id already added! Nothing is really brokwn but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a guardian. Then this issue can't appear");
           return;
         }
-        newSponsorIds.add(sponsorId);
+        newGuardianIds.add(guardianId);
         await usersCollection.doc(uid).set(
-            otherUser.copyWith(sponsorIds: newSponsorIds).toJson(),
+            otherUser.copyWith(guardianIds: newGuardianIds).toJson(),
             SetOptions(merge: true));
       });
     } catch (e) {
       throw FirestoreApiException(
           message:
-              "Unknown expection when trying to add sponsor Id to users sponsor Ids",
+              "Unknown expection when trying to add guardian Id to users guardian Ids",
           devDetails: '$e');
     }
   }
 
-  Future removeSponsorIdFromUser(
-      {required String uid, required String sponsorId}) async {
+  Future removeGuardianIdFromUser(
+      {required String uid, required String guardianId}) async {
     try {
       firestoreInstance.runTransaction((transaction) async {
         final doc = await usersCollection.doc(uid).get();
         User otherUser = User.fromJson(doc.data()! as Map<String, dynamic>);
-        List<String> newSponsorIds = [];
-        newSponsorIds.addAll(otherUser.sponsorIds);
-        if (!newSponsorIds.contains(sponsorId)) {
+        List<String> newGuardianIds = [];
+        newGuardianIds.addAll(otherUser.guardianIds);
+        if (!newGuardianIds.contains(guardianId)) {
           log.w(
-              "Sponsor Id not included! Nothing is really broken but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a sponsor. Then this issue can't appear");
+              "Guardian Id not included! Nothing is really broken but this should not happen and might be due to inconsistencies in the database. Better to look into this or use a transaction for updating a guardian. Then this issue can't appear");
           return;
         }
-        newSponsorIds.remove(sponsorId);
+        newGuardianIds.remove(guardianId);
         await usersCollection.doc(uid).set(
-            otherUser.copyWith(sponsorIds: newSponsorIds).toJson(),
+            otherUser.copyWith(guardianIds: newGuardianIds).toJson(),
             SetOptions(merge: true));
       });
     } catch (e) {
       throw FirestoreApiException(
           message:
-              "Unknown expection when trying to remove sponsor Id from users sponsor Ids",
+              "Unknown expection when trying to remove guardian Id from users guardian Ids",
           devDetails: '$e');
     }
   }
@@ -284,10 +285,10 @@ class FirestoreApi {
     );
   }
 
-  Stream<List<User>> getExplorersDataStream({required String uid}) {
+  Stream<List<User>> getWardsDataStream({required String uid}) {
     try {
       return usersCollection
-          .where("sponsorIds", arrayContains: uid)
+          .where("guardianIds", arrayContains: uid)
           .snapshots()
           .map((event) => event.docs
               .map((doc) => User.fromJson(doc.data() as Map<String, dynamic>))
@@ -295,15 +296,14 @@ class FirestoreApi {
     } catch (e) {
       throw FirestoreApiException(
           message:
-              "Unknown expection when listening to money pools the user is invited to",
+              "Unknown expection when listening to transfer pools the user is invited to",
           devDetails: '$e');
     }
   }
 
-  Future<List<PublicUserInfo>> queryExplorers(
-      {required String queryString}) async {
+  Future<List<PublicUserInfo>> queryWards({required String queryString}) async {
     QuerySnapshot foundUsers = await usersCollection
-        .where("role", isEqualTo: getStringFromEnum(UserRole.explorer))
+        .where("role", isEqualTo: getStringFromEnum(UserRole.ward))
         .where("fullNameSearch", arrayContains: queryString.toLowerCase())
         .get();
     final results = foundUsers.docs.map(
@@ -363,7 +363,7 @@ class FirestoreApi {
   }
 
   Future<List<Quest>> downloadNearbyQuests(
-      {required List<String> sponsorIds,
+      {required List<String> guardianIds,
       required double lat,
       required double lon,
       required double radius}) async {
@@ -373,7 +373,7 @@ class FirestoreApi {
     try {
       final center = geo.point(latitude: lat, longitude: lon);
 
-      // only returns quests NOT created by a standard parent
+      // only returns quests NOT created by a standard guardian
       // ? we can't query for ONLY quests that are NOT done by users, unfortunately.
       final questsRef = questsCollection.where("createdBy", isNull: true);
       Stream<List<DocumentSnapshot>> publicQuestsStream = geo
@@ -411,28 +411,28 @@ class FirestoreApi {
         },
       );
 
-      if (sponsorIds.length == 0) {
+      if (guardianIds.length == 0) {
         log.i(
-            "No parent associated to child, not looking for custom created quests");
+            "No guardian associated to ward, not looking for custom created quests");
         if (!completer2.isCompleted) {
           completer2.complete();
         }
       }
       int counter = 0;
-      for (String id in sponsorIds) {
-        log.v("checking for quests from parent with id $id");
+      for (String id in guardianIds) {
+        log.v("checking for quests from guardian with id $id");
         counter = counter + 1;
         final qref = questsCollection.where("createdBy", isEqualTo: id);
-        Stream<List<DocumentSnapshot>> parentQuestsStream = geo
+        Stream<List<DocumentSnapshot>> guardianQuestsStream = geo
             .collection(collectionRef: qref)
             .within(
                 center: center,
                 radius: radius,
                 field: kQuestGeoPointPropertyName,
                 strictMode: true);
-        parentQuestsStreamSubscriptions[id]?.cancel();
-        parentQuestsStreamSubscriptions[id] = null;
-        parentQuestsStreamSubscriptions[id] = parentQuestsStream.listen(
+        guardianQuestsStreamSubscriptions[id]?.cancel();
+        guardianQuestsStreamSubscriptions[id] = null;
+        guardianQuestsStreamSubscriptions[id] = guardianQuestsStream.listen(
           (List<DocumentSnapshot> docList) {
             if (docList.isNotEmpty) {
               try {
@@ -450,9 +450,9 @@ class FirestoreApi {
               }
             } else {
               log.w(
-                  'There is no \'quests\' collection from parents on firestore');
+                  'There is no \'quests\' collection from guardian on firestore');
             }
-            if (counter == sponsorIds.length) {
+            if (counter == guardianIds.length) {
               if (!completer2.isCompleted) {
                 completer2.complete();
               }
@@ -480,7 +480,7 @@ class FirestoreApi {
   }
 
   Future<List<Quest>> getNearbyQuests(
-      {required List<String> sponsorIds,
+      {required List<String> guardianIds,
       required double lat,
       required double lon,
       required double radius,
@@ -490,7 +490,7 @@ class FirestoreApi {
       try {
         log.i("Downloading quests now");
         questsOnFirestore = await downloadNearbyQuests(
-            sponsorIds: sponsorIds, lat: lat, lon: lon, radius: radius);
+            guardianIds: guardianIds, lat: lat, lon: lon, radius: radius);
       } catch (e) {
         log.w(
             "Error thrown when downloading quests (might be harmless because we want to push new dummy quests): $e");
@@ -509,7 +509,7 @@ class FirestoreApi {
       return quests;
     } else {
       return await downloadNearbyQuests(
-          sponsorIds: sponsorIds, lat: lat, lon: lon, radius: radius);
+          guardianIds: guardianIds, lat: lat, lon: lon, radius: radius);
     }
   }
 
@@ -536,12 +536,12 @@ class FirestoreApi {
   Future bookkeepFinishedQuest({required ActivatedQuest quest}) async {
     log.v("Uploading and bookkeeping finished quest");
 
-    num? afkCreditsEarned = quest.afkCreditsEarned;
+    num? creditsEarned = quest.creditsEarned;
     String? questId = quest.quest.id;
     List<String>? uids = quest.uids;
-    if (afkCreditsEarned == null) {
+    if (creditsEarned == null) {
       log.wtf(
-          "afkCreditsEarned field is null in ActivatedQuest. Can't upload anything");
+          "creditsEarned field is null in ActivatedQuest. Can't upload anything");
       return;
     }
     if (uids == null) {
@@ -568,17 +568,16 @@ class FirestoreApi {
           UserStatistics userStats =
               UserStatistics.fromJson(userDoc.data() as Map<String, dynamic>);
 
-          final incrementCredits = FieldValue.increment(afkCreditsEarned);
-          final decrementSponsoring =
-              FieldValue.increment(-afkCreditsEarned * 10);
+          final incrementCredits = FieldValue.increment(creditsEarned);
+          final decrementGuardianship =
+              FieldValue.increment(-creditsEarned * 10);
 
           transaction.update(
             userDocRef,
             {
-              "availableSponsoring":
-                  decrementSponsoring, // decrement available sponsoring of explorer
-              "afkCreditsBalance":
-                  incrementCredits, // increment afk credits balance
+              "availableGuardianship":
+                  decrementGuardianship, // decrement available guardianship of ward
+              "creditsBalance": incrementCredits, // increment credits balance
               "lifetimeEarnings":
                   incrementCredits, // increment lifetime earnings
               "numberQuestsCompleted": FieldValue.increment(
@@ -743,7 +742,7 @@ class FirestoreApi {
     await screenTimeSessionCollection.doc(session.sessionId).update(
       {
         'status': session.toJson()["status"],
-        'afkCreditsUsed': session.afkCreditsUsed,
+        'creditsUsed': session.creditsUsed,
         'minutesUsed': session.minutesUsed,
       },
     );
@@ -753,7 +752,7 @@ class FirestoreApi {
     log.i("cancel screen time session on firestore");
     await screenTimeSessionCollection.doc(session.sessionId).update({
       'status': session.toJson()["status"],
-      'afkCreditsUsed': session.afkCreditsUsed,
+      'creditsUsed': session.creditsUsed,
       'minutesUsed': session.minutesUsed,
       'endedAt': FieldValue.serverTimestamp(),
     });
@@ -883,7 +882,7 @@ class FirestoreApi {
               transaction.update(
                 ref2,
                 {
-                  "afkCreditsBalance": FieldValue.increment(deltaCredits),
+                  "creditsBalance": FieldValue.increment(deltaCredits),
                   "totalScreenTime": FieldValue.increment(deltaScreenTime),
                 },
               );
@@ -893,7 +892,7 @@ class FirestoreApi {
                 ref3,
                 {
                   'status': session.toJson()["status"],
-                  'afkCreditsUsed': session.afkCreditsUsed,
+                  'creditsUsed': session.creditsUsed,
                   'minutesUsed': session.minutesUsed,
                 },
               );
@@ -918,12 +917,12 @@ class FirestoreApi {
     );
   }
 
-  Future changeAfkCreditsBalanceCheat(
+  Future changeCreditsBalanceCheat(
       {required String uid, num deltaCredits = 50}) async {
     bool timedout = false;
     await getUserSummaryStatisticsDocument(uid: uid).update(
       {
-        "afkCreditsBalance": FieldValue.increment(deltaCredits),
+        "creditsBalance": FieldValue.increment(deltaCredits),
       },
     ).timeout(
       Duration(seconds: 5),

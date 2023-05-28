@@ -1,8 +1,8 @@
 import 'package:afkcredits/enums/super_user_dialog_type.dart';
 import 'package:afkcredits/ui/custom_dialogs/super_user_dialog/super_user_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -208,7 +208,7 @@ class SuperUserDialogView extends StatelessWidget {
                           children: [
                             Text("Add credits cheat"),
                             IconButton(
-                              onPressed: model.addAfkCreditsCheat,
+                              onPressed: model.addCreditsCheat,
                               icon: Icon(Icons.add, size: 30),
                             ),
                             if (model.isCheating) AFKProgressIndicator(),
@@ -218,7 +218,7 @@ class SuperUserDialogView extends StatelessWidget {
                           children: [
                             Text("Remove credits cheat"),
                             IconButton(
-                              onPressed: model.deductAfkCreditsCheat,
+                              onPressed: model.deductCreditsCheat,
                               icon: Icon(Icons.remove, size: 30),
                             ),
                             if (model.isCheating) AFKProgressIndicator(),

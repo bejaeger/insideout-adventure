@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:insideout_ui/src/shared/app_colors.dart';
 import 'package:insideout_ui/src/shared/styles.dart';
-import 'package:flutter/material.dart';
 
 class InsideOutText extends StatelessWidget {
   final String text;
@@ -9,12 +9,10 @@ class InsideOutText extends StatelessWidget {
 
   InsideOutText({required this.text, required this.style, this.alignment});
 
-  const InsideOutText.headingOne(this.text,
-      {TextAlign align = TextAlign.start})
+  const InsideOutText.headingOne(this.text, {TextAlign align = TextAlign.start})
       : style = heading1Style,
         alignment = align;
-  const InsideOutText.headingTwo(this.text,
-      {TextAlign align = TextAlign.start})
+  const InsideOutText.headingTwo(this.text, {TextAlign align = TextAlign.start})
       : style = heading2Style,
         alignment = align;
   const InsideOutText.headingTwoLight(this.text,
@@ -48,8 +46,7 @@ class InsideOutText extends StatelessWidget {
       {TextAlign align = TextAlign.start})
       : style = warnScreenTimeStyle,
         alignment = align;
-  const InsideOutText.alertThree(this.text,
-      {TextAlign align = TextAlign.start})
+  const InsideOutText.alertThree(this.text, {TextAlign align = TextAlign.start})
       : style = alert3Style,
         alignment = align;
   const InsideOutText.successThree(this.text,
@@ -65,8 +62,7 @@ class InsideOutText extends StatelessWidget {
   const InsideOutText.headline(this.text, {TextAlign align = TextAlign.start})
       : style = headlineStyle,
         alignment = align;
-  const InsideOutText.subheading(this.text,
-      {TextAlign align = TextAlign.start})
+  const InsideOutText.subheading(this.text, {TextAlign align = TextAlign.start})
       : style = subheadingStyle,
         alignment = align;
   const InsideOutText.subheadingItalic(this.text,
@@ -106,8 +102,7 @@ class InsideOutText extends StatelessWidget {
       : style = labelStyle,
         alignment = align;
 
-  const InsideOutText.statsStyle(this.text,
-      {TextAlign align = TextAlign.start})
+  const InsideOutText.statsStyle(this.text, {TextAlign align = TextAlign.start})
       : style = statsStyle,
         alignment = align;
   const InsideOutText.statsStyleBlack(this.text,

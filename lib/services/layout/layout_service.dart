@@ -10,10 +10,10 @@ class LayoutService {
       BehaviorSubject<bool>.seeded(false);
   bool get isShowingQuestList => isShowingQuestListSubject.value;
 
-  // true if explorer account is shown
-  BehaviorSubject<bool> isShowingExplorerAccountSubject =
+  // true if ward account is shown
+  BehaviorSubject<bool> isShowingWardAccountSubject =
       BehaviorSubject<bool>.seeded(false);
-  bool get isShowingExplorerAccount => isShowingExplorerAccountSubject.value;
+  bool get isShowingWardAccount => isShowingWardAccountSubject.value;
 
   // true if credits overlay (top right credits button) is shown
   BehaviorSubject<bool> isShowingCreditsOverlaySubject =
@@ -42,8 +42,8 @@ class LayoutService {
     isShowingQuestListSubject.add(set);
   }
 
-  void setIsShowingExplorerAccount(bool set) {
-    isShowingExplorerAccountSubject.add(set);
+  void setIsShowingWardAccount(bool set) {
+    isShowingWardAccountSubject.add(set);
   }
 
   void setIsShowingCreditsOverlay(bool set) {

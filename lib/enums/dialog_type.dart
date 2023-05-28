@@ -1,18 +1,18 @@
 /// The type of dialog to show
 enum DialogType {
-  MoneyTransfer,
+  Transfer,
   CollectCredits,
   CollectedMarker,
   FoundTreasure,
   SuperUserSettings,
   CheckpointInArea,
-  ChildStatCard,
+  WardStatCard,
   CreditConversionInfo,
   OnboardingDialog,
   BewareOfSurroundings,
   CustomScreenTime,
   NumberQuests,
   AvatarSelectDialog,
-  ExplorerSettings,
-  ExplorerSettingsForParents,
+  WardSettings,
+  WardSettingsForGuardian,
 }

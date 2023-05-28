@@ -38,9 +38,9 @@ export class FakeDataPopulator {
       // create test user to sign in with it!
       const auth = admin.auth();
       await auth.createUser({
-        email: Constants.TEST_SPONSOR_EMAIL,
-        uid: Constants.TEST_SPONSOR_ID,
-        password: Constants.TEST_SPONSOR_PASSWORD,
+        email: Constants.TEST_GUARDIAN_EMAIL,
+        uid: Constants.TEST_GUARDIAN_ID,
+        password: Constants.TEST_GUARDIAN_PASSWORD,
       })
           .then((userRecord) => {
             console.log("Successfully created new user:", userRecord.uid);
@@ -74,7 +74,7 @@ export class FakeDataPopulator {
       let zero = false; // initialize users with all statistics set to zero
       // Always add these too userIds for testing function with Postman
       if (index == 0) {
-        docId = await this.dbManager.createUserDocument(user, Constants.TEST_SPONSOR_ID);
+        docId = await this.dbManager.createUserDocument(user, Constants.TEST_GUARDIAN_ID);
         zero = true;
       } else if (index == 1) {
         docId = await this.dbManager.createUserDocument(user, Constants.TEST_EXPLORER_ID);
@@ -95,7 +95,7 @@ export class FakeDataPopulator {
     const stats = {
       "afkCreditsBalance": zero ? 0 : faker.datatype.number(100000),
       "afkCreditsSpent": zero ? 0 : faker.datatype.number(100000),
-      "availableSponsoring": zero ? 0 : faker.datatype.number(100000),
+      "availableGuardianship": zero ? 0 : faker.datatype.number(100000),
       "numberQuestsCompleted": zero ? 0 : faker.datatype.number(10),
     };
     await this.dbManager.createUserStatistics(userId, stats);

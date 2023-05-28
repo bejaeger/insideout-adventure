@@ -22,8 +22,8 @@ class MainFooterViewModel extends BaseModel {
     }
   }
 
-  void showExplorerSettingsDialog() async {
+  void showWardSettingsDialog() async {
     await dialogService.showCustomDialog(
-        variant: DialogType.ExplorerSettings, barrierDismissible: true);
+        variant: DialogType.WardSettings, barrierDismissible: true);
   }
 }

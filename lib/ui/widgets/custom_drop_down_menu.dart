@@ -1,6 +1,6 @@
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 // See example 6 here: https://pub.dev/packages/dropdown_button2#6-dropdownbutton2-as-popup-menu-button-using-custombutton-parameter
 // Currently only supports two items!

@@ -4,12 +4,12 @@ import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart'
 import 'package:afkcredits/enums/connectivity_type.dart';
 import 'package:afkcredits/ui/custom_dialogs/collect_credits/collect_credits_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/animations/confetti_from_top.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:provider/provider.dart';
 
 class CollectCreditsDialogView extends StatelessWidget {
   final DialogRequest request;
@@ -120,11 +120,11 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                       InsideOutText.body(
                           widget.model.isNeedToCollectCredits
                               ? "You get " +
-                                  activeQuest!.quest.afkCredits.toString() +
+                                  activeQuest!.quest.credits.toString() +
                                   " credits"
                               : "You mastered this mission and earned " +
-                                  activeQuest!.quest.afkCredits.toString() +
-                                  " Hercules credits!",
+                                  activeQuest!.quest.credits.toString() +
+                                  " Credits!",
                           align: TextAlign.center),
                     if (connectionStatus == ConnectivityType.Offline)
                       verticalSpaceSmall,
@@ -155,7 +155,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent> {
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Image.asset(
-                                kAFKCreditsLogoPath,
+                                kInsideOutLogoPath,
                                 color: kcPrimaryColor,
                                 width: screenWidth(context, percentage: 0.4),
                               ),

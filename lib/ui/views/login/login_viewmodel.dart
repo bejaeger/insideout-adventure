@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
-import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
+import 'package:afkcredits/services/users/insideout_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/authentication_viewmodel.dart';
 import 'package:afkcredits/ui/views/login/login_view.form.dart';
@@ -35,7 +35,7 @@ class LoginViewModel extends AuthenticationViewModel {
           notifyListeners();
           return;
         }
-        saveData(AuthenticationMethod.EmailOrSponsorCreatedExplorer);
+        saveData(AuthenticationMethod.EmailOrGuardianCreatedWard);
       };
     } else {
       if (_flavorConfigProvider.flavor == Flavor.dev) {
@@ -88,7 +88,7 @@ class LoginViewModel extends AuthenticationViewModel {
   }
 
   @override
-  Future<AFKCreditsAuthenticationResultService> runAuthentication(
+  Future<InsideOutAuthenticationResultService> runAuthentication(
     AuthenticationMethod method, [
     UserRole? role,
   ]) async {
@@ -133,7 +133,7 @@ class LoginViewModel extends AuthenticationViewModel {
   }
 
   void navigateToCreateAccount() {
-    navToSponsorCreateAccount(role: UserRole.sponsor);
+    navToGuardianCreateAccount(role: UserRole.guardian);
   }
 
   bool isPwShown = false;

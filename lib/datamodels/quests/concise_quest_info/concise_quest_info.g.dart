@@ -11,8 +11,8 @@ _$_ConciseFinishedQuestInfo _$$_ConciseFinishedQuestInfoFromJson(
     _$_ConciseFinishedQuestInfo(
       name: json['name'] as String,
       type: $enumDecode(_$QuestTypeEnumMap, json['type']),
-      afkCredits: json['afkCredits'] as num,
-      afkCreditsEarned: json['afkCreditsEarned'] as num,
+      credits: json['credits'] as num,
+      creditsEarned: json['creditsEarned'] as num,
     );
 
 Map<String, dynamic> _$$_ConciseFinishedQuestInfoToJson(
@@ -20,8 +20,8 @@ Map<String, dynamic> _$$_ConciseFinishedQuestInfoToJson(
     <String, dynamic>{
       'name': instance.name,
       'type': _$QuestTypeEnumMap[instance.type]!,
-      'afkCredits': instance.afkCredits,
-      'afkCreditsEarned': instance.afkCreditsEarned,
+      'credits': instance.credits,
+      'creditsEarned': instance.creditsEarned,
     };
 
 const _$QuestTypeEnumMap = {

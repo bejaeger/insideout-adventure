@@ -3,8 +3,8 @@ import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_lis
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/quest_info_card.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 // ? This widget currently produces this warning when included

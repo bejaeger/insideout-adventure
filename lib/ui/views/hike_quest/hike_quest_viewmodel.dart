@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/utils/utilities.dart';
+
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/collect_credits_status.dart';
@@ -10,8 +10,9 @@ import 'package:afkcredits/enums/quest_data_point_trigger.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
-import 'package:insideout_ui/insideout_ui.dart';
+import 'package:afkcredits/utils/utilities.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class HikeQuestViewModel extends ActiveQuestBaseViewModel
     with MapStateControlMixin {
@@ -32,7 +33,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
 
   @override
   Future initialize(
-      {required Quest quest, void Function()? notifyParentCallback}) async {
+      {required Quest quest, void Function()? notifyGuardianCallback}) async {
     log.i("Initializing active map quest of tye: ${quest.type}");
     resetPreviousQuest();
     setBusy(true);
@@ -40,7 +41,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     if (hasActivatedQuestToBeStarted) {
       maybeStartQuest(
         quest: activeQuestService.questToBeStarted!.quest,
-        notifyParentCallback: notifyParentCallback,
+        notifyGuardianCallback: notifyGuardianCallback,
         activatedQuestFromLocalStorage: activeQuestService.questToBeStarted,
       );
     }
@@ -50,7 +51,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
 
   Future maybeStartQuest({
     required Quest? quest,
-    void Function()? notifyParentCallback,
+    void Function()? notifyGuardianCallback,
     ActivatedQuest? activatedQuestFromLocalStorage,
   }) async {
     if ((quest != null && !hasActiveQuest) ||

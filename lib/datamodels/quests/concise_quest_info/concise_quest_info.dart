@@ -1,5 +1,5 @@
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 part 'concise_quest_info.freezed.dart';
 part 'concise_quest_info.g.dart';
@@ -10,8 +10,8 @@ class ConciseFinishedQuestInfo with _$ConciseFinishedQuestInfo {
   factory ConciseFinishedQuestInfo({
     required String name,
     required QuestType type,
-    required num afkCredits,
-    required num afkCreditsEarned,
+    required num credits,
+    required num creditsEarned,
   }) = _ConciseFinishedQuestInfo;
 
   factory ConciseFinishedQuestInfo.fromJson(Map<String, dynamic> json) =>

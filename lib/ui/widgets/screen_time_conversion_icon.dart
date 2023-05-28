@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 // showing `Credits icon -> screen time icon`
 
@@ -19,7 +19,7 @@ class OnboardingScreenTimeConversionIcon extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Image.asset(
-              kAFKCreditsLogoSmallPathColored,
+              kInsideOutLogoSmallPathColored,
               height: 24,
               color: kcPrimaryColor,
             ),

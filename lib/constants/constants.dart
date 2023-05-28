@@ -6,8 +6,8 @@ const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY_ENV_VARIABLE';
 const ProdGoogleMapsEnvKey = 'PROD_GOOGLE_MAPS_API_KEY_ENV_VARIABLE';
 const kLocalStorageUidKey = "uid";
 const kLocalStorageRoleKey = "role";
-const kLocalStorageSponsorPinKey = "pinKey";
-const kLocalStorageSponsorReferenceKey = "PARENT_ID";
+const kLocalStorageGuardianPinKey = "pinKey";
+const kLocalStorageGuardianReferenceKey = "PARENT_ID";
 const kLocalStorageSawOnBoardingKey = "SAW_ONBOARDING";
 const kConfiguredArKey = "CONFIGURED_AR";
 final appName = 'Hercules World';
@@ -40,7 +40,7 @@ final CollectionReference screenShotsCollection =
     FirebaseFirestore.instance.collection('screenshots');
 final CollectionReference picturesCollection =
     FirebaseFirestore.instance.collection('pictures');
-final CollectionReference paymentsCollection =
+final CollectionReference transfersCollection =
     FirebaseFirestore.instance.collection('transfers');
 var questsCollection = FirebaseFirestore.instance.collection('quests');
 final CollectionReference screenTimeSessionCollection =

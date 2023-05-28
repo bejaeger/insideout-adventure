@@ -1,6 +1,6 @@
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class AuthenticationLayout extends StatelessWidget {
   final Widget? title;
@@ -14,8 +14,8 @@ class AuthenticationLayout extends StatelessWidget {
   final void Function()? onCreateAccountTapped;
   final void Function()? onForgotPassword;
   final void Function()? onBackPressed;
-  final void Function()? onDummyLoginExplorerTapped;
-  final void Function()? onDummyLoginSponsorTapped;
+  final void Function()? onDummyLoginWardTapped;
+  final void Function()? onDummyLoginGuardianTapped;
   final void Function()? onDummyLoginAdminTapped;
   final void Function()? onDummyLoginSuperUserTapped;
   final void Function()? onDummyLoginAdminMasterTapped;
@@ -43,8 +43,8 @@ class AuthenticationLayout extends StatelessWidget {
     this.onAppleButtonTapped,
     this.releaseName,
     this.onDummyLoginAdminTapped,
-    this.onDummyLoginExplorerTapped,
-    this.onDummyLoginSponsorTapped,
+    this.onDummyLoginWardTapped,
+    this.onDummyLoginGuardianTapped,
     this.googleText,
     this.onDummyLoginSuperUserTapped,
     this.onDummyLoginAdminMasterTapped,
@@ -136,17 +136,17 @@ class AuthenticationLayout extends StatelessWidget {
                       ),
               ),
             ),
-            if (onDummyLoginExplorerTapped != null ||
-                onDummyLoginSponsorTapped != null)
+            if (onDummyLoginWardTapped != null ||
+                onDummyLoginGuardianTapped != null)
               verticalSpaceRegular,
-            if (onDummyLoginExplorerTapped != null ||
-                onDummyLoginSponsorTapped != null)
+            if (onDummyLoginWardTapped != null ||
+                onDummyLoginGuardianTapped != null)
               Row(
                 children: [
-                  if (onDummyLoginSponsorTapped != null)
+                  if (onDummyLoginGuardianTapped != null)
                     Expanded(
                       child: GestureDetector(
-                        onTap: onDummyLoginSponsorTapped,
+                        onTap: onDummyLoginGuardianTapped,
                         child: Container(
                           height: 40,
                           alignment: Alignment.center,
@@ -169,11 +169,11 @@ class AuthenticationLayout extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (onDummyLoginExplorerTapped != null) horizontalSpaceTiny,
-                  if (onDummyLoginExplorerTapped != null)
+                  if (onDummyLoginWardTapped != null) horizontalSpaceTiny,
+                  if (onDummyLoginWardTapped != null)
                     Expanded(
                       child: GestureDetector(
-                        onTap: onDummyLoginExplorerTapped,
+                        onTap: onDummyLoginWardTapped,
                         child: Container(
                           height: 40,
                           alignment: Alignment.center,
@@ -187,7 +187,7 @@ class AuthenticationLayout extends StatelessWidget {
                                       AlwaysStoppedAnimation(Colors.white),
                                 )
                               : Text(
-                                  "LOGIN AS TEST EXPLORER",
+                                  "LOGIN AS TEST CHILD",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,

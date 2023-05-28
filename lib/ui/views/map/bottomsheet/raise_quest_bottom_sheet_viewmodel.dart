@@ -5,6 +5,7 @@ import 'package:afkcredits/exceptions/mapviewmodel_exception.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import '../../../../app/app.locator.dart';
 
 class RaiseQuestBottomSheetViewModel extends BaseModel {
@@ -19,8 +20,8 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
   Set<Marker> _markersTmp = {};
   GoogleMapController? _googleMapController;
 
-  Future navigateToAcceptPaymentsView() async {
-    log.i("Clicked navigating to accept payments view (not yet implemented!)");
+  Future navigateToAcceptTransfersView() async {
+    log.i("Clicked navigating to accept transfers view (not yet implemented!)");
   }
 
   CameraPosition initialCameraPosition() {
@@ -69,15 +70,15 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     }
   }
 
-  String? checkSponsoringSentence() {
-    if (hasEnoughSponsoring(quest: quest)) {
+  String? checkGuardianshipSentence() {
+    if (hasEnoughGuardianship(quest: quest)) {
       return null;
     } else {
-      return "You don't have enough AFK Credits funds to earn ${quest.afkCredits} credits. Ask a sponsor to support you :)";
+      return "You don't have enough Credits to earn ${quest.credits} credits. Ask a parent to support you :)";
     }
   }
 
-  // ! Duplicated in explorer_settings_dialog_viewmodel.dart
+  // ! Duplicated in ward_settings_dialog_viewmodel.dart
   void setIsShowingCompletedQuests(bool? b) async {
     if (b == null) return;
     userService.updateUserData(
@@ -93,7 +94,7 @@ class RaiseQuestBottomSheetViewModel extends BaseModel {
     notifyListeners();
   }
 
-  void showNotImplementedInParentAccount() {
+  void showNotImplementedInGuardianAccount() {
     dialogService.showDialog(
       title: "Not supported yet",
       description: "Go to child account to do the quest",

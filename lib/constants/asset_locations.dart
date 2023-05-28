@@ -2,12 +2,11 @@
 const String kMapStylePath = "assets/DayStyle.json";
 
 // logo
-const String kAFKCreditsLogoPath = "assets/icons/afk_credits_orig.png";
-const String kAFKCreditsLogoSmallPath =
-    "assets/icons/afk_credits_small_orig.png";
-const String kAFKCreditsLogoSmallPathYellow = "assets/icons/afk_credits.png";
-const String kAFKCreditsLogoSmallPathColored =
-    "assets/icons/afk_credits_small_colored.PNG";
+const String kInsideOutLogoPath = "assets/icons/credits_orig.png";
+const String kInsideOutLogoSmallPath = "assets/icons/credits_small_orig.png";
+const String kInsideOutLogoSmallPathYellow = "assets/icons/credits.png";
+const String kInsideOutLogoSmallPathColored =
+    "assets/icons/credits_small_colored.PNG";
 
 // images
 const String kCloudOverlayImagePath = "assets/images/luz-azul-cielo-azul.jpg";
@@ -27,11 +26,11 @@ const String kScreenTimeIcon2 = "assets/icons/person.png";
 // illustrations
 const String kIllustrationActivity =
     "assets/illustrations/activity_illustration.png";
-const String kIllustrationAnnaHercules =
+const String kIllustrationAnnaInsideOut =
     "assets/illustrations/anna_hercules_world.png";
 const String kIllustrationInfographic = "assets/illustrations/infographic.png";
-const String kIllustrationParentsMeditate =
-    "assets/illustrations/parents_meditate.png";
+const String kIllustrationGuardianMeditate =
+    "assets/illustrations/guardian_meditate.png";
 const String kIllustrationScreenTime = "assets/illustrations/screen_time.png";
 const String kIllustrationWalletEarning =
     "assets/illustrations/wallet_earning.png";
@@ -59,4 +58,3 @@ const String kLottieBigTv = "assets/lottie/big-tv-screen-time.json";
 
 // @see: https://assets7.lottiefiles.com/packages/lf20_Ei9xER.json
 const String kLottieRippleEffect = "assets/lottie/ripple-effect.json";
-

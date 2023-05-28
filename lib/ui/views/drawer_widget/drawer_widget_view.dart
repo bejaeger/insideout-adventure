@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/drawer_widget/drawer_widget_viewmodel.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class DrawerWidgetView extends StatelessWidget {
@@ -60,12 +60,12 @@ class DrawerWidgetView extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            // onPressed: model.navigateToExplorerHomeView,
-                            onPressed: model.handleSwitchToSponsorEvent,
-                            //child: Text("Go to explorer home/map")),
+                            // onPressed: model.navigateToWardHomeView,
+                            onPressed: model.handleSwitchToGuardianEvent,
+                            //child: Text("Go to ward home/map")),
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
-                              child: Text("Parents Area \u279A",
+                              child: Text("Parent Area \u279A",
                                   style: TextStyle(fontSize: 20)),
                             ),
                           ),
@@ -84,9 +84,9 @@ class DrawerWidgetView extends StatelessWidget {
                           style: TextButton.styleFrom(
                               padding: const EdgeInsets.all(0.0),
                               primary: kcBlackHeadlineColor),
-                          // onPressed: model.navigateToExplorerHomeView,
+                          // onPressed: model.navigateToWardHomeView,
                           onPressed: model.logout,
-                          //child: Text("Go to explorer home/map")),
+                          //child: Text("Go to ward home/map")),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child:

@@ -23,8 +23,8 @@ mixin _$User {
   String get uid => throw _privateConstructorUsedError;
   String get fullName => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
-  List<String> get sponsorIds => throw _privateConstructorUsedError;
-  List<String> get explorerIds => throw _privateConstructorUsedError;
+  List<String> get guardianIds => throw _privateConstructorUsedError;
+  List<String> get wardIds => throw _privateConstructorUsedError;
   UserRole get role => throw _privateConstructorUsedError;
   UserSettings? get userSettings => throw _privateConstructorUsedError;
   AuthenticationMethod? get authMethod => throw _privateConstructorUsedError;
@@ -50,8 +50,8 @@ abstract class $UserCopyWith<$Res> {
       {String uid,
       String fullName,
       String? email,
-      List<String> sponsorIds,
-      List<String> explorerIds,
+      List<String> guardianIds,
+      List<String> wardIds,
       UserRole role,
       UserSettings? userSettings,
       AuthenticationMethod? authMethod,
@@ -80,8 +80,8 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? uid = freezed,
     Object? fullName = freezed,
     Object? email = freezed,
-    Object? sponsorIds = freezed,
-    Object? explorerIds = freezed,
+    Object? guardianIds = freezed,
+    Object? wardIds = freezed,
     Object? role = freezed,
     Object? userSettings = freezed,
     Object? authMethod = freezed,
@@ -106,13 +106,13 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
-      sponsorIds: sponsorIds == freezed
-          ? _value.sponsorIds
-          : sponsorIds // ignore: cast_nullable_to_non_nullable
+      guardianIds: guardianIds == freezed
+          ? _value.guardianIds
+          : guardianIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      explorerIds: explorerIds == freezed
-          ? _value.explorerIds
-          : explorerIds // ignore: cast_nullable_to_non_nullable
+      wardIds: wardIds == freezed
+          ? _value.wardIds
+          : wardIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
       role: role == freezed
           ? _value.role
@@ -178,8 +178,8 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       {String uid,
       String fullName,
       String? email,
-      List<String> sponsorIds,
-      List<String> explorerIds,
+      List<String> guardianIds,
+      List<String> wardIds,
       UserRole role,
       UserSettings? userSettings,
       AuthenticationMethod? authMethod,
@@ -210,8 +210,8 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? uid = freezed,
     Object? fullName = freezed,
     Object? email = freezed,
-    Object? sponsorIds = freezed,
-    Object? explorerIds = freezed,
+    Object? guardianIds = freezed,
+    Object? wardIds = freezed,
     Object? role = freezed,
     Object? userSettings = freezed,
     Object? authMethod = freezed,
@@ -236,13 +236,13 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
-      sponsorIds: sponsorIds == freezed
-          ? _value._sponsorIds
-          : sponsorIds // ignore: cast_nullable_to_non_nullable
+      guardianIds: guardianIds == freezed
+          ? _value._guardianIds
+          : guardianIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      explorerIds: explorerIds == freezed
-          ? _value._explorerIds
-          : explorerIds // ignore: cast_nullable_to_non_nullable
+      wardIds: wardIds == freezed
+          ? _value._wardIds
+          : wardIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
       role: role == freezed
           ? _value.role
@@ -296,8 +296,8 @@ class _$_User implements _User {
       {required this.uid,
       required this.fullName,
       this.email,
-      required final List<String> sponsorIds,
-      required final List<String> explorerIds,
+      required final List<String> guardianIds,
+      required final List<String> wardIds,
       required this.role,
       this.userSettings,
       this.authMethod,
@@ -309,8 +309,8 @@ class _$_User implements _User {
       final List<String>? tokens,
       this.deviceId,
       this.avatarIdx = 1})
-      : _sponsorIds = sponsorIds,
-        _explorerIds = explorerIds,
+      : _guardianIds = guardianIds,
+        _wardIds = wardIds,
         _fullNameSearch = fullNameSearch,
         _tokens = tokens;
 
@@ -322,18 +322,18 @@ class _$_User implements _User {
   final String fullName;
   @override
   final String? email;
-  final List<String> _sponsorIds;
+  final List<String> _guardianIds;
   @override
-  List<String> get sponsorIds {
+  List<String> get guardianIds {
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_sponsorIds);
+    return EqualUnmodifiableListView(_guardianIds);
   }
 
-  final List<String> _explorerIds;
+  final List<String> _wardIds;
   @override
-  List<String> get explorerIds {
+  List<String> get wardIds {
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_explorerIds);
+    return EqualUnmodifiableListView(_wardIds);
   }
 
   @override
@@ -376,7 +376,7 @@ class _$_User implements _User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
+    return 'User(uid: $uid, fullName: $fullName, email: $email, guardianIds: $guardianIds, wardIds: $wardIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
   }
 
   @override
@@ -388,9 +388,8 @@ class _$_User implements _User {
             const DeepCollectionEquality().equals(other.fullName, fullName) &&
             const DeepCollectionEquality().equals(other.email, email) &&
             const DeepCollectionEquality()
-                .equals(other._sponsorIds, _sponsorIds) &&
-            const DeepCollectionEquality()
-                .equals(other._explorerIds, _explorerIds) &&
+                .equals(other._guardianIds, _guardianIds) &&
+            const DeepCollectionEquality().equals(other._wardIds, _wardIds) &&
             const DeepCollectionEquality().equals(other.role, role) &&
             const DeepCollectionEquality()
                 .equals(other.userSettings, userSettings) &&
@@ -414,8 +413,8 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(uid),
       const DeepCollectionEquality().hash(fullName),
       const DeepCollectionEquality().hash(email),
-      const DeepCollectionEquality().hash(_sponsorIds),
-      const DeepCollectionEquality().hash(_explorerIds),
+      const DeepCollectionEquality().hash(_guardianIds),
+      const DeepCollectionEquality().hash(_wardIds),
       const DeepCollectionEquality().hash(role),
       const DeepCollectionEquality().hash(userSettings),
       const DeepCollectionEquality().hash(authMethod),
@@ -445,8 +444,8 @@ abstract class _User implements User {
       {required final String uid,
       required final String fullName,
       final String? email,
-      required final List<String> sponsorIds,
-      required final List<String> explorerIds,
+      required final List<String> guardianIds,
+      required final List<String> wardIds,
       required final UserRole role,
       final UserSettings? userSettings,
       final AuthenticationMethod? authMethod,
@@ -468,9 +467,9 @@ abstract class _User implements User {
   @override
   String? get email;
   @override
-  List<String> get sponsorIds;
+  List<String> get guardianIds;
   @override
-  List<String> get explorerIds;
+  List<String> get wardIds;
   @override
   UserRole get role;
   @override

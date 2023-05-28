@@ -1,22 +1,23 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:afkcredits/exceptions/geolocation_service_exception.dart';
-import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/services/quests/active_quest_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/map_state_control_mixin.dart';
 import 'package:afkcredits/utils/utilities.dart';
-import 'package:insideout_ui/insideout_ui.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:insideout_ui/insideout_ui.dart';
 
 class MapViewModel extends BaseModel with MapStateControlMixin {
   // Viewmodel that receives callback functions to update map
@@ -55,9 +56,9 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   String mapStyle = "";
   DateTime startedRotating = DateTime.now();
 
-  // TODO: This function is only called for the explorer!
+  // TODO: This function is only called for the ward!
   Future initializeMapAndMarkers() async {
-    if (!isParentAccount) {
+    if (!isGuardianAccount) {
       mapStyle = await rootBundle.loadString(kMapStylePath);
     }
     if (hasActiveQuest) return;
@@ -138,8 +139,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     setBusy(false);
     if (!kIsWeb && Platform.isIOS) {
       // Somehow this is needed for iOS.
-      // Otherwise map won't react at first when switching from parent
-      // view to the explorer view.
+      // Otherwise map won't react at first when switching from guardian
+      // view to the ward view.
       fakeAnimate();
       fakeAnimate();
     }
@@ -309,7 +310,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     animateCameraViewModel();
   }
 
-  // Function called by explorer account!
+  // Function called by ward account!
   void extractStartMarkersAndAddToMap() {
     bool showCompletedQuests =
         userService.currentUserSettings.isShowingCompletedQuests;
@@ -335,7 +336,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     } else {
       log.i('Markers are Empty');
     }
-    if (!isParentAccount && appConfigProvider.isDevFlavor) {
+    if (!isGuardianAccount && appConfigProvider.isDevFlavor) {
       addARObjectToMap(
           onTap: onARObjectMarkerTap,
           lat: 49.27215968930406,
@@ -352,7 +353,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     bool isStartMarker = false,
     bool completed = false,
     String? infoWindowText,
-    bool isParentAccount = false,
+    bool isGuardianAccount = false,
   }) {
     configureAndAddMapMarker(
       quest: quest,
@@ -360,7 +361,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
       completed: completed,
       isStartMarker: isStartMarker,
       infoWindowText: infoWindowText,
-      isParentAccount: isParentAccount,
+      isGuardianAccount: isGuardianAccount,
       onTap: onMarkerTapCustom != null
           ? () => onMarkerTapCustom()
           : () => onMarkerTap(
@@ -476,15 +477,15 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
   }
 
   void animateMapToQuestLocation({required Quest quest}) async {
-    if (isParentAccount) {
-      animateMapToQuestParentAccount(quest: quest);
+    if (isGuardianAccount) {
+      animateMapToQuestGuardianAccount(quest: quest);
     } else {
-      animateMapToQuestChildAccount(quest: quest);
+      animateMapToQuestWardAccount(quest: quest);
     }
   }
 
-  void animateMapToQuestParentAccount({required Quest quest}) async {
-    log.v("Animating map to quest markers in parent account");
+  void animateMapToQuestGuardianAccount({required Quest quest}) async {
+    log.v("Animating map to quest markers in guardian account");
     resetMapMarkers();
     addAllMarkersNumbered(quest: quest);
     animateCameraToBetweenQuestMarkers(quest: quest);
@@ -493,7 +494,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     showMarkerInfoWindowNumbers(quest: quest);
   }
 
-  void animateMapToQuestChildAccount({required Quest quest}) async {
+  void animateMapToQuestWardAccount({required Quest quest}) async {
     showMarkerInfoWindowNow(markerId: quest.startMarker?.id);
 
     layoutService.setIsMovingCamera(true);
@@ -579,7 +580,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
 
   void showMarkerInfoWindowNumbers({required Quest quest}) async {
     // Wait to first show markers on map after notifyListeners() has been
-    // called in the relevant viewmodel (e.g. parent_home_viewmodel)
+    // called in the relevant viewmodel (e.g. guardian_home_viewmodel)
     for (AFKMarker m in quest.markers) {
       showMarkerInfoWindow(markerId: m.id);
       await Future.delayed(Duration(milliseconds: 1000));
@@ -812,7 +813,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     bool isStartMarker,
     bool completed,
     String? infoWindowText,
-    bool isParentAccount,
+    bool isGuardianAccount,
   }) configureAndAddMapMarker;
   final void Function(
       {required Quest quest,

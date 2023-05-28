@@ -1,11 +1,4 @@
 import 'package:afkcredits/services/maps/google_map_service.dart';
-import 'package:afkcredits/services/maps/google_map_service.dart';
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
-// **************************************************************************
-// StackedLocatorGenerator
-// **************************************************************************
-
 // ignore_for_file: public_member_api_docs, implementation_imports, depend_on_referenced_packages
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -39,9 +32,8 @@ import '../services/quests/quest_service.dart';
 import '../services/quests/stopwatch_service.dart';
 import '../services/screentime/screen_time_service.dart';
 import '../services/users/user_service.dart';
-import '../ui/views/explorer_home/explorer_home_viewmodel.dart';
-import '../ui/views/map/map_viewmodel.dart';
-import '../ui/views/parent_home/parent_home_viewmodel.dart';
+import '../ui/views/guardian_home/guardian_home_viewmodel.dart';
+import '../ui/views/ward_home/ward_home_viewmodel.dart';
 import '../utils/image_selector.dart';
 
 final locator = StackedLocator.instance;
@@ -81,8 +73,8 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => ScreenTimeService());
   locator.registerLazySingleton(() => PermissionService());
   locator.registerLazySingleton(() => NotificationsService());
-  locator.registerLazySingleton(() => ParentHomeViewModel());
-  locator.registerLazySingleton(() => ExplorerHomeViewModel());
+  locator.registerLazySingleton(() => GuardianHomeViewModel());
+  locator.registerLazySingleton(() => WardHomeViewModel());
   locator.registerLazySingleton(() => LocalStorageService());
   final mapViewModel = await presolveMapViewModel();
   locator.registerSingleton(mapViewModel);

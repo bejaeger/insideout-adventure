@@ -1,8 +1,9 @@
 import 'dart:async';
+
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 class ScreenTimeRequestedViewModel extends BaseModel {
   final log = getLogger("StartScreenTimeCounterViewModel");
@@ -26,7 +27,8 @@ class ScreenTimeRequestedViewModel extends BaseModel {
           if (session.status == ScreenTimeSessionStatus.denied) {
             await dialogService.showDialog(
                 title: "Sorry",
-                description: "Your parents did not allow this screen time session");
+                description:
+                    "Your parents did not allow this screen time session");
             popView();
           }
         },

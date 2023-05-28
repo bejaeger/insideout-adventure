@@ -6,7 +6,6 @@ part 'user_settings.g.dart';
 @freezed
 class UserSettings with _$UserSettings {
   factory UserSettings({
-
     // this is mostly used together with a check of appConfigProvide.isARAvailable!
     @Default(true) bool isUsingAR,
 
@@ -15,7 +14,7 @@ class UserSettings with _$UserSettings {
     // as hike quests can ALWAYS be redone))
     @Default(false) bool isShowingCompletedQuests,
     @Default(true) bool isShowAvatarAndMapEffects,
-    @Default(false) bool ownPhone, // child using his/her own phone
+    @Default(false) bool ownPhone, // ward using his/her own phone
     @Default(false) bool isAcceptScreenTimeFirst,
   }) = _UserSettings;
 

@@ -1,7 +1,7 @@
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/enums/map_updates.dart';
 import 'package:map_launcher/map_launcher.dart';
-import 'package:afkcredits/app/app.logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MapStateService {
@@ -99,14 +99,14 @@ class MapStateService {
     lastBirdViewZoom = zoom;
   }
 
-  void setCameraToDefaultChildPosition() {
+  void setCameraToDefaultWardPosition() {
     resetSnapshotOfCameraPosition();
     tilt = kInitialTilt;
     zoom = kInitialZoomAvatarView;
     setIsAvatarView(true);
   }
 
-  void setCameraToDefaultParentPosition() {
+  void setCameraToDefaultGuardianPosition() {
     resetSnapshotOfCameraPosition();
     tilt = 0;
     zoom = kInitialZoomBirdsView;
@@ -245,7 +245,7 @@ class MapStateService {
 
     await availableMaps.first.showDirections(
       destination: Coords(lat, lon),
-      //title: "AFK Credits Quest",
+      //title: "InsideOut Adventures Quest",
     );
   }
 

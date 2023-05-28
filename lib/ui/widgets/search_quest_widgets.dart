@@ -3,9 +3,9 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/enums/quests/direction_status.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class CurrentQuestStatusInfo extends StatelessWidget {
   final DirectionStatus? directionStatus;
@@ -93,7 +93,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
                         Icon(Icons.arrow_forward,
                             size: 22, color: kcMediumGrey),
                         horizontalSpaceSmall,
-                        Image.asset(kAFKCreditsLogoPath,
+                        Image.asset(kInsideOutLogoPath,
                             width: 38,
                             color: directionStatus == DirectionStatus.closer
                                 ? Colors.white

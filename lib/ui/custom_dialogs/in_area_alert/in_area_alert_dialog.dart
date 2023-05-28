@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/custom_dialogs/in_area_alert/in_area_alert_dialog_viewmodel.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 

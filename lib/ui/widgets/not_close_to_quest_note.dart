@@ -1,12 +1,12 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/maps/map_state_service.dart';
-import 'package:insideout_ui/insideout_ui.dart';
-import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
-import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
+import 'package:stacked/stacked.dart';
 
 class NotCloseToQuestNote extends StatelessWidget {
   final void Function()? animateCameraToUserPosition;

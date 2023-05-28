@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class CreditsAmount extends StatelessWidget {
   final num amount;
@@ -27,7 +27,7 @@ class CreditsAmount extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(kAFKCreditsLogoPath, color: color, height: height),
+          Image.asset(kInsideOutLogoPath, color: color, height: height),
           SizedBox(width: 4.0),
           if (style != null)
             Text(amountString ?? amount.toStringAsFixed(0), style: style),

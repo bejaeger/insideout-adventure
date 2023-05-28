@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
@@ -11,7 +12,8 @@ import 'package:afkcredits/utils/string_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ActiveScreenTimeViewModel extends BaseModel {
-  ScreenTimeSession? session; // not null if previous screen time session was found
+  ScreenTimeSession?
+      session; // not null if previous screen time session was found
   ActiveScreenTimeViewModel({required this.session});
 
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
@@ -25,8 +27,8 @@ class ActiveScreenTimeViewModel extends BaseModel {
           uid: session?.uid, sessionId: session?.sessionId);
   UserSettings get currentUserSettings => userService.currentUserSettings;
 
-  String get childName => session != null ? session!.userName : "";
-  String get childId => session != null ? session!.uid : "";
+  String get wardName => session != null ? session!.userName : "";
+  String get wardId => session != null ? session!.uid : "";
 
   int? screenTimeLeft;
   bool justStartedListeningToScreenTime = false;
@@ -44,7 +46,8 @@ class ActiveScreenTimeViewModel extends BaseModel {
       justStartedListeningToScreenTime = true;
     }
 
-    bool continueExistingScreenTime = session != null && session?.status == ScreenTimeSessionStatus.active;
+    bool continueExistingScreenTime =
+        session != null && session?.status == ScreenTimeSessionStatus.active;
     if (continueExistingScreenTime) {
       log.i(
           "screen time session has started or is active and will be continued");
@@ -79,9 +82,8 @@ class ActiveScreenTimeViewModel extends BaseModel {
           buttonTitle: "YES",
           cancelTitle: "NO",
           title: "Cancel Active Screen Time?",
-          description: "There are " +
-              secondsToMinuteTime(screenTimeLeft) +
-              "in left.");
+          description:
+              "There are " + secondsToMinuteTime(screenTimeLeft) + "in left.");
     }
     setBusy(true);
     if (result == null || result?.confirmed == true) {

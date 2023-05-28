@@ -6,8 +6,8 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/screen_time_notifications_note.dart';
 import 'package:afkcredits/ui/widgets/simple_statistics_display.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
@@ -66,9 +66,9 @@ class ActiveScreenTimeView extends StatelessWidget {
                                     verticalSpaceSmall,
                                     Center(
                                       child: InsideOutText.headingTwo(
-                                          !model.isParentAccount
+                                          !model.isGuardianAccount
                                               ? "Woop woop, enjoy time on the screen!"
-                                              : model.childName +
+                                              : model.wardName +
                                                   " is using screen time",
                                           align: TextAlign.center),
                                     ),
@@ -146,8 +146,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                   padding: const EdgeInsets.only(
                                       left: 20, right: 20),
                                   child: InsideOutText.subheading(
-                                      model.childName +
-                                          "'s screen time expired",
+                                      model.wardName + "'s screen time expired",
                                       align: TextAlign.center),
                                 ),
                                 verticalSpaceMedium,
@@ -190,7 +189,7 @@ class ActiveScreenTimeView extends StatelessWidget {
                                         showScreenTimeIcon: true),
                                     SimpleStatisticsDisplay(
                                       statistic: model
-                                          .expiredScreenTime!.afkCreditsUsed
+                                          .expiredScreenTime!.creditsUsed
                                           .toString()
                                           .split(".")
                                           .first,
@@ -203,24 +202,24 @@ class ActiveScreenTimeView extends StatelessWidget {
                             ),
                     if (!showStats) Spacer(),
                     if (!showStats)
-                      model.isParentAccount
+                      model.isGuardianAccount
                           ? ScreenTimeNotificationsNote()
                           : Lottie.asset(
                               kLottieBigTv,
                               height: screenHeight(context, percentage: 0.25),
                             ),
                     Spacer(),
-                    if (showStats && model.isParentAccount)
+                    if (showStats && model.isGuardianAccount)
                       InsideOutButton.text(
-                        title: "See ${model.childName}'s statistics",
-                        onTap: () => model.replaceWithSingleChildView(
-                            uid: model.childId),
+                        title: "See ${model.wardName}'s statistics",
+                        onTap: () =>
+                            model.replaceWithSingleWardView(uid: model.wardId),
                       ),
                     verticalSpaceSmall,
                     if (!model.currentUserSettings.ownPhone ||
                         model.currentScreenTimeSession?.status !=
                             ScreenTimeSessionStatus.active ||
-                        model.isParentAccount)
+                        model.isGuardianAccount)
                       Container(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: InsideOutButton(
