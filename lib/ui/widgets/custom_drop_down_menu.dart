@@ -15,6 +15,9 @@ class CustomDropDownMenu extends StatefulWidget {
   final Widget? icon3;
   final String? text3;
   final void Function()? onTap3;
+  final Widget? icon4;
+  final String? text4;
+  final void Function()? onTap4;
   final Color? color;
   const CustomDropDownMenu(
       {Key? key,
@@ -27,7 +30,7 @@ class CustomDropDownMenu extends StatefulWidget {
       this.onTap2,
       this.icon3,
       this.text3,
-      this.onTap3})
+      this.onTap3, this.icon4, this.text4, this.onTap4})
       : super(key: key);
 
   @override
@@ -51,6 +54,12 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
             MenuItem(
                 text: widget.text3!, icon: widget.icon3!, onTap: widget.onTap3!)
           ];
+    if (widget.onTap4 != null && widget.icon4 != null && widget.text4 != null)
+      list = list +
+          [
+            MenuItem(
+                text: widget.text4!, icon: widget.icon4!, onTap: widget.onTap4!)
+          ];          
     return list;
   }
 

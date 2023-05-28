@@ -1,3 +1,4 @@
+import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/ward_home/overlays/main_header_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_drop_down_menu.dart';
@@ -51,8 +52,7 @@ class MainHeaderOverlayView extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             right: 15.0, top: 14, bottom: 4.0, left: 8.0),
                         child: CreditsAmount(
-                          amount:
-                              model.currentUserStats.creditsBalance.toInt(),
+                          amount: model.currentUserStats.creditsBalance.toInt(),
                           spacing: 4,
                           height: 22,
                         )),
@@ -69,11 +69,16 @@ class MainHeaderOverlayView extends StatelessWidget {
                     icon2: Icon(Icons.logout, color: kcMediumGrey, size: 22),
                     onTap2: model.handleLogoutEvent,
                     text2: 'Logout',
-                    icon3: model.isSuperUser
+                    icon3: Image.asset(kSwitchAccountIcon,
+                        height: 18, color: kcMediumGrey),
+                    text3: 'Switch Account',
+                    onTap3: () async =>
+                        await model.handleSwitchToGuardianEvent(),
+                    icon4: model.isSuperUser
                         ? Icon(Icons.person, color: kcMediumGrey, size: 22)
                         : null,
-                    text3: model.isSuperUser ? "Super Settings" : null,
-                    onTap3: model.isSuperUser
+                    text4: model.isSuperUser ? "Super Settings" : null,
+                    onTap4: model.isSuperUser
                         ? model.openSuperUserSettingsDialog
                         : null,
                   ),

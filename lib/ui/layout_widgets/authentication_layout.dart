@@ -315,7 +315,7 @@ class AuthenticationLayout extends StatelessWidget {
                 child: Text(
                   'By signing up you agree to our terms, conditions and privacy policy.',
                   textAlign: TextAlign.center,
-                  style: labelStyle.copyWith(fontSize: 12),
+                  style: bodyStyleSofia.copyWith(fontSize: 12),
                 ),
                 onTap: showTerms,
               ),

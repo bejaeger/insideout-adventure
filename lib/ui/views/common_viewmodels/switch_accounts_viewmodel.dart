@@ -109,6 +109,11 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   }
 
   Future handleSwitchToGuardianEvent() async {
+    // ! Very peculiar. Without this we get an error of
+    // !_TypeError (type '_DropdownRouteResult<MenuItem>' is not a subtype of type 'SheetResponse<dynamic>?' of 'result')
+    // ! From the navigator from the custom_drop_down_button
+    await Future.delayed(Duration(milliseconds: 10));
+
     if (userService.guardianReference == null) {
       await dialogService.showDialog(
           title: "Error",

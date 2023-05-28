@@ -1,7 +1,7 @@
 import 'package:afkcredits/enums/dialog_type.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 
-class MainHeaderOverlayViewModel extends BaseModel {
+class MainHeaderOverlayViewModel extends SwitchAccountsViewModel {
   void handleLogoutEvent() async {
     // ! Very peculiar. Without this we get an error of
     // !_TypeError (type '_DropdownRouteResult<MenuItem>' is not a subtype of type 'SheetResponse<dynamic>?' of 'result')
