@@ -39,7 +39,7 @@ import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart';
-import 'package:afkcredits/ui/views/parental_consent/parental_consent_view.dart';
+import 'package:afkcredits/ui/views/guardian_consent/guardian_consent_view.dart';
 import 'package:afkcredits/ui/views/permissions/permissions_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_guardian_view.dart';
@@ -85,7 +85,7 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: StartScreenTimeCounterView),
     MaterialRoute(page: ScreenTimeRequestedView),
     MaterialRoute(page: HelpDeskView),
-    MaterialRoute(page: ParentalConsentView),
+    MaterialRoute(page: GuardianConsentView),
     MaterialRoute(page: SelectScreenTimeGuardianView)
   ],
   dependencies: [

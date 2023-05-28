@@ -1,4 +1,4 @@
-enum ParentalVerificationStatus {
+enum GuardianVerificationStatus {
   notInitiated,
   pending,
   verified,

@@ -1,5 +1,5 @@
 import 'package:afkcredits/constants/constants.dart';
-import 'package:afkcredits/ui/views/parental_consent/parental_consent_viewmodel.dart';
+import 'package:afkcredits/ui/views/guardian_consent/guardian_consent_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/terms_and_privacy.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:stacked/stacked_annotations.dart';
-import 'package:afkcredits/ui/views/parental_consent/parental_consent_view.form.dart';
+import 'package:afkcredits/ui/views/guardian_consent/guardian_consent_view.form.dart';
 
 @FormView(
   fields: [
@@ -17,15 +17,15 @@ import 'package:afkcredits/ui/views/parental_consent/parental_consent_view.form.
   ],
   autoTextFieldValidation: false,
 )
-class ParentalConsentView extends StatelessWidget with $ParentalConsentView {
-  ParentalConsentView({Key? key}) : super(key: key);
+class GuardianConsentView extends StatelessWidget with $GuardianConsentView {
+  GuardianConsentView({Key? key}) : super(key: key);
 
   final controller = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ParentalConsentViewModel>.reactive(
-      viewModelBuilder: () => ParentalConsentViewModel(
+    return ViewModelBuilder<GuardianConsentViewModel>.reactive(
+      viewModelBuilder: () => GuardianConsentViewModel(
           disposeController: () => controller.dispose()),
       onModelReady: (model) {
         listenToFormUpdated(model);
@@ -35,7 +35,7 @@ class ParentalConsentView extends StatelessWidget with $ParentalConsentView {
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
-            title: "Parental Constent",
+            title: "Parental Consent",
             onBackButton: () => model.onBackButton(controller),
           ),
           floatingActionButtonLocation:

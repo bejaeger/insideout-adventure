@@ -13,17 +13,17 @@ const String EmailValueKey = 'email';
 const String CodeValueKey = 'code';
 
 final Map<String, TextEditingController>
-    _ParentalConsentViewTextEditingControllers = {};
+    _GuardianConsentViewTextEditingControllers = {};
 
-final Map<String, FocusNode> _ParentalConsentViewFocusNodes = {};
+final Map<String, FocusNode> _GuardianConsentViewFocusNodes = {};
 
 final Map<String, String? Function(String?)?>
-    _ParentalConsentViewTextValidations = {
+    _GuardianConsentViewTextValidations = {
   EmailValueKey: null,
   CodeValueKey: null,
 };
 
-mixin $ParentalConsentView on StatelessWidget {
+mixin $GuardianConsentView on StatelessWidget {
   TextEditingController get emailController =>
       _getFormTextEditingController(EmailValueKey);
   TextEditingController get codeController =>
@@ -33,20 +33,20 @@ mixin $ParentalConsentView on StatelessWidget {
 
   TextEditingController _getFormTextEditingController(String key,
       {String? initialValue}) {
-    if (_ParentalConsentViewTextEditingControllers.containsKey(key)) {
-      return _ParentalConsentViewTextEditingControllers[key]!;
+    if (_GuardianConsentViewTextEditingControllers.containsKey(key)) {
+      return _GuardianConsentViewTextEditingControllers[key]!;
     }
-    _ParentalConsentViewTextEditingControllers[key] =
+    _GuardianConsentViewTextEditingControllers[key] =
         TextEditingController(text: initialValue);
-    return _ParentalConsentViewTextEditingControllers[key]!;
+    return _GuardianConsentViewTextEditingControllers[key]!;
   }
 
   FocusNode _getFormFocusNode(String key) {
-    if (_ParentalConsentViewFocusNodes.containsKey(key)) {
-      return _ParentalConsentViewFocusNodes[key]!;
+    if (_GuardianConsentViewFocusNodes.containsKey(key)) {
+      return _GuardianConsentViewFocusNodes[key]!;
     }
-    _ParentalConsentViewFocusNodes[key] = FocusNode();
-    return _ParentalConsentViewFocusNodes[key]!;
+    _GuardianConsentViewFocusNodes[key] = FocusNode();
+    return _GuardianConsentViewFocusNodes[key]!;
   }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -84,10 +84,10 @@ mixin $ParentalConsentView on StatelessWidget {
 
   /// Returns the validation message for the given key
   String? _getValidationMessage(String key) {
-    final validatorForKey = _ParentalConsentViewTextValidations[key];
+    final validatorForKey = _GuardianConsentViewTextValidations[key];
     if (validatorForKey == null) return null;
     String? validationMessageForKey =
-        validatorForKey(_ParentalConsentViewTextEditingControllers[key]!.text);
+        validatorForKey(_GuardianConsentViewTextEditingControllers[key]!.text);
     return validationMessageForKey;
   }
 
@@ -95,15 +95,15 @@ mixin $ParentalConsentView on StatelessWidget {
   void disposeForm() {
     // The dispose function for a TextEditingController sets all listeners to null
 
-    for (var controller in _ParentalConsentViewTextEditingControllers.values) {
+    for (var controller in _GuardianConsentViewTextEditingControllers.values) {
       controller.dispose();
     }
-    for (var focusNode in _ParentalConsentViewFocusNodes.values) {
+    for (var focusNode in _GuardianConsentViewFocusNodes.values) {
       focusNode.dispose();
     }
 
-    _ParentalConsentViewTextEditingControllers.clear();
-    _ParentalConsentViewFocusNodes.clear();
+    _GuardianConsentViewTextEditingControllers.clear();
+    _GuardianConsentViewFocusNodes.clear();
   }
 }
 

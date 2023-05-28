@@ -1,6 +1,6 @@
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
-import 'package:afkcredits/enums/parental_verification_status.dart';
+import 'package:afkcredits/enums/guardian_verification_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/exceptions/datamodel_exception.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -22,29 +22,28 @@ class User with _$User {
   }
 
   @JsonSerializable(explicitToJson: true)
-  factory User({
-    required String uid,
-    required String fullName,
-    String? email,
-    required List<String> guardianIds,
-    required List<String> wardIds,
-    required UserRole role,
-    UserSettings? userSettings,
-    AuthenticationMethod? authMethod,
-    @Default(true)
-        bool newUser,
-    @JsonKey(
-      toJson: User._checkIfKeywordsAreSet,
-    )
-        List<String>? fullNameSearch,
-    String? createdByUserWithId,
-    String? password,
-    List<String>? tokens,
-    String? deviceId,
-    @Default(1)
-        int? avatarIdx,
-    ParentalVerificationStatus? parentalVerificationStatus
-  }) = _User;
+  factory User(
+      {required String uid,
+      required String fullName,
+      String? email,
+      required List<String> guardianIds,
+      required List<String> wardIds,
+      required UserRole role,
+      UserSettings? userSettings,
+      AuthenticationMethod? authMethod,
+      @Default(true)
+          bool newUser,
+      @JsonKey(
+        toJson: User._checkIfKeywordsAreSet,
+      )
+          List<String>? fullNameSearch,
+      String? createdByUserWithId,
+      String? password,
+      List<String>? tokens,
+      String? deviceId,
+      @Default(1)
+          int? avatarIdx,
+      GuardianVerificationStatus? guardianVerificationStatus}) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }
@@ -54,14 +53,14 @@ class User with _$User {
 // model that is empty. This is used for creating the initial documents in firestore
 User getEmptyUser() {
   return User(
-    uid: "",
-    fullName: "",
-    email: "",
-    role: UserRole.unassigned,
-    authMethod: AuthenticationMethod.dummy,
-    guardianIds: [],
-    wardIds: [],
-    newUser: false,
-    userSettings: UserSettings(),
-    parentalVerificationStatus: ParentalVerificationStatus.notInitiated);
+      uid: "",
+      fullName: "",
+      email: "",
+      role: UserRole.unassigned,
+      authMethod: AuthenticationMethod.dummy,
+      guardianIds: [],
+      wardIds: [],
+      newUser: false,
+      userSettings: UserSettings(),
+      guardianVerificationStatus: GuardianVerificationStatus.notInitiated);
 }

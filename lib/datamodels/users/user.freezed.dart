@@ -36,7 +36,7 @@ mixin _$User {
   List<String>? get tokens => throw _privateConstructorUsedError;
   String? get deviceId => throw _privateConstructorUsedError;
   int? get avatarIdx => throw _privateConstructorUsedError;
-  ParentalVerificationStatus? get parentalVerificationStatus =>
+  GuardianVerificationStatus? get guardianVerificationStatus =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -65,7 +65,7 @@ abstract class $UserCopyWith<$Res> {
       List<String>? tokens,
       String? deviceId,
       int? avatarIdx,
-      ParentalVerificationStatus? parentalVerificationStatus});
+      GuardianVerificationStatus? guardianVerificationStatus});
 
   $UserSettingsCopyWith<$Res>? get userSettings;
 }
@@ -95,7 +95,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? tokens = freezed,
     Object? deviceId = freezed,
     Object? avatarIdx = freezed,
-    Object? parentalVerificationStatus = freezed,
+    Object? guardianVerificationStatus = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -158,10 +158,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.avatarIdx
           : avatarIdx // ignore: cast_nullable_to_non_nullable
               as int?,
-      parentalVerificationStatus: parentalVerificationStatus == freezed
-          ? _value.parentalVerificationStatus
-          : parentalVerificationStatus // ignore: cast_nullable_to_non_nullable
-              as ParentalVerificationStatus?,
+      guardianVerificationStatus: guardianVerificationStatus == freezed
+          ? _value.guardianVerificationStatus
+          : guardianVerificationStatus // ignore: cast_nullable_to_non_nullable
+              as GuardianVerificationStatus?,
     ));
   }
 
@@ -199,7 +199,7 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       List<String>? tokens,
       String? deviceId,
       int? avatarIdx,
-      ParentalVerificationStatus? parentalVerificationStatus});
+      GuardianVerificationStatus? guardianVerificationStatus});
 
   @override
   $UserSettingsCopyWith<$Res>? get userSettings;
@@ -231,7 +231,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? tokens = freezed,
     Object? deviceId = freezed,
     Object? avatarIdx = freezed,
-    Object? parentalVerificationStatus = freezed,
+    Object? guardianVerificationStatus = freezed,
   }) {
     return _then(_$_User(
       uid: uid == freezed
@@ -294,10 +294,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.avatarIdx
           : avatarIdx // ignore: cast_nullable_to_non_nullable
               as int?,
-      parentalVerificationStatus: parentalVerificationStatus == freezed
-          ? _value.parentalVerificationStatus
-          : parentalVerificationStatus // ignore: cast_nullable_to_non_nullable
-              as ParentalVerificationStatus?,
+      guardianVerificationStatus: guardianVerificationStatus == freezed
+          ? _value.guardianVerificationStatus
+          : guardianVerificationStatus // ignore: cast_nullable_to_non_nullable
+              as GuardianVerificationStatus?,
     ));
   }
 }
@@ -322,20 +322,10 @@ class _$_User implements _User {
       this.password,
       final List<String>? tokens,
       this.deviceId,
-<<<<<<< HEAD
       this.avatarIdx = 1,
-      this.parentalVerificationStatus})
-      : _sponsorIds = sponsorIds,
-        _explorerIds = explorerIds,
-||||||| f743cdf
-      this.avatarIdx = 1})
-      : _sponsorIds = sponsorIds,
-        _explorerIds = explorerIds,
-=======
-      this.avatarIdx = 1})
+      this.guardianVerificationStatus})
       : _guardianIds = guardianIds,
         _wardIds = wardIds,
->>>>>>> c659276866dd6f87b570e76ab03690ad639ce3da
         _fullNameSearch = fullNameSearch,
         _tokens = tokens;
 
@@ -399,17 +389,11 @@ class _$_User implements _User {
   @JsonKey()
   final int? avatarIdx;
   @override
-  final ParentalVerificationStatus? parentalVerificationStatus;
+  final GuardianVerificationStatus? guardianVerificationStatus;
 
   @override
   String toString() {
-<<<<<<< HEAD
-    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx, parentalVerificationStatus: $parentalVerificationStatus)';
-||||||| f743cdf
-    return 'User(uid: $uid, fullName: $fullName, email: $email, sponsorIds: $sponsorIds, explorerIds: $explorerIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
-=======
-    return 'User(uid: $uid, fullName: $fullName, email: $email, guardianIds: $guardianIds, wardIds: $wardIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx)';
->>>>>>> c659276866dd6f87b570e76ab03690ad639ce3da
+    return 'User(uid: $uid, fullName: $fullName, email: $email, guardianIds: $guardianIds, wardIds: $wardIds, role: $role, userSettings: $userSettings, authMethod: $authMethod, newUser: $newUser, fullNameSearch: $fullNameSearch, createdByUserWithId: $createdByUserWithId, password: $password, tokens: $tokens, deviceId: $deviceId, avatarIdx: $avatarIdx, guardianVerificationStatus: $guardianVerificationStatus)';
   }
 
   @override
@@ -438,7 +422,7 @@ class _$_User implements _User {
             const DeepCollectionEquality().equals(other.deviceId, deviceId) &&
             const DeepCollectionEquality().equals(other.avatarIdx, avatarIdx) &&
             const DeepCollectionEquality().equals(
-                other.parentalVerificationStatus, parentalVerificationStatus));
+                other.guardianVerificationStatus, guardianVerificationStatus));
   }
 
   @JsonKey(ignore: true)
@@ -460,7 +444,7 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(_tokens),
       const DeepCollectionEquality().hash(deviceId),
       const DeepCollectionEquality().hash(avatarIdx),
-      const DeepCollectionEquality().hash(parentalVerificationStatus));
+      const DeepCollectionEquality().hash(guardianVerificationStatus));
 
   @JsonKey(ignore: true)
   @override
@@ -493,7 +477,7 @@ abstract class _User implements User {
       final List<String>? tokens,
       final String? deviceId,
       final int? avatarIdx,
-      final ParentalVerificationStatus? parentalVerificationStatus}) = _$_User;
+      final GuardianVerificationStatus? guardianVerificationStatus}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -529,7 +513,7 @@ abstract class _User implements User {
   @override
   int? get avatarIdx;
   @override
-  ParentalVerificationStatus? get parentalVerificationStatus;
+  GuardianVerificationStatus? get guardianVerificationStatus;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;

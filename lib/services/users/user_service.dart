@@ -14,7 +14,7 @@ import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
-import 'package:afkcredits/enums/parental_verification_status.dart';
+import 'package:afkcredits/enums/guardian_verification_status.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -62,8 +62,10 @@ class UserService {
     });
     return list;
   }
-  bool get hasGivenConsent => currentUser.parentalVerificationStatus ==
-      ParentalVerificationStatus.verified;
+
+  bool get hasGivenConsent =>
+      currentUser.guardianVerificationStatus ==
+      GuardianVerificationStatus.verified;
 
   User? _currentUser;
   UserStatistics? _currentUserStats;
@@ -139,7 +141,7 @@ class UserService {
         guardianIds: [],
         avatarIdx: 1,
         userSettings: UserSettings(),
-        parentalVerificationStatus: ParentalVerificationStatus.notInitiated,
+        guardianVerificationStatus: GuardianVerificationStatus.notInitiated,
       ),
     );
   }
@@ -306,7 +308,7 @@ class UserService {
             guardianIds: [],
             avatarIdx: 1,
             userSettings: UserSettings(),
-            parentalVerificationStatus: ParentalVerificationStatus.notInitiated,
+            guardianVerificationStatus: GuardianVerificationStatus.notInitiated,
           ),
         );
       } catch (e) {
@@ -355,7 +357,7 @@ class UserService {
       tokens: currentUser.tokens,
       avatarIdx: 1,
       userSettings: userSettings,
-      parentalVerificationStatus: ParentalVerificationStatus.notInitiated,
+      guardianVerificationStatus: GuardianVerificationStatus.notInitiated,
     );
     await createUserAccount(user: newWard);
     List<String> newWardIds = addToSupportedWardsList(uid: docRef.id);
@@ -662,7 +664,8 @@ class UserService {
     return completer.future;
   }
 
-  Future verifyParentalConsentCode({required String code, required String codeSent}) async {
+  Future verifyGuardianConsentCode(
+      {required String code, required String codeSent}) async {
     return code == codeSent;
   }
 
@@ -919,12 +922,14 @@ class UserService {
     _firestoreApi.updateUserData(user: newUser);
   }
 
-  Future updateParentalVerificationStatus({required ParentalVerificationStatus status}) async {
+  Future updateGuardianVerificationStatus(
+      {required GuardianVerificationStatus status}) async {
     if (currentUserNullable != null) {
-      User newUser = currentUser.copyWith(parentalVerificationStatus: status);
+      User newUser = currentUser.copyWith(guardianVerificationStatus: status);
       _firestoreApi.updateUserData(user: newUser);
     } else {
-      log.wtf("User is null in updateParentalVerificationStatus() function. Should never happen");
+      log.wtf(
+          "User is null in updateGuardianVerificationStatus() function. Should never happen");
     }
   }
 

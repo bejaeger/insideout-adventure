@@ -1,15 +1,15 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app_config_provider.dart';
-import 'package:afkcredits/enums/parental_verification_status.dart';
+import 'package:afkcredits/enums/guardian_verification_status.dart';
 import 'package:afkcredits/services/email_service/email_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/parental_consent/parental_consent_view.form.dart';
+import 'package:afkcredits/ui/views/guardian_consent/guardian_consent_view.form.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class ParentalConsentViewModel extends FormViewModel {
+class GuardianConsentViewModel extends FormViewModel {
   final UserService _userService = locator<UserService>();
   final NavigationService _navigationService = locator<NavigationService>();
   final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
@@ -18,7 +18,7 @@ class ParentalConsentViewModel extends FormViewModel {
   final log = getLogger("AddExplorerViewModel");
 
   void Function() disposeController;
-  ParentalConsentViewModel({required this.disposeController});
+  GuardianConsentViewModel({required this.disposeController});
 
   String get email => _userService.currentUserNullable?.email ?? "";
   bool isLoading = false;
@@ -33,13 +33,13 @@ class ParentalConsentViewModel extends FormViewModel {
       return;
     }
 
-    timeSentEmail = DateTime.now();    
+    timeSentEmail = DateTime.now();
     _emailService.sendConsentEmail(
         code: code,
         email: emailValue!,
         userName: _userService.currentUser.fullName);
-    _userService.updateParentalVerificationStatus(
-        status: ParentalVerificationStatus.pending);
+    _userService.updateGuardianVerificationStatus(
+        status: GuardianVerificationStatus.pending);
     onNextButton(controller);
     if (resend) {
       _snackbarService.showSnackbar(
@@ -66,13 +66,14 @@ class ParentalConsentViewModel extends FormViewModel {
       fieldsValidationMessages[CodeValueKey] =
           "Please provide the correct code we sent you via email";
       returnVal = false;
-    } else if (timeSentEmail != null && DateTime.now().difference(timeSentEmail!).inMinutes > 60) {
+    } else if (timeSentEmail != null &&
+        DateTime.now().difference(timeSentEmail!).inMinutes > 60) {
       fieldsValidationMessages[CodeValueKey] =
           "Your verification code expired, please send a new email";
       returnVal = false;
     } else {
-      _userService.updateParentalVerificationStatus(
-          status: ParentalVerificationStatus.verified);
+      _userService.updateGuardianVerificationStatus(
+          status: GuardianVerificationStatus.verified);
       verifiedCode = true;
     }
     notifyListeners();

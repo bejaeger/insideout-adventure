@@ -26,6 +26,8 @@ import 'package:afkcredits/ui/views/create_account/create_account_view.dart'
     as _i5;
 import 'package:afkcredits/ui/views/create_ward/create_ward_view.dart' as _i10;
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart' as _i21;
+import 'package:afkcredits/ui/views/guardian_consent/guardian_consent_view.dart'
+    as _i26;
 import 'package:afkcredits/ui/views/guardian_home/guardian_home_view.dart'
     as _i2;
 import 'package:afkcredits/ui/views/guardian_map/guardian_map_view.dart'
@@ -36,16 +38,6 @@ import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart'
     as _i9;
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart'
     as _i19;
-<<<<<<< HEAD
-import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart' as _i2;
-import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart' as _i20;
-import 'package:afkcredits/ui/views/parental_consent/parental_consent_view.dart'
-    as _i26;
-||||||| f743cdf
-import 'package:afkcredits/ui/views/parent_home/parent_home_view.dart' as _i2;
-import 'package:afkcredits/ui/views/parent_map/parent_map_view.dart' as _i20;
-=======
->>>>>>> c659276866dd6f87b570e76ab03690ad639ce3da
 import 'package:afkcredits/ui/views/permissions/permissions_view.dart' as _i22;
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart'
     as _i14;
@@ -61,14 +53,8 @@ import 'package:afkcredits/ui/views/startup/startup_screen_time_view.dart'
 import 'package:afkcredits/ui/views/startup/startup_view.dart' as _i7;
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.dart'
     as _i12;
-<<<<<<< HEAD
-import 'package:flutter/foundation.dart' as _i28;
-||||||| f743cdf
-import 'package:flutter/foundation.dart' as _i26;
-=======
 import 'package:afkcredits/ui/views/ward_home/ward_home_view.dart' as _i3;
-import 'package:flutter/foundation.dart' as _i26;
->>>>>>> c659276866dd6f87b570e76ab03690ad639ce3da
+import 'package:flutter/foundation.dart' as _i28;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
 import 'package:stacked_services/stacked_services.dart' as _i33;
@@ -122,7 +108,7 @@ class Routes {
 
   static const helpDeskView = '/help-desk-view';
 
-  static const parentalConsentView = '/parental-consent-view';
+  static const guardianConsentView = '/guardian-consent-view';
 
   static const selectScreenTimeGuardianView =
       '/select-screen-time-guardian-view';
@@ -152,7 +138,7 @@ class Routes {
     startScreenTimeCounterView,
     screenTimeRequestedView,
     helpDeskView,
-    parentalConsentView,
+    guardianConsentView,
     selectScreenTimeGuardianView,
   };
 }
@@ -256,8 +242,8 @@ class StackedRouter extends _i1.RouterBase {
       page: _i25.HelpDeskView,
     ),
     _i1.RouteDef(
-      Routes.parentalConsentView,
-      page: _i26.ParentalConsentView,
+      Routes.guardianConsentView,
+      page: _i26.GuardianConsentView,
     ),
     _i1.RouteDef(
       Routes.selectScreenTimeGuardianView,
@@ -473,12 +459,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i26.ParentalConsentView: (data) {
-      final args = data.getArgs<ParentalConsentViewArguments>(
-        orElse: () => const ParentalConsentViewArguments(),
+    _i26.GuardianConsentView: (data) {
+      final args = data.getArgs<GuardianConsentViewArguments>(
+        orElse: () => const GuardianConsentViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => _i26.ParentalConsentView(key: args.key),
+        builder: (context) => _i26.GuardianConsentView(key: args.key),
         settings: data,
       );
     },
@@ -491,7 +477,7 @@ class StackedRouter extends _i1.RouterBase {
             senderInfo: args.senderInfo,
             recipientInfo: args.recipientInfo,
             selectScreenTimeMode: args.selectScreenTimeMode,
-            childId: args.childId),
+            wardId: args.wardId),
         settings: data,
       );
     },
@@ -696,20 +682,19 @@ class ScreenTimeRequestedViewArguments {
   final _i29.ScreenTimeSession session;
 }
 
-class ParentalConsentViewArguments {
-  const ParentalConsentViewArguments({this.key});
+class GuardianConsentViewArguments {
+  const GuardianConsentViewArguments({this.key});
 
   final _i28.Key? key;
 }
 
-<<<<<<< HEAD
 class SelectScreenTimeGuardianViewArguments {
   const SelectScreenTimeGuardianViewArguments({
     this.key,
     required this.senderInfo,
     required this.recipientInfo,
     this.selectScreenTimeMode = false,
-    required this.childId,
+    required this.wardId,
   });
 
   final _i28.Key? key;
@@ -720,24 +705,13 @@ class SelectScreenTimeGuardianViewArguments {
 
   final bool selectScreenTimeMode;
 
-  final String childId;
+  final String wardId;
 }
 
 extension NavigatorStateExtension on _i33.NavigationService {
-  Future<dynamic> navigateToParentHomeView({
+  Future<dynamic> navigateToGuardianHomeView({
     _i28.Key? key,
     _i29.ScreenTimeSession? screenTimeSession,
-||||||| f743cdf
-extension NavigatorStateExtension on _i31.NavigationService {
-  Future<dynamic> navigateToParentHomeView({
-    _i26.Key? key,
-    _i27.ScreenTimeSession? screenTimeSession,
-=======
-extension NavigatorStateExtension on _i31.NavigationService {
-  Future<dynamic> navigateToGuardianHomeView({
-    _i26.Key? key,
-    _i27.ScreenTimeSession? screenTimeSession,
->>>>>>> c659276866dd6f87b570e76ab03690ad639ce3da
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -753,16 +727,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-<<<<<<< HEAD
-  Future<dynamic> navigateToExplorerHomeView({
-    _i28.Key? key,
-||||||| f743cdf
-  Future<dynamic> navigateToExplorerHomeView({
-    _i26.Key? key,
-=======
   Future<dynamic> navigateToWardHomeView({
-    _i26.Key? key,
->>>>>>> c659276866dd6f87b570e76ab03690ad639ce3da
+    _i28.Key? key,
     bool showBewareDialog = false,
     _i29.ScreenTimeSession? screenTimeSession,
     bool showNumberQuestsDialog = false,
@@ -881,16 +847,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-<<<<<<< HEAD
-  Future<dynamic> navigateToCreateExplorerView({
-    _i28.Key? key,
-||||||| f743cdf
-  Future<dynamic> navigateToCreateExplorerView({
-    _i26.Key? key,
-=======
   Future<dynamic> navigateToCreateWardView({
-    _i26.Key? key,
->>>>>>> c659276866dd6f87b570e76ab03690ad639ce3da
+    _i28.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -905,16 +863,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-<<<<<<< HEAD
-  Future<dynamic> navigateToSingleChildStatView({
-    _i28.Key? key,
-||||||| f743cdf
-  Future<dynamic> navigateToSingleChildStatView({
-    _i26.Key? key,
-=======
   Future<dynamic> navigateToSingleWardStatView({
-    _i26.Key? key,
->>>>>>> c659276866dd6f87b570e76ab03690ad639ce3da
+    _i28.Key? key,
     required String uid,
     int? routerId,
     bool preventDuplicates = true,
@@ -1040,16 +990,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
   }
 
   Future<dynamic> navigateToSelectScreenTimeView({
-<<<<<<< HEAD
     _i28.Key? key,
-    String? childId,
-||||||| f743cdf
-    _i26.Key? key,
-    String? childId,
-=======
-    _i26.Key? key,
     String? wardId,
->>>>>>> c659276866dd6f87b570e76ab03690ad639ce3da
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1171,7 +1113,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToParentalConsentView({
+  Future<dynamic> navigateToGuardianConsentView({
     _i28.Key? key,
     int? routerId,
     bool preventDuplicates = true,
@@ -1179,8 +1121,8 @@ extension NavigatorStateExtension on _i31.NavigationService {
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
-    return navigateTo<dynamic>(Routes.parentalConsentView,
-        arguments: ParentalConsentViewArguments(key: key),
+    return navigateTo<dynamic>(Routes.guardianConsentView,
+        arguments: GuardianConsentViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1192,7 +1134,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
     required _i32.PublicUserInfo senderInfo,
     required _i32.PublicUserInfo recipientInfo,
     bool selectScreenTimeMode = false,
-    required String childId,
+    required String wardId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1205,7 +1147,7 @@ extension NavigatorStateExtension on _i31.NavigationService {
             senderInfo: senderInfo,
             recipientInfo: recipientInfo,
             selectScreenTimeMode: selectScreenTimeMode,
-            childId: childId),
+            wardId: wardId),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

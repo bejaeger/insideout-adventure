@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/constants/inside_out_credit_system.dart';
 import 'package:afkcredits/constants/credits_system.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/helpers/transfer_status_model.dart';

@@ -157,7 +157,7 @@ class SingleWardStatViewModel extends SwitchAccountsViewModel {
     } else {
       await navigationService.navigateTo(Routes.selectScreenTimeGuardianView,
           arguments: SelectScreenTimeGuardianViewArguments(
-              childId: wardId,
+              wardId: wardId,
               senderInfo: PublicUserInfo(
                   name: currentUser.fullName, uid: currentUser.uid),
               recipientInfo: PublicUserInfo(

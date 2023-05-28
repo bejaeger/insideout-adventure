@@ -88,7 +88,7 @@ class CreateWardViewModel extends FormViewModel {
     if (result == true) {
 
       if (!_userService.hasGivenConsent) {
-        final res = await _navigationService.navigateTo(Routes.parentalConsentView);
+        final res = await _navigationService.navigateTo(Routes.guardianConsentView);
         if (res == false) {
            await _dialogService.showDialog(
             title: "Could not create user", description: "You need to give parental consent to create a child account.");

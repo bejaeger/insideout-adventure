@@ -66,7 +66,7 @@ class SelectScreenTimeGuardianView extends StatelessWidget
   Widget _creditsSummaryStats(num? value) {
     return SummaryStatsDisplay(
       title: "Equiv. credits",
-      icon: Image.asset(kAFKCreditsLogoPath, color: kcPrimaryColor, height: 26),
+      icon: Image.asset(kInsideOutLogoPath, color: kcPrimaryColor, height: 26),
       stats: value == null ? "0" : value.toStringAsFixed(0),
     );
   }
