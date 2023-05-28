@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-const String kAppName = "Hercules World";
+const String kAppName = "InsideOut Adventure";
 const NoKey = 'NoKey';
 const GoogleMapsEnvKey = 'GOOGLE_MAPS_API_KEY_ENV_VARIABLE';
 const ProdGoogleMapsEnvKey = 'PROD_GOOGLE_MAPS_API_KEY_ENV_VARIABLE';
@@ -10,7 +10,7 @@ const kLocalStorageGuardianPinKey = "pinKey";
 const kLocalStorageGuardianReferenceKey = "PARENT_ID";
 const kLocalStorageSawOnBoardingKey = "SAW_ONBOARDING";
 const kConfiguredArKey = "CONFIGURED_AR";
-final appName = 'Hercules World';
+final appName = 'InsideOut Adventure';
 
 // local storage keys
 final String kActivatedQuestLocalFileName = "activatedQuest.json";
@@ -21,7 +21,6 @@ final String userFavouritePlacesCollectionKey = "FavouritePlaces";
 final String activatedQuestsCollectionKey = "activatedQuests";
 final String screenTimeSessionsCollectionKey = "screenTimeSessions";
 final String userSummaryStatisticsDocumentKey = "summaryStats";
-final String purchasedGiftCardsCollectionKey = "giftcards";
 final String purchasedScreenTimeCollectionKey = "screentime";
 final String feedbackCampaignInfoDocumentKey = "campaignInfo";
 final String generalFeedbackDocumentKey = "generalFeedback";

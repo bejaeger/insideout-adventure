@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/apis/notion_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
@@ -7,6 +8,7 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
 import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
+import 'package:afkcredits/services/email_service/email_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +18,7 @@ import 'package:flutter/foundation.dart';
 class FeedbackService {
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final NotionApi _notionApi = locator<NotionApi>();
+  final EmailService _emailService = locator<EmailService>();
   final UserService _userService = locator<UserService>();
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   final log = getLogger("FeedbackService");
@@ -62,13 +65,19 @@ class FeedbackService {
   }
 
   Future uploadFeedback(
-      {required Feedback feedback, String? currentFeedbackDocumentKey}) async {
+      {required Feedback feedback, String? currentFeedbackDocumentKey, String? uid, String? email}) async {
     if (currentFeedbackDocumentKey == null) {
       currentFeedbackDocumentKey = generalFeedbackDocumentKey;
     }
     await _firestoreApi.uploadFeedback(
         feedback: feedback, feedbackDocumentKey: currentFeedbackDocumentKey);
     _notionApi.uploadFeedback(feedback: feedback);
+    try {
+      await _emailService.sendFeedbackEmail(message: feedback.feedback, email: email, uid: uid);
+    } catch(e) {
+      // pass silently for now
+      log.e("Error sending feedback email: $e");
+    }
   }
 
   Future getDeviceInfoString() async {

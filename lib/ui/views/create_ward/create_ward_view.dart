@@ -36,6 +36,8 @@ class CreateWardView extends StatelessWidget with $CreateWardView {
             title: "Create Child Account",
             onBackButton: () => model.onBackButton(controller),
           ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           floatingActionButton: model.isBusy || model.pageIndex == 1
               ? null
               : BottomFloatingActionButtons(
@@ -78,11 +80,11 @@ class CreateWardView extends StatelessWidget with $CreateWardView {
                           children: [
                             verticalSpaceLarge,
                             InsideOutInputField(
-                              placeholder: 'Name',
+                              placeholder: 'Account Name',
                               controller: nameController,
                               errorText:
                                   model.fieldsValidationMessages[NameValueKey],
-                              autofocus: true,
+                              autofocus: model.nameValue == null,
                             ),
                             verticalSpaceMedium,
                             InsideOutInputField(
@@ -95,7 +97,7 @@ class CreateWardView extends StatelessWidget with $CreateWardView {
                                 onPressed: () {
                                   model.setIsPwShown(!model.isPwShown);
                                 },
-                                icon: (model.isPwShown)
+                                icon: (!model.isPwShown)
                                     ? Icon(Icons.visibility,
                                         color: kcPrimaryColor)
                                     : Icon(Icons.visibility_off,
@@ -126,22 +128,18 @@ class CreateWardView extends StatelessWidget with $CreateWardView {
                                   onTap: () =>
                                       model.switchOnOwnPhoneSelected(false),
                                   child: Container(
-                                    width: 120,
-                                    height: 80,
+                                    width: 100,
+                                    height: 60,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                         border:
                                             Border.all(color: kcShadowColor),
-                                        color: (model.ownPhoneSelected !=
-                                                    null &&
-                                                model.ownPhoneSelected! ==
-                                                    false)
+                                        color: model.ownPhoneSelected == false
                                             ? kcPrimaryColor.withOpacity(0.8)
                                             : Colors.grey[200],
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    child: (model.ownPhoneSelected != null &&
-                                            model.ownPhoneSelected! == false)
+                                    child: model.ownPhoneSelected == false
                                         ? InsideOutText.headingFour("No")
                                         : InsideOutText.headingFourLight("No"),
                                   ),
@@ -151,21 +149,18 @@ class CreateWardView extends StatelessWidget with $CreateWardView {
                                   onTap: () =>
                                       model.switchOnOwnPhoneSelected(true),
                                   child: Container(
-                                    width: 125,
-                                    height: 80,
+                                    width: 100,
+                                    height: 60,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                         border:
                                             Border.all(color: kcShadowColor),
-                                        color: (model.ownPhoneSelected !=
-                                                    null &&
-                                                model.ownPhoneSelected! == true)
+                                        color: model.ownPhoneSelected == true
                                             ? kcPrimaryColor.withOpacity(0.8)
                                             : Colors.grey[200],
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    child: (model.ownPhoneSelected != null &&
-                                            model.ownPhoneSelected! == true)
+                                    child: model.ownPhoneSelected == true
                                         ? InsideOutText.headingFour("Yes")
                                         : InsideOutText.headingFourLight("Yes"),
                                   ),
@@ -180,10 +175,16 @@ class CreateWardView extends StatelessWidget with $CreateWardView {
                             if (model.chooseValueMessage != null)
                               verticalSpaceMedium,
                             InsideOutButton(
-                                leading: Icon(Icons.add_circle_outline,
-                                    color: Colors.white),
+                                leading:
+                                    Icon(Icons.person_add, color: Colors.white),
                                 busy: model.isBusy,
-                                onTap: model.addWard,
+                                onTap: () async {
+                                  bool res = await model.addWard();
+                                  if (res == false) {
+                                    FocusScope.of(context).unfocus();
+                                    model.onBackButton(controller);
+                                  }
+                                },
                                 title: "Create account"),
                           ],
                         ),

@@ -153,6 +153,20 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     }
   }
 
+  Future manualCheckIfInAreaOfMarker() async {
+    notifyListeners();
+    Position pos = await geolocationService.getAndSetCurrentLocation();
+    bool isAllowed = isUpdatingPositionAllowed(position: pos);
+    if (!isAllowed) {
+      snackbarService.showSnackbar(
+          title: "GPS Accuracy Too Low",
+          message: "Please walk a few meters and try again :)");
+      return;
+    }
+    await checkDistance();
+    notifyListeners();
+  }
+
   bool isAtNextMarker({bool forceNoDummy = false}) {
     // return true;
     if (!hasActiveQuest) {

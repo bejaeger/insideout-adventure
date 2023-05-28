@@ -52,7 +52,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   int pageIndex = 0;
   bool isLoading = false;
   bool result = false;
-  QuestType selectedQuestType = QuestType.TreasureLocationSearch;
+  QuestType selectedQuestType = QuestType.GPSAreaHike;
   String? creditsInputValidationMessage;
   String? nameInputValidationMessage;
   String? questTypeInputValidationMessage;
@@ -401,7 +401,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
         title: "Recommendation",
         description:
             "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${CreditsSystem.creditsToScreenTime(recommendedCredits)} min screen time.",
-        cancelTitle: "Learn more",
+        cancelTitle: "LEAN MORE",
         cancelTitleColor: kcOrange);
     if (response?.confirmed == false) {
       await _dialogService.showCustomDialog(

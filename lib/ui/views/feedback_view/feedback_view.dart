@@ -139,50 +139,14 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                               verticalSpaceMedium,
                             ],
                           ),
-
-                        // if (model.feedbackCampaignInfo?.questions != null &&
-                        //     model.feedbackCampaignInfo!.questions.length > 0)
-                        //   Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       verticalSpaceSmall,
-                        //       InsideOutText.headingThree(
-                        //           "Question of the week"),
-                        //       verticalSpaceSmall,
-                        //       Container(
-                        //         height: 80,
-                        //         padding: const EdgeInsets.all(15.0),
-                        //         decoration: BoxDecoration(
-                        //           borderRadius: BorderRadius.circular(16.0),
-                        //           color: kcGreenWhiter,
-                        //           boxShadow: [
-                        //             BoxShadow(
-                        //                 spreadRadius: 0.3,
-                        //                 offset: Offset(1, 1),
-                        //                 blurRadius: 0.4,
-                        //                 color: kcShadowColor),
-                        //           ],
-                        //         ),
-                        //         alignment: Alignment.center,
-                        //         child: InsideOutText.headingFour(
-                        //             model.feedbackCampaignInfo!.questions[0]),
-                        //       ),
-                        //       verticalSpaceMedium,
-                        //     ],
-                        //   ),
-                        // CreditsButton(
-                        //     onTap: model.sendFeedback,
-                        //     title: "Answer question of the week",
-                        //     leading: Icon(Icons.send, color: Colors.white),
-                        //     ),
                         verticalSpaceSmall,
                         InsideOutText.headingThree("General feedback"),
                         verticalSpaceSmall,
                         InsideOutText.bodyItalic(
-                            "Found bugs? Have suggestions? Anything else? Please let us know."),
+                            "Found bugs? Have suggestions? Feature requests? Please let us know."),
                         verticalSpaceSmall,
                         InsideOutInputField(
-                          maxLines: 5,
+                          maxLines: 10,
                           controller: feedbackController,
                           placeholder: 'Add feedback here...',
                           errorText: model.feedbackInputValidationMessage,

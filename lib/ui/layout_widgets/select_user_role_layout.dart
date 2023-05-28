@@ -32,10 +32,10 @@ class SelectUserRoleLayout extends StatelessWidget {
           children: [
             verticalSpaceRegular,
             IconButton(
-              //padding: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
               alignment: Alignment.centerLeft,
               icon: Icon(
-                Icons.arrow_back_ios,
+                Icons.arrow_back,
                 color: Colors.black,
               ),
               onPressed: onBackPressed,

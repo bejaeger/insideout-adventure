@@ -60,7 +60,10 @@ class WardStatsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                            child: InsideOutText.headingFour(user.fullName)),
+                            child: Text(user.fullName,
+                                maxLines: 2,
+                                style: heading4Style.copyWith(
+                                    overflow: TextOverflow.ellipsis))),
                         Icon(Icons.arrow_forward_ios,
                             size: 20, color: kcPrimaryColorSecondary),
                       ],
@@ -82,11 +85,11 @@ class WardStatsCard extends StatelessWidget {
                     if (activityTimeLastWeek == null &&
                         screenTimeLastWeek == null)
                       InsideOutText.body("No recent activities"),
-                    if (activityTimeLastWeek == null &&
-                        screenTimeLastWeek == null)
-                      InsideOutText.body("Switch to " +
-                          user.fullName +
-                          "'s account to get started"),
+                    // if (activityTimeLastWeek == null &&
+                    //     screenTimeLastWeek == null)
+                    //   InsideOutText.body("Switch to " +
+                    //       user.fullName +
+                    //       "'s account to get started"),
                     wardStats == null
                         ? AFKProgressIndicator()
                         : Column(
@@ -155,7 +158,6 @@ class WardStatsCard extends StatelessWidget {
   }
 }
 
-// TODO: put somewhere more central
 int getTimeLeftInSeconds({required ScreenTimeSession session}) {
   DateTime now = DateTime.now();
   int diff = now.difference(session.startedAt.toDate()).inSeconds;

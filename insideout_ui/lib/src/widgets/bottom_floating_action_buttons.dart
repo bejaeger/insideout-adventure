@@ -6,11 +6,12 @@ class BottomFloatingActionButtons extends StatelessWidget {
   final Widget? leadingMain;
   final Widget? leadingSecondary;
   final String? titleSecondary;
-  final void Function() onTapMain;
+  final void Function()? onTapMain;
   final void Function()? onTapSecondary;
   final bool swapButtons;
   final bool busySecondary;
   final bool busyMain;
+  final Color? color;
   const BottomFloatingActionButtons({
     Key? key,
     required this.titleMain,
@@ -22,6 +23,7 @@ class BottomFloatingActionButtons extends StatelessWidget {
     this.busyMain = false,
     this.leadingMain,
     this.leadingSecondary,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -45,12 +47,14 @@ class BottomFloatingActionButtons extends StatelessWidget {
                     title: titleMain,
                     leading: leadingMain,
                     onTap: onTapMain,
+                    color: color ?? kcPrimaryColor,
                   )
                 : InsideOutButton(
                     leading: leadingMain,
                     title: titleMain,
                     onTap: onTapMain,
                     busy: busyMain,
+                    color: color ?? kcPrimaryColor,
                   ),
           ),
           if (titleSecondary != null) horizontalSpaceMedium,

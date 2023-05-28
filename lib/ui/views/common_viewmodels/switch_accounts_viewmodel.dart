@@ -1,13 +1,17 @@
+import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/guardian_reference/guardian_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
+import 'package:afkcredits/enums/guardian_verification_status.dart';
+import 'package:afkcredits/services/email_service/email_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
 abstract class SwitchAccountsViewModel extends QuestViewModel {
   final log = getLogger("SwitchAccountsViewModel");
+  final EmailService _emailService = locator<EmailService>();
   final String? wardUid;
 
   User? get ward => userService.supportedWards[wardUid];
@@ -17,6 +21,33 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
   SwitchAccountsViewModel({this.wardUid});
 
+  Future handleGuardianConsent() async {
+    if (currentUser.guardianVerificationStatus ==
+        GuardianVerificationStatus.verified) {
+      return;
+    } else {
+      // TODO: Implement logic for parental consent
+
+      // Logic:
+      // 1. Go to guardianConsentView (link terms&conditions and privacy policy)
+      // 2. Have them input an email (as default use email they signed up with)
+      // 3. Send email with code when they click send code via email
+      // 4. Move to next screen where they input the code
+      // 5. When they accept, update guardianVerificationStatus to verified
+
+      // Can use same code as in creation of quest or creation of user!
+
+      // TODO: Maybe need to do that logic in the creation of the user already?
+
+      _emailService.sendConsentEmail(
+          code: "AB38",
+          userName: "Alfred Super Boy",
+          email: "benjamin.jaeger@posteo.de");
+      userService.updateGuardianVerificationStatus(
+          status: GuardianVerificationStatus.pending);
+    }
+  }
+
   Future handleSwitchToWardEvent({String? wardUidInput}) async {
     User? tmpWard;
     if (wardUidInput != null) {
@@ -24,6 +55,8 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     } else {
       tmpWard = ward;
     }
+
+    // await handleGuardianConsent();
 
     if (tmpWard == null) {
       log.e("Please provide an wardUid you want to switch to!");
@@ -76,6 +109,11 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   }
 
   Future handleSwitchToGuardianEvent() async {
+    // ! Very peculiar. Without this we get an error of
+    // !_TypeError (type '_DropdownRouteResult<MenuItem>' is not a subtype of type 'SheetResponse<dynamic>?' of 'result')
+    // ! From the navigator from the custom_drop_down_button
+    await Future.delayed(Duration(milliseconds: 10));
+
     if (userService.guardianReference == null) {
       await dialogService.showDialog(
           title: "Error",

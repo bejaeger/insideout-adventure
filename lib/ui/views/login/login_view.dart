@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
+import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:afkcredits/ui/views/login/login_view.form.dart';
-import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
@@ -47,7 +47,11 @@ class LoginView extends StatelessWidget with $LoginView {
           logo: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HerculesWorldLogo(),
+              Row(
+                children: [
+                  InsideOutLogo(),
+                ],
+              ),
             ],
           ),
           subtitle: Row(
@@ -79,13 +83,14 @@ class LoginView extends StatelessWidget with $LoginView {
                 controller: emailOrNameController,
               ), */
               InsideOutInputField(
-                //leading: Icon(Icons.lock),
+                // leading: Icon(Icons.lock),
                 controller: passwordController,
+                obscureText: !model.isPwShown,
+                trailing: (!model.isPwShown)
+                    ? Icon(Icons.visibility)
+                    : Icon(Icons.visibility_off),
+                trailingTapped: () => model.setIsPwShown(!model.isPwShown),
                 placeholder: "Password",
-                //leading: Text('Password'),
-                obscureText: true,
-                trailing: Icon(Icons.close),
-                trailingTapped: () => passwordController.clear(),
                 errorText: model.passwordInputValidationMessage,
               ),
               /*         TextField(

@@ -97,16 +97,14 @@ class _BasicDialogContent extends StatelessWidget {
                               model.secondaryButtonTitle!,
                             ),
                           ),
-                        TextButton(
-                          onPressed: () =>
-                              completer(DialogResponse(confirmed: true)),
-                          child: Text(
-                            model.mainButtonTitle ?? '',
-                            style: textTheme(context).bodyText2!.copyWith(
-                                color: _getStatusColor(model.status),
-                                fontWeight: FontWeight.w600),
+                        Container(
+                          width: screenWidth(context, percentage: 0.4),
+                          child: InsideOutButton(
+                            title: model.mainButtonTitle ?? '',
+                            onTap: () =>
+                                completer(DialogResponse(confirmed: true)),
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ],

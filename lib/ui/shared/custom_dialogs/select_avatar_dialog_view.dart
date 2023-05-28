@@ -113,7 +113,6 @@ class SelectAvatarDialogView extends StatelessWidget {
                         Container(
                           height: 180,
                           //height: screenHeight(context, percentage: 0.2),
-                          //color: Colors.red,
                           alignment: Alignment.center,
                           child: Container(
                             //color: Colors.green,
@@ -169,7 +168,7 @@ class SelectAvatarDialogView extends StatelessWidget {
                   minRadius: 16,
                   maxRadius: 38,
                   backgroundColor: kcPrimaryColor,
-                  child: Image.asset(kHerculesWorldLogo, height: 45)
+                  child: Image.asset(kInsideOutLogo, height: 45)
                   // Icon(
                   //   Icons.favorite,
                   //   size: 28,

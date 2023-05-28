@@ -13,6 +13,7 @@ class ScreenTimeNotificationsNote extends StatelessWidget {
       //color: Colors.red,
       child: Column(
         mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           verticalSpaceLarge,
           Flexible(
@@ -20,7 +21,7 @@ class ScreenTimeNotificationsNote extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(Icons.alarm_on_outlined,
-                    color: kcScreenTimeBlue, size: 45),
+                    color: kcScreenTimeBlue, size: 40),
                 horizontalSpaceSmall,
                 Flexible(
                   child: InsideOutText.subheading(
@@ -36,7 +37,7 @@ class ScreenTimeNotificationsNote extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(Icons.info_outline_rounded,
-                    color: kcPrimaryColor, size: 45),
+                    color: kcPrimaryColor, size: 40),
                 horizontalSpaceSmall,
                 Flexible(
                   child: InsideOutText.subheading(

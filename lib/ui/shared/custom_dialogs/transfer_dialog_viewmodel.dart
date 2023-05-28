@@ -42,7 +42,7 @@ class TransferDialogViewModel extends BaseModel {
     } else if (status == TransferDialogStatus.success) {
       title = "Success!";
       description = "Someone will be very happy!";
-      mainButtonTitle = "Back";
+      mainButtonTitle = "Go back";
     } else {
       title = "Warning";
       description =

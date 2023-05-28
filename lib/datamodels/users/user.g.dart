@@ -31,6 +31,9 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
           (json['tokens'] as List<dynamic>?)?.map((e) => e as String).toList(),
       deviceId: json['deviceId'] as String?,
       avatarIdx: json['avatarIdx'] as int? ?? 1,
+      guardianVerificationStatus: $enumDecodeNullable(
+          _$GuardianVerificationStatusEnumMap,
+          json['guardianVerificationStatus']),
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
@@ -49,6 +52,8 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'tokens': instance.tokens,
       'deviceId': instance.deviceId,
       'avatarIdx': instance.avatarIdx,
+      'guardianVerificationStatus': _$GuardianVerificationStatusEnumMap[
+          instance.guardianVerificationStatus],
     };
 
 const _$UserRoleEnumMap = {
@@ -67,4 +72,10 @@ const _$AuthenticationMethodEnumMap = {
   AuthenticationMethod.apple: 'apple',
   AuthenticationMethod.dummy: 'dummy',
   AuthenticationMethod.EmailOrGuardianCreatedWard: 'EmailOrGuardianCreatedWard',
+};
+
+const _$GuardianVerificationStatusEnumMap = {
+  GuardianVerificationStatus.notInitiated: 'notInitiated',
+  GuardianVerificationStatus.pending: 'pending',
+  GuardianVerificationStatus.verified: 'verified',
 };

@@ -999,10 +999,6 @@ DocumentReference getAFKMarkersPositionDocs({required String markerId}) {
   return afkMarkersPositionsCollection.doc(markerId);
 }
 
-CollectionReference getUserGiftCardsCollection({required String uid}) {
-  return usersCollection.doc(uid).collection(purchasedGiftCardsCollectionKey);
-}
-
 CollectionReference getUserScreenTimeCollection({required String uid}) {
   return usersCollection.doc(uid).collection(purchasedScreenTimeCollectionKey);
 }

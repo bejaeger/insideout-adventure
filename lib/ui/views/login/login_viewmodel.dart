@@ -109,8 +109,8 @@ class LoginViewModel extends AuthenticationViewModel {
       final response = await _dialogService.showDialog(
           title: "Send email to $emailOrNameValue?",
           description: "We will send you an email with a password reset link",
-          buttonTitle: "Send email",
-          cancelTitle: "Cancel");
+          buttonTitle: "SEND EMAIL",
+          cancelTitle: "CANCEL");
       if (response?.confirmed == true) {
         bool res = await _firebaseAuthenticationService
             .sendResetPasswordLink(emailOrNameValue!);

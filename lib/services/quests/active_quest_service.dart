@@ -105,51 +105,54 @@ class ActiveQuestService with ReactiveServiceMixin {
       Future Function(int)? periodicFuncFromViewModel,
       bool countStartMarkerAsCollected = false}) async {
     late ActivatedQuest tmpActivatedQuest;
-    if (!hasActiveQuestToBeStarted) {
-      _timeElapsedOffset = 0;
-      tmpActivatedQuest = _createActivatedQuest(quest: quest, uids: uids);
-    } else {
+
+    if (hasActiveQuestToBeStarted) {
       // this means a quest was found in local storage at startup and this quest is resumed
       _timeElapsedOffset = questToBeStarted!.timeElapsed;
       tmpActivatedQuest = questToBeStarted!;
-    }
+    } else {
+      _timeElapsedOffset = 0;
+      tmpActivatedQuest = _createActivatedQuest(quest: quest, uids: uids);
 
-    if (quest.type != QuestType.DistanceEstimate) {
-      try {
-        AFKMarker fullMarker = tmpActivatedQuest.quest.markers
-            .firstWhere((element) => element.id == quest.startMarker?.id);
-        final bool closeby =
-            await _markerService.isUserCloseby(marker: fullMarker);
-        if (!closeby) {
-          log.w("You are not nearby the marker, cannot start quest!");
-          return "Get closer to the start first.";
-        }
-      } catch (e) {
-        log.e("Error thrown when searching for start marker: $e");
-        if (e is StateError) {
-          log.e(
-              "The quest that is to be started does not have a start marker!");
+      if (quest.type != QuestType.DistanceEstimate) {
+        try {
+          AFKMarker fullMarker = tmpActivatedQuest.quest.markers
+              .firstWhere((element) => element.id == quest.startMarker?.id);
+          final bool closeby =
+              await _markerService.isUserCloseby(marker: fullMarker);
+          if (!closeby) {
+            log.w("You are not nearby the marker, cannot start quest!");
+            return "Get closer to the start first.";
+          }
+        } catch (e) {
+          log.e("Error thrown when searching for start marker: $e");
+          if (e is StateError) {
+            log.e(
+                "The quest that is to be started does not have a start marker!");
+          }
         }
       }
-    }
 
-    if (countStartMarkerAsCollected && !hasActiveQuestToBeStarted) {
-      List<bool> tmpMarkersCollectedList =
-          List.from(tmpActivatedQuest.markersCollected);
-      tmpMarkersCollectedList[0] = true;
-      tmpActivatedQuest =
-          tmpActivatedQuest.copyWith(markersCollected: tmpMarkersCollectedList);
+      if (countStartMarkerAsCollected) {
+        List<bool> tmpMarkersCollectedList =
+            List.from(tmpActivatedQuest.markersCollected);
+        tmpMarkersCollectedList[0] = true;
+        tmpActivatedQuest = tmpActivatedQuest.copyWith(
+            markersCollected: tmpMarkersCollectedList);
+      }
     }
 
     // quest activated!
 
     pushActivatedQuest(tmpActivatedQuest);
+
     // careful: don't move before pushActivatedQuest
     if (!hasActiveQuestToBeStarted) {
       saveActiveQuestToLocalStorage();
     } else {
       resetTemporaryQuestToBeStarted(quest: null);
     }
+
     setNewTrialNumber();
     _questTestingService.maybeInitialize(
       activatedQuest: activatedQuest,

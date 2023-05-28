@@ -14,6 +14,7 @@ import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
+import 'package:afkcredits/enums/guardian_verification_status.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
@@ -61,6 +62,10 @@ class UserService {
     });
     return list;
   }
+
+  bool get hasGivenConsent =>
+      currentUser.guardianVerificationStatus ==
+      GuardianVerificationStatus.verified;
 
   User? _currentUser;
   UserStatistics? _currentUserStats;
@@ -136,6 +141,7 @@ class UserService {
         guardianIds: [],
         avatarIdx: 1,
         userSettings: UserSettings(),
+        guardianVerificationStatus: GuardianVerificationStatus.notInitiated,
       ),
     );
   }
@@ -302,6 +308,7 @@ class UserService {
             guardianIds: [],
             avatarIdx: 1,
             userSettings: UserSettings(),
+            guardianVerificationStatus: GuardianVerificationStatus.notInitiated,
           ),
         );
       } catch (e) {
@@ -332,7 +339,7 @@ class UserService {
       required AuthenticationMethod authMethod,
       required UserSettings userSettings}) async {
     if (await isUserAlreadyPresent(name: name)) {
-      return "User with name $name already present. Please choose a different name.";
+      return "A user with name $name exists already in our system. Please choose a different name.";
     }
 
     final docRef = _firestoreApi.createUserDocument();
@@ -350,6 +357,7 @@ class UserService {
       tokens: currentUser.tokens,
       avatarIdx: 1,
       userSettings: userSettings,
+      guardianVerificationStatus: GuardianVerificationStatus.notInitiated,
     );
     await createUserAccount(user: newWard);
     List<String> newWardIds = addToSupportedWardsList(uid: docRef.id);
@@ -656,6 +664,11 @@ class UserService {
     return completer.future;
   }
 
+  Future verifyGuardianConsentCode(
+      {required String code, required String codeSent}) async {
+    return code == codeSent;
+  }
+
   dynamic getCreditsBalance({String? wardId}) {
     if (wardId == null) {
       return currentUserStats.creditsBalance;
@@ -907,6 +920,17 @@ class UserService {
   Future setNewUserPropertyToFalse({required User user}) async {
     User newUser = user.copyWith(newUser: false);
     _firestoreApi.updateUserData(user: newUser);
+  }
+
+  Future updateGuardianVerificationStatus(
+      {required GuardianVerificationStatus status}) async {
+    if (currentUserNullable != null) {
+      User newUser = currentUser.copyWith(guardianVerificationStatus: status);
+      _firestoreApi.updateUserData(user: newUser);
+    } else {
+      log.wtf(
+          "User is null in updateGuardianVerificationStatus() function. Should never happen");
+    }
   }
 
   Future setNewAvatarId({required int id, required User user}) async {

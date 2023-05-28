@@ -1,5 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/services/users/user_service.dart';
@@ -20,7 +21,7 @@ class CreateWardViewModel extends FormViewModel {
   CreateWardViewModel({required this.disposeController});
 
   int pageIndex = 0;
-  bool? ownPhoneSelected;
+  bool ownPhoneSelected = false;
   String? chooseValueMessage;
 
   Future onBackButton(PageController controller) async {
@@ -36,7 +37,8 @@ class CreateWardViewModel extends FormViewModel {
 
   Future onNextButton(PageController controller) async {
     if (pageIndex == 0) {
-      final result = isValidInput(name: nameValue, password: passwordValue);
+      final result =
+          await isValidInput(name: nameValue, password: passwordValue);
       if (result == true) {
         controller.nextPage(
             duration: Duration(milliseconds: 200), curve: Curves.easeIn);
@@ -53,37 +55,51 @@ class CreateWardViewModel extends FormViewModel {
     notifyListeners();
   }
 
-  dynamic isValidInput({required String? name, required String? password}) {
+  Future isValidInput(
+      {required String? name, required String? password}) async {
     log.i("Testing if user input is valid: name = $name, password = $password");
+    bool returnValue = true;
     if (name == null || name == "") {
       fieldsValidationMessages[NameValueKey] = "Please provide a valid name";
-      return;
+      returnValue = false;
     }
-    if (password == null) {
+    if (await _userService.isUserAlreadyPresent(name: name)) {
+      fieldsValidationMessages[NameValueKey] =
+          "A user with name $name exists already in our system. Please choose a different name.";
+      returnValue = false;
+    }
+    if (password == null || password == "") {
       fieldsValidationMessages[PasswordValueKey] =
           "Please provide a valid password";
-      return;
+      returnValue = false;
     }
-    if (password.length < 4) {
+    if (password != null && password.length < 4) {
       fieldsValidationMessages[PasswordValueKey] =
           "Please provide a password with at least 4 characters";
-      return;
+      returnValue = false;
     }
-    return true;
+    notifyListeners();
+    return returnValue;
   }
 
   Future addWard() async {
-    if (ownPhoneSelected == null) {
-      chooseValueMessage = "Choose yes or no";
-      notifyListeners();
-      return;
-    }
-    final result = isValidInput(name: nameValue, password: passwordValue!);
+    final result =
+        await isValidInput(name: nameValue, password: passwordValue!);
     if (result == true) {
-      // per default if ward has own phone we enable verification step
+
+      if (!_userService.hasGivenConsent) {
+        final res = await _navigationService.navigateTo(Routes.guardianConsentView);
+        if (res == false) {
+           await _dialogService.showDialog(
+            title: "Could not create user", description: "You need to give parental consent to create a child account.");
+            return false;
+        }
+      }
+
+      // per default if child has own phone we enable verification step
       UserSettings userSettings = UserSettings(
-          ownPhone: ownPhoneSelected!,
-          isAcceptScreenTimeFirst: ownPhoneSelected!);
+          ownPhone: ownPhoneSelected,
+          isAcceptScreenTimeFirst: ownPhoneSelected);
       final result = await runBusyFuture(_userService.createWardAccount(
           name: nameValue!,
           password: passwordValue!,
@@ -92,16 +108,20 @@ class CreateWardViewModel extends FormViewModel {
       if (result is String) {
         await _dialogService.showDialog(
             title: "Could not create user", description: result);
+        return false;
       } else {
+        String title = nameValue != null ? "Successfully created ${nameValue!}'s account" : "Successfully created child account";
         await _dialogService.showDialog(
-            title: "Successfully created account",
+            title: title,
             description:
-                "Tip: You can use the entered credentials to login on another phone");
+                "Tip: you can use the account name and password to login to the child's account on another phone");
         _navigationService.back();
+        return true;
       }
     } else {
       await _dialogService.showDialog(
           title: "Could not create user", description: result);
+      return false;
     }
   }
 

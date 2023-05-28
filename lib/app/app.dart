@@ -1,9 +1,11 @@
+import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/apis/notion_api.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/notifications/notifications_service.dart';
 import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_service.dart';
 import 'package:afkcredits/services/connectivity/connectivity_service.dart';
+import 'package:afkcredits/services/email_service/email_service.dart';
 import 'package:afkcredits/services/environment_services.dart';
 import 'package:afkcredits/services/feedback_service/feedback_service.dart';
 import 'package:afkcredits/services/gamification/gamification_service.dart';
@@ -37,8 +39,10 @@ import 'package:afkcredits/ui/views/login/login_view.dart';
 import 'package:afkcredits/ui/views/login/select_role_after_login_view.dart';
 import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_view.dart';
+import 'package:afkcredits/ui/views/guardian_consent/guardian_consent_view.dart';
 import 'package:afkcredits/ui/views/permissions/permissions_view.dart';
 import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.dart';
+import 'package:afkcredits/ui/views/screen_time/select_screen_time_guardian_view.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_view.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.dart';
 import 'package:afkcredits/ui/views/single_ward_stat/single_ward_stat_view.dart';
@@ -81,8 +85,12 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: StartScreenTimeCounterView),
     MaterialRoute(page: ScreenTimeRequestedView),
     MaterialRoute(page: HelpDeskView),
+    MaterialRoute(page: GuardianConsentView),
+    MaterialRoute(page: SelectScreenTimeGuardianView)
   ],
   dependencies: [
+    LazySingleton(classType: CloudFunctionsApi),
+    LazySingleton(classType: EmailService),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: DialogService),
     LazySingleton(classType: ConnectivityService),

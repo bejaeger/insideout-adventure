@@ -34,7 +34,6 @@ class StartScreenTimeCounterView extends StatelessWidget {
                     ? ScreenTimeNotificationsNote()
                     : Container(
                         height: 220,
-                        //color: Colors.red,
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [ScreenTimeNotificationsNote()],
@@ -43,7 +42,7 @@ class StartScreenTimeCounterView extends StatelessWidget {
                 Spacer(),
                 InsideOutButton.text(
                   title: "Start immediately",
-                  color: kcGreyTextColor,
+                  color: kcBlackHeadlineColor,
                   onTap: () => model.startNow(session: session),
                 ),
                 verticalSpaceRegular,

@@ -1,7 +1,7 @@
 import 'package:afkcredits/ui/views/permissions/permissions_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/hercules_world_logo.dart';
-import 'package:flutter/material.dart';
+import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
 import 'package:insideout_ui/insideout_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 // view that asks for all permissions necessary for the app
@@ -46,7 +46,7 @@ class PermissionsView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       verticalSpaceLarge,
-                      HerculesWorldLogo(),
+                      InsideOutLogo(),
                     ],
                   )),
         );

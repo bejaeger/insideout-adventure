@@ -40,7 +40,7 @@ class OnboardingDialog extends StatelessWidget {
                 Text('WELCOME',
                     textAlign: TextAlign.center,
                     style: textTheme(context).headline4),
-                Text('to Hercules World',
+                Text('to InsideOut Adventure',
                     textAlign: TextAlign.center,
                     style: textTheme(context)
                         .headline6!
@@ -87,7 +87,7 @@ class OnboardingDialog extends StatelessWidget {
                 minRadius: 16,
                 maxRadius: 35,
                 backgroundColor: kcPrimaryColor,
-                child: Image.asset(kHerculesWorldLogo, height: 38)
+                child: Image.asset(kInsideOutLogo, height: 38)
                 // Icon(
                 //   Icons.favorite,
                 //   size: 28,

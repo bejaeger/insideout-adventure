@@ -1,5 +1,5 @@
-import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/credits_system.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
@@ -36,7 +36,7 @@ class SelectScreenTimeViewModel extends BaseModel {
 
   Future selectCustomScreenTime() async {
     DialogResponse? response = await dialogService.showCustomDialog(
-        variant: DialogType.CustomScreenTime);
+        variant: DialogType.CustomScreenTime, barrierDismissible: true);
     if (response?.confirmed == true) {
       if (response?.data is int) {
         screenTimePreset = response?.data;

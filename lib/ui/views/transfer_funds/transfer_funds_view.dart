@@ -1,8 +1,9 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/select_value.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
@@ -15,8 +16,12 @@ import 'package:stacked/stacked_annotations.dart';
 class TransferFundsView extends StatelessWidget with $TransferFundsView {
   final PublicUserInfo senderInfo;
   final PublicUserInfo recipientInfo;
+  final bool selectScreenTimeMode;
   TransferFundsView(
-      {Key? key, required this.senderInfo, required this.recipientInfo})
+      {Key? key,
+      required this.senderInfo,
+      required this.recipientInfo,
+      this.selectScreenTimeMode = false})
       : super(key: key);
 
   @override
@@ -27,68 +32,66 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
       onModelReady: (model) {
         listenToFormUpdated(model);
       },
-      builder: (context, model, child) => Scaffold(
-        appBar: AppBar(title: Text("Add credits to ${recipientInfo.name}")),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-          child: ListView(
-            children: [
-              verticalSpaceMedium,
-              InsideOutText.subheadingItalic(
-                  "How many credits do you want to add to ${recipientInfo.name}'s account?"),
-              verticalSpaceMedium,
-              Row(
-                children: [
-                  Container(
-                    width: screenWidth(context, percentage: 0.35),
-                    child: InsideOutInputField(
-                      focusNode: amountFocusNode,
-                      controller: amountController,
-                      style: heading3Style,
-                      leading: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Image.asset(kInsideOutLogoPath, height: 10),
-                      ),
-                      autofocus: true,
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                  //Container(color: Colors.red),
-                  horizontalSpaceSmall,
-                  Icon(Icons.arrow_right_alt, size: 26),
-                  horizontalSpaceSmall,
-                  Expanded(
-                    child: SummaryStatsDisplay(
-                      title: "Equiv. screen time",
-                      icon: Image.asset(kScreenTimeIcon,
-                          height: 26, color: kcScreenTimeBlue),
-                      unit: "min",
-                      stats: model.screenTimeEquivalent == null
-                          ? "0"
-                          : model.screenTimeEquivalent!.toStringAsFixed(0),
-                    ),
-                  ),
-                ],
-              ),
-              if (model.customValidationMessage != null)
-                Expanded(
-                    child: InsideOutText.warn(model.customValidationMessage!)),
-              verticalSpaceMedium,
-              InsideOutButton(
-                leading: Icon(Icons.add, color: Colors.white),
-                title: "Add credits",
-                onTap: () async {
-                  amountFocusNode.unfocus();
-                  final res = await model.showBottomSheetAndProcessTransfer();
-                  if (res is bool && res == true) {
-                    amountController.clear();
-                  }
-                },
-              ),
-            ],
+      builder: (context, model, child) => SafeArea(
+        child: Scaffold(
+          appBar: CustomAppBar(
+              title: "Reward ${recipientInfo.name}",
+              onBackButton: () {
+                amountController.clear();
+                model.popView();
+              }),
+          body: SelectValue(
+            userPrompt:
+                "How many credits do you want to add to ${recipientInfo.name}'s account?",
+            inputField: _creditsInputField(),
+            validationMessage: model.customValidationMessage,
+            equivalentValueWidget:
+                _screenTimeSummaryStats(model.equivalentValue),
+            ctaButton: _transferCreditsButton(
+                onTap: model.showBottomSheetAndProcessTransfer,
+                enabled: model.canTransferCredits()),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _screenTimeSummaryStats(num? value) {
+    return SummaryStatsDisplay(
+      title: "Equiv. screen time",
+      icon: Image.asset(kScreenTimeIcon, height: 26, color: kcScreenTimeBlue),
+      unit: "min",
+      stats: value == null ? "0" : value.toStringAsFixed(0),
+    );
+  }
+
+  Widget _creditsInputField() {
+    return InsideOutInputField(
+      focusNode: amountFocusNode,
+      controller: amountController,
+      style: heading3Style,
+      leading: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Image.asset(kInsideOutLogoPath, height: 10),
+      ),
+      autofocus: true,
+      keyboardType: TextInputType.number,
+    );
+  }
+
+  Widget _transferCreditsButton(
+      {required Function() onTap, required bool enabled}) {
+    return InsideOutButton(
+      leading: Icon(Icons.add, color: Colors.white),
+      title: "Reward credits",
+      disabled: !enabled,
+      onTap: () async {
+        amountFocusNode.unfocus();
+        final res = await onTap();
+        if (res is bool && res == true) {
+          amountController.clear();
+        }
+      },
     );
   }
 }

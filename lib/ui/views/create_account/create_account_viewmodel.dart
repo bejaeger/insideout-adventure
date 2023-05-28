@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
+import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/services/users/insideout_authentication_result_service.dart';
@@ -18,6 +19,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
   final log = getLogger("CreateAccountViewModel");
   final UserService _userService = locator<UserService>();
   final _navigationService = locator<NavigationService>();
+  final AppConfigProvider appConfigProvider = locator<AppConfigProvider>();
 
   String? emailInputValidationMessage;
   String? passwordInputValidationMessage;
@@ -58,7 +60,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
     }
     if (passwordValue != null) {
       if (passwordValue!.length < 4) {
-        emailInputValidationMessage =
+        passwordInputValidationMessage =
             'Please choose a password that is at least 4 characters long.';
         returnVal = false;
       }
@@ -66,6 +68,12 @@ class CreateAccountViewModel extends AuthenticationViewModel {
     return returnVal;
   }
 
+  bool isPwShown = false;
+  setIsPwShown(bool show) {
+    isPwShown = show;
+    notifyListeners();
+  }
+  
   @override
   Future<InsideOutAuthenticationResultService> runAuthentication(
       AuthenticationMethod method,

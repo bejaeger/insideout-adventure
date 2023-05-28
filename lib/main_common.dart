@@ -106,9 +106,15 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: kAppName,
             theme: ThemeData(
+              primaryColor: kcPrimaryColor,
               elevatedButtonTheme:
                   ElevatedButtonThemeData(style: getRaisedButtonStyle()),
-              primaryColor: kcPrimaryColor,
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  // color of YES in confirmation dialog
+                  primary: kcPrimaryColor,
+                ),
+              ),
               appBarTheme: AppBarTheme(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
@@ -122,6 +128,11 @@ class MyApp extends StatelessWidget {
               colorScheme: ThemeData().colorScheme.copyWith(
                     primary: kcPrimaryColor,
                   ),
+              dialogTheme: DialogTheme(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
               primaryIconTheme: IconThemeData(color: Colors.white),
               primaryTextTheme: TextTheme(
                 // color of app bar title

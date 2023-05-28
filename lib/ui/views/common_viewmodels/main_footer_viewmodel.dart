@@ -1,29 +1,11 @@
-import 'package:afkcredits/enums/dialog_type.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 
-class MainFooterViewModel extends BaseModel {
+class MainFooterViewModel extends SwitchAccountsViewModel {
   bool isMenuOpen = false;
 
   void listenToLayout() {
     layoutService.isShowingQuestListSubject.listen((show) {
       notifyListeners();
     });
-  }
-
-  void handleLogoutEvent() async {
-    final result = await dialogService.showDialog(
-        barrierDismissible: true,
-        title: "Sure",
-        description: "Are you sure you want to logout?",
-        buttonTitle: "YES",
-        cancelTitle: "NO");
-    if (result?.confirmed == true) {
-      logout();
-    }
-  }
-
-  void showWardSettingsDialog() async {
-    await dialogService.showCustomDialog(
-        variant: DialogType.WardSettings, barrierDismissible: true);
   }
 }

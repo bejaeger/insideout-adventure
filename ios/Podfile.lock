@@ -885,8 +885,9 @@ PODS:
   - nanopb/encode (2.30909.0)
   - open_settings (0.0.1):
     - Flutter
-  - path_provider_ios (0.0.1):
+  - path_provider_foundation (0.0.1):
     - Flutter
+    - FlutterMacOS
   - pedometer (0.0.1):
     - Flutter
   - permission_handler_apple (9.0.4):
@@ -936,7 +937,7 @@ DEPENDENCIES:
   - location (from `.symlinks/plugins/location/ios`)
   - map_launcher (from `.symlinks/plugins/map_launcher/ios`)
   - open_settings (from `.symlinks/plugins/open_settings/ios`)
-  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - pedometer (from `.symlinks/plugins/pedometer/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
@@ -1039,8 +1040,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/map_launcher/ios"
   open_settings:
     :path: ".symlinks/plugins/open_settings/ios"
-  path_provider_ios:
-    :path: ".symlinks/plugins/path_provider_ios/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/ios"
   pedometer:
     :path: ".symlinks/plugins/pedometer/ios"
   permission_handler_apple:
@@ -1118,7 +1119,7 @@ SPEC CHECKSUMS:
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   open_settings: 9628e736cb2738fd1dc84159565755c214478158
-  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
+  path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   pedometer: 381969883680ade42559782cc41a3bbd453d8234
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
@@ -1131,6 +1132,6 @@ SPEC CHECKSUMS:
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   ZIPFoundation: ae5b4b813d216d3bf0a148773267fff14bd51d37
 
-PODFILE CHECKSUM: 011af008145fd50a9b6dc1d5969674023f7a5893
+PODFILE CHECKSUM: c1382e70031924f50fc2825620b253158d9948a4
 
 COCOAPODS: 1.12.0

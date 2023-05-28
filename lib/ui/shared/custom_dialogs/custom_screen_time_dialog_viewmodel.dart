@@ -1,7 +1,8 @@
+import 'package:stacked/stacked.dart';
+import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_view.form.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/credits_system.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/custom_screen_time_dialog_view.form.dart';
-import 'package:stacked/stacked.dart';
 
 class CustomScreenTimeDialogViewModel extends FormViewModel {
   final log = getLogger("CustomScreenTimeDialogViewModel");

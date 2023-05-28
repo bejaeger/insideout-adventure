@@ -1,7 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/credits_system.dart';
-import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CreditConversionInfoDialog extends StatelessWidget {

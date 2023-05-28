@@ -97,7 +97,9 @@ class FeedbackViewModel extends FormViewModel with NavigationMixin {
           feedback: feedback,
           currentFeedbackDocumentKey: generalFeedback
               ? generalFeedbackDocumentKey
-              : feedbackCampaignInfo?.currentCampaign);
+              : feedbackCampaignInfo?.currentCampaign,
+              uid: _userService.currentUser.uid,
+              email: _userService.currentUser.email);
     } catch (e) {
       log.e("Error uploading feedback. Error: $e");
       await _dialogService.showDialog(

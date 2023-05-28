@@ -48,8 +48,8 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
           floatingActionButton: BottomFloatingActionButtons(
               // titleMain: "Add Credits",
               // onTapMain: model.navigateToAddFundsView,
-              leadingMain:
-                  Icon(Icons.switch_account_outlined, color: Colors.white),
+              leadingMain: Image.asset(kSwitchAccountIcon,
+                  height: 22, color: Colors.white),
               titleMain: "Switch area",
               onTapMain: model.handleSwitchToWardEvent),
           floatingActionButtonLocation:
@@ -57,7 +57,9 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
           body: RefreshIndicator(
             onRefresh: model.refresh,
             child: model.isBusy
-                ? AFKProgressIndicator()
+                ? model.removedUser
+                    ? Container()
+                    : AFKProgressIndicator()
                 : ListView(
                     children: [
                       verticalSpaceMedium,
@@ -77,7 +79,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                   children: [
                                     verticalSpaceMedium,
                                     SummaryStatsDisplay(
-                                      title: "Current credits",
+                                      title: "Credits",
                                       icon: Image.asset(kInsideOutLogoPath,
                                           color: kcPrimaryColor, height: 24),
                                       stats: model.stats.creditsBalance
@@ -126,7 +128,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                   children: [
                                     verticalSpaceMedium,
                                     SummaryStatsDisplay(
-                                      title: "Equiv. screen time",
+                                      title: "Screen time",
                                       icon: Image.asset(kScreenTimeIcon,
                                           height: 26, color: kcScreenTimeBlue),
                                       unit: "min",
@@ -150,7 +152,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                                       color: kcScreenTimeBlue),
                                                   title: "Show",
                                                   onTap: () => model
-                                                      .navToSelectScreenTimeView(
+                                                      .navigateToSelectScreenTimeGuardianView(
                                                           wardId: widget.uid),
                                                   color: kcScreenTimeBlue)
                                               : InsideOutButton.outline(
@@ -158,8 +160,8 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                                       Icons.play_arrow_rounded,
                                                       color: kcPrimaryColor),
                                                   title: "Set timer",
-                                                  onTap: () => model
-                                                      .navToSelectScreenTimeView(
+                                                  onTap: () =>
+                                                      model.navigateToSelectScreenTimeGuardianView(
                                                           wardId: widget.uid),
                                                   color: null),
                                           if (model.getScreenTimeSession(

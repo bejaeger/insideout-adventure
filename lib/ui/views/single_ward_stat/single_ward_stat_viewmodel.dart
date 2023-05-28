@@ -36,6 +36,8 @@ class SingleWardStatViewModel extends SwitchAccountsViewModel {
           ? totalWardActivityLastDays.toString()
           : "0";
 
+  bool removedUser = false;
+
   String wardNameFromUid(String uid) {
     return userService.wardNameFromUid(uid);
   }
@@ -64,6 +66,7 @@ class SingleWardStatViewModel extends SwitchAccountsViewModel {
         } catch (e) {
           log.e("$e");
         }
+        removedUser = true;
         await showSuccessBottomSheet();
         replaceWithHomeView();
       }
@@ -144,6 +147,22 @@ class SingleWardStatViewModel extends SwitchAccountsViewModel {
         variant: DialogType.WardStatCard,
         data: stats,
         barrierDismissible: true);
+  }
+
+  Future navigateToSelectScreenTimeGuardianView(
+      {required String wardId}) async {
+    final session = screenTimeService.getActiveScreenTimeInMemory(uid: wardId);
+    if (session != null) {
+      navToActiveScreenTimeView(session: session);
+    } else {
+      await navigationService.navigateTo(Routes.selectScreenTimeGuardianView,
+          arguments: SelectScreenTimeGuardianViewArguments(
+              wardId: wardId,
+              senderInfo: PublicUserInfo(
+                  name: currentUser.fullName, uid: currentUser.uid),
+              recipientInfo: PublicUserInfo(
+                  name: ward!.fullName, uid: ward!.uid)));
+    }
   }
 
   Future navigateToAddFundsView() async {

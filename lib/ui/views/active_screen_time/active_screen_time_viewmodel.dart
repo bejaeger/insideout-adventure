@@ -78,12 +78,14 @@ class ActiveScreenTimeViewModel extends BaseModel {
     if (screenTimeLeft == null) return;
     dynamic result;
     if (screenTimeLeft! > 0) {
+      String note = secondsToMinuteTime(screenTimeLeft) == "1" ? "is" : "are";
+      String description =
+          "There $note ${secondsToMinuteTime(screenTimeLeft)}in left.";
       result = await dialogService.showDialog(
           buttonTitle: "YES",
           cancelTitle: "NO",
           title: "Cancel Active Screen Time?",
-          description:
-              "There are " + secondsToMinuteTime(screenTimeLeft) + "in left.");
+          description: description);
     }
     setBusy(true);
     if (result == null || result?.confirmed == true) {
@@ -106,9 +108,10 @@ class ActiveScreenTimeViewModel extends BaseModel {
       snackbarService.showSnackbar(
         title: snackBarTitle,
         message: snackBarMsg,
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 3),
       );
     }
+    await Future.delayed(Duration(milliseconds: 1000));
     setBusy(false);
   }
 

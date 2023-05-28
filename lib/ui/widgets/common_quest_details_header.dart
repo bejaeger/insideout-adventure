@@ -60,7 +60,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.only(top: 12.0, left: 18.0, right: 12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -105,9 +105,6 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                           child: Text(
                             quest?.name ?? "QUEST",
                             style: heading3Style.copyWith(
-                                // decoration: finishedQuest != null
-                                //     ? TextDecoration.lineThrough
-                                //     : null,
                                 overflow: TextOverflow.ellipsis),
                             maxLines: 2,
                           ),

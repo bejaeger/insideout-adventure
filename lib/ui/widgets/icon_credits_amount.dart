@@ -9,6 +9,7 @@ class CreditsAmount extends StatelessWidget {
   final Color color;
   final Color textColor;
   final double height;
+  final double? spacing;
   const CreditsAmount(
       {Key? key,
       required this.amount,
@@ -16,6 +17,7 @@ class CreditsAmount extends StatelessWidget {
       this.textColor = kcBlackHeadlineColor,
       this.height = 25,
       this.style,
+      this.spacing,
       this.amountString})
       : super(key: key);
 
@@ -27,15 +29,19 @@ class CreditsAmount extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(kInsideOutLogoPath, color: color, height: height),
-          SizedBox(width: 4.0),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2),
+            child:
+                Image.asset(kInsideOutLogoPath, color: color, height: height),
+          ),
+          SizedBox(width: spacing ?? 4.0),
           if (style != null)
             Text(amountString ?? amount.toStringAsFixed(0), style: style),
           if (style == null)
             InsideOutText(
               text: amountString ?? amount.toStringAsFixed(0),
               style: heading3Style.copyWith(
-                  color: textColor, fontSize: height * 1.05),
+                  color: textColor, fontSize: height * 1.00),
             ),
         ],
       ),

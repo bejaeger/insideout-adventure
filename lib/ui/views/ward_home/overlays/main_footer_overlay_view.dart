@@ -23,6 +23,7 @@ class MainFooterOverlayView extends StatelessWidget {
         model.listenToLayout();
       },
       builder: (context, model, child) => Container(
+        alignment: Alignment.bottomCenter,
         child: FadingWidget(
           show: show,
           child: Stack(
@@ -61,57 +62,7 @@ class MainFooterOverlayView extends StatelessWidget {
                           )),
                     ),
                   ),
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 250),
-                    width: model.isMenuOpen ? screenWidth(context) : 130,
-                    curve: Curves.linear,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: CircularMenu(
-                        toggleButtonOnPressed: () {
-                          model.isMenuOpen = !model.isMenuOpen;
-                          model.notifyListeners();
-                        },
-                        toggleButtonBoxShadow: mainFooterBoxShadow(),
-                        alignment: Alignment.bottomCenter,
-                        startingAngleInRadian: 1.3 * 3.14,
-                        endingAngleInRadian: 1.7 * 3.14,
-                        toggleButtonColor: kcCultured,
-                        toggleButtonIconColor: kcMediumGrey,
-                        toggleButtonMargin: 0,
-                        toggleButtonSize: 35,
-                        radius: model.isSuperUser ? 120 : 90,
-                        items: [
-                          CircularMenuItem(
-                            icon: Icons.settings,
-                            color: Colors.grey[600],
-                            margin: 0,
-                            boxShadow: [],
-                            onTap: () {
-                              model.showWardSettingsDialog();
-                            },
-                          ),
-                          CircularMenuItem(
-                            icon: Icons.logout,
-                            color: Colors.redAccent.shade700.withOpacity(0.9),
-                            margin: 0,
-                            boxShadow: [],
-                            onTap: model.handleLogoutEvent,
-                            //model.logout();
-                          ),
-                          if (model.isSuperUser)
-                            CircularMenuItem(
-                              icon: Icons.person,
-                              color: Colors.orange.shade700.withOpacity(0.9),
-                              margin: 0,
-                              boxShadow: [],
-                              onTap: model.openSuperUserSettingsDialog,
-                              //model.logout();
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  Container(width: 100),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(right: 15, bottom: 20),

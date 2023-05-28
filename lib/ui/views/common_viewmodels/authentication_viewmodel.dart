@@ -86,7 +86,12 @@ abstract class AuthenticationViewModel extends FormViewModel
     } else {
       log.e(
           "User could not be logged in or signed-up, error: ${result.errorMessage}");
-      setValidationMessage(result.errorMessage);
+      // HACK!
+      // if 'canceled' in message it means the user dismissed the pop-up
+      // For iOS, the message includes `ErrorCode.canceled`
+      if (!result.errorMessage!.contains('canceled')) {
+        setValidationMessage(result.errorMessage);
+      }
     }
   }
 

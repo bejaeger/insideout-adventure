@@ -99,9 +99,9 @@ class GuardianMapViewModel extends QuestViewModel {
     final res = await dialogService.showDialog(
         title: "Create quest",
         description: "You can create a quest starting here",
-        cancelTitle: "Nope",
+        cancelTitle: "NO",
         barrierDismissible: true,
-        buttonTitle: "Create quest");
+        buttonTitle: "CREATE QUEST");
     if (res?.confirmed == true) {
       await navigationService.navigateTo(Routes.createQuestView,
           arguments:

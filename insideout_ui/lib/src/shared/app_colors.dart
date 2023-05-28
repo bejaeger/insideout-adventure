@@ -13,6 +13,7 @@ const Color kcGreyTextColor = Color.fromARGB(237, 66, 66, 66);
 // text
 const Color kcWhiteTextColor = Color.fromARGB(255, 250, 250, 250);
 const Color kcBlackHeadlineColor = Colors.black;
+const Color kcBlackOnBackground = Color.fromARGB(255, 72, 71, 54);
 const Color kcTextFieldBackground = Color(0xFFEEEEEE);
 
 const Color kcShadowColor = Colors.black12;

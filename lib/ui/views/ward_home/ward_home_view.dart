@@ -5,7 +5,7 @@ import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_lis
 import 'package:afkcredits/ui/views/quests_overview/quest_list_overlay/quest_list_overlay_viewmodel.dart';
 import 'package:afkcredits/ui/views/ward_account/ward_account_view.dart';
 import 'package:afkcredits/ui/views/ward_home/overlays/main_footer_overlay_view.dart';
-import 'package:afkcredits/ui/views/ward_home/overlays/main_header_overlay.dart';
+import 'package:afkcredits/ui/views/ward_home/overlays/main_header_overlay_view.dart';
 import 'package:afkcredits/ui/views/ward_home/overlays/quest_details_overlay_view.dart';
 import 'package:afkcredits/ui/views/ward_home/overlays/switch_to_guardian_overlay.dart';
 import 'package:afkcredits/ui/views/ward_home/ward_home_viewmodel.dart';
@@ -93,18 +93,9 @@ class _WardHomeViewState extends State<WardHomeView> {
                     loadingQuests: model.showQuestLoadingScreen,
                   ),
 
-                  // TODO: Can also make MainHeader a view!
                   if (!model.isBusy)
-                    MainHeaderOverlay(
-                      percentageOfNextLevel: model.percentageOfNextLevel,
-                      currentLevel: model.currentLevel(),
-                      onAvatarPressed: model.showWardAccountOverlay,
+                    MainHeaderOverlayView(
                       show: showMainWidgets,
-                      onDevFeaturePressed: model.isDevFlavor
-                          ? model.openSuperUserSettingsDialog
-                          : null, // model.showNotImplementedSnackbar,
-                      onCreditsPressed: model.showCreditsOverlay,
-                      balance: model.currentUserStats.creditsBalance,
                       avatarIdx: model.avatarIdx,
                     ),
 
