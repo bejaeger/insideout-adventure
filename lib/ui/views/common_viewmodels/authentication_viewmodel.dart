@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
@@ -9,7 +10,7 @@ import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/local_secure_storage_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
-import 'package:afkcredits/services/users/afkcredits_authentication_result_service.dart';
+import 'package:afkcredits/services/users/insideout_authentication_result_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -32,7 +33,7 @@ abstract class AuthenticationViewModel extends FormViewModel
   Future saveData(AuthenticationMethod method, [UserRole? role]) async {
     if (role != null && this.role == null) this.role = role;
     log.i("Trying to authenticate user with method $method and role $role ");
-    final AFKCreditsAuthenticationResultService result = await (runBusyFuture(
+    final InsideOutAuthenticationResultService result = await (runBusyFuture(
         runAuthentication(method, this.role),
         throwException: true));
 
@@ -66,7 +67,7 @@ abstract class AuthenticationViewModel extends FormViewModel
             "User logged in with third-party provider but no account has been created yet. Trying to create account");
         setBusy(true);
         await _userService.createUserAccountFromFirebaseUser(
-            role: this.role ?? UserRole.sponsor, authMethod: method);
+            role: this.role ?? UserRole.guardian, authMethod: method);
         await _userService.syncUserAccount(
             uid: result.uid, fromLocalStorage: result.fromLocalStorage);
         setBusy(false);
@@ -98,14 +99,14 @@ abstract class AuthenticationViewModel extends FormViewModel
     final role = this.role ?? _userService.getUserRole;
     log.i("User logged in with role $role");
 
-    if (role == UserRole.explorer || role == UserRole.superUser) {
-      _navigationService.replaceWith(Routes.explorerHomeView);
+    if (role == UserRole.ward || role == UserRole.superUser) {
+      _navigationService.replaceWith(Routes.wardHomeView);
     } else {
       final onboarded = await _localStorageService.getFromDisk(
           key: kLocalStorageSawOnBoardingKey);
       if (onboarded == _userService.currentUser.uid) {
         await _navigationService.replaceWith(
-          Routes.parentHomeView,
+          Routes.guardianHomeView,
         );
       } else {
         await _navigationService.replaceWith(
@@ -118,7 +119,7 @@ abstract class AuthenticationViewModel extends FormViewModel
     }
   }
 
-  Future<AFKCreditsAuthenticationResultService> runAuthentication(
+  Future<InsideOutAuthenticationResultService> runAuthentication(
       AuthenticationMethod method,
       [UserRole? role]);
 }

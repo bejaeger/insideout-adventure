@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
@@ -9,8 +10,8 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:stacked_services/stacked_services.dart';
 
 mixin NavigationMixin {
   final NavigationService _navigationService = locator<NavigationService>();
@@ -20,12 +21,12 @@ mixin NavigationMixin {
   final LayoutService _layoutService = locator<LayoutService>();
   final ScreenTimeService _screenTimeService = locator<ScreenTimeService>();
 
-  void navToExplorerCreateAccount({required UserRole role}) {
+  void navToWardCreateAccount({required UserRole role}) {
     _navigationService.replaceWith(Routes.createAccountView,
         arguments: CreateAccountViewArguments(role: role));
   }
 
-  void navToSponsorCreateAccount({required UserRole role}) {
+  void navToGuardianCreateAccount({required UserRole role}) {
     _navigationService.replaceWith(Routes.createAccountView,
         arguments: CreateAccountViewArguments(role: role));
   }
@@ -51,22 +52,22 @@ mixin NavigationMixin {
     _navigationService.navigateTo(Routes.feedbackView);
   }
 
-  Future replaceWithExplorerHomeView(
+  Future replaceWithWardHomeView(
       {bool showBewareDialog = false,
       bool showNumberQuestsDialog = false,
       ScreenTimeSession? screenTimeSession}) async {
-    await _navigationService.replaceWith(Routes.explorerHomeView,
-        arguments: ExplorerHomeViewArguments(
+    await _navigationService.replaceWith(Routes.wardHomeView,
+        arguments: WardHomeViewArguments(
             showBewareDialog: showBewareDialog,
             showNumberQuestsDialog: showNumberQuestsDialog,
             screenTimeSession: screenTimeSession));
   }
 
-  Future replaceWithParentHomeView(
+  Future replaceWithGuardianHomeView(
       {ScreenTimeSession? screenTimeSession}) async {
-    await _navigationService.replaceWith(Routes.parentHomeView,
+    await _navigationService.replaceWith(Routes.guardianHomeView,
         arguments:
-            ParentHomeViewArguments(screenTimeSession: screenTimeSession));
+            GuardianHomeViewArguments(screenTimeSession: screenTimeSession));
   }
 
   void popView() {
@@ -81,8 +82,8 @@ mixin NavigationMixin {
     _navigationService.back(result: result);
   }
 
-  void navToParentMapView() {
-    _navigationService.navigateTo(Routes.parentMapView);
+  void navToGuardianMapView() {
+    _navigationService.navigateTo(Routes.guardianMapView);
   }
 
   void navToCreateQuest({bool fromMap = false}) {
@@ -91,7 +92,7 @@ mixin NavigationMixin {
   }
 
   Future popUntilMapView() async {
-    await _navigationService.clearTillFirstAndShow(Routes.parentMapView);
+    await _navigationService.clearTillFirstAndShow(Routes.guardianMapView);
   }
 
   void navBackToPreviousView() {
@@ -109,8 +110,8 @@ mixin NavigationMixin {
     _layoutService.setIsShowingQuestList(true);
   }
 
-  void showExplorerAccountOverlay() {
-    _layoutService.setIsShowingExplorerAccount(true);
+  void showWardAccountOverlay() {
+    _layoutService.setIsShowingWardAccount(true);
   }
 
   void showCreditsOverlay() {
@@ -125,8 +126,8 @@ mixin NavigationMixin {
     _layoutService.setIsShowingCreditsOverlay(false);
   }
 
-  void removeExplorerAccountOverlay() {
-    _layoutService.setIsShowingExplorerAccount(false);
+  void removeWardAccountOverlay() {
+    _layoutService.setIsShowingWardAccount(false);
   }
 
   void maybeRemoveQuestListOverlay() {
@@ -135,20 +136,20 @@ mixin NavigationMixin {
     }
   }
 
-  void maybeRemoveExplorerAccountOverlay() {
-    if (_layoutService.isShowingExplorerAccount) {
-      _layoutService.setIsShowingExplorerAccount(false);
+  void maybeRemoveWardAccountOverlay() {
+    if (_layoutService.isShowingWardAccount) {
+      _layoutService.setIsShowingWardAccount(false);
     }
   }
 
-  void navToSingleChildView({required String uid}) async {
-    await _navigationService.navigateTo(Routes.singleChildStatView,
-        arguments: SingleChildStatViewArguments(uid: uid));
+  void navToSingleWardView({required String uid}) async {
+    await _navigationService.navigateTo(Routes.singleWardStatView,
+        arguments: SingleWardStatViewArguments(uid: uid));
   }
 
-  void replaceWithSingleChildView({required String uid}) async {
-    await _navigationService.replaceWith(Routes.singleChildStatView,
-        arguments: SingleChildStatViewArguments(uid: uid));
+  void replaceWithSingleWardView({required String uid}) async {
+    await _navigationService.replaceWith(Routes.singleWardStatView,
+        arguments: SingleWardStatViewArguments(uid: uid));
   }
 
   Future navToArObjectView(bool isCoins) async {
@@ -163,20 +164,19 @@ mixin NavigationMixin {
   }
 
   Future navToSelectScreenTimeView(
-      {String? childId, bool isParentAccount = true}) async {
-    final session =
-        _screenTimeService.getActiveScreenTimeInMemory(uid: childId);
+      {String? wardId, bool isGuardianAccount = true}) async {
+    final session = _screenTimeService.getActiveScreenTimeInMemory(uid: wardId);
     if (session != null) {
       navToActiveScreenTimeView(session: session);
     } else {
       await _navigationService.navigateTo(Routes.selectScreenTimeView,
           arguments: SelectScreenTimeViewArguments(
-              childId: isParentAccount ? childId : null));
+              wardId: isGuardianAccount ? wardId : null));
     }
   }
 
-  Future navToCreateChildAccount() async {
-    await _navigationService.navigateTo(Routes.createExplorerView);
+  Future navToCreateWardAccount() async {
+    await _navigationService.navigateTo(Routes.createWardView);
   }
 
   Future navToActiveScreenTimeView({required ScreenTimeSession session}) async {

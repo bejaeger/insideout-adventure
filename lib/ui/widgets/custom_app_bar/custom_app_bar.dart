@@ -3,10 +3,11 @@ import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
+
 import '../../../constants/constants.dart';
 
 // ignore: must_be_immutable

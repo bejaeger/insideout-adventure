@@ -1,15 +1,14 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
+import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/select_value.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
-
-import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
 
 @FormView(fields: [
   FormTextField(name: 'amount'),
@@ -49,7 +48,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
             equivalentValueWidget:
                 _screenTimeSummaryStats(model.equivalentValue),
             ctaButton: _transferCreditsButton(
-                onTap: model.showBottomSheetAndProcessPayment,
+                onTap: model.showBottomSheetAndProcessTransfer,
                 enabled: model.canTransferCredits()),
           ),
         ),
@@ -73,7 +72,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
       style: heading3Style,
       leading: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Image.asset(kAFKCreditsLogoPath, height: 10),
+        child: Image.asset(kInsideOutLogoPath, height: 10),
       ),
       autofocus: true,
       keyboardType: TextInputType.number,

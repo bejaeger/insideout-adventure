@@ -1,10 +1,9 @@
-import 'package:afkcredits/app/app.logger.dart';
-import 'package:afkcredits/ui/widgets/animations/confetti_from_top.dart';
-import 'package:insideout_ui/insideout_ui.dart';
-import 'package:confetti/confetti.dart';
-import 'package:flutter/material.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'dart:math';
+
+import 'package:afkcredits/app/app.logger.dart';
+import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class CollectedMarkerDialog extends StatelessWidget {
   final DialogRequest request;

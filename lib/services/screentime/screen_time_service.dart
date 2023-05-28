@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
@@ -18,14 +19,13 @@ class ScreenTimeService {
 
   //? State synced with firestore!
   // quest history is added to user service (NOT IDEAL! cause we have a quest service)
-  // map of explorerIds and screen time sessions (list with 1 entry!)
-  Map<String, List<ScreenTimeSession>> supportedExplorerScreenTimeSessions = {};
-  // map of explorerIds with screen time session, filled from firestore
-  Map<String, ScreenTimeSession> supportedExplorerScreenTimeSessionsActive = {};
+  // map of wardIds and screen time sessions (list with 1 entry!)
+  Map<String, List<ScreenTimeSession>> supportedWardScreenTimeSessions = {};
+  // map of wardIds with screen time session, filled from firestore
+  Map<String, ScreenTimeSession> supportedWardScreenTimeSessionsActive = {};
 
-  // when child asks for screen time, this map will be filled
-  Map<String, ScreenTimeSession> supportedExplorerScreenTimeSessionsRequested =
-      {};
+  // when ward asks for screen time, this map will be filled
+  Map<String, ScreenTimeSession> supportedWardScreenTimeSessionsRequested = {};
 
   // ? State synced with local app!
   // map of uid and screen time that are over and we want to show
@@ -195,7 +195,7 @@ class ScreenTimeService {
     final currentSession = session.copyWith(
       status: ScreenTimeSessionStatus.completed,
       minutesUsed: session.minutes,
-      afkCreditsUsed: session.afkCredits,
+      creditsUsed: session.credits,
     );
 
     // this will make the UI react to the finish event cause now the status is complete!
@@ -210,7 +210,7 @@ class ScreenTimeService {
 
     await _firestoreApi.updateStatsAfterScreenTimeFinished(
       session: currentSession,
-      deltaCredits: -currentSession.afkCredits,
+      deltaCredits: -currentSession.credits,
       deltaScreenTime: currentSession.minutes,
     );
 
@@ -231,16 +231,16 @@ class ScreenTimeService {
       int minutesUsed = getScreenTimeDurationInMinutes(session: session);
       int secondsUsed = getScreenTimeDurationInSeconds(session: session);
       double fraction = secondsUsed / (session.minutes * 60);
-      num afkCreditsUsed = (fraction * session.afkCredits).round();
+      num creditsUsed = (fraction * session.credits).round();
       session = session.copyWith(
         status: ScreenTimeSessionStatus.cancelled,
-        afkCreditsUsed: afkCreditsUsed,
+        creditsUsed: creditsUsed,
         minutesUsed: minutesUsed,
       );
       screenTimeActiveSubject[session.uid]?.add(session);
       await _firestoreApi.updateStatsAfterScreenTimeFinished(
         session: session,
-        deltaCredits: -afkCreditsUsed,
+        deltaCredits: -creditsUsed,
         deltaScreenTime: minutesUsed,
       );
       returnVal = true;
@@ -277,16 +277,16 @@ class ScreenTimeService {
     }
   }
 
-  // this listener is meant for the parent_home_view and the explorer_home_view
+  // this listener is meant for the guardian_home_view and the ward_home_view
   // So whenever these views get disposed, we should cancel the screenTimeSubjectSubscription
   // so it starts again here!
   Future listenToPotentialScreenTimes(
       {required void Function() callback}) async {
     log.v("Start listening to the screen times in memory (if there are any)");
     Completer<void> completer = Completer();
-    int l = supportedExplorerScreenTimeSessionsActive.length;
+    int l = supportedWardScreenTimeSessionsActive.length;
     int counter = 0;
-    if (supportedExplorerScreenTimeSessionsActive.isEmpty) {
+    if (supportedWardScreenTimeSessionsActive.isEmpty) {
       if (!completer.isCompleted) {
         completer.complete();
         return completer.future;
@@ -294,7 +294,7 @@ class ScreenTimeService {
     }
 
     for (ScreenTimeSession session
-        in supportedExplorerScreenTimeSessionsActive.values) {
+        in supportedWardScreenTimeSessionsActive.values) {
       await continueOrBookkeepScreenTimeSessionOnStartup(
         session: session,
         callback: () {},
@@ -347,7 +347,6 @@ class ScreenTimeService {
     }
     return null;
   }
-
 
   int getTimeLeftInSeconds({required ScreenTimeSession session}) {
     DateTime now = DateTime.now();
@@ -476,7 +475,7 @@ class ScreenTimeService {
   }
 
   void cancelOnlyActiveScreenTimeSubjectListenersAll() {
-    supportedExplorerScreenTimeSessionsActive.forEach((key, session) {
+    supportedWardScreenTimeSessionsActive.forEach((key, session) {
       screenTimeSubjectSubscription[key]?.cancel();
       screenTimeSubjectSubscription[key] = null;
     });
@@ -488,7 +487,7 @@ class ScreenTimeService {
     screenTimeActiveSubject[uid]?.close();
     screenTimeActiveSubject.remove(uid);
 
-    supportedExplorerScreenTimeSessionsActive.remove(uid);
+    supportedWardScreenTimeSessionsActive.remove(uid);
 
     screenTimeTimer[uid]?.cancel();
     screenTimeTimer.remove(uid);

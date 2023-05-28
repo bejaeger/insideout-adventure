@@ -6,8 +6,8 @@ import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/ui/widgets/info_container.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
 import 'package:afkcredits/ui/widgets/quest_type_tag.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class CommonQuestDetailsHeader extends StatelessWidget {
   final bool hasActiveQuest;
@@ -17,7 +17,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
   final Quest? quest;
   final ActivatedQuest? finishedQuest;
   final bool completed;
-  final bool isParentAccount;
+  final bool isGuardianAccount;
   const CommonQuestDetailsHeader({
     Key? key,
     required this.quest,
@@ -27,7 +27,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
     this.finishedQuest,
     this.completed = false,
     this.hasActiveQuestToBeStarted = false,
-    required this.isParentAccount,
+    required this.isGuardianAccount,
   }) : super(key: key);
 
   @override
@@ -38,7 +38,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
         IgnorePointer(
           ignoring: true,
           child: Container(
-            // openSuperUserSettingsDialog only used in explorer view!
+            // openSuperUserSettingsDialog only used in ward view!
             height: openSuperUserSettingsDialog != null ? 400 : 300,
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -60,8 +60,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 12.0, left: 18.0, right: 12.0),
+              padding: const EdgeInsets.only(top: 12.0, left: 18.0, right: 12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -95,7 +94,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CreditsAmount(
-                          amount: quest?.afkCredits ?? -1,
+                          amount: quest?.credits ?? -1,
                           height: 24,
                           textColor: kcPrimaryColor,
                         ),
@@ -106,9 +105,6 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                           child: Text(
                             quest?.name ?? "QUEST",
                             style: heading3Style.copyWith(
-                                // decoration: finishedQuest != null
-                                //     ? TextDecoration.lineThrough
-                                //     : null,
                                 overflow: TextOverflow.ellipsis),
                             maxLines: 2,
                           ),
@@ -140,7 +136,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                     verticalSpaceSmall,
                   if (quest != null &&
                       !completed &&
-                      !isParentAccount &&
+                      !isGuardianAccount &&
                       !hasActiveQuest &&
                       finishedQuest == null)
                     InfoContainer(
@@ -151,11 +147,11 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                             TextSpan(text: "Earn "),
                             WidgetSpan(
                               alignment: PlaceholderAlignment.middle,
-                              child: Image.asset(kAFKCreditsLogoPath,
+                              child: Image.asset(kInsideOutLogoPath,
                                   color: kcPrimaryColor, height: 18),
                             ),
                             TextSpan(
-                              text: " " + quest!.afkCredits.toStringAsFixed(0),
+                              text: " " + quest!.credits.toStringAsFixed(0),
                               style: TextStyle(
                                   color: kcPrimaryColor,
                                   fontWeight: FontWeight.w500),
@@ -179,7 +175,7 @@ class CommonQuestDetailsHeader extends StatelessWidget {
                     ),
                   if (quest != null &&
                       quest!.type == QuestType.TreasureLocationSearch &&
-                      isParentAccount)
+                      isGuardianAccount)
                     InfoContainer(
                         child: InsideOutText.body(
                             "Only the start marker is visible to children.")),

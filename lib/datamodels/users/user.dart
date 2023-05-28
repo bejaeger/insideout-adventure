@@ -2,8 +2,8 @@ import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/parental_verification_status.dart';
 import 'package:afkcredits/enums/user_role.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:afkcredits/exceptions/datamodel_exception.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
@@ -26,8 +26,8 @@ class User with _$User {
     required String uid,
     required String fullName,
     String? email,
-    required List<String> sponsorIds,
-    required List<String> explorerIds,
+    required List<String> guardianIds,
+    required List<String> wardIds,
     required UserRole role,
     UserSettings? userSettings,
     AuthenticationMethod? authMethod,
@@ -59,8 +59,8 @@ User getEmptyUser() {
     email: "",
     role: UserRole.unassigned,
     authMethod: AuthenticationMethod.dummy,
-    sponsorIds: [],
-    explorerIds: [],
+    guardianIds: [],
+    wardIds: [],
     newUser: false,
     userSettings: UserSettings(),
     parentalVerificationStatus: ParentalVerificationStatus.notInitiated);

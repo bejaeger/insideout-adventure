@@ -1,11 +1,11 @@
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class SelectUserRoleLayout extends StatelessWidget {
   final void Function() onBackPressed;
-  final void Function() onExplorerPressed;
-  final void Function() onSponsorPressed;
+  final void Function() onWardPressed;
+  final void Function() onGuardianPressed;
   final void Function()? onSuperUserPressed;
   final void Function()? onAdminMasterPressed;
   final void Function()? onAdminPressed;
@@ -15,8 +15,8 @@ class SelectUserRoleLayout extends StatelessWidget {
   const SelectUserRoleLayout(
       {Key? key,
       required this.onBackPressed,
-      required this.onExplorerPressed,
-      required this.onSponsorPressed,
+      required this.onWardPressed,
+      required this.onGuardianPressed,
       this.isBusy = false,
       this.onSuperUserPressed,
       this.onAdminMasterPressed,
@@ -46,14 +46,14 @@ class SelectUserRoleLayout extends StatelessWidget {
             verticalSpaceLarge,
             verticalSpaceSmall,
             InsideOutButton(
-              onTap: onExplorerPressed,
+              onTap: onWardPressed,
               title: "I am a child",
               height: 80,
               disabled: true,
             ),
             verticalSpaceLarge,
             InsideOutButton(
-              onTap: onSponsorPressed,
+              onTap: onGuardianPressed,
               title: "I am a parent",
               height: 80,
             ),

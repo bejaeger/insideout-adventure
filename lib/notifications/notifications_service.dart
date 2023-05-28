@@ -1,5 +1,6 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
@@ -7,8 +8,8 @@ import 'package:afkcredits/services/local_secure_storage_service.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
 import '../utils/utilities.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 class NotificationsService {
   final log = getLogger("NotificationsService");

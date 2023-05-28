@@ -25,7 +25,7 @@ mixin _$ActivatedQuest {
   List<bool> get markersCollected => throw _privateConstructorUsedError;
   QuestStatus get status => throw _privateConstructorUsedError;
   List<String>? get uids => throw _privateConstructorUsedError;
-  num? get afkCreditsEarned => throw _privateConstructorUsedError;
+  num? get creditsEarned => throw _privateConstructorUsedError;
   int get timeElapsed => throw _privateConstructorUsedError; // in seconds!
   dynamic get createdAt => throw _privateConstructorUsedError;
   double? get lastCheckLat =>
@@ -53,7 +53,7 @@ abstract class $ActivatedQuestCopyWith<$Res> {
       List<bool> markersCollected,
       QuestStatus status,
       List<String>? uids,
-      num? afkCreditsEarned,
+      num? creditsEarned,
       int timeElapsed,
       dynamic createdAt,
       double? lastCheckLat,
@@ -78,7 +78,7 @@ class _$ActivatedQuestCopyWithImpl<$Res>
     Object? markersCollected = freezed,
     Object? status = freezed,
     Object? uids = freezed,
-    Object? afkCreditsEarned = freezed,
+    Object? creditsEarned = freezed,
     Object? timeElapsed = freezed,
     Object? createdAt = freezed,
     Object? lastCheckLat = freezed,
@@ -107,9 +107,9 @@ class _$ActivatedQuestCopyWithImpl<$Res>
           ? _value.uids
           : uids // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      afkCreditsEarned: afkCreditsEarned == freezed
-          ? _value.afkCreditsEarned
-          : afkCreditsEarned // ignore: cast_nullable_to_non_nullable
+      creditsEarned: creditsEarned == freezed
+          ? _value.creditsEarned
+          : creditsEarned // ignore: cast_nullable_to_non_nullable
               as num?,
       timeElapsed: timeElapsed == freezed
           ? _value.timeElapsed
@@ -152,7 +152,7 @@ abstract class _$$_ActivatedQuestCopyWith<$Res>
       List<bool> markersCollected,
       QuestStatus status,
       List<String>? uids,
-      num? afkCreditsEarned,
+      num? creditsEarned,
       int timeElapsed,
       dynamic createdAt,
       double? lastCheckLat,
@@ -179,7 +179,7 @@ class __$$_ActivatedQuestCopyWithImpl<$Res>
     Object? markersCollected = freezed,
     Object? status = freezed,
     Object? uids = freezed,
-    Object? afkCreditsEarned = freezed,
+    Object? creditsEarned = freezed,
     Object? timeElapsed = freezed,
     Object? createdAt = freezed,
     Object? lastCheckLat = freezed,
@@ -208,9 +208,9 @@ class __$$_ActivatedQuestCopyWithImpl<$Res>
           ? _value._uids
           : uids // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      afkCreditsEarned: afkCreditsEarned == freezed
-          ? _value.afkCreditsEarned
-          : afkCreditsEarned // ignore: cast_nullable_to_non_nullable
+      creditsEarned: creditsEarned == freezed
+          ? _value.creditsEarned
+          : creditsEarned // ignore: cast_nullable_to_non_nullable
               as num?,
       timeElapsed: timeElapsed == freezed
           ? _value.timeElapsed
@@ -250,7 +250,7 @@ class _$_ActivatedQuest implements _ActivatedQuest {
       required final List<bool> markersCollected,
       required this.status,
       final List<String>? uids,
-      this.afkCreditsEarned,
+      this.creditsEarned,
       required this.timeElapsed,
       this.createdAt = "",
       this.lastCheckLat,
@@ -286,7 +286,7 @@ class _$_ActivatedQuest implements _ActivatedQuest {
   }
 
   @override
-  final num? afkCreditsEarned;
+  final num? creditsEarned;
   @override
   final int timeElapsed;
 // in seconds!
@@ -307,7 +307,7 @@ class _$_ActivatedQuest implements _ActivatedQuest {
 
   @override
   String toString() {
-    return 'ActivatedQuest(id: $id, quest: $quest, markersCollected: $markersCollected, status: $status, uids: $uids, afkCreditsEarned: $afkCreditsEarned, timeElapsed: $timeElapsed, createdAt: $createdAt, lastCheckLat: $lastCheckLat, lastCheckLon: $lastCheckLon, currentDistanceInMeters: $currentDistanceInMeters, lastDistanceInMeters: $lastDistanceInMeters)';
+    return 'ActivatedQuest(id: $id, quest: $quest, markersCollected: $markersCollected, status: $status, uids: $uids, creditsEarned: $creditsEarned, timeElapsed: $timeElapsed, createdAt: $createdAt, lastCheckLat: $lastCheckLat, lastCheckLon: $lastCheckLon, currentDistanceInMeters: $currentDistanceInMeters, lastDistanceInMeters: $lastDistanceInMeters)';
   }
 
   @override
@@ -322,7 +322,7 @@ class _$_ActivatedQuest implements _ActivatedQuest {
             const DeepCollectionEquality().equals(other.status, status) &&
             const DeepCollectionEquality().equals(other._uids, _uids) &&
             const DeepCollectionEquality()
-                .equals(other.afkCreditsEarned, afkCreditsEarned) &&
+                .equals(other.creditsEarned, creditsEarned) &&
             const DeepCollectionEquality()
                 .equals(other.timeElapsed, timeElapsed) &&
             const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
@@ -345,7 +345,7 @@ class _$_ActivatedQuest implements _ActivatedQuest {
       const DeepCollectionEquality().hash(_markersCollected),
       const DeepCollectionEquality().hash(status),
       const DeepCollectionEquality().hash(_uids),
-      const DeepCollectionEquality().hash(afkCreditsEarned),
+      const DeepCollectionEquality().hash(creditsEarned),
       const DeepCollectionEquality().hash(timeElapsed),
       const DeepCollectionEquality().hash(createdAt),
       const DeepCollectionEquality().hash(lastCheckLat),
@@ -373,7 +373,7 @@ abstract class _ActivatedQuest implements ActivatedQuest {
       required final List<bool> markersCollected,
       required final QuestStatus status,
       final List<String>? uids,
-      final num? afkCreditsEarned,
+      final num? creditsEarned,
       required final int timeElapsed,
       final dynamic createdAt,
       final double? lastCheckLat,
@@ -395,7 +395,7 @@ abstract class _ActivatedQuest implements ActivatedQuest {
   @override
   List<String>? get uids;
   @override
-  num? get afkCreditsEarned;
+  num? get creditsEarned;
   @override
   int get timeElapsed;
   @override // in seconds!

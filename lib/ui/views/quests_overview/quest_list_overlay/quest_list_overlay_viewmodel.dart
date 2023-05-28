@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:afkcredits/exceptions/quest_service_exception.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
@@ -15,13 +16,13 @@ class QuestListOverlayViewModel extends QuestViewModel {
     }
   }
 
-  // !!! THE SAME FUNCTION EXISTS IN EXPLORER HOME VIEWMODEL!
+  // !!! THE SAME FUNCTION EXISTS IN WARD HOME VIEWMODEL!
   Future initializeQuests({bool? force}) async {
     setBusy(true);
     try {
       if (questService.sortedNearbyQuests == false || force == true) {
         await questService.loadNearbyQuests(
-            force: true, sponsorIds: currentUser.sponsorIds);
+            force: true, guardianIds: currentUser.guardianIds);
         await questService.sortNearbyQuests();
         questService.extractAllQuestTypes();
       }

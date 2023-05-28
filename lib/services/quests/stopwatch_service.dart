@@ -1,9 +1,10 @@
 // A wrapper around the stop watch package
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:afkcredits/services/common_services/pausable_service.dart';
+
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/services/common_services/pausable_service.dart';
+import 'package:flutter/material.dart';
 
 enum StopWatchMode { countUp, countDown }
 

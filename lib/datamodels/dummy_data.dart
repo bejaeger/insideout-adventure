@@ -4,9 +4,9 @@ import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 List<Quest> getDummyQuests() {
   return [
@@ -65,7 +65,7 @@ List<ScreenTimeSession> getDummyScreenTimes({required String uid}) {
         userName: "DummyName",
         minutes: 30,
         status: ScreenTimeSessionStatus.active,
-        afkCredits: 500),
+        credits: 500),
   ];
 }
 
@@ -76,7 +76,7 @@ Quest getDummyQuest1() {
     id: "D1qn76RJwqDlcbtcKaLm",
     name: "Grouse Grind",
     description: "Make it up the hill in less than 1 hour",
-    afkCredits: 100,
+    credits: 100,
     markers: [
       getDummyMarker1(),
       getDummyMarker2(),
@@ -100,7 +100,7 @@ Quest getDistanceEstimate200() {
     id: "sANrbvqSYZJX8IS1CCKL",
     name: "Distance Estimate 200m",
     description: "Estimate 200m",
-    afkCredits: 20,
+    credits: 20,
     markers: [],
     type: QuestType.DistanceEstimate,
     distanceToTravelInMeter: 200,
@@ -118,7 +118,7 @@ Quest getDistanceEstimate500() {
     id: "E46GBs5XcGwGHeSmCMSh",
     name: "Distance Estimate 500m",
     description: "Estimate 500m",
-    afkCredits: 20,
+    credits: 20,
     markers: [],
     type: QuestType.DistanceEstimate,
     distanceToTravelInMeter: 500,
@@ -136,7 +136,7 @@ Quest getDistanceEstimate1000() {
     id: "Sg9NFY1sReWmiL2t1Ks9",
     name: "Distance Estimate 1km",
     description: "Estimate 1km",
-    afkCredits: 20,
+    credits: 20,
     markers: [],
     type: QuestType.DistanceEstimate,
     distanceToTravelInMeter: 1000,
@@ -154,7 +154,7 @@ Quest getDistanceEstimate2000() {
     id: "kFMNafSAwBJA8DKLX275",
     name: "Distance Estimate 2km",
     description: "Estimate 2km",
-    afkCredits: 999999999,
+    credits: 999999999,
     markers: [],
     type: QuestType.DistanceEstimate,
     distanceToTravelInMeter: 2000,
@@ -171,8 +171,8 @@ Quest getDummyVibrationSearchQuest() {
   return Quest(
     id: "VibrationSearch",
     name: "Woodway Vibrations",
-    description: "Find the AFK Credits",
-    afkCredits: 10,
+    description: "Find the Credits",
+    credits: 10,
     markers: [
       woodwayInFrontMarker(),
       myRoomParkSiteMarker(),
@@ -193,8 +193,8 @@ Quest getDummyVibrationSearchQuestFreiburg() {
   return Quest(
     id: "BYC9JvJaz64vMmyuV2Cc",
     name: "Freiburg Location Search",
-    description: "Find the AFK Credits",
-    afkCredits: 10,
+    description: "Find the Credits",
+    credits: 10,
     markers: [
       freiburg1(),
       freiburg2(),
@@ -215,8 +215,8 @@ Quest streeth11th2ndVibration() {
   return Quest(
     id: "aeyLAC1r0OsnA0IBj6uT",
     name: "10th Street Fun!",
-    description: "Find the AFK Credits",
-    afkCredits: 10,
+    description: "Find the Credits",
+    credits: 10,
     markers: [street11th2nd(), street11th2ndEnd()],
     type: QuestType.TreasureLocationSearch,
     startMarker: street11th2nd(),
@@ -236,7 +236,7 @@ Quest heidachTrohpy() {
     name: "Finde den Schatz im Heidach",
     description:
         "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
-    afkCredits: 30,
+    credits: 30,
     markers: [heidach1(), heidach2()],
     type: QuestType.TreasureLocationSearch,
     startMarker: heidach1(),
@@ -256,7 +256,7 @@ Quest heidachTrohpy2() {
     name: "Finde den Heidach 2 Schatz",
     description:
         "Ein großer Schatz wurde im Heidach vergraben, kannst du ihn finden?",
-    afkCredits: 50,
+    credits: 50,
     markers: [heidach3(), heidach4()],
     type: QuestType.TreasureLocationSearch,
     startMarker: heidach3(),
@@ -275,7 +275,7 @@ Quest getDummyQuest2() {
     id: "QuestId02",
     name: "Angola Adventure",
     description: "Explore the coast of Angola",
-    afkCredits: 900,
+    credits: 900,
     markers: [
       getDummyMarker5(),
       getDummyMarker6(),
@@ -301,7 +301,7 @@ Quest getDummyQuest3() {
     name: "Fun at Brentwood",
     description:
         "Whether it's long street or high street...you'll have the time of your life",
-    afkCredits: 200,
+    credits: 200,
     markers: [
       woodwayMarker1(),
       woodwayMarker2(),
@@ -327,7 +327,7 @@ Quest getDummyQuest4() {
     id: "QuestId04",
     name: "Woodway Adventures",
     description: "Find the most precious hidden codes at Woodway",
-    afkCredits: 50,
+    credits: 50,
     markers: [
       intimateWoodwayMarker1(),
       intimateWoodwayMarker2(),
@@ -350,7 +350,7 @@ Quest getQrCodeHuntJaeger() {
     id: "aHynXLPBE68rxe3Y083L",
     name: "Versteckter Schatz bei Jägers!",
     description: "Finde alle Codes im Hause Jägers!",
-    afkCredits: 50,
+    credits: 50,
     markerNotes: [
       MarkerNote(note: "Start"),
       MarkerNote(note: "In einem der Bäder"),
@@ -384,7 +384,7 @@ Quest getQrCodeHuntJaeger2() {
     id: "aHynXLPBE68rxe3Y083Lblubb",
     name: "Second treasure hunt",
     description: "Find hidden codes at Jaegers!",
-    afkCredits: 50,
+    credits: 50,
     markerNotes: [
       MarkerNote(note: "Start"),
       MarkerNote(note: "In einem der Bäder"),
@@ -411,7 +411,7 @@ Quest getQrCodeHuntJaeger2() {
 //     id: "elkHlNMiRLHsagfcATc3",
 //     name: "Versteckte Schätze im Starenweg!",
 //     description: "Finde alle Codes im Starenweg!",
-//     afkCredits: 50,
+//     credits: 50,
 //     markers: [
 //       starenweg1(),
 //       starenweg2(),
@@ -431,7 +431,7 @@ Quest getDummyQuest5() {
     id: "LSwSs2c6ZtVKk23qyWxD",
     name: "Party at Mine!",
     description: "Come and test it",
-    afkCredits: 100,
+    credits: 100,
     markers: [
       myRoomMarker(),
     ],
@@ -449,7 +449,7 @@ Quest getDummyQuest6() {
     id: "nJiVPrgw2jcGrxoABCBW",
     name: "Starenweg Hike!",
     description: "",
-    afkCredits: 1,
+    credits: 1,
     markers: [
       starenweg4(),
       heidach2(),
@@ -471,7 +471,7 @@ Quest starenWegNoListener() {
     id: "nJiVPrgw2jcGrxoABCBW",
     name: "Starenweg Hike No Listener!",
     description: "",
-    afkCredits: 1,
+    credits: 1,
     markers: [
       heidach4(),
       heidach2(),
@@ -494,7 +494,7 @@ Quest getZaehringenHike() {
     id: "unknown",
     name: "Zähringen GPS Area Hike!",
     description: "",
-    afkCredits: 5,
+    credits: 5,
     markers: [
       freiburg1(),
       freiburg2(),
@@ -931,7 +931,7 @@ Quest getDummyVibrationSearchQuestHeuweiler() {
     id: "860CQjbdDk0Pggj3NgBv",
     name: "Heuweiler Trophy Search!",
     description: "Find the Trophy Hidden in Heuweiler Best Town!",
-    afkCredits: 30,
+    credits: 30,
     markers: [
       belekLocSearch1(),
       belekLocSearch(),
@@ -1026,7 +1026,7 @@ Quest commercialTrophy() {
     name: "Find the biggest secret of commercial drive!",
     description:
         "Learn how to enjoy life by finding the treasure at commercial drive",
-    afkCredits: 30,
+    credits: 30,
     markers: [commercial1(), commercial2()],
     type: QuestType.TreasureLocationSearch,
     startMarker: commercial1(),
@@ -1045,7 +1045,7 @@ Quest seeparkSpielplatz() {
     id: "Unknown",
     name: "Finde den Spielplatz!",
     description: "Im Seepark",
-    afkCredits: 50,
+    credits: 50,
     markers: [seepark1(), seepark2()],
     type: QuestType.TreasureLocationSearch,
     startMarker: seepark1(),
@@ -1064,7 +1064,7 @@ Quest manu() {
     id: "Unknown",
     name: "Finde Manu!",
     description: "Im Seepark",
-    afkCredits: 50,
+    credits: 50,
     markers: [manu1(), manu2()],
     type: QuestType.TreasureLocationSearch,
     startMarker: manu1(),

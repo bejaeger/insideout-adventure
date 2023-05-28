@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
@@ -26,8 +27,8 @@ class ActiveScreenTimeViewModel extends BaseModel {
           uid: session?.uid, sessionId: session?.sessionId);
   UserSettings get currentUserSettings => userService.currentUserSettings;
 
-  String get childName => session != null ? session!.userName : "";
-  String get childId => session != null ? session!.uid : "";
+  String get wardName => session != null ? session!.userName : "";
+  String get wardId => session != null ? session!.uid : "";
 
   int? screenTimeLeft;
   bool justStartedListeningToScreenTime = false;

@@ -1,7 +1,7 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/app_strings.dart';
-import 'package:afkcredits/constants/inside_out_credit_system.dart';
+import 'package:afkcredits/constants/credits_system.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
@@ -11,15 +11,15 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_marker_viewmodel.dart';
-import 'package:insideout_ui/insideout_ui.dart';
+import 'package:afkcredits/ui/views/map/map_viewmodel.dart';
+import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.form.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
-import 'package:afkcredits/ui/views/quests_overview/create_quest/create_quest_view.form.dart';
 
 class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   void Function() disposeController;
@@ -53,7 +53,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   bool isLoading = false;
   bool result = false;
   QuestType selectedQuestType = QuestType.GPSAreaHike;
-  String? afkCreditsInputValidationMessage;
+  String? creditsInputValidationMessage;
   String? nameInputValidationMessage;
   String? questTypeInputValidationMessage;
   String? afkMarkersInputValidationMessage;
@@ -76,8 +76,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     if (afkCreditAmountValue != null && afkCreditAmountValue != "") {
       if (isValidUserInputs(credits: true)) {
         num tmpamount = int.parse(afkCreditAmountValue!);
-        screenTimeEquivalent =
-            InsideOutCreditSystem.creditsToScreenTime(tmpamount);
+        screenTimeEquivalent = CreditsSystem.creditsToScreenTime(tmpamount);
       }
     }
     if (nameValue?.isEmpty ?? true) {
@@ -164,16 +163,16 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     resetValidationMessages();
     bool isValid = true;
     if (credits && afkCreditAmountValue == null) {
-      afkCreditsInputValidationMessage = 'Choose AFK Credits amount';
+      creditsInputValidationMessage = 'Choose Credits amount';
       isValid = false;
     }
-    // also check type of afkCredits input
+    // also check type of credits input
     if (credits) {
       try {
         num tmpValue = num.parse(afkCreditAmountValue.toString());
       } catch (e) {
         if (e is FormatException) {
-          afkCreditsInputValidationMessage = "Please provide a numerical value";
+          creditsInputValidationMessage = "Please provide a numerical value";
           isValid = false;
         } else {
           rethrow;
@@ -223,15 +222,15 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       case QuestType.DistanceEstimate:
         return kDistanceEstimateDescription;
       case QuestType.TreasureLocationSearch:
-        return kLocationSearchDescriptionParents;
+        return kLocationSearchDescriptionGuardian;
       case QuestType.QRCodeHunt:
-        return kGPSAreaHikeDescriptionParents;
+        return kGPSAreaHikeDescriptionGuardian;
       case QuestType.QRCodeHike:
         return kGPSAreaHikeDescription;
       case QuestType.GPSAreaHike:
-        return kGPSAreaHikeDescriptionParents;
+        return kGPSAreaHikeDescriptionGuardian;
       case QuestType.GPSAreaHunt:
-        return kGPSAreaHikeDescriptionParents;
+        return kGPSAreaHikeDescriptionGuardian;
       default:
         return kGPSAreaHikeDescription;
     }
@@ -261,7 +260,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
         repeatable:
             selectedQuestType == QuestType.TreasureLocationSearch ? 0 : 1,
         markers: getAFKMarkers,
-        afkCredits: afkCreditAmount,
+        credits: afkCreditAmount,
         distanceMarkers: getTotalDistanceOfMarkers(),
       ),
     );
@@ -322,7 +321,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       );
       await Future.delayed(Duration(milliseconds: 2000));
       setBusy(false);
-      replaceWithParentHomeView();
+      replaceWithGuardianHomeView();
       disposeController();
     }
     return result;
@@ -377,7 +376,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       actualDistanceMarkers = distanceMarkers;
     }
     return (actualDistanceMarkers *
-            InsideOutCreditSystem.kDistanceInMeterToActivityMinuteConversion)
+            CreditsSystem.kDistanceInMeterToActivityMinuteConversion)
         .round();
   }
 
@@ -388,8 +387,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     } else {
       actualDuration = durationQuestInMinutes;
     }
-    return (actualDuration *
-            InsideOutCreditSystem.kMinuteActivityToCreditsConversion)
+    return (actualDuration * CreditsSystem.kMinuteActivityToCreditsConversion)
         .round();
   }
 
@@ -402,7 +400,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
     final response = await _dialogService.showDialog(
         title: "Recommendation",
         description:
-            "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${InsideOutCreditSystem.creditsToScreenTime(recommendedCredits)} min screen time.",
+            "Your markers are ${totalDistanceInMeter.toStringAsFixed(0)} meter apart. Your ${getShortQuestType(selectedQuestType)} is therefore expected to take about $durationQuestInMinutes minutes. We recommend giving $recommendedCredits credits which amounts to a default of ${CreditsSystem.creditsToScreenTime(recommendedCredits)} min screen time.",
         cancelTitle: "LEAN MORE",
         cancelTitleColor: kcOrange);
     if (response?.confirmed == false) {
@@ -414,7 +412,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   }
 
   void resetValidationMessages() {
-    afkCreditsInputValidationMessage = null;
+    creditsInputValidationMessage = null;
     nameInputValidationMessage = null;
     questTypeInputValidationMessage = null;
     afkMarkersInputValidationMessage = null;

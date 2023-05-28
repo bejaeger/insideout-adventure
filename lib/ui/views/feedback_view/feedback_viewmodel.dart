@@ -1,5 +1,7 @@
 import 'dart:io';
+
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
 import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
@@ -12,8 +14,8 @@ import 'package:afkcredits/utils/image_selector.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'feedback_view.form.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 class FeedbackViewModel extends FormViewModel with NavigationMixin {
   final ImageSelector _imageSelector = locator<ImageSelector>();

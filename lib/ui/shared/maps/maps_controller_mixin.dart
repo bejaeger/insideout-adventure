@@ -1,5 +1,3 @@
-import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 mixin MapControllerMixin {

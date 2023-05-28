@@ -23,8 +23,8 @@ ConciseFinishedQuestInfo _$ConciseFinishedQuestInfoFromJson(
 mixin _$ConciseFinishedQuestInfo {
   String get name => throw _privateConstructorUsedError;
   QuestType get type => throw _privateConstructorUsedError;
-  num get afkCredits => throw _privateConstructorUsedError;
-  num get afkCreditsEarned => throw _privateConstructorUsedError;
+  num get credits => throw _privateConstructorUsedError;
+  num get creditsEarned => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,8 +37,7 @@ abstract class $ConciseFinishedQuestInfoCopyWith<$Res> {
   factory $ConciseFinishedQuestInfoCopyWith(ConciseFinishedQuestInfo value,
           $Res Function(ConciseFinishedQuestInfo) then) =
       _$ConciseFinishedQuestInfoCopyWithImpl<$Res>;
-  $Res call(
-      {String name, QuestType type, num afkCredits, num afkCreditsEarned});
+  $Res call({String name, QuestType type, num credits, num creditsEarned});
 }
 
 /// @nodoc
@@ -54,8 +53,8 @@ class _$ConciseFinishedQuestInfoCopyWithImpl<$Res>
   $Res call({
     Object? name = freezed,
     Object? type = freezed,
-    Object? afkCredits = freezed,
-    Object? afkCreditsEarned = freezed,
+    Object? credits = freezed,
+    Object? creditsEarned = freezed,
   }) {
     return _then(_value.copyWith(
       name: name == freezed
@@ -66,13 +65,13 @@ class _$ConciseFinishedQuestInfoCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as QuestType,
-      afkCredits: afkCredits == freezed
-          ? _value.afkCredits
-          : afkCredits // ignore: cast_nullable_to_non_nullable
+      credits: credits == freezed
+          ? _value.credits
+          : credits // ignore: cast_nullable_to_non_nullable
               as num,
-      afkCreditsEarned: afkCreditsEarned == freezed
-          ? _value.afkCreditsEarned
-          : afkCreditsEarned // ignore: cast_nullable_to_non_nullable
+      creditsEarned: creditsEarned == freezed
+          ? _value.creditsEarned
+          : creditsEarned // ignore: cast_nullable_to_non_nullable
               as num,
     ));
   }
@@ -86,8 +85,7 @@ abstract class _$$_ConciseFinishedQuestInfoCopyWith<$Res>
           $Res Function(_$_ConciseFinishedQuestInfo) then) =
       __$$_ConciseFinishedQuestInfoCopyWithImpl<$Res>;
   @override
-  $Res call(
-      {String name, QuestType type, num afkCredits, num afkCreditsEarned});
+  $Res call({String name, QuestType type, num credits, num creditsEarned});
 }
 
 /// @nodoc
@@ -106,8 +104,8 @@ class __$$_ConciseFinishedQuestInfoCopyWithImpl<$Res>
   $Res call({
     Object? name = freezed,
     Object? type = freezed,
-    Object? afkCredits = freezed,
-    Object? afkCreditsEarned = freezed,
+    Object? credits = freezed,
+    Object? creditsEarned = freezed,
   }) {
     return _then(_$_ConciseFinishedQuestInfo(
       name: name == freezed
@@ -118,13 +116,13 @@ class __$$_ConciseFinishedQuestInfoCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as QuestType,
-      afkCredits: afkCredits == freezed
-          ? _value.afkCredits
-          : afkCredits // ignore: cast_nullable_to_non_nullable
+      credits: credits == freezed
+          ? _value.credits
+          : credits // ignore: cast_nullable_to_non_nullable
               as num,
-      afkCreditsEarned: afkCreditsEarned == freezed
-          ? _value.afkCreditsEarned
-          : afkCreditsEarned // ignore: cast_nullable_to_non_nullable
+      creditsEarned: creditsEarned == freezed
+          ? _value.creditsEarned
+          : creditsEarned // ignore: cast_nullable_to_non_nullable
               as num,
     ));
   }
@@ -137,8 +135,8 @@ class _$_ConciseFinishedQuestInfo implements _ConciseFinishedQuestInfo {
   _$_ConciseFinishedQuestInfo(
       {required this.name,
       required this.type,
-      required this.afkCredits,
-      required this.afkCreditsEarned});
+      required this.credits,
+      required this.creditsEarned});
 
   factory _$_ConciseFinishedQuestInfo.fromJson(Map<String, dynamic> json) =>
       _$$_ConciseFinishedQuestInfoFromJson(json);
@@ -148,13 +146,13 @@ class _$_ConciseFinishedQuestInfo implements _ConciseFinishedQuestInfo {
   @override
   final QuestType type;
   @override
-  final num afkCredits;
+  final num credits;
   @override
-  final num afkCreditsEarned;
+  final num creditsEarned;
 
   @override
   String toString() {
-    return 'ConciseFinishedQuestInfo(name: $name, type: $type, afkCredits: $afkCredits, afkCreditsEarned: $afkCreditsEarned)';
+    return 'ConciseFinishedQuestInfo(name: $name, type: $type, credits: $credits, creditsEarned: $creditsEarned)';
   }
 
   @override
@@ -164,10 +162,9 @@ class _$_ConciseFinishedQuestInfo implements _ConciseFinishedQuestInfo {
             other is _$_ConciseFinishedQuestInfo &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.type, type) &&
+            const DeepCollectionEquality().equals(other.credits, credits) &&
             const DeepCollectionEquality()
-                .equals(other.afkCredits, afkCredits) &&
-            const DeepCollectionEquality()
-                .equals(other.afkCreditsEarned, afkCreditsEarned));
+                .equals(other.creditsEarned, creditsEarned));
   }
 
   @JsonKey(ignore: true)
@@ -176,8 +173,8 @@ class _$_ConciseFinishedQuestInfo implements _ConciseFinishedQuestInfo {
       runtimeType,
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(type),
-      const DeepCollectionEquality().hash(afkCredits),
-      const DeepCollectionEquality().hash(afkCreditsEarned));
+      const DeepCollectionEquality().hash(credits),
+      const DeepCollectionEquality().hash(creditsEarned));
 
   @JsonKey(ignore: true)
   @override
@@ -197,8 +194,8 @@ abstract class _ConciseFinishedQuestInfo implements ConciseFinishedQuestInfo {
   factory _ConciseFinishedQuestInfo(
       {required final String name,
       required final QuestType type,
-      required final num afkCredits,
-      required final num afkCreditsEarned}) = _$_ConciseFinishedQuestInfo;
+      required final num credits,
+      required final num creditsEarned}) = _$_ConciseFinishedQuestInfo;
 
   factory _ConciseFinishedQuestInfo.fromJson(Map<String, dynamic> json) =
       _$_ConciseFinishedQuestInfo.fromJson;
@@ -208,9 +205,9 @@ abstract class _ConciseFinishedQuestInfo implements ConciseFinishedQuestInfo {
   @override
   QuestType get type;
   @override
-  num get afkCredits;
+  num get credits;
   @override
-  num get afkCreditsEarned;
+  num get creditsEarned;
   @override
   @JsonKey(ignore: true)
   _$$_ConciseFinishedQuestInfoCopyWith<_$_ConciseFinishedQuestInfo>

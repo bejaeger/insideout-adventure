@@ -18,9 +18,9 @@ import 'package:afkcredits/services/quest_testing_service/quest_testing_service.
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:stacked/stacked.dart';
@@ -308,12 +308,12 @@ class ActiveQuestService with ReactiveServiceMixin {
     if (_questStartTime != null) {
       pushActivatedQuest(activatedQuest!.copyWith(
           status: QuestStatus.success,
-          afkCreditsEarned: activatedQuest!.quest.afkCredits,
+          creditsEarned: activatedQuest!.quest.credits,
           timeElapsed: DateTime.now().difference(_questStartTime!).inSeconds));
     } else {
       pushActivatedQuest(activatedQuest!.copyWith(
           status: QuestStatus.success,
-          afkCreditsEarned: activatedQuest!.quest.afkCredits));
+          creditsEarned: activatedQuest!.quest.credits));
     }
   }
 
@@ -402,7 +402,7 @@ class ActiveQuestService with ReactiveServiceMixin {
     if (activatedQuest?.status == QuestStatus.success) {
       // model evaluated already in viewmodel. Just add credits
       pushActivatedQuest(activatedQuest!
-          .copyWith(afkCreditsEarned: activatedQuest!.quest.afkCredits));
+          .copyWith(creditsEarned: activatedQuest!.quest.credits));
       return;
     }
 
@@ -411,7 +411,7 @@ class ActiveQuestService with ReactiveServiceMixin {
       if (activatedQuest?.status == QuestStatus.success) {
         pushActivatedQuest(activatedQuest!.copyWith(
             status: QuestStatus.success,
-            afkCreditsEarned: activatedQuest!.quest.afkCredits));
+            creditsEarned: activatedQuest!.quest.credits));
       } else {
         pushActivatedQuest(
           activatedQuest!.copyWith(
@@ -428,7 +428,7 @@ class ActiveQuestService with ReactiveServiceMixin {
         log.i("All markers were collected, quest finished successfully!");
         pushActivatedQuest(activatedQuest!.copyWith(
             status: QuestStatus.success,
-            afkCreditsEarned: activatedQuest!.quest.afkCredits));
+            creditsEarned: activatedQuest!.quest.credits));
       } else {
         log.w("Quest found to be incomplete!");
         log.w(

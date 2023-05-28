@@ -10,12 +10,11 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       uid: json['uid'] as String,
       fullName: json['fullName'] as String,
       email: json['email'] as String?,
-      sponsorIds: (json['sponsorIds'] as List<dynamic>)
+      guardianIds: (json['guardianIds'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      explorerIds: (json['explorerIds'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      wardIds:
+          (json['wardIds'] as List<dynamic>).map((e) => e as String).toList(),
       role: $enumDecode(_$UserRoleEnumMap, json['role']),
       userSettings: json['userSettings'] == null
           ? null
@@ -41,8 +40,8 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'uid': instance.uid,
       'fullName': instance.fullName,
       'email': instance.email,
-      'sponsorIds': instance.sponsorIds,
-      'explorerIds': instance.explorerIds,
+      'guardianIds': instance.guardianIds,
+      'wardIds': instance.wardIds,
       'role': _$UserRoleEnumMap[instance.role]!,
       'userSettings': instance.userSettings?.toJson(),
       'authMethod': _$AuthenticationMethodEnumMap[instance.authMethod],
@@ -58,8 +57,8 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
     };
 
 const _$UserRoleEnumMap = {
-  UserRole.sponsor: 'sponsor',
-  UserRole.explorer: 'explorer',
+  UserRole.guardian: 'guardian',
+  UserRole.ward: 'ward',
   UserRole.admin: 'admin',
   UserRole.unassigned: 'unassigned',
   UserRole.adminMaster: 'adminMaster',
@@ -72,8 +71,7 @@ const _$AuthenticationMethodEnumMap = {
   AuthenticationMethod.facebook: 'facebook',
   AuthenticationMethod.apple: 'apple',
   AuthenticationMethod.dummy: 'dummy',
-  AuthenticationMethod.EmailOrSponsorCreatedExplorer:
-      'EmailOrSponsorCreatedExplorer',
+  AuthenticationMethod.EmailOrGuardianCreatedWard: 'EmailOrGuardianCreatedWard',
 };
 
 const _$ParentalVerificationStatusEnumMap = {

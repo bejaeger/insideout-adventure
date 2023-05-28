@@ -1,11 +1,11 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/ui/shared/custom_dialogs/select_avatar_dialog_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/selectable_box.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:lottie/lottie.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class SelectAvatarDialogView extends StatelessWidget {
   final DialogRequest request;

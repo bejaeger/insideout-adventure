@@ -1,11 +1,11 @@
 import 'package:afkcredits/constants/constants.dart';
+import 'package:afkcredits/ui/views/set_pin/set_pin_view.form.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
-import 'package:afkcredits/ui/views/set_pin/set_pin_view.form.dart';
 
 // Might wanna switch to this package!
 // https://pub.dev/packages/pin_code_fields

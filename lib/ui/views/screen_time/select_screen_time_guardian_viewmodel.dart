@@ -16,15 +16,15 @@ class SelectScreenTimeGuardianViewModel extends SelectValueViewModel {
   final log = getLogger("SelectScreenTimeGuardianViewModel");
 
   int get totalAvailableScreenTime =>
-      _userService.getTotalAvailableScreenTime(childId: childId);
+      _userService.getTotalAvailableScreenTime(wardId: wardId);
   int get afkCreditsBalance =>
-      _userService.getAfkCreditsBalance(childId: childId).round();
+      _userService.getCreditsBalance(wardId: wardId).round();
 
   int? screenTimePreset;
 
-  String childId;
+  String wardId;
   SelectScreenTimeGuardianViewModel(
-      {required this.childId,
+      {required this.wardId,
       required super.recipientInfo,
       required super.senderInfo});
 
@@ -80,16 +80,16 @@ class SelectScreenTimeGuardianViewModel extends SelectValueViewModel {
 
     ScreenTimeSession session = ScreenTimeSession(
       sessionId: _screenTimeService.getScreenTimeSessionDocId(),
-      uid: childId,
+      uid: wardId,
       createdByUid: currentUser.uid,
-      userName: _userService.explorerNameFromUid(childId),
+      userName: _userService.wardNameFromUid(wardId),
       minutes: screenTimePreset!,
       status: ScreenTimeSessionStatus.notStarted,
       startedAt: DateTime.now().add(
         Duration(seconds: 10),
       ), // add 10 seconds because we wait for another 10 seconds in the next view!
-      afkCredits: double.parse(
-          InsideOutCreditSystem.screenTimeToCredits(screenTimePreset!)
+      credits: double.parse(
+          CreditsSystem.screenTimeToCredits(screenTimePreset!)
               .toString()),
     );
 
@@ -104,7 +104,7 @@ class SelectScreenTimeGuardianViewModel extends SelectValueViewModel {
       if (isValidData(false)) {
         int tmpamount = int.parse(amountValue!);
         screenTimePreset = tmpamount;
-        equivalentValue = InsideOutCreditSystem.screenTimeToCredits(tmpamount);
+        equivalentValue = CreditsSystem.screenTimeToCredits(tmpamount);
       }
     }
     await Future.delayed(Duration(milliseconds: 2000));

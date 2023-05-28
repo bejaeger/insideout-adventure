@@ -2,11 +2,12 @@ import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
 import 'package:afkcredits/services/quests/quest_service.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:uuid/uuid.dart';
+
 import '../../../app/app.locator.dart';
 import '../../../datamodels/dummy_data.dart';
 import '../../../exceptions/mapviewmodel_exception.dart';

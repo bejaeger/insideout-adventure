@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/constants/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
@@ -23,11 +25,10 @@ import 'package:afkcredits/services/quests/quest_service.dart';
 import 'package:afkcredits/services/quests/stopwatch_service.dart';
 import 'package:afkcredits/services/screentime/screen_time_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 // The Basemodel
 // All our ViewModels inherit from this class so
@@ -57,7 +58,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   User? get currentUserNullable => userService.currentUserNullable;
   UserStatistics get currentUserStats => userService.currentUserStats;
   bool get isSuperUser => userService.isSuperUser;
-  bool get isParentAccount => currentUser.role == UserRole.sponsor;
+  bool get isGuardianAccount => currentUser.role == UserRole.guardian;
   bool get isAdminMaster => userService.isAdminUser;
   bool get useSuperUserFeatures => _questTestingService.isPermanentUserMode
       ? false
@@ -74,7 +75,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       (activeQuestService.selectedQuest != null) ||
       activeQuestService.previouslyFinishedQuest != null;
   bool get isShowingQuestList => layoutService.isShowingQuestList;
-  bool get isShowingExplorerAccount => layoutService.isShowingExplorerAccount;
+  bool get isShowingWardAccount => layoutService.isShowingWardAccount;
   bool get isShowingCreditsOverlay => layoutService.isShowingCreditsOverlay;
   bool get isFadingOutOverlay => layoutService.isFadingOutOverlay;
   bool get isMovingCamera => layoutService.isMovingCamera;
@@ -109,10 +110,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   int get numMarkersCollected =>
       activeQuest.markersCollected.where((element) => element == true).length;
   bool get isScreenTimeActive =>
-      screenTimeService.supportedExplorerScreenTimeSessionsActive.length != 0;
-  List<ScreenTimeSession> get childScreenTimeSessionsActive =>
-      screenTimeService.supportedExplorerScreenTimeSessionsActive.values
-          .toList();
+      screenTimeService.supportedWardScreenTimeSessionsActive.length != 0;
+  List<ScreenTimeSession> get wardScreenTimeSessionsActive =>
+      screenTimeService.supportedWardScreenTimeSessionsActive.values.toList();
 
   bool? canVibrate;
   bool validatingMarker = false;
@@ -135,7 +135,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   ScreenTimeSession? getScreenTime({required String uid}) {
     try {
-      return childScreenTimeSessionsActive
+      return wardScreenTimeSessionsActive
           .firstWhere((element) => element.uid == uid);
     } catch (e) {
       if (e is StateError) {
@@ -148,7 +148,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
 
   Future clearServiceData(
       {bool logOutFromFirebase = true,
-      bool doNotClearSponsorReference = false}) async {
+      bool doNotClearGuardianReference = false}) async {
     questService.clearData();
     activeQuestService.clearData();
     geolocationService.clearData();
@@ -157,7 +157,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     gamificationService.clearData();
     await userService.handleLogoutEvent(
         logOutFromFirebase: logOutFromFirebase,
-        doNotClearSponsorReference: doNotClearSponsorReference);
+        doNotClearGuardianReference: doNotClearGuardianReference);
   }
 
   Future logout() async {
@@ -171,18 +171,18 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
-  // TODO: Remove concept of "enough sponsoring"
-  bool hasEnoughSponsoring({required Quest? quest}) {
+  // TODO: Remove concept of "enough guardianship"
+  bool hasEnoughGuardianship({required Quest? quest}) {
     if (quest == null) {
       baseModelLog.e(
-          "Attempted to check whether sponsoring is enough for quest that is null!");
+          "Attempted to check whether guardianship is enough for quest that is null!");
       return false;
     }
     return true;
   }
 
   bool hasEnoughCredits({required int credits}) {
-    return currentUserStats.afkCreditsBalance >= credits;
+    return currentUserStats.creditsBalance >= credits;
   }
 
   void navigateBack() {
@@ -218,14 +218,14 @@ class BaseModel extends BaseViewModel with NavigationMixin {
   Future clearStackAndNavigateToHomeView(
       {bool showBewareDialog = false,
       bool showNumberQuestsDialog = false}) async {
-    if (isParentAccount || isAdminMaster) {
+    if (isGuardianAccount || isAdminMaster) {
       await navigationService.clearStackAndShow(
-        Routes.parentHomeView,
+        Routes.guardianHomeView,
       );
     } else {
       await navigationService.clearStackAndShow(
-        Routes.explorerHomeView,
-        arguments: ExplorerHomeViewArguments(
+        Routes.wardHomeView,
+        arguments: WardHomeViewArguments(
           showBewareDialog: showBewareDialog,
           showNumberQuestsDialog: showNumberQuestsDialog,
         ),
@@ -245,10 +245,10 @@ class BaseModel extends BaseViewModel with NavigationMixin {
         await navigationService.navigateTo(Routes.permissionsView);
       }
     }
-    if (isParentAccount || isAdminMaster) {
-      await replaceWithParentHomeView(screenTimeSession: screenTimeSession);
+    if (isGuardianAccount || isAdminMaster) {
+      await replaceWithGuardianHomeView(screenTimeSession: screenTimeSession);
     } else {
-      await replaceWithExplorerHomeView(
+      await replaceWithWardHomeView(
           showBewareDialog: showBewareDialog,
           showNumberQuestsDialog: showNumberQuestsDialog,
           screenTimeSession: screenTimeSession);
@@ -313,8 +313,8 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       title: quest.name,
       enterBottomSheetDuration: Duration(milliseconds: 300),
       description: quest.description,
-      mainButtonTitle: isParentAccount ? "Show markers" : "Play",
-      secondaryButtonTitle: isParentAccount ? "Delete quest" : "Close",
+      mainButtonTitle: isGuardianAccount ? "Show markers" : "Play",
+      secondaryButtonTitle: isGuardianAccount ? "Delete quest" : "Close",
       data: {
         "quest": quest,
         "completed":

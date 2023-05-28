@@ -3,17 +3,18 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/data/app_strings.dart';
-import 'package:afkcredits/ui/views/create_explorer/validators.dart';
+import 'package:afkcredits/ui/views/create_ward/validators.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/selectable_box.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
+
 import '../../../../data/app_strings.dart';
 import 'create_quest.form.dart';
 import 'create_quest_viewmodel.dart';
@@ -410,7 +411,7 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                           style: heading3Style,
                           leading: Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Image.asset(kAFKCreditsLogoPath, height: 10),
+                            child: Image.asset(kInsideOutLogoPath, height: 10),
                           ),
                           autofocus: true,
                           //placeholder: 'Amount',
@@ -436,10 +437,10 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                       ),
                     ],
                   ),
-            if (model.afkCreditsInputValidationMessage != null)
+            if (model.creditsInputValidationMessage != null)
               Expanded(
-                  child: InsideOutText.warn(
-                      model.afkCreditsInputValidationMessage!)),
+                  child:
+                      InsideOutText.warn(model.creditsInputValidationMessage!)),
             verticalSpaceMassive,
           ],
         ),

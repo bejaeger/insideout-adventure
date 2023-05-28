@@ -15,9 +15,9 @@ class ScreenTimeSession with _$ScreenTimeSession {
     @Default("") dynamic endedAt,
     required int minutes,
     int? minutesUsed,
-    num? afkCreditsUsed,
+    num? creditsUsed,
     required ScreenTimeSessionStatus status,
-    required double afkCredits,
+    required double credits,
   }) = _ScreenTimeSession;
 
   factory ScreenTimeSession.fromJson(Map<String, dynamic> json) =>
@@ -45,7 +45,7 @@ Map<String, String?> getStringMapFromSession(
     "endedAt": "",
     "minutes": session.minutes.toStringAsFixed(0),
     "status": session.status.toString().split('.').last,
-    "afkCredits": session.afkCredits.toStringAsFixed(0),
+    "credits": session.credits.toStringAsFixed(0),
   };
 }
 
@@ -68,7 +68,7 @@ ScreenTimeSession getSessionFromStringMap(
       "startedAt": startedAt,
       "endedAt": "",
       "minutes": int.parse(payload["minutes"]!),
-      "afkCredits": int.parse(payload["afkCredits"]!),
+      "credits": int.parse(payload["credits"]!),
       "status": payload["status"], // ! change that manually here
     },
   );

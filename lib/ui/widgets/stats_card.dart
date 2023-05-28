@@ -1,13 +1,13 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
-class AFKCreditsIcon extends StatelessWidget {
+class InsideOutIcon extends StatelessWidget {
   final bool locked;
   final double? height;
   final Alignment alignment;
   final Color? color;
-  const AFKCreditsIcon({
+  const InsideOutIcon({
     Key? key,
     this.locked = false,
     this.height,
@@ -25,7 +25,7 @@ class AFKCreditsIcon extends StatelessWidget {
             children: [
               Align(
                 alignment: alignment,
-                child: Image.asset(kAFKCreditsLogoPath,
+                child: Image.asset(kInsideOutLogoPath,
                     color: color, height: (height ?? 70) - 10.0),
               ),
               if (locked)

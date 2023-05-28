@@ -1,6 +1,6 @@
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 void setupSnackbarUi() {

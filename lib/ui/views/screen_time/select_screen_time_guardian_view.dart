@@ -18,7 +18,7 @@ class SelectScreenTimeGuardianView extends StatelessWidget
     with $SelectScreenTimeGuardianView {
   final PublicUserInfo senderInfo;
   final PublicUserInfo recipientInfo;
-  final String childId;
+  final String wardId;
 
   final bool selectScreenTimeMode;
   SelectScreenTimeGuardianView(
@@ -26,14 +26,14 @@ class SelectScreenTimeGuardianView extends StatelessWidget
       required this.senderInfo,
       required this.recipientInfo,
       this.selectScreenTimeMode = false,
-      required this.childId})
+      required this.wardId})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SelectScreenTimeGuardianViewModel>.reactive(
       viewModelBuilder: () => SelectScreenTimeGuardianViewModel(
-          childId: childId,
+          wardId: wardId,
           senderInfo: senderInfo,
           recipientInfo: recipientInfo),
       onModelReady: (model) {

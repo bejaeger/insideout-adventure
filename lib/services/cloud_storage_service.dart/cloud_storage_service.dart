@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_result.dart';
-import 'package:insideout_ui/insideout_ui.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:afkcredits/app/app.logger.dart';
+import 'package:afkcredits/services/cloud_storage_service.dart/cloud_storage_result.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class CloudStorageService {
   final log = getLogger("CloudStorageService");

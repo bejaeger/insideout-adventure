@@ -2,10 +2,9 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/enums/quest_status.dart';
 import 'package:afkcredits/ui/views/map/avatar_and_effects_on_map_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/fading_widget.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:lottie/lottie.dart';
-
 import 'package:stacked/stacked.dart';
 
 class AvatarAndEffectsOnMapView extends StatefulWidget {

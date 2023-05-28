@@ -5,13 +5,13 @@ import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
 import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
 import 'package:insideout_ui/insideout_ui.dart';
+import 'package:afkcredits/ui/views/login/login_view.form.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 import './login_viewmodel.dart';
-import 'package:afkcredits/ui/views/login/login_view.form.dart';
 
 @FormView(fields: [
   FormTextField(name: 'emailOrName'),
@@ -32,10 +32,10 @@ class LoginView extends StatelessWidget with $LoginView {
         body: AuthenticationLayout(
           busy: model.isBusy,
           onCreateAccountTapped: model.navigateToCreateAccount,
-          onDummyLoginExplorerTapped:
-              model.userLoginTapped(userRole: UserRole.explorer),
-          onDummyLoginSponsorTapped:
-              model.userLoginTapped(userRole: UserRole.sponsor),
+          onDummyLoginWardTapped:
+              model.userLoginTapped(userRole: UserRole.ward),
+          onDummyLoginGuardianTapped:
+              model.userLoginTapped(userRole: UserRole.guardian),
           onDummyLoginAdminTapped:
               model.userLoginTapped(userRole: UserRole.admin),
           onDummyLoginSuperUserTapped:
@@ -79,7 +79,7 @@ class LoginView extends StatelessWidget with $LoginView {
               verticalSpaceRegular,
               /*        TextField(
                 decoration:
-                    InputDecoration(labelText: 'Email or explorer name'),
+                    InputDecoration(labelText: 'Email or ward name'),
                 controller: emailOrNameController,
               ), */
               InsideOutInputField(

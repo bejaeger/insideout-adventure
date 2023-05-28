@@ -1,10 +1,10 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
-import 'package:afkcredits/datamodels/users/sponsor_reference/sponsor_reference.dart';
+import 'package:afkcredits/datamodels/users/guardian_reference/guardian_reference.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/enums/parental_verification_status.dart';
 import 'package:afkcredits/services/email_service/email_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
@@ -12,14 +12,14 @@ import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 abstract class SwitchAccountsViewModel extends QuestViewModel {
   final log = getLogger("SwitchAccountsViewModel");
   final EmailService _emailService  = locator<EmailService>();
-  final String? explorerUid;
+  final String? wardUid;
 
-  User? get explorer => userService.supportedExplorers[explorerUid];
-  UserStatistics get stats => userService.supportedExplorerStats[explorerUid]!;
+  User? get ward => userService.supportedWards[wardUid];
+  UserStatistics get stats => userService.supportedWardStats[wardUid]!;
   List<ActivatedQuest> get history =>
-      userService.supportedExplorerQuestsHistory[explorerUid]!;
+      userService.supportedWardQuestsHistory[wardUid]!;
 
-  SwitchAccountsViewModel({this.explorerUid});
+  SwitchAccountsViewModel({this.wardUid});
 
   Future handleParentalConsent() async {
     if (currentUser.parentalVerificationStatus == ParentalVerificationStatus.verified) {
@@ -44,24 +44,24 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
   }
 
-  Future handleSwitchToExplorerEvent({String? explorerUidInput}) async {
-    User? tmpExplorer;
-    if (explorerUidInput != null) {
-      tmpExplorer = userService.supportedExplorers[explorerUidInput];
+  Future handleSwitchToWardEvent({String? wardUidInput}) async {
+    User? tmpWard;
+    if (wardUidInput != null) {
+      tmpWard = userService.supportedWards[wardUidInput];
     } else {
-      tmpExplorer = explorer;
+      tmpWard = ward;
     }
     
     // await handleParentalConsent();
 
-    if (tmpExplorer == null) {
-      log.e("Please provide an explorerUid you want to switch to!");
+    if (tmpWard == null) {
+      log.e("Please provide an wardUid you want to switch to!");
       await showGenericInternalErrorDialog();
       return;
     }
 
     final result = await bottomSheetService.showBottomSheet(
-        title: "Switch to " + tmpExplorer.fullName + "'s area",
+        title: "Switch to " + tmpWard.fullName + "'s area",
         description: "Do you want to lock this parent area with a passcode?",
         confirmButtonTitle: "Yes",
         cancelButtonTitle: "No");
@@ -69,30 +69,29 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       String? pin;
       bool setPin = result.confirmed == true;
       if (setPin) {
-        log.i("Asking to set PIN before switching to explorer session");
+        log.i("Asking to set PIN before switching to ward session");
         final pinResult = await navigationService.navigateTo(Routes.setPinView);
         if (pinResult == null) {
           return;
         }
         pin = pinResult.pin;
       }
-      await switchToExplorerAccount(pin: pin, explorer: tmpExplorer);
+      await switchToWardAccount(pin: pin, ward: tmpWard);
     }
   }
 
-  Future switchToExplorerAccount({String? pin, required User explorer}) async {
+  Future switchToWardAccount({String? pin, required User ward}) async {
     setBusy(true);
-    await userService.saveSponsorReference(
+    await userService.saveGuardianReference(
         uid: currentUser.uid, authMethod: currentUser.authMethod, pin: pin);
     await clearServiceData(
-        logOutFromFirebase: false, doNotClearSponsorReference: true);
+        logOutFromFirebase: false, doNotClearGuardianReference: true);
     mapViewModel.clearAllMapData();
     try {
-      log.i("Syncing explorer account");
-      await userService.syncUserAccount(
-          uid: explorer.uid, fromLocalStorage: true);
+      log.i("Syncing ward account");
+      await userService.syncUserAccount(uid: ward.uid, fromLocalStorage: true);
     } catch (e) {
-      log.wtf("Error when trying to sync explorer account.");
+      log.wtf("Error when trying to sync ward account.");
       await dialogService.showDialog(
           title: "Internal Failure",
           description: "Sorry, an internal error occured: $e");
@@ -105,25 +104,25 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     setBusy(false);
   }
 
-  Future handleSwitchToSponsorEvent() async {
-    if (userService.sponsorReference == null) {
+  Future handleSwitchToGuardianEvent() async {
+    if (userService.guardianReference == null) {
       await dialogService.showDialog(
           title: "Error",
           description:
               "No parent account found. Please first logout and then sign in to a parrent account.");
       return;
     } else {
-      if (userService.sponsorReference!.withPasscode) {
+      if (userService.guardianReference!.withPasscode) {
         final pinResult = await navigationService.navigateTo(Routes.setPinView);
         if (pinResult == null) {
           return;
         } else {
           final valid =
-              await userService.validateSponsorPin(pin: pinResult.pin);
+              await userService.validateGuardianPin(pin: pinResult.pin);
           setBusy(true);
           if (valid != null && valid == true) {
-            await switchToSponsorAccount(
-                sponsorReference: userService.sponsorReference!);
+            await switchToGuardianAccount(
+                guardianReference: userService.guardianReference!);
           } else {
             await dialogService.showDialog(
                 title: "Pin not correct",
@@ -137,24 +136,24 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
             confirmButtonTitle: "Switch",
             cancelButtonTitle: "Cancel");
         if (confirmation?.confirmed == true) {
-          await switchToSponsorAccount(
-              sponsorReference: userService.sponsorReference!);
+          await switchToGuardianAccount(
+              guardianReference: userService.guardianReference!);
         }
       }
     }
   }
 
-  Future switchToSponsorAccount(
-      {required SponsorReference sponsorReference}) async {
+  Future switchToGuardianAccount(
+      {required GuardianReference guardianReference}) async {
     setBusy(true);
     await clearServiceData(logOutFromFirebase: false);
     mapViewModel.clearAllMapData();
     try {
-      log.i("Syncing sponsor account");
+      log.i("Syncing guardian account");
       await userService.syncUserAccount(
-          uid: sponsorReference.uid, fromLocalStorage: false);
+          uid: guardianReference.uid, fromLocalStorage: false);
     } catch (e) {
-      log.e("Error when trying to sync explorer account.");
+      log.e("Error when trying to sync ward account.");
       await dialogService.showDialog(
           title: "Internal Failure",
           description: "Sorry, an internal error occured: $e");
@@ -162,7 +161,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       return;
     }
     await clearStackAndNavigateToHomeView();
-    userService.clearSponsorReference();
+    userService.clearGuardianReference();
     setBusy(false);
   }
 }

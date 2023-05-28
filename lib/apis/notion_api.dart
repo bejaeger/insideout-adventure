@@ -1,4 +1,5 @@
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
 import 'package:notion_api/notion.dart';
@@ -7,7 +8,6 @@ import 'package:notion_api/notion/general/rich_text.dart';
 import 'package:notion_api/notion/objects/pages.dart';
 import 'package:notion_api/notion/objects/parent.dart';
 import 'package:notion_api/responses/notion_response.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 // ? service/api for notion for different operational tasks
 class NotionApi {

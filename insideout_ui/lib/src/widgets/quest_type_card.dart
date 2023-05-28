@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../insideout_ui.dart';
 
 class QuestTypeCard extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class CreditsToScreenTimeWidget extends StatelessWidget {
   final int credits;
@@ -19,7 +19,7 @@ class CreditsToScreenTimeWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Image.asset(kAFKCreditsLogoPath,
+        Image.asset(kInsideOutLogoPath,
             height: 28 * sizeScale, color: kcPrimaryColor),
         SizedBox(width: 8.0 * sizeScale),
         InsideOutText(

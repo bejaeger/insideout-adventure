@@ -1,7 +1,8 @@
 import 'dart:async';
+
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 class StartScreenTimeCounterViewModel extends BaseModel {
   final log = getLogger("StartScreenTimeCounterViewModel");

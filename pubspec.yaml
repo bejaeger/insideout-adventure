@@ -160,11 +160,11 @@ flutter:
     - assets/avatars/chilldude-head.png
     - assets/icons/
     - assets/icons/beware.png
-    - assets/icons/afk_credits.PNG
-    - assets/icons/afk_credits_orig.png
-    - assets/icons/afk_credits_small.PNG
-    - assets/icons/afk_credits_small_orig.png
-    - assets/icons/afk_credits_small_colored.PNG
+    - assets/icons/credits.PNG
+    - assets/icons/credits_orig.png
+    - assets/icons/credits_small.PNG
+    - assets/icons/credits_small_orig.png
+    - assets/icons/credits_small_colored.PNG
     - assets/icons/treasure2_big.png
     - assets/icons/cardinal-point.png  
     - assets/lottie/ripple-effect.json  
@@ -181,7 +181,7 @@ flutter:
     - assets/illustrations/activity_illustration.png
     - assets/illustrations/anna_inside_out.png
     - assets/illustrations/infographic.png
-    - assets/illustrations/parents_meditate.png
+    - assets/illustrations/guardian_meditate.png
     - assets/illustrations/screen_time.png
     - assets/illustrations/wallet_earning.png
     - assets/illustrations/wallet_spending.png

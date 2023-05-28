@@ -4,6 +4,7 @@ import 'package:afkcredits/apis/cloud_functions_api.dart';
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/apis/notion_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/feedback/feedback.dart';
 import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
@@ -11,7 +12,6 @@ import 'package:afkcredits/services/email_service/email_service.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 // service for managing feedback campaigns!
 

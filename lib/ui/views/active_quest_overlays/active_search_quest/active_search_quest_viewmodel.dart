@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:afkcredits/app/app.locator.dart';
+import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/markers/afk_marker.dart';
@@ -13,7 +15,6 @@ import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quests/quest_qrcode_scan_result.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/active_quest_base_viewmodel.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:afkcredits/app/app.logger.dart';
 
 class SearchQuestViewModel extends ActiveQuestBaseViewModel {
   final GeolocationService _geolocationService = locator<GeolocationService>();
@@ -36,16 +37,16 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
   int numTimesFired = 0;
   bool allowCheckingPosition = true;
 
-  void Function()? notifyParentView;
+  void Function()? notifyGuardianView;
 
   @override
   Future initialize(
       {required Quest quest,
-      void Function()? notifyParentCallback,
+      void Function()? notifyGuardianCallback,
       ActivatedQuest? activatedQuestFromLocalStorage}) async {
     log.wtf("Initializing search quest view");
 
-    notifyParentView = notifyParentCallback;
+    notifyGuardianView = notifyGuardianCallback;
     setBusy(true);
     await super.initialize(quest: quest);
     // ^ Add listener with a small distance filter to get most precise
@@ -56,7 +57,7 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
       log.i("Trying to start quest found in local storage");
       maybeStartQuest(
         quest: activeQuestService.questToBeStarted!.quest,
-        notifyParentCallback: notifyParentCallback,
+        notifyGuardianCallback: notifyGuardianCallback,
         activatedQuestFromLocalStorage: activeQuestService.questToBeStarted,
       );
     }
@@ -65,11 +66,11 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
 
   Future maybeStartQuest(
       {required Quest? quest,
-      void Function()? notifyParentCallback,
+      void Function()? notifyGuardianCallback,
       ActivatedQuest? activatedQuestFromLocalStorage}) async {
     if (quest != null || activatedQuestFromLocalStorage != null) {
       quest = activatedQuestFromLocalStorage?.quest ?? quest!;
-      notifyParentCallback = notifyParentCallback;
+      notifyGuardianCallback = notifyGuardianCallback;
       log.i("Starting vibration search quest with name ${quest.name}");
 
       final position = await _geolocationService.getUserLivePosition;
@@ -105,8 +106,8 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
         return;
       }
 
-      if (notifyParentCallback != null) {
-        notifyParentCallback();
+      if (notifyGuardianCallback != null) {
+        notifyGuardianCallback();
       }
       mapViewModel.resetMapMarkers();
       // quest started!
@@ -339,9 +340,9 @@ class SearchQuestViewModel extends ActiveQuestBaseViewModel {
     isAnimatingCamera = false;
     layoutService.setIsMovingCamera(false);
 
-    // We need to notify the parent here so that common success UI can be shown!
-    if (notifyParentView != null) {
-      notifyParentView!();
+    // We need to notify the guardian here so that common success UI can be shown!
+    if (notifyGuardianView != null) {
+      notifyGuardianView!();
     }
     setBusy(false);
   }

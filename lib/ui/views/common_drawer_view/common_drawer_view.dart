@@ -1,7 +1,7 @@
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class CommonDrawerView extends StatelessWidget {

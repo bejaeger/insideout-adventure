@@ -4,7 +4,35 @@ This is the mobile adventure app of InsideOutAdventure
 # Setup instructions
 
 ## Get code and packages
-The current version of the app is tested with
+### Xcode
+Version: **14.1** released November 1, 2022
+[Release Notes Summary](https://developer.apple.com/documentation/xcode-release-notes/xcode-14_2-release-notes)
+> Xcode 14.1 includes Swift 5.7 and SDKs for iOS 16.1, iPadOS 16.1, tvOS 16.1, watchOS 9.1, and macOS Ventura.
+> The Xcode 14.1 release supports on-device debugging in iOS 11 and later, tvOS 11 and later, and watchOS 4 and later.
+> Xcode 14.1 requires a Mac running macOS Monterey 12.5 or later.
+
+Relevant excerpts re: supportability ([source](https://developer.apple.com/support/xcode/))
+```
+Xcode Version
+  Xcode 14.1
+Minimum OS Required
+  macOS Monterey 12.5
+SDK
+  iOS 16.1
+  macOS 13
+Deployment Targets
+  iOS 11-16.1
+  macOS 10.13-13
+Simulator
+  iOS 12.4-16.1
+Swift
+  Swift 4
+  Swift 4.2
+  Swift 5.7
+```
+
+### Flutter
+The current version of the app is tested with:
 ```
 Flutter 3.0.5 • channel stable • https://github.com/flutter/flutter.git
 Framework • revision f1875d570e (7 months ago) • 2022-07-13 11:24:16 -0700
@@ -32,6 +60,17 @@ firebase projects:list
 # switch projects with 
 firebase use <project_id>
 ```
+
+We also use the flutterfire CLI
+```bash
+# install the flutterfire CLI
+dart pub global activate flutterfire_cli
+
+# as per the post-install prompt (at least on MacOS),
+# add this to your shell's config file (.bashrc, .bash_profile, etc.):
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+```
+
 The project IDs of our development database is `afk-credits-112d2`, our production database has the id `afk-credits-prod` (afk-credits is a legacy name). 
 Now we can generate the necessary firebase configuration file with flutterfire
 ```bash
@@ -53,7 +92,26 @@ flutter run --flavor prod -t lib/main_prod.dart --debug
 ```
 Note that some warnings are currently expected when building the app.
 For iOS, it is recommended to run in `--release` mode, because otherwise the app cannot be used on the phone standalone. 
-For convenience, different modes are configured in `.vscode/launch.json`. 
+
+## IDE Setup Notes
+
+Just listing items specific to this project here.
+
+### Visual Studio Code
+For convenience, different modes (flavors) are configured in `.vscode/launch.json`.
+
+### Jetbrains (IntelliJ IDEA)
+For convenience, different modes (flavors) are configured in `.iml` files inside `.intellij/.run`
+
+**TODO: Prod Flavor**
+
+#### Optimize Imports and 'dart format'
+TODO: Find a way to exclude these in the future or customize this functionality for our project
+
+These locations were reverted since the emitted changes were messy:
+* `functions/` - Javascript code
+* `insideout_ui/lib/insideout_ui.dart` - Export commands are interleaved with comments which gets mangled
+* `lib/app/app.locator.dart` - Comments re: generated code get deleted
 
 ## Troubleshooting
 ### iOS
@@ -89,9 +147,5 @@ For convenience, different modes are configured in `.vscode/launch.json`.
 # Information about status of code
 
 ## Legacy naming
-Some classes or packages still use legacy names. This is a list of terms that are used interchangeably:
-- 'Sponsor' = 'Parent', 'Explorer' = 'Child'
-- 'Payment' = 'Money Transfer' = 'Credit Transfer'
-- 'AFK(Credits)' = 'Hercules(Credits)' = 'InsideOut(Credits)' = 'Credits'
-- Also in the project settings/names 'afkcredits' or 'hercules' may still be used instead of 'insideout' or 'insideoutadventure'
+- In the project settings/names & DB names 'afkcredits' or 'hercules' may still be used instead of 'insideout' or 'insideoutadventure'
 

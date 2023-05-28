@@ -1,7 +1,7 @@
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
-import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/datamodels/helpers/quest_data_point.dart';
 import 'package:afkcredits/services/geolocation/geolocation_service.dart';
 import 'package:afkcredits/services/quest_testing_service/quest_testing_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
@@ -92,18 +92,18 @@ class SuperUserDialogViewModel extends BaseModel {
   }
 
   bool isCheating = false;
-  void addAfkCreditsCheat() async {
+  void addCreditsCheat() async {
     isCheating = true;
     notifyListeners();
-    await _firestoreApi.changeAfkCreditsBalanceCheat(uid: currentUser.uid);
+    await _firestoreApi.changeCreditsBalanceCheat(uid: currentUser.uid);
     isCheating = false;
     notifyListeners();
   }
 
-  void deductAfkCreditsCheat() async {
+  void deductCreditsCheat() async {
     isCheating = true;
     notifyListeners();
-    await _firestoreApi.changeAfkCreditsBalanceCheat(
+    await _firestoreApi.changeCreditsBalanceCheat(
         uid: currentUser.uid, deltaCredits: -50);
     isCheating = false;
     notifyListeners();

@@ -2,14 +2,14 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/ui/widgets/quest_specifications_row.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 
 class QuestInfoCard extends StatelessWidget {
   final double height;
   final double? width;
   final Quest quest;
-  final String? sponsoringSentence;
+  final String? guardianshipSentence;
   final String? subtitle;
   final double? marginRight;
   final double? marginTop;
@@ -21,7 +21,7 @@ class QuestInfoCard extends StatelessWidget {
       required this.quest,
       this.subtitle,
       required this.onCardPressed,
-      this.sponsoringSentence,
+      this.guardianshipSentence,
       this.width,
       this.marginRight,
       this.marginTop})
@@ -79,13 +79,13 @@ class QuestInfoCard extends StatelessWidget {
                         SizedBox(width: 4),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 5.0),
-                          child: Image.asset(kAFKCreditsLogoPath,
+                          child: Image.asset(kInsideOutLogoPath,
                               height: 22, color: kcPrimaryColor),
                         ),
                         SizedBox(width: 4.0),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 2.0),
-                          child: Text(quest.afkCredits.toStringAsFixed(0),
+                          child: Text(quest.credits.toStringAsFixed(0),
                               style: heading3Style.copyWith(
                                   color: kcPrimaryColor)),
                         ),
@@ -119,7 +119,7 @@ class QuestInfoCard extends StatelessWidget {
                       color: kcPrimaryColorSecondary),
                 ),
               ),
-              if (sponsoringSentence != null) Text(sponsoringSentence!),
+              if (guardianshipSentence != null) Text(guardianshipSentence!),
             ],
           ),
         ),

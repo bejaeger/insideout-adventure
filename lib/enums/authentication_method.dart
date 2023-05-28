@@ -4,5 +4,5 @@ enum AuthenticationMethod {
   facebook,
   apple,
   dummy,
-  EmailOrSponsorCreatedExplorer
+  EmailOrGuardianCreatedWard
 }

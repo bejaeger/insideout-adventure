@@ -1,24 +1,26 @@
 import 'dart:async';
+
 import 'package:afkcredits/apis/firestore_api.dart';
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/constants/inside_out_credit_system.dart';
+import 'package:afkcredits/constants/credits_system.dart';
 import 'package:afkcredits/data/app_strings.dart';
-import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
-import 'package:afkcredits/datamodels/payments/money_transfer.dart';
-import 'package:afkcredits/datamodels/payments/transfer_details.dart';
+import 'package:afkcredits/datamodels/helpers/transfer_status_model.dart';
+import 'package:afkcredits/datamodels/transfers/transfer.dart';
+import 'package:afkcredits/datamodels/transfers/transfer_details.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
-import 'package:afkcredits/enums/money_source.dart';
-import 'package:afkcredits/enums/money_transfer_dialog_status.dart';
+import 'package:afkcredits/enums/transfer_dialog_status.dart';
+import 'package:afkcredits/enums/transfer_source.dart';
 import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
-import 'package:afkcredits/exceptions/money_transfer_exception.dart';
+import 'package:afkcredits/exceptions/transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/users/user_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/select_value_viewmodel.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class TransferFundsViewModel extends SelectValueViewModel {
   final BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
@@ -32,7 +34,7 @@ class TransferFundsViewModel extends SelectValueViewModel {
   TransferFundsViewModel(
       {required super.recipientInfo, required super.senderInfo});
 
-  Future showBottomSheetAndProcessPayment() async {
+  Future showBottomSheetAndProcessTransfer() async {
     if (!isValidData()) {
       log.e("Entered amount not valid");
       notifyListeners();
@@ -78,16 +80,16 @@ class TransferFundsViewModel extends SelectValueViewModel {
       // We create a completer and parse it to the pop-up window.
       // The pop-up window shows a progress indicator and
       // displays a success or error dialog when the completer is completed
-      // in _processsPayment.
-      var moneyTransferCompleter = Completer<TransferDialogStatus>();
+      // in _processsTransfer.
+      var transferCompleter = Completer<TransferDialogStatus>();
       try {
-        _processPayment(moneyTransferCompleter);
+        _processTransfer(transferCompleter);
       } catch (e) {
         log.wtf("Something very mysterious went wrong, error thrown: $e");
-        moneyTransferCompleter.complete(TransferDialogStatus.error);
+        transferCompleter.complete(TransferDialogStatus.error);
       }
-      dynamic dialogResult = await _showMoneyTransferDialog(
-          moneyTransferCompleter: moneyTransferCompleter);
+      dynamic dialogResult =
+          await _showTransferDialog(transferCompleter: transferCompleter);
 
       if (dialogResult?.confirmed == true) {
         popView();
@@ -97,17 +99,17 @@ class TransferFundsViewModel extends SelectValueViewModel {
     return;
   }
 
-  Future _processPayment(
-      Completer<TransferDialogStatus> moneyTransferCompleter) async {
+  Future _processTransfer(
+      Completer<TransferDialogStatus> transferCompleter) async {
     try {
-      final MoneyTransfer data = prepareTransferData();
+      final Transfer data = prepareTransferData();
       await Future.delayed(Duration(milliseconds: 300)); // artificial delay
       // Possible Improvements
       //  - make entry in transfer history!
-      //  - notification in explorer account
-      //  - history visible for parent and explorer
-      //  - option to add description to transfer for parents
-      final res = await _firestoreApi.changeAfkCreditsBalanceCheat(
+      //  - notification in ward account
+      //  - history visible for guardian and ward
+      //  - option to add description to transfer for guardian
+      final res = await _firestoreApi.changeCreditsBalanceCheat(
           uid: data.transferDetails.recipientId,
           deltaCredits: data.transferDetails.amount);
       if (res is String) {
@@ -122,15 +124,15 @@ class TransferFundsViewModel extends SelectValueViewModel {
       log.i("Processed transfer: $data");
 
       // the completion event will be listened to in the pop-up dialog
-      moneyTransferCompleter.complete(TransferDialogStatus.success);
+      transferCompleter.complete(TransferDialogStatus.success);
     } catch (e) {
-      log.e("Error when processing payment, error thrown $e");
-      if (e is MoneyTransferException) {
-        moneyTransferCompleter.complete(TransferDialogStatus.error);
+      log.e("Error when processing transfer, error thrown $e");
+      if (e is TransferException) {
+        transferCompleter.complete(TransferDialogStatus.error);
       } else if (e is UserServiceException) {
-        moneyTransferCompleter.complete(TransferDialogStatus.error);
+        transferCompleter.complete(TransferDialogStatus.error);
       } else if (e is FirestoreApiException) {
-        moneyTransferCompleter.complete(TransferDialogStatus.error);
+        transferCompleter.complete(TransferDialogStatus.error);
       } else {
         rethrow;
       }
@@ -138,26 +140,26 @@ class TransferFundsViewModel extends SelectValueViewModel {
     }
   }
 
-  // returning the money transfer object that will be pushed to firestore
-  MoneyTransfer prepareTransferData() {
+  // returning the transfer object that will be pushed to firestore
+  Transfer prepareTransferData() {
     try {
       final transferDetails = TransferDetails(
         recipientId: recipientInfo.uid,
         recipientName: recipientInfo.name,
         senderId: senderInfo.uid,
         senderName: senderInfo.name,
-        sourceType: MoneySource.Bank,
+        sourceType: TransferSource.Bank,
         amount: amount!,
         currency: 'cad',
       );
-      MoneyTransfer data = MoneyTransfer(
-          type: TransferType.Sponsor2ExplorerCredits /* legacy */,
+      Transfer data = Transfer(
+          type: TransferType.Guardian2WardCredits /* legacy */,
           transferDetails: transferDetails);
       return data;
     } catch (e) {
       log.e(
           "Could not fill transaction model, Failed with error ${e.toString()}");
-      throw MoneyTransferException(
+      throw TransferException(
           message:
               "Something went wrong when preparing the transfer. We apologize, please contact support or try again later.",
           prettyDetails:
@@ -177,16 +179,16 @@ class TransferFundsViewModel extends SelectValueViewModel {
     );
   }
 
-  Future _showMoneyTransferDialog({
-    required Completer<TransferDialogStatus> moneyTransferCompleter,
+  Future _showTransferDialog({
+    required Completer<TransferDialogStatus> transferCompleter,
   }) async {
     log.i("We are starting the dialog");
     final dialogResult = await _dialogService.showCustomDialog(
-      variant: DialogType.MoneyTransfer,
+      variant: DialogType.Transfer,
       data: {
-        "moneyTransferStatus": MoneyTransferStatusModel(
-          futureStatus: moneyTransferCompleter.future,
-          type: TransferType.Sponsor2ExplorerCredits, // legacy code
+        "transferStatus": TransferStatusModel(
+          futureStatus: transferCompleter.future,
+          type: TransferType.Guardian2WardCredits, // legacy code
         )
       },
     );
@@ -199,7 +201,7 @@ class TransferFundsViewModel extends SelectValueViewModel {
     if (amountValue != null && amountValue != "") {
       if (isValidData(false)) {
         num tmpamount = int.parse(amountValue!);
-        equivalentValue = InsideOutCreditSystem.creditsToScreenTime(tmpamount);
+        equivalentValue = CreditsSystem.creditsToScreenTime(tmpamount);
       }
     }
     await Future.delayed(Duration(milliseconds: 2000));

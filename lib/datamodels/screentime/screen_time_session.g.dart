@@ -16,9 +16,9 @@ _$_ScreenTimeSession _$$_ScreenTimeSessionFromJson(Map<String, dynamic> json) =>
       endedAt: json['endedAt'] ?? "",
       minutes: json['minutes'] as int,
       minutesUsed: json['minutesUsed'] as int?,
-      afkCreditsUsed: json['afkCreditsUsed'] as num?,
+      creditsUsed: json['creditsUsed'] as num?,
       status: $enumDecode(_$ScreenTimeSessionStatusEnumMap, json['status']),
-      afkCredits: (json['afkCredits'] as num).toDouble(),
+      credits: (json['credits'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$$_ScreenTimeSessionToJson(
@@ -32,9 +32,9 @@ Map<String, dynamic> _$$_ScreenTimeSessionToJson(
       'endedAt': instance.endedAt,
       'minutes': instance.minutes,
       'minutesUsed': instance.minutesUsed,
-      'afkCreditsUsed': instance.afkCreditsUsed,
+      'creditsUsed': instance.creditsUsed,
       'status': _$ScreenTimeSessionStatusEnumMap[instance.status]!,
-      'afkCredits': instance.afkCredits,
+      'credits': instance.credits,
     };
 
 const _$ScreenTimeSessionStatusEnumMap = {

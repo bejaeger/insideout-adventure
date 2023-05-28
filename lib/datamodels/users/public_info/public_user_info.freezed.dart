@@ -24,7 +24,7 @@ mixin _$PublicUserInfo {
   String get name => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
-  bool? get isSponsored => throw _privateConstructorUsedError;
+  bool? get hasGuardian => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +42,7 @@ abstract class $PublicUserInfoCopyWith<$Res> {
       String name,
       String? email,
       String? errorMessage,
-      bool? isSponsored});
+      bool? hasGuardian});
 }
 
 /// @nodoc
@@ -60,7 +60,7 @@ class _$PublicUserInfoCopyWithImpl<$Res>
     Object? name = freezed,
     Object? email = freezed,
     Object? errorMessage = freezed,
-    Object? isSponsored = freezed,
+    Object? hasGuardian = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -79,9 +79,9 @@ class _$PublicUserInfoCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
-      isSponsored: isSponsored == freezed
-          ? _value.isSponsored
-          : isSponsored // ignore: cast_nullable_to_non_nullable
+      hasGuardian: hasGuardian == freezed
+          ? _value.hasGuardian
+          : hasGuardian // ignore: cast_nullable_to_non_nullable
               as bool?,
     ));
   }
@@ -99,7 +99,7 @@ abstract class _$$_PublicUserInfoCopyWith<$Res>
       String name,
       String? email,
       String? errorMessage,
-      bool? isSponsored});
+      bool? hasGuardian});
 }
 
 /// @nodoc
@@ -119,7 +119,7 @@ class __$$_PublicUserInfoCopyWithImpl<$Res>
     Object? name = freezed,
     Object? email = freezed,
     Object? errorMessage = freezed,
-    Object? isSponsored = freezed,
+    Object? hasGuardian = freezed,
   }) {
     return _then(_$_PublicUserInfo(
       uid: uid == freezed
@@ -138,9 +138,9 @@ class __$$_PublicUserInfoCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
-      isSponsored: isSponsored == freezed
-          ? _value.isSponsored
-          : isSponsored // ignore: cast_nullable_to_non_nullable
+      hasGuardian: hasGuardian == freezed
+          ? _value.hasGuardian
+          : hasGuardian // ignore: cast_nullable_to_non_nullable
               as bool?,
     ));
   }
@@ -154,7 +154,7 @@ class _$_PublicUserInfo implements _PublicUserInfo {
       required this.name,
       this.email,
       this.errorMessage,
-      this.isSponsored});
+      this.hasGuardian});
 
   factory _$_PublicUserInfo.fromJson(Map<String, dynamic> json) =>
       _$$_PublicUserInfoFromJson(json);
@@ -168,11 +168,11 @@ class _$_PublicUserInfo implements _PublicUserInfo {
   @override
   final String? errorMessage;
   @override
-  final bool? isSponsored;
+  final bool? hasGuardian;
 
   @override
   String toString() {
-    return 'PublicUserInfo(uid: $uid, name: $name, email: $email, errorMessage: $errorMessage, isSponsored: $isSponsored)';
+    return 'PublicUserInfo(uid: $uid, name: $name, email: $email, errorMessage: $errorMessage, hasGuardian: $hasGuardian)';
   }
 
   @override
@@ -186,7 +186,7 @@ class _$_PublicUserInfo implements _PublicUserInfo {
             const DeepCollectionEquality()
                 .equals(other.errorMessage, errorMessage) &&
             const DeepCollectionEquality()
-                .equals(other.isSponsored, isSponsored));
+                .equals(other.hasGuardian, hasGuardian));
   }
 
   @JsonKey(ignore: true)
@@ -197,7 +197,7 @@ class _$_PublicUserInfo implements _PublicUserInfo {
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(email),
       const DeepCollectionEquality().hash(errorMessage),
-      const DeepCollectionEquality().hash(isSponsored));
+      const DeepCollectionEquality().hash(hasGuardian));
 
   @JsonKey(ignore: true)
   @override
@@ -218,7 +218,7 @@ abstract class _PublicUserInfo implements PublicUserInfo {
       required final String name,
       final String? email,
       final String? errorMessage,
-      final bool? isSponsored}) = _$_PublicUserInfo;
+      final bool? hasGuardian}) = _$_PublicUserInfo;
 
   factory _PublicUserInfo.fromJson(Map<String, dynamic> json) =
       _$_PublicUserInfo.fromJson;
@@ -232,7 +232,7 @@ abstract class _PublicUserInfo implements PublicUserInfo {
   @override
   String? get errorMessage;
   @override
-  bool? get isSponsored;
+  bool? get hasGuardian;
   @override
   @JsonKey(ignore: true)
   _$$_PublicUserInfoCopyWith<_$_PublicUserInfo> get copyWith =>
