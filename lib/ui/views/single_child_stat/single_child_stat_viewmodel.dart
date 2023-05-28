@@ -151,6 +151,22 @@ class SingleChildStatViewModel extends SwitchAccountsViewModel {
         barrierDismissible: true);
   }
 
+  Future navigateToSelectScreenTimeGuardianView(
+      {required String childId}) async {
+    final session = screenTimeService.getActiveScreenTimeInMemory(uid: childId);
+    if (session != null) {
+      navToActiveScreenTimeView(session: session);
+    } else {
+      await navigationService.navigateTo(Routes.selectScreenTimeGuardianView,
+          arguments: SelectScreenTimeGuardianViewArguments(
+              childId: childId,
+              senderInfo: PublicUserInfo(
+                  name: currentUser.fullName, uid: currentUser.uid),
+              recipientInfo: PublicUserInfo(
+                  name: explorer!.fullName, uid: explorer!.uid)));
+    }
+  }
+
   Future navigateToAddFundsView() async {
     if (explorer != null) {
       await navigationService.navigateTo(Routes.transferFundsView,

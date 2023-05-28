@@ -7,8 +7,6 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/helpers/money_transfer_status_model.dart';
 import 'package:afkcredits/datamodels/payments/money_transfer.dart';
 import 'package:afkcredits/datamodels/payments/transfer_details.dart';
-import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
-import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/enums/money_source.dart';
@@ -17,42 +15,22 @@ import 'package:afkcredits/enums/transfer_type.dart';
 import 'package:afkcredits/exceptions/firestore_api_exception.dart';
 import 'package:afkcredits/exceptions/money_transfer_exception.dart';
 import 'package:afkcredits/exceptions/user_service_exception.dart';
-import 'package:afkcredits/services/navigation/navigation_mixin.dart';
 import 'package:afkcredits/services/users/user_service.dart';
-import 'package:stacked/stacked.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/select_value_viewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
 
-class TransferFundsViewModel extends FormViewModel with NavigationMixin {
+class TransferFundsViewModel extends SelectValueViewModel {
   final BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
-  final SnackbarService? _snackbarService = locator<SnackbarService>();
   final UserService _userService = locator<UserService>();
   final DialogService _dialogService = locator<DialogService>();
-  final NavigationService _navigationService = locator<NavigationService>();
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final log = getLogger("AddFundsViewModel");
 
   User get currentUser => _userService.currentUser;
 
-  num? amount;
-  num? equivalentValue;
-
-  final PublicUserInfo recipientInfo;
-  final PublicUserInfo senderInfo;
   TransferFundsViewModel(
-      {required this.recipientInfo, required this.senderInfo});
-
-  // The functionality from stacked's form view is
-  // not working properly (not sure exactly why).
-  // This has to do with how we wrap the entire
-  // App with the Unfocuser, see main.dart.
-  // For the time being we just use our own validation
-  // message string
-  String? customValidationMessage;
-  void setCustomValidationMessage(String msg) {
-    customValidationMessage = msg;
-    notifyListeners();
-  }
+      {required super.recipientInfo, required super.senderInfo});
 
   Future showBottomSheetAndProcessPayment() async {
     if (!isValidData()) {
@@ -64,7 +42,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     }
   }
 
-  // TODO: should be unit tested!
   bool isValidData([bool setNoMessage = false]) {
     bool returnValue = true;
     if (amountValue == null || amountValue == "" || amountValue == "-") {
@@ -85,6 +62,10 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
             "You cannot top up more than 1000 credits at once");
     }
     return returnValue;
+  }
+
+  bool canTransferCredits() {
+    return isValidData(true);
   }
 
   Future handleTransfer() async {
@@ -185,10 +166,6 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     }
   }
 
-  void navigateBack() {
-    _navigationService.back();
-  }
-
   Future _showFinalConfirmationBottomSheet() async {
     return await _bottomSheetService!.showBottomSheet(
       barrierDismissible: true,
@@ -216,21 +193,11 @@ class TransferFundsViewModel extends FormViewModel with NavigationMixin {
     return dialogResult;
   }
 
-  Future showNotYetImplementedSnackbar() async {
-    _snackbarService!.showSnackbar(
-        title: "Not yet implemented.", message: "I know... it's sad");
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   void setFormStatus() async {
     log.i("Set custom Form status");
     if (amountValue != null && amountValue != "") {
-      if (isValidData(true)) {
+      if (isValidData(false)) {
         num tmpamount = int.parse(amountValue!);
         equivalentValue = InsideOutCreditSystem.creditsToScreenTime(tmpamount);
       }

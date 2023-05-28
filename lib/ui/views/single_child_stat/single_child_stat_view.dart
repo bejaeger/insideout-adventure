@@ -152,7 +152,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                       color: kcScreenTimeBlue),
                                                   title: "Show",
                                                   onTap: () => model
-                                                      .navToSelectScreenTimeView(
+                                                      .navigateToSelectScreenTimeGuardianView(
                                                           childId: widget.uid),
                                                   color: kcScreenTimeBlue)
                                               : InsideOutButton.outline(
@@ -161,7 +161,7 @@ class _SingleChildStatViewState extends State<SingleChildStatView> {
                                                       color: kcPrimaryColor),
                                                   title: "Set timer",
                                                   onTap: () =>
-                                                      model.navToSelectScreenTimeView(
+                                                      model.navigateToSelectScreenTimeGuardianView(
                                                           childId: widget.uid),
                                                   color: null),
                                           if (model.getScreenTimeSession(
