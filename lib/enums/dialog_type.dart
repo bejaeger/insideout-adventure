@@ -7,7 +7,7 @@ enum DialogType {
   SuperUserSettings,
   CheckpointInArea,
   WardStatCard,
-  CreditConversionInfo,
+  CreditsConversionInfo,
   OnboardingDialog,
   BewareOfSurroundings,
   CustomScreenTime,

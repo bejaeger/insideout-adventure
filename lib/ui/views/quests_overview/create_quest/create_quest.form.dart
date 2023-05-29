@@ -11,7 +11,7 @@ import 'package:stacked/stacked.dart';
 
 const String NameValueKey = 'name';
 const String DescriptionValueKey = 'description';
-const String AfkCreditAmountValueKey = 'afkCreditAmount';
+const String CreditsAmountValueKey = 'creditsAmount';
 const String QuestTypeValueKey = 'questType';
 const String AfkStartAndFinishMarkersValueKey = 'afkStartAndFinishMarkers';
 
@@ -23,12 +23,11 @@ const Map<String, String> AfkStartAndFinishMarkersValueToTitleMap = {
 mixin $CreateQuestView on StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController afkCreditAmountController =
-      TextEditingController();
+  final TextEditingController creditsAmountController = TextEditingController();
   final TextEditingController questTypeController = TextEditingController();
   final FocusNode nameFocusNode = FocusNode();
   final FocusNode descriptionFocusNode = FocusNode();
-  final FocusNode afkCreditAmountFocusNode = FocusNode();
+  final FocusNode creditsAmountFocusNode = FocusNode();
   final FocusNode questTypeFocusNode = FocusNode();
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -36,7 +35,7 @@ mixin $CreateQuestView on StatelessWidget {
   void listenToFormUpdated(FormViewModel model) {
     nameController.addListener(() => _updateFormData(model));
     descriptionController.addListener(() => _updateFormData(model));
-    afkCreditAmountController.addListener(() => _updateFormData(model));
+    creditsAmountController.addListener(() => _updateFormData(model));
     questTypeController.addListener(() => _updateFormData(model));
   }
 
@@ -46,7 +45,7 @@ mixin $CreateQuestView on StatelessWidget {
           ..addAll({
             NameValueKey: nameController.text,
             DescriptionValueKey: descriptionController.text,
-            AfkCreditAmountValueKey: afkCreditAmountController.text,
+            CreditsAmountValueKey: creditsAmountController.text,
             QuestTypeValueKey: questTypeController.text,
           }),
       );
@@ -59,8 +58,8 @@ mixin $CreateQuestView on StatelessWidget {
     nameFocusNode.dispose();
     descriptionController.dispose();
     descriptionFocusNode.dispose();
-    afkCreditAmountController.dispose();
-    afkCreditAmountFocusNode.dispose();
+    creditsAmountController.dispose();
+    creditsAmountFocusNode.dispose();
     questTypeController.dispose();
     questTypeFocusNode.dispose();
   }
@@ -69,16 +68,15 @@ mixin $CreateQuestView on StatelessWidget {
 extension ValueProperties on FormViewModel {
   String? get nameValue => this.formValueMap[NameValueKey];
   String? get descriptionValue => this.formValueMap[DescriptionValueKey];
-  String? get afkCreditAmountValue =>
-      this.formValueMap[AfkCreditAmountValueKey];
+  String? get creditsAmountValue => this.formValueMap[CreditsAmountValueKey];
   String? get questTypeValue => this.formValueMap[QuestTypeValueKey];
   String? get afkStartAndFinishMarkersValue =>
       this.formValueMap[AfkStartAndFinishMarkersValueKey];
 
   bool get hasName => this.formValueMap.containsKey(NameValueKey);
   bool get hasDescription => this.formValueMap.containsKey(DescriptionValueKey);
-  bool get hasAfkCreditAmount =>
-      this.formValueMap.containsKey(AfkCreditAmountValueKey);
+  bool get hasCreditsAmount =>
+      this.formValueMap.containsKey(CreditsAmountValueKey);
   bool get hasQuestType => this.formValueMap.containsKey(QuestTypeValueKey);
   bool get hasAfkStartAndFinishMarkers =>
       this.formValueMap.containsKey(AfkStartAndFinishMarkersValueKey);
