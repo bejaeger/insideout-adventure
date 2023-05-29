@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:afkcredits/enums/authentication_method.dart';
 import 'package:afkcredits/enums/user_role.dart';
 import 'package:afkcredits/ui/layout_widgets/authentication_layout.dart';
-import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:afkcredits/ui/views/login/login_view.form.dart';
+import 'package:afkcredits/ui/widgets/insideout_logo.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 

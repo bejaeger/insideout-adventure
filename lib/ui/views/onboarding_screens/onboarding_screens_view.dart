@@ -2,7 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/onboarding_screens/onboarding_screens_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/activity_conversion_icon.dart';
-import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
+import 'package:afkcredits/ui/widgets/insideout_logo.dart';
 import 'package:afkcredits/ui/widgets/screen_time_conversion_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';

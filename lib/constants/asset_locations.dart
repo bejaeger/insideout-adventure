@@ -14,7 +14,7 @@ const String kCloudOverlayImagePath = "assets/images/luz-azul-cielo-azul.jpg";
 // icons
 const String kTreasureIconARPath = "assets/icons/treasure2_big.png";
 const String kCompassIcon = "assets/icons/cardinal-point.png";
-const String kInsideOutLogo = "assets/inside_out_logo_io_adv.png";
+const String kInsideOutLogo = "assets/insideout_logo_io_adv.png";
 const String kBewareOfSurroundingsIcon = "assets/icons/beware.png";
 const String kWalkingIcon = "assets/icons/walk.png";
 const String kActivityIcon = "assets/icons/run.png";
@@ -27,7 +27,7 @@ const String kScreenTimeIcon2 = "assets/icons/person.png";
 const String kIllustrationActivity =
     "assets/illustrations/activity_illustration.png";
 const String kIllustrationAnnaInsideOut =
-    "assets/illustrations/anna_inside_out.png";
+    "assets/illustrations/anna_insideout.png";
 const String kIllustrationInfographic = "assets/illustrations/infographic.png";
 const String kIllustrationGuardianMeditate =
     "assets/illustrations/guardian_meditate.png";

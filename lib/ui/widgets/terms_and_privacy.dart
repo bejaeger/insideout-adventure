@@ -8,7 +8,7 @@ void showTermsAndPrivacyDialog(
   return showAboutDialog(
     context: context,
     applicationIcon: Image.asset(
-      "assets/inside_out_logo_io_adv.png",
+      "assets/insideout_logo_io_adv.png",
       height: 50,
       width: 50,
     ),
