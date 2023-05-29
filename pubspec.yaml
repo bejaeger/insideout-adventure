@@ -160,11 +160,11 @@ flutter:
     - assets/avatars/chilldude-head.png
     - assets/icons/
     - assets/icons/beware.png
-    - assets/icons/credits.PNG
+    - assets/icons/credits.png
     - assets/icons/credits_orig.png
-    - assets/icons/credits_small.PNG
+    - assets/icons/credits_small.png
     - assets/icons/credits_small_orig.png
-    - assets/icons/credits_small_colored.PNG
+    - assets/icons/credits_small_colored.png
     - assets/icons/treasure2_big.png
     - assets/icons/cardinal-point.png  
     - assets/lottie/ripple-effect.json  

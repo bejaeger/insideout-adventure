@@ -6,7 +6,7 @@ const String kInsideOutLogoPath = "assets/icons/credits_orig.png";
 const String kInsideOutLogoSmallPath = "assets/icons/credits_small_orig.png";
 const String kInsideOutLogoSmallPathYellow = "assets/icons/credits.png";
 const String kInsideOutLogoSmallPathColored =
-    "assets/icons/credits_small_colored.PNG";
+    "assets/icons/credits_small_colored.png";
 
 // images
 const String kCloudOverlayImagePath = "assets/images/luz-azul-cielo-azul.jpg";
