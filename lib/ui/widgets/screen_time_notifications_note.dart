@@ -20,12 +20,12 @@ class ScreenTimeNotificationsNote extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.alarm_on_outlined,
-                    color: kcScreenTimeBlue, size: 40),
+                Icon(Icons.info_outline_rounded,
+                    color: kcPrimaryColor, size: 40),
                 horizontalSpaceSmall,
                 Flexible(
                   child: InsideOutText.subheading(
-                    "We will notify you once the screen time is over",
+                    "Make sure your sound or vibration is turned on",
                   ),
                 ),
               ],
@@ -36,12 +36,12 @@ class ScreenTimeNotificationsNote extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.info_outline_rounded,
-                    color: kcPrimaryColor, size: 40),
+                Icon(Icons.alarm_on_outlined,
+                    color: kcScreenTimeBlue, size: 40),
                 horizontalSpaceSmall,
                 Flexible(
                   child: InsideOutText.subheading(
-                    "Make sure your sound or vibration is turned on",
+                    "We will notify you once the screen time is over",
                   ),
                 ),
               ],

@@ -54,7 +54,6 @@ IconData getIconForCategory(QuestType? category) {
   if (category == QuestType.DistanceEstimate) {
     return Icons.arrow_right_alt;
   } else if (category == QuestType.TreasureLocationSearch) {
-    // return Icons.location_on;
     return Icons.search;
   } else if (category == QuestType.QRCodeHunt) {
     return Icons.pets;
@@ -74,7 +73,7 @@ String getStringForCategory(QuestType? category) {
     case QuestType.DistanceEstimate:
       return "Estimating Distance";
     case QuestType.TreasureLocationSearch:
-      return "Search Quest";
+      return "Search";
     case QuestType.QRCodeHunt:
       return "QR Code Hunt";
     case QuestType.GPSAreaHunt:

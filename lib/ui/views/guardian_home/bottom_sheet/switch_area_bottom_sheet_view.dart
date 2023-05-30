@@ -39,7 +39,7 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                 ),
                 verticalSpaceSmall,
                 Center(
-                  child: InsideOutText.headingFour("Switch area",
+                  child: InsideOutText.headingFour("Switch to kids area",
                       align: TextAlign.center),
                 ),
                 verticalSpaceSmall,

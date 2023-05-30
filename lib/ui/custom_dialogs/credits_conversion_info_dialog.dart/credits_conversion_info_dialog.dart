@@ -27,56 +27,6 @@ class CreditsConversionInfoDialog extends StatelessWidget {
             children: [
               InsideOutText.headingThree("Our conversions"),
               verticalSpaceMedium,
-              //OnboardingActivityConversionIcon(),
-              // Row(
-              //   children: [
-              //     InsideOutText.headingFour("Activity"),
-              //     Icon(Icons.arrow_right_alt, size: 24, color: kcMediumGrey),
-              //     InsideOutText.headingFour("Credits"),
-              //   ],
-              // ),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        kActivityIcon,
-                        height: 24,
-                        color: kcActivityIconColor,
-                      ),
-                      InsideOutText.captionBold(
-                          "${(1 / CreditsSystem.kMinuteActivityToCreditsConversion).round().toString()} min"),
-                    ],
-                  ),
-                  horizontalSpaceTiny,
-                  Icon(Icons.arrow_right_alt, size: 24, color: kcMediumGrey),
-                  horizontalSpaceTiny,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        kInsideOutLogoSmallPathColored,
-                        height: 24,
-                        color: kcPrimaryColor,
-                      ),
-                      InsideOutText.captionBold("1 credit"),
-                    ],
-                  ),
-                ],
-              ),
-              verticalSpaceTiny,
-              InsideOutText.body(
-                  "We recommend giving 1 credit for ${(1 / CreditsSystem.kMinuteActivityToCreditsConversion).round().toString()} minutes of activity. By creating your own quests you can decide on this conversion."),
-              verticalSpaceMedium,
-
-              // Row(
-              //   children: [
-              //     InsideOutText.headingFour("Credits"),
-              //     Icon(Icons.arrow_right_alt, size: 24, color: kcMediumGrey),
-              //     InsideOutText.headingFour("Screen time"),
-              //   ],
-              // ),
               Row(
                 children: [
                   Column(
@@ -110,6 +60,40 @@ class CreditsConversionInfoDialog extends StatelessWidget {
               verticalSpaceTiny,
               InsideOutText.body(
                   "Per default 1 credit converts to ${CreditsSystem.kCreditsToScreenTimeConversionFactor.round()} minute screen time. In future versions of the app we will allow to adjust this conversion."),
+              verticalSpaceMedium,
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        kActivityIcon,
+                        height: 24,
+                        color: kcActivityIconColor,
+                      ),
+                      InsideOutText.captionBold(
+                          "${(1 / CreditsSystem.kMinuteActivityToCreditsConversion).round().toString()} min"),
+                    ],
+                  ),
+                  horizontalSpaceTiny,
+                  Icon(Icons.arrow_right_alt, size: 24, color: kcMediumGrey),
+                  horizontalSpaceTiny,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        kInsideOutLogoSmallPathColored,
+                        height: 24,
+                        color: kcPrimaryColor,
+                      ),
+                      InsideOutText.captionBold("1 credit"),
+                    ],
+                  ),
+                ],
+              ),
+              verticalSpaceTiny,
+              InsideOutText.body(
+                  "We recommend giving 1 credit for ${(1 / CreditsSystem.kMinuteActivityToCreditsConversion).round().toString()} minutes of activity. By creating your own quests you can decide on this conversion."),
               verticalSpaceSmall,
               Row(
                 children: [

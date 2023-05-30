@@ -37,14 +37,12 @@ class NumberQuestsFoundDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 verticalSpaceSmall,
-                Text('Found ${request.data} quests nearby',
+                verticalSpaceSmall,
+                Text('Found ${request.data} quests nearby!',
                     textAlign: TextAlign.center,
                     style: textTheme(context)
                         .headline6!
                         .copyWith(fontWeight: FontWeight.w800)),
-                verticalSpaceSmall,
-                Text('Look around the map and tap on the markers.',
-                    textAlign: TextAlign.center),
                 verticalSpaceMedium,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -63,12 +61,6 @@ class NumberQuestsFoundDialog extends StatelessWidget {
                             width: 180,
                             height: 45,
                           ),
-                          // horizontalSpaceTiny,
-                          // Padding(
-                          //   padding: const EdgeInsets.only(top: 4),
-                          //   child: Icon(Icons.arrow_forward,
-                          //       size: 20, color: kcPrimaryColor),
-                          // ),
                         ],
                       ),
                     ),
@@ -84,13 +76,7 @@ class NumberQuestsFoundDialog extends StatelessWidget {
                 maxRadius: 38,
                 backgroundColor: kcOrange,
                 child: Image.asset(kActivityIcon,
-                    height: 45, color: kcVeryLightGrey)
-                // Icon(
-                //   Icons.favorite,
-                //   size: 28,
-                //   color: Colors.white,
-                // ),
-                ),
+                    height: 45, color: kcVeryLightGrey)),
           ),
         ],
       ),

@@ -122,7 +122,7 @@ class CurrentQuestStatusInfo extends StatelessWidget {
       case DirectionStatus.closer:
         return "Getting Closer!";
       case DirectionStatus.further:
-        return "Further away!";
+        return "Moving away!";
       case DirectionStatus.notstarted:
         return "";
       case DirectionStatus.denied:

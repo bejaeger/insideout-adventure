@@ -56,14 +56,18 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
       tmpWard = ward;
     }
 
-    // await handleGuardianConsent();
-
     if (tmpWard == null) {
       log.e("Please provide an wardUid you want to switch to!");
       await showGenericInternalErrorDialog();
       return;
     }
-
+    if (!userService.hasGivenConsent) {
+      await dialogService.showDialog(
+          title: "Give consent first",
+          description:
+              "Please first give your consent to the terms, conditions and privacy policy. You can give consent by navigating to the terms & conditions in the menu on the top right.");
+      return;
+    }
     final result = await bottomSheetService.showBottomSheet(
         title: "Switch to " + tmpWard.fullName + "'s area",
         description: "Do you want to lock this parent area with a passcode?",
@@ -120,34 +124,32 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
           description:
               "No parent account found. Please first logout and then sign in to a parrent account.");
       return;
-    } else {
-      if (userService.guardianReference!.withPasscode) {
-        final pinResult = await navigationService.navigateTo(Routes.setPinView);
-        if (pinResult == null) {
-          return;
-        } else {
-          final valid =
-              await userService.validateGuardianPin(pin: pinResult.pin);
-          setBusy(true);
-          if (valid != null && valid == true) {
-            await switchToGuardianAccount(
-                guardianReference: userService.guardianReference!);
-          } else {
-            await dialogService.showDialog(
-                title: "Pin not correct",
-                description: "You entered a wrong passcode.");
-          }
-          setBusy(false);
-        }
+    }
+    if (userService.guardianReference!.withPasscode) {
+      final pinResult = await navigationService.navigateTo(Routes.setPinView);
+      if (pinResult == null) {
+        return;
       } else {
-        final confirmation = await bottomSheetService.showBottomSheet(
-            title: "Switch to parent area?",
-            confirmButtonTitle: "Switch",
-            cancelButtonTitle: "Cancel");
-        if (confirmation?.confirmed == true) {
+        final valid = await userService.validateGuardianPin(pin: pinResult.pin);
+        setBusy(true);
+        if (valid != null && valid == true) {
           await switchToGuardianAccount(
               guardianReference: userService.guardianReference!);
+        } else {
+          await dialogService.showDialog(
+              title: "Pin not correct",
+              description: "You entered a wrong passcode.");
         }
+        setBusy(false);
+      }
+    } else {
+      final confirmation = await bottomSheetService.showBottomSheet(
+          title: "Switch to parent area?",
+          confirmButtonTitle: "Switch",
+          cancelButtonTitle: "Cancel");
+      if (confirmation?.confirmed == true) {
+        await switchToGuardianAccount(
+            guardianReference: userService.guardianReference!);
       }
     }
   }

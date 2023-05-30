@@ -72,6 +72,8 @@ class GuardianConsentView extends StatelessWidget with $GuardianConsentView {
                             InsideOutInputField(
                               placeholder: 'Email',
                               controller: emailController,
+                              trailing: Icon(Icons.close),
+                              trailingTapped: () => emailController.clear(),
                               errorText:
                                   model.fieldsValidationMessages[EmailValueKey],
                               autofocus: false,
@@ -97,7 +99,7 @@ class GuardianConsentView extends StatelessWidget with $GuardianConsentView {
                             verticalSpaceMedium,
                             if (!model.verifiedCode)
                               InsideOutText.body(
-                                  "We sent a code to your email address:\n${model.email}"),
+                                  "We sent a code to your email address:\n${emailController.text}"),
                             verticalSpaceMedium,
                             if (!model.verifiedCode)
                               Container(

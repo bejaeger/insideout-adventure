@@ -29,7 +29,7 @@ class WardSettingsForGuardianDialogViewModel extends BaseModel {
       await dialogService.showDialog(
           title: "Not recommended",
           description:
-              "Setting screen time verification to true is only possible when your child uses his own phone");
+              "Setting screen time verification to true is only possible when your child uses their own phone");
       return;
     }
     isAcceptScreenTimeFirstTmp = b;
@@ -41,5 +41,12 @@ class WardSettingsForGuardianDialogViewModel extends BaseModel {
     isUsingOwnPhoneTmp = b;
     userService.setIsUsingOwnPhone(uid: wardUid, value: b);
     notifyListeners();
+  }
+
+  void showChildPassword() async {
+    await dialogService.showDialog(
+        barrierDismissible: true,
+        title: "Child password",
+        description: "The password is: ${ward!.password}");
   }
 }

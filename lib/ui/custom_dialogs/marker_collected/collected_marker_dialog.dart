@@ -97,7 +97,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                 children: [
                   verticalSpaceSmall,
                   Text(
-                    "Marker collected!",
+                    "Checkpoint collected!",
                     textAlign: TextAlign.center,
                     style: textTheme(context).headline6!.copyWith(
                         color: kcPrimaryColor,

@@ -104,6 +104,21 @@ class CreateWardView extends StatelessWidget with $CreateWardView {
                                         color: kcPrimaryColor),
                               ),
                             ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: model.showPasswordReasonDialog,
+                                  child: InsideOutText(
+                                      text: "Why password?",
+                                      style: bodyStyleSofia.copyWith(
+                                          color: Colors.grey[500],
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13)),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

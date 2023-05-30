@@ -23,6 +23,7 @@ class SelectValue extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
       child: ListView(
+        shrinkWrap: true,
         children: [
           verticalSpaceMedium,
           InsideOutText.subheading(userPrompt),

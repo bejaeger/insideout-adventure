@@ -27,7 +27,7 @@ String getShortQuestType(QuestType? type, {bool noCaps = false}) {
     returnVal = "Hike";
   }
   if (type == QuestType.TreasureLocationSearch) {
-    returnVal = "Search Quest";
+    returnVal = "Search";
   }
   if (noCaps) {
     return returnVal.toLowerCase();

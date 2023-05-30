@@ -34,22 +34,52 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
       },
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: CustomAppBar(
               title: "Reward ${recipientInfo.name}",
               onBackButton: () {
                 amountController.clear();
                 model.popView();
               }),
-          body: SelectValue(
-            userPrompt:
-                "How many credits do you want to add to ${recipientInfo.name}'s account?",
-            inputField: _creditsInputField(),
-            validationMessage: model.customValidationMessage,
-            equivalentValueWidget:
-                _screenTimeSummaryStats(model.equivalentValue),
-            ctaButton: _transferCreditsButton(
-                onTap: model.showBottomSheetAndProcessTransfer,
-                enabled: model.canTransferCredits()),
+          body: Container(
+            height: screenHeight(context),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SelectValue(
+                  userPrompt:
+                      "How many credits do you want to add to ${recipientInfo.name}'s account?",
+                  inputField: _creditsInputField(),
+                  validationMessage: model.customValidationMessage,
+                  equivalentValueWidget:
+                      _screenTimeSummaryStats(model.equivalentValue),
+                  ctaButton: _transferCreditsButton(
+                      onTap: model.showBottomSheetAndProcessTransfer,
+                      enabled: model.canTransferCredits()),
+                ),
+                verticalSpaceMedium,
+                Container(
+                  width: screenWidth(context, percentage: 0.8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InsideOutText.body(
+                          "Why ${recipientInfo.name} might have earned credits"),
+                      verticalSpaceTiny,
+                      InsideOutText.body("""
+\u2022 for helping in the kitchen
+\u2022 as a birthday gift
+\u2022 for being active
+\u2022 for reading a book
+\u2022 for mowing the lawn
+\u2022 for helping in the household
+\u2022 ...
+                          """),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

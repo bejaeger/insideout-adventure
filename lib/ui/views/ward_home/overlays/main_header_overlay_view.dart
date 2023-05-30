@@ -66,14 +66,14 @@ class MainHeaderOverlayView extends StatelessWidget {
                     icon1: Icon(Icons.settings, color: kcMediumGrey, size: 22),
                     onTap1: model.showExplorerSettingsDialog,
                     text1: 'Settings',
-                    icon2: Icon(Icons.logout, color: kcMediumGrey, size: 22),
-                    onTap2: model.handleLogoutEvent,
-                    text2: 'Logout',
-                    icon3: Image.asset(kSwitchAccountIcon,
+                    icon2: Image.asset(kSwitchAccountIcon,
                         height: 18, color: kcMediumGrey),
-                    text3: 'Switch Account',
-                    onTap3: () async =>
+                    text2: 'Switch Account',
+                    onTap2: () async =>
                         await model.handleSwitchToGuardianEvent(),
+                    icon3: Icon(Icons.logout, color: kcMediumGrey, size: 22),
+                    onTap3: model.handleLogoutEvent,
+                    text3: 'Logout',
                     icon4: model.isSuperUser
                         ? Icon(Icons.person, color: kcMediumGrey, size: 22)
                         : null,

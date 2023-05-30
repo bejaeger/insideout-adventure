@@ -217,4 +217,5 @@ mixin NavigationMixin {
       ),
     );
   }
+
 }

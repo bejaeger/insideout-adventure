@@ -50,7 +50,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
               // onTapMain: model.navigateToAddFundsView,
               leadingMain: Image.asset(kSwitchAccountIcon,
                   height: 22, color: Colors.white),
-              titleMain: "Switch area",
+              titleMain: "Kids area",
               onTapMain: model.handleSwitchToWardEvent),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
@@ -182,14 +182,21 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                               title: "Last 7 days",
                               horizontalPadding: 0,
                               //onButtonTap: model.showNotImplementedSnackbar,
-                              otherTrailingIcon: TextButton(
-                                child: InsideOutText.body(
-                                  "Total Stats",
-                                  color: kcPrimaryColor,
-                                ),
+                              otherTrailingIcon: IconButton(
+                                icon: Icon(Icons.more_vert,
+                                    size: 24, color: kcGreyTextColor),
                                 onPressed: model.showWardStatDetailsDialog,
+                                //color: Colors.red,
                               ),
                             ),
+                            //    TextButton(
+                            //     child: InsideOutText.body(
+                            //       "Total Stats",
+                            //       color: kcPrimaryColor,
+                            //     ),
+                            //     onPressed: model.showWardStatDetailsDialog,
+                            //   ),
+                            // ),
                             verticalSpaceSmall,
                             Row(
                               children: [

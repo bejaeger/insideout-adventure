@@ -337,7 +337,8 @@ class UserService {
       {required String name,
       required String password,
       required AuthenticationMethod authMethod,
-      required UserSettings userSettings}) async {
+      required UserSettings userSettings,
+      bool noHashPassword = true}) async {
     if (await isUserAlreadyPresent(name: name)) {
       return "A user with name $name exists already in our system. Please choose a different name.";
     }
@@ -346,7 +347,7 @@ class UserService {
     final newWard = User(
       authMethod: authMethod,
       fullName: name,
-      password: hashPassword(password),
+      password: noHashPassword ? password : hashPassword(password),
       uid: docRef.id,
       role: UserRole.ward,
       guardianIds: [currentUser.uid],
@@ -926,7 +927,7 @@ class UserService {
       {required GuardianVerificationStatus status}) async {
     if (currentUserNullable != null) {
       User newUser = currentUser.copyWith(guardianVerificationStatus: status);
-      _firestoreApi.updateUserData(user: newUser);
+      await _firestoreApi.updateUserData(user: newUser);
     } else {
       log.wtf(
           "User is null in updateGuardianVerificationStatus() function. Should never happen");
@@ -962,7 +963,13 @@ class UserService {
       return false;
     }
     final hash = hashedPw2 ?? hashPassword(stringPw2!);
-    return hash.compareTo(hashedPw1) == 0;
+    if (hash.compareTo(hashedPw1) == 0) {
+      return true;
+    } else if (hashedPw1 == stringPw2) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   String hashPassword(String pw) {

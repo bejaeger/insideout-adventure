@@ -58,7 +58,9 @@ class GuardianDrawerView extends StatelessWidget {
                 leading: Icon(Icons.book),
                 onTap: () => showTermsAndPrivacyDialog(
                     context: context,
-                    appConfigProvider: model.appConfigProvider)),
+                    appConfigProvider: model.appConfigProvider,
+                    consentButton: _consentButton(model),
+                    revokeButton: _revokeButton(model))),
           ),
           verticalSpaceTiny,
           Padding(
@@ -101,5 +103,23 @@ class GuardianDrawerView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget? _revokeButton(CommonDrawerViewModel model) {
+    return model.hasGivenConsent
+        ? InsideOutButton(
+            title: "Revoke Consent",
+            onTap: model.handleToggleConsent,
+          )
+        : null;
+  }
+
+  Widget? _consentButton(CommonDrawerViewModel model) {
+    return model.hasGivenConsent
+        ? null
+        : InsideOutButton(
+            title: "Give Consent",
+            onTap: model.handleToggleConsent,
+          );
   }
 }

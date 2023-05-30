@@ -17,6 +17,6 @@ const String kDistanceEstimateDescription =
     "Start the quest and then walk the given meters (air distance). If you think the distance is correct, check it. You only have 3 tries!";
 
 const String kLocationSearchDescriptionGuardian =
-    "You can choose a start position on the map and place credits somewhere else. Children can search for the credits by walking and observing their distance to the credits.";
+    "You can choose a starting marker on the map and place checkpoints somewhere else. Children can search for the checkpoints in your chosen order by walking and observing their distance to next checkpoint on the screen.";
 const String kGPSAreaHikeDescriptionGuardian =
-    "A simple hike quest. You can choose the position of all checkpoints that need to be reached to finish the quest. Children can only ever see the next checkpoint on the map.";
+    "You can choose the position of all checkpoints that need to be reached in your chosen order to finish the quest. Children can only ever see the next checkpoint on the map.";
