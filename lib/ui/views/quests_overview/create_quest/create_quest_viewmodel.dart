@@ -73,9 +73,9 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   @override
   void setFormStatus() {
     _log.i('Set the Form With Data: $formValueMap');
-    if (afkCreditAmountValue != null && afkCreditAmountValue != "") {
+    if (creditsAmountValue != null && creditsAmountValue != "") {
       if (isValidUserInputs(credits: true)) {
-        num tmpamount = int.parse(afkCreditAmountValue!);
+        num tmpamount = int.parse(creditsAmountValue!);
         screenTimeEquivalent = CreditsSystem.creditsToScreenTime(tmpamount);
       }
     }
@@ -162,14 +162,14 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
       bool credits = false}) {
     resetValidationMessages();
     bool isValid = true;
-    if (credits && afkCreditAmountValue == null) {
+    if (credits && creditsAmountValue == null) {
       creditsInputValidationMessage = 'Choose Credits amount';
       isValid = false;
     }
     // also check type of credits input
     if (credits) {
       try {
-        num tmpValue = num.parse(afkCreditAmountValue.toString());
+        num tmpValue = num.parse(creditsAmountValue.toString());
       } catch (e) {
         if (e is FormatException) {
           creditsInputValidationMessage = "Please provide a numerical value";
@@ -239,7 +239,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
   Future<bool?> _createQuest() async {
     if (!isValidUserInputs(credits: true)) return false;
     notifyListeners();
-    num afkCreditAmount = num.parse(afkCreditAmountValue.toString());
+    num creditsAmount = num.parse(creditsAmountValue.toString());
     var id = Uuid();
     final questId = id.v1().toString().replaceAll('-', '');
     final added = await _questService.createQuest(
@@ -260,7 +260,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
         repeatable:
             selectedQuestType == QuestType.TreasureLocationSearch ? 0 : 1,
         markers: getAFKMarkers,
-        credits: afkCreditAmount,
+        credits: creditsAmount,
         distanceMarkers: getTotalDistanceOfMarkers(),
       ),
     );
@@ -405,7 +405,7 @@ class CreateQuestViewModel extends QuestMarkerViewModel with NavigationMixin {
         cancelTitleColor: kcOrange);
     if (response?.confirmed == false) {
       await _dialogService.showCustomDialog(
-        variant: DialogType.CreditConversionInfo,
+        variant: DialogType.CreditsConversionInfo,
         barrierDismissible: true,
       );
     }

@@ -12,7 +12,7 @@ import 'package:stacked/stacked.dart';
 
 const String NameValueKey = 'name';
 const String DescriptionValueKey = 'description';
-const String AfkCreditAmountValueKey = 'afkCreditAmount';
+const String CreditsAmountValueKey = 'creditsAmount';
 
 final Map<String, TextEditingController>
     _CreateQuestViewTextEditingControllers = {};
@@ -23,7 +23,7 @@ final Map<String, String? Function(String?)?> _CreateQuestViewTextValidations =
     {
   NameValueKey: FormValidators.nameValidator,
   DescriptionValueKey: null,
-  AfkCreditAmountValueKey: null,
+  CreditsAmountValueKey: null,
 };
 
 mixin $CreateQuestView on StatelessWidget {
@@ -31,12 +31,12 @@ mixin $CreateQuestView on StatelessWidget {
       _getFormTextEditingController(NameValueKey, initialValue: 'Quest Name');
   TextEditingController get descriptionController =>
       _getFormTextEditingController(DescriptionValueKey);
-  TextEditingController get afkCreditAmountController =>
-      _getFormTextEditingController(AfkCreditAmountValueKey);
+  TextEditingController get creditsAmountController =>
+      _getFormTextEditingController(CreditsAmountValueKey);
   FocusNode get nameFocusNode => _getFormFocusNode(NameValueKey);
   FocusNode get descriptionFocusNode => _getFormFocusNode(DescriptionValueKey);
-  FocusNode get afkCreditAmountFocusNode =>
-      _getFormFocusNode(AfkCreditAmountValueKey);
+  FocusNode get creditsAmountFocusNode =>
+      _getFormFocusNode(CreditsAmountValueKey);
 
   TextEditingController _getFormTextEditingController(String key,
       {String? initialValue}) {
@@ -61,7 +61,7 @@ mixin $CreateQuestView on StatelessWidget {
   void listenToFormUpdated(FormViewModel model) {
     nameController.addListener(() => _updateFormData(model));
     descriptionController.addListener(() => _updateFormData(model));
-    afkCreditAmountController.addListener(() => _updateFormData(model));
+    creditsAmountController.addListener(() => _updateFormData(model));
   }
 
   final bool _autoTextFieldValidation = true;
@@ -77,7 +77,7 @@ mixin $CreateQuestView on StatelessWidget {
         ..addAll({
           NameValueKey: nameController.text,
           DescriptionValueKey: descriptionController.text,
-          AfkCreditAmountValueKey: afkCreditAmountController.text,
+          CreditsAmountValueKey: creditsAmountController.text,
         }),
     );
     if (_autoTextFieldValidation || forceValidate) {
@@ -89,7 +89,7 @@ mixin $CreateQuestView on StatelessWidget {
   void _updateValidationData(dynamic model) => model.setValidationMessages({
         NameValueKey: _getValidationMessage(NameValueKey),
         DescriptionValueKey: _getValidationMessage(DescriptionValueKey),
-        AfkCreditAmountValueKey: _getValidationMessage(AfkCreditAmountValueKey),
+        CreditsAmountValueKey: _getValidationMessage(CreditsAmountValueKey),
       });
 
   /// Returns the validation message for the given key
@@ -123,28 +123,27 @@ extension ValueProperties on FormViewModel {
   String? get nameValue => this.formValueMap[NameValueKey] as String?;
   String? get descriptionValue =>
       this.formValueMap[DescriptionValueKey] as String?;
-  String? get afkCreditAmountValue =>
-      this.formValueMap[AfkCreditAmountValueKey] as String?;
+  String? get creditsAmountValue =>
+      this.formValueMap[CreditsAmountValueKey] as String?;
 
   bool get hasName => this.formValueMap.containsKey(NameValueKey);
   bool get hasDescription => this.formValueMap.containsKey(DescriptionValueKey);
-  bool get hasAfkCreditAmount =>
-      this.formValueMap.containsKey(AfkCreditAmountValueKey);
+  bool get hasCreditsAmount =>
+      this.formValueMap.containsKey(CreditsAmountValueKey);
 
   bool get hasNameValidationMessage =>
       this.fieldsValidationMessages[NameValueKey]?.isNotEmpty ?? false;
   bool get hasDescriptionValidationMessage =>
       this.fieldsValidationMessages[DescriptionValueKey]?.isNotEmpty ?? false;
-  bool get hasAfkCreditAmountValidationMessage =>
-      this.fieldsValidationMessages[AfkCreditAmountValueKey]?.isNotEmpty ??
-      false;
+  bool get hasCreditsAmountValidationMessage =>
+      this.fieldsValidationMessages[CreditsAmountValueKey]?.isNotEmpty ?? false;
 
   String? get nameValidationMessage =>
       this.fieldsValidationMessages[NameValueKey];
   String? get descriptionValidationMessage =>
       this.fieldsValidationMessages[DescriptionValueKey];
-  String? get afkCreditAmountValidationMessage =>
-      this.fieldsValidationMessages[AfkCreditAmountValueKey];
+  String? get creditsAmountValidationMessage =>
+      this.fieldsValidationMessages[CreditsAmountValueKey];
 }
 
 extension Methods on FormViewModel {
@@ -152,7 +151,6 @@ extension Methods on FormViewModel {
       this.fieldsValidationMessages[NameValueKey] = validationMessage;
   setDescriptionValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[DescriptionValueKey] = validationMessage;
-  setAfkCreditAmountValidationMessage(String? validationMessage) =>
-      this.fieldsValidationMessages[AfkCreditAmountValueKey] =
-          validationMessage;
+  setCreditsAmountValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[CreditsAmountValueKey] = validationMessage;
 }

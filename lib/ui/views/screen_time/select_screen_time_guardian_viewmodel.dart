@@ -17,7 +17,7 @@ class SelectScreenTimeGuardianViewModel extends SelectValueViewModel {
 
   int get totalAvailableScreenTime =>
       _userService.getTotalAvailableScreenTime(wardId: wardId);
-  int get afkCreditsBalance =>
+  int get creditsBalance =>
       _userService.getCreditsBalance(wardId: wardId).round();
 
   int? screenTimePreset;
@@ -89,8 +89,7 @@ class SelectScreenTimeGuardianViewModel extends SelectValueViewModel {
         Duration(seconds: 10),
       ), // add 10 seconds because we wait for another 10 seconds in the next view!
       credits: double.parse(
-          CreditsSystem.screenTimeToCredits(screenTimePreset!)
-              .toString()),
+          CreditsSystem.screenTimeToCredits(screenTimePreset!).toString()),
     );
 
     log.i("Navigating to start screen time session counter");

@@ -142,7 +142,7 @@ flutter_icons:
   android: "launcher_icon"
   ios: true
   remove_alpha_ios: true # important otherwise apple doesn't accept app
-  image_path: "assets/inside_out_logo_io_adv.png"
+  image_path: "assets/insideout_logo_io_adv.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -156,15 +156,15 @@ flutter:
   uses-material-design: true
   assets:
     - assets/DayStyle.json
-    - assets/inside_out_logo_io_adv.png
+    - assets/insideout_logo_io_adv.png
     - assets/avatars/chilldude-head.png
     - assets/icons/
     - assets/icons/beware.png
-    - assets/icons/credits.PNG
+    - assets/icons/credits.png
     - assets/icons/credits_orig.png
-    - assets/icons/credits_small.PNG
+    - assets/icons/credits_small.png
     - assets/icons/credits_small_orig.png
-    - assets/icons/credits_small_colored.PNG
+    - assets/icons/credits_small_colored.png
     - assets/icons/treasure2_big.png
     - assets/icons/cardinal-point.png  
     - assets/lottie/ripple-effect.json  
@@ -179,7 +179,7 @@ flutter:
     - assets/icons/person.png
     - assets/icons/computer.png
     - assets/illustrations/activity_illustration.png
-    - assets/illustrations/anna_inside_out.png
+    - assets/illustrations/anna_insideout.png
     - assets/illustrations/infographic.png
     - assets/illustrations/guardian_meditate.png
     - assets/illustrations/screen_time.png

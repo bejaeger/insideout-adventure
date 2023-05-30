@@ -112,7 +112,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                               bottom: 0.0),
                                           visualDensity: VisualDensity.compact,
                                           onPressed: model
-                                              .showExplainCreditConversionDialog,
+                                              .showExplainCreditsConversionDialog,
                                           icon: Icon(Icons.info_outline,
                                               color: kcPrimaryColor, size: 22)),
                                     ),
@@ -160,8 +160,8 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                                       Icons.play_arrow_rounded,
                                                       color: kcPrimaryColor),
                                                   title: "Set timer",
-                                                  onTap: () =>
-                                                      model.navigateToSelectScreenTimeGuardianView(
+                                                  onTap: () => model
+                                                      .navigateToSelectScreenTimeGuardianView(
                                                           wardId: widget.uid),
                                                   color: null),
                                           if (model.getScreenTimeSession(

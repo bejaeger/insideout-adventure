@@ -31,7 +31,7 @@ final circularBorder = OutlineInputBorder(
       validator: FormValidators.nameValidator,
     ),
     FormTextField(name: 'description'),
-    FormTextField(name: 'afkCreditAmount'),
+    FormTextField(name: 'creditsAmount'),
   ],
 )
 // ignore: must_be_immutable
@@ -124,7 +124,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                   ),
                   CreditsSelection(
                     model: model,
-                    afkCreditAmountController: afkCreditAmountController,
+                    creditsAmountController: creditsAmountController,
                   ),
                 ],
               ),
@@ -362,17 +362,17 @@ class QuestMarkersSelection extends StatelessWidget with $CreateQuestView {
 
 class CreditsSelection extends StatelessWidget with $CreateQuestView {
   final CreateQuestViewModel model;
-  final TextEditingController afkCreditAmountController;
+  final TextEditingController creditsAmountController;
   QuestType? questTypeValue;
 
   CreditsSelection({
     required this.model,
-    required this.afkCreditAmountController,
+    required this.creditsAmountController,
   });
   @override
   Widget build(BuildContext context) {
-    if (afkCreditAmountController.text == "") {
-      afkCreditAmountFocusNode.requestFocus();
+    if (creditsAmountController.text == "") {
+      creditsAmountFocusNode.requestFocus();
     }
     return SingleChildScrollView(
       child: Container(
@@ -406,8 +406,8 @@ class CreditsSelection extends StatelessWidget with $CreateQuestView {
                       Container(
                         width: screenWidth(context, percentage: 0.35),
                         child: InsideOutInputField(
-                          focusNode: afkCreditAmountFocusNode,
-                          controller: afkCreditAmountController,
+                          focusNode: creditsAmountFocusNode,
+                          controller: creditsAmountController,
                           style: heading3Style,
                           leading: Padding(
                             padding: const EdgeInsets.all(10.0),

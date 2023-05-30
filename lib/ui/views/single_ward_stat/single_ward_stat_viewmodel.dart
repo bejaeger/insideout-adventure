@@ -135,9 +135,9 @@ class SingleWardStatViewModel extends SwitchAccountsViewModel {
     );
   }
 
-  void showExplainCreditConversionDialog() async {
+  void showExplainCreditsConversionDialog() async {
     await dialogService.showCustomDialog(
-      variant: DialogType.CreditConversionInfo,
+      variant: DialogType.CreditsConversionInfo,
       barrierDismissible: true,
     );
   }
@@ -160,8 +160,8 @@ class SingleWardStatViewModel extends SwitchAccountsViewModel {
               wardId: wardId,
               senderInfo: PublicUserInfo(
                   name: currentUser.fullName, uid: currentUser.uid),
-              recipientInfo: PublicUserInfo(
-                  name: ward!.fullName, uid: ward!.uid)));
+              recipientInfo:
+                  PublicUserInfo(name: ward!.fullName, uid: ward!.uid)));
     }
   }
 

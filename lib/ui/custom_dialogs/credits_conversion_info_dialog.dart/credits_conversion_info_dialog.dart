@@ -1,14 +1,14 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/credits_system.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class CreditConversionInfoDialog extends StatelessWidget {
+class CreditsConversionInfoDialog extends StatelessWidget {
   final DialogRequest request;
   final Function(DialogResponse) completer;
 
-  const CreditConversionInfoDialog(
+  const CreditsConversionInfoDialog(
       {Key? key, required this.request, required this.completer})
       : super(key: key);
 

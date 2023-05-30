@@ -2,9 +2,9 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_view.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/terms_and_privacy.dart';
-import 'package:insideout_ui/insideout_ui.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class GuardianDrawerView extends StatelessWidget {
@@ -57,7 +57,8 @@ class GuardianDrawerView extends StatelessWidget {
                 title: InsideOutText.body("Terms & Policies"),
                 leading: Icon(Icons.book),
                 onTap: () => showTermsAndPrivacyDialog(
-                    context: context, appConfigProvider: model.appConfigProvider)),
+                    context: context,
+                    appConfigProvider: model.appConfigProvider)),
           ),
           verticalSpaceTiny,
           Padding(
@@ -68,7 +69,7 @@ class GuardianDrawerView extends StatelessWidget {
               onTap: () => showAboutDialog(
                 context: context,
                 applicationIcon: Image.asset(
-                  "assets/inside_out_logo_io_adv.png",
+                  "assets/insideout_logo_io_adv.png",
                   height: 50,
                   width: 50,
                 ),

@@ -35,8 +35,9 @@ void setupDialogUi() {
             request: sheetRequest, completer: completer, isQrCodeInArea: false),
     DialogType.WardStatCard: (context, sheetRequest, completer) =>
         WardTotalStatsCardDialog(request: sheetRequest, completer: completer),
-    DialogType.CreditConversionInfo: (context, sheetRequest, completer) =>
-        CreditConversionInfoDialog(request: sheetRequest, completer: completer),
+    DialogType.CreditsConversionInfo: (context, sheetRequest, completer) =>
+        CreditsConversionInfoDialog(
+            request: sheetRequest, completer: completer),
     DialogType.OnboardingDialog: (context, sheetRequest, completer) =>
         OnboardingDialog(request: sheetRequest, completer: completer),
     DialogType.BewareOfSurroundings: (context, sheetRequest, completer) =>

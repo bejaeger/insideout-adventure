@@ -1,7 +1,7 @@
 import 'package:afkcredits/ui/views/startup/startup_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/inside_out_logo.dart';
-import 'package:insideout_ui/insideout_ui.dart';
+import 'package:afkcredits/ui/widgets/insideout_logo.dart';
 import 'package:flutter/material.dart';
+import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class StartUpView extends StatelessWidget {
