@@ -35,7 +35,7 @@ class QuestSpecificationsRow extends StatelessWidget {
           ],
         ),
         horizontalSpaceMedium,
-        horizontalSpaceSmall,
+        horizontalSpaceTiny,
         if (quest!.distanceMarkers != null)
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,

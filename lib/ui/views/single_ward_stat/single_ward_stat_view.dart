@@ -49,7 +49,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
               // titleMain: "Add Credits",
               // onTapMain: model.navigateToAddFundsView,
               leadingMain: Image.asset(kSwitchAccountIcon,
-                  height: 22, color: Colors.white),
+                  height: 20, color: Colors.white),
               titleMain: "Kids area",
               onTapMain: model.handleSwitchToWardEvent),
           floatingActionButtonLocation:
@@ -247,7 +247,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset(kScreenTimeIcon2,
+                                      Image.asset(kScreenTimeIcon,
                                           height: 40,
                                           width: 40,
                                           color: kcScreenTimeBlue),

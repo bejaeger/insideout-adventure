@@ -67,13 +67,7 @@ class GuardianHomeView extends StatelessWidget {
                         onPressed: model.showSwitchAreaBottomSheet,
                       ),
                 body: model.isBusy
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                            AFKProgressIndicator(),
-                            verticalSpaceSmall,
-                            InsideOutText.body("Loading..."),
-                          ])
+                    ? AFKProgressIndicator()
                     : RefreshIndicator(
                         onRefresh: () => model.listenToData(),
                         child: ListView(

@@ -117,7 +117,7 @@ class WardStatsCard extends StatelessWidget {
                               if (screenTimeLastWeek != null)
                                 Row(
                                   children: [
-                                    Image.asset(kScreenTimeIcon2,
+                                    Image.asset(kScreenTimeIcon,
                                         height: 18,
                                         width: 18,
                                         color: kcScreenTimeBlue),

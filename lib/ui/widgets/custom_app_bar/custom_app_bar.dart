@@ -260,8 +260,7 @@ class _ActiveScreenTimeBadgeState extends State<ActiveScreenTimeBadge>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(kScreenTimeIcon2,
-                    width: 20, color: animation.value),
+                Image.asset(kScreenTimeIcon, width: 20, color: animation.value),
                 if (widget.screenTimeLeft != null) horizontalSpaceTiny,
                 if (widget.screenTimeLeft != null)
                   InsideOutText(

@@ -21,7 +21,6 @@ const String kActivityIcon = "assets/icons/run.png";
 const String kPinInAreaIcon = "assets/icons/location-icon.ico";
 const String kSwitchAccountIcon = "assets/icons/switch_accounts.png";
 const String kScreenTimeIcon = "assets/icons/computer.png";
-const String kScreenTimeIcon2 = "assets/icons/person.png";
 
 // illustrations
 const String kIllustrationActivity =
