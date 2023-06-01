@@ -18,6 +18,9 @@ class StartUpViewModel extends BaseModel {
     // TODO: Check for network connection!
 
     try {
+
+      
+
       String? localUserId;
       if (!kIsWeb) {
         localUserId = await userService.getLocallyLoggedInUserId();
@@ -47,7 +50,7 @@ class StartUpViewModel extends BaseModel {
           log.v('User sync complete. User profile: $currentUser');
           if (!(await _permissionService.allPermissionsProvided())) {
             await navigationService.navigateTo(Routes.permissionsView);
-          }
+          }          
           await replaceWithHomeView(
               showBewareDialog: true, showNumberQuestsDialog: true);
         }

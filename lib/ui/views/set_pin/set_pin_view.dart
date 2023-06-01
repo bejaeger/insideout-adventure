@@ -55,7 +55,12 @@ class SetPinView extends StatelessWidget with $SetPinView {
                     leading: Icon(Icons.clear, color: kcPrimaryColor, size: 22),
                     title: "Clear",
                     onTap: () => clearTextFields(),
-                  )
+                  ),
+                  verticalSpaceSmall,
+                  Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: InsideOutText.body(
+                          "You will need to enter this passcode to come back to the parent area."))
                 ],
               )),
         ),
