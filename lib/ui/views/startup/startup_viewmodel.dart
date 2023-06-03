@@ -18,9 +18,6 @@ class StartUpViewModel extends BaseModel {
     // TODO: Check for network connection!
 
     try {
-
-      
-
       String? localUserId;
       if (!kIsWeb) {
         localUserId = await userService.getLocallyLoggedInUserId();

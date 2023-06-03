@@ -137,8 +137,6 @@ dev_dependencies:
 
   mockito: ^5.1.0
 
-  new_version: ^0.3.1
-
 # icons
 flutter_icons:
   android: "launcher_icon"
@@ -178,7 +176,6 @@ flutter:
     - assets/lottie/big-tv-screen-time.json
     - assets/icons/walk.png
     - assets/icons/run.png
-    - assets/icons/person.png
     - assets/icons/computer.png
     - assets/illustrations/activity_illustration.png
     - assets/illustrations/anna_insideout.png
