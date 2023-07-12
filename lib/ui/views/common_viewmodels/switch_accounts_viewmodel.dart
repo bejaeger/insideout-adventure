@@ -40,8 +40,8 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
               "Please first give your consent to the terms, conditions and privacy policy. You can give consent by navigating to the terms & conditions in the menu on the top right.");
       return;
     }
-    final result = await bottomSheetService.showBottomSheet(
-        title: "Switch to " + tmpWard.fullName + "'s area",
+    final result = await bottomSheetService.showBottomSheet(      
+        title: "Use passcode to switch to " + tmpWard.fullName + "?",
         description: "Do you want to lock this parent area with a passcode?",
         confirmButtonTitle: "Yes",
         cancelButtonTitle: "No");

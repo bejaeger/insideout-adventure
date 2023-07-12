@@ -64,7 +64,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InsideOutText.body(
-                          "Why ${recipientInfo.name} might have earned credits"),
+                          "Reward ${recipientInfo.name} for"),
                       verticalSpaceTiny,
                       InsideOutText.body("""
 \u2022 for helping in the kitchen
@@ -73,7 +73,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
 \u2022 for reading a book
 \u2022 for mowing the lawn
 \u2022 for helping in the household
-\u2022 ...
+\u2022 or anything else you can think of!
                           """),
                     ],
                   ),

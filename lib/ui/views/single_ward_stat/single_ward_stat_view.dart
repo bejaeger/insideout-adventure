@@ -1,6 +1,8 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/ui/views/single_ward_stat/single_ward_stat_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
@@ -130,7 +132,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                     SummaryStatsDisplay(
                                       title: "Screen time",
                                       icon: Image.asset(kScreenTimeIcon,
-                                          height: 26, color: kcScreenTimeBlue),
+                                          height: 24, color: kcScreenTimeBlue),
                                       unit: "min",
                                       stats: model.stats.creditsBalance
                                           .toStringAsFixed(0),
@@ -205,8 +207,8 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.asset(kActivityIcon,
-                                          height: 40,
-                                          width: 40,
+                                          height: 30,
+                                          width: 30,
                                           color: kcActivityIconColor),
                                       horizontalSpaceSmall,
                                       Column(
@@ -248,8 +250,8 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.asset(kScreenTimeIcon,
-                                          height: 40,
-                                          width: 40,
+                                          height: 28,
+                                          width: 28,
                                           color: kcScreenTimeBlue),
                                       horizontalSpaceSmall,
                                       Column(
@@ -318,26 +320,32 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                         model.sortedHistory.length.clamp(0, 5),
                                     itemBuilder: (context, index) {
                                       final data = model.sortedHistory[index];
-                                      return Column(
-                                        children: [
-                                          HistoryTile(
-                                            showName: false,
-                                            showCredits: true,
-                                            data: data,
-                                            name: data is ActivatedQuest
-                                                ? model.wardNameFromUid(
-                                                    data.uids![0])
-                                                : model
-                                                    .wardNameFromUid(data.uid),
-                                            onTap: () =>
-                                                model.showHistoryItemInfoDialog(
-                                                    data),
-                                          ),
-                                          if (index !=
-                                              model.sortedHistory.length - 1)
-                                            Divider(),
-                                        ],
-                                      );
+                                      if (data is ScreenTimeSession &&
+                                          data.status ==
+                                              ScreenTimeSessionStatus.active) {
+                                        return SizedBox(height: 0, width: 0);
+                                      } else {
+                                        return Column(
+                                          children: [
+                                            HistoryTile(
+                                              showName: false,
+                                              showCredits: true,
+                                              data: data,
+                                              name: data is ActivatedQuest
+                                                  ? model.wardNameFromUid(
+                                                      data.uids![0])
+                                                  : model.wardNameFromUid(
+                                                      data.uid),
+                                              onTap: () => model
+                                                  .showHistoryItemInfoDialog(
+                                                      data),
+                                            ),
+                                            if (index <
+                                                model.sortedHistory.length - 1)
+                                              Divider(),
+                                          ],
+                                        );
+                                      }
                                     },
                                   ),
                                 ),

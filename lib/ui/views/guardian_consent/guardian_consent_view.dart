@@ -65,7 +65,7 @@ class GuardianConsentView extends StatelessWidget with $GuardianConsentView {
                                         model.appConfigProvider)),
                             verticalSpaceMedium,
                             InsideOutText.bodyItalic(
-                              "Send verification code to the address below",
+                              "Send verification code to the email address below",
                               align: TextAlign.left,
                             ),
                             verticalSpaceSmall,

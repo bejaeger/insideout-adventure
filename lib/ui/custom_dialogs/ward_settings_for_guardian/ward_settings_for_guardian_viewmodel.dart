@@ -40,6 +40,10 @@ class WardSettingsForGuardianDialogViewModel extends BaseModel {
   void setIsUsingOwnPhone(bool b) async {
     isUsingOwnPhoneTmp = b;
     userService.setIsUsingOwnPhone(uid: wardUid, value: b);
+    if (b == false && isAcceptScreenTimeFirst == true) {
+      setIsAcceptScreenTime(false);
+      return;
+    }
     notifyListeners();
   }
 

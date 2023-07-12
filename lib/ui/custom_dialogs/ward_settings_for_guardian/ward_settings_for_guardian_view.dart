@@ -48,14 +48,14 @@ class WardSettingsForGuardianDialogView extends StatelessWidget {
                     SwitchListTile(
                       dense: true,
                       title: Text("Uses their own phone"),
-                      subtitle: Text("Does $name use his or her own phone?"),
+                      subtitle: Text("Does $name use their own phone?"),
                       value: model.isUsingOwnPhoneTmp,
                       onChanged: (bool value) =>
                           model.setIsUsingOwnPhone(value),
                     ),
                     SwitchListTile(
                       dense: true,
-                      title: Text("Verify screen time"),
+                      title: Text("Verify screen time (beta)"),
                       subtitle: Text(
                           "$name will have to request screen time and you can confirm or reject on your own phone before the timer starts"),
                       value: model.isAcceptScreenTimeFirstTmp,

@@ -42,7 +42,7 @@ class GuardianConsentViewModel extends FormViewModel {
       expiredCodes.add(code!);
     }
     code =
-        "i${Random().nextInt(9).toStringAsFixed(0)}a${Random().nextInt(9).toStringAsFixed(0)}";
+        "7${Random().nextInt(9).toStringAsFixed(0)}6${Random().nextInt(9).toStringAsFixed(0)}";
     _emailService.sendConsentEmail(
         code: code!,
         email: emailValue!,

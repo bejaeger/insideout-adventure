@@ -118,8 +118,8 @@ class WardStatsCard extends StatelessWidget {
                                 Row(
                                   children: [
                                     Image.asset(kScreenTimeIcon,
-                                        height: 18,
-                                        width: 18,
+                                        height: 16,
+                                        width: 16,
                                         color: kcScreenTimeBlue),
                                     SizedBox(width: 4),
                                     InsideOutText.body(

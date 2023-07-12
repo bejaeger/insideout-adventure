@@ -44,8 +44,20 @@ class HistoryTile extends StatelessWidget {
                 children: [
                   if (!showName) SizedBox(height: 4),
                   Image.asset(screenTime ? kScreenTimeIcon : kActivityIcon,
-                      height: showName ? 25 : 30,
-                      width: showName ? 25 : 30,
+                      height: showName
+                          ? screenTime
+                              ? 23
+                              : 25
+                          : screenTime
+                              ? 28
+                              : 30,
+                      width: showName
+                          ? screenTime
+                              ? 23
+                              : 25
+                          : screenTime
+                              ? 28
+                              : 30,
                       color:
                           screenTime ? kcScreenTimeBlue : kcActivityIconColor),
                   if (showName) SizedBox(height: 1),

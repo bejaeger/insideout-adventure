@@ -245,7 +245,7 @@ class PermissionsViewModel extends BaseModel {
   Future showReinstallOrChangePermissionDialog(
       {required String permissionType}) async {
     await dialogService.showDialog(
-        title: "Sorry...that did not work",
+        title: "Oops...that didn't work",
         description:
             "For this app to work we need $permissionType permissions. Please change the permissions in your settings to which we will forward you.");
   }

@@ -40,9 +40,8 @@ class SelectValue extends StatelessWidget {
               Expanded(child: equivalentValueWidget)
             ],
           ),
-          verticalSpaceMedium,
-          if (validationMessage != null)
-            Expanded(child: InsideOutText.warn(validationMessage!)),
+          validationMessage == null ? verticalSpaceMedium : verticalSpaceSmall,
+          if (validationMessage != null) InsideOutText.warn(validationMessage!),
           if (validationMessage != null) verticalSpaceSmall,
           ctaButton,
         ],

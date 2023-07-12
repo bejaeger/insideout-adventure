@@ -57,10 +57,13 @@ class SetPinView extends StatelessWidget with $SetPinView {
                     onTap: () => clearTextFields(),
                   ),
                   verticalSpaceSmall,
-                  Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: InsideOutText.body(
-                          "You will need to enter this passcode to come back to the parent area."))
+                  if (model.isGuardianAccount)
+                    Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: InsideOutText.body(
+                          "You will need this passcode to come back to your parent area.",
+                          align: TextAlign.center,
+                        ))
                 ],
               )),
         ),
