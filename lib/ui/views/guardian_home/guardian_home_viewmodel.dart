@@ -9,9 +9,9 @@ import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/enums/bottom_sheet_type.dart';
 import 'package:afkcredits/enums/dialog_type.dart';
 import 'package:afkcredits/services/feedback_service/feedback_service.dart';
-import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
+import 'package:afkcredits/ui/views/common_viewmodels/switch_accounts_viewmodel.dart';
 
-class GuardianHomeViewModel extends BaseModel {
+class GuardianHomeViewModel extends SwitchAccountsViewModel {
   final FeedbackService _feedbackService = locator<FeedbackService>();
   final log = getLogger("GuardianHomeViewModel");
 
@@ -145,9 +145,40 @@ class GuardianHomeViewModel extends BaseModel {
     }
   }
 
-  void showSwitchAreaBottomSheet() async {
+  Future selectWardToSelectScreenTime() async {
     await bottomSheetService.showCustomSheet(
-        variant: BottomSheetType.switchArea);
+      variant: BottomSheetType.selectWard,
+      title: "Select child to set screen time",
+      data: {
+        "callback": ({required String wardUidSelected}) async {
+          await navigateToSelectScreenTimeGuardianView(wardId: wardUidSelected);
+        },
+      },
+    );
+  }
+
+  Future selectWardToSwitchAccount() async {
+    await bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.selectWard,
+      title: "Select child account",
+      data: {
+        "callback": ({required String wardUidSelected}) async {
+          await handleSwitchToWardEvent(wardUidSelected: wardUidSelected);
+        },
+      },
+    );
+  }
+
+  Future selectWardToReward() async {
+    await bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.selectWard,
+      title: "Select child to reward",
+      data: {
+        "callback": ({required String wardUidSelected}) async {
+          await navigateToAddFundsView(wardId: wardUidSelected);
+        },
+      },
+    );
   }
 
   Future showFirstLoginDialog() async {

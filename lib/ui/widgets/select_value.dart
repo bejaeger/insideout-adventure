@@ -9,12 +9,14 @@ class SelectValue extends StatelessWidget {
   final Widget equivalentValueWidget;
   final String? validationMessage;
   final Widget ctaButton;
+  final Widget? label;
   const SelectValue(
       {Key? key,
       required this.userPrompt,
       required this.inputField,
       required this.equivalentValueWidget,
       this.validationMessage,
+      this.label,
       required this.ctaButton})
       : super(key: key);
 
@@ -40,6 +42,8 @@ class SelectValue extends StatelessWidget {
               Expanded(child: equivalentValueWidget)
             ],
           ),
+          if (label != null) SizedBox(height: 3),
+          if (label != null) label!,
           validationMessage == null ? verticalSpaceMedium : verticalSpaceSmall,
           if (validationMessage != null) InsideOutText.warn(validationMessage!),
           if (validationMessage != null) verticalSpaceSmall,

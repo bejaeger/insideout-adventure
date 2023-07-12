@@ -1,13 +1,11 @@
 import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/constants/asset_locations.dart';
-import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
 import 'package:afkcredits/ui/views/guardian_drawer_view/guardian_drawer_view.dart';
 import 'package:afkcredits/ui/views/guardian_home/guardian_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
-import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/ward_stats_card.dart';
 import 'package:flutter/material.dart';
@@ -54,18 +52,6 @@ class GuardianHomeView extends StatelessWidget {
                   hasUserGivenFeedback: model.userHasGivenFeedback,
                 ),
                 endDrawer: const GuardianDrawerView(),
-                floatingActionButton: model.navigatingToActiveScreenTimeView
-                    ? null
-                    : AFKFloatingActionButton(
-                        icon: Image.asset(kSwitchAccountIcon,
-                            height: 22, color: Colors.white),
-                        width: 140,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        title: "Kids area",
-                        onPressed: model.showSwitchAreaBottomSheet,
-                      ),
                 body: model.isBusy
                     ? AFKProgressIndicator()
                     : RefreshIndicator(
@@ -106,56 +92,9 @@ class GuardianHomeView extends StatelessWidget {
                                 viewModel: model,
                               ),
                             verticalSpaceMedium,
-                            Container(
-                              height: 90,
-                              color: kcVeryLightGrey,
-                              width: screenWidth(context),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: InsideOutButton(
-                                        leading: Icon(Icons.add,
-                                            color: Colors.white),
-                                        title: "Quest",
-                                        onTap: model.navToCreateQuest,
-                                        height: 50),
-                                  ),
-                                  horizontalSpaceMedium,
-                                  Expanded(
-                                    child: InsideOutButton.outline(
-                                      title: "Map",
-                                      leading: Icon(Icons.map,
-                                          color: kcPrimaryColor),
-                                      onTap: model.navToGuardianMapView,
-                                      height: 50,
-                                    ),
-                                  ),
-                                  //verticalSpaceSmall,
-                                ],
-                              ),
-                            ),
-                            verticalSpaceMedium,
-                            verticalSpaceMedium,
-                            InsideOutText.headingFour(
-                              "How can we improve?",
-                              align: TextAlign.center,
-                            ),
-                            GestureDetector(
-                              onTap: model.navToFeedbackView,
-                              child: Container(
-                                color: Colors.transparent,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: kHorizontalPadding),
-                                child: InsideOutButton.text(
-                                  title: "Provide Feedback",
-                                  onTap: null,
-                                  height: 35,
-                                ),
-                              ),
-                            ),
-                            verticalSpaceMassive,
+                            childButtons(context, model),
+                            verticalSpaceTiny,
+                            activityButtons(context, model),
                             verticalSpaceMassive,
                           ],
                         ),
@@ -164,6 +103,81 @@ class GuardianHomeView extends StatelessWidget {
             ),
           );
         });
+  }
+
+  Widget childButtons(BuildContext context, GuardianHomeViewModel model) {
+    return Container(
+      height: 96,
+      width: screenWidth(context),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            child: InsideOutButtonVertical(
+                color: kcBlue.withOpacity(0.9),
+                leading: Icon(Icons.hourglass_top_rounded,
+                    color: Colors.grey[100], size: 26),
+                title: "Timer",
+                onTap: model.selectWardToSelectScreenTime,
+                height: 100),
+          ),
+          horizontalSpaceSmall,
+          Expanded(
+            child: InsideOutButtonVertical(
+              color: kcBlue.withOpacity(0.9),
+              title: "Switch",
+              leading: Image.asset(kSwitchAccountIcon,
+                  height: 22, color: Colors.grey[100]),
+              onTap: model.selectWardToSwitchAccount,
+              height: 100,
+            ),
+          ),
+          horizontalSpaceSmall,
+          Expanded(
+            child: InsideOutButtonVertical(
+              color: kcBlue.withOpacity(0.9),
+              title: "Reward",
+              leading: Image.asset(kInsideOutLogoSmallPath,
+                  height: 24, color: Colors.grey[100]),
+              onTap: model.selectWardToReward,
+              height: 100,
+            ),
+          ),
+          //verticalSpaceSmall,
+        ],
+      ),
+    );
+  }
+
+  Widget activityButtons(BuildContext context, GuardianHomeViewModel model) {
+    return Container(
+      height: 100,
+      width: screenWidth(context),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            child: InsideOutButtonVertical(
+                // color: kcOrangeOpaque,
+                leading: Image.asset(kActivityIcon,
+                    height: 30, color: Colors.grey[50]),
+                title: "Create",
+                onTap: model.navToCreateQuest,
+                height: 80),
+          ),
+          horizontalSpaceMedium,
+          Expanded(
+            child: InsideOutButtonVertical(
+              title: "Map",
+              leading: Icon(Icons.map, color: Colors.grey[50], size: 30),
+              onTap: model.navToGuardianMapView,
+              height: 80,
+            ),
+          ),
+          //verticalSpaceSmall,
+        ],
+      ),
+    );
   }
 }
 

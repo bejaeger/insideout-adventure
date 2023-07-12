@@ -1,12 +1,10 @@
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/guardian_reference/guardian_reference.dart';
+import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/guardian_verification_status.dart';
-import 'package:afkcredits/services/email_service/email_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
 abstract class SwitchAccountsViewModel extends QuestViewModel {
@@ -20,10 +18,10 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
   SwitchAccountsViewModel({this.wardUid});
 
-  Future handleSwitchToWardEvent({String? wardUidInput}) async {
+  Future handleSwitchToWardEvent({String? wardUidSelected}) async {
     User? tmpWard;
-    if (wardUidInput != null) {
-      tmpWard = userService.supportedWards[wardUidInput];
+    if (wardUidSelected != null) {
+      tmpWard = userService.supportedWards[wardUidSelected];
     } else {
       tmpWard = ward;
     }
@@ -40,7 +38,7 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
               "Please first give your consent to the terms, conditions and privacy policy. You can give consent by navigating to the terms & conditions in the menu on the top right.");
       return;
     }
-    final result = await bottomSheetService.showBottomSheet(      
+    final result = await bottomSheetService.showBottomSheet(
         title: "Use passcode to switch to " + tmpWard.fullName + "?",
         description: "Do you want to lock this parent area with a passcode?",
         confirmButtonTitle: "Yes",
@@ -146,5 +144,55 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     await clearStackAndNavigateToHomeView();
     userService.clearGuardianReference();
     setBusy(false);
+  }
+
+  User? getSelectedWard({required String? wardId}) {
+    User? selectedWard;
+    if (wardId != null) {
+      selectedWard = userService.supportedWards[wardId];
+    } else {
+      selectedWard = ward;
+    }
+    return selectedWard;
+  }
+
+  Future navigateToSelectScreenTimeGuardianView({String? wardId}) async {
+    User? selectedWard = getSelectedWard(wardId: wardId);
+    if (selectedWard == null) {
+      log.e("Please provide an wardUid you want to switch to!");
+      await showGenericInternalErrorDialog();
+      return;
+    }
+
+    final session = screenTimeService.getActiveScreenTimeInMemory(uid: wardId);
+    if (session != null) {
+      navToActiveScreenTimeView(session: session);
+    } else {
+      await navigationService.navigateTo(Routes.selectScreenTimeGuardianView,
+          arguments: SelectScreenTimeGuardianViewArguments(
+              wardId: selectedWard.uid,
+              senderInfo: PublicUserInfo(
+                  name: currentUser.fullName, uid: currentUser.uid),
+              recipientInfo: PublicUserInfo(
+                  name: selectedWard.fullName, uid: selectedWard.uid)));
+    }
+  }
+
+  Future navigateToAddFundsView({String? wardId}) async {
+    User? selectedWard = getSelectedWard(wardId: wardId);
+    if (selectedWard == null) {
+      log.e("Please provide an wardUid you want to switch to!");
+      await showGenericInternalErrorDialog();
+      return;
+    }
+
+    await navigationService.navigateTo(Routes.transferFundsView,
+        arguments: TransferFundsViewArguments(
+            senderInfo: PublicUserInfo(
+                name: currentUser.fullName, uid: currentUser.uid),
+            recipientInfo: PublicUserInfo(
+                name: selectedWard.fullName, uid: selectedWard.uid)));
+    await Future.delayed(Duration(milliseconds: 300));
+    notifyListeners();
   }
 }

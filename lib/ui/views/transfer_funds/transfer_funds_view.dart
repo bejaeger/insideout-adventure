@@ -36,7 +36,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: CustomAppBar(
-              title: "Reward ${recipientInfo.name}",
+              title: recipientInfo.name,
               onBackButton: () {
                 amountController.clear();
                 model.popView();
@@ -47,8 +47,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SelectValue(
-                  userPrompt:
-                      "How many credits do you want to add to ${recipientInfo.name}'s account?",
+                  userPrompt: "Add credits to ${recipientInfo.name}'s account",
                   inputField: _creditsInputField(),
                   validationMessage: model.customValidationMessage,
                   equivalentValueWidget:
@@ -56,15 +55,26 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
                   ctaButton: _transferCreditsButton(
                       onTap: model.showBottomSheetAndProcessTransfer,
                       enabled: model.canTransferCredits()),
+                  label: InsideOutText(
+                      text:
+                          " Current: ${model.currentBalance.toStringAsFixed(0)}",
+                      style: bodyStyleSofia.copyWith(
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13)),
                 ),
                 verticalSpaceMedium,
                 Container(
-                  width: screenWidth(context, percentage: 0.8),
+                  width: screenWidth(context, percentage: 0.85),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: kcMediumGrey.withOpacity(0.15)),
+                      color: kcVeryLightGrey,
+                      borderRadius: BorderRadius.circular(20.0)),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      InsideOutText.body(
-                          "Reward ${recipientInfo.name} for"),
+                      InsideOutText.body("Reward ${recipientInfo.name}"),
                       verticalSpaceTiny,
                       InsideOutText.body("""
 \u2022 for helping in the kitchen

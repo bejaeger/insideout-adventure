@@ -1,1 +1,1 @@
-enum BottomSheetType { questInformation, switchArea }
+enum BottomSheetType { questInformation, selectWard }

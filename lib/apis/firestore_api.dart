@@ -11,6 +11,7 @@ import 'package:afkcredits/datamodels/feedback/feedback_campaign_info.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/quests/quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/datamodels/transfers/transfer_details.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
@@ -677,6 +678,33 @@ class FirestoreApi {
       throw FirestoreApiException(
           message:
               "Unknown expection when listening to past quests the user has successfully done",
+          devDetails: '$e');
+    }
+  }
+
+  Future<void> addTransferDetails({required TransferDetails details}) async {
+    final docRef = transfersCollection.doc();
+    TransferDetails newDetails = details.copyWith(
+        id: docRef.id, createdAt: FieldValue.serverTimestamp());
+    await docRef.set(newDetails.toJson());
+    log.v('Transfer document added to transfersCollection');
+  }
+
+  Stream<List<TransferDetails>> getPastRewardsStream({required String uid}) {
+    try {
+      final returnStream = transfersCollection
+          .where("recipientId", isEqualTo: uid)
+          .orderBy("createdAt", descending: true)
+          .limit(20) // limit query
+          .snapshots()
+          .map((event) => event.docs
+              .map((doc) =>
+                  TransferDetails.fromJson(doc.data() as Map<String, dynamic>))
+              .toList());
+      return returnStream;
+    } catch (e) {
+      throw FirestoreApiException(
+          message: "Unknown expection when listening to past transfer entries",
           devDetails: '$e');
     }
   }

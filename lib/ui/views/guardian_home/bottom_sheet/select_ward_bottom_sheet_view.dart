@@ -1,14 +1,14 @@
-import 'package:afkcredits/ui/views/guardian_home/bottom_sheet/switch_area_bottom_sheet_viewmodel.dart';
+import 'package:afkcredits/ui/views/guardian_home/bottom_sheet/select_ward_bottom_sheet_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class SwitchAreaBottomSheetView extends StatelessWidget {
+class SelectWardBottomSheetView extends StatelessWidget {
   final SheetRequest request;
   final Function(SheetResponse) completer;
 
-  const SwitchAreaBottomSheetView({
+  const SelectWardBottomSheetView({
     Key? key,
     required this.request,
     required this.completer,
@@ -16,8 +16,8 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<SwitchAreaBottomSheetViewModel>.reactive(
-      viewModelBuilder: () => SwitchAreaBottomSheetViewModel(),
+    return ViewModelBuilder<SelectWardBottomSheetViewModel>.reactive(
+      viewModelBuilder: () => SelectWardBottomSheetViewModel(),
       builder: (context, model, child) => Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -39,7 +39,7 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                 ),
                 verticalSpaceSmall,
                 Center(
-                  child: InsideOutText.headingFour("Switch to kids area",
+                  child: InsideOutText.headingFour(request.title ?? "Select child",
                       align: TextAlign.center),
                 ),
                 verticalSpaceSmall,
@@ -73,8 +73,9 @@ class SwitchAreaBottomSheetView extends StatelessWidget {
                             completer(
                               SheetResponse(confirmed: true),
                             );
-                            await model.handleSwitchToWardEvent(
-                                wardUidInput: model.supportedWards[index].uid);
+                            // WARN: this callback function is not type checked and needs to be
+                            // correctly parsed
+                            await request.data["callback"](wardUidSelected: model.supportedWards[index].uid);
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),

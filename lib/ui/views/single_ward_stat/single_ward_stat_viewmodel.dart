@@ -3,6 +3,7 @@ import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/datamodels/transfers/transfer_details.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
@@ -116,6 +117,12 @@ class SingleWardStatViewModel extends SwitchAccountsViewModel {
                 .toDate()
                 .add(Duration(minutes: data.minutesUsed ?? data.minutes))),
       );
+    } else if (data is TransferDetails) {
+      await dialogService.showDialog(
+        title: "Got rewarded ${data.amount.toStringAsFixed(0)} credits",
+        description: "Credits were rewarded on " +
+            formatDateDetailsType2(data.createdAt.toDate()),
+      );
     }
   }
 
@@ -147,37 +154,6 @@ class SingleWardStatViewModel extends SwitchAccountsViewModel {
         variant: DialogType.WardStatCard,
         data: stats,
         barrierDismissible: true);
-  }
-
-  Future navigateToSelectScreenTimeGuardianView(
-      {required String wardId}) async {
-    final session = screenTimeService.getActiveScreenTimeInMemory(uid: wardId);
-    if (session != null) {
-      navToActiveScreenTimeView(session: session);
-    } else {
-      await navigationService.navigateTo(Routes.selectScreenTimeGuardianView,
-          arguments: SelectScreenTimeGuardianViewArguments(
-              wardId: wardId,
-              senderInfo: PublicUserInfo(
-                  name: currentUser.fullName, uid: currentUser.uid),
-              recipientInfo:
-                  PublicUserInfo(name: ward!.fullName, uid: ward!.uid)));
-    }
-  }
-
-  Future navigateToAddFundsView() async {
-    if (ward != null) {
-      await navigationService.navigateTo(Routes.transferFundsView,
-          arguments: TransferFundsViewArguments(
-              senderInfo: PublicUserInfo(
-                  name: currentUser.fullName, uid: currentUser.uid),
-              recipientInfo:
-                  PublicUserInfo(name: ward!.fullName, uid: ward!.uid)));
-      await Future.delayed(Duration(milliseconds: 300));
-      notifyListeners();
-    } else {
-      log.wtf("No ward found!");
-    }
   }
 
   Future refresh() async {
