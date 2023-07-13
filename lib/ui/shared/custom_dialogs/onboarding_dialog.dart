@@ -47,7 +47,7 @@ class OnboardingDialog extends StatelessWidget {
                         .copyWith(fontWeight: FontWeight.w800)),
                 verticalSpaceSmall,
                 Text(
-                    'Start by creating a child account and quests, and let your child earn screen time. Thank you for testing our prototype!',
+                    'Thank you for using our app! Your feedback is highly welcome.',
                     textAlign: TextAlign.center),
                 verticalSpaceMedium,
                 Row(

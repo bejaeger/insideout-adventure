@@ -65,9 +65,18 @@ mixin NavigationMixin {
 
   Future replaceWithGuardianHomeView(
       {ScreenTimeSession? screenTimeSession}) async {
-    await _navigationService.replaceWith(Routes.guardianHomeView,
-        arguments:
-            GuardianHomeViewArguments(screenTimeSession: screenTimeSession));
+    await _navigationService.replaceWith(Routes.highlightGuardianHomeView,
+        arguments: HighlightGuardianHomeViewArguments(
+            screenTimeSession: screenTimeSession));
+  }
+
+  Future replaceWithHighlightGuardianHomeView(
+      {ScreenTimeSession? screenTimeSession,
+      bool highlightBubbles = false}) async {
+    await _navigationService.replaceWith(Routes.highlightGuardianHomeView,
+        arguments: HighlightGuardianHomeViewArguments(
+            screenTimeSession: screenTimeSession,
+            highlightBubbles: highlightBubbles));
   }
 
   void popView() {
@@ -217,5 +226,4 @@ mixin NavigationMixin {
       ),
     );
   }
-
 }

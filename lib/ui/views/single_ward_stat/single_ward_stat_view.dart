@@ -306,7 +306,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                         ),
                       ),
                       verticalSpaceLarge,
-                      if (model.stats.lifetimeEarnings == 0)
+                      if (model.sortedHistory.length == 0)
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
@@ -314,7 +314,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                               "No activities found",
                               align: TextAlign.center),
                         ),
-                      if (model.stats.lifetimeEarnings == 0)
+                      if (model.sortedHistory.length == 0)
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding * 2, vertical: 4),

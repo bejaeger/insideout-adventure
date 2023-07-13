@@ -106,7 +106,7 @@ abstract class AuthenticationViewModel extends FormViewModel
           key: kLocalStorageSawOnBoardingKey);
       if (onboarded == _userService.currentUser.uid) {
         await _navigationService.replaceWith(
-          Routes.guardianHomeView,
+          Routes.highlightGuardianHomeView,
         );
       } else {
         await _navigationService.replaceWith(

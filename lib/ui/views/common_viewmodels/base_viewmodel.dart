@@ -220,7 +220,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       bool showNumberQuestsDialog = false}) async {
     if (isGuardianAccount || isAdminMaster) {
       await navigationService.clearStackAndShow(
-        Routes.guardianHomeView,
+        Routes.highlightGuardianHomeView,
       );
     } else {
       await navigationService.clearStackAndShow(
@@ -237,6 +237,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       {bool showPermissionView = false,
       bool showBewareDialog = false,
       bool showNumberQuestsDialog = false,
+      bool showHightlightGuardianHomeView = false,
       ScreenTimeSession? screenTimeSession}) async {
     baseModelLog.v("Replacing view with home view");
     // ? Request for all necessary permissions
@@ -246,7 +247,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       }
     }
     if (isGuardianAccount || isAdminMaster) {
-      await replaceWithGuardianHomeView(screenTimeSession: screenTimeSession);
+      await replaceWithHighlightGuardianHomeView(
+          screenTimeSession: screenTimeSession,
+          highlightBubbles: showHightlightGuardianHomeView);
     } else {
       await replaceWithWardHomeView(
           showBewareDialog: showBewareDialog,

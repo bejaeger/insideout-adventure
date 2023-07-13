@@ -11,11 +11,31 @@ import 'package:afkcredits/ui/widgets/ward_stats_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:insideout_ui/insideout_ui.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 
-class GuardianHomeView extends StatelessWidget {
+class GuardianHomeView extends StatefulWidget {
   final ScreenTimeSession? screenTimeSession;
-  const GuardianHomeView({Key? key, this.screenTimeSession}) : super(key: key);
+  final bool highlightBubbles;
+  final bool allowShowDialog;
+  const GuardianHomeView(
+      {Key? key,
+      this.screenTimeSession,
+      this.highlightBubbles = false,
+      this.allowShowDialog = false})
+      : super(key: key);
+
+  @override
+  State<GuardianHomeView> createState() => _GuardianHomeViewState();
+}
+
+class _GuardianHomeViewState extends State<GuardianHomeView> {
+  final GlobalKey _zero = GlobalKey();
+  final GlobalKey _one = GlobalKey();
+  final GlobalKey _two = GlobalKey();
+  final GlobalKey _three = GlobalKey();
+  final GlobalKey _four = GlobalKey();
+  final GlobalKey _five = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +44,23 @@ class GuardianHomeView extends StatelessWidget {
         viewModelBuilder: () => locator<GuardianHomeViewModel>(),
         disposeViewModel: false,
         onModelReady: (model) async {
-          if (model.currentUser.newUser && screenTimeSession == null) {
+          // put in post frame callback because we use a singleton!
+          SchedulerBinding.instance.addPostFrameCallback(
+            (timeStamp) async {
+              model.listenToData(screenTimeSession: widget.screenTimeSession);
+            },
+          );
+          if (widget.highlightBubbles) {
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ShowCaseWidget.of(context)
+                  .startShowCase([_zero, _one, _two, _three, _four, _five]),
+            );
+          }
+        },
+        builder: (context, model, child) {
+          if (model.currentUser.newUser &&
+              widget.screenTimeSession == null &&
+              widget.allowShowDialog) {
             model.setNewUserPropertyToFalse();
             SchedulerBinding.instance.addPostFrameCallback(
               (timeStamp) async {
@@ -32,14 +68,7 @@ class GuardianHomeView extends StatelessWidget {
               },
             );
           }
-          // put in post frame callback because we use a singleton!
-          SchedulerBinding.instance.addPostFrameCallback(
-            (timeStamp) async {
-              model.listenToData(screenTimeSession: screenTimeSession);
-            },
-          );
-        },
-        builder: (context, model, child) {
+
           return WillPopScope(
             onWillPop: () async => false,
             child: SafeArea(
@@ -61,18 +90,28 @@ class GuardianHomeView extends StatelessWidget {
                           children: [
                             verticalSpaceMedium,
                             Center(
-                                child: InsideOutText.headingOne("Parent Area")),
+                              child: Showcase(
+                                  key: _zero,
+                                  description:
+                                      'This is your parent area which helps you find a healthy lifestyle for your children. This is how it works...',
+                                  child:
+                                      InsideOutText.headingOne("Parent Area")),
+                            ),
                             verticalSpaceSmall,
                             SectionHeader(
                               title: "Children",
                               onButtonTap: model.navToCreateWardAccount,
-                              buttonIcon: Container(
-                                alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.only(right: 5.0),
-                                height: 30,
-                                width: 40,
-                                child: Icon(Icons.person_add,
-                                    size: 28, color: kcPrimaryColor),
+                              buttonIcon: Showcase(
+                                key: _one,
+                                description: '1) Create a child account',
+                                child: Container(
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.only(right: 5.0),
+                                  height: 30,
+                                  width: 40,
+                                  child: Icon(Icons.person_add,
+                                      size: 28, color: kcPrimaryColor),
+                                ),
                               ),
                             ),
                             if (model.supportedWards.length == 0)
@@ -113,16 +152,23 @@ class GuardianHomeView extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: InsideOutButtonVertical(
-                color: kcBlue.withOpacity(0.9),
-                leading: Icon(Icons.hourglass_top_rounded,
-                    color: Colors.grey[100], size: 26),
-                title: "Timer",
-                onTap: model.selectWardToSelectScreenTime,
-                height: 100),
+            child: Showcase(
+              key: _four,
+              description: '4) Set a timer when your child uses screen time',
+              child: InsideOutButtonVertical(
+                  color: kcBlue.withOpacity(0.9),
+                  leading: Icon(Icons.hourglass_top_rounded,
+                      color: Colors.grey[100], size: 26),
+                  title: "Timer",
+                  onTap: model.selectWardToSelectScreenTime,
+                  height: 100),
+            ),
           ),
           horizontalSpaceSmall,
           Expanded(
+              child: Showcase(
+            key: _three,
+            description: '3) Switch to child area and let them do the quests',
             child: InsideOutButtonVertical(
               color: kcBlue.withOpacity(0.9),
               title: "Switch",
@@ -131,16 +177,21 @@ class GuardianHomeView extends StatelessWidget {
               onTap: model.selectWardToSwitchAccount,
               height: 100,
             ),
-          ),
+          )),
           horizontalSpaceSmall,
           Expanded(
-            child: InsideOutButtonVertical(
-              color: kcBlue.withOpacity(0.9),
-              title: "Reward",
-              leading: Image.asset(kInsideOutLogoSmallPath,
-                  height: 24, color: Colors.grey[100]),
-              onTap: model.selectWardToReward,
-              height: 100,
+            child: Showcase(
+              key: _five,
+              description:
+                  'Tip: you can also reward your child with credits for any other activities they engage in',
+              child: InsideOutButtonVertical(
+                color: kcBlue.withOpacity(0.9),
+                title: "Reward",
+                leading: Image.asset(kInsideOutLogoSmallPath,
+                    height: 24, color: Colors.grey[100]),
+                onTap: model.selectWardToReward,
+                height: 100,
+              ),
             ),
           ),
           //verticalSpaceSmall,
@@ -157,13 +208,17 @@ class GuardianHomeView extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: InsideOutButtonVertical(
-                // color: kcOrangeOpaque,
-                leading: Image.asset(kActivityIcon,
-                    height: 30, color: Colors.grey[50]),
-                title: "Create",
-                onTap: model.navToCreateQuest,
-                height: 80),
+            child: Showcase(
+              key: _two,
+              description: '2) Create a quest',
+              child: InsideOutButtonVertical(
+                  // color: kcOrangeOpaque,
+                  leading: Image.asset(kActivityIcon,
+                      height: 30, color: Colors.grey[50]),
+                  title: "Create",
+                  onTap: model.navToCreateQuest,
+                  height: 80),
+            ),
           ),
           horizontalSpaceMedium,
           Expanded(
