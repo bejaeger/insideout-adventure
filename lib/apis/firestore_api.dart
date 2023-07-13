@@ -67,6 +67,19 @@ class FirestoreApi {
     return docRef;
   }
 
+  Future<void> deleteUser({required String uid}) async {
+    try {
+      await getUserSummaryStatisticsDocument(uid: uid).delete();
+      await usersCollection.doc(uid).delete();
+      log.v('User document deleted');
+    } catch (error) {
+      throw FirestoreApiException(
+        message: 'Failed to delete user',
+        devDetails: '$error',
+      );
+    }
+  }
+
   Future<User?> getUser({required String uid}) async {
     var userData = await usersCollection.doc(uid).get();
     if (!userData.exists) {

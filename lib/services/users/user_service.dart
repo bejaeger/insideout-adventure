@@ -1151,4 +1151,26 @@ class UserService {
       await _firebaseAuthenticationService.logout();
     }
   }
+
+  Future deleteUserAccount() async {
+    try {
+      final uid = currentUser.uid;
+      currentUser.wardIds.forEach((wardId) async {
+        await removeGuardianIdFromOtherUser(
+            otherUsersId: wardId, guardianId: currentUser.uid);
+      });
+      await _firestoreApi.deleteUser(uid: currentUser.uid);
+      await handleLogoutEvent(logOutFromFirebase: false);
+      if (_firebaseAuthenticationService.firebaseAuth.currentUser != null) {
+        await _firebaseAuthenticationService.firebaseAuth.currentUser!.delete();
+      }
+      log.i("User account $uid deleted");
+    } catch (error) {
+      log.e("Error when trying to delete user account: $error");
+      throw UserServiceException(
+        message:
+            "Error when trying to delete user account. Please contact support with the following error message: $error",
+      );
+    }
+  }
 }

@@ -62,7 +62,8 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     setBusy(true);
     await userService.saveGuardianReference(
         uid: currentUser.uid, authMethod: currentUser.authMethod, pin: pin);
-    await clearServiceData(
+    await clearServiceData();
+    await userService.handleLogoutEvent(
         logOutFromFirebase: false, doNotClearGuardianReference: true);
     mapViewModel.clearAllMapData();
     try {
@@ -127,7 +128,9 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   Future switchToGuardianAccount(
       {required GuardianReference guardianReference}) async {
     setBusy(true);
-    await clearServiceData(logOutFromFirebase: false);
+    await clearServiceData();
+    await userService.handleLogoutEvent(logOutFromFirebase: false);
+
     mapViewModel.clearAllMapData();
     try {
       log.i("Syncing guardian account");

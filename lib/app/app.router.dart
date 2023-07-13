@@ -269,7 +269,8 @@ class StackedRouter extends _i1.RouterBase {
         builder: (context) => _i2.GuardianHomeView(
             key: args.key,
             screenTimeSession: args.screenTimeSession,
-            highlightBubbles: args.highlightBubbles),
+            highlightBubbles: args.highlightBubbles,
+            allowShowDialog: args.allowShowDialog),
         settings: data,
       );
     },
@@ -517,6 +518,7 @@ class GuardianHomeViewArguments {
     this.key,
     this.screenTimeSession,
     this.highlightBubbles = false,
+    this.allowShowDialog = false,
   });
 
   final _i29.Key? key;
@@ -524,6 +526,8 @@ class GuardianHomeViewArguments {
   final _i30.ScreenTimeSession? screenTimeSession;
 
   final bool highlightBubbles;
+
+  final bool allowShowDialog;
 }
 
 class WardHomeViewArguments {
@@ -753,6 +757,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
     _i29.Key? key,
     _i30.ScreenTimeSession? screenTimeSession,
     bool highlightBubbles = false,
+    bool allowShowDialog = false,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -763,7 +768,8 @@ extension NavigatorStateExtension on _i34.NavigationService {
         arguments: GuardianHomeViewArguments(
             key: key,
             screenTimeSession: screenTimeSession,
-            highlightBubbles: highlightBubbles),
+            highlightBubbles: highlightBubbles,
+            allowShowDialog: allowShowDialog),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

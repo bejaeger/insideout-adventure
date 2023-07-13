@@ -30,7 +30,7 @@ class AppConfigProvider {
 
   bool get isDevFlavor => flavor == Flavor.dev;
 
-  String get versionName => "1.0.0+1";
+  String get versionName => "1.0.0+2";
   String get contactEmail => "patrick.mayerhofer@icloud.com";
 
   String get appName {

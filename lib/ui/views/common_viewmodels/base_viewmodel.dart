@@ -146,22 +146,22 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
-  Future clearServiceData(
-      {bool logOutFromFirebase = true,
-      bool doNotClearGuardianReference = false}) async {
+  Future clearServiceData() async {
     questService.clearData();
     activeQuestService.clearData();
     geolocationService.clearData();
     screenTimeService.clearData();
     _questTestingService.maybeReset();
     gamificationService.clearData();
+  }
+
+  Future logout(
+      {bool logOutFromFirebase = true,
+      bool doNotClearGuardianReference = false}) async {
+    clearServiceData();
     await userService.handleLogoutEvent(
         logOutFromFirebase: logOutFromFirebase,
         doNotClearGuardianReference: doNotClearGuardianReference);
-  }
-
-  Future logout() async {
-    clearServiceData();
     navigationService.clearStackAndShow(Routes.loginView);
   }
 

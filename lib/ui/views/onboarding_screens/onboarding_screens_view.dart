@@ -50,7 +50,7 @@ class OnBoardingScreensView extends StatelessWidget {
                     children: [
                       verticalSpaceSmall,
                       InsideOutText.body(
-                          "Thank you for testing our public beta version, we hope you will enjoy it."),
+                          "Thank you for testing our first app version, we hope you will enjoy it."),
                       // verticalSpaceMedium,
                       // InsideOutText.bodyItalic(
                       //   "Prototype Version - " + model.versionName,
