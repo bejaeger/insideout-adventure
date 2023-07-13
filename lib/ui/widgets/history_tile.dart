@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/transfers/transfer_details.dart';
 import 'package:afkcredits/ui/widgets/icon_credits_amount.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,8 @@ class HistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool screenTime = !(data is ActivatedQuest);
+    bool screenTime = !(data is ActivatedQuest || data is TransferDetails);
+    bool transfer = data is TransferDetails;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -43,11 +45,31 @@ class HistoryTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (!showName) SizedBox(height: 4),
-                  Image.asset(screenTime ? kScreenTimeIcon2 : kActivityIcon,
-                      height: showName ? 25 : 30,
-                      width: showName ? 25 : 30,
-                      color:
-                          screenTime ? kcScreenTimeBlue : kcActivityIconColor),
+                  Image.asset(
+                      screenTime
+                          ? kScreenTimeIcon
+                          : transfer
+                              ? kInsideOutLogoSmallPath
+                              : kActivityIcon,
+                      height: showName
+                          ? screenTime
+                              ? 23
+                              : 25
+                          : screenTime
+                              ? 28
+                              : 30,
+                      width: showName
+                          ? screenTime
+                              ? 23
+                              : 25
+                          : screenTime
+                              ? 28
+                              : 30,
+                      color: screenTime
+                          ? kcScreenTimeBlue
+                          : transfer
+                              ? kcPrimaryColor
+                              : kcActivityIconColor),
                   if (showName) SizedBox(height: 1),
                   if (showName) InsideOutText.captionBold(name),
                 ],
@@ -80,27 +102,46 @@ class HistoryTile extends StatelessWidget {
                             InsideOutText.caption("Screen time"),
                           ],
                         )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                      : transfer
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 5),
-                                // questType
-                                InsideOutText.headingFour(
-                                    ((data.timeElapsed / 60).round())!
-                                        .round()
-                                        .toString()),
-                                SizedBox(width: 1),
-                                InsideOutText.caption("min"),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    SizedBox(height: 5),
+                                    // questType
+                                    InsideOutText.headingFour(
+                                        data.amount.toStringAsFixed(0)),
+                                    SizedBox(width: 1),
+                                    InsideOutText.caption("credits"),
+                                  ],
+                                ),
+                                InsideOutText.caption("Reward"),
                               ],
-                            ),
-                            InsideOutText.caption("Activity: " +
-                                getShortQuestType(data.quest.type)),
-                          ],
-                        )
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    SizedBox(height: 5),
+                                    // questType
+                                    InsideOutText.headingFour(
+                                        ((data.timeElapsed / 60).round())!
+                                            .round()
+                                            .toString()),
+                                    SizedBox(width: 1),
+                                    InsideOutText.caption("min"),
+                                  ],
+                                ),
+                                InsideOutText.caption("Activity: " +
+                                    getShortQuestType(data.quest.type)),
+                              ],
+                            )
 
                   // Name and date row
                 ],
@@ -121,7 +162,9 @@ class HistoryTile extends StatelessWidget {
                       CreditsAmount(
                           amount: screenTime
                               ? data.creditsUsed ?? data.credits
-                              : data.creditsEarned,
+                              : transfer
+                                  ? data.amount
+                                  : data.creditsEarned,
                           height: 16,
                           style: bodyStyleSofia),
                       SizedBox(width: 3),

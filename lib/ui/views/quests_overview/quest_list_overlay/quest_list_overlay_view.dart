@@ -82,7 +82,7 @@ class QuestListOverlayView extends StatelessWidget {
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.only(top: 15),
                                 child: InsideOutText.subheading(
-                                    "Ask your parents to create one")),
+                                    "Ask your parents to create some")),
                           ListView(
                             physics: ScrollPhysics(),
                             shrinkWrap: true,

@@ -24,7 +24,7 @@ class SwitchToGuardianAreaButton extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 25),
               child:
-                  Image.asset(kSwitchAccountIcon, height: 25, color: kcGreen),
+                  Image.asset(kSwitchAccountIcon, height: 24, color: kcGreen),
             ),
           ),
         ),

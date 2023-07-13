@@ -17,11 +17,17 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
   final UserRole role;
   CreateAccountView({Key? key, required this.role}) : super(key: key);
 
+  void clearTextCallback() {
+    fullNameController.clear();
+    emailController.clear();
+    passwordController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     String roleString = role == UserRole.guardian ? "Parent" : "Child";
     return ViewModelBuilder<CreateAccountViewModel>.reactive(
-      viewModelBuilder: () => CreateAccountViewModel(role: role),
+      viewModelBuilder: () => CreateAccountViewModel(role: role, clearTextCallback: clearTextCallback),
       onModelReady: (model) => listenToFormUpdated(model),      
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {

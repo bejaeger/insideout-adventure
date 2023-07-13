@@ -33,8 +33,8 @@ class PermissionsView extends StatelessWidget {
                           align: TextAlign.center),
                       verticalSpaceSmall,
                       InsideOutText.headingFourLight(
-                          "Please allow us to use your location. You can re-install the app and we will ask you for permission again.",
-                          align: TextAlign.center),
+                          "Please make sure your location service is enabled and restart the app",
+                          align: TextAlign.center),                          
                     ],
                   ),
                 )

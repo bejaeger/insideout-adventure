@@ -15,6 +15,8 @@ _$_TransferDetails _$$_TransferDetailsFromJson(Map<String, dynamic> json) =>
       amount: json['amount'] as num,
       currency: json['currency'] as String,
       sourceType: $enumDecode(_$TransferSourceEnumMap, json['sourceType']),
+      createdAt: json['createdAt'] ?? "",
+      id: json['id'] as String?,
     );
 
 Map<String, dynamic> _$$_TransferDetailsToJson(_$_TransferDetails instance) =>
@@ -26,6 +28,8 @@ Map<String, dynamic> _$$_TransferDetailsToJson(_$_TransferDetails instance) =>
       'amount': instance.amount,
       'currency': instance.currency,
       'sourceType': _$TransferSourceEnumMap[instance.sourceType]!,
+      'createdAt': instance.createdAt,
+      'id': instance.id,
     };
 
 const _$TransferSourceEnumMap = {

@@ -1,6 +1,9 @@
 import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
+import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/datamodels/transfers/transfer_details.dart';
+import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/ui/views/single_ward_stat/single_ward_stat_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
@@ -32,7 +35,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
             title: model.isBusy
                 ? "Child stats"
                 : model.ward != null
-                    ? model.ward!.fullName + '\'s Stats'
+                    ? model.ward!.fullName
                     : "Child Statistics",
             onBackButton: model.popView,
             dropDownButton: CustomDropDownMenu(
@@ -45,15 +48,6 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
               text2: 'Settings',
             ),
           ),
-          floatingActionButton: BottomFloatingActionButtons(
-              // titleMain: "Add Credits",
-              // onTapMain: model.navigateToAddFundsView,
-              leadingMain: Image.asset(kSwitchAccountIcon,
-                  height: 22, color: Colors.white),
-              titleMain: "Switch area",
-              onTapMain: model.handleSwitchToWardEvent),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
           body: RefreshIndicator(
             onRefresh: model.refresh,
             child: model.isBusy
@@ -84,18 +78,6 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                           color: kcPrimaryColor, height: 24),
                                       stats: model.stats.creditsBalance
                                           .toStringAsFixed(0),
-                                    ),
-                                    verticalSpaceTiny,
-                                    Container(
-                                      width: 120,
-                                      child: InsideOutButton(
-                                        leading: Icon(
-                                          Icons.add,
-                                          color: Colors.white,
-                                        ),
-                                        title: "Reward",
-                                        onTap: model.navigateToAddFundsView,
-                                      ),
                                     ),
                                   ],
                                 ),
@@ -130,66 +112,39 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                     SummaryStatsDisplay(
                                       title: "Screen time",
                                       icon: Image.asset(kScreenTimeIcon,
-                                          height: 26, color: kcScreenTimeBlue),
+                                          height: 24, color: kcScreenTimeBlue),
                                       unit: "min",
                                       stats: model.stats.creditsBalance
                                           .toStringAsFixed(0),
-                                    ),
-                                    verticalSpaceTiny,
-                                    Container(
-                                      width: 120,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          model.getScreenTimeSession(
-                                                      uid: widget.uid) !=
-                                                  null
-                                              ? InsideOutButton.outline(
-                                                  leading: Icon(
-                                                      Icons
-                                                          .hourglass_top_rounded,
-                                                      color: kcScreenTimeBlue),
-                                                  title: "Show",
-                                                  onTap: () => model
-                                                      .navigateToSelectScreenTimeGuardianView(
-                                                          wardId: widget.uid),
-                                                  color: kcScreenTimeBlue)
-                                              : InsideOutButton.outline(
-                                                  leading: Icon(
-                                                      Icons.play_arrow_rounded,
-                                                      color: kcPrimaryColor),
-                                                  title: "Set timer",
-                                                  onTap: () => model
-                                                      .navigateToSelectScreenTimeGuardianView(
-                                                          wardId: widget.uid),
-                                                  color: null),
-                                          if (model.getScreenTimeSession(
-                                                  uid: widget.uid) !=
-                                              null)
-                                            InsideOutText.screenTimeWarn(
-                                                "Screen time active"),
-                                        ],
-                                      ),
                                     ),
                                   ],
                                 ),
                                 Spacer(),
                               ],
                             ),
-                            verticalSpaceMedium,
+                            verticalSpaceSmall,
+                            childButtons(context, model),
+                            verticalSpaceSmall,
+                            verticalSpaceTiny,
                             SectionHeader(
                               title: "Last 7 days",
                               horizontalPadding: 0,
                               //onButtonTap: model.showNotImplementedSnackbar,
-                              otherTrailingIcon: TextButton(
-                                child: InsideOutText.body(
-                                  "Total Stats",
-                                  color: kcPrimaryColor,
-                                ),
+                              otherTrailingIcon: IconButton(
+                                icon: Icon(Icons.more_vert,
+                                    size: 24, color: kcGreyTextColor),
                                 onPressed: model.showWardStatDetailsDialog,
+                                //color: Colors.red,
                               ),
                             ),
+                            //    TextButton(
+                            //     child: InsideOutText.body(
+                            //       "Total Stats",
+                            //       color: kcPrimaryColor,
+                            //     ),
+                            //     onPressed: model.showWardStatDetailsDialog,
+                            //   ),
+                            // ),
                             verticalSpaceSmall,
                             Row(
                               children: [
@@ -198,8 +153,8 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.asset(kActivityIcon,
-                                          height: 40,
-                                          width: 40,
+                                          height: 30,
+                                          width: 30,
                                           color: kcActivityIconColor),
                                       horizontalSpaceSmall,
                                       Column(
@@ -240,9 +195,9 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset(kScreenTimeIcon2,
-                                          height: 40,
-                                          width: 40,
+                                      Image.asset(kScreenTimeIcon,
+                                          height: 28,
+                                          width: 28,
                                           color: kcScreenTimeBlue),
                                       horizontalSpaceSmall,
                                       Column(
@@ -293,13 +248,16 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                 horizontalPadding: 0,
                               ),
                             if (model.sortedHistory.length > 0)
+                              verticalSpaceSmall,
+                            if (model.sortedHistory.length > 0)
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5.0),
                                 child: Container(
                                   decoration: BoxDecoration(
                                       border: Border.all(
-                                          color: kcMediumGrey.withOpacity(0.5)),
+                                          color: kcMediumGrey.withOpacity(0.1)),
+                                      color: kcCultured,
                                       borderRadius:
                                           BorderRadius.circular(20.0)),
                                   padding: const EdgeInsets.symmetric(
@@ -308,57 +266,122 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
                                     shrinkWrap: true,
                                     physics: ScrollPhysics(),
                                     itemCount:
-                                        model.sortedHistory.length.clamp(0, 5),
+                                        model.sortedHistory.length.clamp(0, 8),
                                     itemBuilder: (context, index) {
                                       final data = model.sortedHistory[index];
-                                      return Column(
-                                        children: [
-                                          HistoryTile(
-                                            showName: false,
-                                            showCredits: true,
-                                            data: data,
-                                            name: data is ActivatedQuest
-                                                ? model.wardNameFromUid(
-                                                    data.uids![0])
-                                                : model
-                                                    .wardNameFromUid(data.uid),
-                                            onTap: () =>
-                                                model.showHistoryItemInfoDialog(
-                                                    data),
-                                          ),
-                                          if (index !=
-                                              model.sortedHistory.length - 1)
-                                            Divider(),
-                                        ],
-                                      );
+                                      if (data is ScreenTimeSession &&
+                                          data.status ==
+                                              ScreenTimeSessionStatus.active) {
+                                        return SizedBox(height: 0, width: 0);
+                                      } else {
+                                        return Column(
+                                          children: [
+                                            HistoryTile(
+                                              showName: false,
+                                              showCredits: true,
+                                              data: data,
+                                              name: data is ActivatedQuest
+                                                  ? model.wardNameFromUid(
+                                                      data.uids![0])
+                                                  : data is TransferDetails
+                                                      ? model.wardNameFromUid(
+                                                          data.recipientId)
+                                                      : model.wardNameFromUid(
+                                                          data.uid),
+                                              onTap: () => model
+                                                  .showHistoryItemInfoDialog(
+                                                      data),
+                                            ),
+                                            if (index <
+                                                model.sortedHistory.length - 1)
+                                              Divider(),
+                                          ],
+                                        );
+                                      }
                                     },
                                   ),
                                 ),
                               ),
-                            verticalSpaceMassive,
                           ],
                         ),
                       ),
-                      if (model.stats.lifetimeEarnings == 0)
+                      verticalSpaceLarge,
+                      if (model.sortedHistory.length == 0)
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
                           child: InsideOutText.headingTwoLight(
+                              "No activities found",
+                              align: TextAlign.center),
+                        ),
+                      if (model.sortedHistory.length == 0)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kHorizontalPadding * 2, vertical: 4),
+                          child: InsideOutText.body(
                               "Switch account and let " +
                                   model.ward!.fullName +
                                   " earn credits",
                               align: TextAlign.center),
                         ),
-                      if (model.stats.lifetimeEarnings == 0)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: Icon(Icons.arrow_downward_rounded,
-                              size: 40, color: kcPrimaryColor),
-                        ),
+                      verticalSpaceMassive,
                     ],
                   ),
           ),
         ),
+      ),
+    );
+  }
+
+  // WARNING: Same is in guardian home view
+  Widget childButtons(BuildContext context, SingleWardStatViewModel model) {
+    return Container(
+      height: 96,
+      width: screenWidth(context),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            child: model.getScreenTimeSession(uid: widget.uid) != null
+                ? InsideOutButtonVertical.outline(
+                    leading: Icon(Icons.hourglass_top_rounded, color: kcRed),
+                    title: "Active Timer",
+                    height: 100,
+                    onTap: () => model.navigateToSelectScreenTimeGuardianView(
+                        wardId: widget.uid),
+                    color: kcRed)
+                : InsideOutButtonVertical(
+                    color: kcBlue.withOpacity(0.9),
+                    leading: Icon(Icons.hourglass_top_rounded,
+                        color: Colors.grey[100], size: 26),
+                    title: "Timer",
+                    onTap: model.navigateToSelectScreenTimeGuardianView,
+                    height: 100),
+          ),
+          horizontalSpaceSmall,
+          Expanded(
+            child: InsideOutButtonVertical(
+              color: kcBlue.withOpacity(0.9),
+              title: "Switch",
+              leading: Image.asset(kSwitchAccountIcon,
+                  height: 22, color: Colors.grey[100]),
+              onTap: model.handleSwitchToWardEvent,
+              height: 100,
+            ),
+          ),
+          horizontalSpaceSmall,
+          Expanded(
+            child: InsideOutButtonVertical(
+              color: kcBlue.withOpacity(0.9),
+              title: "Reward",
+              leading: Image.asset(kInsideOutLogoSmallPath,
+                  height: 24, color: Colors.grey[100]),
+              onTap: model.navigateToAddFundsView,
+              height: 100,
+            ),
+          ),
+          //verticalSpaceSmall,
+        ],
       ),
     );
   }

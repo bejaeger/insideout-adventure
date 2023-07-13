@@ -12,6 +12,8 @@ class SetPinViewModel extends FormViewModel {
 
   final log = getLogger("SetPinViewModel");
 
+  bool get isGuardianAccount => _userService.currentUser.role == UserRole.guardian;
+
   Future onSubmit(String pin) async {
     if (_userService.currentUser.role == UserRole.guardian) {
       log.i("Pin set to $pin. Getting final confirmation to switch accounts");

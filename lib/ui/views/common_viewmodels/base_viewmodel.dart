@@ -146,22 +146,22 @@ class BaseModel extends BaseViewModel with NavigationMixin {
     }
   }
 
-  Future clearServiceData(
-      {bool logOutFromFirebase = true,
-      bool doNotClearGuardianReference = false}) async {
+  Future clearServiceData() async {
     questService.clearData();
     activeQuestService.clearData();
     geolocationService.clearData();
     screenTimeService.clearData();
     _questTestingService.maybeReset();
     gamificationService.clearData();
+  }
+
+  Future logout(
+      {bool logOutFromFirebase = true,
+      bool doNotClearGuardianReference = false}) async {
+    clearServiceData();
     await userService.handleLogoutEvent(
         logOutFromFirebase: logOutFromFirebase,
         doNotClearGuardianReference: doNotClearGuardianReference);
-  }
-
-  Future logout() async {
-    clearServiceData();
     navigationService.clearStackAndShow(Routes.loginView);
   }
 
@@ -220,7 +220,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       bool showNumberQuestsDialog = false}) async {
     if (isGuardianAccount || isAdminMaster) {
       await navigationService.clearStackAndShow(
-        Routes.guardianHomeView,
+        Routes.highlightGuardianHomeView,
       );
     } else {
       await navigationService.clearStackAndShow(
@@ -237,6 +237,7 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       {bool showPermissionView = false,
       bool showBewareDialog = false,
       bool showNumberQuestsDialog = false,
+      bool showHightlightGuardianHomeView = false,
       ScreenTimeSession? screenTimeSession}) async {
     baseModelLog.v("Replacing view with home view");
     // ? Request for all necessary permissions
@@ -246,7 +247,9 @@ class BaseModel extends BaseViewModel with NavigationMixin {
       }
     }
     if (isGuardianAccount || isAdminMaster) {
-      await replaceWithGuardianHomeView(screenTimeSession: screenTimeSession);
+      await replaceWithHighlightGuardianHomeView(
+          screenTimeSession: screenTimeSession,
+          highlightBubbles: showHightlightGuardianHomeView);
     } else {
       await replaceWithWardHomeView(
           showBewareDialog: showBewareDialog,

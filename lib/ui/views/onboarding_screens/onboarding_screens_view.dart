@@ -48,12 +48,13 @@ class OnBoardingScreensView extends StatelessWidget {
                   padding: const EdgeInsets.all(6.0),
                   child: Column(
                     children: [
+                      verticalSpaceSmall,
                       InsideOutText.body(
-                          "Thank you for testing our prototype, we hope you will enjoy it."),
-                      verticalSpaceMedium,
-                      InsideOutText.bodyItalic(
-                        "Prototype Version - " + model.versionName,
-                      ),
+                          "Thank you for testing our first app version, we hope you will enjoy it."),
+                      // verticalSpaceMedium,
+                      // InsideOutText.bodyItalic(
+                      //   "Prototype Version - " + model.versionName,
+                      // ),
                     ],
                   ),
                 ),
@@ -146,8 +147,9 @@ class OnBoardingScreensView extends StatelessWidget {
                 footer: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: InsideOutButton(
-                    onTap: () =>
-                        model.replaceWithHomeView(showPermissionView: true),
+                    onTap: () => model.replaceWithHomeView(
+                        showPermissionView: true,
+                        showHightlightGuardianHomeView: true),
                     title: "Start Now",
                   ),
                 ),

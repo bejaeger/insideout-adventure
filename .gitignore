@@ -38,6 +38,7 @@ android/app/src/*/*/google-services.json
 android/app/src/*/google-services.json
 android/app/google-services.json
 android/local.properties
+android/key.properties
 
 #Lib folder 
 lib/firebase_options.dart

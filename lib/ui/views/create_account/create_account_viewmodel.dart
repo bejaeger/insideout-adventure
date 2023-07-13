@@ -14,7 +14,9 @@ import 'package:stacked_services/stacked_services.dart';
 
 class CreateAccountViewModel extends AuthenticationViewModel {
   final UserRole role;
-  CreateAccountViewModel({required this.role}) : super(role: role);
+  final Function clearTextCallback;
+  CreateAccountViewModel({required this.role, required this.clearTextCallback})
+      : super(role: role);
 
   final log = getLogger("CreateAccountViewModel");
   final UserService _userService = locator<UserService>();
@@ -26,12 +28,13 @@ class CreateAccountViewModel extends AuthenticationViewModel {
   String? fullNameInputValidationMessage;
 
   void Function()? onSignUpTapped() {
-    return () {
+    return () async {
       if (!isValidUserInput()) {
         notifyListeners();
         return;
       }
-      saveData(AuthenticationMethod.email);
+      await saveData(AuthenticationMethod.email);
+      clearTextCallback();
     };
   }
 
@@ -73,7 +76,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
     isPwShown = show;
     notifyListeners();
   }
-  
+
   @override
   Future<InsideOutAuthenticationResultService> runAuthentication(
       AuthenticationMethod method,

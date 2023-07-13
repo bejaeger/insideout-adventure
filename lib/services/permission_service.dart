@@ -22,7 +22,7 @@ class PermissionService {
       location = true;
     }
 
-    bool notifications = await AwesomeNotifications().isNotificationAllowed();
+    // bool notifications = await AwesomeNotifications().isNotificationAllowed();
 
     // camera
     // NOT used atm!
@@ -31,6 +31,6 @@ class PermissionService {
     dynamic testedAr =
         await _localStorageServie.getFromDisk(key: kConfiguredArKey);
 
-    return serviceEnabled && location && notifications && testedAr != null;
+    return serviceEnabled && location && testedAr != null;
   }
 }

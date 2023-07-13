@@ -56,7 +56,8 @@ class _WardHomeViewState extends State<WardHomeView> {
         bool showMainWidgets =
             (!(model.isShowingQuestDetails || model.hasActiveQuest) ||
                     model.isFadingOutQuestDetails) &&
-                (model.previouslyFinishedQuest == null);
+                (model.previouslyFinishedQuest == null) &&
+                (!model.isBusy);
         return WillPopScope(
           onWillPop: () async {
             model.maybeRemoveWardAccountOverlay();

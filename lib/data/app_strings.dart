@@ -8,7 +8,7 @@ const String WarningScannedMarkerNotInQuest =
     "Scanned marker does not belong to quest.";
 
 const String WarningNotNearbyMarker =
-    "You are not close to the actual marker. ";
+    "Try to walk to the center of a checkpoint.";
 
 const String WarningScannedMarkerAlreadyCollected =
     "Marker has already been collected.";
@@ -27,7 +27,7 @@ String getShortQuestType(QuestType? type, {bool noCaps = false}) {
     returnVal = "Hike";
   }
   if (type == QuestType.TreasureLocationSearch) {
-    returnVal = "Search Quest";
+    returnVal = "Search";
   }
   if (noCaps) {
     return returnVal.toLowerCase();

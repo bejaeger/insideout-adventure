@@ -48,7 +48,7 @@ class SimpleStatisticsDisplay extends StatelessWidget {
                 if (showScreenTimeIcon)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(kScreenTimeIcon2,
+                    child: Image.asset(kScreenTimeIcon,
                         height: 28,
                         alignment: Alignment.centerLeft,
                         color: kcScreenTimeBlue),

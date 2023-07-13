@@ -19,6 +19,23 @@ class QuestSpecificationsRow extends StatelessWidget {
     if (quest == null) return SizedBox(height: 0, width: 0);
     return Row(
       children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset(
+              kPinInAreaIcon,
+              height: 18,
+              color: kcPrimaryColor,
+            ),
+            horizontalSpaceTiny,
+            InsideOutText.bodyBold(
+              (quest!.markers.length - 1).toString(),
+              color: textColor ?? kcGreyTextColor,
+            ),
+          ],
+        ),
+        horizontalSpaceMedium,
+        horizontalSpaceTiny,
         if (quest!.distanceMarkers != null)
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,43 +57,27 @@ class QuestSpecificationsRow extends StatelessWidget {
               ),
             ],
           ),
-        if (quest!.distanceMarkers != null)
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              horizontalSpaceMedium,
-              Icon(
-                Icons.schedule,
-                size: 20,
-                color: kcScreenTimeBlue,
-              ),
-              horizontalSpaceTiny,
-              InsideOutText.bodyBold(
-                "~" +
-                    (CreditsSystem.kDistanceInMeterToActivityMinuteConversion *
-                            quest!.distanceMarkers!)
-                        .toStringAsFixed(0) +
-                    "min",
-                color: textColor ?? kcGreyTextColor,
-              ),
-            ],
-          ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            horizontalSpaceMedium,
-            Image.asset(
-              kPinInAreaIcon,
-              height: 18,
-              color: kcPrimaryColor,
-            ),
-            horizontalSpaceTiny,
-            InsideOutText.bodyBold(
-              (quest!.markers.length - 1).toString(),
-              color: textColor ?? kcGreyTextColor,
-            ),
-          ],
-        ),
+        // if (quest!.distanceMarkers != null)
+        //   Row(
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: [
+        //       horizontalSpaceMedium,
+        //       Icon(
+        //         Icons.schedule,
+        //         size: 20,
+        //         color: kcScreenTimeBlue,
+        //       ),
+        //       horizontalSpaceTiny,
+        //       InsideOutText.bodyBold(
+        //         "~" +
+        //             (CreditsSystem.kDistanceInMeterToActivityMinuteConversion *
+        //                     quest!.distanceMarkers!)
+        //                 .toStringAsFixed(0) +
+        //             "min",
+        //         color: textColor ?? kcGreyTextColor,
+        //       ),
+        //     ],
+        //   ),
       ],
     );
   }

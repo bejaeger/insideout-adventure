@@ -30,15 +30,16 @@ class EmailService {
       required String email}) async {
     // poor-man composing of email
     String message = """
-      Hi $userName!\n
-      Thank you for your interest in our app. We are happy to have you on board!
-      This is your code to verify you as a parent:
+Hi $userName!
 
-      $code
+Thank you for your interest in our app. We are happy to have you on board!
+This is your code to verify you as a parent:
 
-      Thank you!
-      The InsideOut Adventure Team
-    """;
+$code
+
+Thank you!
+The InsideOut Adventure Team
+""";
     await _cloudFunctionsApi.sendEmail(message: message, receiverEmail: email);
   }
 }

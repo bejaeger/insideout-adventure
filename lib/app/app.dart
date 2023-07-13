@@ -33,6 +33,7 @@ import 'package:afkcredits/ui/views/create_ward/create_ward_view.dart';
 import 'package:afkcredits/ui/views/feedback_view/feedback_view.dart';
 import 'package:afkcredits/ui/views/guardian_home/guardian_home_view.dart';
 import 'package:afkcredits/ui/views/guardian_home/guardian_home_viewmodel.dart';
+import 'package:afkcredits/ui/views/guardian_home/highlight_guardian_home_view.dart';
 import 'package:afkcredits/ui/views/guardian_map/guardian_map_view.dart';
 import 'package:afkcredits/ui/views/help_desk/hep_desk_view.dart';
 import 'package:afkcredits/ui/views/login/login_view.dart';
@@ -86,7 +87,8 @@ import '../ui/views/ar_view/ar_object_android_view.dart';
     MaterialRoute(page: ScreenTimeRequestedView),
     MaterialRoute(page: HelpDeskView),
     MaterialRoute(page: GuardianConsentView),
-    MaterialRoute(page: SelectScreenTimeGuardianView)
+    MaterialRoute(page: SelectScreenTimeGuardianView),
+    MaterialRoute(page: HighlightGuardianHomeView)
   ],
   dependencies: [
     LazySingleton(classType: CloudFunctionsApi),

@@ -33,30 +33,33 @@ class SelectScreenTimeGuardianView extends StatelessWidget
   Widget build(BuildContext context) {
     return ViewModelBuilder<SelectScreenTimeGuardianViewModel>.reactive(
       viewModelBuilder: () => SelectScreenTimeGuardianViewModel(
-          wardId: wardId,
-          senderInfo: senderInfo,
-          recipientInfo: recipientInfo),
+          wardId: wardId, senderInfo: senderInfo, recipientInfo: recipientInfo),
       onModelReady: (model) {
         listenToFormUpdated(model);
       },
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
-            title: "Select screen time",
-            onBackButton: () {
-              amountController.clear();
-              model.popView();
-            }
-          ),
+              title: recipientInfo.name,
+              onBackButton: () {
+                amountController.clear();
+                model.popView();
+              }),
           body: SelectValue(
             userPrompt:
-                "Choose minutes of screen time for ${recipientInfo.name}",
+                "Select minutes of screen time for ${recipientInfo.name}",
             inputField: _screenTimeInputField(model.customValidationMessage),
             equivalentValueWidget: _creditsSummaryStats(model.equivalentValue),
             validationMessage: model.customValidationMessage,
             ctaButton: _startScreenTimeButton(
                 onTap: model.startScreenTime,
                 enabled: model.canStartScreenTime()),
+            label: InsideOutText(
+                text: " Max: ${model.totalAvailableScreenTime} min",
+                style: bodyStyleSofia.copyWith(
+                    color: Colors.grey[500],
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13)),
           ),
         ),
       ),
@@ -101,7 +104,7 @@ class SelectScreenTimeGuardianView extends StatelessWidget
               amountFocusNode.unfocus();
               final res = await onTap();
               if (res is bool && res == true) {
-                amountController.clear();                
+                amountController.clear();
               }
             }
           : null,

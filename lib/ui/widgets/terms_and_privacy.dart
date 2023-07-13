@@ -4,7 +4,9 @@ import 'package:insideout_ui/insideout_ui.dart';
 
 void showTermsAndPrivacyDialog(
     {required BuildContext context,
-    required AppConfigProvider appConfigProvider}) {
+    required AppConfigProvider appConfigProvider,
+    Widget? consentButton,
+    Widget? revokeButton}) {
   return showAboutDialog(
     context: context,
     applicationIcon: Image.asset(
@@ -15,6 +17,8 @@ void showTermsAndPrivacyDialog(
     applicationName: "InsideOut Adventure",
     applicationVersion: appConfigProvider.versionName,
     children: [
+      if (consentButton != null) consentButton,
+      if (consentButton != null) verticalSpaceMedium,
       Text(
           "Welcome to InsideOut Adventure! Our app incentivizes healthy activities and outdoor exploration while allowing parents to manage their child’s screen time. By using our app, you agree to the following terms, conditions, and privacy policy"),
       verticalSpaceMedium,
@@ -103,6 +107,9 @@ If you have any questions or concerns about our Privacy Policy, please contact u
 """,
         style: bodyStyle,
       ),
+      verticalSpaceMedium,
+      if (revokeButton != null) revokeButton,
+      verticalSpaceSmall,
     ],
   );
 }

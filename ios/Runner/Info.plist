@@ -44,11 +44,11 @@
 		<string>_dartobservatory._tcp</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>Please allow camera access to use the AR feature.</string>
+	<string>Please allow camera access if you want to use our AR feature.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Please allow location access.</string>
+	<string>To be able to create and participate in outdoor quests the app needs to know about your location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Please allow location access.</string>
+	<string>To be able to create and participate in outdoor quests the app needs to know about your location.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Please allow photo library access to be able to send feedback to us.</string>
 	<key>UIBackgroundModes</key>

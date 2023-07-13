@@ -17,6 +17,7 @@ class StartScreenTimeCounterView extends StatelessWidget {
       onModelReady: (model) => model.startCounter(session: session),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Container(
             height: screenHeight(context),
             width: screenWidth(context),

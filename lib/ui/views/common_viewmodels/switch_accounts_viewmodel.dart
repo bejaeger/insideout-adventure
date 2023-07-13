@@ -1,17 +1,14 @@
-import 'package:afkcredits/app/app.locator.dart';
 import 'package:afkcredits/app/app.logger.dart';
 import 'package:afkcredits/app/app.router.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/users/guardian_reference/guardian_reference.dart';
+import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
 import 'package:afkcredits/datamodels/users/user.dart';
-import 'package:afkcredits/enums/guardian_verification_status.dart';
-import 'package:afkcredits/services/email_service/email_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/quest_viewmodel.dart';
 
 abstract class SwitchAccountsViewModel extends QuestViewModel {
   final log = getLogger("SwitchAccountsViewModel");
-  final EmailService _emailService = locator<EmailService>();
   final String? wardUid;
 
   User? get ward => userService.supportedWards[wardUid];
@@ -21,51 +18,28 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
 
   SwitchAccountsViewModel({this.wardUid});
 
-  Future handleGuardianConsent() async {
-    if (currentUser.guardianVerificationStatus ==
-        GuardianVerificationStatus.verified) {
-      return;
-    } else {
-      // TODO: Implement logic for parental consent
-
-      // Logic:
-      // 1. Go to guardianConsentView (link terms&conditions and privacy policy)
-      // 2. Have them input an email (as default use email they signed up with)
-      // 3. Send email with code when they click send code via email
-      // 4. Move to next screen where they input the code
-      // 5. When they accept, update guardianVerificationStatus to verified
-
-      // Can use same code as in creation of quest or creation of user!
-
-      // TODO: Maybe need to do that logic in the creation of the user already?
-
-      _emailService.sendConsentEmail(
-          code: "AB38",
-          userName: "Alfred Super Boy",
-          email: "benjamin.jaeger@posteo.de");
-      userService.updateGuardianVerificationStatus(
-          status: GuardianVerificationStatus.pending);
-    }
-  }
-
-  Future handleSwitchToWardEvent({String? wardUidInput}) async {
+  Future handleSwitchToWardEvent({String? wardUidSelected}) async {
     User? tmpWard;
-    if (wardUidInput != null) {
-      tmpWard = userService.supportedWards[wardUidInput];
+    if (wardUidSelected != null) {
+      tmpWard = userService.supportedWards[wardUidSelected];
     } else {
       tmpWard = ward;
     }
-
-    // await handleGuardianConsent();
 
     if (tmpWard == null) {
       log.e("Please provide an wardUid you want to switch to!");
       await showGenericInternalErrorDialog();
       return;
     }
-
+    if (!userService.hasGivenConsent) {
+      await dialogService.showDialog(
+          title: "Give consent first",
+          description:
+              "Please first give your consent to the terms, conditions and privacy policy. You can give consent by navigating to the terms & conditions in the menu on the top right.");
+      return;
+    }
     final result = await bottomSheetService.showBottomSheet(
-        title: "Switch to " + tmpWard.fullName + "'s area",
+        title: "Use passcode to switch to " + tmpWard.fullName + "?",
         description: "Do you want to lock this parent area with a passcode?",
         confirmButtonTitle: "Yes",
         cancelButtonTitle: "No");
@@ -88,7 +62,8 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     setBusy(true);
     await userService.saveGuardianReference(
         uid: currentUser.uid, authMethod: currentUser.authMethod, pin: pin);
-    await clearServiceData(
+    await clearServiceData();
+    await userService.handleLogoutEvent(
         logOutFromFirebase: false, doNotClearGuardianReference: true);
     mapViewModel.clearAllMapData();
     try {
@@ -100,11 +75,11 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
           title: "Internal Failure",
           description: "Sorry, an internal error occured: $e");
       await navigationService.clearStackAndShow(Routes.loginView);
+      setBusy(false);
       return;
     }
     await clearStackAndNavigateToHomeView(
         showBewareDialog: true, showNumberQuestsDialog: true);
-
     setBusy(false);
   }
 
@@ -120,34 +95,32 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
           description:
               "No parent account found. Please first logout and then sign in to a parrent account.");
       return;
-    } else {
-      if (userService.guardianReference!.withPasscode) {
-        final pinResult = await navigationService.navigateTo(Routes.setPinView);
-        if (pinResult == null) {
-          return;
-        } else {
-          final valid =
-              await userService.validateGuardianPin(pin: pinResult.pin);
-          setBusy(true);
-          if (valid != null && valid == true) {
-            await switchToGuardianAccount(
-                guardianReference: userService.guardianReference!);
-          } else {
-            await dialogService.showDialog(
-                title: "Pin not correct",
-                description: "You entered a wrong passcode.");
-          }
-          setBusy(false);
-        }
+    }
+    if (userService.guardianReference!.withPasscode) {
+      final pinResult = await navigationService.navigateTo(Routes.setPinView);
+      if (pinResult == null) {
+        return;
       } else {
-        final confirmation = await bottomSheetService.showBottomSheet(
-            title: "Switch to parent area?",
-            confirmButtonTitle: "Switch",
-            cancelButtonTitle: "Cancel");
-        if (confirmation?.confirmed == true) {
+        final valid = await userService.validateGuardianPin(pin: pinResult.pin);
+        setBusy(true);
+        if (valid != null && valid == true) {
           await switchToGuardianAccount(
               guardianReference: userService.guardianReference!);
+        } else {
+          await dialogService.showDialog(
+              title: "Pin not correct",
+              description: "You entered a wrong passcode.");
         }
+        setBusy(false);
+      }
+    } else {
+      final confirmation = await bottomSheetService.showBottomSheet(
+          title: "Switch to parent area?",
+          confirmButtonTitle: "Switch",
+          cancelButtonTitle: "Cancel");
+      if (confirmation?.confirmed == true) {
+        await switchToGuardianAccount(
+            guardianReference: userService.guardianReference!);
       }
     }
   }
@@ -155,7 +128,9 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
   Future switchToGuardianAccount(
       {required GuardianReference guardianReference}) async {
     setBusy(true);
-    await clearServiceData(logOutFromFirebase: false);
+    await clearServiceData();
+    await userService.handleLogoutEvent(logOutFromFirebase: false);
+
     mapViewModel.clearAllMapData();
     try {
       log.i("Syncing guardian account");
@@ -172,5 +147,55 @@ abstract class SwitchAccountsViewModel extends QuestViewModel {
     await clearStackAndNavigateToHomeView();
     userService.clearGuardianReference();
     setBusy(false);
+  }
+
+  User? getSelectedWard({required String? wardId}) {
+    User? selectedWard;
+    if (wardId != null) {
+      selectedWard = userService.supportedWards[wardId];
+    } else {
+      selectedWard = ward;
+    }
+    return selectedWard;
+  }
+
+  Future navigateToSelectScreenTimeGuardianView({String? wardId}) async {
+    User? selectedWard = getSelectedWard(wardId: wardId);
+    if (selectedWard == null) {
+      log.e("Please provide an wardUid you want to switch to!");
+      await showGenericInternalErrorDialog();
+      return;
+    }
+
+    final session = screenTimeService.getActiveScreenTimeInMemory(uid: wardId);
+    if (session != null) {
+      navToActiveScreenTimeView(session: session);
+    } else {
+      await navigationService.navigateTo(Routes.selectScreenTimeGuardianView,
+          arguments: SelectScreenTimeGuardianViewArguments(
+              wardId: selectedWard.uid,
+              senderInfo: PublicUserInfo(
+                  name: currentUser.fullName, uid: currentUser.uid),
+              recipientInfo: PublicUserInfo(
+                  name: selectedWard.fullName, uid: selectedWard.uid)));
+    }
+  }
+
+  Future navigateToAddFundsView({String? wardId}) async {
+    User? selectedWard = getSelectedWard(wardId: wardId);
+    if (selectedWard == null) {
+      log.e("Please provide an wardUid you want to switch to!");
+      await showGenericInternalErrorDialog();
+      return;
+    }
+
+    await navigationService.navigateTo(Routes.transferFundsView,
+        arguments: TransferFundsViewArguments(
+            senderInfo: PublicUserInfo(
+                name: currentUser.fullName, uid: currentUser.uid),
+            recipientInfo: PublicUserInfo(
+                name: selectedWard.fullName, uid: selectedWard.uid)));
+    await Future.delayed(Duration(milliseconds: 300));
+    notifyListeners();
   }
 }

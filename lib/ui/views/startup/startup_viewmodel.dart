@@ -47,7 +47,7 @@ class StartUpViewModel extends BaseModel {
           log.v('User sync complete. User profile: $currentUser');
           if (!(await _permissionService.allPermissionsProvided())) {
             await navigationService.navigateTo(Routes.permissionsView);
-          }
+          }          
           await replaceWithHomeView(
               showBewareDialog: true, showNumberQuestsDialog: true);
         }

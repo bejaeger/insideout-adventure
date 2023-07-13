@@ -28,7 +28,8 @@ class TransferFundsViewModel extends SelectValueViewModel {
   final FirestoreApi _firestoreApi = locator<FirestoreApi>();
   final log = getLogger("AddFundsViewModel");
 
-  User get currentUser => _userService.currentUser;
+  num get currentBalance =>
+      _userService.supportedWardStats[recipientInfo.uid]!.creditsBalance;
 
   TransferFundsViewModel(
       {required super.recipientInfo, required super.senderInfo});
@@ -104,10 +105,11 @@ class TransferFundsViewModel extends SelectValueViewModel {
       final Transfer data = prepareTransferData();
       await Future.delayed(Duration(milliseconds: 300)); // artificial delay
       // Possible Improvements
-      //  - make entry in transfer history!
       //  - notification in ward account
-      //  - history visible for guardian and ward
+      //  - history visible for ward
       //  - option to add description to transfer for guardian
+
+      await _firestoreApi.addTransferDetails(details: data.transferDetails);
       final res = await _firestoreApi.changeCreditsBalanceCheat(
           uid: data.transferDetails.recipientId,
           deltaCredits: data.transferDetails.amount);
@@ -188,7 +190,9 @@ class TransferFundsViewModel extends SelectValueViewModel {
         "transferStatus": TransferStatusModel(
           futureStatus: transferCompleter.future,
           type: TransferType.Guardian2WardCredits, // legacy code
-        )
+        ),
+        "newBalance": currentBalance + amount!,
+        "recipientName": recipientInfo.name,
       },
     );
     return dialogResult;

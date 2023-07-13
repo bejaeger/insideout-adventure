@@ -27,6 +27,8 @@ mixin _$TransferDetails {
   num get amount => throw _privateConstructorUsedError;
   String get currency => throw _privateConstructorUsedError;
   TransferSource get sourceType => throw _privateConstructorUsedError;
+  dynamic get createdAt => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +48,9 @@ abstract class $TransferDetailsCopyWith<$Res> {
       String senderName,
       num amount,
       String currency,
-      TransferSource sourceType});
+      TransferSource sourceType,
+      dynamic createdAt,
+      String? id});
 }
 
 /// @nodoc
@@ -67,6 +71,8 @@ class _$TransferDetailsCopyWithImpl<$Res>
     Object? amount = freezed,
     Object? currency = freezed,
     Object? sourceType = freezed,
+    Object? createdAt = freezed,
+    Object? id = freezed,
   }) {
     return _then(_value.copyWith(
       recipientId: recipientId == freezed
@@ -97,6 +103,14 @@ class _$TransferDetailsCopyWithImpl<$Res>
           ? _value.sourceType
           : sourceType // ignore: cast_nullable_to_non_nullable
               as TransferSource,
+      createdAt: createdAt == freezed
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -115,7 +129,9 @@ abstract class _$$_TransferDetailsCopyWith<$Res>
       String senderName,
       num amount,
       String currency,
-      TransferSource sourceType});
+      TransferSource sourceType,
+      dynamic createdAt,
+      String? id});
 }
 
 /// @nodoc
@@ -138,6 +154,8 @@ class __$$_TransferDetailsCopyWithImpl<$Res>
     Object? amount = freezed,
     Object? currency = freezed,
     Object? sourceType = freezed,
+    Object? createdAt = freezed,
+    Object? id = freezed,
   }) {
     return _then(_$_TransferDetails(
       recipientId: recipientId == freezed
@@ -168,6 +186,14 @@ class __$$_TransferDetailsCopyWithImpl<$Res>
           ? _value.sourceType
           : sourceType // ignore: cast_nullable_to_non_nullable
               as TransferSource,
+      createdAt: createdAt == freezed
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -182,7 +208,9 @@ class _$_TransferDetails implements _TransferDetails {
       required this.senderName,
       required this.amount,
       required this.currency,
-      required this.sourceType});
+      required this.sourceType,
+      this.createdAt = "",
+      this.id});
 
   factory _$_TransferDetails.fromJson(Map<String, dynamic> json) =>
       _$$_TransferDetailsFromJson(json);
@@ -201,10 +229,15 @@ class _$_TransferDetails implements _TransferDetails {
   final String currency;
   @override
   final TransferSource sourceType;
+  @override
+  @JsonKey()
+  final dynamic createdAt;
+  @override
+  final String? id;
 
   @override
   String toString() {
-    return 'TransferDetails(recipientId: $recipientId, recipientName: $recipientName, senderId: $senderId, senderName: $senderName, amount: $amount, currency: $currency, sourceType: $sourceType)';
+    return 'TransferDetails(recipientId: $recipientId, recipientName: $recipientName, senderId: $senderId, senderName: $senderName, amount: $amount, currency: $currency, sourceType: $sourceType, createdAt: $createdAt, id: $id)';
   }
 
   @override
@@ -222,7 +255,9 @@ class _$_TransferDetails implements _TransferDetails {
             const DeepCollectionEquality().equals(other.amount, amount) &&
             const DeepCollectionEquality().equals(other.currency, currency) &&
             const DeepCollectionEquality()
-                .equals(other.sourceType, sourceType));
+                .equals(other.sourceType, sourceType) &&
+            const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
+            const DeepCollectionEquality().equals(other.id, id));
   }
 
   @JsonKey(ignore: true)
@@ -235,7 +270,9 @@ class _$_TransferDetails implements _TransferDetails {
       const DeepCollectionEquality().hash(senderName),
       const DeepCollectionEquality().hash(amount),
       const DeepCollectionEquality().hash(currency),
-      const DeepCollectionEquality().hash(sourceType));
+      const DeepCollectionEquality().hash(sourceType),
+      const DeepCollectionEquality().hash(createdAt),
+      const DeepCollectionEquality().hash(id));
 
   @JsonKey(ignore: true)
   @override
@@ -258,7 +295,9 @@ abstract class _TransferDetails implements TransferDetails {
       required final String senderName,
       required final num amount,
       required final String currency,
-      required final TransferSource sourceType}) = _$_TransferDetails;
+      required final TransferSource sourceType,
+      final dynamic createdAt,
+      final String? id}) = _$_TransferDetails;
 
   factory _TransferDetails.fromJson(Map<String, dynamic> json) =
       _$_TransferDetails.fromJson;
@@ -277,6 +316,10 @@ abstract class _TransferDetails implements TransferDetails {
   String get currency;
   @override
   TransferSource get sourceType;
+  @override
+  dynamic get createdAt;
+  @override
+  String? get id;
   @override
   @JsonKey(ignore: true)
   _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>

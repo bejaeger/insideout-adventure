@@ -9,12 +9,14 @@ class SelectValue extends StatelessWidget {
   final Widget equivalentValueWidget;
   final String? validationMessage;
   final Widget ctaButton;
+  final Widget? label;
   const SelectValue(
       {Key? key,
       required this.userPrompt,
       required this.inputField,
       required this.equivalentValueWidget,
       this.validationMessage,
+      this.label,
       required this.ctaButton})
       : super(key: key);
 
@@ -23,6 +25,7 @@ class SelectValue extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
       child: ListView(
+        shrinkWrap: true,
         children: [
           verticalSpaceMedium,
           InsideOutText.subheading(userPrompt),
@@ -39,9 +42,10 @@ class SelectValue extends StatelessWidget {
               Expanded(child: equivalentValueWidget)
             ],
           ),
-          verticalSpaceMedium,
-          if (validationMessage != null)
-            Expanded(child: InsideOutText.warn(validationMessage!)),
+          if (label != null) SizedBox(height: 3),
+          if (label != null) label!,
+          validationMessage == null ? verticalSpaceMedium : verticalSpaceSmall,
+          if (validationMessage != null) InsideOutText.warn(validationMessage!),
           if (validationMessage != null) verticalSpaceSmall,
           ctaButton,
         ],

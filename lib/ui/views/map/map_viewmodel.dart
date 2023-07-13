@@ -424,8 +424,8 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
           hideMarkerInfoWindowNow(markerId: afkmarker.id);
         } else {
           await dialogService.showDialog(
-              title: "Marker",
-              description: "Start the quest and collect this marker.");
+              title: "Checkpoint",
+              description: "Start the quest and collect this checkpoint.");
         }
       }
     } else {
@@ -700,7 +700,7 @@ class MapViewModel extends BaseModel with MapStateControlMixin {
     if (result.hasError) {
       log.e("Error occured: ${result.errorMessage}");
       await dialogService.showDialog(
-        title: "Can't collect marker!",
+        title: "Can't find checkpoint!",
         description: result.errorMessage!,
       );
       return false;

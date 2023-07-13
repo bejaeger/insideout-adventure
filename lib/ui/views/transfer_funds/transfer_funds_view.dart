@@ -34,22 +34,62 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
       },
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: CustomAppBar(
-              title: "Reward ${recipientInfo.name}",
+              title: recipientInfo.name,
               onBackButton: () {
                 amountController.clear();
                 model.popView();
               }),
-          body: SelectValue(
-            userPrompt:
-                "How many credits do you want to add to ${recipientInfo.name}'s account?",
-            inputField: _creditsInputField(),
-            validationMessage: model.customValidationMessage,
-            equivalentValueWidget:
-                _screenTimeSummaryStats(model.equivalentValue),
-            ctaButton: _transferCreditsButton(
-                onTap: model.showBottomSheetAndProcessTransfer,
-                enabled: model.canTransferCredits()),
+          body: Container(
+            height: screenHeight(context),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SelectValue(
+                  userPrompt: "Add credits to ${recipientInfo.name}'s account",
+                  inputField: _creditsInputField(),
+                  validationMessage: model.customValidationMessage,
+                  equivalentValueWidget:
+                      _screenTimeSummaryStats(model.equivalentValue),
+                  ctaButton: _transferCreditsButton(
+                      onTap: model.showBottomSheetAndProcessTransfer,
+                      enabled: model.canTransferCredits()),
+                  label: InsideOutText(
+                      text:
+                          " Current: ${model.currentBalance.toStringAsFixed(0)}",
+                      style: bodyStyleSofia.copyWith(
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13)),
+                ),
+                verticalSpaceMedium,
+                Container(
+                  width: screenWidth(context, percentage: 0.85),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: kcMediumGrey.withOpacity(0.15)),
+                      color: kcVeryLightGrey,
+                      borderRadius: BorderRadius.circular(20.0)),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InsideOutText.body("Reward ${recipientInfo.name}"),
+                      verticalSpaceTiny,
+                      InsideOutText.body("""
+\u2022 for helping in the kitchen
+\u2022 as a birthday gift
+\u2022 for being active
+\u2022 for reading a book
+\u2022 for mowing the lawn
+\u2022 for helping in the household
+\u2022 or anything else you can think of!
+                          """),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

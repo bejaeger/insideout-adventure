@@ -132,30 +132,34 @@ class PermissionsViewModel extends BaseModel {
       return;
     }
 
-    await showTestArDialog();
-    bool ok = false;
-    try {
-      dynamic res = await navToArObjectView(true);
-      ok = res is bool && res == true;
-    } catch (e) {
-      log.e("Cannot open AR view");
-    }
-    if (ok) {
-      userService.setIsUsingAr(value: true);
-      await showArWorksDialog();
-      await _localStorageServie.saveToDisk(
-          key: kConfiguredArKey, value: "true");
-    } else {
-      final res = await showArFailedDialog();
-      if (res?.confirmed == true) {
-        await handleCameraPermissions();
-        await handleArTest();
-      } else {
-        await showArDoesNotWorkDialog();
+    dynamic testedAr =
+        await _localStorageServie.getFromDisk(key: kConfiguredArKey);
+    if (testedAr == null) {
+      await showTestArDialog();
+      bool ok = false;
+      try {
+        dynamic res = await navToArObjectView(true);
+        ok = res is bool && res == true;
+      } catch (e) {
+        log.e("Cannot open AR view");
+      }
+      if (ok) {
+        userService.setIsUsingAr(value: true);
+        await showArWorksDialog();
         await _localStorageServie.saveToDisk(
             key: kConfiguredArKey, value: "true");
-        // AR is available but it is configured NOT to use AR!
-        userService.setIsUsingAr(value: false);
+      } else {
+        final res = await showArFailedDialog();
+        if (res?.confirmed == true) {
+          await handleCameraPermissions();
+          await handleArTest();
+        } else {
+          await showArDoesNotWorkDialog();
+          await _localStorageServie.saveToDisk(
+              key: kConfiguredArKey, value: "true");
+          // AR is available but it is configured NOT to use AR!
+          userService.setIsUsingAr(value: false);
+        }
       }
     }
   }
@@ -164,7 +168,7 @@ class PermissionsViewModel extends BaseModel {
     await dialogService.showDialog(
         title: "Enable location access",
         description:
-            "For this app to work we need to know about your location. Please allow us to use your precise location in the following.");
+            "To be able to create and participate in outdoor quests the app needs to know about your location. Please allow us to use your precise location in the following.");
   }
 
   // ? This is a bit more complicated as the 'requestPermissionToSendNotifications' does
@@ -173,7 +177,7 @@ class PermissionsViewModel extends BaseModel {
   // ? Otherwise the user will be always prompted with the notifications dialog.
   Future showNotificationPermissionRequestDialog({Completer? completer}) async {
     final res = await dialogService.showDialog(
-        title: "Enable notifications",
+        title: "Enable notifications (optional)",
         description:
             "For optimal usage of the app we would like to send you notifications.");
     if (res?.confirmed == true) {
@@ -245,7 +249,7 @@ class PermissionsViewModel extends BaseModel {
   Future showReinstallOrChangePermissionDialog(
       {required String permissionType}) async {
     await dialogService.showDialog(
-        title: "Sorry...that did not work",
+        title: "Oops...that didn't work",
         description:
             "For this app to work we need $permissionType permissions. Please change the permissions in your settings to which we will forward you.");
   }

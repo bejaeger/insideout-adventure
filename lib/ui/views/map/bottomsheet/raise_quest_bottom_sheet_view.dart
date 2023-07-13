@@ -62,28 +62,34 @@ class RaiseQuestBottomSheetView extends StatelessWidget {
                         ],
                       ),
                       verticalSpaceSmall,
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset(kInsideOutLogoPath,
-                              height: 24, color: kcPrimaryColor),
-                          SizedBox(width: 6.0),
-                          InsideOutText.headingThree(
-                            quest.credits.toStringAsFixed(0),
-                          ),
-                          horizontalSpaceSmall,
-                          InsideOutText.headingFour("-"),
-                          horizontalSpaceSmall,
-                          Expanded(
-                            child: Text(quest.name.toString(),
-                                style: heading3Style.copyWith(
-                                    overflow: TextOverflow.ellipsis),
-                                maxLines: 3),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 2.0, top: 4.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.asset(kInsideOutLogoPath,
+                                height: 24, color: kcPrimaryColor),
+                            SizedBox(width: 6.0),
+                            InsideOutText.headingThree(
+                              quest.credits.toStringAsFixed(0),
+                            ),
+                            horizontalSpaceSmall,
+                            InsideOutText.headingFour("-"),
+                            horizontalSpaceSmall,
+                            Expanded(
+                              child: Text(quest.name.toString(),
+                                  style: heading3Style.copyWith(
+                                      overflow: TextOverflow.ellipsis),
+                                  maxLines: 3),
+                            ),
+                          ],
+                        ),
                       ),
                       if (!completed) verticalSpaceMedium,
-                      if (!completed) QuestSpecificationsRow(quest: quest),
+                      if (!completed)
+                        Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: QuestSpecificationsRow(quest: quest)),
                     ],
                   ),
                   if (quest.description != "") verticalSpaceMedium,

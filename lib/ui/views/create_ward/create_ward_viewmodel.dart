@@ -86,13 +86,15 @@ class CreateWardViewModel extends FormViewModel {
     final result =
         await isValidInput(name: nameValue, password: passwordValue!);
     if (result == true) {
-
       if (!_userService.hasGivenConsent) {
-        final res = await _navigationService.navigateTo(Routes.guardianConsentView);
+        final res =
+            await _navigationService.navigateTo(Routes.guardianConsentView);
         if (res == false) {
-           await _dialogService.showDialog(
-            title: "Could not create user", description: "You need to give parental consent to create a child account.");
-            return false;
+          await _dialogService.showDialog(
+              title: "Could not create user",
+              description:
+                  "You need to give parental consent to create a child account.");
+          return false;
         }
       }
 
@@ -110,7 +112,9 @@ class CreateWardViewModel extends FormViewModel {
             title: "Could not create user", description: result);
         return false;
       } else {
-        String title = nameValue != null ? "Successfully created ${nameValue!}'s account" : "Successfully created child account";
+        String title = nameValue != null
+            ? "Successfully created ${nameValue!}'s account"
+            : "Successfully created child account";
         await _dialogService.showDialog(
             title: title,
             description:
@@ -123,6 +127,14 @@ class CreateWardViewModel extends FormViewModel {
           title: "Could not create user", description: result);
       return false;
     }
+  }
+
+  Future showPasswordReasonDialog() async {
+    await _dialogService.showDialog(
+        barrierDismissible: true,
+        title: "Why do we need a password?",
+        description:
+            "This password is required in case the child wants to log into their account on a different phone.");
   }
 
   bool isPwShown = false;

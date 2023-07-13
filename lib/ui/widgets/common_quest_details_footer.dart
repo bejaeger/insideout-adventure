@@ -20,12 +20,6 @@ class CommonQuestDetailsFooter extends StatelessWidget {
     bool showNotCloseToQuest =
         !((model.isNearStartMarker || model.previouslyFinishedQuest != null)) &&
             (!model.hasActivatedQuestToBeStarted && !model.hasActiveQuest);
-    print("showNotCloseToQuest: $showNotCloseToQuest");
-    print("model.isNearStartMarker: ${model.isNearStartMarker}");
-    print("model.previouslyFinishedQuest: ${model.previouslyFinishedQuest}");
-    print(
-        "model.hasActivatedQuestToBeStarted: ${model.hasActivatedQuestToBeStarted}");
-    print("model.hasActiveQuest: ${model.hasActiveQuest}");
     return Stack(
       children: [
         // TODO: Here we have the option to show a statistics display cause the

@@ -49,17 +49,6 @@ class QuestSuccessCard extends StatelessWidget {
                 horizontalSpaceTiny,
                 InsideOutText.headingThree(
                     finishedQuest!.creditsEarned.toString()),
-                horizontalSpaceSmall,
-                Icon(Icons.arrow_right_alt, size: 24),
-                horizontalSpaceSmall,
-                //Icon(Icons.schedule, color: kcScreenTimeBlue, size: 35),
-                Image.asset(kScreenTimeIcon,
-                    height: 24, color: kcScreenTimeBlue),
-                horizontalSpaceTiny,
-                InsideOutText.headingThree(CreditsSystem.creditsToScreenTime(
-                            finishedQuest!.creditsEarned!)
-                        .toString() +
-                    " min"),
               ],
             ),
           verticalSpaceMedium,

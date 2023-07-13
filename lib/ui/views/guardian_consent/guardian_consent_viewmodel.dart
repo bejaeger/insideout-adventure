@@ -8,6 +8,7 @@ import 'package:afkcredits/ui/views/guardian_consent/guardian_consent_view.form.
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'dart:math';
 
 class GuardianConsentViewModel extends FormViewModel {
   final UserService _userService = locator<UserService>();
@@ -24,7 +25,10 @@ class GuardianConsentViewModel extends FormViewModel {
   bool isLoading = false;
   int pageIndex = 0;
   bool verifiedCode = false;
-  String code = "B4T6";
+  // generate random number
+
+  String? code;
+  List<String> expiredCodes = [];
   DateTime? timeSentEmail;
 
   Future sendConsentEmail(PageController controller,
@@ -34,8 +38,13 @@ class GuardianConsentViewModel extends FormViewModel {
     }
 
     timeSentEmail = DateTime.now();
+    if (code != null) {
+      expiredCodes.add(code!);
+    }
+    code =
+        "7${Random().nextInt(9).toStringAsFixed(0)}6${Random().nextInt(9).toStringAsFixed(0)}";
     _emailService.sendConsentEmail(
-        code: code,
+        code: code!,
         email: emailValue!,
         userName: _userService.currentUser.fullName);
     _userService.updateGuardianVerificationStatus(
@@ -65,6 +74,10 @@ class GuardianConsentViewModel extends FormViewModel {
     } else if (codeValue! != code) {
       fieldsValidationMessages[CodeValueKey] =
           "Please provide the correct code we sent you via email";
+      returnVal = false;
+    } else if (expiredCodes.contains(codeValue)) {
+      fieldsValidationMessages[CodeValueKey] =
+          "Your verification code has expired, please send a new email";
       returnVal = false;
     } else if (timeSentEmail != null &&
         DateTime.now().difference(timeSentEmail!).inMinutes > 60) {

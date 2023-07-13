@@ -195,7 +195,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     // of the geofence.
     else if (!isInAreaNow &&
         markerInArea != null &&
-        (distance > (kDistanceFromCenterOfArea + 10))) {
+        (distance > (kDistanceFromCenterOfArea + 30))) {
       log.i("Outside of the area again");
       markerInArea = null;
       return false;
@@ -282,7 +282,7 @@ class HikeQuestViewModel extends ActiveQuestBaseViewModel
     if (result.hasError) {
       log.e("Error occured: ${result.errorMessage}");
       await dialogService.showDialog(
-        title: "Can't collect marker!",
+        title: "Can't find checkpoint!",
         description: result.errorMessage!,
       );
       return false;

@@ -9,6 +9,7 @@ import 'package:afkcredits/app_config_provider.dart';
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/datamodels/quests/active_quests/activated_quest.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
+import 'package:afkcredits/datamodels/transfers/transfer_details.dart';
 import 'package:afkcredits/datamodels/users/guardian_reference/guardian_reference.dart';
 import 'package:afkcredits/datamodels/users/settings/user_settings.dart';
 import 'package:afkcredits/datamodels/users/statistics/user_statistics.dart';
@@ -76,9 +77,11 @@ class UserService {
   Map<String, UserStatistics> supportedWardStats = {};
   // we add the quest history to the user service (THIS IS NOT IDEAL!)
   Map<String, List<ActivatedQuest>> supportedWardQuestsHistory = {};
+  Map<String, List<TransferDetails>> supportedWardRewards = {};
   StreamSubscription? _wardsDataStreamSubscriptions;
   Map<String, StreamSubscription?> _wardStatsStreamSubscriptions = {};
   Map<String, StreamSubscription?> _wardHistoryStreamSubscriptions = {};
+  Map<String, StreamSubscription?> _wardRewardsStreamSubscriptions = {};
   Map<String, StreamSubscription?> _wardScreenTimeStreamSubscriptions = {};
 
   Future<void> syncUserAccount(
@@ -337,7 +340,8 @@ class UserService {
       {required String name,
       required String password,
       required AuthenticationMethod authMethod,
-      required UserSettings userSettings}) async {
+      required UserSettings userSettings,
+      bool noHashPassword = true}) async {
     if (await isUserAlreadyPresent(name: name)) {
       return "A user with name $name exists already in our system. Please choose a different name.";
     }
@@ -346,7 +350,7 @@ class UserService {
     final newWard = User(
       authMethod: authMethod,
       fullName: name,
-      password: hashPassword(password),
+      password: noHashPassword ? password : hashPassword(password),
       uid: docRef.id,
       role: UserRole.ward,
       guardianIds: [currentUser.uid],
@@ -493,6 +497,7 @@ class UserService {
     wardIds.forEach((wardId) async {
       await addWardStatListener(wardId: wardId, callback: callback);
       await addWardHistoryListener(wardId: wardId, callback: callback);
+      await addWardRewardsListener(wardId: wardId, callback: callback);
       await addWardScreenTimeListener(
           wardId: wardId,
           callback: callback,
@@ -550,6 +555,28 @@ class UserService {
     } else {
       log.w(
           "Quest history stream of user with id $wardId already listened to!");
+      completer.complete();
+    }
+    return completer.future;
+  }
+
+  Future addWardRewardsListener(
+      {required String wardId, void Function()? callback}) async {
+    Completer<void> completer = Completer();
+    if (!_wardRewardsStreamSubscriptions.containsKey(wardId) ||
+        _wardRewardsStreamSubscriptions[wardId] == null) {
+      _wardRewardsStreamSubscriptions[wardId] =
+          _firestoreApi.getPastRewardsStream(uid: wardId).listen((stats) {
+        supportedWardRewards[wardId] = stats;
+        if (!completer.isCompleted) {
+          completer.complete();
+        }
+        if (callback != null) {
+          callback();
+        }
+      });
+    } else {
+      log.w("Rewards stream of user with id $wardId already listened to!");
       completer.complete();
     }
     return completer.future;
@@ -765,6 +792,29 @@ class UserService {
     return sortedQuests;
   }
 
+  List<TransferDetails> sortedWardRewards({String? uid}) {
+    List<TransferDetails> sortedRewards = [];
+    if (uid == null) {
+      supportedWardRewards.forEach((key, transfer) {
+        sortedRewards.addAll(transfer);
+      });
+    } else {
+      if (supportedWardRewards.containsKey(uid)) {
+        sortedRewards = supportedWardRewards[uid]!;
+      }
+    }
+    sortedRewards.sort((a, b) {
+      if (b.createdAt is String) {
+        return -1;
+      }
+      if (a.createdAt is String) {
+        return -1;
+      }
+      return b.createdAt.toDate().compareTo(a.createdAt.toDate());
+    });
+    return sortedRewards;
+  }
+
   List<ScreenTimeSession> sortedWardScreenTimeSessions({String? uid}) {
     List<ScreenTimeSession> sortedSessions = [];
     if (uid == null) {
@@ -792,7 +842,11 @@ class UserService {
   List<dynamic> sortedHistory({String? uid}) {
     List<dynamic> list = [];
     if (uid == null) {
-      list = [...sortedWardScreenTimeSessions(), ...sortedWardQuestHistory()];
+      list = [
+        ...sortedWardScreenTimeSessions(),
+        ...sortedWardQuestHistory(),
+        ...sortedWardRewards()
+      ];
     } else {
       if (_screenTimeService.supportedWardScreenTimeSessions.containsKey(uid)) {
         list = list + sortedWardScreenTimeSessions(uid: uid);
@@ -800,15 +854,19 @@ class UserService {
       if (supportedWardQuestsHistory.containsKey(uid)) {
         list = list + sortedWardQuestHistory(uid: uid);
       }
+      if (supportedWardRewards.containsKey(uid)) {
+        list = list + sortedWardRewards(uid: uid);
+      }
     }
+
     list.sort((a, b) {
       dynamic date1;
       dynamic date2;
-      if (a is ActivatedQuest)
+      if (a is ActivatedQuest || a is TransferDetails)
         date1 = a.createdAt;
       else
         date1 = a.startedAt;
-      if (b is ActivatedQuest)
+      if (b is ActivatedQuest || b is TransferDetails)
         date2 = b.createdAt;
       else
         date2 = b.startedAt;
@@ -926,7 +984,7 @@ class UserService {
       {required GuardianVerificationStatus status}) async {
     if (currentUserNullable != null) {
       User newUser = currentUser.copyWith(guardianVerificationStatus: status);
-      _firestoreApi.updateUserData(user: newUser);
+      await _firestoreApi.updateUserData(user: newUser);
     } else {
       log.wtf(
           "User is null in updateGuardianVerificationStatus() function. Should never happen");
@@ -962,7 +1020,13 @@ class UserService {
       return false;
     }
     final hash = hashedPw2 ?? hashPassword(stringPw2!);
-    return hash.compareTo(hashedPw1) == 0;
+    if (hash.compareTo(hashedPw1) == 0) {
+      return true;
+    } else if (hashedPw1 == stringPw2) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   String hashPassword(String pw) {
@@ -1045,6 +1109,8 @@ class UserService {
     _wardHistoryStreamSubscriptions[uid] = null;
     _wardScreenTimeStreamSubscriptions[uid]?.cancel();
     _wardScreenTimeStreamSubscriptions[uid] = null;
+    _wardRewardsStreamSubscriptions[uid]?.cancel();
+    _wardRewardsStreamSubscriptions[uid] = null;
   }
 
   Future handleLogoutEvent(
@@ -1070,6 +1136,9 @@ class UserService {
     _wardScreenTimeStreamSubscriptions.forEach((key, value) {
       cancelWardListener(uid: key);
     });
+    _wardRewardsStreamSubscriptions.forEach((key, value) {
+      cancelWardListener(uid: key);
+    });
     _wardsDataStreamSubscriptions?.cancel();
     _wardsDataStreamSubscriptions = null;
 
@@ -1080,6 +1149,28 @@ class UserService {
 
     if (logOutFromFirebase) {
       await _firebaseAuthenticationService.logout();
+    }
+  }
+
+  Future deleteUserAccount() async {
+    try {
+      final uid = currentUser.uid;
+      currentUser.wardIds.forEach((wardId) async {
+        await removeGuardianIdFromOtherUser(
+            otherUsersId: wardId, guardianId: currentUser.uid);
+      });
+      await _firestoreApi.deleteUser(uid: currentUser.uid);
+      await handleLogoutEvent(logOutFromFirebase: false);
+      if (_firebaseAuthenticationService.firebaseAuth.currentUser != null) {
+        await _firebaseAuthenticationService.firebaseAuth.currentUser!.delete();
+      }
+      log.i("User account $uid deleted");
+    } catch (error) {
+      log.e("Error when trying to delete user account: $error");
+      throw UserServiceException(
+        message:
+            "Error when trying to delete user account. Please contact support with the following error message: $error",
+      );
     }
   }
 }

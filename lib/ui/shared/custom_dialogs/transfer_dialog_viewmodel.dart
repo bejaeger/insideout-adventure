@@ -14,8 +14,16 @@ class TransferDialogViewModel extends BaseModel {
   String? description;
   String? mainButtonTitle;
   String? secondaryButtonTitle;
+  num? newBalance;
+  String? recipientName;
 
   Future waitForTransfer({required dynamic request}) async {
+    if (request.data["newBalance"] != null) {
+      newBalance = request.data["newBalance"];
+    }
+    if (request.data["recipientName"] != null) {
+      recipientName = request.data["recipientName"];
+    }
     if (request.data["transferStatus"] == null) {
       log.w(
           "Somehow the completer could not be parsed to the transfer dialog!");
@@ -41,7 +49,9 @@ class TransferDialogViewModel extends BaseModel {
       mainButtonTitle = "Got it";
     } else if (status == TransferDialogStatus.success) {
       title = "Success!";
-      description = "Someone will be very happy!";
+      description = (recipientName != null && newBalance != null)
+          ? "$recipientName has ${newBalance!.toStringAsFixed(0)} credits now!"
+          : "Someone will be very happy!";
       mainButtonTitle = "Go back";
     } else {
       title = "Warning";

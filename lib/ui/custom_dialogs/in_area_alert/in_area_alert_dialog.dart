@@ -181,7 +181,7 @@ class _BasicDialogContentState extends State<_BasicDialogContent>
                     // height: height,
                     child: Text(
                       widget.model.isUsingAR && widget.model.isARAvailable
-                          ? "Find credits"
+                          ? "Open camera"
                           : "Collect credits",
                       style: textTheme(context)
                           .headline6!

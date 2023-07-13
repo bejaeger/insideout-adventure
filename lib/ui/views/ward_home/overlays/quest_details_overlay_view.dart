@@ -373,7 +373,7 @@ class _GPSAreaHikeState extends State<GPSAreaHike>
                           ScaleTransition(
                             scale: _animation,
                             child: LiveQuestStatistic(
-                              title: "Markers collected",
+                              title: "Checkpoints collected",
                               statistic: model.hasActiveQuest
                                   ? model.getNumberMarkersCollectedString()
                                   : "0",

@@ -34,8 +34,8 @@ class WardStatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
-      color: kcCultured.withOpacity(0.5),
+      elevation: 1,
+      color: kcCultured,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.hardEdge,
       child: Container(
@@ -44,7 +44,7 @@ class WardStatsCard extends StatelessWidget {
             border: Border.all(
                 color: screenTimeSession != null
                     ? kcScreenTimeBlue
-                    : Colors.grey[400]!,
+                    : Colors.grey[200]!,
                 width: screenTimeSession != null ? 3.0 : 1.0),
             borderRadius: BorderRadius.circular(20.0)),
         child: Padding(
@@ -117,9 +117,9 @@ class WardStatsCard extends StatelessWidget {
                               if (screenTimeLastWeek != null)
                                 Row(
                                   children: [
-                                    Image.asset(kScreenTimeIcon2,
-                                        height: 18,
-                                        width: 18,
+                                    Image.asset(kScreenTimeIcon,
+                                        height: 16,
+                                        width: 16,
                                         color: kcScreenTimeBlue),
                                     SizedBox(width: 4),
                                     InsideOutText.body(

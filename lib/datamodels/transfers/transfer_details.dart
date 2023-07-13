@@ -14,6 +14,8 @@ class TransferDetails with _$TransferDetails {
     required num amount,
     required String currency,
     required TransferSource sourceType,
+    @Default("") dynamic createdAt,
+    String? id,
     /* legacy */
   }) = _TransferDetails;
 

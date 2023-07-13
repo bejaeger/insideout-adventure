@@ -67,9 +67,9 @@ class ActiveScreenTimeView extends StatelessWidget {
                                     Center(
                                       child: InsideOutText.headingThree(
                                           !model.isGuardianAccount
-                                              ? "Woop woop, enjoy time on the screen!"
+                                              ? "Woop woop, have fun!"
                                               : model.wardName +
-                                                  " is using screen time",
+                                                  " is enjoying screen time",
                                           align: TextAlign.center),
                                     ),
                                     verticalSpaceSmall,
