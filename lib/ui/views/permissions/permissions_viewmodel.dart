@@ -129,6 +129,7 @@ class PermissionsViewModel extends BaseModel {
     // AR not supported yet for Android
     if (!appConfigProvider.isARAvailable) {
       _localStorageServie.saveToDisk(key: kConfiguredArKey, value: "true");
+      log.v("Not using AR because it is not available on this device");
       return;
     }
 
