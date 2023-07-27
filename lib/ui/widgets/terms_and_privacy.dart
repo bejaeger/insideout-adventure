@@ -9,7 +9,7 @@ void showTermsAndPrivacyDialog(
     required AppConfigProvider appConfigProvider,
     Widget? consentButton,
     Widget? revokeButton}) {
-  return Platform.isIOS
+  return Platform.isAndroid
       ? showAboutDialog(
           context: context,
           applicationIcon: Image.asset(
