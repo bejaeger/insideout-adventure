@@ -6,7 +6,6 @@ import 'package:afkcredits/exceptions/user_service_exception.dart';
 import 'package:afkcredits/services/feedback_service/feedback_service.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/views/guardian_home/guardian_home_viewmodel.dart';
-import 'package:afkcredits/ui/widgets/terms_and_privacy.dart';
 
 import '../../../app/app.locator.dart';
 

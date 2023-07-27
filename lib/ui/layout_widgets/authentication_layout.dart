@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:insideout_ui/insideout_ui.dart';
@@ -339,8 +341,8 @@ class AuthenticationLayout extends StatelessWidget {
                 onPressed: onAppleButtonTapped!,
               ),
             verticalSpaceLarge,
-            if (releaseName != null)
-              Center(child: Text("Release - " + releaseName!)),
+            if (releaseName != null && Platform.isAndroid)
+              Center(child: Text(releaseName!)),
             verticalSpaceMedium,
           ],
         ),
