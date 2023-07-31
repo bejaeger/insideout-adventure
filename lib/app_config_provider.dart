@@ -30,7 +30,7 @@ class AppConfigProvider {
 
   bool get isDevFlavor => flavor == Flavor.dev;
 
-  String get versionName => "1.0.0+2";
+  String get versionName => "1.0.0";
   String get contactEmail => "patrick.mayerhofer@icloud.com";
 
   String get appName {
@@ -38,7 +38,7 @@ class AppConfigProvider {
       case Flavor.dev:
         return "InsideOut Adventure - Dev";
       case Flavor.prod:
-        return "InsideOut Adventure - v0.1.1+2";
+        return "InsideOut Adventure - $versionName";
       default:
         return "InsideOut Adventure - Dev";
     }

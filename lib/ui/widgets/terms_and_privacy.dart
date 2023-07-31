@@ -1,32 +1,60 @@
 import 'package:afkcredits/app_config_provider.dart';
+import 'package:afkcredits/ui/widgets/about_dialog_ios.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
+import 'dart:io' show Platform;
 
 void showTermsAndPrivacyDialog(
     {required BuildContext context,
     required AppConfigProvider appConfigProvider,
     Widget? consentButton,
     Widget? revokeButton}) {
-  return showAboutDialog(
-    context: context,
-    applicationIcon: Image.asset(
-      "assets/insideout_logo_io_adv.png",
-      height: 50,
-      width: 50,
-    ),
-    applicationName: "InsideOut Adventure",
-    applicationVersion: appConfigProvider.versionName,
-    children: [
-      if (consentButton != null) consentButton,
-      if (consentButton != null) verticalSpaceMedium,
-      Text(
-          "Welcome to InsideOut Adventure! Our app incentivizes healthy activities and outdoor exploration while allowing parents to manage their child’s screen time. By using our app, you agree to the following terms, conditions, and privacy policy"),
-      verticalSpaceMedium,
-      InsideOutText.headingFour("Terms & Conditions"),
-      verticalSpaceSmall,
-      Text(
-        // generated
-        """
+  return Platform.isAndroid
+      ? showAboutDialog(
+          context: context,
+          applicationIcon: Image.asset(
+            "assets/insideout_logo_io_adv.png",
+            height: 50,
+            width: 50,
+          ),
+          applicationName: "InsideOut Adventure",
+          applicationVersion: appConfigProvider.versionName,
+          children: getTermsText(
+              context: context,
+              consentButton: consentButton,
+              revokeButton: revokeButton),
+        )
+      : showAboutDialogIos(
+          context: context,
+          applicationIcon: Image.asset(
+            "assets/insideout_logo_io_adv.png",
+            height: 50,
+            width: 50,
+          ),
+          applicationName: "InsideOut Adventure",
+          applicationVersion: appConfigProvider.versionName,
+          children: getTermsText(
+              context: context,
+              consentButton: consentButton,
+              revokeButton: revokeButton),
+        );
+}
+
+List<Widget> getTermsText(
+    {required BuildContext context,
+    Widget? consentButton,
+    Widget? revokeButton}) {
+  return [
+    if (consentButton != null) consentButton,
+    if (consentButton != null) verticalSpaceMedium,
+    Text(
+        "Welcome to InsideOut Adventure! Our app incentivizes healthy activities and outdoor exploration while allowing parents to manage their child’s screen time. By using our app, you agree to the following terms, conditions, and privacy policy"),
+    verticalSpaceMedium,
+    InsideOutText.headingFour("Terms & Conditions"),
+    verticalSpaceSmall,
+    Text(
+      // generated
+      """
 - Acceptance of Terms -
 By downloading or using our app, you agree to be bound by these Terms & Conditions. If you do not agree to these terms, you may not use our app.
 
@@ -65,13 +93,13 @@ We reserve the right to revise these Terms & Conditions at any time without noti
 - Contact Information -
 If you have any questions or concerns, please reach out via our in-app feedback function, or directly to our temporary email address patrick.mayerhofer@icloud.com.
 """,
-        style: bodyStyle,
-      ),
-      verticalSpaceMedium,
-      InsideOutText.headingFour("Privacy Policy"),
-      verticalSpaceSmall,
-      Text(
-        """
+      style: bodyStyle,
+    ),
+    verticalSpaceMedium,
+    InsideOutText.headingFour("Privacy Policy"),
+    verticalSpaceSmall,
+    Text(
+      """
 - Information Collection -
 Some of our Services require you to register with us or sign up for an account before you can use them. Where this is the case, you provide us with information including your in-app username or email address that you choose to use on our Services. We collect and use this information in order to authenticate you when you register an account and use the Services, to make sure you are eligible and able to receive the Services, and so that you receive the correct version of the Services.
 
@@ -105,11 +133,10 @@ We reserve the right to revise the Privacy Policy at any time without notice. By
 - Contact Information -
 If you have any questions or concerns about our Privacy Policy, please contact us via our in-app feedback function or directly to our temporary email address patrick.mayerhofer@icloud.com.
 """,
-        style: bodyStyle,
-      ),
-      verticalSpaceMedium,
-      if (revokeButton != null) revokeButton,
-      verticalSpaceSmall,
-    ],
-  );
+      style: bodyStyle,
+    ),
+    verticalSpaceMedium,
+    if (revokeButton != null) revokeButton,
+    verticalSpaceSmall,
+  ];
 }
