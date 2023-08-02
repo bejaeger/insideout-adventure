@@ -1119,9 +1119,6 @@ class UserService {
     if (!kIsWeb) {
       await _localStorageService.deleteFromDisk(key: kLocalStorageUidKey);
     }
-    _currentUser = null;
-    _currentUserStats = null;
-
     _currentUserStreamSubscription?.cancel();
     _currentUserStreamSubscription = null;
     _currentUserStatsStreamSubscription?.cancel();
@@ -1144,6 +1141,9 @@ class UserService {
 
     supportedWards = {};
     supportedWardStats = {};
+
+    _currentUser = null;
+    _currentUserStats = null;
 
     if (!doNotClearGuardianReference) clearGuardianReference();
 

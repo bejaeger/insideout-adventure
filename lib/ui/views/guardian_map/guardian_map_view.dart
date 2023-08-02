@@ -7,6 +7,7 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
 import 'package:afkcredits/ui/widgets/common_quest_details_header.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class GuardianMapView extends StatelessWidget {
       viewModelBuilder: () => GuardianMapViewModel(),
       onModelReady: (model) => model.initialize(),
       builder: (context, model, child) {
-        return SafeArea(
+        return CustomSafeArea(
           child: Scaffold(
             appBar: CustomAppBar(
               title: model.selectedQuest == null ? "Quests" : "Quest Details",

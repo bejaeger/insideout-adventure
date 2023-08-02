@@ -1,5 +1,6 @@
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/active_screen_time/start_screen_time_counter_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/screen_time_notifications_note.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
@@ -15,7 +16,7 @@ class StartScreenTimeCounterView extends StatelessWidget {
     return ViewModelBuilder<StartScreenTimeCounterViewModel>.reactive(
       viewModelBuilder: () => StartScreenTimeCounterViewModel(),
       onModelReady: (model) => model.startCounter(session: session),
-      builder: (context, model, child) => SafeArea(
+      builder: (context, model, child) => CustomSafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           body: Container(

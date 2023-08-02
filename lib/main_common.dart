@@ -39,7 +39,8 @@ void mainCommon(Flavor flavor) async {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: kcPrimaryColor,
-        systemNavigationBarColor: kcBlackHeadlineColor,
+        systemNavigationBarColor: Colors.grey[50],
+        systemNavigationBarIconBrightness: Brightness.dark,
       ),
     );
 
@@ -127,6 +128,7 @@ class MyApp extends StatelessWidget {
                   centerTitle: true),
               colorScheme: ThemeData().colorScheme.copyWith(
                     primary: kcPrimaryColor,
+                    background: Colors.grey[50],
                   ),
               dialogTheme: DialogTheme(
                 shape: RoundedRectangleBorder(

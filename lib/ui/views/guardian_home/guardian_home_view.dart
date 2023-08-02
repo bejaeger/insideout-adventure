@@ -6,6 +6,7 @@ import 'package:afkcredits/ui/views/guardian_drawer_view/guardian_drawer_view.da
 import 'package:afkcredits/ui/views/guardian_home/guardian_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/ward_stats_card.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,7 @@ class _GuardianHomeViewState extends State<GuardianHomeView> {
 
           return WillPopScope(
             onWillPop: () async => false,
-            child: SafeArea(
+            child: CustomSafeArea(
               child: Scaffold(
                 appBar: CustomAppBar(
                   showLogo: true,

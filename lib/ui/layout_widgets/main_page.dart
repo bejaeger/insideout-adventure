@@ -1,4 +1,5 @@
 import 'package:afkcredits/ui/views/common_viewmodels/main_page_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -24,7 +25,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return CustomSafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         floatingActionButton: floatingActionButton,

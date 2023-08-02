@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/active_screen_time/screen_time_requested_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:lottie/lottie.dart';
@@ -22,7 +23,7 @@ class ScreenTimeRequestedView extends StatelessWidget {
           model.cancel(session: session);
           return true;
         },
-        child: SafeArea(
+        child: CustomSafeArea(
           child: Scaffold(
             body: Container(
               height: screenHeight(context),

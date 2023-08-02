@@ -6,6 +6,7 @@ import 'package:afkcredits/data/app_strings.dart';
 import 'package:afkcredits/ui/views/create_ward/validators.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/selectable_box.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +69,7 @@ class CreateQuestView extends StatelessWidget with $CreateQuestView {
                   model.onBackButton(controller);
                   return false;
                 },
-          child: SafeArea(
+          child: CustomSafeArea(
             child: Scaffold(
               appBar: CustomAppBar(
                 title: "Create Quest",

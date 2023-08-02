@@ -3,6 +3,7 @@ import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/enums/screen_time_session_status.dart';
 import 'package:afkcredits/ui/views/active_screen_time/active_screen_time_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/screen_time_notifications_note.dart';
 import 'package:afkcredits/ui/widgets/simple_statistics_display.dart';
 import 'package:afkcredits/utils/string_utils.dart';
@@ -34,7 +35,7 @@ class ActiveScreenTimeView extends StatelessWidget {
             model.resetActiveScreenTimeView(uid: session.uid);
             return true;
           },
-          child: SafeArea(
+          child: CustomSafeArea(
             child: Scaffold(
               body: Container(
                 height: screenHeight(context),

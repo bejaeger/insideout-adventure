@@ -30,7 +30,10 @@ class CustomDropDownMenu extends StatefulWidget {
       this.onTap2,
       this.icon3,
       this.text3,
-      this.onTap3, this.icon4, this.text4, this.onTap4})
+      this.onTap3,
+      this.icon4,
+      this.text4,
+      this.onTap4})
       : super(key: key);
 
   @override
@@ -59,7 +62,7 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
           [
             MenuItem(
                 text: widget.text4!, icon: widget.icon4!, onTap: widget.onTap4!)
-          ];          
+          ];
     return list;
   }
 
@@ -92,7 +95,7 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
         itemHeight: 48,
         //alignment: AlignmentDirectional.centerStart,
         itemPadding: const EdgeInsets.only(left: 16, right: 16),
-        dropdownWidth: 180,
+        dropdownWidth: 195,
         dropdownPadding: const EdgeInsets.symmetric(vertical: 6),
         dropdownDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
@@ -123,8 +126,9 @@ class MenuItems {
         const SizedBox(
           width: 10,
         ),
-        InsideOutText.body(
-          item.text,
+        InsideOutText(
+          text: item.text,
+          style: bodyStyleSofia.copyWith(overflow: TextOverflow.fade),
         ),
       ],
     );

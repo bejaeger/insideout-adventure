@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/guardian_consent/guardian_consent_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/terms_and_privacy.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class GuardianConsentView extends StatelessWidget with $GuardianConsentView {
         emailController.text = model.email;
       },
       onDispose: (_) => disposeForm(),
-      builder: (context, model, child) => SafeArea(
+      builder: (context, model, child) => CustomSafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
             title: "Parental Consent",

@@ -3,6 +3,7 @@ import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_view.form.dart';
 import 'package:afkcredits/ui/views/transfer_funds/transfer_funds_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/select_value.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class TransferFundsView extends StatelessWidget with $TransferFundsView {
       onModelReady: (model) {
         listenToFormUpdated(model);
       },
-      builder: (context, model, child) => SafeArea(
+      builder: (context, model, child) => CustomSafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: CustomAppBar(

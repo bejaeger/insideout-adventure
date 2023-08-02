@@ -3,6 +3,7 @@ import 'package:afkcredits/ui/views/create_ward/create_ward_view.form.dart';
 import 'package:afkcredits/ui/views/create_ward/create_ward_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
@@ -30,7 +31,7 @@ class CreateWardView extends StatelessWidget with $CreateWardView {
           CreateWardViewModel(disposeController: () => controller.dispose()),
       onModelReady: (model) => listenToFormUpdated(model),
       onDispose: (_) => disposeForm(),
-      builder: (context, model, child) => SafeArea(
+      builder: (context, model, child) => CustomSafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
             title: "Create Child Account",

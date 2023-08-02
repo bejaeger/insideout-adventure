@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/feedback_view/feedback_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
         listenToFormUpdated(model);
         model.initialize();
       },
-      builder: (context, model, child) => SafeArea(
+      builder: (context, model, child) => CustomSafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: CustomAppBar(

@@ -8,6 +8,7 @@ import 'package:afkcredits/ui/views/single_ward_stat/single_ward_stat_viewmodel.
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/custom_drop_down_menu.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/history_tile.dart';
 import 'package:afkcredits/ui/widgets/section_header.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
@@ -29,7 +30,7 @@ class _SingleWardStatViewState extends State<SingleWardStatView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SingleWardStatViewModel>.reactive(
       viewModelBuilder: () => SingleWardStatViewModel(wardUid: widget.uid),
-      builder: (context, model, child) => SafeArea(
+      builder: (context, model, child) => CustomSafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
             title: model.isBusy

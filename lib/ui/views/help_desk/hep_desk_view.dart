@@ -1,6 +1,7 @@
 import 'package:afkcredits/ui/views/help_desk/help_desk_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
@@ -13,7 +14,7 @@ class HelpDeskView extends StatelessWidget {
     return ViewModelBuilder<HelpDeskViewModel>.reactive(
       viewModelBuilder: () => HelpDeskViewModel(),
       onModelReady: (model) => model.getData(),
-      builder: (context, model, child) => SafeArea(
+      builder: (context, model, child) => CustomSafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: CustomAppBar(

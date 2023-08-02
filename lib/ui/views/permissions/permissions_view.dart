@@ -1,4 +1,5 @@
 import 'package:afkcredits/ui/views/permissions/permissions_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/insideout_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
@@ -17,7 +18,7 @@ class PermissionsView extends StatelessWidget {
         model.runPermissionLogic();
       },
       builder: (context, model, child) {
-        return SafeArea(
+        return CustomSafeArea(
           child: model.showReinstallScreen
               ? Container(
                   height: screenHeight(context),

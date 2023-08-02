@@ -11,6 +11,7 @@ import 'package:afkcredits/ui/views/ward_home/overlays/switch_to_guardian_overla
 import 'package:afkcredits/ui/views/ward_home/ward_home_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/animations/fade_transition_animation.dart';
 import 'package:afkcredits/ui/widgets/animations/map_loading_overlay.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/quest_reload_button.dart';
 import 'package:afkcredits/ui/widgets/round_close_button.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class _WardHomeViewState extends State<WardHomeView> {
             model.maybeRemoveQuestListOverlay();
             return false;
           },
-          child: SafeArea(
+          child: CustomSafeArea(
             child: Scaffold(
               body: Stack(
                 children: [

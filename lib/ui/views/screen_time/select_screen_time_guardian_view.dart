@@ -2,6 +2,7 @@ import 'package:afkcredits/constants/asset_locations.dart';
 import 'package:afkcredits/datamodels/users/public_info/public_user_info.dart';
 import 'package:afkcredits/ui/views/screen_time/select_screen_time_guardian_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/select_value.dart';
 import 'package:afkcredits/ui/widgets/summary_stats_display.dart';
 import 'package:insideout_ui/insideout_ui.dart';
@@ -37,7 +38,7 @@ class SelectScreenTimeGuardianView extends StatelessWidget
       onModelReady: (model) {
         listenToFormUpdated(model);
       },
-      builder: (context, model, child) => SafeArea(
+      builder: (context, model, child) => CustomSafeArea(
         child: Scaffold(
           appBar: CustomAppBar(
               title: recipientInfo.name,

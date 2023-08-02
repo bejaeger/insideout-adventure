@@ -1,4 +1,5 @@
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
@@ -25,7 +26,7 @@ class CommonDrawerView extends StatelessWidget {
           return SizedBox(
             width: screenWidth(context, percentage: 0.7),
             child: Drawer(
-              child: SafeArea(
+              child: CustomSafeArea(
                 child: ListView(
                   children: [
                     DrawerHeader(
