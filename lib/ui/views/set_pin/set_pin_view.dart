@@ -1,6 +1,7 @@
 import 'package:afkcredits/constants/constants.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_view.form.dart';
 import 'package:afkcredits/ui/views/set_pin/set_pin_viewmodel.dart';
+import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';
@@ -45,28 +46,31 @@ class SetPinView extends StatelessWidget with $SetPinView {
               model.popView();
             },
           ),
-          body: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: kHorizontalPadding, vertical: 50),
-              child: Column(
-                children: [
-                  generateTextFields(context, model),
-                  verticalSpaceMedium,
-                  InsideOutButton.text(
-                    leading: Icon(Icons.clear, color: kcPrimaryColor, size: 22),
-                    title: "Clear",
-                    onTap: () => clearTextFields(),
-                  ),
-                  verticalSpaceSmall,
-                  if (model.isGuardianAccount)
-                    Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: InsideOutText.body(
-                          "You will need this passcode to come back to your parent area.",
-                          align: TextAlign.center,
-                        ))
-                ],
-              )),
+          body: model.isBusy
+              ? AFKProgressIndicator()
+              : Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kHorizontalPadding, vertical: 50),
+                  child: Column(
+                    children: [
+                      generateTextFields(context, model),
+                      verticalSpaceMedium,
+                      InsideOutButton.text(
+                        leading:
+                            Icon(Icons.clear, color: kcPrimaryColor, size: 22),
+                        title: "Clear",
+                        onTap: () => clearTextFields(),
+                      ),
+                      verticalSpaceSmall,
+                      if (model.isGuardianAccount)
+                        Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: InsideOutText.body(
+                              "You will need this passcode to come back to your parent area.",
+                              align: TextAlign.center,
+                            ))
+                    ],
+                  )),
         ),
       ),
     );

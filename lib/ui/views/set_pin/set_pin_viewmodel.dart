@@ -12,7 +12,8 @@ class SetPinViewModel extends FormViewModel {
 
   final log = getLogger("SetPinViewModel");
 
-  bool get isGuardianAccount => _userService.currentUser.role == UserRole.guardian;
+  bool get isGuardianAccount =>
+      _userService.currentUserNullable?.role == UserRole.guardian;
 
   Future onSubmit(String pin) async {
     if (_userService.currentUser.role == UserRole.guardian) {
@@ -20,14 +21,13 @@ class SetPinViewModel extends FormViewModel {
       final result = await _bottomSheetService.showBottomSheet(
           title: "Switch to child area", cancelButtonTitle: "Cancel");
       if (result?.confirmed == true) {
+        setBusy(true);
         _navigationService.back(result: SetPinResult.withPin(pin: pin));
-        return true;
-      } else {
-        return false;
+        await Future.delayed(Duration(milliseconds: 500));
+        setBusy(false);
       }
     } else {
       _navigationService.back(result: SetPinResult.withPin(pin: pin));
-      return true;
     }
   }
 
