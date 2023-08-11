@@ -4,7 +4,7 @@ import 'package:afkcredits/ui/widgets/afk_progress_indicator.dart';
 import 'package:afkcredits/ui/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:afkcredits/ui/widgets/custom_safe_area.dart';
 import 'package:afkcredits/ui/widgets/my_floating_action_button.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as b;
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
@@ -87,9 +87,9 @@ class FeedbackView extends StatelessWidget with $FeedbackView {
                               GestureDetector(
                                 onTap: () => model.launchUrlViewModel(
                                     model.feedbackCampaignInfo!.surveyUrl),
-                                child: Badge(
+                                child: b.Badge(
                                   showBadge: !model.userHasGivenFeedback,
-                                  position: BadgePosition.topStart(start: -5),
+                                  position: b.BadgePosition.topStart(start: -5),
                                   badgeColor: kcOrange,
                                   child: Container(
                                     height: 80,

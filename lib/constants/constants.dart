@@ -125,7 +125,7 @@ const double kMinLocationAccuracy = 100;
 const double kUnrealisticallyHighDistance = 100000000;
 const int kDistanceFilterForCalibration = 5;
 const int kDefaultGeolocationDistanceFilter = 10;
-const double kDefaultQuestDownloadRadiusInKm = 10;
+const double kDefaultQuestDownloadRadiusInKm = 2;
 
 // Google Maps View Settings
 const double kInitialZoomAvatarView = 17.3;

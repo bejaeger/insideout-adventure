@@ -3,7 +3,7 @@ import 'package:afkcredits/datamodels/screentime/screen_time_session.dart';
 import 'package:afkcredits/ui/views/common_viewmodels/base_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/insideout_logo.dart';
 import 'package:afkcredits/utils/string_utils.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as b;
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
@@ -67,9 +67,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: kHorizontalPadding),
-                          child: Badge(
+                          child: b.Badge(
                             badgeColor: kcOrange,
-                            position: BadgePosition.topEnd(end: -5, top: -3),
+                            position: b.BadgePosition.topEnd(end: -5, top: -3),
                             showBadge: !hasUserGivenFeedback,
                             child: Icon(Icons.menu,
                                 color: kcWhiteTextColor, size: 30),

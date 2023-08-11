@@ -3,7 +3,7 @@ import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_view.dart';
 import 'package:afkcredits/ui/views/common_drawer_view/common_drawer_viewmodel.dart';
 import 'package:afkcredits/ui/widgets/about_dialog_ios.dart';
 import 'package:afkcredits/ui/widgets/terms_and_privacy.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as b;
 import 'package:flutter/material.dart';
 import 'package:insideout_ui/insideout_ui.dart';
 import 'package:stacked/stacked.dart';
@@ -46,10 +46,10 @@ class GuardianDrawerView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: kHorizontalPadding),
                   child: ListTile(
-                    title: Badge(
+                    title: b.Badge(
                       alignment: Alignment.centerLeft,
                       badgeColor: kcOrange,
-                      position: BadgePosition.topEnd(end: 40, top: -3),
+                      position: b.BadgePosition.topEnd(end: 40, top: -3),
                       showBadge: !model.userHasGivenFeedback,
                       child: InsideOutText.body("Feedback"),
                     ),

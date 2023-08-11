@@ -53,9 +53,9 @@ class CreateAccountViewModel extends AuthenticationViewModel {
       returnVal = false;
     }
     if (emailValue != null) {
-      bool emailValid =
-          RegExp(r"^([a-zA-Z0-9_+\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$")
-              .hasMatch(emailValue!);
+      bool emailValid = RegExp(
+              r"^([a-zA-Z0-9_+\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})(\s*)$")
+          .hasMatch(emailValue!);
       if (!emailValid) {
         emailInputValidationMessage = 'Please provide a valid email address';
         returnVal = false;
@@ -85,7 +85,7 @@ class CreateAccountViewModel extends AuthenticationViewModel {
         method: method,
         role: this.role,
         fullName: fullNameValue,
-        email: emailValue,
+        email: emailValue!.trim(),
         password: passwordValue);
   }
 
