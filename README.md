@@ -1,5 +1,13 @@
 # InsideOutAdventure
-This is the mobile adventure app of InsideOutAdventure
+This is the mobile adventure app of InsideOutAdventure, available on [Android](https://play.google.com/store/apps/details?id=com.hercules.prod) and [iOS](https://apps.apple.com/ca/app/insideout-adventure/id6443437964).
+
+![alt text](https://github.com/bejaeger/afk-credits/blob/master/assets/illustrations/infographic.png?raw=true)
+
+InsideOut Adventure empowers parents to effectively incentivize their children to develop healthy habits by embracing their joy for the digital world. With our reward system, children can earn credits by engaging in healthy activities and redeem these credits on screen time & digital products. 
+
+# App Screenshots
+
+![alt text](https://github.com/bejaeger/afk-credits/blob/master/assets/illustrations/app_store_screenshot.png?raw=true)
 
 # Setup instructions
 
